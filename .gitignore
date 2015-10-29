@@ -1,0 +1,4 @@
+/target
+/src/main/resources/conf/jdbc.properties
+/src/main/resources/conf/log4j.properties
+/src/main/webapp/WEB-INF/logs/*
