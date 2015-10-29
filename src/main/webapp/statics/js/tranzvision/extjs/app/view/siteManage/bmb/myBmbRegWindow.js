@@ -56,7 +56,7 @@
 						 allowBlank: false
 					}).render(divTmp)
 					return divTmp.outerHTML;
-				})() + '<div class="predefinetpllist">asdf</div>';
+				})() + '<div class="predefinetpllist">asdf</div>'
 			}]
 	}],
     buttons: [{

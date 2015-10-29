@@ -2,6 +2,7 @@ package com.tranzvision.gd.ztest.service.impl;
  
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import com.tranzvision.gd.TZBaseBundle.service.Framework;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.ztest.dao.AdminMapper;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
@@ -30,10 +32,12 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     private AdminMapper AdminMapper;
     
-    ///*
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    //*/
+    
+    @Autowired
+    private SqlQuery sqlQuery;
+    
     public int insertAdmin(Admin admin) {
         // TODO Auto-generated method stub
         return AdminMapper.insert(admin);
@@ -85,12 +89,39 @@ public class AdminServiceImpl implements AdminService{
     public List getAllAdmins() {
 		System.out.println("jdbcTemplate=" + jdbcTemplate);
 		
+		/*
 		String testvar = jdbcTemplate.queryForObject("SELECT 'Y' FROM admin WHERE adminid=1", String.class);
 		System.out.println(testvar);
+		
+		int num = jdbcTemplate.queryForObject("SELECT count(*) FROM admin WHERE adminid=1", int.class);
+		System.out.println(num);
 		
 		
 		return jdbcTemplate
 				.queryForList("SELECT * FROM admin WHERE 1=1");
+		*/
+		Object[] args = new Object[] {new Integer(50)};
+		
+		
+		String testvar = sqlQuery.queryForObject("SELECT 'Y' FROM admin WHERE adminid=?", args, "String");
+		System.out.println(testvar);
+		
+		String testString = sqlQuery.queryForObject("SELECT 'Y' FROM admin WHERE adminid=1", "String");
+		System.out.println(testString);
+		
+		int testInt = sqlQuery.queryForObject("SELECT count(*) FROM admin", "int");
+		System.out.println(testInt);
+		
+		Map<String, Object> testmap = sqlQuery.queryForMap("SELECT * FROM admin WHERE adminid=1");
+		System.out.println(testmap);
+		System.out.println(testmap.get("admin_name"));
+		//{adminid=1, admin_name=管理员, admin_pwd=123456, admin_realname=测试名字1}
+		
+		List<?> testlist = sqlQuery.queryForList("SELECT * FROM admin WHERE adminid=1");
+		System.out.println(testlist);
+		//[{adminid=1, admin_name=管理员, admin_pwd=123456, admin_realname=测试名字1}]
+		
+		return sqlQuery.queryForList("SELECT * FROM admin WHERE adminid<>?", args);
 		
 	}
  	//*/
