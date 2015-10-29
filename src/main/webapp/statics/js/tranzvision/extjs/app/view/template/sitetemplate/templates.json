@@ -1,0 +1,22 @@
+{
+"total":"8",
+"root":[
+    {
+        templateId: '1001',
+        templateName: '首页模板',
+        templateType: '栏目站点'
+    },{
+        templateId: '1002',
+        templateName: '活动列表模板',
+        templateType: '活动列表'
+    },{
+        templateId: '1003',
+        templateName: '新闻列表模板',
+        templateType: '新闻列表'
+    },{
+        templateId: '1004',
+        templateName: '新闻通知详情列表',
+        templateType: '新闻列表'
+    }
+]
+}

@@ -1,0 +1,94 @@
+﻿Ext.define('KitchenSink.view.GSMmaterialsReview.materialsReview', {
+    extend: 'Ext.grid.Panel',
+	requires: [
+        'Ext.data.*',
+        'Ext.grid.*',
+        'Ext.util.*',
+        'Ext.toolbar.Paging',
+        'Ext.ux.ProgressBarPager',
+        'KitchenSink.view.GSMmaterialsReview.materialsReviewStore',
+        'KitchenSink.view.GSMmaterialsReview.materialsReviewController',
+        'KitchenSink.view.common.store.comboxStore'
+    ],
+    xtype: 'GSMmaterialsReview',
+    columnLines: true,
+//    selModel: {
+//        type: 'checkboxmodel'
+//    },
+    controller: 'GSMmaterialsReview',
+	style:"margin:8px",
+    multiSelect: true,
+    title: '光华学院材料评审',
+    viewConfig: {
+        enableTextSelection: true
+    },
+	header:false,
+	frame: true,
+    dockedItems:[/*{
+		xtype:"toolbar",
+		dock:"bottom",
+		ui:"footer",
+		items:['->',{minWidth:80,text:"保存",iconCls:"save"}]
+		},*/{
+		xtype:"toolbar",
+		items:[
+			{text:"查询",tooltip:"查询数据",iconCls:"query",handler:"queryClassBatch"},"|",
+            {text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addClassBatch"},"|",
+            {text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:"editClassBatch"},"->",
+            {
+                xtype:'splitbutton',
+                text:'更多操作',
+                iconCls:  'list',
+                glyph: 61,
+                menu:[
+                    { text: '删除',handler: 'deleteClassBatch'}
+                ]  }
+        ]
+	}],
+    initComponent: function () {
+        var store = new KitchenSink.view.materialsReview.materialsReview.materialsReviewStore();
+        Ext.apply(this, {
+            columns: [{
+                text: '招聘项目编号',
+                dataIndex: 'classID'
+            },{
+                text: '招聘项目名称',
+				dataIndex: 'className',
+                minWidth:180,
+                sortable:false,
+                flex:2
+            },{
+                text: '批次编号',
+                dataIndex: 'batchID',
+                hidden:true
+            },{
+                text: '批次',
+                dataIndex: 'batchName',
+                minWidth:100,
+                sortable:false,
+                flex:1
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width:150,
+                text: "操作",
+                xtype: 'actioncolumn',
+                align:'center',
+                items:[
+                    {iconCls: 'set',tooltip: '设置评审规则',handler:'setReviewRule'},"-",
+                    {iconCls: 'people',tooltip: '查看考生名单',handler:'viewApplicants'}
+                ]
+            }],
+            store: store,
+            bbar: {
+                xtype: 'pagingtoolbar',
+                pageSize: 10,
+                store: store,
+                plugins: new Ext.ux.ProgressBarPager()
+            }
+        });
+		
+        this.callParent();
+    }
+});
+

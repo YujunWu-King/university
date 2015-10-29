@@ -1,0 +1,23 @@
+{
+	"total":3,
+	"root":[
+		{
+			"restempid":"TZ_TEMP1",          
+			"restempname":"元模板1",
+			"orgname":"EMBA",
+			"isneed":true
+		},
+		{
+			"restempid":"TZ_TEMP2",          
+			"restempname":"元模板2",
+			"orgname":"MBA",
+			"isneed":false
+		},
+		{
+			"restempid":"TZ_TEMP3",          
+			"restempname":"元模板3",
+			"orgname":"EMBA",
+			"isneed":true
+		}
+	]
+}

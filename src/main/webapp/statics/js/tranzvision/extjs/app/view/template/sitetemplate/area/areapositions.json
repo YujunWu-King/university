@@ -1,0 +1,28 @@
+﻿{
+"total":3,
+"root":[
+    {
+        areapositionId: 'A',
+        areapositionName: '中间栏'
+    },
+	{
+        areapositionId: 'B',
+        areapositionName: '左侧菜单栏'
+    }
+    ,
+	{
+        areapositionId: 'C',
+        areapositionName: '右侧栏'
+    }
+    ,
+	{
+        areapositionId: 'D',
+        areapositionName: '页头'
+    }
+    ,
+	{
+        areapositionId: 'E',
+        areapositionName: '页尾'
+    }
+]
+}

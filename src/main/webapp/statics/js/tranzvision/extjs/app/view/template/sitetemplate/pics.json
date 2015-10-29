@@ -1,0 +1,13 @@
+{
+"picList":[
+	{index:'1', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall1.jpg', caption:'111111111.jpg' },
+	{index:'2', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall2.jpg', caption:'222222222.jpg' },
+	{index:'3', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall3.jpg', caption:'333333333.jpg' },
+	{index:'4', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall4.jpg', caption:'444444444.jpg' },
+	{index:'5', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall5.jpg', caption:'555555555.jpg' },
+	{index:'6', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall6.jpg', caption:'666666666.jpg' },
+	{index:'7', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall7.jpg', caption:'777777777.jpg' },
+	{index:'8', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/wall8.jpg', caption:'888888888.jpg' },
+	{index:'last_0', src:'/tranzvision/kitchensink/app/view/template/sitetemplate/picWall/wall/images/add.png', caption:'添加图片',last_id:'style="background:#eee;cursor:auto"'}
+]
+}

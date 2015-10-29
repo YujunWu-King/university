@@ -1,0 +1,50 @@
+﻿{
+"total":"11",
+"root":[
+    {
+        skinId: 'TZ_001',
+        skinName: '红色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_002',
+        skinName: '蓝色',
+        skinStatus: '失效'
+    },{
+        skinId: 'TZ_003',
+        skinName: '绿色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_004',
+        skinName: '黄色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_005',
+        skinName: '紫色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_002',
+        skinName: '蓝色',
+        skinStatus: '失效'
+    },{
+        skinId: 'TZ_003',
+        skinName: '绿色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_004',
+        skinName: '黄色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_005',
+        skinName: '紫色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_004',
+        skinName: '黄色',
+        skinStatus: '生效'
+    },{
+        skinId: 'TZ_005',
+        skinName: '紫色',
+        skinStatus: '生效'
+    }
+]
+}

@@ -1,0 +1,11 @@
+﻿[
+    {
+        orderNum: 'A',
+        FieldMc: 'A',
+		fieldDesc: 'A',
+		fldReadonly: '是',
+		fldHide:'是',
+		promptTab: 'A',
+		promptFld:'A'
+    }
+]

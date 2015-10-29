@@ -1,0 +1,29 @@
+{
+	"total":4,
+	"root":[
+		{
+			"emailaddr":"44577@qq.com",          
+			"emailorg":"EMBA",
+			"chnsname":"QQ邮箱",
+			"emlalias":"别名QQ邮箱"
+		},
+		{
+			"emailaddr":"44588@qq.com",          
+			"emailorg":"MBA",
+			"chnsname":"QQ邮箱2",
+			"emlalias":"别名QQ邮箱2"
+		},
+		{
+			"emailaddr":"44599@qq.com",          
+			"emailorg":"EMBA",
+			"chnsname":"QQ邮箱3",
+			"emlalias":"别名QQ邮箱3"
+		},
+		{
+			"emailaddr":"44500@qq.com",          
+			"emailorg":"MBA",
+			"chnsname":"QQ邮箱4",
+			"emlalias":"别名QQ邮箱4"
+		}
+	]
+}

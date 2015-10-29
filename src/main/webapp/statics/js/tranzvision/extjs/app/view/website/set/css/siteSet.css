@@ -1,0 +1,248 @@
+
+.thumb-list {
+    padding: 20px;
+}
+.thumb-list dd {
+    cursor: pointer;
+    float: left;
+    height: 160px;
+    line-height: 1em;
+    margin: 10px;
+    width: 400px;
+}
+.thumb-list dd.over {
+    background: url("../images/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
+}
+.thumb-list dd .thumb {
+    float: left;
+    height: 90px;
+    margin: 5px 0 0 5px;
+    width: 120px;
+}
+.thumb-list dd .thumb img {
+    border: 1px solid #ddd;
+    margin: auto;
+    max-height: 88px;
+    max-width: 118px;
+}
+.thumb-list dd div {
+    float: left;
+    margin-left: 10px;
+    width: 160px;
+}
+.thumb-list dd h4 {
+    color: #555;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 0;
+}
+.thumb-list dd h4 span.new-sample {
+    color: red;
+}
+.thumb-list dd h4 span.updated-sample {
+    color: blue;
+}
+.thumb-list dd p {
+    color: #777;
+    font-size: 13px;
+}
+.thumb-list h2 {
+    border-bottom: 2px solid #99bbe8;
+    cursor: pointer;
+    padding-top: 6px;
+}
+.thumb-list h2 div {
+    background: url("../images/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
+    color: #3764a0;
+    padding: 4px 4px 4px 17px;
+}
+.thumb-list .collapsed h2 div {
+    background-position: 2px 5px;
+}
+.thumb-list .collapsed dl {
+    display: none;
+}
+
+
+
+.thumb-list2 {
+    padding: 10px;
+}
+.thumb-list2 dd {
+    cursor: pointer;
+    float: left;
+    height: 200px;
+    line-height: 1em;
+    margin: 10px;
+    width: 200px;
+}
+.thumb-list2 dd.over {
+    background: url("../images/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
+}
+.thumb-list2 dd .thumb {
+    float: left;
+    height: 180px;
+    margin: 5px 0 0 5px;
+    width: 180px;
+}
+.thumb-list2 dd .thumb img {
+    border: 1px solid #ddd;
+    margin: auto;
+    max-height: 200px;
+    max-width: 190px;
+}
+.thumb-list2 dd div {
+    float: left;
+    margin-left: 10px;
+    width: 180px;
+}
+.thumb-list2 dd h4 {
+    color: #555;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 0;
+}
+.thumb-list2 dd h4 span.new-sample {
+    color: red;
+}
+.thumb-list2 dd h4 span.updated-sample {
+    color: blue;
+}
+.thumb-list2 dd p {
+    color: #777;
+    font-size: 13px;
+}
+.thumb-list2 h2 {
+    border-bottom: 2px solid #99bbe8;
+    cursor: pointer;
+    padding-top: 6px;
+}
+.thumb-list2 h2 div {
+    background: url("../images/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
+    color: #3764a0;
+    padding: 4px 4px 4px 17px;
+}
+.thumb-list2 .collapsed h2 div {
+    background-position: 2px 5px;
+}
+.thumb-list2 .collapsed dl {
+    display: none;
+}
+
+
+
+.thumb-list3 {
+    padding: 10px;
+}
+.thumb-list3 dd {
+    /*cursor: pointer;*/
+    float: left;
+    height: 200px;
+    line-height: 1em;
+    margin: 10px;
+    width: 200px;
+}
+.thumb-list3 dd .thumb {
+    float: left;
+    height: 180px;
+    margin: 5px 0 0 5px;
+    width: 190px;
+}
+.thumb-list3 dd .thumb img {
+    border: 1px solid #ddd;
+    margin: auto;
+    max-height: 200px;
+    max-width: 190px;
+	width:190px;
+	height:150px;
+}
+.thumb-list3 .skin_title{
+	height:20px;
+}
+.thumb-list3 dd h4 {
+    color: #555;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 0px 2px;
+	margin: 0px;
+	float:left;
+}
+.thumb-list3 dd .current{
+	width:190px;
+	height:30px;
+	background:rgba(0,0,0,0.5);
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	text-align: center;
+	line-height: 30px;
+	color: #fff;
+	font-size:14px;
+}
+.thumb-list3 dd .currPic{
+	background:url("../images/curr.png") no-repeat;
+	display: inline-block;
+	width: 12px;
+	height: 10px;
+	padding-right: 20px;
+}
+.thumb-list3 dd .skin_preview{
+	height:30px;
+	line-height:30px;
+	font-size:12px;
+	cursor:pointer;
+	color: #fff;
+	position:absolute;
+	bottom:0px;
+	right:10px;
+}
+.thumb-list3 dd .skin_preview:hover{
+	color:#09F;
+}
+.thumb-list3 a {
+	text-decoration:none;
+	font-size:14px;
+	font-weight:normal;
+	color:#2828FF;
+}
+.thumb-list3 a:hover {
+	color:#7339B3;
+}
+.thumb-list3 .skinImg{
+	position:relative;
+	overflow:hidden;
+}
+.thumb-list3 .mask{
+	background:rgba(0,0,0,0);
+	width:190px;
+	height:150px;
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+.thumb-list3 .mask:hover{
+	background:rgba(0,0,0,0.5);
+}
+.thumb-list3 .skinImg .btn{
+	position: relative;
+    top: 28%;
+	display:none;
+}
+.thumb-list3 .skinImg .btn div{
+	height:30px;
+	margin-bottom: 10px;
+}
+
+.thumb-list3 .skinImg .btn a{
+	display:block;
+	width:76px;
+	height:30px;
+	margin:0 auto;
+	cursor:pointer;
+}
+.thumb-list3 .skinImg .btn .selBtn{
+	background:url("../images/select.png") no-repeat;
+}
+.thumb-list3 .skinImg .btn .preVBtn{
+	background:url("../images/preview.png") no-repeat;
+}

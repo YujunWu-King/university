@@ -1,0 +1,22 @@
+﻿[
+    {
+        comID: 'TZ_MBA_GJXS_COM',
+        comName: 'MBA国际学生名单'
+    },
+	{
+       comID: 'TZ_GG_APPCLS_COM',
+       comName: '类方法定义'
+    },
+	{
+        comID: 'TZ_MBA_YQBY_COM',
+        comName: 'MBA延期毕业学生名单'
+    },
+	{
+        comID: 'TZ_MBA_ZZXY_COM',
+        comName: '中止学业学生名单'
+    },
+	{
+        comID: 'TZ_MBA_YPKMG_COM',
+        comName: 'MBA预排课管理'
+    }
+]

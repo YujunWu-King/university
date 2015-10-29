@@ -1,0 +1,179 @@
+	body{
+		font-size:12px
+	}
+		.assdiv{
+			position:relative;
+		}
+		.baracts{
+			position: absolute;
+			z-index: 363;
+			top: 0;
+			right: 1px;
+			width: 100%;
+			text-align: right;
+			height: 100%;
+			cursor: pointer;
+			border-width: 1px; 
+			background-color: rgba(192,222,237,.5); 
+			background-color: #c0deed\0/; 
+			*background-color:#c0deed;
+			filter: alpha(opacity = 80)\0/; 
+			*filter:alpha(opacity = 80);
+		}
+		.baracts a{
+			display: inline-block;
+			padding: 0;
+			margin-top: 1px;
+			margin-left: -1px;
+			background: url(/tranzvision/kitchensink/app/view/website/set/images/system/ds-edit.gif?5) no-repeat 0 0;
+			height: 21px;
+			vertical-align: top;
+			text-decoration: none;
+		}
+ .baracts .bbars {bottom: 1px;position: absolute;right: 0;_right: -1px;}
+	   .baracts .ds-bar-edit {
+		width: 49px;
+		margin-left: 0;
+	   }
+       .baracts .ds-bar-movedown {
+		width: 21px;
+		height: 21px;
+	   }
+
+ .baracts .ds-bar-edit { width: 49px; margin-left: 0 }
+ .baracts .ds-bar-edit-false { cursor: no-drop; }
+ .baracts .ds-bar-edit:hover { width: 49px; background-position: 0 -22px; }
+ .baracts .ds-bar-moveup, .baracts .ds-bar-movedown { width: 21px; height: 21px; }
+ .baracts .ds-bar-moveup { background-position: -50px 0; }
+ .baracts .ds-bar-moveup-false { cursor: no-drop; }
+ .baracts .ds-bar-moveup:hover { background-position: -50px -22px; }
+ .baracts .ds-bar-movedown { background-position: -72px 0; }
+ .baracts .ds-bar-movedown-false { cursor: no-drop; }
+ .baracts .ds-bar-movedown:hover { background-position: -72px -22px; }
+ .baracts .ds-bar-del { background-position: -138px 0; width: 46px; }
+ .baracts .ds-bar-del-false { cursor: no-drop; }
+ .baracts .ds-bar-del:hover { background-position: -138px -22px }
+ .baracts .ds-bar-copy {background-position: -185px 0;width: 75px;margin-left: 0;}
+ .baracts .ds-bar-copy-false { cursor: no-drop; }
+ .baracts .ds-bar-copy:hover { background-position: -185px -22px; }		
+ .baracts .ds-bar-add { background-position: -261px 0; width: 70px }
+ .baracts .ds-bar-add-false { cursor: no-drop; }
+ .baracts .ds-bar-add:hover { background-position: -261px -22px; }
+/*
+.mid_right_contact_content2 {
+    font-size: 12px;
+    height: 33px;
+    line-height: 17px;
+    margin-left: 30px;
+    overflow: hidden;
+    text-align: left;
+    width: 270px;
+}
+*/
+
+#sdkbar .sdk-page-nav{
+	padding-left:15px;
+}
+#sdkbar .sdk-page-nav, #sdkbar .sdk-page-nav li {
+    float: left;
+}
+#sdkbar .sdk-page-nav li a, #sdkbar .sdk-theme-btn a, #sdkbar .sdk-confirm li.mytheme a.mytheme-btn, #sdkbar .sdk-confirm li.preview a, #sdkbar .sdk-confirm li.release a, #sdkbar .sdk-confirm li.exit a, #sdkbar .sdk-global-btn a {
+   background-image: url(/tranzvision/kitchensink/app/view/website/set/images/system/sdkbar.gif); background-repeat: no-repeat;
+	display: block;
+    font-size: 0;
+    height: 29px;
+    line-height: 0;
+    margin-top: 7px;
+    overflow: hidden;
+    text-decoration: none;
+    text-indent: -999em;
+}
+#sdkbar .sdk-page-nav li a:hover {
+}
+#sdkbar .sdk-page-nav li.page-index a {
+    background-position: 0 -43px;
+    position: relative;
+    width: 63px;
+}
+#sdkbar .sdk-page-nav li.page-index a:hover {
+    background-position: 0 -72px;
+    z-index: 3;
+}
+#sdkbar .sdk-page-nav li.page-index a.on {
+    background-position: 0 -101px !important;
+}
+#sdkbar .sdk-page-nav li.page-list a {
+    background-position: -62px -43px;
+    margin-left: -1px;
+    position: relative;
+    width: 71px;
+}
+#sdkbar .sdk-page-nav li.page-list a:hover {
+    background-position: -62px -72px;
+    z-index: 3;
+}
+#sdkbar .sdk-page-nav li.page-list a.on {
+    background-position: -62px -101px !important;
+}
+#sdkbar .sdk-page-nav li.page-detail a {
+    background-position: -132px -43px;
+    margin-left: -1px;
+    position: relative;
+    width: 71px;
+}
+#sdkbar .sdk-page-nav li.page-detail a:hover {
+    background-position: -132px -72px;
+    z-index: 3;
+}
+#sdkbar .sdk-page-nav li.page-detail a.on {
+    background-position: -132px -101px !important;
+}
+
+
+
+#sdkbar, #sdkbar .sdk-confirm li.preview a, #sdkbar .sdk-confirm li.release a, #sdkbar .sdk-confirm li.exit a { background-image: url(/tranzvision/kitchensink/app/view/website/set/images/system/sdkbar.gif); background-repeat: no-repeat }
+
+#sdkbar { position: relative; _position: absolute; z-index: 11001; top: 0; _top: expression(documentElement.scrollTop);
+left: 0; width: 100%; height: 42px; background-color: #2c2c2c; zoom: 1; -moz-box-shadow: 0 3px 3px rgba(0,0,0,0.3); -webkit-box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3) ;display:block}
+
+ #sdkbar .sdk-confirm li.preview a, #sdkbar .sdk-confirm li.release a, #sdkbar .sdk-confirm li.exit a { display: block; height: 29px; margin-top: 7px; font-size: 0; line-height: 0; text-decoration: none; text-indent: -999em; overflow: hidden }
+
+#sdkbar .sdk-confirm { float: right; margin-right: 10px; _display: inline }
+#sdkbar .sdk-confirm li { display: inline-block; *display:inline;*zoom:1;vertical-align: top; }
+#sdkbar .sdk-confirm li.preview a { background-position: -204px -101px; width: 61px; }
+#sdkbar .sdk-confirm li.preview a:hover { background-position: -266px -101px; zoom: 1 }
+#sdkbar .sdk-confirm li.exit a { background-position: 0 -159px; width: 78px; }
+#sdkbar .sdk-confirm li.exit a:hover { background-position: -79px -159px; zoom: 1 }
+#sdkbar .sdk-confirm li.release a { background-position: 0 -130px; width: 78px; }
+#sdkbar .sdk-confirm li.release a:hover { background-position: -79px -130px; zoom: 1 }
+
+
+ .x-grid-cell-topic b {
+            display: block;
+        }
+        .x-grid-cell-topic .x-grid-cell-inner {
+			height:50px;
+			overflow:hidden;
+            white-space: normal;
+			
+        }
+        .x-grid-cell-topic a {
+            color: #385F95;
+            text-decoration: none;
+        }
+        .x-grid-cell-topic a:hover {
+            text-decoration:underline;
+        }
+		.x-grid-cell-topic .x-grid-cell-innerf {
+			padding: 5px;
+		}
+		.x-grid-rowbody {
+	        padding: 0 5px 5px 5px;
+		}
+.x-action-col-icon{
+	margin-top:20px;
+    margin-left:35px;
+}
+.x-tree-node-text{
+	cursor:pointer;
+}

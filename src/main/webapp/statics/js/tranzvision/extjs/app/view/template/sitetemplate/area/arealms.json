@@ -1,0 +1,13 @@
+﻿{
+"total":3,
+"root":[
+    {
+        arealmId: 'A',
+        arealmName: '首页'
+    },
+	{
+        arealmId: 'B',
+        arealmName: '尾页'
+    }
+]
+}

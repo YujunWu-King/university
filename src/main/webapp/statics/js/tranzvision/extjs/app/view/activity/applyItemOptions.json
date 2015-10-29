@@ -1,0 +1,18 @@
+﻿{
+"total":"3",
+"root":[
+    {
+			"transId": "1",
+			"transPxXh": 1,
+			"transName": "选项1"
+		},{
+			"transId": "2",
+			"transPxXh": 2,
+			"transName":"选项2"
+		},{
+			"transId": "3",
+			"transPxXh": 3,
+			"transName": "选项3"
+		}
+	]
+}

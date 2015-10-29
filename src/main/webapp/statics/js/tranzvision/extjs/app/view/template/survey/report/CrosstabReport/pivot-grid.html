@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="google" content="notranslate">
+
+<title>交叉报表</title>
+
+    <link rel="stylesheet" href="/extjslib60/pivot-Grid/pivot-Alone/css/KitchenSink-all_1.css" />
+    <link rel="stylesheet" href="/extjslib60/pivot-Grid/pivot-Alone/css/KitchenSink-all_2.css" />
+
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/ext-all-debug.js"></script>
+
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/pivot.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/Configurator.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/DrillDown.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/Exporter.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/RangeEditor.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/Column.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/Container.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/DragZone.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/DropZone.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/FilterLabelWindow.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/FilterTopWindow.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/FilterValueWindow.js"></script>
+    <script type="text/javascript" src="/extjslib60/pivot-Grid/pivot-Alone/pivot/plugin/configurator/Panel.js"></script>
+
+    <script type="text/javascript">
+        var Ext = Ext || {};
+        Ext.beforeLoad = function(tags){
+            var profile = location.href.match(/profile=([\w-]+)/),
+                    locale = location.href.match(/locale=([\w-]+)/);
+
+            profile  = (profile && profile[1]) || (tags.phone ? 'modern-triton' : 'triton');
+            locale = (locale && locale[1]) || 'en';
+
+            Ext.manifest = profile + "-" + locale;
+            tags.test = /testMode=true/.test(location.search);
+            Ext.microloaderTags = tags;
+        };
+    </script>
+
+    <script type="text/javascript">
+    Ext.onReady(function(){
+        var store1 = new Ext.data.Store({
+            data : [{'id':'1','一级指标':'师资队伍与资源','二级指标':'师生情况','三级指标':'生师比','学校':'河南农业大学','年份':'2020','爱好':'游泳，篮球','原始得分':10},{'id':'6','一级指标':'师资队伍与资源','二级指标':'师生情况','三级指标':'专职教师总数','学校':'河南农业大学','年份':'2020','爱好':'篮球','原始得分':20},{'id':'7','一级指标':'师资队伍与资源','二级指标':'师生情况','三级指标':'专职教师总数','学校':'河南农业大学','年份':'2020','爱好':'篮球','原始得分':20},{'id':'2','一级指标':'师资队伍与资源','二级指标':'专家团队','三级指标':'专家团队','学校':'上海交通大学','年份':'2018','爱好':'足球','原始得分':30},{'id':'3','一级指标':'科学研究','二级指标':'学术论文','三级指标':'国内论文他引次数和','学校':'上海交通大学','年份':'2015','爱好':'电影','原始得分':40},{'id':'4','一级指标':'人才培养','二级指标':'学位论文质量','三级指标':'博士学位论文抽查情况','学校':'河南农业大学','年份':'2014',	'爱好':'运动','原始得分':50},{'id':'5','一级指标':'人才培养','二级指标':'学生国际交流','三级指标':'学生境外交流人数','学校':'河南农业大学','年份':'2015','爱好':'拳击','原始得分':60}],
+			fields : ['id','一级指标','二级指标','三级指标','学校','年份','爱好','原始得分'],
+        });
+        //Grid Panel
+        var grid = new Ext.pivot.Grid({
+            title: 'grid',
+            renderTo: 'div1',
+            columnLines: true,
+            stripeRows : true,
+            loadMask : {msg : 'Loading...'},
+            autoWidth: true,
+            collapsible: true,
+            multiSelect: true,
+            height: 600,
+            selModel: {
+                type: 'spreadsheet'
+            },
+
+            plugins: [
+                {
+                    ptype:'pivotconfigurator',
+                    pluginId:'configurator',
+                    fields:[{dataIndex:'一级指标',header:'一级指标'},{dataIndex:'二级指标',header:'二级指标'},{dataIndex:'三级指标',header:'三级指标'},{dataIndex:'学校',header:'学校'},{dataIndex:'年份',header:'年份'},{dataIndex:'爱好',header:'爱好'}]
+                },
+                {
+                    ptype: 'pivotdrilldown',
+                    pluginId: 'pivotdrilldown',
+                    textWindow: '详细信息',
+                    //columns: [],
+                    //lockableScope:  'top',
+                    width:800,
+                    height:300
+                }
+            ],
+
+            viewConfig: { },
+            store:  store1,
+            aggregate: [{dataIndex: '原始得分',header:'原始得分',aggregator: 'sum'}],
+
+            colSubTotalsPosition:"none",
+            colGrandTotalsPosition:"none",
+            rowSubTotalsPosition:"none",
+            rowGrandTotalsPosition:"none",
+        });
+    });
+    </script>
+    </head>
+
+    <body>
+        <div id="div1">
+
+        </div>
+    </body>
+</html>

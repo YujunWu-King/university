@@ -1,0 +1,96 @@
+﻿{
+"root":[
+    {
+    		imageId: 'tz_image_0001',
+    		imagePriority: 1,
+        imageUrl: 'http://localhost/test.jpg',
+        imageDesc: '图片1.jpg',
+        imageTrsUrl: 'http://localhost/test.jpg',
+        imageTrsTitle: '图片1.jpg',
+        sysImageName: '232132.jpg'
+    },
+		{
+        imageId: 'tz_image_0002',
+    		imagePriority: 2,
+        imageUrl: 'http://localhost/1.jpg',
+        imageDesc: '图片2.jpg',
+        imageTrsUrl: 'http://localhost/1.jpg',
+        imageTrsTitle: '图片2.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0003',
+    		imagePriority: 3,
+        imageUrl: 'http://localhost/3.jpg',
+        imageDesc: '图片3.jpg',
+        imageTrsUrl: 'http://localhost/3.jpg',
+        imageTrsTitle: '图片3.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0004',
+    		imagePriority: 4,
+        imageUrl: 'http://localhost/4.jpg',
+        imageDesc: '图片2.jpg',
+        imageTrsUrl: 'http://localhost/4.jpg',
+        imageTrsTitle: '图片4.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0005',
+    		imagePriority: 5,
+        imageUrl: 'http://localhost/5.jpg',
+        imageDesc: '图片2.jpg',
+        imageTrsUrl: 'http://localhost/5.jpg',
+        imageTrsTitle: '图片5.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0006',
+    		imagePriority: 6,
+        imageUrl: 'http://localhost/6.jpg',
+        imageDesc: '图片6.jpg',
+        imageTrsUrl: 'http://localhost/6.jpg',
+        imageTrsTitle: '图片6.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0007',
+    		imagePriority: 2,
+        imageUrl: 'http://localhost/7.jpg',
+        imageDesc: '图片2.jpg',
+        imageTrsUrl: 'http://localhost/7.jpg',
+        imageTrsTitle: '图片7.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0008',
+    		imagePriority: 8,
+        imageUrl: 'http://localhost/8.jpg',
+        imageDesc: '图片2.jpg',
+        imageTrsUrl: 'http://localhost/8.jpg',
+        imageTrsTitle: '图片8.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0009',
+    		imagePriority: 9,
+        imageUrl: 'http://localhost/9.jpg',
+        imageDesc: '图片9.jpg',
+        imageTrsUrl: 'http://localhost/9.jpg',
+        imageTrsTitle: '图片9.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0020',
+    		imagePriority: 10,
+        imageUrl: 'http://localhost/10.jpg',
+        imageDesc: '图片10.jpg',
+        imageTrsUrl: 'http://localhost/10.jpg',
+        imageTrsTitle: '图片10.jpg',
+        sysImageName: '232132.jpg'
+    },{
+        imageId: 'tz_image_0011',
+    		imagePriority: 11,
+        imageUrl: 'http://localhost/11.jpg',
+        imageDesc: '图片11.jpg',
+        imageTrsUrl: 'http://localhost/11.jpg',
+        imageTrsTitle: '图片11.jpg',
+        sysImageName: '232132.jpg'
+    }
+]
+}
+
+

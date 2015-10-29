@@ -1,0 +1,27 @@
+﻿{
+"total":"3",
+"root":[
+    {
+			"activityId":"663",
+			"applyItemId":"TZ_CYR_NAME",
+			"applyItemNum":1,
+			"applyItemName":"姓名",
+			"applyItemRequired":"true",
+			"applyItemType":"1"
+		},{
+			"activityId":"663",
+			"applyItemId":"TZ_ZY_SJ",
+			"applyItemNum":2,
+			"applyItemName":"手机",
+			"applyItemRequired":"true",
+			"applyItemType":"1"
+		},{
+			"activityId":"663",
+			"applyItemId":"TZ_ZY_EMAIL",
+			"applyItemNum":3,
+			"applyItemName":"邮箱",
+			"applyItemRequired":"true",
+			"applyItemType":"1"
+		}
+	]
+}

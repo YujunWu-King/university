@@ -1,0 +1,17 @@
+﻿{
+    "total": 2,
+    "root": [
+        {
+            "oprid": "Z001",
+            "judgeName": "张晓松",
+            "judgeType": "001",
+			"judTypeDesc":"材料评审评委"
+        },
+        {
+            "oprid": "E002",
+            "judgeName": "李海清",
+            "judgeType": "002",
+			"judTypeDesc":"面试评审评委"
+        }
+    ]
+}

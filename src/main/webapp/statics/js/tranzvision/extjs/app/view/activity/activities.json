@@ -1,0 +1,106 @@
+﻿{
+"total":11,
+"root":[
+    {
+        "activityId": "1",    
+        "activityName": "测试活动1",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },
+	 {
+        "activityId": "2",
+        "activityName": "测试活动2",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+       "activityId": "3",
+        "activityName": "测试活动3",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+        "activityId": "4",
+        "activityName": "测试活动4",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+       "activityId": "5",
+        "activityName": "测试活动5",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+        "activityId": "6",
+        "activityName": "测试活动6",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+       "activityId": "7",
+        "activityName": "测试活动7",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+        "activityId": "8",
+        "activityName": "测试活动8",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+        "activityId": "9",
+        "activityName": "测试活动9",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+       "activityId": "10",
+        "activityName": "测试活动10",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    },{
+        "activityId": "11",
+        "activityName": "测试活动11",
+        "activityPlace": "上海交通大学",
+        "activityStartDate": "2015-04-12",
+			  "activityEndDate": "2015-04-12",
+			  "applyStartDate": "2015-03-20",
+			  "applyEndDate": "2015-04-10",
+			  "applyNum": "100"
+    }
+	]
+}

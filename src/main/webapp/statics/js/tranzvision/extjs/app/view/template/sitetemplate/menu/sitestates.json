@@ -1,0 +1,13 @@
+﻿{
+"total":2,
+"root":[
+    {
+        sitestateId: 'Y',
+        sitestateName: '有效'
+    },
+	{
+        sitestateId: 'N',
+        sitestateName: '无效'
+    }
+]
+}

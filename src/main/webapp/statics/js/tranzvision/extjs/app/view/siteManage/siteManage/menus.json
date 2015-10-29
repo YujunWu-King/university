@@ -1,0 +1,23 @@
+{
+"total":"17",
+"root":[
+    {
+        menuId: 'MENU_1',
+        menuName: '首页',
+        menuType: '首页'
+    },
+	{
+        menuId: 'MENU_2',
+        menuName: '活动预告',
+        menuType: '活动预告'
+    },{
+        menuId: 'MENU_3',
+        menuName: '新闻通知',
+        menuType: '新闻通知'
+    },{
+        menuId: 'MENU_4',
+        menuName: '在线报名',
+        menuType: '在线报名'
+    }
+]
+}

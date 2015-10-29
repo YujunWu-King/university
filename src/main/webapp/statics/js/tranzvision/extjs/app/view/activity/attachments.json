@@ -1,0 +1,27 @@
+﻿{
+"total":"10",
+"root":[
+    {
+        attachmentID: '111111111',
+        attachmentName: '附件名称1',
+        attachmentUrl:'xxxxxxxx'
+    },
+	{
+        attachmentID: '222222',
+        attachmentName: '附件名称2',
+        attachmentUrl:'xxxxxxxx'
+    },{
+        attachmentID: '3333333',
+        attachmentName: '附件名称3',
+        attachmentUrl:'xxxxxxxx'
+    },{
+         attachmentID: '4444444444',
+        attachmentName: '附件名称4',
+        attachmentUrl:'xxxxxxxx'
+    },{
+        attachmentID: '555555555',
+        attachmentName: '附件名称5',
+        attachmentUrl:'xxxxxxxx'
+    }
+]
+}

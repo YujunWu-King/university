@@ -1,0 +1,19 @@
+﻿{
+    "comContent": {
+        "total": 2,
+        "root": [
+            {
+                modelId: 'GXH',
+                modelName: '个性化邮件'
+            },
+            {
+                modelId: 'DZMP',
+                modelName: '电子门票邮件'
+            }
+        ]
+    },
+    "state": {
+        "errcode": 0,
+        "errdesc": ""
+    }
+}

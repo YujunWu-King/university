@@ -1,0 +1,65 @@
+{
+"total":"20",
+"root":[
+    {
+        "tplid": "1",
+        "tplname": "清华夏列营招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+         "tplid": "1",
+        "tplname": "清华MBA招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+        "tplid": "1",
+        "tplname": "清华夏列营招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+         "tplid": "1",
+        "tplname": "清华MBA招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	 {
+        "tplid": "1",
+        "tplname": "清华夏列营招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+         "tplid": "1",
+        "tplname": "清华MBA招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+        "tplid": "1",
+        "tplname": "清华夏列营招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+         "tplid": "1",
+        "tplname": "清华MBA招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+        "tplid": "1",
+        "tplname": "清华夏列营招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    },
+	{
+         "tplid": "1",
+        "tplname": "清华MBA招生模板",
+		"activestate":"Y",
+		"activestatedesc":"有效"
+    }
+]
+}

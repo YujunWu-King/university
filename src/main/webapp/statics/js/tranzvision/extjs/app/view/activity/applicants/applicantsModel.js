@@ -1,0 +1,37 @@
+Ext.define('KitchenSink.view.activity.applicants.applicantsModel', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'activityId'},//活动编号
+		{name: 'applicantsId'},//报名人编号
+        {name: 'TZ_CYR_NAME'},//姓名
+        {name: 'TZ_ZY_SJ'},//手机号码
+		{name: 'TZ_ZY_EMAIL'},//电子邮箱
+		{name: 'applyStatus'},//报名状态
+		{name: 'channel'},//报名渠道
+		{name: 'signStatus'},//签到状态
+		{name: 'remark'},//备注
+		{name: 'isReg'},//是否注册
+		{name: 'applyTime'},//报名时间
+		{name: 'signCode'},//活动签到码
+		{name: 'TZ_ZXBM_XXX_001'},
+		{name: 'TZ_ZXBM_XXX_002'},
+		{name: 'TZ_ZXBM_XXX_003'},
+		{name: 'TZ_ZXBM_XXX_004'},
+		{name: 'TZ_ZXBM_XXX_005'},
+		{name: 'TZ_ZXBM_XXX_006'},
+		{name: 'TZ_ZXBM_XXX_007'},
+		{name: 'TZ_ZXBM_XXX_008'},
+		{name: 'TZ_ZXBM_XXX_009'},
+		{name: 'TZ_ZXBM_XXX_010'},
+		{name: 'TZ_ZXBM_XXX_011'},
+		{name: 'TZ_ZXBM_XXX_012'},
+		{name: 'TZ_ZXBM_XXX_013'},
+		{name: 'TZ_ZXBM_XXX_014'},
+		{name: 'TZ_ZXBM_XXX_015'},
+		{name: 'TZ_ZXBM_XXX_016'},
+		{name: 'TZ_ZXBM_XXX_017'},
+		{name: 'TZ_ZXBM_XXX_018'},
+		{name: 'TZ_ZXBM_XXX_019'},
+		{name: 'TZ_ZXBM_XXX_020'}
+	]
+});

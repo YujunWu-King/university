@@ -1,0 +1,23 @@
+﻿[
+    {
+        comID: 'TZ_AQ_COMREG_COM',
+		pageID: 'TZ_AQ_COMGL_STD',
+        pageName: '组件注册管理页面',
+		isDefault: 'Y',
+		orderNum: 1
+    },
+	{
+       comID: 'TZ_AQ_COMREG_COM',
+	   pageID: 'TZ_AQ_COMREG_STD',
+       pageName: '组件注册信息页面',
+	   isDefault: 'N',
+	   orderNum: 2
+    },
+	{
+        comID: 'TZ_AQ_COMREG_COM',
+		pageID: 'TZ_AQ_PAGEREG_STD',
+        pageName: '页面注册信息页面',
+	    isDefault: 'N',
+	    orderNum: 3
+    }
+]

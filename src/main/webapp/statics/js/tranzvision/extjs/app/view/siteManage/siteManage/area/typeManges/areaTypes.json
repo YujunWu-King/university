@@ -1,0 +1,53 @@
+﻿{
+"total":11,
+"root":[
+    {
+        areatypeId: 'A',
+        areatypeName: '个人信息区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'B',
+        areatypeName: '活动预告区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'C',
+        areatypeName: '新闻列表区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'D',
+        areatypeName: '左侧菜单区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'E',
+        areatypeName: '页头区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'F',
+        areatypeName: '页尾区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'G',
+        areatypeName: '联系信息区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    },
+	{
+        areatypeId: 'H',
+        areatypeName: '右侧广告栏位区',
+	areatypePersonApp: 'TZ_APP_PAG:TZ_APP_CLS',
+	areatypeCodeApp: 'TZ_APP_PAG:TZ_APP_CLS'
+    }
+]
+}

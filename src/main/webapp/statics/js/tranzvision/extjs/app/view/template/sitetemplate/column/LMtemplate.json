@@ -1,0 +1,25 @@
+﻿{
+"total":5,
+"root":[
+    {
+        areatypeId: 'A',
+        areatypeName: '栏目模板一'
+    },
+	{
+        areatypeId: 'B',
+        areatypeName: '栏目模板二'
+    },
+	{
+        areatypeId: 'C',
+        areatypeName: '栏目模板三'
+    },
+	{
+        areatypeId: 'D',
+        areatypeName: '栏目模板四'
+    },
+	{
+        areatypeId: 'E',
+        areatypeName: '栏目模板五'
+    }
+]
+}

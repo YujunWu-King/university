@@ -1,0 +1,25 @@
+﻿{
+    "total":5,
+    "root":[
+    {
+        orgId: 'MBA',
+        orgName: 'MBA中心'
+    },
+	{
+        orgId: 'EMBA',
+        orgName: 'EMBA中心'
+    },
+	{
+        orgId: 'EDP',
+        orgName: 'EDP中心'
+    },
+    {
+        orgId: 'SHARE',
+        orgName: '共享'
+    },
+    {
+        orgId: 'ALN01',
+        orgName: '校友办'
+    }
+]
+}

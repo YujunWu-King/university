@@ -1,0 +1,56 @@
+﻿{
+"total":11,
+"root":[
+    {
+        siteId:'SITEM_10',
+        sitetemplateName: '北京大学光华管理学院MBA招生系统',
+        explanation: '###',
+       
+    },{
+    	siteId:'SITEM_11',
+        sitetemplateName: '北京大学光华管理学院EXED招生系统',
+        explanation: '###',
+       
+    },{
+    	siteId:'SITEM_12',
+        sitetemplateName: '北京大学光华管理学院研究生招生系统',
+        explanation: '###',
+        
+    },{
+    	siteId:'SITEM_13',
+        sitetemplateName: '北京大学光华管理学院EMBA招生系统',
+        explanation: '###',
+       
+    },{
+    	siteId:'SITEM_14',
+        sitetemplateName: '北京大学光华管理学院本硕博系统',
+        explanation: '###',
+       
+    },{
+        siteId:'SITEM_15',
+        sitetemplateName: '北京大学光华管理学院留学生系统',
+        explanation: '###',
+       
+    },{
+        siteId:'SITEM_16',
+        sitetemplateName: '...',
+        explanation: '###',
+      
+    },{
+        siteId:'SITEM_17',
+        sitetemplateName: '...',
+        explanation: '###',
+   
+    },{
+        siteId:'SITEM_18',
+        sitetemplateName: '...',
+        explanation: '###',
+     
+    },{
+        siteId:'SITEM_19',
+        sitetemplateName: '...',
+        explanation: '###',
+      
+    }
+]
+}

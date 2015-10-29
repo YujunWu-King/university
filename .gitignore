@@ -1,5 +1,7 @@
 /target
 /target/*
+/src/main/webapp/statics/js/tmp
+/src/main/webapp/statics/js/tmp/*
 /src/main/resources/conf/jdbc.properties
 /src/main/resources/conf/log4j.properties
 /src/main/webapp/WEB-INF/logs/*.log

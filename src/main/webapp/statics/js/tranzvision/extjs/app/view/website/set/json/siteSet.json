@@ -1,0 +1,39 @@
+﻿
+[
+            {
+                "text": "站点基本信息",
+                "url": "#",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/kitchensink.gif",
+                "desc": "查看、编辑站点基本信息；管理站点皮肤、模板、栏目、区域、菜单等信息"
+            },
+            {
+                "text": "站点风格选择",
+                "url": "#",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/feeds.png",
+                "desc": "浏览所有站点模板风格，可以重置站点的整体风格"
+            },
+            {
+                "text": "站点首页设置",
+                "url": "http://202.120.24.169:9550/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_ZSPT_D.TZ_FUNC_D.FieldFormula.IScript_SetHomePage",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/calendar.png",
+                "desc": "设置当前站点首页显示风格、布局、样式"
+            },
+            {
+                "text": "站点登录页设置",
+                "url": "#",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/desktop.png",
+                "desc": "设置当前站点登录显示风格、布局、样式"
+            },
+            {
+                "text": "站点注册页设置",
+                "url": "#",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/portal.png",
+                "desc": "设置当前站点注册显示风格、布局、样式"
+            },
+            {
+                "text": "站点内容管理",
+                "url": "#",
+                "icon": "tranzvision/kitchensink/app/view/website/set/images/sandbox.gif",
+                "desc": "在当前站点下发布内容，例如新闻、活动等信息"
+            }
+        ]

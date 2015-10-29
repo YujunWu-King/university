@@ -1,0 +1,38 @@
+﻿{
+"total":7,
+"root":[
+    {
+        areapositionId: 'A',
+        areapositionName: '活动'
+    },
+	{
+        areapositionId: 'B',
+        areapositionName: '新闻'
+    }
+    ,
+	{
+        areapositionId: 'C',
+        areapositionName: '单页'
+    }
+    ,
+	{
+        areapositionId: 'D',
+        areapositionName: 'FAQ'
+    }
+    ,
+	{
+        areapositionId: 'E',
+        areapositionName: '焦点图'
+    }
+	,
+	{
+        areapositionId: 'F',
+        areapositionName: '附件集'
+    }
+	,
+	{
+        areapositionId: 'G',
+        areapositionName: '视频集'
+    }
+]
+}

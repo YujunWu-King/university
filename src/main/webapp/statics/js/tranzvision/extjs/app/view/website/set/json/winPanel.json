@@ -1,0 +1,242 @@
+{
+    "success": true,
+    "items": 
+        {
+            "container": [
+	    
+                {
+                    "xtype": "container",
+                    "items": [
+			{
+			 "xtype":"textfield",
+			 "fieldLabel": "输入框",
+			 "name":"text",
+			},
+			{
+			   "xtype":"radio",
+			    "fieldLabel": "单选按钮",
+                            "id": "",
+                            "name": "radio",
+			    "inputValue":"Y",
+			    "uncheckedValue":"N"
+			},
+			{
+			 "xtype": "radiogroup",
+			 "fieldLabel": "单选按钮组",
+		         "items": [
+			   { "boxLabel": "小", "name": "radiogroup", "inputValue": "S" },
+			   { "boxLabel": "中", "name": "radiogroup", "inputValue": "M" },
+			   { "boxLabel": "大", "name": "radiogroup", "inputValue": "L" },
+			   { "boxLabel": "超大", "name": "radiogroup", "inputValue": "XL" }
+		       ]
+		      },
+			{
+			 "xtype":"numberfield",
+			 "fieldLabel": "数字",
+			 "name":"number",
+			 "minValue":0,
+			 "maxValue":99
+			},
+			{
+			 "xtype":"datefield",
+			 "fieldLabel": "日期",
+			 "name":"date",
+			 "minValue":"2014-01-01",
+			 "maxValue":"2115-01-01",
+			 "format":"Y/m/d"
+			},
+			{
+			 "xtype":"timefield",
+			 "fieldLabel": "时间",
+			 "name":"time",
+			 "minValue": '00:00',
+			 "maxValue": '23:30',
+			 "increment": 30,
+			 "format":'H:i'
+			},
+			{
+			 "xtype": "checkboxgroup",
+			 "fieldLabel": "复选框组",
+		         "columns": 4,
+		         "items": [
+			   { "boxLabel": "阅读", "name": "checkboxgroup", "inputValue": "1" },
+			   { "boxLabel": "摄影", "name": "checkboxgroup", "inputValue": "2" },
+			   { "boxLabel": "音乐", "name": "checkboxgroup", "inputValue": "3" },
+			   { "boxLabel": "跳舞", "name": "checkboxgroup", "inputValue": "4" }
+		       ]
+		      },
+			{
+			   "xtype":"checkbox",
+			    "fieldLabel": "复选框",
+                            "id": "",
+                            "name": "checkbox",
+                            "readOnly": false,
+			    "inputValue":"Y",
+			    "uncheckedValue":"N"
+			},
+			{
+                            "xtype": "combo",
+                            "fieldLabel": "组合框",
+                            "id": "",
+                            "name": "combo",
+                            "readOnly": false,
+                            "store": "",
+                            "fields": [
+                                "value",
+                                "text"
+                            ],
+                            "data": [
+                                [
+                                    "A",
+                                    "教室1"
+                                ],
+                                [
+                                    "B",
+                                    "会议室1"
+                                ],
+                                [
+                                    "C",
+                                    "贵宾厅1"
+                                ],
+                                [
+                                    "D",
+                                    "报告厅1"
+                                ],
+                                [
+                                    "E",
+                                    "讨论室1"
+                                ],
+                                [
+                                    "O",
+                                    "其他1"
+                                ],
+                                [
+                                    "W",
+                                    "全部1"
+                                ]
+                            ],
+                            "displayField": "text",
+                            "valueField": "value"
+                        },
+			{
+				 "xtype"     : "textarea",
+				 "grow"      : true,
+				 "name"      : "textarea",
+				 "fieldLabel": "文本域"
+			},
+			{
+				"xtype":"colorpicker",
+				"name"      : "颜色选择器",
+				"fieldLabel": "颜色选择器"
+			},
+			{
+				 "xtype": "filefield",
+				 "name": "filefield",
+				 "fieldLabel": "文件",
+				 "buttonText": "选择..."
+			}
+                    ]
+                }
+            ],
+            "tabpanel": [
+                {
+                    "title": "属性组一",
+                    "items": [
+                        {
+                            "xtype": "combo",
+                            "fieldLabel": "First Name",
+                            "id": "",
+                            "name": "first",
+                            "readOnly": false,
+                            "store": "",
+                            "fields": [
+                                "value",
+                                "text"
+                            ],
+                            "data": [
+                                [
+                                    "A",
+                                    "教室1"
+                                ],
+                                [
+                                    "B",
+                                    "会议室1"
+                                ],
+                                [
+                                    "C",
+                                    "贵宾厅1"
+                                ],
+                                [
+                                    "D",
+                                    "报告厅"
+                                ],
+                                [
+                                    "E",
+                                    "讨论室"
+                                ],
+                                [
+                                    "O",
+                                    "其他"
+                                ],
+                                [
+                                    "W",
+                                    "全部"
+                                ]
+                            ],
+                            "displayField": "text",
+                            "valueField": "value"
+                        }
+                    ]
+                },
+		{
+                    "title": "属性组二",
+                    "items": [
+                        {
+                            "xtype": "combo",
+                            "fieldLabel": "Last Name",
+                            "id": "",
+                            "name": "last",
+                            "readOnly": false,
+                            "store": "",
+                            "fields": [
+                                "value",
+                                "text"
+                            ],
+                            "data": [
+                                [
+                                    "A",
+                                    "教室2"
+                                ],
+                                [
+                                    "B",
+                                    "会议室2"
+                                ],
+                                [
+                                    "C",
+                                    "贵宾厅2"
+                                ],
+                                [
+                                    "D",
+                                    "报告厅"
+                                ],
+                                [
+                                    "E",
+                                    "讨论室"
+                                ],
+                                [
+                                    "O",
+                                    "其他"
+                                ],
+                                [
+                                    "W",
+                                    "全部"
+                                ]
+                            ],
+                            "displayField": "text",
+                            "valueField": "value"
+                        }
+                    ]
+                }
+            ]
+        }
+}

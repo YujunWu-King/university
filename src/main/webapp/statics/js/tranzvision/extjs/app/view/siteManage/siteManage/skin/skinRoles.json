@@ -1,0 +1,30 @@
+﻿[
+    {
+        pictureID: '000001021',
+        pictureRanking: '1',
+        pictureName: '图片1',
+        name: 'www.baidu.com'
+		
+    },
+	{
+        pictureID: '000001022',
+        pictureRanking: '2',
+        pictureName: '图片2',
+        name: 'www.baidu.com'
+    },{
+        pictureID: '000001023',
+        pictureRanking: '3',
+        pictureName: '图片3',
+        name: 'www.baidu.com'
+    },{
+       pictureID: '000001024',
+        pictureRanking: '4',
+        pictureName: '图片4',
+        name: 'www.baidu.com'
+    },{
+        pictureID: '000001024',
+        pictureRanking: '4',
+        pictureName: '图片4',
+        name: 'www.baidu.com'
+    }
+]

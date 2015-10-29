@@ -1,0 +1,54 @@
+﻿{
+"total":8,
+"root":[
+    {
+        "sendStatus": "部分成功",
+        "sendCount": "10",
+        "successNum": "9",
+        "failedNum": "1",
+		"sendDate": "2015-03-09 12:02:26"
+    },{
+        "sendStatus": "部分成功",
+        "sendCount": "15",
+        "successNum": "12",
+        "failedNum": "3",
+		"sendDate": "2015-02-23 09:22:28"
+    },{
+        "sendStatus": "发送失败",
+        "sendCount": "5",
+        "successNum": "0",
+        "failedNum": "5",
+		"sendDate": "2015-03-12 14:02:52"
+    },{
+        "sendStatus": "发送成功",
+        "sendCount": "7",
+        "successNum": "7",
+        "failedNum": "0",
+		"sendDate": "2015-03-02 15:02:20"
+    },{
+        "sendStatus": "部分成功",
+        "sendCount": "13",
+        "successNum": "9",
+        "failedNum": "4",
+		"sendDate": "2015-02-19 10:02:26"
+    },{
+        "sendStatus": "发送成功",
+        "sendCount": "17",
+        "successNum": "17",
+        "failedNum": "0",
+		"sendDate": "2015-03-19 16:22:26"
+    },{
+        "sendStatus": "发送成功",
+        "sendCount": "11",
+        "successNum": "11",
+        "failedNum": "0",
+		"sendDate": "2015-03-02 19:27:26"
+    },{
+        "sendStatus": "部分成功",
+        "sendCount": "21",
+        "successNum": "20",
+        "failedNum": "1",
+		"sendDate": "2015-02-29 15:24:46"
+    }
+	]
+}

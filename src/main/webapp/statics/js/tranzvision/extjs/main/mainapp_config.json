@@ -1,0 +1,207 @@
+{
+  "cn":
+  {
+    "languagePackage":
+    {
+      "tz-frmwrk-lang-00001":"主菜单",
+      "tz-frmwrk-lang-00002":"搜索",
+      "tz-frmwrk-lang-00003":"内容",
+      "tz-frmwrk-lang-00004":"详细信息",
+      "tz-frmwrk-lang-00005":"最大化详细信息窗口",
+      "tz-frmwrk-lang-00006":"切换到导航菜单模式",
+      "tz-frmwrk-lang-00007":"切换到树型菜单模式",
+      "tz-frmwrk-lang-00008":"无法加载当前指定菜单项对应的应用程序代码资源。",
+      "tz-frmwrk-lang-00009":"无法获取当前指定菜单项对应的实例对象。",
+      "tz-frmwrk-lang-00010":"菜单导航页",
+      "tz-frmwrk-lang-00011":"没有找到指定功能页面，您将被导航到系统开始功能页面。"
+    }
+  },
+  "en":
+  {
+    "languagePackage":
+    {
+      "tz-frmwrk-lang-00001":"Main Menu",
+      "tz-frmwrk-lang-00002":"Search",
+      "tz-frmwrk-lang-00003":"Content",
+      "tz-frmwrk-lang-00004":"Details",
+      "tz-frmwrk-lang-00005":"Maximize Details Window",
+      "tz-frmwrk-lang-00006":"Switch to Breadcrumb View",
+      "tz-frmwrk-lang-00007":"Switch to Tree View",
+      "tz-frmwrk-lang-00008":"Failed to load the application code resource corresponding to the currently specified menu item.",
+      "tz-frmwrk-lang-00009":"Failed to get the instance object corresponding to the currently specified menu item.",
+      "tz-frmwrk-lang-00010":"Menu Navigate",
+      "tz-frmwrk-lang-00011":"The function view could not be found. You will be taken to the application\'s start."
+    }
+  },
+  "resources":
+  {
+    "neptune":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-neptune/build",
+              "name": ["ext-theme-neptune.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/neptune/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+	    {
+              "path": "/tranzvision/kitchensink/app/view/website/set/css",
+              "name": ["siteSet.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-neptune/build/resources",
+              "name": ["ext-theme-neptune-all.css"]
+            }
+          ]
+        }
+      }
+    ],
+    "neptune-touch":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-neptune-touch/build",
+              "name": ["ext-theme-neptune-touch.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/neptune-touch/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+	    {
+              "path": "/tranzvision/kitchensink/app/view/website/set/css",
+              "name": ["siteSet.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-neptune-touch/build/resources",
+              "name": ["ext-theme-neptune-touch-all.css"]
+            }
+          ]
+        }
+      }
+    ],
+    "crisp":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-crisp/build",
+              "name": ["ext-theme-crisp.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/crisp/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-crisp/build/resources",
+              "name": ["ext-theme-crisp-all.css"]
+            }
+          ]
+        }
+      }
+    ],
+    "crisp-touch":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-crisp-touch/build",
+              "name": ["ext-theme-crisp-touch.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/crisp-touch/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-crisp-touch/build/resources",
+              "name": ["ext-theme-crisp-touch-all.css"]
+            }
+          ]
+        }
+      }
+    ],
+    "classic":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-classic/build",
+              "name": ["ext-theme-classic.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/classic/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-classic/build/resources",
+              "name": ["ext-theme-classic-all.css"]
+            }
+          ]
+        }
+      }
+    ],
+    "gray":
+    [
+      {
+        "index": 1,
+        "reid": "mkca_base_01",
+        "required": true,
+        "content": {
+          "js": [
+            {
+              "path": "/extjslib51/packages/ext-theme-gray/build",
+              "name": ["ext-theme-gray.js"]
+            }
+          ],
+          "css": [
+            {
+              "path": "/tranzvision/kitchensink/gray/resources",
+              "name": ["KitchenSink-all.css"]
+            },
+            {
+              "path": "/extjslib51/packages/ext-theme-gray/build/resources",
+              "name": ["ext-theme-gray-all.css"]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "state": {
+    "errcode": 0,
+    "errdesc": "success"
+  }
+}

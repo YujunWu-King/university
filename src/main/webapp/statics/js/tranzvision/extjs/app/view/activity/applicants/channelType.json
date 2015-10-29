@@ -1,0 +1,29 @@
+﻿{
+"total":6,
+"root":[
+    {
+        channelId: 'A',
+        channelName: '手机'
+    },
+	{
+        channelId: 'B',
+        channelName: '网站'
+    },
+	{
+        channelId: 'C',
+        channelName: '短信'
+    },
+	{
+        channelId: 'D',
+        channelName: '邮件'
+    },
+	{
+        channelId: 'E',
+        channelName: '电话'
+    },
+	{
+        channelId: 'F',
+        channelName: '现场报名'
+    }
+]
+}

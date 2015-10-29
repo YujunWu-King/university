@@ -1,0 +1,42 @@
+﻿{
+"total":9,
+"root":[
+    {
+        menutypeId: 'A',
+        menutypeName: '首页'
+    },
+	{
+        menutypeId: 'B',
+        menutypeName: '活动预告'
+    },
+	{
+        menutypeId: 'C',
+        menutypeName: '新闻通知'
+    },
+	{
+        menutypeId: 'D',
+        menutypeName: '在线申请'
+    },
+	{
+        menutypeId: 'E',
+        menutypeName: '账号管理'
+    },
+	{
+        menutypeId: 'F',
+        menutypeName: '单页'
+    },
+	{
+        menutypeId: 'G',
+        menutypeName: '超链接'
+    },
+	{
+        menutypeId: 'H',
+        menutypeName: 'FAQ'
+    },
+        {
+        menutypeId: 'I',
+        menutypeName: '资料下载'
+    }
+]
+}
+

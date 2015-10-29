@@ -1,0 +1,69 @@
+﻿{
+"total":11,
+"root":[
+    {
+        menutypeId: 'A',
+        menutypeName: '首页',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'B',
+        menutypeName: '活动预告',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'C',
+        menutypeName: '新闻通知',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'D',
+        menutypeName: '在线申请',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'E',
+        menutypeName: '账号管理',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'F',
+        menutypeName: '单页',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'G',
+        menutypeName: '超链接',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'H',
+        menutypeName: 'FAQ',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    },{
+        menutypeId: 'I',
+        menutypeName: '资料下载',
+	sitestate: '有效',
+	agreebuildmenu: 'Y',
+	menuPersonDealCode: 'TZ_APP_PAG:TZ_APP_CLS',
+	menuStuDealCode: 'TZ_APP_PAG:TZ_APP_CLS'
+    }
+]
+}

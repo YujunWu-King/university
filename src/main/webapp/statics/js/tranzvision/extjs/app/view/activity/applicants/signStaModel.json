@@ -1,0 +1,21 @@
+﻿{
+"total":4,
+"root":[
+    {
+        signStaId: 'A',
+        signStaName: '已参与'
+    },
+	{
+        signStaId: 'B',
+        signStaName: '其他原因未参与'
+    },
+	{
+        signStaId: 'C',
+        signStaName: '无故缺席'
+    },
+	{
+        signStaId: 'D',
+        signStaName: '请假'
+    }
+]
+}

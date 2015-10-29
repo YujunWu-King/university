@@ -1,0 +1,37 @@
+﻿{
+"total":3,
+"root":[
+    {
+        areatypeId: 'A',
+        areatypeName: '个人信息区'
+    },
+	{
+        areatypeId: 'B',
+        areatypeName: '活动预告区'
+    },
+	{
+        areatypeId: 'C',
+        areatypeName: '新闻列表区'
+    },
+	{
+        areatypeId: 'D',
+        areatypeName: '左侧菜单区'
+    },
+	{
+        areatypeId: 'E',
+        areatypeName: '页头区'
+    },
+	{
+        areatypeId: 'F',
+        areatypeName: '页尾区'
+    },
+	{
+        areatypeId: 'G',
+        areatypeName: '联系信息区'
+    },
+	{
+        areatypeId: 'H',
+        areatypeName: '右侧广告栏位区'
+    }
+]
+}

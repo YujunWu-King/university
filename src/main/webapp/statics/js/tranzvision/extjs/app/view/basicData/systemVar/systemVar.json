@@ -1,0 +1,26 @@
+﻿{
+"total":5,
+"root":[
+    {
+        "sysVarID": "TZ_XTBL_001",
+        "sysVarName": "我的系统变量001",
+        "isValid": "Y"
+    },{
+        "sysVarID": "TZ_XTBL_002",
+        "sysVarName": "我的系统变量002",
+        "isValid": "N"
+    },{
+        "sysVarID": "TZ_XTBL_003",
+        "sysVarName": "我的系统变量003",
+        "isValid": "Y"
+    },{
+        "sysVarID": "TZ_XTBL_004",
+        "sysVarName": "我的系统变量004",
+        "isValid": "Y"
+    },{
+        "sysVarID": "TZ_XTBL_005",
+        "sysVarName": "我的系统变量005",
+        "isValid": "Y"
+    }
+	]
+}

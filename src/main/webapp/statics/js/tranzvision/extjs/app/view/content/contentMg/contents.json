@@ -1,0 +1,41 @@
+﻿{
+"total":24,
+"root":[
+    {
+        //isEnable:0,
+        articleTitle:'北京大学光华管理学院MBA招生系统',
+        releaseTime:'2015/12/12 12:24:10',
+        lastUpdate:'刘豆豆',
+        releaseOrUndo:'0',
+        topOrUndo:'1'
+    },{
+        //isEnable:1,
+        articleTitle:'北京大学光华管理学院MBA招生系统',
+        releaseTime:'2015/12/12 12:24:10',
+        lastUpdate:'刘豆豆',
+        releaseOrUndo:'0',
+        topOrUndo:'1'
+    },{
+        //isEnable:1,
+        articleTitle:'北京大学光华管理学院MBA招生系统',
+        releaseTime:'2015/12/12 12:24:10',
+        lastUpdate:'刘豆豆',
+        releaseOrUndo:'0',
+        topOrUndo:'1'
+    },{
+        //isEnable:0,
+        articleTitle:'北京大学光华管理学院MBA招生系统',
+        releaseTime:'2015/12/12 12:24:10',
+        lastUpdate:'刘豆豆',
+        releaseOrUndo:'0',
+        topOrUndo:'1'
+    },{
+        //isEnable:0,
+        articleTitle:'北京大学光华管理学院MBA招生系统',
+        releaseTime:'2015/12/12 12:24:10',
+        lastUpdate:'刘豆豆',
+        releaseOrUndo:'0',
+        topOrUndo:'1'
+    }
+]
+}

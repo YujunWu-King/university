@@ -1,0 +1,75 @@
+﻿{
+"total":5,
+"root":[
+    {
+        "activityId": "1",
+        "applicantsId": "1",
+        "name": "张三",
+        "mobile": "13877273888",
+		"email": "zhangSan@163.com",
+		"applyStatus": "1",
+		"channel": "WZ",
+		"signStatus": "YCY",
+		"remark": "参与活动积极者",
+		"isReg": "Y",
+		"applyTime": "2014-02-28 07:22:45",
+		"signCode": "ZSan8A"
+    },
+	{
+        "activityId": "1",
+        "applicantsId": "2",
+        "name": "李四",
+        "mobile": "13273840093",
+		"email": "lisi77382@yahoo.com",
+		"applyStatus": "2",
+		"channel": "SJ",
+		"signStatus": "YCY",
+		"remark": "参与活动积极者",
+		"isReg": "N",
+		"applyTime": "2014-02-28 07:23:15",
+		"signCode": "LSi7A"
+    },
+	{
+        "activityId": "1",
+        "applicantsId": "3",
+        "name": "老王",
+        "mobile": "13477123528",
+		"email": "wang.L@tranzvision.com.cn",
+		"applyStatus": "3",
+		"channel": "WZ",
+		"signStatus": "WGQX",
+		"remark": "参与活动积极者",
+		"isReg": "N",
+		"applyTime": "2014-02-28 07:23:42",
+		"signCode": "Lwang8A"
+    },
+	{
+        "activityId": "1",
+        "applicantsId": "4",
+        "name": "Big Marry",
+        "mobile": "18977266638",
+		"email": "marryBigs8@sina.com.cn",
+		"applyStatus": "4",
+		"channel": "WZ",
+		"signStatus": "YCY",
+		"remark": "参与活动积极者",
+		"isReg": "Y",
+		"applyTime": "2014-02-28 07:32:41",
+		"signCode": "BMa7sn"
+    },
+	{
+        "activityId": "1",
+        "applicantsId": "5",
+        "name": "Tom",
+        "mobile": "13388270037",
+		"email": "762348893@qq.com",
+		"applyStatus": "1",
+		"channel": "WZ",
+		"signStatus": "QJ",
+		"remark": "迟到了",
+		"isReg": "Y",
+		"applyTime": "2014-02-28 09:22:02",
+		"signCode": "Tomn7syA"
+    }
+	]
+}

@@ -1,0 +1,17 @@
+﻿{
+"total":3,
+"root":[
+    {
+        arealmId: 'A',
+        arealmName: '内容模板一'
+    },
+	{
+        arealmId: 'B',
+        arealmName: '内容模板二'
+    },
+	{
+        arealmId: 'B',
+        arealmName: '内容模板三'
+    }
+]
+}

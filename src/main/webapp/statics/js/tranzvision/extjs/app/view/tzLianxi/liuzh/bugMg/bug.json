@@ -1,0 +1,42 @@
+
+{
+  "total":18,
+  "root":[
+    {
+      "BugID":4558222297,
+      "name":"交易不了账号",
+      "responsableOprID":"王耀",
+      "espectDate":"2015-03-11",
+      "status":"2"
+    },{
+      "BugID":1559901397,
+      "name":"角色卡在进口处",
+      "responsableOprID":"刘智宏",
+      "espectDate":"2015-03-02",
+      "status":"1"
+    },{
+      "BugID":9013510897,
+      "name":"英雄技能无cd",
+      "responsableOprID":"郭德纲",
+      "espectDate":"2015-03-11",
+      "status":"4"
+    },{
+      "BugID":4551111297,
+      "name":"交易不了账号",
+      "responsableOprID":"叶少威",
+      "espectDate":"2015-03-11",
+      "status":"3"
+    },{
+      "BugID":4558222297,
+      "name":"无法拾取物品",
+      "responsableOprID":"王耀",
+      "espectDate":"2015-03-11",
+      "status":"0"
+    },{
+      "BugID":4558222297,
+      "name":"交易不了账号",
+      "responsableOprID":"王耀",
+      "espectDate":"2015-03-11",
+      "status":"5"
+    }]
+}

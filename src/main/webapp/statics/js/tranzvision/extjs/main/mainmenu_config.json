@@ -1,0 +1,333 @@
+﻿{
+  "cn":
+  {
+    "mainMenu":
+    [
+	  {
+        "text": "基础数据",
+        "id": "basicDatas",
+        "expanded": true,
+        "description": "基础数据.",
+		"children":
+        [
+		  {"id": "resDatas","text": "资源数据","leaf": false,"description": "资源数据.","children":
+        	[
+				{"id": "themeSetMg","text": "主题配置管理","leaf": true},
+		  		{"id": "resSetMg","text": "资源集合管理","leaf": true,"comID":"TZ_ZY_RESSET_COM"},
+		 		{"id": "msgSetMg","text": "消息集合管理","leaf": true},
+		  		{"id": "tranSetMg","text": "转换值集合管理","leaf": true,"comID":"TZ_GD_TRANSLATE_COM"},
+				{"id": "hardCode","text": "hardCode管理","leaf": true,"comID":"TZ_GD_HARDCODE_COM"}
+			]
+		  },
+		  {"id": "filter","text": "可配置搜索","leaf": true},
+		  {"id": "sysVarMg","text": "系统变量管理","leaf": true,"comID":"TZ_GD_SYSVARGL_COM"}
+        ]
+      },
+	  {
+        "text": "内容管理",
+        "id": "contentMgs",
+        "expanded": true,
+        "description": "内容管理.",
+		"children":
+        [
+		  {"id": "contentMg","text": "内容管理","leaf": true, "comID":"TZ_CONTENT_MG_COM"}
+        ]
+      },
+      {
+        "text": "安全管理",
+        "id": "securityMgs",
+        "expanded": true,
+        "description": "安全管理.",
+        "children":
+        [
+          {"id": "comReg","text": "功能组件注册","leaf": true,"comID":"TZ_AQ_COMREG_COM"},
+		  {"id": "plstDef","text": "许可权定义","leaf": true,"comID":"TZ_AQ_PLST_COM"},
+		  {"id": "menuMg","text": "功能菜单管理","leaf": true,"comID":"TZ_AQ_MENU_COM"},
+		  {"id": "userMg","text": "用户账号管理","leaf": true,"comID":"TZ_AQ_YHZHGL_COM"}
+        ]
+      },
+	  {
+        "text": "机构管理",
+        "id": "ogrMgs",
+        "expanded": true,
+        "description": "平台管理员设置机构基本信息，开通管理员账号.",
+		"children":
+        [
+		  {"id": "orgMg","text": "机构管理","leaf": true},
+		  {"id": "initOrgInfo","text": "机构管理(机构端)","leaf": true}
+        ]
+      },
+      {
+        "text": "模版设置",
+        "id": "templateSets",
+        "expanded": true,
+        "description": "模版设置.",
+        "children":
+        [
+          {"id": "SiteManagement","text": "站点模版设置","leaf": true,"comID":"TZ_GD_ZDMB_COM"},
+	  {"id": "siteManage","text": "站点管理","leaf": true,"comID":"TZ_GD_ZDGL_COM"},
+		  {"id": "tableTemplate","text": "报名表模版设置","leaf": false,"children":[{"id": "myBmb","text": "我的报名表","leaf": true,"comID":"TZ_ONLINE_REG_COM"}]},
+		  {"id": "proTemplate","text": "报名流程模版设置","leaf": true},
+		  {"id": "datumTemplate","text": "补充资料模版设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "基础参数设置",
+        "id": "basicParams",
+        "expanded": true,
+        "description": "基础参数设置.",
+		"children":
+        [
+		  {"id": "configGuide","text": "配置向导","leaf": true},
+		  {"id": "orgBasicInfo","text": "机构基础信息","leaf": true},
+		  {"id": "techParams","text": "技术参数设置","leaf": false,"description": "技术参数设置.","children":
+        	[
+				{"id": "messageSet","text": "短信网关设置","leaf": true},
+		  		{"id": "emailSet","text": "邮件参数设置","leaf": true},
+		 		{"id": "wechatSet","text": "微信参数设置","leaf": true},
+				{"id": "paraMg","text": "参数定义","leaf": true},
+				{"id": "resTempletDef","text": "元模板定义","leaf": true},
+				{"id": "smsTempletDef","text": "短信模板定义","leaf": true},
+				{"id": "emlTempletDef","text": "邮件模板定义","leaf": true},
+				
+			]
+		  },
+		  {"id": "busParams","text": "业务参数设置","leaf": false,"description": "业务参数设置.","children":
+        	[
+				{"id": "websitSet","text": "招生网站设置","leaf": true},
+		  		{"id": "memberDataMg","text": "会员数据项管理","leaf": true},
+		 		{"id": "proSet","text": "报名流程设置","leaf": true},
+				{"id": "datumSet","text": "补充资料设置","leaf": true}
+			]
+		  },
+		  {"id": "tableconfigs","text": "报名表配置","leaf": false,"description": "报名表配置.","children":
+        	[
+				{"id": "enrollTemp","text": "报名表模版配置","leaf": true},
+		  		{"id": "exportTemp","text": "Excel导出模版","leaf": true}			]
+		  }
+        ]
+      },
+	  {
+        "text": "用户账号管理",
+        "id": "userAccMgs",
+        "expanded": true,
+        "description": "用户账号管理.",
+		"children":
+        [
+		  {"id": "interUserMg","text": "内部用户管理","leaf": true},
+		  {"id": "memberMg","text": "会员用户管理","leaf": true}
+        ]
+      },
+	  {
+        "text": "招生网站管理",
+        "id": "EnrollmentWebsiteMgs",
+        "expanded": true,
+        "description": "招生网站管理.",
+		"children":
+        [
+		  {"id": "websiteRelease","text": "网站信息发布","leaf": true}
+        ]
+      },
+	  {
+        "text": "招生项目管理",
+        "id": "EnrollmentProjectMgs",
+        "expanded": true,
+        "description": "招生项目管理.",
+		"children":
+        [
+		  {"id": "proClassifyMg","text": "项目分类设置","leaf": true,"comID":"TZ_ZS_XMLBSZ_COM"},
+		  {"id": "projectMg","text": "项目管理","leaf": true,"comID":"TZ_PRJ_PROMG_COM"},
+		  {"id": "classMg","text": "班级管理","leaf": true,"comID":"TZ_GD_BJGL_COM"},
+		  {"id": "individuationSet","text": "个性化属性设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "报名管理",
+        "id": "enrollMgs",
+        "expanded": true,
+        "description": "报名管理.",
+		"children":
+        [
+		  {"id": "appFormAuditing","text": "报名表审核","leaf": true,"comID":"TZ_BM_BMBSH_COM"},
+		  {"id": "tagSet","text": "标签设置","leaf": true},
+		  {"id": "colorSet","text": "颜色分类设置","leaf": true,"comID":"TZ_BMGL_COLOR_COM"},
+		  {"id": "addFieldSet","text": "附加字段设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "活动管理",
+        "id": "activityMgs",
+        "expanded": true,
+        "description": "活动管理.",
+		"children":
+        [
+		  {"id": "activityMg","text": "活动管理","leaf": true,"comID": "TZ_HD_MANAGER_COM"}        ]
+      }
+    ]
+  },
+  "en":
+  {
+    "mainMenu":
+    [
+	  {
+        "text": "基础数据",
+        "id": "basicDatas",
+        "expanded": true,
+        "description": "基础数据.",
+		"children":
+        [
+		  {"id": "resDatas","text": "资源数据","leaf": false,"children":
+        	[
+				{"id": "themeSetMg","text": "主题配置管理","leaf": true},
+		  		{"id": "resSetMg","text": "资源集合管理","leaf": true},
+		 		{"id": "msgSetMg","text": "消息集合管理","leaf": true},
+		  		{"id": "tranSetMg","text": "转换值集合管理","leaf": true}
+			]
+		  },
+		  {"id": "filter","text": "可配置搜索","leaf": true}
+        ]
+      },
+	  {
+        "text": "内容管理",
+        "id": "contentMgs",
+        "expanded": true,
+        "description": "内容管理.",
+		"children":
+        [
+		  {"id": "contentMg","text": "内容管理","leaf": true}
+        ]
+      },
+      {
+        "text": "安全管理",
+        "id": "securityMgs",
+        "expanded": true,
+        "description": "安全管理.",
+        "children":
+        [
+          {"id": "comReg","text": "功能组件注册","leaf": true},
+		  {"id": "plstDef","text": "许可权定义","leaf": true},
+		  {"id": "menuMg","text": "功能菜单管理","leaf": true,"comID":"TZ_AQ_MENU_COM"},
+		  {"id": "userMg","text": "用户账号管理","leaf": true,"comID":"TZ_AQ_YHZHGL_COM"}
+        ]
+      },
+	  {
+        "text": "机构管理",
+        "id": "ogrMgs",
+        "expanded": true,
+        "description": "平台管理员设置机构基本信息，开通管理员账号.",
+		"children":
+        [
+		  {"id": "orgMg","text": "机构管理","leaf": true}
+        ]
+      },
+      {
+        "text": "模版设置",
+        "id": "templateSets",
+        "expanded": true,
+        "description": "模版设置.",
+        "children":
+        [
+          {"id": "siteTemplate","text": "站点模版设置","leaf": true},
+		  {"id": "tableTemplate","text": "报名表模版设置","leaf": true},
+		  {"id": "proTemplate","text": "报名流程模版设置","leaf": true},
+		  {"id": "datumTemplate","text": "补充资料模版设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "基础参数设置",
+        "id": "basicParams",
+        "expanded": true,
+        "description": "基础参数设置.",
+		"children":
+        [
+		  {"id": "configGuide","text": "配置向导","leaf": true},
+		  {"id": "orgBasicInfo","text": "机构基础信息","leaf": true},
+		  {"id": "techParams","text": "技术参数设置","leaf": false,"description": "技术参数设置.","children":
+        	[
+				{"id": "messageSet","text": "短信网关设置","leaf": true},
+		  		{"id": "emailSet","text": "邮件参数设置","leaf": true},
+		 		{"id": "wechatSet","text": "微信参数设置","leaf": true},
+				{"id": "paraMg","text": "参数定义","leaf": true},
+				{"id": "resTempletDef","text": "元模板定义","leaf": true},
+				{"id": "smsTempletDef","text": "短信模板定义","leaf": true},
+				{"id": "emlTempletDef","text": "邮件模板定义","leaf": true}
+			]
+		  },
+		  {"id": "busParams","text": "业务参数设置","leaf": false,"description": "业务参数设置.","children":
+        	[
+				{"id": "websitSet","text": "招生网站设置","leaf": true},
+		  		{"id": "memberDataMg","text": "会员数据项管理","leaf": true},
+		 		{"id": "proSet","text": "报名流程设置","leaf": true},
+				{"id": "datumSet","text": "补充资料设置","leaf": true}
+			]
+		  },
+		  {"id": "tableconfigs","text": "报名表配置","leaf": false,"description": "报名表配置.","children":
+        	[
+				{"id": "enrollTemp","text": "报名表模版配置","leaf": true},
+		  		{"id": "exportTemp","text": "Excel导出模版","leaf": true}			]
+		  }
+        ]
+      },
+	  {
+        "text": "用户账号管理",
+        "id": "userAccMgs",
+        "expanded": true,
+        "description": "用户账号管理.",
+		"children":
+        [
+		  {"id": "interUserMg","text": "内部用户管理","leaf": true},
+		  {"id": "memberMg","text": "会员用户管理","leaf": true}
+        ]
+      },
+	  {
+        "text": "招生网站管理",
+        "id": "EnrollmentWebsiteMgs",
+        "expanded": true,
+        "description": "招生网站管理.",
+		"children":
+        [
+		  {"id": "websiteRelease","text": "网站信息发布","leaf": true}
+        ]
+      },
+	  {
+        "text": "招生项目管理",
+        "id": "EnrollmentProjectMgs",
+        "expanded": true,
+        "description": "招生项目管理.",
+		"children":
+        [
+		  {"id": "projectSet","text": "项目分类设置","leaf": true},
+		  {"id": "classSet","text": "招生班级设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "报名管理",
+        "id": "enrollMgs",
+        "expanded": true,
+        "description": "报名管理.",
+		"children":
+        [
+		  {"id": "appFormAuditing","text": "报名表审核","leaf": true,"comID":"TZ_BM_BMBSH_COM"},
+		  {"id": "tagSet","text": "标签设置","leaf": true},
+		  {"id": "colorSet","text": "颜色分类设置","leaf": true,"comID":"TZ_BMGL_COLOR_COM"},
+		  {"id": "addFieldSet","text": "附加字段设置","leaf": true}
+        ]
+      },
+	  {
+        "text": "活动管理",
+        "id": "activityMgs",
+        "expanded": true,
+        "description": "活动管理.",
+		"children":
+        [
+		  {"id": "activityMg","text": "活动管理","leaf": true,"comID": "TZ_HD_MANAGER_COM"}
+		  ]
+      }
+    ]
+  },
+  "state":
+  {
+    "errcode": 0,
+    "errdesc": "success"
+  }
+}

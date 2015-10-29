@@ -1,0 +1,26 @@
+{
+"total":"50",
+"root":[
+    {
+        areaId: 'A1001',
+        areaName: '个人信息区',
+        areaType: '个人信息',
+        areaLocation: '中间栏'
+    },{
+        areaId: 'A1002',
+        areaName: '活动预告区',
+        areaType: '活动预告',
+        areaLocation: '中间栏'
+    },{
+        areaId: 'A1003',
+        areaName: '新闻列表区',
+        areaType: '新闻列表',
+        areaLocation: '中间栏'
+    },{
+        areaId: 'A1004',
+        areaName: '联系信息区',
+        areaType: '联系信息',
+        areaLocation: '右侧栏'
+    }
+]
+}

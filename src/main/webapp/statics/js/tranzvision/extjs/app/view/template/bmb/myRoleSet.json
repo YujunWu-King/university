@@ -1,0 +1,27 @@
+﻿{
+    "comContent": {
+        "total": 91,
+        "root": [
+            {
+                "jgid": "EMBA",
+                "rolename": "EMBA_TZGD_APPLICANT",
+                "roledesc": "考生申请人",
+                "tplid": "135",
+                "isChecked": true
+            },
+            {
+                "jgid": "EMBA",
+                "rolename": "EMBA_TZGD_JG_USER",
+                "roledesc": "机构用户",
+                "tplid": "135",
+                "isChecked": false
+            }
+        ]
+    },
+    "state": {
+        "errcode": 0,
+        "errdesc": "",
+        "timeout": false,
+        "authorizedInfo": {}
+    }
+}

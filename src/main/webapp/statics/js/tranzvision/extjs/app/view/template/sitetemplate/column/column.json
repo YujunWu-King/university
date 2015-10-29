@@ -1,0 +1,13 @@
+﻿{
+"total":2,
+"root":[
+    {
+        sitestateId: 'A',
+        sitestateName: '单页'
+    },
+	{
+        sitestateId: 'B',
+        sitestateName: '列表'
+    }
+]
+}

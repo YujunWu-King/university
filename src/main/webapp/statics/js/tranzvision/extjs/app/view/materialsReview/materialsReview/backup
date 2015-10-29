@@ -1,0 +1,18 @@
+listeners:{
+                                                    focus:function(combo){
+                                                        var form = field.findParentByType("setMaterialsReviewRule").lookupReference("CountForm").getForm();
+                                                        var reviewApplicantsCount = form.findField("materialsReviewApplicantsNumber").getValue();
+
+                                                        var groupData = "";
+                                                         for(var i=1;i<=reviewApplicantsCount;i++){
+                                                             var groupID =String.fromCharCode(64+i);
+                                                             if(groupData==""){
+                                                                 groupData=Ext.JSON.encode({group:groupID,desc:groupID})
+                                                             }else{
+                                                                 groupData=Ext.JSON.encode({group:groupID,desc:groupID})+","+groupData
+                                                             }
+                                                         };
+                                                        groupData="["+groupData+"]";
+                                                        judgeGroupStore.loadData(Ext.JSON.decode(groupData));
+                                                    }
+                                                }

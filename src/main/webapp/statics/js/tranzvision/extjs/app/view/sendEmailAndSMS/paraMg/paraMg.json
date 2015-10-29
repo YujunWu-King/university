@@ -1,0 +1,20 @@
+{
+	"total":3,
+	"root":[
+		{
+			"paraid":"TZ_SETID",          
+			"chaname":"集合ID",
+			"datatype":"字符串"
+		},
+		{
+			"paraid":"TZ_ORGID",          
+			"chaname":"机构ID",
+			"datatype":"字符串"
+		},
+		{
+			"paraid":"TZ_DATE",          
+			"chaname":"日期",
+			"datatype":"日期"
+		}
+	]
+}

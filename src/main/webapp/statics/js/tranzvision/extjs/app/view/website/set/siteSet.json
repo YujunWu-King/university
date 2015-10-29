@@ -1,0 +1,67 @@
+﻿{
+"total":11,
+"root":[
+    {
+        usAccNum: '000001023',
+        usName: '张三',
+        mobile: '15601118321',
+        email: '184312333@qq.com',
+		birthday: '1990-12-20'
+    },
+	{
+        usAccNum: '000001024',
+        usName: '李四',
+        mobile: '13601318021',
+        email: 'lisi@163.com',
+		birthday: '1985-01-23'
+    },{
+        usAccNum: '000001025',
+        usName: '李明',
+        mobile: '13302118122',
+        email: 'liming12@163.com',
+		birthday: '1992-05-18'
+    },{
+        usAccNum: '000001026',
+        usName: '花花',
+        mobile: '13541218025',
+        email: '23415652@qq.com',
+		birthday: '1975-01-24'
+    },{
+        usAccNum: '000001027',
+        usName: '何以琛',
+        mobile: '13848204015',
+        email: '21267890@qq.com',
+		birthday: '1955-12-24'
+    },{
+        usAccNum: '000001028',
+        usName: '赵默笙',
+        mobile: '13741206210',
+        email: 'zhaoms@163.com',
+		birthday: '1963-12-25'
+    },{
+        usAccNum: '000001029',
+        usName: '宁致远',
+        mobile: '15600208012',
+        email: 'ningzy@126.com',
+		birthday: '1945-10-22'
+    },{
+        usAccNum: '000001030',
+        usName: '乐颜',
+        mobile: '13640244051',
+        email: 'leyan@126.com',
+		birthday: '1965-10-13'
+    },{
+        usAccNum: '000001031',
+        usName: '孙少平',
+        mobile: '13218204017',
+        email: '47502134@qq.com',
+		birthday: '1976-03-24'
+    },{
+        usAccNum: '000001032',
+        usName: '田润叶',
+        mobile: '13143254021',
+        email: '184921324@qq.com',
+		birthday: '1987-02-22'
+    }
+]
+}

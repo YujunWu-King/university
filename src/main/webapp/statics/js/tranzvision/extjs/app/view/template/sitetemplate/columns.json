@@ -1,0 +1,56 @@
+{
+"total":"12",
+"root":[
+    {
+        columnId: 'C1001',
+        columnName: '首页',
+        columnType: '首页栏目',
+        contentType: '首页'
+    },{
+        columnId: 'C1002',
+        columnName: '活动预告',
+        columnType: '活动栏目',
+        contentType: '活动预告'
+    },{
+        columnId: 'C1003',
+        columnName: '新闻通知',
+        columnType: '新闻栏目',
+        contentType: '新闻通知'
+    },{
+        columnId: 'C1004',
+        columnName: '在线报名',
+        columnType: '报名栏目',
+        contentType: '在线报名'
+    },{
+        columnId: 'C1005',
+        columnName: '申请进度',
+        columnType: '进度栏目',
+        contentType: '申请进度'
+    },{
+        columnId: 'C1006',
+        columnName: '校友管理',
+        columnType: '校友栏目',
+        contentType: '校友管理'
+    },{
+        columnId: 'C1007',
+        columnName: '账户管理',
+        columnType: '账户栏目',
+        contentType: '账户管理'
+    },{
+        columnId: 'C1005',
+        columnName: '申请进度',
+        columnType: '进度栏目',
+        contentType: '申请进度'
+    },{
+        columnId: 'C1006',
+        columnName: '校友管理',
+        columnType: '校友栏目',
+        contentType: '校友管理'
+    },{
+        columnId: 'C1007',
+        columnName: '账户管理',
+        columnType: '账户栏目',
+        contentType: '账户管理'
+    }
+]
+}

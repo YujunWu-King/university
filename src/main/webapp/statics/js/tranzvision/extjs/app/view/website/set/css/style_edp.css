@@ -1,0 +1,6448 @@
+/* ------------------------------------------------------
+
+   AUTHOR           :  	Meon Lee
+   WEBSITE          :   http://www.ojisan.me/
+   TEMPLATE NAME    : 	JD MBA
+   TEMPLATE CODE    : 	JDM
+   VERSION          :   1.0
+   LAST DATE MOD    :   Mar 1, 2014
+
+--------------------------------------------------------- */
+
+
+@charset "utf-8";
+
+/* ------------------------------------------------------
+   HTML ELEMENTS
+--------------------------------------------------------- */
+*
+{
+    padding: 0;
+    outline: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+body
+{
+    margin: 0;
+    padding: 0;
+    font: 14px Yahei, "????", Arial;
+    color: #333;
+    /*text-align: center;*/
+}
+span {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* images */
+img
+{
+	border: 0px solid #DCDCDC;
+	padding: 0px;
+	vertical-align: middle;
+}
+
+.img_mid
+{
+	vertical-align: middle;	
+}
+.img_num {
+	vertical-align: -30%;
+}
+/* form */
+
+
+form {
+	margin: 0px;
+	padding: 0px;
+}
+
+.fileupload {
+	height: 35px;
+	width: 68px;
+	overflow: hidden; 
+	right:0; 
+	top:0; 
+	opacity: 0; 
+	filter:alpha(opacity=0); 
+	cursor:pointer; 
+}
+.fileupload2 {
+	height: 35px;
+	width: 111px;
+	overflow: hidden; 
+	right:0; 
+	top:0; 
+	opacity: 0; 
+	filter:alpha(opacity=0); 
+	cursor:pointer; 
+}
+.input_text{
+	line-height: 39px;
+	font-size: 16px;
+	box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.075);
+	border: 1px solid #999 ;
+	border-radius: 3px;
+	height: 39px;
+	padding-left: 8px;
+	color: #666;
+	vertical-align:middle;
+}
+
+
+.input_text:focus{
+	border: 1px solid #b1193b !important;
+	border-radius: 3px;
+}
+.input_text:hover{
+	border: 1px solid  #b1193b;
+	border-radius: 3px;
+}
+textarea {
+	font-size: 14px;
+	color: #9f9f9f;
+	width: 555px;
+	margin-left: 3px;
+	box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.075);
+	border: 1px solid #999;
+	border-radius: 3px;
+	white-space: pre;
+	overflow: hidden;
+	max-width: 555px;
+	margin-right: 10px;
+	vertical-align: text-top;
+	line-height: 16px;
+	padding-left: 10px;
+	padding-top: 8px;
+	padding-right:5px;
+}
+textarea:focus{
+	border: 1px solid #06F !important;
+	border-radius: 3px;
+}
+textarea:hover{
+	border: 1px solid #09F;
+	border-radius: 3px;
+}
+.input_205px {
+	width: 195px;
+	margin-right: 7px;
+	
+}
+
+.input_227px {
+	width: 217px;
+	margin-right: 7px;
+}
+.input_105px {
+	width: 95px;
+	margin-right: 7px;
+}
+.input_411px {
+	width: 401px;
+	margin-right: 7px;
+}
+
+.input_251px {
+	width: 241px;
+	margin-right: 7px;
+}
+
+.input_351px {
+	width: 341px;
+	margin-right: 7px;
+}
+
+.combox_351px{
+   border-radius: 3px;
+    color: #666;
+    font-size: 16px;
+    height: 39px;
+    margin-right: 7px;
+    padding-left: 3px;
+    width: 341px;
+}
+
+.input_97px {
+	width: 87px;
+	margin-right: 7px;
+}
+.input_225px {
+	width: 225px;
+	margin-right: 7px;
+}
+.input_152px {
+	width: 142px;
+	margin-right: 7px;
+}
+.input_120px {
+	width: 110px;
+	margin-right: 7px;
+}
+.input_555px {
+	width: 548px;
+	margin-right: 7px;
+}
+.input_63px {
+	width: 53px;
+}
+.input_168px {
+	width: 158px;
+	margin-right: 7px;
+}
+
+.input_368px {
+	width: 358px;
+	margin-right: 7px;
+}
+.input_320px {
+	width: 310px;
+	margin-right: 7px;
+}
+
+/* fonts */
+
+.font_blue_14px_b {
+	font-size: 14px;
+	font-weight: bold;
+	color: #B1193B;
+}
+.font_blue_14px {
+	font-size: 14px;
+	color: #B1193B;
+}
+.font_gray_bg_16px {
+	color: #F5F5F5;
+	font-size: 4px;
+}
+.font_gray_16px_s {
+	color: #555;
+	font-size: 16px;
+	font-weight:normal;
+}
+.font_gray_14px {
+	color: #adadad;
+	font-size: 14px;
+	font-weight: normal;
+}
+.font_gray_14px_dark {
+	color: #4f4f4f;
+	font-size: 14px;
+	font-weight: normal;
+}
+.font_gray_16px {
+	color: #9f9f9f;
+	font-size: 16px;
+}
+.reg_title_grey_17px {
+	font-size: 17px;
+	color: #8c8c8c;
+	font-weight: bold;
+}
+.reg_title_star {
+	font-size: 16px;
+	color: #fe800e;
+	vertical-align: -20%;
+	line-height: 16px;
+	font-weight: normal;
+}
+.font_orange_16px {
+	font-size: 16px;
+	color: #fe800e;
+	font-weight: normal;
+}
+.button_351px {
+	width: 341px;
+	margin-right: 7px;
+	height:35px;
+}
+.font_gray_16px_b {
+	font-size: 16px;
+	font-weight: bold;
+	color: #555;
+}
+
+.font_white_16px {
+	font-size: 16px;
+	color: #fff;
+	line-height: 16px;
+}
+/* links */
+a:link
+{
+    color: #424242;
+    text-decoration: none;
+}
+a:visited
+{
+	color: #999999;
+	text-decoration: none;
+}
+a:hover
+{
+    color: #B1193B;
+	cursor:pointer;
+}
+a.underline:link
+{
+	color: #424242;
+	background-color: inherit;
+	text-decoration: underline;
+}
+a.underline:visited
+{
+	color: #999999;
+	background-color: inherit;
+	text-decoration: underline;
+}
+a.underline:hover
+{
+    color: #B1193B;
+    background-color: inherit;
+	text-decoration: none;
+}
+a.alpha:hover
+{
+    filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+}
+a.del:link
+{
+    color: #9f9f9f;
+    background-color: inherit;
+    text-decoration: none;
+}
+a.del:hover
+{
+    color: #B1193B;
+    background-color: inherit;
+}
+a.blue:link, a.blue:visited
+{
+    color: #B1193B !important;
+    background-color: inherit;
+    text-decoration: none;
+}
+a.blue:hover
+{
+    color: #999999;
+    background-color: inherit;
+	text-decoration: none;
+}
+a.blue_under:link, a.blue_under:visited
+{
+    color: #B1193B !important;
+    background-color: inherit;
+    text-decoration: none;
+}
+a.blue_under:hover
+{
+    color: #999999 !important;
+    background-color: inherit;
+	text-decoration: underline;
+}
+a.bw:hover
+{
+    color: #fff !important;
+    background-color: inherit;
+}
+a.bw:link, a.bw:visited
+{
+    color: #fff;
+    background-color: inherit;
+    text-decoration: none;
+}
+a.blue:hover
+{
+    color: #B1193B;
+    background-color: inherit;
+}
+a.ora:link, a.ora:visited
+{
+    color: #ff7e0b;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+a.ora:hover
+{
+    color: #555;
+    background-color: inherit;
+}
+
+
+/* top */
+.top {
+	height: 110px;
+	width: 100%;
+	background-color:#B1193B;
+	//background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/top_bg.png");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.top_main_right {
+	text-align: right;
+	float: right;
+	height: 30px;
+	padding: 0px;
+	margin-top: 80px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	color: #FFF;
+}
+
+.top_main {
+	padding: 0px;
+	height: 110px;
+	width: 1000px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.top_main_left {
+	float: left;
+	height: 110px;
+	width: 480px;
+}
+
+
+.top_main_right a {
+	color: #FFF;
+	text-decoration: none;
+}
+
+/* main */
+.main {
+	padding: 0px;
+	width: 1000px;
+	margin-top: 19px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	height: 100%;
+	/*overflow: hidden;*/
+}
+
+	/* main left */
+.main_left {
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 100%;
+	width: 197px;
+	border: 1px solid #dadbdd;
+	/*overflow: hidden;*/
+}
+.main_left_nav0_c {
+	height: 48px;
+	font-size: 14px;
+	line-height: 48px;
+	color: #fff;
+	background-color:#B1193B;
+	text-align: left;
+	padding-left:10px;
+	border-bottom: 1px solid #dadbdd;
+}
+.main_left_nav1_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_2_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav2_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_3_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav3_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_4_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+	
+}
+.main_left_nav4_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_5_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav5_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_6_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav6_c {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_7_c.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav0_c:hover {
+    background-color:#B1193B;
+	cursor: pointer;
+	color: #fff;
+	border-bottom: 1px solid #dadbdd;
+
+	
+}
+.main_left_nav1_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_2_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+.main_left_nav2_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_3_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+.main_left_nav3_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_4_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+.main_left_nav4_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_5_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+.main_left_nav5_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_6_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+.main_left_nav6_c:hover {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_7_c.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	color: #fff;
+}
+
+.main_left_nav0 {
+	height: 48px;
+	font-size: 14px;
+	line-height: 48px;
+	color: #B1193B;
+	text-align: left;
+	padding-left:10px;
+	border-bottom: 1px solid #dadbdd;
+}
+.main_left_nav1 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/menu-icon-1.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav2 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_3.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav3 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_4.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+	
+}
+.main_left_nav4 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_5.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav5 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_6.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+.main_left_nav6 {
+	height: 48px;
+	width: 200px;
+	font-size: 16px;
+	line-height: 48px;
+	color: #B1193B;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_7.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	font-weight: bold;
+}
+
+.main_left_nav0:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_1_c.png");*/
+	background-color:#eee;
+	cursor: pointer;
+	/*color: #fff;*/
+	
+}
+.main_left_nav1:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_2_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+/*	color: #fff;*/
+}
+.main_left_nav2:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_3_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+	/*color: #fff;*/
+}
+.main_left_nav3:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_4_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+/*	color: #fff;*/
+}
+.main_left_nav4:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_5_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+	/*color: #fff;*/
+}
+.main_left_nav5:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_6_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+	/*color: #fff;*/
+}
+.main_left_nav6:hover {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/nav_7_c.png");*/
+	background-repeat: no-repeat;
+	cursor: pointer;
+	/*color: #fff;*/
+}
+
+.main_left_nav a.nav_active {
+	width: 200px;
+}
+
+.main_left_nav a.nav_detail {
+	width: 200px;
+}
+
+	/* main mid */
+.main_mid {
+	float: left;
+	width: 542px;
+	margin: 0px;
+	padding-right: 11px;
+	padding-left: 11px;
+	text-align: left;
+}
+
+.main_mid_activity {
+	/*height: 432px;*/
+	height :auto;
+	width: 542px;
+	margin-top: 24px;
+}
+
+.main_mid_info {
+	height: 158px;
+	width: 542px;
+        margin-bottom:20px;
+}
+.main_mid_activity_list_date {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/date_bg_yenching.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	float: left;
+	height: 54px;
+	width: 48px;
+	margin-top: 5px;
+	font-family: Arial;
+}
+.main_mid_activity_list_date_month {
+	font-size: 14px;
+	line-height: 14px;
+	color: #FFF;
+	text-align: center;
+	clear: both;
+	height: 14px;
+	width: 40px;
+	margin-top: 6px;
+	margin-left: 2px;
+}
+.main_mid_activity_list_date_day {
+	font-family: Arial;
+	font-size: 22px;
+	line-height: 22px;
+	color: #FFF;
+	text-align: center;
+	clear: both;
+	height: 22px;
+	width: 40px;
+	margin-top: 5px;
+	margin-left: 2px;
+}
+.main_mid_activity_list_title {
+	line-height: 18px;
+	text-align: left;
+	float: left;
+	width: 405px;
+	margin-top: 12px;
+	margin-left: 3px;
+}
+.main_mid_recruit {
+	width: 542px;
+	padding-top: 9px;
+}
+.main_mid_recruit ul  {
+	margin-left: 0px;
+}
+.main_mid_recruit ul li {
+	color: #B1193B;
+	list-style-type: none;
+	height: 42px;
+	margin: 0px;
+	padding: 0px;
+	line-height: 42px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/li_bg_yenching.png");
+	background-repeat: no-repeat;
+}
+.main_mid_recruit_list_title {
+	line-height: 42px;
+	float: left;
+	height: 42px;
+	width: 432px;
+	padding-left: 18px;
+}
+.main_mid_recruit_list_date {
+	line-height: 42px;
+	color: #adadad;
+	float: right;
+	height: 42px;
+	width: 120px;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+
+.main_mid_recruit_list {
+	width: 542px;
+}
+
+
+
+.main_mid_activity_list_button {
+	float: right;
+	height: 35px;
+	width: 68px;
+	margin-top: 14px;
+}
+
+.main_mid_info_photo {
+	float: left;
+	height: 158px;
+	width: 126px;
+}
+.main_mid_info_list {
+	float: right;
+	height: 25px;
+	width: 404px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #424242;
+	margin-left: 12px;
+	line-height: 26px;
+	overflow: hidden;
+}
+.main_mid_info_left_list{
+    float: left;
+    height: 25px;
+    width: 500px;
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+    border-bottom-color: #424242;
+    margin-left: 12px;
+    line-height: 26px;
+    overflow: hidden;
+}
+.main_mid_title {
+	height: 31px;
+	width: 542px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #B1193B;
+}
+.main_mid_title_right {
+	line-height: 31px;
+	height: 31px;
+	width: 42px;
+	overflow: hidden;
+	text-align: right;
+	float: right;
+}
+
+.main_mid_title_left {
+	font-size:16px;
+	color:#B1193B;
+	line-height:31px;
+	font-weight:bold;
+	float: left;
+	height: 31px;
+	width: 400px;
+}
+.main_mid_activity_menu {
+	height: 30px;
+	width: 542px;
+	margin-bottom: 8px;
+}
+.main_mid_activity_menu_1 {
+	line-height: 30px;
+	background-color: #B1193B;
+	float: left;
+	height: 30px;
+	width: 80px;
+	overflow: hidden;
+	color: #FFF;
+	text-align: center;
+}
+.main_mid_activity_list {
+	height: 72px;
+	width: 541px;
+	margin-left: 1px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #424242;
+}
+.main_mid_activity_list2 {
+	height: 72px;
+	width: 541px;
+	margin-left: 1px;
+}
+
+.main_mid_activity_list_last {
+	height: 72px;
+	width: 541px;
+	margin-left: 1px;
+
+}
+.main_mid_activity_menu_2 {
+	line-height: 30px;
+	background-color: #e9ecee;
+	float: left;
+	height: 30px;
+	width: 80px;
+	overflow: hidden;
+	color: #B1193B;
+	text-align: center;
+}
+
+
+.main_mid_title_left {
+	float: left;
+	height: 31px;
+	width: 400px;
+}
+	/* main_right */
+.main_right {
+	float: right;
+	width: 234px;
+}
+.mid_right_ad_1 {
+	height: 184px;
+	width: 234px;
+}
+.mid_right_ad_2 {
+	height: 230px;
+	width: 234px;
+	margin-top: 22px;
+}
+.mid_right_experience {
+	text-align: left;
+	/*height: 424px;*/
+	width: 212px;
+	margin-top: 18px;
+	border: 1px solid #dadbdd;
+	padding:10px;
+	margin-bottom: 20px;
+}
+
+.mid_right_experience div {
+	margin-right: auto;
+	margin-left: auto;
+}
+.mid_right_experience_name {
+	font-size: 24px;	
+	height: 33px;
+
+
+}
+.mid_right_experience_class {
+	height: 26px;
+
+}
+.mid_right_experience_article {
+	height: 25px;
+	margin-top: 5px;
+}
+.mid_right_experience_content {
+	font-size: 12px;
+	line-height: 23px;
+}
+
+
+.mid_right_experience_photo {
+	
+}
+
+
+
+.mid_right_experience_title {
+	height: 33px;
+	width: 83px !important;
+	margin-top: 8px;
+	float:left;
+	background-color: #B1193B;
+	font-size: 14px;
+	color: #FFFFFF;
+	line-height: 33px;
+	text-align: center;
+}
+.mid_right_experience_title:hover {
+	cursor:pointer;
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+}
+
+.mid_right_follow {
+	height: 118px;
+	width: 234px;
+	margin-top: 11px;
+}
+.mid_right_follow_title {
+	clear: both;
+	height: 33px;
+	width: 234px;
+}
+.mid_right_follow_ico {
+	float: left;
+	height: 42px;
+	width: 42px;
+	margin-right: 18px;
+	margin-left: 18px;
+}
+.follow_detail{
+	
+	border: none;}
+.follow_active{
+	
+	border: none;}
+.mid_right_contact {
+	height: 65px;
+	width: 234px;
+	margin-top: 7px;
+}
+.mid_right_contact_title {
+	height: 33px;
+	width: 234px;
+}
+.mid_right_contact_content {
+	font-size: 12px;
+	line-height: 17px;
+	height: 33px;
+	width: 170px;
+	margin-left: 53px;
+	text-align: left;
+	overflow: hidden;
+}
+
+/* foot */
+.foot {
+	float:left;
+	background-color: #eee;
+	height: 145px;
+	width: 100%;
+	margin-top: 22px;
+}
+.foot2 {
+	background-color: #eee;
+	height: 145px;
+	width: 100%;
+	margin-top: 22px;
+	position: fixed;
+	z-index: 999;
+	overflow: visible;
+	bottom:0;
+	left:0;
+}
+.foot_main {
+	width: 1000px;
+	height: 145px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.foot_main_left {
+	font-size: 12px;
+	text-align: left;
+	float: left;
+	height: 57px;
+	width: 650px;
+	margin-top: 41px;
+	margin-left: 13px;
+}
+.foot_main_right {
+	float: right;
+	height: 57px;
+	width: 275px;
+	margin-top: 41px;
+}
+
+/* inner page main */
+
+.main_inner {
+	float: right;
+	width: 788px;
+	text-align: left;
+	min-height:550px;
+}
+.main_inner_title {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_title_offReg_add_Exper.png");
+	background-repeat: no-repeat;
+	height: 35px;
+	width: 788px;
+}
+.main_inner_title_link {
+	line-height: 24px;
+	height: 24px;
+	width: 330px;
+	float:left;
+}
+.main_inner_title_text {
+	line-height: 24px;
+	height: 24px;
+	width: 85px;
+	margin-left: 6px;
+	float: left;
+	font-size: 16px;
+	color: #B1193B;
+	font-weight: bold;
+}
+.main_inner_title_text_wide {
+	line-height: 24px;
+	height: 24px;
+	width: 385px;
+	margin-left: 6px;
+	float: left;
+	font-size: 16px;
+	color: #B1193B;
+	font-weight: bold;
+	text-align: left;
+}
+.main_inner_title_text_right {
+	line-height: 24px;
+	height: 24px;
+	width: 85px;
+	margin-left: 6px;
+	float: right;
+	text-align:right;
+}
+.main_inner_line {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_line.png");
+	background-repeat: no-repeat;
+	height: 39px;
+	width: 788px;
+	font-size: 14px;
+	color: #9f9f9f;
+	text-align: center;
+}
+
+.main_inner_line_2 {
+	height: 16px;
+	width: 788px;
+	text-align: center;
+
+}
+.main_inner_steps {
+	height: 41px;
+	width: 788px;
+}
+.main_inner_steps_step {
+	float: left;
+	height: 41px;
+	width: 110px;
+	margin-right: 1px;
+	margin-left: 1px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/but-03.png");
+	background-repeat: no-repeat;
+	text-align:center;
+	line-height: 41px;
+	font-size:16px;
+	color: #fff;
+}
+.main_inner_steps_step_c {
+	float: left;
+	height: 41px;
+	width: 110px;
+	margin-right: 1px;
+	margin-left: 1px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/but-02.png");
+	background-repeat: no-repeat;
+	text-align:center;
+	line-height: 41px;
+	font-size:16px;
+	color: #fff;
+}
+.main_inner_steps_step_ce {
+	float: left;
+	height: 41px;
+	width: 110px;
+	margin-right: 1px;
+	margin-left: 1px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/but-04.png");
+	background-repeat: no-repeat;
+	text-align:center;
+	line-height: 41px;
+	font-size:16px;
+	color: #fff;
+}
+.main_inner_steps_step_e {
+	float: left;
+	height: 41px;
+	width: 110px;
+	margin-right: 1px;
+	margin-left: 1px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/but-01.png");
+	background-repeat: no-repeat;
+	text-align: center;
+	line-height: 41px;
+	font-size: 16px;
+	color: #fff;
+}
+.main_inner_steps_step:hover{
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+	cursor:pointer;
+	}
+.main_inner_steps_step_c:hover{
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+	cursor:pointer;
+	}
+.main_inner_steps_step_e:hover{
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+	cursor:pointer;
+	}
+.main_inner_content_title {
+	line-height: 36px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_content_title_bg.png");
+	height: 36px;
+	width: 788px;
+	padding-left: 15px;
+	margin-bottom: 3px;
+	background-repeat: no-repeat;
+}
+.main_inner_content_top {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_content_top_bg.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 16px;
+	width: 788px;
+}
+.main_inner_content_info_left {
+	line-height: 39px;
+	float: left;
+	height: 39px;
+	width: auto;
+}
+.main_inner_content_info_left_174px {
+	line-height: 39px;
+	float: left;
+	height: 39px;
+	width: 174px;
+	text-align: right;
+}
+.main_inner_content_info_left_b {
+	line-height: 39px;
+	float: left;
+	height: 39px;
+	width: auto;
+	font-weight: bold;
+	color: #8c8c8c;
+}
+.main_inner_content_info_text {
+	clear: right;
+	float: left;
+	height: 39px;
+	width: 300px;
+	text-align: left;
+}
+.main_inner_content_info_text2 {
+	clear: right;
+	float: left;
+	height: 39px;
+	width: 600px;
+	text-align: left;
+}
+.main_inner_content_tips {
+	height: 71px;
+	width: 540px;
+	margin-top: 9px;
+	padding-left: 205px;
+	font-size: 16px;
+	line-height: 20px;
+}
+.main_inner_content_tips_3line {
+	height: 40px;
+	width: 540px;
+	padding-left: 340px;
+	font-size: 16px;
+	line-height: 30px;
+	color:#9f9f9f;
+}
+#main_inner_content_info_save {
+	float: left;
+	height: 35px;
+	width: 68px;
+	padding-right: 16px;
+	padding-left: 420px;
+}
+#main_inner_content_info_save0 {
+	float: left;
+	height: 35px;
+	width: 68px;
+	padding-right: 16px;
+	padding-left: 420px;
+}
+#main_inner_content_info_save1 {
+	float: left;
+	height: 35px;
+	width: 68px;
+	padding-right: 16px;
+	padding-left: 420px;
+}
+#main_inner_content_info_save2 {
+	float: left;
+	height: 35px;
+	width: 68px;
+	padding-right: 16px;
+	padding-left: 420px;
+}
+#main_inner_content_info_save3 {
+	float: left;
+	height: 35px;
+	width: 68px;
+	padding-right: 16px;
+	padding-left: 420px;
+}
+.main_inner_content_info_add {
+	clear: right;
+	float: left;
+	height: 35px;
+	width: 169px;
+}
+.main_inner_content_radio {
+	font-size: 16px;
+	line-height: 27px;
+	color: #9f9f9f;
+	height: 49px;
+	width: 780px;
+	padding-left: 8px;
+}
+
+
+
+.main_inner_content_tips p {
+	margin-bottom: 15px;
+	color: #9f9f9f;
+}
+
+
+
+.main_inner_content {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_content_mid_bg.png");
+	background-repeat: repeat-y;
+	background-position: center;
+	height: auto;
+	width: 788px;
+}
+.main_inner_content_info_topline {
+	font-size: 16px;
+	line-height: 39px;
+	height: 39px;
+	width: 589px;
+	padding-bottom: 14px;
+	padding-left: 39px;
+	color: #9f9f9f;
+	float:left;
+	clear:left;
+}
+
+.main_inner_content_info {
+	font-size: 16px;
+	line-height: 39px;
+	height: 39px;
+	width: 740px;
+	padding-bottom: 14px;
+	padding-left: 39px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+}
+.main_inner_content_info_autoheight {
+	font-size: 16px;
+	line-height: 39px;
+	height: 39px;
+	width: 788px;
+	padding-bottom: 9px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	
+}
+.main_inner_content_info_autoheight_b {
+	font-size: 16px;
+	line-height: 39px;
+	height: 39px;
+	width: 788px;
+	padding-bottom: 15px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	font-weight: bold;
+	padding-left: 5px;
+}
+.main_inner_content_info_autoheight_b2 {
+	font-size: 16px;
+	line-height: 39px;
+	height: auto;
+	width: 788px;
+	padding-bottom: 15px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	font-weight: bold;
+	padding-left: 5px;
+	overflow:hidden;
+}
+.main_inner_content_info_autoheight_d {
+	font-size: 14px;
+	line-height: 19px;
+	height: 22px;
+	width: 788px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	padding-left: 10px;
+}
+.main_inner_content_info_autoheight_c {
+	font-size: 16px;
+	line-height: 39px;
+	height: 39px;
+	width: 788px;
+	padding-bottom: 3px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	font-weight: bold;
+	padding-left: 5px;
+}
+.main_inner_content_info_autoheight_real {
+	font-size: 16px;
+	line-height: 39px;
+	height: auto;
+	width: 788px;
+	padding-bottom: 14px;
+	color: #9f9f9f;
+	clear: both;
+	white-space: nowrap;
+	padding-left:5px;
+	
+}
+
+.main_inner_content_info_autoheight_top {
+	font-size: 16px;
+	line-height: 39px;
+	height: 180px;
+	width: 788px;
+	padding-bottom: 14px;
+	color: #9f9f9f;
+	clear: both;
+}
+
+.main_inner_content_foot {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_content_foot_bg.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 19px;
+	width: 788px;
+	clear: both;
+	margin-bottom: 20px;
+}
+
+.main_inner_content_del {
+	font-size: 16px;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 30px;
+	width: 75px;
+	line-height: 30px;
+	color:#9f9f9f;
+	
+}
+.city_close {
+	font-size: 16px;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 30px;
+	width: 35px;
+	line-height: 30px;
+	color: #9f9f9f;
+	margin-top: 10px;	
+}
+.main_inner_content_edit {
+	font-size: 16px;
+	text-align: right;
+	float: left;
+	height: 30px;
+	width: 75px;
+	line-height: 30px;
+	color:#9f9f9f;
+	display:none;
+	
+}
+.main_inner_content_edit:hover {
+
+	cursor:pointer;
+	color:#B1193B;
+}
+.main_inner_content_edit img {
+	vertical-align: -5%;
+	margin-right: 3px;
+}
+.main_inner_content_del:hover {
+
+	cursor:pointer;
+	color:#B1193B;
+}
+.city_close:hover {
+
+	cursor:pointer;
+}
+.main_inner_content_del img {
+	vertical-align: -5%;
+	margin-right: 3px;
+}
+#main_inner_content_para0 {
+	width:788px;
+}
+#main_inner_content_para1 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para2 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para3 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para4 {
+	width:788px;
+}
+#main_inner_content_para5 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para6 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para7 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para8 {
+	width:788px;
+}
+#main_inner_content_para9 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para10 {
+	width:788px;
+	display:none;
+}
+#main_inner_content_para11{
+	width:788px;
+	display:none;
+}
+#main_inner_content_para12{
+	width:788px;
+}
+#main_inner_content_para13{
+	width:788px;
+	display:none;
+}
+#main_inner_content_para14{
+	width:788px;
+	display:none;
+}
+#main_inner_content_para15{
+	width:788px;
+	display:none;
+}
+
+.main_inner_content_info_upload {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/upload_bt.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 35px;
+	width: 68px;
+	float:left;
+	margin-right: 7px;
+	margin-left: 10px;
+
+}
+.main_inner_content_info_upload:hover {
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+
+}
+.main_inner_content_info_upload2 {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/up_photo_bt.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 35px;
+	width: 111px;
+	float:left;
+	margin-right: 7px;
+
+}
+.main_inner_content_info_upload2:hover {
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+
+}
+.main_inner_foot {
+	font-size: 14px;
+	line-height: 58px;
+	color: #9f9f9f;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_foot_bg.png");
+	background-repeat: no-repeat;
+	text-align: right;
+	height: 58px;
+	width: 770px;
+	clear:both;
+}
+.main_inner_save {
+	clear: left;
+	float: left;
+	height: 35px;
+	width: 90px;
+	margin-right: 25px;
+	margin-left: 250px;
+	font-weight: bold;
+	font-size: 16px;
+}
+.main_inner_back {
+	clear: left;
+	float: left;
+	height: 35px;
+	width: 151px;
+	margin-right: 25px;
+	margin-left: 220px;
+	margin-bottom: 40px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.main_inner_submit {
+	float: left;
+	height: 35px;
+	width: 90px;
+	margin-right: 25px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.main_inner_next {
+	clear: right;
+	float: left;
+	height: 35px;
+	width: 202px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.alert_display_none {
+	font-size: 16px;
+	color: #fe800e;
+	display: none;
+}
+.alert_display_none_14px {
+	font-size: 14px;
+	color: #fe800e;
+	display: none;
+}
+
+.alert_img{
+	vertical-align: -5%;
+	margin-right: 3px;
+}
+.main_inner_connent_info_left {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 130px;
+	font-weight: bold;
+}
+.main_inner_connent_info_left_103px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 103px;
+	font-weight: bold;
+}
+.main_inner_connent_info_left_103px_2 {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 103px;
+}
+.main_inner_content_info_right_103px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 39px;
+	width: 684px;
+}
+.main_inner_content_info_right_103px_top {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 524px;
+	margin-left:1px;
+}
+.main_inner_content_info_right {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 39px;
+	width: 657px;
+	margin-left: 10px;
+}
+.main_inner_connent_info_left_120px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 120px;
+	font-weight: bold;
+}
+.main_inner_content_info_right_120px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 39px;
+	width: 667px;
+}
+
+.main_inner_connent_info_left_120px_2 {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 120px;
+}
+.main_inner_content_info_right_120px_top {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 507px;
+	margin-left:1px;
+}
+.main_inner_connent_info_left_220px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 220px;
+	font-weight: bold;
+}
+.main_inner_content_info_right_220px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 39px;
+	width: 567px;
+}
+
+.main_inner_connent_info_left_220px_2 {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 220px;
+}
+.main_inner_content_info_right_220px_top {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 407px;
+	margin-left:1px;
+}
+.main_inner_connent_info_left_310px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #8c8c8c;
+	text-align: right;
+	clear: left;
+	float: left;
+	height: 39px;
+	width: 310px;
+	font-weight: bold;
+}
+.main_inner_content_info_right_310px {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 39px;
+	width: 477px;
+}
+
+
+.main_inner_content_info_right_220px_top {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 317px;
+	margin-left:1px;
+}
+.main_inner_content_info_right_top {
+	font-size: 16px;
+	line-height: 39px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: right;
+	float: right;
+	height: 180px;
+	width: 657px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/base_info_top_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;
+}
+.main_inner_content_info_right_photo {
+	clear: left;
+	float: left;
+	height: 180px;
+	width: 126px;
+	margin-right: 17px;
+}
+.main_inner_content_info_right_option_168px {
+	float: left;
+	height: 39px;
+	width: 168px;
+	margin-right: 7px;
+	
+}
+.main_inner_content_info_option_text {
+	line-height: 39px;
+	clear: right;
+	float: left;
+	height: 39px;
+	width: 350px;
+}
+
+
+.main_inner_content_info_right_text {
+	line-height: 35px;
+	float: left;
+	height: 35px;
+	width: 430px;
+	margin-top: 98px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/upload_bt_2.png");
+	background-repeat: no-repeat;
+}
+.main_inner_content_info_right_text:hover {
+    filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+}
+.main_inner_content_info_right_text_2 {
+	line-height: 35px;
+	float: left;
+	height: 35px;
+	width: 430px;
+	color: #fe800e;
+}
+.option_168px {
+	height: 39px;
+	width: 190px;
+	background: transparent;
+	border: none;
+	font-size: 16px;
+	color: #9f9f9f;
+}
+.display_true {
+	display: inline;
+}
+#save_and_add0 {
+	cursor: pointer;
+}
+#save_and_add1 {
+	cursor: pointer;
+}
+#save_and_add2 {
+	cursor: pointer;
+}
+#save_and_add3 {
+	cursor: pointer;
+}
+.main_inner_content_info_right_103px_top #mbaSqXxjd2_chosen {
+	width: 227px !important;
+}
+.main_inner_content_info_right_103px_top #mbaSqXxjd3_chosen {
+	width: 227px !important;
+}
+.main_inner_content_info_right_103px_top #mbaSqXxjd4_chosen {
+	width: 227px !important;
+}
+.main_inner_content_info_right_120px_top #mbaSqKsmc2_chosen {
+	width: 227px !important;
+}
+
+.main_inner_content_info_right_120px_top #mbaSqKsmc3_chosen {
+	width: 227px !important;
+}
+
+.main_inner_content_info_right_120px_top #mbaSqKsmc4_chosen {
+	width: 227px !important;
+}
+.main_inner_content_info_right_120px_top #mbaSqKsmcqt2_chosen {
+	width: 227px !important;
+}
+
+.main_inner_content_info_right_120px_top #mbaSqKsmcqt3_chosen {
+	width: 227px !important;
+}
+
+.main_inner_content_info_right_120px_top #mbaSqKsmcqt4_chosen {
+	width: 227px !important;
+}
+.main_inner_content_info_right_220px #mbaSqHwgj2_chosen {
+	width: 168px !important;
+}
+
+.main_inner_content_info_right_220px #mbaSqHwgj3_chosen {
+	width: 168px !important;
+}
+
+.main_inner_content_info_right_220px #mbaSqHwgj4_chosen {
+	width: 168px !important;
+}
+
+.main_inner_content_info_right_310px #w_chosen {
+	width: 251px !important;
+}
+.main_inner_content_info #mbaSqZlsqzt2_chosen {
+	width: 205px !important;
+}
+.main_inner_content_info #mbaSqZlsqzt3_chosen {
+	width: 205px !important;
+}
+.main_inner_content_info #mbaSqZlsqzt4_chosen {
+	width: 205px !important;
+}
+.main_inner_content_info #mbaSqZlzzsx2_chosen {
+	width: 205px !important;
+}
+.main_inner_content_info #mbaSqZlzzsx3_chosen {
+	width: 205px !important;
+}
+.main_inner_content_info #mbaSqZlzzsx4_chosen {
+	width: 205px !important;
+}
+.display_none {
+	display: none;
+}
+.right_45px {
+	margin-right: 45px;
+	vertical-align: middle;
+}
+.main_inner_conntet_info_text_top {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_top_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	height: 5px;
+	width: 561px;
+}
+.main_inner_content_info_text_mid {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_mid_bg.png");
+	background-repeat: repeat-y;
+	background-position: left;*/
+	height: auto;
+	width: 100%;
+}
+.main_inner_content_info_text_foot {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_foot_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	clear: both;
+	height: 5px;
+	width: 561px;
+}
+
+.main_inner_conntet_info_text_top2 {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_top_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	height: 5px;
+	width: 561px;
+	margin-left:115px;
+}
+.main_inner_content_info_text_mid2 {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_mid_bg.png");
+	background-repeat: repeat-y;
+	background-position: left;*/
+	height: auto;
+	width: 561px;
+	margin-left:115px;
+}
+.main_inner_content_info__text_foot2 {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/text_foot_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	clear: both;
+	height: 5px;
+	width: 561px;
+	margin-left:115px;
+}
+
+
+.main_inner_content_info_left_10px {
+	float: left;
+	height: 39px;
+	width: 10px;
+}
+.main_inner_content_info_left_151px {
+	float: left;
+	height: 39px;
+	width: 151px;
+}
+.main_inner_content_info_left_300px {
+	height: 39px;
+	width: 300px;
+	position: relative;
+}
+.main_inner_content_info_left_330px {
+	float: left;
+	height: 39px;
+	width: 330px;
+}
+.main_inner_content_info_left_330px img {
+	margin-left: 5px;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+.main_inner_content_info_right_330px {
+	line-height: 39px;
+	font-weight: normal;
+	float: right;
+	height: 39px;
+	width: 95px;
+}
+.main_inner_content_info_auto_title {
+	font-size: 18px;
+	color: #0068B5;
+	text-align: center;
+	clear: both;
+	height: 39px;
+	width: 750px;
+	margin-bottom: 10px;
+	padding-left: 37px;
+}
+.main_inner_content_info_auto_foot {
+	font-size: 16px;
+	color: #0068B5;
+	text-align: center;
+	clear: both;
+	height: 39px;
+	width: 750px;
+	margin-bottom: 10px;
+	padding-left: 37px;
+}
+.main_inner_content_info_auto_text {
+	font-size: 16px;
+	line-height: 30px;
+	color: #9f9f9f;
+	text-align: left;
+	clear: both;
+	height: auto;
+	width: 750px;
+	
+	white-space:normal;
+	padding-left: 37px;
+}
+.main_788 {
+	clear: both;
+	height: auto;
+	width: 788px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+}
+.main_inner_content_info_right_310px .checks {
+	margin-left: 10px;
+}
+.padding_div {
+	background-color: #FFF;
+	clear: both;
+	height: 4px;
+	width: 100%;
+}
+.padding_div_50px {
+	background-color: #FFF;
+	clear: both;
+	height: 50px;
+	width: 80%;
+	margin-left:auto;
+	margin-right:auto;
+}
+.padding_div_40px {
+	background-color: #FFF;
+	clear: both;
+	height: 40px;
+	width: 100%;
+}
+.padding_div_40px2 {
+	margin-left:260px;
+	background-color: #FFF;
+	clear: both;
+	height: 40px;
+	width: 100%;
+}
+/* main full */
+.main_full_top {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/mid_top_bg.png");
+	background-repeat: no-repeat;
+	height: 13px;
+	width: 825px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.main_full_foot {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/mid_foot_bg.png");
+	background-repeat: no-repeat;
+	height: 13px;
+	width: 825px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.main_full {
+	height: auto;
+	width: 825px;
+	margin-right: auto;
+	margin-left: auto;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/mid_center_bg.png");
+	background-repeat: repeat-y;
+	overflow: hidden;
+}
+.main_full_line {
+	clear: both;
+	height: 39px;
+	width: 810px;
+	margin-right: auto;
+	margin-bottom: 13px;
+	margin-left: auto;
+	text-align:center;
+}
+.main_full_line_auto {
+	clear: both;
+	height: auto;
+	width: 810px;
+	margin-right: auto;
+	margin-bottom: 13px;
+	margin-left: auto;
+}
+.main_full_line_auto2 {
+	clear: both;
+	height: auto;
+	width: 810px;
+	margin-right: auto;
+	margin-bottom: 13px;
+	margin-left: auto;
+	font-size:16px;
+	text-align:center;
+}
+.main_full_line_title {
+	line-height: 39px;
+	float: left;
+	width: 750px;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	color: #B1193B;
+}
+.main_full_line_title_font_left {
+	line-height: 39px;
+	float: left;
+	width: 690px;
+	text-align: left;
+	font-size: 20px;
+	font-weight: bold;
+	color: #0067b5;
+	padding-left: 60px;
+}
+.main_full_full_right {
+	line-height: 39px;
+	float: right;
+	height: 39px;
+	width: 58px;
+	text-align: left;
+}
+.main_full_full_right img {
+	vertical-align: 3%;
+	}
+.main_full_lines {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_line.png");
+	background-repeat: no-repeat;
+	height: 19px;
+	width: 788px;
+	font-size: 14px;
+	color: #9f9f9f;
+	text-align: center;
+	background-position: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 23px;
+}
+.main_full_lines_720px {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_line.png");
+	background-repeat: no-repeat;
+	height: 19px;
+	width: 720px;
+	font-size: 14px;
+	color: #9f9f9f;
+	text-align: center;
+	background-position: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 23px;
+}
+.main_full_lines_400px {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_line.png");
+	background-repeat: no-repeat;
+	height: 19px;
+	width: 400px;
+	font-size: 14px;
+	color: #9f9f9f;
+	text-align: center;
+	background-position: center;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 23px;
+}
+.main_full_lines_400px2 {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/inner_line.png");
+	background-repeat: no-repeat;
+	height: 19px;
+	width: 400px;
+	font-size: 14px;
+	color: #9f9f9f;
+	text-align: center;
+	background-position: center;
+	margin-bottom: 23px;
+	margin-top: 23px;
+}
+.main_full_line_left {
+	font-size: 16px;
+	line-height: 39px;
+	font-weight: bold;
+	color: #4f4f4f;
+	text-align: right;
+	float: left;
+	height: 39px;
+	width: 210px;
+}
+.main_full_line_left2 {
+	font-size: 16px;
+	line-height: 39px;
+	font-weight: bold;
+	color: #4f4f4f;
+	text-align: right;
+	float: left;
+	height: 39px;
+	width: 290px;
+}
+.main_full_line_right {
+	font-size: 14px;
+	line-height: 39px;
+	color: #4f4f4f;
+	text-align: left;
+	float: right;
+	height: 39px;
+	width: 595px;
+}
+.main_full_line_right2 {
+	font-size: 14px;
+	line-height: 39px;
+	color: #4f4f4f;
+	text-align: left;
+	float: right;
+	height: 39px;
+	width: 505px;
+}
+.main_full_line_right .left_m7 {
+	margin-right: 3px;
+	margin-left: 7px;
+	vertical-align: middle;
+}
+.main_full_line_right_txt {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/full_text_bg.png");
+	background-repeat: no-repeat;
+	font-size: 14px;
+	color: #7f7f7f;
+	height: 94px;
+	width: 492px;
+	margin-left: 216px;
+	text-align: left;
+	line-height: 29px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+.top_mar_70px {
+	margin-top: 70px;
+	clear: both;
+	height: 3px;
+	width: 100%;
+}
+.main_full_left {
+	float: left;
+	height: 350px;
+	width: 540px;
+	border-right-width: 1px;
+	border-right-style: dotted;
+	border-right-color: #333;
+	overflow: hidden;
+}
+.main_full_right {
+	float: right;
+	height: 350px;
+	width: 280px;
+}
+.main_full_title_80p {
+	text-align: center;
+	height: 44px;
+	width: 80%;
+	margin-right: auto;
+	margin-bottom: 20px;
+	margin-left: auto;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #000;
+	line-height: 44px;
+	font-size: 20px;
+	font-weight: bold;
+	color: #333;
+	clear: both;
+}
+.main_full_left_line {
+	clear: both;
+	height: 39px;
+	width: 540px;
+	margin-bottom: 13px;
+}
+.main_full_left_line2 {
+	clear: both;
+	height: 20px;
+	width: 540px;
+	margin-bottom: 5px;
+}
+.main_full_left_line3 {
+	clear: both;
+	height: 40px;
+	width: 500px;
+	margin-left:15px;
+
+}
+.main_full_right_line {
+	text-align: center;
+	height: 150px;
+	width: 100%;
+}
+.main_full_right_button {
+	text-align: center;
+	height: 39px;
+	width: 100%;
+	margin-top: 20px;
+}
+
+
+.main_full_left_line_left {
+	font-size: 16px;
+	line-height: 39px;
+	font-weight: bold;
+	color: #333;
+	text-align: right;
+	float: left;
+	height: 39px;
+	width: 125px;
+}
+.main_full_left_line_left2 {
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: bold;
+	color: #333;
+	text-align: right;
+	float: left;
+	height: 20px;
+	width: 125px;
+}
+.main_full_left_line_right {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	float: right;
+	height: 39px;
+	width: 410px;
+}
+.main_full_left_line_right3 {
+	font-size: 16px;
+	line-height: 20px;
+	text-align: left;
+	float: right;
+	height: 20px;
+	width: 410px;
+}
+.main_full_left_line_right2 {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 111px;
+	font-weight:bold;
+}
+.main_full_down {
+	height: 60px;
+	width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+	text-align: left;
+}
+.main_full_down2 {
+	height: auto;
+	width: 790px;
+	margin-right: auto;
+	margin-left: auto;
+	line-height: 23px;
+	padding: 4px 5px 3px 5px;
+	overflow: hidden;
+	text-align: left;
+	border: 1px solid #eee ;
+	border-radius:10px;
+	background-color:#eee;
+}
+.font_dgray_14px_b {
+	font-size: 14px;
+	line-height: 24px;
+	font-weight: bold;
+	color: #424242;
+}
+/*city*/
+.city_top {
+    height: 48px;
+    width: 588px;
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/city_top_bg.png");
+    background-repeat: no-repeat;
+    margin-right: 0;
+    margin-left: 0;
+}
+.city_top3 {
+    height: 48px;
+    width: 815px;
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/selector_top_bg.png");
+    background-repeat: repeat-x;
+    margin-right: 0;
+    margin-left: 0;
+	padding-left: 15px;
+	font-size:18px;
+	font-weight:bold;
+	color:#005fa8;
+	line-height: 40px;
+	text-align:left;
+}
+.city_top2 {
+    height: 38px;
+    width: 588px;
+    margin-right: 0;
+    margin-left: 0;
+}
+.city_foot {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/city_foot_bg.png");
+	background-repeat: no-repeat;
+	height: 19px;
+	width: 588px;
+	margin-right: 0;
+	margin-left: 0;
+}
+.city_main {
+
+	width: 588px;
+	margin-right: 0;
+	margin-left: 0;
+	overflow: hidden;
+}
+.city_main2 {
+
+	width: 830px;
+	margin-right: 0;
+	margin-left: 0;
+	overflow: hidden;
+}
+.city_main_title {
+	font-size: 18px;
+	line-height: 45px;
+	font-weight: bold;
+	color: #000;
+	text-align: left;
+	height: 45px;
+	width: 500px;
+	margin-left: 47px;
+	clear: both;
+	
+}
+.city_main_title2 {
+	font-size: 18px;
+	line-height: 45px;
+	font-weight: bold;
+	color: #0070c6;
+	text-align: left;
+	height: 39px;
+	width: 500px;
+	margin-left: 30px;
+	margin-bottom : 10px;
+	clear: both;
+	
+}
+
+.city_main_title3 {
+	font-size: 18px;
+	line-height: 45px;
+	font-weight: bold;
+	color: #0070c6;
+	text-align: left;
+	height: 39px;
+	width: 500px;
+	margin-left: 30px;
+	margin-top: 15px;
+	margin-bottom : 10px;
+	clear: both;
+	
+}
+.city_main_title2 input {
+	margin-left:5px;
+	}
+.city_main_city {
+	font-size: 16px;
+	line-height: 33px;
+	text-align: center;
+	float: left;
+	height: 33px;
+	width: 70px;
+	font-weight: normal;
+}
+.city_main_city3 {
+	font-size: 16px;
+	line-height: 33px;
+	text-align: left;
+	float: left;
+	height: 33px;
+	width: auto;
+	font-weight: normal;
+	margin-right:20px;
+	padding-left:5px;
+	padding-right:5px;
+}
+.city_main_line {
+	text-align: left;
+	height: auto;
+	width: 500px;
+	margin-left: 47px;
+	clear: both;
+	overflow:hidden;
+}
+.city_main_line2 {
+	text-align: left;
+	height: auto;
+	width: 700px;
+	margin-left: 50px;
+	clear: both;
+	overflow:hidden;
+}
+.city_main_line3 {
+	text-align: left;
+	height: 270px;
+	width: 700px;
+	margin-top:20px;
+	margin-left: 50px;
+	clear: both;
+	overflow-x:none;
+	overflow-y:auto;
+	border: 1px solid #b2b2b2;
+}
+.city_main_city2 {
+	font-size: 16px;
+	line-height: 40px;
+	text-align: left;
+	float: left;
+	height: 40px;
+	width: 330px;
+	margin-left:10px;
+	font-weight: normal;
+}
+/* letter */
+.main_letter_logo {
+	clear: both;
+	height: 116px;
+	width: 1000px;
+}
+.main_letter_logo_left {
+	font-size: 32px;
+	line-height: 95px;
+	color: #B1193B;
+	text-align: left;
+	height: 95px;
+	width: 740px;
+	float: left;
+}
+.main_letter_logo_right {
+	font-family: "Times New Roman";
+	font-size: 12px;
+	color: #B1193B;
+	float: right;
+	height: 87px;
+	width: 217px;
+	padding-right: 22px;
+	margin-top: 24px;
+	text-align: right;
+	line-height: 17px;
+}
+.main_letter_title {
+	font-size: 16px;
+	line-height: 30px;
+	color: #fe8518;
+	text-align: center;
+	height: 30px;
+	width: 1000px;
+	font-weight: bold;
+}
+.main_letter_top {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/letter_top_bg.png");
+	background-repeat: no-repeat;
+	height: 20px;
+	width: 961px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.main_letter_foot {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/letter_foot_bg.png");
+	background-repeat: no-repeat;
+	height: 20px;
+	width: 961px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.main_letter {
+	height: auto;
+	width: 961px;
+	margin-right: auto;
+	margin-left: auto;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/letter_mid_bg.png");
+	background-repeat: repeat-y;
+	overflow: hidden;
+}
+.main_letter_text {
+	clear: both;
+	height: 356px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 29px;
+}
+
+.main_letter_line {
+	clear: both;
+	height: 39px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+}
+.main_letter_line_b {
+	clear: both;
+	font-weight:bold;
+	height: 39px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+}
+.main_letter_line_b6 {
+	clear: both;
+	font-weight:bold;
+	height: 39px;
+	width: 900px;
+	margin-left: 55px;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+}
+.main_letter_line_b3 {
+	clear: both;
+	font-weight:bold;
+	height: 39px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 15px;
+}
+.main_letter_line_b5 {
+	clear: both;
+	font-weight:bold;
+	height: 39px;
+	width: 880px;
+	margin-left: 55px;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 15px;
+}
+
+.main_letter_line_b4 {
+	clear: both;
+	font-weight:bold;
+	height: auto;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 15px;
+	overflow:hidden;
+}
+.main_letter_line_b2 {
+	clear: both;
+	font-weight:bold;
+	height: 60px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 28px;
+	margin-bottom: 10px;
+}
+.main_letter_line_3 {
+	clear: both;
+	font-weight:bold;
+	height: 39px;
+	width: 850px;
+	margin-right: auto;
+	margin-left: auto;
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 15px;
+}
+.main_letter_line_auto {
+	clear: both;
+	height: auto;
+	width: 850px;
+	margin-left: 82px;
+
+	padding-left: 28px
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+	font-size: 16px;
+	overflow:hidden;
+}
+.main_letter_line_auto2 {
+	clear: both;
+	height: auto;
+	width: 700px;
+	margin-left: 82px;
+
+	padding-left: 28px
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+	font-size: 16px;
+	overflow:hidden;
+}
+.main_letter_line_auto3 {
+	clear: both;
+	height: auto;
+	width: 850px;
+	margin-left: 82px;
+
+	padding-left: 28px
+	font-size: 16px;
+	color: #555;
+	text-align: left;
+	line-height: 39px;
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+.main_letter_lene_text_top {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/let_txt_top_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	height: 5px;
+	width:649px;
+	clear: both;
+}
+.main_letter_lene_text_mid {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/let_txt_mid_bg.png");
+	background-repeat: repeat-y;
+	background-position: left;*/
+	height: auto;
+	width: 100%;
+	clear: both;
+	overflow:hidden;
+}
+.main_letter_lene_text_foot {
+	/*background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/let_txt_foot_bg.png");
+	background-repeat: no-repeat;
+	background-position: left;*/
+	clear: both;
+	height: 5px;
+	width: 649px;
+}
+.main_letter_lene_text_mid textarea {
+	width: 647px;
+	max-width:647px !important;
+}
+.main_letter_line_auto table td {
+	font-size: 16px;
+	color: #555;
+}
+.letter_table {
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-right-color: #dfdfdf;
+	border-bottom-color: #dfdfdf;
+}
+.letter_table td {
+	font-size: 16px;
+	text-align: center;
+	height: 34px;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-left-style: solid;
+	border-top-color: #dfdfdf;
+	border-left-color: #dfdfdf;
+}
+.main_letter_line_left {
+	text-align: right;
+	float: left;
+	height: 39px;
+	width: 300px;
+	line-height: 39px;
+}
+.main_letter_line_left2 {
+	text-align: right;
+	float: left;
+	height: 39px;
+	width: 360px;
+	line-height: 39px;
+}
+.main_letter_line_right {
+	line-height: 39px;
+	text-align: left;
+	float: right;
+	height: 39px;
+	width: 545px;
+}
+.main_letter_line_right2 {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 530px;
+}
+.main_letter_buttom {
+	font-size: 14px;
+	line-height: 24px;
+	color: #555;
+	text-align: center;
+	height: auto;
+	width: 100%;
+}
+.main_inner_article_title {
+	font-size: 14px;
+	line-height: 66px;
+	font-weight: bold;
+	color: #424242;
+	text-align: center;
+	clear: both;
+	height: 66px;
+	width: 720px;
+	margin-right: auto;
+	margin-left: auto;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #333;
+}
+.main_inner_article {
+	font-size: 14px;
+	color: #424242;
+	text-align: left;
+	clear: both;
+	height: auto;
+	width: 720px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 20px;
+}
+.main_inner_article p {
+	line-height: 24px;
+}
+.main_article_nav {
+	clear: both;
+	height: 51px;
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align:center;
+}
+.main_all_line_center {
+	clear: both;
+	height: 39px;
+	width: 100%;
+	line-height: 39px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: 16px;
+	color: #333;
+	font-weight: bold;
+}
+.main_article_nav_left {
+	font-size: 14px;
+	line-height: 22px;
+	color: #474747;
+	background-color: #eeeeee;
+	float: left;
+	height: 51px;
+	width: 365px;
+}
+.main_article_nav_right {
+	font-size: 14px;
+	line-height: 22px;
+	color: #474747;
+	background-color: #eeeeee;
+	float: right;
+	height: 51px;
+	width: 365px;
+}
+.main_inner_nav_txt_left {
+	float: left;
+	height: 51px;
+	width: 67px;
+	text-align: center;
+}
+.main_inner_nav_txt_right {
+	float: left;
+	height: 51px;
+	width: 280px;
+	text-align: left;
+	padding-right: 18px;
+}
+.main_letter_top_title {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/top_title_bg.png");
+	background-repeat: repeat-x;
+	height: 35px;
+	width: 100%;
+}
+.main_letter_top_title2 {
+	height: auto;
+	width: 100%;
+	overflow:hidden;
+}
+.main_letter_top_title5 {
+	height: auto;
+	width: 90%;
+	overflow:hidden;
+	margin-left:auto;
+	margin-right:auto;
+}
+.main_letter_top_title3 {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/top_title_under_bg.png");
+	background-repeat: repeat-x;
+	height: 10px;
+	width: 100%;
+	margin-top:5px;
+}
+.main_letter_top_title4 {
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/top_title_under_bg.png");
+	background-repeat: repeat-x;
+	height: 10px;
+	width: 90%;
+	margin-top:5px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.main_full_line_option {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 150px;
+}
+.main_full_line_option2 {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 250px;
+}
+.main_full_line_option_260px {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 260px;
+}
+
+.mian_inner_nav {
+	clear: both;
+	height: 34px;
+	width: 780px;
+	margin-bottom: 15px;
+}
+.float_left ul li{
+	display: inline;
+}
+.float_left ul {
+	margin: 0;
+	padding: 0;
+}
+.float_left li{
+	float: left;
+	height:34px;
+	padding : 0 30px;
+	line-height:34px;
+	margin-right:1px;
+	text-align:center;
+	color: #B1193B;
+	font-size: 15px;
+	cursor: pointer;
+	font-weight:bold;
+	background-color: #eceff3;
+}
+.float_left li.now{
+	color: #fff;
+	background: #B1193B;
+}
+.now2{
+	color:#B1193B !important;
+	font-weight:bold !important;
+}
+.main_inner_left {
+	text-align: center;
+	float: left;
+	height: auto;
+	width: 213px;
+	margin-top: 30px;
+}
+.main_inner_right {
+	float: right;
+	width: 570px;
+	overflow: hidden;
+	margin-top: 30px;
+}
+
+.main_inner_right_2 {
+    float: right;
+    width: 570px;
+    overflow: hidden;
+    margin-top: 30px;
+}
+.main_inner_right_line_50px {
+	font-size: 16px;
+	line-height: 39px;
+	text-align: left;
+	height: 40px;
+	width: 100%;
+	margin-bottom: 10px;
+	clear: both;
+}
+.main_inner_right_line_left {
+	font-size: 16px;
+	line-height: 40px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 92px;
+	text-align: right;
+}
+.main_inner_right_line_left5 {
+	font-size: 16px;
+	line-height: 40px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 150px;
+	text-align: right;
+}
+.main_inner_right_line_mid {
+	font-size: 16px;
+	line-height: 40px;
+	color: #424242;
+	text-align: left;
+	float: left;
+	height: 40px;
+	width: 300px;
+	padding-left: 18px;
+}
+.main_inner_right_line_mid3 {
+	font-size: 16px;
+	line-height: 40px;
+	color: #424242;
+	text-align: left;
+	float: left;
+	height: 40px;
+	width: 300px;
+}
+.main_inner_right_line_mid4 {
+	font-size: 16px;
+	line-height: 40px;
+	color: #424242;
+	text-align: left;
+	float: left;
+	height: 40px;
+	width: 200px;
+}
+.main_inner_right_line_right {
+	clear: right;
+	float: left;
+	height: 40px;
+	width: 160px;
+}
+.main_inner_right_line_right2 {
+	clear: right;
+	float: left;
+	height: 40px;
+	width: 120px;
+	text-align:center;
+}
+.main_inner_right_line_40px {
+	font-size: 16px;
+	line-height: 40px;
+	text-align: left;
+	height: 40px;
+	width: 100%;
+	clear: both;
+}
+.main_inner_right_line_left2 {
+	font-size: 16px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 120px;
+	text-align: center;
+	line-height: 30px;
+}
+.main_inner_right_line_mid2 {
+	font-size: 16px;
+	line-height: 40px;
+	color: #424242;
+	text-align: left;
+	float: left;
+	height: 40px;
+	width: 320px;
+}
+.main_inner_right_line_left3 {
+	font-size: 16px;
+	line-height: 40px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 175px;
+	text-align: center;
+}
+.main_inner_right_line_left4 {
+	font-size: 16px;
+	line-height: 40px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 400px;
+	text-align: left;
+	padding-left:13px;
+}
+.main_inner_right_line_40px2 {
+	font-size: 16px;
+	line-height: 40px;
+	text-align: center;
+	height: 40px;
+	width: 100%;
+	clear: both;
+}
+.cul1 {
+	font-size: 24px;
+	font-weight: bold;
+	color: #fff;
+	background-color: #d0d5db;
+}
+.cul2 {
+	font-size: 18px;
+	color: #B1193B;
+	background-color: #eceff3;
+}
+.cul3 {
+	font-size: 14px;
+	color: #292929;
+	background-color: #f7f9fa;
+	padding-left: 12px;
+	padding-bottom: 17px;
+	padding-top: 17px;
+	height:74px;
+	overflow:hidden;
+	text-align:left;
+}
+.rowtitle {
+	font-size: 16px;
+	font-weight: bold;
+	color: #666;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/tb_title_bg.png");
+	background-repeat: repeat-x;
+}
+.cul4 {
+	font-size: 14px;
+	color: #818181;
+	background-color: #eceff3;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.tab1 {
+	width: 100%;
+	overflow: hidden;
+	display:none;
+}
+.tabs1 {
+	display:none;
+}
+.block {
+	display:block;
+	}
+.tab_list ul  {
+	margin-left: 0px;
+}
+.tab_list ul li {
+	color: #B1193B;
+	list-style-type: none;
+	height: 42px;
+	margin: 0px;
+	padding: 0px;
+	line-height: 42px;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/li_long_bg.png");
+	background-repeat: no-repeat;
+}
+.main_mid_recruit_list_title2 {
+	line-height: 42px;
+	float: left;
+	height: 42px;
+	width: 400px;
+	padding-left: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+}
+.main_article_nav_left2 {
+	font-size: 14px;
+	line-height: 22px;
+	color: #474747;
+	float: left;
+	height: 51px;
+	width: 365px;
+	text-align:left;
+}
+.main_article_nav_right2 {
+	font-size: 14px;
+	line-height: 22px;
+	color: #474747;
+	float: right;
+	height: 51px;
+	width: 365px;
+	text-align:right;
+}
+.main_article_nav_left2 ul li{
+	display: inline;
+}
+.main_article_nav_left2 ul {
+	margin: 0;
+	padding: 0;
+}
+.main_article_nav_left2 li{
+	float: left;
+	height:32px;
+	width: 32px;
+	line-height:32px;
+	margin-right:3px;
+	text-align:center;
+	color: #555;
+	font-size: 15px;
+	cursor: pointer;
+	border: 1px solid #ccc;
+}
+.main_article_nav_left2 li.now{
+	color: #fff;
+	background: #B1193B;
+}
+.main_article_nav_left2 li:hover{
+	color: #fff;
+	background: #B1193B;
+}
+.tab_list {
+	width: 100%;
+}
+.arrow {
+	font-size: 9px !important;
+}
+.main_mid_activity_list2 {
+	height: 68px;
+	width: 100%;
+	margin-left: 1px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #424242;
+}
+.main_mid_activity_list_title2 {
+	line-height: 18px;
+	text-align: left;
+	float: left;
+	width: 355px;
+	margin-top: 12px;
+	margin-left: 3px;
+}
+.ordertype {
+	float: right;
+	height: 39px;
+	width: 170px;
+	font-size: 16px;
+	line-height: 35px;
+}
+.ordertype2 {
+	float: right;
+	height: 39px;
+	width: 170px;
+	font-size: 16px;
+	line-height: 35px;
+	text-align:right;
+}
+.float_left {
+	float: left;
+	width: 580px;
+	overflow: hidden;
+}
+.toggle:hover {
+	cursor: pointer;
+}
+.main_left_nav0 img {
+	vertical-align: middle;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+.main_left_nav0_c img {
+	vertical-align: middle;
+	padding-right: 5px;
+	padding-left: 5px;
+}
+.main_inner_title_text_wide2 {
+	line-height: 24px;
+	height: auto;
+	width: 100%;
+	margin-left: 6px;
+	float: left;
+	font-size: 16px;
+	color: #B1193B;
+	font-weight: bold;
+	text-align: left;
+}.main_letter_line_left_105px {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 105px;
+}
+.main_letter_line_left_105px2 {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 100px;
+}
+.main_letter_line_right_105px {
+	line-height: 39px;
+	text-align: left;
+	clear: right;
+	float: left;
+	height: 39px;
+	width: 700px;
+	font-weight: normal;
+}
+.main_letter_line_right_105px2 {
+	line-height: 39px;
+	text-align: left;
+	clear: right;
+	float: left;
+	height: auto;
+	width: 700px;
+	font-weight: normal;
+}
+.main_letter_line_right_105px3 {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 330px;
+	font-weight: normal;
+}
+.main_letter_line_right_105px4 {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 130px;
+	font-weight: normal;
+}
+.main_letter_line_right_105px5 {
+	line-height: 39px;
+	text-align: left;
+	float: left;
+	height: 39px;
+	width: 220px;
+	font-weight: normal;
+}
+.main_photo {
+	margin: 0px;
+	height: 596px;
+	width: 809px;
+	padding-left: 20px;
+}
+.photo_title {
+	font-size: 16px;
+	line-height: 62px;
+	font-weight: bold;
+	color: #0064b2;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/up_title_bg.png");
+	background-repeat: no-repeat;
+	height: 62px;
+	width: 100%;
+}
+.photo_up {
+	font-size: 16px;
+	line-height: 48px;
+	color: #ff7900;
+	text-align: left;
+	height: auto;
+	width: 100%;
+	margin-bottom: 13px;
+	margin-top:10px;
+	overflow:hidden;
+}
+.photo_up img {
+	margin-right: 10px;
+}
+.photo_left {
+	float: left;
+	height: 450px;
+	width: 300px;
+}
+.photo_img {
+	height: 360px;
+	width: 300px;
+	border: 1px solid #000;
+	overflow: hidden;
+	background-color: #CCC;
+	text-align: left;
+	
+}
+.photo_img img{
+	max-height:360px;
+	max-width:300px;
+	}
+.photo_turn_left {
+	margin-top:15px;
+	float: left;
+	height: 62px;
+	width: 62px;
+	text-align:center;
+}
+.photo_turn_right {
+	margin-top:15px;
+	float: right;
+	height: 62px;
+	width: 62px;
+	text-align:center;
+}
+.photo_right {
+	clear: right;
+	float: left;
+	height: 460px;
+	width: 435px;
+	padding-left: 25px;
+}
+.photo_right_intro {
+	font-size: 16px;
+	line-height: 30px;
+	color: #555;
+	text-align: left;
+	clear: both;
+	height: 70px;
+	width: 100%;
+}
+.photo_preview {
+	height: 158px;
+	width: 126px;
+	margin-top: 40px;
+	margin-right: auto;
+	margin-bottom: 30px;
+	margin-left: auto;
+	overflow: hidden;
+}
+.photo_preview img{
+
+	max-width:none;
+	}
+.photo_bt {
+	text-align: center;
+	clear: both;
+	height: 35px;
+	width: 100%;
+}
+.photo_bt {
+	text-align: center;
+	clear: both;
+	height: 35px;
+	width: 100%;
+}
+.center_bt {
+	font-size:16px;
+	font-weight:bold;
+	clear: both;
+	height: 40px;
+	width: 111px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+}
+.center_bt3 {
+	font-size: 16px;
+	font-weight: bold;
+	clear: both;
+	height: 40px;
+	width: 290px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+}
+.center_bt2 {
+	font-size:16px;
+	font-weight:bold;
+	clear: both;
+	height: 40px;
+	width: 200px;
+	margin-left: 150px;
+	text-align: center;
+	margin-top:20px;
+}
+.other {
+	font-size: 16px;
+	line-height: 45px;
+	text-align: left;
+	height: 39px;
+	width: 500px;
+	margin-left: 50px;
+	margin-bottom : 10px;
+	margin-top:10px;
+	clear: both;
+}
+.tab_list2 {
+	display: none;
+}
+.bt_blue {
+
+	line-height: 35px;
+	color:#fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/blue_bg_bt_yenching.png");
+	background-repeat: repeat-x;
+	border: 1px solid #fff ;
+	border-radius:3px;
+	text-align: center;
+	float: left;
+	height: 35px;
+	width: 100%;
+}
+.bt_blue:hover{
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+	cursor:pointer;
+	}
+.bt_blue1 {
+  line-height: 35px;
+  color: #fff;
+  background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/blue_bg_bt_yenching.png");
+  background-repeat: repeat-x;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  text-align: center;
+  height: 35px;
+  width: 50px;
+}
+.bt_blue1_gray {
+  line-height: 35px;
+  color: #fff;
+  background-image: url(/tranzvision/kitchensink/app/view/website/set/images/system/date_bg_gray.png);
+  background-repeat: repeat-x;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  text-align: center;
+  height: 35px;
+  width: 50px;
+}
+.bt_gray {
+
+	line-height: 35px;
+	color:#fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/gray_bg_bt.png") ;
+	background-repeat: repeat-x;
+	border: 1px solid #fff ;
+	border-radius:3px;
+	text-align: center;
+	float: left;
+	height: 35px;
+	width: 100%;
+}
+.bt_gray:hover{
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+	cursor:pointer;
+	}
+.bt_113px {
+	height: 35px;
+	width: 113px;
+	margin-right: 30px;
+	float: left;
+}
+.text_300 {
+	line-height: 35px;
+	float: left;
+	height: 35px;
+	width: 300px;
+}
+.input_num {
+	height:16px !important;
+	font-size: 14px !important;
+	line-height: 16px  !important;
+	font-weight: normal;
+	color: #9f9f9f !important;
+	width: 200px;
+	border: none !important;
+	box-shadow:none !important;
+	padding: 0px !important;
+	margin: 0px !important;
+	
+}
+.btc_left {
+	float: left;
+	height: 35px;
+	width: 111px;
+}
+.btc_right {
+	float: right;
+	height: 35px;
+	width: 111px;
+}
+.city_main_city2 label {
+	cursor:pointer;
+	}
+.autocomplete{
+border: 1px solid #8f8f8f;
+border-radius: 0px 5px 5px 0px;
+background-color: white;
+text-align: left;
+}
+.autocomplete li{
+	font-size:16px;
+	font-weight:normal;
+	color:#B1193B;
+	list-style-type: none;
+}
+.clickable {
+cursor: default;
+}
+.highlight {
+background-color: #8f8f8f;
+cursor:pointer;
+}
+.main_full_line_right label {
+	cursor:pointer;
+	}.pading_left {
+	padding-left: 200px;
+}
+#jb8,#jb9,#jb10,#jb11,#cj8,#cj9,#cj10,#cj11,#cj4,#cj5,#cj6,#cj7,#jb4,#jb5,#jb6,#jb7{
+	display:none;
+}.search_left {
+	float: left;
+	height: 39px;
+	width: 300px;
+}
+.search_right {
+	float: left;
+	height: 39px;
+	width: 50px;
+	margin:8px 0;
+}
+.main_inner_right_line_right2  input[type="button"] {
+	font-size: 16px;
+	line-height: 35px;
+	color: #fff;
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/blue_bg_bt.png");
+	background-repeat: repeat-x;
+	height: 37px;
+	width: 100%;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	margin: 0px;
+	padding: 0px;
+	border: 1px solid #fff ;
+	border-radius:3px;
+}
+.main_inner_right_line_right2  input[type="button"]:hover {
+	cursor:pointer;
+	filter:alpha(opacity=80); 
+	-moz-opacity:0.8; 
+	opacity:0.8;
+}
+.sub_left {
+	float: left;
+	height: 35px;
+	width: 110px;
+	line-height:35px;
+}
+.sub_right {
+	float: left;
+	height: auto;
+	width: 460px;
+	overflow: hidden;
+}
+.radio_line {
+	font-size: 16px;
+	line-height: 35px;
+	font-weight: normal;
+	text-align: left;
+	clear: both;
+	height: 35px;
+	width: 100%;
+}
+
+/* ------------------------------------------------------
+  ???????????---begin
+--------------------------------------------------------- */
+.font_12px_red {
+   font-size:12px; color:red;
+}
+
+.font_12px_046dba {
+   font-size:12px; color:#B1193B;
+}
+
+.font_14px_000_b {
+  font-size:14px; color:#000000;  font-weight:bold;
+}
+
+.td_14px_292929_pd17px_bd {
+	font-size: 14px;color: #292929;padding:17px; border: 1px solid #d0d5db;
+}
+
+.cul {
+	padding: 10px;
+	font-size: 17px;
+	color: #B1193B;
+	background-color: #eceff3;
+}
+/* ------------------------------------------------------
+  ???????????---end
+--------------------------------------------------------- */
+
+
+/*--------------------------------------------------------
+?????????---bengin
+----------------------------------------------------------*/
+.pw-tip-arr {
+	display: block;
+	width: 7px;
+	height: 9px;
+	background: url(/tranzvision/images/arr-left.png) no-repeat 0 0;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -5px;
+}
+.pw-tip {
+	position: absolute;
+	padding-left: 6px;
+	width: 300px;
+	display: none;
+	line-height: 18px;
+	font-size:12px;
+	color:#000000;
+}
+.pw-tip-bd {
+        text-align:left;
+        font-weight:normal;
+	padding: 20px;
+	background: #fff url(/tranzvision/images/pw-tip-bd.png) 0 100% repeat-x;
+	border: 1px solid #c2c8c8;
+}
+.pw-strength {
+	height: 18px;
+	line-height: 18px;
+	position: relative;
+	padding-bottom: 10px;
+}
+.pw-strength-bar {
+	width: 95px;
+	position: absolute;
+	left: 60px;
+	top: 0;
+}
+.pw-strength-bar span {
+	display: block;
+	width: 25px;
+	height: 10px;
+	float: left;
+	margin-left: 1px;
+	background-color: #dcdcdc;
+	position: relative;
+	top: 5px;
+}
+.pw-rule-item .iconfont {
+	margin-right: 3px;
+	color: #b7b7b7;
+	font-weight: bold;
+	vertical-align: middle;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 24px;
+        -webkit-font-smoothing: antialiased;
+        -webkit-text-stroke-width: 0.2px;
+}
+input[type="text"],input[type="password"]{
+	line-height: 39px;
+	font-size: 16px;
+	box-shadow: inset 0 4px 4px rgba(0, 0, 0, 0.075);
+	border: 1px solid #999 ;
+	border-radius: 3px;
+	height: 39px;
+	padding-left: 8px;
+	color: #666;
+	vertical-align:middle;
+}
+input[type="text"]:focus,input[type="password"]:focus{
+	border: 1px solid #b1193b !important;
+	border-radius: 3px;
+}
+input[type="text"]:hover,input[type="password"]:hover{
+	border: 1px solid  #B1193B;
+	border-radius: 3px;
+}
+.button_251px {
+	width: 241px;
+	margin-right: 7px;
+	height:35px;
+}
+.main_full_line_right .radio_7{
+	width:20px;
+	margin-right: 3px;
+	margin-left: 40px;
+	vertical-align: middle;
+}
+.main_inner_right_line_50px .radio_7{
+	width:20px;
+	margin-right: 3px;
+	margin-left: 40px;
+	vertical-align: middle;
+}
+.main_inner_right_line_50px .combox{
+	font-size:16px;
+	border-radius: 3px;
+	height: 39px;
+	padding-left: 3px;
+	color: #666;
+	width: 251px;
+	margin-right: 7px;
+}
+.main_full_line_right .combox{
+	font-size:16px;
+	border-radius: 3px;
+	height: 39px;
+	padding-left: 3px;
+	color: #666;
+	width: 241px;
+	margin-right: 7px;
+}
+.main_inner_right_line_left_user {
+	font-size: 16px;
+	line-height: 40px;
+	font-weight: bold;
+	color: #333;
+	float: left;
+	height: 40px;
+	width: 180px;
+	text-align: right;
+}
+/*--------------------------------------------------------
+?????????---end
+----------------------------------------------------------*/
+
+
+
+/*???*/
+#img_box{width:700px;margin:0 auto;overflow:hidden;}
+/* bigPic */
+.bigPic{margin:0px auto;overflow:hidden;width:650px;position:relative}
+.bigPic a.btnleft{margin-top:-42px;display:block;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/btnLeft1_1.png);left:35px;overflow:hidden;width:24px;position:absolute;top:55%;height:43px}
+.bigPic a.btnleft:hover{margin-top:-42px;display:block;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/btnLeft1.png);left:35px;overflow:hidden;width:24px;position:absolute;top:55%;height:43px}
+.bigPic a.btnright{margin-top:-42px;display:block;right:35px;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/btnRight1_1.png);overflow:hidden;width:24px;position:absolute;top:55%;height:43px}
+.bigPic a.btnright:hover{margin-top:-42px;display:block;right:35px;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/btnRight1.png);overflow:hidden;width:24px;position:absolute;top:55%;height:43px}
+.load_pic{margin-top:-42px;display:none;left:50%;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/load2.gif);overflow:hidden;width:32px;position:absolute;top:55%;height:32px}
+.show_bg_pic{margin-top:-42px;display:block;right:35px;top:50px;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/show_bg1.png);overflow:hidden;width:26px;position:absolute;height:22px}
+.show_bg_pic:hover{background:url(/tranzvision/kitchensink/app/view/website/set/images/system/show_bg2.png);}
+.bigPic .info{overflow:hidden;width:650px;height:auto}
+.bigPic .info div{overflow:hidden;width:650px;text-align:center; background:url(/tranzvision/kitchensink/app/view/website/set/images/system/load2.gif) no-repeat center}
+.bigPic .info div img{width:600px}
+/* sPic */
+.img_title{margin:0px auto;overflow:hidden;width:650px; font-size:14px;  text-align:center; line-height:40px;}
+.sPic{margin:0px auto;overflow:hidden;width:650px;position:relative}
+.sPic a.btnleft{display:block;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/system/left.png) no-repeat center center;left:2px;overflow:hidden;width:15px;position:absolute;top:10px;height:69px}
+.sPic a.btnright{display:block;right:2px;background:url(/tranzvision/kitchensink/app/view/website/set/images/system/system/right.png) no-repeat center center;overflow:hidden;width:15px;position:absolute;top:10px;height:69px}
+.sPic .info{margin:0px auto;overflow:hidden;width:615px}
+.sPic .info div{overflow:hidden;width:123px;cursor:pointer;height:91px;text-align:center}
+.sPic .info div{border:0;}
+.sPic .info div img{margin:11px 0px 0px;width:100px;height:69px; border:0px}
+.sPic .info div  a{width:100px;height:69px;}
+.sPic .info div  a:hover img{opacity:0.8;filter:alpha(opacity=80); }
+.sPic .info td.current div{background:url(/tranzvision/kitchensink/app/view/website/set/images/system/spbg1.jpg)}
+
+/*????*/
+.o-application table{
+	width:790px;
+	border:solid #ddd; 
+	border-width:1px 0px 0px 1px;
+	font-size:16px;
+}
+.o-application table td{
+	border:solid #ddd; 
+	border-width:0px 1px 1px 0px;
+}
+.o-application table tr{
+	height:74px;
+}
+.gray-font{
+	font-size: 14px;
+	color: #787878;
+}
+
+.step-btn{
+	border:#ddd 1px solid;
+	border-radius:3px;
+	color:#424242;
+	font-size:16px;
+	float:left;
+	background:#f3f3f3;
+	padding:9px 20px;
+	line-height:24px;
+}
+.step-btn img{
+	margin-right:10px;
+}
+.step-title{
+	width:120px;	
+	margin-left:40px;
+}
+.step-info{
+	float:left;
+	margin-left:20px;
+	margin-top:14px;
+}
+.black-font{
+	color:#333;
+	font-weight:bold;
+	font-size:16px;
+}
+.red-font{
+	color:#b1193b;
+	font-weight:bold;
+	font-size:16px;
+}
+.step-arrow{
+	margin:5px 0;
+	margin-left:85px;
+	text-align:left;
+}
+.clear{
+	clear:both;
+}
+.bt_blue_tx{
+	  line-height: 35px;
+  color: #fff;
+  background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/blue_bg_bt_yenching.png");
+  background-repeat: repeat-x;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  text-align: center;
+  height: 35px;
+  width: 84px;
+}
+.font-red{
+	color:#b1193b;
+}
+/*????*/
+.index table{
+	width:542px;
+	border:solid #ddd; 
+	border-width:1px 0px 0px 1px;
+	font-size:14px;
+	margin-top:10px;
+}
+.index table td{
+	border:solid #ddd; 
+	border-width:0px 1px 1px 0px;
+}
+.index table tr{
+	height:120px;
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+.yj-red{
+	color:#b1193b;
+}
+
+/*???????-????*/
+.modal-backdrop{
+	position:fixed; 
+	top:0; 
+	right:0; 
+	bottom:0; 
+	left:0; 
+	z-index:1040; 
+	background-color:#000;
+}
+.modal-backdrop.in{
+	filter:alpha(opacity=50);
+	opacity:.5;
+}
+.fade{
+	opacity:10;
+	-webkit-transition:opacity .15s linear;
+	-o-transition:opacity .15s linear;
+	transition:opacity .15s linear;
+}
+.modal-open{
+	overflow:hidden;
+}
+.modal{
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:1050;
+	overflow:hidden;
+	-webkit-overflow-scrolling:touch;
+	outline:0;
+}
+.modal.fade .modal-dialog{
+	-webkit-transition:-webkit-transform .3s ease-out;
+	-o-transition:-o-transform .3s ease-out;
+	transition:transform .3s ease-out;
+	-webkit-transform:translate3d(0,-25%,0);
+	-o-transform:translate3d(0,-25%,0);
+	transform:translate3d(0,-25%,0);
+}
+.modal.in .modal-dialog{
+	-webkit-transform:translate3d(0,0,0);
+	-o-transform:translate3d(0,0,0);
+	transform:translate3d(0,0,0);
+}
+.modal-open .modal{
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+.modal-dialog{
+	position:relative;
+	width:auto;
+	margin:150px 10px 0 10px;
+}
+.modal-content{
+	position:relative;
+	background-color:#fff;
+	-webkit-background-clip:padding-box;
+	background-clip:padding-box;
+	border:1px solid #999;
+	border:1px solid rgba(0,0,0,.2);
+	border-radius:6px 6px 0 0;
+	outline:0;
+	width:800px;
+	margin:0 auto;
+}
+.modal-backdrop{
+	position:fixed;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:1040;
+	background-color:#000;
+}
+.modal-backdrop.fade{
+	filter:alpha(opacity=0);
+	opacity:0;
+}
+.modal-backdrop.in{
+	filter:alpha(opacity=50);
+	opacity:.5;
+}
+.modal-header{
+	min-height:16.43px;
+	padding:15px;
+	border-bottom:1px solid #e5e5e5;
+}
+.close{
+	margin-top:-2px;
+	float: right;
+	font-size: 21px;
+	font-weight: 700;
+	line-height: 1;
+	color: #000;
+	text-shadow: 0px 1px 0px #FFF;
+	opacity: 0.2;
+}
+.close:hover, .close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+	opacity: 0.5;
+}
+.modal-title{
+	margin:0;
+	line-height:1.42857143;
+	font-size:18px;
+}
+.modal-body{
+	position:relative;
+	padding:20px;
+}
+.form-control{
+	width:100%;
+	display: block;
+	padding: 6px 0;
+	font-size: 14px;
+	line-height: 1.42857;
+	border: 1px solid #CCC;
+	border-radius: 4px;
+	box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	color: #555;
+	text-indent:10px;
+}
+.form-control:focus{
+	border-color:#b6c2c9;
+	-webkit-box-shadow:none;
+	box-shadow:none;
+}
+.modal-footer{
+	padding:15px;
+	text-align:right;
+	border-top:1px solid #e5e5e5;
+}
+.modal-footer .btn+.btn{
+	margin-bottom:0;
+	margin-left:5px;
+}
+
+.table_jd{
+	padding:10px;
+}
+.step-btn-jdimg{
+	float:left;
+	width:32px;
+	height:32px;
+	line-height:32px;
+	color:#fff;
+	background:#b1193b;
+	border-radius:50%;
+	text-align:center;
+}
+.step-btn-jd{
+	border:#ddd 1px solid;
+	border-radius:3px;
+	color:#424242;
+	font-size:16px;
+	float:left;
+	background:#f3f3f3;
+	padding:9px 20px;
+	line-height:24px;
+}
+.step-title-jd{
+	width:200px;
+	margin-left:40px;
+}
+.step-btn-jd img{
+	margin-right:10px;
+}
+.step-info-jd{
+	float:left;
+	margin-left:20px;
+	margin-top:14px;
+}
+
+.step-arrow{
+	margin:5px 0;
+	margin-left:85px;
+	text-align:left;
+}
+.step-arrow-jd{
+	margin:5px 0;
+	margin-left:135px;
+	text-align:left;
+}
+
+/* appliction url */
+.application_expand{
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/expand.png");
+	background-repeat: no-repeat;
+}
+
+.application_shrink{
+	background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/shrink.png");
+	background-repeat: no-repeat;
+}
+
+
+
+/*?flat-ui.css*/
+
+
+.fui-volume-16:before {
+    content: "?";
+}
+.fui-video-16:before {
+    content: "?";
+}
+.fui-time-16:before {
+    content: "?";
+}
+.fui-settings-16:before {
+    content: "?";
+}
+.fui-plus-16:before {
+    content: "?";
+}
+.fui-new-16:before {
+    content: "?";
+}
+.fui-menu-16:before {
+    content: "?";
+}
+.fui-man-16:before {
+    content: "?";
+}
+.fui-mail-16:before {
+    content: "?";
+}
+.fui-lock-16:before {
+    content: "?";
+}
+.fui-location-16:before {
+    content: "?";
+}
+.fui-heart-16:before {
+    content: "?";
+}
+.fui-eye-16:before {
+    content: "?";
+}
+.fui-cross-16:before {
+    content: "?";
+}
+.fui-cmd-16:before {
+    content: "?";
+}
+.fui-checkround-16:before {
+    content: "?";
+}
+.fui-checkmark-16:before {
+    content: "?";
+}
+.fui-camera-16:before {
+    content: "?";
+}
+.fui-calendar-16:before {
+    content: "?";
+}
+.fui-bubble-16:before {
+    content: "?";
+}
+[data-icon]:before {
+    content: attr(data-icon);
+    font-family: "Flat-UI-Icons-24";
+    font-weight: normal;
+    line-height: 1;
+}
+.fui-video-24:before, .fui-time-24:before, .fui-settings-24:before, .fui-plus-24:before, .fui-new-24:before, .fui-menu-24:before, .fui-man-24:before, .fui-mail-24:before, .fui-lock-24:before, .fui-location-24:before, .fui-heart-24:before, .fui-eye-24:before, .fui-cross-24:before, .fui-cmd-24:before, .fui-checkround-24:before, .fui-checkmark-24:before, .fui-calendar-24:before, .fui-bubble-24:before, .fui-volume-24:before, .fui-camera-24:before {
+    font-family: "Flat-UI-Icons-24";
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+}
+.fui-video-24:before {
+    content: "?";
+}
+.fui-time-24:before {
+    content: "?";
+}
+.fui-settings-24:before {
+    content: "?";
+}
+.fui-plus-24:before {
+    content: "?";
+}
+.fui-new-24:before {
+    content: "?";
+}
+.fui-menu-24:before {
+    content: "?";
+}
+.fui-man-24:before {
+    content: "?";
+}
+.fui-mail-24:before {
+    content: "?";
+}
+.fui-lock-24:before {
+    content: "?";
+}
+.fui-location-24:before {
+    content: "?";
+}
+.fui-heart-24:before {
+    content: "?";
+}
+.fui-eye-24:before {
+    content: "?";
+}
+.fui-cross-24:before {
+    content: "?";
+}
+.fui-cmd-24:before {
+    content: "?";
+}
+.fui-checkround-24:before {
+    content: "?";
+}
+.fui-checkmark-24:before {
+    content: "?";
+}
+.fui-calendar-24:before {
+    content: "?";
+}
+.fui-bubble-24:before {
+    content: "?";
+}
+.fui-volume-24:before {
+    content: "?";
+}
+.fui-camera-24:before {
+    content: "?";
+}
+.btn {
+    background: none repeat scroll 0 0 #34495e;
+    border: medium none;
+    box-shadow: none;
+    color: white;
+    font-size: 16.5px;
+    text-decoration: none;
+    text-shadow: none;
+    transition: all 0.25s ease 0s;
+}
+.btn:hover, .btn:focus {
+    background-color: #4e6d8d;
+    color: white;
+    transition: all 0.25s ease 0s;
+}
+.btn:active, .btn.active {
+    background-color: #2c3e50;
+    box-shadow: none;
+    color: rgba(255, 255, 255, 0.75);
+}
+.btn.disabled, .btn[disabled] {
+    background-color: #95a5a6;
+    color: white;
+}
+.btn.btn-large {
+    padding-bottom: 12px;
+    padding-top: 13px;
+}
+.btn.btn-primary {
+    background-color: #1abc9c;
+}
+.btn.btn-primary:hover, .btn.btn-primary:focus {
+    background-color: #2fe2bf;
+}
+.btn.btn-primary:active, .btn.btn-primary.active {
+    background-color: #16a085;
+}
+.btn.btn-info {
+    background-color: #3498db;
+}
+.btn.btn-info:hover, .btn.btn-info:focus {
+    background-color: #5dade2;
+}
+.btn.btn-info:active, .btn.btn-info.active {
+    background-color: #2383c4;
+}
+.btn.btn-danger {
+    background-color: #e74c3c;
+}
+.btn.btn-danger:hover, .btn.btn-danger:focus {
+    background-color: #ec7063;
+}
+.btn.btn-danger:active, .btn.btn-danger.active {
+    background-color: #dc2d1b;
+}
+.btn.btn-success {
+    background-color: #2ecc71;
+}
+.btn.btn-success:hover, .btn.btn-success:focus {
+    background-color: #55d98d;
+}
+.btn.btn-success:active, .btn.btn-success.active {
+    background-color: #27ad60;
+}
+.btn.btn-warning {
+    background-color: #f1c40f;
+}
+.btn.btn-warning:hover, .btn.btn-warning:focus {
+    background-color: #f4d03f;
+}
+.btn.btn-warning:active, .btn.btn-warning.active {
+    background-color: #cea70c;
+}
+.btn-toolbar .btn {
+    font-size: 18px;
+    padding: 10px 14px 9px;
+}
+.btn-toolbar .btn:first-child {
+    border-radius: 6px 0 0 6px;
+}
+.btn-toolbar .btn:last-child {
+    border-radius: 0 6px 6px 0;
+}
+.btn-toolbar .btn.active {
+    color: white;
+}
+.demo-headline {
+    padding: 73px 0 110px;
+    text-align: center;
+}
+.demo-logo {
+    font-size: 90px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 100px;
+}
+.demo-logo .logo {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/logo-mask.png") no-repeat scroll center 0 / 256px 186px rgba(0, 0, 0, 0);
+    height: 186px;
+    margin: 0 auto 26px;
+    overflow: hidden;
+    text-indent: -9999em;
+    width: 256px;
+}
+.demo-logo small {
+    color: rgba(52, 73, 94, 0.3);
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    padding-top: 5px;
+}
+.demo-row {
+    margin-bottom: 20px;
+}
+.demo-panel-title {
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+.demo-panel-title small {
+    color: #bfc1c3;
+    font-size: inherit;
+    font-weight: 400;
+}
+.demo-navigation {
+    margin-bottom: -4px;
+    margin-top: -10px;
+}
+.demo-pager {
+    margin-top: -10px;
+}
+.demo-tooltips {
+    height: 126px;
+}
+.demo-tooltips .tooltip {
+    left: -8px !important;
+    position: relative !important;
+    top: -8px !important;
+}
+.demo-headings {
+    margin-bottom: 12px;
+}
+.demo-tiles {
+    margin-bottom: 46px;
+}
+.demo-icons {
+    margin-bottom: 115px;
+}
+.demo-icons-24 {
+    font-size: 24px;
+    margin-bottom: 38px;
+    position: relative;
+}
+.demo-icons-24 span {
+    margin: 0 0 0 18px;
+}
+.demo-icons-24 span:first-child {
+    margin-left: 0;
+}
+.demo-icons-16 {
+    font-size: 16px;
+    margin: 0 0 38px 5px;
+    position: relative;
+}
+.demo-icons-16 span {
+    margin: 0 0 0 28px;
+}
+.demo-icons-16 span:first-child {
+    margin-left: 0;
+}
+.demo-icons-tooltip {
+    bottom: 0;
+    color: #b9c8d8;
+    font-size: 12px;
+    left: 100%;
+    margin-left: 0 !important;
+    position: absolute;
+    width: 80px;
+}
+.demo-illustrations {
+    margin-bottom: 45px;
+}
+.demo-illustrations img {
+    height: 100px;
+    margin-left: 35px;
+    vertical-align: bottom;
+    width: 100px;
+}
+.demo-illustrations img:first-child {
+    margin-left: 0;
+}
+.demo-illustrations img.big-illustration {
+    height: 111px;
+    width: 112px;
+}
+.demo-illustrations img.big-retina-illustration {
+    height: 104px;
+    margin-right: -24px;
+    width: 117px;
+}
+.demo-illustrations img.big-illustration-pusher {
+    margin-right: 12px;
+}
+.demo-samples {
+    margin-bottom: 46px;
+}
+.demo-video {
+    border-radius: 6px;
+    padding-top: 95px;
+}
+.demo-download-section {
+    float: none;
+    margin: 0 auto;
+    padding: 60px 0 90px 20px;
+    text-align: center;
+}
+.demo-download-section [class*="fui-"] {
+    margin: 3px 0 -3px;
+}
+.demo-download {
+    background-color: #e8edf2;
+    border-radius: 50%;
+    height: 120px;
+    margin: 0 auto 32px;
+    padding: 40px 28px 30px 32px;
+    text-align: center;
+    width: 130px;
+}
+.demo-download img {
+    height: 104px;
+    width: 82px;
+}
+.demo-download-text {
+    font-size: 15px;
+    padding: 20px 0;
+    text-align: center;
+}
+.demo-text-box a:hover {
+    color: #1abc9c;
+}
+.demo-browser {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/demo/browser.png") no-repeat scroll 0 0 / 659px 42px #2c3e50;
+    border-radius: 0 0 6px 6px;
+    color: white;
+    margin: 0 41px 140px 0;
+    padding-top: 42px;
+}
+.demo-browser-side {
+    float: left;
+    padding: 22px 20px;
+    width: 111px;
+}
+.demo-browser-side > h5 {
+    margin-bottom: 3px;
+    text-transform: none;
+}
+.demo-browser-side > h6 {
+    font-size: 11px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-top: 3px;
+    text-transform: none;
+}
+.demo-browser-author {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/browser-author.jpg") no-repeat scroll center center rgba(0, 0, 0, 0);
+    border: 3px solid white;
+    border-radius: 50%;
+    display: block;
+    height: 84px;
+    margin: 0 auto;
+    width: 84px;
+}
+.demo-browser-action {
+    padding: 30px 0 12px;
+}
+.demo-browser-action > .btn {
+    border-radius: 3px;
+    padding: 9px 0 10px 11px;
+    text-align: left;
+}
+.demo-browser-action > .btn:before {
+    color: white;
+    content: "?";
+    font-family: "Flat-UI-Icons-16";
+    font-size: 16px;
+    font-weight: 300;
+    margin-right: 12px;
+    position: relative;
+    top: 1px;
+}
+.demo-browser-content {
+    background-color: #34495e;
+    border-radius: 0 0 6px;
+    overflow: hidden;
+    padding: 21px 0 0 20px;
+}
+.demo-browser-content > img {
+    border: 6px solid white;
+    float: left;
+    margin: 0 15px 20px 0;
+    width: 134px;
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.logo {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/logo-mask-2x.png");
+}
+.demo-browser {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/browser-2x.png");
+}
+}
+.navbar {
+    font-size: 18px;
+}
+.navbar .brand {
+    color: #1abc9c;
+    font-size: inherit;
+    font-weight: 700;
+    padding-bottom: 16px;
+    padding-top: 15px;
+}
+.navbar .nav > li:hover > ul {
+    top: 100%;
+}
+.navbar .nav > li > ul {
+    padding-top: 13px;
+    top: 80%;
+}
+.navbar .nav > li > ul:before {
+    border-color: transparent transparent #34495e;
+    border-style: solid;
+    border-width: 0 9px 9px;
+    content: "";
+    height: 0;
+    left: 15px;
+    position: absolute;
+    top: 5px;
+    width: 0;
+}
+.navbar .nav > li > ul li:hover ul {
+    opacity: 1;
+    visibility: visible;
+}
+.navbar .nav > li > ul li ul {
+    left: 100%;
+}
+.navbar .nav > li > a {
+    padding: 14px 15px 17px;
+}
+.navbar .nav > li > a:hover {
+    color: #1abc9c;
+}
+.navbar .nav li {
+    position: relative;
+}
+.navbar .nav li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    z-index: 100;
+}
+.navbar .nav ul {
+    border-radius: 4px;
+    left: 15px;
+    list-style-type: none;
+    margin-left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    transition: all 0.3s ease-out 0s;
+    visibility: hidden;
+    width: 234px;
+    z-index: -100;
+}
+.navbar .nav ul ul {
+    left: 95%;
+    padding-left: 5px;
+}
+.navbar .nav ul li {
+    background-color: #34495e;
+    padding: 0 3px 3px;
+}
+.navbar .nav ul li:first-child {
+    border-radius: 4px 4px 0 0;
+    padding-top: 3px;
+}
+.navbar .nav ul li:last-child {
+    border-radius: 0 0 4px 4px;
+}
+.navbar .nav ul li.active > a, .navbar .nav ul li.active > a:hover {
+    background-color: #1abc9c;
+    color: white;
+}
+.navbar .nav ul a {
+    border-radius: 2px;
+    color: white;
+    display: block;
+    font-size: 14px;
+    padding: 6px 9px;
+    text-decoration: none;
+}
+.navbar .nav ul a:hover {
+    background-color: #1abc9c;
+}
+.navbar-inner {
+    border: medium none;
+    border-radius: 6px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.navbar-inverse .navbar-inner {
+    background: none repeat scroll 0 0 #34495e;
+}
+.navbar-inverse .nav > li > a {
+    color: white;
+}
+.navbar-inverse .nav .active > a, .navbar-inverse .nav .active > a:hover, .navbar-inverse .nav .active > a:focus {
+    background-color: transparent;
+    box-shadow: none;
+    color: #1abc9c;
+}
+.navbar-unread {
+    background-color: #e74c3c;
+    border-radius: 30px;
+    color: white;
+    display: none;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    min-width: 8px;
+    padding: 0 5px;
+    position: absolute;
+    right: -7px;
+    text-align: center;
+    text-shadow: none;
+    top: 8px;
+    z-index: 10;
+}
+.active .navbar-unread {
+    display: block;
+}
+.dk_container {
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+    outline: medium none;
+}
+.dk_toggle {
+    background-color: #1abc9c;
+    border-radius: 6px;
+    color: white;
+    overflow: hidden;
+    padding: 11px 45px 11px 13px;
+    text-decoration: none;
+    transition: all 0.25s ease 0s;
+    white-space: nowrap;
+}
+.dk_toggle:hover, .dk_toggle:focus, .dk_focus .dk_toggle {
+    background-color: #2fe2bf;
+    color: white;
+    outline: medium none;
+}
+.dk_toggle:active {
+    background-color: #16a085;
+    outline: medium none;
+}
+.dk_toggle:active .select-icon {
+    border-left-color: transparent;
+}
+.select-icon {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/toggle.png") no-repeat scroll right center #1abc9c;
+    border-left: 2px solid rgba(52, 73, 94, 0.15);
+    border-radius: 0 6px 6px 0;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all 0.25s ease 0s;
+    width: 42px;
+}
+.dk_open {
+    z-index: 10;
+}
+.dk_open .dk_toggle {
+    background-color: #1abc9c;
+}
+.dk_open .dk_toggle .select-icon {
+    background-color: #16a085;
+    border-left-color: transparent;
+}
+.dk_options {
+    padding-top: 14px;
+}
+.dk_options:before {
+    border-color: transparent transparent #34495e;
+    border-style: solid;
+    border-width: 0 9px 9px;
+    content: "";
+    height: 0;
+    left: 15px;
+    position: absolute;
+    top: 5px;
+    width: 0;
+}
+.dk_options:before {
+    left: auto;
+    right: 12px;
+}
+.dk_options li {
+    padding-bottom: 3px;
+}
+.dk_options a {
+    border-radius: 3px;
+    color: white;
+    display: block;
+    padding: 5px 9px;
+    text-decoration: none;
+}
+.dk_options a:hover {
+    background-color: #1abc9c;
+}
+.dk_option_current a {
+    background-color: #1abc9c;
+}
+.dk_options_inner {
+    background-color: #34495e;
+    border-radius: 5px;
+    margin: 0;
+    max-height: 244px;
+    padding: 3px 3px 0;
+}
+.dk_touch .dk_options {
+    max-height: 250px;
+}
+.dk_container {
+    display: none;
+    position: relative;
+    vertical-align: middle;
+}
+.dk_container.dk_shown {
+    display: inline-block;
+}
+.dk_container[class*="span"] {
+    float: none;
+    margin-left: 0;
+}
+.dk_toggle {
+    display: block;
+    position: relative;
+}
+.dk_open {
+    position: relative;
+}
+.dk_open .dk_options {
+    margin-top: -1px;
+    opacity: 1;
+    z-index: 10;
+}
+.dk_open .dk_label {
+    color: inherit;
+}
+.dk_options {
+    left: 0;
+    margin-top: -21px;
+    opacity: 0;
+    position: absolute;
+    transition: all 0.3s ease-out 0s;
+    width: 220px;
+    z-index: -100;
+}
+.select-right .dk_options {
+    left: auto;
+    right: 0;
+}
+.dk_options a {
+    display: block;
+}
+.dk_options_inner {
+    outline: medium none;
+    overflow: auto;
+    position: relative;
+}
+.dk_touch .dk_options {
+    overflow: hidden;
+}
+.dk_touch .dk_options_inner {
+    max-height: none;
+    overflow: visible;
+}
+.dk_fouc select {
+    position: relative;
+    top: -99999em;
+    visibility: hidden;
+}
+input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    border: 2px solid #dce4ec;
+    border-radius: 6px;
+    box-shadow: none;
+    color: #34495e;
+    font-family: "Lato",sans-serif;
+    font-size: 14px;
+    padding: 8px 0 9px 10px;
+    text-indent: 1px;
+}
+textarea:-moz-placeholder, input[type="datetime"]:-moz-placeholder, input[type="datetime-local"]:-moz-placeholder, input[type="date"]:-moz-placeholder, input[type="month"]:-moz-placeholder, input[type="time"]:-moz-placeholder, input[type="week"]:-moz-placeholder, input[type="number"]:-moz-placeholder, input[type="email"]:-moz-placeholder, input[type="url"]:-moz-placeholder, input[type="search"]:-moz-placeholder, input[type="tel"]:-moz-placeholder, input[type="color"]:-moz-placeholder, .uneditable-input:-moz-placeholder {
+    color: #acb6c0;
+}
+textarea.placeholder, input.placeholder[type="datetime"], input.placeholder[type="datetime-local"], input.placeholder[type="date"], input.placeholder[type="month"], input.placeholder[type="time"], input.placeholder[type="week"], input.placeholder[type="number"], input.placeholder[type="email"], input.placeholder[type="url"], input.placeholder[type="search"], input.placeholder[type="tel"], input.placeholder[type="color"], .uneditable-input.placeholder {
+    color: #acb6c0;
+}
+textarea:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+    border-color: #1abc9c;
+    box-shadow: none;
+}
+.control-group.error textarea, .control-group.error input[type="datetime"], .control-group.error input[type="datetime-local"], .control-group.error input[type="date"], .control-group.error input[type="month"], .control-group.error input[type="time"], .control-group.error input[type="week"], .control-group.error input[type="number"], .control-group.error input[type="email"], .control-group.error input[type="url"], .control-group.error input[type="search"], .control-group.error input[type="tel"], .control-group.error input[type="color"], .control-group.error .uneditable-input {
+    border-color: #e74c3c;
+    box-shadow: none;
+    color: #e74c3c;
+}
+.control-group.error textarea:focus, .control-group.error input[type="datetime"]:focus, .control-group.error input[type="datetime-local"]:focus, .control-group.error input[type="date"]:focus, .control-group.error input[type="month"]:focus, .control-group.error input[type="time"]:focus, .control-group.error input[type="week"]:focus, .control-group.error input[type="number"]:focus, .control-group.error input[type="email"]:focus, .control-group.error input[type="url"]:focus, .control-group.error input[type="search"]:focus, .control-group.error input[type="tel"]:focus, .control-group.error input[type="color"]:focus, .control-group.error .uneditable-input:focus {
+    box-shadow: none;
+}
+.control-group.success textarea, .control-group.success input[type="datetime"], .control-group.success input[type="datetime-local"], .control-group.success input[type="date"], .control-group.success input[type="month"], .control-group.success input[type="time"], .control-group.success input[type="week"], .control-group.success input[type="number"], .control-group.success input[type="email"], .control-group.success input[type="url"], .control-group.success input[type="search"], .control-group.success input[type="tel"], .control-group.success input[type="color"], .control-group.success .uneditable-input {
+    border-color: #2ecc71;
+    box-shadow: none;
+    color: #2ecc71;
+}
+.control-group.success textarea:focus, .control-group.success input[type="datetime"]:focus, .control-group.success input[type="datetime-local"]:focus, .control-group.success input[type="date"]:focus, .control-group.success input[type="month"]:focus, .control-group.success input[type="time"]:focus, .control-group.success input[type="week"]:focus, .control-group.success input[type="number"]:focus, .control-group.success input[type="email"]:focus, .control-group.success input[type="url"]:focus, .control-group.success input[type="search"]:focus, .control-group.success input[type="tel"]:focus, .control-group.success input[type="color"]:focus, .control-group.success .uneditable-input:focus {
+    box-shadow: none;
+}
+.control-group.warning textarea, .control-group.warning input[type="datetime"], .control-group.warning input[type="datetime-local"], .control-group.warning input[type="date"], .control-group.warning input[type="month"], .control-group.warning input[type="time"], .control-group.warning input[type="week"], .control-group.warning input[type="number"], .control-group.warning input[type="email"], .control-group.warning input[type="url"], .control-group.warning input[type="search"], .control-group.warning input[type="tel"], .control-group.warning input[type="color"], .control-group.warning .uneditable-input {
+    border-color: #f1c40f;
+    box-shadow: none;
+    color: #f1c40f;
+}
+.control-group.warning textarea:focus, .control-group.warning input[type="datetime"]:focus, .control-group.warning input[type="datetime-local"]:focus, .control-group.warning input[type="date"]:focus, .control-group.warning input[type="month"]:focus, .control-group.warning input[type="time"]:focus, .control-group.warning input[type="week"]:focus, .control-group.warning input[type="number"]:focus, .control-group.warning input[type="email"]:focus, .control-group.warning input[type="url"]:focus, .control-group.warning input[type="search"]:focus, .control-group.warning input[type="tel"]:focus, .control-group.warning input[type="color"]:focus, .control-group.warning .uneditable-input:focus {
+    box-shadow: none;
+}
+.control-group.info textarea, .control-group.info input[type="datetime"], .control-group.info input[type="datetime-local"], .control-group.info input[type="date"], .control-group.info input[type="month"], .control-group.info input[type="time"], .control-group.info input[type="week"], .control-group.info input[type="number"], .control-group.info input[type="email"], .control-group.info input[type="url"], .control-group.info input[type="search"], .control-group.info input[type="tel"], .control-group.info input[type="color"], .control-group.info .uneditable-input {
+    border-color: #3498db;
+    box-shadow: none;
+    color: #3498db;
+}
+.control-group.info textarea:focus, .control-group.info input[type="datetime"]:focus, .control-group.info input[type="datetime-local"]:focus, .control-group.info input[type="date"]:focus, .control-group.info input[type="month"]:focus, .control-group.info input[type="time"]:focus, .control-group.info input[type="week"]:focus, .control-group.info input[type="number"]:focus, .control-group.info input[type="email"]:focus, .control-group.info input[type="url"]:focus, .control-group.info input[type="search"]:focus, .control-group.info input[type="tel"]:focus, .control-group.info input[type="color"]:focus, .control-group.info .uneditable-input:focus {
+    box-shadow: none;
+}
+input[disabled], input[readonly], textarea[disabled], textarea[readonly] {
+    background-color: #eaeded;
+    border-color: transparent;
+    color: #cad2d3;
+    cursor: default;
+}
+input, textarea, .uneditable-input {
+    width: 192px;
+}
+.checkbox, .radio {
+    margin-bottom: 12px;
+    padding-left: 32px;
+    position: relative;
+    transition: all 0.25s ease 0s;
+}
+.checkbox:hover, .radio:hover {
+    color: #1abc9c;
+}
+.checkbox input, .radio input {
+    opacity: 0;
+    outline: medium none !important;
+}
+.checkbox.checked .icon, .radio.checked .icon {
+    background-position: -60px -30px;
+    opacity: 1;
+}
+.checkbox.checked .icon-to-fade, .radio.checked .icon-to-fade {
+    opacity: 0;
+}
+.checkbox.disabled, .radio.disabled {
+    color: #d7dddd;
+    cursor: default;
+}
+.checkbox.disabled .icon, .radio.disabled .icon {
+    opacity: 0;
+}
+.checkbox.disabled .icon-to-fade, .radio.disabled .icon-to-fade {
+    background-position: -30px -60px;
+    opacity: 1;
+}
+.checkbox.disabled.checked .icon, .radio.disabled.checked .icon {
+    background-position: 0 -90px;
+    opacity: 1;
+}
+.checkbox.disabled.checked .icon-to-fade, .radio.disabled.checked .icon-to-fade {
+    opacity: 0;
+}
+.checkbox .icon, .checkbox .icon-to-fade, .radio .icon, .radio .icon-to-fade {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/checkbox.png") no-repeat scroll -90px 0 rgba(0, 0, 0, 0);
+    display: block;
+    height: 20px;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    top: -1px;
+    transition: opacity 0.1s linear 0s;
+    width: 20px;
+}
+.checkbox .icon, .radio .icon {
+    opacity: 0;
+    top: 0;
+    z-index: 2;
+}
+.radio .icon, .radio .icon-to-fade {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/radio.png");
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.checkbox .icon {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/checkbox-2x.png");
+    background-size: 110px 110px;
+}
+.radio .icon {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/radio-2x.png");
+    background-size: 110px 110px;
+}
+}
+.toggle {
+    background-color:#b1193b;
+    border-radius: 60px;
+    color: white;
+    display: inline-block;
+    height: 29px;
+    margin: 0 12px 12px 0;
+    overflow: hidden;
+    transition: all 0.25s ease 0s;
+}
+.toggle:before, .toggle:after {
+    content: "";
+    display: table;
+}
+.toggle:after {
+    clear: both;
+}
+.toggle.toggle-off {
+    background-color: #cbd2d8;
+}
+.toggle.toggle-off .toggle-radio {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/icon-off.png");
+    background-position: 0 0;
+    color: white;
+    left: 0;
+    margin-left: 0.5px;
+    margin-right: -13px;
+    z-index: 1;
+}
+.toggle.toggle-off .toggle-radio:first-child {
+    left: -120%;
+}
+.toggle .toggle-radio {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/icon-on.png") no-repeat scroll right top rgba(0, 0, 0, 0);
+    color: #fff;
+    display: block;
+    font-weight: 700;
+    height: 21px;
+    left: 120%;
+    margin-left: -13px;
+    padding: 5px 32px 3px;
+    position: relative;
+    text-align: center;
+    transition: all 0.25s ease 0s;
+    z-index: 2;
+}
+.toggle .toggle-radio:first-child {
+    left: 0;
+    margin-bottom: -29px;
+}
+.toggle input {
+    display: none;
+    opacity: 0.01;
+    outline: medium none !important;
+    position: absolute;
+}
+.toggle.toggle-icon {
+    border-radius: 6px 7px 7px 6px;
+}
+.toggle.toggle-icon.toggle-off {
+    border-radius: 7px 6px 6px 7px;
+}
+.toggle.toggle-icon.toggle-off .toggle-radio {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/block-off.png");
+    background-position: 0 0;
+}
+.toggle.toggle-icon .toggle-radio {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/block-on.png");
+    background-position: 62px 0;
+    border-radius: 6px;
+    min-width: 27px;
+    text-align: right;
+}
+.toggle.toggle-icon .toggle-radio:first-child {
+    text-align: left;
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.toggle.toggle-off .toggle-radio {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/icon-off-2x.png");
+    background-size: 30px 29px;
+}
+.toggle .toggle-radio {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/icon-on-2x.png");
+    background-size: 30px 29px;
+}
+}
+.tagsinput {
+    background: none repeat scroll 0 0 white;
+    border: 2px solid #1abc9c;
+    border-radius: 6px;
+    height: 100px;
+    overflow-y: auto;
+    padding: 6px 1px 1px 6px;
+    text-align: left;
+}
+.tagsinput .tag {
+    background: none repeat scroll 0 0 #1abc9c;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    overflow: hidden;
+    padding: 6px 13px 6px 19px;
+    position: relative;
+    transition: all 0.14s linear 0s;
+    vertical-align: middle;
+}
+.tagsinput .tag:hover {
+    background-color: #16a085;
+    padding-left: 12px;
+    padding-right: 20px;
+}
+.tagsinput .tag:hover .tagsinput-remove-link {
+    color: white;
+    opacity: 1;
+}
+.tagsinput input {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    color: #34495e;
+    font-family: "Lato",sans-serif;
+    font-size: 14px;
+    margin: 0 5px 5px 0;
+    outline: 0 none;
+    padding: 0 0 0 5px;
+    width: 12px;
+}
+.tagsinput-remove-link {
+    bottom: 0;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0;
+    padding: 9px 7px 3px 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    text-decoration: none;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+.tagsinput-remove-link:before {
+    color: white;
+}
+.tagsinput-add-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+.tagsinput-add {
+    background-color: #bbc3cb;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin-bottom: 5px;
+    padding: 6px 9px;
+    transition: all 0.25s ease 0s;
+}
+.tagsinput-add:hover {
+    background-color: #1abc9c;
+}
+.tags_clear {
+    clear: both;
+    height: 0;
+    width: 100%;
+}
+.not_valid {
+    background: none repeat scroll 0 0 #fbd8db !important;
+    color: #90111a !important;
+}
+.progress, .ui-slider {
+    background: none repeat scroll 0 0 #e8edf2;
+    border-radius: 32px;
+    box-shadow: none;
+    height: 12px;
+}
+.progress .bar, .ui-slider .bar {
+    background: none repeat scroll 0 0 #1abc9c;
+    box-shadow: none !important;
+}
+.progress .bar-success, .ui-slider .bar-success {
+    background-color: #2ecc71;
+}
+.progress .bar-warning, .ui-slider .bar-warning {
+    background-color: #f1c40f;
+}
+.progress .bar-danger, .ui-slider .bar-danger {
+    background-color: #e74c3c;
+}
+.progress .bar-info, .ui-slider .bar-info {
+    background-color: #3498db;
+}
+.ui-slider {
+    margin-bottom: 20px;
+    position: relative;
+}
+.ui-slider-handle {
+    background-color: #16a085;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 18px;
+    margin-left: -9px;
+    position: absolute;
+    top: -3px;
+    transition: background 0.25s ease 0s;
+    width: 18px;
+    z-index: 2;
+}
+.ui-slider-handle[style*="100"] {
+    margin-left: -15px;
+}
+.ui-slider-handle:hover, .ui-slider-handle:focus {
+    background-color: #2fe2bf;
+    outline: medium none;
+}
+.ui-slider-handle:active {
+    background-color: #16a085;
+}
+.ui-slider-range {
+    background-color: #1abc9c;
+    border-radius: 30px 0 0 30px;
+    display: block;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+}
+.ui-slider-segment {
+    background-color: #d6dbe0;
+    border-radius: 50%;
+    float: left;
+    height: 6px;
+    margin: 3px -6px 0 25%;
+    width: 6px;
+}
+.pager {
+    background-color: #34495e;
+    border-radius: 6px;
+    color: white;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 700;
+}
+.pager li:first-child > a, .pager li:first-child > span {
+    border-left: medium none;
+    border-radius: 6px 0 0 6px;
+    padding-left: 20px;
+}
+.pager li:first-child > a img, .pager li:first-child > span img {
+    margin-left: 0;
+    margin-right: 13px;
+}
+.pager li.pager-center {
+    display: inline-block;
+    padding: 9px 0 10px;
+}
+.pager li.previous img, .pager li.next img {
+    height: 14px;
+    margin: -1px 0 0 13px;
+    vertical-align: middle;
+}
+.pager li > a, .pager li > span {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border-color: -moz-use-text-color -moz-use-text-color -moz-use-text-color #2c3e50;
+    border-image: none;
+    border-radius: 0 6px 6px 0;
+    border-style: none none none solid;
+    border-width: medium medium medium 2px;
+    color: white;
+    padding: 9px 18px 10px 7px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.pager li > a:hover, .pager li > a:focus, .pager li > span:hover, .pager li > span:focus {
+    background-color: #4e6d8d;
+}
+.pager li > a:active, .pager li > span:active {
+    background-color: #2c3e50;
+}
+.pagination ul {
+    background: none repeat scroll 0 0 #d7dce0;
+    border-radius: 6px;
+    box-shadow: none;
+}
+.pagination ul > li:first-child {
+    border-radius: 6px 0 0 6px;
+}
+.pagination ul > li:last-child {
+    border-radius: 0 6px 6px 0;
+}
+.pagination ul > li.previous > a, .pagination ul > li.previous > span, .pagination ul > li.next > a, .pagination ul > li.next > span {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 transparent;
+    border-bottom: medium none;
+    border-image: none;
+    border-left: medium none;
+    border-radius: 6px 0 0 6px;
+    border-right: 2px solid white !important;
+    border-top: medium none;
+    box-shadow: none !important;
+    margin: 0 9px 0 0;
+    padding: 11px 17px 12px;
+}
+.pagination ul > li.next > a, .pagination ul > li.next > span {
+    border-left: 2px solid white !important;
+    border-radius: 0 6px 6px 0;
+    margin-left: 9px;
+    margin-right: 0;
+}
+.pagination ul > li.active > a, .pagination ul > li.active > span {
+    background-color: white;
+    border-color: white;
+    border-width: 2px;
+    color: #d7dce0;
+    margin: 10px 5px 9px;
+}
+.pagination ul > li.active > a:hover, .pagination ul > li.active > a:focus, .pagination ul > li.active > span:hover, .pagination ul > li.active > span:focus {
+    background-color: white;
+    border-color: white;
+    box-shadow: none;
+    color: #d7dce0;
+}
+.pagination ul > li > a, .pagination ul > li > span {
+    background: none repeat scroll 0 0 white;
+    border: 5px solid #d7dce0;
+    border-radius: 50px;
+    color: white;
+    line-height: 16px;
+    margin: 7px 2px 6px;
+    padding: 0 4px;
+    transition: background 0.2s ease-out 0s, border-color 0s ease-out 0s, color 0.2s ease-out 0s;
+}
+.pagination ul > li > a:hover, .pagination ul > li > a *:focus, .pagination ul > li > span:hover, .pagination ul > li > span *:focus {
+    background-color: #1abc9c;
+    border-color: #1abc9c;
+    color: white;
+    transition: background 0.2s ease-out 0s, border-color 0.2s ease-out 0s, color 0.2s ease-out 0s;
+}
+.pagination ul > li > a:active, .pagination ul > li > span:active {
+    background-color: #16a085;
+    border-color: #16a085;
+}
+.pagination ul img {
+    height: 14px;
+    margin-top: -1px;
+    vertical-align: middle;
+    width: 13px;
+}
+.share {
+    background-color: #ecf0f5;
+    border-radius: 6px;
+    position: relative;
+}
+.share:before {
+    border-color: transparent transparent #ecf0f5;
+    border-style: solid;
+    border-width: 0 9px 9px;
+    content: "";
+    height: 0;
+    left: 23px;
+    position: absolute;
+    top: -9px;
+    width: 0;
+}
+.share ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 15px;
+}
+.share li {
+    padding-top: 11px;
+}
+.share li:before, .share li:after {
+    content: "";
+    display: table;
+}
+.share li:after {
+    clear: both;
+}
+.share li:first-child {
+    padding-top: 0;
+}
+.share .toggle {
+    float: right;
+    margin: 0;
+}
+.share .btn {
+    border-radius: 0 0 6px 6px;
+}
+.share-label {
+    float: left;
+    font-size: 15px;
+    padding-top: 5px;
+    width: 50%;
+}
+.tooltip {
+    font-size: 13px;
+}
+.tooltip.in {
+    opacity: 1;
+}
+.tooltip.top {
+    padding-bottom: 9px;
+}
+.tooltip.top .tooltip-arrow {
+    border-top-color: #34495e;
+    border-width: 9px 9px 0;
+    bottom: 0;
+    margin-left: -9px;
+}
+.tooltip.right .tooltip-arrow {
+    border-right-color: #34495e;
+    border-width: 9px 9px 9px 0;
+    left: -3px;
+    margin-top: -9px;
+}
+.tooltip.bottom {
+    padding-top: 8px;
+}
+.tooltip.bottom .tooltip-arrow {
+    border-bottom-color: #34495e;
+    border-width: 0 9px 9px;
+    margin-left: -9px;
+    top: -1px;
+}
+.tooltip.left .tooltip-arrow {
+    border-right-color: #34495e;
+    border-width: 9px 9px 9px 0;
+    margin-top: -3px;
+    top: -3px;
+}
+.tooltip-inner {
+    background-color: #34495e;
+    border-radius: 6px;
+    line-height: 18px;
+    padding: 12px;
+    text-align: center;
+    width: 183px;
+}
+.palette {
+    color: white;
+    margin: 0;
+    padding: 15px;
+    text-transform: uppercase;
+}
+.palette dt {
+    display: block;
+    font-weight: 500;
+    opacity: 0.8;
+}
+.palette dd {
+    font-weight: 200;
+    margin-left: 0;
+    opacity: 0.8;
+}
+.palette-firm {
+    background-color: #1abc9c;
+}
+.palette-firm-dark {
+    background-color: #16a085;
+}
+.palette-success {
+    background-color: #2ecc71;
+}
+.palette-success-dark {
+    background-color: #27ad60;
+}
+.palette-info {
+    background-color: #3498db;
+}
+.palette-info-dark {
+    background-color: #2383c4;
+}
+.palette-warning {
+    background-color: #f1c40f;
+}
+.palette-warning-dark {
+    background-color: #cea70c;
+}
+.palette-danger {
+    background-color: #e74c3c;
+}
+.palette-danger-dark {
+    background-color: #dc2d1b;
+}
+.palette-night {
+    background-color: #34495e;
+}
+.palette-night-dark {
+    background-color: #2c3e50;
+}
+.palette-bright {
+    background-color: #f1c40f;
+}
+.palette-bright-dark {
+    background-color: #cea70c;
+}
+.palette-success-dark {
+    background-color: #27ae60;
+}
+.palette-info-dark {
+    background-color: #2980b9;
+}
+.palette-bright-dark {
+    background-color: #f39c12;
+}
+.palette-amethyst {
+    background-color: #9b59b6;
+}
+.palette-wisteria {
+    background-color: #8e44ad;
+}
+.palette-carrot {
+    background-color: #e67e22;
+}
+.palette-pumpkin {
+    background-color: #d35400;
+}
+.palette-alizarin {
+    background-color: #e74c3c;
+}
+.palette-pomegranate {
+    background-color: #c0392b;
+}
+.palette-clouds {
+    background-color: #ecf0f1;
+    color: #bdc3c7;
+}
+.palette-silver {
+    background-color: #bdc3c7;
+}
+.palette-concrete {
+    background-color: #95a5a6;
+}
+.palette-asbestos {
+    background-color: #7f8c8d;
+}
+.palette-paragraph {
+    color: #7f8c8d;
+    font-size: 12px;
+    line-height: 17px;
+}
+.palette-paragraph span {
+    color: #bdc3c7;
+}
+.palette-headline {
+    color: #7f8c8d;
+    font-weight: 700;
+    margin-top: -5px;
+}
+.tile {
+    background-color: #ecf0f5;
+    border-radius: 6px;
+    padding: 14px;
+    position: relative;
+    text-align: center;
+}
+.tile.tile-hot:before {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/ribbon.png") no-repeat scroll 0 0 / 82px 82px rgba(0, 0, 0, 0);
+    content: "";
+    height: 82px;
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 82px;
+}
+.tile p {
+    font-size: 15px;
+    margin-bottom: 33px;
+}
+.tile-image {
+    height: 100px;
+    margin: 31px 0 27px;
+    vertical-align: bottom;
+}
+.tile-image.big-illustration {
+    height: 111px;
+    margin-top: 20px;
+    width: 112px;
+}
+.tile-title {
+    font-size: 20px;
+    margin: 0;
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.tile.tile-hot:before {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/ribbon-2x.png");
+}
+}
+.todo {
+    background-color: #2c3e50;
+    border-radius: 8px 8px 6px 6px;
+    color: #6285a8;
+    margin-bottom: 20px;
+}
+.todo ul {
+    list-style-type: none;
+    margin: 0;
+}
+.todo li {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/todo.png") no-repeat scroll 92% center / 20px 20px #34495e;
+    cursor: pointer;
+    margin-top: 2px;
+    padding: 18px 42px 17px 25px;
+    position: relative;
+    transition: all 0.25s ease 0s;
+}
+.todo li:first-child {
+    margin-top: 0;
+}
+.todo li:last-child {
+    border-radius: 0 0 6px 6px;
+    padding-bottom: 18px;
+}
+.todo li.todo-done {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/done.png") no-repeat scroll 92% center / 20px 20px transparent;
+    color: #1abc9c;
+}
+.todo li.todo-done .todo-name {
+    color: #1abc9c;
+}
+.todo-search {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/search.png") no-repeat scroll 92% center / 16px 16px #1abc9c;
+    border-radius: 6px 6px 0 0;
+    color: #34495e;
+    padding: 19px 25px 20px;
+}
+input.todo-search-field {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    box-shadow: none;
+    color: #34495e;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 23px;
+    margin: 0;
+    padding: 5px 0;
+    text-indent: 0;
+}
+input.todo-search-field:-moz-placeholder {
+    color: #34495e;
+}
+input.todo-search-field.placeholder {
+    color: #34495e;
+}
+.todo-icon {
+    float: left;
+    font-size: 24px;
+    padding: 11px 22px 0 0;
+}
+.todo-content {
+    overflow: hidden;
+    padding-top: 1px;
+}
+.todo-name {
+    color: white;
+    font-size: 17px;
+    margin: 1px 0 3px;
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.todo li {
+}
+.todo li.todo-done {
+}
+.todo-search {
+}
+}
+footer {
+    background-color: #eceff1;
+    color: #bdc1c5;
+    font-size: 15px;
+    padding: 0;
+}
+footer a {
+    color: #a1a4a7;
+    font-weight: 700;
+}
+footer p {
+    font-size: 15px;
+    line-height: 20px;
+}
+.footer-title {
+    margin: 0 0 22px;
+    padding-top: 21px;
+}
+.footer-brand {
+    display: block;
+    margin-bottom: 26px;
+    width: 220px;
+}
+.footer-brand img {
+    width: 216px;
+}
+.footer-banner {
+    background-color: #1abc9c;
+    color: #cff3ec;
+    margin-left: 42px;
+    min-height: 286px;
+    padding: 0 30px 30px;
+}
+.footer-banner .footer-title {
+    color: white;
+}
+.footer-banner a {
+    color: #cff3ec;
+    text-decoration: underline;
+}
+.footer-banner a:hover {
+    text-decoration: none;
+}
+.footer-banner ul {
+    list-style-type: none;
+    margin: 0 0 26px;
+}
+.footer-banner ul li {
+    border-top: 1px solid #1bc6a5;
+    line-height: 19px;
+    padding: 6px 0;
+}
+.footer-banner ul li:first-child {
+    border-top: medium none;
+    padding-top: 1px;
+}
+.video-js {
+    background-color: #34495e;
+    border-radius: 6px 6px 0 0;
+    font-size: 10px;
+    margin-top: -95px;
+    padding: 0;
+    position: relative;
+    vertical-align: middle;
+}
+.video-js .vjs-tech {
+    border-radius: 6px 6px 0 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.video-js:-moz-full-screen {
+    position: absolute;
+}
+body.vjs-full-window {
+    height: 100%;
+    margin: 0;
+    overflow-y: auto;
+    padding: 0;
+}
+.video-js.vjs-fullscreen {
+    bottom: 0;
+    height: 100% !important;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100% !important;
+    z-index: 1000;
+}
+.vjs-poster {
+    cursor: pointer;
+    margin: 0 auto;
+    max-height: 100%;
+    padding: 0;
+    position: relative;
+    width: 100%;
+}
+.video-js .vjs-text-track-display {
+    bottom: 4em;
+    font-family: "Lato",sans-serif;
+    left: 1em;
+    position: absolute;
+    right: 1em;
+    text-align: center;
+}
+.video-js .vjs-text-track {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+    color: white;
+    display: none;
+    font-size: 1.4em;
+    margin-bottom: 0.1em;
+    text-align: center;
+}
+.video-js .vjs-subtitles {
+    color: white;
+}
+.video-js .vjs-captions {
+    color: #ffcc66;
+}
+.vjs-tt-cue {
+    display: block;
+}
+.vjs-fade-in {
+    opacity: 1 !important;
+    transition: visibility 0s linear 0s, opacity 0.3s linear 0s;
+    visibility: visible !important;
+}
+.vjs-fade-out {
+    opacity: 0 !important;
+    transition: visibility 0s linear 1.5s, opacity 1.5s linear 0s;
+    visibility: hidden !important;
+}
+.vjs-controls {
+    background: none repeat scroll 0 0 #2c3e50;
+    border-radius: 0 0 6px 6px;
+    bottom: -47px;
+    color: white;
+    height: 47px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+}
+.vjs-controls.vjs-fade-out {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.vjs-control {
+    background-position: center center;
+    background-repeat: no-repeat;
+    float: left;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    width: 18px;
+}
+.vjs-control:focus {
+    outline: 0 none;
+}
+.vjs-control div {
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+.vjs-control-text {
+    border: 0 none;
+    clip: rect(0px, 0px, 0px, 0px);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.vjs-play-control {
+    cursor: pointer !important;
+    height: 47px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 58px;
+}
+.vjs-paused .vjs-play-control {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/play.png") no-repeat scroll center -31px / 16px 64px rgba(0, 0, 0, 0);
+}
+.vjs-paused .vjs-play-control:hover div {
+    opacity: 0;
+}
+.vjs-paused .vjs-play-control div {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/play.png") no-repeat scroll center 15px / 16px 64px rgba(0, 0, 0, 0);
+    height: 47px;
+    transition: opacity 0.25s ease 0s;
+}
+.vjs-playing .vjs-play-control {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/pause.png") no-repeat scroll center -31px / 15px 64px rgba(0, 0, 0, 0);
+}
+.vjs-playing .vjs-play-control:hover div {
+    opacity: 0;
+}
+.vjs-playing .vjs-play-control div {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/pause.png") no-repeat scroll center 15px / 15px 64px rgba(0, 0, 0, 0);
+    height: 47px;
+    transition: opacity 0.25s ease 0s;
+}
+.vjs-rewind-control {
+    cursor: pointer !important;
+    width: 5em;
+}
+.vjs-rewind-control div {
+    background: url("video-js.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+    height: 16px;
+    margin: 0.5em auto 0;
+    width: 19px;
+}
+.vjs-mute-control {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/volume-full.png") no-repeat scroll center -48px / 16px 64px rgba(0, 0, 0, 0);
+    cursor: pointer !important;
+    position: absolute;
+    right: 51px;
+    top: 14px;
+}
+.vjs-mute-control:hover div, .vjs-mute-control:focus div {
+    opacity: 0;
+}
+.vjs-mute-control.vjs-vol-0, .vjs-mute-control.vjs-vol-0 div {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/volume-off.png");
+}
+.vjs-mute-control div {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/volume-full.png") no-repeat scroll center 2px / 16px 64px #2c3e50;
+    height: 18px;
+    transition: opacity 0.25s ease 0s;
+}
+.vjs-volume-control, .vjs-volume-level, .vjs-volume-handle, .vjs-volume-bar {
+    display: none;
+}
+.vjs-progress-control {
+    background: none repeat scroll 0 0 #eff2f6;
+    border-radius: 32px;
+    height: 12px;
+    left: 60px;
+    position: absolute;
+    right: 180px;
+    top: 18px;
+    width: auto;
+}
+.vjs-progress-holder {
+    cursor: pointer !important;
+    height: 12px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.vjs-play-progress, .vjs-load-progress {
+    border-radius: 32px;
+    display: block;
+    height: 12px;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+}
+.vjs-play-progress {
+    background: none repeat scroll 0 0 #1abc9c;
+    left: -1px;
+}
+.vjs-load-progress {
+    background: none repeat scroll 0 0 #d6dbe0;
+    border-radius: 32px 0 0 32px;
+}
+.vjs-load-progress[style*="100%"], .vjs-load-progress[style*="99%"] {
+    border-radius: 32px;
+}
+.vjs-seek-handle {
+    background-color: #16a085;
+    border-radius: 50%;
+    height: 18px;
+    left: 0;
+    margin: -3px 0 0 1px;
+    position: absolute;
+    top: 0;
+    transition: background-color 0.25s ease 0s;
+    width: 18px;
+}
+.vjs-seek-handle[style*="95."] {
+    margin-left: 3px;
+}
+.vjs-seek-handle[style="left: 0%;"] {
+    margin-left: -2px;
+}
+.vjs-seek-handle:hover, .vjs-seek-handle:focus {
+    background-color: #138d75;
+}
+.vjs-seek-handle:active {
+    background-color: #117e69;
+}
+.vjs-time-controls {
+    font: 300 13px "Lato",sans-serif;
+    height: 20px;
+    position: absolute;
+    top: 16px;
+    width: 50px;
+}
+.vjs-current-time {
+    right: 128px;
+    text-align: right;
+}
+.vjs-duration {
+    color: #667687;
+    right: 69px;
+    text-align: left;
+}
+.vjs-remaining-time {
+    display: none;
+}
+.vjs-time-divider {
+    color: #667687;
+    font-size: 14px;
+    position: absolute;
+    right: 121px;
+    top: 15px;
+}
+.vjs-secondary-controls {
+    float: right;
+}
+.vjs-fullscreen-control {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/fullscreen.png");
+    background-position: center -47px;
+    background-size: 15px 64px;
+    cursor: pointer !important;
+    position: absolute;
+    right: 17px;
+    top: 13px;
+}
+.vjs-fullscreen-control:hover div, .vjs-fullscreen-control:focus div {
+    opacity: 0;
+}
+.vjs-fullscreen-control div {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/fullscreen.png") no-repeat scroll center 2px / 15px 64px rgba(0, 0, 0, 0);
+    height: 18px;
+    transition: opacity 0.25s ease 0s;
+}
+.vjs-menu-button {
+    display: none !important;
+}
+@keyframes sharp {
+0% {
+    background: none repeat scroll 0 0 #e74c3c;
+    border-radius: 10px;
+    transform: rotate(0deg);
+}
+50% {
+    background: none repeat scroll 0 0 #ebedee;
+    border-radius: 0;
+    transform: rotate(180deg);
+}
+100% {
+    background: none repeat scroll 0 0 #e74c3c;
+    border-radius: 10px;
+    transform: rotate(360deg);
+}
+}
+@keyframes sharp {
+0% {
+    background: none repeat scroll 0 0 #e74c3c;
+    border-radius: 10px;
+    transform: rotate(0deg);
+}
+50% {
+    background: none repeat scroll 0 0 #ebedee;
+    border-radius: 0;
+    transform: rotate(180deg);
+}
+100% {
+    background: none repeat scroll 0 0 #e74c3c;
+    border-radius: 10px;
+    transform: rotate(360deg);
+}
+}
+.vjs-loading-spinner {
+    animation: 2s ease 0s normal none infinite running sharp;
+    background: none repeat scroll 0 0 #ebedee;
+    border-radius: 10px;
+    display: none;
+    height: 16px;
+    left: 50%;
+    margin: -8px 0 0 -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+.login {
+    background: url("/tranzvision/kitchensink/app/view/website/set/images/system/imac.png") no-repeat scroll 0 0 / 940px 778px rgba(0, 0, 0, 0);
+    color: white;
+    margin-bottom: 77px;
+    padding: 38px 38px 267px;
+    position: relative;
+}
+.login-screen {
+    background-color: #1abc9c;
+    min-height: 317px;
+    padding: 123px 199px 33px 306px;
+}
+.login-icon {
+    left: 200px;
+    position: absolute;
+    top: 160px;
+    width: 96px;
+}
+.login-icon > img {
+    display: block;
+    margin-bottom: 6px;
+    width: 100%;
+}
+.login-icon > h4 {
+    font-size: 17px;
+    font-weight: 200;
+    line-height: 34px;
+    opacity: 0.95;
+}
+.login-icon > h4 small {
+    color: inherit;
+    display: block;
+    font-size: inherit;
+    font-weight: 700;
+}
+.login-form {
+    background-color: #eceff1;
+    border-radius: 6px;
+    padding: 24px 23px 20px;
+    position: relative;
+}
+.login-form:before {
+    border-color: transparent #eceff1 transparent transparent;
+    border-style: solid;
+    border-width: 12px 12px 12px 0;
+    content: "";
+    height: 0;
+    left: -12px;
+    position: absolute;
+    top: 35px;
+    width: 0;
+}
+.login-form .control-group {
+    margin-bottom: 6px;
+    position: relative;
+}
+.login-form .login-field {
+    border-color: transparent;
+    font-size: 17px;
+    padding-bottom: 11px;
+    padding-top: 11px;
+    text-indent: 3px;
+    width: 299px;
+}
+.login-form .login-field:focus + .login-field-icon {
+    color: #1abc9c;
+}
+.login-form .login-field-icon {
+    color: #bfc9ca;
+    font-size: 16px;
+    position: absolute;
+    right: 13px;
+    top: 14px;
+    transition: all 0.25s ease 0s;
+}
+.login-link {
+    color: #bfc9ca;
+    display: block;
+    font-size: 13px;
+    margin-top: 15px;
+    text-align: center;
+}
+@media not all, not all, not all, not all, not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.login {
+    background-image: url("/tranzvision/kitchensink/app/view/website/set/images/system/imac-2x.png");
+}
+}
+.ptn, .pvn, .pan {
+    padding-top: 0;
+}
+.ptx, .pvx, .pax {
+    padding-top: 3px;
+}
+.pts, .pvs, .pas {
+    padding-top: 5px;
+}
+.ptm, .pvm, .pam {
+    padding-top: 10px;
+}
+.ptl, .pvl, .pal {
+    padding-top: 20px;
+}
+.prn, .phn, .pan {
+    padding-right: 0;
+}
+.prx, .phx, .pax {
+    padding-right: 3px;
+}
+.prs, .phs, .pas {
+    padding-right: 5px;
+}
+.prm, .phm, .pam {
+    padding-right: 10px;
+}
+.prl, .phl, .pal {
+    padding-right: 20px;
+}
+.pbn, .pvn, .pan {
+    padding-bottom: 0;
+}
+.pbx, .pvx, .pax {
+    padding-bottom: 3px;
+}
+.pbs, .pvs, .pas {
+    padding-bottom: 5px;
+}
+.pbm, .pvm, .pam {
+    padding-bottom: 10px;
+}
+.pbl, .pvl, .pal {
+    padding-bottom: 20px;
+}
+.pln, .phn, .pan {
+    padding-left: 0;
+}
+.plx, .phx, .pax {
+    padding-left: 3px;
+}
+.pls, .phs, .pas {
+    padding-left: 5px;
+}
+.plm, .phm, .pam {
+    padding-left: 10px;
+}
+.pll, .phl, .pal {
+    padding-left: 20px;
+}
+.mtn, .mvn, .man {
+    margin-top: 0;
+}
+.mtx, .mvx, .max {
+    margin-top: 3px;
+}
+.mts, .mvs, .mas {
+    margin-top: 5px;
+}
+.mtm, .mvm, .mam {
+    margin-top: 10px;
+}
+.mtl, .mvl, .mal {
+    margin-top: 20px;
+}
+.mrn, .mhn, .man {
+    margin-right: 0;
+}
+.mrx, .mhx, .max {
+    margin-right: 3px;
+}
+.mrs, .mhs, .mas {
+    margin-right: 5px;
+}
+.mrm, .mhm, .mam {
+    margin-right: 10px;
+}
+.mrl, .mhl, .mal {
+    margin-right: 20px;
+}
+.mbn, .mvn, .man {
+    margin-bottom: 0;
+}
+.mbx, .mvx, .max {
+    margin-bottom: 3px;
+}
+.mbs, .mvs, .mas {
+    margin-bottom: 5px;
+}
+.mbm, .mvm, .mam {
+    margin-bottom: 10px;
+}
+.mbl, .mvl, .mal {
+    margin-bottom: 20px;
+}
+.mln, .mhn, .man {
+    margin-left: 0;
+}
+.mlx, .mhx, .max {
+    margin-left: 3px;
+}
+.mls, .mhs, .mas {
+    margin-left: 5px;
+}
+.mlm, .mhm, .mam {
+    margin-left: 10px;
+}
+.mll, .mhl, .mal {
+    margin-left: 20px;
+}
+.bt_145px {
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    height: 35px;
+    width: 145px;
+}
+
