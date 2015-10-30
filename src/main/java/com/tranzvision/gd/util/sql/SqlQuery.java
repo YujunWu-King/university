@@ -16,7 +16,7 @@ import com.tranzvision.gd.util.base.VarType2Class;
 
 /**
  * @author SHIHUA
- *
+ * @since 2015-10-29
  */
 @Service
 public class SqlQuery {
