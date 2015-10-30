@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZPermissionDefnBundle.dao.PsClassDefnMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn" >
+    <id column="CLASSID" property="classid" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="INTEGER" />
+    <result column="CLASSDEFNDESC" property="classdefndesc" jdbcType="VARCHAR" />
+    <result column="TIMEOUTMINUTES" property="timeoutminutes" jdbcType="INTEGER" />
+    <result column="DEFAULTBPM" property="defaultbpm" jdbcType="VARCHAR" />
+    <result column="STARTAPPSERVER" property="startappserver" jdbcType="BIT" />
+    <result column="ALLOWPSWDEMAIL" property="allowpswdemail" jdbcType="BIT" />
+    <result column="LASTUPDDTTM" property="lastupddttm" jdbcType="TIMESTAMP" />
+    <result column="LASTUPDOPRID" property="lastupdoprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CLASSID, VERSION, CLASSDEFNDESC, TIMEOUTMINUTES, DEFAULTBPM, STARTAPPSERVER, ALLOWPSWDEMAIL, 
+    LASTUPDDTTM, LASTUPDOPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PSCLASSDEFN
+    where CLASSID = #{classid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PSCLASSDEFN
+    where CLASSID = #{classid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn" >
+    insert into PSCLASSDEFN (CLASSID, VERSION, CLASSDEFNDESC, 
+      TIMEOUTMINUTES, DEFAULTBPM, STARTAPPSERVER, 
+      ALLOWPSWDEMAIL, LASTUPDDTTM, LASTUPDOPRID
+      )
+    values (#{classid,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, #{classdefndesc,jdbcType=VARCHAR}, 
+      #{timeoutminutes,jdbcType=INTEGER}, #{defaultbpm,jdbcType=VARCHAR}, #{startappserver,jdbcType=BIT}, 
+      #{allowpswdemail,jdbcType=BIT}, #{lastupddttm,jdbcType=TIMESTAMP}, #{lastupdoprid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn" >
+    insert into PSCLASSDEFN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="classid != null" >
+        CLASSID,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="classdefndesc != null" >
+        CLASSDEFNDESC,
+      </if>
+      <if test="timeoutminutes != null" >
+        TIMEOUTMINUTES,
+      </if>
+      <if test="defaultbpm != null" >
+        DEFAULTBPM,
+      </if>
+      <if test="startappserver != null" >
+        STARTAPPSERVER,
+      </if>
+      <if test="allowpswdemail != null" >
+        ALLOWPSWDEMAIL,
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM,
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="classid != null" >
+        #{classid,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="classdefndesc != null" >
+        #{classdefndesc,jdbcType=VARCHAR},
+      </if>
+      <if test="timeoutminutes != null" >
+        #{timeoutminutes,jdbcType=INTEGER},
+      </if>
+      <if test="defaultbpm != null" >
+        #{defaultbpm,jdbcType=VARCHAR},
+      </if>
+      <if test="startappserver != null" >
+        #{startappserver,jdbcType=BIT},
+      </if>
+      <if test="allowpswdemail != null" >
+        #{allowpswdemail,jdbcType=BIT},
+      </if>
+      <if test="lastupddttm != null" >
+        #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn" >
+    update PSCLASSDEFN
+    <set >
+      <if test="version != null" >
+        VERSION = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="classdefndesc != null" >
+        CLASSDEFNDESC = #{classdefndesc,jdbcType=VARCHAR},
+      </if>
+      <if test="timeoutminutes != null" >
+        TIMEOUTMINUTES = #{timeoutminutes,jdbcType=INTEGER},
+      </if>
+      <if test="defaultbpm != null" >
+        DEFAULTBPM = #{defaultbpm,jdbcType=VARCHAR},
+      </if>
+      <if test="startappserver != null" >
+        STARTAPPSERVER = #{startappserver,jdbcType=BIT},
+      </if>
+      <if test="allowpswdemail != null" >
+        ALLOWPSWDEMAIL = #{allowpswdemail,jdbcType=BIT},
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CLASSID = #{classid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn" >
+    update PSCLASSDEFN
+    set VERSION = #{version,jdbcType=INTEGER},
+      CLASSDEFNDESC = #{classdefndesc,jdbcType=VARCHAR},
+      TIMEOUTMINUTES = #{timeoutminutes,jdbcType=INTEGER},
+      DEFAULTBPM = #{defaultbpm,jdbcType=VARCHAR},
+      STARTAPPSERVER = #{startappserver,jdbcType=BIT},
+      ALLOWPSWDEMAIL = #{allowpswdemail,jdbcType=BIT},
+      LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR}
+    where CLASSID = #{classid,jdbcType=VARCHAR}
+  </update>
+</mapper>

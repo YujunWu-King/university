@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZHardCodeMgBundle.dao.PsCmbcHardcdPntMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    <id column="CMBC_HARDCODE_PNT" property="cmbcHardcodePnt" jdbcType="VARCHAR" />
+    <result column="CMBC_DESCR254" property="cmbcDescr254" jdbcType="VARCHAR" />
+    <result column="CMBC_HARDCODE_VAL" property="cmbcHardcodeVal" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" extends="BaseResultMap" >
+    <result column="CMBC_DESCR1000" property="cmbcDescr1000" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CMBC_HARDCODE_PNT, CMBC_DESCR254, CMBC_HARDCODE_VAL
+  </sql>
+  <sql id="Blob_Column_List" >
+    CMBC_DESCR1000
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_CMBC_HARDCD_PNT
+    where CMBC_HARDCODE_PNT = #{cmbcHardcodePnt,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_CMBC_HARDCD_PNT
+    where CMBC_HARDCODE_PNT = #{cmbcHardcodePnt,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    insert into PS_CMBC_HARDCD_PNT (CMBC_HARDCODE_PNT, CMBC_DESCR254, CMBC_HARDCODE_VAL, 
+      CMBC_DESCR1000)
+    values (#{cmbcHardcodePnt,jdbcType=VARCHAR}, #{cmbcDescr254,jdbcType=VARCHAR}, #{cmbcHardcodeVal,jdbcType=VARCHAR}, 
+      #{cmbcDescr1000,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    insert into PS_CMBC_HARDCD_PNT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cmbcHardcodePnt != null" >
+        CMBC_HARDCODE_PNT,
+      </if>
+      <if test="cmbcDescr254 != null" >
+        CMBC_DESCR254,
+      </if>
+      <if test="cmbcHardcodeVal != null" >
+        CMBC_HARDCODE_VAL,
+      </if>
+      <if test="cmbcDescr1000 != null" >
+        CMBC_DESCR1000,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cmbcHardcodePnt != null" >
+        #{cmbcHardcodePnt,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcDescr254 != null" >
+        #{cmbcDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcHardcodeVal != null" >
+        #{cmbcHardcodeVal,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcDescr1000 != null" >
+        #{cmbcDescr1000,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    update PS_CMBC_HARDCD_PNT
+    <set >
+      <if test="cmbcDescr254 != null" >
+        CMBC_DESCR254 = #{cmbcDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcHardcodeVal != null" >
+        CMBC_HARDCODE_VAL = #{cmbcHardcodeVal,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcDescr1000 != null" >
+        CMBC_DESCR1000 = #{cmbcDescr1000,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where CMBC_HARDCODE_PNT = #{cmbcHardcodePnt,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    update PS_CMBC_HARDCD_PNT
+    set CMBC_DESCR254 = #{cmbcDescr254,jdbcType=VARCHAR},
+      CMBC_HARDCODE_VAL = #{cmbcHardcodeVal,jdbcType=VARCHAR},
+      CMBC_DESCR1000 = #{cmbcDescr1000,jdbcType=LONGVARCHAR}
+    where CMBC_HARDCODE_PNT = #{cmbcHardcodePnt,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt" >
+    update PS_CMBC_HARDCD_PNT
+    set CMBC_DESCR254 = #{cmbcDescr254,jdbcType=VARCHAR},
+      CMBC_HARDCODE_VAL = #{cmbcHardcodeVal,jdbcType=VARCHAR}
+    where CMBC_HARDCODE_PNT = #{cmbcHardcodePnt,jdbcType=VARCHAR}
+  </update>
+</mapper>
