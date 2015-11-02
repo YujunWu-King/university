@@ -44,7 +44,7 @@ public class AdminServiceImpl implements AdminService{
     }
     
     public Admin getOneAdmin(int id){
-    	
+    	/*
     	Framework obj = (Framework)ctx.getBean("com.tranzvision.gd.ztest.service.impl.TestServiceImpl");
     	String str = obj.testMethod(1);
     	System.out.println("----------------------------------");
@@ -56,7 +56,7 @@ public class AdminServiceImpl implements AdminService{
     	System.out.println("----------------------------------");
     	System.out.println(str2);
 		System.out.println("----------------------------------");
-    	
+    	*/
     	
     	/*
     	Object obj = (Object)ctx.getBean("abc");

@@ -24,6 +24,7 @@ public class TestServiceImpl extends FrameworkImpl {
 		// TODO Auto-generated constructor stub
 	}
 
+	/*
 	@Override
 	public String testMethod(int id) {
 		
@@ -33,7 +34,7 @@ public class TestServiceImpl extends FrameworkImpl {
 		
 		return admin.getAdminRealname();
 	}
-	
+	*/
 	
 
 }

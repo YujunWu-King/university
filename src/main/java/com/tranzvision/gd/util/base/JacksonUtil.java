@@ -1,6 +1,8 @@
 package com.tranzvision.gd.util.base;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -174,9 +176,14 @@ public class JacksonUtil {
 	 * 
 	 * @param key
 	 * @return int
+	 * @throws Exception
 	 */
-	public int getInt(String key) {
-		return (int) jsonMap.get(key);
+	public int getInt(String key) throws Exception {
+		try {
+			return Integer.parseInt((String) jsonMap.get(key));
+		} catch (NumberFormatException nfe) {
+			throw new Exception(nfe.getMessage());
+		}
 	}
 
 	/**
@@ -184,9 +191,14 @@ public class JacksonUtil {
 	 * 
 	 * @param key
 	 * @return long
+	 * @throws Exception
 	 */
-	public long getLong(String key) {
-		return (long) jsonMap.get(key);
+	public long getLong(String key) throws Exception {
+		try {
+			return Long.parseLong((String) jsonMap.get(key));
+		} catch (NumberFormatException nfe) {
+			throw new Exception(nfe.getMessage());
+		}
 	}
 
 	/**
@@ -194,9 +206,16 @@ public class JacksonUtil {
 	 * 
 	 * @param key
 	 * @return double
+	 * @throws Exception
 	 */
-	public double getDouble(String key) {
-		return (double) jsonMap.get(key);
+	public double getDouble(String key) throws Exception {
+		try {
+			return Double.parseDouble((String) jsonMap.get(key));
+		} catch (NullPointerException npe) {
+			throw new Exception(npe.getMessage());
+		} catch (NumberFormatException nfe) {
+			throw new Exception(nfe.getMessage());
+		}
 	}
 
 	/**
@@ -206,7 +225,44 @@ public class JacksonUtil {
 	 * @return boolean
 	 */
 	public boolean getBoolean(String key) {
-		return (boolean) jsonMap.get(key);
+		return Boolean.parseBoolean((String) jsonMap.get(key));
+	}
+
+	/**
+	 * 根据key获取给定格式的日期时间数值
+	 * 
+	 * @param key
+	 * @param dateFormat
+	 * @return Date or null
+	 */
+	public Date getDate(String key, String dateFormat) {
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+			return formatter.parse((String) jsonMap.get(key));
+		} catch (java.text.ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * 根据key获取指定格式（yyyy-MM-dd）的日期值
+	 * 
+	 * @param key
+	 * @return Date or null
+	 */
+	public Date getDate(String key) {
+		return this.getDate(key, "yyyy-MM-dd");
+	}
+
+	/**
+	 * 根据key获取指定格式（yyyy-MM-dd HH:mm:ss）的日期时间值
+	 * 
+	 * @param key
+	 * @return Date or null
+	 */
+	public Date getDateTime(String key) {
+		return this.getDate(key, "yyyy-MM-dd HH:mm:ss");
 	}
 
 	/**

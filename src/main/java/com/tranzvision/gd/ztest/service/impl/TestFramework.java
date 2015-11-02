@@ -33,6 +33,7 @@ public class TestFramework extends FrameworkImpl {
 	 * 
 	 * @see com.tranzvision.gd.TZBaseBundle.service.Framework#testMethod(int)
 	 */
+	/*
 	@Override
 	public String testMethod(int id) {
 		// TODO Auto-generated method stub
@@ -43,5 +44,6 @@ public class TestFramework extends FrameworkImpl {
 
 		return admin.getAdminRealname();
 	}
-
+	*/
+	
 }

@@ -1,0 +1,5 @@
+cookieMaxAge=3600
+cookieDomain=202.120.24.114
+cookiePath=/
+cookieHttpOnly=True
+cookieSecure=False
