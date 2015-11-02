@@ -55,7 +55,14 @@ public class JsonController {
 		System.out.println(jacksonUtil.getString("userImage"));
 		System.out.println(jacksonUtil.getBoolean("verified"));
 		System.out.println(alluser);
-		System.out.println(jacksonUtil.getInt("num"));
+		
+		try {
+			System.out.println(jacksonUtil.getInt("num"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println(jacksonUtil.containsKey("key"));
 		
 		return "";

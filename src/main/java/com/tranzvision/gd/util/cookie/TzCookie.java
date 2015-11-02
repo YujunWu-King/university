@@ -45,20 +45,20 @@ public class TzCookie {
 			String cookieDomain, String cookiePath, boolean cookieHttpOnly, boolean cookieSecure) {
 
 		cookieGen = new CookieGenerator();
-		
+
 		cookieGen.setCookieName(cookieName);
 		cookieGen.setCookieDomain(cookieDomain);
 		cookieGen.setCookiePath(cookiePath);
 		cookieGen.setCookieMaxAge(cookieMaxAge);
 		cookieGen.setCookieHttpOnly(cookieHttpOnly);
 		cookieGen.setCookieSecure(cookieSecure);
-		
+
 		cookieGen.addCookie(response, cookieVal.toString());
 
 	}
 
 	/**
-	 * 新增一个Cookie
+	 * 新增一个Cookie-1
 	 * 
 	 * @param response
 	 * @param cookieName
@@ -76,7 +76,7 @@ public class TzCookie {
 	}
 
 	/**
-	 * 新增一个Cookie
+	 * 新增一个Cookie-2
 	 * 
 	 * @param response
 	 * @param cookieName
@@ -93,7 +93,7 @@ public class TzCookie {
 	}
 
 	/**
-	 * 新增一个Cookie
+	 * 新增一个Cookie-3
 	 * 
 	 * @param response
 	 * @param cookieName
@@ -116,11 +116,11 @@ public class TzCookie {
 	 * 私有方法，获取一个Cookie的值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return String
 	 */
-	private String getCookieVal(HttpServletRequest request, String name) {
-		Cookie cookie = WebUtils.getCookie(request, name);
+	private String getCookieVal(HttpServletRequest request, String cookieName) {
+		Cookie cookie = WebUtils.getCookie(request, cookieName);
 		return cookie.getValue();
 	}
 
@@ -128,24 +128,24 @@ public class TzCookie {
 	 * 获取一个String类型的Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return String
 	 */
-	public String getStringCookieVal(HttpServletRequest request, String name) {
-		return this.getCookieVal(request, name);
+	public String getStringCookieVal(HttpServletRequest request, String cookieName) {
+		return this.getCookieVal(request, cookieName);
 	}
 
 	/**
 	 * 获取一个int类型的Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return int
 	 * @throws Exception
 	 */
-	public int getIntCookieVal(HttpServletRequest request, String name) throws Exception {
+	public int getIntCookieVal(HttpServletRequest request, String cookieName) throws Exception {
 		try {
-			return Integer.parseInt(this.getCookieVal(request, name));
+			return Integer.parseInt(this.getCookieVal(request, cookieName));
 		} catch (NumberFormatException nfe) {
 			throw new Exception(nfe.getMessage());
 		}
@@ -155,25 +155,25 @@ public class TzCookie {
 	 * 获取一个boolean类型的Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return String
 	 */
-	public boolean getBoolCookieVal(HttpServletRequest request, String name) {
-		return Boolean.parseBoolean(this.getCookieVal(request, name));
+	public boolean getBoolCookieVal(HttpServletRequest request, String cookieName) {
+		return Boolean.parseBoolean(this.getCookieVal(request, cookieName));
 	}
 
 	/**
 	 * 获取一个指定格式的日期类型Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @param dateFormat
 	 * @return Date
 	 */
-	public Date getDateCookieVal(HttpServletRequest request, String name, String dateFormat) {
+	public Date getDateCookieVal(HttpServletRequest request, String cookieName, String dateFormat) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
-			return formatter.parse(this.getCookieVal(request, name));
+			return formatter.parse(this.getCookieVal(request, cookieName));
 		} catch (java.text.ParseException e) {
 			e.printStackTrace();
 			return null;
@@ -184,22 +184,55 @@ public class TzCookie {
 	 * 获取默认日期类型（yyyy-MM-dd）的Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return Date
 	 */
-	public Date getDate(HttpServletRequest request, String name) {
-		return this.getDateCookieVal(request, name, "yyyy-MM-dd");
+	public Date getDate(HttpServletRequest request, String cookieName) {
+		return this.getDateCookieVal(request, cookieName, "yyyy-MM-dd");
 	}
 
 	/**
 	 * 获取默认日期时间类型（yyyy-MM-dd HH:mm:ss）的Cookie值
 	 * 
 	 * @param request
-	 * @param name
+	 * @param cookieName
 	 * @return Date
 	 */
-	public Date getDateTime(HttpServletRequest request, String name) {
-		return this.getDateCookieVal(request, name, "yyyy-MM-dd HH:mm:ss");
+	public Date getDateTime(HttpServletRequest request, String cookieName) {
+		return this.getDateCookieVal(request, cookieName, "yyyy-MM-dd HH:mm:ss");
+	}
+
+	/**
+	 * 删除一个Cookie（完整参数）
+	 * 
+	 * @param response
+	 * @param cookieName
+	 */
+	public void removeCookie(HttpServletResponse response, String cookieName, String cookieDomain, String cookiePath,
+			boolean cookieHttpOnly, boolean cookieSecure) {
+		addCookie(response, cookieName, null, 0, cookieDomain, cookiePath, cookieHttpOnly, cookieSecure);
+	}
+
+	/**
+	 * 删除一个Cookie-1
+	 * 
+	 * @param response
+	 * @param cookieName
+	 */
+	public void removeCookie(HttpServletResponse response, String cookieName) {
+		addCookie(response, cookieName, null, 0);
+	}
+
+	/**
+	 * 删除一个Cookie-2
+	 * 
+	 * @param response
+	 * @param cookieName
+	 * @param cookieDomain
+	 * @param cookiePath
+	 */
+	public void removeCookie(HttpServletResponse response, String cookieName, String cookieDomain, String cookiePath) {
+		addCookie(response, cookieName, null, 0, cookieDomain, cookiePath);
 	}
 
 }
