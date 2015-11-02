@@ -3,3 +3,4 @@ cookieDomain=202.120.24.114
 cookiePath=/
 cookieHttpOnly=True
 cookieSecure=False
+sessionMaxInactive=3600

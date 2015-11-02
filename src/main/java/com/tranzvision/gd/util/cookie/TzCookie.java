@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 import org.springframework.web.util.CookieGenerator;
 
-import com.tranzvision.gd.util.cfgdata.GetCookieProps;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 
 /**
  * @author SHIHUA
@@ -25,7 +25,7 @@ import com.tranzvision.gd.util.cfgdata.GetCookieProps;
 public class TzCookie {
 
 	@Autowired
-	private GetCookieProps getCookieProps;
+	private GetCookieSessionProps getCookieProps;
 
 	private CookieGenerator cookieGen;
 
@@ -121,7 +121,10 @@ public class TzCookie {
 	 */
 	private String getCookieVal(HttpServletRequest request, String cookieName) {
 		Cookie cookie = WebUtils.getCookie(request, cookieName);
-		return cookie.getValue();
+		if (cookie != null) {
+			return cookie.getValue();
+		}
+		return null;
 	}
 
 	/**

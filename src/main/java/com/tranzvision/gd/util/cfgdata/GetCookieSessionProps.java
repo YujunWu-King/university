@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
  * @since 2015-11-02
  */
 @Service
-public class GetCookieProps {
+public class GetCookieSessionProps {
 
-	private Properties cookieProps;
+	private Properties cookieSessioinProps;
 
 	private int cookieMaxAge;
 
@@ -31,20 +31,24 @@ public class GetCookieProps {
 	private boolean cookieHttpOnly;
 
 	private boolean cookieSecure;
+	
+	private int sessionMaxInactive;
 
 	/**
 	 * 构造函数，加载Cookie配置默认值
 	 */
-	public GetCookieProps() {
+	public GetCookieSessionProps() {
 		Resource resource = new ClassPathResource("classpath:conf/cookie.properties");
 		try {
-			cookieProps = PropertiesLoaderUtils.loadProperties(resource);
+			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 
-			cookieMaxAge = Integer.parseInt(cookieProps.getProperty("cookieMaxAge"));
-			cookieDomain = cookieProps.getProperty("cookieDomain");
-			cookiePath = cookieProps.getProperty("cookiePath");
-			cookieHttpOnly = Boolean.parseBoolean(cookieProps.getProperty("cookieHttpOnly"));
-			cookieSecure = Boolean.parseBoolean(cookieProps.getProperty("cookieSecure"));
+			cookieMaxAge = Integer.parseInt(cookieSessioinProps.getProperty("cookieMaxAge"));
+			cookieDomain = cookieSessioinProps.getProperty("cookieDomain");
+			cookiePath = cookieSessioinProps.getProperty("cookiePath");
+			cookieHttpOnly = Boolean.parseBoolean(cookieSessioinProps.getProperty("cookieHttpOnly"));
+			cookieSecure = Boolean.parseBoolean(cookieSessioinProps.getProperty("cookieSecure"));
+			
+			sessionMaxInactive = Integer.parseInt(cookieSessioinProps.getProperty("sessionMaxInactive"));
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -71,6 +75,10 @@ public class GetCookieProps {
 
 	public boolean getCookieSecure() {
 		return cookieSecure;
+	}
+	
+	public int getSessionMaxInactive(){
+		return sessionMaxInactive;
 	}
 
 }
