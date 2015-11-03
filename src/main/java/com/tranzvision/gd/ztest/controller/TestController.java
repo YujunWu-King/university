@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +20,8 @@ import org.springframework.ui.ModelMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
 
@@ -27,12 +32,20 @@ public class TestController {
 	@Autowired
 	private AdminService adminService;
 
+	@Autowired
+	private Patchca patchaService;
+
 	String message = "Admin!";
 
 	private static final String TPLPrefix = "ztest/";
 
 	@RequestMapping("index")
-	public String index(ModelMap model) {
+	public String index(ModelMap model, HttpServletRequest request) {
+
+		TzSession tzSession = new TzSession(request);
+		model.addAttribute("sessionid", tzSession.getSessionId());
+		model.addAttribute("token", patchaService.getToken(request));
+
 		model.addAttribute("nickname", "管理员");
 		return "ztest/hello";
 	}
@@ -73,6 +86,7 @@ public class TestController {
 			model.addAttribute("id", admin.getAdminid());
 			model.addAttribute("name", admin.getAdminName());
 			model.addAttribute("state", admin.getAdminRealname());
+
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,6 +109,9 @@ public class TestController {
 	}
 	// */
 
-
+	@RequestMapping("captcha")
+	public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
+		patchaService.genCaptcha(request, response);
+	}
 
 }
