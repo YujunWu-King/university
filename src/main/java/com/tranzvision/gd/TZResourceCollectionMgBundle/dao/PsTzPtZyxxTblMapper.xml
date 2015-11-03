@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZResourceCollectionMgBundle.dao.PsTzPtZyxxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl" >
+    <id column="TZ_ZYJH_ID" property="tzZyjhId" jdbcType="VARCHAR" />
+    <id column="TZ_RES_ID" property="tzResId" jdbcType="VARCHAR" />
+    <result column="TZ_RES_MC" property="tzResMc" jdbcType="VARCHAR" />
+    <result column="TZ_RES_FILE_TYPE" property="tzResFileType" jdbcType="VARCHAR" />
+    <result column="TZ_RES_FILE_NAME" property="tzResFileName" jdbcType="VARCHAR" />
+    <result column="TZ_RES_FILE_PATH" property="tzResFilePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZYJH_ID, TZ_RES_ID, TZ_RES_MC, TZ_RES_FILE_TYPE, TZ_RES_FILE_NAME, TZ_RES_FILE_PATH
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PT_ZYXX_TBL
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+      and TZ_RES_ID = #{tzResId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTblKey" >
+    delete from PS_TZ_PT_ZYXX_TBL
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+      and TZ_RES_ID = #{tzResId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl" >
+    insert into PS_TZ_PT_ZYXX_TBL (TZ_ZYJH_ID, TZ_RES_ID, TZ_RES_MC, 
+      TZ_RES_FILE_TYPE, TZ_RES_FILE_NAME, TZ_RES_FILE_PATH
+      )
+    values (#{tzZyjhId,jdbcType=VARCHAR}, #{tzResId,jdbcType=VARCHAR}, #{tzResMc,jdbcType=VARCHAR}, 
+      #{tzResFileType,jdbcType=VARCHAR}, #{tzResFileName,jdbcType=VARCHAR}, #{tzResFilePath,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl" >
+    insert into PS_TZ_PT_ZYXX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZyjhId != null" >
+        TZ_ZYJH_ID,
+      </if>
+      <if test="tzResId != null" >
+        TZ_RES_ID,
+      </if>
+      <if test="tzResMc != null" >
+        TZ_RES_MC,
+      </if>
+      <if test="tzResFileType != null" >
+        TZ_RES_FILE_TYPE,
+      </if>
+      <if test="tzResFileName != null" >
+        TZ_RES_FILE_NAME,
+      </if>
+      <if test="tzResFilePath != null" >
+        TZ_RES_FILE_PATH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZyjhId != null" >
+        #{tzZyjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResId != null" >
+        #{tzResId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResMc != null" >
+        #{tzResMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFileType != null" >
+        #{tzResFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFileName != null" >
+        #{tzResFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFilePath != null" >
+        #{tzResFilePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl" >
+    update PS_TZ_PT_ZYXX_TBL
+    <set >
+      <if test="tzResMc != null" >
+        TZ_RES_MC = #{tzResMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFileType != null" >
+        TZ_RES_FILE_TYPE = #{tzResFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFileName != null" >
+        TZ_RES_FILE_NAME = #{tzResFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResFilePath != null" >
+        TZ_RES_FILE_PATH = #{tzResFilePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+      and TZ_RES_ID = #{tzResId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl" >
+    update PS_TZ_PT_ZYXX_TBL
+    set TZ_RES_MC = #{tzResMc,jdbcType=VARCHAR},
+      TZ_RES_FILE_TYPE = #{tzResFileType,jdbcType=VARCHAR},
+      TZ_RES_FILE_NAME = #{tzResFileName,jdbcType=VARCHAR},
+      TZ_RES_FILE_PATH = #{tzResFilePath,jdbcType=VARCHAR}
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+      and TZ_RES_ID = #{tzResId,jdbcType=VARCHAR}
+  </update>
+</mapper>

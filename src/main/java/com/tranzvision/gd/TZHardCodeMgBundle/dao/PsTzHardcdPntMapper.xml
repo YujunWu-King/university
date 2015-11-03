@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZHardCodeMgBundle.dao.PsTzHardcdPntMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    <id column="TZ_HARDCODE_PNT" property="tzHardcodePnt" jdbcType="VARCHAR" />
+    <result column="TZ_DESCR254" property="tzDescr254" jdbcType="VARCHAR" />
+    <result column="TZ_HARDCODE_VAL" property="tzHardcodeVal" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" extends="BaseResultMap" >
+    <result column="TZ_DESCR1000" property="tzDescr1000" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_HARDCODE_PNT, TZ_DESCR254, TZ_HARDCODE_VAL
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_DESCR1000
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_HARDCD_PNT
+    where TZ_HARDCODE_PNT = #{tzHardcodePnt,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_HARDCD_PNT
+    where TZ_HARDCODE_PNT = #{tzHardcodePnt,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    insert into PS_TZ_HARDCD_PNT (TZ_HARDCODE_PNT, TZ_DESCR254, TZ_HARDCODE_VAL, 
+      TZ_DESCR1000)
+    values (#{tzHardcodePnt,jdbcType=VARCHAR}, #{tzDescr254,jdbcType=VARCHAR}, #{tzHardcodeVal,jdbcType=VARCHAR}, 
+      #{tzDescr1000,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    insert into PS_TZ_HARDCD_PNT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzHardcodePnt != null" >
+        TZ_HARDCODE_PNT,
+      </if>
+      <if test="tzDescr254 != null" >
+        TZ_DESCR254,
+      </if>
+      <if test="tzHardcodeVal != null" >
+        TZ_HARDCODE_VAL,
+      </if>
+      <if test="tzDescr1000 != null" >
+        TZ_DESCR1000,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzHardcodePnt != null" >
+        #{tzHardcodePnt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr254 != null" >
+        #{tzDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHardcodeVal != null" >
+        #{tzHardcodeVal,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr1000 != null" >
+        #{tzDescr1000,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    update PS_TZ_HARDCD_PNT
+    <set >
+      <if test="tzDescr254 != null" >
+        TZ_DESCR254 = #{tzDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHardcodeVal != null" >
+        TZ_HARDCODE_VAL = #{tzHardcodeVal,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr1000 != null" >
+        TZ_DESCR1000 = #{tzDescr1000,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_HARDCODE_PNT = #{tzHardcodePnt,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    update PS_TZ_HARDCD_PNT
+    set TZ_DESCR254 = #{tzDescr254,jdbcType=VARCHAR},
+      TZ_HARDCODE_VAL = #{tzHardcodeVal,jdbcType=VARCHAR},
+      TZ_DESCR1000 = #{tzDescr1000,jdbcType=LONGVARCHAR}
+    where TZ_HARDCODE_PNT = #{tzHardcodePnt,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt" >
+    update PS_TZ_HARDCD_PNT
+    set TZ_DESCR254 = #{tzDescr254,jdbcType=VARCHAR},
+      TZ_HARDCODE_VAL = #{tzHardcodeVal,jdbcType=VARCHAR}
+    where TZ_HARDCODE_PNT = #{tzHardcodePnt,jdbcType=VARCHAR}
+  </update>
+</mapper>

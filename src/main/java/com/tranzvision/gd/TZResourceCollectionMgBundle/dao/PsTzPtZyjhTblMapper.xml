@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZResourceCollectionMgBundle.dao.PsTzPtZyjhTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl" >
+    <id column="TZ_ZYJH_ID" property="tzZyjhId" jdbcType="VARCHAR" />
+    <result column="TZ_ZYJH_MC" property="tzZyjhMc" jdbcType="VARCHAR" />
+    <result column="TZ_ZYJH_ISGG" property="tzZyjhIsgg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZYJH_ID, TZ_ZYJH_MC, TZ_ZYJH_ISGG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PT_ZYJH_TBL
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_PT_ZYJH_TBL
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl" >
+    insert into PS_TZ_PT_ZYJH_TBL (TZ_ZYJH_ID, TZ_ZYJH_MC, TZ_ZYJH_ISGG
+      )
+    values (#{tzZyjhId,jdbcType=VARCHAR}, #{tzZyjhMc,jdbcType=VARCHAR}, #{tzZyjhIsgg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl" >
+    insert into PS_TZ_PT_ZYJH_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZyjhId != null" >
+        TZ_ZYJH_ID,
+      </if>
+      <if test="tzZyjhMc != null" >
+        TZ_ZYJH_MC,
+      </if>
+      <if test="tzZyjhIsgg != null" >
+        TZ_ZYJH_ISGG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZyjhId != null" >
+        #{tzZyjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyjhMc != null" >
+        #{tzZyjhMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyjhIsgg != null" >
+        #{tzZyjhIsgg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl" >
+    update PS_TZ_PT_ZYJH_TBL
+    <set >
+      <if test="tzZyjhMc != null" >
+        TZ_ZYJH_MC = #{tzZyjhMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyjhIsgg != null" >
+        TZ_ZYJH_ISGG = #{tzZyjhIsgg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl" >
+    update PS_TZ_PT_ZYJH_TBL
+    set TZ_ZYJH_MC = #{tzZyjhMc,jdbcType=VARCHAR},
+      TZ_ZYJH_ISGG = #{tzZyjhIsgg,jdbcType=VARCHAR}
+    where TZ_ZYJH_ID = #{tzZyjhId,jdbcType=VARCHAR}
+  </update>
+</mapper>
