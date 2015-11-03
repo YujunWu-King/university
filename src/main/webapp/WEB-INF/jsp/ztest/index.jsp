@@ -14,5 +14,9 @@
   
   <body>
     <a href="hello?name=shihua">${nickname} come on!</a>
+    
+    <p>
+    <a href=""><img src="captcha" /></a>
+    </p>
   </body>
 </html>

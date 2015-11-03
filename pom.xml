@@ -175,6 +175,12 @@
 			<version>${comlogging.version}</version>
 		</dependency>
 
+		<!-- 验证码 -->
+		<dependency>
+			<groupId>com.github.bingoohuang</groupId>
+			<artifactId>patchca</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 
 		<!-- 日志文件管理包 -->
 		<!-- log start -->
