@@ -20,5 +20,8 @@ public interface GdKjInitService {
 	/* 获取框架操作列表信息 */
 	public String getKJVersionInfo();
 	
+	/*根据菜单说明信息编号获取菜单说明信息*/
+	public String getMenuDescription(HttpServletRequest request, HttpServletResponse response,String strDescID);
+	
 	
 }

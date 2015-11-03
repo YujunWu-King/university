@@ -648,7 +648,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				break;
 			// 获取json格式的数据;
 			case EJSON:
-				// TODO;
+				strRet = obj.tzGetHtmlData(comParams);
 				break;
 			// tzOther;
 			default:
@@ -806,8 +806,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					keyContent = presetJson.getString(key);
 					// 将搜索字段内容转成json;
 					fieldJson = PaseJsonUtil.getJson(keyContent);
-					// 操作符;
-					operate = fieldJson.getString("operator");
+					
 
 					if (fieldJson.containsKey("value")) {
 						value = fieldJson.getString("value");
@@ -825,7 +824,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						continue;
 					}
 
-					if ("".equals(value)) {
+					if ("".equals(sqlWhere)) {
 						sqlWhere = " WHERE ";
 					} else {
 						sqlWhere = sqlWhere + " AND ";
@@ -852,6 +851,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					default:
 						break;
 					}
+					
+					
 
 					sqlWhere = sqlWhere + key + "=" + value;
 				}
@@ -1011,7 +1012,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			}
 
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
-
 			try {
 				total = (int) jdbcTemplate.queryForObject(totalSQL, Integer.class);
 			} catch (Exception e) {
@@ -1290,5 +1290,51 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			errMsgArr[1] = e.toString();
 		}
 		return strRet;
+	}
+
+	/*获取指定组件页面的访问授权信息*/
+	@Override
+	public String getComAuthorizedInfo(String sUserId, String sComID) {
+		String sql = "SELECT C.TZ_COM_ID , C.TZ_PAGE_ID , if(SUM(if(C.DISPLAYONLY = 1 ,1 ,0)) =0 ,0,1) DISPLAYONLY, if(SUM(if(C.TZ_EDIT_FLG =1 ,1 ,0)) = 0 ,0 ,1) TZ_EDIT_FLG FROM PSROLEUSER A, PSROLECLASS B, PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND C.TZ_COM_ID=? GROUP BY C.TZ_COM_ID,C.TZ_PAGE_ID";
+		String authJSON = "";
+		try{
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{sUserId,sComID});
+			if(list != null && list.size()>0){
+				for(int i=0; i<list.size();i++){
+					
+					String tmpPageID = (String) list.get(i).get("TZ_PAGE_ID");
+					long tmpNumDisplayOnly = (long) list.get(i).get("DISPLAYONLY");
+					long tmpNumModifiable = (long) list.get(i).get("TZ_EDIT_FLG");
+					String tmpModifiable = "";
+					String tmpDisplayOnly = "";
+					if(tmpNumModifiable >= 1){
+						tmpModifiable = "true";
+				        tmpDisplayOnly = "false";
+					}else{
+						if(tmpNumDisplayOnly >= 1){
+							tmpModifiable = "false";
+					        tmpDisplayOnly = "true";
+						}else{
+							tmpModifiable = "false";
+					        tmpDisplayOnly = "false";
+						}
+					}
+					if("".equals(authJSON)){
+						authJSON = "{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly + ",\"modifiable\":" + tmpModifiable + "}";
+					}else{
+						authJSON = authJSON + ",{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly + ",\"modifiable\":" + tmpModifiable + "}";
+					}
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		if("".equals(authJSON)){
+			 authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[]";
+		}else{
+			 authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[" + authJSON + "]";
+		}
+		return authJSON;
 	}
 }

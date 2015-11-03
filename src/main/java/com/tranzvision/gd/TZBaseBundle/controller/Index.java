@@ -53,6 +53,7 @@ public class Index {
 	@RequestMapping(value = "dispatcher", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String dispatcher(HttpServletRequest request, HttpServletResponse response) {
+		
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
 		// 报文内容;
@@ -164,7 +165,10 @@ public class Index {
 				break;
 			// 菜单说明信息;
 			case CDSM:
-				// TODO;
+				// 菜单说明信息编号;
+		        String strDespID = CLASSJson.getString("menuDescID");
+		        // 获取菜单说明信息内容;
+		        strComContent = gdKjInitService.getMenuDescription(request, response,strDespID);
 				break;
 			// 框架操作列表;
 			case ZTYY:
@@ -241,23 +245,16 @@ public class Index {
 				break;
 			// 获取hardcode值;
 			case HARDCODE:
-				// TODO;
-				break;
-			// LOGIN;
-			case LOGIN:
-				// TODO;
+				// hardcode名称;
+		        String hardcodeName = CLASSJson.getString("hardcodeName");
+		        // hardcode值;
+		        String hardcodeValue = gdKjInitService.getHardCodeValue(hardcodeName);
+		        strComContent = "'" + hardcodeValue + "'";
 				break;
 				// LOGOUT;
 			case LOGOUT:
 				// TODO;
 				break;
-			case CODE:
-				// TODO;
-				break;
-			case VALIDATECODE:
-				// TODO;
-				break;
-
 			default:
 				// 组件ID;
 				String comID = CLASSJson.getString("ComID");
@@ -274,12 +271,7 @@ public class Index {
 				strErrorDesc = errMsgArr[1];
 
 				String tmpUserID = gdKjComService.getOPRID(request);
-				
-				
-				/****** TODO getComAuthorizedInfo ************/
-				// authorizedInfomation
-				// =%This.getComAuthorizedInfo(&tmpUserID, &comID);
-				authorizedInfomation = "";
+				authorizedInfomation =gdKjComService.getComAuthorizedInfo(tmpUserID, comID);
 				break;
 			}
 			
@@ -316,8 +308,7 @@ public class Index {
 					tmpTimeOutFlag = "true";
 				}
 			}
-			//TODO authorizedInfomation;
-			authorizedInfomation = "\"comID\":\"TZ_AQ_COMREG_COM\",\"pageAuthInfo\":[]";
+
 			strRetContent = "{\"comContent\": " + strComContent
 					+ ",\"state\":{\"errcode\":" + errorCode
 					+ ",\"errdesc\": \""

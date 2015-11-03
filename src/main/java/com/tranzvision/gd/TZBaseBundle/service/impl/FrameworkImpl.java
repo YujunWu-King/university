@@ -66,4 +66,10 @@ public class FrameworkImpl implements Framework {
 		return null;
 	}
 
+	@Override
+	public String tzGetHtmlData(String strParams) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

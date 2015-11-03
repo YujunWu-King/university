@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn;
+import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsTzAqComsqTblMapper;
+import com.tranzvision.gd.TZPermissionDefnBundle.model.PsTzAqComsqTbl;
+import com.tranzvision.gd.TZPermissionDefnBundle.model.PsTzAqComsqTblKey;
 import com.tranzvision.gd.util.base.PaseJsonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -21,6 +23,8 @@ import net.sf.json.JSONObject;
 public class PermissionComServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private PsTzAqComsqTblMapper psTzAqComsqTblMapper;
 	
 	/*获取组件授权页面列表*/
 	@Override
@@ -32,6 +36,7 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 		 
 	     // 将字符串转换成json;
 	     JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
+	    
 	     // 许可权编号;
 	     String strPermID = CLASSJson.getString("permID");
 	     // 组件ID;
@@ -113,8 +118,48 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 			    strPageID = Json.getString("pageID");
 			    strReadonly = Json.getString("readonly");
 			    strModify = Json.getString("modify");
-				
-			}
+			    
+			    Short numReadonly, numModify;
+			    if("true".equals(strReadonly)){
+			    	numReadonly = 1;
+			    }else{
+			    	numReadonly = 0;
+			    }
+			    
+			    if("true".equals(strModify)){
+			    	numModify = 1;
+			    }else{
+			    	numModify = 0;
+			    }
+			      
+			    strModify = Json.getString("modify");
+			    PsTzAqComsqTblKey psTzAqComsqTblKey = new PsTzAqComsqTblKey();
+			    psTzAqComsqTblKey.setClassid(strPermID);
+			    psTzAqComsqTblKey.setTzComId(strComID);
+			    psTzAqComsqTblKey.setTzPageId(strPageID);
+			    PsTzAqComsqTbl psTzAqComsqTbl = psTzAqComsqTblMapper.selectByPrimaryKey(psTzAqComsqTblKey);
+			    if(psTzAqComsqTbl != null){
+			    	psTzAqComsqTbl.setDisplayonly(numReadonly);
+			    	psTzAqComsqTbl.setTzEditFlg(numModify);
+			    	psTzAqComsqTbl.setRowLastmantDttm(new Date());
+			    	/*****TODO %USERID****/
+			    	psTzAqComsqTbl.setRowLastmantOprid("TZ_7");
+			    	psTzAqComsqTblMapper.updateByPrimaryKeySelective(psTzAqComsqTbl);
+			    }else{
+			    	psTzAqComsqTbl = new PsTzAqComsqTbl();
+			    	psTzAqComsqTbl.setClassid(strPermID);;
+			    	psTzAqComsqTbl.setTzComId(strComID);
+			    	psTzAqComsqTbl.setTzPageId(strPageID);
+			    	psTzAqComsqTbl.setDisplayonly(numReadonly);
+			    	psTzAqComsqTbl.setTzEditFlg(numModify);
+			    	psTzAqComsqTbl.setRowAddedDttm(new Date());
+			    	psTzAqComsqTbl.setRowLastmantDttm(new Date());
+			    	/*****TODO %USERID****/
+			    	psTzAqComsqTbl.setRowAddedOprid("TZ_7");
+			    	psTzAqComsqTbl.setRowLastmantOprid("TZ_7");
+			    	psTzAqComsqTblMapper.insert(psTzAqComsqTbl);
+			    }
+			} 
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();

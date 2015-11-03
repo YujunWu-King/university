@@ -416,4 +416,18 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 		strRet = "{\"themes\":[" + strThemeCont + "],\"languages\":[" + strLangCont + "]}";
 		return strRet;
 	}
+
+	/*获取菜单说明信息*/
+	@Override
+	public String getMenuDescription(HttpServletRequest request, HttpServletResponse response,String strDescID) {
+		// 返回json报文;
+		String strRet;
+		// 说明信息内容;
+		String strDescContent = "";
+		   
+		// 菜单说明信息内容;
+		strRet = "{\""+this.getLoginLanguage(request, response)+"\":{\"descriptionID\":\""+strDescID+"\",\"description\":\""+strDescContent+"\"}}";
+		   
+		return strRet;
+	}
 }

@@ -86,7 +86,8 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 
 				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
-				// 类定义ID;
+				
+				// 许可权ID;
 				String sPermID = CLASSJson.getString("permID");
 				if (sPermID != null && !"".equals(sPermID)) {
 					/*删除该许可权ID下的所有信息*/
@@ -100,7 +101,7 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 					}
 					//删除role下的权限;
 					try{
-						sql = "DELETE FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=?";
+						sql = "DELETE FROM PSROLECLASS WHERE CLASSID=?";
 						jdbcTemplate.update(sql,sPermID);
 					}catch(DataAccessException e){
 						

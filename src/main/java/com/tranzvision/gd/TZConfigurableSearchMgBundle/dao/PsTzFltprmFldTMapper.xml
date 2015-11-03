@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltprmFldTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT" >
+    <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <id column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
+    <id column="TZ_VIEW_NAME" property="tzViewName" jdbcType="VARCHAR" />
+    <id column="TZ_FILTER_FLD" property="tzFilterFld" jdbcType="VARCHAR" />
+    <id column="TZ_FILTER_GL_FLD" property="tzFilterGlFld" jdbcType="VARCHAR" />
+    <result column="TZ_FILTER_ORDER" property="tzFilterOrder" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_FILTER_FLD, TZ_FILTER_GL_FLD, TZ_FILTER_ORDER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FLTPRM_FLD_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
+      and TZ_FILTER_GL_FLD = #{tzFilterGlFld,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldTKey" >
+    delete from PS_TZ_FLTPRM_FLD_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
+      and TZ_FILTER_GL_FLD = #{tzFilterGlFld,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT" >
+    insert into PS_TZ_FLTPRM_FLD_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, 
+      TZ_FILTER_FLD, TZ_FILTER_GL_FLD, TZ_FILTER_ORDER
+      )
+    values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, 
+      #{tzFilterFld,jdbcType=VARCHAR}, #{tzFilterGlFld,jdbcType=VARCHAR}, #{tzFilterOrder,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT" >
+    insert into PS_TZ_FLTPRM_FLD_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzPageId != null" >
+        TZ_PAGE_ID,
+      </if>
+      <if test="tzViewName != null" >
+        TZ_VIEW_NAME,
+      </if>
+      <if test="tzFilterFld != null" >
+        TZ_FILTER_FLD,
+      </if>
+      <if test="tzFilterGlFld != null" >
+        TZ_FILTER_GL_FLD,
+      </if>
+      <if test="tzFilterOrder != null" >
+        TZ_FILTER_ORDER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageId != null" >
+        #{tzPageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzViewName != null" >
+        #{tzViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFilterFld != null" >
+        #{tzFilterFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFilterGlFld != null" >
+        #{tzFilterGlFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFilterOrder != null" >
+        #{tzFilterOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT" >
+    update PS_TZ_FLTPRM_FLD_T
+    <set >
+      <if test="tzFilterOrder != null" >
+        TZ_FILTER_ORDER = #{tzFilterOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
+      and TZ_FILTER_GL_FLD = #{tzFilterGlFld,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT" >
+    update PS_TZ_FLTPRM_FLD_T
+    set TZ_FILTER_ORDER = #{tzFilterOrder,jdbcType=INTEGER}
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR}
+      and TZ_FILTER_GL_FLD = #{tzFilterGlFld,jdbcType=VARCHAR}
+  </update>
+</mapper>

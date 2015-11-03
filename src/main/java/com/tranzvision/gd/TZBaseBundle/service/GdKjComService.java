@@ -44,4 +44,7 @@ public interface GdKjComService {
 	
 	/*下拉框数据*/
 	public String getComboxValue(String recname , String condition,  String result,String[] errMsgArr );
+	
+	/*获取指定组件页面的访问授权信息*/
+	public String getComAuthorizedInfo(String sUserId,String sComID);
 }

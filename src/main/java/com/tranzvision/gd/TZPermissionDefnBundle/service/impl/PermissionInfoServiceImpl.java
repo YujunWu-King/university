@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -192,6 +193,50 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return strRet;
+	}
+	
+	/* 删除许可权组件授权信息 */
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+		// 返回值;
+		String strRet = "{}";
+
+		// 若参数为空，直接返回;
+		if (actData == null || actData.length == 0) {
+			return strRet;
+		}
+
+		try {
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				// 提交信息
+				String strForm = actData[num];
+
+				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				// 许可权ID;
+				String sPermID = CLASSJson.getString("permID");
+				// 组件ID;
+			    String sComID = CLASSJson.getString("comID");
+			    
+				if (sPermID != null && !"".equals(sPermID) && sComID != null && !"".equals(sComID)) {
+					//删除role下的权限;
+					try{
+						String sql = "DELETE FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=? AND TZ_COM_ID=?";
+						jdbcTemplate.update(sql,sPermID,sComID);
+					}catch(DataAccessException e){
+						e.printStackTrace();
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+			return strRet;
+		}
+
 		return strRet;
 	}
 	
