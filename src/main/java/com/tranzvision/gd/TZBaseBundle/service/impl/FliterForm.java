@@ -67,7 +67,7 @@ public class FliterForm extends FrameworkImpl {
 			
 			// 是否高级模式;
 			String TZ_ADVANCE_MODEL = "";
-			int TZ_RESULT_MAX_NUM = 0;
+			long TZ_RESULT_MAX_NUM = 0;
 			// 操作符是否只读;
 			String operatorReadOnly = "true";
 			// 是否存在;
@@ -79,7 +79,7 @@ public class FliterForm extends FrameworkImpl {
 				map = jdbcTemplate.queryForMap(sql, new Object[]{comId,pageId,viewName});
 				isExist = (String) map.get("Exist");
 				TZ_ADVANCE_MODEL = (String) map.get("TZ_ADVANCE_MODEL");
-				TZ_RESULT_MAX_NUM = (int) map.get("TZ_RESULT_MAX_NUM");
+				TZ_RESULT_MAX_NUM = (long) map.get("TZ_RESULT_MAX_NUM");
 			}catch(Exception e){
 				e.printStackTrace();
 			}

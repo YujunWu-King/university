@@ -98,7 +98,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String jgId = this.getLoginOrgID(request, response);
 		String superOrgId = this.getSuperOrgId(request, response);
 		
-		String sql = "SELECT ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(CMBC_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND A.TZ_MSG_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
+		String sql = "SELECT ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND A.TZ_MSG_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
 		try{
 			tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[]{loginLanguage,msgSetId,msgId,jgId},String.class);
 		}catch(DataAccessException e){
@@ -253,7 +253,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	@Override
 	public String getHardCodeValue(String hCode){
 		String tmpHardCodeValue = "";
-		String hardCodeSQL = "SELECT CMBC_HARDCODE_VAL FROM PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT=?";
+		String hardCodeSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try{
 			tmpHardCodeValue = jdbcTemplate.queryForObject(hardCodeSQL, new Object[]{hCode},String.class);
 		}catch(DataAccessException e){

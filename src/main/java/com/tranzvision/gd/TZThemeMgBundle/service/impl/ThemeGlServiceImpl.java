@@ -8,15 +8,21 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZThemeMgBundle.dao.PsTzPtZtxxTblMapper;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONObject;
-
+/**
+ * 
+ * @author tang
+ * 功能说明：高端产品-主题管理
+ * 原PS类：TZ_GD_THEMEGL_PKG：TZ_GD_THEMEGL_CLS
+ */
 @Service("com.tranzvision.gd.TZThemeMgBundle.service.impl.ThemeGlServiceImpl")
 public class ThemeGlServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	@Autowired
 	private PsTzPtZtxxTblMapper psTzPtZtxxTblMapper;
 	
@@ -73,10 +79,9 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				// 提交信息
 				String strForm = actData[num];
-
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 主题 ID;
-				String strThemeId = CLASSJson.getString("themeID");
+				String strThemeId = jacksonUtil.getString("themeID");
 				if (strThemeId != null && !"".equals(strThemeId)) {
 					psTzPtZtxxTblMapper.deleteByPrimaryKey(strThemeId);
 					String sql = "DELETE from PS_TZ_PT_ZTZY_TBL WHERE TZ_ZT_ID=?";

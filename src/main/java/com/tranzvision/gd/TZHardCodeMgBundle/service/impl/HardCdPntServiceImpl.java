@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZHardCodeMgBundle.dao.PsCmbcHardcdPntMapper;
-import com.tranzvision.gd.TZHardCodeMgBundle.model.PsCmbcHardcdPnt;
+import com.tranzvision.gd.TZHardCodeMgBundle.dao.PsTzHardcdPntMapper;
+import com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt;
 import com.tranzvision.gd.util.base.PaseJsonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -21,7 +21,7 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZHardCodeMgBundle.service.impl.HardCdPntServiceImpl")
 public class HardCdPntServiceImpl extends FrameworkImpl {
 	@Autowired
-	private PsCmbcHardcdPntMapper psCmbcHardcdPntMapper;
+	private PsTzHardcdPntMapper psCmbcHardcdPntMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	
@@ -34,11 +34,11 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 		FliterForm fliterForm = new FliterForm();
 
 		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] { { "CMBC_HARDCODE_PNT", "ASC" } };
+		String[][] orderByArr = new String[][] { { "TZ_HARDCODE_PNT", "ASC" } };
 		fliterForm.orderByArr = orderByArr;
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "CMBC_HARDCODE_PNT", "CMBC_DESCR254", "CMBC_HARDCODE_VAL" };
+		String[] resultFldArray = { "TZ_HARDCODE_PNT", "TZ_DESCR254", "TZ_HARDCODE_VAL" };
 		String jsonString = "";
 
 		// 可配置搜索通用函数;
@@ -76,12 +76,12 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 			if (CLASSJson.containsKey("hardCodeName")) {
 				// hardcode ID;
 				String hardCodeName = CLASSJson.getString("hardCodeName");
-				PsCmbcHardcdPnt psCmbcHardcdPnt=  psCmbcHardcdPntMapper.selectByPrimaryKey(hardCodeName);
+				PsTzHardcdPnt psCmbcHardcdPnt=  psCmbcHardcdPntMapper.selectByPrimaryKey(hardCodeName);
 				if (psCmbcHardcdPnt != null) {
-					strRet = "{\"hardCodeName\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getCmbcHardcodePnt())
-							+ "\",\"hardCodeDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getCmbcDescr254())
-							+ "\",\"hardCodeValue\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getCmbcHardcodeVal())
-							+ "\",\"hardCodeDetailDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getCmbcDescr1000())
+					strRet = "{\"hardCodeName\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzHardcodePnt())
+							+ "\",\"hardCodeDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzDescr254())
+							+ "\",\"hardCodeValue\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzHardcodeVal())
+							+ "\",\"hardCodeDetailDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzDescr1000())
 							+ "\"}";
 				} else {
 					errMsg[0] = "1";
@@ -119,17 +119,17 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				String hardCodeValue = CLASSJson.getString("hardCodeValue");
 				String hardCodeDetailDesc = CLASSJson.getString("hardCodeDetailDesc");
 
-				String sql = "select COUNT(1) from PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT=?";
+				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
 				if (count > 0) {
 					errMsg[0] = "1";
 					errMsg[1] = "HardCode点：" + hardCodeName + ",已经存在";
 				} else {
-					PsCmbcHardcdPnt psCmbcHardcdPnt = new PsCmbcHardcdPnt();
-					psCmbcHardcdPnt.setCmbcHardcodePnt(hardCodeName);
-					psCmbcHardcdPnt.setCmbcDescr254(hardCodeDesc);
-					psCmbcHardcdPnt.setCmbcHardcodeVal(hardCodeValue);
-					psCmbcHardcdPnt.setCmbcDescr1000(hardCodeDetailDesc);
+					PsTzHardcdPnt psCmbcHardcdPnt = new PsTzHardcdPnt();
+					psCmbcHardcdPnt.setTzHardcodePnt(hardCodeName);
+					psCmbcHardcdPnt.setTzDescr254(hardCodeDesc);
+					psCmbcHardcdPnt.setTzHardcodeVal(hardCodeValue);
+					psCmbcHardcdPnt.setTzDescr1000(hardCodeDetailDesc);
 					psCmbcHardcdPntMapper.insert(psCmbcHardcdPnt);
 				}
 			}
@@ -158,14 +158,14 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				String hardCodeValue = CLASSJson.getString("hardCodeValue");
 				String hardCodeDetailDesc = CLASSJson.getString("hardCodeDetailDesc");
 
-				String sql = "select COUNT(1) from PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT=?";
+				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
 				if (count > 0) {
-					PsCmbcHardcdPnt psCmbcHardcdPnt = new PsCmbcHardcdPnt();
-					psCmbcHardcdPnt.setCmbcHardcodePnt(hardCodeName);
-					psCmbcHardcdPnt.setCmbcDescr254(hardCodeDesc);
-					psCmbcHardcdPnt.setCmbcHardcodeVal(hardCodeValue);
-					psCmbcHardcdPnt.setCmbcDescr1000(hardCodeDetailDesc);
+					PsTzHardcdPnt psCmbcHardcdPnt = new PsTzHardcdPnt();
+					psCmbcHardcdPnt.setTzHardcodePnt(hardCodeName);
+					psCmbcHardcdPnt.setTzDescr254(hardCodeDesc);
+					psCmbcHardcdPnt.setTzHardcodeVal(hardCodeValue);
+					psCmbcHardcdPnt.setTzDescr1000(hardCodeDetailDesc);
 					psCmbcHardcdPntMapper.updateByPrimaryKeyWithBLOBs(psCmbcHardcdPnt);
 					
 				} else {

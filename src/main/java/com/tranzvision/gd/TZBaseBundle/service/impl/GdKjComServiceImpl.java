@@ -59,7 +59,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String xxjhId = "TZGD_FWINIT_MSGSET";
 		// 查询登录机构下的系统消息定义;
 		List<Map<String, Object>> list = null;
-		String loginMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(CMBC_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
+		String loginMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
 		try {
 			list = jdbcTemplate.queryForList(loginMsgSQL, new Object[] { languageId, xxjhId, jgId });
 		} catch (DataAccessException e) {
@@ -87,7 +87,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		}
 
 		if (jgId != null && !jgId.equals(SuperOrgId)) {
-			String superMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(CMBC_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND NOT exists(SELECT 'Y' FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND UPPER(A.TZ_JG_ID)=UPPER(?)";
+			String superMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND NOT exists(SELECT 'Y' FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND UPPER(A.TZ_JG_ID)=UPPER(?)";
 			try {
 				list = jdbcTemplate.queryForList(superMsgSQL,
 						new Object[] { languageId, xxjhId, SuperOrgId, xxjhId, jgId });
@@ -362,7 +362,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					// 获取该页面下的标签资源;
 					sCID = sComID + "." + sPageID + "%";
 					List<Map<String, Object>> BqList = null;
-					String BqListSQL = "select ifnull(B.TZ_MSG_BQID,A.TZ_MSG_BQID) TZ_MSG_BQID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(CMBC_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_CMBC_HARDCD_PNT WHERE CMBC_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND (A.TZ_MSG_BQID LIKE ? or B.TZ_MSG_BQID LIKE ?)";
+					String BqListSQL = "select ifnull(B.TZ_MSG_BQID,A.TZ_MSG_BQID) TZ_MSG_BQID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND (A.TZ_MSG_BQID LIKE ? or B.TZ_MSG_BQID LIKE ?)";
 					try {
 						BqList = jdbcTemplate.queryForList(BqListSQL,
 								new Object[] { strLangID, sComID, this.getLoginOrgID(request, response), sCID, sCID });

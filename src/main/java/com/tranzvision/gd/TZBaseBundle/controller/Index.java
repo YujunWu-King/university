@@ -146,7 +146,6 @@ public class Index {
 		// 操作类型;
 		String strOprType = "";
 		strOprType = CLASSJson.getString("OperateType");
-		System.out.println("OperateType:"+strOprType);
 		try {
 			switch (OperateType.getOperateType(strOprType)) {
 			// 框架资源;
