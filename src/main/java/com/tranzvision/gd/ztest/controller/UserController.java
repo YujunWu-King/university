@@ -20,7 +20,7 @@ import com.tranzvision.gd.util.sql.type.*;
 import com.tranzvision.gd.util.base.TzSystemException;
  
 @Controller
-@RequestMapping("/")
+@RequestMapping("/testuser")
 public class UserController {
 	
 	@Autowired
