@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZRoleMgBundle.dao.PsRoledefnMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    <id column="ROLENAME" property="rolename" jdbcType="VARCHAR" />
+    <result column="VERSION" property="version" jdbcType="INTEGER" />
+    <result column="ROLETYPE" property="roletype" jdbcType="VARCHAR" />
+    <result column="DESCR" property="descr" jdbcType="VARCHAR" />
+    <result column="QRYNAME" property="qryname" jdbcType="VARCHAR" />
+    <result column="ROLESTATUS" property="rolestatus" jdbcType="VARCHAR" />
+    <result column="RECNAME" property="recname" jdbcType="VARCHAR" />
+    <result column="FIELDNAME" property="fieldname" jdbcType="VARCHAR" />
+    <result column="PC_EVENT_TYPE" property="pcEventType" jdbcType="VARCHAR" />
+    <result column="QRYNAME_SEC" property="qrynameSec" jdbcType="VARCHAR" />
+    <result column="PC_FUNCTION_NAME" property="pcFunctionName" jdbcType="VARCHAR" />
+    <result column="ROLE_PCODE_RULE_ON" property="rolePcodeRuleOn" jdbcType="VARCHAR" />
+    <result column="ROLE_QUERY_RULE_ON" property="roleQueryRuleOn" jdbcType="VARCHAR" />
+    <result column="LDAP_RULE_ON" property="ldapRuleOn" jdbcType="VARCHAR" />
+    <result column="ALLOWNOTIFY" property="allownotify" jdbcType="VARCHAR" />
+    <result column="ALLOWLOOKUP" property="allowlookup" jdbcType="VARCHAR" />
+    <result column="LASTUPDDTTM" property="lastupddttm" jdbcType="TIMESTAMP" />
+    <result column="LASTUPDOPRID" property="lastupdoprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" extends="BaseResultMap" >
+    <result column="DESCRLONG" property="descrlong" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ROLENAME, VERSION, ROLETYPE, DESCR, QRYNAME, ROLESTATUS, RECNAME, FIELDNAME, PC_EVENT_TYPE, 
+    QRYNAME_SEC, PC_FUNCTION_NAME, ROLE_PCODE_RULE_ON, ROLE_QUERY_RULE_ON, LDAP_RULE_ON, 
+    ALLOWNOTIFY, ALLOWLOOKUP, LASTUPDDTTM, LASTUPDOPRID
+  </sql>
+  <sql id="Blob_Column_List" >
+    DESCRLONG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PSROLEDEFN
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PSROLEDEFN
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    insert into PSROLEDEFN (ROLENAME, VERSION, ROLETYPE, 
+      DESCR, QRYNAME, ROLESTATUS, 
+      RECNAME, FIELDNAME, PC_EVENT_TYPE, 
+      QRYNAME_SEC, PC_FUNCTION_NAME, ROLE_PCODE_RULE_ON, 
+      ROLE_QUERY_RULE_ON, LDAP_RULE_ON, ALLOWNOTIFY, 
+      ALLOWLOOKUP, LASTUPDDTTM, LASTUPDOPRID, 
+      DESCRLONG)
+    values (#{rolename,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, #{roletype,jdbcType=VARCHAR}, 
+      #{descr,jdbcType=VARCHAR}, #{qryname,jdbcType=VARCHAR}, #{rolestatus,jdbcType=VARCHAR}, 
+      #{recname,jdbcType=VARCHAR}, #{fieldname,jdbcType=VARCHAR}, #{pcEventType,jdbcType=VARCHAR}, 
+      #{qrynameSec,jdbcType=VARCHAR}, #{pcFunctionName,jdbcType=VARCHAR}, #{rolePcodeRuleOn,jdbcType=VARCHAR}, 
+      #{roleQueryRuleOn,jdbcType=VARCHAR}, #{ldapRuleOn,jdbcType=VARCHAR}, #{allownotify,jdbcType=VARCHAR}, 
+      #{allowlookup,jdbcType=VARCHAR}, #{lastupddttm,jdbcType=TIMESTAMP}, #{lastupdoprid,jdbcType=VARCHAR}, 
+      #{descrlong,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    insert into PSROLEDEFN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rolename != null" >
+        ROLENAME,
+      </if>
+      <if test="version != null" >
+        VERSION,
+      </if>
+      <if test="roletype != null" >
+        ROLETYPE,
+      </if>
+      <if test="descr != null" >
+        DESCR,
+      </if>
+      <if test="qryname != null" >
+        QRYNAME,
+      </if>
+      <if test="rolestatus != null" >
+        ROLESTATUS,
+      </if>
+      <if test="recname != null" >
+        RECNAME,
+      </if>
+      <if test="fieldname != null" >
+        FIELDNAME,
+      </if>
+      <if test="pcEventType != null" >
+        PC_EVENT_TYPE,
+      </if>
+      <if test="qrynameSec != null" >
+        QRYNAME_SEC,
+      </if>
+      <if test="pcFunctionName != null" >
+        PC_FUNCTION_NAME,
+      </if>
+      <if test="rolePcodeRuleOn != null" >
+        ROLE_PCODE_RULE_ON,
+      </if>
+      <if test="roleQueryRuleOn != null" >
+        ROLE_QUERY_RULE_ON,
+      </if>
+      <if test="ldapRuleOn != null" >
+        LDAP_RULE_ON,
+      </if>
+      <if test="allownotify != null" >
+        ALLOWNOTIFY,
+      </if>
+      <if test="allowlookup != null" >
+        ALLOWLOOKUP,
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM,
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID,
+      </if>
+      <if test="descrlong != null" >
+        DESCRLONG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="roletype != null" >
+        #{roletype,jdbcType=VARCHAR},
+      </if>
+      <if test="descr != null" >
+        #{descr,jdbcType=VARCHAR},
+      </if>
+      <if test="qryname != null" >
+        #{qryname,jdbcType=VARCHAR},
+      </if>
+      <if test="rolestatus != null" >
+        #{rolestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="recname != null" >
+        #{recname,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldname != null" >
+        #{fieldname,jdbcType=VARCHAR},
+      </if>
+      <if test="pcEventType != null" >
+        #{pcEventType,jdbcType=VARCHAR},
+      </if>
+      <if test="qrynameSec != null" >
+        #{qrynameSec,jdbcType=VARCHAR},
+      </if>
+      <if test="pcFunctionName != null" >
+        #{pcFunctionName,jdbcType=VARCHAR},
+      </if>
+      <if test="rolePcodeRuleOn != null" >
+        #{rolePcodeRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="roleQueryRuleOn != null" >
+        #{roleQueryRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="ldapRuleOn != null" >
+        #{ldapRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="allownotify != null" >
+        #{allownotify,jdbcType=VARCHAR},
+      </if>
+      <if test="allowlookup != null" >
+        #{allowlookup,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupddttm != null" >
+        #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+      <if test="descrlong != null" >
+        #{descrlong,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    update PSROLEDEFN
+    <set >
+      <if test="version != null" >
+        VERSION = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="roletype != null" >
+        ROLETYPE = #{roletype,jdbcType=VARCHAR},
+      </if>
+      <if test="descr != null" >
+        DESCR = #{descr,jdbcType=VARCHAR},
+      </if>
+      <if test="qryname != null" >
+        QRYNAME = #{qryname,jdbcType=VARCHAR},
+      </if>
+      <if test="rolestatus != null" >
+        ROLESTATUS = #{rolestatus,jdbcType=VARCHAR},
+      </if>
+      <if test="recname != null" >
+        RECNAME = #{recname,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldname != null" >
+        FIELDNAME = #{fieldname,jdbcType=VARCHAR},
+      </if>
+      <if test="pcEventType != null" >
+        PC_EVENT_TYPE = #{pcEventType,jdbcType=VARCHAR},
+      </if>
+      <if test="qrynameSec != null" >
+        QRYNAME_SEC = #{qrynameSec,jdbcType=VARCHAR},
+      </if>
+      <if test="pcFunctionName != null" >
+        PC_FUNCTION_NAME = #{pcFunctionName,jdbcType=VARCHAR},
+      </if>
+      <if test="rolePcodeRuleOn != null" >
+        ROLE_PCODE_RULE_ON = #{rolePcodeRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="roleQueryRuleOn != null" >
+        ROLE_QUERY_RULE_ON = #{roleQueryRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="ldapRuleOn != null" >
+        LDAP_RULE_ON = #{ldapRuleOn,jdbcType=VARCHAR},
+      </if>
+      <if test="allownotify != null" >
+        ALLOWNOTIFY = #{allownotify,jdbcType=VARCHAR},
+      </if>
+      <if test="allowlookup != null" >
+        ALLOWLOOKUP = #{allowlookup,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+      <if test="descrlong != null" >
+        DESCRLONG = #{descrlong,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    update PSROLEDEFN
+    set VERSION = #{version,jdbcType=INTEGER},
+      ROLETYPE = #{roletype,jdbcType=VARCHAR},
+      DESCR = #{descr,jdbcType=VARCHAR},
+      QRYNAME = #{qryname,jdbcType=VARCHAR},
+      ROLESTATUS = #{rolestatus,jdbcType=VARCHAR},
+      RECNAME = #{recname,jdbcType=VARCHAR},
+      FIELDNAME = #{fieldname,jdbcType=VARCHAR},
+      PC_EVENT_TYPE = #{pcEventType,jdbcType=VARCHAR},
+      QRYNAME_SEC = #{qrynameSec,jdbcType=VARCHAR},
+      PC_FUNCTION_NAME = #{pcFunctionName,jdbcType=VARCHAR},
+      ROLE_PCODE_RULE_ON = #{rolePcodeRuleOn,jdbcType=VARCHAR},
+      ROLE_QUERY_RULE_ON = #{roleQueryRuleOn,jdbcType=VARCHAR},
+      LDAP_RULE_ON = #{ldapRuleOn,jdbcType=VARCHAR},
+      ALLOWNOTIFY = #{allownotify,jdbcType=VARCHAR},
+      ALLOWLOOKUP = #{allowlookup,jdbcType=VARCHAR},
+      LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      DESCRLONG = #{descrlong,jdbcType=LONGVARCHAR}
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn" >
+    update PSROLEDEFN
+    set VERSION = #{version,jdbcType=INTEGER},
+      ROLETYPE = #{roletype,jdbcType=VARCHAR},
+      DESCR = #{descr,jdbcType=VARCHAR},
+      QRYNAME = #{qryname,jdbcType=VARCHAR},
+      ROLESTATUS = #{rolestatus,jdbcType=VARCHAR},
+      RECNAME = #{recname,jdbcType=VARCHAR},
+      FIELDNAME = #{fieldname,jdbcType=VARCHAR},
+      PC_EVENT_TYPE = #{pcEventType,jdbcType=VARCHAR},
+      QRYNAME_SEC = #{qrynameSec,jdbcType=VARCHAR},
+      PC_FUNCTION_NAME = #{pcFunctionName,jdbcType=VARCHAR},
+      ROLE_PCODE_RULE_ON = #{rolePcodeRuleOn,jdbcType=VARCHAR},
+      ROLE_QUERY_RULE_ON = #{roleQueryRuleOn,jdbcType=VARCHAR},
+      LDAP_RULE_ON = #{ldapRuleOn,jdbcType=VARCHAR},
+      ALLOWNOTIFY = #{allownotify,jdbcType=VARCHAR},
+      ALLOWLOOKUP = #{allowlookup,jdbcType=VARCHAR},
+      LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR}
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </update>
+</mapper>

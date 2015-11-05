@@ -1,19 +1,27 @@
 package com.tranzvision.gd.TZAccountMgBundle.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsroleuserKey;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * 安全管理-用户账号管理列表类 原PS类：TZ_GD_YHZHGL_PKG:TZ_GD_YHZHXX_CLS
@@ -24,7 +32,17 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZAccountMgBundle.service.impl.AccountInfoImpl")
 public class AccountInfoImpl extends FrameworkImpl {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private PsroleuserMapper psroleuserMapper;
+	@Autowired
+	private PsoprdefnMapper psoprdefnMapper;
+	@Autowired
+	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
 	
 	/* 新增用户账号信息 */
 	@Override
@@ -36,29 +54,24 @@ public class AccountInfoImpl extends FrameworkImpl {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				String strForm = actData[num];
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
 
 				// 用户账号信息;
 				if ("USER".equals(strFlag)) {
 					// 信息内容;
-					String infoData = CLASSJson.getString("data");
-					// 将字符串转换成json;
-					CLASSJson = PaseJsonUtil.getJson(infoData);
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+					
 					// 登录账号;
-					String strActNum = CLASSJson.getString("usAccNum");
+					String strActNum = (String) infoData.get("usAccNum");
 					// 机构编号;
-					String orgID = CLASSJson.getString("orgId");
+					String orgID = (String) infoData.get("orgId");
 					// 查看是否已经存在;
 					int isExistNum = 0;
 					String isExistSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-					try {
-						isExistNum = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strActNum, orgID },
-								Integer.class);
-					} catch (DataAccessException e) {
-
-					}
+					isExistNum = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strActNum, orgID },"Integer");
+					
 					if (isExistNum > 0) {
 						errMsg[0] = "1";
 						errMsg[1] = "机构编号为：" + orgID + "，登录账号为：" + strActNum + "的信息已经存在。";
@@ -66,48 +79,44 @@ public class AccountInfoImpl extends FrameworkImpl {
 					}
 
 					// 用户名称;
-					String usName = CLASSJson.getString("usName");
+					String usName = (String) infoData.get("usName");
 					// 手机号码;
-					String mobile = CLASSJson.getString("mobile");
+					String mobile = (String) infoData.get("mobile");
 					// 电子邮箱;
-					String email = CLASSJson.getString("email");
+					String email = (String) infoData.get("email");
 					// 手机号码;
-					String bdMobile = CLASSJson.getString("bdMobile");
+					String bdMobile = (String) infoData.get("bdMobile");
 					// 电子邮箱;
-					String bdEmail = CLASSJson.getString("bdEmail");
+					String bdEmail = (String) infoData.get("bdEmail");
 					// 邮箱绑定标志;
-					String eBindFlag = CLASSJson.getString("eBindFlag");
+					String eBindFlag = (String) infoData.get("eBindFlag");
 					// 手机绑定标志;
-					String mBindFlag = CLASSJson.getString("mBindFlag");
+					String mBindFlag = (String) infoData.get("mBindFlag");
 					// 激活状态;
-					String jhState = CLASSJson.getString("jhState");
+					String jhState = (String) infoData.get("jhState");
 					// 激活方式;
-					String jhMethod = CLASSJson.getString("jhMethod");
+					String jhMethod = (String) infoData.get("jhMethod");
 					// 账号类型;
-					String rylx = CLASSJson.getString("rylx");
+					String rylx = (String) infoData.get("rylx");
 					// 账号密码;
-					String password = CLASSJson.getString("password");
+					String password = (String) infoData.get("password");
 					password = DESUtil.encrypt(password, "TZGD_Tranzvision");
 					// 锁定账号;
 					String acctLock = "";
 
-					if (CLASSJson.containsKey("acctLock")) {
-						acctLock = CLASSJson.getString("acctLock");
+					if (infoData.containsKey("acctLock")) {
+						acctLock = (String) infoData.get("acctLock");
 					}
 					// 原机构ID，判断是否修改了用户的所属机构;
-					String originOrgId = CLASSJson.getString("originOrgId");
+					String originOrgId = (String) infoData.get("originOrgId");
 
 					// 检查绑定手机是否被占用;
 					String isBd = "";
 					if ("Y".equals(mBindFlag)) {
 						String isBdPhoneExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
-						try {
-							isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
-									new Object[] { bdMobile, orgID, strActNum }, String.class);
-						} catch (DataAccessException e) {
-
-						}
-
+						isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
+									new Object[] { bdMobile, orgID, strActNum }, "String");
+						
 						if ("Y".equals(isBd)) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该手机已经被占用";
@@ -119,12 +128,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 
 					if ("Y".equals(eBindFlag)) {
 						String isBdEmlExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
-						try {
-							isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
-									String.class);
-						} catch (DataAccessException e) {
-
-						}
+						isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
+									"String");
 
 						if ("Y".equals(isBd)) {
 							errMsg[0] = "1";
@@ -137,70 +142,72 @@ public class AccountInfoImpl extends FrameworkImpl {
 						String originOprId = "";
 						// 删除原账号的权限;
 						String originOpridSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
-						try {
-							originOprId = jdbcTemplate.queryForObject(originOpridSql,
-									new Object[] { originOrgId, strActNum }, String.class);
-						} catch (DataAccessException e) {
-
-						}
+						originOprId = jdbcTemplate.queryForObject(originOpridSql,
+									new Object[] { originOrgId, strActNum }, "String");
+						
 						if (originOprId != null && !"".equals(originOprId)) {
 							String deleteRoleSql = "DELETE from PSROLEUSER WHERE ROLEUSER=?";
-							try {
-								jdbcTemplate.update(deleteRoleSql, originOprId);
-							} catch (DataAccessException e) {
-
-							}
+							jdbcTemplate.update(deleteRoleSql, new Object[]{originOprId});
+							
 						}
 
 					}
 
-					TZUtility utility = new TZUtility();
-					oprID = "TZ_" + utility.GetSeqNum("PSOPRDEFN", "OPRID");
-					String insertOprdSql = "insert into PS_TZ_AQ_YHXX_TBL ( TZ_DLZH_ID, TZ_JG_ID, OPRID, TZ_REALNAME, TZ_EMAIL,TZ_MOBILE,TZ_RYLX,TZ_YXBD_BZ,TZ_SJBD_BZ,TZ_JIHUO_ZT,TZ_JIHUO_FS,TZ_ZHCE_DT,TZ_BJS_EML,TZ_BJS_SMS,ROW_ADDED_DTTM,ROW_ADDED_OPRID,ROW_LASTMANT_DTTM,ROW_LASTMANT_OPRID,SYNCID,SYNCDTTM ) values(?,?,?,?,?,?,?,?,?,?,?,curdate(),'','',curdate(),?,curdate(),?,0,curdate())";
-					try {
-						/**** TODO %OPRID *****/
-						jdbcTemplate.update(insertOprdSql, strActNum, orgID, oprID, usName, bdEmail, bdMobile, rylx,
-								eBindFlag, mBindFlag, jhState, jhMethod, "TZ_7", "TZ_7");
-					} catch (DataAccessException e) {
-
+					
+					oprID = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
+					PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+					psTzAqYhxxTbl.setTzDlzhId(strActNum);
+					psTzAqYhxxTbl.setTzJgId(orgID);
+					psTzAqYhxxTbl.setOprid(oprID);
+					psTzAqYhxxTbl.setTzRealname(usName);
+					psTzAqYhxxTbl.setTzEmail(bdEmail);
+					psTzAqYhxxTbl.setTzMobile(bdMobile);
+					psTzAqYhxxTbl.setTzRylx(rylx);
+					psTzAqYhxxTbl.setTzYxbdBz(eBindFlag);
+					psTzAqYhxxTbl.setTzSjbdBz(mBindFlag);
+					psTzAqYhxxTbl.setTzJihuoZt(jhState);
+					psTzAqYhxxTbl.setTzJihuoFs(jhMethod);
+					psTzAqYhxxTbl.setTzZhceDt(new Date());
+					psTzAqYhxxTbl.setTzBjsEml("");
+					psTzAqYhxxTbl.setTzBjsSms("");
+					/**** TODO %OPRID *****/
+					psTzAqYhxxTbl.setRowAddedDttm(new Date());
+					psTzAqYhxxTbl.setRowAddedOprid("TZ_7");
+					psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+					psTzAqYhxxTbl.setRowLastmantOprid("TZ_7");
+					psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
+					
+					
+					short acctLockNum;
+					if ("on".equals(acctLock)) {
+						acctLockNum = 1;
+					} else {
+						acctLockNum = 0;
 					}
-
-					String insertOprSQL = "INSERT INTO PSOPRDEFN(OPRID,OPERPSWD,ACCTLOCK,LASTUPDDTTM,LASTUPDOPRID) values(?,?,?,curdate(),?)";
-					try {
-						int acctLockNum;
-						if ("on".equals(acctLock)) {
-							acctLockNum = 1;
-						} else {
-							acctLockNum = 0;
-						}
-						/**** TODO %OPRID *****/
-						jdbcTemplate.update(insertOprSQL, oprID, password, acctLockNum, "TZ_7");
-					} catch (DataAccessException e) {
-
-					}
+					Psoprdefn psoprdefn = new Psoprdefn();
+					psoprdefn.setOprid(oprID);
+					psoprdefn.setOperpswd(password);
+					psoprdefn.setAcctlock(acctLockNum);
+					/**** TODO %OPRID *****/
+					psoprdefn.setLastupddttm(new Date());
+					psoprdefn.setLastupdoprid("TZ_7");
+					psoprdefnMapper.insert(psoprdefn);
 
 					// 联系方式;
 					if ((mobile != null && !"".equals(mobile)) || (email != null && !"".equals(email))) {
 						String lsfsSQL = "INSERT INTO PS_TZ_LXFSINFO_TBL(TZ_LXFS_LY,TZ_LYDX_ID,TZ_ZY_SJ,TZ_ZY_EMAIL) VALUES(?,?,?,?)";
-						try {
-							jdbcTemplate.update(lsfsSQL, rylx, oprID, mobile, email);
-						} catch (DataAccessException e) {
-
-						}
+						jdbcTemplate.update(lsfsSQL, new Object[]{rylx, oprID, mobile, email});
+						
 					}
 
 					// 如果是从机构信息里新建的用户，需要添加到机构管理员表中 start;
 					// 机构编号 机构管理员使用;
 
-					if (CLASSJson.containsKey("orgNo")) {
-						String orgNo = CLASSJson.getString("orgNo");
+					if (infoData.containsKey("orgNo")) {
+						String orgNo = (String) infoData.get("orgNo");
 						if (orgNo != null && !"".equals(orgNo)) {
 							String insertJgGLYSQL = "INSERT INTO PS_TZ_JS_MGR_T(TZ_JG_ID,TZ_DLZH_ID) VALUES (?,?)";
-							try {
-								jdbcTemplate.update(insertJgGLYSQL, orgNo, strActNum);
-							} catch (DataAccessException e) {
-
-							}
+							jdbcTemplate.update(insertJgGLYSQL, new Object[]{orgNo, strActNum});
 						}
 
 					}
@@ -208,29 +215,24 @@ public class AccountInfoImpl extends FrameworkImpl {
 				}
 
 				if ("ROLE".equals(strFlag) && oprID != null && !"".equals(oprID)) {
-					JSONArray jsonArray = CLASSJson.getJSONArray("data");
+					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("data");
 					int j = 0;
 					for (j = 0; j < jsonArray.size(); j++) {
-						String roleStr = jsonArray.getString(j);
-						// 将字符串转换成json;
-						JSONObject roleCLASSJson = PaseJsonUtil.getJson(roleStr);
-						String roleID = roleCLASSJson.getString("roleID");
-						String isRole = roleCLASSJson.getString("isRole");
-						if ("true".equals(isRole)) {
-							String addRoleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,'N')";
-							try {
-								jdbcTemplate.update(addRoleSQL, oprID, roleID);
-							} catch (DataAccessException e) {
-
-							}
+						Map<String, Object> roleCLASSJson = jsonArray.get(j);
+						String roleID = (String) roleCLASSJson.get("roleID");
+						boolean isRole = (boolean) roleCLASSJson.get("isRole");
+						if (isRole) {
+							Psroleuser psroleuser = new Psroleuser();
+							psroleuser.setRoleuser(oprID);
+							psroleuser.setRolename(roleID);
+							psroleuser.setDynamicSw("N");
+							psroleuserMapper.insert(psroleuser);
+							
 						} else {
-							String deleteRoleSQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER = ? AND ROLENAME = ?";
-							try {
-								jdbcTemplate.update(deleteRoleSQL, oprID, roleID);
-							} catch (DataAccessException e) {
-
-							}
-
+							PsroleuserKey psroleuserKey = new PsroleuserKey();
+							psroleuserKey.setRoleuser(oprID);
+							psroleuserKey.setRolename(roleID);
+							psroleuserMapper.deleteByPrimaryKey(psroleuserKey);
 						}
 					}
 				}
@@ -254,77 +256,59 @@ public class AccountInfoImpl extends FrameworkImpl {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				String strForm = actData[num];
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
 
 				// 用户账号信息;
 				if ("USER".equals(strFlag)) {
+					
 					// 信息内容;
-					String infoData = CLASSJson.getString("data");
-					// 将字符串转换成json;
-					CLASSJson = PaseJsonUtil.getJson(infoData);
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+					
 					// 登录账号;
-					String strActNum = CLASSJson.getString("usAccNum");
+					String strActNum = (String) infoData.get("usAccNum");
 					// 机构编号;
-					String orgID = CLASSJson.getString("orgId");
-					// 查看是否已经存在;
-					String isExistSQL = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-					try {
-						oprID = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strActNum, orgID },
-								String.class);
-					} catch (DataAccessException e) {
-
-					}
-					if (oprID == null || "".equals(oprID)) {
-						errMsg[0] = "1";
-						errMsg[1] = "机构编号为：" + orgID + "，登录账号为：" + strActNum + "的信息不存在，更新失败。";
-						return strRet;
-					}
+					String orgID = (String) infoData.get("orgId");
 
 					// 用户名称;
-					String usName = CLASSJson.getString("usName");
+					String usName = (String) infoData.get("usName");
 					// 手机号码;
-					String mobile = CLASSJson.getString("mobile");
+					String mobile = (String) infoData.get("mobile");
 					// 电子邮箱;
-					String email = CLASSJson.getString("email");
+					String email = (String) infoData.get("email");
 					// 手机号码;
-					String bdMobile = CLASSJson.getString("bdMobile");
+					String bdMobile = (String) infoData.get("bdMobile");
 					// 电子邮箱;
-					String bdEmail = CLASSJson.getString("bdEmail");
+					String bdEmail = (String) infoData.get("bdEmail");
 					// 邮箱绑定标志;
-					String eBindFlag = CLASSJson.getString("eBindFlag");
+					String eBindFlag = (String) infoData.get("eBindFlag");
 					// 手机绑定标志;
-					String mBindFlag = CLASSJson.getString("mBindFlag");
+					String mBindFlag = (String) infoData.get("mBindFlag");
 					// 激活状态;
-					String jhState = CLASSJson.getString("jhState");
+					String jhState = (String) infoData.get("jhState");
 					// 激活方式;
-					String jhMethod = CLASSJson.getString("jhMethod");
+					String jhMethod = (String) infoData.get("jhMethod");
 					// 账号类型;
-					String rylx = CLASSJson.getString("rylx");
+					String rylx = (String) infoData.get("rylx");
 					// 账号密码;
-					String password = CLASSJson.getString("password");
+					String password = (String) infoData.get("password");
 					password = DESUtil.encrypt(password, "TZGD_Tranzvision");
 					// 锁定账号;
 					String acctLock = "";
 
-					if (CLASSJson.containsKey("acctLock")) {
-						acctLock = CLASSJson.getString("acctLock");
+					if (infoData.containsKey("acctLock")) {
+						acctLock = (String) infoData.get("acctLock");
 					}
-					// 原机构ID，判断是否修改了用户的所属机构;
-					String originOrgId = CLASSJson.getString("originOrgId");
+					
 
 					// 检查绑定手机是否被占用;
 					String isBd = "";
 					if ("Y".equals(mBindFlag)) {
 						String isBdPhoneExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
-						try {
-							isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
-									new Object[] { bdMobile, orgID, strActNum }, String.class);
-						} catch (DataAccessException e) {
-
-						}
-
+						isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
+									new Object[] { bdMobile, orgID, strActNum }, "String");
+						
 						if ("Y".equals(isBd)) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该手机已经被占用";
@@ -336,12 +320,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 
 					if ("Y".equals(eBindFlag)) {
 						String isBdEmlExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
-						try {
-							isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
-									String.class);
-						} catch (DataAccessException e) {
-
-						}
+						isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
+									"String");
 
 						if ("Y".equals(isBd)) {
 							errMsg[0] = "1";
@@ -349,117 +329,129 @@ public class AccountInfoImpl extends FrameworkImpl {
 							return strRet;
 						}
 					}
-
-					if (originOrgId != null && !"".equals(originOrgId) && !originOrgId.equals(orgID)) {
-						String originOprId = "";
-						// 删除原账号的权限;
-						String originOpridSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
-						try {
-							originOprId = jdbcTemplate.queryForObject(originOpridSql,
-									new Object[] { originOrgId, strActNum }, String.class);
-						} catch (DataAccessException e) {
-
-						}
-
-						if (originOprId != null && !"".equals(originOprId)) {
-							String deleteRoleSql = "DELETE from PSROLEUSER WHERE ROLEUSER=?";
-							try {
-								jdbcTemplate.update(deleteRoleSql, originOprId);
-							} catch (DataAccessException e) {
-
+					
+					// 原机构ID，判断是否修改了用户的所属机构;
+					String originOrgId = (String) infoData.get("originOrgId");
+					if (originOrgId != null && !"".equals(originOrgId.trim()) && !originOrgId.equals(orgID)) {
+						
+						// 如果改变了机构，判断该用户是否已经存在;
+						String isExistSQL = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
+						String orgIsExist = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strActNum, orgID },
+									"String");
+						
+						if ("Y".equals(orgIsExist)) {
+							errMsg[0] = "1";
+							errMsg[1] = "机构编号为：" + orgID + "，登录账号为：" + strActNum + "的信息已经存在。";
+							return strRet;
+						}else{
+							
+							// 删除原账号的权限;
+							String originOpridSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
+							oprID = jdbcTemplate.queryForObject(originOpridSql,
+										new Object[] { originOrgId, strActNum }, "String");
+							
+							if (oprID != null && !"".equals(oprID)) {
+								
+								String deleteRoleSql = "DELETE from PSROLEUSER WHERE ROLEUSER=?";
+								jdbcTemplate.update(deleteRoleSql, new Object[]{oprID});
+								
 							}
 						}
-
+					}else{
+						String opridSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
+						oprID = jdbcTemplate.queryForObject(opridSql,
+									new Object[] { orgID, strActNum }, "String");
 					}
 
-					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_REALNAME = ?, TZ_EMAIL  = ?,TZ_MOBILE = ?,TZ_RYLX = ?,TZ_YXBD_BZ = ?,TZ_SJBD_BZ = ?,TZ_JIHUO_ZT = ?,TZ_JIHUO_FS = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where TZ_DLZH_ID=? and TZ_JG_ID=?";
-					try {
-						/**** TODO %OPRID *****/
-						jdbcTemplate.update(updateOprdSql, usName, bdEmail, bdMobile, rylx, eBindFlag, mBindFlag,
-								jhState, jhMethod, "TZ_7", strActNum, orgID);
-					} catch (DataAccessException e) {
-
+					
+					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?,TZ_JG_ID=?, TZ_REALNAME = ?, TZ_EMAIL  = ?,TZ_MOBILE = ?,TZ_RYLX = ?,TZ_YXBD_BZ = ?,TZ_SJBD_BZ = ?,TZ_JIHUO_ZT = ?,TZ_JIHUO_FS = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where OPRID=?";
+					/**** TODO %OPRID *****/
+					jdbcTemplate.update(updateOprdSql, new Object[]{strActNum,orgID,usName, bdEmail, bdMobile, rylx, eBindFlag, mBindFlag,
+								jhState, jhMethod, "TZ_7", oprID});
+					/*
+					PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+					psTzAqYhxxTbl.setTzDlzhId(strActNum);
+					psTzAqYhxxTbl.setTzJgId(orgID);
+					psTzAqYhxxTbl.setOprid(oprID);
+					psTzAqYhxxTbl.setTzRealname(usName);
+					psTzAqYhxxTbl.setTzEmail(bdEmail);
+					psTzAqYhxxTbl.setTzMobile(bdMobile);
+					psTzAqYhxxTbl.setTzRylx(rylx);
+					psTzAqYhxxTbl.setTzYxbdBz(eBindFlag);
+					psTzAqYhxxTbl.setTzSjbdBz(mBindFlag);
+					psTzAqYhxxTbl.setTzJihuoZt(jhState);
+					psTzAqYhxxTbl.setTzJihuoFs(jhMethod);
+					psTzAqYhxxTbl.setTzZhceDt(new Date());
+					psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+					psTzAqYhxxTbl.setRowLastmantOprid("TZ_7");
+					psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
+					*/
+					
+					short acctLockNum;
+					if ("on".equals(acctLock)) {
+						acctLockNum = 1;
+					} else {
+						acctLockNum = 0;
 					}
+					Psoprdefn psoprdefn = new Psoprdefn();
+					psoprdefn.setOprid(oprID);
+					psoprdefn.setOperpswd(password);
+					psoprdefn.setAcctlock(acctLockNum);
+					/**** TODO %OPRID *****/
+					psoprdefn.setLastupddttm(new Date());
+					psoprdefn.setLastupdoprid("TZ_7");
+					psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 
-					String updatePSOPRDEFNSQL = "update PSOPRDEFN set OPERPSWD = ?,ACCTLOCK = ?,LASTUPDDTTM =curdate(),LASTUPDOPRID = ? where OPRID=?";
-					try {
-						int acctLockNum;
-						if ("on".equals(acctLock)) {
-							acctLockNum = 1;
-						} else {
-							acctLockNum = 0;
-						}
-						/**** TODO %OPRID *****/
-						jdbcTemplate.update(updatePSOPRDEFNSQL, password, acctLockNum, "TZ_7", oprID);
-					} catch (DataAccessException e) {
-
-					}
 
 					// 联系方式;
 					int isExistNum = 0;
 					String isExistLXFS = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY=? and TZ_LYDX_ID=?";
-					try {
-						isExistNum = jdbcTemplate.queryForObject(isExistLXFS, new Object[] { rylx, oprID },
-								Integer.class);
-					} catch (DataAccessException e) {
-
-					}
-
+					isExistNum = jdbcTemplate.queryForObject(isExistLXFS, new Object[] { rylx, oprID },
+								"Integer");
+					
 					if (isExistNum <= 0) {
 						if ((mobile != null && !"".equals(mobile)) || (email != null && !"".equals(email))) {
 							String lsfsSQL = "INSERT INTO PS_TZ_LXFSINFO_TBL(TZ_LXFS_LY,TZ_LYDX_ID,TZ_ZY_SJ,TZ_ZY_EMAIL) VALUES(?,?,?,?)";
-							try {
-								jdbcTemplate.update(lsfsSQL, rylx, oprID, mobile, email);
-							} catch (DataAccessException e) {
-
-							}
+							jdbcTemplate.update(lsfsSQL, new Object[]{rylx, oprID, mobile, email});
+							
 						}
 					} else {
 						String updatelSFSSql = "UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_SJ=?,TZ_ZY_EMAIL=? WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
-						try {
-							jdbcTemplate.update(updatelSFSSql, mobile, email, rylx, oprID);
-						} catch (DataAccessException e) {
+						jdbcTemplate.update(updatelSFSSql, new Object[]{mobile, email, rylx, oprID});
 
-						}
 					}
 				}
 
 				if ("ROLE".equals(strFlag) && oprID != null && !"".equals(oprID)) {
-					JSONArray jsonArray = CLASSJson.getJSONArray("data");
+					
+					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("data");
 					int j = 0;
 					for (j = 0; j < jsonArray.size(); j++) {
-						String roleStr = jsonArray.getString(j);
-						// 将字符串转换成json;
-						JSONObject roleCLASSJson = PaseJsonUtil.getJson(roleStr);
-						String roleID = roleCLASSJson.getString("roleID");
-						String isRole = roleCLASSJson.getString("isRole");
-						if ("true".equals(isRole)) {
+						Map<String, Object> roleCLASSJson = jsonArray.get(j);
+						String roleID = (String) roleCLASSJson.get("roleID");
+						boolean isRole = (boolean) roleCLASSJson.get("isRole");
+						if (isRole) {
 							String isRoleExist = "";
 							String isRoleExistSQL = "SELECT 'Y' FROM PSROLEUSER WHERE ROLEUSER=? AND ROLENAME=?";
-							try {
-								isRoleExist = jdbcTemplate.queryForObject(isRoleExistSQL,
-										new Object[] { oprID, roleID }, String.class);
-							} catch (DataAccessException e) {
-
-							}
+							isRoleExist = jdbcTemplate.queryForObject(isRoleExistSQL,
+										new Object[] { oprID, roleID }, "String");
+							
 							if (!"Y".equals(isRoleExist)) {
-								String addRoleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,'N')";
-								try {
-									jdbcTemplate.update(addRoleSQL, oprID, roleID);
-								} catch (DataAccessException e) {
-
-								}
+								Psroleuser psroleuser = new Psroleuser();
+								psroleuser.setRoleuser(oprID);
+								psroleuser.setRolename(roleID);
+								psroleuser.setDynamicSw("N");
+								psroleuserMapper.insert(psroleuser);
 							}
-
+							
 						} else {
-							String deleteRoleSQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER = ? AND ROLENAME = ?";
-							try {
-								jdbcTemplate.update(deleteRoleSQL, oprID, roleID);
-							} catch (DataAccessException e) {
-
-							}
+							PsroleuserKey psroleuserKey = new PsroleuserKey();
+							psroleuserKey.setRoleuser(oprID);
+							psroleuserKey.setRolename(roleID);
+							psroleuserMapper.deleteByPrimaryKey(psroleuserKey);
 						}
 					}
+
 				}
 
 			}
@@ -477,11 +469,11 @@ public class AccountInfoImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
-			if (CLASSJson.containsKey("usAccNum") && CLASSJson.containsKey("orgId")) {
-				String usAccNum = CLASSJson.getString("usAccNum");
-				String userOrg = CLASSJson.getString("orgId");
+			jacksonUtil.json2Map(strParams);
+		
+			if (jacksonUtil.containsKey("usAccNum") && jacksonUtil.containsKey("orgId")) {
+				String usAccNum = jacksonUtil.getString("usAccNum");
+				String userOrg = jacksonUtil.getString("orgId");
 
 				// 用户ID,姓名，电子邮件，手机号码，人员类型，邮箱绑定标志，手机绑定标志，激活状态，激活方式;
 				String oprID = "", name = "", bdEmail = "", bdMobile = "", perType = "", eBindFlg = "", mBindFlg = "",
@@ -494,54 +486,44 @@ public class AccountInfoImpl extends FrameworkImpl {
 				String acctLock = "false";
 
 				if (usAccNum != null && !"".equals(usAccNum)) {
-
-					String sql1 = "SELECT OPRID,TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_RYLX,TZ_YXBD_BZ,TZ_SJBD_BZ,TZ_JIHUO_ZT,TZ_JIHUO_FS,TZ_RYLX FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-					Map<String, Object> map = null;
-					try {
-						map = jdbcTemplate.queryForMap(sql1, new Object[] { usAccNum, userOrg });
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-					}
-					if (map != null) {
-						oprID = TZUtility.transFormchar((String) map.get("OPRID")).trim();
-						name = TZUtility.transFormchar((String) map.get("TZ_REALNAME")).trim();
-						bdEmail = TZUtility.transFormchar((String) map.get("TZ_EMAIL")).trim();
-						bdMobile = TZUtility.transFormchar((String) map.get("TZ_MOBILE")).trim();
-						perType = TZUtility.transFormchar((String) map.get("TZ_RYLX")).trim();
-						eBindFlg = TZUtility.transFormchar((String) map.get("TZ_YXBD_BZ")).trim();
-						mBindFlg = TZUtility.transFormchar((String) map.get("TZ_SJBD_BZ")).trim();
-						jhState = TZUtility.transFormchar((String) map.get("TZ_JIHUO_ZT")).trim();
-						jhMethod = TZUtility.transFormchar((String) map.get("TZ_JIHUO_FS")).trim();
-						rylx = TZUtility.transFormchar((String) map.get("TZ_RYLX")).trim();
+					PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
+					psTzAqYhxxTblKey.setTzDlzhId(usAccNum);
+					psTzAqYhxxTblKey.setTzJgId(userOrg);
+					PsTzAqYhxxTbl psTzAqYhxxTbl = psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
+					
+					if (psTzAqYhxxTbl != null) {
+						oprID = TZUtility.transFormchar(psTzAqYhxxTbl.getOprid());
+						name = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRealname());
+						bdEmail = TZUtility.transFormchar(psTzAqYhxxTbl.getTzEmail());
+						bdMobile = TZUtility.transFormchar(psTzAqYhxxTbl.getTzMobile());
+						perType = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRylx());
+						eBindFlg = TZUtility.transFormchar(psTzAqYhxxTbl.getTzYxbdBz());
+						mBindFlg = TZUtility.transFormchar(psTzAqYhxxTbl.getTzSjbdBz());
+						jhState = TZUtility.transFormchar(psTzAqYhxxTbl.getTzJihuoZt());
+						jhMethod = TZUtility.transFormchar(psTzAqYhxxTbl.getTzJihuoFs());
+						rylx = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRylx());
 					}
 
-					map = null;
+					
 					String sql2 = "SELECT TZ_ZY_SJ,TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
-					try {
-						map = jdbcTemplate.queryForMap(sql2, new Object[] { rylx, oprID });
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-					}
+					Map<String, Object> map = jdbcTemplate.queryForMap(sql2, new Object[] { rylx, oprID });
+					
 
 					if (map != null) {
 						mobile = TZUtility.transFormchar((String) map.get("TZ_ZY_SJ")).trim();
 						email = TZUtility.transFormchar((String) map.get("TZ_ZY_EMAIL")).trim();
 					}
-
-					int localNum = 0;
-					String sql3 = "select OPERPSWD,ACCTLOCK from PSOPRDEFN where OPRID=? ";
-					map = null;
 					
-					try {
-						map = jdbcTemplate.queryForMap(sql3, new Object[] { oprID });
-					} catch (DataAccessException e) {
-					}
-					if (map != null) {
-						password = TZUtility.transFormchar((String) map.get("OPERPSWD")).trim();
+					Psoprdefn psoprdefn = new Psoprdefn();
+					psoprdefn = psoprdefnMapper.selectByPrimaryKey(oprID);
+					short localNum = 0;
+				
+					if (psoprdefn != null) {
+						password = TZUtility.transFormchar(psoprdefn.getOperpswd());
 						if (!"".equals(password)) {
 							password = DESUtil.decrypt(password, "TZGD_Tranzvision");
 						}
-						localNum = (int) map.get("ACCTLOCK");
+						localNum = (short) psoprdefn.getAcctlock();
 					}
 					if (localNum == 1) {
 						acctLock = "true";
@@ -586,26 +568,21 @@ public class AccountInfoImpl extends FrameworkImpl {
 		String oprID = "";
 
 		try {
-			
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
+			jacksonUtil.json2Map(strParams);
 			// 登录账号;
-			String usAccNum = CLASSJson.getString("usAccNum");
+			String usAccNum = jacksonUtil.getString("usAccNum");
 			// 机构编号;
-			String orgID = CLASSJson.getString("orgId");
+			String orgID = jacksonUtil.getString("orgId");
 
 			// 从机构新建用户时 需根据角色类型选中对应的角色（普通用户选择角色类型为普通用户的角色，管理员用户选择角色类型为管理员的角色）;
 			String roleType = "";
-			if (CLASSJson.containsKey("roleType")) {
-				roleType = CLASSJson.getString("roleType");
+			if (jacksonUtil.containsKey("roleType")) {
+				roleType = jacksonUtil.getString("roleType");
 			}
 
 			// 获取用户ID;
 			String opridSql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-			try {
-				oprID = jdbcTemplate.queryForObject(opridSql, new Object[] { usAccNum, orgID }, String.class);
-			} catch (DataAccessException e) {
-				e.printStackTrace();
-			}
+			oprID = jdbcTemplate.queryForObject(opridSql, new Object[] { usAccNum, orgID }, "String");
 
 			// 获取角色信息列表sql;
 			String sqlRoleList = "";
@@ -617,54 +594,34 @@ public class AccountInfoImpl extends FrameworkImpl {
 			if (numLimit == 0) {
 				if (!"".equals(oprID) && oprID != null) {
 					sqlRoleList = "SELECT B.ROLENAME,B.DESCR,'Y' ISROLE ISROLE FROM PSROLEUSER A,PSROLEDEFN B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER = ? AND A.DYNAMIC_SW='N' UNION SELECT C.ROLENAME,A.DESCR,'N' ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME AND NOT EXISTS (SELECT 'Y' FROM PSROLEUSER B WHERE A.ROLENAME=B.ROLENAME AND B.ROLEUSER = ? AND B.DYNAMIC_SW='N') ORDER BY ISROLE DESC";
-					try {
-						list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { oprID, orgID, oprID });
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-					}
+					list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { oprID, orgID, oprID });
+					
 				} else {
 					if (!"".equals(roleType) && roleType != null) {
 						sqlRoleList = "SELECT C.ROLENAME,A.DESCR,if(C.TZ_ROLE_TYPE=?,'Y','N') ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C  WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME";
-						try {
-							list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { roleType, orgID });
-						} catch (DataAccessException e) {
-							e.printStackTrace();
-						}
+						list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { roleType, orgID });
+						
 					} else {
 						sqlRoleList = "SELECT C.ROLENAME,A.DESCR,'N' ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C  WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME";
-						try {
-							list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { orgID });
-						} catch (DataAccessException e) {
-							e.printStackTrace();
-						}
+						list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { orgID });
 					}
 				}
 
 			} else {
 				if (!"".equals(oprID) && oprID != null) {
 					sqlRoleList = "SELECT B.ROLENAME,B.DESCR,'Y' ISROLE FROM PSROLEUSER A,PSROLEDEFN B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER = ? AND A.DYNAMIC_SW='N' UNION SELECT C.ROLENAME,A.DESCR,'N' ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME AND NOT EXISTS (SELECT 'Y' FROM PSROLEUSER B WHERE A.ROLENAME=B.ROLENAME AND B.ROLEUSER = ? AND B.DYNAMIC_SW='N') ORDER BY ISROLE DESC limit ?,?";
-					try {
-						list = jdbcTemplate.queryForList(sqlRoleList,
+					list = jdbcTemplate.queryForList(sqlRoleList,
 								new Object[] { oprID, orgID, oprID, numStart, numLimit });
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-					}
+					
 				} else {
 					if (!"".equals(roleType) && roleType != null) {
 						sqlRoleList = "SELECT C.ROLENAME,A.DESCR,if(C.TZ_ROLE_TYPE=?,'Y','N') ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C  WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME limit ?,?";
-						try {
-							list = jdbcTemplate.queryForList(sqlRoleList,
+						list = jdbcTemplate.queryForList(sqlRoleList,
 									new Object[] { roleType, orgID, numStart, numLimit });
-						} catch (DataAccessException e) {
-							e.printStackTrace();
-						}
+						
 					} else {
 						sqlRoleList = "SELECT C.ROLENAME,A.DESCR,'N' ISROLE FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C  WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME limit ?,?";
-						try {
-							list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { orgID, numStart, numLimit });
-						} catch (DataAccessException e) {
-							e.printStackTrace();
-						}
+						list = jdbcTemplate.queryForList(sqlRoleList, new Object[] { orgID, numStart, numLimit });
 					}
 				}
 			}
@@ -692,19 +649,12 @@ public class AccountInfoImpl extends FrameworkImpl {
 			String totalSQL = "";
 			if (oprID != null && !"".equals(oprID)) {
 				totalSQL = "SELECT COUNT(1) FROM (SELECT B.ROLENAME  FROM PSROLEUSER A,PSROLEDEFN B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER = ? AND A.DYNAMIC_SW='N' UNION SELECT C.ROLENAME FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME AND NOT EXISTS (SELECT 'Y' FROM PSROLEUSER B WHERE A.ROLENAME=B.ROLENAME AND B.ROLEUSER = ? AND B.DYNAMIC_SW='N')) AS AB";
-				try {
-					numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { oprID, orgID, oprID },Integer.class);
-				} catch (DataAccessException e) {
-
-				}
+					numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { oprID, orgID, oprID },"Integer");
 
 			} else {
 				totalSQL = "SELECT COUNT(1) FROM PSROLEDEFN A, PS_TZ_JG_ROLE_T C  WHERE C.TZ_JG_ID = ? AND A.ROLENAME = C.ROLENAME";
-				try {
-					numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { orgID},Integer.class);
-				} catch (DataAccessException e) {
-
-				}
+				numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { orgID},"Integer");
+				
 			}
 			strRet = "{\"total\":" + numTotal + ",\"root\":[" + strContent + "]}";
 

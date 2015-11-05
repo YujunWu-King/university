@@ -1,18 +1,20 @@
 package com.tranzvision.gd.TZAccountMgBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 安全管理-用户账号管理列表类
@@ -23,18 +25,23 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZAccountMgBundle.service.impl.AccountListImpl")
 public class AccountListImpl extends FrameworkImpl {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/*获取用户账号信息列表*/
 	@Override
 	public String tzQueryList(String comParams,int numLimit, int numStart, String[] errorMsg){
 		// 返回值;
 		String strRet = "";
-		FliterForm fliterForm = new FliterForm();
 				
 		//排序字段如果没有不要赋值
-		//String[][] orderByArr = new String[][]{{"TZ_COM_ID","ASC"}};
-		//fliterForm.orderByArr = orderByArr;
+		String[][] orderByArr = new String[][]{{"TZ_DLZH_ID","ASC"}};
+		fliterForm.orderByArr = orderByArr;
 				
 		//json数据要的结果字段;
 		String[] resultFldArray = { "TZ_DLZH_ID", "TZ_JG_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_JIHUO_FS_DESC", "TZ_RYLX", "ACCTLOCK"};
@@ -80,76 +87,49 @@ public class AccountListImpl extends FrameworkImpl {
 				// 用户账号信息;
 				String strUserInfo = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strUserInfo);
+				jacksonUtil.json2Map(strUserInfo);
 				// 登录账号;
-				String usAccNum = CLASSJson.getString("usAccNum");
+				String usAccNum = jacksonUtil.getString("usAccNum");
 				// 机构编号;
-				String orgId = CLASSJson.getString("orgId");
+				String orgId = jacksonUtil.getString("orgId");
 				if(usAccNum != null && !"".endsWith(usAccNum) && orgId != null && !"".endsWith(orgId)){
 					
 					/*获取用户ID*/
-					String selectSql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-					try{
-						oprID = jdbcTemplate.queryForObject(selectSql, new Object[]{usAccNum,orgId},String.class);
-					}catch(DataAccessException e){
-						
-					}
+					PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
+					psTzAqYhxxTblKey.setTzDlzhId(usAccNum);
+					psTzAqYhxxTblKey.setTzJgId(orgId);
+					PsTzAqYhxxTbl psTzAqYhxxTbl= psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
+					oprID = psTzAqYhxxTbl.getOprid();
+					
 				    if(oprID != null && !"".equals(oprID)){
 				    	//删除照片信息；
 				    	String photoSQL1 = "DELETE FROM PS_TZ_OPR_PHOTO_T WHERE TZ_ATTACHSYSFILENA IN (SELECT TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID=?)";
-				    	try{
-							jdbcTemplate.update(photoSQL1, oprID);
-						}catch(DataAccessException e){
-							
-						}
+				    	jdbcTemplate.update(photoSQL1, new Object[]{oprID});
+						
 				    	
 				    	String photoSQL2 = "DELETE FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID=?";
-				    	try{
-							jdbcTemplate.update(photoSQL2, oprID);
-						}catch(DataAccessException e){
-							
-						}
+				    	jdbcTemplate.update(photoSQL2, new Object[]{oprID});
+				    	
 				    	
 				    	//删除会员用户的注册信息;
 				    	String deleteHYSQL = "DELETE FROM PS_TZ_REG_USER_T WHERE OPRID=?";
-				    	try{
-							jdbcTemplate.update(deleteHYSQL, oprID);
-						}catch(DataAccessException e){
-							
-						}
+				    	jdbcTemplate.update(deleteHYSQL, new Object[]{oprID});
 				    	
 				    	//删除会员用户的注册信息;
 				    	String deleteLXFSSQL = "DELETE FROM PS_TZ_LXFSINFO_TBL WHERE ( TZ_LXFS_LY='ZCYH' OR  TZ_LXFS_LY='NBYH') AND TZ_LYDX_ID=?";
-				    	try{
-							jdbcTemplate.update(deleteLXFSSQL, oprID);
-						}catch(DataAccessException e){
-							
-						}
+				    	jdbcTemplate.update(deleteLXFSSQL, new Object[]{oprID});
 				    	
 				    	//删除用户角色;
 				    	String deleteROLESQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER=?";
-				    	try{
-							jdbcTemplate.update(deleteROLESQL, oprID);
-						}catch(DataAccessException e){
-							
-						}
+				    	jdbcTemplate.update(deleteROLESQL, new Object[]{oprID});
 				    	
 				    	//删除用户信息记录信息;
 				    	String deleteYHXXSQL = "DELETE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-				    	try{
-							jdbcTemplate.update(deleteYHXXSQL, usAccNum,orgId);
-						}catch(DataAccessException e){
-							
-						}
-				    	
+				    	jdbcTemplate.update(deleteYHXXSQL, new Object[]{usAccNum,orgId} );
+
 				    	//删除用户;
 				    	String deleteOPDSQL = "DELETE FROM PSOPRDEFN WHERE OPRID=?";
-				    	try{
-							jdbcTemplate.update(deleteOPDSQL, oprID);
-						}catch(DataAccessException e){
-							
-						}
-				    
+				    	jdbcTemplate.update(deleteOPDSQL, new Object[]{oprID} );
 				    }
 					
 				}
@@ -172,26 +152,22 @@ public class AccountListImpl extends FrameworkImpl {
 		try {
 
 			// 将字符串转换成json;
-			JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
-
-			JSONArray jsonArray = CLASSJson.getJSONArray("data");
+			jacksonUtil.json2Map(comParams);
+			List<?> jsonArray = jacksonUtil.getList("data");
 			
 			for (int num = 0; num < jsonArray.size(); num++) {
-				String strJson = jsonArray.getString(num);
-				JSONObject dataJson = PaseJsonUtil.getJson(strJson);
+				Map<String, Object> dataJson = (Map<String, Object>) jsonArray.get(num);
+				
 				// 登录账号;
-				String usAccNum = dataJson.getString("usAccNum");
+				String usAccNum = (String) dataJson.get("usAccNum");
 				// 机构编号;
-				String orgID = dataJson.getString("orgId");
+				String orgID = (String) dataJson.get("orgId");
 				
 				if(usAccNum != null && !"".equals(usAccNum) && orgID != null && !"".equals(orgID)){
 					String oprID = "";
 					String isExistSQL = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
-					try{
-						oprID = jdbcTemplate.queryForObject(isExistSQL, new Object[]{usAccNum,orgID}, String.class);
-					}catch(DataAccessException e){
-						
-					}
+					oprID = jdbcTemplate.queryForObject(isExistSQL, new Object[]{usAccNum,orgID}, "String");
+
 					if (oprID == null || "".equals(oprID)) {
 						errorMsg[0] = "1";
 						errorMsg[1] = "机构编号为：" + orgID + "，登录账号为：" + usAccNum
@@ -202,29 +178,20 @@ public class AccountListImpl extends FrameworkImpl {
 					
 					// 重置密码;
 					if ("PWD".equals(oprType)) {
-						String password = CLASSJson.getString("password");
+						String password = jacksonUtil.getString("password");
 						if(password != null && !"".equals(password)){
 							String updatePSOPRDEFNSQL = "update PSOPRDEFN set OPERPSWD = ?, LASTUPDDTTM =curdate(),LASTUPDOPRID = ? where OPRID=?";
-							try{
-								password = DESUtil.encrypt(password,"TZGD_Tranzvision");
-								/**** TODO %OPRID *****/
-								jdbcTemplate.update(updatePSOPRDEFNSQL,password,"TZ_7",oprID);
-							}catch(DataAccessException e){
-								
-							}
-
+							password = DESUtil.encrypt(password,"TZGD_Tranzvision");
+							/**** TODO %OPRID *****/
+							jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{password,"TZ_7",oprID});
 						}
 					}
 
 					// 锁定账号;
 					if ("LOCK".equals(oprType)) {
 						String updatePSOPRDEFNSQL = "update PSOPRDEFN set ACCTLOCK = ?, LASTUPDDTTM =curdate(),LASTUPDOPRID = ? where OPRID=?";
-						try{
-							/**** TODO %OPRID *****/
-							jdbcTemplate.update(updatePSOPRDEFNSQL,1,"TZ_7",oprID);
-						}catch(DataAccessException e){
-							
-						}
+						/**** TODO %OPRID *****/
+						jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{1,"TZ_7",oprID});
 					}
 				}else{
 					errorMsg[0] = "1";

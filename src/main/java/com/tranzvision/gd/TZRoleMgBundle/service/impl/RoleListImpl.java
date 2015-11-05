@@ -3,15 +3,14 @@ package com.tranzvision.gd.TZRoleMgBundle.service.impl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoledefnMapper;
+import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONObject;
 
 /**
  * 角色管理相关类 原PS类：TZ_GD_ROLE_PKG:TZ_GD_ROLELIST_CLS
@@ -22,7 +21,13 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZRoleMgBundle.service.impl.RoleListImpl")
 public class RoleListImpl extends FrameworkImpl {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private PsRoledefnMapper psRoledefnMapper;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/* 查询角色列表 */
 	@Override
@@ -30,7 +35,6 @@ public class RoleListImpl extends FrameworkImpl {
 			String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
-		FliterForm fliterForm = new FliterForm();
 
 		// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "ROLENAME", "ASC" } };
@@ -80,43 +84,26 @@ public class RoleListImpl extends FrameworkImpl {
 				
 				// 角色信息;
 				String strRoleInfo = actData[num];
-				
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strRoleInfo);
+				jacksonUtil.json2Map(strRoleInfo);
 				// 角色名称ID;
-				String sRoleName = CLASSJson.getString("roleName");
+				String sRoleName = jacksonUtil.getString("roleName");
 				if (sRoleName != null && !"".equals(sRoleName)) {
 
 					/* 删除该角色名称下的所有相关表信息 */
 					/*角色定义表*/
-					String PSROLEDEFNSQL = "DELETE FROM PSROLEDEFN WHERE ROLENAME=?";
-					try{
-						jdbcTemplate.update(PSROLEDEFNSQL,sRoleName);
-					}catch(DataAccessException e){
-						
-					}
+					psRoledefnMapper.deleteByPrimaryKey(sRoleName);
+					
 					 /*用户角色表*/
 					String PSROLEUSERSQL = "DELETE FROM PSROLEUSER WHERE ROLENAME=?";
-					try{
-						jdbcTemplate.update(PSROLEUSERSQL,sRoleName);
-					}catch(DataAccessException e){
-						
-					}
+					jdbcTemplate.update(PSROLEUSERSQL, new Object[]{sRoleName});
+					
 					/*角色类别表*/
 					String PSROLECLASSSQL = "DELETE FROM PSROLECLASS WHERE ROLENAME=?";
-					try{
-						jdbcTemplate.update(PSROLECLASSSQL,sRoleName);
-					}catch(DataAccessException e){
-						
-					}
-					
+					jdbcTemplate.update(PSROLECLASSSQL, new Object[]{sRoleName});
+
 					/*机构角色表*/
 					String PS_TZ_JG_ROLE_TSQL = "DELETE FROM PS_TZ_JG_ROLE_T WHERE ROLENAME=?";
-					try{
-						jdbcTemplate.update(PS_TZ_JG_ROLE_TSQL,sRoleName);
-					}catch(DataAccessException e){
-						
-					}
-
+					jdbcTemplate.update(PS_TZ_JG_ROLE_TSQL, new Object[]{sRoleName});
 				}
 			}
 		} catch (Exception e) {

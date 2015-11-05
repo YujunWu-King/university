@@ -25,13 +25,14 @@ public class ResSetListServiceImpl extends FrameworkImpl {
 	private JacksonUtil jacksonUtil;
 	@Autowired
 	private PsTzPtZyjhTblMapper psTzPtZyjhTblMapper;
+	@Autowired
+	private FliterForm fliterForm;
 
 	/* 查询资源集合列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
-		FliterForm fliterForm = new FliterForm();
 
 		// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "TZ_ZYJH_ID", "ASC" } };

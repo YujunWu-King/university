@@ -26,6 +26,8 @@ public class AppClsServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsTzAppclsTblMapper psTzAppclsTblMapper;
+	@Autowired
+	private FliterForm fliterForm;
 
 	/* 查询类定义列表 */
 	@Override
@@ -33,8 +35,6 @@ public class AppClsServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		try {
-			FliterForm fliterForm = new FliterForm();
-
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APPCLS_ID", "ASC" } };
 			fliterForm.orderByArr = orderByArr;

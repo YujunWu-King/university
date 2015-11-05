@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn" >
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="OPERPSWD" property="operpswd" jdbcType="VARCHAR" />
+    <result column="ACCTLOCK" property="acctlock" jdbcType="SMALLINT" />
+    <result column="LASTUPDDTTM" property="lastupddttm" jdbcType="TIMESTAMP" />
+    <result column="LASTUPDOPRID" property="lastupdoprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OPRID, OPERPSWD, ACCTLOCK, LASTUPDDTTM, LASTUPDOPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PSOPRDEFN
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PSOPRDEFN
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn" >
+    insert into PSOPRDEFN (OPRID, OPERPSWD, ACCTLOCK, 
+      LASTUPDDTTM, LASTUPDOPRID)
+    values (#{oprid,jdbcType=VARCHAR}, #{operpswd,jdbcType=VARCHAR}, #{acctlock,jdbcType=SMALLINT}, 
+      #{lastupddttm,jdbcType=TIMESTAMP}, #{lastupdoprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn" >
+    insert into PSOPRDEFN
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="operpswd != null" >
+        OPERPSWD,
+      </if>
+      <if test="acctlock != null" >
+        ACCTLOCK,
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM,
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="operpswd != null" >
+        #{operpswd,jdbcType=VARCHAR},
+      </if>
+      <if test="acctlock != null" >
+        #{acctlock,jdbcType=SMALLINT},
+      </if>
+      <if test="lastupddttm != null" >
+        #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn" >
+    update PSOPRDEFN
+    <set >
+      <if test="operpswd != null" >
+        OPERPSWD = #{operpswd,jdbcType=VARCHAR},
+      </if>
+      <if test="acctlock != null" >
+        ACCTLOCK = #{acctlock,jdbcType=SMALLINT},
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn" >
+    update PSOPRDEFN
+    set OPERPSWD = #{operpswd,jdbcType=VARCHAR},
+      ACCTLOCK = #{acctlock,jdbcType=SMALLINT},
+      LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR}
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

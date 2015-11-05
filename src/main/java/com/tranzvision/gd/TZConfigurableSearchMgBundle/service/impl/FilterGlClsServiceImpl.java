@@ -11,7 +11,6 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterDfnTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
 import com.tranzvision.gd.util.base.PaseJsonUtil;
 
 import net.sf.json.JSONObject;
@@ -26,6 +25,8 @@ import net.sf.json.JSONObject;
 public class FilterGlClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzFilterDfnTMapper psTzFilterDfnTMapper;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/* 查询可配置搜索列表 */
 	@Override
@@ -33,8 +34,6 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		try {
-			FliterForm fliterForm = new FliterForm();
-
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" },{ "TZ_PAGE_ID", "ASC" },{ "TZ_VIEW_NAME", "ASC" } };
 			fliterForm.orderByArr = orderByArr;

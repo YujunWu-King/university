@@ -4,11 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.GdObjectService;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 高端产品顶层service父类
@@ -19,7 +18,7 @@ import com.tranzvision.gd.TZBaseBundle.service.GdObjectService;
 @Service
 public class GdObjectServiceImpl implements GdObjectService {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SqlQuery jdbcTemplate;
 
 	@Override
 	/* 获取当前登录会话语言代码的方法 TODO ***/
@@ -99,17 +98,10 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String superOrgId = this.getSuperOrgId(request, response);
 		
 		String sql = "SELECT ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND A.TZ_MSG_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
-		try{
-			tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[]{loginLanguage,msgSetId,msgId,jgId},String.class);
-		}catch(DataAccessException e){
-			tmpMsgText = "";
-		}
+		tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[]{loginLanguage,msgSetId,msgId,jgId},"String");
+		
 		if(tmpMsgText == null || "".equals(tmpMsgText)){
-			try{
-				tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[]{loginLanguage,msgSetId,msgId,superOrgId},String.class);
-			}catch(DataAccessException e){
-				tmpMsgText = "";
-			}
+			tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[]{loginLanguage,msgSetId,msgId,superOrgId},"String");
 		}
 		
 
@@ -138,12 +130,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public boolean isThemeIDValid(String theme) {
 		String sql = "SELECT 'X' FROM PS_TZ_PT_ZTXX_TBL WHERE UPPER(TZ_ZT_ID)=UPPER(?)";
 		String validFlag = "";
-		try{
-			validFlag = jdbcTemplate.queryForObject(sql, new Object[]{theme},String.class);
-		}catch(DataAccessException e){
-			validFlag = "";
-		}
-		
+		validFlag = jdbcTemplate.queryForObject(sql, new Object[]{theme},"String");
+
 		return ("X".equals(validFlag));
 	}
 
@@ -157,39 +145,26 @@ public class GdObjectServiceImpl implements GdObjectService {
 		/* 判断用户账号、机构是否合法 */
 		String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
 		int isValidateNum = 0;
-		try{
-			isValidateNum = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId},Integer.class);
-		}catch(DataAccessException e){
-			isValidateNum = 0;
-		}
+		isValidateNum = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId},"Integer");
+		
 		
 		if(isValidateNum > 0 ){
 			//是否存在用户个性化记录;		
 			String gxhSxqz = "";
 			sql = "SELECT TZ_GXH_SXQZ FROM PS_TZ_YHGXH_JGJL_T WHERE TZ_DLZH_ID=? AND Upper(TZ_JG_ID)=Upper(?) AND Upper(TZ_GXH_SXMC)=Upper(?)";
-			try{
-				gxhSxqz = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId,userGxhsxName},String.class);
-			}catch(DataAccessException e){
-				gxhSxqz = "";
-			}
+			gxhSxqz = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId,userGxhsxName},"String");
+			
 			//设置用户个性化设置结果记录表;
 			if(gxhSxqz != null && !"".equals(gxhSxqz)){
 				if(! gxhSxqz.equals(userGxhsxValue)){
 					String updateSQL = "UPDATE PS_TZ_YHGXH_JGJL_T SET TZ_GXH_SXQZ = ? WHERE TZ_DLZH_ID=? AND Upper(TZ_JG_ID)=Upper(?) AND Upper(TZ_GXH_SXMC)=Upper(?)";
-					try{
-						jdbcTemplate.update(updateSQL,userGxhsxValue, tmpUserId,tmpOrgId,userGxhsxName);
-					}catch(DataAccessException e){
-						e.printStackTrace();
-					}
+					jdbcTemplate.update(updateSQL,new Object[]{userGxhsxValue, tmpUserId,tmpOrgId,userGxhsxName});
+					
 				}
 				
 			}else{
 				String insertSQL = "INSERT INTO PS_TZ_YHGXH_JGJL_T(TZ_DLZH_ID, TZ_JG_ID, TZ_GXH_SXMC, TZ_GXH_SXQZ) VALUES(?,?,?,?)";
-				try{
-					jdbcTemplate.update(insertSQL,tmpUserId,tmpOrgId.toUpperCase(),userGxhsxName.toUpperCase(),userGxhsxValue);
-				}catch(DataAccessException e){
-					e.printStackTrace();
-				}
+				jdbcTemplate.update(insertSQL,new Object[]{tmpUserId,tmpOrgId.toUpperCase(),userGxhsxName.toUpperCase(),userGxhsxValue});
 			}
 				
 			
@@ -214,11 +189,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String validFlag = "";
 		
 		String sql = "SELECT 'X' FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_GD_LANGUAGE' AND TZ_EFF_STATUS='A' AND UPPER(TZ_ZHZ_ID)=UPPER(?)";
-		try{
-			validFlag = jdbcTemplate.queryForObject(sql, new Object[]{language},String.class);
-		}catch(DataAccessException e){
-			validFlag = "";
-		}
+		validFlag = jdbcTemplate.queryForObject(sql, new Object[]{language},"String");
+		
 		return ("X".equals(validFlag));
 	}
 
@@ -254,9 +226,9 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getHardCodeValue(String hCode){
 		String tmpHardCodeValue = "";
 		String hardCodeSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		try{
-			tmpHardCodeValue = jdbcTemplate.queryForObject(hardCodeSQL, new Object[]{hCode},String.class);
-		}catch(DataAccessException e){
+		tmpHardCodeValue = jdbcTemplate.queryForObject(hardCodeSQL, new Object[]{hCode},"String");
+		
+		if(tmpHardCodeValue == null){
 			tmpHardCodeValue = "";
 		}
 		
@@ -269,9 +241,9 @@ public class GdObjectServiceImpl implements GdObjectService {
 		 String tmpUserId = this.getLoginAccount(request, response);  
 		 String tmpOrgId = this.getLoginOrgID(request, response);   
 		 String sql = "SELECT TZ_GXH_SXQZ FROM PS_TZ_YHGXH_JGJL_T WHERE TZ_DLZH_ID=? AND TZ_JG_ID=UPPER(?) AND TZ_GXH_SXMC=UPPER(?)";
-		 try{
-			 tmpGxhsxValue = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId,userGxhsxName},String.class);
-		}catch(DataAccessException e){
+		 tmpGxhsxValue = jdbcTemplate.queryForObject(sql, new Object[]{tmpUserId,tmpOrgId,userGxhsxName},"String");
+		
+		if(tmpGxhsxValue == null){
 			tmpGxhsxValue = "";
 		}
 		   

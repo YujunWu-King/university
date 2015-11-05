@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSystemVariableMgBundle.dao.PsTzSysvarTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    <id column="TZ_SYSVARID" property="tzSysvarid" jdbcType="VARCHAR" />
+    <result column="TZ_SYSVARNAME" property="tzSysvarname" jdbcType="VARCHAR" />
+    <result column="TZ_EFFFLG" property="tzEffflg" jdbcType="VARCHAR" />
+    <result column="TZ_SYSVARDESC" property="tzSysvardesc" jdbcType="VARCHAR" />
+    <result column="TZ_SYSVARTYPE" property="tzSysvartype" jdbcType="VARCHAR" />
+    <result column="TZ_VALMETHOD" property="tzValmethod" jdbcType="VARCHAR" />
+    <result column="TZ_APPCLS_REG" property="tzAppclsReg" jdbcType="VARCHAR" />
+    <result column="TZ_CONSTANT" property="tzConstant" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" extends="BaseResultMap" >
+    <result column="TZ_LNGSTRCONT" property="tzLngstrcont" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SYSVARID, TZ_SYSVARNAME, TZ_EFFFLG, TZ_SYSVARDESC, TZ_SYSVARTYPE, TZ_VALMETHOD, 
+    TZ_APPCLS_REG, TZ_CONSTANT, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_LNGSTRCONT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_SYSVAR_T
+    where TZ_SYSVARID = #{tzSysvarid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_SYSVAR_T
+    where TZ_SYSVARID = #{tzSysvarid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    insert into PS_TZ_SYSVAR_T (TZ_SYSVARID, TZ_SYSVARNAME, TZ_EFFFLG, 
+      TZ_SYSVARDESC, TZ_SYSVARTYPE, TZ_VALMETHOD, 
+      TZ_APPCLS_REG, TZ_CONSTANT, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_LNGSTRCONT
+      )
+    values (#{tzSysvarid,jdbcType=VARCHAR}, #{tzSysvarname,jdbcType=VARCHAR}, #{tzEffflg,jdbcType=VARCHAR}, 
+      #{tzSysvardesc,jdbcType=VARCHAR}, #{tzSysvartype,jdbcType=VARCHAR}, #{tzValmethod,jdbcType=VARCHAR}, 
+      #{tzAppclsReg,jdbcType=VARCHAR}, #{tzConstant,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzLngstrcont,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    insert into PS_TZ_SYSVAR_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSysvarid != null" >
+        TZ_SYSVARID,
+      </if>
+      <if test="tzSysvarname != null" >
+        TZ_SYSVARNAME,
+      </if>
+      <if test="tzEffflg != null" >
+        TZ_EFFFLG,
+      </if>
+      <if test="tzSysvardesc != null" >
+        TZ_SYSVARDESC,
+      </if>
+      <if test="tzSysvartype != null" >
+        TZ_SYSVARTYPE,
+      </if>
+      <if test="tzValmethod != null" >
+        TZ_VALMETHOD,
+      </if>
+      <if test="tzAppclsReg != null" >
+        TZ_APPCLS_REG,
+      </if>
+      <if test="tzConstant != null" >
+        TZ_CONSTANT,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzLngstrcont != null" >
+        TZ_LNGSTRCONT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSysvarid != null" >
+        #{tzSysvarid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSysvarname != null" >
+        #{tzSysvarname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEffflg != null" >
+        #{tzEffflg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSysvardesc != null" >
+        #{tzSysvardesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSysvartype != null" >
+        #{tzSysvartype,jdbcType=VARCHAR},
+      </if>
+      <if test="tzValmethod != null" >
+        #{tzValmethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsReg != null" >
+        #{tzAppclsReg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzConstant != null" >
+        #{tzConstant,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLngstrcont != null" >
+        #{tzLngstrcont,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    update PS_TZ_SYSVAR_T
+    <set >
+      <if test="tzSysvarname != null" >
+        TZ_SYSVARNAME = #{tzSysvarname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEffflg != null" >
+        TZ_EFFFLG = #{tzEffflg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSysvardesc != null" >
+        TZ_SYSVARDESC = #{tzSysvardesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSysvartype != null" >
+        TZ_SYSVARTYPE = #{tzSysvartype,jdbcType=VARCHAR},
+      </if>
+      <if test="tzValmethod != null" >
+        TZ_VALMETHOD = #{tzValmethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsReg != null" >
+        TZ_APPCLS_REG = #{tzAppclsReg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzConstant != null" >
+        TZ_CONSTANT = #{tzConstant,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLngstrcont != null" >
+        TZ_LNGSTRCONT = #{tzLngstrcont,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SYSVARID = #{tzSysvarid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    update PS_TZ_SYSVAR_T
+    set TZ_SYSVARNAME = #{tzSysvarname,jdbcType=VARCHAR},
+      TZ_EFFFLG = #{tzEffflg,jdbcType=VARCHAR},
+      TZ_SYSVARDESC = #{tzSysvardesc,jdbcType=VARCHAR},
+      TZ_SYSVARTYPE = #{tzSysvartype,jdbcType=VARCHAR},
+      TZ_VALMETHOD = #{tzValmethod,jdbcType=VARCHAR},
+      TZ_APPCLS_REG = #{tzAppclsReg,jdbcType=VARCHAR},
+      TZ_CONSTANT = #{tzConstant,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_LNGSTRCONT = #{tzLngstrcont,jdbcType=LONGVARCHAR}
+    where TZ_SYSVARID = #{tzSysvarid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT" >
+    update PS_TZ_SYSVAR_T
+    set TZ_SYSVARNAME = #{tzSysvarname,jdbcType=VARCHAR},
+      TZ_EFFFLG = #{tzEffflg,jdbcType=VARCHAR},
+      TZ_SYSVARDESC = #{tzSysvardesc,jdbcType=VARCHAR},
+      TZ_SYSVARTYPE = #{tzSysvartype,jdbcType=VARCHAR},
+      TZ_VALMETHOD = #{tzValmethod,jdbcType=VARCHAR},
+      TZ_APPCLS_REG = #{tzAppclsReg,jdbcType=VARCHAR},
+      TZ_CONSTANT = #{tzConstant,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_SYSVARID = #{tzSysvarid,jdbcType=VARCHAR}
+  </update>
+</mapper>

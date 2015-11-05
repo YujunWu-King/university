@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZRoleMgBundle.dao.PsRoleclassMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey" >
+    <id column="ROLENAME" property="rolename" jdbcType="VARCHAR" />
+    <id column="CLASSID" property="classid" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey" >
+    delete from PSROLECLASS
+    where ROLENAME = #{rolename,jdbcType=VARCHAR}
+      and CLASSID = #{classid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey" >
+    insert into PSROLECLASS (ROLENAME, CLASSID)
+    values (#{rolename,jdbcType=VARCHAR}, #{classid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey" >
+    insert into PSROLECLASS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="rolename != null" >
+        ROLENAME,
+      </if>
+      <if test="classid != null" >
+        CLASSID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="classid != null" >
+        #{classid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

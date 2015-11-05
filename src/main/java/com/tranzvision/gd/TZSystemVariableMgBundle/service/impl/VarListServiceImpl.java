@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZThemeMgBundle.service.impl;
+package com.tranzvision.gd.TZSystemVariableMgBundle.service.impl;
 
 import java.util.ArrayList;
 
@@ -7,39 +7,39 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZThemeMgBundle.dao.PsTzPtZtxxTblMapper;
+import com.tranzvision.gd.TZSystemVariableMgBundle.dao.PsTzSysvarTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
  * @author tang
- * 功能说明：高端产品-主题管理
- * 原PS类：TZ_GD_THEMEGL_PKG：TZ_GD_THEMEGL_CLS
+ * 功能说明：高端产品-系统变量管理；
+ * 原PS类：TZ_GD_SYSVAR_PKG:TZ_GD_VARLIST_CLS
  */
-@Service("com.tranzvision.gd.TZThemeMgBundle.service.impl.ThemeGlServiceImpl")
-public class ThemeGlServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZSystemVariableMgBundle.service.impl.VarListServiceImpl")
+public class VarListServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private JacksonUtil jacksonUtil;
 	@Autowired
-	private PsTzPtZtxxTblMapper psTzPtZtxxTblMapper;
+	private PsTzSysvarTMapper psTzSysvarTMapper;
 	@Autowired
 	private FliterForm fliterForm;
 	
-	/* 加载主题列表 */
+	/* 系统变量列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
 
 		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] { { "TZ_ZT_ID", "ASC" } };
+		String[][] orderByArr = new String[][] { { "TZ_SYSVARID", "ASC" } };
 		fliterForm.orderByArr = orderByArr;
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_ZT_ID", "TZ_ZT_MC", "TZ_ZT_MS", "TZ_DESCR30" };
+		String[] resultFldArray = { "TZ_SYSVARID", "TZ_SYSVARNAME", "TZ_EFFFLG" };
 		String jsonString = "";
 
 		// 可配置搜索通用函数;
@@ -51,8 +51,8 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 			for (int i = 0; i < list.size(); i++) {
 				String[] rowList = list.get(i);
-				jsonString = jsonString + ",{\"themeID\":\"" + rowList[0] + "\",\"themeName\":\"" + rowList[1]
-						+ "\",\"themeDesc\":\"" + rowList[2] + "\",\"themeState\":\"" + rowList[3] + "\"}";
+				jsonString = jsonString + ",{\"systemVarId\":\"" + rowList[0] + "\",\"systemVarName\":\"" + rowList[1]
+						+ "\",\"isValid\":\"" + rowList[2] + "\"}";
 			}
 			if (!"".equals(jsonString)) {
 				jsonString = jsonString.substring(1);
@@ -63,8 +63,8 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-
-	// 功能说明：删除主题定义;
+	
+	/* 删除系统变量 */
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -82,11 +82,12 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
 				// 主题 ID;
-				String strThemeId = jacksonUtil.getString("themeID");
-				if (strThemeId != null && !"".equals(strThemeId)) {
-					psTzPtZtxxTblMapper.deleteByPrimaryKey(strThemeId);
-					String sql = "DELETE from PS_TZ_PT_ZTZY_TBL WHERE TZ_ZT_ID=?";
-					jdbcTemplate.update(sql,new Object[]{strThemeId});
+				String sysVarID = jacksonUtil.getString("systemVarId");
+				if (sysVarID != null && !"".equals(sysVarID)) {
+					psTzSysvarTMapper.deleteByPrimaryKey(sysVarID);
+					
+					String deleteSQL = "DELETE FROM PS_TZ_SV_CHAIN WHERE TZ_SYSVARID=?";
+					jdbcTemplate.update(deleteSQL,new Object[]{sysVarID});
 				}
 			}
 		} catch (Exception e) {

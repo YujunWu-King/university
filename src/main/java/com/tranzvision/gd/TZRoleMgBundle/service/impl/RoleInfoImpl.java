@@ -1,19 +1,20 @@
 package com.tranzvision.gd.TZRoleMgBundle.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoleclassMapper;
+import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoledefnMapper;
+import com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey;
+import com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
-
-import net.sf.json.JSONObject;
-
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 角色信息相关类 原PS类：TZ_GD_ROLE_PKG:TZ_GD_ROLEINFO_CLS
@@ -24,8 +25,14 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZRoleMgBundle.service.impl.RoleInfoImpl")
 public class RoleInfoImpl extends FrameworkImpl {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private PsRoledefnMapper psRoledefnMapper;
+	@Autowired
+	private PsRoleclassMapper psRoleclassMapper;
+
 	/* 新增用户账号信息 */
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
@@ -35,44 +42,47 @@ public class RoleInfoImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				// 角色信息;
 				if ("ROLE".equals(strFlag)) {
-					CLASSJson = PaseJsonUtil.getJson(infoData);
 					// 角色名称;
-					String strRoleName = CLASSJson.getString("roleName");
+					String strRoleName = (String) infoData.get("roleName");
 					// 角色描述;
-					String strRoleDesc = CLASSJson.getString("roleDesc");
+					String strRoleDesc = (String) infoData.get("roleDesc");
 					// 角色详细描述;
-					String strRoleDescLong = CLASSJson
-							.getString("roleDescLong");
+					String strRoleDescLong = (String) infoData.get("roleDescLong");
 
 					// 查看是否已经存在;
 					int isExistNum = 0;
 					String isExistSQL = "SELECT COUNT(1) FROM PSROLEDEFN WHERE ROLENAME=?";
-					try{
-						isExistNum = jdbcTemplate.queryForObject(isExistSQL,new Object[]{strRoleName},Integer.class);
-					}catch(DataAccessException e){
-						
-					}
+					isExistNum = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strRoleName }, "Integer");
+
 					if (isExistNum > 0) {
 						errMsg[0] = "1";
 						errMsg[1] = "角色名称为：" + strRoleName + "的信息已经存在，请修改角色名称。";
 						return strRet;
 					}
-					
-					
-					String insertRoleSQL = "INSERT INTO PSROLEDEFN(ROLENAME,DESCR,DESCRLONG,VERSION,ROLETYPE,ROLESTATUS,ROLE_PCODE_RULE_ON,ROLE_QUERY_RULE_ON,LDAP_RULE_ON,ALLOWNOTIFY,ALLOWLOOKUP,LASTUPDDTTM,LASTUPDOPRID) VALUES(?,?,?,1,'U','A','N','N','N','Y','Y',curdate(),?)";
-					try{
-						/** TODO %USERID ***/
-						jdbcTemplate.update(insertRoleSQL,strRoleName,strRoleDesc,strRoleDescLong,"TZ_7");
-					}catch(DataAccessException e){
-						
-					}
+
+					PsRoledefn psRoledefn = new PsRoledefn();
+					psRoledefn.setRolename(strRoleName);
+					psRoledefn.setDescr(strRoleDesc);
+					psRoledefn.setDescrlong(strRoleDescLong);
+					psRoledefn.setVersion(1);
+					psRoledefn.setRoletype("U");
+					psRoledefn.setRolestatus("A");
+					psRoledefn.setRolePcodeRuleOn("N");
+					psRoledefn.setRoleQueryRuleOn("N");
+					psRoledefn.setLdapRuleOn("N");
+					psRoledefn.setAllownotify("Y");
+					psRoledefn.setAllowlookup("Y");
+					/** TODO %userid **/
+					psRoledefn.setLastupddttm(new Date());
+					psRoledefn.setLastupdoprid("TZ_7");
+					psRoledefnMapper.insert(psRoledefn);
 				}
 
 			}
@@ -92,71 +102,68 @@ public class RoleInfoImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				// 角色信息;
 				if ("ROLE".equals(strFlag)) {
-					CLASSJson = PaseJsonUtil.getJson(infoData);
 					// 角色名称;
-					String strRoleName = CLASSJson.getString("roleName");
+					String strRoleName = (String) infoData.get("roleName");
 					// 角色描述;
-					String strRoleDesc = CLASSJson.getString("roleDesc");
+					String strRoleDesc = (String) infoData.get("roleDesc");
 					// 角色详细描述;
-					String strRoleDescLong = CLASSJson
-							.getString("roleDescLong");
+					String strRoleDescLong = (String) infoData.get("roleDescLong");
 
 					// 查看是否已经存在;
 					int isExistNum = 0;
-					String isExistSQL = "SELECT count(1) FROM PSROLEDEFN WHERE ROLENAME=?";
-					try{
-						isExistNum = jdbcTemplate.queryForObject(isExistSQL,new Object[]{strRoleName},Integer.class);
-					}catch(DataAccessException e){
-						
-					}
-					
+					String isExistSQL = "SELECT COUNT(1) FROM PSROLEDEFN WHERE ROLENAME=?";
+					isExistNum = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strRoleName }, "Integer");
+
 					if (isExistNum <= 0) {
 						errMsg[0] = "1";
-						errMsg[1] = "角色名称为：" + strRoleName + "的信息不存在，更新失败。";
+						errMsg[1] = "角色名称为：" + strRoleName + "的信息不存在。";
 						return strRet;
 					}
 
-					String updateRoleSQL = "UPDATE PSROLEDEFN SET DESCR=?,DESCRLONG=?,LASTUPDDTTM=curdate(),LASTUPDOPRID=? WHERE ROLENAME=?";
-					try{
-						/** TODO %USERID ***/
-						jdbcTemplate.update(updateRoleSQL,strRoleDesc,strRoleDescLong,"TZ_7",strRoleName);
-					}catch(DataAccessException e){
-						
-					}
+					PsRoledefn psRoledefn = new PsRoledefn();
+					psRoledefn.setRolename(strRoleName);
+					psRoledefn.setDescr(strRoleDesc);
+					psRoledefn.setDescrlong(strRoleDescLong);
+					psRoledefn.setVersion(1);
+					psRoledefn.setRoletype("U");
+					psRoledefn.setRolestatus("A");
+					psRoledefn.setRolePcodeRuleOn("N");
+					psRoledefn.setRoleQueryRuleOn("N");
+					psRoledefn.setLdapRuleOn("N");
+					psRoledefn.setAllownotify("Y");
+					psRoledefn.setAllowlookup("Y");
+					/** TODO %userid **/
+					psRoledefn.setLastupddttm(new Date());
+					psRoledefn.setLastupdoprid("TZ_7");
+					psRoledefnMapper.updateByPrimaryKeyWithBLOBs(psRoledefn);
 				}
-				
+
 				// 许可权信息;
-				if("PLST".equals(strFlag)){
-					CLASSJson = PaseJsonUtil.getJson(infoData);
+				if ("PLST".equals(strFlag)) {
 					// 角色名称;
-					String strRoleName = CLASSJson.getString("roleName");
+					String strRoleName = (String) infoData.get("roleName");
 					// 许可权编号;
-					String strPermID = CLASSJson.getString("permID");
+					String strPermID = (String) infoData.get("permID");
 					// 查看是否已经存在;
 					int isExistNum = 0;
 					String isExistSQL = "SELECT COUNT(1) from PSROLECLASS where ROLENAME=? and CLASSID=?";
-					try{
-						isExistNum = jdbcTemplate.queryForObject(isExistSQL,new Object[]{strRoleName,strPermID},Integer.class);
-					}catch(DataAccessException e){
-						
-					}
-					
-					if(isExistNum > 0){
+					isExistNum = jdbcTemplate.queryForObject(isExistSQL, new Object[] { strRoleName, strPermID },
+							"Integer");
+
+					if (isExistNum > 0) {
 						continue;
-					}else{
-						String insertSQL = "INSERT INTO PSROLECLASS(ROLENAME, CLASSID) VALUES (?,?)";
-						try{
-							jdbcTemplate.update(insertSQL,strRoleName,strPermID);
-						}catch(DataAccessException e){
-							
-						}
+					} else {
+						PsRoleclassKey psRoleclassKey = new PsRoleclassKey();
+						psRoleclassKey.setRolename(strRoleName);
+						psRoleclassKey.setClassid(strPermID);
+						psRoleclassMapper.insert(psRoleclassKey);
 					}
 				}
 			}
@@ -173,26 +180,18 @@ public class RoleInfoImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
+			jacksonUtil.json2Map(strParams);
 
-			if (CLASSJson.containsKey("roleName")) {
+			if (jacksonUtil.containsKey("roleName")) {
 				// 角色名称, 角色描述，详细信息;
 				String strRoleName = "", strRoleDesc = "", strRoleDescLong = "";
-				strRoleName = CLASSJson.getString("roleName");
+				strRoleName = jacksonUtil.getString("roleName");
 
-				String sql = "SELECT DESCR,DESCRLONG FROM PSROLEDEFN WHERE ROLENAME=?";
-				try{
-					Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{strRoleName});
-					strRoleDesc = TZUtility
-							.transFormchar((String)map.get("DESCR")).trim();
-					strRoleDescLong = TZUtility.transFormchar(
-							(String)map.get("DESCRLONG")).trim();
-				}catch(DataAccessException e){
-					
-				}
+				PsRoledefn psRoledefn = psRoledefnMapper.selectByPrimaryKey(strRoleName);
+				strRoleDesc = TZUtility.transFormchar(psRoledefn.getDescr()).trim();
+				strRoleDescLong = TZUtility.transFormchar(psRoledefn.getDescrlong());
 
-				strRet = "{\"formData\":{\"roleName\":\"" + strRoleName
-						+ "\",\"roleDesc\":\"" + strRoleDesc
+				strRet = "{\"formData\":{\"roleName\":\"" + strRoleName + "\",\"roleDesc\":\"" + strRoleDesc
 						+ "\",\"roleDescLong\":\"" + strRoleDescLong + "\"}}";
 
 			} else {
@@ -208,62 +207,47 @@ public class RoleInfoImpl extends FrameworkImpl {
 	}
 
 	/* 获取许可权列表 */
-	public String tzQueryList(String comParams, int numLimit, int numStart,
-			String[] errorMsg) {
+	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
 		int numTotal = 0;
-		
+
 		try {
-	
 			// 将字符串转换成json;
-			JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
+			jacksonUtil.json2Map(comParams);
 			// 角色名称;
-			String strRoleName = CLASSJson.getString("roleName");
+			String strRoleName = jacksonUtil.getString("roleName");
 			// 许可权编号，许可权描述;
-		    String strPermID = "", strPermDesc = "";
-		      
-		    // 许可权列表sql;
-		    String sqlPlstList = "";
-		    
-		    List<Map<String, Object>> list = null;
-		    if(numStart == 0 && numLimit==0){
-		    	sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID";
-		    	try{
-		    		list = jdbcTemplate.queryForList(sqlPlstList,new Object[]{strRoleName});
-					
-				}catch(DataAccessException e){
-					
-				}
-		    }else{
-		    	sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID limit ?,?";
-		    	try{
-		    		list = jdbcTemplate.queryForList(sqlPlstList,new Object[]{strRoleName,numStart,numLimit});
-					
-				}catch(DataAccessException e){
-					
-				}
-		    }
-		    for(int i = 0; i<list.size();i++){
-		    	strPermID  = (String) list.get(i).get("CLASSID");
-		    	strPermDesc = (String) list.get(i).get("CLASSDEFNDESC");
-		    	strRet = strRet + "," + "{\"roleName\":\""+strRoleName+"\",\"permID\":\""+strPermID+"\",\"permDesc\":\""+strPermDesc+"\"}";
-		    }
-			
-		    if(!"".equals(strRet)){
-		    	strRet = strRet.substring(1);
-		    }
-		    
-		    //获取许可权信息总数;
-		    String totalSQL = "SELECT COUNT(1) FROM PSROLECLASS WHERE ROLENAME=?";
-		    try{
-		    	numTotal = jdbcTemplate.queryForObject(totalSQL,new Object[]{strRoleName},Integer.class);
-				
-			}catch(DataAccessException e){
-				
+			String strPermID = "", strPermDesc = "";
+
+			// 许可权列表sql;
+			String sqlPlstList = "";
+
+			List<Map<String, Object>> list = null;
+			if (numStart == 0 && numLimit == 0) {
+				sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID";
+				list = jdbcTemplate.queryForList(sqlPlstList, new Object[] { strRoleName });
+
+			} else {
+				sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID limit ?,?";
+				list = jdbcTemplate.queryForList(sqlPlstList, new Object[] { strRoleName, numStart, numLimit });
 			}
-	    	
-	    	strRet = "{\"total\":"+numTotal+",\"root\":["+strRet+"]}";
+			for (int i = 0; i < list.size(); i++) {
+				strPermID = (String) list.get(i).get("CLASSID");
+				strPermDesc = (String) list.get(i).get("CLASSDEFNDESC");
+				strRet = strRet + "," + "{\"roleName\":\"" + strRoleName + "\",\"permID\":\"" + strPermID
+						+ "\",\"permDesc\":\"" + strPermDesc + "\"}";
+			}
+
+			if (!"".equals(strRet)) {
+				strRet = strRet.substring(1);
+			}
+
+			// 获取许可权信息总数;
+			String totalSQL = "SELECT COUNT(1) FROM PSROLECLASS WHERE ROLENAME=?";
+			numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strRoleName }, "Integer");
+			
+			strRet = "{\"total\":" + numTotal + ",\"root\":[" + strRet + "]}";
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -272,8 +256,8 @@ public class RoleInfoImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
-	/*删除角色许可权信息*/
+
+	/* 删除角色许可权信息 */
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -286,25 +270,23 @@ public class RoleInfoImpl extends FrameworkImpl {
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
-				
+
 				// 角色下权限信息;
 				String strRoleInfo = actData[num];
+				jacksonUtil.json2Map(strRoleInfo);
 				
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strRoleInfo);
 				// 角色名称ID;
-				String sRoleName = CLASSJson.getString("roleName");
-			    // 许可权编号;
-			    String sPermID = CLASSJson.getString("permID");
+				String sRoleName = jacksonUtil.getString("roleName");
+				// 许可权编号;
+				String sPermID = jacksonUtil.getString("permID");
 
 				if (sRoleName != null && !"".equals(sRoleName) && (sPermID != null && !"".equals(sPermID))) {
 
 					/* 删除角色下的权限 */
-					String PSROLECLASSSQL = "DELETE FROM PSROLECLASS WHERE ROLENAME=? AND CLASSID=?";
-					try{
-				    	jdbcTemplate.update(PSROLECLASSSQL,sRoleName,sPermID);
-					}catch(DataAccessException e){
-						
-					}
+					PsRoleclassKey psRoleclassKey = new PsRoleclassKey();
+					psRoleclassKey.setRolename(sRoleName);
+					psRoleclassKey.setClassid(sPermID);
+					psRoleclassMapper.deleteByPrimaryKey(psRoleclassKey);
 				}
 			}
 		} catch (Exception e) {

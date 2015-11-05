@@ -3,15 +3,14 @@ package com.tranzvision.gd.TZComRegMgBundle.service.impl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.TZComRegMgBundle.dao.PsTzAqComzcTblMapper;
+import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONObject;
 
 /************************************************
  *** 开发人：tang* 开发时间：2015-10-9 功能说明：功能组件注册管理相关类
@@ -19,17 +18,21 @@ import net.sf.json.JSONObject;
  ************************************************/
 @Service("com.tranzvision.gd.TZComRegMgBundle.service.impl.ComRegMgImpl")
 public class ComRegMgImpl extends FrameworkImpl {
-	 @Autowired
-	 private JdbcTemplate jdbcTemplate;
-	 
+	@Autowired
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private PsTzAqComzcTblMapper psTzAqComzcTblMapper;
+	@Autowired
+	private FliterForm fliterForm;
+	
 	/* 查询组件注册管理列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
 		try {
-			FliterForm fliterForm = new FliterForm();
-
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" } };
 			fliterForm.orderByArr = orderByArr;
@@ -80,27 +83,14 @@ public class ComRegMgImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 组件ID;
-				String sComID = CLASSJson.getString("comID");
-				String comPageSql = "DELETE FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?";
-				try{
-					jdbcTemplate.update(comPageSql,sComID);
-				}catch(DataAccessException e){
-					errMsg[0] = "1";
-					errMsg[1] = e.toString();
-					return strRet;
-				}
+				String sComID = jacksonUtil.getString("comID");
+				psTzAqComzcTblMapper.deleteByPrimaryKey(sComID);
 				
-
-				String comDeleteSql = "DELETE FROM PS_TZ_AQ_COMZC_TBL WHERE TZ_COM_ID=?";
-				try{
-					 jdbcTemplate.update(comDeleteSql,sComID);
-				}catch(DataAccessException e){
-					errMsg[0] = "1";
-					errMsg[1] = e.toString();
-					return strRet;
-				}
+				String comPageSql = "DELETE FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?";
+				jdbcTemplate.update(comPageSql,new Object[]{sComID});		
+				
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";

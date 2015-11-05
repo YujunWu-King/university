@@ -10,17 +10,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.Framework;
 import com.tranzvision.gd.TZBaseBundle.service.GdKjComService;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
 import com.tranzvision.gd.util.base.PaseJsonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONArray;
+//import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -31,8 +31,9 @@ import net.sf.json.JSONObject;
 @Service
 public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComService {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
-
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	@Autowired
 	private ApplicationContext ctx;
 
@@ -48,23 +49,15 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String SuperOrgId = this.getSuperOrgId(request, response);
 		String tmpKhhSystemNameSQL = "SELECT TZ_JG_LOGIN_INFO FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 		String tmpKhhSystemName = "";
-		try {
-			tmpKhhSystemName = TZUtility.transFormchar(
-					jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, String.class));
-		} catch (DataAccessException e) {
-			tmpKhhSystemName = "";
-		}
+		tmpKhhSystemName = TZUtility.transFormchar(jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String"));
+		
 
 		String languageId = this.getLoginLanguage(request, response);
 		String xxjhId = "TZGD_FWINIT_MSGSET";
 		// 查询登录机构下的系统消息定义;
 		List<Map<String, Object>> list = null;
 		String loginMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
-		try {
-			list = jdbcTemplate.queryForList(loginMsgSQL, new Object[] { languageId, xxjhId, jgId });
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-		}
+		list = jdbcTemplate.queryForList(loginMsgSQL, new Object[] { languageId, xxjhId, jgId });
 
 		String tmpMsgSetID = "";
 		String tmpMsgID = "";
@@ -88,12 +81,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 		if (jgId != null && !jgId.equals(SuperOrgId)) {
 			String superMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND NOT exists(SELECT 'Y' FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND UPPER(A.TZ_JG_ID)=UPPER(?)";
-			try {
-				list = jdbcTemplate.queryForList(superMsgSQL,
+			list = jdbcTemplate.queryForList(superMsgSQL,
 						new Object[] { languageId, xxjhId, SuperOrgId, xxjhId, jgId });
-			} catch (DataAccessException e) {
-				e.printStackTrace();
-			}
+			
 
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
@@ -116,7 +106,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			tmpJSONString = tmpJSONString.substring(1);
 		}
 		tmpJSONString = "{ " + languageId + ":{" + tmpJSONString + "}}";
+		
 		return tmpJSONString;
+		
 	}
 
 	@Override
@@ -147,12 +139,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			// 读取客户化的系统名称;
 			String selectSql1 = "SELECT TZ_MSG_TEXT FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID=? AND TZ_LANGUAGE_ID=?";
-			try {
-				strTagContent = jdbcTemplate.queryForObject(selectSql1, new Object[] { tmpLoginOrgId, sCID, strLangID },
-						String.class);
-			} catch (DataAccessException e) {
-				strTagContent = "";
-			}
+			strTagContent = jdbcTemplate.queryForObject(selectSql1, new Object[] { tmpLoginOrgId, sCID, strLangID },
+						"String");
 
 			if ((strTagContent == null || "".equals(strTagContent))
 					&& (tmpLoginOrgId != null && !"".equals(tmpLoginOrgId))) {
@@ -160,53 +148,37 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				/* 添加一条数据到数据库，标签描述为传入的默认标签描述 */
 				int total = 0;
 				String xxjhSQL = "SELECT count(1) FROM PS_TZ_PT_XXJH_TBL WHERE TZ_XXJH_ID=?";
-				try {
-					total = jdbcTemplate.queryForObject(xxjhSQL, new Object[] { ary[0] }, Integer.class);
-				} catch (DataAccessException e) {
-					total = 0;
-				}
+				total = jdbcTemplate.queryForObject(xxjhSQL, new Object[] { ary[0] }, "Integer");
+				
 				if (total <= 0) {
 					String insertXxjhSQL = "insert into PS_TZ_PT_XXJH_TBL(TZ_XXJH_ID, TZ_XXJH_MC) values(?,?)";
-					try {
-						jdbcTemplate.update(insertXxjhSQL, ary[0], "");
-					} catch (DataAccessException e) {
-						e.printStackTrace();
-					}
+					jdbcTemplate.update(insertXxjhSQL, new Object[]{ary[0], ""});
+					
 				}
 
 				int numCount = 0;
 				String tmpMsgId = "";
 				String maxMsgIdSQL = "SELECT MAX(TZ_MSG_ID) FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID=? AND TZ_LANGUAGE_ID<>?";
-				try {
-					tmpMsgId = jdbcTemplate.queryForObject(maxMsgIdSQL, new Object[] { tmpLoginOrgId, sCID, strLangID },
-							String.class);
-				} catch (DataAccessException e) {
-					tmpMsgId = "";
-				}
+				tmpMsgId = jdbcTemplate.queryForObject(maxMsgIdSQL, new Object[] { tmpLoginOrgId, sCID, strLangID },
+							"String");
 
 				if (tmpMsgId == null || "".equals(tmpMsgId)) {
 					SimpleDateFormat form = new SimpleDateFormat("yyyyMMddHHmmss");
 					Date date = new Date();
 					tmpMsgId = form.format(date);
 					String countSQL = "SELECT COUNT(1) FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND TZ_JG_ID=? AND TZ_MSG_ID LIKE ? AND TZ_LANGUAGE_ID=?";
-					try {
-						numCount = jdbcTemplate.queryForObject(countSQL,
-								new Object[] { ary[0], tmpLoginOrgId, tmpMsgId + "%", strLangID }, Integer.class);
-					} catch (DataAccessException e) {
-
-					}
+					numCount = jdbcTemplate.queryForObject(countSQL,
+								new Object[] { ary[0], tmpLoginOrgId, tmpMsgId + "%", strLangID }, "Integer");
+					
 					String numCountString = "0000" + (numCount);
 					tmpMsgId = tmpMsgId
 							+ numCountString.substring(numCountString.length() - 4, numCountString.length());
 				}
 
 				String insertXxdySQL = "INSERT INTO PS_TZ_PT_XXDY_TBL(TZ_XXJH_ID,TZ_MSG_ID,TZ_LANGUAGE_ID,TZ_MSG_TEXT,TZ_MSG_BQID,TZ_MSG_DESC,TZ_JG_ID) VALUES(?,?,?,?,?,?,?)";
-				try {
-					jdbcTemplate.update(insertXxdySQL, ary[0], tmpMsgId, strLangID, strTagContent, sCID, strTagContent,
-							tmpLoginOrgId);
-				} catch (DataAccessException e) {
-					e.printStackTrace();
-				}
+				jdbcTemplate.update(insertXxdySQL, new Object[]{ary[0], tmpMsgId, strLangID, strTagContent, sCID, strTagContent,
+							tmpLoginOrgId});
+				
 			}
 
 			if (strTagContent == null || "".equals(strTagContent)) {
@@ -219,12 +191,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				String tmpPrefixCID = tmpPrefixArray[0] + "." + tmpPrefixArray[1] + ".%";
 				String tmpSQLText = "SELECT TZ_MSG_BQID,TZ_MSG_TEXT FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID LIKE ? AND TZ_LANGUAGE_ID=?";
 				List<Map<String, Object>> list = null;
-				try {
-					list = jdbcTemplate.queryForList(tmpSQLText,
+				list = jdbcTemplate.queryForList(tmpSQLText,
 							new Object[] { tmpLoginOrgId, tmpPrefixCID, strLangID });
-				} catch (DataAccessException e) {
-					e.printStackTrace();
-				}
+				
 
 				String tmpBQID = "";
 				String tmpBQValue = "";
@@ -277,12 +246,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 		try {
 			List<Map<String, Object>> list = null;
-			String sqlList = "SELECT B.TZ_ZHZ_ID ,ifnull((SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_DMS) TZ_ZHZ_DMS ,ifnull((SELECT TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_CMS) TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZJH_TBL A,PS_TZ_PT_ZHZXX_TBL B WHERE A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZJH_ID=? AND curdate()>=B.TZ_EFF_DATE";
-			try {
-				list = jdbcTemplate.queryForList(sqlList, new Object[] { strLanguageId, strLanguageId, sFieldName });
-			} catch (DataAccessException e) {
-
-			}
+			String sqlList = "SELECT B.TZ_ZHZ_ID ,ifnull((SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_DMS) TZ_ZHZ_DMS ,ifnull((SELECT TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_CMS) TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZJH_TBL A,PS_TZ_PT_ZHZXX_TBL B WHERE B.TZ_EFF_STATUS='A' AND  A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZJH_ID=? AND curdate()>=B.TZ_EFF_DATE";
+			list = jdbcTemplate.queryForList(sqlList, new Object[] { strLanguageId, strLanguageId, sFieldName });
+			
 			if (list != null) {
 				for (int num = 0; num < list.size(); num++) {
 					strTransID = (String) list.get(num).get("TZ_ZHZ_ID");
@@ -336,22 +302,15 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		try {
 			String sqlComList = "SELECT DISTINCT C.TZ_PAGE_ID FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID= ? OR C.TZ_COM_ID LIKE ? ) AND (C.DISPLAYONLY=1 OR C.TZ_EDIT_FLG=1)";
 			List<Map<String, Object>> list = null;
-			try {
-				list = jdbcTemplate.queryForList(sqlComList, new Object[] { strUserID, sComID, sComID + "$%" });
-			} catch (DataAccessException e) {
-
-			}
+			list = jdbcTemplate.queryForList(sqlComList, new Object[] { strUserID, sComID, sComID + "$%" });
+			
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					sPageID = (String) list.get(i).get("TZ_PAGE_ID");
 					rsExistsFlag = true;
 					String pageInfoSQL = "SELECT TZ_PAGE_ISWBURL,TZ_PAGE_WBURL,TZ_PAGE_NEWWIN,TZ_PAGE_KHDJS,TZ_PAGE_MRSY FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID=? OR TZ_COM_ID LIKE ?) AND TZ_PAGE_ID=? limit 0,1";
 					Map<String, Object> map = null;
-					try {
-						map = jdbcTemplate.queryForMap(pageInfoSQL, new Object[] { sComID, sComID + "$%", sPageID });
-					} catch (DataAccessException e) {
-
-					}
+					map = jdbcTemplate.queryForMap(pageInfoSQL, new Object[] { sComID, sComID + "$%", sPageID });
 
 					isExternalURL = (String) map.get("TZ_PAGE_ISWBURL");
 					externalURL = (String) map.get("TZ_PAGE_WBURL");
@@ -363,12 +322,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					sCID = sComID + "." + sPageID + "%";
 					List<Map<String, Object>> BqList = null;
 					String BqListSQL = "select ifnull(B.TZ_MSG_BQID,A.TZ_MSG_BQID) TZ_MSG_BQID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND (A.TZ_MSG_BQID LIKE ? or B.TZ_MSG_BQID LIKE ?)";
-					try {
-						BqList = jdbcTemplate.queryForList(BqListSQL,
+					BqList = jdbcTemplate.queryForList(BqListSQL,
 								new Object[] { strLangID, sComID, this.getLoginOrgID(request, response), sCID, sCID });
-					} catch (DataAccessException e) {
-
-					}
 
 					if (BqList != null) {
 						for (int j = 0; j < BqList.size(); j++) {
@@ -443,13 +398,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 		try {
 			String isZcSQL = "SELECT 'Y' FROM PS_TZ_AQ_COMZC_TBL WHERE TZ_COM_ID=?";
-			try {
-				isExistCom = jdbcTemplate.queryForObject(isZcSQL, new Object[] { sComID }, String.class);
-			} catch (DataAccessException e) {
-				errMsgArr[0] = "1";
-				errMsgArr[1] = "非法访问，该组件[" + sComID + "]未注册。";
-				return strRet;
-			}
+			isExistCom = jdbcTemplate.queryForObject(isZcSQL, new Object[] { sComID }, "String");
+			
 			if (!"Y".equals(isExistCom)) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "非法访问，该组件[" + sComID + "]未注册。";
@@ -457,13 +407,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			}
 
 			String isPageSQL = "SELECT 'Y' FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=?";
-			try {
-				isExistPage = jdbcTemplate.queryForObject(isPageSQL, new Object[] { sComID, sPageID }, String.class);
-			} catch (DataAccessException e) {
-				errMsgArr[0] = "1";
-				errMsgArr[1] = "非法访问，组件页面[" + sComID + "][" + sPageID + "]未注册。";
-				return strRet;
-			}
+			isExistPage = jdbcTemplate.queryForObject(isPageSQL, new Object[] { sComID, sPageID }, "String");
+			
 			if (!"Y".equals(isExistPage)) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "非法访问，组件页面[" + sComID + "][" + sPageID + "]未注册。";
@@ -473,22 +418,16 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			/***** 是否有访问权限 ******/
 			// 更新权限;
 			String haveUpdateSQL = "SELECT C.TZ_EDIT_FLG FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY C.TZ_EDIT_FLG DESC limit 0,1";
-			try {
-				update = jdbcTemplate.queryForObject(haveUpdateSQL,
-						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, Integer.class);
-			} catch (DataAccessException e) {
-
-			}
+			update = jdbcTemplate.queryForObject(haveUpdateSQL,
+						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
+			
 
 			if (update != 1) {
 				// 更新权限;
 				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
-				try {
-					view = jdbcTemplate.queryForObject(haveReadSQL,
-							new Object[] { strUserID, sComID, sComID + "$%", sPageID }, Integer.class);
-				} catch (DataAccessException e) {
-
-				}
+				view = jdbcTemplate.queryForObject(haveReadSQL,
+							new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
+				
 				if (view != 1) {
 					errMsgArr[0] = "1";
 					errMsgArr[1] = "非法访问，您对组件页面[" + sComID + "][" + sPageID + "]的访问未获得授权。";
@@ -498,13 +437,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			// 获取服务端AppClass;
 			String appClassSQL = "SELECT TZ_PAGE_FWDCLS FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=?";
-			try {
-				strAppClass = jdbcTemplate.queryForObject(appClassSQL, new Object[] { sComID, sPageID }, String.class);
-			} catch (DataAccessException e) {
-				errMsgArr[0] = "1";
-				errMsgArr[1] = "配置错误，未配置组件页面[" + sComID + "][" + sPageID + "]对应的服务器端处理程序。";
-				return strRet;
-			}
+			strAppClass = jdbcTemplate.queryForObject(appClassSQL, new Object[] { sComID, sPageID }, "String");
+			
 
 			if (strAppClass == null || "".equals(strAppClass)) {
 				errMsgArr[0] = "1";
@@ -512,21 +446,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				return strRet;
 			}
 
-			// String[] parameterTypes = null;
-			// Object[] arglist = null;
-			// Object objs = null;
-			// String methodName = "";
 			Framework obj = (Framework) ctx.getBean(strAppClass);
 			switch (OperateType.getOperateType(strOprType)) {
 			// 查询表单;
 			case QF:
-				/*
-				 * methodName = "tzQuery"; parameterTypes = new String[] {
-				 * "String", "String[]" }; arglist = new Object[] { comParams,
-				 * errMsgArr }; objs = ObjectDoMethod.Load(strAppClass,
-				 * methodName, parameterTypes, arglist);
-				 */
-
+				
 				strRet = obj.tzQuery(comParams, errMsgArr);
 				break;
 			// 查询列表;
@@ -547,88 +471,49 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				}
 
 				strRet = obj.tzQueryList(comParams, numLimit, numStart, errMsgArr);
-				/*
-				 * arglist = new Object[] { comParams, numLimit, numStart,
-				 * errMsgArr }; methodName = "tzQueryList"; objs =
-				 * ObjectDoMethod.Load(strAppClass, methodName, parameterTypes,
-				 * arglist);
-				 */
-				/*
-				 * GenericApplicationContext ctx = new
-				 * GenericApplicationContext(); BeanDefinitionBuilder bDBuilder
-				 * = BeanDefinitionBuilder.rootBeanDefinition(ComRegMg.class);
-				 * ctx.registerBeanDefinition("comRegMg",
-				 * bDBuilder.getBeanDefinition()); ComRegMg objectRef =
-				 * (ComRegMg)ctx.getBean("comRegMg");
-				 * objectRef.tzQueryList(comParams, numLimit, numStart,
-				 * errMsgArr);
-				 */
-				/*
-				 * ApplicationContext ctx = new
-				 * ClassPathXmlApplicationContext("classpath:conf/spring.xml");
-				 * ComRegMg comRegMg = (ComRegMg) ctx.getBean("comRegMg"); objs
-				 * = comRegMg.tzQueryList(comParams, numLimit, numStart,
-				 * errMsgArr);
-				 */
+				
 				break;
 			case U:
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
+				jacksonUtil.json2Map(comParams);
+				
 				// 操作数据;
 				String[] strActData = null;
-				JSONArray jsonArray = null;
-
+				//JSONArray jsonArray = null;
+				List<Map<String, Object>> jsonArray = null;
 				int num = 0;
-
-				if (CLASSJson.containsKey("add")) {
-					jsonArray = CLASSJson.getJSONArray("add");
+				
+				if (jacksonUtil.containsKey("add")) {
+					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
 					strActData = new String[jsonArray.size()];
 					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jsonArray.getString(num);
+						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
 					}
 
 					strRet = obj.tzAdd(strActData, errMsgArr);
-					/*
-					 * parameterTypes = new String[] { "String[]", "String[]" };
-					 * methodName = "tzAdd"; arglist = new Object[] {
-					 * strActData, errMsgArr }; objs =
-					 * ObjectDoMethod.Load(strAppClass, methodName,
-					 * parameterTypes, arglist);
-					 */
 				}
-
-				if (CLASSJson.containsKey("update")) {
-					jsonArray = CLASSJson.getJSONArray("update");
+				
+				jacksonUtil.json2Map(comParams);
+				if (jacksonUtil.containsKey("update")) {
+					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("update");
 					strActData = new String[jsonArray.size()];
 					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jsonArray.getString(num);
+						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
 					}
 
 					strRet = obj.tzUpdate(strActData, errMsgArr);
-					/*
-					 * parameterTypes = new String[] { "String[]", "String[]" };
-					 * methodName = "tzUpdate"; arglist = new Object[] {
-					 * strActData, errMsgArr }; objs =
-					 * ObjectDoMethod.Load(strAppClass, methodName,
-					 * parameterTypes, arglist);
-					 */
+					
 				}
-
-				if (CLASSJson.containsKey("delete")) {
-					jsonArray = CLASSJson.getJSONArray("delete");
+				
+				jacksonUtil.json2Map(comParams);
+				if (jacksonUtil.containsKey("delete")) {
+					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("delete");
 					strActData = new String[jsonArray.size()];
 					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jsonArray.getString(num);
+						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
 					}
 
 					strRet = obj.tzDelete(strActData, errMsgArr);
-					/*
-					 * parameterTypes = new String[] { "String[]", "String[]" };
-					 * methodName = "tzDelete"; arglist = new Object[] {
-					 * strActData, errMsgArr }; objs =
-					 * ObjectDoMethod.Load(strAppClass, methodName,
-					 * parameterTypes, arglist);
-					 */
 				}
 				break;
 			// 获取html内容;
@@ -697,7 +582,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String resultSelectFlds = "";
 
 		try {
-
+			System.out.println("-----------------------condition:"+condition);
 			// 将字符串转换成json;
 			JSONObject conJson = PaseJsonUtil.getJson(condition);
 			int i, j;
@@ -725,14 +610,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			int tableNameCount = 0;
 			String tableName = recname;
 			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
-			try {
-				tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, Integer.class);
-				if (tableNameCount <= 0) {
-					tableName = "PS_" + recname;
-				}
-			} catch (DataAccessException e) {
-
+			tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
+			if (tableNameCount <= 0) {
+				tableName = "PS_" + recname;
 			}
+			
 
 			// 类型为number的值;
 			String intTypeString = "TINYINT,SMALLINT,MEDIUMINT,INT,INTEGER,BIGINT,FLOAT,DOUBLE,DECIMAL";
@@ -1013,7 +895,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
 			try {
-				total = (int) jdbcTemplate.queryForObject(totalSQL, Integer.class);
+				total = (int) jdbcTemplate.queryForObject(totalSQL, "Integer");
 			} catch (Exception e) {
 
 			}
@@ -1114,14 +996,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			int tableNameCount = 0;
 			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
-			try {
-				tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, Integer.class);
-				if (tableNameCount <= 0) {
-					strSql = "SELECT " + result + " FROM PS_" + recname;
-				}
-			} catch (DataAccessException e) {
-
+			tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
+			if (tableNameCount <= 0) {
+				strSql = "SELECT " + result + " FROM PS_" + recname;
 			}
+			
 
 			for (i = 0; i < conJson.names().size(); i++) {
 				// 搜索字段名称;
@@ -1261,11 +1140,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			}
 
 			List<Map<String, Object>> list = null;
-			try {
-				list = jdbcTemplate.queryForList(strSql);
-			} catch (DataAccessException e) {
-
-			}
+			list = jdbcTemplate.queryForList(strSql);
+			
 			if (list != null) {
 				for (int k = 0; k < list.size(); k++) {
 					strContent = "";

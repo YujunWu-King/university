@@ -27,6 +27,8 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	private JdbcTemplate jdbcTemplate;
 	@Autowired
 	private PsClassDefnMapper psClassDefnMapper;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/*新增许可权信息*/
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -161,7 +163,6 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		try {
-			FliterForm fliterForm = new FliterForm();
 
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" } };

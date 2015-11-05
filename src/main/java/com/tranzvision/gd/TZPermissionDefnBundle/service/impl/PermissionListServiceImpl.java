@@ -26,6 +26,8 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/* 查询许可权列表 */
 	@Override
@@ -33,8 +35,6 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		try {
-			FliterForm fliterForm = new FliterForm();
-
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "CLASSID", "ASC" } };
 			fliterForm.orderByArr = orderByArr;

@@ -24,6 +24,8 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	private PsTzHardcdPntMapper psCmbcHardcdPntMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private FliterForm fliterForm;
 	
 	/* 加载HardCode列表 */
 	@Override
@@ -31,7 +33,6 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 			String[] errorMsg) {
 		// 返回值;
 		String strRet = "";
-		FliterForm fliterForm = new FliterForm();
 
 		// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "TZ_HARDCODE_PNT", "ASC" } };
