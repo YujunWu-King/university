@@ -38,7 +38,11 @@ public class GetCookieSessionProps {
 	 * 构造函数，加载Cookie配置默认值
 	 */
 	public GetCookieSessionProps() {
-		Resource resource = new ClassPathResource("classpath:conf/cookie.properties");
+		this.doGetCookieSessionProps();
+	}
+	
+	public void doGetCookieSessionProps(){
+		Resource resource = new ClassPathResource("conf/cookieSession.properties");
 		try {
 			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 

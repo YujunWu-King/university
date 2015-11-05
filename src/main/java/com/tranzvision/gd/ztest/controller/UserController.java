@@ -113,7 +113,7 @@ public class UserController {
 		tmpStr += "<br>Hello World==>>Path==>>" + System.getProperty("springmvc.root");
 		model.addAttribute("nickname",tmpStr);
 
-    	return "index";
+    	return "ztest/index";
     }
 	
 	@RequestMapping("hello")
@@ -121,7 +121,8 @@ public class UserController {
 			@RequestParam(value = "name", required = false, defaultValue = "World") String name) {
 		System.out.println("in controller");
  
-		ModelAndView mv = new ModelAndView("hello");
+		//ModelAndView mv = new ModelAndView("ztest/hello");
+		ModelAndView mv = new ModelAndView("ztest/hello");
 		mv.addObject("message", message);
 		mv.addObject("nickname", name + "!");
 		return mv;
@@ -138,7 +139,7 @@ public class UserController {
 		model.addAttribute("rst", rst);
 		model.addAttribute("name", name);
 		
-    	return "add";
+    	return "ztest/add";
     }
 	
 	@RequestMapping("get")
@@ -150,7 +151,7 @@ public class UserController {
 		model.addAttribute("name", user.getNickname());
 		model.addAttribute("state", user.getState());
 		
-    	return "get";
+    	return "ztest/get";
     }
 	
 }

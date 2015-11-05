@@ -10,8 +10,6 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Service;
-
 import com.github.bingoohuang.patchca.color.ColorFactory;
 import com.github.bingoohuang.patchca.color.SingleColorFactory;
 import com.github.bingoohuang.patchca.filter.predefined.*;
@@ -26,7 +24,6 @@ import com.tranzvision.gd.util.session.TzSession;
  * @author SHIHUA
  * @since 2015-11-03
  */
-@Service
 public class Patchca {
 
 	private static ConfigurableCaptchaService cs = new ConfigurableCaptchaService();

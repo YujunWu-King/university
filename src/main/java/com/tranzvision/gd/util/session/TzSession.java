@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cookie.TzCookie;
 
@@ -36,7 +37,9 @@ public class TzSession {
 	 * @param request
 	 */
 	public TzSession(HttpServletRequest request) {
-		session = request.getSession();
+		this.session = request.getSession();
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		getSessionProps = (GetCookieSessionProps) getSpringBeanUtil.getAutowiredSpringBean("GetCookieSessionProps");
 	}
 
 	/**
@@ -47,7 +50,8 @@ public class TzSession {
 	 */
 	public void addSession(String sessionName, Object sessionValue) {
 		session.setAttribute(sessionName, sessionValue);
-		session.setMaxInactiveInterval(getSessionProps.getSessionMaxInactive());
+		int t = getSessionProps.getSessionMaxInactive();
+		session.setMaxInactiveInterval(t);
 	}
 
 	/**

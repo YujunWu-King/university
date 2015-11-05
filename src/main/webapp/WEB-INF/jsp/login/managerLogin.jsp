@@ -1,14 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <!doctype html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="google" content="notranslate" />
 <meta charset="utf-8">
 <title>创景云招生系统</title>
-<meta name="google" content="notranslate" />
+<script type="text/javascript">
+var TzUniversityContextPath = "${contextPath}";
+</script>
 <link rel="stylesheet" type="text/css"
-	href="../statics/js/lib/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css" />
+	href="${contextPath}/statics/js/lib/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css" />
 <style type="text/css">
 html, body {
 	height: 95%;
@@ -37,10 +42,12 @@ body {
 	border-width: 0px;
 }
 </style>
-<script type="text/javascript" src="../statics/js/tranzvision/util/checkExplorer.js"
+<script type="text/javascript" src="${contextPath}/statics/js/tranzvision/util/checkExplorer.js"
+	charset="utf-8"></script>
+<script type="text/javascript" src="${contextPath}/statics/js/tranzvision/func/captcha.js"
 	charset="utf-8"></script>
 <script type="text/javascript" charset="UTF-8"
-	src="../statics/js/lib/extjs/bootstrap.js"></script>
+	src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
 <script type='text/javascript'>
 	var rightwidth = window.screen.availWidth;
 
@@ -178,7 +185,7 @@ body {
 
 									//Ext.Msg.alert("提示",responseText.error);
 
-									htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='../statics/images/login/alert.png' />&nbsp;"
+									htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
 											+ responseText.error + "<div>";
 
 									Ext.Ajax
@@ -223,7 +230,7 @@ body {
 
 				//Ext.Msg.alert("提示","登录信息未填写完整或验证码错误");
 
-				htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='../statics/images/login/alert.png' />&nbsp;登录信息未填写完整或验证码错误<div>";
+				htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;登录信息未填写完整或验证码错误<div>";
 
 			}
 
@@ -446,7 +453,7 @@ body {
 																				//Ext.Msg.alert("提示","您所属的机构状态为失效，请联系系统管理员处理。");
 
 																				htmlCom
-																						.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='../statics/images/login/alert.png' />&nbsp;您所属的机构状态为失效，请联系系统管理员处理<div>";
+																						.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;您所属的机构状态为失效，请联系系统管理员处理<div>";
 
 																			} else {
 
@@ -553,7 +560,7 @@ body {
 
 															xtype : "image",
 
-															src : "",
+															src : GenCaptchaUrl(),
 
 															name : "yzmpic",
 
@@ -724,7 +731,7 @@ body {
 																			// Ext.Msg.alert("提示",responseText.error);
 
 																			htmlCom
-																					.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='../statics/images/login/alert.png' />&nbsp;"
+																					.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
 																					+ responseText.error
 																					+ "<div>";
 
@@ -779,7 +786,7 @@ body {
 
 														//Ext.Msg.alert("提示","登录信息未填写完整");		
 
-														htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='../statics/images/login/alert.png' />&nbsp;登录信息未填写完整<div>";
+														htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;登录信息未填写完整<div>";
 
 													}
 
@@ -880,7 +887,7 @@ body {
 </head>
 
 <body
-	style="background: #fff; background-image: url('../statics/images/login/201583153016635_1441013416635.jpg'); background-repeat: no-repeat; background-position: center center;"
+	style="background: #fff; background-image: url('${contextPath}/statics/images/login/201583153016635_1441013416635.jpg'); background-repeat: no-repeat; background-position: center center;"
 	onkeydown="BindEnter(event)">
 
 	<div id="tranzvision_loginDiv" style="width: 100%; height: 100%"></div>

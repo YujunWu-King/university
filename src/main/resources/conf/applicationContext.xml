@@ -78,5 +78,12 @@
 	<!-- spring jdbc 执行自定义SQL -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
 		p:dataSource-ref="dataSource" />
+	
+	<!-- spring application context 工具类 -->
+	<bean id="springApplicationContext" class="com.tranzvision.gd.util.base.SpringApplicationContext"/>
+	
+	<!-- 初始化SrpingBean缓存  -->
+	<bean id="springAutoWiredBeanFactory" class="com.tranzvision.gd.util.base.GetAutowiredSpringBean" 
+		init-method="init" />
 
 </beans>
