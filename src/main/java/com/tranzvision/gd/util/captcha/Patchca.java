@@ -208,8 +208,8 @@ public class Patchca {
 	 * @return boolean
 	 */
 	public boolean verifyToken(HttpServletRequest request, String ckToken) {
-		String token = this.getToken(request);
-		if (token.equals(ckToken.trim())) {
+		String token = this.getToken(request).toUpperCase();
+		if (token.equals(ckToken.trim().toUpperCase())) {
 			// 销毁sessionToken
 			this.removeToken(request);
 			return true;

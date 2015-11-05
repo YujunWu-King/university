@@ -26,6 +26,7 @@ public class TzCaptchaController {
 
 		Patchca patcha = new Patchca();
 		
+		patcha.setColorful();
 		patcha.genCaptcha(request, response);
 		
 	}

@@ -255,6 +255,19 @@ public class TZGDObject
 	
 	/**
 	 * 参数说明：
+	 * sqlObjectName		String类型，用户指定SQL对象的名称。SQL对象名称的格式为：SQL.xxx.xxx.xxx。其中“SQL.”为固定前缀，其对应
+	 *                      /WEB-INF/classes/sql/xxx/xxx/xxx.sql文件中的内容，大小写敏感。注意，SQL对象对应的文件必须以小写的“.sql”结尾。
+	 * 返回结果：
+	 * 返回结果String类型的SQL对象对应的文本内容，如果找不到对应的SQL对象，则抛出TzSystemException类型的异常。
+	 */
+	public String getSQLText(String sqlObjectName) throws TzSystemException
+	{
+		boolean refreshFlag = false;
+		return sqlObjectManager.getSQLText(sqlObjectName,refreshFlag);
+	}
+	
+	/**
+	 * 参数说明：
 	 * htmlObjectName		String类型，用户指定HTML对象的名称。HTML对象名称的格式为：HTML.xxx.xxx.xxx。其中“HTML.”为固定前缀，其对应
 	 *                      /WEB-INF/classes/html/xxx/xxx/xxx.html文件中的内容，大小写敏感.注意，HTML对象对应的文件必须以小写的“.html”结尾。
 	 * refreshFlag			boolean类型，用于指定本次调用是否重新从对应的文件中读取HTML对象的内容，否则直接从缓存中获取。

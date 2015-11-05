@@ -14,7 +14,10 @@ import org.springframework.context.ApplicationContext;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 
 /**
- * 获取自动注册的Spring Bean（java类实例）
+ * 缓存并获取自动注册的Spring Bean（java类实例）
+ * 若要新增SpringBean，则用@Autowired注入后，
+ * 在init方法中对该bean进行注册，加入到springBeanMap成员变量中
+ * key是bean的类名
  * 
  * @author SHIHUA
  * @since 2015-11-05

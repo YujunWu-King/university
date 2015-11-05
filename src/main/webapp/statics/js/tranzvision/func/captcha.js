@@ -7,9 +7,7 @@
 function GenCaptchaUrl() {
 
 	var _captchaURL = TzUniversityContextPath + "/captcha";
-
-	this.genCaptchaUrl = function() {
-		return _captchaURL + "?" + Math.random();
-	}
+	
+	return _captchaURL + "?" + Math.random();
 
 }

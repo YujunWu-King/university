@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!doctype html>
 <html>
 <head>
@@ -10,7 +10,7 @@
 <meta charset="utf-8">
 <title>创景云招生系统</title>
 <script type="text/javascript">
-var TzUniversityContextPath = "${contextPath}";
+	var TzUniversityContextPath = "${contextPath}";
 </script>
 <link rel="stylesheet" type="text/css"
 	href="${contextPath}/statics/js/lib/extjs/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all.css" />
@@ -42,9 +42,11 @@ body {
 	border-width: 0px;
 }
 </style>
-<script type="text/javascript" src="${contextPath}/statics/js/tranzvision/util/checkExplorer.js"
+<script type="text/javascript"
+	src="${contextPath}/statics/js/tranzvision/util/checkExplorer.js"
 	charset="utf-8"></script>
-<script type="text/javascript" src="${contextPath}/statics/js/tranzvision/func/captcha.js"
+<script type="text/javascript"
+	src="${contextPath}/statics/js/tranzvision/func/captcha.js"
 	charset="utf-8"></script>
 <script type="text/javascript" charset="UTF-8"
 	src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
@@ -85,7 +87,8 @@ body {
 
 	if (len = 5) {
 
-		jgHidden = true;
+		//jgHidden = true;
+		jgHidden = false;
 
 		locationOrgId = arr[len - 2];
 
@@ -154,7 +157,7 @@ body {
 
 							async : false,
 
-							url : loginUrl,
+							url : '${contextPath}/login/dologin',
 
 							params : {
 
@@ -179,7 +182,7 @@ body {
 									cpr.set("userName", form.findField(
 											"userName").getValue());
 
-									window.location.href = responseText.indexUrl;
+									window.location.href = "${contextPath}" + responseText.indexUrl;
 
 								} else {
 
@@ -188,29 +191,8 @@ body {
 									htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
 											+ responseText.error + "<div>";
 
-									Ext.Ajax
-											.request({
-
-												async : false,
-
-												url : loginUrl
-														+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}',
-
-												success : function(response) {
-
-													var responseText = eval("("
-															+ response.responseText
-															+ ")");
-
-													var img = Ext
-															.getCmp("yzmpic");
-
-													img
-															.setSrc(responseText.codeImgUrl);
-
-												}
-
-											});
+									Ext.getCmp("yzmpic")
+											.setSrc(GenCaptchaUrl());
 
 									form.findField("yzm").setValue("");
 
@@ -261,57 +243,48 @@ body {
 
 				var cpOrgId = cp.get("orgId");
 
-				Ext
-						.apply(
-								Ext.form.field.VTypes,
-								{
+				Ext.apply(Ext.form.field.VTypes, {
 
-									codeValidator : function(value) {
+					codeValidator : function(value) {
 
-										var flag = false;
+						var flag = false;
 
-										var tzYzmParams = '{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeValidate","yzm":'
-												+ Ext.JSON.encodeString(value)
-												+ '}}';
+						Ext.Ajax.request({
 
-										Ext.Ajax
-												.request({
+							async : false,
 
-													async : false,
+							url : loginUrl,
 
-													url : loginUrl,
+							params : {
 
-													params : {
+								"tzParams" : tzYzmParams
 
-														"tzParams" : tzYzmParams
+							},
 
-													},
+							async : false,
 
-													async : false,
+							success : function(response) {
 
-													success : function(response) {
+								var responseText = eval("("
+										+ response.responseText + ")");
 
-														var responseText = eval("("
-																+ response.responseText
-																+ ")");
+								if (responseText.success == "true") {
 
-														if (responseText.success == "true") {
+									flag = true;
 
-															flag = true;
+								}
 
-														}
+							}
 
-													}
+						});
 
-												});
+						return flag;
 
-										return flag;
+					},
 
-									},
+					codeValidatorText : '输入的验证码不正确!',
 
-									codeValidatorText : '输入的验证码不正确!',
-
-								});
+				});
 
 				Ext
 						.create(
@@ -371,24 +344,34 @@ body {
 
 													autoLoad : true,
 
-													//	data: [{orgValue: 'EDP01', orgDesc: 'EDP中心'},{orgValue: 'MBA01', orgDesc: 'MBA中心'},{orgValue: 'EMBA1', orgDesc: 'EMBA中心'}]
+													data : [ {
+														orgValue : 'Admin',
+														orgDesc : '平台管理机构'
+													}, {
+														orgValue : 'YENCHING',
+														orgDesc : '燕京学堂'
+													}, {
+														orgValue : 'GSM',
+														orgDesc : '北大光华'
+													} ]
+												/*
+												proxy : {
 
-													proxy : {
+													type : 'ajax',
 
-														type : 'ajax',
+													url : loginUrl
+															+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"GetOrg"}}',
 
-														url : loginUrl
-																+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"GetOrg"}}',
+													reader : {
 
-														reader : {
+														type : 'json',
 
-															type : 'json',
-
-															rootProperty : 'org'
-
-														}
+														rootProperty : 'org'
 
 													}
+
+												}
+												 */
 
 												},
 
@@ -572,30 +555,11 @@ body {
 
 																	click : function() {
 
-																		Ext.Ajax
-																				.request({
-
-																					async : false,
-
-																					url : loginUrl
-																							+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}',
-
-																					success : function(
-																							response) {
-
-																						var responseText = eval("("
-																								+ response.responseText
-																								+ ")");
-
-																						var img = Ext
-																								.getCmp("yzmpic");
-
-																						img
-																								.setSrc(responseText.codeImgUrl)
-
-																					}
-
-																				});
+																		Ext
+																				.getCmp(
+																						"yzmpic")
+																				.setSrc(
+																						GenCaptchaUrl());
 
 																	}
 
@@ -696,7 +660,7 @@ body {
 
 																	async : false,
 
-																	url : loginUrl,
+																	url : '${contextPath}/login/dologin',
 
 																	params : {
 
@@ -724,7 +688,7 @@ body {
 																							"orgId",
 																							orgId);
 
-																			window.location.href = responseText.indexUrl;
+																			window.location.href = "${contextPath}" + responseText.indexUrl;
 
 																		} else {
 
@@ -735,30 +699,11 @@ body {
 																					+ responseText.error
 																					+ "<div>";
 
-																			Ext.Ajax
-																					.request({
-
-																						async : false,
-
-																						url : loginUrl
-																								+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}',
-
-																						success : function(
-																								response) {
-
-																							var responseText = eval("("
-																									+ response.responseText
-																									+ ")");
-
-																							var img = Ext
-																									.getCmp("yzmpic");
-
-																							img
-																									.setSrc(responseText.codeImgUrl);
-
-																						}
-
-																					});
+																			Ext
+																					.getCmp(
+																							"yzmpic")
+																					.setSrc(
+																							GenCaptchaUrl());
 
 																			form
 																					.findField(
@@ -795,27 +740,6 @@ body {
 											} ]
 
 								});
-
-				Ext.Ajax
-						.request({
-
-							async : false,
-
-							url : loginUrl
-									+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}',
-
-							success : function(response) {
-
-								var responseText = eval("("
-										+ response.responseText + ")");
-
-								var img = Ext.getCmp("yzmpic");
-
-								img.setSrc(responseText.codeImgUrl);
-
-							}
-
-						});
 
 				//检查浏览器;
 
@@ -873,7 +797,8 @@ body {
 
 					checkBZ = true;
 
-				};
+				}
+				;
 
 				if (!checkBZ) {
 
