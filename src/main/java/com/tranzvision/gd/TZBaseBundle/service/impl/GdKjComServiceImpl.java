@@ -16,12 +16,9 @@ import com.tranzvision.gd.TZBaseBundle.service.Framework;
 import com.tranzvision.gd.TZBaseBundle.service.GdKjComService;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-//import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * 
@@ -49,8 +46,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String SuperOrgId = this.getSuperOrgId(request, response);
 		String tmpKhhSystemNameSQL = "SELECT TZ_JG_LOGIN_INFO FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 		String tmpKhhSystemName = "";
-		tmpKhhSystemName = TZUtility.transFormchar(jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String"));
-		
+		tmpKhhSystemName = TZUtility
+				.transFormchar(jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String"));
 
 		String languageId = this.getLoginLanguage(request, response);
 		String xxjhId = "TZGD_FWINIT_MSGSET";
@@ -82,8 +79,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		if (jgId != null && !jgId.equals(SuperOrgId)) {
 			String superMsgSQL = "select A.TZ_XXJH_ID, A.TZ_MSG_ID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND NOT exists(SELECT 'Y' FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND UPPER(A.TZ_JG_ID)=UPPER(?)";
 			list = jdbcTemplate.queryForList(superMsgSQL,
-						new Object[] { languageId, xxjhId, SuperOrgId, xxjhId, jgId });
-			
+					new Object[] { languageId, xxjhId, SuperOrgId, xxjhId, jgId });
 
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
@@ -106,9 +102,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			tmpJSONString = tmpJSONString.substring(1);
 		}
 		tmpJSONString = "{ " + languageId + ":{" + tmpJSONString + "}}";
-		
+
 		return tmpJSONString;
-		
+
 	}
 
 	@Override
@@ -140,7 +136,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			// 读取客户化的系统名称;
 			String selectSql1 = "SELECT TZ_MSG_TEXT FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID=? AND TZ_LANGUAGE_ID=?";
 			strTagContent = jdbcTemplate.queryForObject(selectSql1, new Object[] { tmpLoginOrgId, sCID, strLangID },
-						"String");
+					"String");
 
 			if ((strTagContent == null || "".equals(strTagContent))
 					&& (tmpLoginOrgId != null && !"".equals(tmpLoginOrgId))) {
@@ -149,18 +145,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				int total = 0;
 				String xxjhSQL = "SELECT count(1) FROM PS_TZ_PT_XXJH_TBL WHERE TZ_XXJH_ID=?";
 				total = jdbcTemplate.queryForObject(xxjhSQL, new Object[] { ary[0] }, "Integer");
-				
+
 				if (total <= 0) {
 					String insertXxjhSQL = "insert into PS_TZ_PT_XXJH_TBL(TZ_XXJH_ID, TZ_XXJH_MC) values(?,?)";
-					jdbcTemplate.update(insertXxjhSQL, new Object[]{ary[0], ""});
-					
+					jdbcTemplate.update(insertXxjhSQL, new Object[] { ary[0], "" });
+
 				}
 
 				int numCount = 0;
 				String tmpMsgId = "";
 				String maxMsgIdSQL = "SELECT MAX(TZ_MSG_ID) FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID=? AND TZ_LANGUAGE_ID<>?";
 				tmpMsgId = jdbcTemplate.queryForObject(maxMsgIdSQL, new Object[] { tmpLoginOrgId, sCID, strLangID },
-							"String");
+						"String");
 
 				if (tmpMsgId == null || "".equals(tmpMsgId)) {
 					SimpleDateFormat form = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -168,17 +164,17 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					tmpMsgId = form.format(date);
 					String countSQL = "SELECT COUNT(1) FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND TZ_JG_ID=? AND TZ_MSG_ID LIKE ? AND TZ_LANGUAGE_ID=?";
 					numCount = jdbcTemplate.queryForObject(countSQL,
-								new Object[] { ary[0], tmpLoginOrgId, tmpMsgId + "%", strLangID }, "Integer");
-					
+							new Object[] { ary[0], tmpLoginOrgId, tmpMsgId + "%", strLangID }, "Integer");
+
 					String numCountString = "0000" + (numCount);
 					tmpMsgId = tmpMsgId
 							+ numCountString.substring(numCountString.length() - 4, numCountString.length());
 				}
 
 				String insertXxdySQL = "INSERT INTO PS_TZ_PT_XXDY_TBL(TZ_XXJH_ID,TZ_MSG_ID,TZ_LANGUAGE_ID,TZ_MSG_TEXT,TZ_MSG_BQID,TZ_MSG_DESC,TZ_JG_ID) VALUES(?,?,?,?,?,?,?)";
-				jdbcTemplate.update(insertXxdySQL, new Object[]{ary[0], tmpMsgId, strLangID, strTagContent, sCID, strTagContent,
-							tmpLoginOrgId});
-				
+				jdbcTemplate.update(insertXxdySQL, new Object[] { ary[0], tmpMsgId, strLangID, strTagContent, sCID,
+						strTagContent, tmpLoginOrgId });
+
 			}
 
 			if (strTagContent == null || "".equals(strTagContent)) {
@@ -191,9 +187,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				String tmpPrefixCID = tmpPrefixArray[0] + "." + tmpPrefixArray[1] + ".%";
 				String tmpSQLText = "SELECT TZ_MSG_BQID,TZ_MSG_TEXT FROM PS_TZ_PT_XXDY_TBL WHERE TZ_JG_ID=? AND TZ_MSG_BQID LIKE ? AND TZ_LANGUAGE_ID=?";
 				List<Map<String, Object>> list = null;
-				list = jdbcTemplate.queryForList(tmpSQLText,
-							new Object[] { tmpLoginOrgId, tmpPrefixCID, strLangID });
-				
+				list = jdbcTemplate.queryForList(tmpSQLText, new Object[] { tmpLoginOrgId, tmpPrefixCID, strLangID });
 
 				String tmpBQID = "";
 				String tmpBQValue = "";
@@ -248,7 +242,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			List<Map<String, Object>> list = null;
 			String sqlList = "SELECT B.TZ_ZHZ_ID ,ifnull((SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_DMS) TZ_ZHZ_DMS ,ifnull((SELECT TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND TZ_ZHZ_ID=B.TZ_ZHZ_ID AND TZ_LANGUAGE_ID=?),B.TZ_ZHZ_CMS) TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZJH_TBL A,PS_TZ_PT_ZHZXX_TBL B WHERE B.TZ_EFF_STATUS='A' AND  A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZJH_ID=? AND curdate()>=B.TZ_EFF_DATE";
 			list = jdbcTemplate.queryForList(sqlList, new Object[] { strLanguageId, strLanguageId, sFieldName });
-			
+
 			if (list != null) {
 				for (int num = 0; num < list.size(); num++) {
 					strTransID = (String) list.get(num).get("TZ_ZHZ_ID");
@@ -303,7 +297,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			String sqlComList = "SELECT DISTINCT C.TZ_PAGE_ID FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID= ? OR C.TZ_COM_ID LIKE ? ) AND (C.DISPLAYONLY=1 OR C.TZ_EDIT_FLG=1)";
 			List<Map<String, Object>> list = null;
 			list = jdbcTemplate.queryForList(sqlComList, new Object[] { strUserID, sComID, sComID + "$%" });
-			
+
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					sPageID = (String) list.get(i).get("TZ_PAGE_ID");
@@ -323,7 +317,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					List<Map<String, Object>> BqList = null;
 					String BqListSQL = "select ifnull(B.TZ_MSG_BQID,A.TZ_MSG_BQID) TZ_MSG_BQID,ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?) AND (A.TZ_MSG_BQID LIKE ? or B.TZ_MSG_BQID LIKE ?)";
 					BqList = jdbcTemplate.queryForList(BqListSQL,
-								new Object[] { strLangID, sComID, this.getLoginOrgID(request, response), sCID, sCID });
+							new Object[] { strLangID, sComID, this.getLoginOrgID(request, response), sCID, sCID });
 
 					if (BqList != null) {
 						for (int j = 0; j < BqList.size(); j++) {
@@ -399,7 +393,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		try {
 			String isZcSQL = "SELECT 'Y' FROM PS_TZ_AQ_COMZC_TBL WHERE TZ_COM_ID=?";
 			isExistCom = jdbcTemplate.queryForObject(isZcSQL, new Object[] { sComID }, "String");
-			
+
 			if (!"Y".equals(isExistCom)) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "非法访问，该组件[" + sComID + "]未注册。";
@@ -408,7 +402,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			String isPageSQL = "SELECT 'Y' FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=?";
 			isExistPage = jdbcTemplate.queryForObject(isPageSQL, new Object[] { sComID, sPageID }, "String");
-			
+
 			if (!"Y".equals(isExistPage)) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "非法访问，组件页面[" + sComID + "][" + sPageID + "]未注册。";
@@ -419,15 +413,14 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			// 更新权限;
 			String haveUpdateSQL = "SELECT C.TZ_EDIT_FLG FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY C.TZ_EDIT_FLG DESC limit 0,1";
 			update = jdbcTemplate.queryForObject(haveUpdateSQL,
-						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
-			
+					new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
 
 			if (update != 1) {
 				// 更新权限;
 				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
 				view = jdbcTemplate.queryForObject(haveReadSQL,
-							new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
-				
+						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
+
 				if (view != 1) {
 					errMsgArr[0] = "1";
 					errMsgArr[1] = "非法访问，您对组件页面[" + sComID + "][" + sPageID + "]的访问未获得授权。";
@@ -438,7 +431,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			// 获取服务端AppClass;
 			String appClassSQL = "SELECT TZ_PAGE_FWDCLS FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=?";
 			strAppClass = jdbcTemplate.queryForObject(appClassSQL, new Object[] { sComID, sPageID }, "String");
-			
 
 			if (strAppClass == null || "".equals(strAppClass)) {
 				errMsgArr[0] = "1";
@@ -450,7 +442,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			switch (OperateType.getOperateType(strOprType)) {
 			// 查询表单;
 			case QF:
-				
+
 				strRet = obj.tzQuery(comParams, errMsgArr);
 				break;
 			// 查询列表;
@@ -471,18 +463,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				}
 
 				strRet = obj.tzQueryList(comParams, numLimit, numStart, errMsgArr);
-				
+
 				break;
 			case U:
 				// 将字符串转换成json;
 				jacksonUtil.json2Map(comParams);
-				
+
 				// 操作数据;
 				String[] strActData = null;
-				//JSONArray jsonArray = null;
+				// JSONArray jsonArray = null;
 				List<Map<String, Object>> jsonArray = null;
 				int num = 0;
-				
+
 				if (jacksonUtil.containsKey("add")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
 					strActData = new String[jsonArray.size()];
@@ -492,7 +484,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 					strRet = obj.tzAdd(strActData, errMsgArr);
 				}
-				
+
 				jacksonUtil.json2Map(comParams);
 				if (jacksonUtil.containsKey("update")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("update");
@@ -502,9 +494,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					}
 
 					strRet = obj.tzUpdate(strActData, errMsgArr);
-					
+
 				}
-				
+
 				jacksonUtil.json2Map(comParams);
 				if (jacksonUtil.containsKey("delete")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("delete");
@@ -582,14 +574,14 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String resultSelectFlds = "";
 
 		try {
-			System.out.println("-----------------------condition:"+condition);
+			
 			// 将字符串转换成json;
-			JSONObject conJson = PaseJsonUtil.getJson(condition);
+			// JSONObject conJson = PaseJsonUtil.getJson(condition);
+			jacksonUtil.json2Map(condition);
 			int i, j;
 			// 搜索字段名称;
 			String key = "";
-			// 搜索字段内容;
-			String keyContent = "";
+			
 			// 操作符;
 			String operate = "";
 			// 搜索字段值;
@@ -597,7 +589,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			// 搜索字段类型：01-字符串，02-数字，03-日期，04-时间，05-日期时间;
 			String type;
 			// 将搜索字段内容转成json;
-			JSONObject fieldJson;
+			// JSONObject fieldJson;
 			// 结果字段按逗号分隔;
 			String[] aryResult = result.split(",");
 			int resultSelectFldsLen = aryResult.length;
@@ -614,7 +606,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			if (tableNameCount <= 0) {
 				tableName = "PS_" + recname;
 			}
-			
 
 			// 类型为number的值;
 			String intTypeString = "TINYINT,SMALLINT,MEDIUMINT,INT,INTEGER,BIGINT,FLOAT,DOUBLE,DECIMAL";
@@ -670,226 +661,218 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			// 搜索条件;
 			String sqlWhere = "";
+			if (jacksonUtil.containsKey("presetFields")) {
+				try{
+					//JSONObject presetJson = PaseJsonUtil.getJson(presetFields);
+					Map<String, Object> presetJson = jacksonUtil.getMap("presetFields");
+					for (Map.Entry<String, Object> entry : presetJson.entrySet()){
+						// 搜索字段名称;
+						key = entry.getKey();
+						// 搜索字段内容;
+						// 搜索字段内容;
+						Map<String, Object> keyContent = (Map<String, Object>) entry.getValue();
 
-			// 预设字段;
-			String presetFields = "";
-			String srhConFields = "";
-
-			if (conJson.containsKey("presetFields")) {
-				presetFields = conJson.getString("presetFields");
-			}
-
-			if (!"".equals(presetFields)) {
-				JSONObject presetJson = PaseJsonUtil.getJson(presetFields);
-				for (i = 0; i < presetJson.names().size(); i++) {
-					// 搜索字段名称;
-					key = presetJson.names().getString(i);
-					// 搜索字段内容;
-					keyContent = presetJson.getString(key);
-					// 将搜索字段内容转成json;
-					fieldJson = PaseJsonUtil.getJson(keyContent);
-					
-
-					if (fieldJson.containsKey("value")) {
-						value = fieldJson.getString("value");
-					} else {
-						value = "";
-					}
-
-					if (fieldJson.containsKey("type")) {
-						type = fieldJson.getString("type");
-					} else {
-						type = "";
-					}
-
-					if ("".equals(value) || "".equals(type)) {
-						continue;
-					}
-
-					if ("".equals(sqlWhere)) {
-						sqlWhere = " WHERE ";
-					} else {
-						sqlWhere = sqlWhere + " AND ";
-					}
-
-					// 搜索字段类型;
-					if ("0".equals(type.substring(0, 1))) {
-						type = type.substring(1);
-					}
-
-					switch (Integer.parseInt(type)) {
-					case 1:
-						value = "'" + value + "'";
-						break;
-					case 3:
-						value = " str_to_date('" + value + "','%Y-%m-%d')";
-						break;
-					case 4:
-						value = " str_to_date('" + value + "','%H:%i')";
-						break;
-					case 5:
-						value = " str_to_date('" + value + "','%Y-%m-%d %H:%i')";
-						break;
-					default:
-						break;
-					}
-					
-					
-
-					sqlWhere = sqlWhere + key + "=" + value;
-				}
-			}
-
-			if (conJson.containsKey("srhConFields")) {
-				srhConFields = conJson.getString("srhConFields");
-			}
-
-			if (!"".equals(srhConFields)) {
-				JSONObject srhConJson = PaseJsonUtil.getJson(srhConFields);
-				for (i = 0; i < srhConJson.names().size(); i++) {
-					// 搜索字段名称;
-					key = srhConJson.names().getString(i);
-					// 搜索字段内容;
-					keyContent = srhConJson.getString(key);
-					// 将搜索字段内容转成json;
-					fieldJson = PaseJsonUtil.getJson(keyContent);
-					// 操作符;
-					operate = fieldJson.getString("operator");
-
-					if (fieldJson.containsKey("value")) {
-						value = fieldJson.getString("value");
-					} else {
-						value = "";
-					}
-
-					if (fieldJson.containsKey("type")) {
-						type = fieldJson.getString("type");
-					} else {
-						type = "";
-					}
-
-					if ("".equals(value) || "".equals(type)) {
-						continue;
-					}
-
-					if ("".equals(sqlWhere)) {
-						sqlWhere = " WHERE ";
-					} else {
-						sqlWhere = sqlWhere + " AND ";
-					}
-
-					// 搜索字段类型;
-					if ("0".equals(type.substring(0, 1))) {
-						type = type.substring(1);
-					}
-
-					String originValue = value;
-					switch (Integer.parseInt(type)) {
-					case 1:
-						value = "'" + value + "'";
-						break;
-					case 3:
-						value = " str_to_date('" + value + "','%Y-%m-%d')";
-						break;
-					case 4:
-						value = " str_to_date('" + value + "','%H:%i')";
-						break;
-					case 5:
-						value = " str_to_date('" + value + "','%Y-%m-%d %H:%i')";
-						break;
-					default:
-						break;
-					}
-
-					// 操作符;
-					if ("0".equals(operate.substring(0, 1))) {
-						operate = operate.substring(1);
-					}
-
-					switch (Integer.parseInt(operate)) {
-					case 1:
-						// 等于;
-						operate = "=";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 2:
-						// 不等于;
-						operate = "<>";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 3:
-						// 大于;
-						operate = ">";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 4:
-						// 大于等于;
-						operate = ">=";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 5:
-						// 小于;
-						operate = "<";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 6:
-						// 小于等于;
-						operate = "<=";
-						sqlWhere = sqlWhere + key + operate + value;
-						break;
-					case 7:
-						// 包含;
-						value = "'%" + originValue + "%'";
-						sqlWhere = sqlWhere + key + " LIKE " + value;
-						break;
-					case 8:
-						// 开始于…;
-						value = "'" + originValue + "%'";
-						sqlWhere = sqlWhere + key + " LIKE " + value;
-						break;
-					case 9:
-						// 结束于…;
-						value = "'%" + originValue + "'";
-						sqlWhere = sqlWhere + key + " LIKE " + value;
-						break;
-					case 10:
-						originValue = originValue.replaceAll(" ", "");
-						originValue = originValue.trim();
-						String[] inArr = originValue.split(",");
-
-						int inArrLen = inArr.length;
-						if (inArrLen > 0) {
+						if (keyContent.containsKey("value")) {
+							value = (String) keyContent.get("value");
+						} else {
 							value = "";
-							if ("1".equals(type)) {
-								for (int ii = 0; ii < inArrLen; ii++) {
-									originValue = originValue + ",'" + inArr[ii] + "'";
-								}
-
-							} else {
-								for (int ii = 0; ii < inArrLen; ii++) {
-									originValue = originValue + "," + inArr[ii];
-								}
-							}
-							originValue = value.substring(1);
-							originValue = "(" + originValue + ")";
 						}
 
-						sqlWhere = sqlWhere + key + " IN " + originValue;
-						break;
-					case 11:
-						// 为空;
-						sqlWhere = sqlWhere + key + " IS NULL";
-						break;
-					case 12:
-						// 不为空;
-						sqlWhere = sqlWhere + key + " IS NOT NULL";
-						break;
+						if (keyContent.containsKey("type")) {
+							type = (String) keyContent.get("type");
+						} else {
+							type = "";
+						}
 
-					default:
+						if ("".equals(value) || "".equals(type)) {
+							continue;
+						}
+
+						if ("".equals(sqlWhere)) {
+							sqlWhere = " WHERE ";
+						} else {
+							sqlWhere = sqlWhere + " AND ";
+						}
+
+						// 搜索字段类型;
+						if ("0".equals(type.substring(0, 1))) {
+							type = type.substring(1);
+						}
+
+						switch (Integer.parseInt(type)) {
+						case 1:
+							value = "'" + value + "'";
+							break;
+						case 3:
+							value = " str_to_date('" + value + "','%Y-%m-%d')";
+							break;
+						case 4:
+							value = " str_to_date('" + value + "','%H:%i')";
+							break;
+						case 5:
+							value = " str_to_date('" + value + "','%Y-%m-%d %H:%i')";
+							break;
+						default:
+							break;
+						}
+
 						sqlWhere = sqlWhere + key + "=" + value;
-						break;
 					}
+				}catch(Exception e){
+					
+				}
+			}
+			
 
+			if (jacksonUtil.containsKey("srhConFields")) {
+				try{
+					//JSONObject srhConJson = PaseJsonUtil.getJson(srhConFields);
+					Map<String, Object> srhConJson = jacksonUtil.getMap("srhConFields");
+					for (Map.Entry<String, Object> entry : srhConJson.entrySet()){
+						// 搜索字段名称;
+						key = entry.getKey();
+						// 搜索字段内容;
+						Map<String, Object> keyContent = (Map<String, Object>) entry.getValue();
+						// 操作符;
+						operate = (String) keyContent.get("operator");
+	
+						if (keyContent.containsKey("value")) {
+							value = (String) keyContent.get("value");
+						} else {
+							value = "";
+						}
+	
+						if (keyContent.containsKey("type")) {
+							type = (String) keyContent.get("type");
+						} else {
+							type = "";
+						}
+	
+						if ("".equals(value) || "".equals(type)) {
+							continue;
+						}
+	
+						if ("".equals(sqlWhere)) {
+							sqlWhere = " WHERE ";
+						} else {
+							sqlWhere = sqlWhere + " AND ";
+						}
+	
+						// 搜索字段类型;
+						if ("0".equals(type.substring(0, 1))) {
+							type = type.substring(1);
+						}
+	
+						String originValue = value;
+						switch (Integer.parseInt(type)) {
+						case 1:
+							value = "'" + value + "'";
+							break;
+						case 3:
+							value = " str_to_date('" + value + "','%Y-%m-%d')";
+							break;
+						case 4:
+							value = " str_to_date('" + value + "','%H:%i')";
+							break;
+						case 5:
+							value = " str_to_date('" + value + "','%Y-%m-%d %H:%i')";
+							break;
+						default:
+							break;
+						}
+	
+						// 操作符;
+						if ("0".equals(operate.substring(0, 1))) {
+							operate = operate.substring(1);
+						}
+	
+						switch (Integer.parseInt(operate)) {
+						case 1:
+							// 等于;
+							operate = "=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 2:
+							// 不等于;
+							operate = "<>";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 3:
+							// 大于;
+							operate = ">";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 4:
+							// 大于等于;
+							operate = ">=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 5:
+							// 小于;
+							operate = "<";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 6:
+							// 小于等于;
+							operate = "<=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 7:
+							// 包含;
+							value = "'%" + originValue + "%'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 8:
+							// 开始于…;
+							value = "'" + originValue + "%'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 9:
+							// 结束于…;
+							value = "'%" + originValue + "'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 10:
+							originValue = originValue.replaceAll(" ", "");
+							originValue = originValue.trim();
+							String[] inArr = originValue.split(",");
+	
+							int inArrLen = inArr.length;
+							if (inArrLen > 0) {
+								value = "";
+								if ("1".equals(type)) {
+									for (int ii = 0; ii < inArrLen; ii++) {
+										originValue = originValue + ",'" + inArr[ii] + "'";
+									}
+	
+								} else {
+									for (int ii = 0; ii < inArrLen; ii++) {
+										originValue = originValue + "," + inArr[ii];
+									}
+								}
+								originValue = value.substring(1);
+								originValue = "(" + originValue + ")";
+							}
+	
+							sqlWhere = sqlWhere + key + " IN " + originValue;
+							break;
+						case 11:
+							// 为空;
+							sqlWhere = sqlWhere + key + " IS NULL";
+							break;
+						case 12:
+							// 不为空;
+							sqlWhere = sqlWhere + key + " IS NOT NULL";
+							break;
+	
+						default:
+							sqlWhere = sqlWhere + key + "=" + value;
+							break;
+						}
+	
+					}
+				}catch(Exception e){
+					
 				}
 			}
 
@@ -965,20 +948,17 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String strContent = "";
 		try {
 			// 将字符串转换成json;
-			JSONObject conJson = PaseJsonUtil.getJson(condition);
+			//JSONObject conJson = PaseJsonUtil.getJson(condition);
+			jacksonUtil.json2Map(condition);
 			int i, j;
 			// 搜索字段名称;
 			String key = "";
-			// 搜索字段内容;
-			String keyContent = "";
 			// 操作符;
 			String operate = "";
 			// 搜索字段值;
 			String value = "";
 			// 搜索字段类型：01-字符串，02-数字，03-日期，04-时间，05-日期时间;
 			String type = "";
-			// 将搜索字段内容转成json;
-			JSONObject fieldJson;
 			// 结果字段按逗号分隔;
 			String[] aryResult = result.split(",");
 			int resultSelectFldsLen = aryResult.length;
@@ -1001,19 +981,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				strSql = "SELECT " + result + " FROM PS_" + recname;
 			}
 			
-
-			for (i = 0; i < conJson.names().size(); i++) {
+			Map<String, Object> conJson = jacksonUtil.getMap();
+			i = 0;
+			for (Map.Entry<String, Object> entry : conJson.entrySet()){
 				// 搜索字段名称;
-				key = conJson.names().getString(i);
+				key = entry.getKey();
 				// 搜索字段内容;
-				keyContent = conJson.getString(key);
-				// 将搜索字段内容转成json;
-				fieldJson = PaseJsonUtil.getJson(keyContent);
+				Map<String, Object> keyContent = (Map<String, Object>) entry.getValue();
+
 				// 操作符;
-				operate = fieldJson.getString("operator");
-				if (fieldJson.containsKey("value") && fieldJson.containsKey("type")) {
-					value = fieldJson.getString("value");
-					type = fieldJson.getString("type");
+				operate = (String) keyContent.get("operator");
+				if (keyContent.containsKey("value") && keyContent.containsKey("type")) {
+					value = (String) keyContent.get("value");
+					type = (String) keyContent.get("type");
 				} else {
 					continue;
 				}
@@ -1023,6 +1003,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				} else {
 					strSql = strSql + " AND ";
 				}
+				i ++;
 
 				// 搜索字段类型;
 				if ("0".equals(type.substring(0, 1))) {
@@ -1141,7 +1122,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			List<Map<String, Object>> list = null;
 			list = jdbcTemplate.queryForList(strSql);
-			
+
 			if (list != null) {
 				for (int k = 0; k < list.size(); k++) {
 					strContent = "";
@@ -1168,48 +1149,50 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		return strRet;
 	}
 
-	/*获取指定组件页面的访问授权信息*/
+	/* 获取指定组件页面的访问授权信息 */
 	@Override
 	public String getComAuthorizedInfo(String sUserId, String sComID) {
 		String sql = "SELECT C.TZ_COM_ID , C.TZ_PAGE_ID , if(SUM(if(C.DISPLAYONLY = 1 ,1 ,0)) =0 ,0,1) DISPLAYONLY, if(SUM(if(C.TZ_EDIT_FLG =1 ,1 ,0)) = 0 ,0 ,1) TZ_EDIT_FLG FROM PSROLEUSER A, PSROLECLASS B, PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND C.TZ_COM_ID=? GROUP BY C.TZ_COM_ID,C.TZ_PAGE_ID";
 		String authJSON = "";
-		try{
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{sUserId,sComID});
-			if(list != null && list.size()>0){
-				for(int i=0; i<list.size();i++){
-					
+		try {
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { sUserId, sComID });
+			if (list != null && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+
 					String tmpPageID = (String) list.get(i).get("TZ_PAGE_ID");
 					long tmpNumDisplayOnly = (long) list.get(i).get("DISPLAYONLY");
 					long tmpNumModifiable = (long) list.get(i).get("TZ_EDIT_FLG");
 					String tmpModifiable = "";
 					String tmpDisplayOnly = "";
-					if(tmpNumModifiable >= 1){
+					if (tmpNumModifiable >= 1) {
 						tmpModifiable = "true";
-				        tmpDisplayOnly = "false";
-					}else{
-						if(tmpNumDisplayOnly >= 1){
+						tmpDisplayOnly = "false";
+					} else {
+						if (tmpNumDisplayOnly >= 1) {
 							tmpModifiable = "false";
-					        tmpDisplayOnly = "true";
-						}else{
+							tmpDisplayOnly = "true";
+						} else {
 							tmpModifiable = "false";
-					        tmpDisplayOnly = "false";
+							tmpDisplayOnly = "false";
 						}
 					}
-					if("".equals(authJSON)){
-						authJSON = "{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly + ",\"modifiable\":" + tmpModifiable + "}";
-					}else{
-						authJSON = authJSON + ",{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly + ",\"modifiable\":" + tmpModifiable + "}";
+					if ("".equals(authJSON)) {
+						authJSON = "{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly
+								+ ",\"modifiable\":" + tmpModifiable + "}";
+					} else {
+						authJSON = authJSON + ",{\"pageID\":\"" + tmpPageID + "\",\"displayOnly\":" + tmpDisplayOnly
+								+ ",\"modifiable\":" + tmpModifiable + "}";
 					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if("".equals(authJSON)){
-			 authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[]";
-		}else{
-			 authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[" + authJSON + "]";
+
+		if ("".equals(authJSON)) {
+			authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[]";
+		} else {
+			authJSON = "\"comID\":\"" + sComID + "\",\"pageAuthInfo\":[" + authJSON + "]";
 		}
 		return authJSON;
 	}
