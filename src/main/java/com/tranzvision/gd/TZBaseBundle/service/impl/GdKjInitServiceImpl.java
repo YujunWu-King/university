@@ -357,7 +357,7 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 			// 获取有效的语言信息列表;
 			num = 0;
 			list = null;
-			String sqlLangList = "SELECT A.TZ_ZHZ_ID,A.TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_TBL A,PS_TZ_PT_ZHZJH_TBL B WHERE A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_EFF_STATUS='A' AND B.TZ_ZHZJH_ID=? AND SYSDATE>=A.TZ_EFF_DATE";
+			String sqlLangList =  "SELECT A.TZ_ZHZ_ID,A.TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_TBL A,PS_TZ_PT_ZHZJH_TBL B WHERE A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_EFF_STATUS='A' AND B.TZ_ZHZJH_ID=? AND curdate()>=A.TZ_EFF_DATE";
 			list = jdbcTemplate.queryForList(sqlLangList, new Object[]{strLangSetID});
 			
 
