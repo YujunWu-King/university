@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZClassDefnBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZClassDefnBundle.dao.PsTzAppclsTblMapper;
 import com.tranzvision.gd.TZClassDefnBundle.model.PsTzAppclsTbl;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
-import net.sf.json.JSONObject;
 
 /*
  * 类方法定义， 原PS类：TZ_GD_APPCLS:TZ_LIST
@@ -28,6 +27,8 @@ public class AppClsServiceImpl extends FrameworkImpl {
 	private PsTzAppclsTblMapper psTzAppclsTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 
 	/* 查询类定义列表 */
 	@Override
@@ -73,11 +74,12 @@ public class AppClsServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
-
-			if (CLASSJson.containsKey("appClassId")) {
+			//JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
+			jacksonUtil.json2Map(strParams);
+			
+			if (jacksonUtil.containsKey("appClassId")) {
 				// 类方法ID;
-				String appClassId = CLASSJson.getString("appClassId");
+				String appClassId = jacksonUtil.getString("appClassId");
 				PsTzAppclsTbl psTzAppclsTbl = psTzAppclsTblMapper.selectByPrimaryKey(appClassId);
 				if (psTzAppclsTbl != null) {
 					strRet = "{\"formData\":{\"appClassId\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzAppclsId())
@@ -112,17 +114,15 @@ public class AppClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
-				// 将字符串转换成json;
-				JSONObject Json = PaseJsonUtil.getJson(infoData);
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 
-				String appClassId = Json.getString("appClassId");
-				String appClassDesc = Json.getString("appClassDesc");
-				String appClassName = Json.getString("appClassName");
-				String appClassPath = Json.getString("appClassPath");
-				String appClassMehtod = Json.getString("appClassMehtod");
+				String appClassId = (String) infoData.get("appClassId");
+				String appClassDesc = (String) infoData.get("appClassDesc");
+				String appClassName = (String) infoData.get("appClassName");
+				String appClassPath = (String) infoData.get("appClassPath");
+				String appClassMehtod = (String) infoData.get("appClassMehtod");
 
 				String sql = "select COUNT(1) from PS_TZ_APPCLS_TBL WHERE TZ_APPCLS_ID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { appClassId }, "Integer");
@@ -161,17 +161,15 @@ public class AppClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
-				// 将字符串转换成json;
-				JSONObject Json = PaseJsonUtil.getJson(infoData);
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 
-				String appClassId = Json.getString("appClassId");
-				String appClassDesc = Json.getString("appClassDesc");
-				String appClassName = Json.getString("appClassName");
-				String appClassPath = Json.getString("appClassPath");
-				String appClassMehtod = Json.getString("appClassMehtod");
+				String appClassId = (String) infoData.get("appClassId");
+				String appClassDesc = (String) infoData.get("appClassDesc");
+				String appClassName = (String) infoData.get("appClassName");
+				String appClassPath = (String) infoData.get("appClassPath");
+				String appClassMehtod = (String) infoData.get("appClassMehtod");
 
 				String sql = "select COUNT(1) from PS_TZ_APPCLS_TBL WHERE TZ_APPCLS_ID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { appClassId }, "Integer");
@@ -215,10 +213,9 @@ public class AppClsServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				//提交信息
 				String strForm = actData[num];
-
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类定义ID;
-				String tzAppclsId = CLASSJson.getString("appClassId");
+				String tzAppclsId = jacksonUtil.getString("appClassId");
 				if (tzAppclsId != null && !"".equals(tzAppclsId)) {
 					psTzAppclsTblMapper.deleteByPrimaryKey(tzAppclsId);
 				}

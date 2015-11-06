@@ -11,9 +11,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterDfnTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
-
-import net.sf.json.JSONObject;
+import com.tranzvision.gd.util.base.JacksonUtil;
 
 /**
  * 可配置搜索
@@ -27,6 +25,8 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 	private PsTzFilterDfnTMapper psTzFilterDfnTMapper;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	
 	/* 查询可配置搜索列表 */
 	@Override
@@ -51,14 +51,14 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-					Map<String, String> map = new HashMap<String, String>();
+					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("ComID", rowList[0]);
 					map.put("comMc", rowList[1]);
 					map.put("PageID", rowList[2]);
 					map.put("pageMc", rowList[3]);
 					map.put("ViewMc", rowList[4]);
 					
-					jsonString = jsonString +","+ JSONObject.fromObject(map).toString();
+					jsonString = jsonString +","+ jacksonUtil.Map2json(map);
 				}
 				
 				if (!"".equals(jsonString)) {
@@ -84,11 +84,12 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
+				
 				// 信息内容;
-				String str_com_id = CLASSJson.getString("ComID");
-				String str_page_id = CLASSJson.getString("PageID");
-				String str_view_name = CLASSJson.getString("ViewMc");
+				String str_com_id = jacksonUtil.getString("ComID");
+				String str_page_id = jacksonUtil.getString("PageID");
+				String str_view_name = jacksonUtil.getString("ViewMc");
 				
 				PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
 				psTzFilterDfnTKey.setTzComId(str_com_id);

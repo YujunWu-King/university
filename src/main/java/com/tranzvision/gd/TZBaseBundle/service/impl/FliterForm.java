@@ -35,7 +35,14 @@ public class FliterForm extends FrameworkImpl {
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
 			jacksonUtil.json2Map(strParams);
-			String cfgSrhId = jacksonUtil.getString("cfgSrhId");
+			String cfgSrhId = "";
+			try{
+				cfgSrhId = jacksonUtil.getString("cfgSrhId");
+			}catch(Exception e){
+				errorMsg[0] = "1";
+				errorMsg[1] = "未获取对应的可配置搜索，请于管理员联系";
+				return strRet;
+			}
 
 			String[] cfgArr = cfgSrhId.split("\\.");
 			if (cfgArr == null || cfgArr.length != 3) {

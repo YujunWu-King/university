@@ -13,10 +13,8 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterYsfTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
-import net.sf.json.JSONObject;
 
 /**
  * 可配置搜索添加搜索字段
@@ -31,7 +29,9 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 	private PsTzFilterFldTMapper psTzFilterFldTMapper;
 	@Autowired
 	private PsTzFilterYsfTMapper psTzFilterYsfTMapper;
-
+	@Autowired
+	private JacksonUtil jacksonUtil;
+	
 	/* 查询可以添加的可配置搜索字段列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -41,12 +41,12 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 		try {
 
 			// 将字符串转换成json;
-			JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
+			jacksonUtil.json2Map(comParams);
 			
-			String str_com_id = CLASSJson.getString("ComID");
-			String str_page_id = CLASSJson.getString("PageID");
-			String str_view_name = CLASSJson.getString("ViewMc");
-			String str_field_name = CLASSJson.getString("FieldMc");
+			String str_com_id = jacksonUtil.getString("ComID");
+			String str_page_id = jacksonUtil.getString("PageID");
+			String str_view_name = jacksonUtil.getString("ViewMc");
+			String str_field_name = jacksonUtil.getString("FieldMc");
 			if(str_field_name != null){
 				str_field_name = str_field_name.trim().toUpperCase();
 			}
@@ -62,6 +62,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 			int total = 0;
 			// 查询总数;
 			String totalSQL = "select COUNT(1) from information_schema.COLUMNS where TABLE_NAME=? AND UPPER(COLUMN_NAME) LIKE ? ORDER BY ORDINAL_POSITION ASC";
+			
 			total = jdbcTemplate.queryForObject(totalSQL, new Object[] {tableName,"%"+str_field_name+"%" },
 					"Integer");
 			
@@ -86,9 +87,8 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 						map.put("ViewMc", str_view_name);
 						map.put("FieldMc", str_field_mc);
 						map.put("fieldDesc", str_field_desc);
-						
-	
-						strContent = strContent + "," + JSONObject.fromObject(map).toString();
+
+						strContent = strContent + "," + jacksonUtil.Map2json(map);
 					}catch(Exception e){
 						e.printStackTrace();
 					}
@@ -117,12 +117,12 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 信息内容;
-				String str_com_id = CLASSJson.getString("ComID");
-				String str_page_id = CLASSJson.getString("PageID");
-				String str_view_name = CLASSJson.getString("ViewMc");
-				String str_field_name = CLASSJson.getString("FieldMc");
+				String str_com_id = jacksonUtil.getString("ComID");
+				String str_page_id = jacksonUtil.getString("PageID");
+				String str_view_name = jacksonUtil.getString("ViewMc");
+				String str_field_name = jacksonUtil.getString("FieldMc");
 				
 				int tableNameCount = 0;
 				String tableName = str_view_name;

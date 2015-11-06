@@ -9,11 +9,10 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZHardCodeMgBundle.dao.PsTzHardcdPntMapper;
 import com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONObject;
 /*
  * Hardcode点定义， 原PS类：TZ_GD_HARDCODE_PKG:TZ_GD_HARDCODE_CLS
  * @author tang
@@ -26,6 +25,8 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	
 	/* 加载HardCode列表 */
 	@Override
@@ -72,11 +73,10 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
-
-			if (CLASSJson.containsKey("hardCodeName")) {
+			jacksonUtil.json2Map(strParams);
+			if (jacksonUtil.containsKey("hardCodeName")) {
 				// hardcode ID;
-				String hardCodeName = CLASSJson.getString("hardCodeName");
+				String hardCodeName = jacksonUtil.getString("hardCodeName");
 				PsTzHardcdPnt psCmbcHardcdPnt=  psCmbcHardcdPntMapper.selectByPrimaryKey(hardCodeName);
 				if (psCmbcHardcdPnt != null) {
 					strRet = "{\"hardCodeName\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzHardcodePnt())
@@ -112,13 +112,13 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// hardCode名称;
-				String hardCodeName = CLASSJson.getString("hardCodeName");
+				String hardCodeName = jacksonUtil.getString("hardCodeName");
 				// hardCode描述;
-				String hardCodeDesc = CLASSJson.getString("hardCodeDesc");
-				String hardCodeValue = CLASSJson.getString("hardCodeValue");
-				String hardCodeDetailDesc = CLASSJson.getString("hardCodeDetailDesc");
+				String hardCodeDesc = jacksonUtil.getString("hardCodeDesc");
+				String hardCodeValue = jacksonUtil.getString("hardCodeValue");
+				String hardCodeDetailDesc = jacksonUtil.getString("hardCodeDetailDesc");
 
 				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
@@ -151,13 +151,13 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// hardCode名称;
-				String hardCodeName = CLASSJson.getString("hardCodeName");
+				String hardCodeName = jacksonUtil.getString("hardCodeName");
 				// hardCode描述;
-				String hardCodeDesc = CLASSJson.getString("hardCodeDesc");
-				String hardCodeValue = CLASSJson.getString("hardCodeValue");
-				String hardCodeDetailDesc = CLASSJson.getString("hardCodeDetailDesc");
+				String hardCodeDesc = jacksonUtil.getString("hardCodeDesc");
+				String hardCodeValue = jacksonUtil.getString("hardCodeValue");
+				String hardCodeDetailDesc = jacksonUtil.getString("hardCodeDetailDesc");
 
 				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
@@ -198,10 +198,9 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				for (num = 0; num < actData.length; num++) {
 					//提交信息
 					String strForm = actData[num];
-
-					JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+					jacksonUtil.json2Map(strForm);
 					// hardcode ID;
-					String hardCodeName = CLASSJson.getString("hardCodeName");
+					String hardCodeName = jacksonUtil.getString("hardCodeName");
 					if (hardCodeName != null && !"".equals(hardCodeName)) {
 						psCmbcHardcdPntMapper.deleteByPrimaryKey(hardCodeName);
 					}

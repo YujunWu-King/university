@@ -11,10 +11,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsTzAqComsqTblMapper;
 import com.tranzvision.gd.TZPermissionDefnBundle.model.PsTzAqComsqTbl;
 import com.tranzvision.gd.TZPermissionDefnBundle.model.PsTzAqComsqTblKey;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-import net.sf.json.JSONObject;
 /*
  * @author tang
  * 许可权组件定义，原PS类：TZ_GD_PLST_PKG:TZ_GD_PERMCOMP_CLS
@@ -25,6 +24,8 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsTzAqComsqTblMapper psTzAqComsqTblMapper;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	
 	/*获取组件授权页面列表*/
 	@Override
@@ -35,12 +36,11 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 		 String strComContent = "";
 		 
 	     // 将字符串转换成json;
-	     JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
-	    
+	     jacksonUtil.json2Map(comParams);
 	     // 许可权编号;
-	     String strPermID = CLASSJson.getString("permID");
+	     String strPermID = jacksonUtil.getString("permID");
 	     // 组件ID;
-	     String strComID = CLASSJson.getString("comID");
+	     String strComID = jacksonUtil.getString("comID");
 	     // 页面ID,页面名称，只读，修改;
 	     String strPageID, strPageName, strReadonly = "false", strModify = "false";
 	     int numReadonly, numModify;
@@ -105,34 +105,33 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
-				JSONObject Json = PaseJsonUtil.getJson(infoData);
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				// 许可权编号;
-			    String strPermID = Json.getString("permID");
+			    String strPermID = (String) infoData.get("permID");
 			    // 授权组件编号;
-			    String strComID = Json.getString("comID");
+			    String strComID = (String) infoData.get("comID");
 			    // 页面编号，显示，修改;
-			    String strPageID, strReadonly, strModify;
-			    strPageID = Json.getString("pageID");
-			    strReadonly = Json.getString("readonly");
-			    strModify = Json.getString("modify");
+			    String strPageID;
+			    strPageID = (String) infoData.get("pageID");
+			    boolean readonly = (boolean) infoData.get("readonly");
+			    boolean modify = (boolean) infoData.get("modify");
 			    
 			    Short numReadonly, numModify;
-			    if("true".equals(strReadonly)){
+			    if(readonly == true){
 			    	numReadonly = 1;
 			    }else{
 			    	numReadonly = 0;
 			    }
 			    
-			    if("true".equals(strModify)){
+			    if(modify == true){
 			    	numModify = 1;
 			    }else{
 			    	numModify = 0;
 			    }
 			      
-			    strModify = Json.getString("modify");
+			    
 			    PsTzAqComsqTblKey psTzAqComsqTblKey = new PsTzAqComsqTblKey();
 			    psTzAqComsqTblKey.setClassid(strPermID);
 			    psTzAqComsqTblKey.setTzComId(strComID);

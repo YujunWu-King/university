@@ -161,6 +161,7 @@ public class Index {
 		
 		try {
 			jacksonUtil.json2Map(strParams);
+			
 			strOprType = jacksonUtil.getString("OperateType");
 			Map<String, Object> map = null;
 			switch (OperateType.getOperateType(strOprType)) {
@@ -275,16 +276,24 @@ public class Index {
 				// 通用参数;
 				//String sCommParams = CLASSJson.getString("comParams");
 				map = jacksonUtil.getMap("comParams");
-				String sCommParams = jacksonUtil.Map2json(map).toString();
 				
-				gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
-				strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
-						sCommParams, errMsgArr);
-				errorCode = errMsgArr[0];
-				strErrorDesc = errMsgArr[1];
-
-				String tmpUserID = gdKjComService.getOPRID(request);
-				authorizedInfomation = gdKjComService.getComAuthorizedInfo(tmpUserID, comID);
+				String sCommParams = jacksonUtil.Map2json(map).toString();
+				System.out.println("-------------------->"+sCommParams);
+				if(sCommParams == null || "null".equals(sCommParams)){
+					// 错误描述;
+					strErrorDesc = "提交的json数据无效";
+					// 错误码;
+					errorCode = "1";
+				}else{
+					gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
+					strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
+							sCommParams, errMsgArr);
+					errorCode = errMsgArr[0];
+					strErrorDesc = errMsgArr[1];
+	
+					String tmpUserID = gdKjComService.getOPRID(request);
+					authorizedInfomation = gdKjComService.getComAuthorizedInfo(tmpUserID, comID);
+				}
 				break;
 			}
 

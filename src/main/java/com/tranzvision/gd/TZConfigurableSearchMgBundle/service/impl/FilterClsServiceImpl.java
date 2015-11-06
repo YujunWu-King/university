@@ -15,17 +15,15 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 /**
  * 可配置搜索配置页面
  * 
  * @author tang 原PS类 TZ_GD_FILTERGL_PKG:TZ_GD_FILTER_CLS
  */
+
 @Service("com.tranzvision.gd.TZConfigurableSearchMgBundle.service.impl.FilterClsServiceImpl")
 public class FilterClsServiceImpl extends FrameworkImpl {
 	@Autowired
@@ -36,6 +34,8 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 
 	/* 查询表单 */
 
@@ -43,10 +43,10 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
-			String str_com_id = CLASSJson.getString("ComID");
-			String str_page_id = CLASSJson.getString("PageID");
-			String str_view_name = CLASSJson.getString("ViewMc");
+			jacksonUtil.json2Map(strParams);
+			String str_com_id = jacksonUtil.getString("ComID");
+			String str_page_id = jacksonUtil.getString("PageID");
+			String str_view_name = jacksonUtil.getString("ViewMc");
 			PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
 			psTzFilterDfnTKey.setTzComId(str_com_id);
 			;
@@ -78,7 +78,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				map.put("advModel", psTzFilterDfnT.getTzAdvanceModel());
 				map.put("baseSchEdit", psTzFilterDfnT.getTzBaseSchEdit());
 			}
-			strRet = JSONObject.fromObject(map).toString();
+			strRet = jacksonUtil.Map2json(map); 
 			strRet = "{\"formData\":" + strRet + "}";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,10 +97,10 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 		try {
 
 			// 将字符串转换成json;
-			JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
-			String str_com_id = CLASSJson.getString("ComID");
-			String str_page_id = CLASSJson.getString("PageID");
-			String str_view_name = CLASSJson.getString("ViewMc");
+			jacksonUtil.json2Map(comParams);
+			String str_com_id = jacksonUtil.getString("ComID");
+			String str_page_id = jacksonUtil.getString("PageID");
+			String str_view_name = jacksonUtil.getString("ViewMc");
 
 			int total = 0;
 			// 查询总数;
@@ -134,7 +134,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					map.put("promptFld", str_prompt_fld);
 					map.put("orderNum", num_xh);
 
-					strContent = strContent + "," + JSONObject.fromObject(map).toString();
+					strContent = strContent + "," + jacksonUtil.Map2json(map);
 				}
 				if (!"".equals(strContent)) {
 					strContent = strContent.substring(1);
@@ -158,17 +158,17 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
-				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
+				
 				if ("FILTER".equals(strFlag)) {
 					// 将字符串转换成json;
-					JSONObject Json = PaseJsonUtil.getJson(infoData);
-					String str_com_id = Json.getString("ComID");
-					String str_page_id = Json.getString("PageID");
-					String str_view_name = Json.getString("ViewMc");
+					Map<String, Object> Json = jacksonUtil.getMap("data");
+					
+					String str_com_id = (String) Json.get("ComID");
+					String str_page_id = (String) Json.get("PageID");
+					String str_view_name = (String) Json.get("ViewMc");
 
 					String isExist = "";
 					String sql = "select 'Y' from PS_TZ_FILTER_DFN_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=?";
@@ -179,13 +179,13 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 						errMsg[1] = "试图添加的值已存在，请指定新值。";
 						return strRet;
 					} else {
-						String num_max = Json.getString("maxNum");
+						String num_max = (String) Json.get("maxNum");
 						int num_max_num = 0;
 						if (!"".equals(num_max) && StringUtils.isNumeric(num_max)) {
 							num_max_num = Integer.parseInt(num_max);
 						}
-						String str_adv_model = Json.getString("advModel");
-						String str_base_sch_edit = Json.getString("baseSchEdit");
+						String str_adv_model = (String) Json.get("advModel");
+						String str_base_sch_edit = (String) Json.get("baseSchEdit");
 
 						PsTzFilterDfnT psTzFilterDfnT = new PsTzFilterDfnT();
 						psTzFilterDfnT.setTzComId(str_com_id);
@@ -215,24 +215,23 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
-				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-				String strFlag = CLASSJson.getString("typeFlag");
+				String strFlag = jacksonUtil.getString("typeFlag");
+				
 				if ("FILTER".equals(strFlag)) {
 					// 将字符串转换成json;
-					JSONObject Json = PaseJsonUtil.getJson(infoData);
-					String str_com_id = Json.getString("ComID");
-					String str_page_id = Json.getString("PageID");
-					String str_view_name = Json.getString("ViewMc");
-					String num_max = Json.getString("maxNum");
+					Map<String, Object> Json = jacksonUtil.getMap("data");
+					String str_com_id = (String) Json.get("ComID");
+					String str_page_id = (String) Json.get("PageID");
+					String str_view_name = (String) Json.get("ViewMc");
+					String num_max = (String) Json.get("maxNum");
 					int num_max_num = 0;
 					if (!"".equals(num_max) && StringUtils.isNumeric(num_max)) {
 						num_max_num = Integer.parseInt(num_max);
 					}
-					String str_adv_model = Json.getString("advModel");
-					String str_base_sch_edit = Json.getString("baseSchEdit");
+					String str_adv_model = (String) Json.get("advModel");
+					String str_base_sch_edit = (String) Json.get("baseSchEdit");
 
 					PsTzFilterDfnT psTzFilterDfnT = new PsTzFilterDfnT();
 					psTzFilterDfnT.setTzComId(str_com_id);
@@ -244,25 +243,26 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					psTzFilterDfnTMapper.updateByPrimaryKey(psTzFilterDfnT);
 				}
 
-				if (CLASSJson.containsKey("updateList")) {
-					JSONArray jsonArray = CLASSJson.getJSONArray("updateList");
-					for (int j = 0; j < jsonArray.size(); j++) {
-						String jsonStr = jsonArray.getString(j);
-						// 将字符串转换成json;
-						JSONObject Json2 = PaseJsonUtil.getJson(jsonStr);
-
-						String str_com_id = Json2.getString("ComID");
-						String str_page_id = Json2.getString("PageID");
-						String str_view_name = Json2.getString("ViewMc");
-						String str_field_name = Json2.getString("FieldMc");
-						int num_order = Json2.getInt("orderNum");
-						PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
-						psTzFilterFldT.setTzComId(str_com_id);
-						psTzFilterFldT.setTzPageId(str_page_id);
-						psTzFilterFldT.setTzViewName(str_view_name);
-						psTzFilterFldT.setTzFilterFld(str_field_name);
-						psTzFilterFldT.setTzSortNum(num_order);
-						psTzFilterFldTMapper.updateByPrimaryKeySelective(psTzFilterFldT);
+				if (jacksonUtil.containsKey("updateList")) {
+					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("updateList");
+					if(jsonArray != null && jsonArray.size()>0){
+						for (int j = 0; j < jsonArray.size(); j++) {
+							// 将字符串转换成json;
+							Map<String, Object> Json2 = jsonArray.get(j);
+	
+							String str_com_id = (String) Json2.get("ComID");
+							String str_page_id = (String) Json2.get("PageID");
+							String str_view_name = (String) Json2.get("ViewMc");
+							String str_field_name = (String) Json2.get("FieldMc");
+							int num_order = (int) Json2.get("orderNum");
+							PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
+							psTzFilterFldT.setTzComId(str_com_id);
+							psTzFilterFldT.setTzPageId(str_page_id);
+							psTzFilterFldT.setTzViewName(str_view_name);
+							psTzFilterFldT.setTzFilterFld(str_field_name);
+							psTzFilterFldT.setTzSortNum(num_order);
+							psTzFilterFldTMapper.updateByPrimaryKeySelective(psTzFilterFldT);
+						}
 					}
 				}
 
@@ -285,12 +285,12 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 信息内容;
-				String str_com_id = CLASSJson.getString("ComID");
-				String str_page_id = CLASSJson.getString("PageID");
-				String str_view_name = CLASSJson.getString("ViewMc");
-				String str_field_name = CLASSJson.getString("FieldMc");
+				String str_com_id = jacksonUtil.getString("ComID");
+				String str_page_id = jacksonUtil.getString("PageID");
+				String str_view_name = jacksonUtil.getString("ViewMc");
+				String str_field_name = jacksonUtil.getString("FieldMc");
 				PsTzFilterFldTKey psTzFilterFldTKey = new PsTzFilterFldTKey();
 				psTzFilterFldTKey.setTzComId(str_com_id);
 				psTzFilterFldTKey.setTzPageId(str_page_id);

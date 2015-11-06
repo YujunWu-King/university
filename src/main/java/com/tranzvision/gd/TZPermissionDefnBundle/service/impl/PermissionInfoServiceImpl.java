@@ -2,20 +2,18 @@ package com.tranzvision.gd.TZPermissionDefnBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsClassDefnMapper;
 import com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
-
-import net.sf.json.JSONObject;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
  * 类方法定义， 原PS类：TZ_GD_PLST_PKG:TZ_GD_PERMINFO_CLS
@@ -24,11 +22,13 @@ import net.sf.json.JSONObject;
 @Service("com.tranzvision.gd.TZPermissionDefnBundle.service.impl.PermissionInfoServiceImpl")
 public class PermissionInfoServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsClassDefnMapper psClassDefnMapper;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private JacksonUtil jacksonUtil;
 	
 	/*新增许可权信息*/
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -38,23 +38,20 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
 				String strForm = actData[num];
-				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-			    String strFlag = CLASSJson.getString("typeFlag");
+			    String strFlag = jacksonUtil.getString("typeFlag");
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				
 				// 许可权信息;
 				if("PERM".equals(strFlag)){
-					// 将字符串转换成json;
-					JSONObject Json = PaseJsonUtil.getJson(infoData);
 					// 许可权编号;
-			        String strPermID = Json.getString("permID");
+			        String strPermID = (String) infoData.get("permID");
 			        //许可权描述;
-			        String strPermDesc = Json.getString("permDesc");
+			        String strPermDesc = (String) infoData.get("permDesc");
 			        String sql = "select COUNT(1) from PSCLASSDEFN WHERE CLASSID=?";
-			        int count = jdbcTemplate.queryForObject(sql, new Object[] { strPermID }, Integer.class);
+			        int count = jdbcTemplate.queryForObject(sql, new Object[] { strPermID }, "Integer");
 					if (count > 0) {
 						errMsg[0] = "1";
 						errMsg[1] = "许可权ID为：" + strPermID + "的信息已经存在，请修改许可权ID。";
@@ -86,22 +83,21 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 				// 表单内容;
 				String strForm = actData[num];
 				// 将字符串转换成json;
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				//JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 类型标志;
-			    String strFlag = CLASSJson.getString("typeFlag");
+			    String strFlag = jacksonUtil.getString("typeFlag");
 				// 信息内容;
-				String infoData = CLASSJson.getString("data");
+				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				
 				// 许可权信息;
 				if("PERM".equals(strFlag)){
-					// 将字符串转换成json;
-					JSONObject Json = PaseJsonUtil.getJson(infoData);
 					// 许可权编号;
-			        String strPermID = Json.getString("permID");
+			        String strPermID = (String) infoData.get("permID");
 			        //许可权描述;
-			        String strPermDesc = Json.getString("permDesc");
+			        String strPermDesc = (String) infoData.get("permDesc");
 			        String sql = "select COUNT(1) from PSCLASSDEFN WHERE CLASSID=?";
-			        int count = jdbcTemplate.queryForObject(sql, new Object[] { strPermID }, Integer.class);
+			        int count = jdbcTemplate.queryForObject(sql, new Object[] { strPermID },"Integer");
 					if (count > 0) {
 						PsClassDefn psClassDefn = new PsClassDefn();
 						psClassDefn.setClassid(strPermID);
@@ -130,11 +126,12 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
-			JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
-
-			if (CLASSJson.containsKey("permID")) {
+			//JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
+			jacksonUtil.json2Map(strParams);
+			
+			if (jacksonUtil.containsKey("permID")) {
 				// 类方法ID;
-				String strPermID = CLASSJson.getString("permID");
+				String strPermID = jacksonUtil.getString("permID");
 				PsClassDefn psClassDefn = psClassDefnMapper.selectByPrimaryKey(strPermID);
 				if (psClassDefn != null) {
 					strRet = "{\"formData\":{\"permID\":\"" + TZUtility.transFormchar(psClassDefn.getClassid())
@@ -214,21 +211,17 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 				// 提交信息
 				String strForm = actData[num];
 
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				//JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 许可权ID;
-				String sPermID = CLASSJson.getString("permID");
+				String sPermID = jacksonUtil.getString("permID");
 				// 组件ID;
-			    String sComID = CLASSJson.getString("comID");
+			    String sComID = jacksonUtil.getString("comID");
 			    
 				if (sPermID != null && !"".equals(sPermID) && sComID != null && !"".equals(sComID)) {
 					//删除role下的权限;
-					try{
-						String sql = "DELETE FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=? AND TZ_COM_ID=?";
-						jdbcTemplate.update(sql,sPermID,sComID);
-					}catch(DataAccessException e){
-						e.printStackTrace();
-					}
-					
+					String sql = "DELETE FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=? AND TZ_COM_ID=?";
+					jdbcTemplate.update(sql,new Object[]{sPermID,sComID});
 				}
 			}
 		} catch (Exception e) {

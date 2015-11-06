@@ -3,16 +3,13 @@ package com.tranzvision.gd.TZPermissionDefnBundle.service.impl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsClassDefnMapper;
-import com.tranzvision.gd.util.base.PaseJsonUtil;
-
-import net.sf.json.JSONObject;
+import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
  * 许可权定义， 原PS类：TZ_GD_PLST_PKG:TZ_GD_PERMLIST_CLS
@@ -23,9 +20,10 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsClassDefnMapper psClassDefnMapper;
-	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private JacksonUtil jacksonUtil;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	@Autowired
 	private FliterForm fliterForm;
 	
@@ -85,27 +83,21 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 				// 提交信息
 				String strForm = actData[num];
 
-				JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
-				
+				//JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
+				jacksonUtil.json2Map(strForm);
 				// 许可权ID;
-				String sPermID = CLASSJson.getString("permID");
+				String sPermID = jacksonUtil.getString("permID");
 				if (sPermID != null && !"".equals(sPermID)) {
 					/*删除该许可权ID下的所有信息*/
 					psClassDefnMapper.deleteByPrimaryKey(sPermID);
 					//删除组件权限;
 					String sql = "DELETE FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=?";
-					try{
-						jdbcTemplate.update(sql,sPermID);
-					}catch(DataAccessException e){
-						
-					}
+					jdbcTemplate.update(sql,new Object[]{sPermID});
+					
 					//删除role下的权限;
-					try{
-						sql = "DELETE FROM PSROLECLASS WHERE CLASSID=?";
-						jdbcTemplate.update(sql,sPermID);
-					}catch(DataAccessException e){
-						
-					}
+					sql = "DELETE FROM PSROLECLASS WHERE CLASSID=?";
+					jdbcTemplate.update(sql,new Object[]{sPermID});
+					
 					
 				}
 			}

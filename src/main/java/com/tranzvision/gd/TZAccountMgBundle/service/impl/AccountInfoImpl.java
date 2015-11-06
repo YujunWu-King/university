@@ -16,6 +16,8 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsroleuserKey;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper;
+import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -43,6 +45,9 @@ public class AccountInfoImpl extends FrameworkImpl {
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 	@Autowired
 	private GetSeqNum getSeqNum;
+	@Autowired
+	private PsTzJgMgrTMapper psTzJgMgrTMapper;
+	
 	
 	/* 新增用户账号信息 */
 	@Override
@@ -206,8 +211,12 @@ public class AccountInfoImpl extends FrameworkImpl {
 					if (infoData.containsKey("orgNo")) {
 						String orgNo = (String) infoData.get("orgNo");
 						if (orgNo != null && !"".equals(orgNo)) {
-							String insertJgGLYSQL = "INSERT INTO PS_TZ_JS_MGR_T(TZ_JG_ID,TZ_DLZH_ID) VALUES (?,?)";
-							jdbcTemplate.update(insertJgGLYSQL, new Object[]{orgNo, strActNum});
+							//String insertJgGLYSQL = "INSERT INTO PS_TZ_JG_MGR_T(TZ_JG_ID,TZ_DLZH_ID) VALUES (?,?)";
+							//jdbcTemplate.update(insertJgGLYSQL, new Object[]{orgNo, strActNum});
+							PsTzJgMgrTKey psTzJgMgrTkey = new PsTzJgMgrTKey(); 
+							psTzJgMgrTkey.setTzDlzhId(strActNum);
+							psTzJgMgrTkey.setTzJgId(orgNo);
+							psTzJgMgrTMapper.deleteByPrimaryKey(psTzJgMgrTkey);
 						}
 
 					}
