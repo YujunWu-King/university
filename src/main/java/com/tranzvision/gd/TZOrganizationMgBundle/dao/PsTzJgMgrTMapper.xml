@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey" >
+    delete from PS_TZ_JG_MGR_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey" >
+    insert into PS_TZ_JG_MGR_T (TZ_JG_ID, TZ_DLZH_ID)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzDlzhId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey" >
+    insert into PS_TZ_JG_MGR_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgRoleTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="ROLENAME" property="rolename" jdbcType="VARCHAR" />
+    <result column="TZ_ROLE_TYPE" property="tzRoleType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, ROLENAME, TZ_ROLE_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_JG_ROLE_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleTKey" >
+    delete from PS_TZ_JG_ROLE_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT" >
+    insert into PS_TZ_JG_ROLE_T (TZ_JG_ID, ROLENAME, TZ_ROLE_TYPE
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{rolename,jdbcType=VARCHAR}, #{tzRoleType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT" >
+    insert into PS_TZ_JG_ROLE_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="rolename != null" >
+        ROLENAME,
+      </if>
+      <if test="tzRoleType != null" >
+        TZ_ROLE_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRoleType != null" >
+        #{tzRoleType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT" >
+    update PS_TZ_JG_ROLE_T
+    <set >
+      <if test="tzRoleType != null" >
+        TZ_ROLE_TYPE = #{tzRoleType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT" >
+    update PS_TZ_JG_ROLE_T
+    set TZ_ROLE_TYPE = #{tzRoleType,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and ROLENAME = #{rolename,jdbcType=VARCHAR}
+  </update>
+</mapper>

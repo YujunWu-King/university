@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgBaseTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_NAME" property="tzJgName" jdbcType="VARCHAR" />
+    <result column="TZ_JG_EFF_STA" property="tzJgEffSta" jdbcType="VARCHAR" />
+    <result column="TZ_JG_DESCR" property="tzJgDescr" jdbcType="VARCHAR" />
+    <result column="TZ_JG_SUP_FLG" property="tzJgSupFlg" jdbcType="VARCHAR" />
+    <result column="TZ_ORGAN_CONTACT" property="tzOrganContact" jdbcType="VARCHAR" />
+    <result column="TZ_ORGAN_CONTACTPH" property="tzOrganContactph" jdbcType="VARCHAR" />
+    <result column="TZ_ORGAN_CONTACTEM" property="tzOrganContactem" jdbcType="VARCHAR" />
+    <result column="TZ_JG_JTFJ_PATH" property="tzJgJtfjPath" jdbcType="VARCHAR" />
+    <result column="TZ_JG_LOGIN_INFO" property="tzJgLoginInfo" jdbcType="VARCHAR" />
+    <result column="TZ_ATTACHSYSFILENA" property="tzAttachsysfilena" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" extends="BaseResultMap" >
+    <result column="TZ_JG_LOGIN_COPR" property="tzJgLoginCopr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_JG_NAME, TZ_JG_EFF_STA, TZ_JG_DESCR, TZ_JG_SUP_FLG, TZ_ORGAN_CONTACT, 
+    TZ_ORGAN_CONTACTPH, TZ_ORGAN_CONTACTEM, TZ_JG_JTFJ_PATH, TZ_JG_LOGIN_INFO, TZ_ATTACHSYSFILENA, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_JG_LOGIN_COPR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_JG_BASE_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_JG_BASE_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    insert into PS_TZ_JG_BASE_T (TZ_JG_ID, TZ_JG_NAME, TZ_JG_EFF_STA, 
+      TZ_JG_DESCR, TZ_JG_SUP_FLG, TZ_ORGAN_CONTACT, 
+      TZ_ORGAN_CONTACTPH, TZ_ORGAN_CONTACTEM, TZ_JG_JTFJ_PATH, 
+      TZ_JG_LOGIN_INFO, TZ_ATTACHSYSFILENA, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_JG_LOGIN_COPR
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzJgName,jdbcType=VARCHAR}, #{tzJgEffSta,jdbcType=VARCHAR}, 
+      #{tzJgDescr,jdbcType=VARCHAR}, #{tzJgSupFlg,jdbcType=VARCHAR}, #{tzOrganContact,jdbcType=VARCHAR}, 
+      #{tzOrganContactph,jdbcType=VARCHAR}, #{tzOrganContactem,jdbcType=VARCHAR}, #{tzJgJtfjPath,jdbcType=VARCHAR}, 
+      #{tzJgLoginInfo,jdbcType=VARCHAR}, #{tzAttachsysfilena,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzJgLoginCopr,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    insert into PS_TZ_JG_BASE_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJgName != null" >
+        TZ_JG_NAME,
+      </if>
+      <if test="tzJgEffSta != null" >
+        TZ_JG_EFF_STA,
+      </if>
+      <if test="tzJgDescr != null" >
+        TZ_JG_DESCR,
+      </if>
+      <if test="tzJgSupFlg != null" >
+        TZ_JG_SUP_FLG,
+      </if>
+      <if test="tzOrganContact != null" >
+        TZ_ORGAN_CONTACT,
+      </if>
+      <if test="tzOrganContactph != null" >
+        TZ_ORGAN_CONTACTPH,
+      </if>
+      <if test="tzOrganContactem != null" >
+        TZ_ORGAN_CONTACTEM,
+      </if>
+      <if test="tzJgJtfjPath != null" >
+        TZ_JG_JTFJ_PATH,
+      </if>
+      <if test="tzJgLoginInfo != null" >
+        TZ_JG_LOGIN_INFO,
+      </if>
+      <if test="tzAttachsysfilena != null" >
+        TZ_ATTACHSYSFILENA,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzJgLoginCopr != null" >
+        TZ_JG_LOGIN_COPR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgName != null" >
+        #{tzJgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgEffSta != null" >
+        #{tzJgEffSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgDescr != null" >
+        #{tzJgDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgSupFlg != null" >
+        #{tzJgSupFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContact != null" >
+        #{tzOrganContact,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContactph != null" >
+        #{tzOrganContactph,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContactem != null" >
+        #{tzOrganContactem,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgJtfjPath != null" >
+        #{tzJgJtfjPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgLoginInfo != null" >
+        #{tzJgLoginInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttachsysfilena != null" >
+        #{tzAttachsysfilena,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJgLoginCopr != null" >
+        #{tzJgLoginCopr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    update PS_TZ_JG_BASE_T
+    <set >
+      <if test="tzJgName != null" >
+        TZ_JG_NAME = #{tzJgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgEffSta != null" >
+        TZ_JG_EFF_STA = #{tzJgEffSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgDescr != null" >
+        TZ_JG_DESCR = #{tzJgDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgSupFlg != null" >
+        TZ_JG_SUP_FLG = #{tzJgSupFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContact != null" >
+        TZ_ORGAN_CONTACT = #{tzOrganContact,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContactph != null" >
+        TZ_ORGAN_CONTACTPH = #{tzOrganContactph,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrganContactem != null" >
+        TZ_ORGAN_CONTACTEM = #{tzOrganContactem,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgJtfjPath != null" >
+        TZ_JG_JTFJ_PATH = #{tzJgJtfjPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgLoginInfo != null" >
+        TZ_JG_LOGIN_INFO = #{tzJgLoginInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttachsysfilena != null" >
+        TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJgLoginCopr != null" >
+        TZ_JG_LOGIN_COPR = #{tzJgLoginCopr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    update PS_TZ_JG_BASE_T
+    set TZ_JG_NAME = #{tzJgName,jdbcType=VARCHAR},
+      TZ_JG_EFF_STA = #{tzJgEffSta,jdbcType=VARCHAR},
+      TZ_JG_DESCR = #{tzJgDescr,jdbcType=VARCHAR},
+      TZ_JG_SUP_FLG = #{tzJgSupFlg,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACT = #{tzOrganContact,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACTPH = #{tzOrganContactph,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACTEM = #{tzOrganContactem,jdbcType=VARCHAR},
+      TZ_JG_JTFJ_PATH = #{tzJgJtfjPath,jdbcType=VARCHAR},
+      TZ_JG_LOGIN_INFO = #{tzJgLoginInfo,jdbcType=VARCHAR},
+      TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_JG_LOGIN_COPR = #{tzJgLoginCopr,jdbcType=LONGVARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT" >
+    update PS_TZ_JG_BASE_T
+    set TZ_JG_NAME = #{tzJgName,jdbcType=VARCHAR},
+      TZ_JG_EFF_STA = #{tzJgEffSta,jdbcType=VARCHAR},
+      TZ_JG_DESCR = #{tzJgDescr,jdbcType=VARCHAR},
+      TZ_JG_SUP_FLG = #{tzJgSupFlg,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACT = #{tzOrganContact,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACTPH = #{tzOrganContactph,jdbcType=VARCHAR},
+      TZ_ORGAN_CONTACTEM = #{tzOrganContactem,jdbcType=VARCHAR},
+      TZ_JG_JTFJ_PATH = #{tzJgJtfjPath,jdbcType=VARCHAR},
+      TZ_JG_LOGIN_INFO = #{tzJgLoginInfo,jdbcType=VARCHAR},
+      TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+</mapper>
