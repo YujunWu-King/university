@@ -983,6 +983,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			
 			Map<String, Object> conJson = jacksonUtil.getMap();
 			i = 0;
+			
 			for (Map.Entry<String, Object> entry : conJson.entrySet()){
 				// 搜索字段名称;
 				key = entry.getKey();
@@ -1143,6 +1144,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			strRet = "{\"" + recname + "\":[" + strRet + "]}";
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsgArr[0] = "1";
 			errMsgArr[1] = e.toString();
 		}

@@ -154,12 +154,14 @@ public class Index {
 		}
 		*/
 		
-		jacksonUtil.json2Map(strParams);
+		
 
 		// 操作类型;
 		String strOprType = "";
-		strOprType = jacksonUtil.getString("OperateType");
+		
 		try {
+			jacksonUtil.json2Map(strParams);
+			strOprType = jacksonUtil.getString("OperateType");
 			Map<String, Object> map = null;
 			switch (OperateType.getOperateType(strOprType)) {
 			// 框架资源;
@@ -291,7 +293,7 @@ public class Index {
 			// 错误描述;
 			strErrorDesc = e.toString();
 			// 错误码;
-			errorCode = "0";
+			errorCode = "1";
 		}
 
 		if ("HTML".equals(strOprType)) {
