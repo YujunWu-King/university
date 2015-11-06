@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -61,6 +62,7 @@ public class JacksonUtil {
 		}
 		Map<String, Object> jMap = null;
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 		try {
 			jMap = mapper.readValue(jsonStr, Map.class);
 		} catch (IOException e) {
@@ -180,7 +182,7 @@ public class JacksonUtil {
 	 */
 	public int getInt(String key) throws Exception {
 		try {
-			return Integer.parseInt((String) jsonMap.get(key));
+			return Integer.parseInt(jsonMap.get(key).toString());
 		} catch (NumberFormatException nfe) {
 			throw new Exception(nfe.getMessage());
 		}
@@ -195,7 +197,7 @@ public class JacksonUtil {
 	 */
 	public long getLong(String key) throws Exception {
 		try {
-			return Long.parseLong((String) jsonMap.get(key));
+			return Long.parseLong(jsonMap.get(key).toString());
 		} catch (NumberFormatException nfe) {
 			throw new Exception(nfe.getMessage());
 		}
@@ -210,7 +212,7 @@ public class JacksonUtil {
 	 */
 	public double getDouble(String key) throws Exception {
 		try {
-			return Double.parseDouble((String) jsonMap.get(key));
+			return Double.parseDouble(jsonMap.get(key).toString());
 		} catch (NullPointerException npe) {
 			throw new Exception(npe.getMessage());
 		} catch (NumberFormatException nfe) {
@@ -225,7 +227,7 @@ public class JacksonUtil {
 	 * @return boolean
 	 */
 	public boolean getBoolean(String key) {
-		return Boolean.parseBoolean((String) jsonMap.get(key));
+		return Boolean.parseBoolean(jsonMap.get(key).toString());
 	}
 
 	/**
