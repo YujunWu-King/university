@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
+    <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="google" content="notranslate" />
     
@@ -66,16 +67,16 @@
 	 	<%= (String)(request.getAttribute("tz_gdcp_loginStyle_20150612184830")) %>
 	 }
     </style>
-    <link rel="stylesheet" type="text/css" href="/tranzvision/kitchensink/resources/Sencha-Examples/style.css"/>
+    <link rel="stylesheet" type="text/css" href="${contextPath}/statics/css/kitchensink/tranzvision/resources/Sencha-Examples/style.css"/>
     <script language="">
     	var tz_gdcp_interaction_url_20150612184830 = '<%= (String)(request.getAttribute("tz_gdcp_interaction_url_20150612184830")) %>';
     	var tz_gdcp_frmwrk_init_msgset_20150612184830 = <%= (String)(request.getAttribute("tz_gdcp_frmwrk_init_msgset_20150612184830")) %>;
     	var tz_gdcp_theme_id_20150612184830 = '<%= (String)(request.getAttribute("tz_gdcp_theme_id_20150612184830")) %>';
     	var tz_gdcp_language_cd_20150612184830 = '<%= (String)(request.getAttribute("tz_gdcp_language_cd_20150612184830")) %>';
     </script>
-  	<script type="text/javascript" charset="UTF-8" src="/tranzvision/kitchensink/lib/prettify/prettify.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="/extjslib51/bootstrap.js"></script>
-    <script id="tranzvision_mkc_advanced_mainapp" type="text/javascript" src="/tranzvision/main/mainapp.js"></script>
+  	<script type="text/javascript" charset="UTF-8" src="${contextPath}/statics/js/lib/prettify/prettify.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
+    <script id="tranzvision_mkc_advanced_mainapp" type="text/javascript" src="${contextPath}/statics/js/tranzvision/extjs/main/mainapp.js"></script>
   </head>
   <body>
     <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">

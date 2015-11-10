@@ -62,7 +62,8 @@ public class Index {
 		// 切换会话语言环境代码;
 		gdKjComService.switchLanguageCd(request, response, tmpLanguageCd);
 
-		request.setAttribute("tz_gdcp_interaction_url_20150612184830", "/university/dispatcher");
+		String parth = request.getContextPath();
+		request.setAttribute("tz_gdcp_interaction_url_20150612184830", parth + "/dispatcher");
 
 		request.setAttribute("tz_gdcp_frmwrk_init_msgset_20150612184830",
 				gdKjComService.getFrameworkDescriptionResources(request, response));

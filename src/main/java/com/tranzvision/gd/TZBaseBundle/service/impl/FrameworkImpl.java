@@ -7,7 +7,7 @@ import com.tranzvision.gd.TZBaseBundle.service.Framework;
  * 框架通用类，所有功能开发客户化的类继承该类
  * 统一描述：以下各方法中的String[] errMsg是执行方法时的错误提示信息；
  * 			 同原&errorCode As number out, &strErrorDesc As string out
- * 			 原&errorCode = 1，&strErrorDesc="错误描述"; 改为errMsg[0]="1",errMsg[0]="错误描述";
+ * 			 原&errorCode = 1，&strErrorDesc="错误描述"; 改为errMsg[0]="1",errMsg[1]="错误描述";
  */
 public class FrameworkImpl implements Framework {
 
