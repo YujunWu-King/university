@@ -219,12 +219,13 @@ public class Index {
 			case COMBOX:
 				// 搜索表或视图名;
 				String recname = jacksonUtil.getString("recname");
+				// 搜索结果字段;
+				String result = jacksonUtil.getString("result");
 				// 搜索条件;
 				//String condition = jacksonUtil.getString("condition");
 				map = jacksonUtil.getMap("condition");
 				String condition = jacksonUtil.Map2json(map).toString();
-				// 搜索结果字段;
-				String result = jacksonUtil.getString("result");
+				
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
 				strComContent = gdKjComService.getComboxValue(recname, condition, result, errMsgArr);
 				break;
