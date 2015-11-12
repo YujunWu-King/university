@@ -24,7 +24,10 @@ public class GetSeqNum {
 			
 			if(index == 0){
 				String insertSQL = "insert into PS_TZ_SEQNUM_T (tz_table_name, tz_col_name, tz_seqnum) values (?, ?, 1)";
-				jdbcTemplate.update(insertSQL, new Object[]{tableName,colName});
+				int i = jdbcTemplate.update(insertSQL, new Object[]{tableName,colName});
+				if(i > 0){
+					index = 1;
+				}
 			}
 			
 		}catch(Exception e){

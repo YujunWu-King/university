@@ -477,35 +477,41 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 				if (jacksonUtil.containsKey("add")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
-					strActData = new String[jsonArray.size()];
-					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+					if(jsonArray != null && jsonArray.size() > 0){
+						strActData = new String[jsonArray.size()];
+						for (num = 0; num < jsonArray.size(); num++) {
+							strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+						}
+	
+						strRet = obj.tzAdd(strActData, errMsgArr);
 					}
-
-					strRet = obj.tzAdd(strActData, errMsgArr);
 				}
 
 				jacksonUtil.json2Map(comParams);
 				if (jacksonUtil.containsKey("update")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("update");
-					strActData = new String[jsonArray.size()];
-					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+					if(jsonArray != null && jsonArray.size() > 0){
+						strActData = new String[jsonArray.size()];
+						for (num = 0; num < jsonArray.size(); num++) {
+							strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+						}
+	
+						strRet = obj.tzUpdate(strActData, errMsgArr);
 					}
-
-					strRet = obj.tzUpdate(strActData, errMsgArr);
 
 				}
 
 				jacksonUtil.json2Map(comParams);
 				if (jacksonUtil.containsKey("delete")) {
 					jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("delete");
-					strActData = new String[jsonArray.size()];
-					for (num = 0; num < jsonArray.size(); num++) {
-						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+					if(jsonArray != null && jsonArray.size() > 0){
+						strActData = new String[jsonArray.size()];
+						for (num = 0; num < jsonArray.size(); num++) {
+							strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
+						}
+	
+						strRet = obj.tzDelete(strActData, errMsgArr);
 					}
-
-					strRet = obj.tzDelete(strActData, errMsgArr);
 				}
 				break;
 			// 获取html内容;
