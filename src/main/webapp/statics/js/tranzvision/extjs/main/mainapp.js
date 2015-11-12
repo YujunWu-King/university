@@ -18,8 +18,8 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         /*保存当前网页对应的文档对象*/
         doc : document,
         mainapp_interaction_url : tz_gdcp_interaction_url_20150612184830,
-        mainapp_cfg_url : '/tranzvision/main/mainapp_config.json',
-        mainmenu_cfg_url : '/tranzvision/main/mainmenu_config.json',
+        //mainapp_cfg_url : '/tranzvision/main/mainapp_config.json',
+        //mainmenu_cfg_url : '/tranzvision/main/mainmenu_config.json',
         language : tz_gdcp_language_cd_20150612184830 || 'ZHS',
         languagePackage : {},
         mainMenu : {},
@@ -121,9 +121,9 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                     Ext.Loader.setConfig({
                         enabled:true,
                         paths:{
-                            'KitchenSink': '/tranzvision/kitchensink/app',
-                            'Ext.ux':'/extjslib51/ux',
-                            'tranzvision.extension':'/tranzvision/extension'
+                            'KitchenSink': '/university/statics/js/tranzvision/extjs/app',
+                            'Ext.ux':'/university/statics/js/lib/extjs/ux',
+                            'tranzvision.extension':'/university/statics/js/tranzvision/extjs/extension'
                         }
                     });
 
@@ -134,7 +134,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             autoCreateViewport: 'KitchenSink.view.main.Main',
                             paths:
                             {
-                                'KitchenSink': '/tranzvision/kitchensink/app'
+                                'KitchenSink': '/university/statics/js/tranzvision/extjs/app'
                             }
                         });
 
@@ -1207,7 +1207,6 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     if(jsonObject.state.errcode === 0)
                                     {
                                         var mainContent = jsonObject.comContent;
-
                                         //默认首页页面ID
                                         var defaultPageID = mainContent.defaultPageID;
                                         //组件资源
@@ -1260,7 +1259,6 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
 
                                         boot.setDescResourseSet(pComID,cResourses);
                                         boot.comRegResourseSet[pComID] = cPResources;
-
                                         loadOkFlag = true;
                                     }
                                     else if(jsonObject.state.timeout == true)

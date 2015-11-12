@@ -949,7 +949,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		try {
 			// 将字符串转换成json;
 			//JSONObject conJson = PaseJsonUtil.getJson(condition);
-			jacksonUtil.json2Map(condition);
+			
 			int i, j;
 			// 搜索字段名称;
 			String key = "";
@@ -981,6 +981,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				strSql = "SELECT " + result + " FROM PS_" + recname;
 			}
 			
+			jacksonUtil.json2Map(condition);
 			Map<String, Object> conJson = jacksonUtil.getMap();
 			i = 0;
 			

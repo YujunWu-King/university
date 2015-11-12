@@ -5,7 +5,7 @@ package com.tranzvision.gd.TZBaseBundle.service;
  * 框架通用接口
  * 统一描述：以下各方法中的String[] errMsg是执行方法时的错误提示信息；
  * 			 同原&errorCode As number out, &strErrorDesc As string out
- * 			 原&errorCode = 1，&strErrorDesc="错误描述"; 改为errMsg[0]="1",errMsg[0]="错误描述";
+ * 			 原&errorCode = 1，&strErrorDesc="错误描述"; 改为errMsg[0]="1",errMsg[1]="错误描述";
  */
 public interface Framework {
 	/*actData:提交过来的json字符串数组，和原PS tzAdd中的actData参数一致;*/

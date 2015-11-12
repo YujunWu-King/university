@@ -47,7 +47,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getLogoStyle(HttpServletRequest request, HttpServletResponse response) {
 		String tmpStyle = "";
 		String logoPath = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_003",
-				"/tranzvision/images/logo/admin", "/tranzvision/images/logo/admin");
+				"/university/statics/images/logo/admin", "/university/statics/images/logo/admin");
 		String logoName = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_004",
 				"logo-admin-w.png", "logo-admin-w.png");
 		String logoSize = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_005",

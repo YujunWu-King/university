@@ -62,7 +62,8 @@ public class Index {
 		// 切换会话语言环境代码;
 		gdKjComService.switchLanguageCd(request, response, tmpLanguageCd);
 
-		request.setAttribute("tz_gdcp_interaction_url_20150612184830", "/university/dispatcher");
+		String parth = request.getContextPath();
+		request.setAttribute("tz_gdcp_interaction_url_20150612184830", parth + "/dispatcher");
 
 		request.setAttribute("tz_gdcp_frmwrk_init_msgset_20150612184830",
 				gdKjComService.getFrameworkDescriptionResources(request, response));
@@ -218,12 +219,13 @@ public class Index {
 			case COMBOX:
 				// 搜索表或视图名;
 				String recname = jacksonUtil.getString("recname");
+				// 搜索结果字段;
+				String result = jacksonUtil.getString("result");
 				// 搜索条件;
 				//String condition = jacksonUtil.getString("condition");
 				map = jacksonUtil.getMap("condition");
 				String condition = jacksonUtil.Map2json(map).toString();
-				// 搜索结果字段;
-				String result = jacksonUtil.getString("result");
+				
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
 				strComContent = gdKjComService.getComboxValue(recname, condition, result, errMsgArr);
 				break;
