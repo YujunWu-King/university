@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZTranslateMgBundle.dao.PsTzPtZhzxxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTbl" >
+    <id column="TZ_ZHZJH_ID" property="tzZhzjhId" jdbcType="VARCHAR" />
+    <id column="TZ_ZHZ_ID" property="tzZhzId" jdbcType="VARCHAR" />
+    <result column="TZ_EFF_DATE" property="tzEffDate" jdbcType="DATE" />
+    <result column="TZ_EFF_STATUS" property="tzEffStatus" jdbcType="VARCHAR" />
+    <result column="TZ_ZHZ_DMS" property="tzZhzDms" jdbcType="VARCHAR" />
+    <result column="TZ_ZHZ_CMS" property="tzZhzCms" jdbcType="VARCHAR" />
+    <result column="LASTUPDDTTM" property="lastupddttm" jdbcType="TIMESTAMP" />
+    <result column="LASTUPDOPRID" property="lastupdoprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZHZJH_ID, TZ_ZHZ_ID, TZ_EFF_DATE, TZ_EFF_STATUS, TZ_ZHZ_DMS, TZ_ZHZ_CMS, LASTUPDDTTM, 
+    LASTUPDOPRID, SYNCID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PT_ZHZXX_TBL
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTblKey" >
+    delete from PS_TZ_PT_ZHZXX_TBL
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTbl" >
+    insert into PS_TZ_PT_ZHZXX_TBL (TZ_ZHZJH_ID, TZ_ZHZ_ID, TZ_EFF_DATE, 
+      TZ_EFF_STATUS, TZ_ZHZ_DMS, TZ_ZHZ_CMS, 
+      LASTUPDDTTM, LASTUPDOPRID, SYNCID
+      )
+    values (#{tzZhzjhId,jdbcType=VARCHAR}, #{tzZhzId,jdbcType=VARCHAR}, #{tzEffDate,jdbcType=DATE}, 
+      #{tzEffStatus,jdbcType=VARCHAR}, #{tzZhzDms,jdbcType=VARCHAR}, #{tzZhzCms,jdbcType=VARCHAR}, 
+      #{lastupddttm,jdbcType=TIMESTAMP}, #{lastupdoprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTbl" >
+    insert into PS_TZ_PT_ZHZXX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZhzjhId != null" >
+        TZ_ZHZJH_ID,
+      </if>
+      <if test="tzZhzId != null" >
+        TZ_ZHZ_ID,
+      </if>
+      <if test="tzEffDate != null" >
+        TZ_EFF_DATE,
+      </if>
+      <if test="tzEffStatus != null" >
+        TZ_EFF_STATUS,
+      </if>
+      <if test="tzZhzDms != null" >
+        TZ_ZHZ_DMS,
+      </if>
+      <if test="tzZhzCms != null" >
+        TZ_ZHZ_CMS,
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM,
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZhzjhId != null" >
+        #{tzZhzjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzId != null" >
+        #{tzZhzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEffDate != null" >
+        #{tzEffDate,jdbcType=DATE},
+      </if>
+      <if test="tzEffStatus != null" >
+        #{tzEffStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzDms != null" >
+        #{tzZhzDms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzCms != null" >
+        #{tzZhzCms,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupddttm != null" >
+        #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTbl" >
+    update PS_TZ_PT_ZHZXX_TBL
+    <set >
+      <if test="tzEffDate != null" >
+        TZ_EFF_DATE = #{tzEffDate,jdbcType=DATE},
+      </if>
+      <if test="tzEffStatus != null" >
+        TZ_EFF_STATUS = #{tzEffStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzDms != null" >
+        TZ_ZHZ_DMS = #{tzZhzDms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzCms != null" >
+        TZ_ZHZ_CMS = #{tzZhzCms,jdbcType=VARCHAR},
+      </if>
+      <if test="lastupddttm != null" >
+        LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdoprid != null" >
+        LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxTbl" >
+    update PS_TZ_PT_ZHZXX_TBL
+    set TZ_EFF_DATE = #{tzEffDate,jdbcType=DATE},
+      TZ_EFF_STATUS = #{tzEffStatus,jdbcType=VARCHAR},
+      TZ_ZHZ_DMS = #{tzZhzDms,jdbcType=VARCHAR},
+      TZ_ZHZ_CMS = #{tzZhzCms,jdbcType=VARCHAR},
+      LASTUPDDTTM = #{lastupddttm,jdbcType=TIMESTAMP},
+      LASTUPDOPRID = #{lastupdoprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER}
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+  </update>
+</mapper>

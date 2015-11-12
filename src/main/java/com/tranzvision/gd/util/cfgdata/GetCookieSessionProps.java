@@ -33,6 +33,8 @@ public class GetCookieSessionProps {
 	private boolean cookieSecure;
 	
 	private int sessionMaxInactive;
+	
+	private boolean debug;
 
 	/**
 	 * 构造函数，加载Cookie配置默认值
@@ -53,6 +55,8 @@ public class GetCookieSessionProps {
 			cookieSecure = Boolean.parseBoolean(cookieSessioinProps.getProperty("cookieSecure"));
 			
 			sessionMaxInactive = Integer.parseInt(cookieSessioinProps.getProperty("sessionMaxInactive"));
+			
+			debug = Boolean.parseBoolean(cookieSessioinProps.getProperty("debug"));
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -83,6 +87,10 @@ public class GetCookieSessionProps {
 	
 	public int getSessionMaxInactive(){
 		return sessionMaxInactive;
+	}
+	
+	public boolean getDebug(){
+		return debug;
 	}
 
 }

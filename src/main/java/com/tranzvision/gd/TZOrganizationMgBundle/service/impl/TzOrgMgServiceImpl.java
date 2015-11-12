@@ -24,8 +24,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author SHIHUA
  * @since 2015-11-06
  */
-@Service("com.tranzvision.gd.TZOrganizationMgBundle.service.impl.OrgMgServiceImpl")
-public class OrgMgServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZOrganizationMgBundle.service.impl.TzOrgMgServiceImpl")
+public class TzOrgMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FliterForm fliterForm;
@@ -99,7 +99,8 @@ public class OrgMgServiceImpl extends FrameworkImpl {
 		}
 
 		try {
-			for (int num = 0; num < actData.length; num++) {
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
 				// 提交信息
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxjhTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl" >
+    <id column="TZ_XXJH_ID" property="tzXxjhId" jdbcType="VARCHAR" />
+    <result column="TZ_XXJH_MC" property="tzXxjhMc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_XXJH_ID, TZ_XXJH_MC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PT_XXJH_TBL
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_PT_XXJH_TBL
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl" >
+    insert into PS_TZ_PT_XXJH_TBL (TZ_XXJH_ID, TZ_XXJH_MC)
+    values (#{tzXxjhId,jdbcType=VARCHAR}, #{tzXxjhMc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl" >
+    insert into PS_TZ_PT_XXJH_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzXxjhId != null" >
+        TZ_XXJH_ID,
+      </if>
+      <if test="tzXxjhMc != null" >
+        TZ_XXJH_MC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzXxjhId != null" >
+        #{tzXxjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxjhMc != null" >
+        #{tzXxjhMc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl" >
+    update PS_TZ_PT_XXJH_TBL
+    <set >
+      <if test="tzXxjhMc != null" >
+        TZ_XXJH_MC = #{tzXxjhMc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl" >
+    update PS_TZ_PT_XXJH_TBL
+    set TZ_XXJH_MC = #{tzXxjhMc,jdbcType=VARCHAR}
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+  </update>
+</mapper>

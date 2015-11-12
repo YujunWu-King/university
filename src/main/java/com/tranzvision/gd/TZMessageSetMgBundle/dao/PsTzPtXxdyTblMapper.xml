@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxdyTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    <id column="TZ_XXJH_ID" property="tzXxjhId" jdbcType="VARCHAR" />
+    <id column="TZ_MSG_ID" property="tzMsgId" jdbcType="VARCHAR" />
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_LANGUAGE_ID" property="tzLanguageId" jdbcType="VARCHAR" />
+    <result column="TZ_MSG_TEXT" property="tzMsgText" jdbcType="VARCHAR" />
+    <result column="TZ_MSG_BQID" property="tzMsgBqid" jdbcType="VARCHAR" />
+    <result column="TZ_MSG_KEY" property="tzMsgKey" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" extends="BaseResultMap" >
+    <result column="TZ_MSG_DESC" property="tzMsgDesc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_XXJH_ID, TZ_MSG_ID, TZ_JG_ID, TZ_LANGUAGE_ID, TZ_MSG_TEXT, TZ_MSG_BQID, TZ_MSG_KEY
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MSG_DESC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_PT_XXDY_TBL
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+      and TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTblKey" >
+    delete from PS_TZ_PT_XXDY_TBL
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+      and TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    insert into PS_TZ_PT_XXDY_TBL (TZ_XXJH_ID, TZ_MSG_ID, TZ_JG_ID, 
+      TZ_LANGUAGE_ID, TZ_MSG_TEXT, TZ_MSG_BQID, 
+      TZ_MSG_KEY, TZ_MSG_DESC)
+    values (#{tzXxjhId,jdbcType=VARCHAR}, #{tzMsgId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzLanguageId,jdbcType=VARCHAR}, #{tzMsgText,jdbcType=VARCHAR}, #{tzMsgBqid,jdbcType=VARCHAR}, 
+      #{tzMsgKey,jdbcType=VARCHAR}, #{tzMsgDesc,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    insert into PS_TZ_PT_XXDY_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzXxjhId != null" >
+        TZ_XXJH_ID,
+      </if>
+      <if test="tzMsgId != null" >
+        TZ_MSG_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzLanguageId != null" >
+        TZ_LANGUAGE_ID,
+      </if>
+      <if test="tzMsgText != null" >
+        TZ_MSG_TEXT,
+      </if>
+      <if test="tzMsgBqid != null" >
+        TZ_MSG_BQID,
+      </if>
+      <if test="tzMsgKey != null" >
+        TZ_MSG_KEY,
+      </if>
+      <if test="tzMsgDesc != null" >
+        TZ_MSG_DESC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzXxjhId != null" >
+        #{tzXxjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgId != null" >
+        #{tzMsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLanguageId != null" >
+        #{tzLanguageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgText != null" >
+        #{tzMsgText,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgBqid != null" >
+        #{tzMsgBqid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgKey != null" >
+        #{tzMsgKey,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgDesc != null" >
+        #{tzMsgDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    update PS_TZ_PT_XXDY_TBL
+    <set >
+      <if test="tzMsgText != null" >
+        TZ_MSG_TEXT = #{tzMsgText,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgBqid != null" >
+        TZ_MSG_BQID = #{tzMsgBqid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgKey != null" >
+        TZ_MSG_KEY = #{tzMsgKey,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgDesc != null" >
+        TZ_MSG_DESC = #{tzMsgDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+      and TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    update PS_TZ_PT_XXDY_TBL
+    set TZ_MSG_TEXT = #{tzMsgText,jdbcType=VARCHAR},
+      TZ_MSG_BQID = #{tzMsgBqid,jdbcType=VARCHAR},
+      TZ_MSG_KEY = #{tzMsgKey,jdbcType=VARCHAR},
+      TZ_MSG_DESC = #{tzMsgDesc,jdbcType=LONGVARCHAR}
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+      and TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl" >
+    update PS_TZ_PT_XXDY_TBL
+    set TZ_MSG_TEXT = #{tzMsgText,jdbcType=VARCHAR},
+      TZ_MSG_BQID = #{tzMsgBqid,jdbcType=VARCHAR},
+      TZ_MSG_KEY = #{tzMsgKey,jdbcType=VARCHAR}
+    where TZ_XXJH_ID = #{tzXxjhId,jdbcType=VARCHAR}
+      and TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+</mapper>

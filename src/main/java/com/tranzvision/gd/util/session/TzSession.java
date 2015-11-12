@@ -105,8 +105,11 @@ public class TzSession {
 	 */
 	public boolean checkSession(String sessionName) {
 		Object val = this.getSession(sessionName);
+		boolean debugging = getSessionProps.getDebug();
 		if (null == val || "".equals(val.toString().trim())) {
-			return false;
+			if (!debugging) {
+				return false;
+			}
 		}
 		return true;
 	}

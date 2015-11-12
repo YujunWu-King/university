@@ -4,3 +4,4 @@ cookiePath=/
 cookieHttpOnly=True
 cookieSecure=False
 sessionMaxInactive=3600
+debug=True

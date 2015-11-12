@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZTranslateMgBundle.dao.PsTzPtZhzxxLngMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLng" >
+    <id column="TZ_ZHZJH_ID" property="tzZhzjhId" jdbcType="VARCHAR" />
+    <id column="TZ_ZHZ_ID" property="tzZhzId" jdbcType="VARCHAR" />
+    <id column="TZ_LANGUAGE_ID" property="tzLanguageId" jdbcType="VARCHAR" />
+    <result column="TZ_ZHZ_DMS" property="tzZhzDms" jdbcType="VARCHAR" />
+    <result column="TZ_ZHZ_CMS" property="tzZhzCms" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZHZJH_ID, TZ_ZHZ_ID, TZ_LANGUAGE_ID, TZ_ZHZ_DMS, TZ_ZHZ_CMS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLngKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PT_ZHZXX_LNG
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLngKey" >
+    delete from PS_TZ_PT_ZHZXX_LNG
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLng" >
+    insert into PS_TZ_PT_ZHZXX_LNG (TZ_ZHZJH_ID, TZ_ZHZ_ID, TZ_LANGUAGE_ID, 
+      TZ_ZHZ_DMS, TZ_ZHZ_CMS)
+    values (#{tzZhzjhId,jdbcType=VARCHAR}, #{tzZhzId,jdbcType=VARCHAR}, #{tzLanguageId,jdbcType=VARCHAR}, 
+      #{tzZhzDms,jdbcType=VARCHAR}, #{tzZhzCms,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLng" >
+    insert into PS_TZ_PT_ZHZXX_LNG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZhzjhId != null" >
+        TZ_ZHZJH_ID,
+      </if>
+      <if test="tzZhzId != null" >
+        TZ_ZHZ_ID,
+      </if>
+      <if test="tzLanguageId != null" >
+        TZ_LANGUAGE_ID,
+      </if>
+      <if test="tzZhzDms != null" >
+        TZ_ZHZ_DMS,
+      </if>
+      <if test="tzZhzCms != null" >
+        TZ_ZHZ_CMS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZhzjhId != null" >
+        #{tzZhzjhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzId != null" >
+        #{tzZhzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLanguageId != null" >
+        #{tzLanguageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzDms != null" >
+        #{tzZhzDms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzCms != null" >
+        #{tzZhzCms,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLng" >
+    update PS_TZ_PT_ZHZXX_LNG
+    <set >
+      <if test="tzZhzDms != null" >
+        TZ_ZHZ_DMS = #{tzZhzDms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhzCms != null" >
+        TZ_ZHZ_CMS = #{tzZhzCms,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTranslateMgBundle.model.PsTzPtZhzxxLng" >
+    update PS_TZ_PT_ZHZXX_LNG
+    set TZ_ZHZ_DMS = #{tzZhzDms,jdbcType=VARCHAR},
+      TZ_ZHZ_CMS = #{tzZhzCms,jdbcType=VARCHAR}
+    where TZ_ZHZJH_ID = #{tzZhzjhId,jdbcType=VARCHAR}
+      and TZ_ZHZ_ID = #{tzZhzId,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+</mapper>

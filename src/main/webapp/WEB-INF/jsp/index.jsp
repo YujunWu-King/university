@@ -80,7 +80,7 @@
   <body>
     <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">
       <tr>
-        <td align="center" valign="middle"><center><div><p><h1 id="tranzvision_mkc_advanced_default_text"></h1></p></div></center></td>
+        <td align="center" valign="middle"><center><div><p><h1 id="tranzvision_mkc_advanced_default_text"></h1></div></center></td>
       </tr>
     </table>
   </body>

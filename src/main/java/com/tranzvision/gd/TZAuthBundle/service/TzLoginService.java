@@ -43,6 +43,22 @@ public interface TzLoginService {
 	 * @return PsTzAqYhxxTbl
 	 */
 	public PsTzAqYhxxTbl getLoginedManagerInfo(HttpServletRequest request);
+	
+	/**
+	 * 获取登录用户的oprid
+	 * 
+	 * @param request
+	 * @return String
+	 */
+	public String getLoginedManagerOprid(HttpServletRequest request);
+	
+	/**
+	 * 获取登录用户的机构id
+	 * 
+	 * @param request
+	 * @return String
+	 */
+	public String getLoginedManagerOrgid(HttpServletRequest request);
 
 	/**
 	 * 检查登录状态

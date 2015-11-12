@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAuthBundle.service.TzLoginService;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -39,7 +40,10 @@ public class TzLoginServiceImpl implements TzLoginService {
 
 	@Autowired
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
-	
+
+	@Autowired
+	GetCookieSessionProps getCookieSessionProps;
+
 	private Patchca patchca;
 
 	private String loginStatus;
@@ -169,6 +173,52 @@ public class TzLoginServiceImpl implements TzLoginService {
 		// 从Session中获取登录用户信息
 		TzSession tzSession = new TzSession(request);
 		return (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tranzvision.gd.TZAuthBundle.service.TzLoginService#
+	 * getLoginedManagerOprid(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public String getLoginedManagerOprid(HttpServletRequest request) {
+		// 从Session中获取登录用户信息，返回oprid
+		TzSession tzSession = new TzSession(request);
+		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
+		if (null != psTzAqYhxxTbl) {
+			return psTzAqYhxxTbl.getOprid();
+		} else {
+			boolean debugging = getCookieSessionProps.getDebug();
+			String strRtn = "";
+			if (debugging) {
+				strRtn = "Admin";
+			}
+			return strRtn;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tranzvision.gd.TZAuthBundle.service.TzLoginService#
+	 * getLoginedManagerOrgid(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public String getLoginedManagerOrgid(HttpServletRequest request) {
+		// 从Session中获取登录用户信息，返回orgid
+		TzSession tzSession = new TzSession(request);
+		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
+		if (null != psTzAqYhxxTbl) {
+			return psTzAqYhxxTbl.getTzJgId();
+		} else {
+			boolean debugging = getCookieSessionProps.getDebug();
+			String strRtn = "";
+			if (debugging) {
+				strRtn = "Admin";
+			}
+			return strRtn;
+		}
 	}
 
 	/*
