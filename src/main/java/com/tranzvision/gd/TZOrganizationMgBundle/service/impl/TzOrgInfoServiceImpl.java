@@ -6,6 +6,7 @@ package com.tranzvision.gd.TZOrganizationMgBundle.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +33,11 @@ import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
+import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 机构管理-机构账号信息类，原：TZ_GD_JGGL_PKG:TZ_GD_JGXX_CLS
@@ -52,6 +56,12 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
+
+	@Autowired
+	private TZGDObject tzSQLObject;
+
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -85,7 +95,6 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
-		String errorMsg = "";
 		String comma = "";
 		try {
 			int dataLength = actData.length;
@@ -264,7 +273,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					this.tzEditOrgRoleInfo(infoData, errMsg);
 				} else if ("COPYROLE".equals(typeFlag)) {
 					// 复制机构角色
-
+					this.tzCopyOrgRole(infoData, errMsg);
 				}
 			}
 			if (!"".equals(errorMsg)) {
@@ -489,6 +498,45 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	}
 
 	/**
+	 * 存储机构图片文件信息
+	 * 
+	 * @param strParams
+	 * @return String
+	 */
+	@Override
+	public String tzGetHtmlContent(String strParams) {
+
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("success", 0);
+		mapRet.put("message", "");
+
+		try {
+			jacksonUtil.json2Map(strParams);
+
+			String tzAttachfileName = jacksonUtil.getString("filename");
+			String tzAttachsysfilena = jacksonUtil.getString("sysFileName");
+			String tzAttPUrl = jacksonUtil.getString("path");
+			String tzAttAUrl = jacksonUtil.getString("accessPath");
+
+			PsTzJgLoginbjT psTzJgLoginbjT = new PsTzJgLoginbjT();
+			psTzJgLoginbjT.setTzAttachfileName(tzAttachfileName);
+			psTzJgLoginbjT.setTzAttachsysfilena(tzAttachsysfilena);
+			psTzJgLoginbjT.setTzAttAUrl(tzAttAUrl);
+			psTzJgLoginbjT.setTzAttPUrl(tzAttPUrl);
+
+			psTzJgLoginbjTMapper.insert(psTzJgLoginbjT);
+
+			mapRet.put("success", 0);
+			mapRet.put("message", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapRet.replace("message", e.getMessage());
+		}
+
+		return jacksonUtil.Map2json(mapRet);
+	}
+
+	/**
 	 * 更新机构管理员信息
 	 * 
 	 * @param mapData
@@ -564,7 +612,90 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @param errorMsg
 	 * @return String
 	 */
+	@SuppressWarnings("unchecked")
 	private String tzQueryRoleList(String strOrgID, int numLimit, int numStart, String[] errorMsg) {
+
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		mapRet.put("root", "[]");
+
+		try {
+			String sql = "";
+			Object[] args;
+			if (numLimit == 0 && numStart == 0) {
+				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzSelectOrgRolesNolimit");
+				args = new Object[] { strOrgID };
+			} else {
+				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzSelectOrgRoleslimit");
+				args = new Object[] { strOrgID, numStart, numLimit };
+			}
+
+			List<?> listData = sqlQuery.queryForList(sql, args);
+
+			ArrayList<Map<String, Object>> listDataJson = new ArrayList<Map<String, Object>>();
+
+			for (Object jgRoleData : listData) {
+
+				Map<String, Object> mapData = (Map<String, Object>) jgRoleData;
+
+				Map<String, Object> mapDataJson = new HashMap<String, Object>();
+				mapDataJson.put("orgId", mapData.get("TZ_JG_ID").toString());
+				mapDataJson.put("roleName", mapData.get("ROLENAME").toString());
+				mapDataJson.put("roleDesc", mapData.get("ROLE_DESC").toString());
+				mapDataJson.put("roleType", mapData.get("TZ_ROLE_TYPE").toString());
+				mapDataJson.put("roleTypeDesc", mapData.get("TZ_ROLE_TYPE_DESC").toString());
+
+				listDataJson.add(mapDataJson);
+
+			}
+
+			sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCountOrgRoles");
+			int total = sqlQuery.queryForObject(sql, new Object[] { strOrgID }, "int");
+
+			mapRet.replace("total", total);
+			mapRet.replace("root", listDataJson);
+
+			strRet = jacksonUtil.Map2json(mapRet);
+
+		} catch (TzSystemException tse) {
+			tse.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = tse.getMessage();
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.getMessage();
+		}
+
+		return strRet;
+	}
+
+	/**
+	 * 从平台机构复制机构角色
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return String
+	 */
+	private String tzCopyOrgRole(Map<String, Object> mapParams, String[] errorMsg) {
+
+		String tzJgId = mapParams.get("orgId").toString();
+
+		String strAdminJg = getHardCodePoint.getHardCodePointVal("TZ_GD_JG_ADMIN");
+		String strPlstBasic = getHardCodePoint.getHardCodePointVal("TZGD_BASIC");
+
+		try {
+			// 复制角色
+			String sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyOrgRoles");
+			
+			
+
+		} catch (TzSystemException tse) {
+			tse.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return "";
 	}
