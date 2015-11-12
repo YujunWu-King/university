@@ -485,7 +485,7 @@ Ext.define('KitchenSink.controller.Global', {
         if (!codePreviewProcessed) {
             resources.push({
                 type: 'View',
-                path: clsProto.$className.replace(/\./g, '/').replace('KitchenSink', '/university/statics/js/tranzvision/extjs/app') + '.js'
+                path: clsProto.$className.replace(/\./g, '/').replace('KitchenSink', TzUniversityContextPath + '/statics/js/tranzvision/extjs/app') + '.js'
             });
 
             if (otherContent) {

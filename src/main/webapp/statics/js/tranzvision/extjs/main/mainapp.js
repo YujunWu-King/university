@@ -121,9 +121,9 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                     Ext.Loader.setConfig({
                         enabled:true,
                         paths:{
-                            'KitchenSink': '/university/statics/js/tranzvision/extjs/app',
-                            'Ext.ux':'/university/statics/js/lib/extjs/ux',
-                            'tranzvision.extension':'/university/statics/js/tranzvision/extjs/extension'
+                            'KitchenSink': TzUniversityContextPath + '/statics/js/tranzvision/extjs/app',
+                            'Ext.ux': TzUniversityContextPath + '/statics/js/lib/extjs/ux',
+                            'tranzvision.extension': TzUniversityContextPath + '/statics/js/tranzvision/extjs/extension'
                         }
                     });
 
@@ -134,7 +134,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             autoCreateViewport: 'KitchenSink.view.main.Main',
                             paths:
                             {
-                                'KitchenSink': '/university/statics/js/tranzvision/extjs/app'
+                                'KitchenSink': TzUniversityContextPath + '/statics/js/tranzvision/extjs/app'
                             }
                         });
 

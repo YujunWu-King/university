@@ -2,12 +2,15 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
     <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!doctype html>
 <html>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="google" content="notranslate" />
-    
+	<meta charset="utf-8">
+    <title>创景云招生系统</title>
+    <script type="text/javascript">
+		var TzUniversityContextPath = "${contextPath}";
+	</script>
     <style type="text/css">
       html,body
       {
@@ -81,7 +84,7 @@
   <body>
     <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">
       <tr>
-        <td align="center" valign="middle"><center><div><p><h1 id="tranzvision_mkc_advanced_default_text"></h1></div></center></td>
+        <td align="center" valign="middle"><center><div><p><h1 id="tranzvision_mkc_advanced_default_text"></h1></p></div></center></td>
       </tr>
     </table>
   </body>
