@@ -144,6 +144,8 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 		String conflictKeys = "";
 		String comma = "";
 		try {
+			Date lastupddttm = new Date();
+			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -170,9 +172,6 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 
 					String tzZhzDms = jacksonUtil.getString("shortDesc");
 					String tzZhzCms = jacksonUtil.getString("longDesc");
-
-					Date lastupddttm = new Date();
-					String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 					PsTzPtZhzxxTbl psTzPtZhzxxTbl = new PsTzPtZhzxxTbl();
 					psTzPtZhzxxTbl.setTzZhzjhId(tzZhzjhId);
@@ -231,6 +230,8 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 		String errorMsg = "";
 		String comma = "";
 		try {
+			Date lastupddttm = new Date();
+			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -252,9 +253,6 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 
 					String tzZhzDms = jacksonUtil.getString("shortDesc");
 					String tzZhzCms = jacksonUtil.getString("longDesc");
-
-					Date lastupddttm = new Date();
-					String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 					PsTzPtZhzxxTbl psTzPtZhzxxTbl = new PsTzPtZhzxxTbl();
 					psTzPtZhzxxTbl.setTzZhzjhId(tzZhzjhId);

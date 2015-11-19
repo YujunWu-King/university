@@ -187,7 +187,11 @@ public class Patchca {
 	 */
 	public String getToken(HttpServletRequest request) {
 		this.insTzSession(request);
-		return tzSession.getSession(tokenName).toString();
+		Object tokenObject = tzSession.getSession(tokenName);
+		if(tokenObject == null){
+			return null;
+		}
+		return tokenObject.toString();
 	}
 
 	/**

@@ -123,7 +123,8 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                         paths:{
                             'KitchenSink': TzUniversityContextPath + '/statics/js/tranzvision/extjs/app',
                             'Ext.ux': TzUniversityContextPath + '/statics/js/lib/extjs/ux',
-                            'tranzvision.extension': TzUniversityContextPath + '/statics/js/tranzvision/extjs/extension'
+                            'tranzvision.extension': TzUniversityContextPath + '/statics/js/tranzvision/extjs/extension',
+							'Ext.lib': TzUniversityContextPath + '/statics/js/lib',
                         }
                     });
 

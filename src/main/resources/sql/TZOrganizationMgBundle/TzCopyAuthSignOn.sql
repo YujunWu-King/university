@@ -1,0 +1,8 @@
+select 
+	DAYOFWEEK,
+	STARTTIME,
+	ENDTIME 
+from 
+	PSAUTHSIGNON 
+where 
+	CLASSID=?

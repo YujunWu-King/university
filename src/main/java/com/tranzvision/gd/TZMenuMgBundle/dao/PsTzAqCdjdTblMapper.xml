@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMenuMgBundle.dao.PsTzAqCdjdTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl" >
+    <id column="TREE_NAME" property="treeName" jdbcType="VARCHAR" />
+    <id column="TZ_MENU_NUM" property="tzMenuNum" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_MC" property="tzMenuMc" jdbcType="VARCHAR" />
+    <result column="TZ_YXX" property="tzYxx" jdbcType="VARCHAR" />
+    <result column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_LIMG" property="tzMenuLimg" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_SIMG" property="tzMenuSimg" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_NRID" property="tzMenuNrid" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TREE_NAME, TZ_MENU_NUM, TZ_MENU_MC, TZ_YXX, TZ_COM_ID, TZ_MENU_LIMG, TZ_MENU_SIMG, 
+    TZ_MENU_NRID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_AQ_CDJD_TBL
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTblKey" >
+    delete from PS_TZ_AQ_CDJD_TBL
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl" >
+    insert into PS_TZ_AQ_CDJD_TBL (TREE_NAME, TZ_MENU_NUM, TZ_MENU_MC, 
+      TZ_YXX, TZ_COM_ID, TZ_MENU_LIMG, 
+      TZ_MENU_SIMG, TZ_MENU_NRID, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
+    values (#{treeName,jdbcType=VARCHAR}, #{tzMenuNum,jdbcType=VARCHAR}, #{tzMenuMc,jdbcType=VARCHAR}, 
+      #{tzYxx,jdbcType=VARCHAR}, #{tzComId,jdbcType=VARCHAR}, #{tzMenuLimg,jdbcType=VARCHAR}, 
+      #{tzMenuSimg,jdbcType=VARCHAR}, #{tzMenuNrid,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl" >
+    insert into PS_TZ_AQ_CDJD_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="treeName != null" >
+        TREE_NAME,
+      </if>
+      <if test="tzMenuNum != null" >
+        TZ_MENU_NUM,
+      </if>
+      <if test="tzMenuMc != null" >
+        TZ_MENU_MC,
+      </if>
+      <if test="tzYxx != null" >
+        TZ_YXX,
+      </if>
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzMenuLimg != null" >
+        TZ_MENU_LIMG,
+      </if>
+      <if test="tzMenuSimg != null" >
+        TZ_MENU_SIMG,
+      </if>
+      <if test="tzMenuNrid != null" >
+        TZ_MENU_NRID,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="treeName != null" >
+        #{treeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuNum != null" >
+        #{tzMenuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuMc != null" >
+        #{tzMenuMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYxx != null" >
+        #{tzYxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuLimg != null" >
+        #{tzMenuLimg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuSimg != null" >
+        #{tzMenuSimg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuNrid != null" >
+        #{tzMenuNrid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl" >
+    update PS_TZ_AQ_CDJD_TBL
+    <set >
+      <if test="tzMenuMc != null" >
+        TZ_MENU_MC = #{tzMenuMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYxx != null" >
+        TZ_YXX = #{tzYxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComId != null" >
+        TZ_COM_ID = #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuLimg != null" >
+        TZ_MENU_LIMG = #{tzMenuLimg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuSimg != null" >
+        TZ_MENU_SIMG = #{tzMenuSimg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuNrid != null" >
+        TZ_MENU_NRID = #{tzMenuNrid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl" >
+    update PS_TZ_AQ_CDJD_TBL
+    set TZ_MENU_MC = #{tzMenuMc,jdbcType=VARCHAR},
+      TZ_YXX = #{tzYxx,jdbcType=VARCHAR},
+      TZ_COM_ID = #{tzComId,jdbcType=VARCHAR},
+      TZ_MENU_LIMG = #{tzMenuLimg,jdbcType=VARCHAR},
+      TZ_MENU_SIMG = #{tzMenuSimg,jdbcType=VARCHAR},
+      TZ_MENU_NRID = #{tzMenuNrid,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+  </update>
+</mapper>

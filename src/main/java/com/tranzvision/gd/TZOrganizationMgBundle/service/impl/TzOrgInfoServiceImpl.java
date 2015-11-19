@@ -15,13 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
-import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTblKey;
-import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgBaseTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgLoginbjTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper;
@@ -31,11 +28,17 @@ import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgLoginbjT;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleT;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgRoleTKey;
+import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsClassDefnMapper;
+import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsTzAqComsqTblMapper;
+import com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn;
+import com.tranzvision.gd.TZPermissionDefnBundle.model.PsTzAqComsqTbl;
+import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoleclassMapper;
+import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoledefnMapper;
+import com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey;
+import com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
-import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -84,6 +87,18 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzJgLoginbjTMapper psTzJgLoginbjTMapper;
 
+	@Autowired
+	private PsRoledefnMapper psRoledefnMapper;
+
+	@Autowired
+	private PsRoleclassMapper psRoleclassMapper;
+
+	@Autowired
+	private PsClassDefnMapper psClassDefnMapper;
+
+	@Autowired
+	private PsTzAqComsqTblMapper psTzAqComsqTblMapper;
+
 	/**
 	 * 新增机构账号信息
 	 * 
@@ -97,6 +112,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		String conflictKeys = "";
 		String comma = "";
 		try {
+			Date dateNow = new Date();
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -159,9 +176,6 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						psTzJgBaseT.setTzAttachsysfilena(sysFileName);
 						psTzJgBaseT.setTzJgJtfjPath(tzJgJtfjPath);
 
-						Date dateNow = new Date();
-						String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
 						psTzJgBaseT.setRowAddedDttm(dateNow);
 						psTzJgBaseT.setRowAddedOprid(oprid);
 						psTzJgBaseT.setRowLastmantDttm(dateNow);
@@ -195,6 +209,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		String errorMsg = "";
 		String comma = "";
 		try {
+			Date dateNow = new Date();
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -251,9 +267,6 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						psTzJgBaseT.setTzJgLoginCopr(orgLoginCopr);
 						psTzJgBaseT.setTzAttachsysfilena(sysFileName);
 						psTzJgBaseT.setTzJgJtfjPath(tzJgJtfjPath);
-
-						Date dateNow = new Date();
-						String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 						psTzJgBaseT.setRowLastmantDttm(dateNow);
 						psTzJgBaseT.setRowLastmantOprid(oprid);
@@ -678,6 +691,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @param errorMsg
 	 * @return String
 	 */
+	@SuppressWarnings("unchecked")
 	private String tzCopyOrgRole(Map<String, Object> mapParams, String[] errorMsg) {
 
 		String tzJgId = mapParams.get("orgId").toString();
@@ -685,19 +699,198 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		String strAdminJg = getHardCodePoint.getHardCodePointVal("TZ_GD_JG_ADMIN");
 		String strPlstBasic = getHardCodePoint.getHardCodePointVal("TZGD_BASIC");
 
+		Date dateNow = new Date();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
 		try {
 			// 复制角色
 			String sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyOrgRoles");
-			
-			
+
+			List<?> listRoles = sqlQuery.queryForList(sql, new Object[] { strAdminJg });
+
+			for (Object srcRole : listRoles) {
+
+				Map<String, Object> mapRole = (Map<String, Object>) srcRole;
+
+				String roleId = tzJgId + mapRole.get("ROLENAME").toString();
+				roleId = roleId.toUpperCase();
+
+				// 检查角色定义表中是否存在该角色
+				sql = "SELECT 'Y' FROM PSROLEDEFN WHERE ROLENAME=?";
+				String recExsit = sqlQuery.queryForObject(sql, new Object[] { roleId }, "String");
+				if (null == recExsit) {
+
+					PsRoledefn psRoledefn = new PsRoledefn();
+
+					psRoledefn.setRolename(roleId);
+					psRoledefn.setDescr(mapRole.get("DESCR").toString());
+					psRoledefn.setDescrlong(mapRole.get("DESCRLONG").toString());
+					psRoledefn.setVersion(Integer.parseInt(mapRole.get("VERSION").toString()));
+					psRoledefn.setRolestatus(mapRole.get("ROLESTATUS").toString());
+					psRoledefn.setRolePcodeRuleOn(mapRole.get("ROLE_PCODE_RULE_ON").toString());
+					psRoledefn.setRoleQueryRuleOn(mapRole.get("ROLE_QUERY_RULE_ON").toString());
+					psRoledefn.setLdapRuleOn(mapRole.get("LDAP_RULE_ON").toString());
+					psRoledefn.setAllownotify(mapRole.get("ALLOWNOTIFY").toString());
+					psRoledefn.setAllowlookup(mapRole.get("ALLOWLOOKUP").toString());
+					psRoledefn.setLastupddttm(dateNow);
+					psRoledefn.setLastupdoprid(oprid);
+
+					psRoledefnMapper.insert(psRoledefn);
+				}
+
+				// 复制角色的许可权
+				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyRolePermit");
+
+				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] { mapRole.get("ROLENAME").toString() });
+
+				for (Object srcPermit : listPermits) {
+
+					Map<String, Object> mapPermit = (Map<String, Object>) srcPermit;
+
+					String srcClassId = mapPermit.get("CLASSID").toString();
+
+					if (!strPlstBasic.equals(srcClassId)) {
+
+						String srcPermID = srcClassId;
+						String permId = tzJgId + "_" + srcPermID;
+						permId = permId.toUpperCase();
+
+						sql = "SELECT 'Y' FROM PSCLASSDEFN WHERE CLASSID=?";
+						recExsit = sqlQuery.queryForObject(sql, new Object[] { permId }, "String");
+						// 复制许可权定义表
+						if (null == recExsit) {
+
+							PsClassDefn psClassDefn = new PsClassDefn();
+
+							psClassDefn.setClassid(permId);
+							psClassDefn.setClassdefndesc(mapPermit.get("CLASSDEFNDESC").toString());
+							psClassDefn.setVersion(Integer.parseInt(mapPermit.get("VERSION").toString()));
+							psClassDefn.setLastupddttm(dateNow);
+							psClassDefn.setLastupdoprid(oprid);
+
+							psClassDefnMapper.insert(psClassDefn);
+
+							// 复制许可权的登陆时间表  PSAUTHSIGNON
+							/*
+							 * 待定，可能不需要此表 sql = tzSQLObject.getSQLText(
+							 * "SQL.TZOrganizationMgBundle.TzCopyAuthSignOn");
+							 * 
+							 * List<?> listAuthSignon =
+							 * sqlQuery.queryForList(sql, new Object[] {
+							 * srcPermID });
+							 * 
+							 * for (Object srcAuthSignon : listAuthSignon) {
+							 * 
+							 * Map<String, Object> mapAuthSignon = (Map<String,
+							 * Object>) srcAuthSignon;
+							 * 
+							 * sql =
+							 * "SELECT 'Y' FROM PSAUTHSIGNON WHERE CLASSID=? and DAYOFWEEK=?"
+							 * ; recExsit = sqlQuery.queryForObject(sql, new
+							 * Object[] { permId,mapAuthSignon.get("DAYOFWEEK")
+							 * }, "String");
+							 * 
+							 * if (null == recExsit) {
+							 * 
+							 * 
+							 * 
+							 * }
+							 * 
+							 * }
+							 */
+
+						}
+
+						// 复制许可权列表的组件
+						sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyAQComsq");
+
+						List<?> listAQComsq = sqlQuery.queryForList(sql, new Object[] { srcPermID });
+
+						for (Object srcAQComsq : listAQComsq) {
+
+							Map<String, Object> mapAQComsq = (Map<String, Object>) srcAQComsq;
+
+							sql = "SELECT 'Y' FROM TZ_AQ_COMSQ_TBL WHERE CLASSID=? and TZ_COM_ID=? and TZ_PAGE_ID=?";
+							String strComId = mapAQComsq.get("TZ_COM_ID").toString();
+							String strPageId = mapAQComsq.get("strPageId").toString();
+							recExsit = sqlQuery.queryForObject(sql, new Object[] { permId, strComId, strPageId },
+									"String");
+
+							if (null == recExsit) {
+
+								PsTzAqComsqTbl psTzAqComsqTbl = new PsTzAqComsqTbl();
+
+								psTzAqComsqTbl.setClassid(permId);
+								psTzAqComsqTbl.setTzComId(strComId);
+								psTzAqComsqTbl.setTzPageId(strPageId);
+								psTzAqComsqTbl.setDisplayonly((Short) mapAQComsq.get("DISPLAYONLY"));
+								psTzAqComsqTbl.setTzEditFlg((Short) mapAQComsq.get("TZ_EDIT_FLG"));
+								psTzAqComsqTbl.setAuthorizedactions(
+										Integer.parseInt(mapAQComsq.get("AUTHORIZEDACTIONS").toString()));
+								psTzAqComsqTbl.setRowAddedDttm(dateNow);
+								psTzAqComsqTbl.setRowAddedOprid(oprid);
+								psTzAqComsqTbl.setRowLastmantDttm(dateNow);
+								psTzAqComsqTbl.setRowLastmantOprid(oprid);
+
+								psTzAqComsqTblMapper.insert(psTzAqComsqTbl);
+
+							}
+
+						}
+
+					}
+
+					// 复制到新的角色关系表中
+					String classId = tzJgId + "_" + srcClassId;
+					classId = classId.toUpperCase();
+					if (strPlstBasic.equals(srcClassId)) {
+						classId = srcClassId;
+					}
+
+					sql = "SELECT 'Y' FROM PSROLECLASS WHERE ROLENAME=? and CLASSID=?";
+					recExsit = sqlQuery.queryForObject(sql, new Object[] { roleId, classId }, "String");
+
+					if (null == recExsit) {
+
+						PsRoleclassKey psRoleclassKey = new PsRoleclassKey();
+
+						psRoleclassKey.setRolename(roleId);
+						psRoleclassKey.setClassid(classId);
+
+						psRoleclassMapper.insert(psRoleclassKey);
+					}
+
+				} // 许可权循环结束
+
+				// 将角色添加到机构里
+				sql = "SELECT 'Y' FROM TZ_JG_ROLE_T WHERE TZ_JG_ID=? and ROLENAME=?";
+				recExsit = sqlQuery.queryForObject(sql, new Object[] { tzJgId, roleId }, "String");
+
+				if (null == recExsit) {
+
+					PsTzJgRoleT psTzJgRoleT = new PsTzJgRoleT();
+
+					psTzJgRoleT.setTzJgId(tzJgId);
+					psTzJgRoleT.setRolename(roleId);
+					psTzJgRoleT.setTzRoleType(mapRole.get("TZ_ROLE_TYPE").toString());
+
+					psTzJgRoleTMapper.insert(psTzJgRoleT);
+
+				}
+
+			} // 角色循环结束
 
 		} catch (TzSystemException tse) {
 			tse.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = tse.getMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.getMessage();
 		}
 
-		return "";
+		return "{}";
 	}
 
 }

@@ -26,6 +26,7 @@
 		<comlang.version>2.6</comlang.version>
 		<comlogging.version>1.2</comlogging.version>
 		<spring.session.version>1.0.2.RELEASE</spring.session.version>
+
 	</properties>
 
 	<dependencies>
@@ -181,6 +182,14 @@
 			<artifactId>patchca</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+
+	    <!-- 百度编辑器用到的json解析包  -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20150729</version>
+		</dependency>
+
 
 		<!-- 日志文件管理包 -->
 		<!-- log start -->

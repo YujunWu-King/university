@@ -12,7 +12,9 @@ import java.io.Reader;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +29,9 @@ public class SQLObjectManager
 	private Lock lock;
 	
 	private Map<String,String> sqlObjects;
+	
+	@Autowired
+	private GetCookieSessionProps getCookieSessionProps;
 	
 	public SQLObjectManager()
 	{
@@ -140,6 +145,11 @@ public class SQLObjectManager
 	{
 		String sqlText = "";
 		String tmpSQLName = sqlName.substring(4);
+		
+		//调试模式
+		if(getCookieSessionProps.getDebug()){
+			refreshFlag = true;
+		}
 		
 		if(sqlObjects.containsKey(tmpSQLName) == false || refreshFlag == true)
 		{

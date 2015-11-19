@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMenuMgBundle.dao.PsTreeNodeMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode" >
+    <id column="SETID" property="setid" jdbcType="VARCHAR" />
+    <id column="SETCNTRLVALUE" property="setcntrlvalue" jdbcType="VARCHAR" />
+    <id column="TREE_NAME" property="treeName" jdbcType="VARCHAR" />
+    <id column="EFFDT" property="effdt" jdbcType="DATE" />
+    <id column="TREE_NODE_NUM" property="treeNodeNum" jdbcType="INTEGER" />
+    <id column="TREE_NODE" property="treeNode" jdbcType="VARCHAR" />
+    <id column="TREE_BRANCH" property="treeBranch" jdbcType="VARCHAR" />
+    <result column="TREE_NODE_NUM_END" property="treeNodeNumEnd" jdbcType="INTEGER" />
+    <result column="TREE_LEVEL_NUM" property="treeLevelNum" jdbcType="SMALLINT" />
+    <result column="TREE_NODE_TYPE" property="treeNodeType" jdbcType="VARCHAR" />
+    <result column="PARENT_NODE_NUM" property="parentNodeNum" jdbcType="INTEGER" />
+    <result column="PARENT_NODE_NAME" property="parentNodeName" jdbcType="VARCHAR" />
+    <result column="OLD_TREE_NODE_NUM" property="oldTreeNodeNum" jdbcType="VARCHAR" />
+    <result column="NODECOL_IMAGE" property="nodecolImage" jdbcType="VARCHAR" />
+    <result column="NODEEXP_IMAGE" property="nodeexpImage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SETID, SETCNTRLVALUE, TREE_NAME, EFFDT, TREE_NODE_NUM, TREE_NODE, TREE_BRANCH, TREE_NODE_NUM_END, 
+    TREE_LEVEL_NUM, TREE_NODE_TYPE, PARENT_NODE_NUM, PARENT_NODE_NAME, OLD_TREE_NODE_NUM, 
+    NODECOL_IMAGE, NODEEXP_IMAGE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNodeKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PSTREENODE
+    where SETID = #{setid,jdbcType=VARCHAR}
+      and SETCNTRLVALUE = #{setcntrlvalue,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and EFFDT = #{effdt,jdbcType=DATE}
+      and TREE_NODE_NUM = #{treeNodeNum,jdbcType=INTEGER}
+      and TREE_NODE = #{treeNode,jdbcType=VARCHAR}
+      and TREE_BRANCH = #{treeBranch,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNodeKey" >
+    delete from PSTREENODE
+    where SETID = #{setid,jdbcType=VARCHAR}
+      and SETCNTRLVALUE = #{setcntrlvalue,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and EFFDT = #{effdt,jdbcType=DATE}
+      and TREE_NODE_NUM = #{treeNodeNum,jdbcType=INTEGER}
+      and TREE_NODE = #{treeNode,jdbcType=VARCHAR}
+      and TREE_BRANCH = #{treeBranch,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode" >
+    insert into PSTREENODE (SETID, SETCNTRLVALUE, TREE_NAME, 
+      EFFDT, TREE_NODE_NUM, TREE_NODE, 
+      TREE_BRANCH, TREE_NODE_NUM_END, TREE_LEVEL_NUM, 
+      TREE_NODE_TYPE, PARENT_NODE_NUM, PARENT_NODE_NAME, 
+      OLD_TREE_NODE_NUM, NODECOL_IMAGE, NODEEXP_IMAGE
+      )
+    values (#{setid,jdbcType=VARCHAR}, #{setcntrlvalue,jdbcType=VARCHAR}, #{treeName,jdbcType=VARCHAR}, 
+      #{effdt,jdbcType=DATE}, #{treeNodeNum,jdbcType=INTEGER}, #{treeNode,jdbcType=VARCHAR}, 
+      #{treeBranch,jdbcType=VARCHAR}, #{treeNodeNumEnd,jdbcType=INTEGER}, #{treeLevelNum,jdbcType=SMALLINT}, 
+      #{treeNodeType,jdbcType=VARCHAR}, #{parentNodeNum,jdbcType=INTEGER}, #{parentNodeName,jdbcType=VARCHAR}, 
+      #{oldTreeNodeNum,jdbcType=VARCHAR}, #{nodecolImage,jdbcType=VARCHAR}, #{nodeexpImage,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode" >
+    insert into PSTREENODE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="setid != null" >
+        SETID,
+      </if>
+      <if test="setcntrlvalue != null" >
+        SETCNTRLVALUE,
+      </if>
+      <if test="treeName != null" >
+        TREE_NAME,
+      </if>
+      <if test="effdt != null" >
+        EFFDT,
+      </if>
+      <if test="treeNodeNum != null" >
+        TREE_NODE_NUM,
+      </if>
+      <if test="treeNode != null" >
+        TREE_NODE,
+      </if>
+      <if test="treeBranch != null" >
+        TREE_BRANCH,
+      </if>
+      <if test="treeNodeNumEnd != null" >
+        TREE_NODE_NUM_END,
+      </if>
+      <if test="treeLevelNum != null" >
+        TREE_LEVEL_NUM,
+      </if>
+      <if test="treeNodeType != null" >
+        TREE_NODE_TYPE,
+      </if>
+      <if test="parentNodeNum != null" >
+        PARENT_NODE_NUM,
+      </if>
+      <if test="parentNodeName != null" >
+        PARENT_NODE_NAME,
+      </if>
+      <if test="oldTreeNodeNum != null" >
+        OLD_TREE_NODE_NUM,
+      </if>
+      <if test="nodecolImage != null" >
+        NODECOL_IMAGE,
+      </if>
+      <if test="nodeexpImage != null" >
+        NODEEXP_IMAGE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="setid != null" >
+        #{setid,jdbcType=VARCHAR},
+      </if>
+      <if test="setcntrlvalue != null" >
+        #{setcntrlvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="treeName != null" >
+        #{treeName,jdbcType=VARCHAR},
+      </if>
+      <if test="effdt != null" >
+        #{effdt,jdbcType=DATE},
+      </if>
+      <if test="treeNodeNum != null" >
+        #{treeNodeNum,jdbcType=INTEGER},
+      </if>
+      <if test="treeNode != null" >
+        #{treeNode,jdbcType=VARCHAR},
+      </if>
+      <if test="treeBranch != null" >
+        #{treeBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="treeNodeNumEnd != null" >
+        #{treeNodeNumEnd,jdbcType=INTEGER},
+      </if>
+      <if test="treeLevelNum != null" >
+        #{treeLevelNum,jdbcType=SMALLINT},
+      </if>
+      <if test="treeNodeType != null" >
+        #{treeNodeType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNodeNum != null" >
+        #{parentNodeNum,jdbcType=INTEGER},
+      </if>
+      <if test="parentNodeName != null" >
+        #{parentNodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTreeNodeNum != null" >
+        #{oldTreeNodeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="nodecolImage != null" >
+        #{nodecolImage,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeexpImage != null" >
+        #{nodeexpImage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode" >
+    update PSTREENODE
+    <set >
+      <if test="treeNodeNumEnd != null" >
+        TREE_NODE_NUM_END = #{treeNodeNumEnd,jdbcType=INTEGER},
+      </if>
+      <if test="treeLevelNum != null" >
+        TREE_LEVEL_NUM = #{treeLevelNum,jdbcType=SMALLINT},
+      </if>
+      <if test="treeNodeType != null" >
+        TREE_NODE_TYPE = #{treeNodeType,jdbcType=VARCHAR},
+      </if>
+      <if test="parentNodeNum != null" >
+        PARENT_NODE_NUM = #{parentNodeNum,jdbcType=INTEGER},
+      </if>
+      <if test="parentNodeName != null" >
+        PARENT_NODE_NAME = #{parentNodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="oldTreeNodeNum != null" >
+        OLD_TREE_NODE_NUM = #{oldTreeNodeNum,jdbcType=VARCHAR},
+      </if>
+      <if test="nodecolImage != null" >
+        NODECOL_IMAGE = #{nodecolImage,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeexpImage != null" >
+        NODEEXP_IMAGE = #{nodeexpImage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SETID = #{setid,jdbcType=VARCHAR}
+      and SETCNTRLVALUE = #{setcntrlvalue,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and EFFDT = #{effdt,jdbcType=DATE}
+      and TREE_NODE_NUM = #{treeNodeNum,jdbcType=INTEGER}
+      and TREE_NODE = #{treeNode,jdbcType=VARCHAR}
+      and TREE_BRANCH = #{treeBranch,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode" >
+    update PSTREENODE
+    set TREE_NODE_NUM_END = #{treeNodeNumEnd,jdbcType=INTEGER},
+      TREE_LEVEL_NUM = #{treeLevelNum,jdbcType=SMALLINT},
+      TREE_NODE_TYPE = #{treeNodeType,jdbcType=VARCHAR},
+      PARENT_NODE_NUM = #{parentNodeNum,jdbcType=INTEGER},
+      PARENT_NODE_NAME = #{parentNodeName,jdbcType=VARCHAR},
+      OLD_TREE_NODE_NUM = #{oldTreeNodeNum,jdbcType=VARCHAR},
+      NODECOL_IMAGE = #{nodecolImage,jdbcType=VARCHAR},
+      NODEEXP_IMAGE = #{nodeexpImage,jdbcType=VARCHAR}
+    where SETID = #{setid,jdbcType=VARCHAR}
+      and SETCNTRLVALUE = #{setcntrlvalue,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and EFFDT = #{effdt,jdbcType=DATE}
+      and TREE_NODE_NUM = #{treeNodeNum,jdbcType=INTEGER}
+      and TREE_NODE = #{treeNode,jdbcType=VARCHAR}
+      and TREE_BRANCH = #{treeBranch,jdbcType=VARCHAR}
+  </update>
+</mapper>

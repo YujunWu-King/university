@@ -77,8 +77,11 @@
     	var tz_gdcp_theme_id_20150612184830 = '<%= (String)(request.getAttribute("tz_gdcp_theme_id_20150612184830")) %>';
     	var tz_gdcp_language_cd_20150612184830 = '<%= (String)(request.getAttribute("tz_gdcp_language_cd_20150612184830")) %>';
     </script>
-  	<script type="text/javascript" charset="UTF-8" src="${contextPath}/statics/js/lib/prettify/prettify.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
+  	<script type="text/javascript" src="${contextPath}/statics/js/lib/prettify/prettify.js"></script>
+  	<script type="text/javascript" src="${contextPath}/statics/js/lib/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="${contextPath}/statics/js/lib/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
+    <script type="text/javascript" src="${contextPath}/statics/js/lib/extjs/ux/ueditor.js"></script>
     <script id="tranzvision_mkc_advanced_mainapp" type="text/javascript" src="${contextPath}/statics/js/tranzvision/extjs/main/mainapp.js"></script>
   </head>
   <body>

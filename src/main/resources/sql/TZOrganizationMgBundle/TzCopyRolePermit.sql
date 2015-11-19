@@ -1,0 +1,10 @@
+select 
+	A.CLASSID,
+	B.CLASSDEFNDESC,
+	B.version 
+from 
+	PSROLECLASS A,
+	PSCLASSDEFN B 
+where 
+	A.CLASSID = B.CLASSID 
+	and ROLENAME=?

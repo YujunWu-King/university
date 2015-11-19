@@ -1,0 +1,9 @@
+select 
+	TREE_NODE_NUM,
+	TREE_NODE_NUM_END 
+from 
+	PSTREENODE 
+where 
+	TREE_NAME=? 
+	and TREE_LEVEL_NUM=2 
+	and TREE_NODE=?

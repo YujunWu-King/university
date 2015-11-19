@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMenuMgBundle.dao.PsTzAqCdjdLngMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng" >
+    <id column="TREE_NAME" property="treeName" jdbcType="VARCHAR" />
+    <id column="TZ_MENU_NUM" property="tzMenuNum" jdbcType="VARCHAR" />
+    <id column="TZ_LANGUAGE_ID" property="tzLanguageId" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_MC" property="tzMenuMc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TREE_NAME, TZ_MENU_NUM, TZ_LANGUAGE_ID, TZ_MENU_MC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLngKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_AQ_CDJD_LNG
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLngKey" >
+    delete from PS_TZ_AQ_CDJD_LNG
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng" >
+    insert into PS_TZ_AQ_CDJD_LNG (TREE_NAME, TZ_MENU_NUM, TZ_LANGUAGE_ID, 
+      TZ_MENU_MC)
+    values (#{treeName,jdbcType=VARCHAR}, #{tzMenuNum,jdbcType=VARCHAR}, #{tzLanguageId,jdbcType=VARCHAR}, 
+      #{tzMenuMc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng" >
+    insert into PS_TZ_AQ_CDJD_LNG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="treeName != null" >
+        TREE_NAME,
+      </if>
+      <if test="tzMenuNum != null" >
+        TZ_MENU_NUM,
+      </if>
+      <if test="tzLanguageId != null" >
+        TZ_LANGUAGE_ID,
+      </if>
+      <if test="tzMenuMc != null" >
+        TZ_MENU_MC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="treeName != null" >
+        #{treeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuNum != null" >
+        #{tzMenuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLanguageId != null" >
+        #{tzLanguageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuMc != null" >
+        #{tzMenuMc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng" >
+    update PS_TZ_AQ_CDJD_LNG
+    <set >
+      <if test="tzMenuMc != null" >
+        TZ_MENU_MC = #{tzMenuMc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng" >
+    update PS_TZ_AQ_CDJD_LNG
+    set TZ_MENU_MC = #{tzMenuMc,jdbcType=VARCHAR}
+    where TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_MENU_NUM = #{tzMenuNum,jdbcType=VARCHAR}
+      and TZ_LANGUAGE_ID = #{tzLanguageId,jdbcType=VARCHAR}
+  </update>
+</mapper>
