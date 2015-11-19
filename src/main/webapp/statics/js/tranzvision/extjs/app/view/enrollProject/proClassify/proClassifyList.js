@@ -12,13 +12,14 @@
     ],
     xtype: 'proClassifyMg',
 	controller: 'proClassifyController',
+	reference: 'proClassifyLIstGridPanal',
     columnLines: true,
 	style:"margin:8px",
 	selModel: {
        	type: 'checkboxmodel'
     },
     multiSelect: false,
-    title: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.xmfldy","项目分类定义"),
+    title: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.xmfldy","项目分类列表"),
 	header:false,
 	frame: true,
     dockedItems:[
@@ -26,15 +27,17 @@
 			xtype:"toolbar",
 			items:[
 				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.query","查询"),iconCls: "query",handler:"searchProTypeList"},'-',
-				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.add","新增"),iconCls: "add",handler:"onAddInLastRow"},'-',
-				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.delete","删除"),iconCls: "remove",handler:"onDeleteBat"}
+				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.add","新增"),iconCls: "add",handler:"addNewPrjType"},'-',
+				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.edit","编辑"),iconCls:"edit",handler:'editPrjTypeDfn'},'->',
+				/*{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.delete","删除"),iconCls: "remove",handler:"onDeleteBat"}*/
 			]
 		},
 		{
 			xtype:"toolbar",
 			dock:"bottom",
 			ui:"footer",
-			items:['->',{minWidth:80,text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.save","保存"),iconCls:"save",handler:"onSaveData"}]
+			items:['->',
+				{minWidth:80,text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.close","关闭"),iconCls:"close",handler: 'closeProList'}]
 		}
 	],
 	plugins: [
@@ -44,7 +47,8 @@
 	],
     initComponent: function () {    
 		var store = new KitchenSink.view.enrollProject.proClassify.proClassifyStore();
-		
+		var store_trans=new KitchenSink.view.common.store.appTransStore("TZ_PRJ_TYPE_STATUS");
+		store_trans.load();
 		this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
         });
@@ -60,33 +64,43 @@
                 text: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.proTypeName","分类名称"),
                 sortable: true,
                 dataIndex: 'proTypeName',
-                width: 200,
-				editor: {
-                    xtype:'textfield'
-                }
+			    readOnly: true,
+                width: 200
             },{
                 text: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.proTypeDesc","分类描述"),
                 sortable: true,
                 dataIndex: 'proTypeDesc',
                 minWidth: 200,
+			    readOnly: true,
 				//enableColumnHide: false,
-				flex: 1,
-				editor: {
-                    xtype:'textfield'
-                }
+				flex: 1
             },{
+			   //text: '有效状态',
+			   text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.proTypeStatus","有效状态"),
+			   sortable: true,
+			   dataIndex: 'proTypeStatus',
+			   readOnly: true,
+			   width: 120,
+			   renderer : function(value, metadata, record) {
+
+					var index = store_trans.find('TValue',value);
+					if(index!=-1){
+						return store_trans.getAt(index).data.TSDesc;
+					}
+					return record.get('');
+			   }
+		   },{
 			   xtype: 'actioncolumn',
 			   menuDisabled: true,
                sortable: false,
 			   width:60,
 			   align: 'center',
 			   items:[
-					  	{
-							iconCls: 'remove',
-							tooltip: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.delete","删除"),
-						    scope: this,
-                    		handler: this.onRemoveCurrRow
-						}
+				   {
+					   iconCls: 'edit',
+					   tooltip: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.edit","编辑"),
+					   handler: 'onEditCurrRow'
+				   }
 			   ]
              }],
 			store:store,
@@ -99,13 +113,5 @@
         });
 		
         this.callParent();
-    },
-	// 行删除
-	onRemoveCurrRow: function(grid, rowIndex){
-		Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.confirm","确认"),Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.nqdyscsxjlm","您确定要删除所选记录吗？"), function(btnId){
-			if (btnId == "yes"){
-        		grid.getStore().removeAt(rowIndex);
-			}
-		});
     }
 });

@@ -277,5 +277,15 @@
 		Ext.tzSubmit(tzParams,function(){
 			store.reload();			   
 		},"",true,this);
+	},
+	closeComRegInfos: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	//确定
+	ensureComRegInfos:function(btn) {
+		this.saveComRegInfos(btn);
+		this.closeComRegInfos(btn);
 	}
 });

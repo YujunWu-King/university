@@ -76,7 +76,7 @@
 			name: 'email',
 				maxLength: 70,
 			vtype: 'email'
-        }, {
+        }, /*{
             xtype: 'checkbox',
             //fieldLabel: '手机绑定标志',
 			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.mBindFlag","手机绑定标志"),
@@ -110,13 +110,42 @@
 					}
 				}
 			}
-    },{
+    }*/{
+			xtype: 'combobox',
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.mBindFlag","手机绑定标志"),
+			editable:false,
+			emptyText:'请选择',
+			queryMode: 'remote',
+			name: 'mBindFlag',
+			valueField: 'TValue',
+			displayField: 'TSDesc',
+			store: new KitchenSink.view.common.store.appTransStore("TZ_SJBD_BZ"),
+			listeners:{
+				select : function(combo,record,index) {
+					//手机号码
+					var bdMobile = combo.findParentByType("form").getForm().findField("bdMobile");
+					var mobile = combo.findParentByType("form").getForm().findField("mobile").getValue();
+
+					if(combo.getValue()=="Y"){
+						bdMobile.allowBlank = false;
+						bdMobile.setReadOnly( false);
+						bdMobile.setFieldStyle('background:#FFFFFF');
+						bdMobile.setValue(mobile);
+					}else{
+						bdMobile.allowBlank = true;
+						bdMobile.setReadOnly( true);
+						bdMobile.setFieldStyle('background:#F4F4F4');
+						bdMobile.setValue("");
+					}
+				}
+			}
+		},{
         xtype: 'textfield',
         //fieldLabel: '绑定手机号码',
 				fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.bdMobile","绑定手机号码"),
 				maxLength: 25,
 				name: 'bdMobile'
-    },{
+    },/*{
        xtype: 'checkbox',
        //fieldLabel: '邮箱绑定标志',
 			 fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
@@ -149,7 +178,35 @@
 						}
 				  }
 			 }
-    }, {
+    },*/ {
+	xtype: 'combobox',
+		fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
+		editable:false,
+		emptyText:'请选择',
+		queryMode: 'remote',
+		name: 'eBindFlag',
+		valueField: 'TValue',
+		displayField: 'TSDesc',
+		store: new KitchenSink.view.common.store.appTransStore("TZ_YXBD_BZ"),
+			listeners:{
+				select : function(combo,record,index) {
+					//电子邮箱
+					var bdEmail = combo.findParentByType("form").getForm().findField("bdEmail");
+					var email = combo.findParentByType("form").getForm().findField("email").getValue();
+					if(combo.getValue()=="Y"){
+						bdEmail.allowBlank = false;
+						bdEmail.setReadOnly( false);
+						bdEmail.setFieldStyle('background:#FFFFFF');
+						bdEmail.setValue(email);
+					}else{
+						bdEmail.allowBlank = true;
+						bdEmail.setReadOnly( true);
+						bdEmail.setFieldStyle('background:#F4F4F4');
+						bdEmail.setValue("");
+					}
+				}
+			}
+	},{
         xtype: 'textfield',
         //fieldLabel: '电子邮箱',
 			  fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.bdEmail","绑定电子邮箱"),
@@ -203,12 +260,22 @@
 	            }
 	          }
 	          
-    }, {
+    }, /*{
             xtype: 'checkbox',
             //fieldLabel: '锁定账号',
 						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.acctLock","锁定账号"),
 						name: 'acctLock'
-    },
+    }*/{
+			xtype: 'combobox',
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.acctLock","锁定账号"),
+			editable:false,
+			emptyText:'请选择',
+			queryMode: 'remote',
+			name: 'acctLock',
+			valueField: 'TValue',
+			displayField: 'TSDesc',
+			store: new KitchenSink.view.common.store.appTransStore("ACCTLOCK")
+		},
     //{
     //        xtype: 'displayfield',
             //fieldLabel: '激活状态',

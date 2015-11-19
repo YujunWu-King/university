@@ -33,17 +33,14 @@ Ext.define('KitchenSink.view.template.survey.report.PinShuBB.PinShuBBQuestionLis
 
         var grid=btn.findParentByType('grid'),
             record = grid.store.getAt(rowIndex);
-        var ZWJID=record.data.questionID;
-        var form=grid.findParentByType('panel').child('form');
-        var WJID=form.getForm().findField('onlinedcId').getValue();
-
-        var tzParams = '{"ComID":"TZ_ZXDC_PSBB_COM","PageID":"TZ_ZXDC_PSBB_STD","OperateType":"WTTB ","comParams":{"onlinedcId":"'+WJID+'","wtId":"'+ZWJID+'"}}';
-
-        console.log(tzParams);
-        Ext.tzLoad(tzParams,function(responseData){
-            console.log(responseData);
-        });
-
+        //总的问题ID：可能是父问题ID+子问题ID，也可能仅仅是父问题ID;
+        var TotalID=record.data.questionID,
+             ZwjID=record.data.childQuestionId,
+             questionDesc=record.data.questionDesc,
+             childQuestionDesc=record.data.childQuestionDesc;
+        var form=grid.findParentByType('panel').child('form'),
+            WJID=form.getForm().findField('onlinedcId').getValue(),//问卷ID
+            WJMS=form.getForm().findField('onlinedcTitle').getValue()//问卷描述
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_PSBB_COM"]["TZ_ZXDC_PSBB_W_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -91,11 +88,49 @@ Ext.define('KitchenSink.view.template.survey.report.PinShuBB.PinShuBBQuestionLis
         cmp = new ViewClass(
 
         );
-        console.log(cmp);
-        cmp.on('afterrender',function(win){
+        cmp.on('afterrender',function(panel){
+            var form = panel.child('form').getForm();
+             var tzParams = '{"ComID":"TZ_ZXDC_PSBB_COM","PageID":"TZ_ZXDC_PSBB_STD","OperateType":"QF","comParams":{"onlinedcId":"'+WJID+'"}}';
+
+            console.log(tzParams);
+            Ext.tzLoad(tzParams,function(responseData){
+                var formData=responseData.formData;
+                formData.questionDesc = questionDesc;
+                formData.childQuestionDesc = childQuestionDesc;
+                form.setValues(formData);
+
+                var chartStore = panel.child('form').child('chart').store;
+                var gridStore = panel.child('form').child('grid').store;
+                console.log(chartStore)
+                console.log(gridStore)
+
+                var chart_tzParams='{"type":"chart","onlinedcId":"'+WJID+'","wtId":"'+TotalID+'"}';
+                var grid_tzParams='{"type":"grid","onlinedcId":"'+WJID+'","wtId":"'+TotalID+'"}';
+                chartStore.tzStoreParams=chart_tzParams;
+                gridStore.tzStoreParams = grid_tzParams;
+                chartStore.load({
+                    scope: this,
+                    callback: function(records, operation, success) {
+                    }
+                });
+                gridStore.load({
+                    scope: this,
+                    callback: function(records, operation, success) {
+                    }
+                });
+            });
+
 
         });
-        cmp.show();
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
 
     },
     //关闭窗口

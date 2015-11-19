@@ -25,12 +25,17 @@
     },
 	header:false,
 	frame: true,
-    dockedItems:[/*{
-		xtype:"toolbar",
-		dock:"bottom",
-		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save"}]
-		},*/{
+    dockedItems:[{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+            {minWidth:80,text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_LIST_STD.close","关闭"),iconCls:"close",handler:function(btn){
+                var grid = btn.findParentByType("grid");
+                grid.close();
+            }}
+        ]
+    },{
 		xtype:"toolbar",
 		items:[
 			{text:"查询",tooltip:"查询数据",iconCls:"query",handler:"queryClassBatch"}

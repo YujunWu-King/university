@@ -239,19 +239,6 @@ Ext.define('KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewA
                                 text: "面试资格",
                                 dataIndex: 'interviewQualification',
                                 width:100,
-                                renderer:function(v){
-                                    switch(v){
-                                        case 'W':
-                                            return '待定';
-                                        case 'N':
-                                            return '无';
-                                        case 'Y':
-                                            return '有';
-                                        case '':
-                                            return '待定';
-
-                                    }
-                                },
                                 filter: {
                                     type: 'list'
                                 }

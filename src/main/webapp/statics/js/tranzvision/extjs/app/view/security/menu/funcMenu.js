@@ -31,6 +31,14 @@
     frame: true,
     dockedItems:[{
         xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+            {minWidth:80,text:"保存",iconCls:"save",handler:"saveOrgList",name:'save'},
+            {minWidth:80,text:'确定',iconCls:"ensure",handler: 'saveOrgList',name:'ensure'},
+            {minWidth:80,text:'关闭',iconCls:"close",handler: 'closeOrgList'}]
+    },{
+        xtype:"toolbar",
         items:[
             {text:"查询",tooltip:"查询数据",iconCls: "query",handler:'cfgSearchMenu'},"-",
             {text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addFuncMenu'},"-",
@@ -56,26 +64,13 @@
                 minWidth:350,
                 flex:1
             },{
-                /*
-                 xtype:'linkcolumn',
-                 sortable: false,
-                 //width: 120,
-                 text: '设置菜单',
-                 flex:1,
-                 items:[{
-                 text: '设置菜单',
-                 handler: function(grid, rowIndex, colIndex){
-                 var rec = grid.getStore().getAt(rowIndex);
-                 alert("设置菜单:"+rec.get('orgId'));
-                 }
-                 }]
-                 */
                 sortable: false,
                 width:60,
                 align:'center',
                 xtype: 'actioncolumn',
                 items:[
-                    {iconCls: 'edit',tooltip: '编辑',handler: 'editFuncMenuById'}
+                    {iconCls: 'edit',tooltip: '编辑',handler: 'editFuncMenuById'},
+                    {iconCls: 'delete',tooltip: '删除',handler: 'deleteFuncMenuById'}
                 ]
             }],
             store: store,
@@ -86,7 +81,6 @@
                 plugins: new Ext.ux.ProgressBarPager()
             }
         });
-
         this.callParent();
     }
 });

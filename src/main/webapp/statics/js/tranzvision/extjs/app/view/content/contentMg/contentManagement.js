@@ -28,7 +28,9 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"关闭",iconCls:"close",handler:"onComRegClose"}
+		items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"saveContentList",name:'save'},
+            {minWidth:80,text:"确定",iconCls:"ensure",handler:"saveContentList",name:'ensure'},
+            {minWidth:80,text:"关闭",iconCls:"close",handler:"onComRegClose"}
 			]
 		},{
 		xtype:"toolbar",

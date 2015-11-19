@@ -49,7 +49,8 @@ Ext.define('KitchenSink.view.orgmgmt.orgRoleWindow', {
             xtype: 'textfield',
             fieldLabel: '角色名称',
             name: 'roleName',
-            readOnly:true
+            readOnly:true,
+                fieldStyle:'background:#F4F4F4'
         }, {
             xtype: 'combo',
             fieldLabel: '角色类型',
@@ -72,7 +73,8 @@ Ext.define('KitchenSink.view.orgmgmt.orgRoleWindow', {
             xtype: 'textfield',
             fieldLabel: '角色描述',
             name: 'roleDesc',
-            readOnly:true
+            readOnly:true,
+                fieldStyle:'background:#F4F4F4'
         }]
     }],
     buttons: [{

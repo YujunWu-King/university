@@ -51,36 +51,24 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.candidate.candid
                     },
                    {
                     xtype: 'textfield',
-                    fieldLabel:'考生姓名',
+                    fieldLabel:'申请人姓名',
                     name: 'realName',
                     ignoreChangesFlag: true,
+                    timeSet:'timeSet',
                     listeners:{'change':function(aa,newValue){
-                       // alert(newValue);拼装请求的参数
+                        var self = this;
+                        clearTimeout(this.timeSet);
+                        this.timeSet = setTimeout(function(){
+                            var formParaes=self.up('form').getForm().getValues();
+                            var classID=formParaes['classID'];
+                            var batchID=formParaes['batchID'];;
+                            var realName=newValue;
 
-                        //提交参数
-                        //alert(this.up('form').getXType());
-                        var formParaes=this.up('form').getForm().getValues();
-                        var classID=formParaes['classID'];
-                        var batchID=formParaes['batchID'];;
-                        var realName=newValue;
-
-                        var comParas='{"classID":"'+classID+'","batchID":"'+batchID+'","realName":"'+realName+'"}';
-                        var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPLY_STD","OperateType":"U","comParams":' + comParas + '}';
-                        //alert(this.getParentbyty('window').getXType());
-                        //alert(this.up('form').child('grid').getXType());
-                        var store=this.up('form').child('grid').getStore();
-                        store.tzStoreParams=comParas;
-                        store.reload();
-                        //Ext.tzSubmit(tzParams,function(responseData){
-                           /* var thisValue = responseData.reviewCount||btn.findParentByType('panel').child('form').getForm().findField('reviewNum').getValue();
-                            btn.findParentByType('panel').child('form').getForm().findField('reviewNum').setValue(thisValue);
-                            var grid = btn.findParentByType('panel').down("grid[name=interviewReviewStudentGrid]");
-                            var store = grid.getStore();
-                            if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1||tzParams.indexOf("update")){
-                                store.reload();
-                            }*/
-                       // },"",true,this);
-
+                            var comParas='{"classID":"'+classID+'","batchID":"'+batchID+'","realName":"'+realName+'"}';
+                            var store=self.up('form').child('grid').getStore();
+                            store.tzStoreParams=comParas;
+                            store.reload();
+                        },500);
                     }}
 
                 },
@@ -93,6 +81,7 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.candidate.candid
                     frame: true,
                     height:250,
                     style:'border:0',
+                    bodyStyle:'overflow-y:auto;overflow-x:hidden',
                     /* plugins: [
                      {
                      ptype: 'gridfilters',
@@ -149,27 +138,10 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.candidate.candid
                                 }
                             }
                         },{
-                            text:"报考批次",
-                            dataIndex:'batchName',
-                            hidden:true,
-                            minWidth:100,
-                            flex:1,
-                            filter: {
-                                type: 'string',
-                                itemDefaults: {
-                                    emptyText: 'Search for...'
-                                }
-                            }
-                        },{
                             text:"研究领域",
                             dataIndex:'joinedBatchs',
                             minWidth:150,
                             flex:1
-                        },{
-                            text:'是否有面试资格',
-                            dataIndex:'isInterviewed',
-                            minWidth:150,
-                            hidden:true
                         }
                     ]
                 }

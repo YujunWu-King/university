@@ -259,6 +259,15 @@
                     dataIndex: 'usName',
                     minWidth: 100,
                     flex: 1
+                },{
+                    menuDisabled: true,
+                    sortable: false,
+                    width:50,
+                    xtype: 'actioncolumn',
+                    items:[
+                        {iconCls: 'edit',tooltip: '编辑',handler: 'editUserAccountLine'},
+                        {iconCls: 'remove',tooltip: '删除',handler: 'deleteUserAccountLine'}
+                    ]
                 }],
                 store: {
                     type: 'orgMemListStore'
@@ -329,6 +338,15 @@
                         sortable: false,
                         minWidth:150,
                         flex:1
+                    },{
+                        menuDisabled: true,
+                        sortable: false,
+                        width:50,
+                        xtype: 'actioncolumn',
+                        items:[
+                            {iconCls: 'edit',tooltip: '编辑',handler: 'editOrgRoleLine'},
+                            {iconCls: 'remove',tooltip: '删除',handler: 'deleteOrgRoleLine'}
+                        ]
                     }],
                 bbar: {
                     xtype: 'pagingtoolbar',

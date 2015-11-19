@@ -278,6 +278,111 @@
     },
 	
 	onThemeResInfoClose: function(){
+        var contentPanel;
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.child("themeSetMg").store.reload();
 		this.getView().close();
-	}
+	},
+    //编辑
+    editThemeInfoBL: function(view, rowIndex){
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        //皮肤
+        var resSetID = selRec.get("resSetID");
+        //显示编辑页面
+        this.editThemeInfoByID(resSetID);
+    },
+    //删除
+    deleteThemeInfoBL: function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                store.removeAt(rowIndex);
+            }
+        },this);
+    },
+    editThemeInfoByID: function(resSetID){
+
+        Ext.tzSetCompResourses("TZ_ZY_RESSET_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZY_RESSET_COM"]["TZ_RESSET_INFO_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_RESSET_INFO_STD，请检查配置。');
+            return;
+        }
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        cmp = new ViewClass();
+        //操作类型设置为更新
+        cmp.actType = "update";
+        cmp.on('afterrender',function(panel){
+            //资源集合表单信息;
+            var form = panel.child('form').getForm();
+            form.findField("resSetID").setReadOnly(true);
+            //资源信息列表
+            var grid = panel.child('grid');
+            //参数
+            var tzParams = '{"ComID":"TZ_ZY_RESSET_COM","PageID":"TZ_RESSET_INFO_STD","OperateType":"QF","comParams":{"resSetID":"'+resSetID+'"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //资源集合信息数据
+                var formData = responseData.formData;
+                form.setValues(formData);
+                //资源集合信息列表数据
+                var roleList = responseData.listData;
+
+                var tzStoreParams = '{"resSetID":"'+resSetID+'"}';
+                grid.store.tzStoreParams = tzStoreParams;
+                grid.store.load();
+            });
+
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    }
 });

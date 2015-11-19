@@ -333,6 +333,7 @@
                                 xtype: 'grid',
                                 title:'申请人名单',
                                 minHeight: 260,
+                                style:'border:0',
                                 name:'GSMmaterialsReviewApplicantsGrid',
                                 reference:'GSMmaterialsReviewApplicantsGrid',
                                 columnLines: true,
@@ -350,11 +351,11 @@
                                     xtype:"toolbar",
                                     items:["-",
                                         // {text:"查询",tooltip:"查询参与本批次材料评审的申请人 ",iconCls:"query",handler:"queryApplicants"},"-",
-                                        {text:"新增",tooltip:"添加申请人 参与本批次材料评审",iconCls:"add",handler:"addApplicants"},"-",
-                                        {text: "编辑",tooltip: "编辑选中申请人 ", iconCls:"edit", handler: 'editApplicants'},"-",
-                                        {text:"删除",tooltip:"从列表中移除选中的申请人 ",iconCls:"remove",handler:"removeApplicants"},"-",
-                                        {text:"导出",tooltip:"导出申请人 列表", iconCls:"excel",handler:"exportExcelApplicants"},"-",
-                                        {text:"设置评委",tooltip:"为申请人 设置评委",iconCls:"people",handler:"setJudgeForStudent"},"->",
+                                        {text:"新增",tooltip:"添加申请人",iconCls:"add",handler:"addApplicants"},"-",
+                                        {text: "编辑",tooltip: "编辑选中申请人信息 ", iconCls:"edit", handler: 'editApplicants'},"-",
+                                        {text:"删除",tooltip:"从列表中删除申请人 ",iconCls:"remove",handler:"removeApplicants"},"-",
+                                        {text:"导出",tooltip:"导出申请人列表", iconCls:"excel",handler:"exportExcelApplicants"},"-",
+                                        {text:"设置评委",tooltip:"为申请人设置评委",iconCls:"people",handler:"setJudgeForStudent"},"->",
                                         {
                                             xtype:'splitbutton',
                                             text:'更多操作',
@@ -439,7 +440,7 @@
                                         },
                                         align:'center'
                                     },{
-                                        text: "评委账号",
+                                        text: "评委姓名",
                                         dataIndex: 'judgeList',
                                         // minWidth:130,
                                         flex:1,
@@ -460,19 +461,6 @@
                                         text: "面试资格",
                                         dataIndex: 'interviewQualification',
                                         width:100,
-                                        renderer:function(v){
-                                            switch(v){
-                                                case 'W':
-                                                    return '待定';
-                                                case 'N':
-                                                    return '无';
-                                                case 'Y':
-                                                    return '有';
-                                                case '':
-                                                    return '待定';
-
-                                            }
-                                        },
                                         filter: {
                                             type: 'list'
                                         }
@@ -483,9 +471,10 @@
                                         width:80,
                                         xtype: 'actioncolumn',
                                         items:[
-                                            {iconCls: 'remove',tooltip: '移除申请人 ',  handler: function(view, rowIndex){
+                                            {iconCls:'edit',tooltip:'编辑申请人信息',handler:'editCurrentApplicant'},
+                                            {iconCls: 'remove',tooltip: '移除申请人',  handler: function(view, rowIndex){
                                                 if( view.findParentByType("grid").findParentByType("form").getForm().findField('reviewStatus').getValue()=='进行中')
-                                                {Ext.Msg.alert('提示','当前评审状态为进行中，不可移除申请人 ');
+                                                {Ext.Msg.alert('提示','当前评审状态为进行中，不可移除申请人');
                                                     return ;}
                                                 Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                                                     if(btnId == 'yes'){
@@ -497,8 +486,8 @@
 
                                                     }
                                                 },"",true,this);
-                                            } },
-                                            {iconCls:'edit',tooltip:'编辑申请人 信息',handler:'editCurrentApplicant'}
+                                            } }
+
                                             // {iconCls: 'people',tooltip: '为申请人 指定评委',handler:'setAppJudge'}
                                         ]
                                     }
@@ -527,7 +516,7 @@
                                                 padding:0,
                                                 items: [
                                                     {text: "新增",iconCls:'add', tooltip: "新增评委信息", handler: "addJudge"},"-",
-                                                    {text: "删除",iconCls:'remove', tooltip: "删除评委信息", handler: function(btn)
+                                                    {text: "删除",iconCls:'remove', tooltip: "删除评委", handler: function(btn)
                                                     { var form=btn.findParentByType("form"),
                                                         selList = form.child('grid').getSelectionModel().getSelection(),
                                                     //选中行长度
@@ -548,7 +537,6 @@
                                                                 }
                                                             },this);
                                                         }}},"-",
-
                                                     {text:"发送邮件",tooltip:"发送邮件",iconCls:"email",handler:"sendEmail"}
                                                 ]
                                             }
@@ -638,11 +626,11 @@
                                                 renderer:function(v){
                                               if (v=="A")
                                               {
-                                                  v="一般评委组"
+                                                  return "一般评委组"
                                               }
                                                     if (v=="B")
                                                     {
-                                                        v="系主任评委组"
+                                                       return "系主任评委组"
                                                     }
                                                 }
                                             },{

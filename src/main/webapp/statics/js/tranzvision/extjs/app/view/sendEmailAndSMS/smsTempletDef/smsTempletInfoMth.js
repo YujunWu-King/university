@@ -107,7 +107,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfoMth', {
 			comParams = '"add":[{"typeFlag":"SMSTMPLINFO","data":'+Ext.JSON.encode(form.getValues())+'}]';
 		}
 		//修改json字符串
-	
+	   console.log(form.getValues());
 		var editJson = "";
 		if(actType == "update"){
 			editJson = '{"typeFlag":"SMSTMPLINFO","data":'+Ext.JSON.encode(form.getValues())+'}';

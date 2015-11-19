@@ -22,7 +22,8 @@
     },
     header:false,
     frame: true,
-    dockedItems:[{
+    dockedItems:[
+        {
         xtype:"toolbar",
         items:[
             {
@@ -30,8 +31,20 @@
                 iconCls:"query",
                 handler:'queryClass'
             }
-        ]
-    }],
+        ]},
+        {
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+            {
+                minWidth:80,
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.close","关闭"),
+                iconCls:"close",
+                handler: 'onComRegClose'
+            }]
+        }
+    ],
     initComponent: function () {
         var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore();
         Ext.apply(this, {

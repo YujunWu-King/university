@@ -47,6 +47,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         {name: 'localStartTime'},
         {name: 'localFinishDate'},
         {name: 'localFinishTime'},
-        {name: 'sort'}
+        {name: 'sort'},
+        {name: 'releaseOrUndo'}
     ]
 });

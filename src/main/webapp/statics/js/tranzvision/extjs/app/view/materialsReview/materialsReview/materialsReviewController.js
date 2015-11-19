@@ -1,6 +1,7 @@
 ﻿Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.materialsReview',
+    requires:['Ext.ux.IFrame'],
     queryClassBatch:function(btn){Ext.tzShowCFGSearch({
         cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_LIST_STD.TZ_CLS_BATCH_V',
         condition :{TZ_JG_ID:Ext.tzOrgID},
@@ -10,6 +11,18 @@
             store.load();
         }
     });
+    },
+    queryApplicants:function(btn) {
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_ADDAPP_STD.TZ_CL_ADDAPP_VW',
+            condition :{TZ_JG_ID:Ext.tzOrgID},
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+
     },
     sendJudgeEmail:function(btn) {
         //是否有访问权限
@@ -368,20 +381,20 @@
         var grid= me.getView().lookupReference("materialsReviewJudgeGrid");
         //var store=grid.store;
         var store = grid.getStore();
-        for (var i=0;i<store.getCount();i++){
-            //var group=Ext.JSON.encode(store.getAt(i).get('judgeGroup').data);
-            var group=store.getAt(i).get('judgeGroup');
-            if (group=="")
-            {
-                if (store.getAt(i).get('judgeID')!=""){
-
-                    i++;
-                    var string1="第"+i+"行";
-                    Ext.Msg.alert(string1,"评委组编号不可为空");
-                    return;}
-            }
-
-        }
+//        for (var i=0;i<store.getCount();i++){
+//            //var group=Ext.JSON.encode(store.getAt(i).get('judgeGroup').data);
+//            var group=store.getAt(i).get('judgeGroup');
+//            if (group=="")
+//            {
+//                if (store.getAt(i).get('judgeID')!=""){
+//
+//                    i++;
+//                    var string1="第"+i+"行";
+//                    Ext.Msg.alert(string1,"评委组编号不可为空");
+//                    return;}
+//            }
+//
+//        }
         if (form.isValid()) {
             var tzParams = this.getRuleParams();
             Ext.tzSubmit(tzParams,function(responseData){
@@ -407,20 +420,20 @@
 //        }
         var grid= me.getView().lookupReference("materialsReviewJudgeGrid");
         var store = grid.getStore();
-        for (var i=0;i<store.getCount();i++){
-            //var group=Ext.JSON.encode(store.getAt(i).get('judgeGroup').data);
-            var group=store.getAt(i).get('judgeGroup');
-            if (group=="")
-            {
-                if (store.getAt(i).get('judgeID')!=""){
-
-                    i++;
-                    var string1="第"+i+"行";
-                    Ext.Msg.alert(string1,"评委组编号不可为空");
-                    return;}
-            }
-
-        }
+//        for (var i=0;i<store.getCount();i++){
+//            //var group=Ext.JSON.encode(store.getAt(i).get('judgeGroup').data);
+//            var group=store.getAt(i).get('judgeGroup');
+//            if (group=="")
+//            {
+//                if (store.getAt(i).get('judgeID')!=""){
+//
+//                    i++;
+//                    var string1="第"+i+"行";
+//                    Ext.Msg.alert(string1,"评委组编号不可为空");
+//                    return;}
+//            }
+//
+//        }
         if (form.isValid()) {
             var tzParams = this.getRuleParams();
             var comView = this.getView();
@@ -639,26 +652,27 @@
                         ignoreChangesFlag: true
                     },{
                         xtype:'numberfield',
-                        fieldLabel: '评审考生下限',
+                        fieldLabel: '评审考生人数',
                         minValue:0,
                         name:'lower',
                         allowDecimals:false,
                         negativeText:'评审考生下限不能为负数',
-                        vtypeText:'评审考生下限不能大于上限',
-                        nanText:'{0}不是有效的数字',
-                        value:0,
-                        ignoreChangesFlag: true
-                    },{xtype:'numberfield',
-                        name:'upper',
-                        fieldLabel: '评审考生上限',
-                        minValue:0,
-                        allowDecimals:false,
-                        negativeText:'评审考生上限不能为负数',
-                        vtypeText:'评审考生上限不能小于下限',
+                       // vtypeText:'评审考生下限不能大于上限',
                         nanText:'{0}不是有效的数字',
                         value:0,
                         ignoreChangesFlag: true
                     }
+//                    ,{xtype:'numberfield',
+//                        name:'upper',
+//                        fieldLabel: '评审考生上限',
+//                        minValue:0,
+//                        allowDecimals:false,
+//                        negativeText:'评审考生上限不能为负数',
+//                        vtypeText:'评审考生上限不能小于下限',
+//                        nanText:'{0}不是有效的数字',
+//                        value:0,
+//                        ignoreChangesFlag: true
+//                    }
                 ]
                 //items END
             }],
@@ -672,11 +686,11 @@
                         judgeStatus = form.findField("judgeStatus").getValue(),
                         judgeGroup = form.findField("judgeGroup").getValue(),
                         lower = form.findField("lower").getValue(),
-                        upper = form.findField("upper").getValue();
-                    if(lower>upper){
-                        Ext.Msg.alert('提示','考生上限不可小于考生下限');
-                        return;
-                    }
+                        upper = form.findField("lower").getValue();
+//                    if(lower>upper){
+//                        Ext.Msg.alert('提示','考生上限不可小于考生下限');
+//                        return;
+//                    }
                     if(form.findField("judgeID").isValid() && form.findField("judgeGroup").isValid()) {
                         if (grid.store.find('judgeID', judgeID, 0, false, false, true) == -1) {
                             var data = {classID: classID, batchID: batchID, judgeID: judgeID, judgeName: judgeName, judgeStatus: judgeStatus, judgeGroup: judgeGroup, lower: lower, upper: upper};
@@ -845,38 +859,40 @@
                             ignoreChangesFlag: true
                         },{
                             xtype:'numberfield',
-                            fieldLabel: '评审考生下限',
+                            fieldLabel: '评审考生人数',
                             minValue:0,
                             name:'lower',
                             allowDecimals:false,
                             negativeText:'评审考生下限不能为负数',
-                            vtypeText:'评审考生下限不能大于上限',
+                            //vtypeText:'评审考生下限不能大于上限',
                             nanText:'{0}不是有效的数字',
                             value:lower,
                             ignoreChangesFlag: true
-                        },{xtype:'numberfield',
-                            name:'upper',
-                            fieldLabel: '评审考生上限',
-                            minValue:0,
-                            allowDecimals:false,
-                            negativeText:'评审考生上限不能为负数',
-                            vtypeText:'评审考生上限不能小于下限',
-                            nanText:'{0}不是有效的数字',
-                            value:upper,
-                            ignoreChangesFlag: true
-                        }]
+                        }
+//                            ,{xtype:'numberfield',
+//                            name:'upper',
+//                            fieldLabel: '评审考生上限',
+//                            minValue:0,
+//                            allowDecimals:false,
+//                            negativeText:'评审考生上限不能为负数',
+//                            vtypeText:'评审考生上限不能小于下限',
+//                            nanText:'{0}不是有效的数字',
+//                            value:upper,
+//                            ignoreChangesFlag: true
+//                        }
+         ]
 
                     })],  buttons:[{
                     text: '保存',handler:function(btn) {
                         var form = btn.findParentByType("panel").child("form").getForm(),
                             judgeStatus = form.findField("judgeStatus").getValue(),
                             judgeGroup = form.findField("judgeGroup").getValue(),
-                            upper = form.findField("upper").getValue(),
+                            upper = form.findField("lower").getValue(),
                             lower = form.findField("lower").getValue();
-                        if (lower > upper) {
-                            Ext.Msg.alert('提示', '考生上限不可小于考生下限');
-                            return;
-                        }
+//                        if (lower > upper) {
+//                            Ext.Msg.alert('提示', '考生上限不可小于考生下限');
+//                            return;
+//                        }
 
                         selList[0].set("judgeStatus", judgeStatus);
                         selList[0].set("judgeGroup", judgeGroup);
@@ -1018,36 +1034,38 @@
                         ignoreChangesFlag: true
                     },{
                         xtype:'numberfield',
-                        fieldLabel: '评审考生下限',
+                        fieldLabel: '评审考生人数',
                         minValue:0,
                         name:'lower',
                         allowDecimals:false,
                         negativeText:'评审考生下限不能为负数',
-                        vtypeText:'评审考生下限不能大于上限',
+                      //  vtypeText:'评审考生下限不能大于上限',
                         nanText:'{0}不是有效的数字',
                         ignoreChangesFlag: true
-                    },{xtype:'numberfield',
-                        name:'upper',
-                        fieldLabel: '评审考生上限',
-                        minValue:0,
-                        allowDecimals:false,
-                        negativeText:'评审考生上限不能为负数',
-                        vtypeText:'评审考生上限不能小于下限',
-                        nanText:'{0}不是有效的数字',
-                        ignoreChangesFlag: true
-                    }]
+                    }
+//                        ,{xtype:'numberfield',
+//                        name:'upper',
+//                        fieldLabel: '评审考生上限',
+//                        minValue:0,
+//                        allowDecimals:false,
+//                        negativeText:'评审考生上限不能为负数',
+//                        vtypeText:'评审考生上限不能小于下限',
+//                        nanText:'{0}不是有效的数字',
+//                        ignoreChangesFlag: true
+//                    }
+                    ]
 
                 })],  buttons:[{
                 text: '确定',handler:function(btn){
                     var form = btn.findParentByType("panel").child("form").getForm(),
                         judgeStatus = form.findField("judgeStatus").getValue(),
                         judgeGroup = form.findField("judgeGroup").getValue(),
-                        upper = form.findField("upper").getValue(),
+                        upper = form.findField("lower").getValue(),
                         lower = form.findField("lower").getValue();
-                    if(lower>upper){
-                        Ext.Msg.alert('提示','考生上限不可小于考生下限');
-                        return;
-                    }
+//                    if(lower>upper){
+//                        Ext.Msg.alert('提示','考生上限不可小于考生下限');
+//                        return;
+//                    }
 
                     grid.store.getAt(rowIndex).set("judgeStatus", judgeStatus);
                     grid.store.getAt(rowIndex).set("judgeGroup", judgeGroup);
@@ -1064,6 +1082,108 @@
         });
         Ext.getCmp('judgeInfo').getForm().setValues(data);
         win.show();
+    },
+    setJudgeForSomeApps:function(btn){
+        var form=btn.findParentByType('form').getForm();
+        var classID = form.findField('classID').value;
+        var batchID =form.findField('batchID').value;
+        if(form.findField('status').getValue()=='进行中'){
+            Ext.Msg.alert('提示','当前评审状态为进行中，不可为考生指定评委');
+            return ;
+        }
+        var grid=btn.findParentByType("grid");
+        //选中行
+        var selList = grid.getSelectionModel().getSelection();
+        //选中行长度
+        var resSetStore =  btn.findParentByType("grid").store;
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要操作的记录");
+            return;
+        }else{
+
+
+            var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_APPJUG_STD"];
+            if( pageResSet == "" || pageResSet == undefined){
+                Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+                return;
+            }
+//该功能对应的JS类
+            var className = pageResSet["jsClassName"];
+            if(className == "" || className == undefined){
+                Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_APPJUG_STD，请检查配置。');
+                return;
+            }
+            var contentPanel, cmp, ViewClass, clsProto;
+
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+            contentPanel.body.addCls('kitchensink-example');
+
+            if(!Ext.ClassManager.isCreated(className)){
+                Ext.syncRequire(className);
+            }
+            ViewClass = Ext.ClassManager.get(className);
+            clsProto = ViewClass.prototype;
+
+            if (clsProto.themes) {
+                clsProto.themeInfo = clsProto.themes[themeName];
+
+                if (themeName === 'gray') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+                } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                    if (themeName === 'crisp-touch') {
+                        clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                    }
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+                }
+                // <debug warn>
+                // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+                if (!clsProto.themeInfo) {
+                    Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                        themeName + '\'. Is this intentional?');
+                }
+                // </debug>
+
+            }
+           // var appGrid,appSelList,appRowIndex;
+            var PLapp='';
+            if(checkLen>1){
+            //批量考生
+            for (var d = 0; d < selList.length; d++) {
+                var  appInsID = selList[d].data.appInsID;
+                if (PLapp == '') {
+                    PLapp=appInsID;
+                } else {
+                    PLapp = PLapp  + "," + appInsID;
+                }
+
+
+            }
+                appInsID="" }
+            else{
+
+                appInsID=selList[0].data.appInsID;
+                PLapp=appInsID;
+            }
+            console.log(grid,selList)
+            cmp = new ViewClass(
+                appGrid=grid,
+                appRowIndex="",
+                appSelList=PLapp
+            );
+
+            cmp.on('afterrender',function(win){
+                var grid= win.child('grid'),
+                    store =grid.getStore();
+
+                var  tzStoreParams = '{"classID":"'+classID+'","batchID":"'+batchID+'","appInsID":"'+appInsID+'"}';
+                store.tzStoreParams = tzStoreParams;
+                store.load();
+
+            });
+            cmp.show();
+        }
+
     },
     setAppJudge:function(btn,rowIndex){
         var grid= this.getView().lookupReference("materialsReviewApplicantsGrid");
@@ -1127,7 +1247,8 @@
         }
         cmp = new ViewClass(
             appGrid=grid,
-            appRowIndex=rowIndex
+            appRowIndex=appInsID,
+            appSelList=""
         );
 
         cmp.on('afterrender',function(win){
@@ -1231,11 +1352,41 @@
                             orgColorSortStore:orgColorSortStore ,
                             initData:initData,
                             stuGridColorSortFilterOptions:stuGridColorSortFilterOptions,
-                            classID:classID
+                            classID:classID,
+                            batchID:batchID
                         }
                     );
                     cmp.classID=classID;
                     cmp.batchID=batchID;
+
+                    var tzAppColsParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_APPS_STD",' +
+                        '"OperateType":"getStudentColumns","comParams":{"type":"getStudentColumns", "classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                    var appFields= [
+                        {name: 'classID'},
+                        {name: 'batchID'},
+                        {name: 'appInsID'},
+                        {name: 'oprID'},
+                        {name: 'realName'},
+                        {name: 'gender'},
+                        {name: 'judgeList'},
+                        {name: 'reviewStatus'},
+                        {name: 'interviewQualification'},
+                        {name: 'colorType'},
+                        {name: 'remark'},
+                        {name: 'adminRemark'}
+                    ];
+                    Ext.tzLoad(tzAppColsParams,function(respData){
+                        var studentColums=respData.studentColums;
+                        if (studentColums!=""){
+                            var transScoreValue=studentColums.split(",");
+
+                            for (var tt=0;tt<transScoreValue.length;tt++) {
+                                appFields.push({
+                                    name:transScoreValue[tt]
+                                });
+                            }}
+
+                    });
 
                     cmp.on('afterrender',function(panel){
                         var form = panel.child('form').getForm();
@@ -1254,6 +1405,7 @@
 
                             form.setValues(formData);
                             var store = panel.child('form').child("grid").store;
+                            store.field=appFields;
                             store.tzStoreParams = tzStoreParams;
                             store.load({
                                 scope: this,
@@ -1278,58 +1430,8 @@
 
 
 
-
-//        cmp.on('afterrender',function(panel){
-//            var form = panel.child('form').getForm();
-//
-//            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_APPS_STD",' +
-//                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
-//
-//
-//            var tzStoreParams ='{"classID":"'+classID+'","batchID":"'+batchID+'"}';
-//
-//            Ext.tzLoad(tzParams,function(respData){
-//                var formData = respData.formData;
-//
-//                formData.className = record.data.className;
-//                formData.batchName = record.data.batchName;
-//
-//                form.setValues(formData);
-//                var store = panel.child('form').child("grid").store;
-//                store.tzStoreParams = tzStoreParams;
-//                store.load({
-//                    scope: this,
-//                    callback: function(records, operation, success) {
-//                    }
-//                });
-//            });
-//        });
-//
-//        tab = contentPanel.add(cmp);
-//
-//        contentPanel.setActiveTab(tab);
-//
-//        Ext.resumeLayouts(true);
-//
-//        if (cmp.floating) {
-//            cmp.show();
-//        }
     },
-    queryApplicants:function(btn){
-        var form = btn.findParentByType("form").getForm();
-        var classID=form.findField("classID").getValue();
-        var batchID=form.findField("batchID").getValue();
 
-        Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_APPS_STD.TZ_CLPS_KSH_V',
-            condition :{"TZ_CLASS_ID":classID,"TZ_APPLY_PC_ID":batchID},
-            callback: function(seachCfg){
-                var store = btn.findParentByType("grid").store;
-                store.tzStoreParams = seachCfg;
-                store.load();
-            }
-        });
-    },
     addApplicants : function(btn){
         var form=btn.findParentByType('form').getForm();
         if(form.findField('status').getValue()=='进行中'){
@@ -1385,13 +1487,22 @@
         }
         //cmp = new ViewClass();
         cmp = new ViewClass(
+            classID=classID,
+            batchID=batchID,
             className=DQclassName
         );
         cmp.on('afterrender',function(win){
+
             var store = win.child('grid').getStore(),
-                tzStoreParams = '{"type":"'+config.type+'","classID":"'+classID+'","batchID":"'+batchID+'"}';
-            store.tzStoreParams = tzStoreParams;
-            store.load();
+                tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDAPP_STD.TZ_CL_ADDAPP_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+Ext.tzOrgID+'","TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classID+'"}}';
+           store.tzStoreParams = tzStoreParams;
+            console.log("storeload")
+            store.load({
+                callback:function(){
+console.log("callBack")
+//                store.on('prefetch',self.ifClearCondition(store));
+            }
+                });
             console.log(store)
             console.log(store.filter)
 //           store.filterBy(function(record) {
@@ -1402,6 +1513,9 @@
 
         cmp.show();
 
+    },
+    ifClearCondition:function(store){
+      alert("asd");
     },
     addApplicantsFromFiveGold:function(btn){
         var form=btn.findParentByType('form').getForm();
@@ -1469,36 +1583,37 @@
         btn.findParentByType("grid").filters.clearFilters(true);
     },
     addApplicantEnsure : function(btn,event){
-        //由于新增弹出窗口会是当前页面不能操作，弹出窗口对应的tab即是当前活动的Tab
+
+//由于新增弹出窗口会是当前页面不能操作，弹出窗口对应的tab即是当前活动的Tab
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
             targetStore = activeTab.down("grid[name=materialsReviewApplicantsGrid]").getStore(),
             select = btn.findParentByType("panel").child('grid').getSelectionModel().getSelection();
+        var isExist = false,
+            newRecord = [];
+        //循环中将非重复数据保存到中间变量，避免之后的循环会额外查询到之前的循环插入的数据
         for(var x =0;x<select.length;x++){
-            if(targetStore.find('appInsID',select[x].data.appInsID)<0) {
-                var applicantModel = new KitchenSink.view.materialsReview.materialsReview.materialsReviewApplicantsModel({
-                    classID:select[x].data.classID,
-                    batchID:select[x].data.batchID,
-                    realName:select[x].data.realName,
-                    gender:select[x].data.gender,
-                    appInsID:select[x].data.appInsID,
-                    judgeList:"",
-                    reviewStatus:"",
-                    interviewQualification:"",
-                    colorType:"",
-                    remark:"",
-                    adminRemark:""
-                });
-
-                targetStore.add(applicantModel);
+            if(targetStore.find('appInsID',select[x].data.appInsID)<0,[anyMatch=false],[exactMatch =true]) {
+                delete select[x].data.id;
+                select[x].data.remark="";
+                select[x].data.adminRemark="";
+                select[x].data.interviewQualification="待定";
+                select[x].data.judgeList="";
+                select[x].data.reviewStatus="";
+                select[x].data.oprID="";
+                select[x].data.colorType=select[x].data.colorType;
+                select[x].data.studentSchool="";
+                newRecord.push(select[x].data);
             }else{
-                var isExist = true;
+                isExist = true;
             }
-            if(isExist){
-                Ext.Msg.alert("提示","在您所选的记录中，有考生已经存在于名单中");
-            }
+
 
         }
-        var store=btn.findParentByType("panel").child('grid').getStore();
+        //循环完毕后再向store中添加数据
+        targetStore.add(newRecord);
+        if(isExist){
+            Ext.Msg.alert("提示","在您所选的记录中，有考生已经存在于名单中");
+        }
         btn.findParentByType("panel").close();
 
     },
@@ -1583,9 +1698,9 @@
                             store: {
                                 fields: ["status", "desc"],
                                 data: [
-                                    {status: 'Y', desc: '有'},
-                                    {status: 'W', desc: '待定'},
-                                    {status: 'N', desc: '无'}
+                                    {status: '有面试资格', desc: '有面试资格'},
+                                    {status: '待定', desc: '待定'},
+                                    {status: '无面试资格', desc: '无面试资格'}
                                 ]
                             },
                             displayField: 'desc',
@@ -1606,6 +1721,14 @@
                             editable : false,
                             store:colorStore,
                             value:colorType,
+                            triggers:{
+                                clear: {
+                                    cls: 'x-form-clear-trigger',
+                                    handler: function(field){
+                                        field.setValue("");
+                                    }
+                                }
+                            },
                             ignoreChangesFlag: true,
                             tpl: Ext.create('Ext.XTemplate',
                                 '<tpl for=".">',
@@ -1647,6 +1770,7 @@
                             adminRemark = form.findField("adminRemark").getValue(),
                             colorType= form.findField("colorType").getValue(),
                             record = selList[0];
+                        console.log(record);
                         record.set("interviewQualification",interviewQualification||'');
                         record.set("colorType",colorType||'');
                         record.set("remark",remark||'');
@@ -1673,6 +1797,7 @@
             batchID = form.findField("batchID").getValue(),
             datas = grid.getStore().getAt(rowIndex).data;
         var interviewQualification=datas.interviewQualification;
+        console.log(interviewQualification);
         var colorType=datas.colorType;
         if (interviewQualification=="")
         {  interviewQualification="W"}
@@ -1733,9 +1858,9 @@
                         store: {
                             fields: ["status", "desc"],
                             data: [
-                                {status: 'Y', desc: '有'},
-                                {status: 'W', desc: '待定'},
-                                {status: 'N', desc: '无'}
+                                {status: '有面试资格', desc: '有面试资格'},
+                                {status: '待定', desc: '待定'},
+                                {status: '无面试资格', desc: '无面试资格'}
                             ]
                         },
                         displayField: 'desc',
@@ -1806,6 +1931,7 @@
                         adminRemark = form.findField("adminRemark").getValue(),
                         colorType= form.findField("colorType").getValue(),
                         record = grid.getStore().getAt(rowIndex);
+                    console.log(record);
                     record.set("interviewQualification",interviewQualification||'');
                     record.set("remark",remark||'');
                     record.set("colorType",colorType||'');
@@ -1825,7 +1951,7 @@
     removeApplicants:function(btn){
         var form=btn.findParentByType('form').getForm();
         if(form.findField('status').getValue()=='进行中'){
-            Ext.Msg.alert('提示','当前评审状态为进行中，不可删除考生');
+            Ext.Msg.alert('提示','当前评审状态为进行中，不可移除考生');
             return ;
         }
         //选中行
@@ -1833,25 +1959,29 @@
         //选中行长度
         var resSetStore =  btn.findParentByType("grid").store;
         var checkLen = selList.length;
+        var tiShi=0;
         if(checkLen == 0){
             Ext.Msg.alert("提示","请选择要删除的记录");
             return;
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
-//
                     for ( var i=0;i<checkLen;i++)
                     {
-                        if (selList[i].data.judgeList!=0)
-                        {Ext.Msg.alert('提示','选中考生中存在已被指定评委的考生，不可删除');}
-                        else
-                        {resSetStore.remove(selList[i]);}
+                        if (selList[i].data.judgeList!="")
+                        {
+                            console.log(selList)
+                            tiShi=tiShi+1;
+                            selList.splice(i,"1"," ");
+                        }
+
                     }
-                    //           resSetStore.remove(selList);
-//                    var resSetStore =  btn.findParentByType("grid").store;
-//                    for (i=0;i<checkLen;i++){
-//
-//                    }
+                    if(tiShi>0)
+                    {
+                        Ext.Msg.alert('提示','选中考生中存在已被指定评委的考生，不可删除');
+
+                    }
+                    resSetStore.remove(selList);
                 }
 
             },"",true,this);
@@ -1880,9 +2010,9 @@
                     store: {
                         fields: ["status", "desc"],
                         data: [
-                            {status: 'Y', desc: '有'},
-                            {status: 'W', desc: '待定'},
-                            {status: 'N', desc: '无'}
+                            {status: '有面试资格', desc: '有面试资格'},
+                            {status: '待定', desc: '待定'},
+                            {status: '无面试资格', desc: '无面试资格'}
                         ]
                     },
                     displayField: 'desc',
@@ -2139,7 +2269,7 @@
 
         if (isGuiFan=="N")
         {
-            alert("评审考生上限小于下限，请重新设置");
+           // alert("评审考生上限小于下限，请重新设置");
             return;
         }
 
@@ -2148,7 +2278,9 @@
             var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"reStartNewOnclick","classID":"' + classID + '","batchID":"' + batchID + '","delibCount":"' + DQLC + '"}}';
             Ext.tzLoad(tzParams, function (respData) {
                 if (respData == "-1") {
-                    Ext.Msg.alert('提示', '当前班级批次情况下，不可开启评审，如要开启评审，请满足以下三个条件：</br>  1.评委总下限不可大于材料评审考生总人次数</br> 2.评委总上限不可小于材料评审考生总人次数</br>   3.每组评委：总下限不可大于材料考生人数，总上限不可小于材料考生人数');
+                    //Ext.Msg.alert('提示', '当前班级批次情况下，不可开启评审，如要开启评审，请满足以下三个条件：</br>  1.评委总下限不可大于材料评审考生总人次数</br> 2.评委总上限不可小于材料评审考生总人次数</br>   3.每组评委：总下限不可大于材料考生人数，总上限不可小于材料考生人数');
+                    Ext.Msg.alert('提示', '当前班级批次情况下，不可开启评审，如要开启评审，请满足以下两个条件：</br>  1.评委评审考生总人次必须等于材料评审考生总人次</br> 2.每组评委的评审考生人数之和必须等于材料考生人数');
+
                     return;
 
                 }
@@ -2337,8 +2469,121 @@
         cmp = new ViewClass(scoreItems);
         cmp.show();
     },
+    viewAppJudge:function(grid,record,rowIndex){
+        //grid,record,rowIndex
 
+        var gridData=grid.getStore().getAt(rowIndex).data;
+        if(gridData.judgeList==""){
+            return;
+        }
+        var reallyJudge=[];
+        var allJudge= gridData.judgeList.split(',');
+        {
+            for (var gg=0;gg<allJudge.length;gg++)
+            {
+                var everyJudge=allJudge[gg].split('(')[0];
+                if(everyJudge!=""){
+                    reallyJudge.push(everyJudge)
+                }
+            }
+        }
+        console.log(allJudge);
+        console.log(allJudge[0]);
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_VWJUD_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+//该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_VWJUD_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        var win = this.lookupReference('materialsReviewAppJugDetail');
+        var panel = this.getView();
+
+        var form = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab().child('form').getForm(),
+            JSONData={
+                appInsID:gridData.appInsID,
+                classID  :form.findField('classID').getValue(),
+                batchID : form.findField('batchID').getValue(),
+                judgeList :reallyJudge
+               // judgeList : gridData.judgeList.split(',')
+            };
+
+        var comParams = Ext.JSON.encode(JSONData);
+
+        var params = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_VWJUD_STD","OperateType":"QG","comParams":'+comParams+'}';
+        Ext.tzLoad(params, function(resp){
+//            var scoreItems=[];
+//
+//            var value=resp.root;
+//            var GridData,judgeScore,scoreItem;
+//
+//            for (var i=0;i<value.length;i++) {
+//                GridData = value[i];
+//
+//                judgeScore = Ext.JSON.decode(GridData.score);
+//
+//                for (var x = judgeScore.length - 1; x >= 0; x--) {
+//                    var n = 0;
+//                    scoreItem = judgeScore[x].name;
+//
+//                    for (var y = 0; y < scoreItems.length; y++) {
+//                        if (scoreItems[y] == scoreItem) {
+//                            n = n + 1;
+//                        }
+//                    }
+//                    if (n == 0) {
+//                        scoreItems.push(scoreItem);
+//                    }
+//                }
+//            }
+            var scoreItems=[];
+//返回json的root
+            var value=resp.root;
+            console.log(value)
+            //因为考虑到无评委不会提交请求，故返回的root内必有数据
+            //所有数据的打分类型一致，取第一组数据打分类型
+            var scoreTypes=value[0].score;
+            var GridData,judgeScore,scoreItem;
+            if(scoreTypes.length>0){
+                for (var x =0 ; x <scoreTypes.length; x++) {
+                    scoreItem = scoreTypes[x].name;
+                    scoreItems.push(scoreItem);
+
+                }
+
+            }
+
+            if (!win) {
+                Ext.syncRequire(className);
+                ViewClass = Ext.ClassManager.get(className);
+                //新建类
+                win = new ViewClass(scoreType=scoreItems);
+                //this.getView().add(win);
+                panel.add(win);
+            }
+            //设置操作类型
+
+            var store=win.child('grid').getStore();
+            store.tzStoreParams = comParams;
+            store.load({  })
+            Ext.resumeLayouts(true);
+
+            if (win.floating) {
+                win.show();
+            }
+        });
+
+    },
     viewJudge:function(grid,record,rowIndex){
+
         var gridData=grid.getStore().getAt(rowIndex).data;
         if(gridData.judgeInfo==""){
             return;
@@ -2373,30 +2618,48 @@
 
         var params = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_VWJUD_STD","OperateType":"QG","comParams":'+comParams+'}';
         Ext.tzLoad(params, function(resp){
+
             var scoreItems=[];
-
+//返回json的root
             var value=resp.root;
+            console.log(value)
+            //因为考虑到无评委不会提交请求，故返回的root内必有数据
+            //所有数据的打分类型一致，取第一组数据打分类型
+            var scoreTypes=value[0].score;
             var GridData,judgeScore,scoreItem;
+            if(scoreTypes.length>0){
+                for (var x =0 ; x <scoreTypes.length; x++) {
+                    scoreItem = scoreTypes[x].name;
+                    scoreItems.push(scoreItem);
 
-            for (var i=0;i<value.length;i++) {
-                GridData = value[i];
-
-                judgeScore = Ext.JSON.decode(GridData.score);
-
-                for (var x = judgeScore.length - 1; x >= 0; x--) {
-                    var n = 0;
-                    scoreItem = judgeScore[x].name;
-
-                    for (var y = 0; y < scoreItems.length; y++) {
-                        if (scoreItems[y] == scoreItem) {
-                            n = n + 1;
-                        }
-                    }
-                    if (n == 0) {
-                        scoreItems.push(scoreItem);
-                    }
                 }
+
             }
+//
+//            var scoreItems=[];
+//
+//            var value=resp.root;
+//            var GridData,judgeScore,scoreItem;
+//
+//            for (var i=0;i<value.length;i++) {
+//                GridData = value[i];
+//
+//                judgeScore = Ext.JSON.decode(GridData.score);
+//
+//                for (var x = judgeScore.length - 1; x >= 0; x--) {
+//                    var n = 0;
+//                    scoreItem = judgeScore[x].name;
+//
+//                    for (var y = 0; y < scoreItems.length; y++) {
+//                        if (scoreItems[y] == scoreItem) {
+//                            n = n + 1;
+//                        }
+//                    }
+//                    if (n == 0) {
+//                        scoreItems.push(scoreItem);
+//                    }
+//                }
+//            }
 
             if (!win) {
                 Ext.syncRequire(className);
@@ -2418,21 +2681,6 @@
             }
         });
 
-//        if(!Ext.ClassManager.isCreated(className)){
-//            Ext.syncRequire(className);
-//        }
-//        store.tzStoreParams = tzStoreParams;
-//
-//        store.load({
-//            callback:function(value){
-
-//
-//
-//                }
-//
-//            }
-//        });
-//        cmp.show();
     },
     onScheduleSave : function(btn){
         var form = btn.findParentByType('panel').child('form'),
@@ -2592,8 +2840,9 @@
             var select = btn.findParentByType("grid").getSelection(),
                 index = btn.findParentByType("grid").getStore().indexOf(select[x]),
                 record = btn.findParentByType("grid").getStore().getAt(index);
-            str = selection[x].data.hasSubmited;
-            if (str.match(/^\d+\//)[0].replace(/\//, '') == str.match(/\/\d+$/)[0].replace(/\//, '') && !str.match(/^0\//)) {
+            var  str = selection[x].data.hasSubmited,
+                totalApp=selection[x].data.lower;
+            if (str.match(/^\d+\//)[0].replace(/\//, '') == str.match(/\/\d+$/)[0].replace(/\//, '') && !str.match(/^0\//)&&str.match(/^\d+\//)[0].replace(/\//, '') ==totalApp) {
                 //抽取数量与已提交的数量相同同时抽取数量不为空=>当前评委抽取的所有考生都已评审
                 //btn.findParentByType('grid').getSelectionModel().getSelection()[0].data.isChange = 'submit';
                 record.set('submitYN','Y');
@@ -2614,7 +2863,7 @@
             Ext.Msg.alert("提示","请选择要操作的记录");
             return;
         }
-        Ext.Msg.confirm('警告','撤销面试数据会将该评委的所有数据都撤销，该操作不可恢复，是否继续？',function(e) {
+        Ext.Msg.confirm('警告','撤销评议数据会将该评委的所有数据都撤销，该操作不可恢复，是否继续？',function(e) {
             if (e === 'yes') {
                 var str = btn.findParentByType('grid').getSelectionModel().getSelection(),
                     JSONData = [];
@@ -2633,6 +2882,7 @@
                 },"成功删除",true,this);
             }
         } );
+        this.judgeInfoController(btn,[{name:'submitYN',value:'C'}]);
     },
     printChart: function(btn){
         //Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
@@ -2782,6 +3032,63 @@
                 }
             }
         })
-    }
+    },
+    viewThisApplicationForm: function(grid, rowIndex,colIndex){
+        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
 
+        var store = grid.getStore();
+        var record = store.getAt(rowIndex);
+        var classID=record.get("classID");
+        var appInsID=record.get("insID");
+
+        if(appInsID!=""){
+            var tzParams="{ComID:'TZ_ONLINE_REG_COM',PageID:'TZ_ONLINE_APP_STD',OperateType:'HTML',comParams:{TZ_APP_INS_ID:'"+appInsID+"'}}";
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            var mask ;
+            var win = new Ext.Window({
+                name:'applicationFormWindow',
+                title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm","查看报名表"),
+                maximized : true,
+                classID :classID,
+                appInsID : appInsID,
+                gridRecord:record,
+                width : Ext.getBody().width,
+                height : Ext.getBody().height,
+                autoScroll : true,
+                border:false,
+                bodyBorder : false,
+                isTopContainer : true,
+                modal : true,
+                resizable : false,
+                items:[
+                    new Ext.ux.IFrame({
+                        xtype: 'iframepanel',
+                        layout: 'fit',
+                        style : "border:0px none;scrollbar:true",
+                        border: false,
+                        src : viewUrl,
+                        height : "100%",
+                        width : "100%"
+                    })
+                ],
+                buttons: [
+                    {
+                        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+                        iconCls:"close",
+                        handler: function(){
+                            win.close();
+                        }
+                    }]
+            })
+            win.show();
+        }else{
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
+        }
+    }
 });

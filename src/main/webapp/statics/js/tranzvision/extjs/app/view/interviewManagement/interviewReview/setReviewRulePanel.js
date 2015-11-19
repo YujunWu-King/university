@@ -15,11 +15,7 @@
     classID:'',
     batchID:'',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    initComponent:function(){
-        var jugaccStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_JUGACC_STATUS"),
-        reviewStage = new KitchenSink.view.common.store.appTransStore("TZ_MSPS_STAGE");
-        reviewStage.load();
-        jugaccStatusStore.load();
+    constructor:function(transValue){
         Ext.apply(this,{
             items: [{
                 xtype: 'form',
@@ -126,6 +122,7 @@
                         listeners:{
                             change:function(field,v){
                                 var x;
+                                var reviewStage = transValue.get("TZ_MSPS_STAGE");
                                 if((x = reviewStage.find('TValue',v))>=0){
                                     field.setValue(reviewStage.getAt(x).data.TSDesc);
                                 }
@@ -137,64 +134,49 @@
                             type: 'column'
                         } ,
                         padding:'0 0 8px 0',
-                        items:[
-                            {
-                                columnWidth:.5,
-                                layout:'form',
-                                items:[{
-                                    xtype: 'datefield',
-                                    fieldLabel: "开始日期",
-                                    name: 'startDate',
-                                    itemId: 'startDate',
-                                    endDateField: 'endDate',
-                                    vtype: 'daterange',
-                                    repeatTriggerClick:true,
-                                    format: 'Y-m-d'
-                                }]
+                        items:[{
+                                xtype: 'datefield',
+                                fieldLabel: "开始日期",
+                                name: 'startDate',
+                                itemId: 'startDate',
+                                endDateField: 'endDate',
+                                vtype: 'daterange',
+                                repeatTriggerClick:true,
+                                format: 'Y-m-d',
+                                columnWidth:.5
                             }, {
-                                columnWidth:.5,
-                                layout:'form',
-                                items:[{
-                                    xtype: 'timefield',
-                                    fieldLabel: "时间",
-                                    labelWidth:38,
-                                    style:'margin-left:5px',
-                                    name: 'startTime',
-                                    format: 'H:i'
-                                }]
+                                xtype: 'timefield',
+                                fieldLabel: "时间",
+                                labelWidth:38,
+                                style:'margin-left:5px',
+                                name: 'startTime',
+                                format: 'H:i',
+                                columnWidth:.5
                             }
                         ]},{
                         layout: {
                             type: 'column'
                         } ,
                         padding:'0 0 8px 0',
-                        items:[
-
-                            {
-                                columnWidth:.5,
-                                layout:'form',
-                                items:[{
-                                    xtype: 'datefield',
-                                    fieldLabel: "结束日期",
-                                    name: 'endDate',
-                                    itemId: 'endDate',
-                                    startDateField: 'startDate',
-                                    vtype: 'daterange',
-                                    format: 'Y-m-d',
-                                    repeatTriggerClick:true
-                                }]
+                        items:[{
+                                xtype: 'datefield',
+                                fieldLabel: "结束日期",
+                                name: 'endDate',
+                                itemId: 'endDate',
+                                startDateField: 'startDate',
+                                vtype: 'daterange',
+                                format: 'Y-m-d',
+                                repeatTriggerClick:true,
+                                columnWidth:.5
                             },
                             {
-                                columnWidth:.5,
-                                layout:'form',
-                                items:[{
-                                    xtype: 'timefield',
-                                    fieldLabel: "时间",
-                                    labelWidth:38,
-                                    style:'margin-left:5px',
-                                    name: 'endTime',
-                                    format: 'H:i'
-                                }]
+                                xtype: 'timefield',
+                                fieldLabel: "时间",
+                                labelWidth:38,
+                                style:'margin-left:5px',
+                                name: 'endTime',
+                                format: 'H:i',
+                                columnWidth:.5
                             }
                         ]
                     }, {
@@ -313,7 +295,7 @@
                                         layout: {
                                             type: 'column'
                                         } ,
-                                        padding:'0px 0 5px 85px',
+                                        padding:'0px 0 5px 75px',
                                         items:[
                                             {
                                                 xtype: 'displayfield',
@@ -330,10 +312,10 @@
                                                 negativeText:'评委组数量不能为负数',
                                                 nanText:'{0}不是有效的数字',
                                                 hideLabel: true,
-                                                width:130
+                                                width:130,
                                             },{
                                                 xtype: 'displayfield',
-                                                value: "个评委审组",
+                                                value: "个评委组",
                                                 hideLabel: true
                                             }
                                         ]},
@@ -378,6 +360,7 @@
                                                 value:'A',/*默认有效*/
                                                 renderer:function(v){
                                                     var x;
+                                                    var jugaccStatusStore = transValue.get("TZ_JUGACC_STATUS");
                                                     if((x = jugaccStatusStore.find('TValue',v))>=0){
                                                         return jugaccStatusStore.getAt(x).data.TSDesc;
                                                     }else{

@@ -70,8 +70,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 "batchID":batchID
             }};
             addStuListForm.setValues(addStuListFormRec.setStuListFormData);
+
+            Params= '{"classID":"'+classID+'"}';
+            addStuListGrid.store.tzStoreParams = Params;
             addStuListGrid.store.load();
-            addStuListGrid.store.filter([{property: 'msZGFlag', value: 'Y'},{property: 'className', value: className}]);
+            addStuListGrid.store.filter([{property: 'msZGFlag', value: '有面试资格'}]);
             //addStuListGrid.store.filterBy(function(record) {
             //    return record.get('msZGFlag') == "Y";
             //});
@@ -172,6 +175,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     }
                 });
             },"",true,this);
+        }else{
+            Ext.tzShowToast('保存成功','提示','t','#ffffff');
         };
     },
     //确定

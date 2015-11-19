@@ -3,7 +3,7 @@
     xtype: 'updatePhoneWindow', 
     title: '绑定手机', 
 	id: 'updatePhoneWindow201506031019',
-    width: 520,
+    width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 520 : 520,
     height: 200,
     minWidth: 400,
     minHeight: 140,
@@ -21,10 +21,11 @@
 		border: false,
 		bodyPadding: 10,
 		//heigth: 600,
+		ignoreLabelWidth: true,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 100,
+			labelWidth: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 100 : 100,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [{

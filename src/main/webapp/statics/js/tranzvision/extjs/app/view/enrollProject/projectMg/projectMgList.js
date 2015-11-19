@@ -18,13 +18,28 @@
     title: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.projectManagement","项目管理"),
 	header:false,
 	frame: true,
-    dockedItems:[
+	selModel:{
+		type: 'checkboxmodel'
+	},
+	dockedItems:[
 		{
 			xtype:"toolbar",
 			items:[
 				{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.query","查询"),iconCls: "query",handler:"cfgSearchProject"},'-',
-				{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.add","新增"),iconCls: "add",handler:"addNewProject"}
+				{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.add","新增"),iconCls: "add",handler:"addNewProject"},'-',
+				{text:Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.edit","编辑"),iconCls:"edit",handler:'editOptProject'}
 			]
+		},
+		{
+			xtype:"toolbar",
+			dock:"bottom",
+			ui:"footer",
+			items:['->',
+				{
+					minWidth:80,
+					text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.close","关闭"),
+					iconCls:"close",
+					handler: 'onComRegClose'}]
 		}
 	],
 
@@ -38,21 +53,20 @@
         });
 		
         Ext.apply(this, {
-           columns: [{
+           columns: [/*{
 			 	xtype: 'rownumberer',
 				text: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.seq","序号")
-			},{
-				xtype: 'linkcolumn',
+			},*/{
                 text: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.projectId","项目编号"),
                 sortable: true,
                 dataIndex: 'projectId',
-                minWidth: 130,
-				items:[{
+                minWidth: 130
+				/*items:[{
 					getText: function(v, meta, rec) {
 						return v;
 					},
 					handler: "editProjectInfo"
-				}],
+				}],*/
             },{ 
 				text: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROMG_STD.projectName","项目名称"),
 				dataIndex: 'projectName', 
@@ -85,7 +99,21 @@
 					}   
 					return record.get('statusDesc');  
 				} 
-			}],
+			},
+			   {
+				   xtype: 'actioncolumn',
+				   menuDisabled: true,
+				   sortable: false,
+				   width:60,
+				   align: 'center',
+				   items:[
+					   {
+						   iconCls: 'edit',
+						   tooltip: Ext.tzGetResourse("TZ_ZS_XMLBSZ_COM.TZ_ZS_XMLBSZ_STD.edit","编辑"),
+						   handler: 'editProjectInfo'
+					   }
+				   ]
+			   }],
 			
 			store:store,
 			bbar: {
@@ -93,7 +121,7 @@
 				pageSize: 10,
 				store:store,
 				plugins: new Ext.ux.ProgressBarPager()
-			}	 
+			}
         });
 		
         this.callParent();

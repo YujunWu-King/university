@@ -33,7 +33,7 @@ Ext.define('Ext.ux.Ueditor',{
             height = me.height - 109;
             
             var toolbars = [
-                    [ 'source', '|', 'undo', 'redo', '|',
+                    ['fullscreen', 'source', '|', 'undo', 'redo', '|',
                         'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat',
         				'formatmatch',  'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist', 'selectall', 'cleardoc', '|', 'fontfamily', 'fontsize', '|','searchreplace','spechars',
@@ -47,7 +47,7 @@ Ext.define('Ext.ux.Ueditor',{
             	var model = me.model;
             	if(model == "simple"){
             			toolbars = [[
-                     'source', '|',
+                    'fullscreen', 'source', '|',
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', 
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   
@@ -56,7 +56,7 @@ Ext.define('Ext.ux.Ueditor',{
             	
             	if(model == "normal"){
             		 toolbars = [[
-                     'source', '|',
+                    'fullscreen', 'source', '|',
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', '|','insertimage', 'attachment',
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   
@@ -69,6 +69,7 @@ Ext.define('Ext.ux.Ueditor',{
             if(me.zIndex){
             	zIndex = me.zIndex;
             }
+
             config = {initialFrameWidth: width, initialFrameHeight: height, zIndex: zIndex, toolbars: toolbars};
             
             me.ueditorInstance = UE.getEditor(id, config);

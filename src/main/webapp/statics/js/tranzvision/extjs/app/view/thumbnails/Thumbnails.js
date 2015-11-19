@@ -10,25 +10,28 @@
     initComponent: function() {
         var backgrounds = {
             crisp: 'border-circle',
-                'crisp-touch': 'circle',
-                neptune: 'border-square',
-                'neptune-touch': 'square',
-                classic: 'rounded-square',
-                gray: 'rounded-square',
-                'tranzvision': 'square',
-                'yenching': 'square'
+            'crisp-touch': 'circle',
+            neptune: 'border-square',
+            'neptune-touch': 'square',
+            classic: 'rounded-square',
+            gray: 'rounded-square',
+            tranzvision: 'square',
+            yenching: 'square',
+            maple: 'square',
+            'tranzvision-classic':'square',
+            'yenching-classic':'square'
         };
-        
+
         this.tpl =
             '<tpl for=".">' +
                 '<div class="thumbnail-item">' +
-                    '<div class="thumbnail-icon-wrap icon-' + backgrounds[Ext.themeName] + '">' +
-                        '<div class="thumbnail-icon {iconCls}"></div>' +
-                    '</div>' +
-                    '<div class="thumbnail-text">{text}</div>' +
+                '<div class="thumbnail-icon-wrap icon-' + backgrounds[Ext.themeName] + '">' +
+                '<div class="thumbnail-icon {iconCls}"></div>' +
                 '</div>' +
-            '</tpl>';
-        
+                '<div class="thumbnail-text">{text}</div>' +
+                '</div>' +
+                '</tpl>';
+
         this.callParent();
     }
 });

@@ -25,6 +25,5 @@ Ext.define('KitchenSink.view.template.proTemplate.newBmlcmb', {
 	onNewClose: function(btn) {
 		var win = btn.findParentByType("window");
 		win.close();
-      
 	}
 });

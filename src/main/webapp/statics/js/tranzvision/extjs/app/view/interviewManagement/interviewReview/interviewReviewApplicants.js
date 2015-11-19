@@ -15,10 +15,7 @@
     classID:'',
     batchID:'',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    initComponent:function(){
-        var genderStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
-            admitStore = new KitchenSink.view.common.store.appTransStore("TZ_LUQU_ZT"),
-            ZGStore = new KitchenSink.view.common.store.appTransStore("TZ_CLPS_MSZG");
+    constructor:function(transValue){
         Ext.apply(this,{
             items: [{
                 xtype: 'form',
@@ -116,7 +113,12 @@
                         store:{
                             type:'interviewReviewApplicants'
                         },
-                        columns: [{
+                        columns: [
+                            {
+                                text:'行号',
+                                xtype:'rownumberer',
+                                minWidth:35
+                            },{
                                 text: "姓名",
                                 dataIndex: 'realName',
                                 minWidth:100,
@@ -132,8 +134,8 @@
                                 minWidth:50,
                                 renderer:function(v){
                                     var x;
+                                    var genderStore = transValue.get("TZ_GENDER");
                                     if((x = genderStore.find('TValue',v))>=0){
-                                        x=+x;
                                         return genderStore.getAt(x).data.TSDesc;
                                     }else{
                                         return v;
@@ -150,8 +152,9 @@
                                 dataIndex: 'LUQUZT',
                                 name:'reviewStatus',
                                 mindWidth:100,
-                                renderer:function(v){
+                                renderer:function(v,metadata,record){
                                     var x;
+                                    var admitStore = transValue.get("TZ_LUQU_ZT");
                                     if((x = admitStore.find('TValue',v))>=0){
                                         return admitStore.getAt(x).data.TSDesc;
                                     }else{
@@ -166,7 +169,7 @@
                                 text:"备注",
                                 dataIndex:'remark',
                                 minWidth:150,
-                                flex:1
+                                flex:1,
                             },{
                                 text:"操作",
                                 menuDisabled: true,
@@ -294,19 +297,22 @@
                     JSONData.update[x].judgeList = updateData[x].data.judgeList;
                     JSONData.update[x].remark = updateData[x].data.remark;
                     JSONData.update[x].reviewStatus = updateData[x].data.LUQUZT;
+                    JSONData.update[x].judgeGroup = updateData[x].data.judgeGroup?updateData[x].data.judgeGroup:'';
                 }
             }
             comParas=Ext.JSON.encode(JSONData);
             //提交参数
             var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"U","comParams":' + comParas + '}';
-            Ext.tzSubmit(tzParams,function(responseData){
-                var grid = btn.findParentByType('panel').down("grid[name=interviewReviewStudentGrid]");
-                var store = grid.getStore();
-                if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1){
-                    store.reload();
-                }
+            if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1||tzParams.indexOf("update")>-1){
+                Ext.tzSubmit(tzParams,function(responseData){
+                    var grid = btn.findParentByType('panel').down("grid[name=interviewReviewStudentGrid]");
+                    var store = grid.getStore();
+                    store.commitChanges();
+                    btn.findParentByType('panel').close();
+                },"",true,this);
+            }else{
                 btn.findParentByType('panel').close();
-            },"",true,this);
+            }
         }
     }, {
         text: '关闭',

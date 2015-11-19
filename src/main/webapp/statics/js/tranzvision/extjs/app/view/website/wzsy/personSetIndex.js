@@ -47,17 +47,14 @@ Ext.define('KitchenSink.view.website.wzsy.personSetIndex', {
                     cls:'lanage_1'
                 }, {
                     xtype: 'checkboxfield',
-                    fieldLabel: "显示首页个人头像",
                     name: 'photo',
-                    boxLabel:'显示首页个人头像',
+                    boxLabel:'<span style="font-weight:bold;">显示首页个人头像</span>',
                     hideLabel:true
                 },{
-                  xtype:'checkboxfield',
-                    fieldLabel:"显示个人信息头像",
+                    xtype:'checkboxfield',
                     name:'photo2',
-                    boxLabel:'显示个人信息头像',
-                    hideLabel:true
-
+                    hideLabel:true,
+                    boxLabel: '<span style="font-weight:bold;">显示个人信息头像</span>'
                }
             ]
         },
@@ -103,7 +100,6 @@ Ext.define('KitchenSink.view.website.wzsy.personSetIndex', {
                     drop: function(node, data, dropRec, dropPosition) {
                         data.view.store.beginUpdate();
                         var items = data.view.store.data.items;
-
                         for (var i = 0; i < items.length; i++) {
                             items[i].set('order', i + 1);
                         }

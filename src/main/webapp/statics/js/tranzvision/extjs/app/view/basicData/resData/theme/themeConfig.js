@@ -12,9 +12,6 @@
     ],
     xtype: 'themeSetMg',
     controller: 'themeSetMg',
-	store: {
-        type: 'themeStore'
-    },
     columnLines: true,
     selModel: {
         type: 'checkboxmodel'
@@ -31,7 +28,10 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"saveThemeInfos"}]
+		items:['->',
+                {minWidth:80,text:"保存",iconCls:"save",handler:"saveThemeInfos"},
+                {minWidth:80,text:'确定',iconCls:"ensure",handler: 'ensureThemeInfo'},
+                {minWidth:80,text:'关闭',iconCls:"close",handler: 'closeThemeInfo'}]
 		},{
 		xtype:"toolbar",
 		items:[
@@ -41,8 +41,10 @@
 			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteTheme'}
 		]
 	}],
-    initComponent: function () {    
+    initComponent: function () {
+        var themeStore = new KitchenSink.view.basicData.resData.theme.themeStore();
         Ext.apply(this, {
+            store:themeStore,
             columns: [{ 
                 text: '主题编号',
                 dataIndex: 'themeID',
@@ -76,9 +78,7 @@
             bbar: {
                 xtype: 'pagingtoolbar',
                 pageSize: 10,
-				store: {
-					type: 'themeStore'
-				},
+				store: themeStore,
                 plugins: new Ext.ux.ProgressBarPager()
             }
         });

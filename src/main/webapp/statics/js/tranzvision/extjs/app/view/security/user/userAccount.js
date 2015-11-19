@@ -56,6 +56,8 @@
     	
 	    //用户账号信息
 	    var store = new KitchenSink.view.security.user.userStore();
+        var acctLock = new KitchenSink.view.common.store.appTransStore("ACCTLOCK");
+        acctLock.load();
         Ext.apply(this, {
 			store: store,
             columns: [{ 
@@ -89,7 +91,7 @@
                 dataIndex: 'email',
                 minWidth: 150,
 				flex: 1
-            },{
+            },/*{
             	xtype: 'checkcolumn',
             	disabled: true,
                 //text: '锁定',
@@ -97,7 +99,21 @@
                 sortable: true,
                 dataIndex: 'acctLock',
                 width: 60
-            }
+            }*/
+                {
+                    text:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.acctLock","锁定"),
+                    sortable: true,
+                    dataIndex: 'acctLock',
+                    minWidth: 100,
+                    renderer : function(value, metadata, record) {
+
+                        var index = acctLock.find('TValue',value);
+                        if(index!=-1){
+                            return acctLock.getAt(index).data.TSDesc;
+                        }
+                        return record.get('');
+                    }
+                }
             /*,{
             	xtype: 'checkcolumn',
             	disabled: false,

@@ -20,6 +20,7 @@ Ext.define('KitchenSink.view.template.jygz.jygzSet', {
     style:"margin:8px",
     multiSelect: true,
     title: '规则列表',
+    reference:'jygzSet',
     viewConfig: {
         enableTextSelection: true
     },
@@ -50,7 +51,13 @@ Ext.define('KitchenSink.view.template.jygz.jygzSet', {
             Ext.tzSubmit(tzParams,function(){
                 store.reload();
             },"",true,this);
-        }}]
+        }},
+        {minWidth:80,text:Ext.tzGetResourse("TZ_JYGZ_COM.TZ_JYGZ_LIST_STD.ensure","确认"),iconCls:"ensure",handler:"ensureJygzSet"},
+        {minWidth:80,text:Ext.tzGetResourse("TZ_JYGZ_COM.TZ_JYGZ_LIST_STD.close","关闭"),iconCls:"close",handler:function(btn){
+            var grid = btn.findParentByType("grid");
+            grid.close();
+        }
+        }]
     },{
         xtype:"toolbar",
         items:[

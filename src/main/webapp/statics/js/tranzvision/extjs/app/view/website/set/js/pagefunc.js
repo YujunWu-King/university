@@ -15,6 +15,14 @@ function checkHisApply(classId,languageCd){
 				dataType:'json',
 				success:function(response){
 					  var HaveHisApplyForm = response.comContent.HaveHisApplyForm;
+					  var HaveHCBJ=response.comContent.HaveHCBJ;
+					  if(HaveHCBJ=="true"){
+						if(languageCd == "ENG"){
+							alert("Our system has detected existing registration information from an application you previously started, and you are not allowed to  the application for other programs related.");
+						}else{
+							alert("系统检测到您已经申请了一个项目，不允许再申请相关的其他项目。");
+						}
+					  }else{
 						if(HaveHisApplyForm == "true"){
 							if(languageCd == "ENG"){
 						  	confirmValue = confirm("Our system has detected existing registration information from an application you previously started. Would you like to copy your previously entered application information into the new application form?");
@@ -28,6 +36,7 @@ function checkHisApply(classId,languageCd){
 						}else{
 							location.href =urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=appId&TZ_CLASS_ID='+classId;
 						} 
+					}
 				}   
 			});
 

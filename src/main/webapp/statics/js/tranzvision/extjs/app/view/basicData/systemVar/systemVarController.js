@@ -137,7 +137,7 @@
 			//var form = this.lookupReference('systemVarForm').getForm();
 			var form = panel.child('form').getForm();
 			form.findField("systemVarId").setReadOnly(true);
-			
+			form.findField("systemVarId").addCls("lanage_1");
 			//var sysVarId = record.data.systemVarId;
 			
 			var tzParams = '{"ComID":"TZ_GD_SYSVARGL_COM","PageID":"TZ_GD_SYSVARDY_STD","OperateType":"QF","comParams":{"systemVarId":"'+sysVarId+'"}}';
@@ -243,6 +243,7 @@
 		
 		Ext.tzSubmit(tzParams,function(responseData){
 			form.findField('systemVarId').setReadOnly(true);
+			form.findField('systemVarId').addCls("lanage_1");
 			panel.actType = "edit";	
 		},"",true,this);
 	},
@@ -300,6 +301,7 @@
 				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
 			}
 		}
+		var comParams = "";
 		if(removeJson != ""){
 			comParams = '"delete":[' + removeJson + "]";
 		}
@@ -309,6 +311,16 @@
 		Ext.tzSubmit(tzParams,function(){
 			store.reload();			   
 		},"保存成功！",true,this);
+	},
+	onEnsureRemoveData:function(btn){
+		//保存数据
+		this.onSaveRemoveData(btn);
+		//关闭窗口
+		this.view.close();
+	},
+	onCloseRemoveData:function(btn){
+		//关闭窗口
+		this.view.close();
 	},
 	//可配置搜索
 	searchSysVarList: function(btn){

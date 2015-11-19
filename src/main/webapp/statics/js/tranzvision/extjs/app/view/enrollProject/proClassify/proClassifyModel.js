@@ -3,7 +3,8 @@ Ext.define('KitchenSink.view.enrollProject.proClassify.proClassifyModel', {
     fields: [
         {name: 'proTypeId'},
         {name: 'proTypeName'},
-        {name: 'proTypeDesc'}
+        {name: 'proTypeDesc'},
+        {name: 'proTypeStatus'}
 		//{name: 'isSaved'}
 	]
 });

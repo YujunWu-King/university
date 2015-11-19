@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewApplicantsModel', {
     extend: 'Ext.data.Model',
-    fields: [
+    field:[
         {name: 'classID'},
         {name: 'batchID'},
         {name: 'appInsID'},
@@ -10,9 +10,8 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppl
         {name: 'judgeList'},
         {name: 'reviewStatus'},
         {name: 'interviewQualification'},
-		{name: 'colorType'},
+        {name: 'colorType'},
         {name: 'remark'},
         {name: 'adminRemark'}
-
     ]
 });

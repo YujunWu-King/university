@@ -38,6 +38,9 @@
 		win.show();
 
     },
+    onPanelClose:function(btn){
+        btn.up('panel').close();
+    },
 	chooseMsBatch:function(grid, rowIndex, colIndex){
         var batchWindow = grid.up('window');
 
@@ -148,6 +151,8 @@
                             record.set("msOprName","");
                             record.set("msOrderState","");
                             record.set("msConfirmState","");
+                            record.set("sort","");
+                            record.set("releaseOrUndo","");
                             record.set('moreInfo',"{}");
                         }
                     }

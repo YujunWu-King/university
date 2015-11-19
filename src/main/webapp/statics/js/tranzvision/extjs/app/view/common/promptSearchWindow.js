@@ -277,6 +277,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                 },
                 border: false,
                 bodyPadding: 10,
+                ignoreLabelWidth: true,
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelStyle: 'font-weight:bold'

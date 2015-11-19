@@ -42,7 +42,8 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletDef', {
 			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelResTemplet'}
 		]
 	}],
-    initComponent: function () {    
+    initComponent: function () {
+        var useFlagStore = new KitchenSink.view.common.store.appTransStore("TZ_USE_FLAG");
 		var store = new KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletStore();
         Ext.apply(this, {
             columns: [{ 
@@ -68,10 +69,17 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletDef', {
             },{
                 text: '是否启用',
                 sortable: true,
-				xtype: 'checkcolumn',
                 dataIndex: 'isneed',
-				disabled : true,
-                minWidth: 50
+                minWidth: 50,
+                renderer:function(v){
+                    v=v?"Y":"N";
+                    var rec = useFlagStore.find('TValue',v,0,false,true,false);
+                    if(rec>-1){
+                        return useFlagStore.getAt(rec).get("TSDesc");
+                    }else{
+                        return "";
+                    }
+                }
             },{
               	menuDisabled: true,
                 sortable: false,
@@ -88,13 +96,6 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletDef', {
                 xtype: 'pagingtoolbar',
                 pageSize: 10,
    				store: store,
-				/*
-                displayInfo: true,
-				displayMsg: '显示{0}-{1}条，共{2}条',
-				beforePageText: '第',
-                afterPageText: '页/共{0}页',
-				emptyMsg: '没有数据显示',
-				*/
                 plugins: new Ext.ux.ProgressBarPager()
             }
         });

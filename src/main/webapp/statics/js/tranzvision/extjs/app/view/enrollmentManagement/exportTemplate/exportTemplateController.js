@@ -323,7 +323,7 @@
             return;
         }
         Ext.tzShowPromptSearch({
-            recname: 'TZ_TEMP_FIELD_V',
+            recname: 'TZ_FORM_FIELD_V',
             searchDesc: '新增模板字段',
             maxRow:20,
             TZ_EFFEXP_ZT:"",

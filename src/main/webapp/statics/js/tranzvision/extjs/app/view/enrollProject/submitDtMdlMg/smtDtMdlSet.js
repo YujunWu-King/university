@@ -1,6 +1,7 @@
 Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlSet', {
     extend: 'Ext.panel.Panel',
 	xtype: 'smtDtMdlSet',
+   // reference:'smtDtMdlSet',
 	controller: 'submitDataModelMg',
 	actType:'add',//默认
 	requires: [
@@ -47,12 +48,18 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlSet', {
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
             allowBlank: false
-        }, {
-            xtype: 'checkboxfield',
-			fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.smtDtStatus","启用"),
-			labelWidth: 140,
-			name: 'smtDtStatus',
-			inputValue: 'Y'
+        },{
+            xtype: 'combobox',
+            fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.smtDtStatus","状态"),
+            forceSelection: true,
+            valueField: 'TValue',
+            displayField: 'TSDesc',
+            labelWidth:140,
+            store: new KitchenSink.view.common.store.appTransStore("TZ_SBMINF_STATUS"),
+            typeAhead: true,
+            queryMode: 'local',
+            name: 'smtDtStatus',
+            value:'Y'
         }]
     },{
 		xtype: 'grid', 
@@ -67,16 +74,21 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlSet', {
 		   xtype:"toolbar",
 		   items:[
 			//{text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addDataInfo'},"-"
-               {text: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.add","新增"),iconCls:"add",handler:'addSmtDataInfo'},"-"
+               {text: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.add","新增"),iconCls:"add",handler:'addSmtDataInfo'},"-",
+               {text: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.edit","编辑"),iconCls:'edit',handler:'editSmtDataInfo'},"-",
+               {text: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.delete","删除"),iconCls:'remove',handler:'removeSmtDataInfo'},"->"
 		   ]
-	    }], 
-		
-		plugins: {
+	    }],
+        selModel: {
+            type: 'checkboxmodel'
+        },
+		//不允许行编辑
+	/*	plugins: {
 							ptype: 'cellediting',
 							pluginId: 'dataCellediting',
 							clicksToEdit: 1
 				 },
-				 
+				 */
 		viewConfig: {
 			plugins: {
 				ptype: 'gridviewdragdrop',
@@ -121,15 +133,17 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlSet', {
                 	text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.cyhfdysz","常用回复短语设置"),
 					handler:'editBackMsg'
                 }]
-        },{
-						menuDisabled: true,
-						sortable: false,
-						width:80,
-						xtype: 'actioncolumn',
-						align: 'center',
-						items:[
-							{iconCls: 'remove',tooltip:  Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.delete","删除"), handler: 'deleteData'}
-						]
+    },{
+            menuDisabled: true,
+            sortable: false,
+            width:80,
+            xtype: 'actioncolumn',
+            align: 'center',
+            items:[
+                {iconCls:'edit',tooltip: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.edit","编辑"),handler:'editData'},
+                {iconCls: 'remove',tooltip:  Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.delete","删除"), handler: 'deleteData'}
+
+            ]
 		}],	//columns-end
 		store: {
 					type: 'smtDtMdlSetStore'

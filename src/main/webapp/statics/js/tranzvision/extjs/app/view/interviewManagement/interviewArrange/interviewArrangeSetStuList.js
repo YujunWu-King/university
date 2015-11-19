@@ -31,7 +31,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         var mszgFlagSortFilterOptions=[];
         mszgFlagStore.addListener("load",function(store, records, successful, eOpts){
             for(var i=0;i<records.length;i++){
-                mszgFlagSortFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+                //mszgFlagSortFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+                mszgFlagSortFilterOptions.push([records[i].data.TSDesc,records[i].data.TSDesc]);
             };
         });
         //gridStore添加filterchange监听
@@ -150,29 +151,20 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     minWidth: 100,
                     flex:1
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.className","报考班级") ,
-                    dataIndex: 'className',
-                    filter: {
-                        type: 'string'
-                        //value:curClassName
-                    },
-                    minWidth: 200,
-                    flex:1
-                },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","初筛结果"),
                     dataIndex: 'msZGFlag',
                     filter: {
                         type: 'list',
                         options: mszgFlagSortFilterOptions
                     },
-                    renderer : function(value, metadata, record) {
-                        //alert("render"+value);
-                        var index = mszgFlagStore.find('TValue',value);
-                        if(index!=-1){
-                            return mszgFlagStore.getAt(index).data.TSDesc;
-                        }
-                        return record.get('msZGFlag');
-                    },
+                    //renderer : function(value, metadata, record) {
+                    //    //alert("render"+value);
+                    //    var index = mszgFlagStore.find('TValue',value);
+                    //    if(index!=-1){
+                    //        return mszgFlagStore.getAt(index).data.TSDesc;
+                    //    }
+                    //    return record.get('msZGFlag');
+                    //},
                     minWidth:120,
                     flex:1
                 },{

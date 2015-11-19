@@ -25,6 +25,7 @@
         },
         border: false,
         bodyPadding: 10,
+        ignoreLabelWidth: true,
         bodyStyle:'overflow-y:auto;overflow-x:hidden',
         fieldDefaults:
         {

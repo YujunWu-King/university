@@ -35,13 +35,18 @@
 			xtype:"toolbar",
 			dock:"bottom",
 			ui:"footer",
-			items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"onSaveRemoveData"}]
+			items:['->',
+                {minWidth:80,text:"保存",iconCls:"save",handler:"onSaveRemoveData"},
+                {minWidth:80,text:"确定",iconCls:"ensure",handler:"onEnsureRemoveData"},
+                {minWidth:80,text:"关闭",iconCls:"close",handler:"onCloseRemoveData"}
+            ]
 		}
 	],
-    initComponent: function () {    
+    initComponent: function () {
 		var store = new KitchenSink.view.basicData.systemVar.systemVarStore({
             listeners:{
                 load:function(store){
+                    /*
                     for(var i=0;i<store.getCount();i++){
                         var rec = store.getAt(i);
                         if(rec.get('isValid')=='N'){
@@ -50,10 +55,10 @@
                             rec.set('isValid',true);
                         }
                     }
+                    */
                 }
             }
         });
-		
         Ext.apply(this, {
             columns: [{ 
                 //text: '系统变量ID',
@@ -69,13 +74,26 @@
                 minwidth: 250,
 				flex:1
             },{
-                xtype: 'checkcolumn',
-				text: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARGL_STD.isValid","是否有效"),
+                text: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARGL_STD.isValid","是否有效"),
                 sortable: true,
-				disabled: true,
                 dataIndex: 'isValid',
-                width: 120
-            },{
+                width: 120,
+                renderer:function(value){
+                    if(value=='Y'){
+                        return '是';
+                    }
+                    return "否";
+                }
+            },
+            /*{
+                    xtype: 'checkcolumn',
+                    text: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARGL_STD.isValid","是否有效"),
+                    sortable: true,
+                    disabled: true,
+                    dataIndex: 'isValid',
+                    width: 120
+            },*/
+            {
                //menuDisabled: true,
 			   text:'操作',
                sortable: false,

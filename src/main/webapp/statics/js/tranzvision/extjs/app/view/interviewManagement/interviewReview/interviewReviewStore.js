@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
     extend: 'Ext.data.Store',
     alias: 'store.interviewReviewStore',
     model: 'KitchenSink.view.interviewManagement.interviewReview.interviewReviewModel',
-    autoLoad:true,
+    autoLoad:false,
     pageSize:10,
 	comID: 'TZ_REVIEW_MS_COM',
 	pageID: 'TZ_MSPS_LIST_STD',

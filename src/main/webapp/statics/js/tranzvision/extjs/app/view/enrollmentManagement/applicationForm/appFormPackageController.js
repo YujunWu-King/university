@@ -95,10 +95,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.appFormPackage
         var AEId=record.get("AEId");
 
         if(AEId!=""){
-            var tzParams='{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_DBDL_STD","OperateType":"HTML","comParams":{"mode":"O","AEId":"'+AEId+'"}}';
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
-            window.open(viewUrl, "","status=no,menubar=yes,toolbar=no,location=no");
-        }else{
+            var tzParams='{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_DBDL_STD","OperateType":"QF","comParams":{"mode":"O","AEId":"'+AEId+'"}}';
+            Ext.tzLoad(tzParams,function(responseData){
+                if(responseData.fileUrl){
+                    //window.open(responseData.fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+                    window.location.href=responseData.fileUrl;
+                }
+            });
+          }else{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.zbdfj","找不到附件"));
         }
     },

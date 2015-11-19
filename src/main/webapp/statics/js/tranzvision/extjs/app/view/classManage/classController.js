@@ -318,6 +318,11 @@
 				Params= '{"bj_id":"'+bj_id+'","queryID":"6","zl_id":"'+_zl+'"}';
 				zl_grid.store.tzStoreParams = Params;
 				zl_grid.store.reload();
+				//互斥规则页面数据加载
+				var hcgz_grid = panel.down('grid[name=hcgzGrid]');
+				Params= '{"bj_id":"'+bj_id+'","queryID":"7"}';
+				hcgz_grid.store.tzStoreParams = Params;
+				hcgz_grid.store.reload();
 			});
 		});
         tab = contentPanel.add(cmp);     
@@ -326,5 +331,10 @@
         if (cmp.floating) {
             cmp.show();
         }
-    }
+    },
+	onComRegClose: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	}
 });

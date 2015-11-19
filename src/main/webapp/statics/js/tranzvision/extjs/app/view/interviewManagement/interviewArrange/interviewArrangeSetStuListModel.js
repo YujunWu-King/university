@@ -5,7 +5,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         {name: 'batchId'},
         {name: 'appId'},
         {name: 'stuName'},
-        {name: 'className'},
         {name: 'msZGFlag'},
         {name: 'city'},
         {name: 'country'},

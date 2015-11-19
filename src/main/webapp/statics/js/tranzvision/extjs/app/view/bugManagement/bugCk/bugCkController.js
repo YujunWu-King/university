@@ -274,8 +274,7 @@ Ext.define("KitchenSink.view.bugManagement.bugCk.bugCkController", {
                         var formData = respData.formData;
                         delete formData.files;
                         form.setValues(formData);
-                        obj.updateRecord(form,grid,formData);
-//                        grid.getStore().reload();
+                        obj.updateRecord(form,grid);
                     });
                 }
             },this);}
@@ -312,8 +311,7 @@ Ext.define("KitchenSink.view.bugManagement.bugCk.bugCkController", {
                         var formData = respData.formData;
                         delete formData.files;
                         form.setValues(formData);
-                        obj.updateRecord(form,grid,formData);
-//                        grid.getStore().reload();
+                        obj.updateRecord(form,grid);
                     });
                 }
             }
@@ -359,37 +357,33 @@ Ext.define("KitchenSink.view.bugManagement.bugCk.bugCkController", {
         win.show();
 
     },
-    updateRecord:function(form,grid,formData){
+    updateRecord:function(form,grid){
         //点击保存更新rec
         var bugID=form.findField('bugID').getValue();
         var store=grid.getStore();
-//        var filters=store.getFilters();
-//        var filters=this.filters;
-
         var index=store.find('bugID',bugID);
         var rec=store.getAt(index);
         if(rec){
-
             var bugUpdateDate=form.findField('bugUpdateDTTM').getRawValue();
             var date=bugUpdateDate.substring(0,10);
             var time=bugUpdateDate.substring(11,16);
-            store.getAt(index).set('bugUpdateDate',date);
-            store.getAt(index).set('bugUpdateTime',time);
-            store.getAt(index).set('bugPercent',form.findField('bugPercent').getValue());
-            store.getAt(index).set('estDate',form.findField('estDate').getValue());
+            rec.set('bugUpdateDate',date);
+            rec.set('bugUpdateTime',time);
+            rec.set('bugPercent',form.findField('bugPercent').getValue());
+            rec.set('estDate',form.findField('estDate').getValue());
             switch (form.findField('bugMigration').getValue())
             {
                 case '0':
-                    store.getAt(index).set('bugMigration','已迁移UAT但未测试');
+                    rec.set('bugMigration','已迁移UAT但未测试');
                     break;
                 case '1':
-                    store.getAt(index).set('bugMigration','UAT环境测试通过');
+                    rec.set('bugMigration','UAT环境测试通过');
                     break;
                 case '2':
-                    store.getAt(index).set('bugMigration','已迁移生产');
+                    rec.set('bugMigration','已迁移生产');
                     break;
             };
-            store.getAt(index).set('bugStatus',form.findField('status').getValue());
+            rec.set('bugStatus',form.findField('status').getValue());
             store.commitChanges();
         }
     }

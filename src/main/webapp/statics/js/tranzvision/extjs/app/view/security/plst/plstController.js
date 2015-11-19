@@ -139,6 +139,7 @@
             //许可权表单信息;
             var form = panel.child('form').getForm();
             form.findField("permID").setReadOnly(true);
+            form.findField("permID").setFieldStyle('background:#F4F4F4');
             //授权组件列表
             var grid = panel.child('grid');
             //参数
@@ -622,6 +623,17 @@
                 store.load();
             }
         });
+    },
+    //确定
+    ensurePlst:function(btn) {
+        this.savePlst(btn);
+        this.closePlst(btn);
+    },
+    //关闭
+    closePlst: function(btn){
+        //关闭
+        var grid = btn.findParentByType("grid");
+        grid.close();
     }
 });
 

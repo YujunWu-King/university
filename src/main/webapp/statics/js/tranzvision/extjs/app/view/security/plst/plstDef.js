@@ -32,7 +32,10 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"savePlst"}]
+		items:['->',
+            {minWidth:80,text:"保存",iconCls:"save",handler:"savePlst"},
+            {minWidth:80,text:'确定',iconCls:"ensure",handler: 'ensurePlst'},
+            {minWidth:80,text:'关闭',iconCls:"close",handler: 'closePlst'}]
 		},
         {
 		xtype:"toolbar",

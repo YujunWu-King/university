@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.tzLianxi.ZXE.ZXDCKJSZ.dckjSet', {
+﻿Ext.define('KitchenSink.view.tzLianxi.ZXE.ZXDCKJSZ.dckjSet', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -12,12 +12,12 @@ Ext.define('KitchenSink.view.tzLianxi.ZXE.ZXDCKJSZ.dckjSet', {
         'tranzvision.extension.grid.column.Link'
     ],
     xtype: 'kjSet',
-    columnLines: true,
+    columnLines: true,   
     selModel: {
         type: 'checkboxmodel'
     },
     controller: 'dckj',
-    style:"margin:8px",
+    style:"margin:10px",
     multiSelect: true,
     title: '控件列表',
     viewConfig: {

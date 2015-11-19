@@ -124,7 +124,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             'KitchenSink': TzUniversityContextPath + '/statics/js/tranzvision/extjs/app',
                             'Ext.ux': TzUniversityContextPath + '/statics/js/lib/extjs/ux',
                             'tranzvision.extension': TzUniversityContextPath + '/statics/js/tranzvision/extjs/extension',
-							'Ext.lib': TzUniversityContextPath + '/statics/js/lib',
+                            'Ext.lib': TzUniversityContextPath + '/statics/js/lib'
                         }
                     });
 
@@ -511,7 +511,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                 {
                                     failureFn(response.responseText);
                                 }
-                                if(response.responseText == "")
+                                if(response.responseText == undefined || response.responseText == "")
                                 {
                                     TranzvisionMeikecityAdvanced.Boot.errorMessage(boot.getMessage("TZGD_FWINIT_00027"));
                                 }
@@ -603,7 +603,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             }
                             catch(e2)
                             {
-                                if(response.responseText == "")
+                                if(response.responseText == undefined || response.responseText == "")
                                 {
                                     TranzvisionMeikecityAdvanced.Boot.errorMessage(boot.getMessage("TZGD_FWINIT_00026"));
                                 }
@@ -1208,6 +1208,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     if(jsonObject.state.errcode === 0)
                                     {
                                         var mainContent = jsonObject.comContent;
+
                                         //默认首页页面ID
                                         var defaultPageID = mainContent.defaultPageID;
                                         //组件资源
@@ -1260,6 +1261,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
 
                                         boot.setDescResourseSet(pComID,cResourses);
                                         boot.comRegResourseSet[pComID] = cPResources;
+
                                         loadOkFlag = true;
                                     }
                                     else if(jsonObject.state.timeout == true)
@@ -1342,6 +1344,33 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             });
 
             return tmpURL ;
+        },
+		
+		//根据邮箱查看邮件发送历史;
+        searchMailHistory: function(configuration)
+        {
+            var contentPanel,cmp, className, ViewClass;
+
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+            contentPanel.body.addCls('kitchensink-example');
+
+            className = 'KitchenSink.view.common.searchMailHistoryPanel';
+            if(!Ext.ClassManager.isCreated(className)){
+                Ext.syncRequire(className);
+            }
+            ViewClass = Ext.ClassManager.get(className);
+
+            cmp = new ViewClass(configuration);
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
         }
     };
 
@@ -1382,6 +1411,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             if(Ext.tzTabOn == undefined) Ext.tzTabOn = TranzvisionMeikecityAdvanced.Boot.tabOn;
             if(Ext.tzImport == undefined) Ext.tzImport = TranzvisionMeikecityAdvanced.Boot.importExcel;
             if(Ext.tzGetHardcodeValue == undefined) Ext.tzGetHardcodeValue = TranzvisionMeikecityAdvanced.Boot.getHardcodeValue;
+			if(Ext.tzSearchMailHistory == undefined) Ext.tzSearchMailHistory = TranzvisionMeikecityAdvanced.Boot.searchMailHistory;
 
 
             /*加载重验证码校验相关的JS代码*/
@@ -1448,6 +1478,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     align: 'stretch'
                                 },
                                 border: false,
+                                ignoreLabelWidth: true,
                                 fieldDefaults:
                                 {
                                     msgTarget: 'side',

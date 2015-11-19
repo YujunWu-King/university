@@ -32,7 +32,11 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"saveTranslates"}]
+		items:['->',
+            {minWidth:80,text:"保存",iconCls:"save",handler:"saveTranslates"},
+            {minWidth:80,text:"确定",iconCls:"ensure",handler:"ensureTranslates"},
+            {minWidth:80,text:"关闭",iconCls:"close",handler:"closeTranslates"}
+        ]
 		},{
 		xtype:"toolbar",
 		items:[

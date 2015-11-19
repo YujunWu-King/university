@@ -166,6 +166,7 @@
 			//组件注册表单信息;
 			var form = panel.child('form').getForm();
 			form.findField("comID").setReadOnly(true);
+			form.findField("comID").setFieldStyle('background:#F4F4F4');
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
@@ -318,6 +319,7 @@
 		Ext.tzLoad(tzParams,function(responseData){
 			form.setValues(responseData);
 			form.findField("pageID").setReadOnly(true);
+			form.findField("pageID").setFieldStyle('background:#F4F4F4');
 		});
         win.show();
 	},
@@ -485,6 +487,7 @@
 		Ext.tzSubmit(tzParams,function(resp){
 			win.actType = "update";
 			form.findField("pageID").setReadOnly(true);
+			form.findField("pageID").setFieldStyle('background:#F4F4F4');
 			pageGrid.store.tzStoreParams = tzStoreParams;
 			pageGrid.store.reload();
 	    },"",true,this);
@@ -505,5 +508,69 @@
 				store.load();
 			}
 		});	
+	},
+	closeComRegInfos: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	//确定
+	ensureComRegInfos:function(btn) {
+		this.saveComRegInfos(btn);
+		this.closeComRegInfos(btn);
+	},
+	//comInfoPanel.js 中grid 每行中的编辑
+	editPageRegInfoOne: function(view, rowIndex){
+
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_COMREG_COM"]["TZ_AQ_PAGEREG_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AQ_PAGEREG_STD，请检查配置。');
+			return;
+		}
+
+		var win = this.lookupReference('pageRegWindow');
+
+		if (!win) {
+			//className = 'KitchenSink.view.security.com.pageRegWindow';
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			//新建类
+			win = new ViewClass();
+			this.getView().add(win);
+		}
+
+		//操作类型设置为更新
+		win.actType = "update";
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		//组件ID
+		var comID = selRec.get("comID");
+		//页面ID
+		var pageID = selRec.get("pageID");
+		//参数
+		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_PAGEREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'","pageID":"'+pageID+'"}}';
+		//页面注册信息表单
+		var form = win.child("form").getForm();
+		Ext.tzLoad(tzParams,function(responseData){
+			form.setValues(responseData);
+			form.findField("pageID").setReadOnly(true);
+		});
+		win.show();
+	},
+	//comInfoPanel.js 中grid 每行中的删除
+	deletePageRegInfoOne: function(view, rowIndex){
+		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+			if(btnId == 'yes'){
+				var store = view.findParentByType("grid").store;
+				store.removeAt(rowIndex);
+			}
+		},this);
 	}
 });

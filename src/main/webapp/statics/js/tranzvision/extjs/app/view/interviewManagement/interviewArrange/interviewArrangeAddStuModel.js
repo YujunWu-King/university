@@ -4,12 +4,12 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         {name: 'classId'},
         {name: 'appId'},
         {name: 'stuName'},
-        {name: 'className'},
         {name: 'msCLPSPC'},
         {name: 'msZGFlag'},
         {name: 'lxEmail'},
         {name: 'label'},
         {name: 'sort'},
-        {name: 'earlyDecision',type:'date'}
+        {name: 'isConfTimezone'}
+        //{name: 'earlyDecision',type:'date'}
     ]
 });

@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.common.cfgSearchWindow', {
     extend: 'Ext.window.Window',
     xtype: 'cfgSearchWindow',
-    title: '查询',
+    title: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00082"),/*查询*/
     width: 500,
     minWidth: 650,
     minHeight: 250,
@@ -45,7 +45,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 						});
 					  return flag;   
 				  },  
-				  promptVildateText: '输入的值不存在'
+				  promptVildateText: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00100")/*输入的值不存在*/
 				});
 				
 				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'"}}';
@@ -317,7 +317,37 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                             hidden: fldHidden,
                             name: fieldName+'-value'
                         };
-                }
+                };
+                var fieldLabel = Ext.tzGetResourse(me.cfgSrhId+"-"+formData[fieldName].fldDesc.replace(/"/g,'\"'),formData[fieldName].fldDesc);
+                var operator = formData[fieldName].operator;
+                Ext.Array.each(operator, function(item,index,allItems) {
+                    switch(item.transId){
+                        case '01':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00088");
+                            break;
+                        case '02':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00089");
+                            break;
+                        case '03':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00090");
+                            break;
+                        case '04':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00091");
+                            break;
+                        case '05':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00092");
+                            break;
+                        case '06':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00093");
+                            break;
+                        case '07':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00094");
+                            break;
+                        case '08':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00095");
+                            break;
+                        case '09':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00096");
+                            break;
+                        case '10':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00097");
+                            break;
+                        case '11':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00098");
+                            break;
+                        case '12':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00099");
+                            break;
+                    }
+                });
                 var fieldItem = {
                     layout:'column',
                     bodyPadding: 5,
@@ -330,10 +360,10 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                         hidden: fldHidden,
                         hideLabel: fldHidden,
                         editable:false,
-                        fieldLabel:formData[fieldName].fldDesc,
+                        fieldLabel:fieldLabel,
                         store:{
                             fields: [{name:'transId'},{name:'transDesc'}],
-                            data: formData[fieldName].operator
+                            data: operator
                         },
                         displayField: 'transDesc',
                         valueField: 'transId',
@@ -383,6 +413,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                 },
                 border: false,
                 bodyPadding: 10,
+                ignoreLabelWidth: true,
                 bodyStyle:'overflow-y:auto;overflow-x:hidden',
                 fieldDefaults: {
                     msgTarget: 'side',
@@ -393,18 +424,18 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                     items:["->",
                         {
                             xtype:'splitbutton',
-                            text:'更多操作',
+                            text:TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00083")/*更多操作*/,
                             iconCls:  'list',
                             glyph: 61,
                             menu:[{
-                                text:'基本搜索',
+                                text:TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00084")/*基本搜索*/,
                                 listeners:{
                                     click: function (bt, e, eOpts) {
                                         me.changeSearchModel(bt,true );
                                     }
                                 }
                             },{
-                                text:'高级搜索',
+                                text:TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00085")/*高级搜索*/,
                                 listeners:{
                                     click: function (bt, e, eOpts) {
                                         me.changeSearchModel(bt,false);
@@ -420,13 +451,13 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
             ,
             buttons: [
                 {
-                    text: '搜索',
+                    text: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00086")/*搜索*/,
                     iconCls:"search",
                     handler: function(btn){
                         me.searchCfg();
                     }
                 },{
-                    text: '清除',
+                    text: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00087")/*清除*/,
                     iconCls:"clean",
                     handler: function(btn){
                         //搜索信息表单
@@ -436,7 +467,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                     }
                 },
                 {
-                    text: '关闭',
+                    text: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00047")/*关闭*/,
                     iconCls:"close",
                     handler: function(btn){
                         //获取窗口

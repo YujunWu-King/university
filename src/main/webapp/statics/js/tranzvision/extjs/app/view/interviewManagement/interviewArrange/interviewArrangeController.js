@@ -40,7 +40,6 @@
         win.show();
     },
 	//建议时间内自动安排考生
-
 	msJYSJAutoArrStus:function(btn){
 		//alert('--');
 		var msArrGrid = btn.up('grid');
@@ -112,7 +111,6 @@
 			}
 		});
 	},
-
 	//弹出面试建议时间定义页面
 	ms_jytime: function(btn) {
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_JYSJ_STD"];
@@ -168,6 +166,8 @@
 						selRecord.set("msOprName","");
 						selRecord.set("msOrderState","");
 						selRecord.set("msConfirmState","");
+						selRecord.set("sort","");
+						selRecord.set("releaseOrUndo","");
 						selRecord.set('moreInfo',"{}");
 					}
 				}												  
@@ -385,9 +385,20 @@
 			var infoText="当前时间段已安排考生，若重新安排将清除当前考生的面试安排信息，确认安排其他考生吗？";
 			Ext.MessageBox.confirm('确认',infoText , function(btnId) {
 				if (btnId == 'yes') {
+					msArrGridRowRecord.set("localStartTime","");
+					msArrGridRowRecord.set("localFinishTime","");
+					msArrGridRowRecord.set("skypeId","");
+					msArrGridRowRecord.set("msClearOprId","");
+					msArrGridRowRecord.set("msOprId","");
+					msArrGridRowRecord.set("msOprName","");
+					msArrGridRowRecord.set("msOrderState","");
+					msArrGridRowRecord.set("msConfirmState","");
+					msArrGridRowRecord.set("sort","");
+					msArrGridRowRecord.set('moreInfo',"{}");
+
 					var tzParams1 = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_CSTU_STD","OperateType":"delCurStuMsArrInfo","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","oprid":"'+msOprId+'"}}';
 					Ext.tzLoad(tzParams1,function(responseData) {
-						if (responseData.success = 'success') {
+						if (responseData.success == 'success') {
 							cmp.on('afterrender',function(panel){
 								var selStuForm = panel.child('form').getForm();
 								var selStuGrid = panel.child('grid');
@@ -498,6 +509,8 @@
 		//面试信息列表
 		var stuListGrid =btn.up("grid");
 
+		var clsformrec = stuListGrid.up('form').getForm().getFieldValues();
+		var classID = clsformrec["classID"];
 		//面试信息选中行数据
 		var stuListRecs = stuListGrid.getSelectionModel().getSelection();
 
@@ -525,7 +538,7 @@
 			}
 		}
 
-		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"getEmailInfo","comParams":{"oprids":"'+editJson+'"}}';
+		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"getEmailInfo","comParams":{"oprids":"'+editJson+'","classID":"'+classID+'"}}';
 
 		Ext.tzLoad(tzParams,function(responseData){
 			var emailTmpName = responseData['EmailTmpName'];
@@ -544,6 +557,145 @@
 			});
 		});
 	},
+	//发布、撤销
+	releaseOrUndo:function(grid, rowIndex, colIndex){
+		var editRec = grid.store.getAt(rowIndex);
+		if( editRec.data.msOprId==''){
+
+		}else{
+			var editJson="";
+			var infoText="";
+			if(editRec.data.releaseOrUndo=="Y"){
+				infoText="撤销发布成功."
+				editRec.data.releaseOrUndo="N";
+			}else{
+				infoText="发布成功.";
+				editRec.data.releaseOrUndo="Y";
+			}
+			editJson = Ext.JSON.encode(editRec.data);
+			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"publish","comParams":'+editJson+'}';
+			var msArrFormRec = grid.up('form').getForm().getFieldValues();
+			var msArrFormclassID = msArrFormRec["classID"];
+			var msArrFormbatchId = msArrFormRec["batchID"];
+			Ext.tzSubmit(tzParams,function(responseData){
+				if(responseData.success=='success'){
+					Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
+					grid.store.tzStoreParams = Params;
+					grid.store.reload();
+				};
+			},infoText,true,this);
+		}
+	},
+	//批量发布
+	releaseSelList:function(btn){
+		var msArrGrid = btn.up('grid');
+		var msArrGridSelectedRecs=msArrGrid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = msArrGridSelectedRecs.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要发布的记录");
+			return;
+		}else{
+			//检验选中记录发布状态是否一致
+			for(var i=0;i<msArrGridSelectedRecs.length;i++){
+				if(msArrGridSelectedRecs[i].data.msOprId==""){
+					Ext.Msg.alert("提示","请检查所选记录是否均已安排考生.");
+					return;
+				}else{
+					if(msArrGridSelectedRecs[i].data.releaseOrUndo=="Y"){
+						Ext.Msg.alert("提示","请检查所选记录发布状态是否均为【未发布】.");
+						return;
+					}
+				}
+			}
+			Ext.MessageBox.confirm('确认', '您确定要发布选中记录吗?', function(btnId){
+				if(btnId == 'yes'){
+					var editJson="";
+					for(var i=0;i<msArrGridSelectedRecs.length;i++){
+						msArrGridSelectedRecs[i].data.releaseOrUndo="Y";
+						if(editJson == ""){
+							editJson = Ext.JSON.encode(msArrGridSelectedRecs[i].data);
+						}else{
+							editJson = editJson + ','+Ext.JSON.encode(msArrGridSelectedRecs[i].data);
+						}
+					}
+					var comParams="";
+					if(editJson != ""){
+						comParams = '"pubrecs":[' + editJson + "]";
+					}else{
+						comParams = '"pubrecs":[]';
+					}
+					var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"publishpl","comParams":{'+comParams+'}}';
+					var msArrFormRec = msArrGrid.up('form').getForm().getFieldValues();
+					var msArrFormclassID = msArrFormRec["classID"];
+					var msArrFormbatchId = msArrFormRec["batchID"];
+					Ext.tzSubmit(tzParams,function(responseData){
+						if(responseData.success=='success'){
+							Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
+							msArrGrid.store.tzStoreParams = Params;
+							msArrGrid.store.reload();
+						};
+					},"发布成功.",true,this);
+				}
+			},this);
+		}
+	},
+	//批量撤销
+	UndoSelList:function(btn){
+		var msArrGrid = btn.up('grid');
+		var msArrGridSelectedRecs=msArrGrid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = msArrGridSelectedRecs.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要撤销的记录");
+			return;
+		}else{
+			//检验选中记录发布状态是否一致
+			for(var i=0;i<msArrGridSelectedRecs.length;i++){
+				if(msArrGridSelectedRecs[i].data.msOprId==""){
+					Ext.Msg.alert("提示","请检查所选记录是否均已安排考生.");
+					return;
+				}else{
+					if(msArrGridSelectedRecs[i].data.releaseOrUndo=="Y"){
+
+					}else{
+						Ext.Msg.alert("提示","请检查所选记录发布状态是否均为【已发布】.");
+						return;
+					}
+				}
+			}
+			Ext.MessageBox.confirm('确认', '您确定要撤销选中记录吗?', function(btnId){
+				if(btnId == 'yes'){
+					var editJson="";
+					for(var i=0;i<msArrGridSelectedRecs.length;i++){
+						msArrGridSelectedRecs[i].data.releaseOrUndo="N";
+						if(editJson == ""){
+							editJson = Ext.JSON.encode(msArrGridSelectedRecs[i].data);
+						}else{
+							editJson = editJson + ','+Ext.JSON.encode(msArrGridSelectedRecs[i].data);
+						}
+					}
+					var comParams="";
+					if(editJson != ""){
+						comParams = '"revrecs":[' + editJson + "]";
+					}else{
+						comParams = '"revrecs":[]';
+					}
+					var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"revokepl","comParams":{'+comParams+'}}';
+					var msArrFormRec = msArrGrid.up('form').getForm().getFieldValues();
+					var msArrFormclassID = msArrFormRec["classID"];
+					var msArrFormbatchId = msArrFormRec["batchID"];
+					Ext.tzSubmit(tzParams,function(responseData){
+						if(responseData.success=='success'){
+							Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
+							msArrGrid.store.tzStoreParams = Params;
+							msArrGrid.store.reload();
+						};
+					},"撤销发布成功.",true,this);
+				}
+			},this);
+		}
+	},
 
 	onFormSave:function(btn){
 		var msArrPanel = btn.up('panel');
@@ -558,7 +710,8 @@
 		msArrGridModifiedRecs =  msArrGrid.store.getModifiedRecords();
 		msArrGridRemovedRecs= msArrGrid.store.getRemovedRecords();
 		if(msArrGridAllRecs.length<=0 && msArrGridRemovedRecs.length<=0){
-			Ext.MessageBox.alert('提示', '没有面试日程安排数据！');
+			//Ext.MessageBox.alert('提示', '没有面试日程安排数据！');
+			Ext.tzShowToast('保存成功','提示','t','#ffffff');
 			return;
 		}else {
 			var msDate,bjMsStartTime,bjMsEndTime,msGroupId,msGroupSn;
@@ -712,7 +865,7 @@
 			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"saveMsArrInfo","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearAllTimeArr":"'+clearAllTimeArr+'",'+comParams+'}}';
 			var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""}
 			Ext.tzSubmit(tzParams,function(responseData){
-				if(responseData.success='success'){
+				if(responseData.success=='success'){
 					//msArrFormRec["clearAllTimeArr"]="";
 					msArrForm.getForm().setValues(formDataSet);
 					Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';

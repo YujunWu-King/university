@@ -30,7 +30,17 @@
 			{text:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.add","新增"),iconCls:"add",handler:'addClassE'},"-",
 			{text:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.edit","编辑"),iconCls:"edit",handler:'editClassInfoT'}
 		]
-	}],
+	},{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+            {
+                minWidth:80,
+                text:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.close","关闭"),
+                iconCls:"close",
+                handler: 'onComRegClose'}]
+    }],
     initComponent: function () {   
 		var store = new KitchenSink.view.classManage.classStore();
         Ext.apply(this, {

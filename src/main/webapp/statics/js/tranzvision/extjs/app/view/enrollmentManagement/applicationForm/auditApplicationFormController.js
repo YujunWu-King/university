@@ -32,6 +32,10 @@
                         if(refLetterStore.isLoaded()){
                             refLetterStore.reload();
                         };
+                        var fileStore = tabpanel.down('grid[name=fileGrid]').getStore();
+                        if(fileStore.isLoaded()){
+                            fileStore.reload();
+                        };
                     }
                     if(btn.name=='auditAppFormEnsureBtn'){
                         panel.close();
@@ -104,7 +108,29 @@
                 comParams = comParams + ',"update":[' + editJson + "]";
             }
         }
-
+        /*附件删除*/
+        //删除json字符串
+        var removeJson = "";
+        var fileGrid = this.getView().down('grid[name=fileGrid]');
+        var fileStore = fileGrid.getStore();
+        //删除记录
+        var removeRecs = fileStore.getRemovedRecords();
+        //console.log(fileStore,removeRecs);
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson + "]";
+            }
+        }
+        /*附件删除end*/
         //提交参数
         var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
@@ -690,5 +716,141 @@
                 "file": "N"
             });
         });
+    },
+    uploadFiles:function(btn){
+
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_UPLOADFILES_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wjsl","未找到该功能页面对应的JS类，页面ID为：TZ_UPLOADFILES_STD，请检查配置。"));
+            return;
+        }
+
+
+        var win = this.lookupReference('uploadFilesWindow');
+        //var form = win.child("form").getForm();
+        var form = this.getView().child("form").getForm();
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        win.actType = "add";
+        var winForm = win.child("form").getForm();
+        //winForm.findField("currentRowIndex").setValue(rowIndex);
+        //var filePath = grid.getStore().getAt(rowIndex).get("refLetterPurl");
+        var appInsID = form.findField("appInsID").getValue();
+        var stuName = form.findField("stuName").getValue();
+        //winForm.findField("filePurl").setValue(filePath);
+        //winForm.findField("FileName").setValue(filePath);
+        winForm.findField("stuName").setValue(stuName);
+        winForm.findField("appInsID").setValue(appInsID);
+        win.show();
+
+    },
+    onUploadFilesWindowClose: function(btn){
+        //获取窗口
+        var win = btn.findParentByType("window");
+        win.close();
+    },
+    onUploadFilesWindowEnsure: function(btn){
+        //获取窗口
+        var win = btn.findParentByType("window");
+
+        var form = win.child("form").getForm();
+
+        /*获取页面数据*/
+        //附件名称
+        var FileName = form.findField("FileName").getValue();
+        var strAppId = form.findField("appInsID").getValue();
+        var stuName = form.findField("stuName").getValue();
+        //文件名称
+        var refLetterFile = form.findField("refLetterFile").getValue();
+
+        if(refLetterFile != ""){
+            var dateStr = Ext.Date.format(new Date(), 'Ymd');
+
+            //var upUrl = form.findField("filePurl").getValue();
+            var upUrl = '/linkfile/FileUpLoad/appFormAttachment/';
+
+            if(upUrl==""){
+                Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.error","错误"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wdysclj","未定义上传附件的路径，请与管理员联系"));
+                return;
+            }else{
+                if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
+                    upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+                }else{
+                    upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+                }
+            }
+
+            var myMask = new Ext.LoadMask({
+                msg    :  Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.loading","加载中..."),
+                target : Ext.getCmp('tranzvision-framework-content-panel')
+            });
+
+            myMask.show();
+
+            form.submit({
+                url: upUrl,
+                success: function (form, action) {
+                    var usefile  = action.result.msg.filename;
+                    var fix = usefile.substring(usefile.lastIndexOf(".") + 1,usefile.length);
+                    var scFileName  =stuName +"_"+ FileName+"."+fix;
+                    //2015827742845_1440675728045.png
+                    var sysfile = action.result.msg.sysFileName;
+                    ///linkfile/FileUpLoad/appFormAttachment/20150827
+                    var accessPath = action.result.msg.accessPath;
+                    ///export/home/PT852/webserv/ALTZDEV/applications/peoplesoft/PORTAL.war/linkfile/FileUpLoad/appFormAttachment/20150827
+                    var path = action.result.msg.path;
+
+                    if (strAppId!=""){
+
+                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{"add":[{"strAppId":"'+strAppId+'","stuName":"'+stuName+'","refLetterFile":"'+scFileName+'","FileName":"'+FileName+'","strSysFile":"'+sysfile+'","fileUrl":"'+path+'"}]} }';
+                        Ext.tzSubmit(tzParams,function(responseData){
+                            //form.reset();
+                            //var fileGrid =  btn.findParentByType('grid');
+                            var fileGrid = btn.findParentByType("auditApplicationForm").down('grid[name=fileGrid]');
+                            var fileStore = fileGrid.getStore();
+                            fileStore.reload();
+                            win.close();
+                        },"",true,this);
+                    }
+                    myMask.hide();
+                },
+                failure: function (form, action) {
+                    myMask.hide();
+                    Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.error","错误"), action.result.msg);
+                }
+            });
+
+        }else
+        {
+            Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.error","错误"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wxzwj","未选择文件"));
+            return;
+        }
+    },
+    deleteFiles: function(view,rowIndex){
+        //var xxId = grid.getStore().getAt(rowIndex).get("TZ_XXX_BH");
+        var xxId = view.findParentByType("grid").getStore().getAt(rowIndex).get("TZ_XXX_BH");
+        if (xxId!="BMBFILE") {
+            Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.confirm","确认"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.deleteConfirm","您确定要删除所选记录吗?"), function (btnId) {
+                if (btnId == 'yes') {
+                    var store = view.findParentByType("grid").store;
+                    store.removeAt(rowIndex);
+                }
+            }, this);
+        } else{
+            Ext.Msg.alert("",Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.deleteerror","不能删除"));
+        }
     }
 });

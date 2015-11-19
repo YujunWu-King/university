@@ -91,6 +91,7 @@
         	
         	var form = panel.child('form').getForm();
 			form.findField("ProcessID").setReadOnly(true);
+			form.findField("ProcessID").addCls("lanage_1");
 			var grid = panel.child('grid');
 			var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_IMPORTEXCEL_STD","OperateType":"QF","comParams":{"ProcessID":"'+ProcessID+'"}}';
 			
@@ -151,6 +152,16 @@
 		Ext.tzSubmit(tzParams,function(){
 			store.reload();			   
 		},"",true,this);
+	},
+	ensureFilterInfos:function(btn){
+		//保存数据
+		this.saveFilterInfos(btn);
+		//关闭窗口
+		this.view.close();
+	},
+	closeFilterInfos:function(btn){
+		//关闭窗口
+		this.view.close();
 	},
     addFilter: function() {
     	//是否有访问权限
@@ -232,8 +243,11 @@
 			//组件注册表单信息;
 			var form = panel.child('form').getForm();
 			form.findField("ComID").setReadOnly(true);
+			form.findField("ComID").addCls("lanage_1");
 			form.findField("PageID").setReadOnly(true);
+			form.findField("PageID").addCls("lanage_1");
 			form.findField("ViewMc").setReadOnly(true);
+			form.findField("ViewMc").addCls("lanage_1");
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数
@@ -345,8 +359,11 @@
 			//组件注册表单信息;
 			var form = panel.child('form').getForm();
 			form.findField("ComID").setReadOnly(true);
+			form.findField("ComID").addCls("lanage_1");
 			form.findField("PageID").setReadOnly(true);
+			form.findField("PageID").addCls("lanage_1");
 			form.findField("ViewMc").setReadOnly(true);
+			form.findField("ViewMc").addCls("lanage_1");
 			//页面注册信息列表
 			var grid = panel.child('grid');
 			//参数

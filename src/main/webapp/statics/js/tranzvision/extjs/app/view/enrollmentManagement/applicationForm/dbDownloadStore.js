@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.dbDownloadStor
     extend: 'Ext.data.Store',
     alias: 'store.dbDownloadStore',
     model: 'KitchenSink.view.enrollmentManagement.applicationForm.dbDownloadModel',
-    autoLoad: false,
+    autoLoad: true,
     pageSize: 5,
     comID: 'TZ_BMGL_BMBSH_COM',
     pageID: 'TZ_BMGL_DBDL_STD',

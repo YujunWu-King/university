@@ -15,7 +15,7 @@
         'KitchenSink.view.interviewManagement.interviewManage.interviewMgrStore',
         'KitchenSink.view.interviewManagement.interviewManage.interviewMgrController'
     ],
-    title: Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.panelTitle","面试管理"),
+    title: Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.panelTitle","面试结果管理"),
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){

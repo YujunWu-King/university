@@ -47,7 +47,34 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			}
 		}
 	},
+   //选中后编辑
+	editBmbTpl: function(btn) {
+		//选中行
+		var grid =btn.up('grid');
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择一条要修改的记录");
+			return;
+		}else if(checkLen >1){
+			Ext.Msg.alert("提示","只能选择一条要修改的记录");
+			return;
+		}
 
+		var tplid = selList[0].get("tplid");
+		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONREG_EDIT_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+
+		var tzParams='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + tplid + '"}}'
+		var url = Ext.tzGetGeneralURL() + tzParams;
+		window.open(url, '_blank');
+	},
 	/*编辑报名表模板*/
 	onBmbTplEdit: function(view, rowIndex) {
 		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
@@ -302,5 +329,26 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		//获取窗口
 		var win = btn.findParentByType("window");
 		win.close();
-	}
+	},
+	//关闭
+	onPanelClose:function(btn){
+		//alert("onPanelClose");
+		var grid=btn.up('grid');
+		grid.close();
+	},
+    //查询报名表，可配置搜索
+    queryBmbTpl:function(btn){
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_ONLINE_REG_COM.TZ_ONREG_MNG_STD.TZ_APPTPL_V',
+            condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID           //设置搜索字段的默认值，没有可以不设置condition;
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+    }
 });

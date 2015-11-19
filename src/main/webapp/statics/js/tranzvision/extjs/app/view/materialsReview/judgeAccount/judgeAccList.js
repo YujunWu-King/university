@@ -36,7 +36,10 @@
 			xtype:"toolbar",
 			dock:"bottom",
 			ui:"footer",
-			items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"onSave"}]
+			items:[
+				'->',
+				{minWidth:80,text:"保存",iconCls:"save",handler:"onSave"},
+				{minWidth:80,text:"关闭",iconCls:"close",handler:"onClose"}]
 		}
 	],
     initComponent: function () {    

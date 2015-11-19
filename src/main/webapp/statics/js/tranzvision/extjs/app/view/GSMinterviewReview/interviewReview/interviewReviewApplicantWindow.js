@@ -14,6 +14,7 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewA
     height: 550,
     modal:true,
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    layout:'fit',
     items: [{
         xtype:'form',
         reference: 'GSMCommendationForm',

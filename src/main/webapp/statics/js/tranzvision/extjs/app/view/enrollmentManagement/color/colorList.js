@@ -29,11 +29,16 @@
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:['->',{minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.save","保存"),iconCls:"save",handler:'saveColors'}]
+        items:['->',
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.save","保存"),iconCls:"save",handler:'saveColors'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.ensure","确认"),iconCls:"ensure",handler: 'ensureColors'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.close","关闭"),iconCls:"close",handler: 'closeColors'}
+        ]
     },{
         xtype:"toolbar",
         items:[
-            {text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.add","新增"),iconCls:"add",handler:'addColor'},
+            {text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.add","新增"),iconCls:"add",handler:'addColor'},"-",
+            {text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.edit","编辑"),iconCls:"edit",handler:"editColor"},"-",
             {text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.delete","删除"),iconCls:"remove",handler:'deleteColors'}
         ]
     }],
@@ -46,6 +51,11 @@
                 //	clicksToEdit: 1
             },
             columns: [
+                {
+                    text: Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.colorSortID","颜色ID"),
+                    dataIndex: 'colorSortID',
+                    hidden:true
+                },
                 {
                     text:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.color","颜色"),
                     width:160,
@@ -83,6 +93,7 @@
                     align:'center',
                     xtype: 'actioncolumn',
                     items:[
+                        {iconCls:"edit",tooltip:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.edit","编辑"),handler:"editCurrentColor"},
                         {iconCls: 'remove',tooltip:Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.delete","删除"),handler:'deleteColor'}
                     ]
                 }],

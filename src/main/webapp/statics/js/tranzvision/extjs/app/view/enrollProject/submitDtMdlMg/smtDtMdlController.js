@@ -322,7 +322,7 @@
 		var removeJson = "";
 		//删除记录
 		var removeRecs = store.getRemovedRecords();
-
+       var comParams="";
 		for(var i=0;i<removeRecs.length;i++){
 			if(removeJson == ""){
 				removeJson = Ext.JSON.encode(removeRecs[i].data);
@@ -549,12 +549,12 @@
 		var formParams = form.getValues();
 	
 		//提交参数
+
 		var tzParams = '{"ComID":"TZ_GD_SMTDTMDL_COM","PageID":"TZ_GD_SMTDTXX_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
 		var tzStoreParams = '{"smtDtTmpID":"'+formParams["smtDtTmpID"]+'"}';
 		var pageGrid = this.getView().child("grid");
 		Ext.tzSubmit(tzParams,function(responseData){
 			win.actType = "update";
-			//form.findField("smtDtID").setReadOnly(true);
             form.setValues(responseData);
 			pageGrid.store.tzStoreParams = tzStoreParams;
 			pageGrid.store.reload();
@@ -836,6 +836,189 @@
 		var tzParams = '{"ComID":"TZ_GD_SMTDTMDL_COM","PageID":"TZ_GD_BAKEMSG_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		//alert(tzParams);
         return tzParams;
-	}
+	},
+    //可配置查询
+    querySmtDataModel:function(btn){
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.TZ_SBMINF_TMP_V',
+            condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+    },
+    //关闭
+    closeSmtDtTmp:function(btn){
+        var grid=btn.up("grid");
+        grid.close();
+    },
+    //确定
+    ensureSmtDtTmp:function(btn){
+        var comView = this.getView();
+        //组件注册信息列表
+        var grid = btn.findParentByType("grid");
+        //组件注册信息数据
+        var store = grid.getStore();
+        //删除json字符串
+        var removeJson = "";
+        //删除记录
+        var removeRecs = store.getRemovedRecords();
+       var comParams="";
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            comParams = '"delete":[' + removeJson + "]";
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_GD_SMTDTMDL_COM","PageID":"TZ_GD_SMTDTLST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        //保存数据
+        Ext.tzSubmit(tzParams,function(){
+            store.reload();
+            comView.close();
+        },"",true,this);
+    },
+    //编辑
+    editSmtDataModel:function(btn){
+        var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
+        var checkLen = selList.length;
+        if (checkLen == 0) {
+            Ext.MessageBox.alert("提示", "请选择一条要修改的记录");
+            return;
+        } else if (checkLen > 1) {
+            Ext.MessageBox.alert("提示", "只能选择一条要修改的记录");
+            return;
+        }
+        var smtDtTmpID = selList[0].get("smtDtTmpID");
+        //显示组件注册信息编辑页面
+        this.editSmtDtTmpByID(smtDtTmpID);
+    },
+    //删除
+    deleteSmtDataModel:function(btn){
+        //选中行
+        var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要删除的记录");
+            return;
+        }else{
+            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+                if(btnId == 'yes'){
+                    var resSetStore =  btn.findParentByType("grid").store;
+                    resSetStore.remove(selList);
+                }
+            },this);
+        }
+    },
+    //顶部的编辑
+    editSmtDataInfo:function(btn){
+        var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
+        var checkLen = selList.length;
+        if (checkLen == 0) {
+            Ext.MessageBox.alert("提示", "请选择一条要修改的记录");
+            return;
+        } else if (checkLen > 1) {
+            Ext.MessageBox.alert("提示", "只能选择一条要修改的记录");
+            return;
+        }
+        var smtDtTmpID = selList[0].get("smtDtTmpID");
+        var smtDtID=selList[0].get("smtDtID");
+        var className="KitchenSink.view.enrollProject.submitDtMdlMg.smtDataWin";
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.prompt","提示"),Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        if(smtDtID==""){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.prompt","提示"),Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.qxbcbmlcxx","请先保存资料模型信息"));
+            return;
+        }
+        var win = this.lookupReference('smtDtMdlSet');
+        if (!win) {
+            //className = 'KitchenSink.view.security.com.pageRegWindow';
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        //操作类型设置为更新
+        win.actType = "update";
+        //参数
+        var tzParams = '{"ComID":"TZ_GD_SMTDTMDL_COM","PageID":"TZ_GD_SMTDTXX_STD","OperateType":"QF","comParams":{"TZ_SBMINF_TMP_ID":"'+smtDtTmpID+'","TZ_SBMINF_ID":"'+smtDtID+'"}}';
+        //页面注册信息表单
+        var form = win.child("form").getForm();
+        Ext.tzLoad(tzParams,function(responseData){
+            form.findField("smtDtTmpID").setReadOnly(true);
+            form.findField("smtDtID").setReadOnly(true);
+            form.setValues(responseData);
+        });
+        win.show();
+    },
+    //grid列表中的编辑
+    editData:function(view,rowIndex){
 
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var smtDtTmpID = selRec.get("smtDtTmpID");
+        var smtDtID = selRec.get("smtDtID");
+        var className="KitchenSink.view.enrollProject.submitDtMdlMg.smtDataWin";
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.prompt","提示"),Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        if(smtDtID==""){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.prompt","提示"),Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.qxbcbmlcxx","请先保存资料模型信息"));
+            return;
+        }
+        var win = this.lookupReference('smtDtMdlSet');
+        if (!win) {
+            //className = 'KitchenSink.view.security.com.pageRegWindow';
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        //操作类型设置为更新
+        win.actType = "update";
+        //参数
+        var tzParams = '{"ComID":"TZ_GD_SMTDTMDL_COM","PageID":"TZ_GD_SMTDTXX_STD","OperateType":"QF","comParams":{"TZ_SBMINF_TMP_ID":"'+smtDtTmpID+'","TZ_SBMINF_ID":"'+smtDtID+'"}}';
+        //页面注册信息表单
+        var form = win.child("form").getForm();
+        Ext.tzLoad(tzParams,function(responseData){
+            form.findField("smtDtTmpID").setReadOnly(true);
+            form.findField("smtDtID").setReadOnly(true);
+            form.setValues(responseData);
+        });
+        win.show();
+    },
+    //左上角新增删除；批量删除
+   removeSmtDataInfo:function(btn){
+       //选中行
+       var applyItemOptionsGrid = btn.findParentByType("grid");
+       var selList = applyItemOptionsGrid.getSelectionModel().getSelection();
+       //选中行长度
+       var checkLen = selList.length;
+       if(checkLen == 0){
+           Ext.Msg.alert(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.prompt","提示"),  Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.qxzyscdjl","请选择要删除的记录"));
+           return;
+       }else{
+           Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.confirm","确认"),  Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.qryscsxjlm","确认要删除所选记录吗？"), function(btnId){
+               if(btnId == 'yes'){
+                   var store = applyItemOptionsGrid.store;
+                   store.remove(selList);
+               }
+           },this);
+       }
+   }
 });

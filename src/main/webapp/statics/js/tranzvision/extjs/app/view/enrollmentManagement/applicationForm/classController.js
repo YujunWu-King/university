@@ -756,6 +756,10 @@
     /*清除过滤条件*/
     onClearFilters: function (btn) {
         btn.findParentByType('grid').filters.clearFilters();
+    },
+    onComRegClose: function(btn){
+        //关闭窗口
+        this.getView().close();
     }
 });
 

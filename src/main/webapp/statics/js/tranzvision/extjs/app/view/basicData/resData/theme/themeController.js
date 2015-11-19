@@ -44,6 +44,16 @@
 			store.reload();			   
 		},"",true,this);
 	},
+	closeThemeInfo: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	ensureThemeInfo: function(btn){
+		//确定
+		this.saveThemeInfos(btn);
+		this.closeThemeInfo(btn);
+	},
     addTheme: function() {
     	//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_THEMEGL_COM"]["TZ_GD_THEME_STD"];

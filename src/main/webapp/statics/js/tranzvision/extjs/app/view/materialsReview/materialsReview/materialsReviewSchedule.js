@@ -10,6 +10,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
         'Ext.ux.ProgressBarPager',
         'KitchenSink.AdvancedVType',
         'Ext.ux.MaximizeTool',
+        'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.materialsReview.materialsReview.materialsReviewScheduleJudgeStore',
         'KitchenSink.view.materialsReview.materialsReview.materialsReviewScheduleAppJudgeWindow',
         'KitchenSink.view.materialsReview.materialsReview.materialsReviewScheduleAppsStore'
@@ -175,7 +176,14 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                 text: "姓名",
                 dataIndex: 'name',
                 align:'center',
-                minWidth: 100
+                minWidth: 100,
+                xtype:'linkcolumn',
+                handler:'viewThisApplicationForm',
+                renderer:function(v){
+                    this.text=v;
+                    return ;
+                }
+
             },{
                 text: "性别",
                 dataIndex: 'gender',
@@ -190,10 +198,10 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                     }
                 }
             },{
-                flex:1,
                 text: "面试资格",
                 dataIndex: 'viewQUA',
                 align:'center',
+				 minWidth: 80,
                 width: 100
 
             },
@@ -223,8 +231,10 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
             }
         ];
         var dockedItems;
+
+
         var tzAppColsParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' +
-            '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"'+classID+'","batchID":"'+batchID+'"}}';
         Ext.tzLoadAsync(tzAppColsParams,function(respData){
             var transScoreValue=respData.ZFZ;
             if(transScoreValue=='Y'){
@@ -307,7 +317,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                         },
                         {
                             xtype: 'numberfield',
-                            fieldLabel: "已选择资料评审考生",
+                            fieldLabel: "已选择材料评审考生",
                             name: 'materialStudents',
                             fieldStyle: 'background:#F4F4F4',
                             readOnly: true,
@@ -347,7 +357,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                                         name: 'delibCount',
                                         minValue:0,
                                         style:'margin-left:5hpx;margin-right:2px;border:none',
-                                        negativeText:'评议次数必须为正整数',
+                                        negativeText:'评审次数必须为正整数',
                                         nanText:'{0}不是有效的数字',
                                         hideLabel: true,
                                         width:20
@@ -363,7 +373,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                                         margin:'8px',
                                         xtype: 'displayfield',
                                         //style:'margin-left:1px',
-                                        value: "<b>次评议，当前评议状态是：</b>",
+                                        value: "<b>次评审，当前评审状态是：</b>",
                                         //hideLabel: true,
                                         labelWidth:70
                                     },{
@@ -386,7 +396,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                                     },{
                                         margin:'8px 0 0 10px',
                                         xtype: 'displayfield',
-                                        value: "<b>本次评议的评议进度是</b>",
+                                        value: "<b>本次评审的评审进度是</b>",
                                         labelWidth:1
                                     },
                                     {
@@ -566,7 +576,7 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                                                         "-",
                                                         {text: "设置提交状态为未提交", tooltip: "设置提交状态为未提交", handler: "setNoSubmit"},
                                                         "-",
-                                                        {text: "撤销评议数据", tooltip: "删除评议数据", handler: "revokeData"},
+                                                        {text: "撤销评议数据", tooltip: "撤销评议数据", handler: "revokeData"},
                                                         "-",
                                                         {text: "打印评分总表", tooltip: "打印评分总表", handler: "printChart"}
 
@@ -603,15 +613,18 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewSche
                                                     align:'center',
                                                     flex: 1
                                                 },{
-                                                    text: "评审考生下限",
+                                                    text: "评审考生人数",
+													 align:'center',
                                                     dataIndex: 'lower',
                                                     width:130
-                                                },{
-                                                    text: "评审考生上限",
-                                                    dataIndex: 'upper',
-                                                    width:130
-                                                }, {
-                                                    text: "抽取数量/已提交数量",
+                                                }
+//                                                ,{
+//                                                    text: "评审考生上限",
+//                                                    dataIndex: 'upper',
+//                                                    width:130
+//                                                }
+                                                , {
+                                                    text: "抽取数量/已评审数量",
                                                     dataIndex: 'hasSubmited',
                                                     align:'center',
                                                     minWidth: 100,

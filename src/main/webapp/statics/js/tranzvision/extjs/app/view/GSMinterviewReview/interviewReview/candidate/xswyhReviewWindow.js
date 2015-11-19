@@ -15,182 +15,178 @@
     ],
 
 	actType : "update",//默认add
+    whichColnums:"",
     title:"学术委员会审议",
     //frame: true,
-
     width: 800,
     height: 500,
     modal:true,
-    bodyStyle:'overflow-y:auto;overflow-x:hidden',
-	items: [
-
-        {
-            xtype: 'form',
-            reference: 'zpldForm',
-            layout: {
-                type: 'vbox',
-                align: 'stretch'
-            },
-            border: false,
-            //bodyPadding: 10,
-            style:"margin:8px",
-            //heigth: 300,
-            bodyStyle:'overflow-y:auto;overflow-x:hidden',
-
-            fieldDefaults: {
-                msgTarget: 'side',
-                labelWidth: 100,
-                labelStyle: 'font-weight:bold'
-            },
-           items: [
-                {
-                    xtype: 'textfield',
-                    fieldLabel: '班级ID',
-                    name: 'classID',
-                    hidden:true
-
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: '批次ID',
-                    name: 'batchID',
-                    hidden:true
-
-                },
-                {
-                    xtype: 'displayfield',
-                    fieldLabel: '申请人',
-                    name: 'realName'
-
-                },
-                {
-                    xtype: 'displayfield',
-                    fieldLabel: '审议通过率',
-                    name: 'xswyhsytgl'
-
-                }
-
-            ]
-        }
-
-      ,{
-		xtype: 'grid',
-
-		height: 280,
-		viewConfig: {
-			enableTextSelection: true
-		},
-        autoHeight:true,
-		columnLines: true,
-		reference:'xswyhReviewGrid',
-        name:'xswyhReviewGrid',
-		style:"margin:8px",
-        header:false,
-        frame: true,
-
-        columns: [{
-			//xtype: 'rownumberer',
-			text: '班级ID',
-			dataIndex: 'classID',
-			//width:100,
-			hidden: true
-
-		},{
-            text: '批次ID',
-            dataIndex: 'batchID',
-			hidden: true
-		},{
-            text: '小组成员ID',
-            dataIndex: 'pwID',
-            hidden:true,
-            width:100
-
-        },{
+    layout:{
+        type:'fit'
+    },
+    constructor:function(store,fields,flag){
+        this.scoreStore = store;
+        var columns = [{
             text: '小组成员',
-            width:200,
-            dataIndex: 'pwName'
-
-		},{
-            text: '报名表实例ID',
-            dataIndex: 'appInsID'
-
-        },{
-            text: '是否投票',
-            width:100,
-            dataIndex: 'ifVote'
-            //width: 110,
-
-        },{
-            text: '审议结果',
-            width:100,
-            dataIndex: 'ReviewResult',
-
-            renderer:function(v){
-                var x=v;
-                if(x=="1"){
-                    return "通过";
-                }
-                if (x=="2"){
-                    return "未通过";
-                }
-                if (x=="3"){
-                    return "未审议";
-                }
-            }
-
-        },{
-            text: '备注',
-            dataIndex: 'remark',
+            minWidth: 150,
+            dataIndex: 'pwName',
             flex:1
         },{
+            text: '是否投票',
+            minWidth: 100,
+            dataIndex: 'ifVote',
+            defaultvalue: '已投票',
+            flex:1
+        }];
+        var backcolums = [{
             header: '退回',
-            xtype:'linkcolumn',
+            xtype: 'linkcolumn',
             sortable: false,
-            flex:1,
-            value:'退回',
-            label:'退回',
-            minWidth: 50,
-            handler:'viewCancel'
-        },{
+            flex: 2,
+            value: '退回',
+            label: '退回',
+            minWidth: 75,
+            handler: 'viewXSCancel'
+            },/*{
             header: '提交',
-            xtype:'linkcolumn',
+            xtype: 'linkcolumn',
+
             sortable: false,
-            flex:1,
-            value:'提交',
-            label:'提交',
-            minWidth: 50,
-            handler:'viewCandidateSubmit'
-        }, {
-            text:"操作",
+            flex: 2,
+            value: '提交',
+            label: '提交',
+            minWidth: 75,
+            handler: 'submitSX'
+            },*/{
+            text: "操作",
             menuDisabled: true,
             sortable: false,
-            align:'center',
-            minWidth:75,
+            align: 'center',
+            minWidth: 75,
             xtype: 'actioncolumn',
-            items:[
-                {iconCls:'edit',tooltip:'编辑考生',handler:'editApplicant24'}
-            ]
-        }],	//columns-end
-		store: {
-					type: 'xswyhReviewWindowStore'
-			   }
+            items: [
+                {iconCls: 'edit', tooltip: '编辑申请人', handler: 'editApplicant24'}
+                ]
+            }];
+        for(var x = 0;x<fields.length;x++){
+            if(fields[x].type==='N'){
+                columns.push({
+                    text:fields[x].name,
+                    dataIndex:fields[x].ID,
+                    minWidth:100,
+                    align:'center',
+                    flex:1,
+                    renderer:function(v){
+                        return "<span title='"+v+"'>"+v+"</span>";
+                    }
+                });
+            }else{
+                this.whichColnums = fields[x].ID;
+                columns.push({
+                    text:fields[x].name,
+                    dataIndex:fields[x].ID,
+                    minWidth:100,
+                    align:'center',
+                    flex:1,
+                    renderer:function(v){
+                        var x;
+                        if((x = store.findExact('TValue',v))>=0){
+                            return "<span title='"+store.getAt(x).data.TSDesc+"'>"+store.getAt(x).data.TSDesc+"</span>";
+                        }else{
+                            return "<span title='"+v+"'>"+v+"</span>";
+                        }
+                    }
+                });
+            }
+        }
+        if(flag){
+            columns = columns.concat(backcolums);
+        }
+        Ext.apply(this,{
+           items: [
+            {
+            xtype: 'form',
+                reference: 'zpldForm',
+                //bodyPadding: 10,
+                fieldDefaults: {
+                    msgTarget: 'side',
+                    labelWidth: 100,
+                    labelStyle: 'font-weight:bold'
+                },
+                items: [
+                    {
+                        xtype: 'textfield',
+                        name: 'classID',
+                        hidden: true
 
-	}],		  
+                    },
+                    {
+                        xtype: 'textfield',
+                        name: 'batchID',
+                        hidden: true
+
+                    },
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '申请人',
+                        style: "margin:8px",
+                        name: 'realName'
+
+                    },
+                    {
+                        xtype: 'displayfield',
+                        fieldLabel: '审议通过率',
+                        style: "margin:8px",
+                        name: 'xswyhsytgl'
+
+                    },{
+                    xtype: 'grid',
+                    columnLines: true,
+                    autoHeight:true,
+                    reference: 'xswyhReviewGrid',
+                    name: 'xswyhReviewGrid',
+                    bodyStyle: 'overflow-y:auto;overflow-x:hidden;border:1px 1px 0px 0px',
+                    columns:columns,
+                    }
+
+                ]
+        }],
+                });
+                this.callParent();
+        },
 
     buttons: [{
-		text: '保存',
-		iconCls:"save",
-		//handler: 'onxswyhReviewMsgSave'
+        text: '保存',
+        iconCls:"save",
+        //handler: 'onteamReviewMsgSave'
         handler:function(btn){
-            var store = btn.findParentByType('window').down('grid[name=xswyhReviewGrid]').store,
-                newData = store.getNewRecords(),
-                removedData = store.getRemovedRecords(),
+            var store = btn.findParentByType('window').down('grid[name=xswyhReviewGrid]').store;
+            var removedData = store.getRemovedRecords(),
                 updateData = store.getModifiedRecords(),
                 comParas,JSONData={},
                 classID = btn.findParentByType('window').child('form').getForm().findField('classID').getValue(),
                 batchID = btn.findParentByType('window').child('form').getForm().findField('batchID').getValue();
-
-
+            //新增数据
+           /* if(newData.length !== 0) {
+                JSONData.add = [];
+                for (var x = newData.length - 1; x >= 0; x--) {
+                    JSONData.add[x] = {};
+                    JSONData.add[x].appINSID = newData[x].data.appINSID;
+                    JSONData.add[x].classID = classID;
+                    JSONData.add[x].batchID = batchID;
+                }
+            }*/
+            //删除数据
+           /* if(removedData.length !== 0){
+                JSONData.delete = [];
+                for(var x =removedData.length-1;x>=0;x--){
+                    JSONData.delete[x] = {};
+                    JSONData.delete[x].appINSID = removedData[x].data.appINSID;
+                    JSONData.delete[x].classID = classID;
+                    JSONData.delete[x].batchID = batchID;
+                }
+            }*/
+            //更新数据
             if(updateData.length !== 0){
                 JSONData.update =[];
                 for(var x = updateData.length-1;x>=0;x--){
@@ -200,13 +196,14 @@
                     JSONData.update[x].batchID = updateData[x].data.batchID;
                     JSONData.update[x].appInsID = updateData[x].data.appInsID;
                     JSONData.update[x].pwID = updateData[x].data.pwID;
-
-                    JSONData.update[x].ReviewResult = updateData[x].data.ReviewResult;
-                    //console.log(updateData[x].data.ReviewResult);
+                    for(var n in updateData[x].data){
+                        if(updateData[x].isModified(n)){
+                            JSONData.update[x].ReviewResult = updateData[x].data[n];
+                        }
+                    }
                     //JSONData.update[x].reviewStatus = updateData[x].data.LUQUZT;
                 }
             }
-            comParas=Ext.JSON.encode(JSONData);
             //表单中的数据
             comParas=Ext.JSON.encode(JSONData);
             //提交参数
@@ -221,10 +218,10 @@
                 }
             },"",true,this);
         }
-	},{
+    },{
         text: '确定',
         iconCls:"ensure",
-        //handler: 'onxswyhReviewSure'
+       // handler: 'onteamReviewSure'
         handler:function(btn){
             var store = btn.findParentByType('window').down('grid[name=xswyhReviewGrid]').store,
                 newData = store.getNewRecords(),
@@ -233,7 +230,27 @@
                 comParas,JSONData={},
                 classID = btn.findParentByType('window').child('form').getForm().findField('classID').getValue(),
                 batchID = btn.findParentByType('window').child('form').getForm().findField('batchID').getValue();
-
+            //新增数据
+            /* if(newData.length !== 0) {
+             JSONData.add = [];
+             for (var x = newData.length - 1; x >= 0; x--) {
+             JSONData.add[x] = {};
+             JSONData.add[x].appINSID = newData[x].data.appINSID;
+             JSONData.add[x].classID = classID;
+             JSONData.add[x].batchID = batchID;
+             }
+             }*/
+            //删除数据
+            /* if(removedData.length !== 0){
+             JSONData.delete = [];
+             for(var x =removedData.length-1;x>=0;x--){
+             JSONData.delete[x] = {};
+             JSONData.delete[x].appINSID = removedData[x].data.appINSID;
+             JSONData.delete[x].classID = classID;
+             JSONData.delete[x].batchID = batchID;
+             }
+             }*/
+            //更新数据
 
             if(updateData.length !== 0){
                 JSONData.update =[];
@@ -244,46 +261,46 @@
                     JSONData.update[x].batchID = updateData[x].data.batchID;
                     JSONData.update[x].appInsID = updateData[x].data.appInsID;
                     JSONData.update[x].pwID = updateData[x].data.pwID;
-
-                    JSONData.update[x].ReviewResult = updateData[x].data.ReviewResult;
-                    console.log(updateData[x].data.ReviewResult);
+                    for(var n in updateData[x].data){
+                        if(updateData[x].isModified(n)){
+                            JSONData.update[x].ReviewResult = updateData[x].data[n];
+                        }
+                    }
                     //JSONData.update[x].reviewStatus = updateData[x].data.LUQUZT;
                 }
             }
+
             comParas=Ext.JSON.encode(JSONData);
             //表单中的数据
-            comParas=Ext.JSON.encode(JSONData);
             //提交参数
             var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_XSWYH_STD","OperateType":"U","comParams":' + comParas + '}';
             Ext.tzSubmit(tzParams,function(responseData){
-                var thisValue = responseData.xswyhsytgl||btn.findParentByType('panel').child('form').getForm().findField('xswyhsytgl').getValue();
-                btn.findParentByType('panel').child('form').getForm().findField('xswyhsytgl').setValue(thisValue);
-                var grid = btn.findParentByType('window').down("grid[name=xswyhReviewGrid]");
-                var store = grid.getStore();
-                if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1||tzParams.indexOf("update")){
-                    store.reload();
-                }
+                var grid = btn.findParentByType('panel').down("grid[name=xswyhReviewGrid]");
+                grid.store.commitChanges();
                 btn.findParentByType('panel').close();
 
                 //var interviewMgrPanel=Ext.ComponentQuery.query("panel[reference=candidateStudentGrid]");
                 //var store=interviewMgrPanel[0].getStore();
                 //var  store11 = interviewMgrPanel[0].getStore();
-                 var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab();
-                 var  store11  = activeTab.down("grid[name=candidateStudentGrid]").getStore();
 
-                var tzStoreParams ='{"classID":"'+classID+'","batchID":"'+batchID+'"}';
-                store11.tzStoreParams = tzStoreParams;
-                store11.load();
+                var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab();
+                var  store11  = activeTab.down("grid[name=candidateStudentGrid]").getStore();
+                store11.reload();
+                //grid11.getStore().reload();
+
             },"",true,this);
         }
     }, {
-		text: '关闭',
-		iconCls:"close",
-		//handler: 'onteamReviewClose'
+        text: '关闭',
+        iconCls:"close",
+        //handler: 'onteamReviewClose'
         handler:function(btn){
             btn.findParentByType('window').close();
+            var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab();
+                var  store11  = activeTab.down("grid[name=candidateStudentGrid]").getStore();
+                store11.reload();
             //this.up('panel').close();
             //this.getView().close();
         }
-	}]
+    }]
 });

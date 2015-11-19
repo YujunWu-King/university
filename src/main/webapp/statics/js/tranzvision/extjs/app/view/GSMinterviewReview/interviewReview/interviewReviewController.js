@@ -5,6 +5,75 @@
 
     extend: 'Ext.app.ViewController',
     alias: 'controller.GSMinterviewReview',
+    transValues:function(){
+        var transvalueCollection = {},
+            self = this;
+        return {
+            set:function(sets,callback){
+                if(sets instanceof Array || typeof sets === 'string'){  
+                    //可以传入一个数组或者单个字符串作为参数
+                    if(sets instanceof Array){
+                        var unload = [];
+                        //遍历查找还未加载的数据
+                        for(var x = sets.length-1;
+                            x>=0&&!transvalueCollection[sets[x]]||(transvalueCollection[sets[x]]&&transvalueCollection[sets[x]].isLoaded());
+                            x--){
+                            unload.push(sets[x]);
+                        }
+
+                        var finishCount = self.isAllFinished(unload);
+                        //加载未加载的数据
+                        if(unload.length>0){
+                            for(var x = unload.length-1;x>=0;x--){
+                                transvalueCollection[unload[x]] = new KitchenSink.view.common.store.appTransStore(unload[x]);
+                                transvalueCollection[unload[x]].load({
+                                    callback:function(){
+                                        finishCount(callback);
+                                    }
+                                });sets[x]
+                            }
+                        }else{
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }
+                    }else{
+                        if(transvalueCollection[sets]&&transvalueCollection[sets].isLoaded()){
+                            //当前store已经加载
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }else{
+                            var finishCount = self.isAllFinished(sets);
+                            transvalueCollection[sets] = new KitchenSink.view.common.store.appTransStore(sets);
+                            transvalueCollection[sets].load({
+                                callback:function(){
+                                    finishCount(callback);
+                                }
+                            });
+                        }
+                    }
+
+                }else{
+                    Ext.MessageBox.alert("传入参数有误");
+                }
+            },
+            get:function(name){
+                return transvalueCollection[name];
+            }
+        }
+    },
+    isAllFinished:function(sets){
+        var len = sets instanceof Array ? sets.length : 1;
+        return function(callback){
+            len--;
+            if(len===0){
+                if(callback instanceof Function){
+                    callback();
+                }
+            }
+        }
+    },
     //KitchenSink.view.interviewManagement.interviewReview.interviewProgress
     queryClassBatch: function (btn) {
         Ext.tzShowCFGSearch({
@@ -79,7 +148,7 @@
     selectClass:function(trigger){
         Ext.tzShowPromptSearch({
             recname: 'TZ_CLASS_V',
-            searchDesc: '选择班级',
+            searchDesc: '选择项目',
             maxRow:20,
             condition:{
                 presetFields:
@@ -91,20 +160,20 @@
                 },
                 srhConFields:{
                     TZ_CLASS_ID:{
-                        desc:'班级ID',
+                        desc:'项目ID',
                         operator:'07',
                         type:'01'
                     },
                     TZ_CLASS_NAME:{
-                        desc:'班级名称',
+                        desc:'项目名称',
                         operator:'07',
                         type:'01'
                     }
                 }
             },
             srhresult:{
-                TZ_CLASS_ID: '班级ID',
-                TZ_CLASS_NAME: '班级名称'
+                TZ_CLASS_ID: '项目ID',
+                TZ_CLASS_NAME: '项目名称'
             },
             multiselect: false,
             callback: function(selection){
@@ -139,7 +208,7 @@
                         batchNameField.setConfig(cofObj);
                         batchNameField.allowBlank = false;
                         batchNameField.regex = reg;
-                        batchNameField.regexText = "当前班级已含有此批次";
+                        batchNameField.regexText = "当前项目已含有此批次";
                         batchNameField.reset();
                         batchNameField.setValue("");
                     }else{
@@ -192,9 +261,9 @@
         }
         datas = Ext.JSON.encode(datas);
         var tzParams = '{"ComID":"TZ_GSM_REVIEW_MS_COM","PageID":"TZ_GSMS_LIST_STD","OperateType":"U","comParams":'+datas+'}';
-        console.log(tzParams);
+    
         Ext.tzSubmit(tzParams,function(responseData){
-            btn.findParentByType('panel').down('grid').getStore().reload();
+            btn.findParentByType('panel').down('grid').getStore().commitChanges();
         },"",true,this)
     },
     onClassBatchEnsure:function(btn){
@@ -229,32 +298,34 @@
         ViewClass = Ext.ClassManager.get(className);
         var store = tabview.grid.getStore();
             classID = store.getAt(rowIndex).data.classID,
-            batchID = store.getAt(rowIndex).data.batchID;
+            batchID = store.getAt(rowIndex).data.batchID,
+            transValue = this.transValues();
         //必须先保存后数据库，才能分配到批次ID
         if(batchID) {
             //当能取到batchID后。说明已经保存过了
-            cmp = new ViewClass();
-
-            cmp.on('afterrender', function (panel) {
-                var tzParams = '{"ComID":"TZ_GSM_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
-                    '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
-                var params = '{"classID":"' + classID + '","batchID":"' + batchID + '","orgID":"' + Ext.tzOrgID + '"}';
-                Ext.tzLoad(tzParams, function (respData) {
-                    var judgeStore = panel.lookupReference('GSMinterviewReviewJudgeGrid').getStore();
-                    panel.lookupReference('GSMinterviewReviewDesc').getForm().setValues(respData.formData);
-                    judgeStore.tzStoreParams = params;
-                    judgeStore.reload();
+            transValue.set("TZ_GSM_JUG_GRP",function(){
+                cmp = new ViewClass(transValue);
+                cmp.on('afterrender', function (panel) {
+                    var tzParams = '{"ComID":"TZ_GSM_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
+                        '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
+                    var params = '{"classID":"' + classID + '","batchID":"' + batchID + '","orgID":"' + Ext.tzOrgID + '"}';
+                    Ext.tzLoad(tzParams, function (respData) {
+                        var judgeStore = panel.lookupReference('GSMinterviewReviewJudgeGrid').getStore();
+                        panel.lookupReference('GSMinterviewReviewDesc').getForm().setValues(respData.formData);
+                        judgeStore.tzStoreParams = params;
+                        judgeStore.reload();
+                    });
                 });
+                var tab = contentPanel.add(cmp);
+
+                contentPanel.setActiveTab(tab);
+
+                Ext.resumeLayouts(true);
+
+                if (cmp.floating) {
+                    cmp.show();
+                }
             });
-            var tab = contentPanel.add(cmp);
-
-            contentPanel.setActiveTab(tab);
-
-            Ext.resumeLayouts(true);
-
-            if (cmp.floating) {
-                cmp.show();
-            }
         }else{
             //没有批次ID,提醒用户先保存
             Ext.MessageBox.alert("提示","请先保存后再继续操作");
@@ -286,33 +357,36 @@
         ViewClass = Ext.ClassManager.get(className);
         var store = tabview.grid.getStore();
             classID = store.getAt(rowIndex).data.classID,
-            batchID = store.getAt(rowIndex).data.batchID;
+            batchID = store.getAt(rowIndex).data.batchID,
+            transValue = this.transValues();
         //必须先保存后数据库，才能分配到批次ID
         if(batchID) {
             //当能取到batchID后。说明已经保存过了
-            cmp = new ViewClass();
-
-            cmp.on('afterrender', function (panel) {
-                var tzParams = '{"ComID":"TZ_GSM_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD",' +
-                    '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
-                Ext.tzLoad(tzParams, function (respData) {
-                    var judgeStore = panel.lookupReference('GSMinterviewReviewJudgeGrid').getStore(),
-                        thisbatchID = respData.formData.batchID;
-                    var params = '{"classID":"' + classID + '","batchID":"' + thisbatchID + '","orgID":"' + Ext.tzOrgID + '"}';
-                    panel.lookupReference('GSMinterviewReviewDesc').getForm().setValues(respData.formData);
-                    judgeStore.tzStoreParams = params;
-                    judgeStore.reload();
+            transValue.set("TZ_GSM_JUG_GRP",function(){
+                cmp = new ViewClass(transValue);
+                cmp.on('afterrender', function (panel) {
+                    var tzParams = '{"ComID":"TZ_GSM_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD",' +
+                        '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
+                    Ext.tzLoad(tzParams, function (respData) {
+                        var judgeStore = panel.lookupReference('GSMinterviewReviewJudgeGrid').getStore(),
+                            thisbatchID = respData.formData.batchID;
+                        var params = '{"classID":"' + classID + '","batchID":"' + thisbatchID + '","orgID":"' + Ext.tzOrgID + '"}';
+                        panel.lookupReference('GSMinterviewReviewDesc').getForm().setValues(respData.formData);
+                        judgeStore.tzStoreParams = params;
+                        judgeStore.reload();
+                    });
                 });
+                var tab = contentPanel.add(cmp);
+
+                contentPanel.setActiveTab(tab);
+
+                Ext.resumeLayouts(true);
+
+                if (cmp.floating) {
+                    cmp.show();
+                }
             });
-            var tab = contentPanel.add(cmp);
-
-            contentPanel.setActiveTab(tab);
-
-            Ext.resumeLayouts(true);
-
-            if (cmp.floating) {
-                cmp.show();
-            }
+            
         }else{
             //没有批次ID,提醒用户先保存
             Ext.MessageBox.alert("提示","请先保存后再继续操作");
@@ -371,116 +445,121 @@
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
-        cmp = new ViewClass();
-        cmp.classID=classID;
-        cmp.batchID=batchID;
+        var transValue = this.transValues();
+        transValue.set(["TZ_GENDER","TZ_LUQU_ZT","TZ_MSPS_STAGE"],function(){
+            cmp = new ViewClass(transValue);
+            cmp.classID=classID;
+            cmp.batchID=batchID;
 
 
-        cmp.on('afterrender',function(panel){
-            var interviewMgrPanel=panel.child('form').down('grid');
-            //var store=interviewMgrPanel[0].getStore();
-            var  store = interviewMgrPanel.getStore();
-            //alert(panel.getXType());
+            cmp.on('afterrender',function(panel){
+                var interviewMgrPanel=panel.child('form').down('grid');
+                //var store=interviewMgrPanel[0].getStore();
+                var  store = interviewMgrPanel.getStore();
+                //alert(panel.getXType());
 
 
-            //var panel11=Ext.ComponentQuery.query("panel[reference=candidateApplicantsPanel]");
-           // var form =panel11[0].child('form').getForm();
-            var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                //var panel11=Ext.ComponentQuery.query("panel[reference=candidateApplicantsPanel]");
+               // var form =panel11[0].child('form').getForm();
+                var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD",' +
+                    '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
 
-            var tzStoreParams ='{"classID":"'+classID+'","batchID":"'+batchID+'"}';
+                var tzStoreParams ='{"classID":"'+classID+'","batchID":"'+batchID+'"}';
 
-            Ext.tzLoad(tzParams,function(respData){
-                var form = panel.child('form').getForm();
-                var formData = respData.formData;
-                form.setValues(formData);
-                form.findField("className").setValue(record.data.className);
-                form.findField("batchName").setValue(record.data.batchName);
+                Ext.tzLoad(tzParams,function(respData){
+                    var form = panel.child('form').getForm();
+                    var formData = respData.formData;
+                    form.setValues(formData);
+                    form.findField("className").setValue(record.data.className);
+                    form.findField("batchName").setValue(record.data.batchName);
 
-                //设置按钮,评议状态的状态
-               //form.down('button[name=finish]'),form.down('button[name=startup]'),
-                var finishbtn =panel.down('button[name=finish]'),
-                    startbtn = panel.down('button[name=startup]'),
-                    statusField = panel.down('displayfield[name=interviewStatus]');
+                    //设置按钮,评议状态的状态
+                   //form.down('button[name=finish]'),form.down('button[name=startup]'),
+                    var finishbtn =panel.down('button[name=finish]'),
+                        startbtn = panel.down('button[name=startup]'),
+                        statusField = panel.down('displayfield[name=interviewStatus]');
 
-                var finishbtn2 =panel.down('button[name=finish2]'),
-                     startbtn2 = panel.down('button[name=startup2]'),
-                     statusField2 = panel.down('displayfield[name=interviewStatus2]');
+                    var finishbtn2 =panel.down('button[name=finish2]'),
+                         startbtn2 = panel.down('button[name=startup2]'),
+                         statusField2 = panel.down('displayfield[name=interviewStatus2]');
 
-                startbtn.defaultColor = startbtn.style['background-color'];
-                finishbtn.defaultColor = finishbtn.style['background-color'];
+                    startbtn.defaultColor = startbtn.style['background-color'];
+                    finishbtn.defaultColor = finishbtn.style['background-color'];
 
-                  startbtn2.defaultColor = startbtn.style['background-color'];
-                  finishbtn2.defaultColor = finishbtn.style['background-color'];
-                //alert(respData.formData.status);
-                switch(respData.formData.status){
-                    case 'A':
-                        //进行中
-                        startbtn.flagType='negative';
-                        finishbtn.flagType='positive';
-                        startbtn.setDisabled(true);
-                        statusField.setValue("进行中");
-                        break;
-                    case 'B':
-                        //已结束
-                        startbtn.flagType='positive';
-                        finishbtn.flagType='negative';
-                        finishbtn.setDisabled(true);
-                        statusField.setValue("已结束");
-                        break;
-                    case 'N':
-                    default:
-                        //初始状态和未开始相同
-                        startbtn.flagType='positive';
-                        finishbtn.flagType='negative';
-                        finishbtn.setDisabled(true);
-                        statusField.setValue("未开始");
-                        break;
-                }
-
-                switch(respData.formData.status1){
-                      case 'A':
-
-                          //进行中
-                          startbtn2.flagType='negative';
-                          finishbtn2.flagType='positive';
-                          startbtn2.setDisabled(true);
-                          statusField2.setValue("进行中");
-                          break;
-                    case 'B':
-                        startbtn2.flagType='positive';
-                        finishbtn2.flagType='negative';
-                        finishbtn2.setDisabled(true);
-                        statusField2.setValue("已结束");
-                         break;
-                    case 'N':
-                    default:
-                        //初始状态和未开始相同
-                        startbtn2.flagType='positive';
-                        finishbtn2.flagType='negative'
-                        finishbtn2.setDisabled(true);
-                        statusField2.setValue("未开始");
-                        break;
-
-                 }
-                store.tzStoreParams = tzStoreParams;
-                store.load({
-                    scope: this,
-                    callback: function(records, operation, success) {
+                      startbtn2.defaultColor = startbtn.style['background-color'];
+                      finishbtn2.defaultColor = finishbtn.style['background-color'];
+                    //alert(respData.formData.status);
+                    switch(respData.formData.status){
+                        case 'A':
+                            //进行中
+                            startbtn.flagType='negative';
+                            finishbtn.flagType='positive';
+                            startbtn.setDisabled(true);
+                            statusField.setValue("进行中");
+                            break;
+                        case 'B':
+                            //已结束
+                            startbtn.flagType='positive';
+                            finishbtn.flagType='negative';
+                            finishbtn.setDisabled(true);
+                            statusField.setValue("已结束");
+                            break;
+                        case 'N':
+                        default:
+                            //初始状态和未开始相同
+                            startbtn.flagType='positive';
+                            finishbtn.flagType='negative';
+                            finishbtn.setDisabled(true);
+                            statusField.setValue("未开始");
+                            break;
                     }
+
+                    switch(respData.formData.status1){
+                          case 'A':
+
+                              //进行中
+                              startbtn2.flagType='negative';
+                              finishbtn2.flagType='positive';
+                              startbtn2.setDisabled(true);
+                              statusField2.setValue("进行中");
+                              break;
+                        case 'B':
+                            startbtn2.flagType='positive';
+                            finishbtn2.flagType='negative';
+                            finishbtn2.setDisabled(true);
+                            statusField2.setValue("已结束");
+                             break;
+                        case 'N':
+                        default:
+                            //初始状态和未开始相同
+                            startbtn2.flagType='positive';
+                            finishbtn2.flagType='negative'
+                            finishbtn2.setDisabled(true);
+                            statusField2.setValue("未开始");
+                            break;
+
+                     }
+                    store.tzStoreParams = tzStoreParams;
+                    store.load({
+                        scope: this,
+                        callback: function(records, operation, success) {
+
+                        }
+
+                    });
                 });
             });
+            
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
         });
-
-        tab = contentPanel.add(cmp);
-
-        contentPanel.setActiveTab(tab);
-
-        Ext.resumeLayouts(true);
-
-        if (cmp.floating) {
-            cmp.show();
-        }
     },
     addJudge:function(btn){
         var form = btn.findParentByType('grid').findParentByType('panel').down('form').getForm(),

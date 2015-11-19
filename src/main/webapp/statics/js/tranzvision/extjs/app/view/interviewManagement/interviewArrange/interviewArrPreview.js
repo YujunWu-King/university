@@ -40,7 +40,7 @@
 		var auditStateSortFilterOptions=[];
 		auditStateStore.addListener("load",function(store, records, successful, eOpts){
 			for(var i=0;i<records.length;i++){
-				auditStateSortFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+				auditStateSortFilterOptions.push([records[i].data.TSDesc,records[i].data.TSDesc]);
 			};
 		});
 		//材料评审状态（有无面试资格）
@@ -50,7 +50,7 @@
 		var mszgFlagSortFilterOptions=[];
 		mszgFlagStore.addListener("load",function(store, records, successful, eOpts){
 			for(var i=0;i<records.length;i++){
-				mszgFlagSortFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+				mszgFlagSortFilterOptions.push([records[i].data.TSDesc,records[i].data.TSDesc]);
 			};
 		});
 		//gridStore添加filterchange监听
@@ -163,8 +163,16 @@
 					minWidth:120,
 					flex:1
 				},{
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_PRE_STD.batchName","面试批次") ,
+					sortable: true,
+					dataIndex: 'batchName',
+					filter: {
+						type: 'string'
+					},
+					minWidth: 150,
+					flex:1
+				},{
 					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_PRE_STD.msDate","面试日期") ,
-					lockable:false,
 					xtype:'datecolumn',
 					format:'Y-m-d',
 					filter: {
@@ -177,14 +185,12 @@
 					flex:1
 				},{
 					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_PRE_STD.msStartTime","开始时间") ,
-					lockable:false,
 					sortable: true,
 					dataIndex: 'msStartTime',
 					minWidth: 100,
 					flex:1
 				},{
 					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_PRE_STD.msEndTime","结束时间") ,
-					lockable:false,
 					sortable: true,
 					dataIndex: 'msEndTime',
 					minWidth: 100,

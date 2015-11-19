@@ -98,7 +98,7 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
                     waitMsg: '正在加载中',
                     success: function(response){
                         var resText1 = response.responseText;
-                        var responseData1 = Ext.JSON.decode(resText1)
+                        var responseData1 = Ext.JSON.decode(resText1);
                         var resText = responseData1.comContent;
                         var responseData = resText;
                         for(var i in responseData){
@@ -108,7 +108,6 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
                     }
                 });
             }
-            // console.log(predefinetpl);
             return predefinetpl;
         }
 

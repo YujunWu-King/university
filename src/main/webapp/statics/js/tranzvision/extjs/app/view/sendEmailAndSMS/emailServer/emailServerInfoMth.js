@@ -15,7 +15,9 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerInfoMth', {
 				form.findField("emailorg").setReadOnly(true);
 				form.findField("emailservid").addCls("lanage_1");
 				form.findField("emailorg").addCls("lanage_1");
-				form.findField("emailservid").setValue(responseData.emailservid);
+
+				//form.findField("emailservid").setValue(responseData.emailservid);//修改保存数据失败
+				form.setValues({emailservid:responseData.emailservid});
 				
 				var contentPanel;
 				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			

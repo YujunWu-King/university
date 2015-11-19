@@ -20,6 +20,8 @@
     actType: 'update',//默认更新
     y:25,
     initComponent: function(){
+		var processingStatus = new KitchenSink.view.common.store.appTransStore("TZ_AE_STATUS");
+		var listStore = new KitchenSink.view.enrollmentManagement.applicationForm.dbDownloadStore();
         Ext.apply(this,{
             items: [{
                 xtype: 'form',
@@ -54,7 +56,6 @@
                         listeners: {
                             tabchange: function (tp, p) {
                                 if (p.reference== 'dbDownloadGrid') {
-                                    p.store.load();
                                     this.doLayout();
                                 }
                             }
@@ -125,9 +126,7 @@
                                 columnLines: true,
                                 reference: 'dbDownloadGrid',
                                 multiSelect: true,
-                                store: {
-                                    type: 'dbDownloadStore'
-                                },
+                                store: listStore,
                                 dockedItems: [{
                                     xtype: "toolbar",
                                     items: [
@@ -166,7 +165,19 @@
                                     {
                                         text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_GD_BMGL_DBDL_CLS.AEState", "状态"),
                                         dataIndex: 'AEState',
-                                        width: 100
+                                        width: 100,
+										renderer:function(v){
+											if(v){
+												var rec = processingStatus.find('TValue',v,0,false,true,false);
+												if(rec>-1){
+													return processingStatus.getAt(rec).get("TSDesc");
+												}else{
+													return "";
+												}
+											}else{
+												return "";
+											}
+										}
                                     },
                                     {
                                         xtype:'actioncolumn',

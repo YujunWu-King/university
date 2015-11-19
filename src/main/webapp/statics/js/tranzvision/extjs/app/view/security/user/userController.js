@@ -154,11 +154,18 @@
             //用户角色信息列表
             var grid = this.lookupReference('userRoleGrid');
             form.findField("usAccNum").setReadOnly(true);
+            form.findField("usAccNum").setFieldStyle('background:#F4F4F4');
             //参数
             var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //用户账号信息数据
+                /*
+                if (responseData['acctLock']==true){
+                    responseData['acctLock']="1";
+                }else{
+                    responseData['acctLock']="0";
+                }  */
                 form.setValues(responseData);
 
                 var tzStoreParams = '{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}';
@@ -459,6 +466,11 @@
         if(formParams["mBindFlag"] == undefined){
             formParams["mBindFlag"] = "N";
         }
+        //账户锁定
+
+        if(formParams["acctLock"] == "1"){
+            formParams["acctLock"] = "on";
+        } 
         //用户角色列表
         var grid = userInfo.child("grid");
         //角色信息数据

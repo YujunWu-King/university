@@ -3,11 +3,11 @@
     xtype: 'selfInfoWindow', 
     title: '自助信息维护', 
 	id: 'selfInfoWindow201506011708',
-    width: 500,
+    width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 500 : 500,
     height: 380,
     minWidth: 400,
     minHeight: 100,
-    layout: 'hbox',
+    layout: 'fit',
     resizable: true,
     modal: true,
     closeAction: 'hide',
@@ -21,10 +21,11 @@
 		border: false,
 		bodyPadding: 10,
 		//heigth: 600,
+		ignoreLabelWidth: true,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 80,
+			labelWidth: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 80 : 80,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [{
@@ -33,7 +34,7 @@
 			name: 'accountID',
 			readOnly:true,
 			colspan:2,
-			width:450,
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 450 : 450,
 			fieldStyle:'background:#F4F4F4'
         },{
             xtype: 'textfield',
@@ -41,7 +42,7 @@
 			name: 'accountName',
 			readOnly:true,
 			colspan:2,
-			width:450,
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 450 : 450,
 			fieldStyle:'background:#F4F4F4'
         },{
 			xtype: 'textfield',
@@ -49,21 +50,21 @@
 			fieldLabel: Ext.tzGetResourse("TZ_SELF_INFO_COM.TZ_SELF_INFO_STD.contactEmail","联系邮箱"),
 			name: 'contactEmail',
 			colspan:2,
-			width:450
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 450 : 450
 		},{
 			xtype: 'textfield',
 			//vtype: 'email',
 			fieldLabel: Ext.tzGetResourse("TZ_SELF_INFO_COM.TZ_SELF_INFO_STD.contactPhone","联系手机"),
 			name: 'contactPhone',
 			colspan:2,
-			width:450
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 450 : 450
 		},{
 			xtype: 'textfield',
 			//vtype: 'email',
 			fieldLabel: Ext.tzGetResourse("TZ_SELF_INFO_COM.TZ_SELF_INFO_STD.Email1","绑定邮箱"),
 			name: 'Email',
 			readOnly:true,
-			width:330,
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 330 : 330,
 			fieldStyle:'background:#F4F4F4'
 		},/*{
 			xtype: 'button',
@@ -93,7 +94,7 @@
             fieldLabel: Ext.tzGetResourse("TZ_SELF_INFO_COM.TZ_SELF_INFO_STD.Phone1","绑定手机"),
 			name: 'Phone',
 			readOnly:true,
-			width:330,
+			width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 330 : 330,
 			fieldStyle:'background:#F4F4F4'
         },/*{
 			xtype: 'button',

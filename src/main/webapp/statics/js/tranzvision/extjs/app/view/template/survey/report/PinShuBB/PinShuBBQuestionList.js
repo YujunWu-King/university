@@ -117,7 +117,7 @@ Ext.define('KitchenSink.view.template.survey.report.PinShuBB.PinShuBBQuestionLis
                     minWidth: 300,
                     flex:3
                 },{
-                    text:Ext.tzGetResourse("TZ_ZXDC_PSBB_COM.TZ_ZXDC_PSBB_STD.questionDesc","子问题描述") ,
+                    text:Ext.tzGetResourse("TZ_ZXDC_PSBB_COM.TZ_ZXDC_PSBB_STD.childQuestionDesc","子问题描述") ,
                     dataIndex: 'childQuestionDesc',
                     minWidth: 300,
                     flex:3

@@ -554,6 +554,22 @@
 		
 		 
 	},
-
 	
+	/*查看邮件发送历史--测试*/
+	viewMailHistory: function(){
+		 //选中行
+		var selList = this.getView().getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+	    if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择一条要查看的记录");   
+			return;
+	    }else if(checkLen >1){
+		   Ext.Msg.alert("提示","只能选择一条要查看的记录");   
+		   return;
+	    }
+		
+		var mailAddr = selList[0].get("userEmail");
+		Ext.tzSearchMailHistory(mailAddr);
+	}
 });

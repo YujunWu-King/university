@@ -175,7 +175,7 @@
                 //创建的需要发送的听众ID;
                 "audienceId": audienceId,
                 //是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
-                "file": "N"
+                "file": "Y"
             });
         });
     },
@@ -354,6 +354,8 @@
         Ext.tzImport({
             /*importType 导入类型：A-传Excel；B-粘贴Excel数据*/
             importType : 'B',
+			/*导入模版编号*/
+			tplResId:'TZ_GD_MSRES_IMP',
             /*businessHandler  预览导入的数据之后点击下一步执行的函数，根据业务的需求自由编写，columnArray为解析Excel后的标题行数组（如果未勾选首行是标题行columnArray=[]）
              * dataArray为解析后的Excel二维数组数据（勾选了首行是标题行则dataArray不包含首行数据；）
              */
@@ -416,13 +418,15 @@
             if(gridColumns[i].dataIndex==""||gridColumns[i].dataIndex==null){
 
             }else{
-                exportGridStoreFields.push(gridColumns[i].dataIndex);
+                if(gridColumns[i].dataIndex.indexOf("#")==-1){
+                    exportGridStoreFields.push(gridColumns[i].dataIndex);
 
-                exportGridColumns.push({
-                    text:gridColumns[i].text,
-                    dataIndex: gridColumns[i].dataIndex
-                });
-            }
+                    exportGridColumns.push({
+                        text:gridColumns[i].text,
+                        dataIndex: gridColumns[i].dataIndex
+                    });
+                }
+            };
         };
         var index=-1;
         //是否参加
@@ -437,11 +441,23 @@
         //确认状态
         var msResExpConfStateStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_CONF_STA");
         //msResExpConfStateStore.load();
+        //类别
+        var orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
+            recname:'TZ_ORG_COLOR_V',
+            condition:{
+                TZ_JG_ID:{
+                    value:Ext.tzOrgID,
+                    operator:'01',
+                    type:'01'
+                }},
+            result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE'
+        });
 
         var arrMsJoinState=new Array();
         var arrMsResult=new Array();
         var arrMsArrState=new Array();
         var arrMsConfState=new Array();
+        var arrColorSort=new Array();
 
         var jsonTemp;
         var strTemp1="";
@@ -488,87 +504,108 @@
                                             arrMsConfState.push(jsonTemp);
                                             //alert(arrMsConfState[i]["value"]+"__"+arrMsConfState[i]["desc"]);
                                         }
+                                        orgColorSortStore.load({
+                                            callback: function(records, options, success){
+                                                for(var i=0;i<records.length;i++){
+                                                    strTemp1=records[i].data.TZ_COLOR_SORT_ID;
+                                                    strTemp2=records[i].data.TZ_COLOR_NAME;
+                                                    jsonTemp={value:strTemp1,desc:strTemp2};
+                                                    arrColorSort.push(jsonTemp);
+                                                    //alert(arrMsConfState[i]["value"]+"__"+arrMsConfState[i]["desc"]);
+                                                };
 
-                                        for(var i=0;i<gridRecs.length;i++){
-                                            //alert(gridRecs[0].data[exportGridColumns[i].dataIndex]+"--"+i+"--"+gridColumns.length);
-                                            arr1Rec=new Array();
-                                            for(var j=0;j<exportGridColumns.length;j++){
-                                                if(j<12){
-                                                    switch(exportGridColumns[j].dataIndex)
-                                                    {
-                                                        case "msDate":
-                                                            arr1Rec[j]=Ext.util.Format.date(gridRecs[i].data[exportGridColumns[j].dataIndex], 'Y-m-d');
-                                                            break;
-                                                        case "msArrState":
-                                                            for(var k=0;k<arrMsArrState.length;k++){
-                                                                //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
-                                                                if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsArrState[k]["value"]) {
-                                                                    arr1Rec[j]=arrMsArrState[k]["desc"];
+                                                for(var i=0;i<gridRecs.length;i++){
+                                                    //alert(gridRecs[0].data[exportGridColumns[i].dataIndex]+"--"+i+"--"+gridColumns.length);
+                                                    arr1Rec=new Array();
+                                                    for(var j=0;j<exportGridColumns.length;j++){
+                                                        //if(j<13){
+                                                            switch(exportGridColumns[j].dataIndex)
+                                                            {
+                                                                case "msDate":
+                                                                    arr1Rec[j]=Ext.util.Format.date(gridRecs[i].data[exportGridColumns[j].dataIndex], 'Y-m-d');
                                                                     break;
-                                                                }else{
-                                                                    arr1Rec[j]="";
-                                                                };
-                                                            };
-                                                            break;
-                                                        case "msConfigState":
-                                                            for(var m=0;m<arrMsConfState.length;m++){
-                                                                //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
-                                                                if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsConfState[m]["value"]) {
-                                                                    arr1Rec[j]=arrMsConfState[m]["desc"];
+                                                                case "msArrState":
+                                                                    for(var k=0;k<arrMsArrState.length;k++){
+                                                                        //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
+                                                                        if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsArrState[k]["value"]) {
+                                                                            arr1Rec[j]=arrMsArrState[k]["desc"];
+                                                                            break;
+                                                                        }else{
+                                                                            arr1Rec[j]="";
+                                                                        };
+                                                                    };
                                                                     break;
-                                                                }else{
-                                                                    arr1Rec[j]="";
-                                                                };
-                                                            };
-                                                            break;
-                                                        case "msJoinState":
-                                                            for(var n=0;n<arrMsJoinState.length;n++){
-                                                                //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
-                                                                if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsJoinState[n]["value"]) {
-                                                                    arr1Rec[j]=arrMsJoinState[n]["desc"];
+                                                                case "msConfigState":
+                                                                    for(var m=0;m<arrMsConfState.length;m++){
+                                                                        //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
+                                                                        if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsConfState[m]["value"]) {
+                                                                            arr1Rec[j]=arrMsConfState[m]["desc"];
+                                                                            break;
+                                                                        }else{
+                                                                            arr1Rec[j]="";
+                                                                        };
+                                                                    };
                                                                     break;
-                                                                }else{
-                                                                    arr1Rec[j]="";
-                                                                };
-                                                            };
-                                                            break;
-                                                        case "msResult":
-                                                            for(var k=0;k<arrMsResult.length;k++){
-                                                                //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
-                                                                if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsResult[k]["value"]) {
-                                                                    arr1Rec[j]=arrMsResult[k]["desc"];
+                                                                case "msJoinState":
+                                                                    for(var n=0;n<arrMsJoinState.length;n++){
+                                                                        //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
+                                                                        if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsJoinState[n]["value"]) {
+                                                                            arr1Rec[j]=arrMsJoinState[n]["desc"];
+                                                                            break;
+                                                                        }else{
+                                                                            arr1Rec[j]="";
+                                                                        };
+                                                                    };
                                                                     break;
-                                                                }else{
-                                                                    arr1Rec[j]="";
-                                                                };
-                                                            };
-                                                            break;
-                                                        default:
-                                                            arr1Rec[j]=gridRecs[i].data[exportGridColumns[j].dataIndex];
+                                                                case "msResult":
+                                                                    for(var k=0;k<arrMsResult.length;k++){
+                                                                        //arrMsJoinState[0]["value"]+"__"+arrMsJoinState[0]["desc"]
+                                                                        if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrMsResult[k]["value"]) {
+                                                                            arr1Rec[j]=arrMsResult[k]["desc"];
+                                                                            break;
+                                                                        }else{
+                                                                            arr1Rec[j]="";
+                                                                        };
+                                                                    };
+                                                                    break;
+                                                                case "sort":
+                                                                    for(var l=0;l<arrColorSort.length;l++){
+                                                                        if (gridRecs[i].data[exportGridColumns[j].dataIndex]==arrColorSort[l]["value"]) {
+                                                                            arr1Rec[j]=arrColorSort[l]["desc"];
+                                                                            break;
+                                                                        }else{
+                                                                            arr1Rec[j]="";
+                                                                        };
+                                                                    };
+                                                                    break;
+                                                                default:
+                                                                    arr1Rec[j]=gridRecs[i].data[exportGridColumns[j].dataIndex];
+                                                            }
+                                                        //}else{
+                                                        //    arr1Rec[j]=gridRecs[i].data[exportGridColumns[j].dataIndex].substring(gridRecs[i].data[exportGridColumns[j].dataIndex].indexOf(",")+1,gridRecs[i].data[exportGridColumns[j].dataIndex].length);
+                                                        //}
                                                     }
-                                                }else{
-                                                    arr1Rec[j]=gridRecs[i].data[exportGridColumns[j].dataIndex].substring(gridRecs[i].data[exportGridColumns[j].dataIndex].indexOf(",")+1,gridRecs[i].data[exportGridColumns[j].dataIndex].length);
+                                                    arr2Recs.push(arr1Rec);
                                                 }
+
+                                                var exportGridStore = Ext.create('Ext.data.Store', {
+                                                    fields: exportGridStoreFields,
+                                                    data: arr2Recs
+                                                });
+                                                var exportGrid = Ext.create("Ext.grid.Panel",{
+                                                    plugins:[{ptype: 'gridexporter'}],
+                                                    columns:exportGridColumns,
+                                                    store:exportGridStore
+                                                });
+                                                exportGrid.saveDocumentAs({
+                                                    type: 'excel',
+                                                    title: '面试结果信息',
+                                                    fileName: '面试结果信息.xls'
+                                                });
+
+                                                exportGrid.close();
                                             }
-                                            arr2Recs.push(arr1Rec);
-                                        }
-
-                                        var exportGridStore = Ext.create('Ext.data.Store', {
-                                            fields: exportGridStoreFields,
-                                            data: arr2Recs
                                         });
-                                        var exportGrid = Ext.create("Ext.grid.Panel",{
-                                            plugins:[{ptype: 'gridexporter'}],
-                                            columns:exportGridColumns,
-                                            store:exportGridStore
-                                        });
-                                        exportGrid.saveDocumentAs({
-                                            type: 'excel',
-                                            title: '面试结果信息',
-                                            fileName: '面试结果信息.xls'
-                                        });
-
-                                        exportGrid.close();
                                     }
                                 });
                             }
@@ -593,7 +630,7 @@
         //保存数据
         Ext.tzSubmit(tzParams,function(){
             store.reload();
-        });
+        },"",true,this);
     },
 
     //确定
@@ -608,7 +645,7 @@
         if(tzParams!=""){
             Ext.tzSubmit(tzParams,function(){
                 comView.close();
-            });
+            },"",true,this);
         }else{
             comView.close();
         }

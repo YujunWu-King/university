@@ -5,12 +5,10 @@
 	reference: 'smtDataWindow',
     width: 600,
     height: 200,
-
     resizable: true,
     modal: true,
     closeAction: 'hide',
 	actType: 'add',
-	
 	initComponent: function(){
 		Ext.apply(this,{
 			items: [{
@@ -21,7 +19,9 @@
 				},
 				border: false,
 				bodyPadding: 10,
-
+                selModel: {
+                    type: 'checkboxmodel'
+                },
 				fieldDefaults: {
 					msgTarget: 'side',
 					labelWidth: 100,
@@ -38,13 +38,12 @@
 					fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.smtDtID","递交资料ID"),
 					name: 'smtDtID',
 					hidden: true
-				},{ 
+				},{
 					xtype: 'numberfield',
 					fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.order","显示顺序"),
 					name: 'order',
-					minValue: 1 ,
                     hidden: true
-				},{ 
+				},{
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.content","内容简介"),
 					name: 'content',

@@ -1,8 +1,79 @@
 ﻿Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReviewController', {
     extend: 'Ext.app.ViewController',
+    requires:['Ext.ux.IFrame'],
     alias: 'controller.interviewReview',
+    transValues:function(){
+        var transvalueCollection = {},
+            self = this;
+        return {
+            set:function(sets,callback){
+                if(sets instanceof Array || typeof sets === 'string'){  
+                    //可以传入一个数组或者单个字符串作为参数
+                    if(sets instanceof Array){
+                        var unload = [];
+                        //遍历查找还未加载的数据
+                        for(var x = sets.length-1;
+                            x>=0&&!transvalueCollection[sets[x]]||(transvalueCollection[sets[x]]&&transvalueCollection[sets[x]].isLoaded());
+                            x--){
+                            unload.push(sets[x]);
+                        }
+
+                        var finishCount = self.isAllFinished(unload);
+                        //加载未加载的数据
+                        if(unload.length>0){
+                            for(var x = unload.length-1;x>=0;x--){
+                                transvalueCollection[unload[x]] = new KitchenSink.view.common.store.appTransStore(unload[x]);
+                                transvalueCollection[unload[x]].load({
+                                    callback:function(){
+                                        finishCount(callback);
+                                    }
+                                });sets[x]
+                            }
+                        }else{
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }
+                    }else{
+                        if(transvalueCollection[sets]&&transvalueCollection[sets].isLoaded()){
+                            //当前store已经加载
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }else{
+                            var finishCount = self.isAllFinished(sets);
+                            transvalueCollection[sets] = new KitchenSink.view.common.store.appTransStore(sets);
+                            transvalueCollection[sets].load({
+                                callback:function(){
+                                    finishCount(callback);
+                                }
+                            });
+                        }
+                    }
+
+                }else{
+                    Ext.MessageBox.alert("传入参数有误");
+                }
+            },
+            get:function(name){
+                return transvalueCollection[name];
+            }
+        }
+    },
+    isAllFinished:function(sets){
+        var len = sets instanceof Array ? sets.length : 1;
+        return function(callback){
+            len--;
+            if(len===0){
+                if(callback instanceof Function){
+                    callback();
+                }
+            }
+        }
+    },
     //KitchenSink.view.interviewManagement.interviewReview.interviewProgress
-    queryClassBatch:function(btn){Ext.tzShowCFGSearch({
+    queryClassBatch:function(btn){
+        Ext.tzShowCFGSearch({
         cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_LIST_STD.TZ_CLS_BATCH_V',
         condition :{TZ_JG_ID:Ext.tzOrgID},
         callback: function(seachCfg){
@@ -12,7 +83,13 @@
         }
     });
     },
-
+    //关闭
+    /*==========================================================*/
+    /*    关闭班级列表页面  LYY  2015-10-26                     */
+    /*==========================================================*/
+    onGridPanelClose:function(btn){
+        btn.up('grid').close();
+    },
     setReviewRule:function(grid,rowIndex){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_RULE_STD"];
@@ -57,40 +134,45 @@
             }
             // </debug>
         }
-
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
-        cmp = new ViewClass();
-        cmp.classID=classID;
-        cmp.batchID=batchID;
+        var transValue = this.transValues();
+        transValue.set(["TZ_MSPS_STAGE","TZ_JUGACC_STATUS"],function(){
+            cmp = new ViewClass(transValue);
+            cmp.classID=classID;
+            cmp.batchID=batchID;
 
-        cmp.on('afterrender',function(panel){
-            var form = panel.child('form').getForm();
-            var countForm = panel.lookupReference("CountForm").getForm();
+            cmp.on('afterrender',function(panel){
+                var form = panel.child('form').getForm();
+                var countForm = panel.lookupReference("CountForm").getForm();
 
-            var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
-            Ext.tzLoad(tzParams,function(respData){
-                var formData = respData.formData;
-                formData.batchName = record.data.batchName;
-                formData.className = record.data.className;
-                form.setValues(formData);
-                countForm.findField("interviewReviewApplicantsNumber").setValue(formData.interviewReviewApplicantsNumber);
-                countForm.findField("reviewCountAll").setValue(parseInt(formData.interviewReviewApplicantsNumber)*(formData.reviewCount));
+                var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
+                    '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                Ext.tzLoad(tzParams,function(respData){
+                    var formData = respData.formData;
+                    formData.batchName = record.data.batchName;
+                    formData.className = record.data.className;
+                    if(!formData.reviewStatus){
+                        formData.reviewStatus='N';
+                    }
+                    form.setValues(formData);
+                    countForm.findField("interviewReviewApplicantsNumber").setValue(formData.interviewReviewApplicantsNumber);
+                    countForm.findField("reviewCountAll").setValue(parseInt(formData.interviewReviewApplicantsNumber)*(formData.reviewCount));
 
+                });
             });
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
         });
-
-        tab = contentPanel.add(cmp);
-
-        contentPanel.setActiveTab(tab);
-
-        Ext.resumeLayouts(true);
-
-        if (cmp.floating) {
-            cmp.show();
-        }
     },
     onReviewRuleSave:function(btn){
         var me =this;
@@ -131,7 +213,7 @@
             Ext.tzSubmit(tzParams,function(responseData){
                 //关闭窗口
                 comView.close();
-            });
+            },"",true,this);
         }
     },
     getRuleParams:function(){
@@ -598,10 +680,10 @@
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
-        cmp = new ViewClass();
+        var transValue = self.transValues();
+        cmp = new ViewClass(transValue);
         cmp.classID=classID;
         cmp.batchID=batchID;
-
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
 
@@ -617,7 +699,9 @@
                 form.setValues(formData);
                 var store = panel.child('form').child("grid").store;
                 store.tzStoreParams = tzStoreParams;
-                store.load();
+                transValue.set(["TZ_GENDER","TZ_LUQU_ZT"],function(){
+                    store.load();
+                })
             });
         });
 
@@ -630,6 +714,7 @@
         if (cmp.floating) {
             cmp.show();
         }
+
     },
     queryApplicants:function(btn){
         var form = btn.findParentByType("form").getForm();
@@ -738,9 +823,21 @@
             grid.getStore().reload();
         });
     },
+    searchFromAll : function(btn){
+        Ext.tzShowCFGSearch({
+        cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDSTU_STD.TZ_MSPS_ADDS_VW',
+        condition :{TZ_JG_ID:Ext.tzOrgID},
+        callback: function(seachCfg){
+            var store = btn.findParentByType("grid").store;
+            store.tzStoreParams = seachCfg;
+            store.load();
+        }
+        });
+    },
     addApplicants : function(btn,config){
         var classID = config.classID;
         var batchID = config.batchID;
+        var self = this;
 //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_ADDSTU_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -787,9 +884,18 @@
         cmp = new ViewClass();
         cmp.on('afterrender',function(win){
             var store = win.child('grid').getStore(),
-                tzStoreParams = '{"type":"'+config.type+'","classID":"'+classID+'","batchID":"'+batchID+'"}';
+                tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_MS_COM.TZ_MSPS_ADDSTU_STD.TZ_MSPS_ADDS_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+Ext.tzOrgID+'","TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classID+'"}}';
             store.tzStoreParams = tzStoreParams;
-            store.load();
+            store.load({
+                callback:function(){
+                    store.filterBy(function(record){
+                        if(record.data.isInterviewed=='是'){
+                            return true;
+                        }
+                    });
+                    store.on('filterchange',self.ifClearCondition(store));
+                }
+            });
         });
         cmp.show();
 
@@ -838,14 +944,15 @@
             }
             // </debug>
         }
-
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
         //cmp = new ViewClass();
-        cmp = new ViewClass(classID,batchID);
+        var transValue = self.transValues();
+        cmp = new ViewClass(classID,batchID,transValue);
         cmp.classID=classID;
         cmp.batchID=batchID;
+        cmp.transValue = transValue;
 
         cmp.on('afterrender',function(panel){
             var judgeStore =panel.down('tabpanel').child("form[title=评委信息]").child('grid').store,
@@ -858,53 +965,57 @@
                 stuListStore = panel.down('tabpanel').child('grid[name=interviewStudentGrid]').getStore(),
                 stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
             Ext.tzLoad(tzParams,function(respData){
-                respData.className = record.data.className;
-                respData.batchName = record.data.batchName;
-                form.getForm().setValues(respData);
-                //根据加载的数据勾选复选框
-                if(respData.judgeTJB === 'Y'){
-                    form.getForm().findField('judgeTJB').setValue(true);
-                }
-                if(respData.judgeFBT === 'Y'){
-                    form.getForm().findField('judgeFBT').setValue(true);
-                }
-                //设置按钮,评议状态的状态
-                var finishbtn =form.down('button[name=finish]'),
-                    startbtn = form.down('button[name=startup]'),
-                    statusField = form.getForm().findField("interviewStatus");
-                startbtn.defaultColor = startbtn.el.dom.style['background-color'];
-                finishbtn.defaultColor = finishbtn.el.dom.style['background-color'];
-                switch(respData.status){
-                    case 'A':
-                        //进行中
-                        startbtn.flagType='negative';
-                        finishbtn.flagType='positive';
-                        startbtn.setDisabled(true);
-                        statusField.setValue("进行中");
-                        break;
-                    case 'B':
-                        //已结束
-                        startbtn.flagType='positive';
-                        finishbtn.flagType='negative';
-                        finishbtn.setDisabled(true);
-                        statusField.setValue("已结束");
-                        break;
-                    case 'N':
-                    default:
-                        //初始状态和未开始相同
-                        startbtn.flagType='positive';
-                        finishbtn.flagType='negative';
-                        finishbtn.setDisabled(true);
-                        statusField.setValue("未开始");
-                        break;
-                }
-            });
-            judgeStore.tzStoreParams = judgeParams;
-            judgeStore.load();
-            stuListStore.tzStoreParams = stuListParams;
-            //stuListStore.load();
-            //standStore.tzStoreParams = standParams;
-            //standStore.load();
+                
+                transValue.set(["TZ_JUGACC_STATUS","TZ_GENDER","TZ_LUQU_ZT","TZ_MSPS_ZT","TZ_MSPS_KSZT"],function(){
+                    respData.className = record.data.className;
+                    respData.batchName = record.data.batchName;
+                    form.getForm().setValues(respData);
+                    //根据加载的数据勾选复选框
+                    if(respData.judgeTJB === 'Y'){
+                        form.getForm().findField('judgeTJB').setValue(true);
+                    }
+                    if(respData.judgeFBT === 'Y'){
+                        form.getForm().findField('judgeFBT').setValue(true);
+                    }
+                    //设置按钮,评议状态的状态
+                    var finishbtn =form.down('button[name=finish]'),
+                        startbtn = form.down('button[name=startup]'),
+                        statusField = form.getForm().findField("interviewStatus");
+                    startbtn.defaultColor = startbtn.el.dom.style['background-color'];
+                    finishbtn.defaultColor = finishbtn.el.dom.style['background-color'];
+                    switch(respData.status){
+                        case 'A':
+                            //进行中
+                            startbtn.flagType='negative';
+                            finishbtn.flagType='positive';
+                            startbtn.setDisabled(true);
+                            statusField.setValue("进行中");
+                            break;
+                        case 'B':
+                            //已结束
+                            startbtn.flagType='positive';
+                            finishbtn.flagType='negative';
+                            finishbtn.setDisabled(true);
+                            statusField.setValue("已结束");
+                            break;
+                        case 'N':
+                        default:
+                            //初始状态和未开始相同
+                            startbtn.flagType='positive';
+                            finishbtn.flagType='negative';
+                            finishbtn.setDisabled(true);
+                            statusField.setValue("未开始");
+                            break;
+                    }
+                    judgeStore.tzStoreParams = judgeParams;
+                    judgeStore.load();
+                    stuListStore.tzStoreParams = stuListParams;
+                });
+                
+                //stuListStore.load();
+                //standStore.tzStoreParams = standParams;
+                //standStore.load();
+                });
 
         });
 
@@ -917,6 +1028,7 @@
         if (cmp.floating) {
             cmp.show();
         }
+        
     },
     startInterview : function(btn){
         if(btn.flagType === 'positive') {
@@ -1260,32 +1372,36 @@
                 }
             });
         }else{
-            records = stuListStore.getRange();
-            for (var x = records.length - 1; x >= 0; x--) {
-                var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
-                (function (thisrecord,col) {
-                    if (col && !col.onclick) {
-                        //为没有注册事件的链接注册事件
-                        if(col.addEventListener) {
-                            col.addEventListener('click', function (e) {
-                                //阻止事件向上冒泡
-                                e.stopPropagation();
-                                //打开评委页面
-                                self.viewJudgeReviewInfo(thisrecord);
-                            }, false);
-                        }else{
-                            //兼容IE
-                            col.attachEvent("onclick",function(){
-                                e= window.event;
-                                //阻止事件向上冒泡
-                                e.stopPropagation();
-                                //打开评委页面
-                                self.viewJudgeReviewInfo(thisrecord);
-                            });
+            grid.view.on('refresh',function(){
+                records = stuListStore.getRange();
+                for (var x = records.length - 1; x >= 0; x--) {
+                    var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
+                    (function (thisrecord,col) {
+                        if (col && !col.onclick) {
+                            //为没有注册事件的链接注册事件
+                            if(col.addEventListener) {
+                                col.addEventListener('click', function (e) {
+                                    //阻止事件向上冒泡
+                                    e.stopPropagation();
+                                    //打开评委页面
+                                    self.viewJudgeReviewInfo(thisrecord);
+                                }, false);
+                            }else{
+                                //兼容IE
+                                col.attachEvent("onclick",function(){
+                                    e= window.event;
+                                    //阻止事件向上冒泡
+                                    e.stopPropagation();
+                                    //打开评委页面
+                                    self.viewJudgeReviewInfo(thisrecord);
+                                });
+                            }
                         }
-                    }
-                })(records[x],viewRecord);
-            }
+                    })(records[x],viewRecord);
+                }
+                grid.view.removeListener('refresh',arguments.callee);
+            });
+            
         }
     },
     addApplicantEnsure : function(btn,event){
@@ -1293,16 +1409,20 @@
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
             targetStore = activeTab.down("grid[name=interviewReviewStudentGrid]").getStore(),
             select = btn.findParentByType("panel").child('grid').getSelectionModel().getSelection(),
-            hasInterviewed = false;
+            hasInterviewed = false,
+            newRecord = [];
+        //循环中将非重复数据保存到中间变量，避免之后的循环会额外查询到之前的循环插入的数据
         for(var x =0;x<select.length;x++){
             if(targetStore.find('appINSID',select[x].data.appINSID)<0) {
                 delete select[x].data.isInterviewed;
                 delete select[x].data.id;
-                targetStore.add(select[x].data);
+                newRecord.push(select[x].data);
             }else{
                 hasInterviewed = true;
             }
         }
+        //循环完毕后再向store中添加数据
+        targetStore.add(newRecord);
         if(hasInterviewed){
             Ext.Msg.alert("提示","有考生已经存在于面试阶段");
         }
@@ -1447,6 +1567,15 @@
     clearCondition : function(btn){
         btn.findParentByType("grid").filters.clearFilters(true);
     },
+    ifClearCondition:function(store){
+        var times = 1;
+        return function(){
+            times--;
+            if(store.isFiltered() && times>=0){
+                store.clearFilter();
+            }
+        }
+    },
     editApplicant : function(btn,rowIndex){
         var self=this,
             form = btn.findParentByType("grid").findParentByType("form").getForm(),
@@ -1508,7 +1637,7 @@
                     },{
                         xtype:'textfield',
                         fieldLabel:'备注',
-                        value:self.HTMLDecode(datas.remark),
+                        value:datas.remark,
                         name:'remark',
                         ignoreChangesFlag: true
                     }
@@ -1524,7 +1653,7 @@
                         remark = form.findField("remark").getValue(),
                         record = grid.getStore().getAt(rowIndex);
                     record.set("LUQUZT",recordStatus||'');
-                    record.set("remark",self.HTMLEncode(remark)||'');
+                    record.set("remark",remark||'');
                     btn.findParentByType("panel").close();
                 }
             }, {
@@ -1676,7 +1805,7 @@
         this.isProgress(tzParams,function(status){
             switch(status) {
                 case 'A':
-                    Ext.MessageBox.alert('提示', '评审正在进行中，不能添加评委');
+                    Ext.MessageBox.alert('提示', '评审正在进行中，不能添加考生');
                     break;
                 case 'B':
                 case 'N':
@@ -1693,16 +1822,16 @@
             tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"IFP","comParams":{"type":"IFP","classID":"'+classID+'","batchID":"'+batchID+'"}}',
             self = this;
         this.isProgress(tzParams,function(status){
-                switch(status) {
-                    case 'A':
-                        Ext.MessageBox.alert('提示', '评审正在进行中，不能添加评委');
-                        break;
-                    case 'B':
-                    case 'N':
-                    default:
-                        self.addApplicants(btn, config);
-                        break;
-                }
+            switch(status) {
+                case 'A':
+                    Ext.MessageBox.alert('提示', '评审正在进行中，不能添加考生');
+                    break;
+                case 'B':
+                case 'N':
+                default:
+                    self.addApplicants(btn, config);
+                    break;
+            }
         });
     },
     printChart: function(btn){
@@ -1745,110 +1874,184 @@
         }
     },
     setJudgeGroup:function(btn){
-        var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
-                recname:'TZ_PWZDY_T',
-                condition:{
-                    TZ_JUGTYP_STAT:{
-                        value:'Y',
-                        operator:'01',
-                        type:'01'
-                    }},
-                result:'TZ_PWZBH,TZ_PWZMS'
-            }),
-            gridBtn = btn,
-            classID = btn.findParentByType('grid').findParentByType('form').getForm().findField('classID').getValue(),
-            batchID = btn.findParentByType('grid').findParentByType('form').getForm().findField('batchID').getValue(),
-            comParas = {
-                classID:classID,
-                batchID:batchID,
-                type:"getG"
-            };
-        var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"GC","comParams":' + Ext.JSON.encode(comParas) + '}';
-        Ext.tzLoad(tzParams,function(respData){
-            win.child('form').getForm().findField('judgeGroup').addListener('focus',function(combo){
-                    var form = btn.findParentByType("form").getForm();
-                    var reviewCount = respData.groupCount;
+        var grid = btn.findParentByType("grid"),
+            selections = grid.getSelectionModel().getSelection();
+        if(selections.length > 0){
+            var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+                    recname:'TZ_PWZDY_T',
+                    condition:{
+                        TZ_JUGTYP_STAT:{
+                            value:'Y',
+                            operator:'01',
+                            type:'01'
+                        }},
+                    result:'TZ_PWZBH,TZ_PWZMS'
+                }),
+                gridBtn = btn,
+                classID = btn.findParentByType('grid').findParentByType('form').getForm().findField('classID').getValue(),
+                batchID = btn.findParentByType('grid').findParentByType('form').getForm().findField('batchID').getValue(),
+                comParas = {
+                    classID:classID,
+                    batchID:batchID,
+                    type:"getG"
+                }; 
+            var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"GC","comParams":' + Ext.JSON.encode(comParas) + '}';
+            Ext.tzLoad(tzParams,function(respData){
+                win.child('form').getForm().findField('judgeGroup').addListener('focus',function(combo){
+                        var form = btn.findParentByType("form").getForm();
+                        var reviewCount = respData.groupCount;
 
-                    var groupData = "";
-                    for(var i=1;i<=reviewCount;i++){
-                        var groupID =String.fromCharCode(64+i);
-                        if(groupData==""){
-                            groupData=Ext.JSON.encode({group:groupID,desc:groupID})
-                        }else{
-                            groupData=groupData+","+Ext.JSON.encode({group:groupID,desc:groupID})
+                        var groupData = "";
+                        for(var i=1;i<=reviewCount;i++){
+                            var groupID =String.fromCharCode(64+i);
+                            if(groupData==""){
+                                groupData=Ext.JSON.encode({group:groupID,desc:groupID})
+                            }else{
+                                groupData=groupData+","+Ext.JSON.encode({group:groupID,desc:groupID})
+                            }
                         }
-                    }
-                    groupData="["+groupData+"]";
-                    combo.store.loadData(Ext.JSON.decode(groupData));
+                        groupData="["+groupData+"]";
+                        combo.store.loadData(Ext.JSON.decode(groupData));
+                });
+                win.show();
             });
-            win.show();
-        });
-        var win = Ext.create('Ext.window.Window', {
-            title: '分配评委组',
-            width: 400,
-            height: 150,
-            modal: true,
-            frame: true,
-            items:[{
-                xtype: 'form',
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'
-                },
-                border: false,
-                bodyPadding: 10,
-                bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 
-                fieldDefaults: {
-                    msgTarget: 'side',
-                    labelWidth: 110,
-                    labelStyle: 'font-weight:bold'
-                },
-                items:[
+            var win = Ext.create('Ext.window.Window', {
+                title: '分配评委组',
+                width: 400,
+                height: 150,
+                modal: true,
+                frame: true,
+                items:[{
+                    xtype: 'form',
+                    layout: {
+                        type: 'vbox',
+                        align: 'stretch'
+                    },
+                    border: false,
+                    bodyPadding: 10,
+                    bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+
+                    fieldDefaults: {
+                        msgTarget: 'side',
+                        labelWidth: 110,
+                        labelStyle: 'font-weight:bold'
+                    },
+                    items:[
+                        {
+                            fieldLabel: "所属评委组",
+                            name: 'judgeGroup',
+                            minWidth:100,
+                            flex:1,
+                            xtype:'combo',
+                            store:judgeGroupStore,
+                            displayField:'desc',
+                            valueField:'group',
+                            queryMode:'local',
+                            editable:false,
+                            ignoreChangesFlag: true,
+                            triggers:{
+                                clear: {
+                                    cls: 'x-form-clear-trigger',
+                                    handler: function(field){
+                                        field.setValue("");
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }],
+                buttons:[
                     {
-                        fieldLabel: "所属评委组",
-                        name: 'judgeGroup',
-                        minWidth:100,
-                        flex:1,
-                        xtype:'combo',
-                        store:judgeGroupStore,
-                        displayField:'desc',
-                        valueField:'group',
-                        queryMode:'local',
-                        editable:false,
-                        ignoreChangesFlag: true
+                        text: '确定',
+                        iconCls: "ensure",
+                        //handler: 'onApplicantsClose'
+                        handler: function (btn) {
+                            var records = gridBtn.findParentByType('grid').getSelectionModel().getSelection(),
+                                value = btn.findParentByType('panel').child('form').getForm().findField('judgeGroup').getValue();
+                            for(var x = records.length-1;x>=0;x--){
+                                records[x].set('judgeGroup',value);
+                            }
+                            btn.findParentByType('panel').close();
+                        }
+                    },
+                    {
+                        text: '关闭',
+                        iconCls: "close",
+                        //handler: 'onApplicantsClose'
+                        handler: function (btn) {
+                            btn.findParentByType('panel').close();
+                        }
                     }
                 ]
-            }],
-            buttons:[
-                {
-                    text: '确定',
-                    iconCls: "ensure",
-                    //handler: 'onApplicantsClose'
-                    handler: function (btn) {
-                        var records = gridBtn.findParentByType('grid').getSelectionModel().getSelection(),
-                            value = btn.findParentByType('panel').child('form').getForm().findField('judgeGroup').getValue();
-                        for(var x = records.length-1;x>=0;x--){
-                            records[x].set('judgeGroup',value);
-                        }
-                        btn.findParentByType('panel').close();
-                    }
-                },
-                {
-                    text: '关闭',
-                    iconCls: "close",
-                    //handler: 'onApplicantsClose'
-                    handler: function (btn) {
-                        btn.findParentByType('panel').close();
-                    }
-                }
-            ]
-        });
+            });
+        }else{
+            Ext.MessageBox.alert("提示","请先选择考生");
+        }
     },
     isProgress : function(params,callback){
         Ext.tzLoad(params,function(respData){
             callback(respData.progress);
         });
+    },
+    viewThisApplicationForm: function(view, rowIndex,colIndex){
+        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        var store = view.grid.getStore();
+        var record = store.getAt(rowIndex);
+        var appInsID=record.get("insID");
+        var classID=view.grid.findParentByType('tabpanel').findParentByType('form').getForm().findField('classID').getValue();
+        
+        var oprID=record.get("oprID");
+
+        if(appInsID!=""){
+            var tzParams="{ComID:'TZ_ONLINE_REG_COM',PageID:'TZ_ONLINE_APP_STD',OperateType:'HTML',comParams:{TZ_APP_INS_ID:'"+appInsID+"'}}";
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            var mask ;
+            var win = new Ext.Window({
+                name:'applicationFormWindow',
+                title :"查看报名表",
+                maximized : true,
+                classID :classID,
+                oprID :oprID,
+                appInsID : appInsID,
+                gridRecord:record,
+                width : Ext.getBody().width,
+                height : Ext.getBody().height,
+                autoScroll : true,
+                border:false,
+                bodyBorder : false,
+                isTopContainer : true,
+                modal : true,
+                resizable : false,
+                items:[
+                    new Ext.ux.IFrame({
+                        xtype: 'iframepanel',
+                        layout: 'fit',
+                        style : "border:0px none;scrollbar:true",
+                        border: false,
+                        src : viewUrl,
+                        height : "100%",
+                        width : "100%"
+                    })
+                ],
+                buttons: [{
+                        text:"关闭",
+                        iconCls:"close",
+                        handler: function(){
+                            win.close();
+                        }
+                    }]
+            })
+            win.show();
+        }else{
+            Ext.MessageBox.alert("提示","找不到该报名人的报名表");
+        }
     },
     findCmpParent : function(ele){
         //根据当前DOM节点，向上查找最近的包含EXT节点对象的节点并返回该EXT节点对象
@@ -1860,22 +2063,6 @@
         }else{
             return false;
         }
-    },
-    HTMLEncode:function(input){
-        //对输入字符串进行编码，以规避HTML敏感词
-        var converter = document.createElement("DIV");
-        converter.innerHTML = input;
-        var output = converter.innerHTML;
-        converter = null;
-        return output;
-    },
-    HTMLDecode:function(input) {
-        //对输入字符串进行解码
-        var converter = document.createElement("DIV");
-        converter.innerHTML = input;
-        var output = converter.innerHTML;
-        converter = null;
-        return output;
     }
 
 });

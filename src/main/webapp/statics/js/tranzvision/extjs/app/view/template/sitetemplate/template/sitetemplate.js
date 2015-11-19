@@ -68,7 +68,7 @@
 	        },{
             xtype: 'textfield',
             fieldLabel: '模板名称',
-			name: 'templateName',
+			name: 'templateName'
         	},{
 	            xtype: 'combobox',
 	            fieldLabel: '模板类型',
@@ -104,7 +104,7 @@
             labelWindth:300,
             height: 150,
 			name: 'templateMBCode'
-            }],
+            }]
 	}],//页面itemend
         
 	    buttons: [{

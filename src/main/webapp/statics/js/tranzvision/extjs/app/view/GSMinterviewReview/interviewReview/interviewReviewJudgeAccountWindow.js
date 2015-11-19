@@ -57,7 +57,7 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewJ
                     xtype: 'textfield',
                     name: 'batchName',
                     fieldLabel: '拟录取批次',
-                    value:'请先选择班级',
+                    value:'请先选择招聘项目',
                     fieldStyle:'color:#BFBFBF',
                     regex:/./,
                     readOnly:true,

@@ -3,7 +3,7 @@
     xtype: 'sendMailWindow', 
     title: '绑定邮箱', 
 	id: 'sendMailWindow201506021945',
-    width: 500,
+    width: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 500 : 500,
     height: 200,
     minWidth: 400,
     minHeight: 140,
@@ -22,10 +22,11 @@
 		border: false,
 		bodyPadding: 10,
 		//heigth: 600,
+		ignoreLabelWidth: true,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 100,
+			labelWidth: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 100 : 100,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [{

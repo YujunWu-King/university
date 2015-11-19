@@ -28,6 +28,9 @@
     initComponent: function(){
         var me =this;
         var modalID = this.modalID;
+		var processingStatus = new KitchenSink.view.common.store.appTransStore("TZ_AE_STATUS");
+		var listStore = new KitchenSink.view.enrollmentManagement.applicationForm.exportExcel.exportExcelStore;
+		
         var excelTplStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_EXPORT_TMP_T',
             condition:{
@@ -90,8 +93,6 @@
                                 if (p.name == "exportExcelForm") {
                                 }
                                 if (p.name == "exportExcelGrid") {
-                                    //queryType = "exportExcelResult";
-                                    p.store.load();
                                     this.doLayout();
                                 }
 
@@ -189,9 +190,7 @@
                                 reference: 'exportExcelGrid',
                                 name:'exportExcelGrid',
                                 multiSelect: true,
-                                store: {
-                                    type: 'appFormExportExcelStore'
-                                },
+                                store: listStore,
                                 dockedItems: [{
                                     xtype: "toolbar",
                                     items: [
@@ -228,7 +227,19 @@
                                     {
                                         text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.state", "导出状态"),
                                         dataIndex: 'applicationEngineStatus',
-                                        width: 100
+                                        width: 100,
+										renderer:function(v){
+											if(v){
+												var rec = processingStatus.find('TValue',v,0,false,true,false);
+												if(rec>-1){
+													return processingStatus.getAt(rec).get("TSDesc");
+												}else{
+													return "";
+												}
+											}else{
+												return "";
+											}
+										}
                                     },
                                     {
                                         xtype:'actioncolumn',

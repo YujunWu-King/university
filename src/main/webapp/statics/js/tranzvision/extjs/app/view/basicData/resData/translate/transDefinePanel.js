@@ -107,16 +107,17 @@
 			text: Ext.tzGetResourse("TZ_GD_TRANSLATE_COM.TZ_GD_TRANSDY_STD.longDesc","长描述"),
 			dataIndex: 'longDesc',
 			flex: 1
-		}/*,{
-               menuDisabled: true,
-               sortable: false,
-			   width:40,
-               xtype: 'actioncolumn',
-			   items:[
-				  {iconCls: 'edit',tooltip: '编辑',handler:'editSelTransValInfo'},
-			   	  {iconCls: 'remove',tooltip: '删除',handler:'deleteSelTransValInfo'}
-			   ]
-            }*/],	
+		},{
+			menuDisabled: true,
+			sortable: false,
+			width:60,
+			align:'center',
+			xtype: 'actioncolumn',
+			items:[
+				{iconCls: 'edit',tooltip: '编辑',handler:'editCurrTransVal'},
+				{iconCls: 'remove',tooltip: '删除',handler:'deleteCurrTransVal'}
+			]
+		}],
 		store: {
 				type: 'transDefineStore'
 			},			

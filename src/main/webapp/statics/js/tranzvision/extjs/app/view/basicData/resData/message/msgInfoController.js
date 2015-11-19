@@ -44,6 +44,25 @@
 		form.setValues({orgId:orgId});
         win.show();
     },
+    //编辑消息
+    editMsgDefine:function(btn){
+    	var grid = this.getView().child("grid");
+    	//选中行
+	   	var selList = grid.getSelectionModel().getSelection();
+	   	//选中行长度
+	   	var checkLen = selList.length;
+	   	if(checkLen == 0){
+				Ext.Msg.alert("提示","请选择一条要修改的记录");
+				return;
+	   	}else if(checkLen >1){
+		   	Ext.Msg.alert("提示","只能选择一条要修改的记录");
+		  	return;
+	   	}
+	   	var msgSetID = selList[0].get("msgSetID");
+	   	var messageId = selList[0].get("messageId");
+	   	//显示消息集合信息编辑页面
+			this.msgDefineEditById(msgSetID,messageId);
+    },
     //删除消息
     delMsgDefine:function(btn){
     	var grid = this.getView().child("grid");
@@ -65,50 +84,112 @@
     //编辑消息
     msgDefineEdit:function(view,t,rowIndex){
     	//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_MESSAGE_COM"]["TZ_GD_MSGDEF_STD"];
-		if( pageResSet == "" || pageResSet == undefined){
-			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-			return;
-		}
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_MSGDEF_STD，请检查配置。');
-			return;
-		}
-		var win = this.lookupReference('msgDefine');
-        
-        if (!win) {
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-		    //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-		
-		//操作类型设置为更新
-		win.actType = "update";
-		//语言类型
-		var lanageType = this.getView().lanageType;
-		//对应机构
-		var orgId = this.getView().orgId;
-		//选中行的数据
-		var record = view.findParentByType("grid").store.getAt(rowIndex);
-		var msgSetID = record.get("msgSetID");
-		var messageId = record.get("messageId");
-		//消息表单
-		var form = win.child('form').getForm();
-		form.findField("msgId").setReadOnly(true);
-		form.findField("msgId").addCls("lanage_1");
-		//参数
-		var tzParams = '{"ComID":"TZ_GD_MESSAGE_COM","PageID":"TZ_GD_MSGDEF_STD","OperateType":"QF","comParams":{"msgSetID":"'+msgSetID+'","messageId":"'+messageId+'","messageLanguage":"'+lanageType+'","orgId":"'+orgId+'"}}';
-		//加载数据
-		Ext.tzLoad(tzParams,function(responseData){
-			var formData = responseData.formData;
-			form.setValues(formData);
-		});
-        win.show();
+			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_MESSAGE_COM"]["TZ_GD_MSGDEF_STD"];
+			if( pageResSet == "" || pageResSet == undefined){
+				Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+				return;
+			}
+			//该功能对应的JS类
+			var className = pageResSet["jsClassName"];
+			if(className == "" || className == undefined){
+				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_MSGDEF_STD，请检查配置。');
+				return;
+			}
+			var win = this.lookupReference('msgDefine');
+	        
+	    if (!win) {
+				Ext.syncRequire(className);
+				ViewClass = Ext.ClassManager.get(className);
+			    //新建类
+	        win = new ViewClass();
+	        this.getView().add(win);
+	    }
+			
+			//操作类型设置为更新
+			win.actType = "update";
+			//语言类型
+			var lanageType = this.getView().lanageType;
+			//对应机构
+			var orgId = this.getView().orgId;
+			//选中行的数据
+			var record = view.findParentByType("grid").store.getAt(rowIndex);
+			var msgSetID = record.get("msgSetID");
+			var messageId = record.get("messageId");
+			//消息表单
+			var form = win.child('form').getForm();
+			form.findField("msgId").setReadOnly(true);
+			form.findField("msgId").addCls("lanage_1");
+			//参数
+			var tzParams = '{"ComID":"TZ_GD_MESSAGE_COM","PageID":"TZ_GD_MSGDEF_STD","OperateType":"QF","comParams":{"msgSetID":"'+msgSetID+'","messageId":"'+messageId+'","messageLanguage":"'+lanageType+'","orgId":"'+orgId+'"}}';
+			//加载数据
+			Ext.tzLoad(tzParams,function(responseData){
+				var formData = responseData.formData;
+				form.setValues(formData);
+			});
+      win.show();
     },
+  //编辑消息
+  msgDefineEditById:function(msgSetID,messageId){
+  		//是否有访问权限
+			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_MESSAGE_COM"]["TZ_GD_MSGDEF_STD"];
+			if( pageResSet == "" || pageResSet == undefined){
+				Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+				return;
+			}
+			//该功能对应的JS类
+			var className = pageResSet["jsClassName"];
+			if(className == "" || className == undefined){
+				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_MSGDEF_STD，请检查配置。');
+				return;
+			}
+			var win = this.lookupReference('msgDefine');
+	        
+	    if (!win) {
+				Ext.syncRequire(className);
+				ViewClass = Ext.ClassManager.get(className);
+			    //新建类
+	        win = new ViewClass();
+	        this.getView().add(win);
+	    }
+			
+			//操作类型设置为更新
+			win.actType = "update";
+			//语言类型
+			var lanageType = this.getView().lanageType;
+			//对应机构
+			var orgId = this.getView().orgId;
+			//消息表单
+			var form = win.child('form').getForm();
+			form.findField("msgId").setReadOnly(true);
+			form.findField("msgId").addCls("lanage_1");
+			//参数
+			var tzParams = '{"ComID":"TZ_GD_MESSAGE_COM","PageID":"TZ_GD_MSGDEF_STD","OperateType":"QF","comParams":{"msgSetID":"'+msgSetID+'","messageId":"'+messageId+'","messageLanguage":"'+lanageType+'","orgId":"'+orgId+'"}}';
+			//加载数据
+			Ext.tzLoad(tzParams,function(responseData){
+				var formData = responseData.formData;
+				form.setValues(formData);
+			});
+      win.show();
+  },
+	//编辑当前行消息记录
+	editCurrentMsg:function(view,rowIndex){
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		//消息集合ID
+		var msgSetID = selRec.get("msgSetID");
+    var messageID = selRec.get("messageId");
+    //显示消息集合信息编辑页面
+		this.msgDefineEditById(msgSetID,messageID);
+	},
+	//删除当前行消息记录
+	deleteCurrentMsg:function(view,rowIndex){
+		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+			if(btnId == 'yes'){
+				var store = view.findParentByType("grid").store;
+				store.removeAt(rowIndex);
+			}
+		},this);
+	},
 	//保存数据
     onMsgInfoSave:function(btn){
     	//消息表单

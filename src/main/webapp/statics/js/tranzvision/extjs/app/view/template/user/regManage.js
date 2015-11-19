@@ -367,6 +367,10 @@ Ext.define('KitchenSink.view.template.user.regManage', {
             text: '预览',
             iconCls: "preview",
             handler: 'onUserRegPreView'
+        },{
+            text: '关闭',
+            iconCls:"close",
+            handler: 'onPanelClose'
         }
     ]
 });

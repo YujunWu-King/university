@@ -430,11 +430,19 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
             		labelStyle: 'font-weight:bold'
         			}, 
         	  	items: [
-        	  	{
+        	  	/*{
 			            xtype: 'checkbox',
 			            fieldLabel: '启用在线报名',
 									name: 'enabledApply'
-			        },{
+			        }*/{
+						xtype: 'combobox',
+						fieldLabel: '启用在线报名',
+						valueField: 'TValue',
+						displayField: 'TLDesc',
+						store: new KitchenSink.view.common.store.appTransStore("TZ_QY_ZXBM"),
+						queryMode: 'local',
+						name: 'enabledApply'
+					},{
            				xtype: 'datefield',
 			            fieldLabel: '报名开始日期',
 			            format: 'Y-m-d',

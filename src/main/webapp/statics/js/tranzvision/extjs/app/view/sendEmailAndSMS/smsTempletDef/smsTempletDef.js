@@ -53,7 +53,8 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletDef', {
 			}
 		]
 	}],
-    initComponent: function () {    
+    initComponent: function () {
+        var useFlagStore = new KitchenSink.view.common.store.appTransStore("TZ_USE_FLAG");
 		var store = new KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletStore();
         Ext.apply(this, {
             columns: [
@@ -84,14 +85,20 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletDef', {
                 dataIndex: 'restempname',
                 width: 300
             },{
-                text: Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_MG_STD.isuse","是否启用"),
+                text:Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_MG_STD.isuse","是否启用"),
                 sortable: true,
-				xtype: 'checkcolumn',
                 dataIndex: 'isuse',
-				disabled : true,
                 minWidth: 80,
-				flex:1
-            },{
+                renderer:function(v) {
+                   v = v == true ? "Y" : "N";
+                    var rec = useFlagStore.find('TValue', v, 0, false, true, false);
+                    if (rec > -1) {
+                        return useFlagStore.getAt(rec).get("TSDesc");
+                    } else {
+                        return "";
+                    }
+                 }
+                },{
               	menuDisabled: true,
                 sortable: false,
 			    width:50,

@@ -27,11 +27,15 @@
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:['->',{minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.save","保存"),iconCls:"save",handler:'saveTags'}]
+        items:['->',
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.save","保存"),iconCls:"save",handler:'saveTags'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.ensure","确认"),iconCls:"ensure",handler: 'ensureTags'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.close","关闭"),iconCls:"close",handler: 'closeTags'}]
     },{
         xtype:"toolbar",
         items:[
-            {text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.add","新增"),iconCls:"add",handler:'addTag'},
+            {text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.add","新增"),iconCls:"add",handler:'addTag'},"-",
+            {text:Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMGL_SXSZ_STD.edit","编辑"),iconCls:"edit",handler:"editTag"},"-",
             {text:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.delete","删除"),iconCls:"remove",handler:'deleteTags'}
         ]
     }],
@@ -44,13 +48,13 @@
                 //	clicksToEdit: 1
             },
             columns: [{
+                text: Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.tagId","标签ID"),
+                dataIndex: 'tagId',
+                hidden:true
+                },{
                     text: Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.tagName","标签名称"),
                     dataIndex: 'tagName',
-                    flex:1,
-                    editor: {
-                        xtype: 'textfield',
-                        allowBlank: false
-                    }
+                    flex:1
                 },{
                     menuDisabled: true,
                     sortable: false,
@@ -58,6 +62,7 @@
                     align:'center',
                     xtype: 'actioncolumn',
                     items:[
+                        {iconCls:"edit",tooltip:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.edit","编辑"),handler:"editCurrentTag"},
                         {iconCls: 'remove',tooltip:Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.delete","删除"),handler:'deleteTag'}
                     ]
                 }],

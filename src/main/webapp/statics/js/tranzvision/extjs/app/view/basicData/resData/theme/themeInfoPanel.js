@@ -37,6 +37,7 @@
             fieldLabel: '主题编号',
             name: 'themeID',
             maxLength: 30,
+            fieldStyle:'background:#F4F4F4',
             afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
@@ -97,7 +98,16 @@
 			dataIndex: 'resSetDesc',
 			minWidth: 200,
 			flex: 1
-		}
+		},{
+            menuDisabled: true,
+            sortable: false,
+            width:60,
+            xtype: 'actioncolumn',
+            items:[
+                {iconCls: 'edit',tooltip: '编辑',handler: 'editThemeInfoBL'},
+                {iconCls: 'remove',tooltip: '删除',handler: 'deleteThemeInfoBL'}
+            ]
+        }
         ],
 		bbar: {
 			xtype: 'pagingtoolbar',

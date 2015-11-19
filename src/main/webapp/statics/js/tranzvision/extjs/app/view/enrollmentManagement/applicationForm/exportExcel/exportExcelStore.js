@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.exportExcel.ex
     extend: 'Ext.data.Store',
     alias: 'store.appFormExportExcelStore',
     model: 'KitchenSink.view.enrollmentManagement.applicationForm.exportExcel.exportExcelModel',
-    autoLoad: false,
+    autoLoad: true,
     pageSize: 5,
     comID: 'TZ_BMGL_BMBSH_COM',
     pageID: 'TZ_EXP_EXCEL_STD',

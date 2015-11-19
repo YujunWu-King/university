@@ -7,6 +7,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
 		{name: 'batchName'},
         {name: 'startDate'},
         {name: 'endDate'},
-        {name: 'status'}
+        {name: 'status'}       
 	]
 });

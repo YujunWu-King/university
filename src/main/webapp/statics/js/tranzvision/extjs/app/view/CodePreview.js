@@ -21,6 +21,5 @@ Ext.define('KitchenSink.view.CodePreview', {
             this.title = TranzvisionMeikecityAdvanced.Boot.languagePackage['tz-frmwrk-lang-00004'];
         }
         this.callParent(arguments);
-        console.log(this);
     }
 });

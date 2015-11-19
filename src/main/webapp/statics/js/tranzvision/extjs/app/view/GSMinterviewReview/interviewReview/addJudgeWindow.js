@@ -67,13 +67,6 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.addJudgeWindow',
                 text:'所属评委组',
                 dataIndex:'judgeType',
                 flex:1
-            },{
-                text:'所属系',
-                dataIndex:'judgeDepert',
-                flex:1,
-                filter:{
-                    type: 'list'
-                }
             }
         ]
     }],

@@ -177,25 +177,20 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
 									labelStyle: 'font-weight:bold'
 								},
 								items:[{
-									xtype: 'combobox',
-									fieldLabel: Ext.tzGetResourse('TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_STD.isuse','是否启用'),
-									forceSelection: true,
-									editable:false,
-									store: new KitchenSink.view.common.store.appTransStore("TZ_USE_FLAG"),
-									valueField: 'TValue',
-									displayField: 'TSDesc',
-									queryMode: 'remote',
-									name: 'isuse',
-									afterLabelTextTpl: [
-										'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-									],
-									allowBlank: false,
-								},{
+                                    xtype:'checkbox',
+                                    fieldLabel: Ext.tzGetResourse('TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_STD.isuse','是否启用'),
+                                    name: 'isuse',
+                                    inputValue:'Y',
+                                    uncheckedValue:'N',
+                                    afterLabelTextTpl: [
+                                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                    ]
+
+                                },{
 									xtype: 'combobox',
 									fieldLabel: Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_STD.restempid","模版类型"),
 									forceSelection: true,
 									editable: false,
-									/**/
 									store: new KitchenSink.view.common.store.comboxStore({
 										recname: 'TZ_TMP_DEFN_TBL',
 										condition:{

@@ -15,15 +15,14 @@
         'KitchenSink.view.GSMinterviewReview.interviewReview.candidate.candidateModel',
         'tranzvision.extension.grid.Exporter'
     ],
-    title: '拟录取考生名单',
+    title: '拟录取人员名单',
     classID:'',
     batchID:'',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    initComponent:function(){
-        var genderStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
-            admitStore = new KitchenSink.view.common.store.appTransStore("TZ_LUQU_ZT"),
-            ZGStore = new KitchenSink.view.common.store.appTransStore("TZ_CLPS_MSZG"),
-            TZ_MSPS_STAGE=new KitchenSink.view.common.store.appTransStore("TZ_MSPS_STAGE");
+    constructor:function(transValue){
+        var genderStore = transValue.get("TZ_GENDER"),
+            admitStore = transValue.get("TZ_LUQU_ZT"),
+            TZ_MSPS_STAGE=transValue.get("TZ_MSPS_STAGE");
         Ext.apply(this,{
             items: [{
                 xtype: 'form',
@@ -77,14 +76,14 @@
                         fieldStyle:'background:#F4F4F4',
                         ignoreChangesFlag:true,
                         readOnly:true
-                    }, {
+                    }, /*{
                         xtype: 'numberfield',
                         fieldLabel: "初筛通过人数",
                         name: 'reviewNum',
                         fieldStyle:'background:#F4F4F4',
                         readOnly:true,
                         ignoreChangesFlag:true
-                    },
+                    },*/
                     {
                         items:[
 
@@ -150,7 +149,7 @@
                                     xtype:'displayfield',
                                     width: 200,
 
-                                    fieldLabel:"评审委员会",
+                                    fieldLabel:"学术委员会",
                                     column:3
 
                                 },{
@@ -191,7 +190,7 @@
 
                             {
                                 xtype: 'grid',
-                                title:'考生名单',
+                                title:'申请人名单',
                                 minHeight: 260,
                                 name:'candidateStudentGrid',
                                 columnLines: true,
@@ -219,11 +218,11 @@
                                  },*/{
                                     xtype:"toolbar",
                                     items:[
-                                        {text:"新增",tooltip:"添加考生参与本批次面试评审",iconCls:"add",
+                                        {text:"新增",tooltip:"添加申请人参与本拟录取批次",iconCls:"add",
                                             handler:"addApplicantsBMR" },"-",
-                                        {text:"删除",tooltip:"从列表中移除选中的考生",iconCls:"remove",
-                                            handler:"removeApplicants" },
-                                        {text:"发送录取邮件",tooltip:"发送录取邮件",iconCls:"email",handler:"sendEmail"}
+                                        {text:"删除",tooltip:"从列表中移除选中的申请人",iconCls:"remove",
+                                            handler:"removeApplicants" },"-",
+                                        {text:"发送面试结果邮件",tooltip:"发送面试结果邮件",iconCls:"email",handler:"sendEmail"}
 
                                     ]
                                 }],
@@ -279,10 +278,22 @@
                                         text: "拟录取系所",
                                         dataIndex: 'nlqxs',
                                         width:120,
-                                        filter: {
-                                            type: 'list'
-                                        },
-                                        align:'center'
+                                        renderer:function(v,metadata,record){
+                                            var x,
+                                                ScoreStore = Ext.create('Ext.data.Store',{
+                                                    autoLoad:false,
+                                                    pageSize:0,
+                                                    data:record.data.nlqxsStore,
+                                                    model:Ext.create('Ext.data.Model',{
+                                                        fiels:['TValue','TSDesc']
+                                                    })
+                                                });
+                                            if((x = ScoreStore.find('TValue',v))>=0){
+                                                return ScoreStore.getAt(x).data.TSDesc;
+                                            }else{
+                                                return v;
+                                            }
+                                        }
                                     },{
                                         header: '系推荐报告',
                                         xtype:'linkcolumn',
@@ -313,12 +324,20 @@
 
                                     },{
                                         header: '学术委员会审议',
-                                        xtype:'linkcolumn',
                                         sortable: false,
+                                        xtype:'linkcolumn',
                                         flex:2,
-                                        value:'学术委员会审议',
                                         minWidth: 120,
-                                        handler:'ViewXxwyReview'
+                                        handler:'ViewXxwyReview',
+                                        renderer:function(v,metadata,record){
+                                            var status = this.findParentByType('grid').findParentByType('form').getForm().findField('interviewStatus2').getValue();
+                                            if(status=="未开始" || (record.data.xswyhsytgl && record.data.xswyhsytgl.match(/\/(\d+)$/)[1]==0)){
+                                                this.text="";
+                                                return "此申请人不能评审";
+                                            }else{
+                                                this.text="学术委员会审议";
+                                            }
+                                        }
                                     },{
                                         text: "录取状态",
                                         dataIndex: 'LUQUZT',
@@ -350,8 +369,8 @@
                                         minWidth:75,
                                         xtype: 'actioncolumn',
                                         items:[
-                                            {iconCls:'edit',tooltip:'编辑考生',handler:'editApplicant22'},
-                                            {iconCls: 'remove',tooltip: '移除考生', handler: function(view, rowIndex){
+                                            {iconCls:'edit',tooltip:'编辑申请人',handler:'editApplicant22'},
+                                            {iconCls: 'remove',tooltip: '移除申请人', handler: function(view, rowIndex){
                                                 var store = view.findParentByType("grid").store;
 
                                                 var interviewStatus=this.up("form[name=interviewReviewApplicantsForm]").getForm().findField('interviewStatus').value;
@@ -360,7 +379,7 @@
                                                  //var interviewStatus2=btn.findParentByType('form').getForm().findField('interviewStatus2').value;
                                                  //alert(interviewStatus+"=="+interviewStatus2);
                                                 if (interviewStatus==enduring || interviewStatus2==enduring){
-                                                    Ext.MessageBox.alert("提示","评审正在进行中，不能删除考生");
+                                                    Ext.MessageBox.alert("提示","评审正在进行中，不能删除申请人");
                                                     return;
                                                 }else{
                                                     Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function (btnId) {
@@ -399,7 +418,7 @@
         classID = btn.findParentByType('panel').child('form').getForm().findField('classID').getValue(),
         batchID = btn.findParentByType('panel').child('form').getForm().findField('batchID').getValue();
     //新增数据
-            if(newData.length !== 0) {
+        if(newData.length !== 0) {
         JSONData.add = [];
         for (var x = newData.length - 1; x >= 0; x--) {
             JSONData.add[x] = {};
@@ -429,6 +448,7 @@
             JSONData.update[x].batchID = batchID;
             JSONData.update[x].appINSID = updateData[x].data.appINSID;
             JSONData.update[x].judgeList = updateData[x].data.judgeList;
+            JSONData.update[x].nlqxs = updateData[x].data.nlqxs;
             JSONData.update[x].remark = updateData[x].data.remark;
             JSONData.update[x].reviewStatus = updateData[x].data.LUQUZT;
         }
@@ -441,10 +461,8 @@
     Ext.tzSubmit(tzParams,function(responseData){
 
     	if(responseData.msg === "reviewing"){
-               Ext.MessageBox.alert("提示","已经处于评审状态的考生不能删除");
+               Ext.MessageBox.alert("提示","已经处于评审状态的申请人不能删除");
            }
-        var thisValue = responseData.reviewCount||btn.findParentByType('panel').child('form').getForm().findField('reviewNum').getValue();
-        btn.findParentByType('panel').child('form').getForm().findField('reviewNum').setValue(thisValue);
         var grid = btn.findParentByType('panel').down("grid[name=candidateStudentGrid]");
         var store = grid.getStore();
         if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1||tzParams.indexOf("update")){
@@ -495,6 +513,7 @@
                     JSONData.update[x].appINSID = updateData[x].data.appINSID;
                     JSONData.update[x].judgeList = updateData[x].data.judgeList;
                     JSONData.update[x].remark = updateData[x].data.remark;
+                    JSONData.update[x].nlqxs = updateData[x].data.nlqxs;
                     JSONData.update[x].reviewStatus = updateData[x].data.LUQUZT;
                 }
             }
@@ -504,11 +523,10 @@
             Ext.tzSubmit(tzParams,function(responseData){
                 var grid = btn.findParentByType('panel').down("grid[name=candidateStudentGrid]");
                 var store = grid.getStore();
-                if(tzParams.indexOf("add")>-1||tzParams.indexOf("delete")>-1){
-                    store.reload();
-                }
+                store.commitChanges();
                 btn.findParentByType('panel').close();
             },"",true,this);
+            
         }
     }, {
         text: '关闭',

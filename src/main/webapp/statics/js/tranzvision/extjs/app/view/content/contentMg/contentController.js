@@ -119,10 +119,18 @@
 				if(btnId == 'yes'){					   
 				   var userStore = this.getView().store;
 				   userStore.remove(selList);
-				   var tzParams = this.submitContentParams("D","删除成功");
 				}
 			},this);
 	   }
+    },
+    saveContentList:function(btn){
+        var store = this.getView().store;
+        if(store.getRemovedRecords().length>0){
+            var tzParams = this.submitContentParams("D","保存成功");
+        };
+        if(btn.name=="ensure"){
+            this.getView().close();
+        }
     },
     //发布选中的内容
     releaseSelList:function(btn){
@@ -310,7 +318,6 @@
 		Ext.MessageBox.confirm('确认', '确定要删除改内容吗?', function(btnId){
 			if(btnId == 'yes'){
 				view.findParentByType("grid").store.removeAt(rowIndex);
-				var tzParams = this.submitContentParams("D","删除成功");
 			}
 		},this);
 	},
@@ -322,7 +329,6 @@
 			record.set("releaseOrUndo", "N");
 			msg = "撤销发布成功";
     }else{
-
 				record.set("releaseOrUndo", "Y");
 				msg = "发布成功";
       

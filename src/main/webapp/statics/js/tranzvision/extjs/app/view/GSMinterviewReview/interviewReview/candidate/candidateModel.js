@@ -11,6 +11,8 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.candidate.candid
         {name:'reviewStatus'},
         {name:'remark'},
         {name:'reasercherArea'},
-        {name:'applyPosition'}
+        {name:'applyPosition'},
+        {name:'nlqxs'},
+        {name:'nlqxsStore'}
     ]
 });

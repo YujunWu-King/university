@@ -20,10 +20,8 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewA
     frame: true,
     style: "margin:8px",
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    initComponent:function(){
-        var store = new KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewApplicantsStore(),
-            judgeGroup = new KitchenSink.view.common.store.appTransStore("TZ_GSM_JUG_GRP");
-        judgeGroup.load();
+    constructor:function(transValue){
+        var store = new KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewApplicantsStore();
         Ext.apply(this,{
             items: [{
                 xtype: 'form',
@@ -139,6 +137,7 @@ Ext.define('KitchenSink.view.GSMinterviewReview.interviewReview.interviewReviewA
                             minWidth:100,
                             renderer:function(v){
                                 var x;
+                                var judgeGroup = transValue.get("TZ_GSM_JUG_GRP")
                                 if((x = judgeGroup.find('TValue',v))>=0){
                                     return judgeGroup.getAt(x).data.TSDesc;
                                 }else{

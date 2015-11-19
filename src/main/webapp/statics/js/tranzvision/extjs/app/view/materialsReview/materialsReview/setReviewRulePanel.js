@@ -18,6 +18,8 @@
     batchID:'',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     initComponent:function(){
+        var KSPWPSEHNZT = new KitchenSink.view.common.store.appTransStore("TZ_CLPW_STATUS");
+        KSPWPSEHNZT.load();
         var judgeGroupStore = new Ext.data.Store({
                 fields:['group','desc'],
                 data:[]
@@ -34,13 +36,11 @@
                 border: false,
                 bodyPadding: 10,
                 bodyStyle:'overflow-y:auto;overflow-x:hidden',
-
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelWidth: 110,
                     labelStyle: 'font-weight:bold'
                 },
-
                 items: [
                     {
                         xtype: 'textfield',
@@ -191,7 +191,6 @@
                         defaults :{
                             autoScroll: false
                         },
-
                         listeners:{
                             beforetabchange:function(tabPanel, newCard, oldCard){
                                 var queryType;
@@ -358,7 +357,6 @@
                                             }
                                         },
                                         columns: [
-
                                             {
                                                 text: "评委帐号",
                                                 dataIndex: 'judgeID',
@@ -376,15 +374,31 @@
                                                 minWidth:100,
                                                 flex:1
                                             },{
-                                                text: "评审考生下限",
+                                                text: "评审考生人数",
                                                 dataIndex: 'lower',
-                                                width:130
-                                            },{
-                                                text: "评审考生上限",
-                                                dataIndex: 'upper',
-                                                width:130
-
-                                            },{
+                                                width:150
+                                            },
+                                            {
+                                                text: "评委状态",
+                                                dataIndex: 'judgeStatus',
+                                                width:150,
+                                                renderer: function (v,grid,record) {
+                                                    var x;
+                                                    v = v?v:'N';
+                                                    if((x = KSPWPSEHNZT.find('TValue',v))>=0){
+                                                        return KSPWPSEHNZT.getAt(x).data.TSDesc;
+                                                    }else{
+                                                        return v;
+                                                    }
+                                                }
+                                            }
+//                                            ,{
+//                                                text: "评审考生上限",
+//                                                dataIndex: 'upper',
+//                                                width:130
+//
+//                                            }
+                                            ,{
                                                 menuDisabled: true,
                                                 sortable: false,
                                                 text:'操作',
@@ -434,12 +448,14 @@
                                             },{
                                                 xtype:'displayfield',
                                                 name: 'lower',
-                                                fieldLabel:'当前选择评委评议下限人次'
+                                                fieldLabel:'当前选择评委评议总人次'
                                             },{
                                                 xtype:'displayfield',
                                                 name: 'upper',
-                                                fieldLabel:'当前选择评委评议上限人次'
-                                            }]
+                                                fieldLabel:'当前选择评委评议上限人次',
+                                                hidden:true
+                                            }
+                                            ]
                                         }]
                                     }
                                 ],

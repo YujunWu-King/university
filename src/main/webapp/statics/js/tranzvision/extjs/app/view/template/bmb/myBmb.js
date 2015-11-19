@@ -24,13 +24,24 @@ Ext.define('KitchenSink.view.template.bmb.myBmb', {
     header: false,
     frame: true,
     dockedItems: [{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',{minWidth:80,text:"关闭",iconCls:"close",handler:'onPanelClose'}]
+    },{
         xtype: "toolbar",
         items: [{
+            text:"查询",
+            tooltip:'查询',
+            iconCls:'query',
+            handler:'queryBmbTpl'
+        },{
             text: "新增",
-            tooltip: "新增模板",
+            tooltip: "新增",
             iconCls: "add",
             handler: 'addBmbTpl'
-        }]
+        },
+            {text:"编辑",tooltip:"编辑",iconCls:"edit",handler:'editBmbTpl'}]
     }],
     initComponent: function() {
         var store = new KitchenSink.view.template.bmb.myBmbStore();
@@ -50,16 +61,14 @@ Ext.define('KitchenSink.view.template.bmb.myBmb', {
                 },
                 {
                     text: '有效状态',
-                    dataIndex: 'activestated',
-                    hidden: true
-                },
-                {
-                    text: '有效状态',
-                    dataIndex: 'activestatedesc',
-                    sortable: true,
-                    resizable: false,
-                    width: 100
-
+                    dataIndex: 'activestate',
+                    renderer:function(v){
+                        if(v=='Y'){
+                            return '生效';
+                        }else{
+                            return '失效';
+                        }
+                    }
                 },
                 {
                     menuDisabled: true,

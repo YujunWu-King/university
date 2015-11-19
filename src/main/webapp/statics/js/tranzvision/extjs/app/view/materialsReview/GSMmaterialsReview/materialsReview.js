@@ -24,12 +24,17 @@
     },
 	header:false,
 	frame: true,
-    dockedItems:[/*{
-		xtype:"toolbar",
-		dock:"bottom",
-		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save"}]
-		},*/{
+    dockedItems:[{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+           {minWidth:80,text:Ext.tzGetResourse("TZ_REVIEW_GSMCL_COM.TZ_GSMCL_LIST_STD.close","关闭"),iconCls:"close",handler:function(btn){
+               var grid = btn.findParentByType("grid");
+               grid.close();
+           }}
+        ]
+    },{
 		xtype:"toolbar",
 		items:[
 			{text:"查询",tooltip:"查询数据",iconCls:"query",handler:"queryClassBatch"},"-",
@@ -40,6 +45,7 @@
     initComponent: function () {
         var store = new KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewStore(),
             KSPWPSEHNZT = new KitchenSink.view.common.store.appTransStore("TZ_CLPS_STATUS");
+			  KSPWPSEHNZT.load();
         Ext.apply(this, {
             columns: [{
                 text: '招聘项目编号',

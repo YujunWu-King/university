@@ -51,13 +51,16 @@
 					align: 'stretch',
         		},
         	  	items:[{
-					xtype: 'checkbox',
+					xtype: 'combo',
+					labelWidth: 100,
+					editable: false,
+					fieldLabel: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARDY_STD.isValid", "有效状态"),
 					name: 'isValid',
-					fieldLabel: '是否有效',
-					hideLabel: true,
-					boxLabel: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARDY_STD.isValid","是否有效"),
-					margin: '0 0 0 103',
-					inputValue: 'Y'
+					emptyText: '请选择',
+					mode: "remote",
+					valueField: 'TValue',
+					displayField: 'TSDesc',
+					store: new KitchenSink.view.common.store.appTransStore("TZ_ISVALID")
 				},{
 					xtype: 'textarea',
 					fieldLabel: Ext.tzGetResourse("TZ_GD_SYSVARGL_COM.TZ_GD_SYSVARDY_STD.systemVarDesc","系统变量描述"),

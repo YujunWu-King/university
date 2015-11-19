@@ -24,6 +24,7 @@
         },
         border: false,
         bodyPadding: 10,
+        ignoreLabelWidth: true,
 		//heigth: 600,
 		bodyStyle:'overflow-y:auto;overflow-x:hidden',
 		

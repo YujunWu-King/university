@@ -7,7 +7,6 @@
     title: '转换值定义', 
 	reference: 'transDetailWindow',
     width: 600,
-    height: 500,
     minWidth: 300,
     minHeight: 380,
     layout: 'fit',

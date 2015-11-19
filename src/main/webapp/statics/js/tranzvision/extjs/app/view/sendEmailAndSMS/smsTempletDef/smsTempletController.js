@@ -166,9 +166,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletController'
 				var tzParams = '{"ComID":"TZ_SMS_TMPL_MG_COM","PageID":"TZ_SMS_TMPL_STD","OperateType":"QF","comParams":{"smstempid":"'+smstempid+'","smstemporg":"'+smstemporg+'"}}';
 				
 				Ext.tzLoad(tzParams,function(responseData){
-					
-					//console.log(responseData);
-					//var formData = responseData.formData;
+
 					form.setValues(responseData);
 					
 					//信息项数据

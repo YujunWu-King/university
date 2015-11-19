@@ -63,8 +63,10 @@
             },
             dockedItems: [{
                 xtype:"toolbar",
-                items: [{text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryMsg'},'-',
+                items: [
+                		{text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryMsg'},'-',
                     {text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addMsgDefine'},'-',
+                    {text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:'editMsgDefine'},'-',
                     {text:"删除",tooltip:"删除数据",iconCls:"remove",handler:'delMsgDefine'},'-',
 					{
 						xtype:'combo',
@@ -124,19 +126,13 @@
                     }]
             }],
             columns: [{
-                text: '消息编号',
+                text: '消息集合编号',
                 dataIndex: 'msgSetID',
                 hidden:true
             },{
                 text: '消息编号',
                 dataIndex: 'messageId',
-                width: 200,
-                renderer:function(value){
-                    return '<a href="javascript:void(0)">' + value + '</a>';
-                },
-                listeners:{
-                    click:'msgDefineEdit'
-                }
+                width: 200
             },{
                 text: '消息文本',
                 dataIndex: 'messageTest',
@@ -146,6 +142,16 @@
                 text: '语言',
                 dataIndex: 'messageLanguage',
                 width: 150
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width:60,
+                align:'center',
+                xtype: 'actioncolumn',
+                items:[
+                    {iconCls: 'edit',tooltip: '编辑',handler:'editCurrentMsg'},
+                    {iconCls: 'remove',tooltip: '删除',handler:'deleteCurrentMsg'}
+                ]
             }],
             bbar: {
                 xtype: 'pagingtoolbar',

@@ -12,7 +12,8 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletInfoMth', {
 				form.findField("restemporg").setReadOnly(true);
 				form.findField("restempid").addCls("lanage_1");
 				form.findField("restemporg").addCls("lanage_1");
-				form.findField("restempid").setValue(responseData.restempid);
+
+				form.setValues({"restempid":responseData.restempid});
 				var contentPanel;
 				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
 				contentPanel.child("resTempletDef").store.reload();

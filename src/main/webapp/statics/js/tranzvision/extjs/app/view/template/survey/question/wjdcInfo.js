@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
         items:[
             {text:"查询",tooltip:'查询',iconCls:"query",handler:'findDcwj'},'-',
             {text:"新增",tooltip:"新增",iconCls:"add",handler:'addDcwj'},'-',
-            {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdc'},'-',
+          //  {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdc'},'-',
             {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->',
             {
                 xtype:'splitbutton',
@@ -57,7 +57,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
         var store = new KitchenSink.view.template.survey.question.wjdcStore();
         Ext.apply(this, {
             columns: [
-                new Ext.grid.RowNumberer() ,{
+               // new Ext.grid.RowNumberer() , 列表序号
+                {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_ID","问卷ID"),
                     sortable: true,
                     dataIndex: 'TZ_DC_WJ_ID',
@@ -92,8 +93,6 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                             iconCls:' publish',tooltip:'未发布',handler:'releaseWjdc',
                             isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
                                 if(record.get('TZ_DC_WJ_FB')=='0'){
-                                  /*  console.log(view,rowIndex,colIndex,item,record);
-                                    view.setTooltip("已发布");*/
                                     return false;
                                 }else{
                                     return true;
@@ -102,27 +101,6 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                         }
                     ]
                 },
-               /* {
-                    text: '发布',
-                    dataIndex: 'TZ_DC_WJ_FB',
-                    width: 87,
-                    align: 'center',
-                    groupable: false,
-                    renderer: function(v) {
-                        if(v == "0"){
-                            //return '<a href="javascript:void(0)">撤销</a>';
-                            return '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-action-col-icon x-action-col-0  publish" />';
-
-                        }else{
-                            //return '<a href="javascript:void(0)">发布</a>';
-                            return "已发布";
-                           // return '<img src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" class="x-action-col-icon x-action-col-0  publish" />';
-                        }
-                    },
-                    listeners:{
-                        click:'releaseWjdc'
-                    }
-                },*/
                 {
                     menuDisabled: true,
                     sortable: false,
@@ -135,7 +113,9 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                         {iconCls:'copy',tooltip:'复制',handler:'copyWjdc'},
                          {iconCls: 'preview',tooltip: '预览',handler:'previewWjdc'},
                         {iconCls: 'set',tooltip: '设置',handler:'setWjdc'},
-                        {iconCls:'import',tooltip:'逻辑',handler:'onLogicalSet'}
+                        {iconCls:'import',tooltip:'逻辑',handler:'onLogicalSet'},
+                        {iconCls:'view',tooltip:'调查详情',handler:'detailOnWjdc'}
+
                     ]
                 },  {
                     menuDisabled: true,
@@ -144,10 +124,10 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                     align: 'center',
                     xtype: 'actioncolumn',
                     items:[
-                        {iconCls:'word',tooltip:'进度报表',handler:'jinDuBB'},
-                        {iconCls: 'word',tooltip: '频数报表',handler:'pinShuBB'},
-                        {iconCls:'word',tooltip:'交叉报表',handler:'jiaoChaBB'},
-                        {iconCls:'word',tooltip:'数据导出',handler:'outputData'}
+                        {iconCls:'schedule_report',tooltip:'进度报表',handler:'jinDuBB'},
+                        {iconCls: 'frequency_report',tooltip: '频数报表',handler:'pinShuBB'},
+                        {iconCls:'cross_report',tooltip:'交叉报表',handler:'jiaoChaBB'},
+                        {iconCls:'excel',tooltip:'数据导出',handler:'outputData'}
                     ]
                 }],
            buttons:[{

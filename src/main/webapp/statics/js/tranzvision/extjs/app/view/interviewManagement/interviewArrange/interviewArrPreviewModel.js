@@ -6,6 +6,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArrPr
 		{name: 'appFormSta'},
 		{name: 'msAppFormAuditSta'},
         {name: 'msZGFlag'},
+        {name: 'batchName'},
         {name: 'msDate',type:'date'},
 	    {name: 'msStartTime'},
         {name: 'msEndTime'}

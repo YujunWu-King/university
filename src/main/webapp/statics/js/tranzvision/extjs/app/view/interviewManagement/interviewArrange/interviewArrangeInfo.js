@@ -12,7 +12,7 @@
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeStore',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeController'
 	],
-    title: '面试日程安排',
+    title: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.panelTitle",'面试日程安排'),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	reference: 'interviewArrangeInfoPanel',
 	listeners:{
@@ -91,27 +91,27 @@
 					readOnly:true
 				},{
 					xtype: 'textfield',
-					fieldLabel: '清除所有时间安排',
+					fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.clearAllTimeArr",'清除所有时间安排'),
 					name: 'clearAllTimeArr',
 					hidden:true
 				},{
 					xtype: 'textfield',
-					fieldLabel: '面试开始日期',
+					fieldLabel: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchStartDate", '面试开始日期'),
 					name: 'batchStartDate',
 					hidden:true
 				},{
 					xtype: 'textfield',
-					fieldLabel: '面试结束日期',
+					fieldLabel: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchEndDate", '面试结束日期'),
 					name: 'batchEndDate',
 					hidden:true
 				},{
 				 xtype: 'textfield',
-				 fieldLabel: '面试开始时间',
+				 fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchStartTime",'面试开始时间'),
 				 name: 'batchStartTime',
 				 hidden:true
 				 },{
 				 xtype: 'textfield',
-				 fieldLabel: '面试结束时间',
+				 fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchEndTime",'面试结束时间'),
 				 name: 'batchEndTime',
 				 hidden:true
 				 },{
@@ -129,8 +129,8 @@
 						items:[
 							{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',
 							{text:"建议时间内自动安排考生",tooltip:"建议时间内自动安排考生",iconCls:"",handler:'msJYSJAutoArrStus'},'-',
-							{text:"发送面试时间确认邮件",tooltip:"发送面试时间确认邮件",iconCls:"",handler:'sendInterviewArrConfirmEmail'},'-',
-							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"",handler:'setInterviewApplicant'},'->',
+							{text:"发送面试时间确认邮件",tooltip:"发送面试时间确认邮件",iconCls:"email",handler:'sendInterviewArrConfirmEmail'},'-',
+							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'->',
 							{
 								xtype:'splitbutton',
 								text:'更多操作',
@@ -139,20 +139,32 @@
 								menu:[
 									{
 										text:'批量清除考生安排',
+										iconCls:"remove",
 										handler:'ms_cleanAp'
 									},{
 										text:'清除选中时间安排',
+										iconCls:"remove",
 										handler:'ms_cleanTimeArr'
 									},{
 										text:'清除所有时间安排',
+										iconCls:"reset",
 										handler:'ms_cleanAllTimeArr'
 									},{
 										text:'考生安排情况一览表',
+										iconCls:"preview",
 										handler:'ms_msArrPreview'
 									},{
 										text:'面试建议时间定义',
+										iconCls:"set",
 										handler:'ms_jytime'
-									}
+									},{
+										text:"发布",
+										iconCls:"publish",
+										handler:'releaseSelList'},
+									{
+										text:"撤销发布",
+										iconCls:"revoke",
+										handler:'UndoSelList'}
 								]
 							}
 						]
@@ -199,7 +211,7 @@
 						type: 'checkboxmodel'
 					},
 					columns: [{
-						text: '面试日期',
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msDate", '面试日期'),
 						xtype:'datecolumn',
 						format:'Y-m-d',
 						sortable: true,
@@ -210,7 +222,7 @@
 						},
 						width: 105
 					},{
-						text: '组号',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msGroupId", '组号'),
 						sortable: true,
 						dataIndex: 'msGroupId',
 						editor:{
@@ -219,55 +231,55 @@
 						},
 						width: 60
 					},{
-						text: '序号',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msGroupSn",  '序号'),
 						sortable: true,
 						dataIndex: 'msGroupSn',
 						width: 72
 					},{
-						text: '开始时间',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
 						xtype:'datecolumn',
 						format:'H:i',
 						sortable: true,
 						dataIndex: 'bjMsStartTime',
 						editor:{
 							xtype: 'timefield',
-							increment:10,
+							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
 						},
 						width: 90
 					},{
-						text: '结束时间',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
 						sortable: true,
 						dataIndex: 'bjMsEndTime',
 						xtype:'datecolumn',
 						format:'H:i',
 						editor:{
 							xtype: 'timefield',
-							increment:10,
+							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
 						},
 						width: 90
 					},{
-						text: '备注',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msXxBz", '备注'),
 						dataIndex: 'msXxBz',
 						editor:{
 							xtype:'textfield'
 						},
 						width: 100
 					},{
-						text: '当地开始时间',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.localStartTime",'当地开始时间'),
 						dataIndex: 'localStartTime',
 						width: 125
 					},{
-						text: '当地结束时间',
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.localFinishTime", '当地结束时间'),
 						dataIndex: 'localFinishTime',
 						width: 125
 					},{
-						text: 'Skype账号',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.skypeId",  'Skype账号'),
 						dataIndex: 'skypeId',
 						width: 100
 					},{
@@ -281,7 +293,7 @@
 					 {	iconCls: 'skype',tooltip: 'Skype',handler:'transferSkype'}
 					 ]
 					 },{
-						text: '姓名',
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msOprName",  '姓名'),
 						dataIndex: 'msOprName',
 						width: 100
 					},{
@@ -305,7 +317,7 @@
 							return "<input class='msArrGridClearBtn' type='button' value='清除'/>";
 						}
 					},{
-						text: '预约状态',
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msOrderState", '预约状态'),
 						sortable: true,
 						dataIndex: 'msOrderState',
 						minWidth: 100,
@@ -323,7 +335,7 @@
 							return record.get('msZGFlag');
 						}
 					},{
-						text: '确认状态',
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msConfirmState", '确认状态'),
 						sortable: true,
 						dataIndex: 'msConfirmState',
 						minWidth: 100,
@@ -354,7 +366,7 @@
 							return record.get('msZGFlag');
 						}
 					},{
-						text:"类别" ,
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.sort", "类别") ,
 						sortable: true,
 						dataIndex: 'sort',
 						minWidth: 140,
@@ -406,9 +418,35 @@
 							}
 						}
 					},{
+						xtype: 'actioncolumn',
+						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.releaseOrUndo","发布/撤销") ,
+						//sortable: false,
+						minWidth:100,
+						width:100,
+						items:[
+							{
+								iconCls: '',
+								tooltip: '',
+								handler:'releaseOrUndo',
+								getClass: function(v, metadata , r,rowIndex ,colIndex ,store ){
+									if (store.getAt(rowIndex).get("msOprId")=='') {
+										return '';
+									}else{
+										if(store.getAt(rowIndex).get("releaseOrUndo")=='Y'){
+											metadata['tdAttr'] = "data-qtip=撤销";
+											return 'revoke';
+										}else{
+											metadata['tdAttr'] = "data-qtip=发布";
+											return 'publish';
+										}
+									}
+								}
+							}
+						]
+					},{
 						menuDisabled: true,
 						sortable: false,
-						header:'操作',
+						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.option", '操作'),
 						width:40,
 						xtype: 'actioncolumn',
 						items:[

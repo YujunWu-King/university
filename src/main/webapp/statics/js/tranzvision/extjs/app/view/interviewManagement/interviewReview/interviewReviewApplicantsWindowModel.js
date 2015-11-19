@@ -4,7 +4,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
         {name: 'classID'},
         {name: 'batchID'},
         {name: 'realName'},
-        {name: 'appInsID'},
+        {name: 'appINSID'},
         {name: 'gender'},
         {name:'isInterviewed'},
         {name:'joinedBatchs'}

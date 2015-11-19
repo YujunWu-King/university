@@ -20,6 +20,7 @@
 		    },
 		    border: false,
 		    bodyPadding: 10,
+		    ignoreLabelWidth: true,
 		  	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 				
 		    fieldDefaults: {
@@ -82,7 +83,7 @@
 					xtype: 'button',
 					text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.viewSJR","查看收件人信息"),
 					ignoreChangesFlag: true,
-					maxWidth: 170,
+					maxWidth: 210,
 					margin: '0 0 10 105',
 					handler: function(btn){
 						var contentPanel,cmp, className, ViewClass;

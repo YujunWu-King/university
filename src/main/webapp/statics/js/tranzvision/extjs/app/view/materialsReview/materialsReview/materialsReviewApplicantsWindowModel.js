@@ -9,6 +9,9 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppl
         {name: 'gender'},
         {name: 'czPCName'},
         {name: 'FirstTrialStatus'},
-        {name: 'realName'}
+        {name: 'realName'},
+        {name: 'colorType'},
+        {name: 'submitTime'},
+        {name: 'GjBkfx'}
     ]
 });

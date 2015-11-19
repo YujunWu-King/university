@@ -27,6 +27,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.exportExcel.ex
         var tabPanel = win.lookupReference("exportExcelTabPanel");
         Ext.tzSubmit(tzParams,function(responseData){
             tabPanel.setActiveTab(1);
+			tabPanel.child("grid").store.reload();
             },"",true,this);
     },
     exportExcelWindowClose: function(btn){

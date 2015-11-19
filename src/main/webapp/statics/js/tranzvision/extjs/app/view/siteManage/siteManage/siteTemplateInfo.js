@@ -38,6 +38,7 @@
         items: [{
             xtype: 'textfield',
             readOnly:true,
+			fieldStyle:'background:#F4F4F4',
             fieldLabel: '站点编号',
 			name: 'siteId',
 			value: 'NEXT'

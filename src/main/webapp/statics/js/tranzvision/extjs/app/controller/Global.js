@@ -5,6 +5,7 @@ Ext.define('KitchenSink.controller.Global', {
         'KitchenSink.view.thumbnails.Thumbnails',
         'KitchenSink.store.Thumbnails',
         'KitchenSink.store.Navigation',
+        'KitchenSink.view.common.externalLinkPanel',
         'KitchenSink.view.common.store.appTransStore',//translateValue使用
         'KitchenSink.view.common.store.comboxStore',//下拉框
         'KitchenSink.view.orgmgmt.initOrgInfo',
@@ -342,24 +343,35 @@ Ext.define('KitchenSink.controller.Global', {
                 // </debug>
             }
 
-            cmp = new ViewClass();
-            cmp.currentNodeId = id;
+            if(node.get('isNewWin')&&node.get('isExternalLink')){
+                window.open(node.get('externalLink'));
+            }else{
+                if(node.get('isExternalLink')){
+                    cmp = new KitchenSink.view.common.externalLinkPanel({
+                        title:node.get('text'),
+                        externalLink:node.get('externalLink')
+                    });
+                }else{
+                    cmp = new ViewClass();
+                }
+                cmp.currentNodeId = id;
 
-            tab = contentPanel.add(cmp);
-            tab.on(Ext.tzTabOn(tab,cmp,cmp,me));
+                var tab = contentPanel.add(cmp);
+                tab.on(Ext.tzTabOn(tab,cmp,cmp,me));
+                contentPanel.setActiveTab(tab);
 
-            contentPanel.setActiveTab(tab);
-			 
-            this.setupPreview(clsProto);
+                this.setupPreview(clsProto);
 
-            this.updateTitle(node);
-			
-            //2015-03-06-禁止出现滚动条
-            contentPanel.setOverflowXY("hidden","hidden");
+                this.updateTitle(node);
 
-            if (cmp.floating) {
-                cmp.show();
+                //2015-03-06-禁止出现滚动条
+                contentPanel.setOverflowXY("hidden","hidden");
+
+                if (cmp.floating) {
+                    cmp.show();
+                }
             }
+
         }
 
         var tmpId = id;
@@ -420,7 +432,7 @@ Ext.define('KitchenSink.controller.Global', {
             });
             subMenuPanel.currentNodeId = tmpId;
 
-            tmpMenuTab = contentPanel.insert(0,subMenuPanel);
+            tmpMenuTab = contentPanel.insert(1,subMenuPanel);
             tmpMenuTab.on(Ext.tzTabOn(tmpMenuTab,subMenuPanel,subMenuPanel,me));
 
             if(node.isLeaf() == false)

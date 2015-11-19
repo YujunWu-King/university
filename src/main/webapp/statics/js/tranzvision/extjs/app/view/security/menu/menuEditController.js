@@ -122,8 +122,9 @@
 							 
 							 form.findField("NodeType").setValue("");
 							 form.findField("operateNode").setValue("");
-							 form.findField("menuId").setReadOnly(true); 
-							 view.actType = "update";
+							 form.findField("menuId").setReadOnly(true);
+                             form.findField("menuId").addCls('lanage_1');
+                 view.actType = "update";
           	 }else{
           	 	  Ext.Msg.alert("提示","保存失败");
           	 }
@@ -295,6 +296,7 @@
 						 form.findField("operateNode").setValue(menuId);
 						 form.findField("rootNode").setValue(rootNode);
 						 form.findField("menuId").setReadOnly(false);
+                         form.findField("menuId").removeCls('lanage_1');
 						 bt.findParentByType("menuEdit").actType = "add";
 					 }
 			 }else{
@@ -322,6 +324,7 @@
 				 form.findField("operateNode").setValue(menuId);
 				 form.findField("rootNode").setValue(rootNode);
 				 form.findField("menuId").setReadOnly(false);
+                 form.findField("menuId").removeCls('lanage_1');
 				 bt.findParentByType("menuEdit").actType = "add";
 			 }else{
 				 Ext.Msg.alert("提示","请先保存当前节点才能添加该节点的子节点");

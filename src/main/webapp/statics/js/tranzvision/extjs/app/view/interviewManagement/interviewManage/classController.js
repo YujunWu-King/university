@@ -38,7 +38,9 @@
 
 		win.show();
     },
-
+    onPanelClose:function(btn){
+        btn.up('panel').close();
+    },
 	chooseMsBatch:function(grid, rowIndex, colIndex){
         var batchWindow = grid.up('window');
 
@@ -481,20 +483,20 @@
                             {
                                 text:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarExport","导出面试安排excel表"),
                                 tooltip:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarExportTip","导出面试安排excel表"),
-                                iconCls:"",
+                                iconCls:"excel",
                                 handler:"msResExport"
                             },"-",
                             {
                                 text:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarImport","导入面试结果"),
                                 tooltip:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarImportTip","导入面试结果"),
-                                iconCls:"",
+                                iconCls:"excel",
                                 handler:'impItwRes'
                             },
                             "-",
                             {
                                 text:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarPubRes","面试结果公布"),
                                 tooltip:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarPubResTip","面试结果公布"),
-                                iconCls:"",
+                                iconCls:"publish",
                                 handler:'pubItwResPl'
                              },
                             '->',
@@ -506,10 +508,12 @@
                                 menu:[
                                     {
                                         text:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarSendEmail","发送面试结果邮件"),
-                                        handler:'sendEmail'
+                                        handler:'sendEmail',
+                                        iconCls:"email"
                                     },{
                                         text:Ext.tzGetResourse("TZ_MS_MGR_COM.TZ_MS_IVWMGR_STD.tbarViewAllStu","考生面试情况一览表"),
-                                        handler:'msArrPreview'
+                                        handler:'msArrPreview',
+                                        iconCls:"preview"
                                     }
                                 ]
                             }

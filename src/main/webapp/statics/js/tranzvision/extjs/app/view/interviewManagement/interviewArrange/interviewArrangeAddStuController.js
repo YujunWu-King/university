@@ -60,6 +60,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     }
                 };
             },"",true,this);
+        }else{
+            Ext.tzShowToast('保存成功','提示','t','#ffffff');
         };
     },
     //确定

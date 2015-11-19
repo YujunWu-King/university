@@ -20,7 +20,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             //var grid = panel.child('grid');
             //if(grid)grid.setHeight( height -buttonHeight-16);
             var grid = panel.child('grid[name=interviewArrangeAddStuGrid]');
-            grid.setHeight( height -buttonHeight-16);   
+            var formHeight = panel.child('form').getHeight();
+            grid.setHeight( height -buttonHeight-formHeight-16);
         }
     },
     initComponent: function (){
@@ -32,7 +33,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         var mszgFlagSortFilterOptions=[];
         mszgFlagStore.addListener("load",function(store, records, successful, eOpts){
             for(var i=0;i<records.length;i++){
-                mszgFlagSortFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+                mszgFlagSortFilterOptions.push([records[i].data.TSDesc,records[i].data.TSDesc]);
             };
         });
         //考生类型
@@ -76,7 +77,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     align: 'stretch'    // 控件横向拉伸至容器大小
                 },
                 border: false,
-                //bodyPadding: 10,
+                bodyPadding: 10,
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelWidth: 120,
@@ -92,8 +93,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.className","报考班级") ,
                     name: 'className',
                     fieldStyle:'background:#F4F4F4',
-                    readOnly:true,
-                    hidden:true
+                    readOnly:true
                 },{
                     xtype: 'textfield',
                     fieldLabel: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.batchID","面试批次ID"),
@@ -138,8 +138,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     filter: {
                         type: 'number'
                     },
-                    minWidth:125,
-                    flex:1
+                    width:105
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.stuName","姓名") ,
                     dataIndex: 'stuName',
@@ -147,16 +146,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         type: 'string'
                     },
                     minWidth: 100,
-                    flex:1
-                },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.className","报考班级") ,
-                    dataIndex: 'className',
-                    filter: {
-                        type: 'string',
-                        //value:curClassName
-                        active:true
-                    },
-                    minWidth: 200,
                     flex:1
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.msCLPSPC","材料评审批次") ,
@@ -172,8 +161,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     filter: {
                         type: 'list',
                         options: mszgFlagSortFilterOptions,
-                        value:'Y',
-                        active:true
+                        value:'Y'
+                        //active:true
                     },
                     renderer : function(value, metadata, record) {
                         //alert("render"+value);
@@ -183,26 +172,15 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         }
                         return record.get('msZGFlag');
                     },
-                    minWidth:120,
-                    flex:1
+                    width:106
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.lxEmail","邮箱") ,
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.isConfTimezone","是否已确认时区") ,
+                    dataIndex: 'isConfTimezone',
                     filter: {
-                        type: 'string'
+                        type: 'list',
+                        options:['是','否']
                     },
-                    sortable: true,
-                    dataIndex: 'lxEmail',
-                    minWidth: 180,
-                    flex:1
-                },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.label","标签") ,
-                    filter: {
-                        type: 'string'
-                    },
-                    sortable: true,
-                    dataIndex: 'label',
-                    minWidth: 200,
-                    flex:2
+                    width: 130
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.sort","考生类型") ,
                     filter: {
@@ -224,6 +202,24 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         }
                     }
                 },{
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.label","标签") ,
+                    filter: {
+                        type: 'string'
+                    },
+                    sortable: true,
+                    dataIndex: 'label',
+                    minWidth: 200,
+                    flex:2
+                },{
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.lxEmail","邮箱") ,
+                    filter: {
+                        type: 'string'
+                    },
+                    sortable: true,
+                    dataIndex: 'lxEmail',
+                    minWidth: 180,
+                    flex:1
+                }/*,{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.earlyDecision","early decision") ,
                     xtype:'datecolumn',
                     format:'Y-m-d',
@@ -235,7 +231,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     dataIndex: 'earlyDecision',
                     minWidth: 105,
                     flex:1
-                }]
+                }*/]
             }]
         });
         this.callParent();

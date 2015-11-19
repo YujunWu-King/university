@@ -31,16 +31,17 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
     dockedItems:[{
         xtype:"toolbar",
         items:[
-            {text:"查询",tooltip:'查询',iconCls:"query",handler:'findWjmb'},'-',
-            {text:"新增",tooltip:"新增",iconCls:"add",handler:'addWjmb'},'-',
-            {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjmb'},'->'
+            {text:"查询",iconCls:"query",handler:'findWjmb'},'-',
+            {text:"新增",iconCls:"add",handler:'addWjmb'},'-',
+            {text:'删除',iconCls:"remove",handler:'deleteWjmb'},'->'
         ]
     }],
     initComponent: function () {
         var store = new KitchenSink.view.template.survey.temp.zxdcMbListStore();
         Ext.apply(this, {
             columns: [
-                new Ext.grid.RowNumberer() ,{
+               // new Ext.grid.RowNumberer() ,
+                {
                     text:Ext.tzGetResourse("TZ_ZXDC_MBGL_COM.TZ_ZXDC_MBGL_STD.TZ_APP_TPL_ID","模板ID"),
                     sortable: true,
                     dataIndex: 'TZ_APP_TPL_ID',
@@ -50,6 +51,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
                     sortable: true,
                     dataIndex: 'TZ_APP_TPL_MC',
                     width: 320,
+                    allowBlank:false,
                     flex: 1
                 },{text: '状态',
                     dataIndex: 'TZ_EFFEXP_ZT',
@@ -75,7 +77,6 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
                         {iconCls:'copy',tooltip:'复制',handler:'copyWjmb'},
                         {iconCls: 'preview',tooltip:'预览',handler:'previewWjmb'},
                         {iconCls: 'set',tooltip: '设置',handler:'setWjmb'},
-                       // {iconCls: 'pass',tooltip: '使用',handler:'useWjmb'},
                         {iconCls:'import',tooltip:'逻辑',handler:'onLogicalSet'}
                     ]
                 }],

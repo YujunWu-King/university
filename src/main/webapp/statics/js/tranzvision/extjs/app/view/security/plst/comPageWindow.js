@@ -54,12 +54,14 @@ Ext.define('KitchenSink.view.security.plst.comPageWindow', {
             xtype: 'textfield',
             fieldLabel: '组件ID',
             name: 'comID',
-            readOnly:true
+            readOnly:true,
+            fieldStyle:'background:#F4F4F4'
         }, {
             xtype: 'textfield',
             fieldLabel: '组件名称',
             name: 'comName',
-            readOnly:true
+            readOnly:true,
+            fieldStyle:'background:#F4F4F4'
         }]
     },{
         xtype: 'grid',

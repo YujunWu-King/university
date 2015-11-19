@@ -276,7 +276,7 @@ Ext.define('KitchenSink.view.security.menu.menuEditPanel', {
 
                     },{
 											layout: {
-												type: 'column',
+												type: 'column'
 											},
 											items:[{
 												columnWidth:.55,
@@ -370,7 +370,8 @@ Ext.define('KitchenSink.view.security.menu.menuEditPanel', {
 							rootNode: me.menuId,
 							comName: rootNode.data.comName
 	         });
-	         form.findField("menuId").setReadOnly(true);              		
+	         form.findField("menuId").setReadOnly(true);
+             form.findField("menuId").addCls('lanage_1');
         }
     },
 

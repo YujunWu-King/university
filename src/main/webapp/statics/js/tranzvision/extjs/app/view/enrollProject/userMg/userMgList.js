@@ -44,6 +44,10 @@
 				},{
 					text:'关闭账号',
 					handler:'deleteUser'
+				},{
+					text:'邮件发送历史',
+					iconCls: 'mail',
+					handler:'viewMailHistory'	
 				}]
 			}
 		]

@@ -13,10 +13,10 @@ Ext.Loader.setConfig({
 
 Ext.require(['Ext.grid.*', 'Ext.window.Window', 'Ext.container.Viewport', 'Ext.layout.container.Border', 'Ext.state.*', 'Ext.data.*', 'Ext.grid.plugin.BufferedRenderer','Ext.ux.colorpick.Field']);
 
-var urlBegin = "http://101.200.181.213:8550/psc/ALTZDEV/EMPLOYEE/CRM/s";
+var urlBegin = "/psc/ALTZDEV/EMPLOYEE/CRM/s";
 var editEnrollFieldComponentID = "_A0000041";
 /*网站首页个人信息展示选择页面*/
-var editPersonInfoComponentID="_A0000089";
+var editPersonInfoComponentID="_A0000090";
 /*
 function getQueryString(name) { 
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
@@ -1846,7 +1846,7 @@ gridPanel.on("cellclick", function(grid, td, cellIndex, record, tr, rowIndex, e,
 						
 						while (i < obj.comContent.length)
 						{
-							var begin = (obj.comContent).indexOf("<script",i);
+							var begin = (obj.comContent).indexOf("<script>",i);
 							var end;
 							if (begin>0)
 							{

@@ -30,6 +30,7 @@ Ext.define('KitchenSink.view.template.survey.report.CrosstabReport.jcbbQuestionL
             items: [{
                 xtype: 'form',
                 reference: 'jcbbQuestionListForm',
+                ignoreChangesFlag: true,
                 layout: {
                     type: 'vbox',       // Arrange child items vertically
                     align: 'stretch'    // 控件横向拉伸至容器大小
@@ -66,6 +67,7 @@ Ext.define('KitchenSink.view.template.survey.report.CrosstabReport.jcbbQuestionL
                 frame: true,
                 name: 'jcbbQuestionListGrid',
                 reference: 'jcbbQuestionListGrid',
+                ignoreChangesFlag: true,
                 store: jcbbQuestionListGridStore,
                 columnLines: true,    //显示纵向表格线
                 selModel:{
@@ -75,13 +77,8 @@ Ext.define('KitchenSink.view.template.survey.report.CrosstabReport.jcbbQuestionL
                 dockedItems:[{
                     xtype:"toolbar",
                     items:[{
-                        xtype:"displayfield",
-                        fieldLabel:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_JCBBLB_STD.selectQuestions","请选择生成交叉报表的问题:"),
-                        labelWidth:200,
-                        height:30
-                        //tooltip:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_JCBBLB_STD.generateReportTip","根据选择问题生成交叉报表"),
-                        //iconCls:"",
-                        //handler:'generateReport'
+                        xtype:"label",
+                        text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_JCBBLB_STD.selectQuestions","请选择生成交叉报表的问题:")
                     }]
                 }],
                 columns: [{
@@ -105,8 +102,8 @@ Ext.define('KitchenSink.view.template.survey.report.CrosstabReport.jcbbQuestionL
     },
     buttons: [{
         text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_JCBBLB_STD.butNext","下一步") ,
-        //iconCls:"",
-        handler:'generateReport'
+        iconCls:"next",
+        handler:'batchGenerateReport'
     },{
         text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_JCBBLB_STD.butClose","关闭") ,
         iconCls:"close",

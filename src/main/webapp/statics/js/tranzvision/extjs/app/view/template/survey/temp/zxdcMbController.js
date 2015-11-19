@@ -4,7 +4,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
    /*新增问卷模板*/
     addWjmb:function(btn){
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_MBGL_COM"]["TZ_ZXDC_MBSZ_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_MBGL_COM"]["TZ_ZXDC_XJMB_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -12,7 +12,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZXDC_MBSZ_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZXDC_XJMB_STD，请检查配置。');
             return;
         }
 
@@ -43,7 +43,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
                     themeName + '\'. Is this intentional?');
             }
         }
-        var win = this.lookupReference('myZxdcMbszWindow');
+        var win = this.lookupReference('newZxdcMbWindow');
         if (!win) {
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
@@ -51,13 +51,6 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
             var form = win.child('form').getForm();
             this.getView().add(win);
         }
-       /* var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_MBSZ_STD","OperateType":"QF","comParams":{"tplId":"'+tplId+'"}}';
-        //加载数据
-        Ext.tzLoad(tzParams,function(responseData){
-            var formData = responseData.formData;
-            console.log(formData);
-            form.setValues(formData);
-        });*/
         win.show();
     },
     /*新增页面 关闭按钮*/
@@ -87,15 +80,15 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
                 function(i) {
                     if (this.style.backgroundColor == "rgb(173, 216, 230)") {
                             tplId = this.getAttribute("data-id");
-                            return false;
+                            //return false;
                     }
                 });
         } else {
             tplId = "";
         }
-        console.log(tplId);
         if (tplName) {
             var tzStoreParams = '{"add":[{"id":"' + tplId + '","name":"' + tplName + '"}]}';
+            console.log(tplId);
             var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_XJMB_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
             Ext.tzSubmit(tzParams,
                 function(jsonObject) {
@@ -169,7 +162,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         Ext.MessageBox.prompt('复制模板', '请输入另存模板的名称:', this.showResultText, this);
     },
     showResultText: function(id, text) {
-        console.log(this.TZ_APP_TPL_ID,text);
+       // console.log(this.TZ_APP_TPL_ID,text);
         Ext.tzSetCompResourses("TZ_ZXDC_MBGL_COM");
         if (id == "ok") {
             if (text) {
@@ -178,13 +171,18 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
                 var tzStoreParams = '{"add":[{"id":"' + this.TZ_APP_TPL_ID + '","name":"' + text + '"}]}';
                 var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM" ,"PageID":"TZ_ZXDC_XJMB_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
                 Ext.tzSubmit(tzParams,
-                    function(jsonObject) {
+                    function(data) {
                         store.reload();
+                       //如果创建成功，直接跳转到编辑页面
+                       var tplId=data.id;
+                        var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
+                        var newTab=window.open('about:blank');
+                        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
                     },"",true,this);
             } else {
-                /*模板名称不能为空*/
                 Ext.MessageBox.alert('提示', '新的模板名称不能为空！');
-                return;
+                // Ext.MessageBox.prompt('复制模板', '请输入另存模板的名称:', this.showResultText, this);
+                //return;
             }
         }
         return;
@@ -231,7 +229,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
                 }
                 clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
             }
-            // <debug warn>
+
             // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
             if (!clsProto.themeInfo) {
                 Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
@@ -250,7 +248,6 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         //加载数据
         Ext.tzLoad(tzParams,function(responseData){
             var formData = responseData.formData;
-            console.log(formData);
             form.setValues(formData);
         });
         win.show();
@@ -314,8 +311,13 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
 		var newTab=window.open('about:blank');
 	  	newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
     },
-    previewWjmb:function(){
-        alert("预览");
+    /*问卷模板预览*/
+    previewWjmb:function(view,rowIndex){
+        var selRec = view.getStore().getAt(rowIndex);
+        var tplId = selRec.get("TZ_APP_TPL_ID");
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"TPL","SURVEY_ID":"' + tplId + '"}}';
+        var newTab=window.open('about:blank');
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
     }, /*新增窗口保存*/
     onNewWjEnsure:function(btn){
         Ext.tzSetCompResourses("TZ_ZXDC_WJGL_COM");
@@ -350,7 +352,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
     onLogicalSet:function(view,rowindex){
       var selRec = view.getStore().getAt(rowindex);
       var tplId = selRec.get("TZ_APP_TPL_ID");
-/*
+	/*
 	 // var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_LJGZ_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":' + tplId + '}}';
 	  var newTab=window.open('about:blank');
 	  //newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
@@ -371,7 +373,6 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
 		move : true,
 		iframe: {src: logicUrl}
 	});
-	
     }
 });
 

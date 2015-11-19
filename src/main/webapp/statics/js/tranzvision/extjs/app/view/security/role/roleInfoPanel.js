@@ -94,6 +94,15 @@
             dataIndex: 'permDesc',
             minWidth: 300,
             flex: 1
+        },{
+            menuDisabled: true,
+            sortable: false,
+            width:40,
+            xtype: 'actioncolumn',
+            items:[
+                {iconCls: 'edit',tooltip: '编辑',handler:'editRoleInfoSave'},
+                {iconCls: 'remove',tooltip: '删除',handler:'deleteRoleInfoSave'}
+            ]
         }],
         bbar: {
             xtype: 'pagingtoolbar',

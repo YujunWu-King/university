@@ -77,6 +77,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                     valueField:'TValue',
                     queryMode:'local',
                     editable:false,
+                    ignoreChangesFlag:true,
                     renderer:function(v){
                         var x;
                         if((x = fileTypeStore.find('TValue',v,0,false,false,false))>=0){
@@ -95,6 +96,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                     valueField:'TValue',
                     queryMode:'local',
                     editable:false,
+                    ignoreChangesFlag:true,
                     renderer:function(v){
                         var x;
                         if((x = isFinishedStore.find('TValue',v,0,false,false,false))>=0){
@@ -110,6 +112,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
     },
     buttons:[
         {text:'导出',iconCls:'excel',handler:function(btn){
+            btn.findParentByType("panel").mask('正在导出...');
             var form = btn.findParentByType("panel").down("form").getForm(),
                 onlinedcName = form.findField("onlinedcName").getValue()
                 onlinedcID = form.findField("onlinedcID").getValue(),
@@ -119,7 +122,6 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                 '"OperateType":"QG","comParams":{"onlinedcId":"'+onlinedcID+'","fileType":"'+filetype+'","status":"'+status+'"}}';
             Ext.tzLoad(tzParams,function(respData){
                 //设置导出excel的一些基本属性
-                console.log(respData);
                 var exporter = new tranzvision.extension.exporter.Excel();
                 exporter.setAuthor("tranzvision");
                 exporter.setCharset("utf-8");
@@ -225,7 +227,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                 //colMerge
                 //exporter.buildHeader();
                 //标题
-                exporter.addTitle(config, colMerge);
+                exporter.addTitle(config, colMerge+1);
                 //表头
                 var header = exporter.table.addRow({
                         height: 20.25,
@@ -294,12 +296,16 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                             }
                             //根据信息项添加之后所有的信息项列
                             for(var m=0;m<len;m++){
+                                var former = 0;
+                                for(var f=0;f<m;f++){
+                                    former+=cellsIndex[f];
+                                }
                                 switch (Object.prototype.toString.call(respData.APPINS[x][m])){
                                     case "[object Array]":
                                     //多项
                                     var sub = respData.DHCC[respData.XXXBH[m]][respData.APPINS[x][m][n]-1];
                                     thisRow.addCell({
-                                        index:m+2,
+                                        index:former+2,
                                         value:sub?sub:"",
                                         styleId:exporter.cellStyleId
                                     });  
@@ -325,7 +331,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                         //表格选择第一行用来构建表头
                                         //第一列显示子选项（表头的子选项为空）
                                         thisRow.addCell({
-                                            index:m+2,
+                                            index:former+2,
                                             value:"",
                                             styleId:exporter.cellStyleId
                                         });
@@ -335,7 +341,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                                 if(respData.APPINS[x][m].hasOwnProperty(l)){
                                                     for(var k in respData.APPINS[x][m][l]){x
                                                         thisRow.addCell({
-                                                            index:m+2+moreCell,
+                                                            index:former+2+moreCell,
                                                             value:k,
                                                             styleId:exporter.cellStyleId
                                                         });
@@ -343,12 +349,10 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                                         moreCell++;
                                                     }
                                                         if(moreCell<cellsIndex[m]){
-                                                            console.log(cellsIndex[m]+" m:"+m);
-                                                            console.log(moreCell);
                                                             //未达到列数，用空列补足
                                                             for(var a=0;a<cellsIndex[m]-moreCell;a++){
                                                                 thisRow.addCell({
-                                                                    index:m+2+moreCell+a,
+                                                                    index:former+2+moreCell+a,
                                                                     value:"",
                                                                     styleId:exporter.cellStyleId
                                                                 });
@@ -361,7 +365,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                         }else{
                                             for(var l=0;l<cellsIndex[m]-1;l++){
                                                 thisRow.addCell({
-                                                    index:m+2+moreCell,
+                                                    index:former+2+moreCell,
                                                     value:"",
                                                     styleId:exporter.cellStyleId
                                                 });
@@ -374,7 +378,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                         moreCell = 1;
                                         for(var l in respData.APPINS[x][m]){
                                             thisRow.addCell({
-                                                index:m+2,
+                                                index:former+2,
                                                 value:l,
                                                 styleId:exporter.cellStyleId
                                             });
@@ -386,7 +390,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                             var moreCell = 1;
                                             for(var k in respData.APPINS[x][m][thisSub]){
                                                 thisRow.addCell({
-                                                    index:m+2+moreCell,
+                                                    index:former+2+moreCell,
                                                     value:respData.APPINS[x][m][thisSub][k],
                                                     styleId:exporter.cellStyleId
                                                 });
@@ -394,12 +398,10 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                             }
                                             //补足列
                                             if(moreCell<cellsIndex[m]){
-                                                console.log(cellsIndex[m]+" m:"+m);
-                                                console.log(moreCell);
                                                 //未达到列数，用空列补足
                                                 for(var a=0;a<cellsIndex[m]-moreCell;a++){
                                                     thisRow.addCell({
-                                                        index:m+2+moreCell+a,
+                                                        index:former+2+moreCell+a,
                                                             alue:"",
                                                         styleId:exporter.cellStyleId
                                                     });
@@ -409,7 +411,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                                             //表头列也需要补足，所以index从m+1开始
                                             for(var l=0;l<cellsIndex[m];l++){
                                                 thisRow.addCell({
-                                                    index:m+1+moreCell,
+                                                    index:former+1+moreCell,
                                                     value:"",
                                                     styleId:exporter.cellStyleId
                                                 });
@@ -433,7 +435,7 @@ Ext.define('KitchenSink.view.template.survey.report.dataOutput.dataOuputInfoPane
                 }
                 
                 tranzvision.extension.exporter.File.saveAs(exporter.workbook.render(), exporter.getFileName(), exporter.getCharset());
-            
+                btn.findParentByType("panel").unmask();
             });
         }},
         {text:'关闭',iconCls:'close',handler:function(btn){

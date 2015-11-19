@@ -37,18 +37,17 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
         },
         dockedItems:[{
             xtype:'toolbar',
-            items:[{
-                text:"清除筛选条件",tooltip:"清除筛选条件", handler:"clearCondition"
-            }]
+            items:[
+                {text:"清除筛选条件",tooltip:"清除筛选条件", handler:"clearCondition"},"-",
+                {text:"搜索",iconCls:'query',tooltip:"从所有考生中搜索",handler:"searchFromAll"}
+            ]
         }],
         columns: [
             {
-                dataIndex: 'classID',
-                hidden: true
-            }, {
-                dataIndex: 'batchID',
-                hidden: true
-            }, {
+                text:'行号',
+                xtype:'rownumberer',
+                minWidth:35
+            },{
                 text: "姓名",
                 dataIndex: 'realName',
                 minWidth: 75,
@@ -79,14 +78,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                 }
             },{
                 text:"报考批次",
-                dataIndex:'batchName',
+                dataIndex:'batchID',
                 minWidth:100,
                 flex:1,
                 filter: {
-                    type: 'string',
-                    itemDefaults: {
-                        emptyText: 'Search for...'
-                    }
+                    type: 'list'
                 }
             },{
                 text:"参与批次",
@@ -96,7 +92,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                 filter: {
                     type: 'string',
                     itemDefaults: {
-                        emptyText: 'Search for...'
+                        emptyText: 'Search for...',
                     }
                 }
             },{
@@ -105,7 +101,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                 minWidth:150,
                 filter: {
                     type: 'list',
-                    value:'是'
+                    options:['是','无','待定']
                 }
 
             }

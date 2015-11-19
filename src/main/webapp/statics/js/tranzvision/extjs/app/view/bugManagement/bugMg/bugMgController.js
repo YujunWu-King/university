@@ -535,7 +535,7 @@ Ext.define("KitchenSink.view.bugManagement.bugMg.bugMgController", {
                     var picViewCom;
 
                     tzParams = '{"attachmentType":"' + attachmentType + '","data":' + Ext.JSON.encode(action.result.msg) + '}';
-                    tzParams = '{"ComID":"TZ_BUGMG_COM","PageID":"TZ_BUG_INFO_STD","OperateType":"HTML","comParams":' + tzParams +'}';
+                    tzParams = '{"ComID":"TZ_BUG_COM","PageID":"TZ_BUG_INFO_STD","OperateType":"HTML","comParams":' + tzParams +'}';
 
                     Ext.Ajax.request({
                         //url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_ATT_D.TZ_GD_ATT_FILE.FieldFormula.Iscript_AddArtAttach',
@@ -894,7 +894,10 @@ Ext.define("KitchenSink.view.bugManagement.bugMg.bugMgController", {
                 rec.set('estDate',formData.estDate);
                 rec.set('expDate',formData.expDate);
                 rec.set('recOpr',formData.recOprName);
-                rec.set('resOpr',formData.resOprName);
+                if (formData.resOprName){
+                rec.set('resOpr',formData.resOprName);}
+                else{
+                    rec.set('resOpr','空');}
                 switch (formData.priority)
                 {
                     case '0':
@@ -953,7 +956,10 @@ Ext.define("KitchenSink.view.bugManagement.bugMg.bugMgController", {
                         break;
                 };
                 rec.commit();
-                store.commitChanges();
+//                store.commitChanges();
+                setTimeout(function(){
+                    store.commitChanges();
+                },400);
             }
         }
         else{
@@ -1019,6 +1025,12 @@ Ext.define("KitchenSink.view.bugManagement.bugMg.bugMgController", {
                      bugStatus='暂时搁置';
                      break;
              };
+            var resOprName;
+            if(formData.resOprName){
+                resOprName=formData.resOprName;
+            }else{
+                resOprName='空';
+            }
              var rec = new KitchenSink.view.bugManagement.bugMg.bugModel({
                  orgID: Ext.tzOrgID,
                  bugID:formData.bugID,
@@ -1033,7 +1045,7 @@ Ext.define("KitchenSink.view.bugManagement.bugMg.bugMgController", {
                  recOpr:formData.recOprName,
                  recDate:formData.recDate,
                  estDate:formData.estDate,
-                 resOpr:formData.resOprName,
+                 resOpr:resOprName,
                  expDate:formData.expDate,
                  bugMigration:bugMigration,
                  module:formData.bugGNMK

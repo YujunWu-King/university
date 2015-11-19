@@ -1,7 +1,11 @@
 ﻿Ext.define('KitchenSink.view.ContentPanel', {
     extend: 'Ext.tab.Panel',
     xtype: 'contentPanel',
-    requires:['Ext.ux.TabCloseMenu', 'tranzvision.extension.ContentPanelMaximize'],
+    requires:[
+        'Ext.ux.TabCloseMenu',
+        'tranzvision.extension.ContentPanelMaximize',
+        'KitchenSink.view.home.Home'
+    ],
     id: 'tranzvision-framework-content-panel',
     plugins:[
         {
@@ -13,6 +17,15 @@
         },
         {
             ptype:'contentpanelmaximize'
+        }
+    ],
+    items:[
+        {
+            xtype:'home',
+            id:'tranzvision-framework-home-panel',
+            title:TranzvisionMeikecityAdvanced.Boot.languagePackage['tz-frmwrk-lang-00014'],
+            closable:false,
+            tabIndex:-1
         }
     ],
     showTitle: true,

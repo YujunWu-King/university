@@ -21,6 +21,9 @@
     viewConfig: {
         enableTextSelection: true
     },
+    selModel: {
+        type: 'checkboxmodel'
+    },
     reference:"smtDtlist",
 	header:false,
 	frame: true,
@@ -28,35 +31,44 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.save","保存"),iconCls:"save",handler:"saveSmtDtTmp"}]
+		items:['->',{minWidth:80,text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.save","保存"),iconCls:"save",handler:"saveSmtDtTmp"},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.ensure","确定"),iconCls:"ensure",handler:"ensureSmtDtTmp"},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.close","关闭"),iconCls:"close",handler:"closeSmtDtTmp"}]
 		},{
 		xtype:"toolbar",
 		items:[
-			//{text:"查询",tooltip:"查询数据",iconCls:"query"},"-",
-			{text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.add","新增"),iconCls:"add",handler:'addSmtDataModel'}
-			//{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:'editTranslate'},"-",
-			//{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteTranslates'}
+			{text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.query","查询"),iconCls:"query",handler:'querySmtDataModel'},"-",
+			{text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.add","新增"),iconCls:"add",handler:'addSmtDataModel'},"-",
+			{text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.edit","编辑"),iconCls:"edit",handler:'editSmtDataModel'},"-",
+			{text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.delete","删除"),iconCls:"remove",handler:'deleteSmtDataModel'},"->"
 		]
 	}],
     initComponent: function () { 
-	   var store = new KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlStore();
+	    var store = new KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlStore();
         Ext.apply(this, {
             columns: [/*{ 
                 text: '序号',
                 dataIndex: 'sqeNum',
 				width: 100
-            },*/{
+            },*//*{
 			 	xtype: 'rownumberer',
 				text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.number","序号")
-			},{
+			},*/{
                 text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.djzlmxmc","递交资料模型名称") ,
 				dataIndex: 'smtDtName',
                 minWidth: 160,
 				flex:1
             },{
-                text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.enable","启用"),
+                text:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.enable","状态"),
 				dataIndex: 'smtDtStatus',
                 minWidth: 50,
+                renderer:function(v){
+                    if(v=='Y'){
+                        return "启用";
+                    }else{
+                        return "未启用"
+                    }
+                },
 				flex:1
             },{
                menuDisabled: true,

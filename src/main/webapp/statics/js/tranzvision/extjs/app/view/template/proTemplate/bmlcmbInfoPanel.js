@@ -53,7 +53,7 @@
         }, {
             xtype: 'combobox',
             //fieldLabel: '有效状态',
-            fieldLabel: Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.TZ_APPPRO_STATUS","启用"),
+            fieldLabel: Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.TZ_APPPRO_STATUS","状态"),
             forceSelection: true,
             valueField: 'TValue',
             displayField: 'TSDesc',
@@ -74,11 +74,11 @@
         selModel: {
             type: 'checkboxmodel'
         },
-        plugins: {
+       /* plugins: {
             ptype: 'cellediting',
             pluginId: 'dataCellediting',
             clicksToEdit: 1
-        },
+        },*/
         viewConfig: {
             plugins: {
                 ptype: 'gridviewdragdrop',
@@ -102,10 +102,7 @@
             text: Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.TZ_APPPRO_NAME","流程名称"),
             dataIndex: 'TZ_APPPRO_NAME',
             width: 430,
-            flex:1,
-            editor: {
-                xtype:'textfield'
-            }
+            flex:1
         },{
             xtype:'linkcolumn',
             sortable: false,
@@ -134,6 +131,7 @@
             width:60,
             xtype: 'actioncolumn',
             items:[
+                {iconCls:'edit',tooltip:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.edit","编辑"),handler:'editDataInfo'},
                 {iconCls: 'remove',tooltip:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.delete","删除"),handler:'deleteDataInfo'}
             ]
         }],
@@ -145,8 +143,9 @@
             items:[
                 //{text:"查询",tooltip:"查询数据",iconCls: "query"},"-",
                  {text:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.add","新增"),iconCls:"add",handler:'addProDataInfo'},
-                //{text:"新增",tooltip:"添加报名流程",iconCls:"add",handler:'addDataInfo3'},'-',
-                {text:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.set","设置"),iconCls:"edit",handler:'editDataInfo4'}
+                {text:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.edit","编辑"),iconCls:"edit",handler:'editDataInfo5'},
+                ,'-',
+                {text:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.set","设置"),iconCls:"set",handler:'editDataInfo4'}
                 ,'-',
                 {text:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.delete","删除"),iconCls:"remove",handler:'deleteDataInfo3'}
                 ,'->'
@@ -155,7 +154,7 @@
         bbar: {
             xtype: 'pagingtoolbar',
             pageSize: 5,
-           // reference: 'adminUserToolBar',
+            // reference: 'adminUserToolBar',
             //store:new KitchenSink.view.template.proTemplate.bmlcmbdetailModel(),
             listeners:{
                 afterrender: function(pbar){

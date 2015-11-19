@@ -25,21 +25,31 @@
     },
     header:false,
     frame: true,
-    dockedItems:[/*{
-     xtype:"toolbar",
-     dock:"bottom",
-     ui:"footer",
-     items:['->',{minWidth:80,text:"保存",iconCls:"save"}]
-     },*/{
+    dockedItems:[{
         xtype:"toolbar",
         items:[
             {text:"查询",tooltip:"查询数据",iconCls:"query",handler:"queryClassBatch"}
         ]
-    }],
+    },{
+            xtype:"toolbar",
+            dock:"bottom",
+            ui:"footer",
+            items:['->',
+                {
+                    minWidth:80,
+                    text:"关闭",
+                    iconCls:"close",
+                    handler: 'onGridPanelClose'
+                }]
+        }],
     initComponent: function () {
         var store = new KitchenSink.view.interviewManagement.interviewReview.interviewReviewStore(),
-            KSPWPSEHNZT = new KitchenSink.view.common.store.appTransStore("TZ_MSPS_STAGE");
-        KSPWPSEHNZT.load();
+            transValue = this.controller.transvalueCollection = this.controller.transValues(),
+            self = this;
+        transValue.set("TZ_MSPS_STAGE",function(){
+            store.load();
+        });
+
         Ext.apply(this, {
             columns: [{
                 text: '班级编号',
@@ -76,8 +86,9 @@
                 dataIndex: 'status',
                 width:100,
                 align:'center',
-                renderer: function (v,grid,record) {
+                renderer: function (v,grid,record){
                         var x;
+                        var KSPWPSEHNZT = transValue.get("TZ_MSPS_STAGE");
                         v = v?v:'N';
                         if((x = KSPWPSEHNZT.find('TValue',v))>=0){
                             return KSPWPSEHNZT.getAt(x).data.TSDesc;
@@ -108,7 +119,6 @@
                 plugins: new Ext.ux.ProgressBarPager()
             }
         });
-
         this.callParent();
     }
 });

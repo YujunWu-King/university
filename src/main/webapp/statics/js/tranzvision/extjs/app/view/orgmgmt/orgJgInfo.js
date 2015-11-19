@@ -56,6 +56,7 @@
             //fieldLabel: '机构编号',
 			fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgId","机构编号"),
 			name: 'orgId',
+            cls:'lanage_1',
             afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
@@ -63,11 +64,12 @@
         }, {
             xtype: 'textfield',
             //fieldLabel: '机构名称',
+            cls:'lanage_1',
 			fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgName","机构名称"),
 			name: 'orgName'
         }, {
             xtype: 'combobox',
-            //fieldLabel: '有效状态',
+            cls:'lanage_1',
 			fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.stateStore","有效状态"),
 			forceSelection: true,
             valueField: 'TValue',

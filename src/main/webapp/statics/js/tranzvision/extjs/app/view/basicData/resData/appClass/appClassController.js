@@ -123,7 +123,9 @@
 		cmp.on('afterrender',function(panel){
 			
 			var form = panel.child('form').getForm();
-            form.findField("appClassId").setReadOnly(true);
+			var appClassIdField = form.findField("appClassId");
+            appClassIdField.setReadOnly(true);
+            appClassIdField.addCls('lanage_1');/*灰掉应用程序类ID输入框*/
 			//参数
 			var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSINF_STD","OperateType":"QF","comParams":{"appClassId":"'+appClassId+'"}}';
 			//加载数据
@@ -143,7 +145,6 @@
 	
 	onAppClassClose: function(btn){
 		var panel = btn.findParentByType("panel");
-		var form = panel.child("form").getForm();
 		panel.close();
 	},
 	
@@ -166,6 +167,7 @@
 			Ext.tzSubmit(tzParams,function(responseData){
 					panel.actType = "update";	
 					form.findField("appClassId").setReadOnly(true);
+                    form.findField("appClassId").addCls('lanage_1');
 			},"",true,this);
 		}
 	},
@@ -230,14 +232,14 @@
 	   }
 	},
 	saveAppClass: function(btn){
-		//组件注册信息列表
 		var grid = btn.findParentByType("grid");
-		//组件注册信息数据
 		var store = grid.getStore();
 		//删除json字符串
 		var removeJson = "";
 		//删除记录
 		var removeRecs = store.getRemovedRecords();
+
+        var comParams="";
 
 		for(var i=0;i<removeRecs.length;i++){
 			if(removeJson == ""){
@@ -253,7 +255,11 @@
 		var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSLIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
 		Ext.tzSubmit(tzParams,function(){
-			store.reload();			   
+			if(btn.name=="save"){
+				store.reload();	
+			}else{
+				grid.close();
+			}
 		},"",true,this);
 	}
 });

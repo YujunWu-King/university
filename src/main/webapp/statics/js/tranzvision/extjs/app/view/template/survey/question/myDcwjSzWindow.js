@@ -1,30 +1,27 @@
 ﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
-    extend: 'Ext.window.Window',
+    extend: 'Ext.panel.Panel',
     xtype: 'myDcwjSzWindow',
     reference: 'myDcwjSzWindow',
-    title: '调查设置',
-    closable: true,
-    height: 500,
-    width: 800,
-    modal: true,
-    autoScroll: true,
-    bodyStyle: 'padding: 5px;',
+    controller: 'wjdcController',
+    title: '调查问卷设置',
+    bodyStyle:'overflow-y:auto;overflow-x:hidden',
     actType: 'add',
+    parentGridStore:"",
     items: [{
         xtype: 'form',
-      //  reference: 'wjdcSzInfoForm',
+        reference: 'wjdcSzInfoForm',
         layout: {
             type: 'vbox',
             align: 'stretch'
         },
         border: false,
         //bodyPadding: 10,
-        width:700,
+       // width:700,
         style:"margin:8px",
         bodyStyle:'overflow-y:auto;overflow-x:hidden',
         fieldDefaults: {
             msgTarget: 'side',
-            labelWidth: 100,
+            labelWidth: 90,
             labelStyle: 'font-weight:bold'
         },
        items:[
@@ -80,8 +77,8 @@
                        listeners: {
                            change:{
                                fn: function (ch,eOpts ) {
-                                   if(ch.getValue()==1){
-                                        var form= ch.findParentByType("window").child("form").getForm();
+                                   if(ch.getValue()==1){//如果发布状态为‘发布’，那么状态值可以修改；如果为‘未发布’，状态值不能修改
+                                        var form= ch.findParentByType("form").getForm();
                                         var state=form.findField("TZ_DC_WJ_ZT");
                                         state.setReadOnly(false);
                                    }
@@ -99,11 +96,10 @@
                            {
                                columnWidth: .4,
                                xtype: 'textfield',
-                               fieldLabel: "问卷模板",
+                               fieldLabel: "问卷模板ID",
                                name: 'TZ_APP_TPL_ID',
                                editable: false,
                                allowBlank: true,
-
                                triggers: {
                                    search: {
                                        cls: 'x-form-search-trigger',
@@ -118,29 +114,36 @@
                                name: 'TZ_APP_TPL_MC',
                                style: 'margin-left:8px'
                            },{
-                               columnWidth:.25,
-                               xtype:'checkboxfield',
-                               name:'reLoad',
-                               boxLabel:'重新加载模板',
-                               fieldLabel:'重新加载模板',
-                               hideLabel:true,
-                               value:false,
-                               handler:function(checkBox,checked){
-                                       /*Ext.Msg.confirm('提示', '勾选后模板将会被重新加载！', function(btn, text){
-                                           console.log(btn,text);
-                                           if (btn == 'yes'){
-                                             checkBox.checked=true;
-                                           }else{
-                                             checkBox.checked=false;
+                               columnWidth:0.15,
+                               xtype:'button',
+                               text:'重新加载模板',
+                               listeners:{
+                                   click:function(button,e,eOpts ){
+                                       Ext.Msg.confirm('警告', '是否要重新加载模板，点击确定，模板会被重新加载!', function(btn){
+                                           if(btn=='yes'){
+                                               //获得该页面上的问卷ID
+                                               var wjId= button.findParentByType("form").getForm().findField("TZ_DC_WJ_ID").value;
+                                               var tplId=button.findParentByType("form").getForm().findField("TZ_APP_TPL_ID").value;
+                                               //与后台交互，更新该问卷的json报文 U可以是add delete update
+                                               var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_XJWJ_STD","OperateType":"U","comParams":{"update":[{"wjId":"' + wjId + '","tplId":"'+tplId+'"}]}}';
+                                               Ext.tzLoad(tzParams, function (responseData) {
+                                                   console.log(responseData.responseText)
+                                               });
                                            }
-                                       });*/
-                                     if(checked==true) {
-                                       Ext.Msg.alert("提示",'勾选后模板将会被重新加载');
-                                     }
+                                       });
+                                   }
                                }
                            }
+
                        ]
                    },
+                   {
+                    // columnWidth: .6,
+                    xtype:'label',
+                    text:'请注意：问卷仅在开始时间和结束时间期间内对外有效，其他时间调查对象不能进行问卷的填写。',
+                    cls: 'lable_1',
+                    style: 'margin-left:95px'
+                    },
                    {
                        xtype: 'datefield',
                        fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_KSRQ", "开始日期"),
@@ -196,21 +199,28 @@
                        name: 'TZ_DC_JWNR'
                    },
                    {
+                       xtype:'textfield',
+                       fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_URL", "发布URL"),
+                       name:'TZ_DC_WJ_URL',
+                       cls:'lanage_1',
+                       readOnly:true
+                   }, /*
+                   {
                        xtype: 'textfield',
                       // fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_PC_URL", "PC-URL"),
                        fieldLabel:"PC-URL",
                        name: 'TZ_DC_WJ_PC_URL',
-                       cls:'lanage_1',/*显灰样式，表示该字段不可修改*/
+                       cls:'lanage_1',/*显灰样式，表示该字段不可修改
                        readOnly:true
-                   },
-                   {
+                   },*/
+                 /* {
                        xtype: 'textfield',
                       // fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_MB_URL", "移动-URL"),
                        fieldLabel:"移动-URL",
                        name: 'TZ_DC_WJ_MB_URL',
                        cls:'lanage_1',
                        readOnly:true
-                   },
+                   },*/
                    {
                        xtype: 'checkboxfield',
                        fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_DLZT", "非登录用户也可以参与本次调查"),
@@ -232,7 +242,7 @@
                    fieldLabel: '答题规则',
                    msgTarget: 'side',
                    autoFitErrors: false,
-                   id:'dtgz',
+                   name:'dtgz',
                    allowBlank:false,
                    afterLabelTextTpl: [
                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -263,7 +273,7 @@
                        allowBlank: false,
                        msgTarget: 'side',
                        autoFitErrors: false,
-                       id:'sjcjgz',
+                       name:'sjcjgz',
                        afterLabelTextTpl: [
                            '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                        ],
@@ -297,7 +307,8 @@
                        allowBlank: false,
                        msgTarget: 'side',
                        autoFitErrors: false,
-                       id:'wcgz',
+                       name:'wcgz',
+                       hidden:true,
                        afterLabelTextTpl: [
                            '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                        ],
@@ -318,7 +329,7 @@
                                 columnWidth:1
                             }
                         ]
-                   }, {
+                   },/* {
                        xtype: 'radiogroup',
                        fieldLabel: '调查方式',
                        msgTarget: 'side',
@@ -339,7 +350,7 @@
                                      name: 'TZ_DC_WJ_NM',
                                      inputValue: '1',
                                      columnWidth:0.5}]
-                   },{
+                   },*/{
                        xtype: 'checkboxfield',
                        fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_NEEDPWD", "是否启用调查密码"),
                        name: 'TZ_DC_WJ_NEEDPWD',
@@ -350,64 +361,29 @@
                        xtype:'textfield',
                        fieldLabel:'调查密码',
                        name:'TZ_DC_WJ_PWD',
-                       hidden:true,
-                       id:'TZ_DC_WJ_PWD'
+                       hidden:true
+
                    }
                ]
            }]
     }],
     buttons: [{
         text:'发布',
-        iconCls:' publish',
+        iconCls:'publish',
         handler:'onWjdcRelease'
     },{
         text: '保存',
         iconCls: "save",
-        handler: function(btn){
-         
-           var win=btn.findParentByType("window");
-           win.doSave(win);
-        }
+        handler:'onFormSave'
     },{
         text: '确定',
         iconCls: "ensure",
-        handler:function(btn){
-            var win = btn.findParentByType("window");
-            var form = win.child("form").getForm();
-            var grid = btn.findParentByType("wjdcInfo");
-
-            if(!form.isValid()){
-                return false;
-            }
-            var formParams = form.getValues();
-            console.log(formParams);
-            var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
-            Ext.tzSubmit(tzParams,function(response){
-                console.log(response.responseText)
-                grid.store.reload();
-                win.close();
-            },"",true,win);
-        }
+        handler:'onFormEnsure'
     },
       {
         text: '关闭',
         iconCls: "close",
-        handler: function(btn){
-          var win=btn.findParentByType("window");
-          win.close();
-         }
-      }],
-   doSave:function(win){
-       var form = win.child("form").getForm();
-       if(!form.isValid() ){
-           return false;
-       }
-       var formParams = form.getValues();
-       console.log(formParams);
-       var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
-       Ext.tzSubmit(tzParams,function(response){
-           win.findParentByType("wjdcInfo").store.reload();
-       },"",true,this);
+        handler:'onFormClose'
+      }]
 
-   }
 });

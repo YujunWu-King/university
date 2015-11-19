@@ -30,14 +30,14 @@ Ext.define('Ext.exporter.Excel', {
          *
          * Protect structure
          */
-        protectStructure: false,
+        protectStructure: 'False',
 
         /**
          * @cfg {Boolean} protectWindows
          *
          * Protect windows
          */
-        protectWindows: false,
+        protectWindows: 'False',
 
         /**
          * @cfg {Ext.exporter.file.excel.Style} defaultStyle
@@ -169,6 +169,7 @@ Ext.define('Ext.exporter.Excel', {
         me.tableHeaderStyleId = me.workbook.addStyle(config.tableHeaderStyle).getId();
         me.groupHeaderStyleId = me.workbook.addStyle(config.groupHeaderStyle).getId();
         me.groupFooterStyleId = me.workbook.addStyle(config.groupFooterStyle).getId();
+        me.shortDateStyleId = me.workbook.addStyle({name:'Date',format:'Short Date'}).getId();
 
         colMerge = me.getColumnCount(data.columns);
 
@@ -270,6 +271,7 @@ Ext.define('Ext.exporter.Excel', {
     },
 
     buildGroupRows: function(lines){
+        var me = this;
         var l, row, i, j;
 
         if (!lines) {
@@ -281,7 +283,8 @@ Ext.define('Ext.exporter.Excel', {
             l = lines[i];
             for (j = 0; j < l.length; j++) {
                 row.addCell({
-                    value: l[j]
+                    value: l[j],
+                    styleId:(l[j] instanceof Date?me.shortDateStyleId:null)
                 });
             }
         }
@@ -346,3 +349,4 @@ Ext.define('Ext.exporter.Excel', {
     }
 
 });
+''

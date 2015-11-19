@@ -66,6 +66,11 @@
 						value: Ext.tzOrgID,
 						operator:"01",
 						type:"01"
+					},
+					TZ_PRJ_TYPE_STATUS:{
+						value: 'Y',
+							operator:"01",
+							type:"01"
 					}
 				},
 				result:'TZ_PRJ_TYPE_ID,TZ_PRJ_TYPE_NAME'
@@ -177,7 +182,7 @@
 			}]
 		},{
 			layout: {
-				type: 'column',
+				type: 'column'
 			},
 			//bodyStyle:'padding:0 0 10px 0',
 			items:[{
@@ -202,7 +207,7 @@
 			}]
         },{
 			layout: {
-				type: 'column',
+				type: 'column'
 			},
 			items:[{
 				columnWidth:.4,
@@ -230,7 +235,7 @@
 			  plain:false,
 			  resizeTabs:true,
 			  defaults :{
-				  autoScroll: false,
+				  autoScroll: false
 			  },
 			  
 			  listeners:{
@@ -268,7 +273,7 @@
 						name: 'projectDesc',
 						hideLabel: true,
 						height: 300,
-						zIndex: 900,
+						zIndex: 900
 					}]
 			  },{
 	        	  	title: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ZYFX","专业方向"),
@@ -281,16 +286,27 @@
 					name: 'professionGrid',
 					reference: 'professionGrid',
 					style:"margin:10px",
+				 	 selModel: {
+					  	type: 'checkboxmodel'
+					  },
 					store: {
 						type: 'professionStore'
 					},
 					dockedItems:[{
 						xtype:"toolbar",
 						items:[
-							{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.add","新增"),iconCls:"add",handler:"addProfessionAtLast"}
+							//{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.add","新增"),iconCls:"add",handler:"addProfessionAtLast"},"-",
+							{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.add","新增"),iconCls:"add",handler:"addPrjZYFX"},"-",
+							{text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.edit","编辑"),iconCls:"edit",handler:"editPrjZYFX"},"-",
+							{
+								text:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tbarDelete","删除"),
+								tooltip:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tbarTipDelete","删除"),
+								iconCls:"delete",
+								handler:'deleteZYFX'
+							}
 						]
 					}],
-					plugins: {
+					/*plugins: {
 							ptype: 'cellediting',
 							pluginId: 'professionCellediting',
 							clicksToEdit: 1
@@ -302,7 +318,7 @@
 								return false;	
 							}
 						}
-					},
+					},*/
 					viewConfig: {
 						plugins: {
 							ptype: 'gridviewdragdrop',
@@ -349,6 +365,7 @@
 						xtype: 'actioncolumn',
 						align: 'center',
 						items:[
+							{iconCls: 'edit',tooltip:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.delete","编辑"), handler: 'editCurrentRow'},
 							{iconCls: 'remove',tooltip:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.delete","删除"), handler: 'deleteCurrentRow'}
 						]
 					}]

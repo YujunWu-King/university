@@ -13,7 +13,8 @@
             datas = grid.getStore().getAt(rowIndex).data,
             classID = datas.classID,
             batchID =datas.batchID,
-            jugaccStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_REVIEW_RESULT");
+            whichColnums = btn.findParentByType("window").whichColnums,
+            jugaccStatusStore = grid.findParentByType('window').scoreStore;
         if(!jugaccStatusStore.isLoaded()){
             jugaccStatusStore.load();
         }
@@ -23,6 +24,7 @@
             height: 245,
             modal: true,
             frame: true,
+            whichColnums:whichColnums,
             items: [{
                 xtype: 'form',
                 layout: {
@@ -57,9 +59,9 @@
                     }, {
                         xtype: 'combo',
                         fieldLabel: "审议结果",
-                        name: 'ReviewResult',
+                        name: whichColnums,
                         store: jugaccStatusStore,
-                        value:datas.ReviewResult,
+                        value:datas[whichColnums],
                         displayField: 'TSDesc',
                         valueField: 'TValue',
                         queryMode: 'local',
@@ -74,10 +76,10 @@
                 iconCls: "ensure",
                 handler: function (btn) {
                     var form = btn.findParentByType("window").child("form").getForm(),
-                        recordStatus = form.findField("ReviewResult").getValue(),
+                        x = btn.findParentByType("window").whichColnums,
+                        recordStatus = form.findField(x).getValue(),
                         record = grid.getStore().getAt(rowIndex);
-                    record.set("ReviewResult",recordStatus||'');
-
+                        record.set(x,recordStatus||'');
                     btn.findParentByType("panel").close();
                 }
             }, {
@@ -93,13 +95,12 @@
     //编辑领导小组审议时的状态信息
     editApplicant23 : function(btn,rowIndex){
         var self=this,
-
             grid = btn.findParentByType("grid"),
-
             datas = grid.getStore().getAt(rowIndex).data,
             classID = datas.classID,
             batchID =datas.batchID,
-            jugaccStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_REVIEW_RESULT");
+            jugaccStatusStore = grid.findParentByType('window').scoreStore,
+            whichColnums = btn.findParentByType("window").whichColnums;
         if(!jugaccStatusStore.isLoaded()){
             jugaccStatusStore.load();
         }
@@ -109,6 +110,7 @@
             height: 245,
             modal: true,
             frame: true,
+            whichColnums:whichColnums,
             items: [{
                 xtype: 'form',
                 layout: {
@@ -143,9 +145,9 @@
                     }, {
                         xtype: 'combo',
                         fieldLabel: "审议结果",
-                        name: 'ReviewResult',
+                        name: whichColnums,
                         store: jugaccStatusStore,
-                        value:datas.ReviewResult,
+                        value:datas[whichColnums],
                         displayField: 'TSDesc',
                         valueField: 'TValue',
                         queryMode: 'local',
@@ -160,10 +162,10 @@
                 iconCls: "ensure",
                 handler: function (btn) {
                         var form = btn.findParentByType("window").child("form").getForm(),
-                        recordStatus = form.findField("ReviewResult").getValue(),
+                        x = btn.findParentByType("window").whichColnums,
+                        recordStatus = form.findField(x).getValue(),
                         record = grid.getStore().getAt(rowIndex);
-                        record.set("ReviewResult",recordStatus||'');
-
+                        record.set(x,recordStatus||'');
                     btn.findParentByType("panel").close();
                 }
             }, {
@@ -189,10 +191,21 @@
         if(!jugaccStatusStore.isLoaded()){
             jugaccStatusStore.load();
         }
-        var win = Ext.create('Ext.window.Window', {
-            title: '编辑考生',
+        var appInsID = datas.appINSID,
+            tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"CK","comParams":{"type":"major","classID":"'+classID+'","batchID":"'+batchID+'","appInsID":"'+appInsID+'"}}';
+        Ext.tzLoad(tzParams, function (respData) {
+            var majorStore = Ext.create('Ext.data.Store',{
+                autoLoad:false,
+                pageSize:0,
+                data:respData.root,
+                model:Ext.create('Ext.data.Model',{
+                    fiels:['TValue','TSDesc']
+                })
+            });
+            var win = Ext.create('Ext.window.Window', {
+            title: '编辑申请人',
             width: 600,
-            height: 245,
+            height: 300,
             modal: true,
             frame: true,
             items: [{
@@ -236,31 +249,43 @@
                         queryMode: 'local',
                         editable: false,
                         ignoreChangesFlag: true
+                    },{
+                        xtype: 'combo',
+                        fieldLabel: "拟录取系所",
+                        name: 'nlqxs',
+                        store: majorStore,
+                        value:datas.nlqxs,
+                        displayField: 'TSDesc',
+                        valueField: 'TValue',
+                        queryMode: 'local',
+                        editable: false,
+                        ignoreChangesFlag: true
                     }
                 ]
                 //items END
-            }],
-            buttons: [{
-                text: '确定',
-                iconCls: "ensure",
-                handler: function (btn) {
-                    var form = btn.findParentByType("panel").child("form").getForm(),
-                        recordStatus = form.findField("LUQUZT").getValue(),
-
-                        record = grid.getStore().getAt(rowIndex);
-                    record.set("LUQUZT",recordStatus||'');
-
-                    btn.findParentByType("panel").close();
-                }
-            }, {
-                text: '关闭',
-                iconCls: "close",
-                handler: function (btn) {
-                    btn.findParentByType("panel").close();
-                }
-            }]
+                }],
+                buttons: [{
+                    text: '确定',
+                    iconCls: "ensure",
+                    handler: function (btn) {
+                        var form = btn.findParentByType("panel").child("form").getForm(),
+                            recordStatus = form.findField("LUQUZT").getValue(),
+                            nlqxs = form.findField("nlqxs").getValue(),
+                            record = grid.getStore().getAt(rowIndex);
+                        record.set("LUQUZT",recordStatus||'');
+                        record.set("nlqxs",nlqxs||'');
+                        btn.findParentByType("panel").close();
+                    }
+                }, {
+                    text: '关闭',
+                    iconCls: "close",
+                    handler: function (btn) {
+                        btn.findParentByType("panel").close();
+                    }
+                }]
+            });
+            win.show();
         });
-        win.show();
     },
 
     endInterview : function(btn){
@@ -329,7 +354,7 @@
                     btn.findParentByType("form").getForm().findField("interviewStatus").setValue(enduring);
 
                 } else {
-                    Ext.MessageBox.alert('启动失败','请设置正确的评审规则');
+                    Ext.MessageBox.alert('启动失败','该批次下还没有评委');
                 }
             });
         }
@@ -361,7 +386,7 @@
                 }else if(responseData.isPass === 'P'){
                     Ext.MessageBox.alert('启动失败','必须先完成招聘领导小组审议');
                 } else {
-                    Ext.MessageBox.alert('启动失败','请设置正确的评审规则');
+                    Ext.MessageBox.alert('启动失败','该批次下还没有评委');
                 }
             });
         }
@@ -384,7 +409,7 @@
 
                     if (responseData.TZ_PSHEN_ZT === 'C') {
 
-                    Ext.Msg.alert("提示", '已提交过，不需要重复提价');
+                    Ext.Msg.alert("提示", '已提交过，不需要重复提交');
                  }else{
                     Ext.Msg.alert("提示", '评委还未评议数据');
                     }
@@ -393,37 +418,93 @@
 
 
     },
+    submitSX:function(btn,rowIndex){
+        var self=this,
+            grid = btn.findParentByType("grid"),
+            datas = grid.getStore().getAt(rowIndex).data,
+            classID = datas.classID,
+            batchID =datas.batchID,
+            appInsID=datas.appInsID,
+            pwID=datas.pwID,
+            tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_ZPLDTEAM_STD","OperateType":"CK","comParams":{"type":"submitXS","classID":"' + classID + '","batchID":"' + batchID + '","appInsID":"' + appInsID + '","pwID":"' + pwID + '"}}';
+            Ext.tzLoad(tzParams, function (responseData) {
+                if (responseData.TZ_PSHEN_ZT === 'Y') {
+                    Ext.Msg.alert("提示",'提交成功');
+                } else {
+
+                    if (responseData.TZ_PSHEN_ZT === 'C') {
+
+                    Ext.Msg.alert("提示", '已提交过，不需要重复提交');
+                 }else{
+                    Ext.Msg.alert("提示", '评委还未评议数据');
+                    }
+                }
+            });
+    },
+    //退回
+    viewCancel: function(btn,rowIndex){
+        var self=this,
+            grid = btn.findParentByType("grid"),
+            datas = grid.getStore().getAt(rowIndex).data,
+            classID = datas.classID,
+            batchID =datas.batchID,
+            appInsID=datas.appInsID,
+            pwID=datas.pwID,
+            tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_ZPLDTEAM_STD","OperateType":"CK","comParams":{"type":"reversion","classID":"' + classID + '","batchID":"' + batchID + '","appInsID":"' + appInsID + '","pwID":"' + pwID + '"}}';
+            Ext.tzLoad(tzParams, function (responseData) {
+                if (responseData.TZ_PSHEN_ZT === 'Y') {
+                    Ext.Msg.alert("提示",'撤回成功');
+                } else {
+                    Ext.Msg.alert("提示", '评委还未提交评议数据');
+                }
+            });
+
+
+    },
+    //退回
+    viewXSCancel: function(btn,rowIndex){
+        var self=this,
+            grid = btn.findParentByType("grid"),
+            datas = grid.getStore().getAt(rowIndex).data,
+            classID = datas.classID,
+            batchID =datas.batchID,
+            appInsID=datas.appInsID,
+            pwID=datas.pwID,
+            tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_ZPLDTEAM_STD","OperateType":"CK","comParams":{"type":"reversionXS","classID":"' + classID + '","batchID":"' + batchID + '","appInsID":"' + appInsID + '","pwID":"' + pwID + '"}}';
+            Ext.tzLoad(tzParams, function (responseData) {
+                if (responseData.TZ_PSHEN_ZT === 'Y') {
+                    Ext.Msg.alert("提示",'撤回成功');
+                } else {
+                    Ext.Msg.alert("提示", '评委还未提交评议数据');
+                }
+            });
+
+
+    },
 
     //KitchenSink.view.interviewManagement.interviewReview.interviewProgress
     addApplicantEnsure : function(btn,event){
-        //由于新增弹出窗口会使当前页面不能操作，弹出窗口对应的tab即是当前活动的Tab
-        //var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
-
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
-            targetStore = activeTab.down("grid[name=candidateStudentGrid]").getStore();
-       // var interviewMgrPanel=Ext.ComponentQuery.query("panel[reference=candidateStudentGrid]");
-        //var store=interviewMgrPanel[0].getStore();
-       // var  targetStore = interviewMgrPanel[0].getStore();
-
-        //l2=Ext.ComponentQuery.query("panel[reference=candidateBRMapplyGrid]");
-        select = btn.findParentByType("window").down("grid[name=candidateBRMapplyGrid]").getSelectionModel().getSelection(),
-        //var store=interviewMgrPanel[0].getStore();
-        //var  targetStore = interviewMgrPanel[0].getStore();
-
-        //var grid=this.lookupReference("candidateWindow").child('form').child('grid');
-            //select = interviewMgrPanel2[0].getSelectionModel().getSelection(),
-            hasInterviewed = false;
+            targetStore = activeTab.down("grid[name=candidateStudentGrid]").getStore(),
+            select = btn.findParentByType("window").down("grid[name=candidateBRMapplyGrid]").getSelectionModel().getSelection(),
+            hasInterviewed = false,
+            hasNewApp = false,
+            mid = [];
         for(var x =0;x<select.length;x++){
             if(targetStore.find('appINSID',select[x].data.appINSID)<0) {
                 delete select[x].data.isInterviewed;
                 delete select[x].data.id;
-                targetStore.add(select[x].data);
+                hasNewApp=true;
+                mid.push(select[x].data);
             }else{
                 hasInterviewed = true;
             }
         }
+        if(hasNewApp){
+            targetStore.add(mid);
+        }
         if(hasInterviewed){
-            Ext.Msg.alert("提示","有考生已经存在于面试阶段");
+            Ext.Msg.alert("提示","有申请人已经存在于面试阶段");
         }
         btn.findParentByType("panel").close();
     },
@@ -431,13 +512,11 @@
         btn.findParentByType("panel").close();
     },
     removeApplicants:function(btn){
-
-
         var interviewStatus=btn.findParentByType('form').getForm().findField('interviewStatus').value;
         var interviewStatus2=btn.findParentByType('form').getForm().findField('interviewStatus2').value;
         var enduring = this.TZ_MSPS_STAGE.getAt(this.TZ_MSPS_STAGE.find('TValue','A')).data.TSDesc;        //alert(interviewStatus+"=="+interviewStatus2);
         if (interviewStatus==enduring||interviewStatus2==enduring){
-            Ext.MessageBox.alert("提示","评审正在进行中，不能添加考生");
+            Ext.MessageBox.alert("提示","评审正在进行中，不能删除申请人");
             return;
         }
 
@@ -452,16 +531,12 @@
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
-//
+                    var mid = [];
                     for ( var i=0;i<checkLen;i++)
                     {
-                        resSetStore.remove(selList[i]);
+                        mid.push(selList[i]);
                     }
-                    //           resSetStore.remove(selList);
-//                    var resSetStore =  btn.findParentByType("grid").store;
-//                    for (i=0;i<checkLen;i++){
-//
-//                    }
+                    resSetStore.remove(mid);
                 }
 
             },"",true,this);
@@ -475,14 +550,14 @@
             Ext.MessageBox.alert("提示","请先保存组件注册信息后，再新增页面注册信息。");
             return;
         }
-        /*状态为进行中的时候，禁止添加考生*/
+        /*状态为进行中的时候，禁止添加申请人*/
 
         var interviewStatus=btn.findParentByType('form').getForm().findField('interviewStatus').value;
         var interviewStatus2=btn.findParentByType('form').getForm().findField('interviewStatus2').value;
         var enduring = this.TZ_MSPS_STAGE.getAt(this.TZ_MSPS_STAGE.find('TValue','A')).data.TSDesc;
         //alert(interviewStatus+"=="+interviewStatus2);
         if (interviewStatus==enduring||interviewStatus2==enduring){
-            Ext.MessageBox.alert("提示","评审正在进行中，不能添加考生");
+            Ext.MessageBox.alert("提示","评审正在进行中，不能添加申请人");
             return;
         }
 
@@ -548,49 +623,84 @@
             Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_SMTDTXX_STD，请检查配置。');
             return;
         }
-        var win = this.lookupReference('zpldteamReviewWindow');
+        var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"CK","comParams":{"type":"searchScore","classID":"'+classID+'"}}';
+        Ext.tzLoad(params,function(respData){
+             //操作类型设置为新增
+            var contentPanel;
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+            contentPanel.body.addCls('kitchensink-example');
+            
+            var ScoreStore = Ext.create('Ext.data.Store',{
+                autoLoad:false,
+                pageSize:0,
+                data:respData.root,
+                model:Ext.create('Ext.data.Model',{
+                    fields:['TValue','TSDesc']
+                })
+            });
+            var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_ZPLDTEAM_STD","OperateType":"SS","comParams":{"type":"CJX","classID":"'+classID+'","batchID":"'+batchID+'","appINSID":"'+appINSID+'"}}';
+            Ext.tzLoad(params,function(respDate){
+                var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_PLAN_STD","OperateType":"CK","comParams":{"type":"isAdmin"}}';
+                Ext.tzLoad(params,function(flag){
+                    var apps = respDate.root[0],
+                        gridStore;
+                    var fields = [{name: 'classID'},
+                                    {name: 'batchID'},
+                                    {name: 'pwID'},
+                                    {name: 'pwName'},
+                                    {name: 'appInsID'},
+                                    {name: 'ifVote'}];
+                    for(var x=0;apps&&x<apps.CJX.length;x++){
+                        fields.push({
+                            name:apps.CJX[x].ID
+                        });
+                    }
+                    gridStore = Ext.create('Ext.data.Store',{
+                        alias: 'store.zpldteamReviewWindowStore',
+                        autoLoad:false,
+                        comID: 'TZ_GSM_CANDIDATE_COM',
+                        pageID: 'TZ_ZPLDTEAM_STD',
+                        pageSize:0,
+                        tzStoreParams:'{"classID":"'+classID+'","batchID":"'+batchID+'","appINSID":"'+appINSID+'"}',
+                        proxy: Ext.tzListProxy(),
+                        fields:fields
+                    });
 
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
+                    Ext.syncRequire(className);
+                    ViewClass = Ext.ClassManager.get(className);
+                    //新建类
+                    win = new ViewClass(ScoreStore,fields.length===6?[]:apps.CJX,flag);
+                    contentPanel.add(win);
+                    win.actType = "add";
+                    win.on('afterrender',function(panel) {
 
-        //操作类型设置为新增
-        win.actType = "add";
-        //cmp = new ViewClass();
+                        var form = panel.child("form").getForm();
+                        var formParams={};
+                        formParams["classID"] = classID;
+                        formParams["batchID"] = batchID;
+                        formParams["realName"] = realName;
+                        formParams["zpldxzsytgl"] = zpldxzsytgl;
+                        form.setValues(formParams);
 
-        //页面注册信息表单
-        var form = win.child("form").getForm();
-        //form.reset();
+                        panel.child("form").child('grid').setStore(gridStore);
+                        panel.child("form").child('grid').store.load();
+                        
+                        /*
+                        var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD",' +
+                            '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
 
-        var formParams = form.getValues();
-        formParams["classID"] = classID;
-        formParams["batchID"] = batchID;
-        formParams["realName"] = realName;
-        formParams["zpldxzsytgl"] = zpldxzsytgl;
+                        var tzStoreParams = '{"classID":"' + classID + '","batchID":"' + batchID + '","appINSID":"' + appINSID + '"}';
+                        var store=win.lookupReference('zpldteamReviewGrid').store;
+                        store.tzStoreParams = tzStoreParams;
+                        store.load();
+                        */
 
-        form.setValues(formParams);
-
-        win.on('afterrender',function(panel) {
-
-            //alert(panel.getXType());
-
-
-            //var panel11=Ext.ComponentQuery.query("panel[reference=candidateApplicantsPanel]");
-            // var form =panel11[0].child('form').getForm();
-            var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
-
-            var tzStoreParams = '{"classID":"' + classID + '","batchID":"' + batchID + '","appINSID":"' + appINSID + '"}';
-            var store=win.child("grid").store;
-            store.tzStoreParams = tzStoreParams;
-            store.load();
+                    });
+                    win.show();
+                });
+                
+            });
         });
-
-        win.show();
     },
     ViewXxwyReview : function(grid,rowIndex){
         var record = grid.store.getAt(rowIndex);
@@ -617,52 +727,74 @@
             Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_XSWYH_STD，请检查配置。');
             return;
         }
-        var win = this.lookupReference('xywyhReviewWindow');
+         
+        var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD","OperateType":"CK","comParams":{"type":"searchScore","classID":"'+classID+'"}}';
+        Ext.tzLoad(params,function(respData){
+             //操作类型设置为新增
+            var contentPanel;
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+            contentPanel.body.addCls('kitchensink-example');
+            
+            var ScoreStore = Ext.create('Ext.data.Store',{
+                autoLoad:false,
+                pageSize:0,
+                data:respData.root,
+                model:Ext.create('Ext.data.Model',{
+                    fields:['TValue','TSDesc']
+                })
+            });
+            var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_ZPLDTEAM_STD","OperateType":"SS","comParams":{"type":"CJX","classID":"'+classID+'","batchID":"'+batchID+'","appINSID":"'+appINSID+'"}}';
+            Ext.tzLoad(params,function(respDate){
+                var params = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_PLAN_STD","OperateType":"CK","comParams":{"type":"isAdmin"}}';
+                Ext.tzLoad(params,function(flag){
+                    var apps = respDate.root[0],
+                        gridStore;
+                    var fields = [{name: 'classID'},
+                                    {name: 'batchID'},
+                                    {name: 'pwID'},
+                                    {name: 'pwName'},
+                                    {name: 'appInsID'},
+                                    {name: 'ifVote'}];
+                    for(var x=0;apps&&x<apps.CJX.length;x++){
+                        fields.push({
+                            name:apps.CJX[x].ID
+                        });
+                    }
+                    gridStore = Ext.create('Ext.data.Store',{
+                        alias: 'store.xswyhReviewWindowStore',
+                        autoLoad:false,
+                        comID: 'TZ_GSM_CANDIDATE_COM',
+                        pageID: 'TZ_XSWYH_STD',
+                        pageSize:0,
+                        tzStoreParams:'{"classID":"'+classID+'","batchID":"'+batchID+'","appINSID":"'+appINSID+'"}',
+                        proxy: Ext.tzListProxy(),
+                        fields:fields
+                    });
 
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
+                    Ext.syncRequire(className);
+                    ViewClass = Ext.ClassManager.get(className);
+                    //新建类
+                    win = new ViewClass(ScoreStore,fields.length===6?[]:apps.CJX,flag);
+                    contentPanel.add(win);
+                    win.actType = "add";
+                    win.on('afterrender',function(panel) {
+                        var form = panel.child("form").getForm();
+                        var formParams = form.getValues();
+                        formParams["classID"] = classID;
+                        formParams["batchID"] = batchID;
+                        formParams["realName"] = realName;
+                        formParams["xswyhsytgl"] = xswyhsytgl;
 
-        //操作类型设置为新增
-        win.actType = "add";
-        //cmp = new ViewClass();
-
-        //页面注册信息表单
-        var form = win.child("form").getForm();
-        //form.reset();
-
-        var formParams = form.getValues();
-        formParams["classID"] = classID;
-        formParams["batchID"] = batchID;
-        formParams["realName"] = realName;
-        formParams["xswyhsytgl"] = xswyhsytgl;
-
-        form.setValues(formParams);
-
-        win.on('afterrender',function(panel) {
-
-            //alert(panel.getXType());
-
-
-            //var panel11=Ext.ComponentQuery.query("panel[reference=candidateApplicantsPanel]");
-            // var form =panel11[0].child('form').getForm();
-            var tzParams = '{"ComID":"TZ_GSM_CANDIDATE_COM","PageID":"TZ_MSPS_APPS_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"' + classID + '","batchID":"' + batchID + '"}}';
-
-            var tzStoreParams = '{"classID":"' + classID + '","batchID":"' + batchID + '","appINSID":"' + appINSID + '"}';
-            var store=win.child("grid").store;
-            store.tzStoreParams = tzStoreParams;
-            store.load();
+                        form.setValues(formParams);
+                        panel.child("form").child('grid').setStore(gridStore);
+                        panel.child("form").child('grid').store.load();
+                    });
+                    win.show();
+                });
+                
+            });
         });
-
-        win.show();
     },
-
-
 
     viewCandidateTJBG:function(tabview,rowIndex){
         //是否有访问权限
@@ -698,49 +830,61 @@
         cmp.show();
     },
     sendEmail:function(btn){
+        var store = btn.findParentByType('grid').store;
+        var classID = btn.findParentByType('grid').findParentByType('form').getForm().findField('classID').getValue();
+        var batchID = btn.findParentByType('grid').findParentByType('form').getForm().findField('batchID').getValue()
+        var modifiedRecs = store.getModifiedRecords();
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GSM_REVIEW_MS_COM"]["TZ_MSPS_MAIL_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有发送邮件的权限');
             return;
         }
-
-        var store = btn.findParentByType('grid').store;
-        var modifiedRecs = store.getModifiedRecords();
         if(modifiedRecs.length>0){
             Ext.MessageBox.alert("提示","请先保存列表数据之后再发送邮件！");
             return;
         };
         var datas = btn.findParentByType('grid').getSelectionModel().getSelection(),
+            hasNull = false;
             arr = [];
         for(var x=datas.length-1;x>=0;x--){
-            arr.push(datas[x].data.oprID);
+            if(datas[x].data.LUQUZT){
+                arr.push(datas[x].data.oprID);
+            }else{
+                hasNull = true;
+                break;
+            }
         }
-        if(arr.length > 0) {
-            var params = {
-                ComID: "TZ_GSM_REVIEW_MS_COM",
-                PageID: "TZ_MSPS_MAIL_STD",
-                OperateType: "GETL",
-                comParams: {type: "getL", oprArr: arr}
-            };
-            Ext.Ajax.request({
-                url: Ext.tzGetGeneralURL,
-                params: {tzParams: Ext.JSON.encode(params)},
-                success: function (responseData) {
-                    var audID = Ext.JSON.decode(responseData.responseText).comContent;
+        if(!hasNull){
+            if(arr.length > 0) {
+            
+                var params = {
+                    ComID: "TZ_GSM_REVIEW_MS_COM",
+                    PageID: "TZ_MSPS_MAIL_STD",
+                    OperateType: "GETL",
+                    comParams: {type: "getL", oprArr: arr,classID:classID,batchID:batchID}
+                };
+                Ext.Ajax.request({
+                    url: Ext.tzGetGeneralURL,
+                    params: {tzParams: Ext.JSON.encode(params)},
+                    success: function (responseData) {
+                        var audID = Ext.JSON.decode(responseData.responseText).comContent;
 
-                    Ext.tzSendEmail({
-                        //发送的邮件模板;
-                        "EmailTmpName": ["TZ_GSM_MSPS_PAS"],
-                        //创建的需要发送的听众ID;
-                        "audienceId": audID,
-                        //是否有附件: Y 表示可以发送附件,"N"表示无附件;
-                        "file": "N"
-                    });
-                }
-            });
+                        Ext.tzSendEmail({
+                            //发送的邮件模板;
+                            "EmailTmpName": ["TZ_MSPS_RESULT"],
+                            //创建的需要发送的听众ID;
+                            "audienceId": audID,
+                            //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                            "file": "N"
+                        });
+                    }
+                });
+            }else{
+                Ext.MessageBox.alert("提示","至少选择一位申请人发送邮件");
+            }
         }else{
-            Ext.MessageBox.alert("提示","至少选择一位学生发送邮件");
+            Ext.MessageBox.alert("提示","没有评审完所有选择的申请人");
         }
     },
     publishResult:function(grid, rowIndex, colIndex){

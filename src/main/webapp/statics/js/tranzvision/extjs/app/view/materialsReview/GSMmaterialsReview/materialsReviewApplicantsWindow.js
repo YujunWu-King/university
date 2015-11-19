@@ -137,7 +137,8 @@ Ext.define('KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewA
                                 dataIndex: 'assedStatus',
                                 minWidth: 10,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    value:'已通过'
                                 }
 
                             },

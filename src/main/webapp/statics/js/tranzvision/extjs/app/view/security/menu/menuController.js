@@ -194,48 +194,11 @@
         cmp = new ViewClass({ menuId: orgId });
         //操作类型设置为更新
         cmp.actType = "update";
-        
-       
-			
-			  /*
-        cmp.on('afterrender',function(panel){
-            //功能菜单树表单信息;
-            var form = panel.child('form').getForm();
-            form.findField("menuId").setReadOnly(true);
-            //treepanel
-            var treepanel = panel.child('treepanel');
-           
-           var tzParams ='{"ComID":"TZ_AQ_MENU_COM","PageID":"TZ_AQ_MENUXX_STD","OperateType":"QF","comParams":{"typeFlag":"TREE","menuId":"'+orgId+'"}}';
-						treepanel.getStore().setProxy({
-									type: 'ajax',
-									url:  '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams='+tzParams,
-									reader: {
-										type : 'json', 
-										rootProperty: 'comContent.root.menuTree'
-									}
-							});
-						
-						console.log("xxx");
-						treepanel.getStore().load();			
-            //参数
-            
-            var tzParams = '{"ComID":"TZ_AQ_MENU_COM","PageID":"TZ_AQ_MENUXX_STD","OperateType":"QF","comParams":{"typeFlag":"FORM","menuId":"'+orgId+'"}}';
-            //加载数据
-            Ext.tzLoad(tzParams,function(responseData){
-            	//菜单那信息数据
-            	var formData = responseData.formData;
-                
-            	form.setValues(formData);
-            });
-        });
-        	
-        	*/
-        	
+
         cmp.on('close',function(panel){
         	try{
-		         	 grid.store.reload();
+		         grid.store.reload();
 		      }catch(e){
-		         	
 		      }	  
 		    });
 
@@ -248,6 +211,14 @@
         if (cmp.floating) {
             cmp.show();
         }
+    },
+    deleteFuncMenuById:function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                var selRec = store.removeAt(rowIndex);
+            }
+        },this);
     },
     deleteFuncMenu:function(btn){
        //选中行
@@ -262,10 +233,21 @@
 				if(btnId == 'yes'){					   
 				   var orgMenuStore = this.getView().store;
 				   orgMenuStore.remove(selList);
-				   var tzParams = this.submitDeleteOrgMenu();
 				}
 			},this);
 	   }
+    },
+    saveOrgList:function(btn){
+        var store = this.getView().getStore();
+        if(store.getRemovedRecords().length>0){
+            this.submitDeleteOrgMenu();
+        }
+        if(btn.name=="ensure"){
+            this.getView().close();
+        }
+    },
+    closeOrgList:function(btn){
+        this.getView().close();
     },
     submitDeleteOrgMenu: function(){
 			var comParams = "";

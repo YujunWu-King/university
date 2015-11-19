@@ -18,6 +18,7 @@
 		    },
 		    border: false,
 		    bodyPadding: 10,
+		    ignoreLabelWidth: true,
 		  	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 		    fieldDefaults: {
 		      msgTarget: 'side',
@@ -25,7 +26,7 @@
 		      labelStyle: 'font-weight:bold'
 		    },
 			autoHeight:true,
-			minHeight: 800,
+			//minHeight: 800,
 		    items: [{
 		      xtype: 'hidden',
 					name: 'audCyrTotal'
@@ -44,13 +45,14 @@
 				xtype: 'displayfield',
 				fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.emailTheme","主题"),
 				name:'emailTheme'
-			},{
+			}]
+		  },{
 				xtype: 'component',
+				padding: 10,
 		      	fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.emailContent","邮件内容"),
 		      	html: me.emailContentHtml,
 		      	name:'emailContentHtml'
-		    }]
-			}],
+		  }],
 		  buttons: [{
 				text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.previous","上一页"),
 				iconCls:"prev",
@@ -71,8 +73,6 @@
 									//htmlCom.getEl().dom.innerHTML = formData.emailContent;
                                     htmlCom.getEl().update(formData.emailContent);
 									htmlCom.updateLayout();
-									
-									win.child("form").updateLayout();	
 							});
 					}else{
 						Ext.Msg.alert(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.reminder","提示"),Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.firstPage","已经是第一页"));
@@ -98,9 +98,7 @@
 									form.setValues(formData); 
 									//htmlCom.getEl().dom.innerHTML = formData.emailContent;
 									htmlCom.getEl().update(formData.emailContent);
-									htmlCom.updateLayout();		
-
-									win.child("form").updateLayout();					
+									htmlCom.updateLayout();						
 							});
 					}else{
 						 Ext.Msg.alert(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.reminder","提示"),Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.lastPage","已经是最后一页"));

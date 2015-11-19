@@ -11,29 +11,23 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
         'Ext.ux.ProgressBarPager',
         'KitchenSink.AdvancedVType',
         'Ext.ux.MaximizeTool',
+        'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.interviewManagement.interviewReview.interviewReviewScheduleJudgeStore',
         'KitchenSink.view.interviewManagement.interviewReview.interviewReviewScheduleAppsStore'
     ],
     title: '进度管理',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    constructor: function (classID,batchID){
+    constructor: function (classID,batchID,transValue){
         this.classID=classID;
         this.batchID=batchID;
+        this.transValue = transValue;
         this.callParent();
     },
     initComponent:function(){
         var classID =this.classID;
         var batchID = this.batchID;
         var statisticsGridDataModel;
-        var jugaccStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_JUGACC_STATUS"),
-            genderStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
-            admitStore = new KitchenSink.view.common.store.appTransStore("TZ_LUQU_ZT"),
-            judgeStatus = new KitchenSink.view.common.store.appTransStore("TZ_MSPS_ZT"),
-            KSPWPSEHNZT = new KitchenSink.view.common.store.appTransStore("TZ_MSPS_KSZT");
-        KSPWPSEHNZT.load();
-        judgeStatus.load();
-        jugaccStatusStore.load();
-        admitStore.load();
+        var transValue = this.transValue;
         var interviewReviewScheduleChartStore=new Ext.data.JsonStore({
             fields:['name','data1'],
             data:[]
@@ -61,12 +55,15 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 150
                 },
                 {
-                    text: "姓名",
+                    header: "姓名",
                     dataIndex: 'name',
                     align:'center',
                     minWidth: 100,
+                    xtype:'linkcolumn',
+                    handler:'viewThisApplicationForm',
                     renderer:function(v){
-                        return '<a href="javaScript:void(0)">'+v+'</a>';
+                        this.text=v;
+                        return ;
                     }
                 } ,
                 {
@@ -76,6 +73,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 30,
                     renderer: function (v) {
                         var x;
+                        var genderStore = transValue.get("TZ_GENDER");
                         if(x = genderStore.find('TValue',v)>=0){
                             x=+x;
                             return genderStore.getAt(x).data.TSDesc;
@@ -113,6 +111,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     flex:1,
                     renderer: function (v,grid,record) {
                         var x;
+                        var KSPWPSEHNZT = transValue.get("TZ_MSPS_KSZT");
                         if((x = KSPWPSEHNZT.find('TValue',v))>=0){
                             return v==='N' ? KSPWPSEHNZT.getAt(x).data.TSDesc+"("+record.data.progress+")":KSPWPSEHNZT.getAt(x).data.TSDesc;
                         }else{
@@ -127,6 +126,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 150,
                     renderer: function (v) {
                         var x;
+                        var admitStore = transValue.get("TZ_LUQU_ZT");
                         if((x = admitStore.find('TValue',v))>=0){
                             return admitStore.getAt(x).data.TSDesc;
                         }else{
@@ -142,12 +142,15 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 150
                 },
                 {
-                    text: "姓名",
+                    header: "姓名",
                     dataIndex: 'name',
                     align:'center',
                     minWidth: 100,
+                    xtype:'linkcolumn',
+                    handler:'viewThisApplicationForm',
                     renderer:function(v){
-                        return '<a href="javaScript:void(0)">'+v+'</a>';
+                        this.text=v;
+                        return ;
                     }
                 } ,
                 {
@@ -157,6 +160,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 30,
                     renderer: function (v) {
                         var x;
+                        var genderStore = transValue.get("TZ_GENDER");
                         if(x = genderStore.find('TValue',v)>=0){
                             x=+x;
                             return genderStore.getAt(x).data.TSDesc;
@@ -188,6 +192,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     flex:1,
                     renderer: function (v,grid,record) {
                         var x;
+                        var KSPWPSEHNZT = transValue.get("TZ_MSPS_KSZT");
                         if((x = KSPWPSEHNZT.find('TValue',v))>=0){
                             return v==='N' ? KSPWPSEHNZT.getAt(x).data.TSDesc+"("+record.data.progress+")":KSPWPSEHNZT.getAt(x).data.TSDesc;
                         }else{
@@ -202,6 +207,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                     minWidth: 150,
                     renderer: function (v) {
                         var x;
+                        var admitStore = transValue.get("TZ_LUQU_ZT");
                         if((x = admitStore.find('TValue',v))>=0){
                             return admitStore.getAt(x).data.TSDesc;
                         }else{
@@ -588,7 +594,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                                                 negativeText:'评委数量不能为负数',
                                                 nanText:'{0}不是有效的数字',
                                                 hideLabel: true,
-                                                width:130
+                                                width:130,
+                                                ignoreChangesFlag:true
                                             },{
                                                 margin:'8px',
                                                 xtype: 'displayfield',
@@ -673,6 +680,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                                                     flex: 1,
                                                     renderer: function (v) {
                                                         var x;
+                                                        var judgeStatus = transValue.get("TZ_MSPS_ZT");
                                                         if((x = judgeStatus.find('TValue',v))>=0){
                                                             return judgeStatus.getAt(x).data.TSDesc;
                                                         }else{
@@ -689,6 +697,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                                                     flex: 1,
                                                     renderer:function(v){
                                                         var x;
+                                                        var jugaccStatusStore = transValue.get("TZ_JUGACC_STATUS");
                                                         if((x = jugaccStatusStore.find('TValue',v))>=0){
                                                             return jugaccStatusStore.getAt(x).data.TSDesc;
                                                         }else{

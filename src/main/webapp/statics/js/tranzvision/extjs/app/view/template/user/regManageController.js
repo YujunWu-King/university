@@ -397,5 +397,10 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 		//获取窗口
 		var win = btn.findParentByType("window");
 		win.close();
+	},
+	//关闭
+	onPanelClose:function(btn){
+		var grid=btn.up('regManage');
+		grid.close();
 	}
 });

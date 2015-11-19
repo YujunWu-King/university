@@ -21,10 +21,11 @@
 		border: false,
 		bodyPadding: 10,
 		//heigth: 600,
+		ignoreLabelWidth: true,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 120,
+			labelWidth: TranzvisionMeikecityAdvanced.Boot.language === 'ZHS' ? 120 : 120,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [{

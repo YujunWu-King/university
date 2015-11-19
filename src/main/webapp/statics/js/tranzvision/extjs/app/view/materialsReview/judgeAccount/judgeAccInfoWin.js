@@ -22,7 +22,7 @@
 	
 	listeners:{
 		close:function(panel, eOpts){
-			panel.pGrid.getEl().unmask();
+			//panel.pGrid.getEl().unmask();
 		}	
 	},
 	

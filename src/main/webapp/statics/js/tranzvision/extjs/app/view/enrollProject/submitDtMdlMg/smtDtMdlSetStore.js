@@ -6,6 +6,6 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.smtDtMdlSetStore', {
 	pageSize: 50,		
 	comID: 'TZ_GD_SMTDTMDL_COM',
 	pageID: 'TZ_GD_SMTDTSET_STD',
-	tzStoreParams: '',
+    tzStoreParams: '',
 	proxy: Ext.tzListProxy()
 });

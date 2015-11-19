@@ -247,7 +247,17 @@
 		var tzParams = '{"ComID":"TZ_GD_ZDMB_COM","PageID":"TZ_GD_MBGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
 		Ext.tzSubmit(tzParams,function(){
-			store.reload();			   
-		});
+			store.reload();
+		},"",true,this);
+	},
+	closeComRegInfos: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	//确定
+	ensureComRegInfos:function(btn) {
+		this.saveComRegInfos(btn);
+		this.closeComRegInfos(btn);
 	}
 });

@@ -44,13 +44,13 @@
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ZY_RESSET_COM.TZ_RESSET_INFO_STD.resSetDesc","资源集合名称"),
             name: 'resSetDesc'
-        }, {
+        },{
             xtype: 'checkboxfield',
-            boxLabel: '<span style="font-weight:bold;">'+Ext.tzGetResourse("TZ_ZY_RESSET_COM.TZ_RESSET_INFO_STD.publicRes","公共资源")+'</span>',
+            boxLabel: '<span style="font-weight:bold;">'+Ext.tzGetResourse("TZ_ZY_RESSET_COM.TZ_RESSET_INFO_STD.publicRes","是否公共资源")+'</span>',
             margin: '0 0 0 115',
             name: 'publicRes',
             inputValue: 'Y'
-            }]
+        }]
     },{
 		xtype: 'grid',
 		height: 350,
@@ -90,7 +90,17 @@
 			dataIndex: 'resourceName',
 			minWidth: 200,
 			flex: 1
-		}
+		},{
+            menuDisabled: true,
+            sortable: false,
+            width:60,
+            align:'center',
+            xtype: 'actioncolumn',
+            items:[
+                {iconCls: 'edit',tooltip: '编辑',handler:'editCurrResource'},
+                {iconCls: 'remove',tooltip: '删除',handler:'deleteCurrResource'}
+            ]
+        }
         ],
 		bbar: {
 			xtype: 'pagingtoolbar',

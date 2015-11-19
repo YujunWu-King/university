@@ -226,6 +226,14 @@
                                     type: 'list'
                                 }
                             },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewResult","面试结果"),
+                                dataIndex: 'interviewResult',
+                                lockable   : false,
+                                width: 95,
+                                filter: {
+                                    type: 'list'
+                                }
+                            },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.colorType","类别"),
                                 dataIndex: 'colorType',
                                 lockable   : false,

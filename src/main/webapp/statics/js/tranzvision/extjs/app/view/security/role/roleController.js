@@ -139,6 +139,7 @@
             //角色表单信息;
             var form = panel.child('form').getForm();
             form.findField("roleName").setReadOnly(true);
+            form.findField("roleName").setFieldStyle('background:#F4F4F4');
             //许可权列表
             var grid = panel.child('grid');
             //参数
@@ -449,6 +450,7 @@
             //许可权表单信息;
             var form = panel.child('form').getForm();
             form.findField("permID").setReadOnly(true);
+            form.findField("permID").setFieldStyle('background:#F4F4F4');
             //授权组件列表
             var grid = panel.child('grid');
             //参数
@@ -544,6 +546,114 @@
                 store.load();
             }
         });
+    },
+    //确定
+    ensureRoles:function(btn) {
+        this.saveRoles(btn);
+        this.closeRoles(btn);
+    },
+    //关闭
+    closeRoles: function(btn){
+        //关闭
+        var grid = btn.findParentByType("grid");
+        grid.close();
+    },
+    //roleInfoPanel.js 中grid 中的编辑
+    editRoleInfoSave:  function(view,rowIndex) {
+
+        Ext.tzSetCompResourses("TZ_AQ_PLST_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_PLST_COM"]["TZ_PLST_INFO_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_PLST_INFO_STD，请检查配置。');
+            return;
+        }
+        //许可权编号
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var permID = selRec.get("permID");
+
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        cmp = new ViewClass();
+        //操作类型设置为更新
+        cmp.actType = "update";
+
+        cmp.on('afterrender',function(panel){
+            //许可权表单信息;
+            var form = panel.child('form').getForm();
+            form.findField("permID").setReadOnly(true);
+            form.findField("permID").setFieldStyle('background:#F4F4F4');
+            //授权组件列表
+            var grid = panel.child('grid');
+            //参数
+            var tzParams = '{"ComID":"TZ_AQ_PLST_COM","PageID":"TZ_PLST_INFO_STD","OperateType":"QF","comParams":{"permID":"'+permID+'"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //角色信息数据
+                var formData = responseData.formData;
+                form.setValues(formData);
+                var tzStoreParams = '{"cfgSrhId": "TZ_AQ_PLST_COM.TZ_PLST_INFO_STD.TZ_AQ_COMSQ_V","condition":{"CLASSID-operator": "01","CLASSID-value": "'+permID+'"}}';
+                grid.store.tzStoreParams = tzStoreParams;
+                grid.store.load();
+            });
+
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    deleteRoleInfoSave: function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                store.removeAt(rowIndex);
+            }
+        },this);
     }
 });
 

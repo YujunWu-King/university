@@ -37,26 +37,31 @@
             xtype: 'textfield',
             fieldLabel: '组件编号',
             readOnly:true,
+			cls:"lanage_1",
             name: 'ComID'
         }, {
             xtype: 'textfield',
             fieldLabel: '组件名称',
             readOnly:true,
+			cls:"lanage_1",
             name: 'comMc'
         }, {
             xtype: 'textfield',
             fieldLabel: '页面编号',
             readOnly:true,
+			cls:"lanage_1",
             name: 'PageID'
         }, {
             xtype: 'textfield',
             fieldLabel: '页面名称',
             readOnly:true,
+			cls:"lanage_1",
             name: 'pageMc'
         }, {
             xtype: 'textfield',
             fieldLabel: '视图名称',
             readOnly:true,
+			cls:"lanage_1",
             name: 'ViewMc'
         },{
             xtype: 'textfield',

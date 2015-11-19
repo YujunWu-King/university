@@ -16,7 +16,8 @@
         'KitchenSink.view.classManage.GlryStore',
         'KitchenSink.view.classManage.DjzlStore',
         'KitchenSink.view.classManage.classInfoController',
-        'KitchenSink.view.classManage.userWindows'
+        'KitchenSink.view.classManage.userWindows',
+        'KitchenSink.view.classManage.hcgzStore'
     ],
     title: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bj_info_title","班级详情"),
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -273,6 +274,60 @@
                             valueField: 'TValue',
                             displayField: 'TSDesc',
                             store: new KitchenSink.view.common.store.appTransStore("TZ_IS_APP_OPEN")
+                        },{
+                            xtype: "container",
+                            layout: "hbox",
+                            items: [
+                                {
+                                    fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.guest_apply","允许匿名报名"),
+                                    xtype: 'checkbox',
+                                    name:'guest_apply',
+                                    listeners:{
+                                        render:function(obj){
+                                            obj.getEl().dom.onclick = function(){
+                                                var form =  obj.up('form[name=form_1]').getForm();
+                                                var bj_id = form.getValues().bj_id;
+                                                var gruest_apply_value=obj.getValue();
+                                                if(gruest_apply_value ==false){
+                                                    gruest_apply_value=true;
+                                                }else{
+                                                    gruest_apply_value=false;
+                                                }
+                                                var comParams = '{"bj_id":"' + bj_id + '","guest_apply":"' + gruest_apply_value + '"}';
+                                                if (gruest_apply_value ==true) {
+                                                    var tzParams = '{"ComID":"TZ_GD_BJGL_COM","PageID":"TZ_BJ_ADD_STD","OperateType":"guest_apply","comParams":' + comParams + '}';
+                                                    Ext.tzLoad(tzParams, function (responseData) {
+                                                        form.findField("guest_apply_url").setValue(responseData.guest_apply_url);
+                                                    })
+                                                }else{
+                                                    form.findField("guest_apply_url").setValue("");
+                                                }
+                                            }
+                                                // obj.findParentByType("guest_apply").previousNode().setValue(obj.getValue());
+                                            }
+
+                                            /*  change:function(file, value, eOpts) {
+                                                  var form = file.findParentByType('ClassInfo').down('form[name=form_1]').getForm();
+                                                  var bj_id = form.getValues().bj_id;
+                                                  var comParams = '{"bj_id":"' + bj_id + '","guest_apply":"' + value + '"}';
+                                                  if (value ==true) {
+
+                                                  var tzParams = '{"ComID":"TZ_GD_BJGL_COM","PageID":"TZ_BJ_ADD_STD","OperateType":"guest_apply","comParams":' + comParams + '}';
+                                                  Ext.tzSubmit(tzParams, function (responseData) {
+
+                                                      form.findField("guest_apply_url").setValue(responseData.guest_apply_url);
+                                                  })
+                                                   }else{
+                                                      form.findField("guest_apply_url").setValue("");
+                                                  }
+                                                  }  */
+                                        }
+                                },{
+                                    xtype:'displayfield',
+                                    name:'guest_apply_url',
+                                    hideLabel: true
+                                }
+                            ]
                         },{
                             xtype: 'datefield',
                             fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.begin_time","班级开始日期"),
@@ -967,6 +1022,29 @@
                                             ]
                                         }
                                     ]
+                                },{
+                                    title: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.hcgztab","互斥班级"),
+                                    xtype: 'grid',
+                                    columnLines: true,
+                                    name:'hcgzGrid',
+                                    minHeight: 250,
+                                    reference: 'hcgzGrid',
+                                    store: {
+                                        type: 'hcgzStore'
+                                    },
+                                    columns: [{
+                                        text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.hcgzRowNum","序号"),
+                                        xtype: 'rownumberer',
+                                        width:50
+                                    },{
+                                        text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.hcgzTabClsId","班级编号"),
+                                        dataIndex: 'hcgzTabClsId',
+                                        flex:1
+                                    },{
+                                        text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.hcgzTabClsName","班级名称"),
+                                        dataIndex: 'hcgzTabClsName',
+                                        flex:2
+                                    }]
                                 },
                                 {
                                     title: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.form_2","更多信息"),

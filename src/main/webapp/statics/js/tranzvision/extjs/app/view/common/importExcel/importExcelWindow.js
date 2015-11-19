@@ -17,6 +17,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
     constructor: function (config) {
         this.importType=config.importType,//导入类型A：上传Excel；B：粘贴Excel数据
             this.businessHandler=config.businessHandler,//回调函数
+            this.tplResId = config.tplResId,
             this.callParent();
     },
     modal:true,
@@ -27,13 +28,31 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
     listeners:{
         resize: function(win){
             win.doLayout();
-        }
+        },
+		afterrender:function(){
+			//处理在火狐下fieldset下的上传控件按钮宽度不够的问题
+			var filebutton = this.down("#excelFile").getTrigger('filebutton');;
+			filebutton.el.dom.style.width='65px';
+		}
     },
     initComponent: function(){
         var me = this,
             uploadExcelCollapsedFlag = me.importType=="B",
-            pasteExcelDataCollapsedFlag = !uploadExcelCollapsedFlag;
+            pasteExcelDataCollapsedFlag = !uploadExcelCollapsedFlag,
+            columnWidths = me.tplResId!=undefined?[.8,.2]:[1,0],
+            excelLinkHidden=me.tplResId!=undefined?false:true,
+            excelTplUrl;
 
+        if(!excelLinkHidden){
+            var tzParams = '{"ComID":"TZ_IMPORT_EXCEL_COM","PageID":"TZ_IMP_EXCEL_STD","OperateType":"tzGetExcelTplUrl","comParams":{"tplResId":"'+me.tplResId+'"}}';
+            Ext.tzLoadAsync(tzParams,function(respData){
+                excelTplUrl = respData.url;
+				if(excelTplUrl==undefined){
+					columnWidths=[1,0];
+					excelLinkHidden=true;
+				}
+            });
+        };
         Ext.apply(this,{
             items:[
                 {
@@ -110,26 +129,53 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                                         },
                                         items:[
                                             {
-                                                xtype: 'filefield',
-                                                name: 'excelFile',
-                                                itemId:'excelFile',
-                                                msgTarget: 'side',
-                                                allowBlank: false,
-                                                anchor: '100%',
-                                                buttonText: '浏览...',
-                                                validator:function(value){
-                                                    var excelReg = /\.([xX][lL][sS]){1}$|\.([xX][lL][sS][xX]){1}$/;
-                                                    if(!excelReg.test(value)&&value){
-                                                        Ext.Msg.alert('提示','文件类型错误,请选择 [xls,xlsx] 格式的Excel文件');
-                                                        return '文件类型错误,请选择 [xls,xlsx] 格式的Excel文件';
-                                                    }else{
-                                                        return true
+                                                layout:'column',
+                                                items:[
+                                                    {
+                                                        xtype: 'filefield',
+                                                        name: 'excelFile',
+                                                        itemId:'excelFile',
+                                                        msgTarget: 'side',
+                                                        allowBlank: false,
+                                                        anchor: '100%',
+                                                        buttonText: '浏览...',
+                                                        columnWidth:columnWidths[0],
+                                                        validator:function(value){
+                                                            var excelReg = /\.([xX][lL][sS]){1}$|\.([xX][lL][sS][xX]){1}$/;
+                                                            if(!excelReg.test(value)&&value){
+                                                                Ext.Msg.alert('提示','文件类型错误,请选择 [xls,xlsx] 格式的Excel文件');
+                                                                return '文件类型错误,请选择 [xls,xlsx] 格式的Excel文件';
+                                                            }else{
+                                                                return true
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        xtype:'toolbar',
+                                                        name:'downloadExcelTpl',
+                                                        hidden:excelLinkHidden,
+                                                        padding:0,
+                                                        style:'margin-left:20px',
+                                                        columnWidth:columnWidths[1],
+                                                        items:[
+                                                            {
+                                                                xtype:'button',
+                                                                text:'<span class="themeColor" style="text-decoration: underline">下载Excel模板</span>',
+                                                                cls:'themeColor',
+                                                                border:false,
+                                                                style:{
+                                                                    background:'white'
+                                                                },
+                                                                href:excelTplUrl
+                                                            }
+                                                        ]
                                                     }
-                                                }
-                                            },
+                                                ]
+                                            }
+                                            ,
                                             {
                                                 xtype: 'checkboxfield',
-                                                boxLabel: '<span style="">'+'首行是标题行'+'</span>',
+                                                boxLabel: '首行是标题行',
                                                 name: 'firstLineTitle_1',
                                                 inputValue: 'Y'
                                             }
@@ -173,7 +219,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                                         },
                                         {
                                             xtype: 'checkboxfield',
-                                            boxLabel: '<span style="">'+'首行是标题行'+'</span>',
+                                            boxLabel: '首行是标题行',
                                             name: 'firstLineTitle_2',
                                             inputValue: 'Y'
                                         }
@@ -186,7 +232,8 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                             header:false,
                             name:'previewExcelData',
                             itemId:'card-1',
-                            xtype:'form'
+                            xtype:'form',
+                            ignoreLabelWidth: true
                         },
                         {
                             //此步骤为使用者自定义函数处理，该处不进行任何操作

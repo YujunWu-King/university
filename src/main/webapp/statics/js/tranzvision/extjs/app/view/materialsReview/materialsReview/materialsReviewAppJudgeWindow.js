@@ -21,6 +21,10 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppJ
         var me = this;
         this.appGrid = appGrid;
         this.appRowIndex=appRowIndex;
+        this.appSelList=appSelList;
+console.log(appGrid);
+        console.log(appRowIndex);
+        console.log(appSelList);
         Ext.apply(this, {
             items: [
                 {
@@ -47,11 +51,17 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppJ
                             iconCls:'save',
                             handler: function (btn) {
                                 var win=btn.findParentByType("window");
-                                var record = appGrid.getStore().getAt(appRowIndex);
+                                //向后台提交的报名表编号
+                                var appInsID='';
+                                //为单行考生
+                                if(appRowIndex!=""){
+                                    appInsID = appRowIndex;}
+                                else{
+                                    appInsID=appSelList
+                                }
 
                                 var form = appGrid.findParentByType('form');
 
-                                var judgeList = record.data.judgeList;
                                 var grid = btn.findParentByType('grid'),
                                     store = grid.getStore(),
 
@@ -94,7 +104,6 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppJ
                                     }
                                     var classID = store.getAt(0).get('classID'),
                                         batchID = store.getAt(0).get('batchID'),
-                                        appInsID = record.data.appInsID,
                                         selectJudge = selectJudge;
                                     if (tongzu > total) {
                                         Ext.Msg.alert('注意', '不可为考生指定同组评委,请改正');
@@ -104,6 +113,11 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppJ
 
                                     Ext.tzSubmit(tzParams, function (respData) {
                                         appGrid.getStore().reload();
+                                        if(respData.Nomal==1){
+                                            Ext.Msg.alert ("注意","在您所选的评委中,有评委指定的考生已达上限，未能成功指定评委，修改");
+                                        }
+                                        else{   Ext.Msg.alert ("提示","指定评委成功");
+                                        }
                                         win.close();
                                     },'',true,me);
                                 }

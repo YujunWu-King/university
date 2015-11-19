@@ -31,7 +31,11 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"saveHardCodeInfos"}]
+		items:['->',
+            {minWidth:80,text:"保存",iconCls:"save",handler:"saveHardCodeInfos"},
+            {minWidth:80,text:"确定",iconCls:"ensure",handler:"ensureHardCodeInfos"},
+            {minWidth:80,text:"关闭",iconCls:"close",handler:"closeHardCodeInfos"}
+        ]
 		},{
 		xtype:"toolbar",
 		items:[

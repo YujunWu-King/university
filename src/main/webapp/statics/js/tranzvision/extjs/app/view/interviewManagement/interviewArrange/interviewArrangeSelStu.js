@@ -172,6 +172,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                                                                     msArrInfoGridStoreRec.set("msOprName","");
                                                                     msArrInfoGridStoreRec.set("msOrderState","");
                                                                     msArrInfoGridStoreRec.set("msConfirmState","");
+                                                                    msArrInfoGridStoreRec.set("sort","");
+                                                                    msArrInfoGridStoreRec.set("releaseOrUndo","");
                                                                     msArrInfoGridStoreRec.set('moreInfo',"{}");
                                                                 }
                                                                 msArrInfoGridStoreRec = msArrInfoGridStore.getAt(msArrInfoGridRowIndex);
@@ -182,6 +184,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                                                                 msArrInfoGridStoreRec.set("msOprName",record.data.stuName);
                                                                 msArrInfoGridStoreRec.set("msOrderState","");
                                                                 msArrInfoGridStoreRec.set("msConfirmState","");
+                                                                msArrInfoGridStoreRec.set("sort","");
+                                                                msArrInfoGridStoreRec.set("releaseOrUndo","");
                                                                 msArrInfoGridStoreRec.set('moreInfo',moreInfo);
                                                             }
                                                         }
@@ -242,6 +246,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                                                 msArrInfoGridStoreRec.set("msOprName","");
                                                 msArrInfoGridStoreRec.set("msOrderState","");
                                                 msArrInfoGridStoreRec.set("msConfirmState","");
+                                                msArrInfoGridStoreRec.set("sort","");
+                                                msArrInfoGridStoreRec.set("releaseOrUndo","");
                                                 msArrInfoGridStoreRec.set('moreInfo',"{}");
                                             }
 
@@ -253,6 +259,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                                             msArrInfoGridStoreRec.set("msOprName",record.data.stuName);
                                             msArrInfoGridStoreRec.set("msOrderState","");
                                             msArrInfoGridStoreRec.set("msConfirmState","");
+                                            msArrInfoGridStoreRec.set("sort","");
+                                            msArrInfoGridStoreRec.set("releaseOrUndo","");
                                             msArrInfoGridStoreRec.set('moreInfo',moreInfo);
                                         }
                                     }

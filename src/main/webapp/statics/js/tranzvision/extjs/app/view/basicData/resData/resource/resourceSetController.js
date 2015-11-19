@@ -140,6 +140,7 @@
             //资源集合表单信息;
             var form = panel.child('form').getForm();
             form.findField("resSetID").setReadOnly(true);
+            form.findField("resSetID").addCls("lanage_1");
             //资源信息列表
             var grid = panel.child('grid');
             //参数
@@ -223,6 +224,17 @@
             store.reload();
         },"",true,this);
     },
+    ensureResSets:function(btn){
+    	 this.saveResSets(btn);
+    	 //关闭窗口
+    	 var comView = this.getView();
+         comView.close();
+    },
+    closeResSets:function(btn){
+    	//关闭窗口
+    	 var comView = this.getView();
+         comView.close();
+    },
     onResSetInfoSave: function(btn){
         //资源集合表单
         var form = this.getView().child("form").getForm();
@@ -233,6 +245,7 @@
             Ext.tzSubmit(tzParams,function(responseData){
                 comView.actType = "update";
                 form.findField("resSetID").setReadOnly(true);
+                form.findField("resSetID").addCls("lanage_1");
             },"",true,this);
         }
     },
@@ -254,7 +267,7 @@
         var form = this.getView().child("form").getForm();
         //表单数据
         var formParams = form.getValues();
-        //公共资源
+        //公共资源        
         if(formParams["publicRes"] == undefined){
             formParams["publicRes"] = "N";
         }
@@ -308,6 +321,58 @@
     onResSetInfoClose: function(btn){
         //关闭窗口
         this.getView().close();
+    },
+    editCurrResource: function(view,rowIndex) {
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        //资源集合ID
+        var resSetID = selRec.get("resSetID");
+        //资源ID
+        var resourceID = selRec.get("resourceID");
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZY_RESSET_COM"]["TZ_RESSET_RES_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_RESSET_RES_STD，请检查配置。');
+            return;
+        }
+        //展示资源信息窗口
+        var win = this.lookupReference('resourceInfoWindow');
+
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+
+        //操作类型设置为更新
+        win.actType = "update";
+        //参数
+        var tzParams = '{"ComID":"TZ_ZY_RESSET_COM","PageID":"TZ_RESSET_RES_STD","OperateType":"QF","comParams":{"resSetID":"'+resSetID+'","resourceID":"'+resourceID+'"}}';
+        //资源信息表单
+        var form = win.child("form").getForm();
+        Ext.tzLoad(tzParams,function(responseData){
+            form.setValues(responseData);
+            form.findField("resourceID").setReadOnly(true);
+            form.findField("resourceID").addCls("lanage_1");
+        });
+        win.show();
+    },
+    deleteCurrResource: function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                store.removeAt(rowIndex);
+            }
+        },this);
     },
     addResource:function(btn){
         if(this.getView().actType == "add"){
@@ -399,6 +464,7 @@
         Ext.tzLoad(tzParams,function(responseData){
             form.setValues(responseData);
             form.findField("resourceID").setReadOnly(true);
+            form.findField("resourceID").addCls("lanage_1");
         });
         win.show();
     },
@@ -457,6 +523,7 @@
         Ext.tzSubmit(tzParams,function(){
             win.actType = "update";
             form.findField("resourceID").setReadOnly(true);
+            form.findField("resourceID").addCls("lanage_1");
             pageGrid.store.tzStoreParams = tzStoreParams;
             pageGrid.store.reload();
         },"",true,this);

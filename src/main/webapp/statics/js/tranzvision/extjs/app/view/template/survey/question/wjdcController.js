@@ -50,7 +50,9 @@
                     });
                 el.style.backgroundColor = "rgb(173, 216, 230)";
                 var activeTab = win.items.items[0].getActiveTab();
-                var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
+               // var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
+               //问卷名称和模板名称保持一致，不加后面的数字
+                var newName = el.getElementsByClassName("tplname")[0].getAttribute("title");
                 document.getElementById(Ext.get(activeTab.id).query('input')[0].id).value = newName;
             }
         }
@@ -81,20 +83,26 @@
                 function(i) {
                     if (this.style.backgroundColor == "rgb(173, 216, 230)") {
                         wjId = this.getAttribute("data-id");  //这里获得的id实际上是模板id
-                        return false;
+                      //  return false;
+                        console.log(wjId);
                     }
                 });
         } else {
             wjId = "";
         }
         if (wjbt) {
-            var tzStoreParams = '{"add":[{"id":"' + wjId + '","name":"' + wjbt + '"}]}';
+            var tzStoreParams = '{"add":[{"id":"' + wjId + '","name":"' + wjbt + '","type":"add"}]}';
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_XJWJ_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
             Ext.tzSubmit(tzParams,
-                function(jsonObject) {
+                function(data) {
+                  var id=data.id;
                   store.reload();
                   win.close();
-                },"",true,this);
+                 /*问卷保存成功，自动跳转到编辑页面*/
+                var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + id + '}}';
+                var newTab=window.open('about:blank');
+                newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+            },"",true,this);
         }
     },
     /*删除问卷调查 */
@@ -153,10 +161,16 @@
             if (text) {
                 //组件注册信息数据
                 var store = this.getView().getStore();
-                var tzStoreParams = '{"add":[{"id":"' + this.TZ_DC_WJ_ID + '","name":"' + text + '"}]}';
+                var tzStoreParams = '{"add":[{"id":"' + this.TZ_DC_WJ_ID + '","name":"' + text + '","type":"copy"}]}';
                 var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM" ,"PageID":"TZ_ZXDC_XJWJ_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
                 Ext.tzSubmit(tzParams,
-                    function(jsonObject) {
+                    function(data) {
+                        //复制问卷成功后，需要跳转到问卷编辑页面
+                       // Ext.MessageBox.alert('提示', '复制问卷成功！');
+                        var wjId = data.id;
+                        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + wjId + '}}';
+                        var newTab=window.open('about:blank');
+                        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
                         store.reload();
                     },"",true,this);
             } else {
@@ -173,10 +187,10 @@
         var selRec = store.getAt(rowindex);
         var wjId = selRec.get("TZ_DC_WJ_ID");
         //显示资源集合信息编辑页面
-        this.editWjdcByID(wjId);
+        this.editWjdcByID(wjId,store);
     },
     /*根据问卷id设置问卷*/
-    editWjdcByID:function(wjId){
+    editWjdcByID:function(wjId,store){
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_WJGL_COM"]["TZ_ZXDC_WJSZ_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -214,44 +228,50 @@
                     themeName + '\'. Is this intentional?');
             }
         }
-        var win = this.lookupReference('myDcwjSzWindow');
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            win = new ViewClass();
-            var form = win.child('form').getForm();
-            this.getView().add(win);
-        }
-        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"QF","comParams":{"wjId":"'+wjId+'"}}';
-        //加载数据
-        Ext.tzLoad(tzParams,function(responseData){
-            var formData = responseData.formData;
-         //   console.log(formData);
-            form.setValues(formData);
+        cmp=new ViewClass();
+        cmp.actType = "update";
+        cmp.parentGridStore = store;
+        cmp.on('afterrender',function(panel){
+          //  console.log(panel);
+            //组件注册表单信息;
+            var form = panel.child('form').getForm();
+            //参数
+            var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"QF","comParams":{"wjId":"'+wjId+'"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //组件注册信息数据
+                var formData = responseData.formData;
+                form.setValues(formData);
+                if(formData.TZ_DC_WJ_DLZT=='Y'){
+                    form.findField("TZ_DC_WJ_DLZT").setValue(true)  ;
+                }else{
+                    form.findField("TZ_DC_WJ_DLZT").setValue(false)  ;
+                }
 
-            if(formData.TZ_DC_WJ_DLZT=='Y'){
-                form.findField("TZ_DC_WJ_DLZT").setValue(true)  ;
-            }else{
-                form.findField("TZ_DC_WJ_DLZT").setValue(false)  ;
-            }
+                if(formData.TZ_DC_WJ_NEEDPWD=='Y'){
+                    form.findField("TZ_DC_WJ_NEEDPWD").setValue(true);
+                }else{
+                    form.findField("TZ_DC_WJ_NEEDPWD").setValue(false);
+                }
+            });
 
-            if(formData.TZ_DC_WJ_NEEDPWD=='Y'){
-                form.findField("TZ_DC_WJ_NEEDPWD").setValue(true);
-            }else{
-                form.findField("TZ_DC_WJ_NEEDPWD").setValue(false);
-            }
         });
-
-        win.show();
+        var tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if (cmp.floating) {
+            cmp.show();
+        }
     },
     /*问卷调查设置下面的问卷模板*/
     wjmb_mbChoice:function(btn){
         var fieldName = btn.name;
         var searchDesc,modal,modal_desc;
-        searchDesc="报名表模板";
+        searchDesc="问卷模板";
         modal="TZ_APP_TPL_ID";
         modal_desc="TZ_APP_TPL_MC";
-        var form = btn.findParentByType('window').child("form").getForm();
+       // var form = btn.findParentByType('window').child("form").getForm();
+        var form=this.getView().child("form").getForm();
         Ext.tzShowPromptSearch({
             recname: 'TZ_DC_DY_T',
             searchDesc: searchDesc,
@@ -301,25 +321,24 @@
         })
     },
     checkBoxAction: function(checkbox,checked){
-        var dtgz=Ext.getCmp("dtgz"); //答题规则
-        var sjcjgz=Ext.getCmp("sjcjgz");//数据采集规则
-        var dcfs=Ext.getCmp("dcfs");//调查方式
-       if(checked){ //如果选中，就隐藏掉
+        var form =this.lookupReference('wjdcSzInfoForm').getForm();
+        //答题规则
+        var dtgz=form.findField("dtgz");
+        //数据采集规则
+        var sjcjgz=form.findField("sjcjgz");
+       if(checked){ //如果选中，就隐藏掉,不显示
            dtgz.items.items[2].setHidden(true);
            sjcjgz.items.items[3].setHidden(true);
-           dcfs.setHidden(true);
-           dcfs.allowBlank=true;
+           sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
        } else{
-
+            sjcjgz.setValue({TZ_DC_WJ_IPGZ:3});
             dtgz.items.items[2].setHidden(false);
             sjcjgz.items.items[3].setHidden(false);
-            dcfs.setHidden(false);
-            dcfs.allowBlank=false;/*如果没有勾选，调查方式必填；如果没有选中，就不是必填的*/
         }
     },
     /*问卷调查密码，默认隐藏，如果勾选，就表示需要密码，密码框显示*/
     needPwdFun:function(checkbox,checked){
-        var pwd=Ext.getCmp('TZ_DC_WJ_PWD');
+        var pwd=checkbox.findParentByType("form").getForm().findField("TZ_DC_WJ_PWD");
         if(checked){
           pwd.setHidden(false);
         }else{
@@ -412,8 +431,12 @@
         },msg,true,this);
 
     },
-    editWjdc:function(){
-        alert("问卷编辑");
+    editWjdc:function(view,rowindex){
+        var selRec = view.getStore().getAt(rowindex);
+        var wjId = selRec.get("TZ_DC_WJ_ID");
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + wjId + '}}';
+        var newTab=window.open('about:blank');
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
     },
     getJDBBData:function(){
         Ext.tzSetCompResourses('TZ_ZXDC_JDBB_COM');/*组件之间的跳转，需要哪个组件就把它加载进来*/
@@ -485,6 +508,7 @@
                 Ext.tzLoad(tzParams,function(responseData){
                     console.log(responseData);
                   PSBBQuestionListGrid.store.add(responseData['root']);
+                    PSBBQuestionListGrid.store.commitChanges();
                 });
             });
         });
@@ -561,10 +585,8 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
                 jcbbQuestionListForm.setValues(responseData['formData']);
                 tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_JCBBLB_STD","OperateType":"TJWT","comParams":{"onlinedcId":"'+onlinedcId+'"}}';
                 Ext.tzLoad(tzParams,function(responseData){
-                    //jcbbQuestionListGrid.store.loadData(responseData['root']);
-
-                    //var arrQL={"root":[{"questionID":"aaaa","questionDesc":"bbbbb"}]};
                     jcbbQuestionListGrid.store.add(responseData['root']);
+                    jcbbQuestionListGrid.store.commitChanges();
                 });
             });
         });
@@ -582,9 +604,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
     /*设置页面的发布按钮*/
     onWjdcRelease:function(btn){
         //内容表单
-
-        var win = btn.findParentByType("window");
-        var form = win.child("form").getForm();
+        var form = this.getView().child("form").getForm();
         if(!form.isValid() ){
             return false;
         }
@@ -596,9 +616,10 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             Ext.Msg.alert("提示","保存出错");
         }else{
             btn.setDisabled(true);
-            form.findField("TZ_DC_WJ_FB").setValue("1");
-            form.findField("TZ_DC_WJ_PC_URL").setValue("http://www.baidu.com");
-            form.findField("TZ_DC_WJ_MB_URL").setValue("http://www.baidu.com");
+            form.findField("TZ_DC_WJ_FB").setValue("1");/*将状态设置为发布*/
+            var url=Ext.tzGetGeneralURL()+'?classid=surveyapp&SURVEY_WJ_ID='+wjId;
+
+            form.findField("TZ_DC_WJ_URL").setValue(url);
             var tzParams = this.getWjdcInfoParams(btn);
             Ext.tzSubmit(tzParams,function(responseData){
                 if(actType=="add"){
@@ -612,8 +633,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 
     },
     getWjdcInfoParams: function(btn){
-        var win = btn.findParentByType("window");
-        var form = win.child("form").getForm();
+        var form = this.getView().child("form").getForm();
         //问卷ID;
         var wjId = form.findField("TZ_DC_WJ_ID").getValue();
         var comParams = "";
@@ -658,8 +678,13 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 			iframe: {src: logicUrl}
 		});
     },
-    previewWjdc:function(){
-        alert("预览");
+    //调查问卷预览
+    previewWjdc:function(view,rowIndex){
+        var selRec = view.getStore().getAt(rowIndex);
+        var sureyId = selRec.get("TZ_DC_WJ_ID");
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + sureyId + '"}}';
+        var newTab=window.open('about:blank');
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
     },
     outputData:function(btn,rowIndex){
         /*
@@ -709,7 +734,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         }
 
         var WJID = btn.findParentByType("grid").store.getAt(rowIndex).data.TZ_DC_WJ_ID;
-        console.log(WJID);
+        //console.log(WJID);
         cmp = new ViewClass();
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
@@ -717,7 +742,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             var tzParams = '{"ComID":"TZ_ZXDC_DCBB_COM","PageID":"TZ_ZXDC_DCBB_STD",' +
                 '"OperateType":"QF","comParams":{"onlinedcId":"'+WJID+'"}}';
             Ext.tzLoad(tzParams,function(respData){
-                console.log(respData);
+                //console.log(respData);
                 form.setValues(respData);
                 
             });
@@ -742,6 +767,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         var contentPanel, cmp, ViewClass, clsProto;
 
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
         contentPanel.body.addCls('kitchensink-example');
 
         if(!Ext.ClassManager.isCreated(className)){
@@ -846,6 +872,156 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         if (cmp.floating) {
             cmp.show();
         }
+    },
+    //查看调查详情
+    detailOnWjdc:function(view,rowindex){
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowindex);
+        var wjId = selRec.get("TZ_DC_WJ_ID");
+        //查看调查详情
+        this.viewWjdcByID(wjId);
+    },
+    viewWjdcByID:function(wjId) {
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_WJGL_COM"]["TZ_ZXDC_WJXQ_STD"];
+        if (pageResSet == "" || pageResSet == undefined) {
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if (className == "" || className == undefined) {
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZXDC_WJXQ_STD，请检查配置。');
+            return;
+        }
+
+        var contentPanel, cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        if (!Ext.ClassManager.isCreated(className)) {
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            if (!clsProto.themeInfo) {
+                Ext.log.warn('Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+        }
+
+        cmp = new ViewClass();
+        //操作类型设置为更新
+        cmp.actType = "update";
+
+        cmp.on('afterrender',function(panel){
+            //组件注册表单信息;
+            var form = panel.child('form').getForm();
+            //页面注册信息列表
+            var grid = panel.child('grid');
+            //参数
+            var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJXQ_STD","OperateType":"QF","comParams":{"wjId":"'+wjId+'"}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+                //组件注册信息数据
+                var formData = responseData.formData;
+                form.setValues(formData);
+                //页面注册信息列表数据
+                var tzStoreParams = '{"wjId":"'+wjId+'"}';
+                grid.store.tzStoreParams = tzStoreParams;
+                grid.store.load();
+            });
+
+        });
+
+        var tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if (cmp.floating) {
+            cmp.show();
+        }
+      /*  var win = this.lookupReference('myDcwjDetailWindow');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            win = new ViewClass();
+            var form = win.child('form').getForm();
+            var grid=win.child("grid");
+            this.getView().add(win);
+        }
+        win.on("afterrender",function(panel){
+            var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJXQ_STD","OperateType":"QF","comParams":{"wjId":"' + wjId + '"}}';
+            Ext.tzLoad(tzParams, function (responseData) {
+                var formData = responseData.formData;
+                form.setValues(formData);
+                var tzStoreParams = '{"wjId":"' + wjId + '"}';
+                grid.store.tzStoreParams = tzStoreParams;
+                grid.store.load();
+            });
+
+        });
+        win.show();*/
+    },
+
+    /*调查详情里面的 查看详情*/
+    viewDetail:function(view,rowIndex){
+        var selRec = view.getStore().getAt(rowIndex);
+        var wjId = selRec.get("wjId");
+        var wjInsId=selRec.get("wjInsId");
+
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + wjId +'","SURVEY_INS_ID":"'+wjInsId +'"}}';
+        var newTab=window.open('about:blank');
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+    },
+  /*问卷设置关闭*/
+    onFormClose:function(){
+        this.getView().close();
+    },
+  //问卷设置保存
+    onFormSave:function(btn){
+        var panel = btn.findParentByType("panel");
+        var form = this.getView().child("form").getForm();
+       // console.log(this.getView());
+        if(!form.isValid() ){
+            return false;
+        }
+        var formParams = form.getValues();
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        Ext.tzSubmit(tzParams,function(response){
+            /*修改页面ID值*/
+            form.setValues({"TZ_DC_WJ_ID":response.wjId});
+            panel.parentGridStore.reload();
+        },"",true,this);
+    },
+    //问卷设置确定
+   onFormEnsure:function(btn){
+       var panel = btn.findParentByType("panel");
+       var form =this.getView().child("form").getForm();
+       if(!form.isValid()){
+           return false;
+       }
+       var formParams = form.getValues();
+       var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+       Ext.tzSubmit(tzParams,function(response){
+           form.setValues({"TZ_DC_WJ_ID":response.wjId});
+           panel.parentGridStore.reload();
+           panel.close();
+
+       },"",true,this);
+   },
+ //调查详情关闭按钮
+    onDetailFormClose:function(){
+        this.getView().close();
     }
 });
 

@@ -393,20 +393,20 @@
             form=grid.findParentByType('form'),
             datas = form.getForm().getValues();
         if(form.getForm().findField('reviewStatus').getValue()=='进行中')
-        { Ext.Msg.alert('提示','当前评审状态为进行中，不可为申请人 设置评委');
+        { Ext.Msg.alert('提示','当前评审状态为进行中，不可为申请人设置评委');
             return ;}
         var classID=form.getForm().findField('classID').getValue(),
             batchID=form.getForm().findField('batchID').getValue();
         var appStore=grid.getStore();
         if (appStore.getCount()==0){
-            Ext.Msg.alert('注意','未添加申请人 ，不可设置评委')
+            Ext.Msg.alert('注意','未添加申请人，不可设置评委')
             return;
         }
         var modiefyGrid=appStore.getModifiedRecords(),
             removeGrid=appStore.getRemovedRecords();
         if (modiefyGrid!=0||removeGrid!=0)
         {
-            Ext.Msg.alert('提示','请您先保存页面申请人 数据，再为申请人 设置评委');
+            Ext.Msg.alert('提示','请您先保存申请人页面数据，再为申请人设置评委');
             return;
         }
 
@@ -414,6 +414,7 @@
         Ext.tzLoad(tzParams, function (respData) {
 
             appStore.reload()
+
         });
 
     },
@@ -565,7 +566,7 @@
             select = btn.findParentByType("panel").child('grid').getSelectionModel().getSelection();
         for(var x =0;x<select.length;x++){
 
-            if(targetStore.find('judgeID',select[x].data.judgeID)<0) {
+            if(targetStore.find('judgeID',select[x].data.judgeID)<0,[anyMatch=false],[exactMatch =true]) {
 
                 var judgeModel = new KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewJudgeAccountModel({
                     classID:select[x].data.classID,
@@ -778,7 +779,7 @@
     addJudge:function(btn){
         var form = btn.findParentByType("form").findParentByType("form").getForm();
         if (form.findField('reviewStatus').getValue()=='进行中')
-        { Ext.Msg.alert('提示','当前评审状态为进行中，不可为添加评委');
+        { Ext.Msg.alert('提示','当前评审状态为进行中，不可添加评委');
             return ;}
         var classID = form.findField("classID").getValue(),
             batchID = form.findField("batchID").getValue();
@@ -1008,7 +1009,7 @@
         var form=btn.findParentByType('grid').findParentByType('form').getForm();
 
         if (form.findField('reviewStatus').getValue()=='进行中')
-        { Ext.Msg.alert('提示','当前评审状态为进行中，不可为添加申请人 ');
+        { Ext.Msg.alert('提示','当前评审状态为进行中，不可添加申请人 ');
             return ;}
         var classID = form.findField('classID').value,
             batchID =form.findField('batchID').value,
@@ -1161,7 +1162,7 @@
 
         }
         var classID=select[0].data.classID;
-
+        var  newRecord = [];
 
         var tzParams = '{"ComID":"TZ_REVIEW_GSMCL_COM","PageID":"TZ_GSMCL_ADDAP_STD","OperateType":"ADDAPP","comParams":{"type":"ADDAPP","classID":"' + classID + '","batchID":"' + batchID + '","selectApps":"' + selectApps + '"}}';
 
@@ -1178,32 +1179,39 @@
                 }
                 if
                     (gg == 0) {
-                    var applicantModel = new KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewApplicantsModel({
-                        classID: respData[dd].classID,
-                        batchID: respData[dd].batchID,
-                        realName: respData[dd].realName,
-                        gender: respData[dd].gender,
-                        appInsID: respData[dd].appInsID,
-                        oprID: respData[dd].oprID,
-                        judgeList: respData[dd].judgeList,
-                        applyPosition: respData[dd].applyPosition,
-                        intentOrder: respData[dd].intentOrder,
-                        intentID: respData[dd].intentID,
-                        intentDepart: respData[dd].intentDepart,
-                        interviewQualification: respData[dd].interviewQualification
-                    });
-                    targetStore.add(applicantModel);
+//
+//
+//                    var applicantModel = new KitchenSink.view.materialsReview.GSMmaterialsReview.materialsReviewApplicantsModel({
+//                        classID: respData[dd].classID,
+//                        batchID: respData[dd].batchID,
+//                        realName: respData[dd].realName,
+//                        gender: respData[dd].gender,
+//                        appInsID: respData[dd].appInsID,
+//                        oprID: respData[dd].oprID,
+//                        judgeList: respData[dd].judgeList,
+//                        applyPosition: respData[dd].applyPosition,
+//                        intentOrder: respData[dd].intentOrder,
+//                        intentID: respData[dd].intentID,
+//                        intentDepart: respData[dd].intentDepart,
+//                        interviewQualification: respData[dd].interviewQualification
+//                    });
+//                    targetStore.add(applicantModel);
+
+                    console.log(respData[dd])
+                    newRecord.push(respData[dd]);
+                    console.log(newRecord);
                 }
                 else {
                     var isExist = true;
                 }
 
             }
-            if(isExist){
-                Ext.Msg.alert("提示","在您所选的记录中，有申请人 已经存在于名单中");
-            }
+//            if(isExist){
+//                Ext.Msg.alert("提示","在您所选的记录中，有申请人 已经存在于名单中");
+//            }
 
             //       targetStore.reload();
+            targetStore.add(newRecord);
         });
 //        var store=btn.findParentByType("panel").child('grid').getStore();
 
@@ -1284,9 +1292,9 @@
                             store: {
                                 fields: ["status", "desc"],
                                 data: [
-                                    {status: 'Y', desc: '有'},
-                                    {status: 'W', desc: '待定'},
-                                    {status: 'N', desc: '无'}
+                                    {status: '有面试资格', desc: '有面试资格'},
+                                    {status: '待定', desc: '待定'},
+                                    {status: '无面试资格', desc: '无面试资格'}
                                 ]
                             },
                             displayField: 'desc',
@@ -1375,9 +1383,9 @@
                         store: {
                             fields: ["status", "desc"],
                             data: [
-                                {status: 'Y', desc: '有'},
-                                {status: 'W', desc: '待定'},
-                                {status: 'N', desc: '无'}
+                                {status: '有面试资格', desc: '有面试资格'},
+                                {status: '待定', desc: '待定'},
+                                {status: '无面试资格', desc: '无面试资格'}
                             ]
                         },
                         displayField: 'desc',
@@ -1422,6 +1430,7 @@
         //选中行长度
         var resSetStore =  btn.findParentByType("grid").store;
         var checkLen = selList.length;
+        var tiShi=0;
         if(checkLen == 0){
             Ext.Msg.alert("提示","请选择要删除的记录");
             return;
@@ -1432,15 +1441,19 @@
                     for ( var i=0;i<checkLen;i++)
                     {
                         if (selList[i].data.judgeList!=0)
-                        {Ext.Msg.alert('提示','选中申请人 中存在已被指定评委的申请人 ，不可删除');}
-                        else
-                        {resSetStore.remove(selList[i]);}
+                        {
+                            console.log(selList)
+                            tiShi=tiShi+1;
+                            selList.splice(i,"1"," ");
+                            }
+
                     }
-                    //           resSetStore.remove(selList);
-//                    var resSetStore =  btn.findParentByType("grid").store;
-//                    for (i=0;i<checkLen;i++){
-//
-//                    }
+                    if(tiShi>0)
+                    {
+                        Ext.Msg.alert('提示','选中申请人中存在已被指定评委的申请人 ，不可删除');
+
+                    }
+                    resSetStore.remove(selList);
                 }
 
             },"",true,this);
@@ -1469,9 +1482,9 @@
                     store: {
                         fields: ["status", "desc"],
                         data: [
-                            {status: 'Y', desc: '有'},
-                            {status: 'W', desc: '待定'},
-                            {status: 'N', desc: '无'}
+                            {status: '有面试资格', desc: '有面试资格'},
+                            {status: '待定', desc: '待定'},
+                            {status: '无面试资格', desc: '无面试资格'}
                         ]
                     },
                     displayField: 'desc',
@@ -1659,29 +1672,22 @@
 
         var params = '{"ComID":"TZ_REVIEW_GSMCL_COM","PageID":"TZ_GSMCL_VWJUD_STD","OperateType":"QG","comParams":'+comParams+'}';
         Ext.tzLoad(params, function(resp){
+
             var scoreItems=[];
-
+//返回json的root
             var value=resp.root;
+            console.log(value)
+            //因为考虑到无评委不会提交请求，故返回的root内必有数据
+            //所有数据的打分类型一致，取第一组数据打分类型
+            var scoreTypes=value[0].score;
             var GridData,judgeScore,scoreItem;
+            if(scoreTypes.length>0){
+                for (var x =0 ; x <scoreTypes.length; x++) {
+                    scoreItem = scoreTypes[x].name;
+                    scoreItems.push(scoreItem);
 
-            for (var i=0;i<value.length;i++) {
-                GridData = value[i];
-
-                judgeScore = Ext.JSON.decode(GridData.score);
-
-                for (var x = judgeScore.length - 1; x >= 0; x--) {
-                    var n = 0;
-                    scoreItem = judgeScore[x].name;
-
-                    for (var y = 0; y < scoreItems.length; y++) {
-                        if (scoreItems[y] == scoreItem) {
-                            n = n + 1;
-                        }
-                    }
-                    if (n == 0) {
-                        scoreItems.push(scoreItem);
-                    }
                 }
+
             }
 
             if (!win) {
@@ -1794,7 +1800,7 @@
                 console.log(respData);
                 if(respData==1){
                     appStore.reload();
-                    Ext.Msg.alert( "注意","报考申请人 中，有申请人 所报志愿不存在相应系所评委，或不同时存在材料评委和系主任")
+                    Ext.Msg.alert( "注意","报考申请人中，有申请人所报志愿不存在相应系所评委，或不同时存在材料评委和系主任")
                 }else {
                     appStore.reload();
                     form.getForm().findField('reviewStatus').setValue("进行中");
@@ -1911,7 +1917,7 @@
         var datas = grid.getSelectionModel().getSelection(),
             arr = [];
         if (datas.length==0){
-            Ext.Msg.alert('提示','请选择发送邮件的考生');
+            Ext.Msg.alert('提示','请选择发送邮件的申请人');
             return;
         }
 

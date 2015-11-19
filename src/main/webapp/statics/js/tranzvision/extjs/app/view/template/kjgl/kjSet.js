@@ -20,6 +20,7 @@ Ext.define('KitchenSink.view.template.kjgl.kjSet', {
     style:"margin:8px",
     multiSelect: true,
     title: '控件列表',
+    reference:'kjSet',
     viewConfig: {
         enableTextSelection: true
     },
@@ -42,6 +43,7 @@ Ext.define('KitchenSink.view.template.kjgl.kjSet', {
                     removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
                 }
             }
+            var comParams="";
             if(removeJson != ""){
                 comParams = '"delete":[' + removeJson + "]";
             }else{
@@ -51,7 +53,38 @@ Ext.define('KitchenSink.view.template.kjgl.kjSet', {
             Ext.tzSubmit(tzParams,function(){
                 store.reload();
             },"",true,this);
-        }}]
+        }},
+            {minWidth:80,text:"确认",iconCls:"ensure",handler:function(btn){
+                var grid = btn.findParentByType("grid");
+                var store = grid.getStore();
+                var removeJson = "";
+                var removeRecs = store.getRemovedRecords();
+                for(var i=0;i<removeRecs.length;i++){
+                    if(removeJson == ""){
+                        removeJson = Ext.JSON.encode(removeRecs[i].data);
+                    }else{
+                        removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+                    }
+                }
+                var comParams="";
+
+                if(removeJson != ""){
+                    comParams = '"delete":[' + removeJson + "]";
+                }else{
+                    grid.close();
+                    return;
+                }
+                var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+
+                Ext.tzSubmit(tzParams,function(){
+                    store.reload();
+                },"",true,grid);
+                grid.close();
+            }},
+            {minWidth:80,text:"关闭",iconCls:"close",handler:function(btn){
+                var grid = btn.findParentByType("grid");
+                grid.close();
+            }}]
     },
         {
         xtype:"toolbar",

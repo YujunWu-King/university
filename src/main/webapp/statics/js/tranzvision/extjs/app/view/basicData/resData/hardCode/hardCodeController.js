@@ -143,6 +143,7 @@
 			
 			var form = panel.child('form').getForm();
             form.findField("hardCodeName").setReadOnly(true);
+			form.findField("hardCodeName").addCls("lanage_1");
 			//参数
 			var tzParams = '{"ComID":"TZ_GD_HARDCODE_COM","PageID":"TZ_GD_HARDCODE_STD","OperateType":"QF","comParams":{"hardCodeName":"'+hardCodeName+'"}}';
 			//加载数据
@@ -188,6 +189,7 @@
 				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
 			}
 		}
+		var comParams = "";
 		if(removeJson != ""){
 			comParams = '"delete":[' + removeJson + "]";
 		}
@@ -198,8 +200,17 @@
 			store.reload();			   
 		},"",true,this);
 	},
-	
-	
+	//确定
+	ensureHardCodeInfos: function(btn){
+		//保存信息
+		this.saveHardCodeInfos(btn);
+		//关闭窗口
+		this.view.close();
+	},
+	//关闭
+	closeHardCodeInfos:function(btn){
+		this.view.close();
+	},
 	onHardCodeClose: function(btn){
 		var panel = btn.findParentByType("panel");
 		var form = panel.child("form").getForm();
@@ -226,10 +237,12 @@
 	
 		
 		tzParams += '"hardCodeName":"'+hardCodeName+'","hardCodeDesc":"'+hardCodeDesc+'","hardCodeValue":"'+hardCodeValue+'","hardCodeDetailDesc":"'+hardCodeDetailDesc+'"}]}}';
-		console.log(tzParams);
+		panel.actType = "edit";
 		Ext.tzSubmit(tzParams,function(response){
 			var formData =	response.formData;
 			form.setValues(formData);
+			form.findField("hardCodeName").setReadOnly(true);
+			form.findField("hardCodeName").addCls('lanage_1');
 		},"",true,this);
 	},
 	

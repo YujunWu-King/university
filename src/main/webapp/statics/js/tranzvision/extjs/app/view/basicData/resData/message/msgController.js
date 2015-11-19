@@ -120,6 +120,19 @@
 			store.reload();			   
 		},"",true,this);
     },
+    //确定
+    msgEnsure:function(btn){
+        this.msgSave(btn);
+        //关闭窗口
+        var comView = this.getView();
+        comView.close();
+    },
+    //关闭
+    msgClose:function(btn){
+        //关闭窗口
+        var comView = this.getView();
+        comView.close();
+    },
     currMsgEdit: function(view,rowIndex) {
         var store = view.findParentByType("grid").store;
         var selRec = store.getAt(rowIndex);

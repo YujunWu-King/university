@@ -8,13 +8,18 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
    // y:10,
     actType: 'add',
     modal:true,
-   bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    bodyStyle:'overflow-y:auto;overflow-x:hidden',
     items: [{
         xtype: 'form',
         width: 700,
         layout: {
             type: 'vbox',
             align: 'stretch'
+        },
+        fieldDefaults: {
+            msgTarget: 'side',
+            labelWidth: 100,
+            labelStyle: 'font-weight:bold'
         },
         border: false,
         bodyPadding: 10,
@@ -31,6 +36,9 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
                 fieldLabel: '模板名称',
                 name: 'TZ_APP_TPL_MC',
                 allowBlank: false,
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
                 xtype: 'textfield'
             },
             {
@@ -43,7 +51,8 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
                 valueField: 'TValue',
                 displayField: 'TSDesc',
                 store: new KitchenSink.view.common.store.appTransStore("TZ_EFFEXP_ZT"),
-                allowBlank: false
+                allowBlank: false,
+                value:'Y'
             },
             {  xtype: 'combobox',
                 fieldLabel: '类型',
@@ -56,6 +65,7 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
                 ignoreChangesFlag: true,
                 store: new KitchenSink.view.common.store.appTransStore("TZ_APP_TPL_LX"),
                 allowBlank:false,
+                hidden:true,
                 value:'0'
             },
             {
@@ -90,8 +100,9 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
             }
             var formParams = form.getValues();
             var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_MBSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
-            Ext.tzSubmit(tzParams,function(response){
+            Ext.tzSubmit(tzParams,function(data){
                 grid.store.reload();
+                var tplId=data.id;
                 win.close();
             },"",true,win);
         }
@@ -110,10 +121,12 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
             return false;
         }else{
             var formParams = form.getValues();
-           console.log(formParams);
             var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_MBSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
             Ext.tzSubmit(tzParams,function(response){
+                /*保存后，=修改页面的ID值*/
+                form.setValues({"TZ_APP_TPL_ID":response.id});
                 win.findParentByType("zxdcMbListInfo").store.reload();
+
             },"",true,this);
         }
     }

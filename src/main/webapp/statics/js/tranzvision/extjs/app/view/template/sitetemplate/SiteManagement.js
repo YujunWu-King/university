@@ -30,7 +30,10 @@
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"saveComRegInfos"}]
+        items:['->',
+            {minWidth:80,text:"保存",iconCls:"save",handler:"saveComRegInfos"},
+            {minWidth:80,text:'确定',iconCls:"ensure",handler: 'ensureComRegInfos'},
+            {minWidth:80,text:'关闭',iconCls:"close",handler: 'closeComRegInfos'}]
     },{
         xtype:"toolbar",
         items:[

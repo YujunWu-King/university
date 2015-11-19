@@ -47,7 +47,7 @@
 			minValue: 1
 		},{
 			xtype: 'checkboxfield',
-			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isExURL","外部链接"),
+			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isExURL","是否外部链接"),
 			name      : 'isExURL',
 			inputValue: 'Y'
 		}, {
@@ -64,12 +64,12 @@
 			name: 'appClass'
 		},{
 			xtype: 'checkboxfield',
-			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isDefault","默认首页"),
+			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isDefault","是否默认首页"),
 			name      : 'isDefault',
 			inputValue: 'Y'
 		},{
 			xtype: 'checkboxfield',
-			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isNewWin","新开窗口"),
+			fieldLabel  : Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.isNewWin","是否新开窗口"),
 			name      : 'isNewWin',
 			inputValue: 'Y'
 		},{

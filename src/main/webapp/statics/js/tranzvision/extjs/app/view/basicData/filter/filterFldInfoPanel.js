@@ -49,6 +49,7 @@
 			xtype: 'textfield',
 			fieldLabel: '字段名称',
 			readOnly:true,
+			cls:"lanage_1",
 			name: 'FieldMc'
 		},{
 			xtype: 'textfield',

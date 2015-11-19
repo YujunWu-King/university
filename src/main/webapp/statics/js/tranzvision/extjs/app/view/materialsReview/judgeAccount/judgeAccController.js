@@ -220,6 +220,14 @@
 			},"保存成功",true,this);
 		}
 	},
+
+	//关闭
+	/*==========================================================*/
+	/*    关闭班级列表页面  LYY  2015-10-26                     */
+	/*==========================================================*/
+	onClose:function(btn){
+		btn.up('grid').close();
+	},
 	
 	onWinClose: function(btn){
 		var win = btn.findParentByType('panel');

@@ -98,7 +98,7 @@
 			dataIndex: 'pageName',
 			minWidth: 100,
 			flex: 1
-		},{
+		},/*{
 			xtype: 'checkcolumn',
 			text: Ext.tzGetResourse("TZ_AQ_COMREG_COM.TZ_AQ_COMREG_STD.isDefault","默认首页"),
 			dataIndex: 'isDefault',
@@ -123,7 +123,34 @@
 					}
 				}	
 			}
-		}],
+		}*/
+		//将原来的checkbox 改为下拉框
+		{
+				text:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.isDefault","是否默认首页"),
+				sortable: true,
+				dataIndex: 'isDefault',
+				minWidth: 100,
+                align:'center',
+				renderer : function(value, metadata, record) {
+					if (value=="Y"){
+						return "是";
+					}else if(value=="N"){
+						return "否";
+					}
+				}
+			},
+			{
+				menuDisabled: true,
+				sortable: false,
+				width:60,
+				align:'center',
+				xtype: 'actioncolumn',
+				items:[
+					{iconCls: 'edit',tooltip: '编辑',handler: 'editPageRegInfoOne'},
+					{iconCls: 'remove',tooltip: '删除',handler: 'deletePageRegInfoOne'}
+				]
+			}
+		],
 		store: {
 			type: 'pageStore'
 		},

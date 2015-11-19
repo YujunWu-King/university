@@ -1,6 +1,33 @@
 Ext.define('KitchenSink.view.template.jygz.jygzController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.jygz',
+
+    ensureJygzSet:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var removeJson = "";
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            comParams = '"delete":[' + removeJson + "]";
+        }else{
+            grid.close();
+            return;
+        }
+        var tzParams = '{"ComID":"TZ_JYGZ_COM","PageID":"TZ_JYGZ_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+
+        Ext.tzSubmit(tzParams,function(){
+            store.reload();
+        },"",true,this);
+        //关闭
+        grid.close();
+    },
     queryJygz:function(btn){
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_JYGZ_COM.TZ_JYGZ_LIST_STD.TZ_JYGZ_VW',
