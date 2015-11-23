@@ -235,8 +235,72 @@
 			var form = panel.child('form').getForm();
 			form.findField("siteId").setReadOnly(true);
 			form.findField("menutypeid").setReadOnly(true);
+			
+			//加载栏目模板
+			var lm_mbStore = new KitchenSink.view.common.store.comboxStore({
+				recname: 'TZ_SITEM_TEMP_T',
+				condition:{
+					TZ_SITEM_ID:{
+						value:siteId,
+						operator:"01",
+						type:"01"
+					},
+					TZ_TEMP_STATE:{
+						value:'Y',
+						operator:"01",
+						type:"01"
+					}
+				},
+				result:'TZ_TEMP_ID,TZ_TEMP_NAME',
+				listeners:{    
+
+					//向已有数据中插入一条新的数据    
+					load : function(store, records, options ){    
+
+						var data ={ "TZ_TEMP_ID": "", "TZ_TEMP_NAME": "" };    
+
+						var rs = [new Ext.data.Record(data)];    
+
+						store.insert(0,rs);    
+
+					}    
+
+				}
+			});
+			
+			form.findField("menuColuTmpl").setStore(lm_mbStore);
+			form.findField("menuContTmpl").setStore(lm_mbStore);
+			
+			//栏目类型
+			var lm_lxStore = new KitchenSink.view.common.store.comboxStore({
+				recname: 'TZ_PT_ZHZXX_V',
+				condition:{
+					TZ_ZHZJH_ID:{
+						value:'TZ_ZDLM_LX',
+						operator:"01",
+						type:"01"
+					}
+				},
+				result:'TZ_ZHZ_ID,TZ_ZHZ_DMS'
+			});
+			form.findField("menuColuType").setStore(lm_lxStore);
+			
+			//内容类型
+			var nr_lxStore = new KitchenSink.view.common.store.comboxStore({
+				recname: 'TZ_PT_ZHZXX_V',
+				condition:{
+					TZ_ZHZJH_ID:{
+						value:'TZ_ZD_NRLX',
+						operator:"01",
+						type:"01"
+					}
+				},
+				result:'TZ_ZHZ_ID,TZ_ZHZ_DMS'
+			});
+			form.findField("menuContType").setStore(nr_lxStore);
+			
 			//页面注册信息列表
-			var grid = panel.child('grid');
+			var grid = panel.down('grid');
 			//参数
 			var tzParams = '{"ComID":"TZ_GD_ZDMB_COM","PageID":"TZ_ZD_CDLXSZ_STD","OperateType":"QF","comParams":{"siteId":"'+siteId+'","menutypeid":"'+menutypeid+'"}}';
 			//加载数据

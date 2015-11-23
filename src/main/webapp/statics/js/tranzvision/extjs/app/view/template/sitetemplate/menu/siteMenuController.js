@@ -34,7 +34,7 @@
 			comView.actType = "update";
 			if(actType == "add" && btn != "but_ensure"){
 				var menuId = responseData.menuId;
-				form.setValues({menuId:menuId});
+				form.setValues({menuid:menuId});
 			}
 			
 			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
