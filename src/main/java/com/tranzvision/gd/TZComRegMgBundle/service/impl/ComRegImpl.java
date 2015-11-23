@@ -232,19 +232,17 @@ public class ComRegImpl extends FrameworkImpl {
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						isDefault = (String) list.get(i).get("TZ_PAGE_MRSY");
-						if ("Y".equals(isDefault)) {
-							isDefault = "true";
-						} else {
-							isDefault = "false";
-						}
+						if (!"Y".equals(isDefault)) {
+							isDefault = "N";
+						} 
 						strPageID = (String) list.get(i).get("TZ_PAGE_ID");
 						strPageName = (String) list.get(i).get("TZ_PAGE_MC");
 						numOrder = (int) list.get(i).get("TZ_PAGE_XH");
 	
 						strPageContent = strPageContent + ",{\"comID\":\"" + TZUtility.transFormchar(strComID)
 								+ "\",\"pageID\":\"" + TZUtility.transFormchar(strPageID) + "\",\"pageName\":\""
-								+ TZUtility.transFormchar(strPageName) + "\",\"orderNum\":" + numOrder + ",\"isDefault\":"
-								+ isDefault + "}";
+								+ TZUtility.transFormchar(strPageName) + "\",\"orderNum\":" + numOrder + ",\"isDefault\":\""
+								+ isDefault + "\"}";
 					}
 				}
 				if (!"".equals(strPageContent)) {
