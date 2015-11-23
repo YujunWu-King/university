@@ -35,7 +35,7 @@
 			comView.actType = "update";
 			if(actType == "add" && btn != "but_ensure"){
 				var areaId = responseData.areaId;
-				form.setValues({areaId:areaId});
+				form.setValues({areaid:areaId});
 			}
 			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
 			var templateGrid = contentPanel.child("siteTemplateInfoGL").child("form").child("tabpanel").getActiveTab();
