@@ -127,16 +127,12 @@ public class Index {
 			 * 检查comParams是否是一个合法的JSON字符串，如果不是，则将临时变量&tmpComParams赋值为空JSON对象字符串
 			 */
 			/*
-			try {
-				tmpComParams = request.getParameter("comParams");
-				PaseJsonUtil.getJson(tmpComParams);
-			} catch (Exception e) {
-				e.printStackTrace();
-				tmpComParams = "{}";
-			}
-			*/
+			 * try { tmpComParams = request.getParameter("comParams");
+			 * PaseJsonUtil.getJson(tmpComParams); } catch (Exception e) {
+			 * e.printStackTrace(); tmpComParams = "{}"; }
+			 */
 			tmpComParams = request.getParameter("comParams");
-			if(tmpComParams == null || "".equals(tmpComParams)){
+			if (tmpComParams == null || "".equals(tmpComParams)) {
 				tmpComParams = "{}";
 			}
 
@@ -147,22 +143,17 @@ public class Index {
 
 		// 将字符串转换成json;
 		/*
-		JSONObject CLASSJson = null;
-		try {
-			CLASSJson = PaseJsonUtil.getJson(strParams);
-		} catch (Exception e) {
-			// e.printStackTrace();
-		}
-		*/
-		
-		
+		 * JSONObject CLASSJson = null; try { CLASSJson =
+		 * PaseJsonUtil.getJson(strParams); } catch (Exception e) { //
+		 * e.printStackTrace(); }
+		 */
 
 		// 操作类型;
 		String strOprType = "";
-		
+
 		try {
 			jacksonUtil.json2Map(strParams);
-			
+
 			strOprType = jacksonUtil.getString("OperateType");
 			Map<String, Object> map = null;
 			switch (OperateType.getOperateType(strOprType)) {
@@ -222,10 +213,10 @@ public class Index {
 				// 搜索结果字段;
 				String result = jacksonUtil.getString("result");
 				// 搜索条件;
-				//String condition = jacksonUtil.getString("condition");
+				// String condition = jacksonUtil.getString("condition");
 				map = jacksonUtil.getMap("condition");
 				String condition = jacksonUtil.Map2json(map).toString();
-				
+
 				// 根据搜索条件获取搜索表中的数据，供下拉框使用;
 				strComContent = gdKjComService.getComboxValue(recname, condition, result, errMsgArr);
 				break;
@@ -234,7 +225,7 @@ public class Index {
 				// 搜索表或视图名;
 				String precname = jacksonUtil.getString("recname");
 				// 搜索条件;
-				//String pcondition = jacksonUtil.getString("condition");
+				// String pcondition = jacksonUtil.getString("condition");
 				map = jacksonUtil.getMap("condition");
 				String pcondition = jacksonUtil.Map2json(map).toString();
 				// 搜索结果字段;
@@ -276,26 +267,26 @@ public class Index {
 				// 页面ID;
 				String sPageID = jacksonUtil.getString("PageID");
 				// 通用参数;
-				//String sCommParams = CLASSJson.getString("comParams");
+				// String sCommParams = CLASSJson.getString("comParams");
 				map = jacksonUtil.getMap("comParams");
-				
+
 				String sCommParams = jacksonUtil.Map2json(map).toString();
-				if((sCommParams == null || "null".equals(sCommParams))  ){
+				if ((sCommParams == null || "null".equals(sCommParams))) {
 					// 错误描述;
-					//strErrorDesc = sCommParams + "提交的json数据无效";
+					// strErrorDesc = sCommParams + "提交的json数据无效";
 					// 错误码;
-					//errorCode = "1";
+					// errorCode = "1";
 					sCommParams = "{}";
-				}else{
-					gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
-					strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
-							sCommParams, errMsgArr);
-					errorCode = errMsgArr[0];
-					strErrorDesc = errMsgArr[1];
-	
-					String tmpUserID = gdKjComService.getOPRID(request);
-					authorizedInfomation = gdKjComService.getComAuthorizedInfo(tmpUserID, comID);
 				}
+				gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
+				strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
+						sCommParams, errMsgArr);
+				errorCode = errMsgArr[0];
+				strErrorDesc = errMsgArr[1];
+
+				String tmpUserID = gdKjComService.getOPRID(request);
+				authorizedInfomation = gdKjComService.getComAuthorizedInfo(tmpUserID, comID);
+
 				break;
 			}
 
