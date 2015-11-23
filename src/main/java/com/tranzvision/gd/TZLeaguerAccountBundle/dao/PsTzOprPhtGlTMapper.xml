@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhtGlTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT" >
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_ATTACHSYSFILENA" property="tzAttachsysfilena" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OPRID, TZ_ATTACHSYSFILENA
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_OPR_PHT_GL_T
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_OPR_PHT_GL_T
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT" >
+    insert into PS_TZ_OPR_PHT_GL_T (OPRID, TZ_ATTACHSYSFILENA)
+    values (#{oprid,jdbcType=VARCHAR}, #{tzAttachsysfilena,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT" >
+    insert into PS_TZ_OPR_PHT_GL_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzAttachsysfilena != null" >
+        TZ_ATTACHSYSFILENA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttachsysfilena != null" >
+        #{tzAttachsysfilena,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT" >
+    update PS_TZ_OPR_PHT_GL_T
+    <set >
+      <if test="tzAttachsysfilena != null" >
+        TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT" >
+    update PS_TZ_OPR_PHT_GL_T
+    set TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR}
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

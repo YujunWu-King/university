@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemCdpfTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_MENU_TYPE_ID" property="tzMenuTypeId" jdbcType="VARCHAR" />
+    <id column="TZ_SKIN_ID" property="tzSkinId" jdbcType="VARCHAR" />
+    <result column="TZ_SKIN_STATE" property="tzSkinState" jdbcType="VARCHAR" />
+    <result column="TZ_SKIN_NAME" property="tzSkinName" jdbcType="VARCHAR" />
+    <result column="TZ_TYPE_IMG" property="tzTypeImg" jdbcType="VARCHAR" />
+    <result column="TZ_NOW_IMG" property="tzNowImg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_MENU_TYPE_ID, TZ_SKIN_ID, TZ_SKIN_STATE, TZ_SKIN_NAME, TZ_TYPE_IMG, 
+    TZ_NOW_IMG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEM_CDPF_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfTKey" >
+    delete from PS_TZ_SITEM_CDPF_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT" >
+    insert into PS_TZ_SITEM_CDPF_T (TZ_SITEM_ID, TZ_MENU_TYPE_ID, TZ_SKIN_ID, 
+      TZ_SKIN_STATE, TZ_SKIN_NAME, TZ_TYPE_IMG, 
+      TZ_NOW_IMG)
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, #{tzSkinId,jdbcType=VARCHAR}, 
+      #{tzSkinState,jdbcType=VARCHAR}, #{tzSkinName,jdbcType=VARCHAR}, #{tzTypeImg,jdbcType=VARCHAR}, 
+      #{tzNowImg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT" >
+    insert into PS_TZ_SITEM_CDPF_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzMenuTypeId != null" >
+        TZ_MENU_TYPE_ID,
+      </if>
+      <if test="tzSkinId != null" >
+        TZ_SKIN_ID,
+      </if>
+      <if test="tzSkinState != null" >
+        TZ_SKIN_STATE,
+      </if>
+      <if test="tzSkinName != null" >
+        TZ_SKIN_NAME,
+      </if>
+      <if test="tzTypeImg != null" >
+        TZ_TYPE_IMG,
+      </if>
+      <if test="tzNowImg != null" >
+        TZ_NOW_IMG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuTypeId != null" >
+        #{tzMenuTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinId != null" >
+        #{tzSkinId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinState != null" >
+        #{tzSkinState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinName != null" >
+        #{tzSkinName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeImg != null" >
+        #{tzTypeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNowImg != null" >
+        #{tzNowImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT" >
+    update PS_TZ_SITEM_CDPF_T
+    <set >
+      <if test="tzSkinState != null" >
+        TZ_SKIN_STATE = #{tzSkinState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinName != null" >
+        TZ_SKIN_NAME = #{tzSkinName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeImg != null" >
+        TZ_TYPE_IMG = #{tzTypeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNowImg != null" >
+        TZ_NOW_IMG = #{tzNowImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT" >
+    update PS_TZ_SITEM_CDPF_T
+    set TZ_SKIN_STATE = #{tzSkinState,jdbcType=VARCHAR},
+      TZ_SKIN_NAME = #{tzSkinName,jdbcType=VARCHAR},
+      TZ_TYPE_IMG = #{tzTypeImg,jdbcType=VARCHAR},
+      TZ_NOW_IMG = #{tzNowImg,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+  </update>
+</mapper>

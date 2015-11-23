@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PxTzSitemMenuTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_MENU_ID" property="tzMenuId" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_NAME" property="tzMenuName" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_COLUMN" property="tzMenuColumn" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_STATE" property="tzMenuState" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_TYPE_ID" property="tzMenuTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_IS_DEL" property="tzIsDel" jdbcType="VARCHAR" />
+    <result column="TZ_IS_EDITOR" property="tzIsEditor" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_XH" property="tzMenuXh" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_MENU_ID, TZ_MENU_NAME, TZ_MENU_COLUMN, TZ_MENU_STATE, TZ_MENU_TYPE_ID, 
+    TZ_IS_DEL, TZ_IS_EDITOR, TZ_MENU_XH
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEM_MENU_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuTKey" >
+    delete from PS_TZ_SITEM_MENU_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuT" >
+    insert into PS_TZ_SITEM_MENU_T (TZ_SITEM_ID, TZ_MENU_ID, TZ_MENU_NAME, 
+      TZ_MENU_COLUMN, TZ_MENU_STATE, TZ_MENU_TYPE_ID, 
+      TZ_IS_DEL, TZ_IS_EDITOR, TZ_MENU_XH
+      )
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzMenuId,jdbcType=VARCHAR}, #{tzMenuName,jdbcType=VARCHAR}, 
+      #{tzMenuColumn,jdbcType=VARCHAR}, #{tzMenuState,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, 
+      #{tzIsDel,jdbcType=VARCHAR}, #{tzIsEditor,jdbcType=VARCHAR}, #{tzMenuXh,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuT" >
+    insert into PS_TZ_SITEM_MENU_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzMenuId != null" >
+        TZ_MENU_ID,
+      </if>
+      <if test="tzMenuName != null" >
+        TZ_MENU_NAME,
+      </if>
+      <if test="tzMenuColumn != null" >
+        TZ_MENU_COLUMN,
+      </if>
+      <if test="tzMenuState != null" >
+        TZ_MENU_STATE,
+      </if>
+      <if test="tzMenuTypeId != null" >
+        TZ_MENU_TYPE_ID,
+      </if>
+      <if test="tzIsDel != null" >
+        TZ_IS_DEL,
+      </if>
+      <if test="tzIsEditor != null" >
+        TZ_IS_EDITOR,
+      </if>
+      <if test="tzMenuXh != null" >
+        TZ_MENU_XH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuId != null" >
+        #{tzMenuId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuName != null" >
+        #{tzMenuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuColumn != null" >
+        #{tzMenuColumn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuState != null" >
+        #{tzMenuState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuTypeId != null" >
+        #{tzMenuTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsDel != null" >
+        #{tzIsDel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsEditor != null" >
+        #{tzIsEditor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuXh != null" >
+        #{tzMenuXh,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuT" >
+    update PS_TZ_SITEM_MENU_T
+    <set >
+      <if test="tzMenuName != null" >
+        TZ_MENU_NAME = #{tzMenuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuColumn != null" >
+        TZ_MENU_COLUMN = #{tzMenuColumn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuState != null" >
+        TZ_MENU_STATE = #{tzMenuState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuTypeId != null" >
+        TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsDel != null" >
+        TZ_IS_DEL = #{tzIsDel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsEditor != null" >
+        TZ_IS_EDITOR = #{tzIsEditor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuXh != null" >
+        TZ_MENU_XH = #{tzMenuXh,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PxTzSitemMenuT" >
+    update PS_TZ_SITEM_MENU_T
+    set TZ_MENU_NAME = #{tzMenuName,jdbcType=VARCHAR},
+      TZ_MENU_COLUMN = #{tzMenuColumn,jdbcType=VARCHAR},
+      TZ_MENU_STATE = #{tzMenuState,jdbcType=VARCHAR},
+      TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR},
+      TZ_IS_DEL = #{tzIsDel,jdbcType=VARCHAR},
+      TZ_IS_EDITOR = #{tzIsEditor,jdbcType=VARCHAR},
+      TZ_MENU_XH = #{tzMenuXh,jdbcType=INTEGER}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAtypTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypT" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <id column="TZ_AREA_TYPE_ID" property="tzAreaTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE_NAME" property="tzAreaTypeName" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE" property="tzAreaType" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE_STATE" property="tzAreaTypeState" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_SET_CODE" property="tzAreaSetCode" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_HTML_CODE" property="tzAreaHtmlCode" jdbcType="VARCHAR" />
+    <result column="TZ_ADDED_DTTM" property="tzAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_ADDED_OPRID" property="tzAddedOprid" jdbcType="VARCHAR" />
+    <result column="TZ_LASTMANT_DTTM" property="tzLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_LASTMANT_OPRID" property="tzLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_AREA_TYPE_ID, TZ_AREA_TYPE_NAME, TZ_AREA_TYPE, TZ_AREA_TYPE_STATE, 
+    TZ_AREA_SET_CODE, TZ_AREA_HTML_CODE, TZ_ADDED_DTTM, TZ_ADDED_OPRID, TZ_LASTMANT_DTTM, 
+    TZ_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEI_ATYP_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypTKey" >
+    delete from PS_TZ_SITEI_ATYP_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypT" >
+    insert into PS_TZ_SITEI_ATYP_T (TZ_SITEI_ID, TZ_AREA_TYPE_ID, TZ_AREA_TYPE_NAME, 
+      TZ_AREA_TYPE, TZ_AREA_TYPE_STATE, TZ_AREA_SET_CODE, 
+      TZ_AREA_HTML_CODE, TZ_ADDED_DTTM, TZ_ADDED_OPRID, 
+      TZ_LASTMANT_DTTM, TZ_LASTMANT_OPRID)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzAreaTypeId,jdbcType=VARCHAR}, #{tzAreaTypeName,jdbcType=VARCHAR}, 
+      #{tzAreaType,jdbcType=VARCHAR}, #{tzAreaTypeState,jdbcType=VARCHAR}, #{tzAreaSetCode,jdbcType=VARCHAR}, 
+      #{tzAreaHtmlCode,jdbcType=VARCHAR}, #{tzAddedDttm,jdbcType=TIMESTAMP}, #{tzAddedOprid,jdbcType=VARCHAR}, 
+      #{tzLastmantDttm,jdbcType=TIMESTAMP}, #{tzLastmantOprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypT" >
+    insert into PS_TZ_SITEI_ATYP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzAreaTypeId != null" >
+        TZ_AREA_TYPE_ID,
+      </if>
+      <if test="tzAreaTypeName != null" >
+        TZ_AREA_TYPE_NAME,
+      </if>
+      <if test="tzAreaType != null" >
+        TZ_AREA_TYPE,
+      </if>
+      <if test="tzAreaTypeState != null" >
+        TZ_AREA_TYPE_STATE,
+      </if>
+      <if test="tzAreaSetCode != null" >
+        TZ_AREA_SET_CODE,
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        TZ_AREA_HTML_CODE,
+      </if>
+      <if test="tzAddedDttm != null" >
+        TZ_ADDED_DTTM,
+      </if>
+      <if test="tzAddedOprid != null" >
+        TZ_ADDED_OPRID,
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM,
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeId != null" >
+        #{tzAreaTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeName != null" >
+        #{tzAreaTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaType != null" >
+        #{tzAreaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeState != null" >
+        #{tzAreaTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaSetCode != null" >
+        #{tzAreaSetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        #{tzAreaHtmlCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddedDttm != null" >
+        #{tzAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAddedOprid != null" >
+        #{tzAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypT" >
+    update PS_TZ_SITEI_ATYP_T
+    <set >
+      <if test="tzAreaTypeName != null" >
+        TZ_AREA_TYPE_NAME = #{tzAreaTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaType != null" >
+        TZ_AREA_TYPE = #{tzAreaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeState != null" >
+        TZ_AREA_TYPE_STATE = #{tzAreaTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaSetCode != null" >
+        TZ_AREA_SET_CODE = #{tzAreaSetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        TZ_AREA_HTML_CODE = #{tzAreaHtmlCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddedDttm != null" >
+        TZ_ADDED_DTTM = #{tzAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAddedOprid != null" >
+        TZ_ADDED_OPRID = #{tzAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAtypT" >
+    update PS_TZ_SITEI_ATYP_T
+    set TZ_AREA_TYPE_NAME = #{tzAreaTypeName,jdbcType=VARCHAR},
+      TZ_AREA_TYPE = #{tzAreaType,jdbcType=VARCHAR},
+      TZ_AREA_TYPE_STATE = #{tzAreaTypeState,jdbcType=VARCHAR},
+      TZ_AREA_SET_CODE = #{tzAreaSetCode,jdbcType=VARCHAR},
+      TZ_AREA_HTML_CODE = #{tzAreaHtmlCode,jdbcType=VARCHAR},
+      TZ_ADDED_DTTM = #{tzAddedDttm,jdbcType=TIMESTAMP},
+      TZ_ADDED_OPRID = #{tzAddedOprid,jdbcType=VARCHAR},
+      TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

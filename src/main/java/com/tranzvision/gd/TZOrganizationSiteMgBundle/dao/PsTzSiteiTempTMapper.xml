@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiTempTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempT" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <id column="TZ_TEMP_ID" property="tzTempId" jdbcType="VARCHAR" />
+    <result column="TZ_TEMP_STATE" property="tzTempState" jdbcType="VARCHAR" />
+    <result column="TZ_TEMP_NAME" property="tzTempName" jdbcType="VARCHAR" />
+    <result column="TZ_TEMP_TYPE" property="tzTempType" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_TEMP_PCCODE" property="tzTempPccode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_TEMP_MSCODE" property="tzTempMscode" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_TEMP_ID, TZ_TEMP_STATE, TZ_TEMP_NAME, TZ_TEMP_TYPE
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_TEMP_PCCODE, TZ_TEMP_MSCODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_SITEI_TEMP_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTKey" >
+    delete from PS_TZ_SITEI_TEMP_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
+    insert into PS_TZ_SITEI_TEMP_T (TZ_SITEI_ID, TZ_TEMP_ID, TZ_TEMP_STATE, 
+      TZ_TEMP_NAME, TZ_TEMP_TYPE, TZ_TEMP_PCCODE, 
+      TZ_TEMP_MSCODE)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzTempState,jdbcType=VARCHAR}, 
+      #{tzTempName,jdbcType=VARCHAR}, #{tzTempType,jdbcType=VARCHAR}, #{tzTempPccode,jdbcType=LONGVARCHAR}, 
+      #{tzTempMscode,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
+    insert into PS_TZ_SITEI_TEMP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzTempId != null" >
+        TZ_TEMP_ID,
+      </if>
+      <if test="tzTempState != null" >
+        TZ_TEMP_STATE,
+      </if>
+      <if test="tzTempName != null" >
+        TZ_TEMP_NAME,
+      </if>
+      <if test="tzTempType != null" >
+        TZ_TEMP_TYPE,
+      </if>
+      <if test="tzTempPccode != null" >
+        TZ_TEMP_PCCODE,
+      </if>
+      <if test="tzTempMscode != null" >
+        TZ_TEMP_MSCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempId != null" >
+        #{tzTempId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempState != null" >
+        #{tzTempState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempName != null" >
+        #{tzTempName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempType != null" >
+        #{tzTempType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempPccode != null" >
+        #{tzTempPccode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzTempMscode != null" >
+        #{tzTempMscode,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
+    update PS_TZ_SITEI_TEMP_T
+    <set >
+      <if test="tzTempState != null" >
+        TZ_TEMP_STATE = #{tzTempState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempName != null" >
+        TZ_TEMP_NAME = #{tzTempName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempType != null" >
+        TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempPccode != null" >
+        TZ_TEMP_PCCODE = #{tzTempPccode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzTempMscode != null" >
+        TZ_TEMP_MSCODE = #{tzTempMscode,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
+    update PS_TZ_SITEI_TEMP_T
+    set TZ_TEMP_STATE = #{tzTempState,jdbcType=VARCHAR},
+      TZ_TEMP_NAME = #{tzTempName,jdbcType=VARCHAR},
+      TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR},
+      TZ_TEMP_PCCODE = #{tzTempPccode,jdbcType=LONGVARCHAR},
+      TZ_TEMP_MSCODE = #{tzTempMscode,jdbcType=LONGVARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempT" >
+    update PS_TZ_SITEI_TEMP_T
+    set TZ_TEMP_STATE = #{tzTempState,jdbcType=VARCHAR},
+      TZ_TEMP_NAME = #{tzTempName,jdbcType=VARCHAR},
+      TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
+  </update>
+</mapper>

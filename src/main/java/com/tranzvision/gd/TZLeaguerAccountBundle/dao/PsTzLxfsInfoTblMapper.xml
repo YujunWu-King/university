@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl" >
+    <id column="TZ_LXFS_LY" property="tzLxfsLy" jdbcType="VARCHAR" />
+    <id column="TZ_LYDX_ID" property="tzLydxId" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_SJ" property="tzZySj" jdbcType="VARCHAR" />
+    <result column="TZ_BZ01" property="tzBz01" jdbcType="VARCHAR" />
+    <result column="TZ_CY_SJ" property="tzCySj" jdbcType="VARCHAR" />
+    <result column="TZ_BZ02" property="tzBz02" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_DH" property="tzZyDh" jdbcType="VARCHAR" />
+    <result column="TZ_BZ03" property="tzBz03" jdbcType="VARCHAR" />
+    <result column="TZ_CY_DH" property="tzCyDh" jdbcType="VARCHAR" />
+    <result column="TZ_BZ04" property="tzBz04" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_EMAIL" property="tzZyEmail" jdbcType="VARCHAR" />
+    <result column="TZ_BZ05" property="tzBz05" jdbcType="VARCHAR" />
+    <result column="TZ_CY_EMAIL" property="tzCyEmail" jdbcType="VARCHAR" />
+    <result column="TZ_BZ06" property="tzBz06" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_TXYB" property="tzZyTxyb" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_TXDZ" property="tzZyTxdz" jdbcType="VARCHAR" />
+    <result column="TZ_BZ07" property="tzBz07" jdbcType="VARCHAR" />
+    <result column="TZ_CY_TXYB" property="tzCyTxyb" jdbcType="VARCHAR" />
+    <result column="TZ_CY_TXDZ" property="tzCyTxdz" jdbcType="VARCHAR" />
+    <result column="TZ_BZ08" property="tzBz08" jdbcType="VARCHAR" />
+    <result column="TZ_WEIXIN" property="tzWeixin" jdbcType="VARCHAR" />
+    <result column="TZ_SKYPE" property="tzSkype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_LXFS_LY, TZ_LYDX_ID, TZ_ZY_SJ, TZ_BZ01, TZ_CY_SJ, TZ_BZ02, TZ_ZY_DH, TZ_BZ03, 
+    TZ_CY_DH, TZ_BZ04, TZ_ZY_EMAIL, TZ_BZ05, TZ_CY_EMAIL, TZ_BZ06, TZ_ZY_TXYB, TZ_ZY_TXDZ, 
+    TZ_BZ07, TZ_CY_TXYB, TZ_CY_TXDZ, TZ_BZ08, TZ_WEIXIN, TZ_SKYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_LXFSINFO_TBL
+    where TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey" >
+    delete from PS_TZ_LXFSINFO_TBL
+    where TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl" >
+    insert into PS_TZ_LXFSINFO_TBL (TZ_LXFS_LY, TZ_LYDX_ID, TZ_ZY_SJ, 
+      TZ_BZ01, TZ_CY_SJ, TZ_BZ02, 
+      TZ_ZY_DH, TZ_BZ03, TZ_CY_DH, 
+      TZ_BZ04, TZ_ZY_EMAIL, TZ_BZ05, 
+      TZ_CY_EMAIL, TZ_BZ06, TZ_ZY_TXYB, 
+      TZ_ZY_TXDZ, TZ_BZ07, TZ_CY_TXYB, 
+      TZ_CY_TXDZ, TZ_BZ08, TZ_WEIXIN, 
+      TZ_SKYPE)
+    values (#{tzLxfsLy,jdbcType=VARCHAR}, #{tzLydxId,jdbcType=VARCHAR}, #{tzZySj,jdbcType=VARCHAR}, 
+      #{tzBz01,jdbcType=VARCHAR}, #{tzCySj,jdbcType=VARCHAR}, #{tzBz02,jdbcType=VARCHAR}, 
+      #{tzZyDh,jdbcType=VARCHAR}, #{tzBz03,jdbcType=VARCHAR}, #{tzCyDh,jdbcType=VARCHAR}, 
+      #{tzBz04,jdbcType=VARCHAR}, #{tzZyEmail,jdbcType=VARCHAR}, #{tzBz05,jdbcType=VARCHAR}, 
+      #{tzCyEmail,jdbcType=VARCHAR}, #{tzBz06,jdbcType=VARCHAR}, #{tzZyTxyb,jdbcType=VARCHAR}, 
+      #{tzZyTxdz,jdbcType=VARCHAR}, #{tzBz07,jdbcType=VARCHAR}, #{tzCyTxyb,jdbcType=VARCHAR}, 
+      #{tzCyTxdz,jdbcType=VARCHAR}, #{tzBz08,jdbcType=VARCHAR}, #{tzWeixin,jdbcType=VARCHAR}, 
+      #{tzSkype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl" >
+    insert into PS_TZ_LXFSINFO_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLxfsLy != null" >
+        TZ_LXFS_LY,
+      </if>
+      <if test="tzLydxId != null" >
+        TZ_LYDX_ID,
+      </if>
+      <if test="tzZySj != null" >
+        TZ_ZY_SJ,
+      </if>
+      <if test="tzBz01 != null" >
+        TZ_BZ01,
+      </if>
+      <if test="tzCySj != null" >
+        TZ_CY_SJ,
+      </if>
+      <if test="tzBz02 != null" >
+        TZ_BZ02,
+      </if>
+      <if test="tzZyDh != null" >
+        TZ_ZY_DH,
+      </if>
+      <if test="tzBz03 != null" >
+        TZ_BZ03,
+      </if>
+      <if test="tzCyDh != null" >
+        TZ_CY_DH,
+      </if>
+      <if test="tzBz04 != null" >
+        TZ_BZ04,
+      </if>
+      <if test="tzZyEmail != null" >
+        TZ_ZY_EMAIL,
+      </if>
+      <if test="tzBz05 != null" >
+        TZ_BZ05,
+      </if>
+      <if test="tzCyEmail != null" >
+        TZ_CY_EMAIL,
+      </if>
+      <if test="tzBz06 != null" >
+        TZ_BZ06,
+      </if>
+      <if test="tzZyTxyb != null" >
+        TZ_ZY_TXYB,
+      </if>
+      <if test="tzZyTxdz != null" >
+        TZ_ZY_TXDZ,
+      </if>
+      <if test="tzBz07 != null" >
+        TZ_BZ07,
+      </if>
+      <if test="tzCyTxyb != null" >
+        TZ_CY_TXYB,
+      </if>
+      <if test="tzCyTxdz != null" >
+        TZ_CY_TXDZ,
+      </if>
+      <if test="tzBz08 != null" >
+        TZ_BZ08,
+      </if>
+      <if test="tzWeixin != null" >
+        TZ_WEIXIN,
+      </if>
+      <if test="tzSkype != null" >
+        TZ_SKYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLxfsLy != null" >
+        #{tzLxfsLy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLydxId != null" >
+        #{tzLydxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZySj != null" >
+        #{tzZySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz01 != null" >
+        #{tzBz01,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCySj != null" >
+        #{tzCySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz02 != null" >
+        #{tzBz02,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyDh != null" >
+        #{tzZyDh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz03 != null" >
+        #{tzBz03,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyDh != null" >
+        #{tzCyDh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz04 != null" >
+        #{tzBz04,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyEmail != null" >
+        #{tzZyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz05 != null" >
+        #{tzBz05,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyEmail != null" >
+        #{tzCyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz06 != null" >
+        #{tzBz06,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyTxyb != null" >
+        #{tzZyTxyb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyTxdz != null" >
+        #{tzZyTxdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz07 != null" >
+        #{tzBz07,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyTxyb != null" >
+        #{tzCyTxyb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyTxdz != null" >
+        #{tzCyTxdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz08 != null" >
+        #{tzBz08,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeixin != null" >
+        #{tzWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkype != null" >
+        #{tzSkype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl" >
+    update PS_TZ_LXFSINFO_TBL
+    <set >
+      <if test="tzZySj != null" >
+        TZ_ZY_SJ = #{tzZySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz01 != null" >
+        TZ_BZ01 = #{tzBz01,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCySj != null" >
+        TZ_CY_SJ = #{tzCySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz02 != null" >
+        TZ_BZ02 = #{tzBz02,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyDh != null" >
+        TZ_ZY_DH = #{tzZyDh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz03 != null" >
+        TZ_BZ03 = #{tzBz03,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyDh != null" >
+        TZ_CY_DH = #{tzCyDh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz04 != null" >
+        TZ_BZ04 = #{tzBz04,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyEmail != null" >
+        TZ_ZY_EMAIL = #{tzZyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz05 != null" >
+        TZ_BZ05 = #{tzBz05,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyEmail != null" >
+        TZ_CY_EMAIL = #{tzCyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz06 != null" >
+        TZ_BZ06 = #{tzBz06,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyTxyb != null" >
+        TZ_ZY_TXYB = #{tzZyTxyb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyTxdz != null" >
+        TZ_ZY_TXDZ = #{tzZyTxdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz07 != null" >
+        TZ_BZ07 = #{tzBz07,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyTxyb != null" >
+        TZ_CY_TXYB = #{tzCyTxyb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyTxdz != null" >
+        TZ_CY_TXDZ = #{tzCyTxdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBz08 != null" >
+        TZ_BZ08 = #{tzBz08,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeixin != null" >
+        TZ_WEIXIN = #{tzWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkype != null" >
+        TZ_SKYPE = #{tzSkype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl" >
+    update PS_TZ_LXFSINFO_TBL
+    set TZ_ZY_SJ = #{tzZySj,jdbcType=VARCHAR},
+      TZ_BZ01 = #{tzBz01,jdbcType=VARCHAR},
+      TZ_CY_SJ = #{tzCySj,jdbcType=VARCHAR},
+      TZ_BZ02 = #{tzBz02,jdbcType=VARCHAR},
+      TZ_ZY_DH = #{tzZyDh,jdbcType=VARCHAR},
+      TZ_BZ03 = #{tzBz03,jdbcType=VARCHAR},
+      TZ_CY_DH = #{tzCyDh,jdbcType=VARCHAR},
+      TZ_BZ04 = #{tzBz04,jdbcType=VARCHAR},
+      TZ_ZY_EMAIL = #{tzZyEmail,jdbcType=VARCHAR},
+      TZ_BZ05 = #{tzBz05,jdbcType=VARCHAR},
+      TZ_CY_EMAIL = #{tzCyEmail,jdbcType=VARCHAR},
+      TZ_BZ06 = #{tzBz06,jdbcType=VARCHAR},
+      TZ_ZY_TXYB = #{tzZyTxyb,jdbcType=VARCHAR},
+      TZ_ZY_TXDZ = #{tzZyTxdz,jdbcType=VARCHAR},
+      TZ_BZ07 = #{tzBz07,jdbcType=VARCHAR},
+      TZ_CY_TXYB = #{tzCyTxyb,jdbcType=VARCHAR},
+      TZ_CY_TXDZ = #{tzCyTxdz,jdbcType=VARCHAR},
+      TZ_BZ08 = #{tzBz08,jdbcType=VARCHAR},
+      TZ_WEIXIN = #{tzWeixin,jdbcType=VARCHAR},
+      TZ_SKYPE = #{tzSkype,jdbcType=VARCHAR}
+    where TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </update>
+</mapper>

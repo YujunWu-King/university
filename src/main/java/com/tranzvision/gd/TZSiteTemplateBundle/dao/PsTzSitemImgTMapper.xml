@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemImgTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_SKIN_ID" property="tzSkinId" jdbcType="VARCHAR" />
+    <id column="TZ_IMG_ID" property="tzImgId" jdbcType="VARCHAR" />
+    <result column="TZ_IMG_XH" property="tzImgXh" jdbcType="INTEGER" />
+    <result column="TZ_IMG_NAME" property="tzImgName" jdbcType="VARCHAR" />
+    <result column="TZ_IMG_VIEW" property="tzImgView" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_SKIN_ID, TZ_IMG_ID, TZ_IMG_XH, TZ_IMG_NAME, TZ_IMG_VIEW
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEM_IMG_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+      and TZ_IMG_ID = #{tzImgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgTKey" >
+    delete from PS_TZ_SITEM_IMG_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+      and TZ_IMG_ID = #{tzImgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT" >
+    insert into PS_TZ_SITEM_IMG_T (TZ_SITEM_ID, TZ_SKIN_ID, TZ_IMG_ID, 
+      TZ_IMG_XH, TZ_IMG_NAME, TZ_IMG_VIEW
+      )
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzSkinId,jdbcType=VARCHAR}, #{tzImgId,jdbcType=VARCHAR}, 
+      #{tzImgXh,jdbcType=INTEGER}, #{tzImgName,jdbcType=VARCHAR}, #{tzImgView,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT" >
+    insert into PS_TZ_SITEM_IMG_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzSkinId != null" >
+        TZ_SKIN_ID,
+      </if>
+      <if test="tzImgId != null" >
+        TZ_IMG_ID,
+      </if>
+      <if test="tzImgXh != null" >
+        TZ_IMG_XH,
+      </if>
+      <if test="tzImgName != null" >
+        TZ_IMG_NAME,
+      </if>
+      <if test="tzImgView != null" >
+        TZ_IMG_VIEW,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinId != null" >
+        #{tzSkinId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgId != null" >
+        #{tzImgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgXh != null" >
+        #{tzImgXh,jdbcType=INTEGER},
+      </if>
+      <if test="tzImgName != null" >
+        #{tzImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgView != null" >
+        #{tzImgView,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT" >
+    update PS_TZ_SITEM_IMG_T
+    <set >
+      <if test="tzImgXh != null" >
+        TZ_IMG_XH = #{tzImgXh,jdbcType=INTEGER},
+      </if>
+      <if test="tzImgName != null" >
+        TZ_IMG_NAME = #{tzImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgView != null" >
+        TZ_IMG_VIEW = #{tzImgView,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+      and TZ_IMG_ID = #{tzImgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT" >
+    update PS_TZ_SITEM_IMG_T
+    set TZ_IMG_XH = #{tzImgXh,jdbcType=INTEGER},
+      TZ_IMG_NAME = #{tzImgName,jdbcType=VARCHAR},
+      TZ_IMG_VIEW = #{tzImgView,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_SKIN_ID = #{tzSkinId,jdbcType=VARCHAR}
+      and TZ_IMG_ID = #{tzImgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

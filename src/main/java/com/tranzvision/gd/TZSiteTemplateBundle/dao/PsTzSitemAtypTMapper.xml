@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemAtypTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_AREA_TYPE_ID" property="tzAreaTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE_NAME" property="tzAreaTypeName" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE" property="tzAreaType" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_TYPE_STATE" property="tzAreaTypeState" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_SET_CODE" property="tzAreaSetCode" jdbcType="VARCHAR" />
+    <result column="TZ_AREA_HTML_CODE" property="tzAreaHtmlCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_AREA_TYPE_ID, TZ_AREA_TYPE_NAME, TZ_AREA_TYPE, TZ_AREA_TYPE_STATE, 
+    TZ_AREA_SET_CODE, TZ_AREA_HTML_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEM_ATYP_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypTKey" >
+    delete from PS_TZ_SITEM_ATYP_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypT" >
+    insert into PS_TZ_SITEM_ATYP_T (TZ_SITEM_ID, TZ_AREA_TYPE_ID, TZ_AREA_TYPE_NAME, 
+      TZ_AREA_TYPE, TZ_AREA_TYPE_STATE, TZ_AREA_SET_CODE, 
+      TZ_AREA_HTML_CODE)
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzAreaTypeId,jdbcType=VARCHAR}, #{tzAreaTypeName,jdbcType=VARCHAR}, 
+      #{tzAreaType,jdbcType=VARCHAR}, #{tzAreaTypeState,jdbcType=VARCHAR}, #{tzAreaSetCode,jdbcType=VARCHAR}, 
+      #{tzAreaHtmlCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypT" >
+    insert into PS_TZ_SITEM_ATYP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzAreaTypeId != null" >
+        TZ_AREA_TYPE_ID,
+      </if>
+      <if test="tzAreaTypeName != null" >
+        TZ_AREA_TYPE_NAME,
+      </if>
+      <if test="tzAreaType != null" >
+        TZ_AREA_TYPE,
+      </if>
+      <if test="tzAreaTypeState != null" >
+        TZ_AREA_TYPE_STATE,
+      </if>
+      <if test="tzAreaSetCode != null" >
+        TZ_AREA_SET_CODE,
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        TZ_AREA_HTML_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeId != null" >
+        #{tzAreaTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeName != null" >
+        #{tzAreaTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaType != null" >
+        #{tzAreaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeState != null" >
+        #{tzAreaTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaSetCode != null" >
+        #{tzAreaSetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        #{tzAreaHtmlCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypT" >
+    update PS_TZ_SITEM_ATYP_T
+    <set >
+      <if test="tzAreaTypeName != null" >
+        TZ_AREA_TYPE_NAME = #{tzAreaTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaType != null" >
+        TZ_AREA_TYPE = #{tzAreaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaTypeState != null" >
+        TZ_AREA_TYPE_STATE = #{tzAreaTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaSetCode != null" >
+        TZ_AREA_SET_CODE = #{tzAreaSetCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAreaHtmlCode != null" >
+        TZ_AREA_HTML_CODE = #{tzAreaHtmlCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemAtypT" >
+    update PS_TZ_SITEM_ATYP_T
+    set TZ_AREA_TYPE_NAME = #{tzAreaTypeName,jdbcType=VARCHAR},
+      TZ_AREA_TYPE = #{tzAreaType,jdbcType=VARCHAR},
+      TZ_AREA_TYPE_STATE = #{tzAreaTypeState,jdbcType=VARCHAR},
+      TZ_AREA_SET_CODE = #{tzAreaSetCode,jdbcType=VARCHAR},
+      TZ_AREA_HTML_CODE = #{tzAreaHtmlCode,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_AREA_TYPE_ID = #{tzAreaTypeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

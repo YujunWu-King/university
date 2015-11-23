@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemDefnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <result column="TZ_JGBH" property="tzJgbh" jdbcType="VARCHAR" />
+    <result column="TZ_SITEM_NAME" property="tzSitemName" jdbcType="VARCHAR" />
+    <result column="TZ_SITEM_ENABLE" property="tzSitemEnable" jdbcType="VARCHAR" />
+    <result column="TZ_SITE_LANG" property="tzSiteLang" jdbcType="VARCHAR" />
+    <result column="TZ_SITEM_DESCR" property="tzSitemDescr" jdbcType="VARCHAR" />
+    <result column="TZ_IMG_STOR" property="tzImgStor" jdbcType="VARCHAR" />
+    <result column="TZ_IMG_VIEW" property="tzImgView" jdbcType="VARCHAR" />
+    <result column="TZ_ATTS_STOR" property="tzAttsStor" jdbcType="VARCHAR" />
+    <result column="TZ_ATTS_VIEW" property="tzAttsView" jdbcType="VARCHAR" />
+    <result column="TZ_VIDEO_STOR" property="tzVideoStor" jdbcType="VARCHAR" />
+    <result column="TZ_VIDEO_VIEW" property="tzVideoView" jdbcType="VARCHAR" />
+    <result column="TZ_SKIN_STOR" property="tzSkinStor" jdbcType="VARCHAR" />
+    <result column="TZ_HOME_HAND_PRO" property="tzHomeHandPro" jdbcType="VARCHAR" />
+    <result column="TZ_LOGIN_HAND_PRO" property="tzLoginHandPro" jdbcType="VARCHAR" />
+    <result column="TZ_REGIS_HAND_PRO" property="tzRegisHandPro" jdbcType="VARCHAR" />
+    <result column="TZ_ADDED_DTTM" property="tzAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_ADDED_OPRID" property="tzAddedOprid" jdbcType="VARCHAR" />
+    <result column="TZ_LASTMANT_DTTM" property="tzLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_LASTMANT_OPRID" property="tzLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_INDEX_INITCODE" property="tzIndexInitcode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_LONGIN_INITCODE" property="tzLonginInitcode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_ENROLL_INITCODE" property="tzEnrollInitcode" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_JGBH, TZ_SITEM_NAME, TZ_SITEM_ENABLE, TZ_SITE_LANG, TZ_SITEM_DESCR, 
+    TZ_IMG_STOR, TZ_IMG_VIEW, TZ_ATTS_STOR, TZ_ATTS_VIEW, TZ_VIDEO_STOR, TZ_VIDEO_VIEW, 
+    TZ_SKIN_STOR, TZ_HOME_HAND_PRO, TZ_LOGIN_HAND_PRO, TZ_REGIS_HAND_PRO, TZ_ADDED_DTTM, 
+    TZ_ADDED_OPRID, TZ_LASTMANT_DTTM, TZ_LASTMANT_OPRID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_INDEX_INITCODE, TZ_LONGIN_INITCODE, TZ_ENROLL_INITCODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_SITEM_DEFN_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_SITEM_DEFN_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnTWithBLOBs" >
+    insert into PS_TZ_SITEM_DEFN_T (TZ_SITEM_ID, TZ_JGBH, TZ_SITEM_NAME, 
+      TZ_SITEM_ENABLE, TZ_SITE_LANG, TZ_SITEM_DESCR, 
+      TZ_IMG_STOR, TZ_IMG_VIEW, TZ_ATTS_STOR, 
+      TZ_ATTS_VIEW, TZ_VIDEO_STOR, TZ_VIDEO_VIEW, 
+      TZ_SKIN_STOR, TZ_HOME_HAND_PRO, TZ_LOGIN_HAND_PRO, 
+      TZ_REGIS_HAND_PRO, TZ_ADDED_DTTM, TZ_ADDED_OPRID, 
+      TZ_LASTMANT_DTTM, TZ_LASTMANT_OPRID, TZ_INDEX_INITCODE, 
+      TZ_LONGIN_INITCODE, TZ_ENROLL_INITCODE
+      )
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzJgbh,jdbcType=VARCHAR}, #{tzSitemName,jdbcType=VARCHAR}, 
+      #{tzSitemEnable,jdbcType=VARCHAR}, #{tzSiteLang,jdbcType=VARCHAR}, #{tzSitemDescr,jdbcType=VARCHAR}, 
+      #{tzImgStor,jdbcType=VARCHAR}, #{tzImgView,jdbcType=VARCHAR}, #{tzAttsStor,jdbcType=VARCHAR}, 
+      #{tzAttsView,jdbcType=VARCHAR}, #{tzVideoStor,jdbcType=VARCHAR}, #{tzVideoView,jdbcType=VARCHAR}, 
+      #{tzSkinStor,jdbcType=VARCHAR}, #{tzHomeHandPro,jdbcType=VARCHAR}, #{tzLoginHandPro,jdbcType=VARCHAR}, 
+      #{tzRegisHandPro,jdbcType=VARCHAR}, #{tzAddedDttm,jdbcType=TIMESTAMP}, #{tzAddedOprid,jdbcType=VARCHAR}, 
+      #{tzLastmantDttm,jdbcType=TIMESTAMP}, #{tzLastmantOprid,jdbcType=VARCHAR}, #{tzIndexInitcode,jdbcType=LONGVARCHAR}, 
+      #{tzLonginInitcode,jdbcType=LONGVARCHAR}, #{tzEnrollInitcode,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnTWithBLOBs" >
+    insert into PS_TZ_SITEM_DEFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzJgbh != null" >
+        TZ_JGBH,
+      </if>
+      <if test="tzSitemName != null" >
+        TZ_SITEM_NAME,
+      </if>
+      <if test="tzSitemEnable != null" >
+        TZ_SITEM_ENABLE,
+      </if>
+      <if test="tzSiteLang != null" >
+        TZ_SITE_LANG,
+      </if>
+      <if test="tzSitemDescr != null" >
+        TZ_SITEM_DESCR,
+      </if>
+      <if test="tzImgStor != null" >
+        TZ_IMG_STOR,
+      </if>
+      <if test="tzImgView != null" >
+        TZ_IMG_VIEW,
+      </if>
+      <if test="tzAttsStor != null" >
+        TZ_ATTS_STOR,
+      </if>
+      <if test="tzAttsView != null" >
+        TZ_ATTS_VIEW,
+      </if>
+      <if test="tzVideoStor != null" >
+        TZ_VIDEO_STOR,
+      </if>
+      <if test="tzVideoView != null" >
+        TZ_VIDEO_VIEW,
+      </if>
+      <if test="tzSkinStor != null" >
+        TZ_SKIN_STOR,
+      </if>
+      <if test="tzHomeHandPro != null" >
+        TZ_HOME_HAND_PRO,
+      </if>
+      <if test="tzLoginHandPro != null" >
+        TZ_LOGIN_HAND_PRO,
+      </if>
+      <if test="tzRegisHandPro != null" >
+        TZ_REGIS_HAND_PRO,
+      </if>
+      <if test="tzAddedDttm != null" >
+        TZ_ADDED_DTTM,
+      </if>
+      <if test="tzAddedOprid != null" >
+        TZ_ADDED_OPRID,
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM,
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID,
+      </if>
+      <if test="tzIndexInitcode != null" >
+        TZ_INDEX_INITCODE,
+      </if>
+      <if test="tzLonginInitcode != null" >
+        TZ_LONGIN_INITCODE,
+      </if>
+      <if test="tzEnrollInitcode != null" >
+        TZ_ENROLL_INITCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgbh != null" >
+        #{tzJgbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemName != null" >
+        #{tzSitemName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemEnable != null" >
+        #{tzSitemEnable,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSiteLang != null" >
+        #{tzSiteLang,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemDescr != null" >
+        #{tzSitemDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgStor != null" >
+        #{tzImgStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgView != null" >
+        #{tzImgView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsStor != null" >
+        #{tzAttsStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsView != null" >
+        #{tzAttsView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVideoStor != null" >
+        #{tzVideoStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVideoView != null" >
+        #{tzVideoView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinStor != null" >
+        #{tzSkinStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHomeHandPro != null" >
+        #{tzHomeHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLoginHandPro != null" >
+        #{tzLoginHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegisHandPro != null" >
+        #{tzRegisHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddedDttm != null" >
+        #{tzAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAddedOprid != null" >
+        #{tzAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIndexInitcode != null" >
+        #{tzIndexInitcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLonginInitcode != null" >
+        #{tzLonginInitcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzEnrollInitcode != null" >
+        #{tzEnrollInitcode,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnTWithBLOBs" >
+    update PS_TZ_SITEM_DEFN_T
+    <set >
+      <if test="tzJgbh != null" >
+        TZ_JGBH = #{tzJgbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemName != null" >
+        TZ_SITEM_NAME = #{tzSitemName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemEnable != null" >
+        TZ_SITEM_ENABLE = #{tzSitemEnable,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSiteLang != null" >
+        TZ_SITE_LANG = #{tzSiteLang,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSitemDescr != null" >
+        TZ_SITEM_DESCR = #{tzSitemDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgStor != null" >
+        TZ_IMG_STOR = #{tzImgStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImgView != null" >
+        TZ_IMG_VIEW = #{tzImgView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsStor != null" >
+        TZ_ATTS_STOR = #{tzAttsStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsView != null" >
+        TZ_ATTS_VIEW = #{tzAttsView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVideoStor != null" >
+        TZ_VIDEO_STOR = #{tzVideoStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVideoView != null" >
+        TZ_VIDEO_VIEW = #{tzVideoView,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSkinStor != null" >
+        TZ_SKIN_STOR = #{tzSkinStor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHomeHandPro != null" >
+        TZ_HOME_HAND_PRO = #{tzHomeHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLoginHandPro != null" >
+        TZ_LOGIN_HAND_PRO = #{tzLoginHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegisHandPro != null" >
+        TZ_REGIS_HAND_PRO = #{tzRegisHandPro,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddedDttm != null" >
+        TZ_ADDED_DTTM = #{tzAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAddedOprid != null" >
+        TZ_ADDED_OPRID = #{tzAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIndexInitcode != null" >
+        TZ_INDEX_INITCODE = #{tzIndexInitcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLonginInitcode != null" >
+        TZ_LONGIN_INITCODE = #{tzLonginInitcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzEnrollInitcode != null" >
+        TZ_ENROLL_INITCODE = #{tzEnrollInitcode,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnTWithBLOBs" >
+    update PS_TZ_SITEM_DEFN_T
+    set TZ_JGBH = #{tzJgbh,jdbcType=VARCHAR},
+      TZ_SITEM_NAME = #{tzSitemName,jdbcType=VARCHAR},
+      TZ_SITEM_ENABLE = #{tzSitemEnable,jdbcType=VARCHAR},
+      TZ_SITE_LANG = #{tzSiteLang,jdbcType=VARCHAR},
+      TZ_SITEM_DESCR = #{tzSitemDescr,jdbcType=VARCHAR},
+      TZ_IMG_STOR = #{tzImgStor,jdbcType=VARCHAR},
+      TZ_IMG_VIEW = #{tzImgView,jdbcType=VARCHAR},
+      TZ_ATTS_STOR = #{tzAttsStor,jdbcType=VARCHAR},
+      TZ_ATTS_VIEW = #{tzAttsView,jdbcType=VARCHAR},
+      TZ_VIDEO_STOR = #{tzVideoStor,jdbcType=VARCHAR},
+      TZ_VIDEO_VIEW = #{tzVideoView,jdbcType=VARCHAR},
+      TZ_SKIN_STOR = #{tzSkinStor,jdbcType=VARCHAR},
+      TZ_HOME_HAND_PRO = #{tzHomeHandPro,jdbcType=VARCHAR},
+      TZ_LOGIN_HAND_PRO = #{tzLoginHandPro,jdbcType=VARCHAR},
+      TZ_REGIS_HAND_PRO = #{tzRegisHandPro,jdbcType=VARCHAR},
+      TZ_ADDED_DTTM = #{tzAddedDttm,jdbcType=TIMESTAMP},
+      TZ_ADDED_OPRID = #{tzAddedOprid,jdbcType=VARCHAR},
+      TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      TZ_INDEX_INITCODE = #{tzIndexInitcode,jdbcType=LONGVARCHAR},
+      TZ_LONGIN_INITCODE = #{tzLonginInitcode,jdbcType=LONGVARCHAR},
+      TZ_ENROLL_INITCODE = #{tzEnrollInitcode,jdbcType=LONGVARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemDefnT" >
+    update PS_TZ_SITEM_DEFN_T
+    set TZ_JGBH = #{tzJgbh,jdbcType=VARCHAR},
+      TZ_SITEM_NAME = #{tzSitemName,jdbcType=VARCHAR},
+      TZ_SITEM_ENABLE = #{tzSitemEnable,jdbcType=VARCHAR},
+      TZ_SITE_LANG = #{tzSiteLang,jdbcType=VARCHAR},
+      TZ_SITEM_DESCR = #{tzSitemDescr,jdbcType=VARCHAR},
+      TZ_IMG_STOR = #{tzImgStor,jdbcType=VARCHAR},
+      TZ_IMG_VIEW = #{tzImgView,jdbcType=VARCHAR},
+      TZ_ATTS_STOR = #{tzAttsStor,jdbcType=VARCHAR},
+      TZ_ATTS_VIEW = #{tzAttsView,jdbcType=VARCHAR},
+      TZ_VIDEO_STOR = #{tzVideoStor,jdbcType=VARCHAR},
+      TZ_VIDEO_VIEW = #{tzVideoView,jdbcType=VARCHAR},
+      TZ_SKIN_STOR = #{tzSkinStor,jdbcType=VARCHAR},
+      TZ_HOME_HAND_PRO = #{tzHomeHandPro,jdbcType=VARCHAR},
+      TZ_LOGIN_HAND_PRO = #{tzLoginHandPro,jdbcType=VARCHAR},
+      TZ_REGIS_HAND_PRO = #{tzRegisHandPro,jdbcType=VARCHAR},
+      TZ_ADDED_DTTM = #{tzAddedDttm,jdbcType=TIMESTAMP},
+      TZ_ADDED_OPRID = #{tzAddedOprid,jdbcType=VARCHAR},
+      TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+  </update>
+</mapper>

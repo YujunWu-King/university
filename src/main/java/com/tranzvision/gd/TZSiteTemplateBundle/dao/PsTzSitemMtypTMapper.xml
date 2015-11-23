@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemMtypTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_MENU_TYPE_ID" property="tzMenuTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_MENU_TYPE_NAME" property="tzMenuTypeName" jdbcType="VARCHAR" />
+    <result column="TZ_TYPE_STATE" property="tzTypeState" jdbcType="VARCHAR" />
+    <result column="TZ_IS_ADD" property="tzIsAdd" jdbcType="VARCHAR" />
+    <result column="TZ_ADD_COLU" property="tzAddColu" jdbcType="VARCHAR" />
+    <result column="TZ_TYPE_IMG" property="tzTypeImg" jdbcType="VARCHAR" />
+    <result column="TZ_NOW_IMG" property="tzNowImg" jdbcType="VARCHAR" />
+    <result column="TZ_SET_MENU_CODE" property="tzSetMenuCode" jdbcType="VARCHAR" />
+    <result column="TZ_SHOW_MENU_CODE" property="tzShowMenuCode" jdbcType="VARCHAR" />
+    <result column="TZ_COLU_TYPE" property="tzColuType" jdbcType="VARCHAR" />
+    <result column="TZ_TEMP_ID" property="tzTempId" jdbcType="VARCHAR" />
+    <result column="TZ_CONT_TYPE" property="tzContType" jdbcType="VARCHAR" />
+    <result column="TZ_CONT_TEMP" property="tzContTemp" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" extends="BaseResultMap" >
+    <result column="TZ_TYPE_DESCR" property="tzTypeDescr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_MENU_TYPE_ID, TZ_MENU_TYPE_NAME, TZ_TYPE_STATE, TZ_IS_ADD, TZ_ADD_COLU, 
+    TZ_TYPE_IMG, TZ_NOW_IMG, TZ_SET_MENU_CODE, TZ_SHOW_MENU_CODE, TZ_COLU_TYPE, TZ_TEMP_ID, 
+    TZ_CONT_TYPE, TZ_CONT_TEMP
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_TYPE_DESCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_SITEM_MTYP_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypTKey" >
+    delete from PS_TZ_SITEM_MTYP_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    insert into PS_TZ_SITEM_MTYP_T (TZ_SITEM_ID, TZ_MENU_TYPE_ID, TZ_MENU_TYPE_NAME, 
+      TZ_TYPE_STATE, TZ_IS_ADD, TZ_ADD_COLU, 
+      TZ_TYPE_IMG, TZ_NOW_IMG, TZ_SET_MENU_CODE, 
+      TZ_SHOW_MENU_CODE, TZ_COLU_TYPE, TZ_TEMP_ID, 
+      TZ_CONT_TYPE, TZ_CONT_TEMP, TZ_TYPE_DESCR
+      )
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, #{tzMenuTypeName,jdbcType=VARCHAR}, 
+      #{tzTypeState,jdbcType=VARCHAR}, #{tzIsAdd,jdbcType=VARCHAR}, #{tzAddColu,jdbcType=VARCHAR}, 
+      #{tzTypeImg,jdbcType=VARCHAR}, #{tzNowImg,jdbcType=VARCHAR}, #{tzSetMenuCode,jdbcType=VARCHAR}, 
+      #{tzShowMenuCode,jdbcType=VARCHAR}, #{tzColuType,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, 
+      #{tzContType,jdbcType=VARCHAR}, #{tzContTemp,jdbcType=VARCHAR}, #{tzTypeDescr,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    insert into PS_TZ_SITEM_MTYP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzMenuTypeId != null" >
+        TZ_MENU_TYPE_ID,
+      </if>
+      <if test="tzMenuTypeName != null" >
+        TZ_MENU_TYPE_NAME,
+      </if>
+      <if test="tzTypeState != null" >
+        TZ_TYPE_STATE,
+      </if>
+      <if test="tzIsAdd != null" >
+        TZ_IS_ADD,
+      </if>
+      <if test="tzAddColu != null" >
+        TZ_ADD_COLU,
+      </if>
+      <if test="tzTypeImg != null" >
+        TZ_TYPE_IMG,
+      </if>
+      <if test="tzNowImg != null" >
+        TZ_NOW_IMG,
+      </if>
+      <if test="tzSetMenuCode != null" >
+        TZ_SET_MENU_CODE,
+      </if>
+      <if test="tzShowMenuCode != null" >
+        TZ_SHOW_MENU_CODE,
+      </if>
+      <if test="tzColuType != null" >
+        TZ_COLU_TYPE,
+      </if>
+      <if test="tzTempId != null" >
+        TZ_TEMP_ID,
+      </if>
+      <if test="tzContType != null" >
+        TZ_CONT_TYPE,
+      </if>
+      <if test="tzContTemp != null" >
+        TZ_CONT_TEMP,
+      </if>
+      <if test="tzTypeDescr != null" >
+        TZ_TYPE_DESCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuTypeId != null" >
+        #{tzMenuTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenuTypeName != null" >
+        #{tzMenuTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeState != null" >
+        #{tzTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsAdd != null" >
+        #{tzIsAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddColu != null" >
+        #{tzAddColu,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeImg != null" >
+        #{tzTypeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNowImg != null" >
+        #{tzNowImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSetMenuCode != null" >
+        #{tzSetMenuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShowMenuCode != null" >
+        #{tzShowMenuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuType != null" >
+        #{tzColuType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempId != null" >
+        #{tzTempId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContType != null" >
+        #{tzContType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContTemp != null" >
+        #{tzContTemp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeDescr != null" >
+        #{tzTypeDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    update PS_TZ_SITEM_MTYP_T
+    <set >
+      <if test="tzMenuTypeName != null" >
+        TZ_MENU_TYPE_NAME = #{tzMenuTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeState != null" >
+        TZ_TYPE_STATE = #{tzTypeState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsAdd != null" >
+        TZ_IS_ADD = #{tzIsAdd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddColu != null" >
+        TZ_ADD_COLU = #{tzAddColu,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeImg != null" >
+        TZ_TYPE_IMG = #{tzTypeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNowImg != null" >
+        TZ_NOW_IMG = #{tzNowImg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSetMenuCode != null" >
+        TZ_SET_MENU_CODE = #{tzSetMenuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShowMenuCode != null" >
+        TZ_SHOW_MENU_CODE = #{tzShowMenuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuType != null" >
+        TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempId != null" >
+        TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContType != null" >
+        TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContTemp != null" >
+        TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTypeDescr != null" >
+        TZ_TYPE_DESCR = #{tzTypeDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    update PS_TZ_SITEM_MTYP_T
+    set TZ_MENU_TYPE_NAME = #{tzMenuTypeName,jdbcType=VARCHAR},
+      TZ_TYPE_STATE = #{tzTypeState,jdbcType=VARCHAR},
+      TZ_IS_ADD = #{tzIsAdd,jdbcType=VARCHAR},
+      TZ_ADD_COLU = #{tzAddColu,jdbcType=VARCHAR},
+      TZ_TYPE_IMG = #{tzTypeImg,jdbcType=VARCHAR},
+      TZ_NOW_IMG = #{tzNowImg,jdbcType=VARCHAR},
+      TZ_SET_MENU_CODE = #{tzSetMenuCode,jdbcType=VARCHAR},
+      TZ_SHOW_MENU_CODE = #{tzShowMenuCode,jdbcType=VARCHAR},
+      TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
+      TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
+      TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
+      TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
+      TZ_TYPE_DESCR = #{tzTypeDescr,jdbcType=LONGVARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT" >
+    update PS_TZ_SITEM_MTYP_T
+    set TZ_MENU_TYPE_NAME = #{tzMenuTypeName,jdbcType=VARCHAR},
+      TZ_TYPE_STATE = #{tzTypeState,jdbcType=VARCHAR},
+      TZ_IS_ADD = #{tzIsAdd,jdbcType=VARCHAR},
+      TZ_ADD_COLU = #{tzAddColu,jdbcType=VARCHAR},
+      TZ_TYPE_IMG = #{tzTypeImg,jdbcType=VARCHAR},
+      TZ_NOW_IMG = #{tzNowImg,jdbcType=VARCHAR},
+      TZ_SET_MENU_CODE = #{tzSetMenuCode,jdbcType=VARCHAR},
+      TZ_SHOW_MENU_CODE = #{tzShowMenuCode,jdbcType=VARCHAR},
+      TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
+      TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
+      TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
+      TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

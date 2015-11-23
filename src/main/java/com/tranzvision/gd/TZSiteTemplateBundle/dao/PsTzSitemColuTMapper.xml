@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemColuTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
+    <id column="TZ_SITEM_ID" property="tzSitemId" jdbcType="VARCHAR" />
+    <id column="TZ_COLU_ID" property="tzColuId" jdbcType="VARCHAR" />
+    <result column="TZ_COLU_NAME" property="tzColuName" jdbcType="VARCHAR" />
+    <result column="TZ_COLU_TYPE" property="tzColuType" jdbcType="VARCHAR" />
+    <result column="TZ_TEMP_ID" property="tzTempId" jdbcType="VARCHAR" />
+    <result column="TZ_CONT_TYPE" property="tzContType" jdbcType="VARCHAR" />
+    <result column="TZ_CONT_TEMP" property="tzContTemp" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, TZ_CONT_TEMP
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SITEM_COLU_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
+    delete from PS_TZ_SITEM_COLU_T
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
+    insert into PS_TZ_SITEM_COLU_T (TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, 
+      TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, 
+      TZ_CONT_TEMP)
+    values (#{tzSitemId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzColuName,jdbcType=VARCHAR}, 
+      #{tzColuType,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzContType,jdbcType=VARCHAR}, 
+      #{tzContTemp,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
+    insert into PS_TZ_SITEM_COLU_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        TZ_SITEM_ID,
+      </if>
+      <if test="tzColuId != null" >
+        TZ_COLU_ID,
+      </if>
+      <if test="tzColuName != null" >
+        TZ_COLU_NAME,
+      </if>
+      <if test="tzColuType != null" >
+        TZ_COLU_TYPE,
+      </if>
+      <if test="tzTempId != null" >
+        TZ_TEMP_ID,
+      </if>
+      <if test="tzContType != null" >
+        TZ_CONT_TYPE,
+      </if>
+      <if test="tzContTemp != null" >
+        TZ_CONT_TEMP,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSitemId != null" >
+        #{tzSitemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuId != null" >
+        #{tzColuId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuName != null" >
+        #{tzColuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuType != null" >
+        #{tzColuType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempId != null" >
+        #{tzTempId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContType != null" >
+        #{tzContType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContTemp != null" >
+        #{tzContTemp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
+    update PS_TZ_SITEM_COLU_T
+    <set >
+      <if test="tzColuName != null" >
+        TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuType != null" >
+        TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTempId != null" >
+        TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContType != null" >
+        TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContTemp != null" >
+        TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
+    update PS_TZ_SITEM_COLU_T
+    set TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
+      TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
+      TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
+      TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
+      TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR}
+    where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+  </update>
+</mapper>
