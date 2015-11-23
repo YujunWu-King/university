@@ -280,11 +280,12 @@ public class Index {
 				map = jacksonUtil.getMap("comParams");
 				
 				String sCommParams = jacksonUtil.Map2json(map).toString();
-				if(sCommParams == null || "null".equals(sCommParams)){
+				if((sCommParams == null || "null".equals(sCommParams))  ){
 					// 错误描述;
-					strErrorDesc = "提交的json数据无效";
+					//strErrorDesc = sCommParams + "提交的json数据无效";
 					// 错误码;
-					errorCode = "1";
+					//errorCode = "1";
+					sCommParams = "{}";
 				}else{
 					gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
 					strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
