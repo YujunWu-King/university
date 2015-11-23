@@ -217,7 +217,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfoMth', {
 		var form = this.getView().child("form").getForm();
 		//var	emlTmplItemGrid = panel.down('grid[name=emlTmplItemGrid]');
 		var emlTmplItemGrid=this.lookupReference('emlTmplItemGrid');
-		var tzStoreParamsItem = "{'restempid':'"+combo.value+"'}";
+		var tzStoreParamsItem = '{"restempid":"'+combo.value+'"}';
 		emlTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
 		emlTmplItemGrid.store.load();
 

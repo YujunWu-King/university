@@ -168,7 +168,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletController'
 					form.setValues(responseData);
 					//信息项数据
 					var	emlTmplItemGrid = panel.down('grid[name=emlTmplItemGrid]');
-					var tzStoreParamsItem = "{'restempid':'"+restempid+"'}";
+					var tzStoreParamsItem = '{"restempid":"'+restempid+'"}';
 					emlTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
 					emlTmplItemGrid.store.load();
 					panel.commitChanges(panel);
