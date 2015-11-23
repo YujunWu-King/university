@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +20,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
  * @since 2015-11-03
  */
 @Controller
-@RequestMapping("/login")
+@RequestMapping(value = { "", "/", "/login" })
 public class TzLoginController {
 
 	@Autowired
@@ -28,9 +29,16 @@ public class TzLoginController {
 	@Autowired
 	private JacksonUtil jacksonUtil;
 
-	@RequestMapping(value = { "/", "" })
+	@RequestMapping(value = { "", "/" })
 	public String userLogin(HttpServletRequest request, HttpServletResponse response) {
-
+		
+		return "login/managerLogin";
+	}
+	
+	@RequestMapping(value = {"/{orgid}" })
+	public String userLoginOrg(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid) {
+		System.out.println(orgid);
 		return "login/managerLogin";
 	}
 
@@ -47,11 +55,11 @@ public class TzLoginController {
 
 		jacksonUtil.json2Map(request.getParameter("tzParams"));
 		Map<String, Object> formData = jacksonUtil.getMap("comParams");
-		
-		String orgid = (String)formData.get("orgId");
-		String userName = (String)formData.get("userName");
-		String userPwd = (String)formData.get("password");
-		String code = (String)formData.get("yzm");
+
+		String orgid = (String) formData.get("orgId");
+		String userName = (String) formData.get("userName");
+		String userPwd = (String) formData.get("password");
+		String code = (String) formData.get("yzm");
 
 		tzLoginServiceImpl.doLogin(request, response, orgid, userName, userPwd, code);
 		String loginStatus = tzLoginServiceImpl.getLoginStatus();

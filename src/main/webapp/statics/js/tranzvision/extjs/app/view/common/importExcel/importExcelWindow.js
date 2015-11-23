@@ -288,7 +288,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                 if(filename&&form.isValid()){
                     //var dateStr = Ext.Date.format(new Date(), 'Ymd');
                     var filePath = '/linkfile/FileUpLoad'
-                    var updateUrl ='/UpdServlet';
+                    var updateUrl = TzUniversityContextPath + '/UpdServlet';
 
                     form.submit({
                         url: updateUrl,

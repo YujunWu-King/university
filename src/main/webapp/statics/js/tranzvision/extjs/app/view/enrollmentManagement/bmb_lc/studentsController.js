@@ -40,7 +40,7 @@
 		var fix = _val.substring(_val.lastIndexOf(".") + 1,_val.length);
 		if(fix.toLowerCase() == "xls"){
 			_form.submit({
-				url: 'UpdServlet?filePath=/ceshi',
+				url: TzUniversityContextPath + '/UpdServlet?filePath=/ceshi',
 				waitMsg: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.uploading","上传中...."),
 				success: function (_form, action) {
 					var message = action.result.msg;

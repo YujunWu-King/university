@@ -124,7 +124,7 @@
 				}
 			},{
 	            xtype: 'fileuploadfield',
-	            name: 'orgLoginBjImg',
+	            name: 'orguploadfile',
 	            buttonText: '上传',
 	            //msgTarget: 'side',
 	            buttonOnly:true,
@@ -139,7 +139,7 @@
 											var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
 											if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 												form.submit({
-													url: '/UpdServlet?filePath=/linkfile/sysImages',
+													url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/sysImages',
 													waitMsg: '图片正在上传，请耐心等待....',
 													success: function (form, action) {
 														var message = action.result.msg;
@@ -151,9 +151,9 @@
 															path = path + "/" + sysFileName;
 														}
 														
-														file.previousSibling().previousSibling().setSrc(path);		
+														file.previousSibling().previousSibling().setSrc(TzUniversityContextPath + path);
 														panel.child("form").getForm().findField("orgLoginBjImgUrl").setValue(path);
-																		
+														
 														tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGDEF_STD","OperateType":"HTML","comParams":' + Ext.JSON.encode(action.result.msg) +'}';
 				
 														Ext.Ajax.request({

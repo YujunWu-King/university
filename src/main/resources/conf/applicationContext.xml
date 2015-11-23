@@ -65,11 +65,10 @@
 
 	<!-- mybatis文件配置，扫描所有mapper文件 -->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory"
-        p:dataSource-ref="dataSource"/>
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
-        p:sqlSessionFactoryBeanName="sqlSessionFactory"
-        p:basePackage="com.tranzvision.gd.*.dao"/>
-	
+		p:dataSource-ref="dataSource" />
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+		p:sqlSessionFactoryBeanName="sqlSessionFactory" p:basePackage="com.tranzvision.gd.*.dao" />
+
 	<!-- 对数据源进行事务管理 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
@@ -78,12 +77,21 @@
 	<!-- spring jdbc 执行自定义SQL -->
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
 		p:dataSource-ref="dataSource" />
-	
+
 	<!-- spring application context 工具类 -->
-	<bean id="springApplicationContext" class="com.tranzvision.gd.util.base.SpringApplicationContext"/>
-	
-	<!-- 初始化SrpingBean缓存  -->
-	<bean id="springAutoWiredBeanFactory" class="com.tranzvision.gd.util.base.GetAutowiredSpringBean" 
+	<bean id="springApplicationContext" class="com.tranzvision.gd.util.base.SpringApplicationContext" />
+
+	<!-- 初始化SrpingBean缓存 -->
+	<bean id="springAutoWiredBeanFactory" class="com.tranzvision.gd.util.base.GetAutowiredSpringBean"
 		init-method="init" />
+
+    <!-- 文件上传功能 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<!-- setting maximum upload size -->
+		<!-- <property name="maxUploadSize" value="102400" /> -->
+
+	</bean>
 
 </beans>

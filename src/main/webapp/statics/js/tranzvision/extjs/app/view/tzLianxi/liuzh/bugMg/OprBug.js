@@ -407,9 +407,9 @@ Ext.define('KitchenSink.view.tzLianxi.liuzh.bugMg.OprBug', {
                     return;
                 }else{
                     if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-                        upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+                        upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                     }else{
-                        upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+                        upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                     }
                 }
             }else{
@@ -419,9 +419,9 @@ Ext.define('KitchenSink.view.tzLianxi.liuzh.bugMg.OprBug', {
                     return;
                 }else{
                     if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-                        upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+                        upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                     }else{
-                        upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+                        upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                     }
                 }
             }
@@ -434,7 +434,7 @@ Ext.define('KitchenSink.view.tzLianxi.liuzh.bugMg.OprBug', {
             myMask.show();
 
             form.submit({
-                //url: '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
+                //url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
                 url: upUrl,
                 //waitMsg: '图片正在上传，请耐心等待....',
                 success: function (form, action) {

@@ -467,9 +467,9 @@ function addAttach(file, value, attachmentType){
 				return;
 			}else{
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
 				}else{
-				   upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
 			}
 		}else{
@@ -479,9 +479,9 @@ function addAttach(file, value, attachmentType){
 				return;
 			}else{
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
 				}else{
-				   upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
 			}
 		}
@@ -494,7 +494,7 @@ function addAttach(file, value, attachmentType){
 		myMask.show();
 		
 		form.submit({
-			//url: '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
+			//url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
 			url: upUrl,
 			//waitMsg: '图片正在上传，请耐心等待....',
 			success: function (form, action) {

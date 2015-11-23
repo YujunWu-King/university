@@ -515,9 +515,9 @@
                 return;
             }else{
                 if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-                    upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+                    upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                 }else{
-                    upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+                    upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                 }
             }
 
@@ -787,9 +787,9 @@
                 return;
             }else{
                 if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-                    upUrl = '/UpdServlet?filePath='+upUrl+dateStr;
+                    upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                 }else{
-                    upUrl = '/UpdServlet?filePath='+upUrl+"/"+dateStr;
+                    upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                 }
             }
 
