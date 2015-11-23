@@ -36,7 +36,7 @@
 			if(actType == "add" && btn != "but_ensure"){
 				var areaId = responseData.areaId;
 				//alert(areaId);
-				form.setValues({areaId:areaId});
+				form.setValues({areaid:areaId});
 			}
 			
 			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
