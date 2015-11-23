@@ -369,6 +369,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	}
 
 	/* 用户请求操作分发器逻辑 */
+	@SuppressWarnings("unchecked")
 	public String userRequestDispatcher(HttpServletRequest request, HttpServletResponse response, String sComID,
 			String sPageID, String strOprType, String comParams, String[] errMsgArr) {
 		// 返回值;
@@ -676,6 +677,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						key = entry.getKey();
 						// 搜索字段内容;
 						// 搜索字段内容;
+						@SuppressWarnings("unchecked")
 						Map<String, Object> keyContent = (Map<String, Object>) entry.getValue();
 
 						if (keyContent.containsKey("value")) {
@@ -738,6 +740,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						// 搜索字段名称;
 						key = entry.getKey();
 						// 搜索字段内容;
+						@SuppressWarnings("unchecked")
 						Map<String, Object> keyContent = (Map<String, Object>) entry.getValue();
 						// 操作符;
 						operate = (String) keyContent.get("operator");
@@ -946,6 +949,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		return strRet;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	/* 下拉框数据 */
 	public String getComboxValue(String recname, String condition, String result, String[] errMsgArr) {

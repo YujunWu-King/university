@@ -280,7 +280,6 @@ public class Index {
 				map = jacksonUtil.getMap("comParams");
 				
 				String sCommParams = jacksonUtil.Map2json(map).toString();
-				System.out.println("-------------------->"+sCommParams);
 				if(sCommParams == null || "null".equals(sCommParams)){
 					// 错误描述;
 					strErrorDesc = "提交的json数据无效";

@@ -69,7 +69,7 @@ public class FliterForm extends FrameworkImpl {
 
 			// 是否高级模式;
 			String TZ_ADVANCE_MODEL = "";
-			long TZ_RESULT_MAX_NUM = 0;
+			//long TZ_RESULT_MAX_NUM = 0;
 			// 操作符是否只读;
 			String operatorReadOnly = "true";
 			// 是否存在;
@@ -81,7 +81,7 @@ public class FliterForm extends FrameworkImpl {
 				map = jdbcTemplate.queryForMap(sql, new Object[] { comId, pageId, viewName });
 				isExist = (String) map.get("Exist");
 				TZ_ADVANCE_MODEL = (String) map.get("TZ_ADVANCE_MODEL");
-				TZ_RESULT_MAX_NUM = (long) map.get("TZ_RESULT_MAX_NUM");
+				//TZ_RESULT_MAX_NUM = (long) map.get("TZ_RESULT_MAX_NUM");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -120,7 +120,7 @@ public class FliterForm extends FrameworkImpl {
 			}
 
 			String fieldName, fieldLabel, readOnly, hiden, promptTable, promptTableFld, promptTableDescFld, isDowm;
-			long maxRows;
+			//long maxRows = 0;
 			// 取值类型:TZ_FLT_FLD_QZ_TYPE;
 			String fldQzType;
 			// 转换值字段:TZ_ZHZJH_ID;
@@ -135,7 +135,7 @@ public class FliterForm extends FrameworkImpl {
 				for (int list_i = 0; list_i < list.size(); list_i++) {
 					fieldName = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FILTER_FLD")).trim();
 					fieldLabel = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FILTER_FLD_DESC")).trim();
-					maxRows = (long) list.get(list_i).get("TZ_RESULT_MAX_NUM");
+					//maxRows = (long) list.get(list_i).get("TZ_RESULT_MAX_NUM");
 					readOnly = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FLD_READONLY")).trim();
 					hiden = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FLD_HIDE")).trim();
 					promptTable = TZUtility.transFormchar((String) list.get(list_i).get("TZ_PROMPT_TBL_NAME")).trim();
@@ -160,14 +160,6 @@ public class FliterForm extends FrameworkImpl {
 						fldHidden = "false";
 					}
 
-					/*
-					 * System.out.println("Field:" + fieldName + "-->" +
-					 * fieldLabel + "-->" + maxRows + "-->" + readOnly + "-->" +
-					 * hiden + "-->" + promptTable + "-->" + promptTableFld +
-					 * "-->" + promptTableDescFld + "-->" + isDowm + "-->" +
-					 * fldQzType + "-->" + zhzJhId + "-->");
-					 */
-
 					// 运算符:TZ_FILTER_YSF, 描述:TZ_ZHZ_DMS;
 					String filterYsf, zhzDms;
 					String trans = "";
@@ -182,7 +174,6 @@ public class FliterForm extends FrameworkImpl {
 					}
 
 					trans = trans.substring(1);
-					/* System.out.println("operate:" + trans); */
 
 					String promptTableFldLabel = "";
 					String promptTableDescFldLabel = "";
@@ -285,12 +276,13 @@ public class FliterForm extends FrameworkImpl {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
-		/* System.out.println(strRet); */
+
 		strRet = "{\"formData\":" + strRet + "}";
 		return strRet;
 	}
 
 	/******* 可配置搜索,返回搜索结果JSON **********/
+	@SuppressWarnings("unchecked")
 	public Object[] searchFilter(String[] resultFldArray, String strParams, int numLimit, int numStart,
 			String[] errorMsg) {
 		// 返回值;
@@ -309,7 +301,7 @@ public class FliterForm extends FrameworkImpl {
 		int resultFldNum = resultFldArray.length;
 
 		// 列表内容;
-		String strContent = "";
+		//String strContent = "";
 		int numTotal = 0;
 		int maxNum = 0;
 
@@ -447,8 +439,7 @@ public class FliterForm extends FrameworkImpl {
 								operate = (String) conditionJson.get(operateKey);
 							} catch (Exception e) {
 								errorMsg[0] = "1";
-								errorMsg[1] = operateKey + "--->" + operate + "--->" + fldKey + "--->"
-										+ "可配置搜索配置错误，请于管理员联系";
+								errorMsg[1] = "可配置搜索配置错误，请于管理员联系";
 								return strRet;
 							}
 							
