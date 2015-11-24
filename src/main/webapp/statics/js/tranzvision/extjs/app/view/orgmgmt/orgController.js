@@ -507,7 +507,9 @@
 				form.setValues(formData);
 				//页面注册信息列表数据
 				var roleList = responseData.listData;
-			  panel.down("image").setSrc(formData.orgLoginBjImgUrl);
+				if(formData.orgLoginBjImgUrl!=""){
+					panel.down("image").setSrc(TzUniversityContextPath + formData.orgLoginBjImgUrl);
+				}
 
 				var queryType="USER";
 				var tzStoreParams = '{"queryType":"' + queryType + '","cfgSrhId":"TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.TZ_JG_USER_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ orgId+'"}}';

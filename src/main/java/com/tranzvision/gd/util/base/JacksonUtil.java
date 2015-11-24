@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @since 2015-10-30
  */
 @Service
+@Scope("prototype")
 public class JacksonUtil {
 
 	private Map<String, Object> jsonMap;

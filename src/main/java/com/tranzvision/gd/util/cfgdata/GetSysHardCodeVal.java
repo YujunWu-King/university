@@ -47,6 +47,11 @@ public class GetSysHardCodeVal {
 	 * 上传文件，禁止的后缀名
 	 */
 	private ArrayList<String> fileUploadDeniedExtensions;
+	
+	/**
+	 * 图片文件的后缀
+	 */
+	public ArrayList<String> imageSuffix;
 
 	/**
 	 * 上传文件，允许的最大文件
@@ -62,11 +67,11 @@ public class GetSysHardCodeVal {
 	 * 前台网站上传文件的路径
 	 */
 	private String websiteFileUploadPath;
-
+	
 	/**
-	 * 图片文件的后缀
+	 * 临时文件存储路径
 	 */
-	public ArrayList<String> imageSuffix;
+	private String tmpFileUploadPath;
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -99,6 +104,8 @@ public class GetSysHardCodeVal {
 			orgFileUploadPath = sysHardCodeValProps.getProperty("OrgFileUploadPath");
 
 			websiteFileUploadPath = sysHardCodeValProps.getProperty("WebsiteFileUploadPath");
+			
+			tmpFileUploadPath = sysHardCodeValProps.getProperty("TmpFileUploadPath");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -152,6 +159,10 @@ public class GetSysHardCodeVal {
 
 	public String getWebsiteFileUploadPath() {
 		return websiteFileUploadPath;
+	}
+	
+	public String getTmpFileUploadPath() {
+		return tmpFileUploadPath;
 	}
 
 }

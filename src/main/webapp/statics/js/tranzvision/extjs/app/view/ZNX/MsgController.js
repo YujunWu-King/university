@@ -192,17 +192,19 @@ Ext.define('KitchenSink.view.ZNX.MsgController', {
             var dateStr = Ext.Date.format(new Date(), 'Ymd');
             var upUrl = "";
             if(attachmentType=="ATTACHMENT"){
-                //upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
                 upUrl = "/linkfile/FileUpLoad/attachment/msg/";
                 if(upUrl==""){
                     Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
                     return;
                 }else{
+					/*
                     if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
                         upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                     }else{
                         upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                     }
+					*/
+					upUrl = TzUniversityContextPath + '/UpdServlet?filePath=znx';
                 }
             }
             var myMask = new Ext.LoadMask({
@@ -212,7 +214,6 @@ Ext.define('KitchenSink.view.ZNX.MsgController', {
 
             myMask.show();
             form.submit({
-                //url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
                 url: upUrl,
                 //waitMsg: '图片正在上传，请耐心等待....',
                 success: function (form, action) {
@@ -224,7 +225,6 @@ Ext.define('KitchenSink.view.ZNX.MsgController', {
                     tzParams = '{"ComID":"TZ_ZNX_COM","PageID":"TZ_ZNX_NEWMSG_STD","OperateType":"ATTACH","comParams":' + tzParams +'}';
                     console.log(tzParams)
                     Ext.Ajax.request({
-                        //url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_ATT_D.TZ_GD_ATT_FILE.FieldFormula.Iscript_AddArtAttach',
                         url: Ext.tzGetGeneralURL,
                         params: {
                             tzParams: tzParams

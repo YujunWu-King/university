@@ -62,7 +62,8 @@
         }, {
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.staticPath","静态文件存放路径"),
-            name: 'staticPath'
+            name: 'staticPath',
+			hidden: true
         },{
             xtype: 'textfield',
             //fieldLabel: '联系人',
@@ -82,7 +83,7 @@
         }, {
             xtype: 'textfield',
             //fieldLabel: '登录系统文字',
-            fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgLoginInf","登录系统名称"),
+            fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgLoginInf","登录页面系统名称"),
             name: 'orgLoginInf'
         }, {
             xtype: 'hidden',
@@ -137,9 +138,9 @@
 										
 											//获取后缀
 											var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-											if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
+											if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 												form.submit({
-													url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/sysImages',
+													url: TzUniversityContextPath + '/UpdServlet?filePath=org',
 													waitMsg: '图片正在上传，请耐心等待....',
 													success: function (form, action) {
 														var message = action.result.msg;
@@ -185,7 +186,7 @@
 											}else{
 												//重置表单
 												form.reset();
-												Ext.MessageBox.alert("提示", "请上传jpg|png|gif|bmp|ico格式的图片。");
+												Ext.MessageBox.alert("提示", "请上传jpg|jpeg|png|gif|bmp|ico格式的图片。");
 											}
 										
 									}

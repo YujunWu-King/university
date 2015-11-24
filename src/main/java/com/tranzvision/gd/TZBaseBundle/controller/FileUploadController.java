@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 
 /**
  * @author SHIHUA
@@ -52,6 +53,9 @@ public class FileUploadController {
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
+	@Autowired
+	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
+
 	/**
 	 * Upload single file using Spring Controller
 	 */
@@ -63,6 +67,21 @@ public class FileUploadController {
 
 		// String limitSize = allRequestParams.get("limitSize");
 		String language = String.valueOf(allRequestParams.get("language"));
+		String funcdir = String.valueOf(allRequestParams.get("filePath"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+
+		//过滤功能目录名称中的特殊字符
+		if (null != funcdir && !"".equals(funcdir) && !"null".equals(funcdir)) {
+			funcdir = "/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(funcdir);
+		}else{
+			funcdir = "";
+		}
+		
+		//是否临时文件的标记
+		if(null == istmpfile ||  !"null".equals(funcdir)){
+			istmpfile = "0";
+		}
+
 		/*
 		 * System.out.println(allRequestParams); for(String
 		 * paramName:Collections.list(request.getParameterNames())){ // Whatever
@@ -116,7 +135,15 @@ public class FileUploadController {
 					// Creating the directory to store file
 					String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 					String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
-					String parentPath = rootPath + "/" + orgid + "/" + this.getDateNow();
+					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
+					String parentPath = "";
+					
+					if("1".equals(istmpfile)){
+						//若是临时文件，则存储在临时文件目录
+						parentPath = tmpFilePath + "/" + orgid + "/" + this.getDateNow() + funcdir;
+					}else{
+						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + funcdir;
+					}
 					String accessPath = parentPath + "/";
 					parentPath = request.getServletContext().getRealPath(parentPath);
 					File dir = new File(parentPath);

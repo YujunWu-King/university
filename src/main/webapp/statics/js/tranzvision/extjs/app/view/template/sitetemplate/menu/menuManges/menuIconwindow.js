@@ -95,9 +95,9 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 							if(panel.actType == "update"){
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
+								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/sysImages',
+										url: TzUniversityContextPath + '/UpdServlet?filePath=menu',
 										waitMsg: '图片正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;
@@ -202,9 +202,9 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 							if(panel.actType == "update"){
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
+								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/sysImages',
+										url: TzUniversityContextPath + '/UpdServlet?filePath=menu',
 										waitMsg: '图片正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;

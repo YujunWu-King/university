@@ -514,11 +514,14 @@
                 Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.error","错误"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.wdyscfjdlj","未定义上传附件的路径，请与管理员联系"));
                 return;
             }else{
+				/*
                 if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
                     upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                 }else{
                     upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                 }
+				*/
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=enrollment';
             }
 
             var myMask = new Ext.LoadMask({
@@ -786,11 +789,14 @@
                 Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.error","错误"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wdysclj","未定义上传附件的路径，请与管理员联系"));
                 return;
             }else{
+				/*
                 if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
                     upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
                 }else{
                     upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
                 }
+				*/
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=enrollment';
             }
 
             var myMask = new Ext.LoadMask({

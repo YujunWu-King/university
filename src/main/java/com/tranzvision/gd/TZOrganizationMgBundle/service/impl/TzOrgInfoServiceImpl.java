@@ -271,7 +271,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						psTzJgBaseT.setRowLastmantDttm(dateNow);
 						psTzJgBaseT.setRowLastmantOprid(oprid);
 
-						psTzJgBaseTMapper.updateByPrimaryKey(psTzJgBaseT);
+						psTzJgBaseTMapper.updateByPrimaryKeyWithBLOBs(psTzJgBaseT);
 
 					} else {
 						errorMsg += comma + tzJgId;
@@ -651,9 +651,9 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 			for (Object jgRoleData : listData) {
 
 				Map<String, Object> mapData = (Map<String, Object>) jgRoleData;
-
+				
 				Map<String, Object> mapDataJson = new HashMap<String, Object>();
-				mapDataJson.put("orgId", mapData.get("TZ_JG_ID").toString());
+				mapDataJson.put("orgId", strOrgID);
 				mapDataJson.put("roleName", mapData.get("ROLENAME").toString());
 				mapDataJson.put("roleDesc", mapData.get("ROLE_DESC").toString());
 				mapDataJson.put("roleType", mapData.get("TZ_ROLE_TYPE").toString());
@@ -671,10 +671,6 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 			strRet = jacksonUtil.Map2json(mapRet);
 
-		} catch (TzSystemException tse) {
-			tse.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = tse.getMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";

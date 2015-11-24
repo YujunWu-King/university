@@ -27,8 +27,6 @@ public class TzCookie {
 	@Autowired
 	private GetCookieSessionProps getCookieProps;
 
-	private CookieGenerator cookieGen;
-
 	/**
 	 * 新增一个Cookie（完整参数）
 	 * 
@@ -44,7 +42,7 @@ public class TzCookie {
 	public void addCookie(HttpServletResponse response, String cookieName, Object cookieVal, int cookieMaxAge,
 			String cookieDomain, String cookiePath, boolean cookieHttpOnly, boolean cookieSecure) {
 
-		cookieGen = new CookieGenerator();
+		CookieGenerator cookieGen = new CookieGenerator();
 
 		cookieGen.setCookieName(cookieName);
 		cookieGen.setCookieDomain(cookieDomain);

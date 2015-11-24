@@ -38,9 +38,9 @@
 		var _form = this.getView().child("form").getForm();
 		var _val=_form.findField('file_name').getValue();
 		var fix = _val.substring(_val.lastIndexOf(".") + 1,_val.length);
-		if(fix.toLowerCase() == "xls"){
+		if(fix.toLowerCase() == "xls" || fix.toLowerCase() == "xlsx"){
 			_form.submit({
-				url: TzUniversityContextPath + '/UpdServlet?filePath=/ceshi',
+				url: TzUniversityContextPath + '/UpdServlet?filePath=enrollment',
 				waitMsg: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.uploading","上传中...."),
 				success: function (_form, action) {
 					var message = action.result.msg;

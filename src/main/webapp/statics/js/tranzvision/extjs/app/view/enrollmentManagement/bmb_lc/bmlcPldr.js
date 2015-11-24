@@ -51,9 +51,9 @@
 							if(panel.actType == "update"){
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-								if(fix.toLowerCase() == "doc"){
+								if(fix.toLowerCase() == "doc" || fix.toLowerCase() == "docx"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/sysImages',
+										url: TzUniversityContextPath + '/UpdServlet?filePath=enrollment',
 										waitMsg: '附件正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;

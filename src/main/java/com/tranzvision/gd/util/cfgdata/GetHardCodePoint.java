@@ -21,28 +21,22 @@ public class GetHardCodePoint {
 	@Autowired
 	private PsTzHardcdPntMapper psCmbcHardcdPntMapper;
 
-	private PsTzHardcdPnt psCmbcHardcdPnt;
-
-	private String hdp;
-
-	private void getPsCmbcHardcdPnt(String hdp) {
-		if (!hdp.equals(this.hdp) || psCmbcHardcdPnt == null) {
-			psCmbcHardcdPnt = psCmbcHardcdPntMapper.selectByPrimaryKey(hdp);
-		}
+	private PsTzHardcdPnt getPsCmbcHardcdPnt(String hdp) {
+		return	psCmbcHardcdPntMapper.selectByPrimaryKey(hdp);
 	}
 
 	public String getHardCodePointVal(String hdp) {
-		this.getPsCmbcHardcdPnt(hdp);
+		PsTzHardcdPnt psCmbcHardcdPnt = this.getPsCmbcHardcdPnt(hdp);
 		return psCmbcHardcdPnt.getTzHardcodeVal();
 	}
 
 	public String getHardCodePointDescr254(String hdp) {
-		this.getPsCmbcHardcdPnt(hdp);
+		PsTzHardcdPnt psCmbcHardcdPnt = this.getPsCmbcHardcdPnt(hdp);
 		return psCmbcHardcdPnt.getTzDescr254();
 	}
 
 	public String getHardCodePointDescr1000(String hdp) {
-		this.getPsCmbcHardcdPnt(hdp);
+		PsTzHardcdPnt psCmbcHardcdPnt = this.getPsCmbcHardcdPnt(hdp);
 		return psCmbcHardcdPnt.getTzDescr1000();
 	}
 

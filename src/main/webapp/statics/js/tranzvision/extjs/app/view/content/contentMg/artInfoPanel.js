@@ -449,8 +449,8 @@ function addAttach(file, value, attachmentType){
 	if(value != ""){
 		if(attachmentType=="IMG" || attachmentType=="TPJ"){ 
 			var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-			if(fix.toLowerCase() != "jpg" && fix.toLowerCase() != "png" && fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
-				Ext.MessageBox.alert("提示","请上传jpg|png|gif|bmp格式的图片。");
+			if(fix.toLowerCase() != "jpg" && fix.toLowerCase() != "jpeg" && fix.toLowerCase() != "png" && fix.toLowerCase() != "gif" && fix.toLowerCase() != "bmp"){
+				Ext.MessageBox.alert("提示","请上传jpg|jpeg|png|gif|bmp格式的图片。");
 				form.reset();
 				return;
 			};	
@@ -466,11 +466,14 @@ function addAttach(file, value, attachmentType){
 				Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
 				return;
 			}else{
+				/*
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
 				}else{
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
+				*/
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=article';
 			}
 		}else{
 			upUrl = file.findParentByType("artInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
@@ -478,11 +481,14 @@ function addAttach(file, value, attachmentType){
 				Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
 				return;
 			}else{
+				/*
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
 				}else{
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
+				*/
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=article';
 			}
 		}
 		
@@ -494,7 +500,6 @@ function addAttach(file, value, attachmentType){
 		myMask.show();
 		
 		form.submit({
-			//url: TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall',
 			url: upUrl,
 			//waitMsg: '图片正在上传，请耐心等待....',
 			success: function (form, action) {

@@ -157,12 +157,16 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 								"select TZ_ATT_A_URL from PS_TZ_JG_LOGINBJ_T where TZ_ATTACHSYSFILENA=?",
 								new Object[] { orgLoginBjImgUrl }, "String");
 
-						int sindex = attUrl.lastIndexOf("/");
-						int lastIndex = attUrl.length() - 1;
-						if (sindex == lastIndex) {
-							orgLoginBjImgUrl = attUrl + orgLoginBjImgUrl;
+						if (null != attUrl) {
+							int sindex = attUrl.lastIndexOf("/");
+							int lastIndex = attUrl.length() - 1;
+							if (sindex == lastIndex) {
+								orgLoginBjImgUrl = attUrl + orgLoginBjImgUrl;
+							} else {
+								orgLoginBjImgUrl = attUrl + "/" + orgLoginBjImgUrl;
+							}
 						} else {
-							orgLoginBjImgUrl = attUrl + "/" + orgLoginBjImgUrl;
+							orgLoginBjImgUrl = "";
 						}
 					}
 
@@ -179,6 +183,7 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 					mapOrg.put("orgLoginBjImgUrl", orgLoginBjImgUrl);
 					mapOrg.put("orgLoginCopr", TZUtility.transFormchar(psTzJgBaseT.getTzJgLoginCopr()));
 
+					mapRet.replace("formData", mapOrg);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择机构";

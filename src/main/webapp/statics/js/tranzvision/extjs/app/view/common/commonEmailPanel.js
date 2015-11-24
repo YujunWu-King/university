@@ -390,7 +390,8 @@ function addAttach(file, value){
 		//如果是附件则存在在附件的url中，如果是图片在存放在图片的url中;
 		var dateStr = Ext.Date.format(new Date(), 'Ymd');
 		
-		var upUrl = TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall/'+dateStr;
+		//var upUrl = TzUniversityContextPath + '/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall/'+dateStr;
+		var upUrl = TzUniversityContextPath + '/UpdServlet?filePath=email';
 
 		var myMask = new Ext.LoadMask({
 	    msg    : Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.loading","加载中..."),
