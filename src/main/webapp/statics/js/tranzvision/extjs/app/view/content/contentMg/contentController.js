@@ -290,13 +290,13 @@
 					
 					  panel.down('image[name=titileImage]').setSrc(panel.down('hiddenfield[name=titleImageUrl]').getValue());	
 						//附件集
-						var tzStoreParams = "{'artId':'"+articleId+"','gridTyp':'FJ'}";
+						var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"FJ"}';
 						attachGrid.store.tzStoreParams = tzStoreParams;
 						attachGrid.store.load();			
 
 						//图片集;
 						var picDataView = panel.down('dataview[name=picView]');
-						var tzStoreParams = "{'artId':'"+articleId+"','gridTyp':'TPJ'}";
+						var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"TPJ"}';
 						picDataView.store.tzStoreParams = tzStoreParams;
 						picDataView.store.load();					
 				});
