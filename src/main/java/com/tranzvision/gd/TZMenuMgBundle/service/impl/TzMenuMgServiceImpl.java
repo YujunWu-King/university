@@ -129,8 +129,8 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 
 					Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { menuTree, menuId });
 
-					int treeNodeNum = (int) mapData.get("TREE_NODE_NUM");
-					int treeNodeNumEnd = (int) mapData.get("TREE_NODE_NUM_END");
+					int treeNodeNum = Integer.parseInt(mapData.get("TREE_NODE_NUM").toString());
+					int treeNodeNumEnd = Integer.parseInt(mapData.get("TREE_NODE_NUM_END").toString());
 
 					tzMenuTreeNodeServiceImpl.deleteNode(menuTree, treeNodeNum, treeNodeNumEnd);
 
@@ -202,6 +202,7 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 				mapRet.put("errorMsg", "未找到对应的处理类");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 			mapRet.put("success", "true");

@@ -165,7 +165,7 @@ public class JacksonUtil {
 			return null;
 		}
 		try {
-			return (String) jsonMap.get(key);
+			return String.valueOf(jsonMap.get(key));
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		} catch (ClassCastException e) {

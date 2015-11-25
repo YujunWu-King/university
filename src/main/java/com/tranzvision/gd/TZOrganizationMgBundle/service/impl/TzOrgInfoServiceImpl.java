@@ -193,6 +193,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				errMsg[1] = "机构编号为：" + conflictKeys + "的信息已经存在，请修改机构编号。";
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -294,6 +295,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				errMsg[1] = "消息集合：" + errorMsg + "，不存在";
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -651,7 +653,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 			for (Object jgRoleData : listData) {
 
 				Map<String, Object> mapData = (Map<String, Object>) jgRoleData;
-				
+
 				Map<String, Object> mapDataJson = new HashMap<String, Object>();
 				mapDataJson.put("orgId", strOrgID);
 				mapDataJson.put("roleName", mapData.get("ROLENAME").toString());
@@ -766,7 +768,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 							psClassDefnMapper.insert(psClassDefn);
 
-							// 复制许可权的登陆时间表  PSAUTHSIGNON
+							// 复制许可权的登陆时间表 PSAUTHSIGNON
 							/*
 							 * 待定，可能不需要此表 sql = tzSQLObject.getSQLText(
 							 * "SQL.TZOrganizationMgBundle.TzCopyAuthSignOn");
@@ -806,23 +808,28 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 							Map<String, Object> mapAQComsq = (Map<String, Object>) srcAQComsq;
 
-							sql = "SELECT 'Y' FROM TZ_AQ_COMSQ_TBL WHERE CLASSID=? and TZ_COM_ID=? and TZ_PAGE_ID=?";
-							String strComId = mapAQComsq.get("TZ_COM_ID").toString();
-							String strPageId = mapAQComsq.get("strPageId").toString();
+							sql = "SELECT 'Y' FROM PS_TZ_AQ_COMSQ_TBL WHERE CLASSID=? and TZ_COM_ID=? and TZ_PAGE_ID=?";
+							String strComId = mapAQComsq.get("TZ_COM_ID") == null ? null
+									: mapAQComsq.get("TZ_COM_ID").toString();
+							String strPageId = mapAQComsq.get("TZ_PAGE_ID") == null ? null
+									: mapAQComsq.get("TZ_PAGE_ID").toString();
 							recExsit = sqlQuery.queryForObject(sql, new Object[] { permId, strComId, strPageId },
 									"String");
 
 							if (null == recExsit) {
+
+								short displayonly = Short.parseShort(mapAQComsq.get("DISPLAYONLY").toString());
+								short editFlag = Short.parseShort(mapAQComsq.get("TZ_EDIT_FLG").toString());
 
 								PsTzAqComsqTbl psTzAqComsqTbl = new PsTzAqComsqTbl();
 
 								psTzAqComsqTbl.setClassid(permId);
 								psTzAqComsqTbl.setTzComId(strComId);
 								psTzAqComsqTbl.setTzPageId(strPageId);
-								psTzAqComsqTbl.setDisplayonly((Short) mapAQComsq.get("DISPLAYONLY"));
-								psTzAqComsqTbl.setTzEditFlg((Short) mapAQComsq.get("TZ_EDIT_FLG"));
-								psTzAqComsqTbl.setAuthorizedactions(
-										Integer.parseInt(mapAQComsq.get("AUTHORIZEDACTIONS").toString()));
+								psTzAqComsqTbl.setDisplayonly(displayonly);
+								psTzAqComsqTbl.setTzEditFlg(editFlag);
+								psTzAqComsqTbl.setAuthorizedactions(mapAQComsq.get("AUTHORIZEDACTIONS") == null ? null
+										: Integer.parseInt(mapAQComsq.get("AUTHORIZEDACTIONS").toString()));
 								psTzAqComsqTbl.setRowAddedDttm(dateNow);
 								psTzAqComsqTbl.setRowAddedOprid(oprid);
 								psTzAqComsqTbl.setRowLastmantDttm(dateNow);

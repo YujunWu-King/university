@@ -57,17 +57,23 @@ Ext.define('KitchenSink.view.orgmgmt.orgRoleWindow', {
             name: 'roleType',
             queryMode:'local',
             editable:false,
-            valueField:'FIELDVALUE',
-            displayField:'XLATLONGNAME',
+            valueField:'TZ_ZHZ_ID',
+            displayField:'TZ_ZHZ_CMS',
             store:new KitchenSink.view.common.store.comboxStore({
-                recname:'PSXITMMNT_VW',
-                condition:{FIELDNAME:{
-                    value:'TZ_ROLE_TYPE',
-                    operator:'01',
-                    type:'01'
-                }
+                recname:'PS_TZ_TRANS_ITEM_VW',
+                condition:{
+					"TZ_ZHZJH_ID":{
+						value:'TZ_ROLE_TYPE',
+						operator:'01',
+						type:'01'
+					},
+					"TZ_LANGUAGE_ID":{
+						value:'ZHS',
+						operator:'01',
+						type:'01'
+					}
                 },
-                result:'XLATLONGNAME,FIELDVALUE'
+                result:'TZ_ZHZ_CMS,TZ_ZHZ_ID'
             })
         }, {
             xtype: 'textfield',

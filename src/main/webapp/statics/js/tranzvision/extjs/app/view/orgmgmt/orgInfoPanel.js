@@ -367,7 +367,8 @@
     buttons: [{
         text: '生成机构登录页面',
         iconCls:"publish",
-        handler: 'onPTFormPublish'
+        handler: 'onPTFormPublish',
+		hidden: true
     },{
         text: '保存',
         iconCls:"save",

@@ -152,6 +152,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 						boolRst = tzMenuTreeNodeServiceImpl.createChildNode(menuTree, operateNode, menuId);
 						break;
 					default:
+						boolRst = true;
 						break;
 					}
 
@@ -232,6 +233,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -427,7 +429,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 			String sql = tzSQLObject.getSQLText("SQL.TZMenuMgBundle.TzSelectMenuList");
 
 			List<?> listData = sqlQuery.queryForList(sql,
-					new Object[] { baseLanguage, targetLanguage, menuTree, strMenuID, menuTree });
+					new Object[] { targetLanguage, baseLanguage, menuTree, strMenuID, menuTree });
 
 			for (Object objNode : listData) {
 

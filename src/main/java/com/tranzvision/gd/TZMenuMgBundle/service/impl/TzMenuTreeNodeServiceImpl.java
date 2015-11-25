@@ -4,6 +4,8 @@
 package com.tranzvision.gd.TZMenuMgBundle.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import com.tranzvision.gd.TZMenuMgBundle.dao.PsTreeNodeMapper;
 import com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode;
 import com.tranzvision.gd.TZMenuMgBundle.service.TzMenuTreeNodeService;
 import com.tranzvision.gd.util.base.TZUtility;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -36,7 +39,10 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Autowired
 	private PsTreeNodeMapper psTreeNodeMapper;
 
-	private long createDt = 20151111;
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
+
+	private String createDt = "2015-11-11";
 
 	/*
 	 * (non-Javadoc)
@@ -46,20 +52,31 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 */
 	@Override
 	public void createTree(String treeName) {
-		Date effdt = new Date(createDt);
+		String dtFormat = getSysHardCodeVal.getDateFormat();
+		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+		Date effdt;
+		try {
+			effdt = format.parse(createDt);
 
-		PsTreeNode psTreeNode = new PsTreeNode();
-		psTreeNode.setTreeName(treeName);
-		psTreeNode.setEffdt(effdt);
-		psTreeNode.setTreeNodeNum(1);
-		psTreeNode.setTreeNode("ROOT");
-		psTreeNode.setTreeNodeNumEnd(2000000000);
-		psTreeNode.setTreeLevelNum((short) 1);
-		psTreeNode.setTreeNodeType("G");
-		psTreeNode.setParentNodeNum(0);
-		psTreeNode.setOldTreeNodeNum("N");
+			PsTreeNode psTreeNode = new PsTreeNode();
+			psTreeNode.setSetid("");
+			psTreeNode.setSetcntrlvalue("");
+			psTreeNode.setTreeBranch("");
+			psTreeNode.setTreeName(treeName);
+			psTreeNode.setEffdt(effdt);
+			psTreeNode.setTreeNodeNum(1);
+			psTreeNode.setTreeNode("ROOT");
+			psTreeNode.setTreeNodeNumEnd(2000000000);
+			psTreeNode.setTreeLevelNum((short) 1);
+			psTreeNode.setTreeNodeType("G");
+			psTreeNode.setParentNodeNum(0);
+			psTreeNode.setOldTreeNodeNum("N");
 
-		psTreeNodeMapper.insert(psTreeNode);
+			psTreeNodeMapper.insert(psTreeNode);
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -73,18 +90,20 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	public boolean createChildNode(String treeName, String parentTreeNode, String treeNode) {
 
 		try {
-			Date effdt = new Date(createDt);
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+			Date effdt = format.parse(createDt);
 
 			String nodeExistYet;
-			String sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			String sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
 
 			nodeExistYet = sqlQuery.queryForObject(sql, new Object[] { treeName, treeNode, effdt }, "String");
 			// 节点存在则不创建
 			if ("Y".equals(nodeExistYet)) {
-				return false;
+				return true;
 			}
 
-			sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
 			Map<String, Object> mapParentNode = sqlQuery.queryForMap(sql,
 					new Object[] { treeName, parentTreeNode, effdt });
 			if (null == mapParentNode) {
@@ -99,9 +118,11 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 			int insertTreeNodeNum, insertTreeNodeNumEnd;
 
 			// 查看父节点下子节点的最小开始序号
-			sql = "select min(TREE_NODE_NUM) from PSTREENODE where TREE_NAME=? and PARENT_NODE_NAME=? and PARENT_NODE_NUM=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
-			int minNodeNum = sqlQuery.queryForObject(sql,
-					new Object[] { treeName, parentTreeNode, parentNodeNum, effdt }, "int");
+			sql = "select min(TREE_NODE_NUM) from PSTREENODE where TREE_NAME=? and PARENT_NODE_NAME=? and PARENT_NODE_NUM=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			String strMinNodeNum = sqlQuery.queryForObject(sql,
+					new Object[] { treeName, parentTreeNode, parentNodeNum, effdt }, "String");
+
+			int minNodeNum = strMinNodeNum == null ? 0 : Integer.parseInt(strMinNodeNum);
 
 			if (minNodeNum > 0) {
 				// 如果存在子节点
@@ -120,6 +141,9 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 
 			// 创建新节点数据
 			PsTreeNode psTreeNode = new PsTreeNode();
+			psTreeNode.setSetid("");
+			psTreeNode.setSetcntrlvalue("");
+			psTreeNode.setTreeBranch("");
 			psTreeNode.setTreeName(treeName);
 			psTreeNode.setEffdt(effdt);
 			psTreeNode.setTreeNodeNum(insertTreeNodeNum);
@@ -151,18 +175,20 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	public boolean createBrotherNode(String treeName, String brotherTreeNode, String treeNode) {
 
 		try {
-			Date effdt = new Date(createDt);
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+			Date effdt = format.parse(createDt);
 
 			String nodeExistYet;
-			String sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			String sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
 
 			nodeExistYet = sqlQuery.queryForObject(sql, new Object[] { treeName, treeNode, effdt }, "String");
 			// 节点存在则不创建
 			if ("Y".equals(nodeExistYet)) {
-				return false;
+				return true;
 			}
 
-			sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM,PARENT_NODE_NUM ,PARENT_NODE_NAME from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM,PARENT_NODE_NUM ,PARENT_NODE_NAME from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
 			Map<String, Object> mapBrotherNode = sqlQuery.queryForMap(sql,
 					new Object[] { treeName, brotherTreeNode, effdt });
 			if (null == mapBrotherNode) {
@@ -191,6 +217,9 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 
 			// 创建新节点数据
 			PsTreeNode psTreeNode = new PsTreeNode();
+			psTreeNode.setSetid("");
+			psTreeNode.setSetcntrlvalue("");
+			psTreeNode.setTreeBranch("");
 			psTreeNode.setTreeName(treeName);
 			psTreeNode.setEffdt(effdt);
 			psTreeNode.setTreeNodeNum(insertTreeNodeNum);
@@ -226,38 +255,44 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Override
 	public void deleteNode(String treeName, int treeNodeNum, int treeNodeNumEnd) {
 
-		Date effdt = new Date(createDt);
+		try {
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+			Date effdt = format.parse(createDt);
 
-		// 查找同级兄弟节点的上节点
-		String sql = "select PARENT_NODE_NAME,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and EFFDT=? and TREE_NODE_NUM = ?  and TREE_NODE_NUM_END = ? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
-		Map<String, Object> mapNode = sqlQuery.queryForMap(sql,
-				new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
+			// 查找同级兄弟节点的上节点
+			String sql = "select PARENT_NODE_NAME,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM = ?  and TREE_NODE_NUM_END = ? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			Map<String, Object> mapNode = sqlQuery.queryForMap(sql,
+					new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
 
-		String parentNode = mapNode.get("PARENT_NODE_NAME").toString();
-		short levelNum = Short.parseShort(mapNode.get("TREE_LEVEL_NUM").toString());
+			String parentNode = mapNode.get("PARENT_NODE_NAME").toString();
+			short levelNum = Short.parseShort(mapNode.get("TREE_LEVEL_NUM").toString());
 
-		sql = "select TREE_NODE,TREE_NODE_NUM from PSTREENODE where TREE_NAME=? and EFFDT=? and PARENT_NODE_NAME = ? AND TREE_LEVEL_NUM=? AND TREE_NODE_NUM_END < ? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' order by TREE_NODE_NUM_END desc";
-		Map<String, Object> mapPrevNode = sqlQuery.queryForMap(sql,
-				new Object[] { treeName, effdt, parentNode, levelNum, treeNodeNum });
+			sql = "select TREE_NODE,TREE_NODE_NUM from PSTREENODE where TREE_NAME=? and EFFDT<=? and PARENT_NODE_NAME = ? AND TREE_LEVEL_NUM=? AND TREE_NODE_NUM_END < ? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' order by TREE_NODE_NUM_END desc";
+			Map<String, Object> mapPrevNode = sqlQuery.queryForMap(sql,
+					new Object[] { treeName, effdt, parentNode, levelNum, treeNodeNum });
 
-		String prevNodeName = mapPrevNode.get("TREE_NODE").toString();
-		int prevNodeNum = Integer.parseInt(mapPrevNode.get("TREE_NODE_NUM").toString());
+			// 删除多语言表中对应的树节点记录
+			sql = "delete from PS_TZ_AQ_CDJD_LNG where TREE_NAME=? and exists (select TREE_NODE from PSTREENODE A where A.TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM>=? and TREE_NODE_NUM_END<=? and A.TREE_NODE=TZ_MENU_NUM)";
+			sqlQuery.update(sql, new Object[] { treeName, treeName, effdt, treeNodeNum, treeNodeNumEnd });
 
-		// 删除多语言表中对应的树节点记录
-		sql = "delete from PS_TZ_AQ_CDJD_LNG B where B.TREE_NAME=? and B.TZ_MENU_NUM in (select TREE_NODE from PSTREENODE A where A.TREE_NAME=? and EFFDT=? and TREE_NODE_NUM>=? and TREE_NODE_NUM_END<=?)";
-		sqlQuery.update(sql, new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
+			// 删除树节点详细信息表中的记录
+			sql = "delete from PS_TZ_AQ_CDJD_TBL where TREE_NAME=? and exists (select TREE_NODE from PSTREENODE A where A.TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM>=? and TREE_NODE_NUM_END<=? and A.TREE_NODE=TZ_MENU_NUM)";
+			sqlQuery.update(sql, new Object[] { treeName, treeName, effdt, treeNodeNum, treeNodeNumEnd });
 
-		// 删除树节点详细信息表中的记录
-		sql = "delete from PS_TZ_AQ_CDJD_TBL B where B.TREE_NAME=:1 and B.TZ_MENU_NUM in (select TREE_NODE from PSTREENODE A where A.TREE_NAME=:1 and EFFDT=? and TREE_NODE_NUM>=? and TREE_NODE_NUM_END<=?)";
-		sqlQuery.update(sql, new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
+			// 删除树节点
+			sql = "delete from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM >= ?  and TREE_NODE_NUM_END <= ?";
+			sqlQuery.update(sql, new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
 
-		// 删除树节点
-		sql = "delete from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT=? and TREE_NODE_NUM >= ?  and TREE_NODE_NUM_END <= ?";
-		sqlQuery.update(sql, new Object[] { treeName, effdt, treeNodeNum, treeNodeNumEnd });
+			// 存在同级兄弟节点的上节点,把上个兄弟节点最大结束序号改为当前删除的节点的最大结束序号
+			if (null != mapPrevNode) {
+				String prevNodeName = mapPrevNode.get("TREE_NODE").toString();
+				int prevNodeNum = Integer.parseInt(mapPrevNode.get("TREE_NODE_NUM").toString());
+				this.updateNodeNum(treeName, prevNodeName, prevNodeNum, treeNodeNumEnd);
+			}
 
-		// 存在同级兄弟节点的上节点,把上个兄弟节点最大结束序号改为当前删除的节点的最大结束序号
-		if (null != mapPrevNode) {
-			this.updateNodeNum(treeName, prevNodeName, prevNodeNum, treeNodeNumEnd);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -272,19 +307,22 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Override
 	public void changeNode(String treeName, String oldNode, String preNode, String patentNode) {
 
-		Date effdt = new Date(createDt);
-
 		TZUtility tzUtility = new TZUtility();
 		int seqNum = tzUtility.GetSeqNum("TZ_TREENODE_TMP", "TZ_SEQNUM");
 
 		try {
 
-			String sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+			Date effdt = format.parse(createDt);
+
+			String sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END,TREE_LEVEL_NUM from PSTREENODE where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
 			Map<String, Object> mapOldNode = sqlQuery.queryForMap(sql, new Object[] { treeName, oldNode, effdt });
 
 			int oldTreeNodeNum = Integer.parseInt(mapOldNode.get("TREE_NODE_NUM").toString());
 			int oldTreeNodeNumEnd = Integer.parseInt(mapOldNode.get("TREE_NODE_NUM_END").toString());
-			//short oldTreeLevelNum = Short.parseShort(mapOldNode.get("TREE_LEVEL_NUM").toString());
+			// short oldTreeLevelNum =
+			// Short.parseShort(mapOldNode.get("TREE_LEVEL_NUM").toString());
 
 			if (mapOldNode != null) {
 
@@ -292,21 +330,21 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 				sqlQuery.update(sql, new Object[] { seqNum, treeName, effdt, oldTreeNodeNum, oldTreeNodeNumEnd });
 
 				// 查找同级兄弟节点的上节点
-				sql = "select PARENT_NODE_NAME,TREE_LEVEL_NUM from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT=? and TREE_NODE_NUM = ?  and TREE_NODE_NUM_END = ?";
+				sql = "select PARENT_NODE_NAME,TREE_LEVEL_NUM from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM = ?  and TREE_NODE_NUM_END = ?";
 				Map<String, Object> mapNode1 = sqlQuery.queryForMap(sql,
 						new Object[] { treeName, effdt, oldTreeNodeNum, oldTreeNodeNumEnd });
 
 				String y_pNode = mapNode1.get("PARENT_NODE_NAME").toString();
 				short levelNum = Short.parseShort(mapNode1.get("TREE_LEVEL_NUM").toString());
 
-				sql = "select TREE_NODE, TREE_NODE_NUM from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT=? and PARENT_NODE_NAME = ? and TREE_LEVEL_NUM=? and TREE_NODE_NUM_END < ? order by TREE_NODE_NUM_END desc";
+				sql = "select TREE_NODE, TREE_NODE_NUM from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT<=? and PARENT_NODE_NAME = ? and TREE_LEVEL_NUM=? and TREE_NODE_NUM_END < ? order by TREE_NODE_NUM_END desc";
 				Map<String, Object> mapNode2 = sqlQuery.queryForMap(sql,
 						new Object[] { treeName, effdt, y_pNode, levelNum, oldTreeNodeNum });
 
 				String prevNodeName = mapNode2.get("TREE_NODE").toString();
 				int prevNodeNum = Integer.parseInt(mapNode2.get("TREE_NODE_NUM").toString());
 
-				sql = "delete from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT=? and TREE_NODE_NUM >= ?  and TREE_NODE_NUM_END <= ?";
+				sql = "delete from PSTREENODE where ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))='' and TREE_NAME=? and EFFDT<=? and TREE_NODE_NUM >= ?  and TREE_NODE_NUM_END <= ?";
 				sqlQuery.update(sql, new Object[] { treeName, effdt, oldTreeNodeNum, oldTreeNodeNumEnd });
 
 				// 存在同级兄弟节点的上节点,把上个兄弟节点最大结束序号改为当前删除的节点的最大结束序号
@@ -342,15 +380,15 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	public void changeNodeToParent(int seqNum, String treeName, String oldNode, String patentNode) {
 
 		this.createChildNode(treeName, patentNode, oldNode);
-		
+
 		String sql = "select TREE_NODE from PS_TZ_TREENODE_TMP where TZ_SEQNUM=? and TREE_NAME=? and PARENT_NODE_NAME=? order by TREE_NODE_NUM desc";
-		List<?> listTreeNodes = sqlQuery.queryForList(sql, new Object[]{seqNum, treeName, oldNode});
-		
-		for(Object objNode:listTreeNodes){
+		List<?> listTreeNodes = sqlQuery.queryForList(sql, new Object[] { seqNum, treeName, oldNode });
+
+		for (Object objNode : listTreeNodes) {
 			Map<String, Object> mapNode = (Map<String, Object>) objNode;
-			
+
 			String childTreeNode = mapNode.get("TREE_NODE").toString();
-			
+
 			this.changeNodeToParent(seqNum, treeName, childTreeNode, oldNode);
 		}
 
@@ -368,18 +406,18 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	public void changeNodeToBrother(int seqNum, String treeName, String oldNode, String brotherTreeNode) {
 
 		this.createBrotherNode(treeName, brotherTreeNode, oldNode);
-		
+
 		String sql = "select TREE_NODE from PS_TZ_TREENODE_TMP where TZ_SEQNUM=? and TREE_NAME=? and PARENT_NODE_NAME=? order by TREE_NODE_NUM desc";
-		List<?> listTreeNodes = sqlQuery.queryForList(sql, new Object[]{seqNum, treeName, oldNode});
-		
-		for(Object objNode:listTreeNodes){
+		List<?> listTreeNodes = sqlQuery.queryForList(sql, new Object[] { seqNum, treeName, oldNode });
+
+		for (Object objNode : listTreeNodes) {
 			Map<String, Object> mapNode = (Map<String, Object>) objNode;
-			
+
 			String childTreeNode = mapNode.get("TREE_NODE").toString();
-			
+
 			this.changeNodeToParent(seqNum, treeName, childTreeNode, oldNode);
 		}
-		
+
 	}
 
 	/*
@@ -392,40 +430,48 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Override
 	public void updateNodeNum(String treeName, String updateTreeNode, int updateTreeNodeNum, int updateTreeNodeNumEnd) {
 
-		Date effdt = new Date(createDt);
+		try {
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat format = new SimpleDateFormat(dtFormat);
+			Date effdt = format.parse(createDt);
 
-		String sql = "update PSTREENODE set TREE_NODE_NUM=?, TREE_NODE_NUM_END=? where TREE_NAME=? and TREE_NODE=? and EFFDT=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
-		sqlQuery.update(sql, new Object[] { updateTreeNodeNum, updateTreeNodeNumEnd, treeName, updateTreeNode, effdt });
+			String sql = "update PSTREENODE set TREE_NODE_NUM=?, TREE_NODE_NUM_END=? where TREE_NAME=? and TREE_NODE=? and EFFDT<=? and ltrim(rtrim(SETID))='' and ltrim(rtrim(SETCNTRLVALUE))=''";
+			sqlQuery.update(sql,
+					new Object[] { updateTreeNodeNum, updateTreeNodeNumEnd, treeName, updateTreeNode, effdt });
 
-		sql = "select TREE_NODE from PSTREENODE where TREE_NAME=? and PARENT_NODE_NAME=? and EFFDT=? order by TREE_NODE_NUM desc";
-		List<?> listNodes = sqlQuery.queryForList(sql, new Object[] { treeName, updateTreeNode, effdt });
+			sql = "select TREE_NODE from PSTREENODE where TREE_NAME=? and PARENT_NODE_NAME=? and EFFDT<=? order by TREE_NODE_NUM desc";
+			List<?> listNodes = sqlQuery.queryForList(sql, new Object[] { treeName, updateTreeNode, effdt });
 
-		String childTreeNode;
-		int num = 0;
-		int childTreeNodeNumEnd, childTreeNodeNum = 0;
-		for (Object objNode : listNodes) {
+			String childTreeNode;
+			int num = 0;
+			int childTreeNodeNumEnd, childTreeNodeNum = 0;
+			for (Object objNode : listNodes) {
 
-			Map<String, Object> mapNode = (Map<String, Object>) objNode;
+				Map<String, Object> mapNode = (Map<String, Object>) objNode;
 
-			childTreeNode = mapNode.get("TREE_NODE").toString();
+				childTreeNode = mapNode.get("TREE_NODE").toString();
 
-			if (num == 0) {
-				childTreeNodeNumEnd = updateTreeNodeNumEnd;
-				// 插入节点的开始序号为（父节点的开始序号 + 当前节点的结束序号）/2;
-				BigDecimal newTreeNodeNum = new BigDecimal((updateTreeNodeNum + updateTreeNodeNumEnd) / 2).setScale(0,
-						BigDecimal.ROUND_HALF_UP);
-				childTreeNodeNum = newTreeNodeNum.intValue();
-			} else {
-				childTreeNodeNumEnd = childTreeNodeNum - 1;
-				BigDecimal newTreeNodeNum = new BigDecimal((updateTreeNodeNum + childTreeNodeNumEnd) / 2).setScale(0,
-						BigDecimal.ROUND_HALF_UP);
-				childTreeNodeNum = newTreeNodeNum.intValue();
+				if (num == 0) {
+					childTreeNodeNumEnd = updateTreeNodeNumEnd;
+					// 插入节点的开始序号为（父节点的开始序号 + 当前节点的结束序号）/2;
+					BigDecimal newTreeNodeNum = new BigDecimal((updateTreeNodeNum + updateTreeNodeNumEnd) / 2)
+							.setScale(0, BigDecimal.ROUND_HALF_UP);
+					childTreeNodeNum = newTreeNodeNum.intValue();
+				} else {
+					childTreeNodeNumEnd = childTreeNodeNum - 1;
+					BigDecimal newTreeNodeNum = new BigDecimal((updateTreeNodeNum + childTreeNodeNumEnd) / 2)
+							.setScale(0, BigDecimal.ROUND_HALF_UP);
+					childTreeNodeNum = newTreeNodeNum.intValue();
+				}
+
+				num++;
+
+				this.updateNodeNum(treeName, childTreeNode, childTreeNodeNum, childTreeNodeNumEnd);
+
 			}
 
-			num++;
-
-			this.updateNodeNum(treeName, childTreeNode, childTreeNodeNum, childTreeNodeNumEnd);
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

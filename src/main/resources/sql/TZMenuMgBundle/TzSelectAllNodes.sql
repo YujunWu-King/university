@@ -5,10 +5,10 @@ select
 	a.PARENT_NODE_NAME,
 	ifnull(b.TZ_MENU_MC,"") TZ_MENU_MC,
 	b.TZ_YXX,
-	b.TZ_COM_ID,
-	b.TZ_MENU_LIMG,
-	b.TZ_MENU_SIMG,
-	b.TZ_MENU_NRID 
+	ifnull(b.TZ_COM_ID,"") TZ_COM_ID,
+	ifnull(b.TZ_MENU_LIMG,"") TZ_MENU_LIMG,
+	ifnull(b.TZ_MENU_SIMG,"") TZ_MENU_SIMG,
+	ifnull(b.TZ_MENU_NRID,"") TZ_MENU_NRID 
 from 
 	PSTREENODE a,
 	PS_TZ_AQ_CDJD_TBL b 

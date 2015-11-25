@@ -73,7 +73,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
-			tzMenuTreeNodeServiceImpl.createTree(menuTree);
+			//tzMenuTreeNodeServiceImpl.createTree(menuTree);
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -86,7 +86,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 
 				// 机构编号
 				String menuOrg = mapData.get("menuOrg").toString();
-				String sql = "select TZ_JG_NAME from PS_TZ_JG_BASE_T where TZ_JG_ID=:1";
+				String sql = "select TZ_JG_NAME from PS_TZ_JG_BASE_T where TZ_JG_ID=?";
 				String orgDesc = sqlQuery.queryForObject(sql, new Object[] { menuOrg }, "String");
 
 				// 复制源机构编号
@@ -176,7 +176,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 					recExists = sqlQuery.queryForObject(sql, new Object[] { menuTree, sourceOrg }, "String");
 
 					if ("Y".equals(recExists)) {
-						sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END from PSTREENODE WHERE TREE_NAME=? and TREE_LEVEL_NUM=2 and TREE_NODE=:1";
+						sql = "select TREE_NODE_NUM,TREE_NODE_NUM_END from PSTREENODE WHERE TREE_NAME=? and TREE_LEVEL_NUM=2 and TREE_NODE=?";
 						Map<String, Object> mapNodeNum = sqlQuery.queryForMap(sql,
 								new Object[] { menuTree, sourceOrg });
 						int treeNodeNum = Integer.parseInt(mapNodeNum.get("TREE_NODE_NUM").toString());
@@ -232,9 +232,9 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 
 							} else {
 
-								int num2 = aryNodes.indexOf(parentenode);
+								int num2 = aryNodes.indexOf(parentenode); 
 
-								if (num2 > 0) {
+								if (num2 >= 0) {
 
 								} else {
 									continue;
@@ -255,7 +255,8 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 									boolean reCreateNewNode = true;
 									while (reCreateNewNode) {
 										newNodeName = menuOrg + "_" + Math.round(Math.random() * 899999999 + 100000000);
-										sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=:1";
+										newNodeName = newNodeName.substring(0, 19);
+										sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=?";
 										recExists = sqlQuery.queryForObject(sql, new Object[] { menuTree, newNodeName },
 												"String");
 										if (!"Y".equals(recExists)) {
@@ -303,6 +304,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}

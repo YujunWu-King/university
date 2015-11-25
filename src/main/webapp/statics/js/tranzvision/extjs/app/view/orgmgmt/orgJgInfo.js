@@ -231,7 +231,8 @@
     buttons: [{
         text: '生成机构登录页面',
         iconCls:"publish",
-        handler: 'onFormPublish'
+        handler: 'onFormPublish',
+		hidden: true
     },{
 		text: '保存',
 		iconCls:"save",
