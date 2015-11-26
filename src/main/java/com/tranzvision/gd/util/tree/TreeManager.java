@@ -17,7 +17,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-11-16
  */
-@Service
 public class TreeManager {
 
 	@Autowired

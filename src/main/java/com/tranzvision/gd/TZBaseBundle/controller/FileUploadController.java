@@ -3,20 +3,16 @@
  */
 package com.tranzvision.gd.TZBaseBundle.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
@@ -42,8 +39,6 @@ import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 @RequestMapping(value = "/")
 public class FileUploadController {
 
-	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
-
 	@Autowired
 	private JacksonUtil jacksonUtil;
 
@@ -55,6 +50,9 @@ public class FileUploadController {
 
 	@Autowired
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
+
+	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;
 
 	/**
 	 * Upload single file using Spring Controller
@@ -70,15 +68,15 @@ public class FileUploadController {
 		String funcdir = String.valueOf(allRequestParams.get("filePath"));
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 
-		//过滤功能目录名称中的特殊字符
+		// 过滤功能目录名称中的特殊字符
 		if (null != funcdir && !"".equals(funcdir) && !"null".equals(funcdir)) {
 			funcdir = "/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(funcdir);
-		}else{
+		} else {
 			funcdir = "";
 		}
-		
-		//是否临时文件的标记
-		if(null == istmpfile ||  !"null".equals(funcdir)){
+
+		// 是否临时文件的标记
+		if (null == istmpfile || !"null".equals(funcdir)) {
 			istmpfile = "0";
 		}
 
@@ -137,51 +135,60 @@ public class FileUploadController {
 					String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
 					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
 					String parentPath = "";
-					
-					if("1".equals(istmpfile)){
-						//若是临时文件，则存储在临时文件目录
+
+					if ("1".equals(istmpfile)) {
+						// 若是临时文件，则存储在临时文件目录
 						parentPath = tmpFilePath + "/" + orgid + "/" + this.getDateNow() + funcdir;
-					}else{
+					} else {
 						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + funcdir;
 					}
 					String accessPath = parentPath + "/";
-					parentPath = request.getServletContext().getRealPath(parentPath);
-					File dir = new File(parentPath);
-					System.out.println(dir.getAbsolutePath());
-					if (!dir.exists()) {
-						dir.mkdirs();
+					
+					boolean createResult = false;
+					int createTimes = 5;
+					String sysFileName = "";
+					while (!createResult && createTimes > 0) {
+
+						// Create the file on server
+						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".")
+								.append(suffix).toString();
+						if (sysFileName.indexOf('/') != -1)
+							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
+
+						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
+
+						createTimes--;
 					}
 
-					// Create the file on server
-					String sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
-							.toString();
-					if (sysFileName.indexOf('/') != -1)
-						sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
+					if (createResult) {
+						// 看是否是图片，如果是，则获取图片的宽、高
+						if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
+							ArrayList<Integer> imgWH = fileManageServiceImpl
+									.getImageWidthHeight(parentPath + File.separator + sysFileName);
+							if (imgWH.size() > 0) {
+								imgWidth = imgWH.get(0);
+								imgHeight = imgWH.get(1);
+							}
+						}
+						
+						Map<String, Object> mapFile = new HashMap<String, Object>();
+						mapFile.put("filename", filename);
+						mapFile.put("sysFileName", sysFileName);
+						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
+						mapFile.put("path", parentPath);
+						mapFile.put("accessPath", accessPath);
+						mapFile.put("imgWidth", imgWidth);
+						mapFile.put("imgHeight", imgHeight);
 
-					File serverFile = new File(dir.getAbsolutePath() + File.separator + sysFileName);
-					BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-					stream.write(bytes);
-					stream.close();
-
-					// 看是否是图片，如果是，则获取图片的宽、高
-					if (getSysHardCodeVal.getImageSuffix().contains(suffix.toLowerCase())) {
-						java.awt.image.BufferedImage img = ImageIO.read(serverFile);
-						imgWidth = img.getWidth();
-						imgHeight = img.getHeight();
+						messages = mapFile;
+						
+					}else{
+						if ("ENG".equals(language)) {
+							messages = "Upload failed. Please re-try.";
+						} else {
+							messages = "上传失败，请重试。";
+						}
 					}
-
-					logger.info("Server File Location=" + serverFile.getAbsolutePath());
-
-					Map<String, Object> mapFile = new HashMap<String, Object>();
-					mapFile.put("filename", filename);
-					mapFile.put("sysFileName", sysFileName);
-					mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
-					mapFile.put("path", parentPath);
-					mapFile.put("accessPath", accessPath);
-					mapFile.put("imgWidth", imgWidth);
-					mapFile.put("imgHeight", imgHeight);
-
-					messages = mapFile;
 
 				}
 

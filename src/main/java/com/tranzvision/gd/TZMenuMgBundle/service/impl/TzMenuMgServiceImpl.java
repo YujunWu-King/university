@@ -43,9 +43,6 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
-	private TreeManager treeManager;
-
-	@Autowired
 	private TzMenuTreeNodeServiceImpl tzMenuTreeNodeServiceImpl;
 
 	/**
@@ -186,7 +183,7 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 		try {
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
 			if ("REFRESHMENU".equals(operateType)) {
-
+				TreeManager treeManager = new TreeManager();
 				treeManager.setTreeName(menuTree);
 				if (treeManager.openTree("")) {
 

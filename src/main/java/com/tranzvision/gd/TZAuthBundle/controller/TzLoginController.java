@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZAuthBundle.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,9 +62,11 @@ public class TzLoginController {
 		String userPwd = (String) formData.get("password");
 		String code = (String) formData.get("yzm");
 
-		tzLoginServiceImpl.doLogin(request, response, orgid, userName, userPwd, code);
-		String loginStatus = tzLoginServiceImpl.getLoginStatus();
-		String errorMsg = tzLoginServiceImpl.getErrorMsg();
+		ArrayList<String> aryErrorMsg = new ArrayList<String>();
+		
+		tzLoginServiceImpl.doLogin(request, response, orgid, userName, userPwd, code, aryErrorMsg);
+		String loginStatus = aryErrorMsg.get(0);
+		String errorMsg = aryErrorMsg.get(1);
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);

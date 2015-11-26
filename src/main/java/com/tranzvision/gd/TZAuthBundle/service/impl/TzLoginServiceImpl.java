@@ -3,6 +3,7 @@
  */
 package com.tranzvision.gd.TZAuthBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,36 +43,12 @@ public class TzLoginServiceImpl implements TzLoginService {
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 
 	@Autowired
-	GetCookieSessionProps getCookieSessionProps;
-
-	private Patchca patchca;
-
-	private String loginStatus;
-
-	private String errorMsg;
+	private GetCookieSessionProps getCookieSessionProps;
 
 	/**
 	 * Session存储的用户信息变量名称
 	 */
 	final static String managerSessionName = "loginManager";
-
-	/**
-	 * 获取登录结果
-	 * 
-	 * @return String 登录结果：成功 - success ；失败 - 其他值
-	 */
-	public String getLoginStatus() {
-		return loginStatus;
-	}
-
-	/**
-	 * 获取错误描述信息
-	 * 
-	 * @return String
-	 */
-	public String getErrorMsg() {
-		return errorMsg;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -83,13 +60,13 @@ public class TzLoginServiceImpl implements TzLoginService {
 	 */
 	@Override
 	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String userName,
-			String userPwd, String code) {
+			String userPwd, String code, ArrayList<String> errorMsg) {
 
 		// 校验验证码
-		patchca = new Patchca();
+		Patchca patchca = new Patchca();
 		if (!patchca.verifyToken(request, code)) {
-			loginStatus = "2";
-			errorMsg = "输入的验证码不正确。";
+			errorMsg.add("2");
+			errorMsg.add("输入的验证码不正确。");
 			return false;
 		}
 
@@ -109,8 +86,8 @@ public class TzLoginServiceImpl implements TzLoginService {
 			}
 
 			if (null == dataMap) {
-				loginStatus = "2";
-				errorMsg = "登录失败，请确认用户名和密码是否正确。";
+				errorMsg.add("2");
+				errorMsg.add("登录失败，请确认用户名和密码是否正确。");
 				return false;
 			}
 
@@ -120,8 +97,8 @@ public class TzLoginServiceImpl implements TzLoginService {
 					"String");
 
 			if (!"Y".equals(strFlag)) {
-				loginStatus = "2";
-				errorMsg = "登录失败，请确认用户名和密码是否正确。";
+				errorMsg.add("2");
+				errorMsg.add("登录失败，请确认用户名和密码是否正确。");
 				return false;
 			}
 
@@ -134,9 +111,9 @@ public class TzLoginServiceImpl implements TzLoginService {
 			// 设置Session
 			TzSession tzSession = new TzSession(request);
 			tzSession.addSession(managerSessionName, loginManager);
-
-			loginStatus = "success";
-			errorMsg = "";
+			
+			errorMsg.add("success");
+			errorMsg.add("");
 			return true;
 
 		} catch (TzSystemException tze) {

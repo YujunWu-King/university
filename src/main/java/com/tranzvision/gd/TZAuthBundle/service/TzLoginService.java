@@ -3,6 +3,8 @@
  */
 package com.tranzvision.gd.TZAuthBundle.service;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,10 +25,11 @@ public interface TzLoginService {
 	 * @param userName
 	 * @param userPwd
 	 * @param code
+	 * @param errorMsg
 	 * @return boolean
 	 */
 	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String userName,
-			String userPwd, String code);
+			String userPwd, String code, ArrayList<String> errorMsg);
 
 	/**
 	 * 用户登出
