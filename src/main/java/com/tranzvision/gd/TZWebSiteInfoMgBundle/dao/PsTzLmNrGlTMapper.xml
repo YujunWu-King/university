@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlT" >
+    <id column="TZ_SITE_ID" property="tzSiteId" jdbcType="VARCHAR" />
+    <id column="TZ_COLU_ID" property="tzColuId" jdbcType="VARCHAR" />
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <result column="TZ_ART_NEWS_DT" property="tzArtNewsDt" jdbcType="TIMESTAMP" />
+    <result column="TZ_ART_PUB_STATE" property="tzArtPubState" jdbcType="VARCHAR" />
+    <result column="TZ_STATIC_ART_URL" property="tzStaticArtUrl" jdbcType="VARCHAR" />
+    <result column="TZ_ART_SEQ" property="tzArtSeq" jdbcType="INTEGER" />
+    <result column="TZ_MAX_ZD_SEQ" property="tzMaxZdSeq" jdbcType="INTEGER" />
+    <result column="TZ_FBZ" property="tzFbz" jdbcType="VARCHAR" />
+    <result column="TZ_BLT_DEPT" property="tzBltDept" jdbcType="VARCHAR" />
+    <result column="TZ_LASTMANT_OPRID" property="tzLastmantOprid" jdbcType="VARCHAR" />
+    <result column="TZ_LASTMANT_DTTM" property="tzLastmantDttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_ART_URL" property="tzArtUrl" jdbcType="LONGVARCHAR" />
+    <result column="TZ_ART_HTML" property="tzArtHtml" jdbcType="LONGVARCHAR" />
+    <result column="TZ_ART_CONENT_SCR" property="tzArtConentScr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITE_ID, TZ_COLU_ID, TZ_ART_ID, TZ_ART_NEWS_DT, TZ_ART_PUB_STATE, TZ_STATIC_ART_URL, 
+    TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_ART_URL, TZ_ART_HTML, TZ_ART_CONENT_SCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_LM_NR_GL_T
+    where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+      and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey" >
+    delete from PS_TZ_LM_NR_GL_T
+    where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+      and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" >
+    insert into PS_TZ_LM_NR_GL_T (TZ_SITE_ID, TZ_COLU_ID, TZ_ART_ID, 
+      TZ_ART_NEWS_DT, TZ_ART_PUB_STATE, TZ_STATIC_ART_URL, 
+      TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, 
+      TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM, 
+      TZ_ART_URL, TZ_ART_HTML, TZ_ART_CONENT_SCR
+      )
+    values (#{tzSiteId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzArtId,jdbcType=VARCHAR}, 
+      #{tzArtNewsDt,jdbcType=TIMESTAMP}, #{tzArtPubState,jdbcType=VARCHAR}, #{tzStaticArtUrl,jdbcType=VARCHAR}, 
+      #{tzArtSeq,jdbcType=INTEGER}, #{tzMaxZdSeq,jdbcType=INTEGER}, #{tzFbz,jdbcType=VARCHAR}, 
+      #{tzBltDept,jdbcType=VARCHAR}, #{tzLastmantOprid,jdbcType=VARCHAR}, #{tzLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{tzArtUrl,jdbcType=LONGVARCHAR}, #{tzArtHtml,jdbcType=LONGVARCHAR}, #{tzArtConentScr,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" >
+    insert into PS_TZ_LM_NR_GL_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteId != null" >
+        TZ_SITE_ID,
+      </if>
+      <if test="tzColuId != null" >
+        TZ_COLU_ID,
+      </if>
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzArtNewsDt != null" >
+        TZ_ART_NEWS_DT,
+      </if>
+      <if test="tzArtPubState != null" >
+        TZ_ART_PUB_STATE,
+      </if>
+      <if test="tzStaticArtUrl != null" >
+        TZ_STATIC_ART_URL,
+      </if>
+      <if test="tzArtSeq != null" >
+        TZ_ART_SEQ,
+      </if>
+      <if test="tzMaxZdSeq != null" >
+        TZ_MAX_ZD_SEQ,
+      </if>
+      <if test="tzFbz != null" >
+        TZ_FBZ,
+      </if>
+      <if test="tzBltDept != null" >
+        TZ_BLT_DEPT,
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID,
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM,
+      </if>
+      <if test="tzArtUrl != null" >
+        TZ_ART_URL,
+      </if>
+      <if test="tzArtHtml != null" >
+        TZ_ART_HTML,
+      </if>
+      <if test="tzArtConentScr != null" >
+        TZ_ART_CONENT_SCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteId != null" >
+        #{tzSiteId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuId != null" >
+        #{tzColuId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtNewsDt != null" >
+        #{tzArtNewsDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzArtPubState != null" >
+        #{tzArtPubState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStaticArtUrl != null" >
+        #{tzStaticArtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtSeq != null" >
+        #{tzArtSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzMaxZdSeq != null" >
+        #{tzMaxZdSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzFbz != null" >
+        #{tzFbz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBltDept != null" >
+        #{tzBltDept,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzArtUrl != null" >
+        #{tzArtUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtHtml != null" >
+        #{tzArtHtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtConentScr != null" >
+        #{tzArtConentScr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" >
+    update PS_TZ_LM_NR_GL_T
+    <set >
+      <if test="tzArtNewsDt != null" >
+        TZ_ART_NEWS_DT = #{tzArtNewsDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzArtPubState != null" >
+        TZ_ART_PUB_STATE = #{tzArtPubState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStaticArtUrl != null" >
+        TZ_STATIC_ART_URL = #{tzStaticArtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtSeq != null" >
+        TZ_ART_SEQ = #{tzArtSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzMaxZdSeq != null" >
+        TZ_MAX_ZD_SEQ = #{tzMaxZdSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzFbz != null" >
+        TZ_FBZ = #{tzFbz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBltDept != null" >
+        TZ_BLT_DEPT = #{tzBltDept,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantOprid != null" >
+        TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLastmantDttm != null" >
+        TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzArtUrl != null" >
+        TZ_ART_URL = #{tzArtUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtHtml != null" >
+        TZ_ART_HTML = #{tzArtHtml,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtConentScr != null" >
+        TZ_ART_CONENT_SCR = #{tzArtConentScr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+      and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" >
+    update PS_TZ_LM_NR_GL_T
+    set TZ_ART_NEWS_DT = #{tzArtNewsDt,jdbcType=TIMESTAMP},
+      TZ_ART_PUB_STATE = #{tzArtPubState,jdbcType=VARCHAR},
+      TZ_STATIC_ART_URL = #{tzStaticArtUrl,jdbcType=VARCHAR},
+      TZ_ART_SEQ = #{tzArtSeq,jdbcType=INTEGER},
+      TZ_MAX_ZD_SEQ = #{tzMaxZdSeq,jdbcType=INTEGER},
+      TZ_FBZ = #{tzFbz,jdbcType=VARCHAR},
+      TZ_BLT_DEPT = #{tzBltDept,jdbcType=VARCHAR},
+      TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
+      TZ_ART_URL = #{tzArtUrl,jdbcType=LONGVARCHAR},
+      TZ_ART_HTML = #{tzArtHtml,jdbcType=LONGVARCHAR},
+      TZ_ART_CONENT_SCR = #{tzArtConentScr,jdbcType=LONGVARCHAR}
+    where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+      and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlT" >
+    update PS_TZ_LM_NR_GL_T
+    set TZ_ART_NEWS_DT = #{tzArtNewsDt,jdbcType=TIMESTAMP},
+      TZ_ART_PUB_STATE = #{tzArtPubState,jdbcType=VARCHAR},
+      TZ_STATIC_ART_URL = #{tzStaticArtUrl,jdbcType=VARCHAR},
+      TZ_ART_SEQ = #{tzArtSeq,jdbcType=INTEGER},
+      TZ_MAX_ZD_SEQ = #{tzMaxZdSeq,jdbcType=INTEGER},
+      TZ_FBZ = #{tzFbz,jdbcType=VARCHAR},
+      TZ_BLT_DEPT = #{tzBltDept,jdbcType=VARCHAR},
+      TZ_LASTMANT_OPRID = #{tzLastmantOprid,jdbcType=VARCHAR},
+      TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP}
+    where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
+      and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
+      and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </update>
+</mapper>
