@@ -189,6 +189,9 @@ public class TzLoginServiceImpl implements TzLoginService {
 		if (null != psTzAqYhxxTbl) {
 			return psTzAqYhxxTbl.getOprid();
 		} else {
+			if (getCookieSessionProps == null) {
+				getCookieSessionProps = new GetCookieSessionProps();
+			}
 			boolean debugging = getCookieSessionProps.getDebug();
 			String strRtn = "";
 			if (debugging) {
@@ -212,6 +215,9 @@ public class TzLoginServiceImpl implements TzLoginService {
 		if (null != psTzAqYhxxTbl) {
 			return psTzAqYhxxTbl.getTzJgId();
 		} else {
+			if (getCookieSessionProps == null) {
+				getCookieSessionProps = new GetCookieSessionProps();
+			}
 			boolean debugging = getCookieSessionProps.getDebug();
 			String strRtn = "";
 			if (debugging) {

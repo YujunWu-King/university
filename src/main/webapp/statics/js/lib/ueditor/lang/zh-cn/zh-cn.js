@@ -59,8 +59,7 @@ UE.I18N['zh-cn'] = {
         'arialBlack':'arial black',
         'comicSansMs':'comic sans ms',
         'impact':'impact',
-        'timesNewRoman':'times new roman',
-         'calibri':'calibri'
+        'timesNewRoman':'times new roman'
     },
     'customstyle':{
         'tc':'标题居中',

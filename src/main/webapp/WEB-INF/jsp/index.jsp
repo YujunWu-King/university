@@ -79,7 +79,7 @@
     </script>
   	<script type="text/javascript" src="${contextPath}/statics/js/lib/prettify/prettify.js"></script>
   	<script type="text/javascript" src="${contextPath}/statics/js/lib/ueditor/ueditor.config.js"></script>
-	<script type="text/javascript" src="${contextPath}/statics/js/lib/ueditor/ueditor.all.js"></script>
+	<script type="text/javascript" src="${contextPath}/statics/js/lib/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript" src="${contextPath}/statics/js/lib/extjs/bootstrap.js"></script>
     <script type="text/javascript" src="${contextPath}/statics/js/lib/extjs/ux/ueditor.js"></script>
     <script id="tranzvision_mkc_advanced_mainapp" type="text/javascript" src="${contextPath}/statics/js/tranzvision/extjs/main/mainapp.js"></script>

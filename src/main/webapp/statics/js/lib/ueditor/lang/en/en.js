@@ -59,8 +59,7 @@ UE.I18N['en'] = {
         'arialBlack':'Arial Black',
         'comicSansMs':'Comic Sans MS',
         'impact':'Impact',
-        'timesNewRoman':'Times New Roman',
-        'calibri':'calibri'
+        'timesNewRoman':'Times New Roman'
     },
     'customstyle':{
         'tc':'Title center',
