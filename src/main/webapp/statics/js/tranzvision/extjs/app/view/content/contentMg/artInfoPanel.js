@@ -214,7 +214,8 @@
 										columnWidth:.65,
             				xtype: "fileuploadfield",  
 										buttonText: '上传',
-										name: 'picUpload',
+										//name: 'picUpload',
+										name: 'orguploadfile',
 										buttonOnly:true,
 										listeners:{
 											change:function(file, value, eOpts){
@@ -260,7 +261,8 @@
 				    			items:[{
 						            xtype: 'fileuploadfield',
 						            buttonText: '上传图片',
-									name: 'picUpload',
+									//name: 'picUpload',
+						            name: 'orguploadfile',
 									buttonOnly:true,
 									listeners:{
 										change:function(file, value, eOpts){
@@ -280,8 +282,8 @@
 						    		'<tpl for=".">',
 						    		'<div class="thumb-wrap" id="{index}">',
 							        	'<div style="width:160px;height:113px;background:url({sltUrl});background-size:100%">',
-								        	'<img src="/linkfile/sysImages/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_Editor({index})"/>',
-								        	'<img src="/linkfile/sysImages/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
+								        	'<img src="'+TzUniversityContextPath+'/statics/images/website/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_Editor({index})"/>',
+								        	'<img src="'+TzUniversityContextPath+'/statics/images/website/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
 							        	'</div>',
 							        	'<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
 							        	'<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
@@ -337,7 +339,8 @@
     								items:[{
 		            			xtype: 'fileuploadfield',
 		            			buttonText: '上传附件',
-											name: 'attachmentUpload',  
+											//name: 'attachmentUpload', 
+		            						name: 'orguploadfile',
 											buttonOnly:true,
 											width: 88,
 											listeners:{
@@ -473,7 +476,7 @@ function addAttach(file, value, attachmentType){
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
 				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=article';
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl;
 			}
 		}else{
 			upUrl = file.findParentByType("artInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
@@ -488,7 +491,7 @@ function addAttach(file, value, attachmentType){
 				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
 				}
 				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=article';
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl;
 			}
 		}
 		
@@ -529,16 +532,16 @@ function addAttach(file, value, attachmentType){
 				        	var sltPath = action.result.msg.accessPath;
 				        	if(accessPath.length == (accessPath.lastIndexOf("/")+1)){
 				        		accessPath = accessPath + action.result.msg.sysFileName;
-				        		sltPath = sltPath + responseText.minPicSysFileName;
+				        		sltPath = TzUniversityContextPath + sltPath + responseText.minPicSysFileName;
 				        		// sltPath = sltPath + "MINI_"+action.result.msg.sysFileName;
 				        	}else{
 				        		accessPath = accessPath + "/" + action.result.msg.sysFileName;
 				        	// 	sltPath = sltPath+ "/" + "MINI_"+action.result.msg.sysFileName;
-				        		sltPath = sltPath+ "/" + responseText.minPicSysFileName;
+				        		sltPath = TzUniversityContextPath + sltPath+ "/" + responseText.minPicSysFileName;
 				        	}
 				        			
 				        	if(attachmentType=="IMG"){ 
-				        		file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(accessPath);
+				        		file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath + accessPath);
 				        		file.findParentByType("form").findParentByType("form").down('hiddenfield[name=titleImageUrl]').setValue(accessPath);
 				  				}
 				  				
@@ -547,7 +550,7 @@ function addAttach(file, value, attachmentType){
 										var applyItemGrid = file.findParentByType("grid")
 										var r = Ext.create('KitchenSink.view.activity.attachmentModel', {
 											"attachmentID": action.result.msg.sysFileName,
-											"attachmentName": "<a href='"+accessPath+"' target='_blank'>"+action.result.msg.filename+"</a>",
+											"attachmentName": "<a href='" + TzUniversityContextPath + accessPath+"' target='_blank'>"+action.result.msg.filename+"</a>",
 											"attachmentUrl": accessPath,
     								});
     	 							applyItemGrid.store.insert(0,r);

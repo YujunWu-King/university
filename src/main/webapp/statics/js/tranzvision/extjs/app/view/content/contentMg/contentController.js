@@ -288,7 +288,7 @@
 					}
 					
 					
-					  panel.down('image[name=titileImage]').setSrc(panel.down('hiddenfield[name=titleImageUrl]').getValue());	
+					  panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	
 						//附件集
 						var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"FJ"}';
 						attachGrid.store.tzStoreParams = tzStoreParams;
