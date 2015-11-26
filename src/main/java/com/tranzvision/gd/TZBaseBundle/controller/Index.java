@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZBaseBundle.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,7 +108,7 @@ public class Index {
 			String tmpPageId = "";
 			String tmpComParams = "{}";
 			// 根据应用编号查询组件id和页面id;
-			String pageSql = "SELECT TZ_COM_ID, TZ_PAGE_ID WHERE TZ_PAGE_REFCODE= ?";
+			String pageSql = "SELECT TZ_COM_ID, TZ_PAGE_ID FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_PAGE_REFCODE= ?";
 			try {
 				Map<String, Object> map = jdbcTemplate.queryForMap(pageSql, new Object[] { tmpClassId });
 				tmpComId = (String) map.get("TZ_COM_ID");
@@ -123,30 +124,17 @@ public class Index {
 				tmpOperateType = tmpOperateType.toUpperCase();
 			}
 
-			/*
-			 * 检查comParams是否是一个合法的JSON字符串，如果不是，则将临时变量&tmpComParams赋值为空JSON对象字符串
-			 */
-			/*
-			 * try { tmpComParams = request.getParameter("comParams");
-			 * PaseJsonUtil.getJson(tmpComParams); } catch (Exception e) {
-			 * e.printStackTrace(); tmpComParams = "{}"; }
-			 */
 			tmpComParams = request.getParameter("comParams");
-			if (tmpComParams == null || "".equals(tmpComParams)) {
-				tmpComParams = "{}";
+			
+			Map<String, Object> strParamsMap = new HashMap<>();
+			strParamsMap.put("ComID", tmpComId);
+			strParamsMap.put("PageID",tmpPageId );
+			strParamsMap.put("OperateType",tmpOperateType );
+			if(tmpComParams != null & !"".equals(tmpComParams)){
+				strParamsMap.put("comParams",tmpComParams );
 			}
-
-			strParams = "{\"ComID\":\"" + tmpComId + "\",\"PageID\":\"" + tmpPageId + "\",\"OperateType\":\""
-					+ tmpOperateType + "\",\"comParams\":" + tmpComParams + "}";
-
+			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
-
-		// 将字符串转换成json;
-		/*
-		 * JSONObject CLASSJson = null; try { CLASSJson =
-		 * PaseJsonUtil.getJson(strParams); } catch (Exception e) { //
-		 * e.printStackTrace(); }
-		 */
 
 		// 操作类型;
 		String strOprType = "";
@@ -266,17 +254,20 @@ public class Index {
 				String comID = jacksonUtil.getString("ComID");
 				// 页面ID;
 				String sPageID = jacksonUtil.getString("PageID");
+				
 				// 通用参数;
-				// String sCommParams = CLASSJson.getString("comParams");
-				map = jacksonUtil.getMap("comParams");
-
-				String sCommParams = jacksonUtil.Map2json(map).toString();
-				if ((sCommParams == null || "null".equals(sCommParams))) {
-					// 错误描述;
-					// strErrorDesc = sCommParams + "提交的json数据无效";
-					// 错误码;
-					// errorCode = "1";
-					sCommParams = "{}";
+				String sCommParams = "{}";
+				if(jacksonUtil.containsKey("comParams")){
+					try{
+						map = jacksonUtil.getMap("comParams");
+		
+						sCommParams = jacksonUtil.Map2json(map).toString();
+						if ((sCommParams == null || "null".equals(sCommParams))) {
+							sCommParams = "{}";
+						}
+					}catch(Exception e){
+						sCommParams = "{}";
+					}
 				}
 				gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
 				strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,

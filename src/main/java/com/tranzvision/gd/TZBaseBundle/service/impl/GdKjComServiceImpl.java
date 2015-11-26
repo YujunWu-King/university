@@ -409,19 +409,39 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				errMsgArr[1] = "非法访问，组件页面[" + sComID + "][" + sPageID + "]未注册。";
 				return strRet;
 			}
-
+			
+			/*是否存在组件配置的权限*/
+			String existSQL = "SELECT COUNT(1) FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=?";
+			int existComQx = 0;
+			try{
+				existComQx = jdbcTemplate.queryForObject(existSQL, new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
+			}catch(Exception e){
+				existComQx = 0;
+			}
+			if(existComQx == 0){
+				errMsgArr[0] = "1";
+				errMsgArr[1] = "非法访问，您对组件页面[" + sComID + "][" + sPageID + "]的访问未获得授权。";
+				return strRet;
+			}
+			
 			/***** 是否有访问权限 ******/
 			// 更新权限;
 			String haveUpdateSQL = "SELECT C.TZ_EDIT_FLG FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY C.TZ_EDIT_FLG DESC limit 0,1";
-			update = jdbcTemplate.queryForObject(haveUpdateSQL,
-					new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
-
+			try{
+				update = jdbcTemplate.queryForObject(haveUpdateSQL,
+						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
+			}catch(Exception e){
+				update = 0;
+			}
 			if (update != 1) {
 				// 更新权限;
 				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
-				view = jdbcTemplate.queryForObject(haveReadSQL,
+				try{
+					view = jdbcTemplate.queryForObject(haveReadSQL,
 						new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
-
+				}catch(Exception e){
+					view = 0;
+				}
 				if (view != 1) {
 					errMsgArr[0] = "1";
 					errMsgArr[1] = "非法访问，您对组件页面[" + sComID + "][" + sPageID + "]的访问未获得授权。";
