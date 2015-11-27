@@ -25,10 +25,11 @@ public class TzCaptchaController {
 	public void genCaptchaPNG(HttpServletRequest request, HttpServletResponse response) {
 
 		Patchca patcha = new Patchca();
-		
+
 		patcha.setColorful();
 		patcha.genCaptcha(request, response);
-		
+
 	}
+
 
 }

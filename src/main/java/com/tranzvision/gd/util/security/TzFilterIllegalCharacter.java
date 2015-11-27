@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class TzFilterIllegalCharacter {
 
-	private String filterRegEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+	//private String filterRegEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+	
+	private String filterRegEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 
 	/**
 	 * 过滤目录名称的非法字符

@@ -8,7 +8,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="google" content="notranslate" />
 <meta charset="utf-8">
-<title>创景云招生系统</title>
+<title>${TZ_JG_LOGIN_INFO}</title>
 <script type="text/javascript">
 	var TzUniversityContextPath = "${contextPath}";
 </script>
@@ -73,28 +73,15 @@ body {
 
 	}
 
-	var locationHref = location.href;
-
-	var arr = locationHref.split("/");
-
-	var len = arr.length;
-
 	var jgHidden = false;
 
-	var locationOrgId = "";
+	var locationOrgId = "${locationOrgId}";
 
 	var currentOrgId = "";
 
-	if (len = 5) {
-
-		//jgHidden = true;
-		jgHidden = false;
-
-		locationOrgId = arr[len - 2];
-
+	if(locationOrgId!=""){
+		jgHidden = true;
 	}
-
-	var loginUrl = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL';
 
 	function BindEnter(obj)
 
@@ -129,8 +116,6 @@ body {
 				var password = form.findField("password").getValue();
 
 				var yzm = form.findField("yzm").getValue();
-
-				//var tzLoginParams ='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"JgLogin","orgId":"'+ orgId +'","userName":"'+userName+'","password":"'+password+'","yzm":"'+yzm+'"}}';
 
 				var tzLoginParams = {};
 
@@ -210,8 +195,6 @@ body {
 
 			} else {
 
-				//Ext.Msg.alert("提示","登录信息未填写完整或验证码错误");
-
 				htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;登录信息未填写完整或验证码错误<div>";
 
 			}
@@ -253,7 +236,7 @@ body {
 
 							async : false,
 
-							url : loginUrl,
+							url : '${contextPath}/captcha/checkqrcode',
 
 							params : {
 
@@ -291,7 +274,7 @@ body {
 								'Ext.form.FormPanel',
 								{
 
-									title : '创景云招生系统',
+									title : '${TZ_JG_LOGIN_INFO}',
 
 									width : 340,
 
@@ -343,7 +326,7 @@ body {
 													} ],
 
 													autoLoad : true,
-
+													/*
 													data : [ {
 														orgValue : 'Admin',
 														orgDesc : '平台管理机构'
@@ -354,13 +337,13 @@ body {
 														orgValue : 'GSM',
 														orgDesc : '北大光华'
 													} ]
-												/*
+													*/
+												///*
 												proxy : {
 
 													type : 'ajax',
 
-													url : loginUrl
-															+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"GetOrg"}}',
+													url : "${contextPath}/login/getorgdata",
 
 													reader : {
 
@@ -371,7 +354,7 @@ body {
 													}
 
 												}
-												 */
+												//*/
 
 												},
 
@@ -385,7 +368,7 @@ body {
 
 												blankText : '请选择登录机构',
 
-												hidden : jgHidden,
+												hidden : false,
 
 												editable : false,
 
@@ -409,11 +392,8 @@ body {
 
 																		async : false,
 
-																		url : loginUrl
-																				+ '?tzParams={"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"SetOrg","orgId":'
-																				+ Ext.JSON
-																						.encodeString(locationOrgId)
-																				+ '}}',
+																		url : '${contextPath}/login/checkorgstatus',
+																		params: {"orgid":locationOrgId},
 
 																		success : function(
 																				response) {
@@ -424,24 +404,13 @@ body {
 
 																			if (responseText.success == "true") {
 
-																				//cm.setValue(responseText.orgId);
-
 																				currentOrgId = responseText.orgId;
+																				
+																				cm.hide();
 
 																			} else if (responseText.success == "false") {
-
-																				cm
-																						.show();
-
-																				//Ext.Msg.alert("提示","您所属的机构状态为失效，请联系系统管理员处理。");
-
-																				htmlCom
-																						.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;您所属的机构状态为失效，请联系系统管理员处理<div>";
-
+																				
 																			} else {
-
-																				cm
-																						.show();
 
 																			}
 
@@ -812,7 +781,7 @@ body {
 </head>
 
 <body
-	style="background: #fff; background-image: url('${contextPath}/statics/images/login/201583153016635_1441013416635.jpg'); background-repeat: no-repeat; background-position: center center;"
+	style="background: #fff; background-image: url('${contextPath}${orgLoginBjImgUrl}'); background-repeat: no-repeat; background-position: center center;"
 	onkeydown="BindEnter(event)">
 
 	<div id="tranzvision_loginDiv" style="width: 100%; height: 100%"></div>
@@ -820,12 +789,7 @@ body {
 	<div
 		style="position: absolute; bottom: 0px; width: 100%; background: #fff; text-align: center; padding-top: 20px;">
 
-		<p>
-			<span
-				style="text-align: center; color: rgb(102, 102, 102); line-height: 17px; font-family: helvetica, arial, verdana, sans-serif; font-size: 12px; background-color: rgb(255, 255, 255);">CopyRight
-				© <span style="font-family: 宋体; font-size: 14px;">北京创景咨询有限公司</span>
-			</span>
-		</p>
+		${TZ_JG_LOGIN_COPR}
 
 	</div>
 

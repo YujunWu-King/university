@@ -55,18 +55,98 @@ public class FileUploadController {
 	private FileManageServiceImpl fileManageServiceImpl;
 
 	/**
-	 * Upload single file using Spring Controller
+	 * Upload single file using Spring Controller 存储在 orgupload目录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param allRequestParams
+	 * @param file
+	 * @return
 	 */
 	@RequestMapping(value = "UpdServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
-	public @ResponseBody String uploadFileHandler(HttpServletRequest request, HttpServletResponse response,
+	public @ResponseBody String orgUploadFileHandler(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> allRequestParams, @RequestParam("orguploadfile") MultipartFile file) {
-
-		Map<String, Object> mapRet = new HashMap<String, Object>();
 
 		// String limitSize = allRequestParams.get("limitSize");
 		String language = String.valueOf(allRequestParams.get("language"));
 		String funcdir = String.valueOf(allRequestParams.get("filePath"));
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
+
+		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file);
+
+		return retJson;
+	}
+
+	/**
+	 * Upload single file using Spring Controller 存储在 website目录
+	 * 
+	 * @param request
+	 * @param response
+	 * @param allRequestParams
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "UpdWebServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String webUploadHandler(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams, @RequestParam("websitefile") MultipartFile file) {
+
+		// String limitSize = allRequestParams.get("limitSize");
+		String language = String.valueOf(allRequestParams.get("language"));
+		String funcdir = String.valueOf(allRequestParams.get("filePath"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+
+		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file);
+
+		return retJson;
+	}
+
+	/**
+	 * Upload multiple file using Spring Controller
+	 */
+	/*---- 未完成
+	@RequestMapping(value = "uploadMultipleFile", method = RequestMethod.POST)
+	public @ResponseBody String uploadMultipleFileHandler(@RequestParam("name") String[] names,
+			@RequestParam("file") MultipartFile[] files) {
+	
+		if (files.length != names.length)
+			return "Mandatory information missing";
+	
+		String message = "";
+		for (int i = 0; i < files.length; i++) {
+			MultipartFile file = files[i];
+			String name = names[i];
+			try {
+				byte[] bytes = file.getBytes();
+	
+				// Creating the directory to store file
+				String rootPath = System.getProperty("catalina.home");
+				File dir = new File(rootPath + File.separator + "tmpFiles");
+				if (!dir.exists())
+					dir.mkdirs();
+	
+				// Create the file on server
+				File serverFile = new File(dir.getAbsolutePath() + File.separator + name);
+				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+				stream.write(bytes);
+				stream.close();
+	
+				logger.info("Server File Location=" + serverFile.getAbsolutePath());
+	
+				message = message + "You successfully uploaded file=" + name + "<br />";
+			} catch (Exception e) {
+				return "You failed to upload " + name + " => " + e.getMessage();
+			}
+		}
+		return message;
+	}
+	*/
+
+	private String doSaveFile(String orgid, String rootPath, String funcdir, String language, String istmpfile,
+			MultipartFile file) {
 
 		// 过滤功能目录名称中的特殊字符
 		if (null != funcdir && !"".equals(funcdir) && !"null".equals(funcdir)) {
@@ -131,8 +211,6 @@ public class FileUploadController {
 					byte[] bytes = file.getBytes();
 
 					// Creating the directory to store file
-					String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-					String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
 					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
 					String parentPath = "";
 
@@ -143,15 +221,15 @@ public class FileUploadController {
 						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + funcdir;
 					}
 					String accessPath = parentPath + "/";
-					
+
 					boolean createResult = false;
 					int createTimes = 5;
 					String sysFileName = "";
 					while (!createResult && createTimes > 0) {
 
 						// Create the file on server
-						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".")
-								.append(suffix).toString();
+						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
+								.toString();
 						if (sysFileName.indexOf('/') != -1)
 							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
 
@@ -170,7 +248,7 @@ public class FileUploadController {
 								imgHeight = imgWH.get(1);
 							}
 						}
-						
+
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
 						mapFile.put("sysFileName", sysFileName);
@@ -181,8 +259,8 @@ public class FileUploadController {
 						mapFile.put("imgHeight", imgHeight);
 
 						messages = mapFile;
-						
-					}else{
+
+					} else {
 						if ("ENG".equals(language)) {
 							messages = "Upload failed. Please re-try.";
 						} else {
@@ -209,52 +287,13 @@ public class FileUploadController {
 			}
 		}
 
+		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", success);
 		mapRet.put("msg", messages == null ? "" : messages);
 
 		return jacksonUtil.Map2json(mapRet);
-	}
 
-	/**
-	 * Upload multiple file using Spring Controller
-	 */
-	/*---- 未完成
-	@RequestMapping(value = "uploadMultipleFile", method = RequestMethod.POST)
-	public @ResponseBody String uploadMultipleFileHandler(@RequestParam("name") String[] names,
-			@RequestParam("file") MultipartFile[] files) {
-	
-		if (files.length != names.length)
-			return "Mandatory information missing";
-	
-		String message = "";
-		for (int i = 0; i < files.length; i++) {
-			MultipartFile file = files[i];
-			String name = names[i];
-			try {
-				byte[] bytes = file.getBytes();
-	
-				// Creating the directory to store file
-				String rootPath = System.getProperty("catalina.home");
-				File dir = new File(rootPath + File.separator + "tmpFiles");
-				if (!dir.exists())
-					dir.mkdirs();
-	
-				// Create the file on server
-				File serverFile = new File(dir.getAbsolutePath() + File.separator + name);
-				BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-				stream.write(bytes);
-				stream.close();
-	
-				logger.info("Server File Location=" + serverFile.getAbsolutePath());
-	
-				message = message + "You successfully uploaded file=" + name + "<br />";
-			} catch (Exception e) {
-				return "You failed to upload " + name + " => " + e.getMessage();
-			}
-		}
-		return message;
 	}
-	*/
 
 	private boolean checkFormat(String fileSuffix) {
 
