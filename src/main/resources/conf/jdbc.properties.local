@@ -1,11 +1,14 @@
 jdbc_driverClassName=com.mysql.jdbc.Driver
-jdbc_url=jdbc\:mysql\://127.0.0.1\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
+jdbc_url=jdbc\:mysql\://202.120.24.114\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
 jdbc_username=TZGDDEV
 jdbc_password=GDDEV@tz001
+#jdbc_url=jdbc\:mysql\://127.0.0.1\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
+#jdbc_username=root
+#jdbc_password=123456
 druid_maxActive=20
 druid_initialSize=1
 druid_maxWait=60000
-druid_maxIdle=20
+druid_maxIdle=10
 druid_minIdle=3
 druid_removeAbandoned=true
 druid_removeAbandonedTimeout=180

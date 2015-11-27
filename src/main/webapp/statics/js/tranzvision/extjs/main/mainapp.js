@@ -172,7 +172,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             {
                                 if(css_files[k] != null)
                                 {
-                                    boot.doc.write(cssheader + css_path + "/" + css_files[k] + csstailer);
+                                    boot.doc.write(cssheader + TzUniversityContextPath + css_path + "/" + css_files[k] + csstailer);
                                 }
                             }
                         }
@@ -201,7 +201,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             {
                                 if(js_files[k] != null)
                                 {
-                                    boot.doc.write(jsheader + js_path + "/" + js_files[k] + jstailer);
+                                    boot.doc.write(jsheader + TzUniversityContextPath + js_path + "/" + js_files[k] + jstailer);
                                 }
                             }
                         }

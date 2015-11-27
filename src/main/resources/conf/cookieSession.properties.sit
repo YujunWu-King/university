@@ -1,5 +1,5 @@
 cookieMaxAge=3600
-cookieDomain=gd.dev.tranzvision.net
+cookieDomain=gd.sit.tranzvision.net
 cookiePath=/
 cookieHttpOnly=True
 cookieSecure=False
