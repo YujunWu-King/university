@@ -5,4 +5,6 @@
 /src/main/resources/conf/jdbc.properties
 /src/main/resources/conf/cookieSession.properties
 /src/main/resources/conf/log4j.properties
+/src/main/webapp/statics/js/lib/ueditor/jsp/config.json
+/src/main/webapp/WEB-INF/web.xml
 /src/main/webapp/WEB-INF/logs/*.log
