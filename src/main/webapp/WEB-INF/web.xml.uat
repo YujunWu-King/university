@@ -14,7 +14,7 @@
 	<!-- 设计路径变量值 -->
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>springmvc.root</param-value>
+		<param-value>springmvc.root.uat</param-value>
 	</context-param>
 
 
@@ -68,6 +68,7 @@
 
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>login</welcome-file>
 	</welcome-file-list>
 
 	<listener>

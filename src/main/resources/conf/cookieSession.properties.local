@@ -1,3 +1,4 @@
+webAppRootKey=springmvc.root.local
 cookieMaxAge=3600
 cookieDomain=localhost
 cookiePath=/

@@ -4,9 +4,11 @@
 package com.tranzvision.gd.util.sql;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.concurrent.locks.Lock;
@@ -15,6 +17,9 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,11 +40,23 @@ public class SQLObjectManager
 	
 	public SQLObjectManager()
 	{
-		basePath = System.getProperty("springmvc.root") + "WEB-INF" + File.separator + "classes" + File.separator + "sql" + File.separator;
-		lock = new ReentrantLock();
-		sqlObjects = new HashMap<String,String>();
+		Resource resource = new ClassPathResource("conf/cookieSession.properties");
+		try {
+			Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+			String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+			basePath = System.getProperty(webAppRootKey) + "WEB-INF" + File.separator + "classes" + File.separator + "sql" + File.separator;
+			lock = new ReentrantLock();
+			sqlObjects = new HashMap<String,String>();
+			
+			init();
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		init();
+		
 	}
 	
 	private void init()

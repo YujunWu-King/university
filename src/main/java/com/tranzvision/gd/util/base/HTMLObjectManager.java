@@ -4,15 +4,20 @@
 package com.tranzvision.gd.util.base;
 
 import java.util.Map;
+import java.util.Properties;
 import java.util.HashMap;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import com.tranzvision.gd.util.base.TzSystemException;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,11 +35,23 @@ public class HTMLObjectManager
 	
 	public HTMLObjectManager()
 	{
-		basePath = System.getProperty("springmvc.root") + "WEB-INF" + File.separator + "classes" + File.separator + "html" + File.separator;
-		lock = new ReentrantLock();
-		htmlObjects = new HashMap<String,String>();
 		
-		init();
+		Resource resource = new ClassPathResource("conf/cookieSession.properties");
+		try {
+			Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+			String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+			basePath = System.getProperty(webAppRootKey) + "WEB-INF" + File.separator + "classes" + File.separator + "html" + File.separator;
+			lock = new ReentrantLock();
+			htmlObjects = new HashMap<String,String>();
+			
+			init();
+
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void init()

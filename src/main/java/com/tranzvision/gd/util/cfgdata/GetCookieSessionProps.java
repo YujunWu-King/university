@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GetCookieSessionProps {
-
+	
 	private Properties cookieSessioinProps;
+	
+	private String webAppRootKey;
 
 	private int cookieMaxAge;
 
@@ -48,6 +50,8 @@ public class GetCookieSessionProps {
 		try {
 			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 
+			webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+			
 			cookieMaxAge = Integer.parseInt(cookieSessioinProps.getProperty("cookieMaxAge"));
 			cookieDomain = cookieSessioinProps.getProperty("cookieDomain");
 			cookiePath = cookieSessioinProps.getProperty("cookiePath");
@@ -63,6 +67,10 @@ public class GetCookieSessionProps {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public String getWebAppRootKey(){
+		return webAppRootKey;
 	}
 
 	public int getCookieMaxAge() {

@@ -18,6 +18,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.sql.SqlParams;
 import com.tranzvision.gd.util.sql.type.*;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
  
 @Controller
 @RequestMapping("/testuser")
@@ -31,6 +32,9 @@ public class UserController {
 	
 	@Autowired
 	private ApplicationContext acx;
+	
+	@Autowired
+	private GetCookieSessionProps getCookieSessionProps;
 	
 	String message = "Welcome to Spring MVC!";
  
@@ -110,7 +114,7 @@ public class UserController {
 			tmpStr = e.toString();
 		}
 		
-		tmpStr += "<br>Hello World==>>Path==>>" + System.getProperty("springmvc.root");
+		tmpStr += "<br>Hello World==>>Path==>>" + System.getProperty(getCookieSessionProps.getWebAppRootKey());
 		model.addAttribute("nickname",tmpStr);
 
     	return "ztest/index";
