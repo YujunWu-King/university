@@ -31,6 +31,7 @@
 		<commonsio.version>2.4</commonsio.version>
 		<comcodec.version>1.10</comcodec.version>
 		<imgscalr.version>4.2</imgscalr.version>
+		<mail.version>1.5.0-b01</mail.version>
 	</properties>
 
 	<dependencies>
@@ -226,6 +227,12 @@
 			<groupId>org.imgscalr</groupId>
 			<artifactId>imgscalr-lib</artifactId>
 			<version>${imgscalr.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${mail.version}</version>
 		</dependency>
 
 		<!-- 日志文件管理包 -->
