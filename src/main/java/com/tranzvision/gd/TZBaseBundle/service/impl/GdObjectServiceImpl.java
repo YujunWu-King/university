@@ -46,8 +46,9 @@ public class GdObjectServiceImpl implements GdObjectService {
 	/* 获取LOGO样式表的方法 */
 	public String getLogoStyle(HttpServletRequest request, HttpServletResponse response) {
 		String tmpStyle = "";
+		String appContext = request.getContextPath();
 		String logoPath = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_003",
-				"/university/statics/images/logo/admin", "/university/statics/images/logo/admin");
+				appContext + "/statics/images/logo/admin", appContext + "/statics/images/logo/admin");
 		String logoName = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_004",
 				"logo-admin-w.png", "logo-admin-w.png");
 		String logoSize = this.getMessageText(request, response, "TZGD_FWDEFAULT_MSGSET", "TZGD_FWD_005",
