@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -137,6 +138,7 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 	}
 
 	@Override
+	@Transactional
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();

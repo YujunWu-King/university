@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -74,6 +75,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 
 		String strRet = "{}";

@@ -92,8 +92,8 @@ public class DESUtil
 	public static void main(String args[])
 	{
 		String encode = encrypt("ni hao a ! *4586 ^#@#!@$!完全正确", "ACEMSSOKEY");
-		System.out.println("encode = " + encode);
+		//System.out.println("encode = " + encode);
 		String decode = decrypt(encode, "ACEMSSOKEY");
-		System.out.println("decode = " + decode);
+		//System.out.println("decode = " + decode);
 	}
 }

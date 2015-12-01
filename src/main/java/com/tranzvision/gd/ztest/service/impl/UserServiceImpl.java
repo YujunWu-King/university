@@ -31,10 +31,10 @@ public class UserServiceImpl implements UserService{
     
     ///*
     public List getAllUsers() {
-		System.out.println("jdbcTemplate=" + jdbcTemplate);
+		//System.out.println("jdbcTemplate=" + jdbcTemplate);
 		
 		String testvar = jdbcTemplate.queryForObject("SELECT 'Y' FROM user WHERE id=1", String.class);
-		System.out.println(testvar);
+		//System.out.println(testvar);
 		
 		
 		return jdbcTemplate

@@ -88,7 +88,6 @@ public class TzLoginController {
 	@RequestMapping(value = { "/{orgid}" })
 	public ModelAndView userLoginOrg(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid) {
-		System.out.println(orgid);
 		
 		orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid);
 		

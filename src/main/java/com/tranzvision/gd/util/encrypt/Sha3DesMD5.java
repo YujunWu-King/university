@@ -230,7 +230,7 @@ public class Sha3DesMD5 {
             KeyGenerator kGen = KeyGenerator.getInstance(Sha3DesMD5.SYMMETRICENCRYPTION_3DES);
             kGen.init(168, sr);
             Key key = kGen.generateKey();
-            System.out.println(byte2Hex(key.getEncoded()));
+            //System.out.println(byte2Hex(key.getEncoded()));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {

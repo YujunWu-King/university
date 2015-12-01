@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -62,6 +63,7 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -139,6 +141,7 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
@@ -225,6 +228,7 @@ public class TranslateMgFormServiceImpl extends FrameworkImpl {
 	 * 更新转换值信息
 	 */
 	@Override
+	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String errorMsg = "";

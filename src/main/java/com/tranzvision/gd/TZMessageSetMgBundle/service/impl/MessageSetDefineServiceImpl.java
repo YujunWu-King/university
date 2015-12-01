@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxdyTblMapper;
@@ -42,6 +43,7 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -102,6 +104,7 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
@@ -157,6 +160,7 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 	 * 修改消息定义信息
 	 */
 	@Override
+	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String errorMsg = "";

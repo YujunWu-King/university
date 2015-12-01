@@ -155,7 +155,7 @@ public class Patchca {
 			this.setResponseHeaders(response);
 			String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.getOutputStream());
 			tzSession.addSession(tokenName, token);
-			System.out.println("SessionID=" + tzSession.getSessionId() + ",token=" + token);
+			//System.out.println("SessionID=" + tzSession.getSessionId() + ",token=" + token);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();

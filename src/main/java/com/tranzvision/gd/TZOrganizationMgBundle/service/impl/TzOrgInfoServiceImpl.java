@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
@@ -107,6 +108,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
@@ -205,6 +207,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * 修改消息集合信息
 	 */
 	@Override
+	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String errorMsg = "";
@@ -306,6 +309,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * 删除机构管理员信息
 	 */
 	@Override
+	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -375,6 +379,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -519,6 +524,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzGetHtmlContent(String strParams) {
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -557,6 +563,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @param mapData
 	 * @param errorMsg
 	 */
+	@Transactional
 	private void tzEditOrgMemAccountInfo(Map<String, Object> mapData, String[] errorMsg) {
 
 		// 机构管理员信息
@@ -584,6 +591,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @param mapData
 	 * @param errorMsg
 	 */
+	@Transactional
 	private void tzEditOrgRoleInfo(Map<String, Object> mapData, String[] errorMsg) {
 		try {
 			// 机构编号;
@@ -690,6 +698,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@SuppressWarnings("unchecked")
+	@Transactional
 	private String tzCopyOrgRole(Map<String, Object> mapParams, String[] errorMsg) {
 
 		String tzJgId = mapParams.get("orgId").toString();

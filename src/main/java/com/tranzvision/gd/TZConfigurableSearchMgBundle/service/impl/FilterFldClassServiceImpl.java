@@ -198,7 +198,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				// 将字符串转换成json;
 				
 				jacksonUtil.json2Map(strForm);
-				System.out.println("------------werwerwe------>"+strForm);
+				//System.out.println("------------werwerwe------>"+strForm);
 				// 信息内容;
 
 				Map<String, Object> jsonObject = jacksonUtil.getMap("update");

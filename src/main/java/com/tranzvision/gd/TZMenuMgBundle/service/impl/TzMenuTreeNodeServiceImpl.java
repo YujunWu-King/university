@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZMenuMgBundle.dao.PsTreeNodeMapper;
 import com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode;
@@ -51,6 +52,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 * createTree(java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public void createTree(String treeName) {
 		String dtFormat = getSysHardCodeVal.getDateFormat();
 		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
@@ -87,6 +89,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 * createChildNode(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public boolean createChildNode(String treeName, String parentTreeNode, String treeNode) {
 
 		try {
@@ -172,6 +175,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 * createBrotherNode(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public boolean createBrotherNode(String treeName, String brotherTreeNode, String treeNode) {
 
 		try {
@@ -253,6 +257,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 * deleteNode(java.lang.String, int, int)
 	 */
 	@Override
+	@Transactional
 	public void deleteNode(String treeName, int treeNodeNum, int treeNodeNumEnd) {
 
 		try {
@@ -305,6 +310,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 * java.lang.String)
 	 */
 	@Override
+	@Transactional
 	public void changeNode(String treeName, String oldNode, String preNode, String patentNode) {
 
 		TZUtility tzUtility = new TZUtility();
@@ -377,6 +383,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public void changeNodeToParent(int seqNum, String treeName, String oldNode, String patentNode) {
 
 		this.createChildNode(treeName, patentNode, oldNode);
@@ -403,6 +410,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
+	@Transactional
 	public void changeNodeToBrother(int seqNum, String treeName, String oldNode, String brotherTreeNode) {
 
 		this.createBrotherNode(treeName, brotherTreeNode, oldNode);

@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZTranslateMgBundle.dao.PsTzPtZhzjhTblMapper;
@@ -54,6 +55,7 @@ public class TranslateMgListServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -130,6 +132,7 @@ public class TranslateMgListServiceImpl extends FrameworkImpl {
 	 * @return String
 	 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
@@ -198,6 +201,7 @@ public class TranslateMgListServiceImpl extends FrameworkImpl {
 	 * 修改转换值集合信息
 	 */
 	@Override
+	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String errorMsg = "";
@@ -263,6 +267,7 @@ public class TranslateMgListServiceImpl extends FrameworkImpl {
 	 * 删除转换值信息列表
 	 */
 	@Override
+	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -397,6 +402,7 @@ public class TranslateMgListServiceImpl extends FrameworkImpl {
 	 * @param errMsg
 	 * @return
 	 */
+	@Transactional
 	private String tzUpdateTransVal(Map<String, Object> mapData, String[] errMsg) {
 		String strRet = "{}";
 		try {
