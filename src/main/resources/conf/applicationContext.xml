@@ -70,7 +70,8 @@
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
 		p:dataSource-ref="dataSource" />
-		
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	
 	<!-- mybatis文件配置，扫描所有mapper文件 -->
 	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory"
 		p:dataSource-ref="dataSource" />

@@ -383,7 +383,6 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
 	public void changeNodeToParent(int seqNum, String treeName, String oldNode, String patentNode) {
 
 		this.createChildNode(treeName, patentNode, oldNode);
@@ -410,7 +409,6 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	@Transactional
 	public void changeNodeToBrother(int seqNum, String treeName, String oldNode, String brotherTreeNode) {
 
 		this.createBrotherNode(treeName, brotherTreeNode, oldNode);

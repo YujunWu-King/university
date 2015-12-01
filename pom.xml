@@ -32,6 +32,7 @@
 		<comcodec.version>1.10</comcodec.version>
 		<imgscalr.version>4.2</imgscalr.version>
 		<mail.version>1.5.0-b01</mail.version>
+		<aspectj.version>1.8.7</aspectj.version>
 	</properties>
 
 	<dependencies>
@@ -124,6 +125,13 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>${mybatis.spring.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjtools</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+
 
 		<!-- mysql驱动包 -->
 		<dependency>
@@ -228,7 +236,7 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>${imgscalr.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
