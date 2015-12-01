@@ -5,6 +5,7 @@ package com.tranzvision.gd.util.cfgdata;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZHardCodeMgBundle.dao.PsTzHardcdPntMapper;
 import com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt;
@@ -21,6 +22,7 @@ public class GetHardCodePoint {
 	@Autowired
 	private PsTzHardcdPntMapper psCmbcHardcdPntMapper;
 
+	@Transactional
 	private PsTzHardcdPnt getPsCmbcHardcdPnt(String hdp) {
 		return	psCmbcHardcdPntMapper.selectByPrimaryKey(hdp);
 	}

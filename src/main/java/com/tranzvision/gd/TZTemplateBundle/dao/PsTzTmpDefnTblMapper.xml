@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZTemplateBundle.dao.PsTzTmpDefnTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_YMB_ID" property="tzYmbId" jdbcType="VARCHAR" />
+    <result column="TZ_YMB_NAME" property="tzYmbName" jdbcType="VARCHAR" />
+    <result column="TZ_USE_FLAG" property="tzUseFlag" jdbcType="VARCHAR" />
+    <result column="TZ_DEFAULT_OPEN" property="tzDefaultOpen" jdbcType="VARCHAR" />
+    <result column="TZ_EXTEND_C_TMPL" property="tzExtendCTmpl" jdbcType="VARCHAR" />
+    <result column="TZ_DTGXHHB_FLG" property="tzDtgxhhbFlg" jdbcType="VARCHAR" />
+    <result column="TZ_YMB_DESC" property="tzYmbDesc" jdbcType="VARCHAR" />
+    <result column="TZ_EMLSERV_ID" property="tzEmlservId" jdbcType="VARCHAR" />
+    <result column="TZ_SMS_SERV_ID" property="tzSmsServId" jdbcType="VARCHAR" />
+    <result column="TZ_YMB_CSLBM" property="tzYmbCslbm" jdbcType="VARCHAR" />
+    <result column="TZ_YMB_NRGM" property="tzYmbNrgm" jdbcType="VARCHAR" />
+    <result column="TZ_APPCLS" property="tzAppcls" jdbcType="VARCHAR" />
+    <result column="TZ_DSREC_NAME" property="tzDsrecName" jdbcType="VARCHAR" />
+    <result column="TZ_DSREC_ALIAS" property="tzDsrecAlias" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_YMB_ID, TZ_YMB_NAME, TZ_USE_FLAG, TZ_DEFAULT_OPEN, TZ_EXTEND_C_TMPL, 
+    TZ_DTGXHHB_FLG, TZ_YMB_DESC, TZ_EMLSERV_ID, TZ_SMS_SERV_ID, TZ_YMB_CSLBM, TZ_YMB_NRGM, 
+    TZ_APPCLS, TZ_DSREC_NAME, TZ_DSREC_ALIAS, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_TMP_DEFN_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTblKey" >
+    delete from PS_TZ_TMP_DEFN_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTbl" >
+    insert into PS_TZ_TMP_DEFN_TBL (TZ_JG_ID, TZ_YMB_ID, TZ_YMB_NAME, 
+      TZ_USE_FLAG, TZ_DEFAULT_OPEN, TZ_EXTEND_C_TMPL, 
+      TZ_DTGXHHB_FLG, TZ_YMB_DESC, TZ_EMLSERV_ID, 
+      TZ_SMS_SERV_ID, TZ_YMB_CSLBM, TZ_YMB_NRGM, 
+      TZ_APPCLS, TZ_DSREC_NAME, TZ_DSREC_ALIAS, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzYmbId,jdbcType=VARCHAR}, #{tzYmbName,jdbcType=VARCHAR}, 
+      #{tzUseFlag,jdbcType=VARCHAR}, #{tzDefaultOpen,jdbcType=VARCHAR}, #{tzExtendCTmpl,jdbcType=VARCHAR}, 
+      #{tzDtgxhhbFlg,jdbcType=VARCHAR}, #{tzYmbDesc,jdbcType=VARCHAR}, #{tzEmlservId,jdbcType=VARCHAR}, 
+      #{tzSmsServId,jdbcType=VARCHAR}, #{tzYmbCslbm,jdbcType=VARCHAR}, #{tzYmbNrgm,jdbcType=VARCHAR}, 
+      #{tzAppcls,jdbcType=VARCHAR}, #{tzDsrecName,jdbcType=VARCHAR}, #{tzDsrecAlias,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTbl" >
+    insert into PS_TZ_TMP_DEFN_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzYmbId != null" >
+        TZ_YMB_ID,
+      </if>
+      <if test="tzYmbName != null" >
+        TZ_YMB_NAME,
+      </if>
+      <if test="tzUseFlag != null" >
+        TZ_USE_FLAG,
+      </if>
+      <if test="tzDefaultOpen != null" >
+        TZ_DEFAULT_OPEN,
+      </if>
+      <if test="tzExtendCTmpl != null" >
+        TZ_EXTEND_C_TMPL,
+      </if>
+      <if test="tzDtgxhhbFlg != null" >
+        TZ_DTGXHHB_FLG,
+      </if>
+      <if test="tzYmbDesc != null" >
+        TZ_YMB_DESC,
+      </if>
+      <if test="tzEmlservId != null" >
+        TZ_EMLSERV_ID,
+      </if>
+      <if test="tzSmsServId != null" >
+        TZ_SMS_SERV_ID,
+      </if>
+      <if test="tzYmbCslbm != null" >
+        TZ_YMB_CSLBM,
+      </if>
+      <if test="tzYmbNrgm != null" >
+        TZ_YMB_NRGM,
+      </if>
+      <if test="tzAppcls != null" >
+        TZ_APPCLS,
+      </if>
+      <if test="tzDsrecName != null" >
+        TZ_DSREC_NAME,
+      </if>
+      <if test="tzDsrecAlias != null" >
+        TZ_DSREC_ALIAS,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbId != null" >
+        #{tzYmbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbName != null" >
+        #{tzYmbName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseFlag != null" >
+        #{tzUseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefaultOpen != null" >
+        #{tzDefaultOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExtendCTmpl != null" >
+        #{tzExtendCTmpl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDtgxhhbFlg != null" >
+        #{tzDtgxhhbFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbDesc != null" >
+        #{tzYmbDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlservId != null" >
+        #{tzEmlservId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsServId != null" >
+        #{tzSmsServId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbCslbm != null" >
+        #{tzYmbCslbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbNrgm != null" >
+        #{tzYmbNrgm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppcls != null" >
+        #{tzAppcls,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsrecName != null" >
+        #{tzDsrecName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsrecAlias != null" >
+        #{tzDsrecAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTbl" >
+    update PS_TZ_TMP_DEFN_TBL
+    <set >
+      <if test="tzYmbName != null" >
+        TZ_YMB_NAME = #{tzYmbName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseFlag != null" >
+        TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefaultOpen != null" >
+        TZ_DEFAULT_OPEN = #{tzDefaultOpen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExtendCTmpl != null" >
+        TZ_EXTEND_C_TMPL = #{tzExtendCTmpl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDtgxhhbFlg != null" >
+        TZ_DTGXHHB_FLG = #{tzDtgxhhbFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbDesc != null" >
+        TZ_YMB_DESC = #{tzYmbDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlservId != null" >
+        TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsServId != null" >
+        TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbCslbm != null" >
+        TZ_YMB_CSLBM = #{tzYmbCslbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbNrgm != null" >
+        TZ_YMB_NRGM = #{tzYmbNrgm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppcls != null" >
+        TZ_APPCLS = #{tzAppcls,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsrecName != null" >
+        TZ_DSREC_NAME = #{tzDsrecName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsrecAlias != null" >
+        TZ_DSREC_ALIAS = #{tzDsrecAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTbl" >
+    update PS_TZ_TMP_DEFN_TBL
+    set TZ_YMB_NAME = #{tzYmbName,jdbcType=VARCHAR},
+      TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
+      TZ_DEFAULT_OPEN = #{tzDefaultOpen,jdbcType=VARCHAR},
+      TZ_EXTEND_C_TMPL = #{tzExtendCTmpl,jdbcType=VARCHAR},
+      TZ_DTGXHHB_FLG = #{tzDtgxhhbFlg,jdbcType=VARCHAR},
+      TZ_YMB_DESC = #{tzYmbDesc,jdbcType=VARCHAR},
+      TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR},
+      TZ_YMB_CSLBM = #{tzYmbCslbm,jdbcType=VARCHAR},
+      TZ_YMB_NRGM = #{tzYmbNrgm,jdbcType=VARCHAR},
+      TZ_APPCLS = #{tzAppcls,jdbcType=VARCHAR},
+      TZ_DSREC_NAME = #{tzDsrecName,jdbcType=VARCHAR},
+      TZ_DSREC_ALIAS = #{tzDsrecAlias,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+  </update>
+</mapper>
