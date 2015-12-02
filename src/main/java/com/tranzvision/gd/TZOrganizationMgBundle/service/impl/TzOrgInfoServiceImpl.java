@@ -336,7 +336,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				}
 
 				if ("USER".equals(typeFlag)) {
-					String tzDlzhId = infoData.get("usAccNum").toString();
+					String tzDlzhId = null==infoData.get("usAccNum")?"":String.valueOf(infoData.get("usAccNum"));
 					if (tzDlzhId != null && !"".equals(tzDlzhId)) {
 
 						// 删除机构管理员
@@ -349,7 +349,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					}
 
 				} else if ("ROLE".equals(typeFlag)) {
-					String rolename = infoData.get("roleName").toString();
+					String rolename = null==infoData.get("roleName")?"":String.valueOf(infoData.get("roleName"));
 					if (rolename != null && !"".equals(rolename)) {
 
 						// 删除机构角色

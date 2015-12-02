@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZTemplateBundle.dao.PsTzTmpRrkfTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_YMB_ID" property="tzYmbId" jdbcType="VARCHAR" />
+    <id column="TZ_KEY_NAME" property="tzKeyName" jdbcType="VARCHAR" />
+    <result column="TZ_PARA_ID" property="tzParaId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_YMB_ID, TZ_KEY_NAME, TZ_PARA_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_TMP_RRKF_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+      and TZ_KEY_NAME = #{tzKeyName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTblKey" >
+    delete from PS_TZ_TMP_RRKF_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+      and TZ_KEY_NAME = #{tzKeyName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTbl" >
+    insert into PS_TZ_TMP_RRKF_TBL (TZ_JG_ID, TZ_YMB_ID, TZ_KEY_NAME, 
+      TZ_PARA_ID)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzYmbId,jdbcType=VARCHAR}, #{tzKeyName,jdbcType=VARCHAR}, 
+      #{tzParaId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTbl" >
+    insert into PS_TZ_TMP_RRKF_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzYmbId != null" >
+        TZ_YMB_ID,
+      </if>
+      <if test="tzKeyName != null" >
+        TZ_KEY_NAME,
+      </if>
+      <if test="tzParaId != null" >
+        TZ_PARA_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbId != null" >
+        #{tzYmbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKeyName != null" >
+        #{tzKeyName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzParaId != null" >
+        #{tzParaId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTbl" >
+    update PS_TZ_TMP_RRKF_TBL
+    <set >
+      <if test="tzParaId != null" >
+        TZ_PARA_ID = #{tzParaId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+      and TZ_KEY_NAME = #{tzKeyName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTbl" >
+    update PS_TZ_TMP_RRKF_TBL
+    set TZ_PARA_ID = #{tzParaId,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR}
+      and TZ_KEY_NAME = #{tzKeyName,jdbcType=VARCHAR}
+  </update>
+</mapper>

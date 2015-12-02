@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZTemplateBundle.dao.PsTzSmsServTblMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl" >
+<mapper namespace="com.tranzvision.gd.TZTemplateBundle.dao.PsTzSmsservTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl" >
     <id column="TZ_SMS_SERV_ID" property="tzSmsServId" jdbcType="VARCHAR" />
     <result column="TZ_SMS_SERV_NAME" property="tzSmsServName" jdbcType="VARCHAR" />
     <result column="TZ_SMS_USR_NAME" property="tzSmsUsrName" jdbcType="VARCHAR" />
@@ -30,7 +30,7 @@
     delete from PS_TZ_SMSSERV_TBL
     where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl" >
     insert into PS_TZ_SMSSERV_TBL (TZ_SMS_SERV_ID, TZ_SMS_SERV_NAME, TZ_SMS_USR_NAME, 
       TZ_SMS_USR_PWD, TZ_SOURCE_NO, TZ_DESCR254, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
@@ -42,7 +42,7 @@
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl" >
     insert into PS_TZ_SMSSERV_TBL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzSmsServId != null" >
@@ -121,7 +121,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl" >
     update PS_TZ_SMSSERV_TBL
     <set >
       <if test="tzSmsServName != null" >
@@ -160,7 +160,7 @@
     </set>
     where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl" >
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl" >
     update PS_TZ_SMSSERV_TBL
     set TZ_SMS_SERV_NAME = #{tzSmsServName,jdbcType=VARCHAR},
       TZ_SMS_USR_NAME = #{tzSmsUsrName,jdbcType=VARCHAR},

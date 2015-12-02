@@ -22,6 +22,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 函件参数信息，原PS：TZ_GD_EMLSMSSET_PKG:TZ_GD_PARAINFO_CLS
+ * 
  * @author SHIHUA
  * @since 2015-12-01
  */
@@ -39,11 +40,10 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	
+
 	@Autowired
 	private PsTzExParaTblMapper psTzExParaTblMapper;
-	
-	
+
 	/**
 	 * 获取参数配置信息
 	 * 
@@ -114,12 +114,12 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-				
+
 				String paraid = jacksonUtil.getString("paraid");
 				String chaname = jacksonUtil.getString("chaname");
 				String datatype = jacksonUtil.getString("datatype");
 				String desc = jacksonUtil.getString("desc");
-				
+
 				String sql = "select 'Y' from PS_TZ_EX_PARA_TBL where TZ_PARA_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { paraid }, "String");
 
@@ -129,7 +129,7 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 					}
 					conflictKeys += comma + paraid;
 				} else {
-					
+
 					PsTzExParaTbl psTzExParaTbl = new PsTzExParaTbl();
 					psTzExParaTbl.setTzParaId(paraid);
 					psTzExParaTbl.setTzParaCname(chaname);
@@ -217,5 +217,5 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
+
 }

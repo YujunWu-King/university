@@ -2694,6 +2694,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                             //组件ID和页面ID不为空
                             if(comID != "" && comID != undefined && pageID != "" && pageID != undefined){
                                 tzParams = '{"ComID":"'+comID+'","PageID":"'+pageID+'","OperateType":"QG","comParams":'+tzStoreParams+'}';
+								//console.log(tzParams);
                             }
 
                             if(store.tzType != undefined && store.tzType != ""){

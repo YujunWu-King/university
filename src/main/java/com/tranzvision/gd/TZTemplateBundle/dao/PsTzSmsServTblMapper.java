@@ -1,17 +1,17 @@
 package com.tranzvision.gd.TZTemplateBundle.dao;
 
-import com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsServTbl;
+import com.tranzvision.gd.TZTemplateBundle.model.PsTzSmsservTbl;
 
-public interface PsTzSmsServTblMapper {
+public interface PsTzSmsservTblMapper {
     int deleteByPrimaryKey(String tzSmsServId);
 
-    int insert(PsTzSmsServTbl record);
+    int insert(PsTzSmsservTbl record);
 
-    int insertSelective(PsTzSmsServTbl record);
+    int insertSelective(PsTzSmsservTbl record);
 
-    PsTzSmsServTbl selectByPrimaryKey(String tzSmsServId);
+    PsTzSmsservTbl selectByPrimaryKey(String tzSmsServId);
 
-    int updateByPrimaryKeySelective(PsTzSmsServTbl record);
+    int updateByPrimaryKeySelective(PsTzSmsservTbl record);
 
-    int updateByPrimaryKey(PsTzSmsServTbl record);
+    int updateByPrimaryKey(PsTzSmsservTbl record);
 }

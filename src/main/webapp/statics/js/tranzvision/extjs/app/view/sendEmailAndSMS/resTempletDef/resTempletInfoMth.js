@@ -871,8 +871,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletInfoMth', {
 		
 		//提交参数
 		var tzParams = '{"ComID":"TZ_RES_TMPL_MG_COM","PageID":"TZ_RESTPL_PARA_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
-		//var tzStoreParams = '{"restempid":"'+formParams["restempid"]+'","restemporg":"'+formParams["restemporg"]+"','listtype':'"+"PARA"+'"}';
-		var tzStoreParams = "{'restempid':'"+formParams["restempid"]+"','restemporg':'"+formParams["restemporg"]+"','listtype':'"+"PARA"+"'}";
+		var tzStoreParams = '{"restempid":"'+formParams["restempid"]+'","restemporg":"'+formParams["restemporg"]+'","listtype":"'+'PARA'+'"}';
 		var paraGrid = this.getView().down('grid[name=resTmplRaraGrid]');
 		Ext.tzSubmit(tzParams,function(){
 			win.actType = "update";
@@ -923,8 +922,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletInfoMth', {
 		
 		//提交参数
 		var tzParams = '{"ComID":"TZ_RES_TMPL_MG_COM","PageID":"TZ_RESTPL_CONT_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
-		//var tzStoreParams = '{"restempid":"'+formParams["restempid"]+'","restemporg":"'+formParams["restemporg"]+"','listtype':'"+"PARA"+'"}';
-		var tzStoreParams = "{'restempid':'"+formParams["restempid"]+"','restemporg':'"+formParams["restemporg"]+"','listtype':'"+"CONTENT"+"'}";
+		var tzStoreParams = '{"restempid":"'+formParams["restempid"]+'","restemporg":"'+formParams["restemporg"]+'","listtype":"'+'CONTENT'+'"}';
 		var contentParaGrid = this.getView().down('grid[name=resTmplContentGrid]');
 		Ext.tzSubmit(tzParams,function(){
 			win.actType = "update";

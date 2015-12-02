@@ -5,15 +5,12 @@ package com.tranzvision.gd.util.sequence;
 
 import java.net.InetAddress;
 
-import org.springframework.stereotype.Service;
-
 /**
  * 生成随机唯一序列号
  * 
  * @author SHIHUA
  * @since 2015-11-03
  */
-@Service
 public class IdCreator {
 
   private static final long orderDataCenterId = 0;

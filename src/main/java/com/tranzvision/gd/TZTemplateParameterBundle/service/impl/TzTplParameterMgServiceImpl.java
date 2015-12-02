@@ -30,11 +30,10 @@ public class TzTplParameterMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private JacksonUtil jacksonUtil;
-	
+
 	@Autowired
 	private PsTzExParaTblMapper psTzExParaTblMapper;
-	
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -83,7 +82,7 @@ public class TzTplParameterMgServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 
 	}
-	
+
 	/**
 	 * 删除参数信息
 	 */
@@ -108,7 +107,7 @@ public class TzTplParameterMgServiceImpl extends FrameworkImpl {
 				String paraid = jacksonUtil.getString("paraid");
 
 				if (paraid != null && !"".equals(paraid)) {
-					
+
 					psTzExParaTblMapper.deleteByPrimaryKey(paraid);
 
 				}
@@ -121,6 +120,5 @@ public class TzTplParameterMgServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-	
-	
+
 }

@@ -2,7 +2,7 @@ package com.tranzvision.gd.TZTemplateBundle.model;
 
 import java.util.Date;
 
-public class PsTzSmsServTbl {
+public class PsTzSmsservTbl {
     private String tzSmsServId;
 
     private String tzSmsServName;
