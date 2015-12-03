@@ -51,7 +51,7 @@ public class TzCookie {
 		cookieGen.setCookieHttpOnly(cookieHttpOnly);
 		cookieGen.setCookieSecure(cookieSecure);
 
-		cookieGen.addCookie(response, cookieVal.toString());
+		cookieGen.addCookie(response, cookieVal == null ? null : String.valueOf(cookieVal));
 
 	}
 

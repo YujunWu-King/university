@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cookie.TzCookie;
@@ -23,10 +21,8 @@ import com.tranzvision.gd.util.cookie.TzCookie;
  */
 public class TzSession {
 
-	@Autowired
 	private GetCookieSessionProps getSessionProps;
 
-	@Autowired
 	private TzCookie tzCookie;
 
 	private HttpSession session;
@@ -39,7 +35,11 @@ public class TzSession {
 	public TzSession(HttpServletRequest request) {
 		this.session = request.getSession();
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		
 		getSessionProps = (GetCookieSessionProps) getSpringBeanUtil.getAutowiredSpringBean("GetCookieSessionProps");
+		
+		tzCookie = (TzCookie) getSpringBeanUtil.getAutowiredSpringBean("TzCookie");
+		
 	}
 
 	/**

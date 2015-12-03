@@ -210,5 +210,19 @@ public class TzLoginController {
 
 		return jacksonUtil.Map2json(jsonMap);
 	}
+	
+	@RequestMapping(value = "logout")
+	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
+
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		
+		tzLoginServiceImpl.doLogout(request, response);
+		
+		//String ctx = request.getContextPath();
+		
+		String redirect = "redirect:" + "/login/" + orgid;
+		
+		return redirect;
+	}
 
 }

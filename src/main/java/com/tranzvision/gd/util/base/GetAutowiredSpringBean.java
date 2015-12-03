@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
+import com.tranzvision.gd.util.cookie.TzCookie;
 
 /**
  * 缓存并获取自动注册的Spring Bean（java类实例）
@@ -26,6 +27,9 @@ public class GetAutowiredSpringBean {
 
 	@Autowired
 	private GetCookieSessionProps getCookieSessionProps;
+	
+	@Autowired
+	private TzCookie tzCookie;
 
 	@Autowired
 	private ApplicationContext ctx;
@@ -35,6 +39,7 @@ public class GetAutowiredSpringBean {
 	public void init() {
 		springBeanMap = new HashMap<String, Object>();
 		springBeanMap.put("GetCookieSessionProps", getCookieSessionProps);
+		springBeanMap.put("TzCookie", tzCookie);
 	}
 
 	/**

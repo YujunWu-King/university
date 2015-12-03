@@ -289,6 +289,9 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 
 						if (null == recExists) {
 							bolRst = true;
+							conflictKeys = "";
+						} else {
+							conflictKeys = "0";
 						}
 
 						loopTimes--;

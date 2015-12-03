@@ -295,8 +295,11 @@ Ext.define('KitchenSink.view.ThemeSwitcher', function() {
 					handler: function(){
 
 						Ext.MessageBox.confirm('确认', '您确定要退出系统吗?', function(btnId){
-							if(btnId == 'yes'){					   
+							if(btnId == 'yes'){
 
+								window.location = TzUniversityContextPath + "/login/logout";
+								
+								/*
 								//提交参数
 								var tzParams = '{"OperateType":"LOGOUT"}';
 								var org=Ext.tzOrgID.toLowerCase();
@@ -318,6 +321,7 @@ Ext.define('KitchenSink.view.ThemeSwitcher', function() {
 										//错误信息响应报文
 									}
 								});
+								*/
 							}												  
 						},this);   	   	
 					}
