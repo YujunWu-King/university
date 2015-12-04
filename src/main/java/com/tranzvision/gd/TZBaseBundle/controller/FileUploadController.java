@@ -74,7 +74,7 @@ public class FileUploadController {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getOrgFileUploadPath();
 
-		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file);
+		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, "");
 
 		return retJson;
 	}
@@ -96,11 +96,19 @@ public class FileUploadController {
 		String language = String.valueOf(allRequestParams.get("language"));
 		String funcdir = String.valueOf(allRequestParams.get("filePath"));
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String siteid = allRequestParams.get("siteid") == null ? "" : String.valueOf(allRequestParams.get("siteid"));
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
 
-		String retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file);
+		String retJson = "";
 
+		if ("".equals(siteid)) {
+			Map<String, Object> mapRet = new HashMap<String, Object>();
+			mapRet.put("success", false);
+			mapRet.put("msg", "缺少参数siteid。");
+		} else {
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+		}
 		return retJson;
 	}
 
@@ -146,13 +154,19 @@ public class FileUploadController {
 	*/
 
 	private String doSaveFile(String orgid, String rootPath, String funcdir, String language, String istmpfile,
-			MultipartFile file) {
+			MultipartFile file, String siteid) {
 
 		// 过滤功能目录名称中的特殊字符
 		if (null != funcdir && !"".equals(funcdir) && !"null".equals(funcdir)) {
 			funcdir = "/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(funcdir);
 		} else {
 			funcdir = "";
+		}
+
+		if (null != siteid && !"".equals(siteid)) {
+			siteid = "/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
+		} else {
+			siteid = "";
 		}
 
 		// 是否临时文件的标记
@@ -216,9 +230,9 @@ public class FileUploadController {
 
 					if ("1".equals(istmpfile)) {
 						// 若是临时文件，则存储在临时文件目录
-						parentPath = tmpFilePath + "/" + orgid + "/" + this.getDateNow() + funcdir;
+						parentPath = tmpFilePath + "/" + orgid + siteid + "/" + this.getDateNow() + funcdir;
 					} else {
-						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + funcdir;
+						parentPath = rootPath + "/" + orgid + siteid + "/" + this.getDateNow() + funcdir;
 					}
 					String accessPath = parentPath + "/";
 
