@@ -1,8 +1,11 @@
 package com.tranzvision.gd.TZAccountMgBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -32,40 +36,59 @@ public class AccountListImpl extends FrameworkImpl {
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	
 	/*获取用户账号信息列表*/
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams,int numLimit, int numStart, String[] errorMsg){
 		// 返回值;
-		String strRet = "";
-				
-		//排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][]{{"TZ_DLZH_ID","ASC"}};
-		fliterForm.orderByArr = orderByArr;
-				
-		//json数据要的结果字段;
-		String[] resultFldArray = { "TZ_DLZH_ID", "TZ_JG_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_JIHUO_FS_DESC", "TZ_RYLX", "ACCTLOCK"};
-		String jsonString = "";
-				
-		//可配置搜索通用函数;
-		Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit,numStart, errorMsg);
-				
-		if (obj == null || obj.length == 0 ) {
-			strRet = "{\"total\":0,\"root\":[]}";
-		} else {
-			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-			for (int i = 0; i < list.size(); i++) {
-				String[] rowList = list.get(i);
-				jsonString = jsonString + ",{\"usAccNum\":\""+rowList[0]+"\",\"orgId\":\""+rowList[1]+"\",\"oprid\":\""+rowList[2]+"\",\"usName\":\""+rowList[3]+"\",\"email\":\""+rowList[4]+"\",\"mobile\":\""+rowList[5]+"\",\"jhState\":\""+rowList[6]+"\",\"jhMethod\":\""+rowList[7]+"\",\"rylx\": \""+rowList[8]+"\",\"acctLock\":"+rowList[9]+"}";
-			}
-			if(!"".equals(jsonString)){
-				jsonString = jsonString.substring(1);
-			}
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		
+		try {
+			//排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][]{{"TZ_DLZH_ID","ASC"}};
+			fliterForm.orderByArr = orderByArr;
 					
-			strRet = "{\"total\":"+obj[0]+",\"root\":[" + jsonString + "]}";
+			//json数据要的结果字段;
+			String[] resultFldArray = { "TZ_DLZH_ID", "TZ_JG_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_JIHUO_FS_DESC", "TZ_RYLX", "ACCTLOCK"};
+					
+			//可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit,numStart, errorMsg);
+			if (obj != null && obj.length > 0) {
+
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("usAccNum", rowList[0]);
+					mapList.put("orgId", rowList[1]);
+					mapList.put("oprid", rowList[2]);
+					mapList.put("usName", rowList[3]);
+					mapList.put("email", rowList[4]);
+					mapList.put("mobile", rowList[5]);
+					mapList.put("jhState", rowList[6]);
+					mapList.put("jhMethod", rowList[7]);
+					mapList.put("rylx", rowList[8]);
+					mapList.put("acctLock", rowList[9]);
+					
+					listData.add(mapList);
+				}
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	/*删除用户账号信息*/
@@ -146,6 +169,7 @@ public class AccountListImpl extends FrameworkImpl {
 	
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzOther(String oprType, String comParams, String[] errorMsg) {
 		String strRet = "{}";
 
@@ -156,6 +180,7 @@ public class AccountListImpl extends FrameworkImpl {
 			List<?> jsonArray = jacksonUtil.getList("data");
 			
 			for (int num = 0; num < jsonArray.size(); num++) {
+				
 				Map<String, Object> dataJson = (Map<String, Object>) jsonArray.get(num);
 				
 				// 登录账号;
@@ -176,22 +201,21 @@ public class AccountListImpl extends FrameworkImpl {
 					}
 
 					
+					String updateoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					// 重置密码;
 					if ("PWD".equals(oprType)) {
 						String password = jacksonUtil.getString("password");
 						if(password != null && !"".equals(password)){
 							String updatePSOPRDEFNSQL = "update PSOPRDEFN set OPERPSWD = ?, LASTUPDDTTM =curdate(),LASTUPDOPRID = ? where OPRID=?";
 							password = DESUtil.encrypt(password,"TZGD_Tranzvision");
-							/**** TODO %OPRID *****/
-							jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{password,"TZ_7",oprID});
+							jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{password,updateoprid,oprID});
 						}
 					}
 
 					// 锁定账号;
 					if ("LOCK".equals(oprType)) {
 						String updatePSOPRDEFNSQL = "update PSOPRDEFN set ACCTLOCK = ?, LASTUPDDTTM =curdate(),LASTUPDOPRID = ? where OPRID=?";
-						/**** TODO %OPRID *****/
-						jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{1,"TZ_7",oprID});
+						jdbcTemplate.update(updatePSOPRDEFNSQL,new Object[]{1,updateoprid,oprID});
 					}
 				}else{
 					errorMsg[0] = "1";

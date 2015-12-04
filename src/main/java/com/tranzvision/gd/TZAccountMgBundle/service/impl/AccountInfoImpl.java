@@ -1,8 +1,12 @@
 package com.tranzvision.gd.TZAccountMgBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsroleuserKey;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey;
@@ -47,12 +52,17 @@ public class AccountInfoImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzJgMgrTMapper psTzJgMgrTMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	
 	
 	/* 新增用户账号信息 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		try {
 			String oprID = "";
 
@@ -116,13 +126,13 @@ public class AccountInfoImpl extends FrameworkImpl {
 					String originOrgId = (String) infoData.get("originOrgId");
 
 					// 检查绑定手机是否被占用;
-					String isBd = "";
+					int isBd = 0;
 					if ("Y".equals(mBindFlag)) {
-						String isBdPhoneExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
+						String isBdPhoneExist = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
 						isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
-									new Object[] { bdMobile, orgID, strActNum }, "String");
+									new Object[] { bdMobile, orgID, strActNum }, "Integer" );
 						
-						if ("Y".equals(isBd)) {
+						if (isBd > 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该手机已经被占用";
 							return strRet;
@@ -132,11 +142,11 @@ public class AccountInfoImpl extends FrameworkImpl {
 					// 检查绑定邮箱是否被占用;
 
 					if ("Y".equals(eBindFlag)) {
-						String isBdEmlExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
+						String isBdEmlExist = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
 						isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
-									"String");
+									"Integer");
 
-						if ("Y".equals(isBd)) {
+						if (isBd > 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该邮箱已经被占用";
 							return strRet;
@@ -175,16 +185,17 @@ public class AccountInfoImpl extends FrameworkImpl {
 					psTzAqYhxxTbl.setTzZhceDt(new Date());
 					psTzAqYhxxTbl.setTzBjsEml("");
 					psTzAqYhxxTbl.setTzBjsSms("");
-					/**** TODO %OPRID *****/
+					
+					String updateOperid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAqYhxxTbl.setRowAddedDttm(new Date());
-					psTzAqYhxxTbl.setRowAddedOprid("TZ_7");
+					psTzAqYhxxTbl.setRowAddedOprid(updateOperid);
 					psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-					psTzAqYhxxTbl.setRowLastmantOprid("TZ_7");
+					psTzAqYhxxTbl.setRowLastmantOprid(updateOperid);
 					psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
 					
 					
 					short acctLockNum;
-					if ("on".equals(acctLock)) {
+					if ("1".equals(acctLock)) {
 						acctLockNum = 1;
 					} else {
 						acctLockNum = 0;
@@ -193,9 +204,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 					psoprdefn.setOprid(oprID);
 					psoprdefn.setOperpswd(password);
 					psoprdefn.setAcctlock(acctLockNum);
-					/**** TODO %OPRID *****/
 					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid("TZ_7");
+					psoprdefn.setLastupdoprid(updateOperid);
 					psoprdefnMapper.insert(psoprdefn);
 
 					// 联系方式;
@@ -224,6 +234,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 				}
 
 				if ("ROLE".equals(strFlag) && oprID != null && !"".equals(oprID)) {
+					
 					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("data");
 					int j = 0;
 					for (j = 0; j < jsonArray.size(); j++) {
@@ -256,6 +267,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 
 	/* 修改组件注册信息 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		try {
@@ -312,13 +324,13 @@ public class AccountInfoImpl extends FrameworkImpl {
 					
 
 					// 检查绑定手机是否被占用;
-					String isBd = "";
+					int isBd = 0;
 					if ("Y".equals(mBindFlag)) {
-						String isBdPhoneExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
+						String isBdPhoneExist = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? AND TZ_SJBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
 						isBd = jdbcTemplate.queryForObject(isBdPhoneExist,
-									new Object[] { bdMobile, orgID, strActNum }, "String");
+									new Object[] { bdMobile, orgID, strActNum }, "Integer" );
 						
-						if ("Y".equals(isBd)) {
+						if (isBd > 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该手机已经被占用";
 							return strRet;
@@ -328,11 +340,11 @@ public class AccountInfoImpl extends FrameworkImpl {
 					// 检查绑定邮箱是否被占用;
 
 					if ("Y".equals(eBindFlag)) {
-						String isBdEmlExist = "SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
+						String isBdEmlExist = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL=? AND TZ_YXBD_BZ='Y' AND TZ_JG_ID=? and TZ_DLZH_ID <> ?";
 						isBd = jdbcTemplate.queryForObject(isBdEmlExist, new Object[] { bdEmail, orgID, strActNum },
-									"String");
+									"Integer");
 
-						if ("Y".equals(isBd)) {
+						if (isBd > 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "当前机构下，该邮箱已经被占用";
 							return strRet;
@@ -374,30 +386,12 @@ public class AccountInfoImpl extends FrameworkImpl {
 
 					
 					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?,TZ_JG_ID=?, TZ_REALNAME = ?, TZ_EMAIL  = ?,TZ_MOBILE = ?,TZ_RYLX = ?,TZ_YXBD_BZ = ?,TZ_SJBD_BZ = ?,TZ_JIHUO_ZT = ?,TZ_JIHUO_FS = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where OPRID=?";
-					/**** TODO %OPRID *****/
+					String updateOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					jdbcTemplate.update(updateOprdSql, new Object[]{strActNum,orgID,usName, bdEmail, bdMobile, rylx, eBindFlag, mBindFlag,
-								jhState, jhMethod, "TZ_7", oprID});
-					/*
-					PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
-					psTzAqYhxxTbl.setTzDlzhId(strActNum);
-					psTzAqYhxxTbl.setTzJgId(orgID);
-					psTzAqYhxxTbl.setOprid(oprID);
-					psTzAqYhxxTbl.setTzRealname(usName);
-					psTzAqYhxxTbl.setTzEmail(bdEmail);
-					psTzAqYhxxTbl.setTzMobile(bdMobile);
-					psTzAqYhxxTbl.setTzRylx(rylx);
-					psTzAqYhxxTbl.setTzYxbdBz(eBindFlag);
-					psTzAqYhxxTbl.setTzSjbdBz(mBindFlag);
-					psTzAqYhxxTbl.setTzJihuoZt(jhState);
-					psTzAqYhxxTbl.setTzJihuoFs(jhMethod);
-					psTzAqYhxxTbl.setTzZhceDt(new Date());
-					psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-					psTzAqYhxxTbl.setRowLastmantOprid("TZ_7");
-					psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
-					*/
-					
+								jhState, jhMethod, updateOprid, oprID});
+
 					short acctLockNum;
-					if ("on".equals(acctLock)) {
+					if ("1".equals(acctLock)) {
 						acctLockNum = 1;
 					} else {
 						acctLockNum = 0;
@@ -406,9 +400,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 					psoprdefn.setOprid(oprID);
 					psoprdefn.setOperpswd(password);
 					psoprdefn.setAcctlock(acctLockNum);
-					/**** TODO %OPRID *****/
 					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid("TZ_7");
+					psoprdefn.setLastupdoprid(updateOprid);
 					psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 
 
@@ -432,7 +425,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 				}
 
 				if ("ROLE".equals(strFlag) && oprID != null && !"".equals(oprID)) {
-					
+
 					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("data");
 					int j = 0;
 					for (j = 0; j < jsonArray.size(); j++) {
@@ -476,7 +469,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+
 		try {
 			jacksonUtil.json2Map(strParams);
 		
@@ -492,7 +486,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 				// 密码;
 				String password = "";
 				String rylx = "";
-				String acctLock = "false";
+				String acctLock = "0";
 
 				if (usAccNum != null && !"".equals(usAccNum)) {
 					PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
@@ -535,7 +529,9 @@ public class AccountInfoImpl extends FrameworkImpl {
 						localNum = (short) psoprdefn.getAcctlock();
 					}
 					if (localNum == 1) {
-						acctLock = "true";
+						acctLock = "1";
+					}else{
+						acctLock = "0";
 					}
 					originOrgId = userOrg;
 
@@ -545,13 +541,29 @@ public class AccountInfoImpl extends FrameworkImpl {
 					rylx = "NBYH";
 					originOrgId = "";
 				}
-				strRet = "{\"usAccNum\":\"" + usAccNum + "\",\"orgId\":\"" + userOrg + "\",\"oprid\":\"" + oprID
-						+ "\",\"usName\":\"" + name + "\",\"email\":\"" + email + "\",\"mobile\":\"" + mobile
-						+ "\",\"eBindFlag\":\"" + eBindFlg + "\",\"mBindFlag\":\"" + mBindFlg + "\",\"jhState\":\""
-						+ jhState + "\",\"jhMethod\":\"" + jhMethod + "\",\"password\":\"" + password
-						+ "\",\"reptPassword\":\"" + password + "\",\"perType\":\"" + perType + "\",\"originOrgId\": \""
-						+ originOrgId + "\",\"rylx\": \"" + rylx + "\",\"acctLock\":" + acctLock + ",\"bdEmail\":\""
-						+ bdEmail + "\",\"bdMobile\":\"" + bdMobile + "\"}";
+				
+				returnJsonMap.put("usAccNum", usAccNum);
+				returnJsonMap.put("orgId", userOrg);
+				returnJsonMap.put("oprid", oprID);
+				
+				returnJsonMap.put("usName", name);
+				returnJsonMap.put("email", email);
+				returnJsonMap.put("mobile", mobile);
+				returnJsonMap.put("eBindFlag", eBindFlg);
+				returnJsonMap.put("mBindFlag", mBindFlg);
+				
+				returnJsonMap.put("jhState", jhState);
+				returnJsonMap.put("jhMethod", jhMethod);
+				returnJsonMap.put("password", password);
+				returnJsonMap.put("reptPassword", password);
+				returnJsonMap.put("perType", perType);
+				
+				returnJsonMap.put("originOrgId", originOrgId);
+				returnJsonMap.put("rylx", rylx);
+				returnJsonMap.put("acctLock", acctLock);
+				returnJsonMap.put("bdEmail", bdEmail);
+				returnJsonMap.put("bdMobile", bdMobile);
+
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取用户信息";
@@ -561,15 +573,17 @@ public class AccountInfoImpl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 获取角色信息列表 */
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		// 返回值;
-		String strRet = "";
-		String strContent = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 
 		// 页面注册信息总数;
 		int numTotal = 0;
@@ -598,7 +612,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 			// 角色编号，角色描述，是否该用户角色;
 			String roleID = "", roleDesc = "", isRole = "";
 
-			/******* 获取该户下的角色信息及所有角色信息; ****/
+			//获取该户下的角色信息及所有角色信息;
 			List<Map<String, Object>> list = null;
 			if (numLimit == 0) {
 				if (!"".equals(oprID) && oprID != null) {
@@ -645,14 +659,14 @@ public class AccountInfoImpl extends FrameworkImpl {
 					} else {
 						isRole = "false";
 					}
-
-					strContent = strContent + "," + "{\"roleID\":\"" + roleID + "\",\"roleName\":\"" + roleDesc
-							+ "\",\"isRole\":" + isRole + "}";
+					
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("roleID", roleID);
+					mapList.put("roleName", roleDesc);
+					mapList.put("isRole", isRole);
+					
+					listData.add(mapList);
 				}
-			}
-
-			if (!"".equals(strContent)) {
-				strContent = strContent.substring(1);
 			}
 
 			String totalSQL = "";
@@ -665,14 +679,16 @@ public class AccountInfoImpl extends FrameworkImpl {
 				numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { orgID},"Integer");
 				
 			}
-			strRet = "{\"total\":" + numTotal + ",\"root\":[" + strContent + "]}";
+			mapRet.replace("total",numTotal);
+			mapRet.replace("root", listData);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 }
