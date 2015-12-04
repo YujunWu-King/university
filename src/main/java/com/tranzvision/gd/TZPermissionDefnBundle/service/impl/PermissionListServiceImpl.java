@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZPermissionDefnBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,15 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 	
 	/* 查询许可权列表 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "CLASSID", "ASC" } };
@@ -39,31 +46,32 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "CLASSID", "CLASSDEFNDESC" };
-			String jsonString = "";
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
-
-			if (obj == null || obj.length == 0) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			
+			if (obj != null && obj.length > 0) {
+				
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-					jsonString = jsonString + ",{\"permID\":\"" + rowList[0] + "\",\"permDesc\":\"" + rowList[1]
-							+ "\"}";
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("permID", rowList[0]);
+					mapList.put("permDesc", rowList[1]);
+					
+					listData.add(mapList);
 				}
 
-				if (!"".equals(jsonString)) {
-					jsonString = jsonString.substring(1);
-				}
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 
-				strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 删除许可权信息 */
@@ -82,8 +90,6 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				// 提交信息
 				String strForm = actData[num];
-
-				//JSONObject CLASSJson = PaseJsonUtil.getJson(strForm);
 				jacksonUtil.json2Map(strForm);
 				// 许可权ID;
 				String sPermID = jacksonUtil.getString("permID");
@@ -97,8 +103,6 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 					//删除role下的权限;
 					sql = "DELETE FROM PSROLECLASS WHERE CLASSID=?";
 					jdbcTemplate.update(sql,new Object[]{sPermID});
-					
-					
 				}
 			}
 		} catch (Exception e) {

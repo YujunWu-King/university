@@ -2,17 +2,20 @@ package com.tranzvision.gd.TZPermissionDefnBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZPermissionDefnBundle.dao.PsClassDefnMapper;
 import com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
@@ -29,10 +32,14 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 	@Autowired
 	private JacksonUtil jacksonUtil;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	
 	/*新增许可权信息*/
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -61,9 +68,13 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 						psClassDefn.setClassdefndesc(strPermDesc);
 						psClassDefn.setVersion(1);
 						psClassDefn.setLastupddttm(new Date());
-						/***TODO %USERID**/
-						psClassDefn.setLastupdoprid("TZ_7");
-						psClassDefnMapper.insert(psClassDefn);
+						String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+						psClassDefn.setLastupdoprid(oprid);
+						int i = psClassDefnMapper.insert(psClassDefn);
+						if(i <= 0){
+							errMsg[0] = "1";
+							errMsg[1] = "保存失败";
+						}
 					}
 				}
 			}
@@ -76,7 +87,7 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	
 	/* 修改许可权信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -104,9 +115,13 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 						psClassDefn.setClassdefndesc(strPermDesc);
 						psClassDefn.setVersion(1);
 						psClassDefn.setLastupddttm(new Date());
-						/***TODO %USERID**/
-						psClassDefn.setLastupdoprid("TZ_7");
-						psClassDefnMapper.updateByPrimaryKeySelective(psClassDefn);
+						String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+						psClassDefn.setLastupdoprid(oprid);
+						int i = psClassDefnMapper.updateByPrimaryKeySelective(psClassDefn);
+						if(i <= 0){
+							errMsg[0] = "1";
+							errMsg[1] = "保存失败";
+						}
 					} else {
 						errMsg[0] = "1";
 						errMsg[1] = "许可权ID为：" + strPermID + "的信息不存在";
@@ -124,19 +139,22 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	/*获取许可权信息*/
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+				
 		try {
-			//JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			jacksonUtil.json2Map(strParams);
-			
 			if (jacksonUtil.containsKey("permID")) {
 				// 类方法ID;
 				String strPermID = jacksonUtil.getString("permID");
 				PsClassDefn psClassDefn = psClassDefnMapper.selectByPrimaryKey(strPermID);
 				if (psClassDefn != null) {
-					strRet = "{\"formData\":{\"permID\":\"" + TZUtility.transFormchar(psClassDefn.getClassid())
-							+ "\",\"permDesc\":\"" + TZUtility.transFormchar(psClassDefn.getClassdefndesc())
-							+ "\"}}";
+					// 组件注册信息;
+					Map<String, Object> jsonMap = new HashMap<>();
+					jsonMap.put("permID", psClassDefn.getClassid());
+					jsonMap.put("permDesc", psClassDefn.getClassdefndesc());
+					returnJsonMap.replace("formData", jsonMap);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择许可权定义";
@@ -151,14 +169,20 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 	
 	/*获取授权组件列表*/
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		
 		try {
 
 			// 排序字段如果没有不要赋值
@@ -167,31 +191,30 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "CLASSID", "TZ_COM_ID", "TZ_COM_MC"};
-			String jsonString = "";
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
-
-			if (obj == null || obj.length == 0) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			if (obj != null && obj.length > 0) {
+				
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-					jsonString = jsonString + ",{\"permID\":\"" + rowList[0] + "\",\"comID\":\"" + rowList[1]
-							+ "\",\"comName\":\"" + rowList[2]+ "\"}";
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("permID", rowList[0]);
+					mapList.put("comID", rowList[1]);
+					mapList.put("comName", rowList[2]);
+					
+					listData.add(mapList);
 				}
 
-				if (!"".equals(jsonString)) {
-					jsonString = jsonString.substring(1);
-				}
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 
-				strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	/* 删除许可权组件授权信息 */
