@@ -1,19 +1,23 @@
 package com.tranzvision.gd.TZRoleMgBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoleclassMapper;
 import com.tranzvision.gd.TZRoleMgBundle.dao.PsRoledefnMapper;
 import com.tranzvision.gd.TZRoleMgBundle.model.PsRoleclassKey;
 import com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -32,10 +36,14 @@ public class RoleInfoImpl extends FrameworkImpl {
 	private PsRoledefnMapper psRoledefnMapper;
 	@Autowired
 	private PsRoleclassMapper psRoleclassMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 
 	/* 新增用户账号信息 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -79,10 +87,14 @@ public class RoleInfoImpl extends FrameworkImpl {
 					psRoledefn.setLdapRuleOn("N");
 					psRoledefn.setAllownotify("Y");
 					psRoledefn.setAllowlookup("Y");
-					/** TODO %userid **/
 					psRoledefn.setLastupddttm(new Date());
-					psRoledefn.setLastupdoprid("TZ_7");
-					psRoledefnMapper.insert(psRoledefn);
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					psRoledefn.setLastupdoprid(oprid);
+					int i = psRoledefnMapper.insert(psRoledefn);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "保存失败";
+					}
 				}
 
 			}
@@ -139,10 +151,14 @@ public class RoleInfoImpl extends FrameworkImpl {
 					psRoledefn.setLdapRuleOn("N");
 					psRoledefn.setAllownotify("Y");
 					psRoledefn.setAllowlookup("Y");
-					/** TODO %userid **/
 					psRoledefn.setLastupddttm(new Date());
-					psRoledefn.setLastupdoprid("TZ_7");
-					psRoledefnMapper.updateByPrimaryKeyWithBLOBs(psRoledefn);
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					psRoledefn.setLastupdoprid(oprid);
+					int i = psRoledefnMapper.updateByPrimaryKeyWithBLOBs(psRoledefn);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "保存失败";
+					}
 				}
 
 				// 许可权信息;
@@ -178,21 +194,30 @@ public class RoleInfoImpl extends FrameworkImpl {
 	/* 获取角色信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+				
 		try {
 			jacksonUtil.json2Map(strParams);
 
 			if (jacksonUtil.containsKey("roleName")) {
 				// 角色名称, 角色描述，详细信息;
-				String strRoleName = "", strRoleDesc = "", strRoleDescLong = "";
+				String strRoleName = "";
 				strRoleName = jacksonUtil.getString("roleName");
 
 				PsRoledefn psRoledefn = psRoledefnMapper.selectByPrimaryKey(strRoleName);
-				strRoleDesc = TZUtility.transFormchar(psRoledefn.getDescr()).trim();
-				strRoleDescLong = TZUtility.transFormchar(psRoledefn.getDescrlong());
-
-				strRet = "{\"formData\":{\"roleName\":\"" + strRoleName + "\",\"roleDesc\":\"" + strRoleDesc
-						+ "\",\"roleDescLong\":\"" + strRoleDescLong + "\"}}";
+				if (psRoledefn != null) {
+					// 角色信息;
+					Map<String, Object> jsonMap = new HashMap<>();
+					jsonMap.put("roleName", strRoleName);
+					jsonMap.put("roleDesc", psRoledefn.getDescr());
+					jsonMap.put("roleDescLong", psRoledefn.getDescrlong());
+					returnJsonMap.replace("formData", jsonMap);
+				} else {
+					errMsg[0] = "1";
+					errMsg[1] = "请选择角色";
+				}
 
 			} else {
 				errMsg[0] = "1";
@@ -203,22 +228,22 @@ public class RoleInfoImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 
 	/* 获取许可权列表 */
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
-		int numTotal = 0;
-
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 		try {
 			// 将字符串转换成json;
 			jacksonUtil.json2Map(comParams);
 			// 角色名称;
 			String strRoleName = jacksonUtil.getString("roleName");
-			// 许可权编号，许可权描述;
-			String strPermID = "", strPermDesc = "";
 
 			// 许可权列表sql;
 			String sqlPlstList = "";
@@ -232,35 +257,34 @@ public class RoleInfoImpl extends FrameworkImpl {
 				sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID limit ?,?";
 				list = jdbcTemplate.queryForList(sqlPlstList, new Object[] { strRoleName, numStart, numLimit });
 			}
-			for (int i = 0; i < list.size(); i++) {
-				strPermID = (String) list.get(i).get("CLASSID");
-				strPermDesc = (String) list.get(i).get("CLASSDEFNDESC");
-				strRet = strRet + "," + "{\"roleName\":\"" + strRoleName + "\",\"permID\":\"" + strPermID
-						+ "\",\"permDesc\":\"" + strPermDesc + "\"}";
-			}
+			int total = 0;
+			if(list != null && list.size() > 0){
+				for (int i = 0; i < list.size(); i++) {
+					total ++;
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("roleName", strRoleName);
+					mapList.put("permID", list.get(i).get("CLASSID"));
+					mapList.put("permDesc",list.get(i).get("CLASSDEFNDESC"));
+					
+					listData.add(mapList);
+				}
 
-			if (!"".equals(strRet)) {
-				strRet = strRet.substring(1);
-			}
+				mapRet.replace("total",total);
+				mapRet.replace("root", listData);
 
-			// 获取许可权信息总数;
-			String totalSQL = "SELECT COUNT(1) FROM PSROLECLASS WHERE ROLENAME=?";
-			numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strRoleName }, "Integer");
-			
-			strRet = "{\"total\":" + numTotal + ",\"root\":[" + strRet + "]}";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
-			strRet = "{\"total\":0,\"root\":[]}";
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 删除角色许可权信息 */
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
@@ -293,7 +317,6 @@ public class RoleInfoImpl extends FrameworkImpl {
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
-			return strRet;
 		}
 
 		return strRet;
