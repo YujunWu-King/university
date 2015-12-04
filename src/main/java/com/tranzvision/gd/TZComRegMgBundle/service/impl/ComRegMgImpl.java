@@ -71,6 +71,8 @@ public class ComRegMgImpl extends FrameworkImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
 		}
 		
 		return jacksonUtil.Map2json(mapRet);

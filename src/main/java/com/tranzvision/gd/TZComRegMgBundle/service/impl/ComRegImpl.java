@@ -88,7 +88,11 @@ public class ComRegImpl extends FrameworkImpl {
 					psTzAqComzcTbl.setRowAddedDttm(new Date());
 					psTzAqComzcTbl.setRowLastmantOprid(oprid);
 					psTzAqComzcTbl.setRowLastmantDttm(new Date());
-					psTzAqComzcTblMapper.insert(psTzAqComzcTbl);
+					int i = psTzAqComzcTblMapper.insert(psTzAqComzcTbl);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "保存失败";
+					}
 				}
 
 				if ("PAGE".equals(strFlag)) {
@@ -150,8 +154,11 @@ public class ComRegImpl extends FrameworkImpl {
 					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAqComzcTbl.setRowLastmantOprid(oprid);
 					psTzAqComzcTbl.setRowLastmantDttm(new Date());
-					psTzAqComzcTblMapper.updateByPrimaryKeySelective(psTzAqComzcTbl);
-
+					int i = psTzAqComzcTblMapper.updateByPrimaryKeySelective(psTzAqComzcTbl);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "更新失败";
+					}
 				}
 
 				if ("PAGE".equals(strFlag)) {
