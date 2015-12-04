@@ -1,17 +1,21 @@
 package com.tranzvision.gd.TZComRegMgBundle.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZComRegMgBundle.dao.PsTzAqPagzcTblMapper;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqPagzcTbl;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqPagzcTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -27,11 +31,15 @@ public class PageRegImpl extends FrameworkImpl {
 	private JacksonUtil jacksonUtil;
 	@Autowired
 	private PsTzAqPagzcTblMapper psTzAqPagzcTblMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 
 	/* 新增组件页面注册信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
@@ -82,17 +90,17 @@ public class PageRegImpl extends FrameworkImpl {
 
 			if (count == 0) {
 
-				/* 引用编号存在则必须唯一 */
-				String refCodeExist = "";
+				//引用编号存在则必须唯一
+				int refCodeExist = 0;
 				if (refCode != null && !"".equals(refCode.trim())) {
-					String refCodeUnqSQL = "SELECT 'Y' FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID<>? OR TZ_PAGE_ID<>?) AND TZ_PAGE_REFCODE=?";
+					String refCodeUnqSQL = "SELECT count(1) FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID<>? OR TZ_PAGE_ID<>?) AND TZ_PAGE_REFCODE=?";
 
 					refCodeExist = jdbcTemplate.queryForObject(refCodeUnqSQL,
-							new Object[] { strComID, strPageID, refCode }, "String");
+							new Object[] { strComID, strPageID, refCode }, "Integer");
 
 				}
 
-				if ("Y".equals(refCodeExist)) {
+				if (refCodeExist > 0) {
 					errMsg[0] = "1";
 					errMsg[1] = "引用编号出现重复!";
 				} else {
@@ -115,15 +123,18 @@ public class PageRegImpl extends FrameworkImpl {
 					psTzAqPagzcTbl.setTzPageMrsy(isDefault);
 					psTzAqPagzcTbl.setTzPageNewwin(isNewWin);
 					psTzAqPagzcTbl.setTzPageRefcode(refCode);
-					/****** TODO, 应该是当前登录人员 %userid ****/
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAqPagzcTbl.setRowAddedDttm(new Date());
-					psTzAqPagzcTbl.setRowAddedOprid("TZ_7");
+					psTzAqPagzcTbl.setRowAddedOprid(oprid);
 					psTzAqPagzcTbl.setRowLastmantDttm(new Date());
-					psTzAqPagzcTbl.setRowLastmantOprid("TZ_7");
-					psTzAqPagzcTblMapper.insert(psTzAqPagzcTbl);
+					psTzAqPagzcTbl.setRowLastmantOprid(oprid);
+					int i = psTzAqPagzcTblMapper.insert(psTzAqPagzcTbl);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "保存失败";
+					}
 
 				}
-
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "当前组件下，页面ID为：" + strPageID + "的信息已经注册,请修改页面ID。";
@@ -193,17 +204,17 @@ public class PageRegImpl extends FrameworkImpl {
 
 			if (count > 0) {
 
-				/* 引用编号存在则必须唯一 */
-				String refCodeExist = "";
+				//引用编号存在则必须唯一
+				int refCodeExist = 0;
 				if (refCode != null && !"".equals(refCode.trim())) {
-					String refCodeUnqSQL = "SELECT 'Y' FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID<>? OR TZ_PAGE_ID<>?) AND TZ_PAGE_REFCODE=?";
+					String refCodeUnqSQL = "SELECT count(1) FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID<>? OR TZ_PAGE_ID<>?) AND TZ_PAGE_REFCODE=?";
 
 					refCodeExist = jdbcTemplate.queryForObject(refCodeUnqSQL,
-							new Object[] { strComID, strPageID, refCode }, "String");
+							new Object[] { strComID, strPageID, refCode }, "Integer");
 
 				}
 
-				if ("Y".equals(refCodeExist)) {
+				if (refCodeExist > 0) {
 					errMsg[0] = "1";
 					errMsg[1] = "引用编号出现重复!";
 				} else {
@@ -226,11 +237,14 @@ public class PageRegImpl extends FrameworkImpl {
 					psTzAqPagzcTbl.setTzPageMrsy(isDefault);
 					psTzAqPagzcTbl.setTzPageNewwin(isNewWin);
 					psTzAqPagzcTbl.setTzPageRefcode(refCode);
-					/****** TODO, 应该是当前登录人员 %userid ****/
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAqPagzcTbl.setRowLastmantDttm(new Date());
-					psTzAqPagzcTbl.setRowLastmantOprid("TZ_7");
-					psTzAqPagzcTblMapper.updateByPrimaryKeySelective(psTzAqPagzcTbl);
-
+					psTzAqPagzcTbl.setRowLastmantOprid(oprid);
+					int i = psTzAqPagzcTblMapper.updateByPrimaryKeySelective(psTzAqPagzcTbl);
+					if(i <= 0){
+						errMsg[0] = "1";
+						errMsg[1] = "更新数据失败";
+					}
 				}
 
 			} else {
@@ -253,40 +267,31 @@ public class PageRegImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+
 		try {
 			jacksonUtil.json2Map(strParams);
 
 			String strComID = jacksonUtil.getString("comID");
 			String strPageID = jacksonUtil.getString("pageID");
 			if (strComID != null && !"".equals(strComID) && strPageID != null && !"".equals(strPageID)) {
-
-				// 页面名称，是否外部链接，外部URL，客户端JS类，服务器端AppClass，是否默认首页，是否新开窗口，引用编号;
-				String strPageName = "", isExUrl = "", exUrl = "", JSClass = "", appClass = "", isDefault = "",
-						isNewWin = "", refCode = "";
-				// 序号;
-				short numOrder = 0;
-
 				PsTzAqPagzcTblKey psTzAqPagzcTblKey = new PsTzAqPagzcTblKey();
 				psTzAqPagzcTblKey.setTzComId(strComID);
 				psTzAqPagzcTblKey.setTzPageId(strPageID);
 				// 获取页面注册信息;
 				PsTzAqPagzcTbl psTzAqPagzcTbl = psTzAqPagzcTblMapper.selectByPrimaryKey(psTzAqPagzcTblKey);
-				strPageName = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageMc());
-				numOrder = psTzAqPagzcTbl.getTzPageXh();
-				isExUrl = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageIswburl());
-				exUrl = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageWburl());
-				JSClass = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageKhdjs());
-				appClass = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageFwdcls());
-				isDefault = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageMrsy());
-				isNewWin = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageNewwin());
-				refCode = TZUtility.transFormchar(psTzAqPagzcTbl.getTzPageRefcode());
 
-				// 组件注册信息;
-				strRet = "{\"comID\":\"" + strComID + "\",\"pageID\":\"" + strPageID + "\",\"pageName\":\""
-						+ strPageName + "\",\"orderNum\":" + numOrder + ",\"isExURL\":\"" + isExUrl + "\",\"exURL\":\""
-						+ exUrl + "\",\"jsClass\":\"" + JSClass + "\",\"appClass\":\"" + appClass
-						+ "\",\"isDefault\":\"" + isDefault + "\",\"isNewWin\":\"" + isNewWin + "\",\"refCode\":\""
-						+ refCode + "\"}";
+				returnJsonMap.put("comID", strComID);
+				returnJsonMap.put("pageID", strPageID);
+				returnJsonMap.put("pageName", psTzAqPagzcTbl.getTzPageMc());
+				returnJsonMap.put("orderNum", psTzAqPagzcTbl.getTzPageXh());
+				returnJsonMap.put("isExURL", psTzAqPagzcTbl.getTzPageIswburl());
+				returnJsonMap.put("exURL", psTzAqPagzcTbl.getTzPageWburl());
+				returnJsonMap.put("jsClass", psTzAqPagzcTbl.getTzPageKhdjs());
+				returnJsonMap.put("appClass", psTzAqPagzcTbl.getTzPageFwdcls());
+				returnJsonMap.put("isDefault", psTzAqPagzcTbl.getTzPageMrsy());
+				returnJsonMap.put("isNewWin", psTzAqPagzcTbl.getTzPageNewwin());
+				returnJsonMap.put("refCode", psTzAqPagzcTbl.getTzPageRefcode());
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取页面信息";
@@ -296,6 +301,7 @@ public class PageRegImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 }

@@ -1,25 +1,32 @@
 package com.tranzvision.gd.TZComRegMgBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZComRegMgBundle.dao.PsTzAqComzcTblMapper;
 import com.tranzvision.gd.TZComRegMgBundle.dao.PsTzAqPagzcTblMapper;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqComzcTbl;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqPagzcTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
+ * 
  * @author tang
- * @version 1.0, 2015-10-9
- * @功能：功能组件注册管理相关类 原ps类：TZ_GD_COMREGMG_PKG:TZ_GD_COMREG_CLS
+ * 2015-10-9
+ * 功能组件注册管理相关类
+ * PS:TZ_GD_COMREGMG_PKG:TZ_GD_COMREG_CLS
+ *
  */
 @Service("com.tranzvision.gd.TZComRegMgBundle.service.impl.ComRegImpl")
 public class ComRegImpl extends FrameworkImpl {
@@ -27,6 +34,10 @@ public class ComRegImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private JacksonUtil jacksonUtil;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired
 	private PsTzAqComzcTblMapper psTzAqComzcTblMapper;
 	@Autowired
@@ -72,10 +83,10 @@ public class ComRegImpl extends FrameworkImpl {
 					PsTzAqComzcTbl psTzAqComzcTbl = new PsTzAqComzcTbl();
 					psTzAqComzcTbl.setTzComId(strComID);
 					psTzAqComzcTbl.setTzComMc(comName);
-					/****** TODO, 应该是当前登录人员 %userid ****/
-					psTzAqComzcTbl.setRowAddedOprid("TZ_7");
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					psTzAqComzcTbl.setRowAddedOprid(oprid);
 					psTzAqComzcTbl.setRowAddedDttm(new Date());
-					psTzAqComzcTbl.setRowLastmantOprid("TZ_7");
+					psTzAqComzcTbl.setRowLastmantOprid(oprid);
 					psTzAqComzcTbl.setRowLastmantDttm(new Date());
 					psTzAqComzcTblMapper.insert(psTzAqComzcTbl);
 				}
@@ -136,8 +147,8 @@ public class ComRegImpl extends FrameworkImpl {
 					PsTzAqComzcTbl psTzAqComzcTbl = new PsTzAqComzcTbl();
 					psTzAqComzcTbl.setTzComId(strComID);
 					psTzAqComzcTbl.setTzComMc(comName);
-					/****** TODO, 应该是当前登录人员 %userid ****/
-					psTzAqComzcTbl.setRowLastmantOprid("TZ_7");
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					psTzAqComzcTbl.setRowLastmantOprid(oprid);
 					psTzAqComzcTbl.setRowLastmantDttm(new Date());
 					psTzAqComzcTblMapper.updateByPrimaryKeySelective(psTzAqComzcTbl);
 
@@ -162,6 +173,9 @@ public class ComRegImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -172,8 +186,10 @@ public class ComRegImpl extends FrameworkImpl {
 					PsTzAqComzcTbl psTzAqComzcTbl = psTzAqComzcTblMapper.selectByPrimaryKey(strComID);
 					if (psTzAqComzcTbl != null) {
 						// 组件注册信息;
-						strRet = "{\"formData\":{\"comID\":\"" + TZUtility.transFormchar(strComID) + "\",\"comName\":\""
-								+ TZUtility.transFormchar(psTzAqComzcTbl.getTzComMc()) + "\"}}";
+						Map<String, Object> jsonMap = new HashMap<>();
+						jsonMap.put("comID", strComID);
+						jsonMap.put("comName", psTzAqComzcTbl.getTzComMc());
+						returnJsonMap.replace("formData", jsonMap);
 					} else {
 						errMsg[0] = "1";
 						errMsg[1] = "无法获取组件信息";
@@ -192,6 +208,7 @@ public class ComRegImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 
@@ -199,12 +216,10 @@ public class ComRegImpl extends FrameworkImpl {
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		// 返回值;
-		String strRet = "";
-
-		// 页面注册信息列表内容;
-		String strPageContent = "";
-		// 页面注册信息总数;
-		int numTotal = 0;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -218,7 +233,7 @@ public class ComRegImpl extends FrameworkImpl {
 				int numOrder = 0;
 				// 页面注册信息列表sql;
 				String sqlPageList = "";
-				/******* 查询组件下的页面列表 ****/
+				//查询组件下的页面列表
 				Object[] obj = null;
 				if (numLimit == 0) {
 					sqlPageList = "SELECT TZ_PAGE_ID,TZ_PAGE_MC,TZ_PAGE_XH,TZ_PAGE_MRSY FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? ORDER BY TZ_PAGE_XH";
@@ -227,33 +242,36 @@ public class ComRegImpl extends FrameworkImpl {
 					sqlPageList = "SELECT TZ_PAGE_ID,TZ_PAGE_MC,TZ_PAGE_XH,TZ_PAGE_MRSY FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=? ORDER BY TZ_PAGE_XH limit ?,?";
 					obj = new Object[] { strComID, numStart, numLimit };
 				}
-
+				
+				int total = 0;
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlPageList, obj);
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
+						total ++;
+						
 						isDefault = (String) list.get(i).get("TZ_PAGE_MRSY");
 						if (!"Y".equals(isDefault)) {
 							isDefault = "N";
 						} 
 						strPageID = (String) list.get(i).get("TZ_PAGE_ID");
 						strPageName = (String) list.get(i).get("TZ_PAGE_MC");
-						numOrder = (int) list.get(i).get("TZ_PAGE_XH");
-	
-						strPageContent = strPageContent + ",{\"comID\":\"" + TZUtility.transFormchar(strComID)
-								+ "\",\"pageID\":\"" + TZUtility.transFormchar(strPageID) + "\",\"pageName\":\""
-								+ TZUtility.transFormchar(strPageName) + "\",\"orderNum\":" + numOrder + ",\"isDefault\":\""
-								+ isDefault + "\"}";
+						try{
+							numOrder = (int) list.get(i).get("TZ_PAGE_XH");
+						}catch(Exception e){
+							numOrder = 0;
+						}
+						
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("comID", strComID);
+						mapList.put("pageID", strPageID);
+						mapList.put("pageName", strPageName);
+						mapList.put("orderNum", numOrder);
+						mapList.put("isDefault", isDefault);
+						listData.add(mapList);
 					}
+					mapRet.replace("total", total);
+					mapRet.replace("root", listData);
 				}
-				if (!"".equals(strPageContent)) {
-					strPageContent = strPageContent.substring(1);
-				}
-
-				/******* 查询组件总的页面数 ****/
-				String totalSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?";
-				numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strComID }, "Integer");
-
-				strRet = "{\"total\":" + numTotal + ",\"root\":[" + strPageContent + "]}";
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取组件页面信息";
@@ -263,7 +281,8 @@ public class ComRegImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 删除页面注册信息列表 */
