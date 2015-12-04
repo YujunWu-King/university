@@ -155,7 +155,8 @@ public class Patchca {
 			this.setResponseHeaders(response);
 			String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.getOutputStream());
 			tzSession.addSession(tokenName, token);
-			//System.out.println("SessionID=" + tzSession.getSessionId() + ",token=" + token);
+			// System.out.println("SessionID=" + tzSession.getSessionId() +
+			// ",token=" + token);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -188,7 +189,7 @@ public class Patchca {
 	public String getToken(HttpServletRequest request) {
 		this.insTzSession(request);
 		Object tokenObject = tzSession.getSession(tokenName);
-		if(tokenObject == null){
+		if (tokenObject == null) {
 			return null;
 		}
 		return tokenObject.toString();
@@ -212,7 +213,12 @@ public class Patchca {
 	 * @return boolean
 	 */
 	public boolean verifyToken(HttpServletRequest request, String ckToken) {
-		String token = this.getToken(request).toUpperCase();
+		String token = this.getToken(request);
+		if (token == null) {
+			return false;
+		}
+
+		token = token.toUpperCase();
 		if (token.equals(ckToken.trim().toUpperCase())) {
 			// 销毁sessionToken
 			this.removeToken(request);
