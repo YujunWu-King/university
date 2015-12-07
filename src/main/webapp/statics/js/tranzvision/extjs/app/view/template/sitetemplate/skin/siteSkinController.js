@@ -86,7 +86,6 @@
 		//删除记录
 		var removeRecs = store.getRemovedRecords();
 		for(var i=0;i<removeRecs.length;i++){
-			console.log(removeRecs[i].data.applyItemId);
 			if(removeJson == ""){
 				removeJson = '{"typeFlag":"SKINAPPLYINFO","siteId":"'+siteId+'","skinId":"'+skinId+'","data":'+Ext.JSON.encode(removeRecs[i].data)+'}';
 			}else{
@@ -101,7 +100,7 @@
 			}
 		}
 		//结束报名信息项;
-		console.log(comParams);
+
 		//提交参数
 		var tzParams = '{"ComID":"TZ_GD_ZDMB_COM","PageID":"TZ_GD_ZDPF_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;

@@ -1023,7 +1023,7 @@
 		var removeJson = "";
 		//删除记录
 		var removeRecs = store.getRemovedRecords();
-		console.log(removeRecs.length);
+
 		for(var i=0;i<removeRecs.length;i++){
 			if(removeJson == ""){
 				removeJson = Ext.JSON.encode(removeRecs[i].data);
@@ -1039,7 +1039,6 @@
 			}
 		}
 	}
-		console.log(comParams);
 		//提交参数
 		var tzParams = '{"ComID":"TZ_GD_ZDMB_COM","PageID":"TZ_GD_ZDMB_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		var comView = this.getView();

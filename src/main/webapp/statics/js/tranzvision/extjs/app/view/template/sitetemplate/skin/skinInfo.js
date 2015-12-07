@@ -175,18 +175,10 @@
 			defaults:{
 				margin:'0 0 0 20px'
 			},
-			items:[{
-				xtype:'button',
-				text:'预览图片集',
-				margin:'0 0 0 700px',
-				listeners:{
-					click:function(file, value, eOpts ){
-						
-					}
-				}
-			},{
+			items:[
+			{
 	            xtype: 'fileuploadfield',
-	            name: 'menutypeimg',
+	            name: 'websitefile',
 	            buttonText: '上传图片',
 	            //msgTarget: 'side',
 	            buttonOnly:true,
@@ -197,11 +189,12 @@
 							//获取该类
 							var panel = file.findParentByType("skinInfo");
 							if(panel.actType == "update"){
+								var siteId = panel.child("form").getForm().findField("siteId").getValue();
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
 								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=skin',
+										url: TzUniversityContextPath + '/UpdWebServlet?siteid='+siteId+'&filePath=skinPic',
 										waitMsg: '图片正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;

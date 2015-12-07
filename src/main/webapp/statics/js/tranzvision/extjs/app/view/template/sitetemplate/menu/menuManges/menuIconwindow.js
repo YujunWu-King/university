@@ -81,7 +81,7 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 				}
 			},{
 	            xtype: 'fileuploadfield',
-	            name: 'menutypeimg',
+	            name: 'websitefile',
 	            buttonText: '上传',
 	            //msgTarget: 'side',
 	            buttonOnly:true,
@@ -93,11 +93,12 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 							var panel = file.findParentByType("menuIconwindow");
 							
 							if(panel.actType == "update"){
+								var siteId = panel.child("form").getForm().findField("siteid").getValue();
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
 								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=menu',
+										url: TzUniversityContextPath + '/UpdWebServlet?siteid='+siteId+'&filePath=menuPic',
 										waitMsg: '图片正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;
@@ -127,7 +128,7 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 											    success: function(response){
 											    	var responseText = eval( "(" + response.responseText + ")" );
 											        if(responseText.comContent.success == 0){
-											        	file.previousSibling().previousSibling().setSrc(path);
+											        	file.previousSibling().previousSibling().setSrc(TzUniversityContextPath + path);
 											        }else{
 											        	Ext.MessageBox.alert("错误", responseText.comContent.msg);        
 											        }
@@ -189,7 +190,7 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 				}
 			},{
 	            xtype: 'fileuploadfield',
-	            name: 'menunowimg',
+	            name: 'websitefile',
 	            buttonText: '上传',
 	            //msgTarget: 'side',
 	            buttonOnly:true,
@@ -200,11 +201,12 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 							//获取该类
 							var panel = file.findParentByType("menuIconwindow");
 							if(panel.actType == "update"){
+								var siteId = panel.child("form").getForm().findField("siteid").getValue();
 								//获取后缀
 								var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
 								if(fix.toLowerCase() == "jpg" || fix.toLowerCase() == "jpeg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif" || fix.toLowerCase() == "bmp" || fix.toLowerCase() == "ico"){
 									form.submit({
-										url: TzUniversityContextPath + '/UpdServlet?filePath=menu',
+										url: TzUniversityContextPath + '/UpdWebServlet?siteid='+siteId+'&filePath=menuPic',
 										waitMsg: '图片正在上传，请耐心等待....',
 										success: function (form, action) {
 											var message = action.result.msg;
@@ -234,7 +236,7 @@ Ext.define('KitchenSink.view.template.sitetemplate.menu.menuManges.menuIconwindo
 											    success: function(response){
 											    	var responseText = eval( "(" + response.responseText + ")" );
 											        if(responseText.comContent.success == 0){
-											        	file.previousSibling().previousSibling().setSrc(path);
+											        	file.previousSibling().previousSibling().setSrc(TzUniversityContextPath + path);
 											        }else{
 											        	Ext.MessageBox.alert("错误", responseText.comContent.msg);        
 											        }
