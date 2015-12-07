@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMenuTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMnpfTMapper;
@@ -34,6 +37,10 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
 	private PsTzSiteiMenuTMapper psTzSiteiMenuTMapper;
 	@Autowired
 	private PsTzSiteiMnpfTMapper psTzSiteiMnpfTMapper;
@@ -41,7 +48,7 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	/* 添加站点菜单 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menuId", "");
 
@@ -86,14 +93,12 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	            	psTzSiteiMenuT.setTzTypeImg((String)map.get("TZ_TYPE_IMG"));
 	            	psTzSiteiMenuT.setTzNowImg((String)map.get("TZ_NOW_IMG"));
 	            }
-	            /**TODO %USERID**/
+	            String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 	            psTzSiteiMenuT.setTzAddedDttm(new Date());
-	            psTzSiteiMenuT.setTzAddedOprid("TZ_7");
+	            psTzSiteiMenuT.setTzAddedOprid(oprid);
 	            psTzSiteiMenuT.setTzLastmantDttm(new Date());
-	            psTzSiteiMenuT.setTzLastmantOprid("TZ_7");
+	            psTzSiteiMenuT.setTzLastmantOprid(oprid);
 	            
-	            
-	            System.out.println("--------------menutypeid---------->"+menutypeid);
 				int i = psTzSiteiMenuTMapper.insert(psTzSiteiMenuT);
 				if(i > 0){
 					//复制菜单类型图标到菜单下;
@@ -101,7 +106,6 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(menuIconSQL,new Object[]{siteId,menutypeid});
 					if(list != null && list.size()>0){
 						for(int j = 0; j<list.size();j++){
-							System.out.println("--------------menutypeid---12121212------->"+menutypeid);
 							PsTzSiteiMnpfT psTzSiteiMnpfT = new PsTzSiteiMnpfT();
 							psTzSiteiMnpfT.setTzSiteiId(siteId);
 							psTzSiteiMnpfT.setTzMenuId(menuId);
@@ -131,7 +135,7 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	/* 添加站点菜单 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menuId", "");
 
@@ -170,9 +174,9 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	            psTzSiteiMenuT.setTzMenuXh(menuxh);
 	            psTzSiteiMenuT.setTzTypeImg(menutypeimg);
             	psTzSiteiMenuT.setTzNowImg(menunowimg);
-	            /**TODO %USERID**/
+            	String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 	            psTzSiteiMenuT.setTzLastmantDttm(new Date());
-	            psTzSiteiMenuT.setTzLastmantOprid("TZ_7");
+	            psTzSiteiMenuT.setTzLastmantOprid(oprid);
 	            
 				int i = psTzSiteiMenuTMapper.updateByPrimaryKeySelective(psTzSiteiMenuT);
 				if(i > 0){
@@ -196,7 +200,7 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -245,7 +249,7 @@ public class OrgSiteMenuGlServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {

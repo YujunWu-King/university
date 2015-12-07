@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMtypTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMtypT;
@@ -33,6 +36,10 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
 	private PsTzSiteiMtypTMapper psTzSiteiMtypTMapper;
 	
 	/* 查询菜单类型管理列表 */
@@ -42,7 +49,8 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -62,7 +70,7 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 				}
 				String zzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_TYPE_STATE' AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+					
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						String menutypestate = (String) list.get(i).get("TZ_TYPE_STATE");
@@ -92,7 +100,7 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	/* 添加菜单类型设置 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menutypeid", "");
 
@@ -136,11 +144,11 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	            psTzSiteiMtypT.setTzTempId(menuColuTmpl);
 	            psTzSiteiMtypT.setTzContType(menuContType);
 	            psTzSiteiMtypT.setTzContTemp(menuContTmpl);
-	            /***TODO %USERID**/
+	            String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 	            psTzSiteiMtypT.setTzAddedDttm(new Date());
-	            psTzSiteiMtypT.setTzAddedOprid("TZ_7");
+	            psTzSiteiMtypT.setTzAddedOprid(oprid);
 	            psTzSiteiMtypT.setTzLastmantDttm(new Date());
-	            psTzSiteiMtypT.setTzLastmantOprid("TZ_7");
+	            psTzSiteiMtypT.setTzLastmantOprid(oprid);
 	            int i = psTzSiteiMtypTMapper.insert(psTzSiteiMtypT);
 	            if(i > 0){
 					returnJsonMap.replace("menutypeid", menutypeid);
@@ -161,7 +169,7 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	/* 修改菜单类型设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menutypeid", "");
 
@@ -206,9 +214,9 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	            psTzSiteiMtypT.setTzTempId(menuColuTmpl);
 	            psTzSiteiMtypT.setTzContType(menuContType);
 	            psTzSiteiMtypT.setTzContTemp(menuContTmpl);
-	            /***TODO %USERID**/
+	            String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 	            psTzSiteiMtypT.setTzLastmantDttm(new Date());
-	            psTzSiteiMtypT.setTzLastmantOprid("TZ_7");
+	            psTzSiteiMtypT.setTzLastmantOprid(oprid);
 	            int i = psTzSiteiMtypTMapper.updateByPrimaryKeyWithBLOBs(psTzSiteiMtypT);
 	            if(i > 0){
 					returnJsonMap.replace("menutypeid", menutypeid);
@@ -233,7 +241,7 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -286,7 +294,7 @@ public class OrgSiteMenuTypeGlServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {

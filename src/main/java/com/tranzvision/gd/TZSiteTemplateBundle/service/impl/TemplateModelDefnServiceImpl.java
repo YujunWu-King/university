@@ -297,7 +297,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	/* 删除站点模板中的数据 */
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 
 		try {
 			int num = 0;

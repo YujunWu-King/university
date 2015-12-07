@@ -1,14 +1,20 @@
 package com.tranzvision.gd.TZOrganizationSiteMgBundle.service.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiColuTMapper;
@@ -21,6 +27,7 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLO
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuTKey;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -39,6 +46,12 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
+	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
 	@Autowired
 	private PsTzSiteiTempTMapper psTzSiteiTempTMapper;
@@ -53,7 +66,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	/* 新增机构站点信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
 
@@ -114,14 +127,45 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				psTzSiteiDefnT.setTzIndexPubcode(indexPubCode);
 				psTzSiteiDefnT.setTzLonginSavecode(loginSaveCode);
 				psTzSiteiDefnT.setTzLonginPubcode(loginPubCode);
-				/* TODO %USERID */
-				psTzSiteiDefnT.setTzAddedOprid("TZ_7");
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				psTzSiteiDefnT.setTzAddedOprid(oprid);
 				psTzSiteiDefnT.setTzAddedDttm(new Date());
-				psTzSiteiDefnT.setTzLastmantOprid("TZ_7");
+				psTzSiteiDefnT.setTzLastmantOprid(oprid);
 				psTzSiteiDefnT.setTzLastmantDttm(new Date());
 				int i = psTzSiteiDefnTMapper.insert(psTzSiteiDefnT);
 				if (i > 0) {
 					returnJsonMap.replace("siteId", siteId);
+					//生成样式文件;
+					try{
+						String websitePath = getSysHardCodeVal.getWebsiteFileUploadPath();
+						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
+						String dirPath = "";
+						if("".equals(skinstor)){
+							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" ;
+						}else{
+							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
+						}
+						
+						String parentRealPath = request.getServletContext().getRealPath(dirPath);
+	
+						File dir = new File(parentRealPath);
+						if (!dir.exists()) {
+							dir.mkdirs();
+						}
+						
+						String filePath = dir + File.separator +  "style_" + orgid.toLowerCase() + ".css";
+						File file = new File(filePath);
+						if (!file.exists()) {
+							file.createNewFile();
+						}
+						FileWriter fw = new FileWriter(file.getAbsoluteFile());
+						BufferedWriter bw = new BufferedWriter(fw);
+						bw.write(skincode);
+						bw.close();
+					}catch(Exception e){
+						errMsg[0] = "1";
+						errMsg[1] = "皮肤样式文件生成失败";
+					}
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "机构站点信息保存失败";
@@ -138,7 +182,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	/* 修改机构站点信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
 
@@ -199,12 +243,43 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				psTzSiteiDefnT.setTzIndexPubcode(indexPubCode);
 				psTzSiteiDefnT.setTzLonginSavecode(loginSaveCode);
 				psTzSiteiDefnT.setTzLonginPubcode(loginPubCode);
-				/* TODO %USERID */
-				psTzSiteiDefnT.setTzLastmantOprid("TZ_7");
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				psTzSiteiDefnT.setTzLastmantOprid(oprid);
 				psTzSiteiDefnT.setTzLastmantDttm(new Date());
 				int i = psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnT);
 				if (i > 0) {
 					returnJsonMap.replace("siteId", siteId);
+					//生成样式文件;
+					try{
+						String websitePath = getSysHardCodeVal.getWebsiteFileUploadPath();
+						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
+						String dirPath = "";
+						if("".equals(skinstor)){
+							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" ;
+						}else{
+							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
+						}
+						
+						String parentRealPath = request.getServletContext().getRealPath(dirPath);
+	
+						File dir = new File(parentRealPath);
+						if (!dir.exists()) {
+							dir.mkdirs();
+						}
+						
+						String filePath = dir + File.separator +  "style_" + orgid.toLowerCase() + ".css";
+						File file = new File(filePath);
+						if (!file.exists()) {
+							file.createNewFile();
+						}
+						FileWriter fw = new FileWriter(file.getAbsoluteFile());
+						BufferedWriter bw = new BufferedWriter(fw);
+						bw.write(skincode);
+						bw.close();
+					}catch(Exception e){
+						errMsg[0] = "1";
+						errMsg[1] = "皮肤样式文件生成失败";
+					}
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "机构站点信息保存失败";
@@ -222,9 +297,9 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -323,7 +398,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	/* 删除站点模板中的数据 */
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 
 		try {
 			int num = 0;
@@ -406,7 +481,8 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -423,7 +499,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -454,7 +530,8 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -471,7 +548,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 			String zhzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -510,7 +587,8 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -527,7 +605,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -563,7 +641,8 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -580,7 +659,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();

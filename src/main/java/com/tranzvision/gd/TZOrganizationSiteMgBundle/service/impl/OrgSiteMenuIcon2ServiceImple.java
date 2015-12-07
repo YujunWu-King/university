@@ -39,7 +39,8 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			
@@ -47,7 +48,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 			if(jacksonUtil.containsKey("siteId") && jacksonUtil.containsKey("menuId") ){
 				String siteId = jacksonUtil.getString("siteId");
 				String menuId = jacksonUtil.getString("menuId");
-				
+
 				String siteIconCountSQL = " SELECT COUNT(1) FROM PS_TZ_SITEI_MNPF_T WHERE TZ_SITEI_ID=? and TZ_MENU_ID=?";
 				int siteIconCount = jdbcTemplate.queryForObject(siteIconCountSQL, new Object[]{siteId,menuId},"Integer");
 				if(siteIconCount == 0){
@@ -55,8 +56,6 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 					List<Map<String, Object>> skinList = jdbcTemplate.queryForList(skinSQL,new Object[]{siteId});
 					if(skinList != null){
 						for(int i = 0; i < skinList.size(); i++){
-							
-							System.out.println("--------------menuId---222222222------->"+menuId);
 							PsTzSiteiMnpfT psTzSiteiMnpfT = new PsTzSiteiMnpfT();
 							psTzSiteiMnpfT.setTzSiteiId(siteId);
 							psTzSiteiMnpfT.setTzMenuId(menuId);
@@ -81,7 +80,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 				}
 				String zhzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+					
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						String skinState = (String) list.get(i).get("TZ_SKIN_STATE");
@@ -113,7 +112,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -161,7 +160,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 	/* 修改菜单类型设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 
 		try {
 			int num = 0;
@@ -184,4 +183,46 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 		}
 		return strRet;
 	}
+	
+	
+	@Override
+	public String tzGetJsonData(String comParams){
+			Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+			returnJsonMap.put("success", 0);
+			returnJsonMap.put("msg", "");
+			
+			try{
+				jacksonUtil.json2Map(comParams);
+				String siteId = jacksonUtil.getString("siteId");
+				String menuId = jacksonUtil.getString("menuId");
+				String skinId = jacksonUtil.getString("skinId");
+				String path = jacksonUtil.getString("path");
+				String imgtype = jacksonUtil.getString("imgtype");
+				
+				PsTzSiteiMnpfT psTzSiteiMnpfT = new PsTzSiteiMnpfT();
+				psTzSiteiMnpfT.setTzSiteiId(siteId);
+				psTzSiteiMnpfT.setTzMenuId(menuId);
+				psTzSiteiMnpfT.setTzSkinId(skinId);
+				if("TZ_TYPE_IMG".equals(imgtype)){
+					psTzSiteiMnpfT.setTzTypeImg(path);
+				}else if("TZ_NOW_IMG".equals(imgtype)){
+					psTzSiteiMnpfT.setTzNowImg(path);
+				}
+				int i = psTzSiteiMnpfTMapper.updateByPrimaryKeySelective(psTzSiteiMnpfT);
+
+				if(i > 0){
+					returnJsonMap.replace("success", 0);
+					returnJsonMap.replace("msg", "");
+				}else{
+					returnJsonMap.replace("success", 1);
+					returnJsonMap.replace("msg", "保存失败");
+				}
+			}catch(Exception e){
+				returnJsonMap.replace("success", 1);
+				returnJsonMap.replace("msg", e.toString());
+				e.printStackTrace();
+			}
+			return jacksonUtil.Map2json(returnJsonMap);
+		}
+	
 }

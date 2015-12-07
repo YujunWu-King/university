@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTKey;
@@ -28,12 +31,16 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
 	
 	/* 添加区域设置 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areaId", "");
 
@@ -67,11 +74,11 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				}
 				psTzSiteiAreaT.setTzColuId(arealm);
 				psTzSiteiAreaT.setTzAreaCode(areacode);
-				/****TODO %userid****/
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				psTzSiteiAreaT.setTzAddedDttm(new Date());
-				psTzSiteiAreaT.setTzAddedOprid("TZ_7");
+				psTzSiteiAreaT.setTzAddedOprid(oprid);
 				psTzSiteiAreaT.setTzLastmantDttm(new Date());
-				psTzSiteiAreaT.setTzLastmantOprid("TZ_7");
+				psTzSiteiAreaT.setTzLastmantOprid(oprid);
 				
 				int i = psTzSiteiAreaTMapper.insert(psTzSiteiAreaT);
 				if(i > 0){
@@ -94,7 +101,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 	/* 添加区域设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areaId", "");
 
@@ -129,9 +136,9 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				}
 				psTzSiteiAreaT.setTzColuId(arealm);
 				psTzSiteiAreaT.setTzAreaCode(areacode);
-				/****TODO %userid****/
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				psTzSiteiAreaT.setTzLastmantDttm(new Date());
-				psTzSiteiAreaT.setTzLastmantOprid("TZ_7");
+				psTzSiteiAreaT.setTzLastmantOprid(oprid);
 				
 				int i = psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaT);
 				if(i > 0){
@@ -157,7 +164,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -205,7 +212,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
