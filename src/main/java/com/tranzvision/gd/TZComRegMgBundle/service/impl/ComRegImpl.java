@@ -240,6 +240,7 @@ public class ComRegImpl extends FrameworkImpl {
 				int numOrder = 0;
 				// 页面注册信息列表sql;
 				String sqlPageList = "";
+				String totalSQL = "";
 				//查询组件下的页面列表
 				Object[] obj = null;
 				if (numLimit == 0) {
@@ -254,8 +255,6 @@ public class ComRegImpl extends FrameworkImpl {
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlPageList, obj);
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
-						total ++;
-						
 						isDefault = (String) list.get(i).get("TZ_PAGE_MRSY");
 						if (!"Y".equals(isDefault)) {
 							isDefault = "N";
@@ -276,9 +275,13 @@ public class ComRegImpl extends FrameworkImpl {
 						mapList.put("isDefault", isDefault);
 						listData.add(mapList);
 					}
+					
+					totalSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?";
+					total = jdbcTemplate.queryForObject(totalSQL,new Object[] { strComID },"Integer");
 					mapRet.replace("total", total);
 					mapRet.replace("root", listData);
 				}
+
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取组件页面信息";

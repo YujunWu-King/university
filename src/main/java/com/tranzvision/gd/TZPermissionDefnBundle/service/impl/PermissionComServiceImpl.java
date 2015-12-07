@@ -58,7 +58,7 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 
 			// 授权组件页面列表sql;
 			String sqlComPageList;
-
+			String totalSQL = "";
 			List<Map<String, Object>> list = null;
 			if (numLimit == 0) {
 				sqlComPageList = "SELECT TZ_PAGE_ID,TZ_PAGE_MC FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?  ORDER BY TZ_PAGE_ID";
@@ -71,8 +71,6 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 			int total = 0;
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
-					total++;
-
 					boolean strReadonly = false;
 					boolean strModify = false;
 					strPageID = (String) list.get(i).get("TZ_PAGE_ID");
@@ -107,7 +105,9 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 					listData.add(mapList);
 
 				}
-				mapRet.replace("total", total);
+			    totalSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_PAGZC_TBL WHERE TZ_COM_ID=?";
+				total = jdbcTemplate.queryForObject(totalSQL, new Object[]{strComID},"Integer");
+			    mapRet.replace("total", total);
 				mapRet.replace("root", listData);
 			}
 		} catch (Exception e) {

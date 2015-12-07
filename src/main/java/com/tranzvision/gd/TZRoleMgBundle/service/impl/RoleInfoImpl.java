@@ -247,7 +247,7 @@ public class RoleInfoImpl extends FrameworkImpl {
 
 			// 许可权列表sql;
 			String sqlPlstList = "";
-
+			String totalSQL = "";
 			List<Map<String, Object>> list = null;
 			if (numStart == 0 && numLimit == 0) {
 				sqlPlstList = "SELECT A.CLASSID,(SELECT CLASSDEFNDESC FROM PSCLASSDEFN WHERE CLASSID=A.CLASSID) CLASSDEFNDESC FROM PSROLECLASS A WHERE A.ROLENAME=? ORDER BY A.CLASSID";
@@ -260,7 +260,6 @@ public class RoleInfoImpl extends FrameworkImpl {
 			int total = 0;
 			if(list != null && list.size() > 0){
 				for (int i = 0; i < list.size(); i++) {
-					total ++;
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("roleName", strRoleName);
 					mapList.put("permID", list.get(i).get("CLASSID"));
@@ -268,6 +267,8 @@ public class RoleInfoImpl extends FrameworkImpl {
 					
 					listData.add(mapList);
 				}
+				totalSQL = "SELECT COUNT(1) FROM PSROLECLASS A WHERE A.ROLENAME=?";
+				total = jdbcTemplate.queryForObject(totalSQL,new Object[]{strRoleName},"Integer");
 
 				mapRet.replace("total",total);
 				mapRet.replace("root", listData);
