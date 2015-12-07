@@ -117,22 +117,19 @@
 			if(actType == "add" && btn != "but_ensure"){
 				var menuId = responseData.menuId;
 				form.setValues({menuid:menuId});
-
+				alert(menuId)
 				/*comView.child("form").child('form').child("image").setSrc(responseData.typeImg);
 				comView.down('form[name=imgForm2]').child("image").setSrc(responseData.nowImg);
 				*/
+				var tzStoreParams = '{"siteId":"'+formParams["siteId"]+'","queryID":"1","menuId":"'+menuId+'"}';
+				grid.store.tzStoreParams = tzStoreParams;
+				grid.store.load();
 			}
 			
 
 			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
 			var templateGrid = contentPanel.child("siteTemplateInfoGL").child("form").child("tabpanel").getActiveTab();
 			templateGrid.store.reload();
-
-	
-
-			var tzStoreParams = '{"siteId":"'+formParams["siteId"]+'","queryID":"1","menuId":"'+formParams["menuid"]+'"}';
-			grid.store.tzStoreParams = tzStoreParams;
-			grid.store.load();
 
 		},"",true,this);
 	},

@@ -86,58 +86,16 @@
             preventScrollbars : false
         },{
             xtype: 'textfield',
-            fieldLabel: '图片的服务器路径前缀',
+            fieldLabel: '图片存放的服务器文件夹',
 			name: 'picPrefix'
         },{
-            xtype: 'label',
-            text: '上传程序获取此地址后，跟上站点编号+日期作为服务器存储路径',
-            cls: 'lable_1',
-			name: 'picIntroduce'
-        },{
             xtype: 'textfield',
-            fieldLabel: '静态路径访问地址前缀',
-			name: 'staPrefix'
-        },{
-            xtype: 'label',
-            text: '图片上传后，根据该地址+站点编号+日期+唯一文件名作为访问地址',
-            cls: 'lable_1',
-			name: 'staIntroduce'
-        },{
-            xtype: 'textfield',
-            fieldLabel: '附件的服务器路径前缀',
+            fieldLabel: '附件存放的服务器文件夹',
 			name: 'attPrefix'
         },{
-            xtype: 'label',
-            text: '上传程序获取此地址后，跟上站点编号+日期 作为服务器存储路径',
-            cls: 'lable_1',
-			name: 'attIntroduce'
-        },{
             xtype: 'textfield',
-            fieldLabel: '附件的访问地址前缀',
-			name: 'attAccessPrefix'
-        },{
-            xtype: 'label',
-            text: '附件上传后，根据该地址+站点编号+日期+唯一文件名作为访问地址',
-            cls: 'lable_1',
-			name: 'attAccessIntroduce'
-        },{
-            xtype: 'textfield',
-            fieldLabel: '视频的服务器路径前缀',
+            fieldLabel: '视频存放的服务器文件夹',
 			name: 'viewPrefix'
-        },{
-            xtype: 'label',
-            text: '上传程序获取此地址后，跟上站点编号+日期 作为服务器存储路径',
-            cls: 'lable_1',
-			name: 'viewIntroduce'
-        },{
-            xtype: 'textfield',
-            fieldLabel: '视频的访问地址前缀',
-			name: 'viewAccessPrefix'
-        },{
-            xtype: 'label',
-            text: '视频上传后，根据该地址+站点编号+日期+唯一文件名作为访问地址',
-            cls: 'lable_1',
-			name: 'viewAccessIntroduce'
         },{
             xtype: 'textfield',
             fieldLabel: '站点首页处理程序',

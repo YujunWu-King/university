@@ -1104,7 +1104,6 @@ Ext.define('KitchenSink.view.siteManage.siteManage.siteChildsController', {
 			gettableInfo = grid.getStore();
 			
 			var removeRecs = gettableInfo.getRemovedRecords();
-			console.log(removeRecs.length);
 			for(var i=0;i<removeRecs.length;i++){
 				if(removeJson == ""){
 					removeJson = Ext.JSON.encode(removeRecs[i].data);
@@ -1139,7 +1138,6 @@ Ext.define('KitchenSink.view.siteManage.siteManage.siteChildsController', {
 			}
 		}
 		
-		console.log(comParams);
 		//提交参数
 		var tzParams = '{"ComID":"TZ_GD_ZDGL_COM","PageID":"TZ_GD_ZDDY_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		var comView = this.getView();
