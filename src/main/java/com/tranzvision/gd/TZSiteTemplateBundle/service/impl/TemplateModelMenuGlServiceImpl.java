@@ -35,7 +35,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 	/* 添加站点菜单 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menuId", "");
 
@@ -52,11 +52,11 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 				String menulm = jacksonUtil.getString("menulm");
 				String menuisdel = jacksonUtil.getString("menuisdel");
 				String menuisedit = jacksonUtil.getString("menuisedit");
-				String menuxhStr = jacksonUtil.getString("menuxh");
-				int menuxh = 0;
-	            if(menuxhStr != null && !"".equals(menuxhStr.trim())){
-	            	menuxh = Integer.parseInt(menuxhStr);
-	            }
+				//String menuxhStr = jacksonUtil.getString("menuxh");
+				//int menuxh = 0;
+	            //if(menuxhStr != null && !"".equals(menuxhStr.trim())){
+	            	//menuxh = Integer.parseInt(menuxhStr);
+	            //}
 	            
 	            String menuId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEM_MENU_T", "TZ_MENU_ID"));;
 	            
@@ -69,7 +69,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 	            psTzSitemMenuT.setTzMenuTypeId(menutypeid);
 	            psTzSitemMenuT.setTzIsDel(menuisdel);
 	            psTzSitemMenuT.setTzIsEditor(menuisedit);
-	            psTzSitemMenuT.setTzMenuXh(menuxh);
+	           // psTzSitemMenuT.setTzMenuXh(menuxh);
 	            
 				int i = psTzSitemMenuTMapper.insert(psTzSitemMenuT);
 				if(i > 0){
@@ -80,6 +80,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -90,7 +91,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 	/* 修改站点菜单 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menuId", "");
 
@@ -108,11 +109,11 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 				String menulm = jacksonUtil.getString("menulm");
 				String menuisdel = jacksonUtil.getString("menuisdel");
 				String menuisedit = jacksonUtil.getString("menuisedit");
-				String menuxhStr = jacksonUtil.getString("menuxh");
-				int menuxh = 0;
-	            if(menuxhStr != null && !"".equals(menuxhStr.trim())){
-	            	menuxh = Integer.parseInt(menuxhStr);
-	            }
+				//String menuxhStr = jacksonUtil.getString("menuxh");
+				//int menuxh = 0;
+	            //if(menuxhStr != null && !"".equals(menuxhStr.trim())){
+	            //	menuxh = Integer.parseInt(menuxhStr);
+	            //}
 
 	            PsTzSitemMenuT psTzSitemMenuT = new PsTzSitemMenuT();
 	            psTzSitemMenuT.setTzSitemId(siteId);
@@ -123,7 +124,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 	            psTzSitemMenuT.setTzMenuTypeId(menutypeid);
 	            psTzSitemMenuT.setTzIsDel(menuisdel);
 	            psTzSitemMenuT.setTzIsEditor(menuisedit);
-	            psTzSitemMenuT.setTzMenuXh(menuxh);
+	            //psTzSitemMenuT.setTzMenuXh(menuxh);
 	            
 				int i = psTzSitemMenuTMapper.updateByPrimaryKey(psTzSitemMenuT);
 				if(i > 0){
@@ -148,7 +149,7 @@ public class TemplateModelMenuGlServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);

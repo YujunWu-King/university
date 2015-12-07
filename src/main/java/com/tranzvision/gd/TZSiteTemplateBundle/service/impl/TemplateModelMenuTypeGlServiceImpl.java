@@ -41,7 +41,8 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -61,7 +62,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 				}
 				String zzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_TYPE_STATE' AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+					
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						String menutypestate = (String) list.get(i).get("TZ_TYPE_STATE");
@@ -156,7 +157,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 	/* 修改菜单类型设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menutypeid", "");
 
@@ -224,7 +225,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -277,7 +278,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {

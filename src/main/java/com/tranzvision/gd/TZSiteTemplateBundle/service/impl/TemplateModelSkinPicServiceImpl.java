@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemImgTMapper;
+import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemImgT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -24,6 +27,10 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 	private JacksonUtil jacksonUtil;
 	@Autowired 
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private GetSeqNum getSeqNum;
+	@Autowired
+	private PsTzSitemImgTMapper psTzSitemImgTMapper;
 	
 	/* 查询站点皮肤图片列表 */
 	@Override
@@ -32,7 +39,8 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -53,7 +61,7 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 				}
 				
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						jsonMap.put("imgid", list.get(i).get("TZ_IMG_ID"));
@@ -74,4 +82,44 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
+	
+	//图标上传
+	@Override
+	public String tzGetJsonData(String comParams){
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("success", 0);
+		returnJsonMap.put("msg", "");
+		
+		try{
+			jacksonUtil.json2Map(comParams);
+			String siteId = jacksonUtil.getString("siteId");
+			String skinid = jacksonUtil.getString("skinId");
+			String name = jacksonUtil.getString("name");
+			String path = jacksonUtil.getString("path");
+			
+			String imageId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEM_IMG_T", "TZ_IMG_ID"));
+			PsTzSitemImgT psTzSitemImgT = new PsTzSitemImgT();
+			psTzSitemImgT.setTzSitemId(siteId);
+			psTzSitemImgT.setTzSkinId(skinid);
+			psTzSitemImgT.setTzImgId(imageId);
+			psTzSitemImgT.setTzImgName(name);
+			psTzSitemImgT.setTzImgXh(0);
+			psTzSitemImgT.setTzImgView(path);
+			
+			int i = psTzSitemImgTMapper.insert(psTzSitemImgT);
+			if(i > 0){
+				returnJsonMap.replace("success", 0);
+				returnJsonMap.replace("msg", "");
+			}else{
+				returnJsonMap.replace("success", 1);
+				returnJsonMap.replace("msg", "保存失败");
+			}
+		}catch(Exception e){
+			returnJsonMap.replace("success", 1);
+			returnJsonMap.replace("msg", e.toString());
+			e.printStackTrace();
+		}
+		return jacksonUtil.Map2json(returnJsonMap);
+	}
+	   
 }

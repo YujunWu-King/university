@@ -41,7 +41,8 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -60,7 +61,7 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 					list = jdbcTemplate.queryForList(sql,new Object[]{strSitemId});
 				}
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+					
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						jsonMap.put("siteId", strSitemId);
@@ -88,7 +89,7 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 	/* 添加区域类型设置 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areatypeid", "");
 
@@ -134,7 +135,7 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 	/* 修改区域类型设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areatypeid", "");
 
@@ -182,7 +183,7 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -228,7 +229,7 @@ public class TemplateModelAreaTypeGlServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {

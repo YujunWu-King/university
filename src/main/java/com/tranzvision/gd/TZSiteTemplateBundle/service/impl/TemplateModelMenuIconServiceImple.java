@@ -38,7 +38,8 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			
@@ -78,7 +79,7 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 				}
 				String zhzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
 				if(list != null){
-					ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+					
 					for(int i = 0; i<list.size();i++){
 						Map<String, Object> jsonMap = new HashMap<String, Object>();
 						String skinState = (String) list.get(i).get("TZ_SKIN_STATE");
@@ -110,7 +111,7 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -160,7 +161,7 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 	/* 修改菜单类型设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 
 		try {
 			int num = 0;
@@ -183,4 +184,44 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 		}
 		return strRet;
 	}
+	
+	@Override
+	public String tzGetJsonData(String comParams){
+			Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+			returnJsonMap.put("success", 0);
+			returnJsonMap.put("msg", "");
+			
+			try{
+				jacksonUtil.json2Map(comParams);
+				String siteId = jacksonUtil.getString("siteId");
+				String menutypeid = jacksonUtil.getString("menutypeid");
+				String skinId = jacksonUtil.getString("skinId");
+				String path = jacksonUtil.getString("path");
+				String imgtype = jacksonUtil.getString("imgtype");
+				
+				PsTzSitemCdpfT psTzSitemCdpfT = new PsTzSitemCdpfT();
+				psTzSitemCdpfT.setTzSitemId(siteId);
+				psTzSitemCdpfT.setTzMenuTypeId(menutypeid);
+				psTzSitemCdpfT.setTzSkinId(skinId);
+				if("TZ_TYPE_IMG".equals(imgtype)){
+					psTzSitemCdpfT.setTzTypeImg(path);
+				}else if("TZ_NOW_IMG".equals(imgtype)){
+					psTzSitemCdpfT.setTzNowImg(path);
+				}
+				int i = psTzSitemCdpfTMapper.updateByPrimaryKeySelective(psTzSitemCdpfT);
+
+				if(i > 0){
+					returnJsonMap.replace("success", 0);
+					returnJsonMap.replace("msg", "");
+				}else{
+					returnJsonMap.replace("success", 1);
+					returnJsonMap.replace("msg", "保存失败");
+				}
+			}catch(Exception e){
+				returnJsonMap.replace("success", 1);
+				returnJsonMap.replace("msg", e.toString());
+				e.printStackTrace();
+			}
+			return jacksonUtil.Map2json(returnJsonMap);
+		}
 }

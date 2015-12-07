@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemAreaTMapper;
 import com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemColuTMapper;
@@ -41,6 +44,10 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
 	private PsTzSitemDefnTMapper psTzSitemDefnTMapper;
 	@Autowired
 	private PsTzSitemSkinTMapper psTzSitemSkinTMapper;
@@ -56,7 +63,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	/* 新增站点模板信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
 
@@ -103,10 +110,10 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				psTzSitemDefnT.setTzRegisHandPro(siteRegistProgram);
 				psTzSitemDefnT.setTzIndexInitcode(indexInitCode);
 				psTzSitemDefnT.setTzLonginInitcode(loginInitCode);
-				/* TODO %USERID */
-				psTzSitemDefnT.setTzAddedOprid("TZ_7");
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				psTzSitemDefnT.setTzAddedOprid(oprid);
 				psTzSitemDefnT.setTzAddedDttm(new Date());
-				psTzSitemDefnT.setTzLastmantOprid("TZ_7");
+				psTzSitemDefnT.setTzLastmantOprid(oprid);
 				psTzSitemDefnT.setTzLastmantDttm(new Date());
 				int i = psTzSitemDefnTMapper.insert(psTzSitemDefnT);
 				if (i > 0) {
@@ -127,7 +134,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	/* 修改站点模板信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
 
@@ -174,8 +181,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				psTzSitemDefnT.setTzRegisHandPro(siteRegistProgram);
 				psTzSitemDefnT.setTzIndexInitcode(indexInitCode);
 				psTzSitemDefnT.setTzLonginInitcode(loginInitCode);
-				/* TODO %USERID */
-				psTzSitemDefnT.setTzLastmantOprid("TZ_7");
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				psTzSitemDefnT.setTzLastmantOprid(oprid);
 				psTzSitemDefnT.setTzLastmantDttm(new Date());
 				int i = psTzSitemDefnTMapper.updateByPrimaryKeySelective(psTzSitemDefnT);
 				if (i > 0) {
@@ -197,9 +204,9 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "{}");
+		returnJsonMap.put("formData", "");
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -374,7 +381,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root",arraylist );
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -391,7 +399,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -420,7 +428,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -437,7 +446,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -467,7 +476,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -484,7 +494,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -518,7 +528,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -535,7 +546,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -571,7 +582,8 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("root", arraylist);
 
 		try {
 			jacksonUtil.json2Map(comParams);
@@ -588,7 +600,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
-			ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+			
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();

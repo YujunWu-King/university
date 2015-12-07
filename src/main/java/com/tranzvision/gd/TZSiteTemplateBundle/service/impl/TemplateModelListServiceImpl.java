@@ -34,7 +34,8 @@ public class TemplateModelListServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("total", 0);
-		returnJsonMap.put("root", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
+		returnJsonMap.put("root", arraylist);
 		
 		try {
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEM_DEFN_T";
@@ -49,7 +50,6 @@ public class TemplateModelListServiceImpl extends FrameworkImpl{
 				list = jdbcTemplate.queryForList(sql);
 			}
 			if(list != null){
-				ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 				for(int i = 0; i<list.size();i++){
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEM_ID"));
