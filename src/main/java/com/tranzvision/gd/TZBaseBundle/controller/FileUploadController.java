@@ -267,7 +267,7 @@ public class FileUploadController {
 						mapFile.put("filename", filename);
 						mapFile.put("sysFileName", sysFileName);
 						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
-						mapFile.put("path", parentPath);
+						//mapFile.put("path", parentPath);
 						mapFile.put("accessPath", accessPath);
 						mapFile.put("imgWidth", imgWidth);
 						mapFile.put("imgHeight", imgHeight);
