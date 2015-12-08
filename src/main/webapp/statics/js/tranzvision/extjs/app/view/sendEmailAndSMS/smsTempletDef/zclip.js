@@ -18,7 +18,7 @@
 
             var settings = $.extend({
 
-                path: '/tranzvision/kitchensink/app/view/sendEmailAndSMS/smsTempletDef/ZeroClipboard.swf',
+                path: TzUniversityContextPath+'/statics/js/tranzvision/extjs/app/view/sendEmailAndSMS/smsTempletDef/ZeroClipboard.swf',
                 copy: null,
                 beforeCopy: null,
                 afterCopy: null,
@@ -156,7 +156,7 @@ var ZeroClipboard = {
     version: "1.0.7",
     clients: {},
     // registered upload clients on page, indexed by id
-    moviePath: '/tranzvision/kitchensink/app/view/sendEmailAndSMS/smsTempletDef/ZeroClipboard.swf',
+    moviePath: TzUniversityContextPath+'/statics/js/tranzvision/extjs/app/view/sendEmailAndSMS/smsTempletDef/ZeroClipboard.swf',
     // URL to movie
     nextId: 1,
     // ID of next movie

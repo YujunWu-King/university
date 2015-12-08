@@ -552,7 +552,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				break;
 			// 获取json格式的数据;
 			case EJSON:
-				strRet = obj.tzGetHtmlData(comParams);
+				strRet = obj.tzGetJsonData(comParams);
 				break;
 			// tzOther;
 			default:
