@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.GdObjectService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -19,6 +21,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class GdObjectServiceImpl implements GdObjectService {
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	/* 获取当前登录会话语言代码的方法 TODO ***/
@@ -29,7 +33,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 	@Override
 	/* 获取当前登录人归属机构的方法 TODO */
 	public String getLoginOrgID(HttpServletRequest request, HttpServletResponse response) {
-		return "Admin";
+		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		return orgId;
 	}
 	
 	@Override
@@ -210,7 +215,11 @@ public class GdObjectServiceImpl implements GdObjectService {
 	/* 获取当前登录人账号的方法 TODO */
 	public String getLoginAccount(HttpServletRequest request, HttpServletResponse response) {
 		// TODO;
-		return "Admin";
+		PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
+		if(psTzAqYhxxTbl != null){
+			return psTzAqYhxxTbl.getTzDlzhId();
+		}
+		return "";
 	}
 
 	/* 获取当前登录人对应的OPRID的方法TODO */
@@ -218,7 +227,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getOPRID(HttpServletRequest request) {
 		// TODO ;
 
-		return "TZ_7";
+		return tzLoginServiceImpl.getLoginedManagerOprid(request);
 	}
 	
 	
