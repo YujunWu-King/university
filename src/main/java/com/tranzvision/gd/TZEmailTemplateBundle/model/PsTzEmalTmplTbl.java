@@ -2,7 +2,7 @@ package com.tranzvision.gd.TZEmailTemplateBundle.model;
 
 import java.util.Date;
 
-public class PsTzEmalTmpTbl extends PsTzEmalTmpTblKey {
+public class PsTzEmalTmplTbl extends PsTzEmalTmplTblKey {
     private String tzTmplName;
 
     private String tzUseFlag;

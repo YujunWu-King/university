@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZEmailTemplateBundle.dao.PsTzEmalTmpTblMapper;
-import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzEmalTmpTbl;
-import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzEmalTmpTblKey;
+import com.tranzvision.gd.TZEmailTemplateBundle.dao.PsTzEmalTmplTblMapper;
+import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzEmalTmplTbl;
+import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzEmalTmplTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -36,7 +36,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
-	private PsTzEmalTmpTblMapper psTzEmalTmpTblMapper;
+	private PsTzEmalTmplTblMapper psTzEmalTmpTblMapper;
 	
 	/* 新增邮件模板设置信息 */
 	@Override
@@ -129,7 +129,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 							}else{
 								String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 								
-								PsTzEmalTmpTbl psTzEmalTmpTbl = new PsTzEmalTmpTbl();
+								PsTzEmalTmplTbl psTzEmalTmpTbl = new PsTzEmalTmplTbl();
 								psTzEmalTmpTbl.setTzJgId(str_restemporg);
 								psTzEmalTmpTbl.setTzTmplId(str_emlTmplId);
 								psTzEmalTmpTbl.setTzTmplName(str_emlTmplName);
@@ -251,7 +251,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 							}else{
 								String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 								
-								PsTzEmalTmpTbl psTzEmalTmpTbl = new PsTzEmalTmpTbl();
+								PsTzEmalTmplTbl psTzEmalTmpTbl = new PsTzEmalTmplTbl();
 								psTzEmalTmpTbl.setTzJgId(str_restemporg);
 								psTzEmalTmpTbl.setTzTmplId(str_emlTmplId);
 								psTzEmalTmpTbl.setTzTmplName(str_emlTmplName);
@@ -286,9 +286,8 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
-		mapRet.put("root", "[]");
-
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -338,7 +337,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 
 		try {
@@ -348,11 +347,11 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 				String strTmpId = jacksonUtil.getString("emltempid");
 				String strOrgName = jacksonUtil.getString("emltemporg");
 				
-				PsTzEmalTmpTblKey psTzEmalTmpTblKey = new PsTzEmalTmpTblKey();
+				PsTzEmalTmplTblKey psTzEmalTmpTblKey = new PsTzEmalTmplTblKey();
 				psTzEmalTmpTblKey.setTzJgId(strOrgName);
 				psTzEmalTmpTblKey.setTzTmplId(strTmpId);
 				
-				PsTzEmalTmpTbl psTzEmalTmpTbl = psTzEmalTmpTblMapper.selectByPrimaryKey(psTzEmalTmpTblKey);
+				PsTzEmalTmplTbl psTzEmalTmpTbl = psTzEmalTmpTblMapper.selectByPrimaryKey(psTzEmalTmpTblKey);
 				if(psTzEmalTmpTbl != null){
 					returnJsonMap.put("emltempid", strTmpId);
 					returnJsonMap.put("emltempname", psTzEmalTmpTbl.getTzTmplName());

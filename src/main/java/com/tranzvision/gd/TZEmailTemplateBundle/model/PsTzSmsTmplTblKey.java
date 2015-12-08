@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZEmailTemplateBundle.model;
 
-public class PsTzEmalTmpTblKey {
+public class PsTzSmsTmplTblKey {
     private String tzJgId;
 
     private String tzTmplId;
