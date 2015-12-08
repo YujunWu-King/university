@@ -29,6 +29,11 @@ public class GetSysHardCodeVal {
 	private String sysDefaultLanguage;
 
 	/**
+	 * 平台机构ID
+	 */
+	private String platformOrgID;
+
+	/**
 	 * 菜单树名称
 	 */
 	private String menuTreeName;
@@ -47,7 +52,7 @@ public class GetSysHardCodeVal {
 	 * 上传文件，禁止的后缀名
 	 */
 	private ArrayList<String> fileUploadDeniedExtensions;
-	
+
 	/**
 	 * 图片文件的后缀
 	 */
@@ -67,7 +72,7 @@ public class GetSysHardCodeVal {
 	 * 前台网站上传文件的路径
 	 */
 	private String websiteFileUploadPath;
-	
+
 	/**
 	 * 临时文件存储路径
 	 */
@@ -87,15 +92,16 @@ public class GetSysHardCodeVal {
 
 			sysDefaultLanguage = sysHardCodeValProps.getProperty("SysDefaultLanguage");
 
+			platformOrgID = sysHardCodeValProps.getProperty("PlatformOrgID");
+
 			menuTreeName = sysHardCodeValProps.getProperty("MenuTreeName");
 
 			dateFormat = sysHardCodeValProps.getProperty("DateFormate");
 
 			dateTimeFormat = sysHardCodeValProps.getProperty("DateTimeFormate");
 
-			imageSuffix = this
-					.stringToArrayList(sysHardCodeValProps.getProperty("ImageSuffix"));
-			
+			imageSuffix = this.stringToArrayList(sysHardCodeValProps.getProperty("ImageSuffix"));
+
 			fileUploadDeniedExtensions = this
 					.stringToArrayList(sysHardCodeValProps.getProperty("FileUploadDeniedExtensions"));
 
@@ -104,7 +110,7 @@ public class GetSysHardCodeVal {
 			orgFileUploadPath = sysHardCodeValProps.getProperty("OrgFileUploadPath");
 
 			websiteFileUploadPath = sysHardCodeValProps.getProperty("WebsiteFileUploadPath");
-			
+
 			tmpFileUploadPath = sysHardCodeValProps.getProperty("TmpFileUploadPath");
 
 		} catch (IOException ioe) {
@@ -129,6 +135,10 @@ public class GetSysHardCodeVal {
 		return sysDefaultLanguage;
 	}
 
+	public String getPlatformOrgID() {
+		return platformOrgID;
+	}
+
 	public String getMenuTreeName() {
 		return menuTreeName;
 	}
@@ -144,7 +154,7 @@ public class GetSysHardCodeVal {
 	public ArrayList<String> getImageSuffix() {
 		return imageSuffix;
 	}
-	
+
 	public ArrayList<String> getFileUploadDeniedExtensions() {
 		return fileUploadDeniedExtensions;
 	}
@@ -160,7 +170,7 @@ public class GetSysHardCodeVal {
 	public String getWebsiteFileUploadPath() {
 		return websiteFileUploadPath;
 	}
-	
+
 	public String getTmpFileUploadPath() {
 		return tmpFileUploadPath;
 	}

@@ -1,0 +1,10 @@
+select 
+	TZ_SITEI_ID,
+	TZ_SITEM_ID,
+	TZ_SKIN_ID,
+	TZ_SITE_LANG 
+from 
+	PS_TZ_SITEI_DEFN_T 
+where  
+	TZ_SITEI_ENABLE='Y' 
+	and TZ_JG_ID=?
