@@ -37,4 +37,6 @@ public interface Framework {
 	
 	/*strParams:提交过来的json字符串数组，和原PS tzGetHtmlData的strParams参数一致;*/
 	public String tzGetHtmlData(String strParams);
+	
+	public String tzGetJsonData(String strParams);
 }

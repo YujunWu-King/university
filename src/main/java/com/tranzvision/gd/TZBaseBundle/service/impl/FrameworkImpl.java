@@ -71,5 +71,10 @@ public class FrameworkImpl implements Framework {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public String tzGetJsonData(String strParams){
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
