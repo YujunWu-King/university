@@ -41,7 +41,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 	/* 新增邮件服务器参数设置信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("emailservid", "");
 		returnJsonMap.put("emailaddr", "");
@@ -151,7 +151,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 	/* 新增邮件服务器参数设置信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("emailservid", "");
 		returnJsonMap.put("emailaddr", "");
@@ -249,7 +249,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 
 		try {

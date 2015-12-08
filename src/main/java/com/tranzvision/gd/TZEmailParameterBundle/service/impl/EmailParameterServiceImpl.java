@@ -34,9 +34,8 @@ public class EmailParameterServiceImpl extends FrameworkImpl {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
-		mapRet.put("root", "[]");
-
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 
 		try {
 			// 排序字段如果没有不要赋值
@@ -82,7 +81,7 @@ public class EmailParameterServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
