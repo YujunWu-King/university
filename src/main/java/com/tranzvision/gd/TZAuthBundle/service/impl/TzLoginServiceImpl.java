@@ -16,9 +16,12 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAuthBundle.service.TzLoginService;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -45,10 +48,29 @@ public class TzLoginServiceImpl implements TzLoginService {
 	@Autowired
 	private GetCookieSessionProps getCookieSessionProps;
 
+	@Autowired
+	private TzCookie tzCookie;
+
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
+
+	@Autowired
+	private GdObjectServiceImpl gdObjectServiceImpl;
+
 	/**
 	 * Session存储的用户信息变量名称
 	 */
 	final static String managerSessionName = "loginManager";
+
+	/**
+	 * Session存储的用户当前登录语言
+	 */
+	final static String sysLanguage = "sysLanguage";
+
+	/**
+	 * Cookie存储的系统语言信息
+	 */
+	final static String cookieLang = "tzlang";
 
 	/*
 	 * (non-Javadoc)
@@ -111,7 +133,10 @@ public class TzLoginServiceImpl implements TzLoginService {
 			// 设置Session
 			TzSession tzSession = new TzSession(request);
 			tzSession.addSession(managerSessionName, loginManager);
-			
+
+			// 设置语言环境
+			this.switchSysLanguage(request, response, "");
+
 			errorMsg.add("success");
 			errorMsg.add("");
 			return true;
@@ -123,6 +148,50 @@ public class TzLoginServiceImpl implements TzLoginService {
 		}
 
 		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tranzvision.gd.TZAuthBundle.service.TzLoginService#switchSysLanguage(
+	 * javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse, java.lang.String)
+	 */
+	public void switchSysLanguage(HttpServletRequest request, HttpServletResponse response, String lanaguageCd) {
+
+		if (null == lanaguageCd || "".equals(lanaguageCd)) {
+
+			// 从cookie中获取用户上次使用的系统语言
+			lanaguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+			if (null == lanaguageCd || "".equals(lanaguageCd)) {
+				// 若cookie中没有或无效，则从系统记录表中获取用户上次登录的系统语言
+				lanaguageCd = gdObjectServiceImpl.getUserGxhLanguage(request, response);
+			}
+
+		}
+
+		// 校验语言的有效性
+		if (!gdObjectServiceImpl.isLanguageCdValid(lanaguageCd)) {
+			lanaguageCd = "";
+		}
+
+		// 若没有有效的语言，则取默认语言
+		if ("".equals(lanaguageCd)) {
+			lanaguageCd = getSysHardCodeVal.getSysDefaultLanguage();
+		}
+
+		// 设置session变量
+		TzSession tzSession = new TzSession(request);
+		tzSession.addSession(sysLanguage, lanaguageCd);
+
+		// 设置cookie变量
+		int cookieMaxAge = 3600 * 24 * 30; // cookie期限是30天
+		tzCookie.addCookie(response, cookieLang, lanaguageCd, cookieMaxAge);
+
+		// 更新系统记录
+		gdObjectServiceImpl.setUserGXHSXValue(request, response, "LANGUAGECD", lanaguageCd);
+
 	}
 
 	/*
@@ -172,6 +241,32 @@ public class TzLoginServiceImpl implements TzLoginService {
 			boolean debugging = getCookieSessionProps.getDebug();
 			String strRtn = "";
 			if (debugging) {
+				strRtn = "TZ_7";
+			}
+			return strRtn;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tranzvision.gd.TZAuthBundle.service.TzLoginService#
+	 * getLoginedManagerDlzhid(javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public String getLoginedManagerDlzhid(HttpServletRequest request) {
+		// 从Session中获取登录用户信息，返回orgid
+		TzSession tzSession = new TzSession(request);
+		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
+		if (null != psTzAqYhxxTbl) {
+			return psTzAqYhxxTbl.getTzDlzhId();
+		} else {
+			if (getCookieSessionProps == null) {
+				getCookieSessionProps = new GetCookieSessionProps();
+			}
+			boolean debugging = getCookieSessionProps.getDebug();
+			String strRtn = "";
+			if (debugging) {
 				strRtn = "Admin";
 			}
 			return strRtn;
@@ -199,6 +294,33 @@ public class TzLoginServiceImpl implements TzLoginService {
 			String strRtn = "";
 			if (debugging) {
 				strRtn = "Admin";
+			}
+			return strRtn;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.tranzvision.gd.TZAuthBundle.service.TzLoginService#getSysLanaguageCD(
+	 * javax.servlet.http.HttpServletRequest)
+	 */
+	@Override
+	public String getSysLanaguageCD(HttpServletRequest request) {
+		// 从Session中获取当前用户正在使用的系统语言
+		TzSession tzSession = new TzSession(request);
+		Object lang = tzSession.getSession(sysLanguage);
+		if (null != lang) {
+			return String.valueOf(lang);
+		} else {
+			if (getCookieSessionProps == null) {
+				getCookieSessionProps = new GetCookieSessionProps();
+			}
+			boolean debugging = getCookieSessionProps.getDebug();
+			String strRtn = "";
+			if (debugging) {
+				strRtn = getSysHardCodeVal.getSysDefaultLanguage();
 			}
 			return strRtn;
 		}

@@ -32,6 +32,15 @@ public interface TzLoginService {
 			String userPwd, String code, ArrayList<String> errorMsg);
 
 	/**
+	 * 切换系统语言
+	 * 
+	 * @param request
+	 * @param response
+	 * @param lanaguageCd
+	 */
+	public void switchSysLanguage(HttpServletRequest request, HttpServletResponse response, String lanaguageCd);
+
+	/**
 	 * 用户登出
 	 * 
 	 * @param request
@@ -46,7 +55,7 @@ public interface TzLoginService {
 	 * @return PsTzAqYhxxTbl
 	 */
 	public PsTzAqYhxxTbl getLoginedManagerInfo(HttpServletRequest request);
-	
+
 	/**
 	 * 获取登录用户的oprid
 	 * 
@@ -54,7 +63,15 @@ public interface TzLoginService {
 	 * @return String
 	 */
 	public String getLoginedManagerOprid(HttpServletRequest request);
-	
+
+	/**
+	 * 获取登录用户的登录账号
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public String getLoginedManagerDlzhid(HttpServletRequest request);
+
 	/**
 	 * 获取登录用户的机构id
 	 * 
@@ -62,6 +79,14 @@ public interface TzLoginService {
 	 * @return String
 	 */
 	public String getLoginedManagerOrgid(HttpServletRequest request);
+	
+	/**
+	 * 获取当前使用的系统语言
+	 * 
+	 * @param request
+	 * @return String
+	 */
+	public String getSysLanaguageCD(HttpServletRequest request);
 
 	/**
 	 * 检查登录状态
