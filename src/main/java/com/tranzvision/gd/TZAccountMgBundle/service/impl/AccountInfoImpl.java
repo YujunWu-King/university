@@ -654,16 +654,17 @@ public class AccountInfoImpl extends FrameworkImpl {
 					roleID = (String) list.get(i).get("ROLENAME");
 					roleDesc = (String) list.get(i).get("DESCR");
 					isRole = (String) list.get(i).get("ISROLE");
-					if ("Y".equals(isRole)) {
-						isRole = "true";
-					} else {
-						isRole = "false";
-					}
+					
 					
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("roleID", roleID);
 					mapList.put("roleName", roleDesc);
-					mapList.put("isRole", isRole);
+					if ("Y".equals(isRole)) {
+						mapList.put("isRole", true);
+					} else {
+						mapList.put("isRole", false);
+					}
+					
 					
 					listData.add(mapList);
 				}
