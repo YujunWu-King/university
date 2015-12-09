@@ -23,10 +23,21 @@ public class GdObjectServiceImpl implements GdObjectService {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
+	
+	
+	
 	@Override
 	/* 获取当前登录会话语言代码的方法 TODO ***/
 	public String getLoginLanguage(HttpServletRequest request, HttpServletResponse response) {
+		/**
+		String retLanguageCd = "";
+		String tmpExtLanguageCd = m_ExtLanguageCd;
+		if(tmpExtLanguageCd == null || "".equals(tmpExtLanguageCd)){
+			
+		}else{
+			retLanguageCd = m_ExtLanguageCd;
+		}
+		**/
 		return "ZHS";
 	}
 
@@ -226,8 +237,10 @@ public class GdObjectServiceImpl implements GdObjectService {
 	@Override
 	public String getOPRID(HttpServletRequest request) {
 		// TODO ;
-
-		return tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String oprid = "";
+		oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		return oprid;
 	}
 	
 	
