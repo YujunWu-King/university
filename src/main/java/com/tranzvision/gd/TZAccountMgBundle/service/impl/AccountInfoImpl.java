@@ -240,7 +240,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 					for (j = 0; j < jsonArray.size(); j++) {
 						Map<String, Object> roleCLASSJson = jsonArray.get(j);
 						String roleID = (String) roleCLASSJson.get("roleID");
-						boolean isRole = (boolean) roleCLASSJson.get("isRole");
+						boolean isRole = Boolean.parseBoolean(String.valueOf(roleCLASSJson.get("isRole")));
 						if (isRole) {
 							Psroleuser psroleuser = new Psroleuser();
 							psroleuser.setRoleuser(oprID);
@@ -431,7 +431,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 					for (j = 0; j < jsonArray.size(); j++) {
 						Map<String, Object> roleCLASSJson = jsonArray.get(j);
 						String roleID = (String) roleCLASSJson.get("roleID");
-						boolean isRole = (boolean) roleCLASSJson.get("isRole");
+						boolean isRole = Boolean.parseBoolean(String.valueOf(roleCLASSJson.get("isRole")));
 						if (isRole) {
 							String isRoleExist = "";
 							String isRoleExistSQL = "SELECT 'Y' FROM PSROLEUSER WHERE ROLEUSER=? AND ROLENAME=?";
