@@ -185,6 +185,9 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 			if ("REFRESHMENU".equals(operateType)) {
 				TreeManager treeManager = new TreeManager();
 				treeManager.setTreeName(menuTree);
+				treeManager.setSqlQuery(sqlQuery);
+				treeManager.setTZGDObject(tzSQLObject);
+				treeManager.setGetSysHardCodeVal(getSysHardCodeVal);
 				if (treeManager.openTree("")) {
 
 					treeManager.save();

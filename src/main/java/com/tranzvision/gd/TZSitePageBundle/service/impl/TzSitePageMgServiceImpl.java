@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -21,6 +22,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author SHIHUA
  * @since 2015-12-07
  */
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzSitePageMgServiceImpl")
 public class TzSitePageMgServiceImpl extends FrameworkImpl {
 
 	@Autowired

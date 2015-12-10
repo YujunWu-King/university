@@ -5,9 +5,7 @@ package com.tranzvision.gd.util.tree;
 
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -19,11 +17,11 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 public class TreeManager {
 
-	@Autowired
 	private SqlQuery sqlQuery;
 
-	@Autowired
 	private TZGDObject tzSQLObject;
+	
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	/**
 	 * 树名称
@@ -42,6 +40,18 @@ public class TreeManager {
 	 */
 	public void setTreeName(String treeName) {
 		this.treeName = treeName;
+	}
+
+	public void setSqlQuery(SqlQuery sqlQuery) {
+		this.sqlQuery = sqlQuery;
+	}
+
+	public void setTZGDObject(TZGDObject tzGDObject) {
+		this.tzSQLObject = tzGDObject;
+	}
+	
+	public void setGetSysHardCodeVal(GetSysHardCodeVal getSysHardCodeVal){
+		this.getSysHardCodeVal = getSysHardCodeVal;
 	}
 
 	/**
@@ -67,11 +77,16 @@ public class TreeManager {
 			Date dateNow = new Date();
 
 			TreeNode tmpRootNode = new TreeNode(setId, "", treeName, dateNow, tmpRootNodeId, "");
+			tmpRootNode.setSqlQuery(sqlQuery);
+			tmpRootNode.setTZGDObject(tzSQLObject);
+			tmpRootNode.setGetSysHardCodeVal(getSysHardCodeVal);
+			
 			// 加载树节点信息
 			tmpRootNode.load(true);
 
 			mRootNode = tmpRootNode;
 
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

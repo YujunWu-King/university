@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -27,6 +28,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-04
  */
+@Service("com.tranzvision.gd.TZSiteStyleBundle.service.impl.TzSiteStyleMgServiceImpl")
 public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 
 	@Autowired

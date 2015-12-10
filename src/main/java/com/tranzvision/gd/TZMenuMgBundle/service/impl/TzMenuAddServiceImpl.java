@@ -75,7 +75,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
-			//tzMenuTreeNodeServiceImpl.createTree(menuTree);
+			// tzMenuTreeNodeServiceImpl.createTree(menuTree);
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -234,7 +234,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 
 							} else {
 
-								int num2 = aryNodes.indexOf(parentenode); 
+								int num2 = aryNodes.indexOf(parentenode);
 
 								if (num2 >= 0) {
 
@@ -245,7 +245,9 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 								String newNodeName = nodeName.replaceAll(sourceOrg, menuOrg);
 								if (newNodeName.equals(nodeName)) {
 									newNodeName = menuOrg + "_" + nodeName;
-									newNodeName = newNodeName.substring(0, 19);
+									if (newNodeName.length() > 19) {
+										newNodeName = newNodeName.substring(0, 19);
+									}
 								}
 
 								// 查看该名字是否已经有了
@@ -257,7 +259,9 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 									boolean reCreateNewNode = true;
 									while (reCreateNewNode) {
 										newNodeName = menuOrg + "_" + Math.round(Math.random() * 899999999 + 100000000);
-										newNodeName = newNodeName.substring(0, 19);
+										if (newNodeName.length() > 19) {
+											newNodeName = newNodeName.substring(0, 19);
+										}
 										sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_NODE=?";
 										recExists = sqlQuery.queryForObject(sql, new Object[] { menuTree, newNodeName },
 												"String");
@@ -266,8 +270,9 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 										}
 									}
 								}
-								
-								boolean boolRst = tzMenuTreeNodeServiceImpl.createChildNode(menuTree, aryMenuOrgs.get(num2), newNodeName);
+
+								boolean boolRst = tzMenuTreeNodeServiceImpl.createChildNode(menuTree,
+										aryMenuOrgs.get(num2), newNodeName);
 
 								if (boolRst) {
 									PsTzAqCdjdTbl psTzAqCdjdTbl = new PsTzAqCdjdTbl();
@@ -313,45 +318,44 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-	
+
 	/**
 	 * 
 	 * @param strParams
 	 * @return
 	 */
 	@Override
-	public String tzGetHtmlContent(String strParams){
+	public String tzGetHtmlContent(String strParams) {
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-		
+
 		jacksonUtil.json2Map(strParams);
 		String menuOrg = jacksonUtil.getString("menuOrg");
 
 		String menuTree = getSysHardCodeVal.getMenuTreeName();
-	   
-	   //已经有该跟节点
+
+		// 已经有该跟节点
 		String sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_LEVEL_NUM=2 and UPPER(TREE_NODE)=UPPER(?)";
-		String recExist = sqlQuery.queryForObject(sql, new Object[]{menuTree, menuOrg}, "String");
-		if("Y".equals(recExist)){
-			
+		String recExist = sqlQuery.queryForObject(sql, new Object[] { menuTree, menuOrg }, "String");
+		if ("Y".equals(recExist)) {
+
 			mapRet.put("success", "false");
-			
-		}else{
-			
-			//判断是否已经被其他树的节点占用了
+
+		} else {
+
+			// 判断是否已经被其他树的节点占用了
 			sql = "select 'Y' from PSTREENODE where TREE_NAME=? and TREE_LEVEL_NUM<>2 and UPPER(TREE_NODE)=UPPER(?)";
-			recExist = sqlQuery.queryForObject(sql, new Object[]{menuTree, menuOrg}, "String");
-			
-			if("Y".equals(recExist)){
+			recExist = sqlQuery.queryForObject(sql, new Object[] { menuTree, menuOrg }, "String");
+
+			if ("Y".equals(recExist)) {
 				mapRet.put("success", "fail");
-			}else{
+			} else {
 				mapRet.put("success", "true");
 			}
-			
+
 		}
-		
+
 		return jacksonUtil.Map2json(mapRet);
 	}
-	
 
 }

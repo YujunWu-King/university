@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -30,6 +31,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author SHIHUA
  * @since 2015-12-08
  */
+@Service("com.tranzvision.gd.TZLeaguerDataItemBundle.service.impl.TzDropboxSetServiceImpl")
 public class TzDropboxSetServiceImpl extends FrameworkImpl {
 
 	@Autowired

@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -25,13 +23,10 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 public class TreeNode {
 
-	@Autowired
 	private SqlQuery sqlQuery;
 
-	@Autowired
 	private TZGDObject tzSQLObject;
 
-	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
 	private List<TreeNode> listChildNodes;
@@ -48,6 +43,18 @@ public class TreeNode {
 	 * 记录当前节点的属性在save方法被调用时是否需要执行实际保存动作的变量
 	 */
 	private boolean mNotSavedFlag;
+
+	public void setSqlQuery(SqlQuery sqlQuery) {
+		this.sqlQuery = sqlQuery;
+	}
+
+	public void setTZGDObject(TZGDObject tzSQLObject) {
+		this.tzSQLObject = tzSQLObject;
+	}
+
+	public void setGetSysHardCodeVal(GetSysHardCodeVal getSysHardCodeVal) {
+		this.getSysHardCodeVal = getSysHardCodeVal;
+	}
 
 	/**
 	 * 构造函数，初始化树节点参数值
@@ -81,6 +88,8 @@ public class TreeNode {
 
 		this.m_TotalChildNum = 0;
 
+		listChildNodes = new ArrayList<TreeNode>();
+
 	}
 
 	/**
@@ -93,11 +102,11 @@ public class TreeNode {
 
 		try {
 
-			if (refreshNodeNum == true) {
+			if (refreshNodeNum) {
 				this.refreshNodeNum(1, 2000000000, 0, true);
 			}
 
-			if (m_NotSavedFlag = true) {
+			if (m_NotSavedFlag) {
 				String sql = "SELECT 'X' FROM PSTREENODE WHERE ltrim(rtrim(SETID))=? AND TREE_NAME=? AND TREE_NODE=?";
 				String nodeExsitsFlag = sqlQuery.queryForObject(sql,
 						new Object[] { this.getSetId(), this.getTreeName(), this.getTreeNode() }, "String");
@@ -153,7 +162,7 @@ public class TreeNode {
 	 */
 	public boolean isNotSaved() {
 
-		if (mNotSavedFlag == true) {
+		if (mNotSavedFlag) {
 			return true;
 		}
 
@@ -225,6 +234,9 @@ public class TreeNode {
 
 				TreeNode childTreeNode = new TreeNode(this.getSetId(), this.getSetCntrlValue(), this.getTreeName(),
 						this.getEffdt(), strNodeId, this.getTreeNode());
+				childTreeNode.setSqlQuery(sqlQuery);
+				childTreeNode.setTZGDObject(tzSQLObject);
+				childTreeNode.setGetSysHardCodeVal(getSysHardCodeVal);
 
 				listChildNodes.add(childTreeNode);
 
@@ -436,12 +448,10 @@ public class TreeNode {
 	 */
 	private void refreshNodeNum(int nodeNum, int nodeNumEnd, int pNodeNum, boolean reCalculateFlag) throws Exception {
 		/*
-		int tmp = 0;
-		if (reCalculateFlag == true) {
-			tmp = this.getChildNodeCount();
-		}
-		*/
-		
+		 * int tmp = 0; if (reCalculateFlag == true) { tmp =
+		 * this.getChildNodeCount(); }
+		 */
+
 		int tmpTotalNodeNum = m_TotalChildNum + 1;
 
 		int m_TreeNodeNum = this.getTreeNodeNum();
@@ -474,7 +484,13 @@ public class TreeNode {
 				childTotal2 = childTotal2 + listChildNodes.get(i).getTotalChildNodeNum() + 1;
 			}
 
-			startNodeNum = (int) Math.floor((childTotal1 / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			double calAvgNodeNum = childTotal1 / tmpTotalNodeNum;
+			long calNodeNumEnd = nodeNumEnd - nodeNum;
+			double calNodeNum = calAvgNodeNum * calNodeNumEnd;
+			int calNodeNumFloor =  (int) Math.floor(calNodeNum);
+			
+			//startNodeNum = (int) Math.floor((childTotal1 / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			startNodeNum = calNodeNumFloor + nodeNum;
 			if (startNodeNum == nodeNum) {
 				startNodeNum = startNodeNum + 1;
 			}
@@ -482,7 +498,13 @@ public class TreeNode {
 				startNodeNum = startNodeNum - 1;
 			}
 
-			endNodeNum = (int) Math.floor(((1 + childTotal2) / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			calAvgNodeNum = (1 + childTotal2) / tmpTotalNodeNum;
+			calNodeNumEnd = nodeNumEnd - nodeNum;
+			calNodeNum = calAvgNodeNum * calNodeNumEnd;
+			calNodeNumFloor =  (int) Math.floor(calNodeNum);
+			
+			//endNodeNum = (int) Math.floor(((1 + childTotal2) / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			endNodeNum = calNodeNumFloor + nodeNum;
 			if (i < (listnum - 1)) {
 				endNodeNum = endNodeNum - 1;
 			}
@@ -546,7 +568,7 @@ public class TreeNode {
 	 ************************/
 	public String getSetId() {
 		if (mapNode != null) {
-			return mapNode.get("SETID").toString();
+			return mapNode.get("SETID") == null ? "" : mapNode.get("SETID").toString();
 		} else {
 			return null;
 		}
@@ -562,7 +584,7 @@ public class TreeNode {
 
 	public String getTreeName() {
 		if (mapNode != null) {
-			return mapNode.get("TREE_NAME").toString();
+			return mapNode.get("TREE_NAME") == null ? "" : mapNode.get("TREE_NAME").toString();
 		} else {
 			return null;
 		}
@@ -593,7 +615,7 @@ public class TreeNode {
 
 	public String getTreeNode() {
 		if (mapNode != null) {
-			return mapNode.get("TREE_NODE").toString();
+			return mapNode.get("TREE_NODE") == null ? "" : mapNode.get("TREE_NODE").toString();
 		} else {
 			return null;
 		}
@@ -601,14 +623,14 @@ public class TreeNode {
 
 	public String getTreeBranch() {
 		if (mapNode != null) {
-			return mapNode.get("TREE_BRANCH").toString();
+			return mapNode.get("TREE_BRANCH") == null ? "" : mapNode.get("TREE_BRANCH").toString();
 		} else {
 			return null;
 		}
 	}
 
 	public int getTreeNodeNumEnd() {
-		if (mapNode != null) {
+		if (mapNode != null && mapNode.get("TREE_NODE_NUM_END") != null) {
 			return Integer.parseInt(mapNode.get("TREE_NODE_NUM_END").toString());
 		} else {
 			return -999999999;
@@ -616,7 +638,7 @@ public class TreeNode {
 	}
 
 	public int getTreeLevelNum() {
-		if (mapNode != null) {
+		if (mapNode != null && mapNode.get("TREE_LEVEL_NUM") != null) {
 			return Integer.parseInt(mapNode.get("TREE_LEVEL_NUM").toString());
 		} else {
 			return -999999999;
@@ -625,14 +647,14 @@ public class TreeNode {
 
 	public String getTreeNodeType() {
 		if (mapNode != null) {
-			return mapNode.get("TREE_NODE_TYPE").toString();
+			return mapNode.get("TREE_NODE_TYPE") == null ? "" : mapNode.get("TREE_NODE_TYPE").toString();
 		} else {
 			return null;
 		}
 	}
 
 	public int getParentNodeNum() {
-		if (mapNode != null) {
+		if (mapNode != null && mapNode.get("PARENT_NODE_NUM") != null) {
 			return Integer.parseInt(mapNode.get("PARENT_NODE_NUM").toString());
 		} else {
 			return -999999999;
@@ -641,7 +663,7 @@ public class TreeNode {
 
 	public String getParentNodeName() {
 		if (mapNode != null) {
-			return mapNode.get("PARENT_NODE_NAME").toString();
+			return mapNode.get("PARENT_NODE_NAME") == null ? "" : mapNode.get("PARENT_NODE_NAME").toString();
 		} else {
 			return null;
 		}
@@ -649,7 +671,7 @@ public class TreeNode {
 
 	public String getOldTreeNodeNum() {
 		if (mapNode != null) {
-			return mapNode.get("OLD_TREE_NODE_NUM").toString();
+			return mapNode.get("OLD_TREE_NODE_NUM") == null ? "" : mapNode.get("OLD_TREE_NODE_NUM").toString();
 		} else {
 			return null;
 		}
@@ -657,7 +679,7 @@ public class TreeNode {
 
 	public String getNodecolImage() {
 		if (mapNode != null) {
-			return mapNode.get("NODECOL_IMAGE").toString();
+			return mapNode.get("NODECOL_IMAGE") == null ? "" : mapNode.get("NODECOL_IMAGE").toString();
 		} else {
 			return null;
 		}
@@ -665,7 +687,7 @@ public class TreeNode {
 
 	public String getNodeexpImage() {
 		if (mapNode != null) {
-			return mapNode.get("NODEEXP_IMAGE").toString();
+			return mapNode.get("NODEEXP_IMAGE") == null ? "" : mapNode.get("NODEEXP_IMAGE").toString();
 		} else {
 			return null;
 		}
@@ -673,121 +695,121 @@ public class TreeNode {
 
 	public void setSetId(String setid) {
 		if (mapNode.containsKey("SETID")) {
-			mapNode.put("SETID", setid);
-		} else {
 			mapNode.replace("SETID", setid);
+		} else {
+			mapNode.put("SETID", setid);
 		}
 	}
 
 	public void setSetCntrlValue(String setcntrlvalue) {
 		if (mapNode.containsKey("SETCNTRLVALUE")) {
-			mapNode.put("SETCNTRLVALUE", setcntrlvalue);
-		} else {
 			mapNode.replace("SETCNTRLVALUE", setcntrlvalue);
+		} else {
+			mapNode.put("SETCNTRLVALUE", setcntrlvalue);
 		}
 	}
 
 	public void setTreeName(String treename) {
 		if (mapNode.containsKey("TREE_NAME")) {
-			mapNode.put("TREE_NAME", treename);
-		} else {
 			mapNode.replace("TREE_NAME", treename);
+		} else {
+			mapNode.put("TREE_NAME", treename);
 		}
 	}
 
 	public void setEffdt(Date effdt) {
 		if (mapNode.containsKey("EFFDT")) {
-			mapNode.put("EFFDT", effdt);
-		} else {
 			mapNode.replace("EFFDT", effdt);
+		} else {
+			mapNode.put("EFFDT", effdt);
 		}
 	}
 
 	public void setTreeNodeNum(int treenodenum) {
 		if (mapNode.containsKey("TREE_NODE_NUM")) {
-			mapNode.put("TREE_NODE_NUM", treenodenum);
-		} else {
 			mapNode.replace("TREE_NODE_NUM", treenodenum);
+		} else {
+			mapNode.put("TREE_NODE_NUM", treenodenum);
 		}
 	}
 
 	public void setTreeNode(String treenode) {
 		if (mapNode.containsKey("TREE_NODE")) {
-			mapNode.put("TREE_NODE", treenode);
-		} else {
 			mapNode.replace("TREE_NODE", treenode);
+		} else {
+			mapNode.put("TREE_NODE", treenode);
 		}
 	}
 
 	public void setTreeBranch(String treebranch) {
 		if (mapNode.containsKey("TREE_BRANCH")) {
-			mapNode.put("TREE_BRANCH", treebranch);
-		} else {
 			mapNode.replace("TREE_BRANCH", treebranch);
+		} else {
+			mapNode.put("TREE_BRANCH", treebranch);
 		}
 	}
 
 	public void setTreeNodeNumEnd(int treenodenumend) {
 		if (mapNode.containsKey("TREE_NODE_NUM_END")) {
-			mapNode.put("TREE_NODE_NUM_END", treenodenumend);
-		} else {
 			mapNode.replace("TREE_NODE_NUM_END", treenodenumend);
+		} else {
+			mapNode.put("TREE_NODE_NUM_END", treenodenumend);
 		}
 	}
 
 	public void setTreeLevelNum(int treelevelnum) {
 		if (mapNode.containsKey("TREE_LEVEL_NUM")) {
-			mapNode.put("TREE_LEVEL_NUM", treelevelnum);
-		} else {
 			mapNode.replace("TREE_LEVEL_NUM", treelevelnum);
+		} else {
+			mapNode.put("TREE_LEVEL_NUM", treelevelnum);
 		}
 	}
 
 	public void setTreeNodeType(String treenodetype) {
 		if (mapNode.containsKey("TREE_NODE_TYPE")) {
-			mapNode.put("TREE_NODE_TYPE", treenodetype);
-		} else {
 			mapNode.replace("TREE_NODE_TYPE", treenodetype);
+		} else {
+			mapNode.put("TREE_NODE_TYPE", treenodetype);
 		}
 	}
 
 	public void setParentNodeNum(int parentnodenum) {
 		if (mapNode.containsKey("PARENT_NODE_NUM")) {
-			mapNode.put("PARENT_NODE_NUM", parentnodenum);
-		} else {
 			mapNode.replace("PARENT_NODE_NUM", parentnodenum);
+		} else {
+			mapNode.put("PARENT_NODE_NUM", parentnodenum);
 		}
 	}
 
 	public void setParentNodeName(String parentnodename) {
 		if (mapNode.containsKey("PARENT_NODE_NAME")) {
-			mapNode.put("PARENT_NODE_NAME", parentnodename);
-		} else {
 			mapNode.replace("PARENT_NODE_NAME", parentnodename);
+		} else {
+			mapNode.put("PARENT_NODE_NAME", parentnodename);
 		}
 	}
 
 	public void setOldTreeNodeNum(String oldtreenodenum) {
 		if (mapNode.containsKey("OLD_TREE_NODE_NUM")) {
-			mapNode.put("OLD_TREE_NODE_NUM", oldtreenodenum);
-		} else {
 			mapNode.replace("OLD_TREE_NODE_NUM", oldtreenodenum);
+		} else {
+			mapNode.put("OLD_TREE_NODE_NUM", oldtreenodenum);
 		}
 	}
 
 	public void setNodecolImage(String nodecolimage) {
 		if (mapNode.containsKey("NODECOL_IMAGE")) {
-			mapNode.put("NODECOL_IMAGE", nodecolimage);
-		} else {
 			mapNode.replace("NODECOL_IMAGE", nodecolimage);
+		} else {
+			mapNode.put("NODECOL_IMAGE", nodecolimage);
 		}
 	}
 
 	public void setNodeexpImage(String nodeexpimage) {
 		if (mapNode.containsKey("NODEEXP_IMAGE")) {
-			mapNode.put("NODEEXP_IMAGE", nodeexpimage);
-		} else {
 			mapNode.replace("NODEEXP_IMAGE", nodeexpimage);
+		} else {
+			mapNode.put("NODEEXP_IMAGE", nodeexpimage);
 		}
 	}
 
