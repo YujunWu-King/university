@@ -77,6 +77,11 @@ public class GetSysHardCodeVal {
 	 * 临时文件存储路径
 	 */
 	private String tmpFileUploadPath;
+	
+	/**
+	 * 前台网站css样式路径
+	 */
+	private String websiteCssPath;
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -112,6 +117,8 @@ public class GetSysHardCodeVal {
 			websiteFileUploadPath = sysHardCodeValProps.getProperty("WebsiteFileUploadPath");
 
 			tmpFileUploadPath = sysHardCodeValProps.getProperty("TmpFileUploadPath");
+			
+			websiteCssPath = sysHardCodeValProps.getProperty("WebsiteCssPath");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -174,5 +181,8 @@ public class GetSysHardCodeVal {
 	public String getTmpFileUploadPath() {
 		return tmpFileUploadPath;
 	}
-
+	
+	public String getWebsiteCssPath() {
+		return websiteCssPath;
+	}
 }
