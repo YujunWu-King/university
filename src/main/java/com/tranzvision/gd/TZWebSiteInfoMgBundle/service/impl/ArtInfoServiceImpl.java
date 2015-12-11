@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
+import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPicTMapper;
@@ -65,6 +66,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private GetSeqNum getSeqNum;
+	@Autowired
+	private ArtContentHtml artContentHtml;
 	@Autowired
 	private ResizeImageUtil resizeImageUtil;
 	@Autowired
@@ -145,12 +148,12 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 				String coluId = jacksonUtil.getString("coluId");
 
 				if ("".equals(strArtId)) {
-					String imageSQL = "select TZ_IMG_VIEW,TZ_ATTS_VIEW from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					String imageSQL = "select TZ_IMG_STOR,TZ_ATTS_STOR from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 					Map<String, Object> imagePathMap = jdbcTemplate.queryForMap(imageSQL, new Object[] { siteId });
 					map.replace("siteId", siteId);
 					map.replace("coluId", coluId);
-					map.replace("saveImageAccessUrl", imagePathMap.get("TZ_IMG_VIEW"));
-					map.replace("saveAttachAccessUrl", imagePathMap.get("TZ_ATTS_VIEW"));
+					map.replace("saveImageAccessUrl", imagePathMap.get("TZ_IMG_STOR"));
+					map.replace("saveAttachAccessUrl", imagePathMap.get("TZ_ATTS_STOR"));
 					returnJsonMap.put("formData", map);
 					strRet = jacksonUtil.Map2json(returnJsonMap);
 					return strRet;
@@ -182,8 +185,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 
 				// 站点表;
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
-				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgView();
-				String saveAttachAccessUrl = psTzSiteiDefnT.getTzAttsView();
+				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();
+				String saveAttachAccessUrl = psTzSiteiDefnT.getTzAttsStor();
 
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
@@ -258,7 +261,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 	/* 新增站点内容文章信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("artId", "");
 		returnJsonMap.put("siteId", "");
@@ -742,8 +745,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 			// 发布的内容id;
 			artId = this.instanceArtId;
 			
-			/** TODO 得到发布解析的模板内容 **/
-			String contentHtml = "TODO 得到发布解析的模板内容";
+			//解析的模板内容;
+			String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
 			
 			PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 			psTzLmNrGlTWithBLOBs.setTzSiteId(this.instanceSiteId);
@@ -797,17 +800,19 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 				if ("IMG".equals(attachmentType)) {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
-						String path1 = (String) dataMap.get("path");
+						String accessPath = (String) dataMap.get("accessPath");
+						//根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
 						String sysFileName1 = (String) dataMap.get("sysFileName");
 						
 						/*压缩图片 */
 						String separator = File.separator;
 						
 						String flg = "";
-						if((path1.lastIndexOf(separator) + 1) == path1.length()){
-							flg = resizeImageUtil.resize(path1 + sysFileName1, path1,  "MINI_" + sysFileName1, 100);
+						if((path.lastIndexOf(separator) + 1) == path.length()){
+							flg = resizeImageUtil.resize(path + sysFileName1, path,  "MINI_" + sysFileName1, 100);
 						}else{
-							flg = resizeImageUtil.resize(path1 + separator + sysFileName1, path1, "MINI_" + sysFileName1, 100);
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "MINI_" + sysFileName1, 100);
 						}
 						if("Y".equals(flg)){
 							minSysFile = "MINI_" + sysFileName1 ;
@@ -816,10 +821,10 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						}
 						
 						
-						if((path1.lastIndexOf(separator) + 1) == path1.length()){
-							flg = resizeImageUtil.resize(path1 + sysFileName1, path1, "NEW_" + sysFileName1, 1000);
+						if((path.lastIndexOf(separator) + 1) == path.length()){
+							flg = resizeImageUtil.resize(path + sysFileName1, path, "NEW_" + sysFileName1, 1000);
 						}else{
-							flg = resizeImageUtil.resize(path1 + separator + sysFileName1, path1, "NEW_" + sysFileName1, 1000);
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "NEW_" + sysFileName1, 1000);
 						}
 						if("Y".equals(flg)){
 							newSysFile = "NEW_" + sysFileName1 ;
@@ -830,8 +835,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						PsTzArtTitimgT psTzArtTitimgT = new PsTzArtTitimgT();
 						psTzArtTitimgT.setTzAttachsysfilena(sysFileName1);
 						psTzArtTitimgT.setTzAttachfileName((String) dataMap.get("filename"));
-						psTzArtTitimgT.setTzAttPUrl(path1);
-						psTzArtTitimgT.setTzAttAUrl((String) dataMap.get("accessPath"));
+						psTzArtTitimgT.setTzAttPUrl(path);
+						psTzArtTitimgT.setTzAttAUrl(accessPath);
 						psTzArtTitimgT.setTzYsAttachsysnam(newSysFile);
 						psTzArtTitimgT.setTzSlAttachsysnam(minSysFile);
 
@@ -842,11 +847,14 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 				if ("ATTACHMENT".equals(attachmentType)) {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
+						String accessPath = (String) dataMap.get("accessPath");
+						//根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
 						PsTzArtFjjT psTzArtFjjT = new PsTzArtFjjT();
 						psTzArtFjjT.setTzAttachsysfilena((String) dataMap.get("sysFileName"));
 						psTzArtFjjT.setTzAttachfileName((String) dataMap.get("filename"));
-						psTzArtFjjT.setTzAttPUrl((String) dataMap.get("path"));
-						psTzArtFjjT.setTzAttAUrl((String) dataMap.get("accessPath"));
+						psTzArtFjjT.setTzAttPUrl(path);
+						psTzArtFjjT.setTzAttAUrl(accessPath);
 						psTzArtFjjTMapper.insert(psTzArtFjjT);
 					}
 				}
@@ -855,7 +863,9 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 					//int order = jacksonUtil.getInt("order");
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
-						String path = (String) dataMap.get("path");
+						String accessPath = (String) dataMap.get("accessPath");
+						//根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
 						String sysFileName = (String) dataMap.get("sysFileName");
 
 						/*压缩图片 */
@@ -887,7 +897,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						psTzArtTpjT.setTzAttachsysfilena(sysFileName);
 						psTzArtTpjT.setTzAttachfileName((String) dataMap.get("filename"));
 						psTzArtTpjT.setTzAttPUrl(path);
-						psTzArtTpjT.setTzAttAUrl((String) dataMap.get("accessPath"));
+						psTzArtTpjT.setTzAttAUrl(accessPath);
 						psTzArtTpjT.setTzYsAttachsysnam(newSysFile);
 						psTzArtTpjT.setTzSlAttachsysnam(minSysFile);
 
@@ -898,6 +908,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 				desc = "参数不正确";
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			desc = e.toString();
 		}
 
@@ -997,7 +1008,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {

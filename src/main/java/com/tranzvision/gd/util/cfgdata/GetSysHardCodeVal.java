@@ -79,9 +79,19 @@ public class GetSysHardCodeVal {
 	private String tmpFileUploadPath;
 	
 	/**
-	 * 前台网站css样式路径
+	 * 前台网站css样式路径前缀
 	 */
 	private String websiteCssPath;
+	
+	/**
+	 * 前台网站图片路径前缀
+	 */
+	private String websiteImgPath;
+	
+	/**
+	 * 前台注册页面路径前缀
+	 */
+	private String websiteEnrollPath;
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -119,6 +129,10 @@ public class GetSysHardCodeVal {
 			tmpFileUploadPath = sysHardCodeValProps.getProperty("TmpFileUploadPath");
 			
 			websiteCssPath = sysHardCodeValProps.getProperty("WebsiteCssPath");
+			
+			websiteImgPath = sysHardCodeValProps.getProperty("WebsiteImgPath");
+			
+			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -184,5 +198,13 @@ public class GetSysHardCodeVal {
 	
 	public String getWebsiteCssPath() {
 		return websiteCssPath;
+	}
+	
+	public String getWebsiteImgPath() {
+		return websiteImgPath;
+	}
+
+	public String getWebsiteEnrollPath() {
+		return websiteEnrollPath;
 	}
 }

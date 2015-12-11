@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
@@ -43,6 +44,8 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private PsTzLmNrGlTMapper psTzLmNrGlTMapper;
+	@Autowired
+	private ArtContentHtml artContentHtml;
 
 
 	/* 查询内容列表 */
@@ -52,10 +55,9 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
-		mapRet.put("root", "[]");
-
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+		mapRet.put("root", listData);
+		
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_MAX_ZD_SEQ", "DESC" }, { "TZ_ART_NEWS_DT", "DESC" } };
@@ -104,9 +106,10 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("TransList", "[]");
+		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		returnJsonMap.put("TransList", arraylist);
 
 		// 获取登录的机构;
 		String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -114,7 +117,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 		String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
 		String siteId = jdbcTemplate.queryForObject(siteSQL, new Object[] { strJgid }, "String");
 
-		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+		
 		// 栏目;
 
 		String columnSQL = "SELECT TZ_COLU_ID,TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_CONT_TYPE<>'A' and  TZ_SITEI_ID=? and TZ_COLU_STATE='Y' ORDER BY TZ_COLU_ID ASC";
@@ -139,7 +142,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
@@ -187,7 +190,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	/* 新增站点内容文章信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 
 		try {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -269,9 +272,9 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
 							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
 							psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
-							/** TODO 得到发布解析的模板内容 **/
-							String contentHtml = "TODO 得到发布解析的模板内容";
-
+							//解析的模板内容;
+							String contentHtml = artContentHtml.getContentHtml(siteId, columnId, articleId);
+							
 							psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
 							if ("Y".equals(releaseOrUndo)) {
 								// 如果发布但没有发布时间，则赋值当前时间为发布时间;
@@ -285,9 +288,10 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 							int success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-							if (success <= 0)
+							if (success <= 0){
 								errMsg[0] = "1";
-							errMsg[1] = "保存数据出错，未找到对应的数据";
+								errMsg[1] = "保存数据出错，未找到对应的数据";
+							}
 						}
 					}
 				}else{

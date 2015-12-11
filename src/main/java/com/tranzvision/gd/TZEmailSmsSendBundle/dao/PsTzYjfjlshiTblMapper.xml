@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzYjfjlshiTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl" >
+    <id column="TZ_RWSL_ID" property="tzRwslId" jdbcType="VARCHAR" />
+    <id column="TZ_FJIAN_ID" property="tzFjianId" jdbcType="VARCHAR" />
+    <result column="TZ_FJIAN_MC" property="tzFjianMc" jdbcType="VARCHAR" />
+    <result column="TZ_FJIAN_LJ" property="tzFjianLj" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_RWSL_ID, TZ_FJIAN_ID, TZ_FJIAN_MC, TZ_FJIAN_LJ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_YJFJLSHI_TBL
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+      and TZ_FJIAN_ID = #{tzFjianId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTblKey" >
+    delete from PS_TZ_YJFJLSHI_TBL
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+      and TZ_FJIAN_ID = #{tzFjianId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl" >
+    insert into PS_TZ_YJFJLSHI_TBL (TZ_RWSL_ID, TZ_FJIAN_ID, TZ_FJIAN_MC, 
+      TZ_FJIAN_LJ)
+    values (#{tzRwslId,jdbcType=VARCHAR}, #{tzFjianId,jdbcType=VARCHAR}, #{tzFjianMc,jdbcType=VARCHAR}, 
+      #{tzFjianLj,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl" >
+    insert into PS_TZ_YJFJLSHI_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzRwslId != null" >
+        TZ_RWSL_ID,
+      </if>
+      <if test="tzFjianId != null" >
+        TZ_FJIAN_ID,
+      </if>
+      <if test="tzFjianMc != null" >
+        TZ_FJIAN_MC,
+      </if>
+      <if test="tzFjianLj != null" >
+        TZ_FJIAN_LJ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzRwslId != null" >
+        #{tzRwslId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFjianId != null" >
+        #{tzFjianId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFjianMc != null" >
+        #{tzFjianMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFjianLj != null" >
+        #{tzFjianLj,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl" >
+    update PS_TZ_YJFJLSHI_TBL
+    <set >
+      <if test="tzFjianMc != null" >
+        TZ_FJIAN_MC = #{tzFjianMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFjianLj != null" >
+        TZ_FJIAN_LJ = #{tzFjianLj,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+      and TZ_FJIAN_ID = #{tzFjianId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl" >
+    update PS_TZ_YJFJLSHI_TBL
+    set TZ_FJIAN_MC = #{tzFjianMc,jdbcType=VARCHAR},
+      TZ_FJIAN_LJ = #{tzFjianLj,jdbcType=VARCHAR}
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+      and TZ_FJIAN_ID = #{tzFjianId,jdbcType=VARCHAR}
+  </update>
+</mapper>

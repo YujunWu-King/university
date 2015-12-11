@@ -140,10 +140,18 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 						String websitePath = getSysHardCodeVal.getWebsiteFileUploadPath();
 						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
 						String dirPath = "";
-						if("".equals(skinstor)){
-							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" ;
+						if(skinstor == null || "".equals(skinstor)){
+							if(orgid != null && !"".equals(orgid)){
+								dirPath = websitePath + File.separator + orgid + File.separator + siteId;
+							}else{
+								dirPath = websitePath + File.separator + siteId;
+							}
 						}else{
-							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
+							if(orgid != null && !"".equals(orgid)){
+								dirPath = websitePath + File.separator + orgid + File.separator + siteId + File.separator + skinstor;
+							}else{
+								dirPath = websitePath + File.separator + siteId + File.separator + skinstor;
+							}
 						}
 						
 						String parentRealPath = request.getServletContext().getRealPath(dirPath);
@@ -153,7 +161,13 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 							dir.mkdirs();
 						}
 						
-						String filePath = dir + File.separator +  "style_" + orgid.toLowerCase() + ".css";
+						String filePath = "";
+						if(orgid != null && !"".equals(orgid)){
+							filePath = dir + File.separator +  "style_" + orgid.toLowerCase() + ".css";
+						}else{
+							filePath = dir + File.separator +  "style.css";
+						}
+						
 						File file = new File(filePath);
 						if (!file.exists()) {
 							file.createNewFile();
@@ -251,7 +265,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 					returnJsonMap.replace("siteId", siteId);
 					//生成样式文件;
 					try{
-						String websitePath = getSysHardCodeVal.getWebsiteFileUploadPath();
+						String websitePath = getSysHardCodeVal.getWebsiteCssPath();
 						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
 						String dirPath = "";
 						if("".equals(skinstor)){

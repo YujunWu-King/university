@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzMalCcAddTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" >
+    <id column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" extends="BaseResultMap" >
+    <result column="TZ_MAL_CC_ADDR" property="tzMalCcAddr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_EML_SMS_TASK_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MAL_CC_ADDR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MAL_CC_ADD_T
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_MAL_CC_ADD_T
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" >
+    insert into PS_TZ_MAL_CC_ADD_T (TZ_EML_SMS_TASK_ID, TZ_MAL_CC_ADDR)
+    values (#{tzEmlSmsTaskId,jdbcType=VARCHAR}, #{tzMalCcAddr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" >
+    insert into PS_TZ_MAL_CC_ADD_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID,
+      </if>
+      <if test="tzMalCcAddr != null" >
+        TZ_MAL_CC_ADDR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzEmlSmsTaskId != null" >
+        #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalCcAddr != null" >
+        #{tzMalCcAddr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" >
+    update PS_TZ_MAL_CC_ADD_T
+    <set >
+      <if test="tzMalCcAddr != null" >
+        TZ_MAL_CC_ADDR = #{tzMalCcAddr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT" >
+    update PS_TZ_MAL_CC_ADD_T
+    set TZ_MAL_CC_ADDR = #{tzMalCcAddr,jdbcType=LONGVARCHAR}
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+  </update>
+</mapper>

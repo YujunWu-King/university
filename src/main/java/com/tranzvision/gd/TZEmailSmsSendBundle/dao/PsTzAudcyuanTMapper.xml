@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzAudcyuanTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT" >
+    <id column="TZ_AUDIENCE_ID" property="tzAudienceId" jdbcType="VARCHAR" />
+    <id column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_XM" property="tzAudXm" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_CH" property="tzAudCh" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_SJ" property="tzZySj" jdbcType="VARCHAR" />
+    <result column="TZ_CY_SJ" property="tzCySj" jdbcType="VARCHAR" />
+    <result column="TZ_ZY_EMAIL" property="tzZyEmail" jdbcType="VARCHAR" />
+    <result column="TZ_CY_EMAIL" property="tzCyEmail" jdbcType="VARCHAR" />
+    <result column="TZ_WEIXIN" property="tzWeixin" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_XSXS_ID" property="tzXsxsId" jdbcType="VARCHAR" />
+    <result column="TZ_HUOD_ID" property="tzHuodId" jdbcType="VARCHAR" />
+    <result column="TZ_BMB_ID" property="tzBmbId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_AUDIENCE_ID, TZ_AUDCY_ID, TZ_AUD_XM, TZ_AUD_CH, TZ_ZY_SJ, TZ_CY_SJ, TZ_ZY_EMAIL, 
+    TZ_CY_EMAIL, TZ_WEIXIN, OPRID, TZ_XSXS_ID, TZ_HUOD_ID, TZ_BMB_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_AUDCYUAN_T
+    where TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanTKey" >
+    delete from PS_TZ_AUDCYUAN_T
+    where TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT" >
+    insert into PS_TZ_AUDCYUAN_T (TZ_AUDIENCE_ID, TZ_AUDCY_ID, TZ_AUD_XM, 
+      TZ_AUD_CH, TZ_ZY_SJ, TZ_CY_SJ, 
+      TZ_ZY_EMAIL, TZ_CY_EMAIL, TZ_WEIXIN, 
+      OPRID, TZ_XSXS_ID, TZ_HUOD_ID, 
+      TZ_BMB_ID)
+    values (#{tzAudienceId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR}, #{tzAudXm,jdbcType=VARCHAR}, 
+      #{tzAudCh,jdbcType=VARCHAR}, #{tzZySj,jdbcType=VARCHAR}, #{tzCySj,jdbcType=VARCHAR}, 
+      #{tzZyEmail,jdbcType=VARCHAR}, #{tzCyEmail,jdbcType=VARCHAR}, #{tzWeixin,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR}, #{tzXsxsId,jdbcType=VARCHAR}, #{tzHuodId,jdbcType=VARCHAR}, 
+      #{tzBmbId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT" >
+    insert into PS_TZ_AUDCYUAN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAudienceId != null" >
+        TZ_AUDIENCE_ID,
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
+      <if test="tzAudXm != null" >
+        TZ_AUD_XM,
+      </if>
+      <if test="tzAudCh != null" >
+        TZ_AUD_CH,
+      </if>
+      <if test="tzZySj != null" >
+        TZ_ZY_SJ,
+      </if>
+      <if test="tzCySj != null" >
+        TZ_CY_SJ,
+      </if>
+      <if test="tzZyEmail != null" >
+        TZ_ZY_EMAIL,
+      </if>
+      <if test="tzCyEmail != null" >
+        TZ_CY_EMAIL,
+      </if>
+      <if test="tzWeixin != null" >
+        TZ_WEIXIN,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzXsxsId != null" >
+        TZ_XSXS_ID,
+      </if>
+      <if test="tzHuodId != null" >
+        TZ_HUOD_ID,
+      </if>
+      <if test="tzBmbId != null" >
+        TZ_BMB_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAudienceId != null" >
+        #{tzAudienceId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudXm != null" >
+        #{tzAudXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudCh != null" >
+        #{tzAudCh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZySj != null" >
+        #{tzZySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCySj != null" >
+        #{tzCySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyEmail != null" >
+        #{tzZyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyEmail != null" >
+        #{tzCyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeixin != null" >
+        #{tzWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsxsId != null" >
+        #{tzXsxsId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHuodId != null" >
+        #{tzHuodId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBmbId != null" >
+        #{tzBmbId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT" >
+    update PS_TZ_AUDCYUAN_T
+    <set >
+      <if test="tzAudXm != null" >
+        TZ_AUD_XM = #{tzAudXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudCh != null" >
+        TZ_AUD_CH = #{tzAudCh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZySj != null" >
+        TZ_ZY_SJ = #{tzZySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCySj != null" >
+        TZ_CY_SJ = #{tzCySj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZyEmail != null" >
+        TZ_ZY_EMAIL = #{tzZyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyEmail != null" >
+        TZ_CY_EMAIL = #{tzCyEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeixin != null" >
+        TZ_WEIXIN = #{tzWeixin,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsxsId != null" >
+        TZ_XSXS_ID = #{tzXsxsId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHuodId != null" >
+        TZ_HUOD_ID = #{tzHuodId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBmbId != null" >
+        TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT" >
+    update PS_TZ_AUDCYUAN_T
+    set TZ_AUD_XM = #{tzAudXm,jdbcType=VARCHAR},
+      TZ_AUD_CH = #{tzAudCh,jdbcType=VARCHAR},
+      TZ_ZY_SJ = #{tzZySj,jdbcType=VARCHAR},
+      TZ_CY_SJ = #{tzCySj,jdbcType=VARCHAR},
+      TZ_ZY_EMAIL = #{tzZyEmail,jdbcType=VARCHAR},
+      TZ_CY_EMAIL = #{tzCyEmail,jdbcType=VARCHAR},
+      TZ_WEIXIN = #{tzWeixin,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_XSXS_ID = #{tzXsxsId,jdbcType=VARCHAR},
+      TZ_HUOD_ID = #{tzHuodId,jdbcType=VARCHAR},
+      TZ_BMB_ID = #{tzBmbId,jdbcType=VARCHAR}
+    where TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

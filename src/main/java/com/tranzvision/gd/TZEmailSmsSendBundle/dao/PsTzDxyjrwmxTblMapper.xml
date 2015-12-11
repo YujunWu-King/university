@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjrwmxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjrwmxTblKey" >
+    <id column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
+    <id column="TZ_AUDIENCE_ID" property="tzAudienceId" jdbcType="VARCHAR" />
+    <id column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjrwmxTblKey" >
+    delete from PS_TZ_DXYJRWMX_TBL
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+      and TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjrwmxTblKey" >
+    insert into PS_TZ_DXYJRWMX_TBL (TZ_EML_SMS_TASK_ID, TZ_AUDIENCE_ID, TZ_AUDCY_ID
+      )
+    values (#{tzEmlSmsTaskId,jdbcType=VARCHAR}, #{tzAudienceId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjrwmxTblKey" >
+    insert into PS_TZ_DXYJRWMX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID,
+      </if>
+      <if test="tzAudienceId != null" >
+        TZ_AUDIENCE_ID,
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzEmlSmsTaskId != null" >
+        #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudienceId != null" >
+        #{tzAudienceId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

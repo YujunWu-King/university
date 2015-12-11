@@ -37,7 +37,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData","{}");
+		returnJsonMap.put("formData","");
 
 		try {
 			//获取登录的机构;
@@ -78,7 +78,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 	/* 修改栏目设置 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
 		
 		try {
 			int num = 0;
@@ -114,7 +114,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
