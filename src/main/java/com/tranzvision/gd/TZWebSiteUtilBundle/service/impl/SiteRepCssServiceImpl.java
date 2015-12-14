@@ -218,13 +218,15 @@ public class SiteRepCssServiceImpl {
 		if(strConent == null || "".equals(strConent)){
 			return strConent;
 		}
-								
+		
 		int numCharstart = strConent.indexOf("<div id=\"sdkbar\">");
 		if(numCharstart >= 0){
 			int numCharend = strConent.indexOf("</div>",numCharstart);
+			//numCharend = strConent.indexOf("</div>",numCharend + 6);
 			if(numCharend > numCharstart){
-				String strCharsub = strConent.substring(numCharstart, numCharend + 6);
-				strConent = strConent.replaceAll(strCharsub, strSdkbar);
+				String startContent = strConent.substring(0,numCharstart);
+				String endContent = strConent.substring(numCharend + 6, strConent.length());
+				strConent = startContent + strSdkbar + endContent;
 			}
 		}
 								
