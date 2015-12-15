@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzInt implements TzSQLData
 {
-	private int value;
+	private Integer value;
 	
 	public TzInt()
 	{

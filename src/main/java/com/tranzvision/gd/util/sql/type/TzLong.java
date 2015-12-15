@@ -12,11 +12,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzLong implements TzSQLData
 {
-	private long value;
+	private Long value;
 	
 	public TzLong()
 	{
-		value = 0;
+		value = Long.valueOf(0);
 	}
 	
 	public TzLong(long v)
@@ -36,7 +36,7 @@ public class TzLong implements TzSQLData
 	
 	public void clearValue()
 	{
-		value = 0;
+		value = Long.valueOf(0);
 	}
 	
 	public long getValue()

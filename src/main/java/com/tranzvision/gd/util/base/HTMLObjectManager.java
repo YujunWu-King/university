@@ -35,9 +35,9 @@ public class HTMLObjectManager
 	
 	public HTMLObjectManager()
 	{
-		
 		Resource resource = new ClassPathResource("conf/cookieSession.properties");
-		try {
+		try
+		{
 			Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 			String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
 			basePath = System.getProperty(webAppRootKey) + "WEB-INF" + File.separator + "classes" + File.separator + "html" + File.separator;
@@ -45,13 +45,15 @@ public class HTMLObjectManager
 			htmlObjects = new HashMap<String,String>();
 			
 			init();
-
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		
+		catch(IOException ioe)
+		{
+			ioe.printStackTrace();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		} 
 	}
 	
 	private void init()
@@ -95,7 +97,7 @@ public class HTMLObjectManager
 			}
 			
 			if(file.isDirectory() == true)
-			{//递归读取子目录下的SQL对象
+			{//递归读取子目录下的HTML对象
 				readHTMLObjects(file,tmpPrefix);
 			}
 			else
@@ -155,7 +157,7 @@ public class HTMLObjectManager
 	
 	public String getHTMLText(String htmlName,boolean refreshFlag) throws TzSystemException
 	{
-		String sqlText = "";
+		String htmlText = "";
 		String tmpHTMLName = htmlName.substring(5);
 		
 		if(htmlObjects.containsKey(tmpHTMLName) == false || refreshFlag == true)
@@ -181,13 +183,13 @@ public class HTMLObjectManager
 		
 		if(htmlObjects.containsKey(tmpHTMLName) == true)
 		{
-			sqlText = htmlObjects.get(tmpHTMLName);
+			htmlText = htmlObjects.get(tmpHTMLName);
 		}
 		else
 		{
 			throw new TzSystemException("error: can't find the specified HTML object \"" + htmlName + "\".");
 		}
 		
-		return sqlText;
+		return htmlText;
 	}
 }

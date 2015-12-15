@@ -3,17 +3,30 @@
  */
 package com.tranzvision.gd.util.sql;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Properties;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+
 import com.tranzvision.gd.util.sql.SqlParams;
 import com.tranzvision.gd.util.sql.type.TzSQLData;
 import com.tranzvision.gd.util.sql.type.TzRecord;
 import com.tranzvision.gd.util.sql.type.TzSQLObject;
 import com.tranzvision.gd.util.sql.SQLObjectManager;
 import com.tranzvision.gd.util.base.HTMLObjectManager;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
 
 /**
  * @author LiGang
@@ -26,14 +39,90 @@ public class TZGDObject
 	private JdbcTemplate jdbcTemplate;
 	
 	@Autowired
+	private DataSourceTransactionManager transactionManager;
+	
+	@Autowired
 	private SQLObjectManager sqlObjectManager;
 	
 	@Autowired
 	private HTMLObjectManager htmlObjectManager;
 	
+	private String basePath = "";
+	
 	public TZGDObject()
 	{
 		;
+	}
+	
+	public String getWebAppRootPath()
+	{
+		if(basePath == null || basePath.trim().equals("") == true)
+		{
+			Resource resource = new ClassPathResource("conf/cookieSession.properties");
+			try
+			{
+				Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+				String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+				basePath = System.getProperty(webAppRootKey);
+			}
+			catch(IOException ioe)
+			{
+				basePath = "";
+				ioe.printStackTrace();
+			}
+			catch(Exception e)
+			{
+				basePath = "";
+				e.printStackTrace();
+			}
+		}
+		
+		return basePath;
+	}
+	
+	/**
+	 * 返回事务对象的方法
+	 */
+	public TransactionStatus getTransaction()
+	{
+		return transactionManager.getTransaction(new DefaultTransactionDefinition());
+	}
+	
+	/**
+	 * 回滚事务的方法
+	 */
+	public void rollback(TransactionStatus status)
+	{
+		transactionManager.rollback(status);
+	}
+	
+	/**
+	 * 提交事务的方法
+	 */
+	public void commit(TransactionStatus status)
+	{
+		transactionManager.commit(status);
+	}
+	
+	/**
+	 * 获取当前操作系统类型的方法
+	 */
+	public String getOSType()
+	{
+	    String l_OSType = "";
+	    
+	    String t_OSType = System.getProperty("os.name").toUpperCase().substring(0,3);
+	    
+	    if(t_OSType.equals("WIN") == true)
+	    {
+	    	l_OSType = "WINDOWS";
+	    }
+	    else
+	    {
+	    	l_OSType = "UNIX";
+	    }
+	    
+	    return l_OSType;
 	}
 	
 	/**
@@ -187,10 +276,7 @@ public class TZGDObject
 		}
 		
 		//获取结果集
-		if(rs.first() == true)
-		{
-			rec.setColList(rs);
-		}
+		rec.setColList(rs);
 	}
 	
 	/**
@@ -295,5 +381,50 @@ public class TZGDObject
 		}
 		
 		return htmlText;
+	}
+	
+	/**
+	 * 参数说明：
+	 * tblName				String类型，指定需要创建的表记录对象的名称。
+	 * 返回结果：
+	 * 返回结果TzRecord类型的指定表名称的实例对象。
+	 */
+	public TzRecord createRecord(String tblName) throws TzException
+	{
+		if(tblName == null || tblName.trim().equals("") == true)
+		{
+			throw new TzException("failed to create the record because the specified record name is null.");
+		}
+		
+		TzRecord tmpRecord = new TzRecord();
+		
+		try
+		{
+			Method method = tmpRecord.getClass().getDeclaredMethod("readyForCreateRecord", String.class,TZGDObject.class,JdbcTemplate.class);
+			method.setAccessible(true);
+			method.invoke(tmpRecord,tblName,this,this.jdbcTemplate);
+		}
+		catch(Exception e)
+		{
+			throw new TzException("an error occurred when try to create a record by name [" + tblName + "].\n" + e.toString());
+		}
+		
+		return tmpRecord;
+	}
+	
+	/**
+	 * 参数说明：
+	 * orgId				String类型，指定需要创建的Job进程归属的机构。
+	 * procName				String类型，指定需要创建的Job进程的类别。
+	 * 返回结果：
+	 * 返回结果BaseEngine类型的Job进程实例对象。
+	 */
+	public BaseEngine createEngineProcess(String orgId,String procName)
+	{
+		BaseEngine tmpEngineProcess = null;
+		
+		//todo
+		
+		return tmpEngineProcess;
 	}
 }

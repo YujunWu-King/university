@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzShort implements TzSQLData
 {
-	private short value;
+	private Short value;
 	
 	public TzShort()
 	{

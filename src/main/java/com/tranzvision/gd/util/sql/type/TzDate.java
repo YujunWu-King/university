@@ -3,7 +3,7 @@
  */
 package com.tranzvision.gd.util.sql.type;
 
-import java.sql.Date;
+import java.util.Date;
 import com.tranzvision.gd.util.sql.type.TzSQLData;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 

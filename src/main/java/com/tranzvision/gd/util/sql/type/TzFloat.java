@@ -12,11 +12,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzFloat implements TzSQLData
 {
-	private float value;
+	private Float value;
 	
 	public TzFloat()
 	{
-		value = 0;
+		value = Float.valueOf(0);
 	}
 	
 	public TzFloat(float v)
@@ -36,7 +36,7 @@ public class TzFloat implements TzSQLData
 	
 	public void clearValue()
 	{
-		value = 0;
+		value = Float.valueOf(0);
 	}
 	
 	public float getValue()

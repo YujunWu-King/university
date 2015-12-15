@@ -92,7 +92,7 @@ public class UserController {
 			TzSQLObject tmps6 = tzSQLObject.createSQLObject("select * from user");
 			while(tmps6.fetch(tmps4) == true)
 			{
-				tmpStr += "<br>NickName==>>" + tmps4.getTzString("Nickname").getValue() + " &nbsp;&nbsp;id==>>" + tmps4.getTzint("id").getValue() + " &nbsp;&nbsp;state==>>" + tmps4.getTzint("state").getValue();
+				tmpStr += "<br>NickName==>>" + tmps4.getTzString("Nickname").getValue() + " &nbsp;&nbsp;id==>>" + tmps4.getTzInt("id").getValue() + " &nbsp;&nbsp;state==>>" + tmps4.getTzInt("state").getValue();
 			}
 			
 			tmpStr += "<br>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";

@@ -24,3 +24,16 @@ log4j.appender.D.Append = true
 log4j.appender.D.Threshold = ERROR
 log4j.appender.D.layout = org.apache.log4j.PatternLayout
 log4j.appender.D.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] %m%n
+
+### Batch server monitor log information ###
+log4j.logger.BatchServerStart=INFO,stdout,BatchServerStart
+log4j.additivity.BatchServerStart=false
+
+### BatchServerStart ###
+log4j.appender.BatchServerStart=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.BatchServerStart.Encoding=UTF-8
+log4j.appender.BatchServerStart.File=${springmvc.root.dev}/WEB-INF/logs/BatchServer/bs_monitor.log
+log4j.appender.BatchServerStart.Append=true
+log4j.appender.BatchServerStart.Threshold=INFO
+log4j.appender.BatchServerStart.layout=org.apache.log4j.PatternLayout
+log4j.appender.BatchServerStart.layout.ConversionPattern=%-d{yyyy-MM-dd HH:mm:ss} [ %t:%r ] - [ %p ] %m%n

@@ -12,7 +12,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzByte implements TzSQLData
 {
-	private byte value;
+	private Byte value;
 	
 	public TzByte()
 	{

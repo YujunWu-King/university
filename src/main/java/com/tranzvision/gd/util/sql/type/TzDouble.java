@@ -12,11 +12,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class TzDouble implements TzSQLData
 {
-	private double value;
+	private Double value;
 	
 	public TzDouble()
 	{
-		value = 0;
+		value = Double.valueOf(0);
 	}
 	
 	public TzDouble(double v)
@@ -36,7 +36,7 @@ public class TzDouble implements TzSQLData
 	
 	public void clearValue()
 	{
-		value = 0;
+		value = Double.valueOf(0);
 	}
 	
 	public double getValue()

@@ -41,7 +41,8 @@ public class SQLObjectManager
 	public SQLObjectManager()
 	{
 		Resource resource = new ClassPathResource("conf/cookieSession.properties");
-		try {
+		try
+		{
 			Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 			String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
 			basePath = System.getProperty(webAppRootKey) + "WEB-INF" + File.separator + "classes" + File.separator + "sql" + File.separator;
@@ -49,14 +50,15 @@ public class SQLObjectManager
 			sqlObjects = new HashMap<String,String>();
 			
 			init();
-
-		} catch (IOException ioe) {
+		}
+		catch(IOException ioe)
+		{
 			ioe.printStackTrace();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	private void init()
