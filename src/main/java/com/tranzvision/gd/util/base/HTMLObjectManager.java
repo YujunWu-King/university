@@ -14,7 +14,9 @@ import java.io.Reader;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -32,6 +34,9 @@ public class HTMLObjectManager
 	private Lock lock;
 	
 	private Map<String,String> htmlObjects;
+	
+	@Autowired
+	private GetCookieSessionProps getCookieSessionProps;
 	
 	public HTMLObjectManager()
 	{
@@ -159,6 +164,11 @@ public class HTMLObjectManager
 	{
 		String htmlText = "";
 		String tmpHTMLName = htmlName.substring(5);
+		
+		//调试模式
+		if(getCookieSessionProps.getDebug()){
+			refreshFlag = true;
+		}
 		
 		if(htmlObjects.containsKey(tmpHTMLName) == false || refreshFlag == true)
 		{

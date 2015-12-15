@@ -65,7 +65,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 			}
 
-			strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzYtForm", false, strSiteId, strAreaId, strAreaZone,
+			strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzYtForm", strSiteId, strAreaId, strAreaZone,
 					strAreaType);
 
 		} catch (Exception e) {

@@ -644,7 +644,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", false, strSaveContent);
+				String strContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", strSaveContent);
 				
 				String strSavedContent = strContent;
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
@@ -705,14 +705,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", false, strSaveContent);
+				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", strSaveContent);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
 				strSavedContent = siteRepCssServiceImpl.repSiteid(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repJgid(strSavedContent, orgid);
 				strSavedContent = siteRepCssServiceImpl.repLang(strSavedContent, siteLang);
 				psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(strSavedContent);
 
-				String strPreviewContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", false, strSaveContent);
+				String strPreviewContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", strSaveContent);
 				strPreviewContent = siteRepCssServiceImpl.repWelcome(strPreviewContent, "");
 				strPreviewContent = siteRepCssServiceImpl.repSdkbar(strPreviewContent, "");
 				strPreviewContent = siteRepCssServiceImpl.repSiteid(strPreviewContent, strSiteId);
@@ -764,14 +764,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", false, strSaveContent);
+				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", strSaveContent);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
 				strSavedContent = siteRepCssServiceImpl.repSiteid(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repJgid(strSavedContent, orgid);
 				strSavedContent = siteRepCssServiceImpl.repLang(strSavedContent, siteLang);
 				psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(strSavedContent);
 
-				String strPreviewContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", false, strSaveContent);
+				String strPreviewContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", strSaveContent);
 				strPreviewContent = siteRepCssServiceImpl.repWelcome(strPreviewContent, "");
 				strPreviewContent = siteRepCssServiceImpl.repSdkbar(strPreviewContent, "");
 				strPreviewContent = siteRepCssServiceImpl.repSiteid(strPreviewContent, strSiteId);
@@ -823,7 +823,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", false, strReleaseContent);
+				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", strReleaseContent);
 				strReleasedContent = siteRepCssServiceImpl.repTitle(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repCss(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repWelcome(strReleasedContent, "");
@@ -878,7 +878,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", false, strReleaseContent);
+				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", strReleaseContent);
 				strReleasedContent = siteRepCssServiceImpl.repTitle(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repCss(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repWelcome(strReleasedContent, "");
@@ -933,7 +933,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", false, strReleaseContent);
+				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl", strReleaseContent);
 				strReleasedContent = siteRepCssServiceImpl.repTitle(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repCss(strReleasedContent, strSiteId);
 				strReleasedContent = siteRepCssServiceImpl.repWelcome(strReleasedContent, "");

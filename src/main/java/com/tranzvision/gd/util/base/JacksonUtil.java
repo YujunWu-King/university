@@ -2,6 +2,7 @@ package com.tranzvision.gd.util.base;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,6 @@ public class JacksonUtil {
 		try {
 			jMap = mapper.readValue(jsonStr, Map.class);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return jMap;
@@ -96,7 +96,23 @@ public class JacksonUtil {
 		try {
 			json = mapper.writeValueAsString(mapData);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return json;
+	}
+	
+	/**
+	 * 将ArrayList转换成String并返回
+	 * 
+	 * @param listData
+	 * @return String
+	 */
+	public String List2json(ArrayList<Map<String, Object>> listData) {
+		String json = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			json = mapper.writeValueAsString(listData);
+		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 		return json;
