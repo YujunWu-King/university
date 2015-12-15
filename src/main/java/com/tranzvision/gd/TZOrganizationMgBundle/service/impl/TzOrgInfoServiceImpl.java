@@ -129,7 +129,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				if ("ORG".equals(typeFlag)) {
 					// 机构账号信息;
 					// 机构编号;
-					String tzJgId = infoData.get("orgId").toString();
+					String tzJgId = infoData.get("orgId").toString().toUpperCase();
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
@@ -227,7 +227,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 				if ("ORG".equals(typeFlag)) {
 					// 机构编号;
-					String tzJgId = infoData.get("orgId").toString();
+					String tzJgId = infoData.get("orgId").toString().toUpperCase();
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
@@ -329,7 +329,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				String typeFlag = jacksonUtil.getString("typeFlag");
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
 
-				String tzJgId = infoData.get("orgId").toString();
+				String tzJgId = infoData.get("orgId").toString().toUpperCase();
 
 				if (null == tzJgId || "".equals(tzJgId)) {
 					continue;

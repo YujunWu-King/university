@@ -29,8 +29,7 @@ import com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpDefnTblKey;
 import com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpParaTblKey;
 import com.tranzvision.gd.TZTemplateBundle.model.PsTzTmpRrkfTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-//import com.tranzvision.gd.util.base.TZUtility;
-import com.tranzvision.gd.util.sequence.IdCreator;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -50,6 +49,9 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -275,13 +277,8 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 					boolean bolRst = false;
 					int loopTimes = 5;
 					while (!bolRst && loopTimes > 0) {
-
-						// TZUtility tzUtility = new TZUtility();
-						// int restempid =
-						// tzUtility.GetSeqNum("PS_TZ_TMP_DEFN_TBL",
-						// "TZ_YMB_ID");
-						IdCreator idCreator = new IdCreator();
-						restempid = idCreator.createId();
+						
+						restempid = String.valueOf(getSeqNum.getSeqNum("PS_TZ_TMP_DEFN_TBL", "TZ_YMB_ID"));
 
 						String sql = "select 'Y' from PS_TZ_TMP_DEFN_TBL where TZ_JG_ID=? and TZ_YMB_ID=?";
 						String recExists = sqlQuery.queryForObject(sql, new Object[] { restemporg, restempid },

@@ -18,7 +18,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.sequence.IdCreator;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -44,6 +44,9 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	/**
 	 * 站点信息查询
@@ -110,14 +113,9 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 				boolean bolRst = false;
 				int loopTimes = 5;
 				while (!bolRst && loopTimes > 0) {
-
-					// TZUtility tzUtility = new TZUtility();
-					// int restempid =
-					// tzUtility.GetSeqNum("PS_TZ_TMP_DEFN_TBL",
-					// "TZ_YMB_ID");
-					IdCreator idCreator = new IdCreator();
-					siteId = idCreator.createId();
-
+					 
+					siteId = String.valueOf(getSeqNum.getSeqNum("PS_TZ_SITEI_DEFN_T", "TZ_SITEI_ID"));
+					
 					String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 

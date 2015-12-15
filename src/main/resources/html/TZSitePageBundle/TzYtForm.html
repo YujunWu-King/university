@@ -1,0 +1,331 @@
+{
+    "success": true,
+	"areaId":"%bind(:2)",
+    "items": {
+        "container": [
+            {
+                "xtype": "container",
+                "items": [
+					{
+				        xtype: "colorfield",
+				        fieldLabel: "背景色",
+						id: "headbgcolor",
+						name: "headbgcolor",
+						bind: "{color}",
+				        listeners: {
+				            change: function(thisField, newValue, oldValue, eOpts){
+								if(typeof(oldValue)!="undefined"){
+									Ext.get("headarea").setStyle({
+										"background-color": "#"+newValue
+									});
+
+									editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);
+									editPanel.child().child().getComponent('headimg').setStyle("backgroundColor", "#"+newValue);
+								}
+							},
+							beforerender: function(thisField, eOpts){
+								var defaultColor = Ext.get("headarea").getStyle("background-color");
+								defaultColor = defaultColor.substr(4, (defaultColor.length - 5));
+								var defaultColorAry = defaultColor.split(",");
+								var headbgcolorR = parseInt(defaultColorAry[0]);
+								var headbgcolorG = parseInt(defaultColorAry[1]);
+								var headbgcolorB = parseInt(defaultColorAry[2]);
+								headbgcolorR = FindData(headbgcolorR,"L");
+								headbgcolorG = FindData(headbgcolorG,"L");
+								headbgcolorB = FindData(headbgcolorB,"L");
+								defaultColor = headbgcolorR + headbgcolorG + headbgcolorB;
+								thisField.value = defaultColor;
+								thisField.rawValue = defaultColor;
+								try{
+									editPanel.child().child().getComponent('headimg').setStyle("backgroundColor", "#"+defaultColor);
+								}catch(e){};
+							}
+				        }
+				    },{
+				        xtype: "colorselector",
+				        hidden: true,
+				        flex: 1,
+				        bind: {
+				            value: "{color}",
+				            visible: "{full}"
+				        }
+				    },
+                   {
+                        "xtype": "old_textfield",
+                        "fieldLabel": "背景色",
+                        "name": "headbgcolor",
+                        "fieldStyle": "background-color: #FFFFFF"
+                    },
+                    {
+                        "xtype": "old_colorpicker",
+                        "style": {
+                            marginLeft: "100px"
+                        },
+                        "listeners": {
+                            select: function(picker,
+                            selColor){
+                                editPanel.getForm().findField('headbgcolor').setValue(selColor);
+                                editPanel.getForm().findField('headbgcolor').setFieldStyle({
+                                    "background-color": "#"+selColor
+                                });
+								Ext.get("headarea").setStyle({
+                                    "background-color": "#"+headbgcolor
+                                });
+
+								var headbgcolor = editPanel.getForm().findField('headbgcolor').getValue();
+								var headbgcolorR = headbgcolor.substr(0,2);
+								var headbgcolorG = headbgcolor.substr(2,2);
+								var headbgcolorB =headbgcolor.substr(4,2);
+								 
+								headbgcolorR = FindData(headbgcolorR,"R");
+								headbgcolorG = FindData(headbgcolorG,"R");
+								headbgcolorB = FindData(headbgcolorB,"R");
+								
+								editPanel.getForm().findField('headbgcolorR').setValue(headbgcolorR);
+								editPanel.getForm().findField('headbgcolorG').setValue(headbgcolorG);
+								editPanel.getForm().findField('headbgcolorB').setValue(headbgcolorB);
+								editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+								var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+								editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+								var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+								var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+								editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+								var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+								editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+								var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+								editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+								var pagetype = Ext.get("pagetype").getValue();
+								editPanel.getForm().findField('pagetype').setValue(pagetype);
+                            }
+                        }
+                    },
+                    {
+                        "xtype": "old_fieldcontainer",
+                        "items": [
+                            {
+                                "xtype": "numberfield",
+								 labelStyle : "text-align:center;width:80;",
+								"name": "headbgcolorR",
+								"fieldLabel": "R",
+								flex:1,
+								"minValue": 0,
+								"maxValue": 255,
+								"listeners":{change:function(thisField,newValue, oldValue, eOpts){
+									var headbgcolor = editPanel.getForm().findField('headbgcolor').getValue();
+									var headbgcolorR = headbgcolor.substr(0,2);
+									var headbgcolorG = headbgcolor.substr(2,2);
+									var headbgcolorB =headbgcolor.substr(4,2);
+									headbgcolorR = FindData(newValue,"L");
+									headbgcolor = headbgcolorR+""+headbgcolorG+""+headbgcolorB;
+									editPanel.getForm().findField('headbgcolor').setValue(headbgcolor);
+									editPanel.getForm().findField('headbgcolor').setFieldStyle({
+                                    	"background-color": "#"+headbgcolor
+	                                });
+	                                Ext.get("headarea").setStyle({
+	                                    "background-color": "#"+headbgcolor
+	                                });
+									editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);
+								}}
+
+                            },
+							{
+                                xtype: "splitter"
+                            },
+                            {
+                                xtype: "numberfield",
+								 labelStyle : "text-align:center;width:80;",
+								"name": "headbgcolorG",
+								"fieldLabel": "G",
+								flex:1,
+								"minValue": 0,
+								"maxValue": 255,
+								"listeners":{change:function(thisField,newValue, oldValue, eOpts){
+									var headbgcolor = editPanel.getForm().findField('headbgcolor').getValue();
+									var headbgcolorR = headbgcolor.substr(0,2);
+									var headbgcolorG = headbgcolor.substr(2,2);
+									var headbgcolorB =headbgcolor.substr(4,2);
+									headbgcolorG = FindData(newValue,"L");
+									headbgcolor = headbgcolorR+""+headbgcolorG+""+headbgcolorB;
+									editPanel.getForm().findField('headbgcolor').setValue(headbgcolor);
+									editPanel.getForm().findField('headbgcolor').setFieldStyle({
+	                                    "background-color": "#"+headbgcolor
+    	                            });
+    	                            Ext.get("headarea").setStyle({
+        	                            "background-color": "#"+headbgcolor
+            	                    });
+									editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);
+								}}
+                            },
+                            {
+                                xtype: "splitter"
+                            },
+                            {
+                                xtype: "numberfield",
+								labelStyle: "text-align:center;width:80;",
+								"name": "headbgcolorB",
+							    "fieldLabel": "B",
+								flex:1,
+								"minValue": 0,
+								"maxValue": 255,
+								"listeners":{change:function(thisField,newValue, oldValue, eOpts){
+									var headbgcolor = editPanel.getForm().findField('headbgcolor').getValue();
+									var headbgcolorR = headbgcolor.substr(0,2);
+									var headbgcolorG = headbgcolor.substr(2,2);
+									var headbgcolorB =headbgcolor.substr(4,2);
+									headbgcolorB = FindData(newValue,"L");
+									headbgcolor = headbgcolorR+""+headbgcolorG+""+headbgcolorB;
+									editPanel.getForm().findField('headbgcolor').setValue(headbgcolor);
+									editPanel.getForm().findField('headbgcolor').setFieldStyle({
+	                                    "background-color": "#"+headbgcolor
+    	                            });
+    	                            Ext.get("headarea").setStyle({
+        	                            "background-color": "#"+headbgcolor
+            	                    });
+									editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);
+								}}
+                            }
+                        ]
+                    }
+					,{
+					         "xtype": "filefield",
+				 		 	 "name": "headfile",
+				 			 "fieldLabel": "LOGO",
+				 			 "buttonText": "选择",
+							 "listeners":{
+									change:function(thisField, value, eOpts ){
+										if(value.substring(value.lastIndexOf(".")+1).toLowerCase()=="jpg"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="png"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="gif"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="jpeg"){
+											editPanel.getForm().submit({
+																		url:"/UpdServlet?filePath=/linkfile/FileUpLoad/imges",
+																		waitMsg:"图片正在上传，请稍后......",
+																		success:function(form,action){ 
+																			var message = action.result.msg;
+																			editPanel.getForm().findField('headfile').setRawValue(value); 
+																			editPanel.child().child().getComponent('headimg').setSrc(message.accessPath+"/"+message.sysFileName);
+																			var imgH =Ext.get("headarea").child("div").child("div").child("a").child("img").getHeight(); 
+																			var imgW =parseInt(message.imgHeight)*parseInt(message.imgWidth)/imgH;  
+																			Ext.get("headarea").child("div").child("div").child("a").child("img").set({"src":message.accessPath+"/"+message.sysFileName}); 
+																			editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
+																			var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+																			editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+																			var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+																			var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+																			editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+																			var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+																			editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+																			var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+																			editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+																			var pagetype = Ext.get("pagetype").getValue();
+																			editPanel.getForm().findField('pagetype').setValue(pagetype);
+																		},
+																		failure:function(){}
+												});
+										}else{
+										}
+									}
+								}
+							},
+							{
+								xtype: "displayfield",
+								fieldLabel: "图片尺寸",
+								value:"&nbsp;480px * 110px"
+							},
+							{
+								xtype: "image",
+								maxHeight: 110,
+								maxWidth: 480,
+								itemId: "headimg",
+								style: {
+						            backgroundColor: "#ffffff",
+									marginLeft: "120px"
+						        },
+								"listeners":{beforerender: function(thisField, eOpts){
+										var defaultHeadImg = Ext.get("headarea").child("div").child("div").child("a").child("img").getAttribute("src");
+										thisField.src = defaultHeadImg;
+									}
+								}
+							},
+							{
+							 "xtype": "box","itemId":"old_headimg","width": 100,"height": 100,"src":""
+							},
+							{
+							 "xtype": "hiddenfield","name": "siteId","value":"%bind(:1)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaId","value":"%bind(:2)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaZone","value":"%bind(:3)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaType","value":"%bind(:4)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "headCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "bodyCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedplugincss"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginjs"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginbar"
+							},
+							{
+							 "xtype": "hiddenfield","name": "pagetype"
+							}
+                ]
+            }
+        ]
+    }
+}

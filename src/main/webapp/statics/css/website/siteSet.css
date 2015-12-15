@@ -11,7 +11,7 @@
     width: 400px;
 }
 .thumb-list dd.over {
-    background: url("../images/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
+    background: url("../../images/website/common/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
 }
 .thumb-list dd .thumb {
     float: left;
@@ -52,7 +52,7 @@
     padding-top: 6px;
 }
 .thumb-list h2 div {
-    background: url("../images/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
+    background: url("../../images/website/common/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
     color: #3764a0;
     padding: 4px 4px 4px 17px;
 }
@@ -77,7 +77,7 @@
     width: 200px;
 }
 .thumb-list2 dd.over {
-    background: url("../images/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
+    background: url("../../images/website/common/sample-over.gif") no-repeat scroll 0 0 #f5fde3;
 }
 .thumb-list2 dd .thumb {
     float: left;
@@ -118,7 +118,7 @@
     padding-top: 6px;
 }
 .thumb-list2 h2 div {
-    background: url("../images/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
+    background: url("../../images/website/common/group-expand-sprite.gif") no-repeat scroll 2px -45px transparent;
     color: #3764a0;
     padding: 4px 4px 4px 17px;
 }
@@ -180,7 +180,7 @@
 	font-size:14px;
 }
 .thumb-list3 dd .currPic{
-	background:url("../images/curr.png") no-repeat;
+	background:url("../../images/website/common/curr.png") no-repeat;
 	display: inline-block;
 	width: 12px;
 	height: 10px;
@@ -241,8 +241,8 @@
 	cursor:pointer;
 }
 .thumb-list3 .skinImg .btn .selBtn{
-	background:url("../images/select.png") no-repeat;
+	background:url("../../images/website/common/select.png") no-repeat;
 }
 .thumb-list3 .skinImg .btn .preVBtn{
-	background:url("../images/preview.png") no-repeat;
+	background:url("../../images/website/common/preview.png") no-repeat;
 }

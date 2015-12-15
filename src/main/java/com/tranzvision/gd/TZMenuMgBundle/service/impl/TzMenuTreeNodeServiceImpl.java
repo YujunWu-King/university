@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZMenuMgBundle.dao.PsTreeNodeMapper;
 import com.tranzvision.gd.TZMenuMgBundle.model.PsTreeNode;
 import com.tranzvision.gd.TZMenuMgBundle.service.TzMenuTreeNodeService;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -42,6 +42,9 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	private String createDt = "2015-11-11";
 
@@ -312,9 +315,8 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Override
 	@Transactional
 	public void changeNode(String treeName, String oldNode, String preNode, String patentNode) {
-
-		TZUtility tzUtility = new TZUtility();
-		int seqNum = tzUtility.GetSeqNum("TZ_TREENODE_TMP", "TZ_SEQNUM");
+		
+		int seqNum = getSeqNum.getSeqNum("TZ_TREENODE_TMP", "TZ_SEQNUM");
 
 		try {
 

@@ -1,8 +1,8 @@
 select 
-	ifnull(PT1.TZ_SITEM_ID,''),
-	ifnull(PT2.TZ_SKIN_ID,''),
-	ifnull(PT1.TZ_JGBH,''),
-	ifnull(PT2.TZ_SKIN_NAME,''),
+	ifnull(PT1.TZ_SITEM_ID,'') TZ_SITEM_ID,
+	ifnull(PT2.TZ_SKIN_ID,'') TZ_SKIN_ID,
+	ifnull(PT1.TZ_JGBH,'') TZ_JGBH,
+	ifnull(PT2.TZ_SKIN_NAME,'') TZ_SKIN_NAME,
 	ifnull(
 		( 
 			select 

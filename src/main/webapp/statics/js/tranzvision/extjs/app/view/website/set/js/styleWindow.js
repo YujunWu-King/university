@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.website.set.js.styleWindow',{
 										'<tpl if="this.isCurrSkinType(values)"><span id="{siteId}_{skinId}" class="current display"></span></tpl>',
 										'<tpl if="this.isNotCurrSkinType(values)"><span id="{siteId}_{skinId}" class="current hidden"></span></tpl>',
 									'</div>',
-									'<img src="{skinImg}"/>',
+									'<img src="'+ TzUniversityContextPath +'{skinImg}"/>',
 									'<a class="style-preview" href="javascript:void(0);" onclick="onPreview({siteId},{skinId})">预览</a>',
                                 '</dd>',
                             '</tpl>',

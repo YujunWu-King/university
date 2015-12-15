@@ -106,7 +106,7 @@ Ext.define('KitchenSink.view.website.set.js.siteSkinStylePanel',{
 										//'<tpl if="this.isNotCurrSkinType(values)"><span id="{siteId}_{skinId}" class="current hidden"></span></tpl>',
 									'</div>',
 									'<div class="skinImg">',
-										'<img src="{skinImg}"/>',
+										'<img src="'+ TzUniversityContextPath  +'{skinImg}"/>',
 										'<tpl if="this.isNotCurrSkinType(values)">',
 											'<div class="mask" onmouseover="showBtn(this);" onmouseout="hiddenBtn(this);">',
 												'<div class="btn">',
@@ -207,7 +207,7 @@ function onPreview(siteId,skinId){
 					tag: 'img',    //指定为img标签  
 					width: 800,
 					//height: 500,
-					src:imgArray[i]
+					src: TzUniversityContextPath + imgArray[i]
 				}	
 			}]
 	  });
@@ -252,7 +252,7 @@ function onPreview(siteId,skinId){
 						{
 							i=imgArray.length-1;
 						}
-						Ext.getCmp(comId).getEl().dom.src = imgArray[i];	
+						Ext.getCmp(comId).getEl().dom.src = TzUniversityContextPath + imgArray[i];	
 					}
 				},	
 				{text: '下一页',handler: function(){
@@ -262,7 +262,7 @@ function onPreview(siteId,skinId){
 					{
 						i = 0;
 					}
-						Ext.getCmp(comId).getEl().dom.src = imgArray[i];	
+						Ext.getCmp(comId).getEl().dom.src = TzUniversityContextPath + imgArray[i];	
 				}}]
 			}]
 		});
