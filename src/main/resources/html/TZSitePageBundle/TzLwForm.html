@@ -1,0 +1,80 @@
+{
+    "success": true,
+	"areaId":"%bind(:2)",
+    "items": {
+        "container": [
+            {
+                "xtype": "container",
+                "items": [
+                  	{
+						"xtype":"displayfield",
+						"value":"<span style='color:red;margin-left:30px'>请注意，如果上传图片，图片的宽度必须是234px，否则显示将会变形！</span>"
+					},
+					{
+							"xtype":"ueditor",
+							"name":"artcont",
+							"fieldLabel": "内容",
+							"labelWidth": 50,
+							"height":250,
+							"width":745,
+							"listeners":{
+								initialize:function(thisField,eOpts){
+									if(Ext.isEmpty(Ext.query('%bind(:5)')[0])){
+									}else{  
+										thisField.setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML)
+									}
+								},change:function(thisField, newValue, oldValue, eOpts){
+									Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML=thisField.getValue();
+									editPanel.getForm().findField('areaCode').setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;
+									bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;
+									editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);
+								}
+							}
+						},{
+							 "xtype": "hiddenfield","name": "siteId","value":"%bind(:1)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaId","value":"%bind(:2)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaZone","value":"%bind(:3)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaType","value":"%bind(:4)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "headCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "bodyCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedplugincss"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginjs"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginbar"
+							},{
+							 "xtype": "hiddenfield","name": "pagetype"
+							}
+				]
+			  }
+		  ]
+		}
+}

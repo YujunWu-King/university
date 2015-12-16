@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -21,6 +22,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-15
  */
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzColuTypeServiceImpl")
 public class TzColuTypeServiceImpl extends FrameworkImpl {
 
 	@Autowired

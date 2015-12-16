@@ -107,7 +107,7 @@ public class JacksonUtil {
 	 * @param listData
 	 * @return String
 	 */
-	public String List2json(ArrayList<Map<String, Object>> listData) {
+	public String List2json(ArrayList<?> listData) {
 		String json = "";
 		ObjectMapper mapper = new ObjectMapper();
 		try {

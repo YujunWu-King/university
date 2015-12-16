@@ -19,13 +19,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 原PS：TZ_SITE_DECORATED_APP:TZ_GG_DECORATED_CLS
+ * 原PS：TZ_SITE_DECORATED_APP:TZ_LS_DECORATED_CLS
  * 
  * @author SHIHUA
- * @since 2015-12-15
+ * @since 2015-12-16
  */
-@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzGgDecoratedServiceImpl")
-public class TzGgDecoratedServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzLsDecoratedServiceImpl")
+public class TzLsDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private JacksonUtil jacksonUtil;
@@ -70,18 +70,12 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			if (null == strAreaClass || "".equals(strAreaClass)) {
-				errMsg[0] = "1";
-				errMsg[1] = "参数错误！参数[areaClass]为空。";
-				return strRet;
-			}
-
 			if (null == strAreaId || "".equals(strAreaId)) {
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
 				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 			}
 
-			strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzGgForm", strSiteId, strAreaId, strAreaZone,
+			strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzLsForm", strSiteId, strAreaId, strAreaZone,
 					strAreaType, strAreaClass);
 
 		} catch (Exception e) {
@@ -167,7 +161,7 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 					PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
 					psTzSiteiDefnTWithBLOBs.setTzSiteiId(strSiteId);
-					
+
 					switch (strPageType) {
 					case "homepage":
 						psTzSiteiDefnTWithBLOBs.setTzIndexSavecode(strPageCode);
@@ -217,19 +211,19 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 
 			String strAreaId = jacksonUtil.getString("areaId");
 
-			//String strAreaZone = jacksonUtil.getString("areaZone");
+			// String strAreaZone = jacksonUtil.getString("areaZone");
 
 			String strAreaType = jacksonUtil.getString("areaType");
 
 			String strAreaCode = jacksonUtil.getString("areaCode");
-			
-			if(null!=strAreaCode && !"".equals(strAreaCode)){
-				
-				if(null==strAreaId || "".equals(strAreaId)){
+
+			if (null != strAreaCode && !"".equals(strAreaCode)) {
+
+				if (null == strAreaId || "".equals(strAreaId)) {
 					String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
-					strAreaId = sqlQuery.queryForObject(sql, new Object[]{strSiteId, strAreaType}, "String");
+					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 				}
-				
+
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
@@ -237,9 +231,9 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 				psTzSiteiAreaTWithBLOBs.setTzAreaSavecode(strAreaCode);
 
 				psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
-				
+
 			}
-			
+
 			errMsg[0] = "0";
 			mapRet.put("success", true);
 			strRet = jacksonUtil.Map2json(mapRet);
@@ -268,19 +262,19 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 
 			String strAreaId = jacksonUtil.getString("areaId");
 
-			//String strAreaZone = jacksonUtil.getString("areaZone");
+			// String strAreaZone = jacksonUtil.getString("areaZone");
 
 			String strAreaType = jacksonUtil.getString("areaType");
 
 			String strAreaCode = jacksonUtil.getString("areaCode");
-			
-			if(null!=strAreaCode && !"".equals(strAreaCode)){
-				
-				if(null==strAreaId || "".equals(strAreaId)){
+
+			if (null != strAreaCode && !"".equals(strAreaCode)) {
+
+				if (null == strAreaId || "".equals(strAreaId)) {
 					String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
-					strAreaId = sqlQuery.queryForObject(sql, new Object[]{strSiteId, strAreaType}, "String");
+					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 				}
-				
+
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
@@ -288,9 +282,9 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 				psTzSiteiAreaTWithBLOBs.setTzAreaPubcode(strAreaCode);
 
 				psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
-				
+
 			}
-			
+
 			errMsg[0] = "0";
 			mapRet.put("success", true);
 			strRet = jacksonUtil.Map2json(mapRet);

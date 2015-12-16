@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -47,6 +48,9 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
+	
+	@Autowired
+	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -123,7 +127,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 					return jacksonUtil.Map2json(mapRet);
 				}
 
-				String strPageCode = "<html>" + strHeadCode + "<body>" + strBodyCode + "</body></html>";
+				
 
 				if (null != strAreaCode && !"".equals(strAreaCode)) {
 
@@ -142,8 +146,10 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 					psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
 				}
 
-				if (null != strPageCode && !"".equals(strPageCode)) {
+				if (null != strHeadCode && null!=strBodyCode) {
 
+					String strPageCode = "<html>" + strHeadCode + "<body>" + strBodyCode + "</body></html>";
+					
 					String strDecoratedplugincss = jacksonUtil.getString("decoratedplugincss");
 					String strDecoratedpluginjs = jacksonUtil.getString("decoratedpluginjs");
 					String strDecoratedpluginbar = jacksonUtil.getString("decoratedpluginbar");
@@ -154,6 +160,8 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 					strPrePageCode = strPrePageCode.replace(strDecoratedpluginbar, "");
 					
 					PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
+					
+					psTzSiteiDefnTWithBLOBs.setTzSiteiId(strSiteId);
 					
 					switch (strPageType) {
 					case "homepage":
@@ -172,6 +180,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 						break;
 					}
 					
+					psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
 				}
 				
 				errMsg[0] = "0";

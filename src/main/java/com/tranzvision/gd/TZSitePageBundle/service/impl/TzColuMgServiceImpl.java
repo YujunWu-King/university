@@ -5,6 +5,7 @@ package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -15,6 +16,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
  * @author SHIHUA
  * @since 2015-12-15
  */
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzColuMgServiceImpl")
 public class TzColuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired

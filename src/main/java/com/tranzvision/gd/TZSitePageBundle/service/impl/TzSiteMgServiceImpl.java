@@ -628,7 +628,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean saveHomepage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveHomepage(String strSaveContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -689,7 +689,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean saveLoginpage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveLoginpage(String strSaveContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -748,7 +748,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean saveEnrollpage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveEnrollpage(String strSaveContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -807,7 +807,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean releasHomepage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasHomepage(String strReleaseContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -862,7 +862,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean releasLoginpage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasLoginpage(String strReleaseContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -917,7 +917,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	private boolean releasEnrollpage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasEnrollpage(String strReleaseContent, String strSiteId, String[] errMsg) {
 
 		boolean boolRet = false;
 
