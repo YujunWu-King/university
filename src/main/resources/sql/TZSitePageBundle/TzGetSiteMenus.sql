@@ -1,0 +1,13 @@
+select 
+	TZ_MENU_ID,
+	TZ_MENU_NAME,  
+	TZ_TYPE_IMG,
+	TZ_NOW_IMG,
+	TZ_IS_DEL,
+	TZ_MENU_OPURL_TYPE 
+from 
+	PS_TZ_SITEI_MENU_T PT 
+where 
+	TZ_SITEI_ID=? 
+	and TZ_MENU_STATE='Y' 
+order by TZ_MENU_XH

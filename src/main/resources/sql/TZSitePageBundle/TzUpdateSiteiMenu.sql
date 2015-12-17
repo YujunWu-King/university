@@ -1,0 +1,1 @@
+update PS_TZ_SITEI_MENU_T set TZ_MENU_XH=? where TZ_SITEI_ID=? and TZ_MENU_ID=?
