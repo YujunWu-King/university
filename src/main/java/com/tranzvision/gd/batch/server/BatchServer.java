@@ -510,7 +510,7 @@ public class BatchServer extends BaseJob
 		{
 			try
 			{
-				TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetExecutableJobs"),getBatchServerName(),getBatchServerName(),getOSType());
+				TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetExecutableJobs"),getBatchServerName(),getBatchServerName(),getOSType(),organizationID);
 				
 				TzRecord tmpRecord = new TzRecord();
 				while(jobList.size() < parallelTaskCount && tmpSQLObject.fetch(tmpRecord) == true)
