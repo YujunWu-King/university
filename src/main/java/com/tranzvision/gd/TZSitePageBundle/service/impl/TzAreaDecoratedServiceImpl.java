@@ -231,7 +231,7 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 			
 			if((null!=strOrgId && !"".equals(strOrgId)) && (null==strSiteId || "".equals(strSiteId))){
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteidByOrgid");
-				strSiteId = sqlQuery.queryForObject(sql, new Object[]{}, "String");
+				strSiteId = sqlQuery.queryForObject(sql, new Object[]{strOrgId}, "String");
 			}
 			
 			String strAreaTypeId = "";

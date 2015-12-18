@@ -1,0 +1,11 @@
+select 
+	TZ_MENU_TYPE_ID,
+	TZ_MENU_TYPE_NAME,
+	TZ_IS_ADD,
+	TZ_ADD_COLU,
+	TZ_TYPE_DESCR 
+from 
+	PS_TZ_SITEI_MTYP_T 
+where 
+	TZ_SITEI_ID=? 
+	and TZ_TYPE_STATE='Y'

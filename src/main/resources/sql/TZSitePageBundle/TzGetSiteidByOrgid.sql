@@ -5,3 +5,5 @@ from
 where 
 	TZ_SITEI_ENABLE='Y' 
 	and TZ_JG_ID=?
+order by TZ_LASTMANT_DTTM desc 
+limit 0,1

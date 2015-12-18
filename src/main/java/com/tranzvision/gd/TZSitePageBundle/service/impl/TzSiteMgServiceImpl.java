@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
+import com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegisteServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -63,6 +64,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
+	
+	@Autowired
+	private RegisteServiceImpl registeServiceImpl;
 	
 	@Autowired
 	private TZGDObject tzGDObject;
@@ -1089,15 +1093,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 			String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			String strOrgId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
-			String strContent = "";
-			// Local TZ_GD_USERMG_PKG:TZ_GD_USER_REG &object = create
-			// TZ_GD_USERMG_PKG:TZ_GD_USER_REG();
+			String strContent = registeServiceImpl.userRegister(strOrgId, strSiteId);
 
-			// String strContent = &object.userRegister(strOrgId, strSiteId);
-
-			// strContent = GetHTMLText(HTML.TZ_SETREGISTEPAGE_HTML,
-			// strContent);
-
+			strContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSetRegisterPage",strContent);
+			
 			if (null != strContent && !"".equals(strContent)) {
 
 				Pattern p = Pattern.compile("<body>(.*)</body>");
