@@ -19,13 +19,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 原PS：TZ_SITE_DECORATED_APP:TZ_URL_TRANS_CLS
+ * 原PS：TZ_SITE_DECORATED_APP:TZ_ZX_COLU_CLS
  * 
  * @author SHIHUA
- * @since 2015-12-18
+ * @since 2015-12-21
  */
-@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzSetEnrollPServiceImpl")
-public class TzXlColuServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl")
+public class TzZxColuServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
@@ -161,14 +161,14 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 				if (numNowPage > 2) {
 					setNowPageNum = numNowPage - 1;
 				}
-				strDivPage = "<li onclick=\"QueryColu(" + String.valueOf(setNowPageNum) + ")\">&lt;&lt;</li>"
+				strDivPage = "<li onclick=\"QueryColuZX(" + String.valueOf(setNowPageNum) + ")\">&lt;&lt;</li>"
 						+ strDivPage;
 
 				int setTotalPageNum = numTotalPage;
 				if ((numNowPage + 1) < numTotalPage) {
 					setTotalPageNum = numNowPage + 1;
 				}
-				strDivPage = strDivPage + "<li onclick=\"QueryColu(" + String.valueOf(setTotalPageNum)
+				strDivPage = strDivPage + "<li onclick=\"QueryColuZX(" + String.valueOf(setTotalPageNum)
 						+ ")\">&gt;&gt;</li>";
 
 			}
@@ -261,5 +261,5 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 		return strRet;
 
 	}
-
+	
 }

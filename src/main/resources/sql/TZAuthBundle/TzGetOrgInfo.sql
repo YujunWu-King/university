@@ -1,0 +1,16 @@
+select 
+	A.TZ_JG_LOGIN_INFO,
+	A.TZ_JG_LOGIN_COPR,
+	A.TZ_ATTACHSYSFILENA,
+	ifnull(B.TZ_ATT_A_URL,'') TZ_ATT_A_URL 
+from 
+	PS_TZ_JG_BASE_T A 
+left join 
+	PS_TZ_JG_LOGINBJ_T B 
+on 
+	(
+		A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA
+	) 
+where 
+	TZ_JG_EFF_STA='Y' 
+	and TZ_JG_ID=?

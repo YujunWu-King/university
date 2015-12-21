@@ -19,9 +19,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 登录前端控制器
@@ -30,7 +32,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @since 2015-11-03
  */
 @Controller
-@RequestMapping(value = { "", "/", "/login" })
+@RequestMapping(value = { "/login" })
 public class TzLoginController {
 
 	@Autowired
@@ -48,6 +50,9 @@ public class TzLoginController {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
+	@Autowired
+	private TZGDObject tzGDObject;
+
 	private String adminOrgId;
 
 	private String adminOrgName = "创景云招生系统";
@@ -58,38 +63,51 @@ public class TzLoginController {
 	public ModelAndView userLogin(HttpServletRequest request, HttpServletResponse response) {
 
 		adminOrgId = getSysHardCodeVal.getPlatformOrgID();
-		
-		String sql = "select A.TZ_JG_LOGIN_INFO,A.TZ_JG_LOGIN_COPR,A.TZ_ATTACHSYSFILENA,ifnull(B.TZ_ATT_A_URL,'') TZ_ATT_A_URL from PS_TZ_JG_BASE_T A left join PS_TZ_JG_LOGINBJ_T B on (A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA) where TZ_JG_EFF_STA='Y' and TZ_JG_ID=?";
 
-		Map<String, Object> mapAdmin = sqlQuery.queryForMap(sql, new Object[] { adminOrgId });
+		try {
+			/*
+			 * String sql =
+			 * "select A.TZ_JG_LOGIN_INFO,A.TZ_JG_LOGIN_COPR,A.TZ_ATTACHSYSFILENA,ifnull(B.TZ_ATT_A_URL,'') TZ_ATT_A_URL from PS_TZ_JG_BASE_T A left join PS_TZ_JG_LOGINBJ_T B on (A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA) where TZ_JG_EFF_STA='Y' and TZ_JG_ID=?"
+			 * ;
+			 */
+			String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetOrgInfo");
 
-		String TZ_JG_LOGIN_INFO = adminOrgName;
-		String TZ_JG_LOGIN_COPR = "";
-		String orgLoginBjImgUrl = adminOrgBjImg;
+			Map<String, Object> mapAdmin = sqlQuery.queryForMap(sql, new Object[] { adminOrgId });
 
-		if (null != mapAdmin) {
-			TZ_JG_LOGIN_INFO = String.valueOf(mapAdmin.get("TZ_JG_LOGIN_INFO"));
-			TZ_JG_LOGIN_COPR = String.valueOf(mapAdmin.get("TZ_JG_LOGIN_COPR"));
+			String TZ_JG_LOGIN_INFO = adminOrgName;
+			String TZ_JG_LOGIN_COPR = "";
+			String orgLoginBjImgUrl = adminOrgBjImg;
 
-			String TZ_ATT_A_URL = String.valueOf(mapAdmin.get("TZ_ATT_A_URL"));
-			Object TZ_ATTACHSYSFILENA = mapAdmin.get("TZ_ATTACHSYSFILENA");
-			String tzATTACHSYSFILENA = "";
-			if (TZ_ATTACHSYSFILENA == null) {
-				tzATTACHSYSFILENA = "";
-			} else {
-				tzATTACHSYSFILENA = String.valueOf(TZ_ATTACHSYSFILENA);
+			if (null != mapAdmin) {
+				TZ_JG_LOGIN_INFO = String.valueOf(mapAdmin.get("TZ_JG_LOGIN_INFO"));
+				TZ_JG_LOGIN_COPR = String.valueOf(mapAdmin.get("TZ_JG_LOGIN_COPR"));
+
+				String TZ_ATT_A_URL = String.valueOf(mapAdmin.get("TZ_ATT_A_URL"));
+				Object TZ_ATTACHSYSFILENA = mapAdmin.get("TZ_ATTACHSYSFILENA");
+				String tzATTACHSYSFILENA = "";
+				if (TZ_ATTACHSYSFILENA == null) {
+					tzATTACHSYSFILENA = "";
+				} else {
+					tzATTACHSYSFILENA = String.valueOf(TZ_ATTACHSYSFILENA);
+				}
+
+				if (!"".equals(TZ_ATT_A_URL) && !"".equals(tzATTACHSYSFILENA)) {
+					orgLoginBjImgUrl = TZ_ATT_A_URL + tzATTACHSYSFILENA;
+				}
 			}
 
-			if (!"".equals(TZ_ATT_A_URL) && !"".equals(tzATTACHSYSFILENA)) {
-				orgLoginBjImgUrl = TZ_ATT_A_URL + tzATTACHSYSFILENA;
-			}
+			ModelAndView mv = new ModelAndView("login/managerLogin");
+			mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
+			mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
+			mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
+			mv.addObject("locationOrgId", "");
+			return mv;
+
+		} catch (TzSystemException e) {
+			e.printStackTrace();
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
-		mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
-		mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
-		mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
-		mv.addObject("locationOrgId", "");
 		return mv;
 	}
 
@@ -99,38 +117,46 @@ public class TzLoginController {
 
 		orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
 
-		String sql = "select A.TZ_JG_LOGIN_INFO,A.TZ_JG_LOGIN_COPR,A.TZ_ATTACHSYSFILENA,ifnull(B.TZ_ATT_A_URL,'') TZ_ATT_A_URL from PS_TZ_JG_BASE_T A left join PS_TZ_JG_LOGINBJ_T B on (A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA) where TZ_JG_EFF_STA='Y' and TZ_JG_ID=?";
+		try {
+			String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetOrgInfo");
 
-		Map<String, Object> mapOrg = sqlQuery.queryForMap(sql, new Object[] { orgid });
+			Map<String, Object> mapOrg = sqlQuery.queryForMap(sql, new Object[] { orgid });
 
-		String locationOrgId = orgid;
-		String TZ_JG_LOGIN_INFO = adminOrgName;
-		String TZ_JG_LOGIN_COPR = "";
-		String orgLoginBjImgUrl = adminOrgBjImg;
+			String locationOrgId = orgid;
+			String TZ_JG_LOGIN_INFO = adminOrgName;
+			String TZ_JG_LOGIN_COPR = "";
+			String orgLoginBjImgUrl = adminOrgBjImg;
 
-		if (null != mapOrg) {
-			TZ_JG_LOGIN_INFO = String.valueOf(mapOrg.get("TZ_JG_LOGIN_INFO"));
-			TZ_JG_LOGIN_COPR = String.valueOf(mapOrg.get("TZ_JG_LOGIN_COPR"));
+			if (null != mapOrg) {
+				TZ_JG_LOGIN_INFO = String.valueOf(mapOrg.get("TZ_JG_LOGIN_INFO"));
+				TZ_JG_LOGIN_COPR = String.valueOf(mapOrg.get("TZ_JG_LOGIN_COPR"));
 
-			String TZ_ATT_A_URL = String.valueOf(mapOrg.get("TZ_ATT_A_URL"));
-			Object TZ_ATTACHSYSFILENA = mapOrg.get("TZ_ATTACHSYSFILENA");
-			String tzATTACHSYSFILENA = "";
-			if (TZ_ATTACHSYSFILENA == null) {
-				tzATTACHSYSFILENA = "";
-			} else {
-				tzATTACHSYSFILENA = String.valueOf(TZ_ATTACHSYSFILENA);
+				String TZ_ATT_A_URL = String.valueOf(mapOrg.get("TZ_ATT_A_URL"));
+				Object TZ_ATTACHSYSFILENA = mapOrg.get("TZ_ATTACHSYSFILENA");
+				String tzATTACHSYSFILENA = "";
+				if (TZ_ATTACHSYSFILENA == null) {
+					tzATTACHSYSFILENA = "";
+				} else {
+					tzATTACHSYSFILENA = String.valueOf(TZ_ATTACHSYSFILENA);
+				}
+
+				if (!"".equals(TZ_ATT_A_URL) && !"".equals(tzATTACHSYSFILENA)) {
+					orgLoginBjImgUrl = TZ_ATT_A_URL + tzATTACHSYSFILENA;
+				}
 			}
 
-			if (!"".equals(TZ_ATT_A_URL) && !"".equals(tzATTACHSYSFILENA)) {
-				orgLoginBjImgUrl = TZ_ATT_A_URL + tzATTACHSYSFILENA;
-			}
+			ModelAndView mv = new ModelAndView("login/managerLogin");
+			mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
+			mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
+			mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
+			mv.addObject("locationOrgId", locationOrgId);
+			return mv;
+
+		} catch (TzSystemException e) {
+			e.printStackTrace();
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
-		mv.addObject("TZ_JG_LOGIN_INFO", TZ_JG_LOGIN_INFO);
-		mv.addObject("TZ_JG_LOGIN_COPR", TZ_JG_LOGIN_COPR);
-		mv.addObject("orgLoginBjImgUrl", orgLoginBjImgUrl);
-		mv.addObject("locationOrgId", locationOrgId);
 		return mv;
 
 	}
@@ -229,13 +255,13 @@ public class TzLoginController {
 		// String ctx = request.getContextPath();
 
 		adminOrgId = getSysHardCodeVal.getPlatformOrgID();
-		
-		if(orgid.equals(adminOrgId)){
+
+		if (orgid.equals(adminOrgId)) {
 			orgid = "";
-		}else{
+		} else {
 			orgid = orgid.toLowerCase();
 		}
-		
+
 		String redirect = "redirect:" + "/login/" + orgid;
 
 		return redirect;

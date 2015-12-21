@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -43,7 +43,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	@Override
 	public String tzGetHtmlData(String strParams) {
@@ -72,10 +72,10 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 				edituserpt_url = websiteImgCommonPath + "/common/edituser-pic-en.png";
 			}
 
-			// 当前用户ID（此用户是否应该用前台登录用户？前台机构？待定）
+			// 当前用户ID（此用户是前台登录用户）
 			String todoCheck;
-			String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String m_curOrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+			String m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 
 			// 处理头像部分 - 开始
 			// sql = "select TZ_GENDER from PS_TZ_REG_USER_T where OPRID=?";
