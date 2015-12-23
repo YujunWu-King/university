@@ -50,6 +50,14 @@ public interface TzWebsiteLoginService {
 	public void doLogout(HttpServletRequest request, HttpServletResponse response);
 
 	/**
+	 * 更新登录用户 的数据对象内容
+	 * 
+	 * @param request
+	 * @return String
+	 */
+	public boolean updateLoginedUserInfo(HttpServletRequest request, HttpServletResponse response);
+
+	/**
 	 * 获取登录用户的数据对象
 	 * 
 	 * @param request
@@ -80,7 +88,7 @@ public interface TzWebsiteLoginService {
 	 * @return String
 	 */
 	public String getLoginedUserOrgid(HttpServletRequest request);
-	
+
 	/**
 	 * 获取当前使用的系统语言
 	 * 

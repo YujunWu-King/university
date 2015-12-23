@@ -15,13 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -49,26 +47,49 @@ public class TzWebsiteLoginController {
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
 
 	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
-
-	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
 
 	@Autowired
 	private TZGDObject tzGDObject;
 
-	@RequestMapping(value = { "/{orgid}" })
+	@RequestMapping(value = { "/{orgid}/{siteid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String userLoginOrg(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable(value = "orgid") String orgid) {
+			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid) {
 
-		orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+		String strRet = "";
 
-		if (null == orgid || "".equals(orgid)) {
+		try {
+			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+			
+			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
 
+			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
+
+				String sql = "select TZ_LONGIN_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? and TZ_JG_ID=?";
+				String loginHtml = sqlQuery.queryForObject(sql, new Object[]{siteid,orgid}, "String");
+				
+				if(null!=loginHtml && !"".equals(loginHtml)){
+					String ctxPath = request.getContextPath();
+					strRet = loginHtml.replace("{ContextPath}", ctxPath);
+				}else{
+					strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "该站点未设置登录页，请联系站点管理员。",
+							"This site haven't the login page, please contact Administrator.");
+				}
+				
+			} else {
+
+				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+						"Can not visit the site.Please check the url.");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+					"Can not visit the site.Please check the url.");
 		}
 
-		return "";
+		return strRet;
 
 	}
 
@@ -102,21 +123,27 @@ public class TzWebsiteLoginController {
 					if (null != strUserName && !"".equals(strUserName)) {
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
-						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strUserName, strPassWord,
-								strYzmCode, strLang, aryErrorMsg);
-						
-						
-						
+						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strUserName,
+								strPassWord, strYzmCode, strLang, aryErrorMsg);
+
 						String loginStatus = aryErrorMsg.get(0);
 						String errorMsg = aryErrorMsg.get(1);
 
-						String indexUrl = "";
-
-						jsonMap.put("success", loginStatus);
+						jsonMap.put("success", boolResult);
+						jsonMap.put("errorCode", loginStatus);
 						jsonMap.put("error", errorMsg);
-						jsonMap.put("indexUrl", indexUrl);
-						
-						
+
+						if (boolResult) {
+
+							String ctxPath = request.getContextPath();
+
+							String indexUrl = ctxPath + "/dispatcher?classid=homePage&siteId=" + strSiteId
+									+ "&oprate=R";
+
+							jsonMap.put("url", indexUrl);
+
+						}
+
 					} else {
 
 						int errorCode = 2;

@@ -219,6 +219,38 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.tranzvision.gd.TZAuthBundle.service.TzWebsiteLoginService#
+	 * updateLoginedUserInfo(javax.servlet.http.HttpServletRequest,
+	 * javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public boolean updateLoginedUserInfo(HttpServletRequest request, HttpServletResponse response) {
+
+		boolean boolRet = false;
+
+		String strDlzhId = this.getLoginedUserDlzhid(request);
+		String strOrgId = this.getLoginedUserOrgid(request);
+
+		// 读取用户信息
+		PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
+		psTzAqYhxxTblKey.setTzDlzhId(strDlzhId);
+		psTzAqYhxxTblKey.setTzJgId(strOrgId);
+		PsTzAqYhxxTbl loginUser = psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
+
+		if (null != loginUser) {
+			// 设置Session
+			TzSession tzSession = new TzSession(request);
+			tzSession.removeSession(userSessionName);
+			tzSession.addSession(userSessionName, loginUser);
+			boolRet = true;
+		}
+
+		return boolRet;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tranzvision.gd.TZAuthBundle.service.TzWebsiteLoginService#
 	 * getLoginedUserInfo(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override

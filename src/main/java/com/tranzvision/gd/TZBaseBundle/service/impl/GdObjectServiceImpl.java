@@ -25,13 +25,13 @@ public class GdObjectServiceImpl implements GdObjectService {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	
+
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-	
+
 	@Autowired
 	private TZGDObject tzGDObject;
-	
+
 	@Override
 	/* 获取当前登录会话语言代码的方法 TODO ***/
 	public String getLoginLanguage(HttpServletRequest request, HttpServletResponse response) {
@@ -287,34 +287,39 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 * @param defaultENMsg
 	 * @return String
 	 */
-	public String getMessageTextWithLanguageCd(HttpServletRequest request, String msgSetId, String msgId, String langCd, String defaultCNMsg,
-			String defaultENMsg) {
+	public String getMessageTextWithLanguageCd(HttpServletRequest request, String msgSetId, String msgId, String langCd,
+			String defaultCNMsg, String defaultENMsg) {
 		String retMsgText = "";
 		String defaultLang = getSysHardCodeVal.getSysDefaultLanguage();
-		if(null==langCd || "".equals(langCd)){
+		if (null == langCd || "".equals(langCd)) {
 			langCd = getSysHardCodeVal.getSysDefaultLanguage();
 		}
-		
-		try{
+
+		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String ptOrid = getSysHardCodeVal.getPlatformOrgID();
-			String sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzGetMsgText");
-			retMsgText = jdbcTemplate.queryForObject(sql, new Object[]{msgSetId, langCd, msgId, orgid}, "String");
-			if(null==retMsgText || "".equals(retMsgText)){
-				retMsgText = jdbcTemplate.queryForObject(sql, new Object[]{msgSetId, langCd, msgId, ptOrid}, "String");
+
+			if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
+				String sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzGetMsgText");
+				retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { msgSetId, langCd, msgId, orgid },
+						"String");
+				if (null == retMsgText || "".equals(retMsgText)) {
+					retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { msgSetId, langCd, msgId, ptOrid },
+							"String");
+				}
 			}
-			
-			if(null==retMsgText || "".equals(retMsgText)){
-				if(defaultLang.equals(langCd)){
+
+			if (null == retMsgText || "".equals(retMsgText)) {
+				if (defaultLang.equals(langCd)) {
 					retMsgText = defaultCNMsg;
-				}else{
+				} else {
 					retMsgText = defaultENMsg;
 				}
-			}else{
-				
+			} else {
+
 			}
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			retMsgText = "取数失败！" + e.getMessage();
 		}

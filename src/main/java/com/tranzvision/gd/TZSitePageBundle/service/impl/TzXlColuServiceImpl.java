@@ -19,12 +19,12 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 原PS：TZ_SITE_DECORATED_APP:TZ_URL_TRANS_CLS
+ * 原PS：TZ_SITE_DECORATED_APP:TZ_XL_COLU_CLS
  * 
  * @author SHIHUA
  * @since 2015-12-18
  */
-@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzSetEnrollPServiceImpl")
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzXlColuServiceImpl")
 public class TzXlColuServiceImpl extends FrameworkImpl {
 
 	@Autowired

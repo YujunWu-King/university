@@ -20,7 +20,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 原PS：TZ_SITE_DECORATED_APP:TZ_AREA_COLU_CLS
+ * 原PS：TZ_SITE_DECORATED_APP:TZ_ASK_MENU_CLS
  * 
  * @author SHIHUA
  * @since 2015-12-15

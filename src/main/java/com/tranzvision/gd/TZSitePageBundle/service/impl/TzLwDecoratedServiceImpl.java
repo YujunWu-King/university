@@ -24,7 +24,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-16
  */
-@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzLsDecoratedServiceImpl")
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzLwDecoratedServiceImpl")
 public class TzLwDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
