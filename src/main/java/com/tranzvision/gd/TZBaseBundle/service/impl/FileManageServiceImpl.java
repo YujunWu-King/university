@@ -81,6 +81,50 @@ public class FileManageServiceImpl implements FileManageService {
 
 		return false;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.tranzvision.gd.TZBaseBundle.service.FileManageService#UpdateFile(java.lang.String, java.lang.String, byte[])
+	 */
+	@Override
+	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
+
+		String parentRealPath = request.getServletContext().getRealPath(parentPath);
+
+		File dir = new File(parentRealPath);
+		// System.out.println(dir.getAbsolutePath());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
+		if (serverFile.exists()) {
+			//文件存在则删除
+			serverFile.delete();
+		}
+
+		BufferedOutputStream stream;
+
+		try {
+			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+			stream.write(fileBytes);
+			stream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
+
+		if (serverFile.exists()) {
+			// 文件存在则创建成功
+			logger.info("Updated file:" + parentRealPath + File.separator + fileName + " success.");
+			return true;
+		}
+
+		return false;
+	}
 
 	/*
 	 * (non-Javadoc)

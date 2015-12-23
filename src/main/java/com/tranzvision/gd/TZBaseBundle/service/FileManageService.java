@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public interface FileManageService {
 
 	/**
-	 * 再服务器上创建一个文件
+	 * 在服务器上创建一个文件
 	 * 
 	 * @param parentPath
 	 * @param fileName
@@ -24,6 +24,17 @@ public interface FileManageService {
 	 * @throws Exception
 	 */
 	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception;
+	
+	/**
+	 * 在服务器上更新一个文件内容
+	 * 
+	 * @param parentPath
+	 * @param fileName
+	 * @param fileBytes
+	 * @return boolean 成功 - true ，失败 - false
+	 * @throws Exception
+	 */
+	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception;
 
 	/**
 	 * 在服务器上删除一个文件

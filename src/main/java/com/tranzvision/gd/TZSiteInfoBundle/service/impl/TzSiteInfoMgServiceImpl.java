@@ -191,7 +191,7 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 				String siteLanguage = jacksonUtil.getString("siteLanguage");
 				String siteName = jacksonUtil.getString("siteName");
 
-				String sql = "select 'Y' from TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+				String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 
 				if (null != recExists) {
