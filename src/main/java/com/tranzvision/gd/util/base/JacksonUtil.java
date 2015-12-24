@@ -100,7 +100,7 @@ public class JacksonUtil {
 		}
 		return json;
 	}
-	
+
 	/**
 	 * 将ArrayList转换成String并返回
 	 * 
@@ -292,6 +292,9 @@ public class JacksonUtil {
 	 * @return boolean
 	 */
 	public boolean containsKey(String key) {
+		if (jsonMap == null) {
+			return false;
+		}
 		return jsonMap.containsKey(key);
 	}
 

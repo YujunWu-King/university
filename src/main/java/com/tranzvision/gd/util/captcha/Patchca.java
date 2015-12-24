@@ -152,6 +152,7 @@ public class Patchca {
 
 		try {
 			this.insTzSession(request);
+			this.removeToken(request);
 			this.setResponseHeaders(response);
 			String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.getOutputStream());
 			tzSession.addSession(tokenName, token);
@@ -221,7 +222,7 @@ public class Patchca {
 		token = token.toUpperCase();
 		if (token.equals(ckToken.trim().toUpperCase())) {
 			// 销毁sessionToken
-			this.removeToken(request);
+			//this.removeToken(request);
 			return true;
 		}
 		return false;
