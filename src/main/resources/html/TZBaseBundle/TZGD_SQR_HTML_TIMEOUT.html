@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="google" content="notranslate" />
+ 	<link href="page_stylecss" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      html,body
+      {
+        height:95%;
+      }
+      <!--以下设置全屏--> 
+      body
+      {
+        margin-left: 0px;
+        margin-top: 0px;
+        margin-right: 0px;
+        margin-bottom: 0px;
+      }
+      .lable_1{
+      	margin-left:180px;
+      	color:red;
+      	font-size: 13px;
+      	margin-top:-5px;
+      }
+      .thumb-wrap{
+      	width:174px;
+      	float:left;
+      	padding:6px;
+      	background:#fff;
+      	border:1px solid #c3c3c3;
+      	margin:8px;
+      	cursor:pointer;
+      }
+      .transparent_class {
+		filter:alpha(opacity=50);
+		-moz-opacity:0.5;
+		-khtml-opacity: 0.5;
+		opacity: 0.5;
+		background:#eee;
+	 }
+	 .picEider{
+	 	width:18px;
+	 	height:18px;
+	 	float:right;
+	 	cursor:pointer;
+	 	display:none;
+	 }
+	 .addPic{
+	 	margin:0px;
+	 	padding:0px;
+	 	height:147px; 
+	 	width:175px;
+	 	background: #fff;
+	 	margin-left:-10px;
+	 	margin-top:-7px;
+	 }
+	 .lanage_1 input{
+	 	background-color:#eee;
+	 }
+    </style>
+<script type="text/javascript" src="%bind(:6)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+  </head>
+  <body>
+
+<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false"
+        area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
+		
+		
+        </div>
+
+    <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">
+      <tr>
+        <td align="center" valign="middle"><center><div><p><h1 id="tranzvision_mkc_advanced_default_text">%bind(:1)<a target="_top" href="%bind(:2)">%bind(:3)</a>%bind(:4)</h1></p></div></center></td>
+      </tr>
+    </table>
+
+
+ <div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false"
+        area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="">
+   </div>
+<script type="text/javascript">
+$(document).ready(function(){
+	LoadHeader("%bind(:5)","","");
+
+LoadFooter("%bind(:5)","","","");
+
+});
+</script>
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>省份选择器</title>
+		<!--
+		<link href="/onlineReg/css/css.css" rel="stylesheet" type="text/css" />
+		-->
+		<script type="text/javascript" src="%bind(:3)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:3)/statics/js/tranzvision/util/layer.js"></script>
+
+		<!--张浪添加-->
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+				var head = document.getElementsByTagName("head").item(0);
+				//在子窗口中添加父窗口的外联样式
+				for(var i = 0;i<linkList.length;i++){
+					var l = document.createElement("link");
+						l.rel = 'stylesheet'
+						l.type = 'text/css'; 
+						l.href = linkList[i].href;
+						head.appendChild(l);
+				}
+			})
+		</script>
+<!--张浪注释
+		<script type="text/javascript">
+			window.onload = function(){
+				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+				var head = document.getElementsByTagName("head").item(0);
+				//在子窗口中添加父窗口的外联样式
+				for(var i=0;i<linkList.length;i++){
+					var l=document.createElement("link");
+						l.rel = 'stylesheet'
+						l.type = 'text/css'; 
+						l.href=linkList[i].href;
+						head.appendChild(l);
+				}
+			}
+		</script>
+-->
+		<!-- 载入左侧边栏自适应高度的js-->
+		<style type="text/css">
+			.city_close {clear: right;color: #9F9F9F;float: right;font-size: 16px;height: 30px;line-height: 30px;margin-top: 3px;text-align: left;width: 35px;}
+		</style>
+
+	</head>
+
+	<body>
+		<div class="city_top">
+			<div class="city_close" onclick="closeThis();" style="margin-top: 3px;">
+				<img src="%bind(:3)/statics/images/website/del.png" width="15" height="15" />
+				&nbsp;
+			</div>
+		</div>
+		<div class="city_main">
+			<div class="city_main_title">
+				全部省份
+			</div>
+			<div class="city_main_line">
+				%bind(:1)
+			</div>
+		</div>
+		<script type="text/javascript">
+			function changeProvince(city){
+				var pageid="%bind(:2)";
+				$("#"+pageid,window.parent.document).val(city);
+				$("#"+pageid,window.parent.document).focus();
+				$("#"+pageid,window.parent.document).trigger("blur");
+				closeThis();
+			}
+			function closeThis(){
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
+			}
+		</script>
+		<div class="city_foot"></div>
+	</body>
+</html>

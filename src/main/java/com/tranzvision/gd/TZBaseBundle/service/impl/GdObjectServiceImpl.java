@@ -6,10 +6,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.GdObjectService;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
+import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -21,6 +24,29 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service
 public class GdObjectServiceImpl implements GdObjectService {
+	
+	/**
+	 * 当前访问组件编号
+	 */
+	private static final String gbl_CurrentAccessCmpntID = "gbl_CurrentAccessCmpntID";
+	/**
+	 * 当前访问页面编号
+	 */
+	private static final String gbl_CurrentAccessCPageID = "gbl_CurrentAccessCmpntID";  
+	/**
+	 * Session存储的用户当前登录语言
+	 */
+	private final static String sysLanguage = "sysLanguage";
+
+	/**
+	 * Cookie存储的系统语言信息
+	 */
+	private final static String cookieLang = "tzlang";
+	/**
+	 * Cookie存储的机构信息 TODO 名称待定
+	 */
+	private final static String cookieJgId = "TZGD_CONTEXT_LOGIN_ORGID";
+	
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -31,21 +57,36 @@ public class GdObjectServiceImpl implements GdObjectService {
 
 	@Autowired
 	private TZGDObject tzGDObject;
+	
+	@Autowired
+	private TzCookie tzCookie;
+	
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
-	/* 获取当前登录会话语言代码的方法 TODO ***/
+	// 获取当前登录会话语言代码的方法
 	public String getLoginLanguage(HttpServletRequest request, HttpServletResponse response) {
-		/**
-		 * String retLanguageCd = ""; String tmpExtLanguageCd = m_ExtLanguageCd;
-		 * if(tmpExtLanguageCd == null || "".equals(tmpExtLanguageCd)){
-		 * 
-		 * }else{ retLanguageCd = m_ExtLanguageCd; }
-		 **/
-		return "ZHS";
+		String language = tzLoginServiceImpl.getSysLanaguageCD(request);
+		if(language == null || "".contentEquals(language)){
+			language = this.getBaseLanguageCd();
+		}
+		return language;
+	}
+	
+	public String getBaseLanguageCd(){
+		String baseLanguageCd = getHardCodeValue("TZGD_BASIC_LANGUAGE");
+		   
+		if(baseLanguageCd == null || "".equals(baseLanguageCd))	{	
+			baseLanguageCd = "ZHS";
+		}else{
+			baseLanguageCd = baseLanguageCd.toUpperCase();
+		}
+		return baseLanguageCd;
 	}
 
 	@Override
-	/* 获取当前登录人归属机构的方法 TODO */
+	/* 获取当前登录人归属机构的方法*/
 	public String getLoginOrgID(HttpServletRequest request, HttpServletResponse response) {
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		return orgId;
@@ -137,15 +178,86 @@ public class GdObjectServiceImpl implements GdObjectService {
 		return tmpMsgText;
 	}
 
-	/* 设置当前用户访问的组件编号和页面编号 TODO */
+	/* 设置当前用户访问的组件编号和页面编号 */
 	public void setCurrentAccessComponentPage(HttpServletRequest request, String accessComponentID,
 			String accessPageID) {
-		// TODO;
+		TzSession tzSession = new TzSession(request);
+		tzSession.addSession(gbl_CurrentAccessCmpntID, accessComponentID);
+		tzSession.addSession(gbl_CurrentAccessCPageID, accessPageID);
 	}
 
-	/* 判断当前登录会话是否超时失效的方法 TODO */
+	/* 判断当前登录会话是否超时失效的方法 */
 	public boolean isSessionValid(HttpServletRequest request) {
-		return true;
+		boolean bSessionValid = false;
+		//判断用户
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String lang = tzLoginServiceImpl.getSysLanaguageCD(request);
+		String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		if(oprid != null && !"".equals(oprid)
+			&& orgid != null && !"".equals(orgid)
+			&& lang != null && !"".equals(lang)
+			&& zhid != null && !"".equals(zhid)){
+			bSessionValid = true;
+		}else{
+			/*当前会话对应的上下文全局变量均不存在的情况下，还要判断一下当前登录用户（理论上应该是匿名访问用户）对当前访问的组件页面是否有访问权限*/
+			TzSession tzSession = new TzSession(request);
+			String comid = (String)tzSession.getSession(gbl_CurrentAccessCmpntID);
+			String pageid = (String)tzSession.getSession(gbl_CurrentAccessCPageID);
+			String tmpAuthFlag = this.getAPByCPU(request,comid,pageid,this.getOPRID(request));
+			if("W".equals(tmpAuthFlag) || "R".equals(tmpAuthFlag)){
+		         /*如果当前用户（理论上应该是匿名访问用户）对当前访问的组件页面有访问权限，则仍然返回会话有效*/
+		         bSessionValid = true;
+			}else{
+				 /*如果当前用户（理论上应该是匿名访问用户）对当前访问的组件页面无访问权限，则返回会话已过有效期*/
+		         bSessionValid = false;
+			}
+			
+		}
+		return bSessionValid;
+	}
+	
+	public String getAPByCPU(HttpServletRequest request,String comId,String pageId, String userId){
+		String retAccessPermission = "N";
+
+		 /*如果传入的用户为空，则默认为当前登录用户*/
+		if(userId == null || "".equals(userId)){
+			userId = this.getOPRID(request);
+		}
+		if(comId == null || "".equals(comId) 
+				|| pageId == null || "".equals(pageId)){
+			return "N";
+		}
+		
+		// 更新权限;
+		int update = 0;
+		String haveUpdateSQL = "SELECT C.TZ_EDIT_FLG FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY C.TZ_EDIT_FLG DESC limit 0,1";
+		try {
+			update = jdbcTemplate.queryForObject(haveUpdateSQL,
+								new Object[] { userId, comId, comId + "$%", pageId }, "Integer");
+		} catch (Exception e) {
+			update = 0;
+		}
+		if (update != 1) {
+			// 查看权限;
+			int view = 0;
+			String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
+			try {
+				view = jdbcTemplate.queryForObject(haveReadSQL,
+									new Object[] { userId, comId, comId + "$%", pageId }, "Integer");
+			} catch (Exception e) {
+				view = 0;
+			}
+			if (view != 1) {
+				retAccessPermission = "N";
+			}else{
+				retAccessPermission = "R";
+			}
+		}else{
+			retAccessPermission = "W";
+		}
+		return retAccessPermission;
+		
 	}
 
 	/* 判断主题是否合法的方法 */
@@ -222,28 +334,32 @@ public class GdObjectServiceImpl implements GdObjectService {
 		}
 	}
 
-	/* 切换当前登录人上下文信息语言环境代码的方法 TODO */
+	/* 切换当前登录人上下文信息语言环境代码的方法*/
 	public void switchLanguageCd(HttpServletRequest request, HttpServletResponse response, String loginLanguageCD) {
-		// TODO
+		// 设置session变量
+		TzSession tzSession = new TzSession(request);
+		tzSession.addSession(sysLanguage, loginLanguageCD);
+
+		// 设置cookie变量
+		int cookieMaxAge = 3600 * 24 * 30; // cookie期限是30天
+		tzCookie.addCookie(response, cookieLang, loginLanguageCD, cookieMaxAge);
+	
+		// 更新系统记录
+		this.setUserGXHSXValue(request, response, "LANGUAGECD", loginLanguageCD);
 	}
 
-	/* 获取当前登录人账号的方法 TODO */
+	/* 获取当前登录人账号的方法 */
 	public String getLoginAccount(HttpServletRequest request, HttpServletResponse response) {
-		// TODO;
-		PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
-		if (psTzAqYhxxTbl != null) {
-			return psTzAqYhxxTbl.getTzDlzhId();
-		}
-		return "";
+		return tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 	}
 
-	/* 获取当前登录人对应的OPRID的方法TODO */
+	/* 获取当前登录人对应的OPRID的方法 */
 	@Override
 	public String getOPRID(HttpServletRequest request) {
-		// TODO ;
-		String oprid = "";
-		oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		if(oprid == null || "".equals(oprid)){
+			oprid = "TZ_GUEST";
+		}
 		return oprid;
 	}
 
@@ -324,5 +440,60 @@ public class GdObjectServiceImpl implements GdObjectService {
 			retMsgText = "取数失败！" + e.getMessage();
 		}
 		return retMsgText;
+	}
+	
+	/*获取处理会话超时的HTML代码*/
+	public String getTimeoutHTML(HttpServletRequest request,String htmlObject){
+		String strRetContent = "";
+		String tmpLoginURL = "";
+		//得到机构的cookie;
+		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+		//得到语言;
+		String tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+
+		if(tmpOrgID != null && !"".equals(tmpOrgID)){
+			//查询机构是不是存在;
+			String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+			int count = jdbcTemplate.queryForObject(sql, new Object[]{tmpOrgID},"Integer");
+			if(count > 0){
+				tmpLoginURL = request.getContextPath() + "/login/"+tmpOrgID.toLowerCase();
+			}else{
+				tmpLoginURL = request.getContextPath() + "/login";
+			}
+		}else{
+			tmpLoginURL = request.getContextPath() + "/login";
+		}
+		
+		if(tmpLanguageCd != null){
+			String langSQL = "SELECT COUNT(1) FROM PS_TZ_PT_ZHZXX_TBL WHERE UPPER(TZ_ZHZJH_ID)=UPPER(?) AND TZ_ZHZ_ID=? AND TZ_EFF_DATE<= curdate()";
+			
+			int languageCount = jdbcTemplate.queryForObject(langSQL, new Object[]{tmpLanguageCd,tmpLanguageCd},"Integer");
+			if(languageCount == 0){
+				tmpLanguageCd = this.getBaseLanguageCd();
+			}
+		}else{
+			tmpLanguageCd = this.getBaseLanguageCd();
+		}
+		
+		String tempDefaultPrefixCN = "当前会话已超时或者非法访问，重新登录请点击";
+		String tempDefaultPrefixEN = "The current session is timeout or the current access is invalid.<br>Please click";
+		String tempDefaultMiddleCN = "这里";
+		String tempDefaultMiddleEN = "here";
+		String tempDefaultPostfixCN = "。";
+		String tempDefaultPostfixEN = "to relogin.";
+		
+		String tmpInvalidSessionPrefix = this.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00037", tmpLanguageCd, tempDefaultPrefixCN, tempDefaultPrefixEN);
+		String tmpInvalidSessionMiddle = this.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00038", tmpLanguageCd, tempDefaultMiddleCN, tempDefaultMiddleEN);
+		String tmpInvalidSessionPostfix = this.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00039", tmpLanguageCd, tempDefaultPostfixCN, tempDefaultPostfixEN);
+	    
+		try {
+			strRetContent = tzGDObject.getHTMLText(htmlObject, true, tmpInvalidSessionPrefix, tmpLoginURL, tmpInvalidSessionMiddle, tmpInvalidSessionPostfix, tmpOrgID,request.getContextPath());
+			strRetContent = siteRepCssServiceImpl.repCssByJg(strRetContent, tmpOrgID);
+		} catch (TzSystemException e) {
+			e.printStackTrace();
+			strRetContent = "";
+		}
+		
+		return strRetContent;
 	}
 }

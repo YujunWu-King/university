@@ -448,7 +448,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			}
 
 			if (update != 1) {
-				// 更新权限;
+				// 查看权限;
 				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
 				try {
 					view = jdbcTemplate.queryForObject(haveReadSQL,
@@ -553,16 +553,10 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			case HTML:
 
 				strRet = obj.tzGetHtmlContent(comParams);
-				/*
-				 * parameterTypes = new String[] { "String" }; methodName =
-				 * "tzGetHtmlContent"; arglist = new Object[] { comParams };
-				 * objs = ObjectDoMethod.Load(strAppClass, methodName,
-				 * parameterTypes, arglist);
-				 */
 				break;
 			// 获取json格式的html内容;
 			case JHTML:
-				// TODO;
+				strRet = obj.tzGetHtmlData(comParams);
 				break;
 			// 获取json格式的数据;
 			case EJSON:
@@ -570,15 +564,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				break;
 			// tzOther;
 			default:
-
 				strRet = obj.tzOther(strOprType, comParams, errMsgArr);
-				/*
-				 * methodName = "tzOther"; parameterTypes = new String[] {
-				 * "String", "String", "String[]" }; arglist = new Object[] {
-				 * strOprType, comParams, errMsgArr }; objs =
-				 * ObjectDoMethod.Load(strAppClass, methodName, parameterTypes,
-				 * arglist);
-				 */
 				break;
 			}
 		} catch (Exception e) {

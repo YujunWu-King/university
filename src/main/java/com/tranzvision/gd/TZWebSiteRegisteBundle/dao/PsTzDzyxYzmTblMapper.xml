@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl" >
+    <id column="TZ_TOKEN_CODE" property="tzTokenCode" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_TOKEN_TYPE" property="tzTokenType" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_CNTLOG_ADDTIME" property="tzCntlogAddtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_YZM_YXQ" property="tzYzmYxq" jdbcType="TIMESTAMP" />
+    <result column="TZ_EFF_FLAG" property="tzEffFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_TOKEN_CODE, TZ_DLZH_ID, TZ_JG_ID, TZ_TOKEN_TYPE, TZ_EMAIL, TZ_CNTLOG_ADDTIME, 
+    TZ_YZM_YXQ, TZ_EFF_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DZYX_YZM_TBL
+    where TZ_TOKEN_CODE = #{tzTokenCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DZYX_YZM_TBL
+    where TZ_TOKEN_CODE = #{tzTokenCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl" >
+    insert into PS_TZ_DZYX_YZM_TBL (TZ_TOKEN_CODE, TZ_DLZH_ID, TZ_JG_ID, 
+      TZ_TOKEN_TYPE, TZ_EMAIL, TZ_CNTLOG_ADDTIME, 
+      TZ_YZM_YXQ, TZ_EFF_FLAG)
+    values (#{tzTokenCode,jdbcType=VARCHAR}, #{tzDlzhId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzTokenType,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, #{tzCntlogAddtime,jdbcType=TIMESTAMP}, 
+      #{tzYzmYxq,jdbcType=TIMESTAMP}, #{tzEffFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl" >
+    insert into PS_TZ_DZYX_YZM_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzTokenCode != null" >
+        TZ_TOKEN_CODE,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzTokenType != null" >
+        TZ_TOKEN_TYPE,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzCntlogAddtime != null" >
+        TZ_CNTLOG_ADDTIME,
+      </if>
+      <if test="tzYzmYxq != null" >
+        TZ_YZM_YXQ,
+      </if>
+      <if test="tzEffFlag != null" >
+        TZ_EFF_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzTokenCode != null" >
+        #{tzTokenCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTokenType != null" >
+        #{tzTokenType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCntlogAddtime != null" >
+        #{tzCntlogAddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzYzmYxq != null" >
+        #{tzYzmYxq,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEffFlag != null" >
+        #{tzEffFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl" >
+    update PS_TZ_DZYX_YZM_TBL
+    <set >
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTokenType != null" >
+        TZ_TOKEN_TYPE = #{tzTokenType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCntlogAddtime != null" >
+        TZ_CNTLOG_ADDTIME = #{tzCntlogAddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzYzmYxq != null" >
+        TZ_YZM_YXQ = #{tzYzmYxq,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEffFlag != null" >
+        TZ_EFF_FLAG = #{tzEffFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_TOKEN_CODE = #{tzTokenCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl" >
+    update PS_TZ_DZYX_YZM_TBL
+    set TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_TOKEN_TYPE = #{tzTokenType,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_CNTLOG_ADDTIME = #{tzCntlogAddtime,jdbcType=TIMESTAMP},
+      TZ_YZM_YXQ = #{tzYzmYxq,jdbcType=TIMESTAMP},
+      TZ_EFF_FLAG = #{tzEffFlag,jdbcType=VARCHAR}
+    where TZ_TOKEN_CODE = #{tzTokenCode,jdbcType=VARCHAR}
+  </update>
+</mapper>

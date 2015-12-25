@@ -24,6 +24,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * 
  * @author tang
  * 发布注册页静态化相关页面
+ * 
+ * PS:TZ_GD_USERMG_PKG:TZ_GD_USER_REG
  *
  */
 @Service("com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegisteServiceImpl")
@@ -45,8 +47,15 @@ public class RegisteServiceImpl {
 	public String userRegister(String strJgid, String strSiteId){
 		String fields = "";
 		try {
-			String strLangSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
-			String strLang = jdbcTemplate.queryForObject(strLangSQL,new Object[]{strSiteId},"String");
+			//得到皮肤图片的路径;
+			PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteId);
+			if(psTzSiteiDefnT == null){
+				return "";
+			}
+			String strLang = psTzSiteiDefnT.getTzSiteLang();
+			String skinId = psTzSiteiDefnT.getTzSkinId();
+			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			//获取要显示的字段;
 			String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
@@ -80,11 +89,14 @@ public class RegisteServiceImpl {
 				    
 				    String regFieldId = (String)map.get("TZ_REG_FIELD_ID");
 				    String regDefValue = (String)map.get("TZ_DEF_VAL");
-				    if("TZ_PASSWORD".equals(regFieldId)){
-				    	continue;
+				    if(regDefValue == null){
+				    	regDefValue = "";
+				    }else{
+				    	regDefValue = regDefValue.trim();
 				    }
 				    
 				    ArrayList<String> fieldsArr = new ArrayList<>();
+				    fieldsArr.add("TZ_PASSWORD");
 				    fieldsArr.add("TZ_REPASSWORD");
 				    fieldsArr.add("TZ_GENDER");
 				    fieldsArr.add("BIRTHDATE");
@@ -94,8 +106,8 @@ public class RegisteServiceImpl {
 				    fieldsArr.add("TZ_LEN_CITY");
 				    if(fieldsArr.contains(regFieldId)){
 				    	//密码
-				    	if("TZ_REPASSWORD".equals(regFieldId)){
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PASSWORD_HTML", true, "*", regFldYsmc, regFieldId,regDefValue );
+				    	if("TZ_PASSWORD".equals(regFieldId) || "TZ_REPASSWORD".equals(regFieldId)){
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PASSWORD_HTML", true, "*", regFldYsmc, regFieldId,regDefValue,imgPath );
 				    	}
 				    	
 				    	//性别;
@@ -119,31 +131,31 @@ public class RegisteServiceImpl {
 				    	
 				    	//BIRTHDATE;
 				    	if("BIRTHDATE".equals(regFieldId)){
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_COUNTRY;
 				    	if("TZ_COUNTRY".equals(regFieldId)){
-				    		img = "<img src=\"/tranzvision/images/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue);
+				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
-				    		img = "<img src=\"/tranzvision/images/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue);
+				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
 				    	if("TZ_LEN_PROID".equals(regFieldId)){
-				    		img = "<img src=\"/tranzvision/images/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue);
+				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_CITY;
 				    	if("TZ_LEN_CITY".equals(regFieldId)){
-				    		img = "<img src=\"/tranzvision/images/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue);
+				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    }else{
 				    	//是否下拉框;
@@ -174,9 +186,9 @@ public class RegisteServiceImpl {
 				    				}
 				    			}
 				    		}
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOXR_HTML", true, isRequired, regFldYsmc, regFieldId,combox );
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOXR_HTML", true, isRequired, regFldYsmc, regFieldId,combox ,imgPath);
 				    	}else{
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "", "", regDefValue);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "", "", regDefValue,imgPath);
 				    	}
 				    }
 				}
@@ -191,10 +203,10 @@ public class RegisteServiceImpl {
 				if(strActType.indexOf("MOBILE")>=0 && strActType.indexOf("EMAIL")>=0){
 					if("ENG".equals(strLang)){
 						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
-				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", true, strActHtml);
+				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", true, strActHtml,imgPath);
 					}else{
 						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
-				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", true, strActHtml);
+				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", true, strActHtml,imgPath);
 					}
 				}
 			}else{
@@ -216,9 +228,9 @@ public class RegisteServiceImpl {
 			}
 			
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", true, fields, strJgid, strActHtml);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath());
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", true, fields, strJgid, strActHtml);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath());
 			}
 			
 			//fields = tzGdObject.getHTMLText("HTML.test.test", true, "test111","test222");
@@ -235,10 +247,18 @@ public class RegisteServiceImpl {
 	public String handleEnrollPage(String strSiteId){
 		String strContent = "";
 		try{
-			String sql = "SELECT TZ_JG_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
-			String strOrgId = jdbcTemplate.queryForObject(sql, new Object[]{strSiteId},"String");
+			PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteId);
+			if(psTzSiteiDefnT == null){
+				return "";
+			}
+			String strOrgId = psTzSiteiDefnT.getTzJgId();
+			String skinId = psTzSiteiDefnT.getTzSkinId();
+			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			imgPath = request.getContextPath() + imgPath + "/" + skinId;
+			
 			strContent = this.userRegister(strOrgId, strSiteId);
-			strContent = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SETREGISTEPAGE_HTML",true, strContent);
+			strContent = strContent.replaceAll("\\$",  "\\\\\\$");
+			strContent = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SETREGISTEPAGE_HTML",true, strContent,request.getContextPath());
 			//截取body内容
 			int numCharstart = 0;
 		    int numCharend = 0;
@@ -263,9 +283,14 @@ public class RegisteServiceImpl {
 				String jgid = psTzSiteiDefnT.getTzJgId();
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
 		        
-				String strReleasContent1 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true)
-						+ "<html>" + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",true, 
-								tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true)) 
+		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true);
+		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true,request.getContextPath());
+		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        
+				String strReleasContent1 = doctypeHtml
+						+ "<html>" 
+						+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",true, 
+								explorerHtml,request.getContextPath()) 
 						+ strReleasContent +  "</html>";
 				
 				strReleasContent1 = objRep.repWelcome(strReleasContent1, "");
@@ -285,7 +310,7 @@ public class RegisteServiceImpl {
 		        }
 		        
 		        String strReleasContent2 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true) + "<html>" 
-		        + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SAVE_HEAD_HTML",true) + strReleasContent + "</html>";
+		        + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SAVE_HEAD_HTML",true,request.getContextPath()) + strReleasContent + "</html>";
 		        
 		        strReleasContent2 = objRep.repWelcome(strReleasContent2, "");
 		        strReleasContent2 = objRep.repSiteid(strReleasContent2, strSiteId);
@@ -331,12 +356,12 @@ public class RegisteServiceImpl {
 				String jgid = psTzSiteiDefnT.getTzJgId();
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
 		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true);
-		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true);
+		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true,request.getContextPath());
 		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 		        strReleasContent = doctypeHtml
 		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",
-		        			true,explorerHtml) 
+		        			true,explorerHtml,request.getContextPath()) 
 		        	+ strReleasContent + "</html>";
 		        strReleasContent = objRep.repTitle(strReleasContent, strSiteId);
 		        strReleasContent = objRep.repCss(strReleasContent, strSiteId);

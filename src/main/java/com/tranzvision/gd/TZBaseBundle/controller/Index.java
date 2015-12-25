@@ -11,11 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjInitServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
 import com.tranzvision.gd.util.base.TZUtility;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/")
 public class Index {
+	/**
+	 * Cookie存储的系统语言信息
+	 */
+	private final static String cookieLang = "tzlang";
+	/**
+	 * Cookie存储的机构信息 TODO 名称待定
+	 */
+	private final static String cookieJgId = "TZGD_CONTEXT_LOGIN_ORGID";
+	
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -32,6 +44,12 @@ public class Index {
 	private GdKjComServiceImpl gdKjComService;
 	@Autowired
 	private GdKjInitServiceImpl gdKjInitService;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private TzCookie tzCookie;
+	@Autowired
+	private GdObjectServiceImpl gdObjectServiceImpl;
 
 	@RequestMapping(value = "index")
 	public String index(HttpServletRequest request, HttpServletResponse response) {
@@ -49,41 +67,101 @@ public class Index {
 		gdKjComService.setCurrentAccessComponentPage(request, "", "");
 
 		String tmpLanguageCd = "";
-
-		if (gdKjComService.isSessionValid(request) == true) {
-
+		
+		//判断下用户有没有登录;
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		if(oprid != null && !"".equals(oprid)
+				&& orgid != null && !"".equals(orgid)
+				&& zhid != null && !"".equals(zhid)){
 			// 记住当前登录用户的主题设置;
 			gdKjComService.setUserGxhTheme(request, response, tmpSubmitThemeID);
 			// 记住当前登录用户的语言环境设置;
 			gdKjComService.setUserGxhLanguage(request, response, tmpSubmitLanguageCd);
 
 			tmpLanguageCd = gdKjComService.getUserGxhLanguage(request, response);
+			
+			// 切换会话语言环境代码;
+			gdKjComService.switchLanguageCd(request, response, tmpLanguageCd);
+
+			String parth = request.getContextPath();
+			request.setAttribute("tz_gdcp_interaction_url_20150612184830", parth + "/dispatcher");
+
+			request.setAttribute("tz_gdcp_frmwrk_init_msgset_20150612184830",
+					gdKjComService.getFrameworkDescriptionResources(request, response));
+
+			request.setAttribute("tz_gdcp_theme_id_20150612184830",
+					TZUtility.transFormchar(gdKjComService.getUserGxhTheme(request, response)));
+
+			request.setAttribute("tz_gdcp_language_cd_20150612184830",
+					TZUtility.transFormchar(gdKjComService.getUserGxhLanguage(request, response)));
+
+			request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
+
+			return "index";
+		}else{
+			String tmpLoginURL = "";
+			//得到机构的cookie;
+			String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+			//得到语言;
+			tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+
+			if(tmpOrgID != null && !"".equals(tmpOrgID)){
+				//查询机构是不是存在;
+				String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+				int count = jdbcTemplate.queryForObject(sql, new Object[]{tmpOrgID},"Integer");
+				if(count > 0){
+					tmpLoginURL = request.getContextPath() + "/login/"+tmpOrgID.toLowerCase();
+				}else{
+					tmpLoginURL = request.getContextPath() + "/login";
+				}
+			}else{
+				tmpLoginURL = request.getContextPath() + "/login";
+			}
+			if(tmpLanguageCd != null){
+				String langSQL = "SELECT COUNT(1) FROM PS_TZ_PT_ZHZXX_TBL WHERE UPPER(TZ_ZHZJH_ID)=UPPER(?) AND TZ_ZHZ_ID=? AND TZ_EFF_DATE<= curdate()";
+				
+				int languageCount = jdbcTemplate.queryForObject(langSQL, new Object[]{tmpLanguageCd,tmpLanguageCd},"Integer");
+				if(languageCount == 0){
+					tmpLanguageCd = gdObjectServiceImpl.getBaseLanguageCd();
+				}
+			}else{
+				tmpLanguageCd = gdObjectServiceImpl.getBaseLanguageCd();
+			}
+			
+			
+			String tempDefaultPrefixCN = "当前会话已超时或者非法访问，重新登录请点击";
+			String tempDefaultPrefixEN = "The current session is timeout or the current access is invalid.<br>Please click";
+			String tempDefaultMiddleCN = "这里";
+			String tempDefaultMiddleEN = "here";
+			String tempDefaultPostfixCN = "。";
+			String tempDefaultPostfixEN = "to relogin.";
+			
+			String tmpInvalidSessionPrefix = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00037", tmpLanguageCd, tempDefaultPrefixCN, tempDefaultPrefixEN);
+			String tmpInvalidSessionMiddle = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00038", tmpLanguageCd, tempDefaultMiddleCN, tempDefaultMiddleEN);
+			String tmpInvalidSessionPostfix = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00039", tmpLanguageCd, tempDefaultPostfixCN, tempDefaultPostfixEN);
+		    
+			request.setAttribute("tmpInvalidSessionPrefix", tmpInvalidSessionPrefix);
+			request.setAttribute("tmpLoginURL", tmpLoginURL);
+			request.setAttribute("tmpInvalidSessionMiddle", tmpInvalidSessionMiddle);
+			request.setAttribute("tmpInvalidSessionPostfix", tmpInvalidSessionPostfix);
+			return "invalid";
 		}
 
-		// 切换会话语言环境代码;
-		gdKjComService.switchLanguageCd(request, response, tmpLanguageCd);
-
-		String parth = request.getContextPath();
-		request.setAttribute("tz_gdcp_interaction_url_20150612184830", parth + "/dispatcher");
-
-		request.setAttribute("tz_gdcp_frmwrk_init_msgset_20150612184830",
-				gdKjComService.getFrameworkDescriptionResources(request, response));
-
-		request.setAttribute("tz_gdcp_theme_id_20150612184830",
-				TZUtility.transFormchar(gdKjComService.getUserGxhTheme(request, response)));
-
-		request.setAttribute("tz_gdcp_language_cd_20150612184830",
-				TZUtility.transFormchar(gdKjComService.getUserGxhLanguage(request, response)));
-
-		request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
-
-		return "index";
+		
 	}
 
 	@RequestMapping(value = "dispatcher", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String dispatcher(HttpServletRequest request, HttpServletResponse response) {
-
+		/*String[] errMsg = {"0",""};
+		String content = registeServiceImpl.handleEnrollPage("5");
+		registeServiceImpl.saveEnrollpage(content, "5",errMsg);
+		registeServiceImpl.releasEnrollpage(content, "5",errMsg);
+		return errMsg[0] + "====>" + errMsg[1];
+		*/
+		
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
 		// 报文内容;
@@ -245,10 +323,6 @@ public class Index {
 				String hardcodeValue = gdKjInitService.getHardCodeValue(hardcodeName);
 				strComContent = "'" + hardcodeValue + "'";
 				break;
-			// LOGOUT;
-			case LOGOUT:
-				// TODO;
-				break;
 			default:
 				// 组件ID;
 				String comID = jacksonUtil.getString("ComID");
@@ -290,15 +364,13 @@ public class Index {
 		}
 
 		if ("HTML".equals(strOprType)) {
-			if (!"1".equals(errorCode)) {
+			if ("0".equals(errorCode)) {
 				strRetContent = strComContent;
 			} else {
 				if (gdKjComService.isSessionValid(request)) {
 					strRetContent = strErrorDesc;
 				} else {
-					// TODO;
-					// strRetContent =
-					// this.getTimeoutHTML("TZGD_SQR_HTML_TIMEOUT");
+					strRetContent = gdObjectServiceImpl.getTimeoutHTML(request, "HTML.TZBaseBundle.TZGD_SQR_HTML_TIMEOUT");
 					if (strRetContent == null || "".equals(strRetContent)) {
 						strRetContent = strErrorDesc;
 					}
@@ -321,4 +393,5 @@ public class Index {
 		}
 		return strRetContent;
 	}
+	
 }

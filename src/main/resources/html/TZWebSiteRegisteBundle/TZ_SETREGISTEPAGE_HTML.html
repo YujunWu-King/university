@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+ <link href="page_stylecss" rel="stylesheet" type="text/css" />
+    <link id="decoratedplugincss" href="%bind(:2)/statics/css/website/decoratedplugin.css" rel="stylesheet" type="text/css"/>
+	<link  rel="stylesheet" type="text/css" href="%bind(:2)/statics/css/kitchensink/neptune-touch/resources/KitchenSink-all.css" symbol="backend"/>
+	<script type="text/javascript" src="%bind(:2)/statics/js/lib/extjs/ext-all.js" symbol="backend"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/ueditor/ueditor.config.js" symbol="backend"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/ueditor/ueditor.all.js" symbol="backend"></script>
+
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/extjs/ux/ueditor.js" symbol="backend"></script>
+	  <script id="decoratedpluginjs" type="text/javascript" src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/decoratedplugin.js">
+        </script>  
+	<script type="text/javascript" src="%bind(:2)/statics/js/lib/jquery/jquery.min.js"></script> 
+  		<script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js">
+        </script>   
+	 <script type="text/javascript">
+			function getQueryString(name) { 
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+				var r = window.location.search.substr(1).match(reg); 
+				if (r != null) return unescape(r[2]); return null; 
+			} 
+
+			//var urlBegin="http://202.120.24.169:9550/psc/TZDEV/EMPLOYEE/CRM/s";
+            
+        </script>
+</head>
+
+<body style="background:#fff">
+		<div id="all">
+<div id="sdkbar">
+            <div class="clear">
+
+				<ul class="sdk-page-nav">
+      				<li class="page-index"><a href="javascript:void(0)" id="sdkbarhome">首页</a></li>
+     				<li class="page-list"><a href="javascript:void(0)" id="sdkbarlogin">登录页</a></li>
+      				<li class="page-detail"><a href="javascript:void(0)" id="sdkbarregiste">注册页</a></li>
+                </ul>
+
+                <ul class="sdk-confirm">
+                    <li class="preview">
+                        <a href="javascript:void(0)" target="_blank" id="sdkbarpreview">
+                            预览
+                        </a>
+                    </li>
+                    <li class="exit">
+                        <a href="javascript:void(0)" id="sdkbarsave">
+                            保存
+                        </a>
+                    </li>
+					<li class="release">
+                        <a href="javascript:void(0)" id="sdkbarrelease">
+                            发布
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+<!-- top start -->
+<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false"
+        area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="40">
+
+</div>
+<!-- top end -->
+
+%bind(:1)
+
+<!-- foot start -->
+<div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="46">
+
+        </div>
+
+<!--foot end -->
+
+<div>
+			<input id="pagetype" name="pagetype" value="enrollpage" type="hidden" >
+            <input id="jgid" name="jgid" type="hidden" />
+            <input id="siteid" name="siteid" type="hidden" />
+            <input id="lang" name="lang" type="hidden" />
+			<input id="operator" name="operator" type="hidden" />
+</div>
+<script type="text/javascript">
+
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    };
+
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+</script>
+<script type="text/javascript">
+	     $(document).ready(function(){
+			LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
+			LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
+		});
+
+</script>
+</div>
+</body>
+</html>

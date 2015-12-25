@@ -150,6 +150,11 @@ public class CreateTaskServiceImpl {
 			int i = psTzAudienceTMapper.insert(psTzAudienceT);
 			if (i <= 0) {
 				audId = "";
+			}else{
+				PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = new PsTzDxyjfsrwTbl();
+				psTzDxyjfsrwTbl.setTzEmlSmsTaskId(taskId);
+				psTzDxyjfsrwTbl.setTzAudienceId(audId);
+				psTzDxyjfsrwTblMapper.updateByPrimaryKeySelective(psTzDxyjfsrwTbl);
 			}
 		} catch (Exception e) {
 			audId = "";

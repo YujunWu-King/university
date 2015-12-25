@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>城市选择器</title>
+		<!--
+		<link href="/onlineReg/css/css.css" rel="stylesheet" type="text/css" />
+		-->
+		<!-- 载入左侧边栏自适应高度的js-->
+
+		<script type="text/javascript">
+			window.onload = function(){
+				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+				var head = document.getElementsByTagName("head").item(0);
+				//在子窗口中添加父窗口的外联样式
+				for(var i=0;i<linkList.length;i++){
+					var l=document.createElement("link");
+						l.rel = 'stylesheet'
+						l.type = 'text/css'; 
+						l.href=linkList[i].href;
+						head.appendChild(l);
+				}
+			}
+		</script>
+		<script type="text/javascript" src="%bind(:3)/statics/js/lib/jquery/jquery.min.js"></script>
+	</head>
+
+	<body>
+		<div class="city_top2">
+			<div class="city_close" onclick="closeThis();">
+				<img src="%bind(:3)/statics/images/website/del.png" width="15" height="15" />
+				&nbsp;
+			</div>
+		</div>
+		<div class="city_main">
+			<div class="city_main_line">
+				%bind(:1)
+			</div>
+		</div>
+		<script language="javascript" type="text/javascript">
+			function changeCity2(city){
+				var pageid="%bind(:2)";
+				$("#"+pageid,window.parent.document).val(city);
+				var index = parent.layer.getFrameIndex(window.name);
+				$("#"+pageid,window.parent.document).focus();
+				$("#"+pageid,window.parent.document).trigger("blur");
+				parent.layer.close(index-3);
+				parent.layer.close(index-2);
+				parent.layer.close(index-1);
+				parent.layer.close(index);
+				//closeThis();
+			}
+			function closeThis(){
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
+			}
+		</script>
+	</body>
+</html>

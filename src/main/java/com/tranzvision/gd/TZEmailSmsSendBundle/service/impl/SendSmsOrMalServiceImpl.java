@@ -437,6 +437,7 @@ public class SendSmsOrMalServiceImpl {
 				jdbcTemplate.update(updateStateSQL,new Object[]{"D",strTaskId});
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			//错误日志;
 			this.writeTaskLog(strTaskId, "", "D", e.toString());
 			//失败;

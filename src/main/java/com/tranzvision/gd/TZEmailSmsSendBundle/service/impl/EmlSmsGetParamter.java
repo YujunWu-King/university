@@ -12,7 +12,7 @@ import com.tranzvision.gd.util.base.GetSpringBeanUtil;
  */
 public class EmlSmsGetParamter {
 	//所有邮件、短信发送的参数都以各自创建TZ_AUDCYUAN_T表听众数据中的听众id和听众成员id为参数;
-	public String getName(String[] paramters){
+    public String getName (String[] paramters){
 		try{
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil(); 
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
@@ -20,10 +20,49 @@ public class EmlSmsGetParamter {
 			String audId = paramters[0];
 			String audCyId = paramters[1];
 			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[]{audId,audCyId});
-			
+				
 			return name;
 		}catch(Exception e){
+			e.printStackTrace();
 			return "";
 		}
 	}
+    
+    //生成注册用户发送的邮件内容;
+	public String createUrlforEnroll (String[] paramters){
+		try{
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil(); 
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "SELECT OPRID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String strOprId = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[]{audId,audCyId});
+			if(strOprId != null && !"".equals(strOprId)){
+				String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+				String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class, new Object[]{strOprId});
+				
+				String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+				String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[]{strOrgid});
+			
+				String tokenCodeSQL = "SELECT TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE='REG' AND TZ_EFF_FLAG='Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
+				String strTokenSign = jdbcTemplate.queryForObject(tokenCodeSQL, String.class, new Object[]{strOprId, strOrgid,});
+				if(strTokenSign != null && !"".equals(strTokenSign)){
+					String strActUrl = "http://localhost:8080/university/dispatcher";
+					strActUrl = strActUrl + "?classid=enrollCls&tokensign=" + strTokenSign + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=2";
+					return strActUrl;
+				}else{
+					return "";
+				}
+			}else{
+				return "";
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	
+	
 }
