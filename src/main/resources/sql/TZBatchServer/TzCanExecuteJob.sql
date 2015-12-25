@@ -1,0 +1,17 @@
+SELECT
+  'X' AQ_FLAG
+FROM
+  TZ_JINC_DY_T A
+WHERE A.TZ_JG_ID=?
+  AND A.TZ_JC_MC=?
+  AND EXISTS(SELECT 'X' FROM TZ_AQ_JCDD_T S1,PSROLECLASS S2,PSROLEUSER S3,PS_TZ_AQ_YHXX_TBL S4
+             WHERE S1.CLASSID=S2.CLASSID
+               AND S1.TZ_COM_ID=A.TZ_ZCZJ_ID
+               AND S1.TZ_JG_ID=A.TZ_JG_ID
+               AND S1.TZ_JC_MC=A.TZ_JC_MC
+               AND S1.TZ_DD_FLG='1'
+               AND S2.ROLENAME=S3.ROLENAME
+               AND S3.ROLEUSER=S4.OPRID
+               AND S4.TZ_JG_ID=A.TZ_JG_ID
+               AND S4.TZ_DLZH_ID=?
+            )
