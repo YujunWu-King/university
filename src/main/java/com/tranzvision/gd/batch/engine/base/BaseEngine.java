@@ -496,6 +496,7 @@ public class BaseEngine extends BaseJob implements Runnable
 		}
 		catch(Exception e)
 		{
+			fatal(e.toString());
 			throw new JobExecutionException(e.toString());
 		}
 		
@@ -525,10 +526,10 @@ public class BaseEngine extends BaseJob implements Runnable
 			//运行状态从“RUNNING”更新为“FATAL”
 			updateStatus("FATAL");
 			
-			//记录日志
-			logFatal("an fatal error occurred during the job process running.\n" + e.toString());
 			//将日志写到日志文件中
 			fatal("an fatal error occurred during the job process running.\n" + e.toString());
+			//记录日志
+			logFatal("an fatal error occurred during the job process running.\n" + e.toString());
 			
 			return;
 		}
@@ -611,7 +612,22 @@ public class BaseEngine extends BaseJob implements Runnable
 	//检查指定用户是否有权向运行当前指定的Job进程
 	final private void checkPermissionList(String orgId,String procName,String loginUser) throws TzException
 	{
-		//todo;
+		try
+		{
+			TzString aqFlag = new TzString();
+			String sqlText = getSQLText("SQL.TZBatchServer.TzCanExecuteJob");
+			
+			this.sqlExec(sqlText,new SqlParams(orgId,procName,loginUser),aqFlag);
+			
+			if("X".equals(aqFlag.getValue().trim()) == false)
+			{
+				throw new TzException("the current user[" + loginUser + "] has no permission to run the currently specified job[" + orgId + "." + procName + "].");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new TzException("an error occured when check the current user's[" + loginUser + "] permission to run the currently specified job[" + orgId + "." + procName + "].\n" + e.toString());
+		}
 	}
 	
 	//发起一个调度Job进程的方法，参数schdDateTime指定了Job进程的调度执行时间

@@ -395,7 +395,7 @@ public class BatchServer extends BaseJob
 		try
 		{
 			String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
-			sqlExec(sqlText);
+			sqlExec(sqlText,new SqlParams(organizationID));
 		}
 		catch(Exception e)
 		{
