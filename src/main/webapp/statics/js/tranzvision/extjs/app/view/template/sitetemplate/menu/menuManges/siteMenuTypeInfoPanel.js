@@ -35,14 +35,15 @@
         },
 		
         items: [{
-            xtype: 'textfield',
+            xtype: 'hiddenfield',
             readOnly:true,
             fieldLabel: '站点模板编号',
-			name: 'siteId',
-        	},{
-            xtype: 'hiddenfield',
+			name: 'siteId'
+        },{
+            xtype: 'textfield',
             fieldLabel: '菜单类型编号',
 			name: 'menutypeid',
+			readOnly : true
         },{
             xtype: 'textfield',
             fieldLabel: '菜单类型名称',
