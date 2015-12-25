@@ -66,8 +66,8 @@ public class TemplateModelMenuIconServiceImple extends FrameworkImpl {
 					}
 				}
 				
-				String totalSQL ="SELECT COUNT(1) FROM PS_TZ_SITEM_CDPF_T where TZ_SITEM_ID = ?";
-				int total = jdbcTemplate.queryForObject(totalSQL,new Object[]{siteId}, "Integer");
+				String totalSQL ="SELECT COUNT(1) FROM PS_TZ_SITEM_CDPF_T where TZ_SITEM_ID = ? and TZ_MENU_TYPE_ID = ?";
+				int total = jdbcTemplate.queryForObject(totalSQL,new Object[]{siteId,menutypeid}, "Integer");
 				String sql = "";
 				List<Map<String, Object>> list = null;
 				if(numLimit > 0){
