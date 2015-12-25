@@ -314,13 +314,18 @@
             allowBlank: false,
             validator : function(v){
             	
-            	var form = this.findParentByType("form").getForm();
+              var form = this.findParentByType("form").getForm();
               var pwd = form.findField("password").getValue();
+              
+              if(v != "" && pwd != ""){
             	if(v ==pwd){
             		 return true;
             	}else{
             		return "输入的密码不一致";
             	}
+              }else{
+          		return true;
+          	  }
             }
         }, {
             xtype: 'textfield',
