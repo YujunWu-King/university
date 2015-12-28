@@ -332,7 +332,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			boolean debugging = getCookieSessionProps.getDebug();
 			String strRtn = "";
 			if (debugging) {
-				strRtn = "Admin";
+				strRtn = "ADMIN";
 			}
 			return strRtn;
 		}

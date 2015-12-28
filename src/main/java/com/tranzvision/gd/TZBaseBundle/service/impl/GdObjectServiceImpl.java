@@ -97,7 +97,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getSuperOrgId(HttpServletRequest request, HttpServletResponse response) {
 		String superOrgId = this.getHardCodeValue("TZGD_SUPERORG_ID");
 		if ("".equals(superOrgId)) {
-			superOrgId = "Admin";
+			superOrgId = "ADMIN";
 		}
 		return superOrgId;
 	}
