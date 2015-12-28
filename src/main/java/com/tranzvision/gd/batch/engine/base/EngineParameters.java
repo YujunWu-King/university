@@ -11,27 +11,12 @@ import java.util.Date;
  */
 public class EngineParameters
 {
-	private String organizationId = "";
 	private Integer processInstanceId = 0;
 	private String loginUserAccount = "";
 	private String runControlId = "";
-	private String processName = "";
 	private String cycleExpression = "";
 	private String batchServer = "";
 	private Date planExcuteDateTime = null;
-	
-	public void setOrganizationId(String orgId)
-	{
-		if(orgId != null && orgId.trim().equals("") == false)
-		{
-			organizationId = orgId.trim();
-		}
-	}
-	
-	public String getOrganizationId()
-	{
-		return organizationId;
-	}
 	
 	public void setProcessInstanceId(Integer procInstanceId)
 	{
@@ -70,19 +55,6 @@ public class EngineParameters
 	public String getRunControlId()
 	{
 		return runControlId;
-	}
-	
-	public void setProcessName(String procName)
-	{
-		if(procName != null && procName.trim().equals("") == false)
-		{
-			processName = procName.trim();
-		}
-	}
-	
-	public String getProcessName()
-	{
-		return processName;
 	}
 	
 	public void setCycleExpression(String cycleExp)

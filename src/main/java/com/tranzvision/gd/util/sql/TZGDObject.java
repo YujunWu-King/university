@@ -17,11 +17,13 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.context.ApplicationContext;
 
 import com.tranzvision.gd.util.sql.SqlParams;
 import com.tranzvision.gd.util.sql.type.TzSQLData;
 import com.tranzvision.gd.util.sql.type.TzRecord;
 import com.tranzvision.gd.util.sql.type.TzSQLObject;
+import com.tranzvision.gd.util.sql.type.TzString;
 import com.tranzvision.gd.util.sql.SQLObjectManager;
 import com.tranzvision.gd.util.base.HTMLObjectManager;
 import com.tranzvision.gd.util.base.TzException;
@@ -35,6 +37,9 @@ import com.tranzvision.gd.batch.engine.base.BaseEngine;
 @Service
 public class TZGDObject
 {
+	@Autowired
+	private ApplicationContext acx;
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -438,11 +443,90 @@ public class TZGDObject
 	 * 返回结果：
 	 * 返回结果BaseEngine类型的Job进程实例对象。
 	 */
-	public BaseEngine createEngineProcess(String orgId,String procName)
+	public BaseEngine createEngineProcess(String orgId,String procName) throws TzException
 	{
 		BaseEngine tmpEngineProcess = null;
 		
-		//todo
+		//验证机构是否有效
+		try
+		{
+			TzString orgIdFlag = new TzString();
+			String sqlText = "SELECT 'X' ORGID_FLAG FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=? AND TZ_JG_EFF_STA='Y'";
+			sqlExec(sqlText,new SqlParams(orgId),orgIdFlag);
+			
+			if("X".equals(orgIdFlag.getValue()) == false)
+			{
+				throw new TzException("the specified organization ID[" + orgId + "] is not valid.");
+			}
+		}
+		catch(Exception e)
+		{
+			throw new TzException("an error occurred when tried to create an EngingProcess instance.\n" + e.toString());
+		}
+		
+		//验证进程名称是否有效
+		String procClass = "";
+		try
+		{
+			TzString procFlag = new TzString();
+			TzString tmpProcClass = new TzString();
+			String sqlText = "SELECT 'X' PROC_FLAG,TZ_JAVA_CLASS FROM TZ_JINC_DY_T WHERE TZ_JG_ID=? AND TZ_JC_MC=?";
+			sqlExec(sqlText,new SqlParams(orgId,procName),procFlag,tmpProcClass);
+			
+			if("X".equals(procFlag.getValue()) == false)
+			{
+				throw new TzException("the specified process[" + procName + "] is not valid.");
+			}
+			
+			if(tmpProcClass.getValue().trim().equals("") == true)
+			{
+				throw new TzException("the specified process[" + procName + "] doesn't have the corresponding Java class.");
+			}
+			
+			procClass = tmpProcClass.getValue().trim();
+		}
+		catch(Exception e)
+		{
+			throw new TzException("an error occurred when tried to create an EngingProcess instance.\n" + e.toString());
+		}
+		
+		//检查是否存在指定的机构的作业进程定义
+		try
+		{
+			//获取Job进程对应的Class类定义
+			Class<?> tmpJobClass = Class.forName(procClass);
+			if(BaseEngine.class.isAssignableFrom(tmpJobClass) == false)
+			{
+				throw new TzException("the class for the job process[" + orgId + "." + procName + "] must inherit from the class \"com.tranzvision.gd.batch.engine.base.BaseEngine\".");
+			}
+			
+			//创建Job进程对象实例
+			tmpEngineProcess = (BaseEngine)tmpJobClass.newInstance();
+			
+			//为Job进程对象实例的ApplicationContext类型的acx私有成员对象赋值
+			Method method1 = tmpEngineProcess.getClass().getSuperclass().getSuperclass().getDeclaredMethod("setApplicationContext", ApplicationContext.class);
+			method1.setAccessible(true);
+			method1.invoke(tmpEngineProcess,acx);
+			
+			//为Job进程对象实例的TZGDObject类型的tzGDObject私有成员对象赋值
+			Method method2 = tmpEngineProcess.getClass().getSuperclass().getSuperclass().getDeclaredMethod("setTZGDObject", TZGDObject.class);
+			method2.setAccessible(true);
+			method2.invoke(tmpEngineProcess,this);
+			
+			//为Job进程对象实例的组织机构ID私有成员对象赋值
+			Method method3 = tmpEngineProcess.getClass().getSuperclass().getDeclaredMethod("setOrganziationID", String.class);
+			method3.setAccessible(true);
+			method3.invoke(tmpEngineProcess,orgId.trim());
+			
+			//为Job进程对象实例的进程名称私有成员对象赋值
+			Method method4 = tmpEngineProcess.getClass().getSuperclass().getDeclaredMethod("setProcessName", String.class);
+			method4.setAccessible(true);
+			method4.invoke(tmpEngineProcess,procName.trim());
+		}
+		catch(Exception e)
+		{
+			throw new TzException("an error occurred when try to create a job instance by organization ID and process name [" + orgId + "." + procName + "].\n" + e.toString());
+		}
 		
 		return tmpEngineProcess;
 	}

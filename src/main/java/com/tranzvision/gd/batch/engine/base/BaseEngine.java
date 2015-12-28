@@ -130,9 +130,19 @@ public class BaseEngine extends BaseJob implements Runnable
 		return organizationID;
 	}
 	
+	private void setOrganziationID(String orgId)
+	{
+		organizationID = orgId == null ? "" : orgId.trim();
+	}
+	
 	public String getProcessName()
 	{
 		return jobProcessName;
+	}
+	
+	private void setProcessName(String procName)
+	{
+		jobProcessName = procName == null ? "" : procName.trim();
 	}
 	
 	public String getRunControlID()
@@ -460,9 +470,7 @@ public class BaseEngine extends BaseJob implements Runnable
 				schdProcessParameters.setBatchServer(getBatchServerName());
 				schdProcessParameters.setCycleExpression(cronCycleName);
 				schdProcessParameters.setLoginUserAccount(processInstanceRecord.getTzString("TZ_DLZH_ID").getValue());
-				schdProcessParameters.setOrganizationId(organizationID);
 				schdProcessParameters.setPlanExcuteDateTime(nextExecuteDateTime);
-				schdProcessParameters.setProcessName(jobProcessName);
 				schdProcessParameters.setRunControlId(processRunControlID);
 				
 				//进行调度
@@ -654,17 +662,17 @@ public class BaseEngine extends BaseJob implements Runnable
 		//必须指定进程请求发起人
 		if(schdProcessParameters.getLoginUserAccount().equals("") == true)
 		{
-			throw new TzException("couldn't get the user who initiated the request to run an engine process[" + organizationID + "." + schdProcessParameters.getProcessName() + "].");
+			throw new TzException("couldn't get the user who initiated the request to run an engine process[" + organizationID + "." + getProcessName() + "].");
 		}
 		
 		//检查当前指定的Job进程
-		if(schdProcessParameters.getProcessName().equals("") == true)
+		if(getProcessName().equals("") == true)
 		{
 			throw new TzException("not specify the process name for the request to run an engine process.");
 		}
 		
 		//检查指定用户是否有权向运行当前指定的Job进程
-		checkPermissionList(organizationID,schdProcessParameters.getProcessName(),schdProcessParameters.getLoginUserAccount());
+		checkPermissionList(organizationID,getProcessName(),schdProcessParameters.getLoginUserAccount());
 		
 		//检查循环表达式是否正确
 		if(schdProcessParameters.getCycleExpression().equals("") == false)
@@ -772,7 +780,7 @@ public class BaseEngine extends BaseJob implements Runnable
 			//必须是使用TZGDObject的createEngineProcess方法创建的对象才可以执行schedule方法
 			if(this.isApplicationContextNull() == true || this.isTZGDObjectNull() == true)
 			{
-				throw new TzException("the scheduler object[" + this.getClass().getName() + "] is not valid and please use the method createEngineProcess of the class com.tranzvision.gd.util.sql.TZGDObject to create the scheduler object.");
+				throw new TzException("the job process instance[" + this.getClass().getName() + "] is not valid and please use the method createEngineProcess of the class com.tranzvision.gd.util.sql.TZGDObject to create the scheduler object.");
 			}
 			
 			//先检查Job进程调度参数是否满足要求
@@ -809,18 +817,21 @@ public class BaseEngine extends BaseJob implements Runnable
 			else
 			{
 				//既没有为Job进程指定计划执行时间，又没有指定据循环表达式，则以当前系统时间作为计划执行时间
-				tmpPlanExecuteDateTime = new Date();
+				if(tmpPlanExecuteDateTime == null)
+				{
+					tmpPlanExecuteDateTime = new Date();
+				}
 			}
 			
 			//生成Job进程实例ID
 			Integer tmpProcessInstanceID = getNewProcessInstanceId(organizationID);
 			
 			//为Job进程实例对象的各个属性赋值
-			tmpProcessInstanceRecord.setColumnValue("TZ_JG_ID", organizationID);
+			tmpProcessInstanceRecord.setColumnValue("TZ_JG_ID", getOrganziationID());
 			tmpProcessInstanceRecord.setColumnValue("TZ_JCSL_ID", tmpProcessInstanceID);
 			tmpProcessInstanceRecord.setColumnValue("TZ_YUNX_KZID", schdProcessParameters.getRunControlId());
 			tmpProcessInstanceRecord.setColumnValue("TZ_DLZH_ID", tmpLoginUserAccount);
-			tmpProcessInstanceRecord.setColumnValue("TZ_JC_MC", schdProcessParameters.getProcessName());
+			tmpProcessInstanceRecord.setColumnValue("TZ_JC_MC", getProcessName());
 			tmpProcessInstanceRecord.setColumnValue("TZ_XH_QZBDS", schdProcessParameters.getCycleExpression());
 			tmpProcessInstanceRecord.setColumnValue("TZ_JCFWQ_MC", schdProcessParameters.getBatchServer());
 			tmpProcessInstanceRecord.setColumnValue("TZ_JOB_YXZT", "QUENED");
