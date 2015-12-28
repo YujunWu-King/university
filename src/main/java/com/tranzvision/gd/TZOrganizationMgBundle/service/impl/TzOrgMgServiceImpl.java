@@ -108,9 +108,9 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 				// 机构id
 				String orgId = jacksonUtil.getString("orgId");
 
-				if ("Admin".equals(orgId)) {
+				if ("ADMIN".equals(orgId)) {
 					errMsg[0] = "1";
-					errMsg[1] = "Admin为平台预留机构编号，不能删除。";
+					errMsg[1] = "ADMIN为平台预留机构编号，不能删除。";
 					return strRet;
 				}
 

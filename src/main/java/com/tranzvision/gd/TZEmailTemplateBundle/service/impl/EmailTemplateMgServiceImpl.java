@@ -155,7 +155,7 @@ public class EmailTemplateMgServiceImpl extends FrameworkImpl {
 			//当前登录的机构;
 			String orgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			if("initializ".equals(oprType)){
-				if(orgID != null && !"".equals(orgID) && !"Admin".equals(orgID)){
+				if(orgID != null && !"".equals(orgID) && !"ADMIN".equals(orgID)){
 					/*删除该机构所有的元模版信息*/
 					String deleteSQL = "DELETE FROM PS_TZ_TMP_DEFN_TBL WHERE TZ_JG_ID = ?";
 					jdbcTemplate.update(deleteSQL,new Object[]{orgID});
@@ -176,7 +176,7 @@ public class EmailTemplateMgServiceImpl extends FrameworkImpl {
 					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					String emlsServDefSQL= "SELECT TZ_EMLSERV_ID FROM PS_TZ_EMLS_DEF_TBL WHERE TZ_JG_ID = ? AND TZ_IS_DEFAULT = 'Y'";
 					String strTmpEmlServ = jdbcTemplate.queryForObject(emlsServDefSQL,new Object[]{orgID},"String");
-					String str_orgIdAdmin = "Admin";
+					String str_orgIdAdmin = "ADMIN";
 					String getResTempletSQL = "SELECT TZ_YMB_ID,TZ_YMB_NAME,TZ_EXTEND_C_TMPL,TZ_DTGXHHB_FLG,TZ_YMB_DESC,TZ_SMS_SERV_ID,TZ_YMB_CSLBM,TZ_YMB_NRGM,TZ_APPCLS,TZ_DSREC_NAME,TZ_DSREC_ALIAS FROM PS_TZ_TMP_DEFN_TBL WHERE TZ_USE_FLAG = 'Y' AND TZ_DEFAULT_OPEN = 'Y' AND TZ_JG_ID = ?";
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(getResTempletSQL,new Object[]{str_orgIdAdmin} );
 					if(list != null && list.size()>0){

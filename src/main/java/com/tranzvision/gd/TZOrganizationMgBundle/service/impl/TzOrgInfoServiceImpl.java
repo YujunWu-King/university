@@ -231,7 +231,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
-					if (null != recExists) {
+					if (!"Y".equals(recExists)) {
 						// 机构名称;
 						String tzJgName = infoData.get("orgName").toString();
 						// 机构有效性状态;
@@ -295,7 +295,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 			}
 			if (!"".equals(errorMsg)) {
 				errMsg[0] = "1";
-				errMsg[1] = "消息集合：" + errorMsg + "，不存在";
+				errMsg[1] = "机构：" + errorMsg + "，不存在";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -336,7 +336,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				}
 
 				if ("USER".equals(typeFlag)) {
-					String tzDlzhId = null==infoData.get("usAccNum")?"":String.valueOf(infoData.get("usAccNum"));
+					String tzDlzhId = null == infoData.get("usAccNum") ? "" : String.valueOf(infoData.get("usAccNum"));
 					if (tzDlzhId != null && !"".equals(tzDlzhId)) {
 
 						// 删除机构管理员
@@ -349,7 +349,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					}
 
 				} else if ("ROLE".equals(typeFlag)) {
-					String rolename = null==infoData.get("roleName")?"":String.valueOf(infoData.get("roleName"));
+					String rolename = null == infoData.get("roleName") ? "" : String.valueOf(infoData.get("roleName"));
 					if (rolename != null && !"".equals(rolename)) {
 
 						// 删除机构角色
@@ -664,10 +664,14 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 				Map<String, Object> mapDataJson = new HashMap<String, Object>();
 				mapDataJson.put("orgId", strOrgID);
-				mapDataJson.put("roleName", mapData.get("ROLENAME").toString());
-				mapDataJson.put("roleDesc", mapData.get("ROLE_DESC").toString());
-				mapDataJson.put("roleType", mapData.get("TZ_ROLE_TYPE").toString());
-				mapDataJson.put("roleTypeDesc", mapData.get("TZ_ROLE_TYPE_DESC").toString());
+				mapDataJson.put("roleName",
+						mapData.get("ROLENAME") == null ? "" : String.valueOf(mapData.get("ROLENAME")));
+				mapDataJson.put("roleDesc",
+						mapData.get("ROLE_DESC") == null ? "" : String.valueOf(mapData.get("ROLE_DESC")));
+				mapDataJson.put("roleType",
+						mapData.get("TZ_ROLE_TYPE") == null ? "" : String.valueOf(mapData.get("TZ_ROLE_TYPE")));
+				mapDataJson.put("roleTypeDesc", mapData.get("TZ_ROLE_TYPE_DESC") == null ? ""
+						: String.valueOf(mapData.get("TZ_ROLE_TYPE_DESC")));
 
 				listDataJson.add(mapDataJson);
 
@@ -719,7 +723,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 				Map<String, Object> mapRole = (Map<String, Object>) srcRole;
 
-				String roleId = tzJgId + mapRole.get("ROLENAME").toString();
+				String roleId = tzJgId + mapRole.get("ROLENAME") == null ? "" : String.valueOf(mapRole.get("ROLENAME"));
 				roleId = roleId.toUpperCase();
 
 				// 检查角色定义表中是否存在该角色
@@ -730,15 +734,22 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					PsRoledefn psRoledefn = new PsRoledefn();
 
 					psRoledefn.setRolename(roleId);
-					psRoledefn.setDescr(mapRole.get("DESCR").toString());
-					psRoledefn.setDescrlong(mapRole.get("DESCRLONG").toString());
+					psRoledefn.setDescr(mapRole.get("DESCR") == null ? "" : String.valueOf(mapRole.get("DESCR")));
+					psRoledefn.setDescrlong(
+							mapRole.get("DESCRLONG") == null ? "" : String.valueOf(mapRole.get("DESCRLONG")));
 					psRoledefn.setVersion(Integer.parseInt(mapRole.get("VERSION").toString()));
-					psRoledefn.setRolestatus(mapRole.get("ROLESTATUS").toString());
-					psRoledefn.setRolePcodeRuleOn(mapRole.get("ROLE_PCODE_RULE_ON").toString());
-					psRoledefn.setRoleQueryRuleOn(mapRole.get("ROLE_QUERY_RULE_ON").toString());
-					psRoledefn.setLdapRuleOn(mapRole.get("LDAP_RULE_ON").toString());
-					psRoledefn.setAllownotify(mapRole.get("ALLOWNOTIFY").toString());
-					psRoledefn.setAllowlookup(mapRole.get("ALLOWLOOKUP").toString());
+					psRoledefn.setRolestatus(
+							mapRole.get("ROLESTATUS") == null ? "" : String.valueOf(mapRole.get("ROLESTATUS")));
+					psRoledefn.setRolePcodeRuleOn(mapRole.get("ROLE_PCODE_RULE_ON") == null ? ""
+							: String.valueOf(mapRole.get("ROLE_PCODE_RULE_ON")));
+					psRoledefn.setRoleQueryRuleOn(mapRole.get("ROLE_QUERY_RULE_ON") == null ? ""
+							: String.valueOf(mapRole.get("ROLE_QUERY_RULE_ON")));
+					psRoledefn.setLdapRuleOn(
+							mapRole.get("LDAP_RULE_ON") == null ? "" : String.valueOf(mapRole.get("LDAP_RULE_ON")));
+					psRoledefn.setAllownotify(
+							mapRole.get("ALLOWNOTIFY") == null ? "" : String.valueOf(mapRole.get("ALLOWNOTIFY")));
+					psRoledefn.setAllowlookup(
+							mapRole.get("ALLOWLOOKUP") == null ? "" : String.valueOf(mapRole.get("ALLOWLOOKUP")));
 					psRoledefn.setLastupddttm(dateNow);
 					psRoledefn.setLastupdoprid(oprid);
 
@@ -748,7 +759,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				// 复制角色的许可权
 				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyRolePermit");
 
-				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] { mapRole.get("ROLENAME").toString() });
+				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] {
+						mapRole.get("ROLENAME") == null ? "" : String.valueOf(mapRole.get("ROLENAME")) });
 
 				for (Object srcPermit : listPermits) {
 

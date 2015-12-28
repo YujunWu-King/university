@@ -80,7 +80,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 				language = "ZHS";
 			}
 			if(jgId == null || "".equals(jgId)){
-				jgId = "Admin";
+				jgId = "ADMIN";
 			}
 			
 			String LOAD = validateUtil.getMessageTextWithLanguageCd(jgId, language,"TZGD_PERSON_PHOTO_MSGSET", "LOAD", "图像上传中，请稍等……", "图像上传中，请稍等……");

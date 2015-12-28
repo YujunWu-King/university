@@ -163,14 +163,14 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 			}
 		} else {
 			language = "ZHS";
-			jgId = "Admin";
+			jgId = "ADMIN";
 		}
 
 		if (language == null || "".equals(language)) {
 			language = "ZHS";
 		}
 		if (jgId == null || "".equals(jgId)) {
-			jgId = "Admin";
+			jgId = "ADMIN";
 		}
 		
 		String imgPath = getSysHardCodeVal.getWebsiteImgPath();
@@ -199,7 +199,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 	public String getMessageTextWithLanguageCd(String jgId, String strLang, String msgSetId, String msgId,
 			String defaultCNMsg, String defaultENMsg) {
 		String tmpMsgText = "";
-		String superOrgId = "Admin";
+		String superOrgId = "ADMIN";
 		String sql = "SELECT ifnull(B.TZ_MSG_TEXT,A.TZ_MSG_TEXT) TZ_MSG_TEXT from PS_TZ_PT_XXDY_TBL A left join PS_TZ_PT_XXDY_TBL B on A.TZ_XXJH_ID = B.TZ_XXJH_ID and A.TZ_JG_ID=B.TZ_JG_ID and A.TZ_MSG_ID=B.TZ_MSG_ID where upper(B.TZ_LANGUAGE_ID)=upper(?) and upper(A.TZ_LANGUAGE_ID)=(SELECT UPPER(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' ) AND A.TZ_XXJH_ID=? AND A.TZ_MSG_ID=? AND  UPPER(A.TZ_JG_ID)=UPPER(?)";
 		try {
 			tmpMsgText = jdbcTemplate.queryForObject(sql, new Object[] { strLang, msgSetId, msgId, jgId }, "String");

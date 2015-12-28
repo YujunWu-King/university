@@ -64,7 +64,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 					language = "ZHS";
 				}
 				if(jgId == null || "".equals(jgId)){
-					jgId = "Admin";
+					jgId = "ADMIN";
 				}
 				
 				/*账号管理页面文字双语化*/
