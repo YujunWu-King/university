@@ -510,7 +510,7 @@ public class BatchServer extends BaseJob
 		{
 			try
 			{
-				TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetExecutableJobs"),getBatchServerName(),getBatchServerName(),getOSType(),organizationID);
+				TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetExecutableJobs"),getBatchServerName(),getBatchServerName(),getBatchServerName(),getOSType(),organizationID);
 				
 				TzRecord tmpRecord = new TzRecord();
 				while(jobList.size() < parallelTaskCount && tmpSQLObject.fetch(tmpRecord) == true)
@@ -562,14 +562,17 @@ public class BatchServer extends BaseJob
 									info("failed to lock the job process[" + tmpOrgId + "." + tmpInstanceId + "] and it might have been scheduled by the other batch server.");
 								}
 								
-								//提交事务
-								commit(status);
-								
 								//记录已调度的Job
 								if(tmpJob != null)
 								{
 									jobList.put(tmpJob.getKey().getName(),tmpJob.getKey());
 								}
+								
+								//提交事务
+								commit(status);
+								
+								//随机睡眠0～500毫秒
+								sleep((int)(500 * Math.random()));
 							}
 							catch(Exception e)
 							{
