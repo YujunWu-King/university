@@ -15,7 +15,7 @@ public class FilterTzClsServiceImpl extends FrameworkImpl{
 	private JacksonUtil jacksonUtil;
 	
 	@Override
-	public String tzGetHtmlData(String strParams) {
+	public String tzGetJsonData(String strParams) {
 		String result = "";
 		try{
 			// 将字符串转换成json;
