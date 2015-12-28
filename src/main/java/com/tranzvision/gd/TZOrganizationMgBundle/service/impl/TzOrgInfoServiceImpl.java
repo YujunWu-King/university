@@ -568,7 +568,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 		// 机构管理员信息
 		// 机构编号;
-		String tzJgId = mapData.get("orgId").toString();
+		String tzJgId = mapData.get("orgId").toString().toUpperCase();
 		// 管理员账号ID;
 		String tzDlzhId = mapData.get("usAccNum").toString();
 		String sql = "select 'Y' from PS_TZ_JS_MGR_T WHERE TZ_JG_ID=? and TZ_DLZH_ID=?";
@@ -595,7 +595,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	private void tzEditOrgRoleInfo(Map<String, Object> mapData, String[] errorMsg) {
 		try {
 			// 机构编号;
-			String tzJgId = mapData.get("orgId").toString();
+			String tzJgId = mapData.get("orgId").toString().toUpperCase();
 			// 角色名称;
 			String rolename = mapData.get("roleName").toString();
 			// 角色类型
@@ -701,7 +701,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	@Transactional
 	private String tzCopyOrgRole(Map<String, Object> mapParams, String[] errorMsg) {
 
-		String tzJgId = mapParams.get("orgId").toString();
+		String tzJgId = mapParams.get("orgId").toString().toUpperCase();
 
 		String strAdminJg = getHardCodePoint.getHardCodePointVal("TZ_GD_JG_ADMIN");
 		String strPlstBasic = getHardCodePoint.getHardCodePointVal("TZGD_BASIC");

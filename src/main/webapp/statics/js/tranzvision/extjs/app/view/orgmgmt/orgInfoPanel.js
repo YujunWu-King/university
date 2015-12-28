@@ -39,7 +39,9 @@
             afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
-            allowBlank: false
+            allowBlank: false,
+			maxLength: 10,
+			enforceMaxLength: true
         }, {
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgName","机构名称"),
