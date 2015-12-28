@@ -25,9 +25,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class MessageSetMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private FliterForm fliterForm;
-
-	@Autowired
 	private JacksonUtil jacksonUtil;
 
 	@Autowired
@@ -47,6 +44,7 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
+			FliterForm fliterForm = new FliterForm();
 			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;

@@ -194,7 +194,7 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 					psTzPtXxdyTbl.setTzMsgBqid(markId);
 					psTzPtXxdyTbl.setTzMsgKey(keyWord);
 					psTzPtXxdyTbl.setTzMsgDesc(msgDesc);
-					psTzPtXxdyTblMapper.updateByPrimaryKey(psTzPtXxdyTbl);
+					psTzPtXxdyTblMapper.updateByPrimaryKeyWithBLOBs(psTzPtXxdyTbl);
 				} else {
 					errorMsg += comma + "[" + msgSetID + "," + msgId + "," + orgId + "," + msgLanage + "]";
 					comma = ",";

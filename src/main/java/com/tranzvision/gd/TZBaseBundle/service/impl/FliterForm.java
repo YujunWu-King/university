@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -22,8 +23,17 @@ public class FliterForm extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private JacksonUtil jacksonUtil;
+	
+	private SqlQuery sqlQuery;
 
 	public String[][] orderByArr;
+	
+	private void getSqlQueryBean(){
+		if(this.sqlQuery==null){
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			this.sqlQuery = (SqlQuery) getSpringBeanUtil.getAutowiredSpringBean("SqlQuery");
+		}
+	}
 
 	/* 获取组件注册信息 */
 	public String tzQuery(String strParams, String[] errorMsg) {
@@ -308,6 +318,7 @@ public class FliterForm extends FrameworkImpl {
 		try {
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(strParams);
 			String cfgSrhId = jacksonUtil.getString("cfgSrhId");
 
@@ -323,12 +334,14 @@ public class FliterForm extends FrameworkImpl {
 			String pageId = comPageRecArr[1];
 			String recname = comPageRecArr[2];
 
+			this.getSqlQueryBean();
+			
 			// 得到总条数;
 			int tableNameCount = 0;
 			String tableName = recname;
 			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
 
-			tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
+			tableNameCount = sqlQuery.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
 			if (tableNameCount <= 0) {
 				tableName = "PS_" + recname;
 			}
@@ -337,7 +350,7 @@ public class FliterForm extends FrameworkImpl {
 			String existSQL = "SELECT 'Y' EXIST,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
 			Map<String, Object> map = null;
 			try {
-				map = jdbcTemplate.queryForMap(existSQL, new Object[] { comId, pageId, recname });
+				map = sqlQuery.queryForMap(existSQL, new Object[] { comId, pageId, recname });
 				exist = (String) map.get("EXIST");
 				maxNum = (int) map.get("TZ_RESULT_MAX_NUM");
 			} catch (Exception e) {
@@ -360,7 +373,7 @@ public class FliterForm extends FrameworkImpl {
 
 			ArrayList<String> resultFldTypeList = new ArrayList<String>();
 			String resultFldTypeSQL = "SELECT  COLUMN_NAME, DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=?";
-			List<Map<String, Object>> typelist = jdbcTemplate.queryForList(resultFldTypeSQL,
+			List<Map<String, Object>> typelist = sqlQuery.queryForList(resultFldTypeSQL,
 					new Object[] { tableName });
 			String columnNanme = "";
 			String dateType = "";
@@ -447,7 +460,7 @@ public class FliterForm extends FrameworkImpl {
 							// 是不是下拉框;
 							String isSelect = "";
 							String isDropDownSql = "SELECT 'Y' from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_ISDOWN_FLD = '1'";
-							isSelect = jdbcTemplate.queryForObject(isDropDownSql,
+							isSelect = sqlQuery.queryForObject(isDropDownSql,
 									new Object[] { comId, pageId, recname, fieldName }, "String");
 
 							if ("Y".equals(isSelect)) {
@@ -480,7 +493,7 @@ public class FliterForm extends FrameworkImpl {
 							// 查看搜索字段是不是不区分大小写:TZ_NO_UPORLOW;
 							String noUpOrLow = "";
 							String noUpOrLowSql = "SELECT TZ_NO_UPORLOW from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-							noUpOrLow = jdbcTemplate.queryForObject(noUpOrLowSql,
+							noUpOrLow = sqlQuery.queryForObject(noUpOrLowSql,
 									new Object[] { comId, pageId, recname, fieldName }, "String");
 
 							fldValue = fldValue.trim();
@@ -801,7 +814,7 @@ public class FliterForm extends FrameworkImpl {
 
 			// 得到总条数;
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
-			numTotal = jdbcTemplate.queryForObject(totalSQL, "Integer");
+			numTotal = sqlQuery.queryForObject(totalSQL, "Integer");
 
 			// 总数;
 			if (maxNum > 0 && numTotal > maxNum) {
@@ -828,11 +841,11 @@ public class FliterForm extends FrameworkImpl {
 			try {
 				List<Map<String, Object>> resultlist = null;
 				if (numLimit != 0) {
-					resultlist = jdbcTemplate.queryForList(sqlList, new Object[] { numStart, numLimit });
+					resultlist = sqlQuery.queryForList(sqlList, new Object[] { numStart, numLimit });
 				} else if (numLimit == 0 && numStart > 0) {
-					resultlist = jdbcTemplate.queryForList(sqlList, new Object[] { numStart, numTotal - numStart });
+					resultlist = sqlQuery.queryForList(sqlList, new Object[] { numStart, numTotal - numStart });
 				} else {
-					resultlist = jdbcTemplate.queryForList(sqlList);
+					resultlist = sqlQuery.queryForList(sqlList);
 				}
 				for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
 					Map<String, Object> resultMap = resultlist.get(resultlist_i);

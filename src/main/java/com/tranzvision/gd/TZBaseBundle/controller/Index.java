@@ -161,7 +161,7 @@ public class Index {
 		registeServiceImpl.releasEnrollpage(content, "5",errMsg);
 		return errMsg[0] + "====>" + errMsg[1];
 		*/
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
 		// 报文内容;
@@ -211,6 +211,7 @@ public class Index {
 			if(tmpComParams != null & !"".equals(tmpComParams)){
 				strParamsMap.put("comParams",tmpComParams );
 			}
+			
 			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
 

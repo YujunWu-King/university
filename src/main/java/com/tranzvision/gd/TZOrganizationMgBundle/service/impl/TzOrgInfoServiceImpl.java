@@ -231,7 +231,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
-					if (!"Y".equals(recExists)) {
+					if ("Y".equals(recExists)) {
 						// 机构名称;
 						String tzJgName = infoData.get("orgName").toString();
 						// 机构有效性状态;

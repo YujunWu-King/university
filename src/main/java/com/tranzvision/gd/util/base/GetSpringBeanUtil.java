@@ -41,6 +41,7 @@ public class GetSpringBeanUtil {
 		try {
 			return getASBean.getBeanByKey(beanKey);
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("getASBean is null!");
 		}
 		return null;
