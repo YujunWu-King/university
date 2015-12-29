@@ -20,8 +20,6 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 public class emlHisServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -32,17 +30,16 @@ public class emlHisServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {{"TZ_RWZX_DT_STR", "DESC"}};
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_RWZX_ZT_DESC", "TZ_SEND_COUNT", "TZ_SEND_SUC_COUNT", "TZ_SEND_FAIL_COUNT", "TZ_RWZX_DT_STR", "TZ_SEND_RPT_COUNT", "TZ_REALNAME"};
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 

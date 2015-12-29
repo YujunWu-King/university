@@ -20,8 +20,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.EmlCommonServiceImpl")
 public class EmlCommonServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
@@ -33,7 +31,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("formData", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			String jgId = jacksonUtil.getString("jgId");
@@ -70,7 +68,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			String jgId = jacksonUtil.getString("jgId");
@@ -131,7 +129,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String , Object> map = new HashMap<>();
 		map.put("success", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

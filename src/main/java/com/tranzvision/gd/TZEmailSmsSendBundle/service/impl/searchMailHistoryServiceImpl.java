@@ -26,8 +26,6 @@ public class searchMailHistoryServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
@@ -41,7 +39,7 @@ public class searchMailHistoryServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			if(jacksonUtil.containsKey("emailAddress")){
@@ -97,7 +95,7 @@ public class searchMailHistoryServiceImpl extends FrameworkImpl{
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("rwInsID")) {

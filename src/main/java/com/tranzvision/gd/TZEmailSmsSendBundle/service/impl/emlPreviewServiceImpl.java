@@ -21,8 +21,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.emlPreviewServiceImpl")
 public class emlPreviewServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private AnalysisSysVar analysisSysVar;
@@ -34,7 +32,7 @@ public class emlPreviewServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("jgId") && jacksonUtil.containsKey("tmpId")
