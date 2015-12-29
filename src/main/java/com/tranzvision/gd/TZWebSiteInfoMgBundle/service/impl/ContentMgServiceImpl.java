@@ -35,8 +35,6 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -57,18 +55,17 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_MAX_ZD_SEQ", "DESC" }, { "TZ_ART_NEWS_DT", "DESC" } };
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_SITE_ID", "TZ_COLU_ID", "TZ_ART_ID", "TZ_ART_TITLE", "TZ_ART_NEWS_DT",
 					"TZ_REALNAME", "TZ_ART_PUB_STATE", "TZ_MAX_ZD_SEQ", "TZ_PAGE_REFCODE" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr,strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -110,7 +107,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("TransList", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 获取登录的机构;
 		String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		// 获取机构对应的站点；
@@ -148,7 +145,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -191,7 +188,7 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			

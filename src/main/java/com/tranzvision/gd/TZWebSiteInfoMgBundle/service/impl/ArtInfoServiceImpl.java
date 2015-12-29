@@ -57,8 +57,6 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 	private String ins_isPublish;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -116,7 +114,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		map.put("saveImageAccessUrl", "");
 		map.put("saveAttachAccessUrl", "");
 		map.put("artNewsDT", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -269,7 +267,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("viewUrl", "");
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			// 发布的站点;
@@ -443,7 +441,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("viewUrl", "");
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			// 发布的站点;
@@ -792,6 +790,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		String desc = "";
 		String minSysFile = "";
 		String newSysFile = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("attachmentType") && jacksonUtil.containsKey("data")) {
@@ -933,7 +932,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("artId") && jacksonUtil.containsKey("gridTyp")){
@@ -1014,7 +1013,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

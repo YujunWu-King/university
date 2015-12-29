@@ -23,8 +23,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZWebSiteInfoMgBundle.service.impl.ChanlClasServiceImpl")
 public class ChanlClasServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
@@ -38,7 +36,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData","");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			//获取登录的机构;
 			String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -79,7 +77,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -120,7 +118,7 @@ public class ChanlClasServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
