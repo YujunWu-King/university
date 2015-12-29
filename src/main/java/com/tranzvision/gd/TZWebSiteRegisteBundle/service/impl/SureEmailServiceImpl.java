@@ -25,8 +25,6 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzDzyxYzmTblMapper psTzDzyxYzmTblMapper;
 	
 	@Override
@@ -41,7 +39,7 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 		Date cntlogAddtiem;
 		Date curDate = new Date();
 		String dlzhId = "", tzJgId = "", tzEmail = "";
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");

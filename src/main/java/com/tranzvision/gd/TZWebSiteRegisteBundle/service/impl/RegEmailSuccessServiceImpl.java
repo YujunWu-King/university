@@ -22,8 +22,6 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 	private TZGDObject tzGdObject;
 	@Autowired
 	private HttpServletRequest request;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 	@Override
 	//确认修改邮箱成功后跳转页面
@@ -31,6 +29,7 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 		String result = "";
 		String strErrorDesc = "";
 		String contextPaht = request.getContextPath();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			String FLAGE =request.getParameter("FLAGE").trim();

@@ -38,8 +38,6 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SiteRepCssServiceImpl objRep;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private HttpServletRequest request;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -389,6 +387,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = jacksonUtil.getString("siteId");
@@ -457,6 +456,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	
 	//获取基本信息;
 	public String getUserInfo(String comParams ,String[] errorMsg){
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			String fields = "";
 			
@@ -570,6 +570,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	
 	//招生账号管理修改相关链接;
 	public String saveUserInfo(String comParams ,String[] errorMsg){
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 			
@@ -714,6 +715,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	
 	//修改密码;
 	public String savePassword(String comParams ,String[] errorMsg){
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 		    
@@ -766,6 +768,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 	
 	//Notice;
 	public String saveNotice(String comParams ,String[] errorMsg){
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 			String isEmail = jacksonUtil.getString("isEmail");
@@ -806,6 +809,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String bindEmail = request.getContextPath() + "/dispatcher"; 
 		String strEmail = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 			strLang = jacksonUtil.getString("lang");
@@ -886,6 +890,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String bindMobile = request.getContextPath() + "/dispatcher"; 
 		String strPhone = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 			strLang = jacksonUtil.getString("lang");

@@ -35,8 +35,6 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SiteRepCssServiceImpl objRep;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private HttpServletRequest request;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -49,7 +47,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			
@@ -119,6 +117,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 	
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			String sysFileName = jacksonUtil.getString("sysFileName");

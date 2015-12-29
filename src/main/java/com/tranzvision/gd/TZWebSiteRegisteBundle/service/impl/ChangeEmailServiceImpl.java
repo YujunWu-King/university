@@ -41,8 +41,6 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -57,7 +55,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			// 站点ID;
@@ -104,7 +102,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
 		String mess = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strEmail = jacksonUtil.getString("Email");
