@@ -28,8 +28,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZEmailTemplateBundle.service.impl.EmailTemplateInfoServiceImpl")
 public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -42,6 +40,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -164,6 +163,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -288,7 +288,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("restempid")){
@@ -339,7 +339,7 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("emltempid") && jacksonUtil.containsKey("emltemporg")) {
