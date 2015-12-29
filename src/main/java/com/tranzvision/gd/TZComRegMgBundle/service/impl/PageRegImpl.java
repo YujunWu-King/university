@@ -28,8 +28,6 @@ public class PageRegImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzAqPagzcTblMapper psTzAqPagzcTblMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -44,7 +42,7 @@ public class PageRegImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 表单内容;
 			String strForm = actData[0];
@@ -158,7 +156,7 @@ public class PageRegImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 表单内容;
 			String strForm = actData[0];
@@ -268,7 +266,7 @@ public class PageRegImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 

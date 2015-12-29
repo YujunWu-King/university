@@ -33,8 +33,6 @@ public class ComRegImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
@@ -53,6 +51,7 @@ public class ComRegImpl extends FrameworkImpl {
 		}
 
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -121,6 +120,7 @@ public class ComRegImpl extends FrameworkImpl {
 		}
 
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -182,7 +182,7 @@ public class ComRegImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -227,7 +227,7 @@ public class ComRegImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -305,7 +305,7 @@ public class ComRegImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
