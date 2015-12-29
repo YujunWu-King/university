@@ -31,8 +31,6 @@ public class RoleInfoImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsRoledefnMapper psRoledefnMapper;
 	@Autowired
 	private PsRoleclassMapper psRoleclassMapper;
@@ -45,6 +43,7 @@ public class RoleInfoImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -109,6 +108,7 @@ public class RoleInfoImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -197,7 +197,7 @@ public class RoleInfoImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-				
+		JacksonUtil jacksonUtil = new JacksonUtil();		
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -239,6 +239,7 @@ public class RoleInfoImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 将字符串转换成json;
 			jacksonUtil.json2Map(comParams);
@@ -286,12 +287,12 @@ public class RoleInfoImpl extends FrameworkImpl {
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "";
-
+		
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

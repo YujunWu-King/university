@@ -25,8 +25,6 @@ public class RoleListImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsRoledefnMapper psRoledefnMapper;
 	@Autowired
 	private FliterForm fliterForm;
@@ -41,16 +39,16 @@ public class RoleListImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "ROLENAME", "ASC" } };
-			fliterForm.orderByArr = orderByArr;
 	
 			// json数据要的结果字段;
 			String[] resultFldArray = { "ROLENAME", "DESCR" };
 	
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams,
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
 					numLimit, numStart, errorMsg);
 			
 			if (obj != null && obj.length > 0) {
@@ -85,7 +83,7 @@ public class RoleListImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
