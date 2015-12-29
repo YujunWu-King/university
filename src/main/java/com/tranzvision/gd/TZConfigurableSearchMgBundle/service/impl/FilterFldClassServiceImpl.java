@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZConfigurableSearchMgBundle.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +38,16 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 	private PsTzFltprmFldTMapper psTzFltprmFldTMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 
 	/* 查询表单 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
-
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			
@@ -67,21 +69,23 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				if (psTzFilterFldT.getTzResultMaxNum() != null) {
 					maxNum = psTzFilterFldT.getTzResultMaxNum();
 				}
-				strRet = "{\"ComID\":\"" + psTzFilterFldT.getTzComId() + "\",\"PageID\":\""
-						+ psTzFilterFldT.getTzPageId() + "\",\"ViewMc\":\"" + psTzFilterFldT.getTzViewName()
-						+ "\",\"FieldMc\":\"" + psTzFilterFldT.getTzFilterFld() + "\",\"fieldDesc\":\""
-						+ TZUtility.transFormchar(psTzFilterFldT.getTzFilterFldDesc()) + "\",\"promptTab\":\""
-						+ TZUtility.transFormchar(psTzFilterFldT.getTzPromptTblName()) + "\",\"promptFld\":\""
-						+ TZUtility.transFormchar(psTzFilterFldT.getTzPromptFld()) + "\",\"promptDesc\":\""
-						+ TZUtility.transFormchar(psTzFilterFldT.getTzPromptDescFld()) + "\",\"maxNum\":\"" + maxNum
-						+ "\",\"fldReadonly\":\"" + TZUtility.transFormchar(psTzFilterFldT.getTzFldReadonly())
-						+ "\",\"fldHide\":\"" + TZUtility.transFormchar(psTzFilterFldT.getTzFldHide())
-						+ "\",\"fldIsDown\":\"" + TZUtility.transFormchar(psTzFilterFldT.getTzIsdownFld())
-						+ "\",\"fltFldQzLx\":\"" + TZUtility.transFormchar(psTzFilterFldT.getTzFltFldQzType())
-						+ "\",\"translateValueFld\":\"" + TZUtility.transFormchar(psTzFilterFldT.getTzZhzjhId())
-						+ "\",\"fltFldNoUpperLower\": \"" + TZUtility.transFormchar(psTzFilterFldT.getTzNoUporlow())
-						+ "\"}";
-				strRet = "{\"formData\":" + strRet + "}";
+				Map<String, Object> map = new HashMap<>();
+				map.put("ComID", psTzFilterFldT.getTzComId());
+				map.put("PageID", psTzFilterFldT.getTzPageId());
+				map.put("ViewMc", psTzFilterFldT.getTzViewName());
+				map.put("FieldMc", psTzFilterFldT.getTzFilterFld());
+				map.put("fieldDesc", psTzFilterFldT.getTzFilterFldDesc());
+				map.put("promptTab", psTzFilterFldT.getTzPromptTblName());
+				map.put("promptFld", psTzFilterFldT.getTzPromptFld());
+				map.put("promptDesc", psTzFilterFldT.getTzPromptDescFld());
+				map.put("maxNum", maxNum);
+				map.put("fldReadonly", psTzFilterFldT.getTzFldReadonly());
+				map.put("fldHide", psTzFilterFldT.getTzFldHide());
+				map.put("fldIsDown", psTzFilterFldT.getTzIsdownFld());
+				map.put("fltFldQzLx", psTzFilterFldT.getTzFltFldQzType());
+				map.put("translateValueFld", psTzFilterFldT.getTzZhzjhId());
+				map.put("fltFldNoUpperLower", psTzFilterFldT.getTzNoUporlow());
+				returnJsonMap.replace("formData", map);
 			}
 
 		} catch (Exception e) {
@@ -89,14 +93,19 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 查询可配置搜索字段列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 
 			// 将字符串转换成json;
@@ -132,16 +141,21 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 							str_is_qy = TZUtility.transFormchar(psTzFilterYsfT.getTzFilterBdyQy());
 							str_is_oprt = TZUtility.transFormchar(psTzFilterYsfT.getTzIsDefOprt());
 						}
-						strRet = strRet + ",{\"ComID\":\"" + str_com_id + "\",\"PageID\":\"" + str_page_id
-								+ "\",\"ViewMc\":\"" + str_view_name + "\",\"FieldMc\":\"" + str_field_name
-								+ "\",\"orderNum\":\"" + (i + 1) + "\",\"FieldYsfID\":\"" + str_field_ysfid
-								+ "\",\"FieldYsf\":\"" + str_field_ysf + "\",\"isQy\":\"" + str_is_qy
-								+ "\",\"isOprt\":\"" + str_is_oprt + "\"}";
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("ComID", str_com_id);
+						mapList.put("PageID", str_page_id);
+						mapList.put("ViewMc", str_view_name);
+						mapList.put("FieldMc", str_field_name);
+						mapList.put("orderNum", i + 1);
+						mapList.put("FieldYsfID", str_field_ysfid);
+						mapList.put("FieldYsf", str_field_ysf);
+						mapList.put("isQy", str_is_qy);
+						mapList.put("isOprt", str_is_oprt);
+						
+						listData.add(mapList);
 					}
-					if (!"".equals(strRet)) {
-						strRet = strRet.substring(1);
-					}
-					strRet = "{\"total\":" + total + ",\"root\":[" + strRet + "]}";
+					mapRet.replace("total", total);
+					mapRet.replace("root", listData);
 				}
 
 			}
@@ -165,16 +179,20 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 						
 						String str_fieldgl_mc = (String) list.get(i).get("TZ_FILTER_GL_FLD");
 						String str_fieldgl_desc = "";
-
-						strRet = strRet + ",{\"ComID\":\"" + str_com_id + "\",\"PageID\":\"" + str_page_id
-								+ "\",\"ViewMc\":\"" + str_view_name + "\",\"FieldMc\":\"" + str_field_name
-								+ "\",\"orderNum\":\"" + num_glxh + "\",\"FieldGL\":\"" + str_fieldgl_mc
-								+ "\",\"fieldDesc\":\"" + str_fieldgl_desc + "\"}";
+						
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("ComID", str_com_id);
+						mapList.put("PageID", str_page_id);
+						mapList.put("ViewMc", str_view_name);
+						mapList.put("FieldMc", str_field_name);
+						mapList.put("orderNum", num_glxh);
+						mapList.put("FieldGL", str_fieldgl_mc);
+						mapList.put("fieldDesc", str_fieldgl_desc);
+						
+						listData.add(mapList);
 					}
-					if (strRet != null && !"".equals(strRet)) {
-						strRet = strRet.substring(1);
-					}
-					strRet = "{\"total\":" + total + ",\"root\":[" + strRet + "]}";
+					mapRet.replace("total", total);
+					mapRet.replace("root", listData);
 				}
 				
 			}
@@ -183,13 +201,15 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 			
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	/* 修改 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -198,7 +218,6 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				// 将字符串转换成json;
 				
 				jacksonUtil.json2Map(strForm);
-				//System.out.println("------------werwerwe------>"+strForm);
 				// 信息内容;
 
 				Map<String, Object> jsonObject = jacksonUtil.getMap("update");
@@ -244,6 +263,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				Map<String, Object> jObj = null;
 				Map<String, Object> updateListJson = jacksonUtil.getMap("updateList");
 				try {
+					
 					List<Map<String, Object>> jsonArray2 = (List<Map<String, Object>>) updateListJson.get("data1");
 					if (jsonArray2 != null && jsonArray2.size() > 0) {
 						for (int i = 0; i < jsonArray2.size(); i++) {

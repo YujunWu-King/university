@@ -25,29 +25,29 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 	private PsTzFilterDfnTMapper psTzFilterDfnTMapper;
 	@Autowired
 	private FliterForm fliterForm;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 	/* 查询可配置搜索列表 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" },{ "TZ_PAGE_ID", "ASC" },{ "TZ_VIEW_NAME", "ASC" } };
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_COM_ID", "TZ_COM_MC", "TZ_PAGE_ID", "TZ_PAGE_MC", "TZ_VIEW_NAME" };
-			String jsonString = "";
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
 
-			if (obj == null || obj.length == 0) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			if (obj != null ){
+				
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
@@ -57,27 +57,22 @@ public class FilterGlClsServiceImpl extends FrameworkImpl {
 					map.put("PageID", rowList[2]);
 					map.put("pageMc", rowList[3]);
 					map.put("ViewMc", rowList[4]);
-					
-					jsonString = jsonString +","+ jacksonUtil.Map2json(map);
+					listData.add(map);
 				}
-				
-				if (!"".equals(jsonString)) {
-					jsonString = jsonString.substring(1);
-				}
-
-				strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	@Override
 	/* 删除可配置搜索 */
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
-
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZConfigurableSearchMgBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,15 +30,17 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 	private PsTzFilterFldTMapper psTzFilterFldTMapper;
 	@Autowired
 	private PsTzFilterYsfTMapper psTzFilterYsfTMapper;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 	/* 查询可以添加的可配置搜索字段列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "{}";
-		String strContent = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 
 			// 将字符串转换成json;
@@ -70,9 +73,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 					new Object[] { tableName,"%"+str_field_name+"%" ,numStart,numLimit});
 			
-			if (list == null) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			if (list != null) {
 				
 				for (int i = 0; i < list.size(); i++) {
 					
@@ -87,30 +88,27 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 						map.put("ViewMc", str_view_name);
 						map.put("FieldMc", str_field_mc);
 						map.put("fieldDesc", str_field_desc);
-
-						strContent = strContent + "," + jacksonUtil.Map2json(map);
+						listData.add(map);
 					}catch(Exception e){
 						e.printStackTrace();
 					}
 				}
-				if (!"".equals(strContent)) {
-					strContent = strContent.substring(1);
-				}
-
-				strRet = "{\"total\":" + total + ",\"root\":[" + strContent + "]}";
+				mapRet.replace("total", total);
+				mapRet.replace("root", listData);
 			}
 			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	@Override
 	/*新增搜索字段*/
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

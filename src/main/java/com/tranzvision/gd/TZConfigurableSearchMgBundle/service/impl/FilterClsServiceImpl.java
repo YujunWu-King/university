@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZConfigurableSearchMgBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +35,14 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 
 	/* 查询表单 */
 
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			String str_com_id = jacksonUtil.getString("ComID");
@@ -49,7 +50,6 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 			String str_view_name = jacksonUtil.getString("ViewMc");
 			PsTzFilterDfnTKey psTzFilterDfnTKey = new PsTzFilterDfnTKey();
 			psTzFilterDfnTKey.setTzComId(str_com_id);
-			;
 			psTzFilterDfnTKey.setTzPageId(str_page_id);
 			psTzFilterDfnTKey.setTzViewName(str_view_name);
 			PsTzFilterDfnT psTzFilterDfnT = psTzFilterDfnTMapper.selectByPrimaryKey(psTzFilterDfnTKey);
@@ -78,22 +78,25 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				map.put("advModel", psTzFilterDfnT.getTzAdvanceModel());
 				map.put("baseSchEdit", psTzFilterDfnT.getTzBaseSchEdit());
 			}
-			strRet = jacksonUtil.Map2json(map); 
-			strRet = "{\"formData\":" + strRet + "}";
+			returnJsonMap.replace("formData", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 查询可配置搜索字段列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "{\"total\":0,\"root\":[]}";
-		String strContent = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 
 			// 将字符串转换成json;
@@ -111,9 +114,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 			String sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM asc limit ?,?";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 					new Object[] { str_com_id, str_page_id, str_view_name, numStart, numLimit });
-			if (list == null) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			if (list != null && list.size()>0) {
 				for (int i = 0; i < list.size(); i++) {
 					String FieldMc = (String) list.get(i).get("TZ_FILTER_FLD");
 					String fieldDesc = (String) list.get(i).get("TZ_FILTER_FLD_DESC");
@@ -134,24 +135,23 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					map.put("promptFld", str_prompt_fld);
 					map.put("orderNum", num_xh);
 
-					strContent = strContent + "," + jacksonUtil.Map2json(map);
+					listData.add(map);
 				}
-				if (!"".equals(strContent)) {
-					strContent = strContent.substring(1);
-				}
-
-				strRet = "{\"total\":" + total + ",\"root\":[" + strContent + "]}";
+				
+				mapRet.replace("total",total);
+				mapRet.replace("root", listData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	@Override
 	/* 添加可配置搜索 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -206,9 +206,11 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	/* 修改可配置定义信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -244,6 +246,7 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				}
 
 				if (jacksonUtil.containsKey("updateList")) {
+					
 					List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("updateList");
 					if(jsonArray != null && jsonArray.size()>0){
 						for (int j = 0; j < jsonArray.size(); j++) {
@@ -277,8 +280,8 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 	@Override
 	/* 修改类定义信息 */
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
-
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

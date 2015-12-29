@@ -11,12 +11,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class FilterTzClsServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
 		String result = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			// 将字符串转换成json;
 			jacksonUtil.json2Map(strParams);
