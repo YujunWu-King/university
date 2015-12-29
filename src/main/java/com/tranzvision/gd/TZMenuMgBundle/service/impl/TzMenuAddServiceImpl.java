@@ -32,8 +32,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZMenuMgBundle.service.impl.TzMenuAddServiceImpl")
 public class TzMenuAddServiceImpl extends FrameworkImpl {
-	@Autowired
-	private JacksonUtil jacksonUtil;
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -69,6 +67,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			Date lastupddttm = new Date();
@@ -329,6 +328,7 @@ public class TzMenuAddServiceImpl extends FrameworkImpl {
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		String menuOrg = jacksonUtil.getString("menuOrg");
 

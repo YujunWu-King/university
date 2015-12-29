@@ -24,9 +24,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzZtsmColuServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -36,7 +33,7 @@ public class TzZtsmColuServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

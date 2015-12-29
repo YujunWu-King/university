@@ -29,9 +29,6 @@ public class JsonController {
 	@Autowired
 	private AdminService adminService;
 
-	@Autowired
-	private JacksonUtil jacksonUtil;
-
 	@SuppressWarnings("unchecked")
 	@RequestMapping("parseJSON")
 	public String parseJSON(@RequestParam(value = "name", required = false, defaultValue = "") String json) {
@@ -47,6 +44,7 @@ public class JsonController {
 
 		System.out.println(json);
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(json);
 
 		System.out.println(jacksonUtil.getMap());
@@ -86,6 +84,7 @@ public class JsonController {
 		userData.put("userImage", "Rm9vYmFyIQ==");
 		userData.put("alluser", UsersList);
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		json = jacksonUtil.Map2json(userData);
 
 		System.out.println(json);

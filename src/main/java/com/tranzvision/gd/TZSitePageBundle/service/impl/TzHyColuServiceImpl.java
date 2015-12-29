@@ -36,9 +36,6 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -56,7 +53,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

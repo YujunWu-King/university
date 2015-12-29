@@ -26,9 +26,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -44,6 +41,7 @@ public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

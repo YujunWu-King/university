@@ -41,9 +41,6 @@ public class TzWebsiteLoginController {
 	private SqlQuery sqlQuery;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
 
 	@Autowired
@@ -97,6 +94,7 @@ public class TzWebsiteLoginController {
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(request.getParameter("tzParams"));
 
 		String strOrgId = jacksonUtil.getString("orgid");

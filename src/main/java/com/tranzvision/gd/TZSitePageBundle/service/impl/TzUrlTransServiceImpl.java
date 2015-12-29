@@ -24,9 +24,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzUrlTransServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -39,7 +36,7 @@ public class TzUrlTransServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

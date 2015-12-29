@@ -40,9 +40,6 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -67,7 +64,7 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			String strSiteId = request.getParameter("siteId");
@@ -179,6 +176,7 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;
@@ -218,6 +216,7 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 	private String saveHomepage(Map<String, Object> mapData, String[] errMsg) {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			// String strSiteIdSrc = mapData.get("siteId") == null ? "" :
@@ -318,6 +317,7 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			// String strSiteIdSrc = mapData.get("siteId") == null ? "" :

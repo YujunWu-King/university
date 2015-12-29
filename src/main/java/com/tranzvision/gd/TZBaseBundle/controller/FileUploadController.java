@@ -40,9 +40,6 @@ import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 public class FileUploadController {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
@@ -305,6 +302,7 @@ public class FileUploadController {
 		mapRet.put("success", success);
 		mapRet.put("msg", messages == null ? "" : messages);
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}

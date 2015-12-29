@@ -40,9 +40,6 @@ public class TzMenuEditedServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -73,7 +70,8 @@ public class TzMenuEditedServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", false);
 		mapRet.put("data", "");
-
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -198,6 +196,8 @@ public class TzMenuEditedServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", false);
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			Date dateNow = new Date();

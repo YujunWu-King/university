@@ -35,9 +35,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzDropboxSetServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -63,12 +60,13 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String languageCd = "ENG";
-
+			
 			jacksonUtil.json2Map(strParams);
 			String regId = jacksonUtil.getString("regId");
 
@@ -137,6 +135,7 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String languageCd = "ENG";
@@ -233,6 +232,8 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String languageCd = "ENG";

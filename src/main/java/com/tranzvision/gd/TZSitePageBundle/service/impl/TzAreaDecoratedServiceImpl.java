@@ -34,9 +34,6 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -51,6 +48,7 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -123,6 +121,7 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;
@@ -211,6 +210,7 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

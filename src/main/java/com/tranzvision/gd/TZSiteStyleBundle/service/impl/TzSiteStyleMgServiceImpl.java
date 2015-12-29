@@ -33,9 +33,6 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
     private ApplicationContext ctx;
-	
-	@Autowired
-	private JacksonUtil jacksonUtil;
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -144,6 +141,7 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 			errorMsg[1]="未配置站点模板数据！";
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -155,6 +153,7 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;

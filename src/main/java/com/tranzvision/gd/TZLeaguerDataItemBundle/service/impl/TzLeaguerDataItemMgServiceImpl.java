@@ -41,9 +41,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -78,6 +75,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -468,6 +466,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			mapRet.put("formData", mapRetFormData);
 			mapRet.put("listData", listRetJson);
 
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			strRet = jacksonUtil.Map2json(mapRet);
 
 		} catch (Exception e) {
@@ -567,6 +566,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			errorMsg[1] = "数据异常，请重试！";
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
