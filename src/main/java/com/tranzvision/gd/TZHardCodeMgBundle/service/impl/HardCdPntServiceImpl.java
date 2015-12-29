@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZHardCodeMgBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,6 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZHardCodeMgBundle.dao.PsTzHardcdPntMapper;
 import com.tranzvision.gd.TZHardCodeMgBundle.model.PsTzHardcdPnt;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
@@ -25,45 +26,44 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private FliterForm fliterForm;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
 	/* 加载HardCode列表 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart,
 			String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "TZ_HARDCODE_PNT", "ASC" } };
-		fliterForm.orderByArr = orderByArr;
 
 		// json数据要的结果字段;
 		String[] resultFldArray = { "TZ_HARDCODE_PNT", "TZ_DESCR254", "TZ_HARDCODE_VAL" };
-		String jsonString = "";
 
 		// 可配置搜索通用函数;
-		Object[] obj = fliterForm.searchFilter(resultFldArray, comParams,
+		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
 				numLimit, numStart, errorMsg);
 
-		if (obj == null || obj.length == 0) {
-			strRet = "{\"total\":0,\"root\":[]}";
-		} else {
+		if (obj != null && obj.length > 0) {
 			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 			for (int i = 0; i < list.size(); i++) {
 				String[] rowList = list.get(i);
-				jsonString = jsonString + ",{\"hardCodeName\":\"" + rowList[0]
-						+ "\",\"hardCodeDesc\":\"" + rowList[1]+ "\",\"hardCodeValue\":\"" + rowList[2] + "\"}";
+				Map<String, Object> mapList = new HashMap<String, Object>();
+				mapList.put("hardCodeName", rowList[0]);
+				mapList.put("hardCodeDesc", rowList[1]);
+				mapList.put("hardCodeValue", rowList[2]);
+				listData.add(mapList);
 			}
-			if (!"".equals(jsonString)) {
-				jsonString = jsonString.substring(1);
-			}
-
-			strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
+			mapRet.replace("total", obj[0]);
+			mapRet.replace("root", listData);
 		}
 
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	
@@ -71,7 +71,8 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("hardCodeName")) {
@@ -79,11 +80,11 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 				String hardCodeName = jacksonUtil.getString("hardCodeName");
 				PsTzHardcdPnt psCmbcHardcdPnt=  psCmbcHardcdPntMapper.selectByPrimaryKey(hardCodeName);
 				if (psCmbcHardcdPnt != null) {
-					strRet = "{\"hardCodeName\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzHardcodePnt())
-							+ "\",\"hardCodeDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzDescr254())
-							+ "\",\"hardCodeValue\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzHardcodeVal())
-							+ "\",\"hardCodeDetailDesc\":\"" + TZUtility.transFormchar(psCmbcHardcdPnt.getTzDescr1000())
-							+ "\"}";
+					returnJsonMap.put("hardCodeName", psCmbcHardcdPnt.getTzHardcodePnt());
+					returnJsonMap.put("hardCodeDesc", psCmbcHardcdPnt.getTzDescr254());
+					returnJsonMap.put("hardCodeValue", psCmbcHardcdPnt.getTzHardcodeVal());
+					returnJsonMap.put("hardCodeDetailDesc", psCmbcHardcdPnt.getTzDescr1000());
+					
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该hardcode数据不存在";
@@ -98,14 +99,15 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 	
 	
 	@Override
 	/* 新增hardcode方法 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -144,7 +146,8 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	@Override
 	/* 修改hardcode方法 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -186,7 +189,8 @@ public class HardCdPntServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
