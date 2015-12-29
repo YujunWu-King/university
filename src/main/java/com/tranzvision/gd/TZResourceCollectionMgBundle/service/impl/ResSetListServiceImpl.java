@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZResourceCollectionMgBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,59 +24,57 @@ public class ResSetListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzPtZyjhTblMapper psTzPtZyjhTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
 
 	/* 查询资源集合列表 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "TZ_ZYJH_ID", "ASC" } };
-		fliterForm.orderByArr = orderByArr;
 
 		// json数据要的结果字段;
 		String[] resultFldArray = { "TZ_ZYJH_ID", "TZ_ZYJH_MC" };
-		String jsonString = "";
 
 		// 可配置搜索通用函数;
-		Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr,comParams, numLimit, numStart, errorMsg);
 
-		if (obj == null || obj.length == 0) {
-			strRet = "{\"total\":0,\"root\":[]}";
-		} else {
+		if (obj != null && obj.length > 0) {
 			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 			for (int i = 0; i < list.size(); i++) {
 				String[] rowList = list.get(i);
-				jsonString = jsonString + ",{\"resSetID\":\"" + rowList[0] + "\",\"resSetDesc\":\"" + rowList[1]
-						+ "\"}";
+				Map<String, Object> mapList = new HashMap<String, Object>();
+				mapList.put("resSetID", rowList[0]);
+				mapList.put("resSetDesc", rowList[1]);
+				listData.add(mapList);
 			}
-			if (!"".equals(jsonString)) {
-				jsonString = jsonString.substring(1);
-			}
-
-			strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
+			mapRet.replace("total", obj[0]);
+			mapRet.replace("root", listData);
 		}
 
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 删除资源集合信息 */
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

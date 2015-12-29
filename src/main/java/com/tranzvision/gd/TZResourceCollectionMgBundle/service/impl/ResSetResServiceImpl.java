@@ -1,5 +1,8 @@
 package com.tranzvision.gd.TZResourceCollectionMgBundle.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +11,6 @@ import com.tranzvision.gd.TZResourceCollectionMgBundle.dao.PsTzPtZyxxTblMapper;
 import com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTbl;
 import com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -20,15 +22,14 @@ public class ResSetResServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzPtZyxxTblMapper psTzPtZyxxTblMapper;
 	
 	/* 获取资源信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -42,12 +43,12 @@ public class ResSetResServiceImpl extends FrameworkImpl {
 				psTzPtZyxxTblKey.setTzResId(strResourceID);
 				PsTzPtZyxxTbl psTzPtZyxxTbl = psTzPtZyxxTblMapper.selectByPrimaryKey(psTzPtZyxxTblKey);
 				if (psTzPtZyxxTbl != null) {
-					strRet = "{\"resSetID\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzZyjhId())
-							+ "\",\"resourceID\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzResId())
-							+ "\",\"resourceName\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzResMc()) 
-							+ "\",\"fileType\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzResFileType())
-							+ "\",\"filePath\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzResFilePath())
-							+ "\",\"fileName\":\"" + TZUtility.transFormchar(psTzPtZyxxTbl.getTzResFileName())+ "\"}";
+					returnJsonMap.put("resSetID", psTzPtZyxxTbl.getTzZyjhId());
+					returnJsonMap.put("resourceID", psTzPtZyxxTbl.getTzResId());
+					returnJsonMap.put("resourceName", psTzPtZyxxTbl.getTzResMc());
+					returnJsonMap.put("fileType", psTzPtZyxxTbl.getTzResFileType());
+					returnJsonMap.put("filePath", psTzPtZyxxTbl.getTzResFilePath());
+					returnJsonMap.put("fileName", psTzPtZyxxTbl.getTzResFileName());
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该资源信息数据不存在";
@@ -62,13 +63,14 @@ public class ResSetResServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 新增资源信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -118,7 +120,8 @@ public class ResSetResServiceImpl extends FrameworkImpl {
 	/* 修改资源信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

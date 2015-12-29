@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZResourceCollectionMgBundle.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,6 @@ import com.tranzvision.gd.TZResourceCollectionMgBundle.dao.PsTzPtZyxxTblMapper;
 import com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyjhTbl;
 import com.tranzvision.gd.TZResourceCollectionMgBundle.model.PsTzPtZyxxTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -24,8 +25,6 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzPtZyjhTblMapper psTzPtZyjhTblMapper;
 	@Autowired
 	private PsTzPtZyxxTblMapper psTzPtZyxxTblMapper;
@@ -34,7 +33,9 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -43,9 +44,11 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 				String strResSetID = jacksonUtil.getString("resSetID");
 				PsTzPtZyjhTbl psTzPtZyjhTbl = psTzPtZyjhTblMapper.selectByPrimaryKey(strResSetID);
 				if (psTzPtZyjhTbl != null) {
-					strRet = "{\"formData\":{\"resSetID\":\"" + TZUtility.transFormchar(psTzPtZyjhTbl.getTzZyjhId())
-							+ "\",\"resSetDesc\":\"" + TZUtility.transFormchar(psTzPtZyjhTbl.getTzZyjhMc())
-							+ "\",\"publicRes\":\"" + TZUtility.transFormchar(psTzPtZyjhTbl.getTzZyjhIsgg()) + "\"}}";
+					Map<String, Object> map = new HashMap<>();
+					map.put("resSetID", psTzPtZyjhTbl.getTzZyjhId());
+					map.put("resSetDesc", psTzPtZyjhTbl.getTzZyjhMc());
+					map.put("publicRes", psTzPtZyjhTbl.getTzZyjhIsgg());
+					returnJsonMap.replace("formData", map);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该资源集合数据不存在";
@@ -60,14 +63,19 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 获取资源信息列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
-		String strComContent = "";
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 		int total = 0;
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 将字符串转换成json;
 			jacksonUtil.json2Map(comParams);
@@ -83,16 +91,15 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 						new Object[] { strResSetID, numStart, numLimit });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
-						String resourceID = TZUtility.transFormchar((String) list.get(i).get("TZ_RES_ID"));
-						String resourceName = TZUtility.transFormchar((String) list.get(i).get("TZ_RES_MC"));
-						strComContent = strComContent + ",{\"resSetID\":\"" + strResSetID + "\",\"resourceID\":\""
-								+ resourceID + "\",\"resourceName\":\"" + resourceName + "\"}";
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("resSetID", strResSetID);
+						mapList.put("resourceID", (String) list.get(i).get("TZ_RES_ID"));
+						mapList.put("resourceName", (String) list.get(i).get("TZ_RES_MC"));
+						listData.add(mapList);
 					}
+					mapRet.replace("total",total);
+					mapRet.replace("root", listData);
 				}
-				if (!"".equals(strComContent)) {
-					strComContent = strComContent.substring(1);
-				}
-
 			} else {
 				errorMsg[0] = "1";
 				errorMsg[1] = "未获得资源编号";
@@ -102,14 +109,14 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
-		strComContent = "{\"total\":" + total + ",\"root\":[" + strComContent + "]}";
-		return strComContent;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	// 新增资源集合信息;
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -155,7 +162,8 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 	// 新增资源集合信息;
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -203,13 +211,13 @@ public class ResSetInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
