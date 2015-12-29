@@ -2,7 +2,9 @@ package com.tranzvision.gd.TZSystemVariableMgBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,6 @@ import com.tranzvision.gd.TZSystemVariableMgBundle.dao.PsTzSysvarTMapper;
 import com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSvChainKey;
 import com.tranzvision.gd.TZSystemVariableMgBundle.model.PsTzSysvarT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -25,8 +26,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZSystemVariableMgBundle.service.impl.VarDefnServiceImpl")
 public class VarDefnServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsTzSysvarTMapper psTzSysvarTMapper;
@@ -37,7 +36,9 @@ public class VarDefnServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -47,16 +48,15 @@ public class VarDefnServiceImpl extends FrameworkImpl {
 				
 				PsTzSysvarT psTzSysvarT = psTzSysvarTMapper.selectByPrimaryKey(sysVarId);
 				if (psTzSysvarT != null) {
-					strRet = "{\"systemVarId\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzSysvarid())
-							+ "\",\"systemVarName\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzSysvarname())
-							+ "\",\"isValid\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzEffflg())
-							+ "\",\"systemVarDesc\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzSysvardesc()) 
-							+ "\",\"sysVarDataType\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzSysvartype())
-							+ "\",\"getValType\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzValmethod())
-							+ "\",\"sqlValue\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzLngstrcont())
-							+ "\",\"appClass\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzAppclsReg())
-							+ "\",\"constant\":\"" + TZUtility.transFormchar(psTzSysvarT.getTzConstant())
-							+ "\"}";
+					returnJsonMap.put("systemVarId", psTzSysvarT.getTzSysvarid());
+					returnJsonMap.put("systemVarName", psTzSysvarT.getTzSysvarname());
+					returnJsonMap.put("isValid", psTzSysvarT.getTzEffflg());
+					returnJsonMap.put("systemVarDesc", psTzSysvarT.getTzSysvardesc());
+					returnJsonMap.put("sysVarDataType", psTzSysvarT.getTzSysvartype());
+					returnJsonMap.put("getValType", psTzSysvarT.getTzValmethod());
+					returnJsonMap.put("sqlValue", psTzSysvarT.getTzLngstrcont());
+					returnJsonMap.put("appClass", psTzSysvarT.getTzAppclsReg());
+					returnJsonMap.put("constant", psTzSysvarT.getTzConstant());
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该系统变量数据不存在";
@@ -71,13 +71,14 @@ public class VarDefnServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 	
 	@Override
 	/* 新增系统变量 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -163,7 +164,8 @@ public class VarDefnServiceImpl extends FrameworkImpl {
 	@Override
 	/* 新增系统变量 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
