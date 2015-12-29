@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -21,27 +20,14 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class FliterForm extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	
-	private SqlQuery sqlQuery;
-
-	public String[][] orderByArr;
-	
-	private void getSqlQueryBean(){
-		if(this.sqlQuery==null){
-			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-			this.sqlQuery = (SqlQuery) getSpringBeanUtil.getAutowiredSpringBean("SqlQuery");
-		}
-	}
-
 	/* 获取组件注册信息 */
 	public String tzQuery(String strParams, String[] errorMsg) {
 		// 返回值;
 		String strRet = "{}";
 
 		try {
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
 			jacksonUtil.json2Map(strParams);
@@ -256,19 +242,6 @@ public class FliterForm extends FrameworkImpl {
 							+ promptGlJson + "],\"promptTableFldLabel\":\"" + promptTableFldLabel
 							+ "\",\"promptTableDescFldLabel\":\"" + promptTableDescFldLabel + "\",\"translateFld\":\""
 							+ zhzJhId + "\"}";
-					/***
-					 * fldJson = fldJson + ",\"" + fieldName +
-					 * "\":{\"operator\":[" + trans + "],\"operatorReadOnly\":"
-					 * + operatorReadOnly + ",\"fldDesc\":\"" + fieldLabel +
-					 * "\",\"fldType\":\"" + fldType + "\",\"fldReadOnly\":" +
-					 * fldReadOnly + ",\"fldHidden\":" + fldHidden +
-					 * ",\"promptTable\":\"" + "" + "\",\"promptTableFld\":\"" +
-					 * "" + "\",\"promptTableFldDesc\":\"" + "" +
-					 * "\",\"promptTableDefaultFld\":[" + promptGlJson +
-					 * "],\"promptTableFldLabel\":\"" + "" +
-					 * "\",\"promptTableDescFldLabel\":\"" + "" +
-					 * "\",\"translateFld\":\"" + "" + "\"}";
-					 ***/
 				}
 
 			} catch (Exception e) {
@@ -293,8 +266,9 @@ public class FliterForm extends FrameworkImpl {
 
 	/******* 可配置搜索,返回搜索结果JSON **********/
 	@SuppressWarnings("unchecked")
-	public Object[] searchFilter(String[] resultFldArray, String strParams, int numLimit, int numStart,
+	public Object[] searchFilter(String[] resultFldArray,String[][] orderByArr, String strParams, int numLimit, int numStart,
 			String[] errorMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 返回值;
 		Object[] strRet = null;
 
@@ -318,7 +292,6 @@ public class FliterForm extends FrameworkImpl {
 		try {
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
-			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(strParams);
 			String cfgSrhId = jacksonUtil.getString("cfgSrhId");
 
@@ -334,14 +307,12 @@ public class FliterForm extends FrameworkImpl {
 			String pageId = comPageRecArr[1];
 			String recname = comPageRecArr[2];
 
-			this.getSqlQueryBean();
-			
 			// 得到总条数;
 			int tableNameCount = 0;
 			String tableName = recname;
 			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
 
-			tableNameCount = sqlQuery.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
+			tableNameCount = jdbcTemplate.queryForObject(tableNameSql, new Object[] { recname }, "Integer");
 			if (tableNameCount <= 0) {
 				tableName = "PS_" + recname;
 			}
@@ -350,7 +321,7 @@ public class FliterForm extends FrameworkImpl {
 			String existSQL = "SELECT 'Y' EXIST,TZ_RESULT_MAX_NUM from PS_TZ_FILTER_DFN_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
 			Map<String, Object> map = null;
 			try {
-				map = sqlQuery.queryForMap(existSQL, new Object[] { comId, pageId, recname });
+				map = jdbcTemplate.queryForMap(existSQL, new Object[] { comId, pageId, recname });
 				exist = (String) map.get("EXIST");
 				maxNum = (int) map.get("TZ_RESULT_MAX_NUM");
 			} catch (Exception e) {
@@ -373,7 +344,7 @@ public class FliterForm extends FrameworkImpl {
 
 			ArrayList<String> resultFldTypeList = new ArrayList<String>();
 			String resultFldTypeSQL = "SELECT  COLUMN_NAME, DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=?";
-			List<Map<String, Object>> typelist = sqlQuery.queryForList(resultFldTypeSQL,
+			List<Map<String, Object>> typelist = jdbcTemplate.queryForList(resultFldTypeSQL,
 					new Object[] { tableName });
 			String columnNanme = "";
 			String dateType = "";
@@ -460,7 +431,7 @@ public class FliterForm extends FrameworkImpl {
 							// 是不是下拉框;
 							String isSelect = "";
 							String isDropDownSql = "SELECT 'Y' from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_ISDOWN_FLD = '1'";
-							isSelect = sqlQuery.queryForObject(isDropDownSql,
+							isSelect = jdbcTemplate.queryForObject(isDropDownSql,
 									new Object[] { comId, pageId, recname, fieldName }, "String");
 
 							if ("Y".equals(isSelect)) {
@@ -493,7 +464,7 @@ public class FliterForm extends FrameworkImpl {
 							// 查看搜索字段是不是不区分大小写:TZ_NO_UPORLOW;
 							String noUpOrLow = "";
 							String noUpOrLowSql = "SELECT TZ_NO_UPORLOW from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
-							noUpOrLow = sqlQuery.queryForObject(noUpOrLowSql,
+							noUpOrLow = jdbcTemplate.queryForObject(noUpOrLowSql,
 									new Object[] { comId, pageId, recname, fieldName }, "String");
 
 							fldValue = fldValue.trim();
@@ -659,147 +630,6 @@ public class FliterForm extends FrameworkImpl {
 						}
 					}
 				}
-
-				/*
-				 * String condition = CLASSJson.getString("condition");
-				 * JSONObject conditionJson = PaseJsonUtil.getJson(condition);
-				 * 
-				 * int i = 0; int size = conditionJson.names().size(); for (i =
-				 * 0; i < (size / 2); i++) { operateKey =
-				 * conditionJson.names().getString(2 * i); operate =
-				 * conditionJson.getString(operateKey);
-				 * 
-				 * 
-				 * fldKey = conditionJson.names().getString(2 * i + 1);
-				 * 
-				 * String fieldName = operateKey.replaceAll("-operator", "");
-				 * String fieldName2 = fldKey.replaceAll("-value", ""); if
-				 * (fieldName == null || !fieldName.equals(fieldName2)) {
-				 * errorMsg[0] = "1"; errorMsg[1] = "可配置搜索配置错误，请于管理员联系"; return
-				 * strRet; }
-				 * 
-				 * 
-				 * String isSelect = ""; String isDropDownSql =
-				 * "SELECT 'Y' from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_ISDOWN_FLD = '1'"
-				 * ; isSelect = jdbcTemplate.queryForObject(isDropDownSql, new
-				 * Object[]{comId,pageId,recname,fieldName2}, "String");
-				 * 
-				 * if ("Y".equals(isSelect)) { String fldKeyValueString =
-				 * conditionJson .getString(fldKey); if (fldKeyValueString !=
-				 * null && !"".equals(fldKeyValueString)) { try { JSONArray
-				 * jsonArray = conditionJson .getJSONArray(fldKey); for (int
-				 * jsonNum = 0; jsonNum < jsonArray .size(); jsonNum++) { if
-				 * ("".equals(fldValue)) { fldValue =
-				 * jsonArray.getString(jsonNum); } else { fldValue = fldValue +
-				 * "," + jsonArray.getString(jsonNum); } } } catch (Exception e)
-				 * { fldValue = fldKeyValueString; } } else { fldValue = ""; } }
-				 * else { fldValue = conditionJson.getString(fldKey); }
-				 * 
-				 * 
-				 * String noUpOrLowSql =
-				 * "SELECT TZ_NO_UPORLOW from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?"
-				 * ; noUpOrLow = jdbcTemplate.queryForObject(noUpOrLowSql, new
-				 * Object[]{comId,pageId,recname,fieldName}, "String");
-				 * 
-				 * 
-				 * fldValue = fldValue.trim(); if ("".equals(fldValue) &&
-				 * !"11".equals(operate) && !"12".equals(operate)) { continue; }
-				 * 
-				 * String value = ""; String isChar = "";
-				 * 
-				 * int index = resultFldTypeList.indexOf(fieldName); if (index <
-				 * 0) { errorMsg[0] = "1"; errorMsg[1] = "字段：" + fieldName +
-				 * "在可配置搜索中不存在，请于管理员联系"; return strRet; } else { String
-				 * fieldType = resultFldTypeList.get(index + 1);
-				 * 
-				 * if (intTypeString.contains(fieldType)) {
-				 * 
-				 * value = fldValue; } else if ("DATE".equals(fieldType)) {
-				 * 
-				 * value = " str_to_date('" + fldValue + "','%Y-%m-%d')"; } else
-				 * if ("TIME".equals(fieldType)) {
-				 * 
-				 * value = " str_to_date('" + fldValue + "','%H:%i')"; } else if
-				 * ("DATETIME".equals(fieldType) ||
-				 * "TIMESTAMP".equals(fieldType)) {
-				 * 
-				 * value = " str_to_date('" + fldValue + "','%Y-%m-%d %H:%i')";
-				 * } else {
-				 * 
-				 * isChar = "Y"; fldValue = fldValue.replaceAll("'", "''");
-				 * value = "'" + fldValue + "'"; if ("A".equals(noUpOrLow) &&
-				 * !"10".equals(operate) && !"11".equals(operate) &&
-				 * !"12".equals(operate)) { value = "upper(" + value + ")";
-				 * fieldName = "upper(" + fieldName + ")"; } }
-				 * 
-				 * if ("".equals(sqlWhere)) { sqlWhere = " WHERE "; } else {
-				 * sqlWhere = sqlWhere + " AND "; }
-				 * 
-				 * 
-				 * if ("0".equals(operate.substring(0, 1))) { operate =
-				 * operate.substring(1); }
-				 * 
-				 * switch (Integer.parseInt(operate)) { case 1:
-				 * 
-				 * operate = "="; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 2:
-				 * 
-				 * operate = "<>"; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 3:
-				 * 
-				 * operate = ">"; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 4:
-				 * 
-				 * operate = ">="; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 5:
-				 * 
-				 * operate = "<"; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 6:
-				 * 
-				 * operate = "<="; sqlWhere = sqlWhere + fieldName + operate +
-				 * value; break; case 7:
-				 * 
-				 * if ("A".equals(noUpOrLow)) { value = "'%" +
-				 * fldValue.toUpperCase() + "%'"; } else { value = "'%" +
-				 * fldValue + "%'"; } sqlWhere = sqlWhere + fieldName + " LIKE "
-				 * + value; break; case 8:
-				 * 
-				 * if ("A".equals(noUpOrLow)) { value = "'" +
-				 * fldValue.toUpperCase() + "%'"; } else { value = "'" +
-				 * fldValue + "%'"; } sqlWhere = sqlWhere + fieldName + " LIKE "
-				 * + value; break; case 9:
-				 * 
-				 * if ("A".equals(noUpOrLow)) { value = "'%" +
-				 * fldValue.toUpperCase() + "'"; } else { value = "'%" +
-				 * fldValue + "'"; } sqlWhere = sqlWhere + fieldName + " LIKE "
-				 * + value; break; case 10: fldValue = fldValue.replaceAll(" ",
-				 * ""); fldValue = fldValue.trim(); String[] inArr =
-				 * fldValue.split(",");
-				 * 
-				 * int inArrLen = inArr.length; if (inArrLen > 0) { value = "";
-				 * if ("Y".equals(isChar)) { for (int ii = 0; ii < inArrLen;
-				 * ii++) { value = value + ",'" + inArr[ii] + "'"; }
-				 * 
-				 * } else { for (int ii = 0; ii < inArrLen; ii++) { value =
-				 * value + "," + inArr[ii]; } } value = value.substring(1);
-				 * value = "(" + value + ")"; }
-				 * 
-				 * sqlWhere = sqlWhere + fieldName + " IN " + value; break; case
-				 * 11:
-				 * 
-				 * 
-				 * sqlWhere = sqlWhere + fieldName + " IS NULL"; break; case 12:
-				 * 
-				 * 
-				 * sqlWhere = sqlWhere + fieldName + " IS NOT NULL"; break;
-				 * 
-				 * default: sqlWhere = sqlWhere + fieldName + "=" + value;
-				 * break; }
-				 * 
-				 * }
-				 * 
-				 * }
-				 */
 			}
 
 			String orderby = "";
@@ -814,7 +644,7 @@ public class FliterForm extends FrameworkImpl {
 
 			// 得到总条数;
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
-			numTotal = sqlQuery.queryForObject(totalSQL, "Integer");
+			numTotal = jdbcTemplate.queryForObject(totalSQL, "Integer");
 
 			// 总数;
 			if (maxNum > 0 && numTotal > maxNum) {
@@ -841,11 +671,11 @@ public class FliterForm extends FrameworkImpl {
 			try {
 				List<Map<String, Object>> resultlist = null;
 				if (numLimit != 0) {
-					resultlist = sqlQuery.queryForList(sqlList, new Object[] { numStart, numLimit });
+					resultlist = jdbcTemplate.queryForList(sqlList, new Object[] { numStart, numLimit });
 				} else if (numLimit == 0 && numStart > 0) {
-					resultlist = sqlQuery.queryForList(sqlList, new Object[] { numStart, numTotal - numStart });
+					resultlist = jdbcTemplate.queryForList(sqlList, new Object[] { numStart, numTotal - numStart });
 				} else {
-					resultlist = sqlQuery.queryForList(sqlList);
+					resultlist = jdbcTemplate.queryForList(sqlList);
 				}
 				for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
 					Map<String, Object> resultMap = resultlist.get(resultlist_i);
@@ -875,7 +705,7 @@ public class FliterForm extends FrameworkImpl {
 	public String tzOther(String strOperateType, String comParams, String[] errorMsg) {
 		String strRet = "{}";
 		try {
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
 			jacksonUtil.json2Map(comParams);
