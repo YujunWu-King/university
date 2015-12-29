@@ -28,8 +28,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.RegisteMalServiceImpl")
 public class RegisteMalServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -50,7 +48,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strSen = "";
 		String strResponse = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();   
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("sen")){
@@ -103,7 +101,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strLang = "";
 		   
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();   
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -161,7 +159,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	    String strUserName = "";
 
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();   
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -264,7 +262,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strOrgid = "";
 		String strLang = "";
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil(); 
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -326,7 +324,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	    String strUserName = "";
 
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -433,7 +431,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strOrgid = "";
 		String strLang = "";
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -495,7 +493,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	    String strUserName = "";
 
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -602,7 +600,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strOrgid = "";
 		String strLang = "";
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 
@@ -664,7 +662,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 	    String strUserName = "";
 
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email") 

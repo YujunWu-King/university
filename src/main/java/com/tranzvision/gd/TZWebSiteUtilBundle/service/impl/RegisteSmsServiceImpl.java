@@ -16,8 +16,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.RegisteSmsServiceImpl")
 public class RegisteSmsServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -26,7 +24,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strSen = "";
 		String strResponse = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("sen")){
@@ -55,7 +53,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strLang = "";
 		   
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("phone") 
@@ -102,7 +100,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strLang = "";
 		   
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("phone") 

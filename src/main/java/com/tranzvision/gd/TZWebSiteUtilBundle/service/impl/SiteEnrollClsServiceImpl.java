@@ -40,8 +40,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl")
 public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private ValidateUtil validateUtil;
@@ -76,6 +74,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
 		Map<String, Object> returnMap = new HashMap<String ,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			
 			jacksonUtil.json2Map(strParams);
@@ -133,6 +132,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strSen = "";
 		String strResponse = "\"failure\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("sen")){
@@ -170,7 +170,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		
 		String strResult = "\"failure\"";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("checkCode") 
@@ -205,7 +205,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strJumUrl = "";
 		String strOrgId = "";
 		String strLang = "";
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgId = jacksonUtil.getString("orgid");
@@ -682,6 +682,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String jgid = "";
 		String strResult = "\"failure\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strCheckCode = jacksonUtil.getString("checkCode");
@@ -715,7 +716,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strJgId = "";
 		String strLang = "";
 		String strResult = "\"failure\"";
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strPwd = jacksonUtil.getString("pwd");
@@ -827,7 +828,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String classid = request.getParameter("classid");
 		
 		String strResponse = "获取数据失败，请联系管理员";
-		   
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			if(classid != null && !"".equals(classid)){
 				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang + "\",\"tokensign\":\"" + strTokenSign + "\",\"email\":\"" + strEmail + "\",\"sen\":\"" + strSen + "\"}";
@@ -883,6 +884,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strSiteId = "";
 		String strLang = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strEmail = jacksonUtil.getString("email");
@@ -927,6 +929,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		Date dtYxq = null;
 		String strYxzt = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strTokenSign = jacksonUtil.getString("tokensign");
@@ -1060,6 +1063,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strSiteId = "";
 		String strLang = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
@@ -1120,6 +1124,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		Date dtYxq;
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
@@ -1186,6 +1191,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String strSiteId = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
@@ -1227,6 +1233,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strEmail = "";
 		String strYxzt = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strTokenSign = jacksonUtil.getString("tokensign");
@@ -1309,6 +1316,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String strSiteId = "";
 		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
