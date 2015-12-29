@@ -30,8 +30,6 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzAqComsqTblMapper psTzAqComsqTblMapper;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
@@ -44,6 +42,7 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			// 将字符串转换成json;
@@ -123,6 +122,7 @@ public class PermissionComServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;

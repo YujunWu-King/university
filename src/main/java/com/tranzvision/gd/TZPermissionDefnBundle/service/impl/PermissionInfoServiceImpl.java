@@ -31,8 +31,6 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
@@ -41,6 +39,7 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -89,6 +88,7 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -142,8 +142,9 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-				
+		JacksonUtil jacksonUtil = new JacksonUtil();		
 		try {
+			
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("permID")) {
 				// 类方法ID;
@@ -182,18 +183,17 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_COM_ID", "ASC" } };
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "CLASSID", "TZ_COM_ID", "TZ_COM_MC"};
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
 			if (obj != null && obj.length > 0) {
 				
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -227,7 +227,7 @@ public class PermissionInfoServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

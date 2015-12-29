@@ -23,8 +23,6 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsClassDefnMapper psClassDefnMapper;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private FliterForm fliterForm;
@@ -38,17 +36,16 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "CLASSID", "ASC" } };
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "CLASSID", "CLASSDEFNDESC" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
 			
 			if (obj != null && obj.length > 0) {
 				
@@ -84,7 +81,7 @@ public class PermissionListServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
