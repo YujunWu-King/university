@@ -56,9 +56,6 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -113,6 +110,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String conflictKeys = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -212,6 +210,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -318,6 +317,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
 			int dataLength = actData.length;
@@ -433,6 +434,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapRet = new HashMap<String, Object>();
 				mapRet.put("formData", mapData);
 
+				JacksonUtil jacksonUtil = new JacksonUtil();
 				strRet = jacksonUtil.Map2json(mapRet);
 			} else {
 				errMsg[0] = "1";
@@ -455,6 +457,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		jacksonUtil.json2Map(strParams);
 		String queryType = jacksonUtil.getString("queryType");
 
@@ -469,15 +473,14 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			fliterForm.orderByArr = orderByArr;
 
 			if ("USER".equals(queryType)) {
 
 				// json数据要的结果字段;
-				String[] resultFldArray = { "TZ_JG_ID", "TZ_DLZH_ID", "TZ_REALNAME", };
+				String[] resultFldArray = { "TZ_JG_ID", "TZ_DLZH_ID", "TZ_REALNAME" };
 
 				// 可配置搜索通用函数;
-				Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 				if (obj != null && obj.length > 0) {
 
@@ -531,6 +534,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		mapRet.put("success", 0);
 		mapRet.put("message", "");
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -683,6 +688,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 			mapRet.replace("total", total);
 			mapRet.replace("root", listDataJson);
 
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			strRet = jacksonUtil.Map2json(mapRet);
 
 		} catch (Exception e) {

@@ -42,9 +42,6 @@ public class TzLoginController {
 	private SqlQuery sqlQuery;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
 
 	@Autowired
@@ -194,6 +191,7 @@ public class TzLoginController {
 
 		mapRet.put("org", listOrgJson);
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 	}
 
@@ -214,6 +212,7 @@ public class TzLoginController {
 			mapRet.replace("orgId", orgid);
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 	}
 
@@ -221,6 +220,7 @@ public class TzLoginController {
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(request.getParameter("tzParams"));
 		Map<String, Object> formData = jacksonUtil.getMap("comParams");
 

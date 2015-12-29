@@ -22,14 +22,11 @@ public class TzColuMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Autowired
-	private JacksonUtil jacksonUtil;
-
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

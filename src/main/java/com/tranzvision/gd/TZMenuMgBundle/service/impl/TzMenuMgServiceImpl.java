@@ -31,9 +31,6 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -62,13 +59,12 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_MENU_NUM", "TZ_MENU_MC" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -92,6 +88,7 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -108,6 +105,8 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
 			int dataLength = actData.length;
@@ -148,6 +147,7 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		String menuId = jacksonUtil.getString("menuId");
 		String actType = jacksonUtil.getString("actType");
@@ -209,6 +209,7 @@ public class TzMenuMgServiceImpl extends FrameworkImpl {
 			mapRet.put("errorMsg", e.toString());
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}

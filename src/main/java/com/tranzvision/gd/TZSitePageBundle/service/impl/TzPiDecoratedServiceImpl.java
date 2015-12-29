@@ -31,9 +31,6 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -48,7 +45,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzGetHtmlData(String strParams) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

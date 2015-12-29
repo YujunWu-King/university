@@ -25,9 +25,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class MessageSetMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 	
 	@SuppressWarnings("unchecked")
@@ -45,13 +42,12 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
 			FliterForm fliterForm = new FliterForm();
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_XXJH_ID", "TZ_XXJH_MC" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -74,7 +70,8 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -89,6 +86,7 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

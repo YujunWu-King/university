@@ -31,9 +31,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -75,6 +72,8 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 				mapRet.put("siteLanguage", String.valueOf(mapData.get("TZ_SITE_LANG")));
 				mapRet.put("siteName", String.valueOf(mapData.get("TZ_SITEI_NAME")));
 				mapRet.put("siteMid", String.valueOf(mapData.get("TZ_SITEM_ID")));
+				
+				JacksonUtil jacksonUtil = new JacksonUtil();
 				strRet = jacksonUtil.Map2json(mapRet);
 
 			}
@@ -99,6 +98,7 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date datenow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -177,6 +177,7 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date lastupddttm = new Date();
 			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);

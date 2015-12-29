@@ -26,9 +26,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzSitePageMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -56,6 +53,7 @@ public class TzSitePageMgServiceImpl extends FrameworkImpl {
 			mapRet.put("siteMid", "");
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapData);
 	}
 

@@ -62,9 +62,6 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	private ApplicationContext ctx;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -169,6 +166,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 			errorMsg[1] = "获取功能列表数据出错！";
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -177,6 +175,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			Date dateNow = new Date();
@@ -706,6 +705,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;
@@ -750,7 +750,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 		String strRet = "";
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String strSiteIdSrc = formData.get("siteId") == null ? "" : String.valueOf(formData.get("siteId"));
 			String strSiteId = "";
@@ -974,7 +974,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 		String strRet = "";
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String strSiteIdSrc = formData.get("siteId") == null ? "" : String.valueOf(formData.get("siteId"));
 			String strSiteId = "";

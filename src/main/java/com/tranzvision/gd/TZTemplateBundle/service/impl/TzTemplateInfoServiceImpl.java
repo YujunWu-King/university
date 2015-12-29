@@ -42,9 +42,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -83,6 +80,7 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("restempid") && jacksonUtil.containsKey("restemporg")) {
@@ -157,6 +155,7 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date lastupddttm = new Date();
 			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -256,6 +255,7 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		String conflictKeys = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date datenow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -363,7 +363,9 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
-
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		jacksonUtil.json2Map(strParams);
 		String listtype = jacksonUtil.getString("listtype");
 		String restempid = jacksonUtil.getString("restempid");
@@ -469,6 +471,8 @@ public class TzTemplateInfoServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

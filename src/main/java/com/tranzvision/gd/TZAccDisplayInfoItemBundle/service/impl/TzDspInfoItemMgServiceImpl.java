@@ -41,9 +41,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzDspInfoItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -134,6 +131,7 @@ public class TzDspInfoItemMgServiceImpl extends FrameworkImpl {
 			errorMsg[1] = "数据异常，请重试！";
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -371,6 +369,7 @@ public class TzDspInfoItemMgServiceImpl extends FrameworkImpl {
 			mapRet.put("formData", mapRetFormData);
 			mapRet.put("listData", listRetJson);
 
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			strRet = jacksonUtil.Map2json(mapRet);
 
 		} catch (Exception e) {
@@ -390,6 +389,7 @@ public class TzDspInfoItemMgServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			Date dateNow = new Date();

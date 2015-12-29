@@ -22,9 +22,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzMenuShowServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -37,7 +34,7 @@ public class TzMenuShowServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 		
 		String strRet = "";
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			
 			jacksonUtil.json2Map(strParams);

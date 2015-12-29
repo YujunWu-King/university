@@ -29,9 +29,6 @@ public class TranslateMgServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@SuppressWarnings("unchecked")
@@ -48,13 +45,12 @@ public class TranslateMgServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_ZHZJH_ID", "TZ_ZHZJH_MS" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -78,6 +74,7 @@ public class TranslateMgServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -93,6 +90,8 @@ public class TranslateMgServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

@@ -31,9 +31,6 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -47,6 +44,7 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

@@ -30,9 +30,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class MessageSetInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -53,6 +50,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("msgSetID")) {
@@ -100,6 +98,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String conflictKeys = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -144,6 +143,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -196,13 +196,12 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
 			FliterForm fliterForm = new FliterForm();
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_XXJH_ID", "TZ_MSG_ID", "TZ_MSG_TEXT", "TZ_LANGUAGE_NAME", "TZ_JG_ID" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -229,6 +228,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -247,6 +247,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {

@@ -38,9 +38,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzMenuInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -90,6 +87,8 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 		} else {
 			baseLanguage = baseLanguage.toUpperCase();
 		}
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
@@ -258,6 +257,8 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
 			int dataLength = actData.length;
@@ -301,6 +302,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String menuTree = getSysHardCodeVal.getMenuTreeName();
 			jacksonUtil.json2Map(strParams);
@@ -493,6 +495,7 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 
 		String menuTree = getSysHardCodeVal.getMenuTreeName();
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 
 		String nodeId = jacksonUtil.getString("nodeId");
@@ -523,6 +526,8 @@ public class TzMenuInfoServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", "false");
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 
 			// 如果源数据语言代码与目标数据语言代码相同或者基础数据语言代码与目标数据语言代码相同，则直接返回

@@ -30,9 +30,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -56,6 +53,7 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("paraid")) {
@@ -105,6 +103,7 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String conflictKeys = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date datenow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -166,6 +165,7 @@ public class TzTplParameterInfoServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			Date lastupddttm = new Date();
 			String lastupdoprid = tzLoginServiceImpl.getLoginedManagerOprid(request);

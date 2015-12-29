@@ -32,9 +32,6 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 	private FliterForm fliterForm;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -54,13 +51,12 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_JG_ID", "TZ_JG_NAME", "TZ_ZHZ_DMS" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -85,6 +81,7 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -98,7 +95,9 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -143,6 +142,7 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("formData", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 

@@ -25,9 +25,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzAreaAddServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -38,7 +35,7 @@ public class TzAreaAddServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -128,6 +125,7 @@ public class TzAreaAddServiceImpl extends FrameworkImpl {
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;

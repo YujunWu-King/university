@@ -26,9 +26,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzTemplateContentServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -47,6 +44,7 @@ public class TzTemplateContentServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String conflictKeys = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -101,6 +99,7 @@ public class TzTemplateContentServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String errorMsg = "";
 		String comma = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -158,6 +157,7 @@ public class TzTemplateContentServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("restempid") && jacksonUtil.containsKey("restempid")) {

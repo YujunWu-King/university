@@ -28,9 +28,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -46,7 +43,7 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -98,6 +95,7 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int dataLength = actData.length;
@@ -209,6 +207,7 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);
@@ -260,6 +259,7 @@ public class TzGgDecoratedServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			jacksonUtil.json2Map(strParams);

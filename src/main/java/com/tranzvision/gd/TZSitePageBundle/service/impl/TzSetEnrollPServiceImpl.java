@@ -32,9 +32,6 @@ public class TzSetEnrollPServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 
 	@Autowired
-	private JacksonUtil jacksonUtil;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -56,7 +53,7 @@ public class TzSetEnrollPServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			String strSiteId = request.getParameter("siteId");
