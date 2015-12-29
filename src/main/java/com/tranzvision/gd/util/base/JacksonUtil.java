@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author SHIHUA
  * @since 2015-10-30
  */
-@Service
-@Scope("prototype")
 public class JacksonUtil {
 
 	private Map<String, Object> jsonMap;
