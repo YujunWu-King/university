@@ -31,8 +31,6 @@ public class AccountListImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
@@ -50,17 +48,16 @@ public class AccountListImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			//排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][]{{"TZ_DLZH_ID","ASC"}};
-			fliterForm.orderByArr = orderByArr;
 					
 			//json数据要的结果字段;
 			String[] resultFldArray = { "TZ_DLZH_ID", "TZ_JG_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_JIHUO_FS_DESC", "TZ_RYLX", "ACCTLOCK"};
 					
 			//可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit,numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit,numStart, errorMsg);
 			if (obj != null && obj.length > 0) {
 
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -101,7 +98,7 @@ public class AccountListImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			
 			int num = 0;
@@ -172,7 +169,7 @@ public class AccountListImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	public String tzOther(String oprType, String comParams, String[] errorMsg) {
 		String strRet = "{}";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			// 将字符串转换成json;

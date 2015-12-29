@@ -41,8 +41,6 @@ public class AccountInfoImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsroleuserMapper psroleuserMapper;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
@@ -65,7 +63,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 		String strRet = "";
 		try {
 			String oprID = "";
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				String strForm = actData[num];
@@ -271,9 +269,9 @@ public class AccountInfoImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		try {
-	
+			
 			String oprID = "";
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				String strForm = actData[num];
@@ -470,7 +468,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 		
@@ -584,7 +582,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 页面注册信息总数;
 		int numTotal = 0;
 
