@@ -40,8 +40,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @SuppressWarnings("unchecked")
 public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -69,7 +67,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -199,7 +197,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -314,7 +312,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -371,7 +369,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
 		if (jacksonUtil.containsKey("queryID")) {
 			try {
@@ -413,7 +411,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -497,7 +495,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -546,7 +544,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -603,7 +601,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -657,7 +655,7 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");

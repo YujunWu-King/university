@@ -27,8 +27,6 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 	@Autowired 
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzSiteiMnpfTMapper psTzSiteiMnpfTMapper;
 	
 	
@@ -41,7 +39,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			
 			jacksonUtil.json2Map(comParams);
@@ -113,7 +111,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -161,7 +159,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -190,7 +188,7 @@ public class OrgSiteMenuIcon2ServiceImple extends FrameworkImpl{
 			Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 			returnJsonMap.put("success", 0);
 			returnJsonMap.put("msg", "");
-			
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			try{
 				jacksonUtil.json2Map(comParams);
 				String siteId = jacksonUtil.getString("siteId");

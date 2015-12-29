@@ -25,8 +25,6 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
 	
 	/* 查询许可权列表 */
@@ -38,7 +36,7 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T";
 			int total = jdbcTemplate.queryForObject(totalSQL, "Integer");
@@ -82,7 +80,7 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

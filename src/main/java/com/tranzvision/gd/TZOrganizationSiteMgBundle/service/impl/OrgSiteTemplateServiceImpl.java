@@ -20,9 +20,6 @@ import com.tranzvision.gd.util.sql.GetSeqNum;
  */
 @Service("com.tranzvision.gd.TZOrganizationSiteMgBundle.service.impl.OrgSiteTemplateServiceImpl")
 public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
-	
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
@@ -34,7 +31,7 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("templateId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -80,7 +77,7 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("templateId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -128,7 +125,7 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
