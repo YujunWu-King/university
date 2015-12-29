@@ -2,17 +2,20 @@ package com.tranzvision.gd.TZClassDefnBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZClassDefnBundle.dao.PsTzAppclsTblMapper;
 import com.tranzvision.gd.TZClassDefnBundle.model.PsTzAppclsTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
@@ -28,51 +31,55 @@ public class AppClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private JacksonUtil jacksonUtil;
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 
 	/* 查询类定义列表 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APPCLS_ID", "ASC" } };
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_APPCLS_ID", "TZ_DESCR100" };
-			String jsonString = "";
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
 
-			if (obj == null || obj.length == 0) {
-				strRet = "{\"total\":0,\"root\":[]}";
-			} else {
+			if (obj != null) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-					jsonString = jsonString + ",{\"appClassId\":\"" + rowList[0] + "\",\"appClassDesc\":\"" + rowList[1]
-							+ "\"}";
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("appClassId", rowList[0]);
+					mapList.put("appClassDesc", rowList[0]);
+					listData.add(mapList);
 				}
-
-				if (!"".equals(jsonString)) {
-					jsonString = jsonString.substring(1);
-				}
-
-				strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 获取类定义信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			//JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
 			jacksonUtil.json2Map(strParams);
@@ -82,12 +89,14 @@ public class AppClsServiceImpl extends FrameworkImpl {
 				String appClassId = jacksonUtil.getString("appClassId");
 				PsTzAppclsTbl psTzAppclsTbl = psTzAppclsTblMapper.selectByPrimaryKey(appClassId);
 				if (psTzAppclsTbl != null) {
-					strRet = "{\"formData\":{\"appClassId\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzAppclsId())
-							+ "\",\"appClassDesc\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzDescr100())
-							+ "\",\"appClassName\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzAppclsName())
-							+ "\",\"appClassPath\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzAppclsPath())
-							+ "\",\"appClassMehtod\":\"" + TZUtility.transFormchar(psTzAppclsTbl.getTzAppclsMethod())
-							+ "\"}}";
+					Map<String, Object> map = new HashMap<>();
+					map.put("appClassId", psTzAppclsTbl.getTzAppclsId());
+					map.put("appClassDesc", psTzAppclsTbl.getTzDescr100());
+					map.put("appClassName", psTzAppclsTbl.getTzAppclsName());
+					map.put("appClassPath", psTzAppclsTbl.getTzAppclsPath());
+					map.put("appClassMehtod", psTzAppclsTbl.getTzAppclsMethod());
+					
+					returnJsonMap.replace("formData", map);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择类定义";
@@ -102,12 +111,13 @@ public class AppClsServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 新增类方法 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -136,11 +146,11 @@ public class AppClsServiceImpl extends FrameworkImpl {
 					psTzAppclsTbl.setTzAppclsName(appClassName);
 					psTzAppclsTbl.setTzAppclsPath(appClassPath);
 					psTzAppclsTbl.setTzAppclsMethod(appClassMehtod);
-					/** TODO %userid **/
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAppclsTbl.setRowAddedDttm(new Date());
-					psTzAppclsTbl.setRowAddedOprid("TZ_7");
+					psTzAppclsTbl.setRowAddedOprid(oprid);
 					psTzAppclsTbl.setRowLastmantDttm(new Date());
-					psTzAppclsTbl.setRowLastmantOprid("TZ_7");
+					psTzAppclsTbl.setRowLastmantOprid(oprid);
 					psTzAppclsTblMapper.insert(psTzAppclsTbl);
 				}
 
@@ -154,7 +164,8 @@ public class AppClsServiceImpl extends FrameworkImpl {
 
 	/* 修改类定义信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -180,9 +191,9 @@ public class AppClsServiceImpl extends FrameworkImpl {
 					psTzAppclsTbl.setTzAppclsName(appClassName);
 					psTzAppclsTbl.setTzAppclsPath(appClassPath);
 					psTzAppclsTbl.setTzAppclsMethod(appClassMehtod);
-					/** TODO %userid **/
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzAppclsTbl.setRowLastmantDttm(new Date());
-					psTzAppclsTbl.setRowLastmantOprid("TZ_7");
+					psTzAppclsTbl.setRowLastmantOprid(oprid);
 					psTzAppclsTblMapper.updateByPrimaryKeySelective(psTzAppclsTbl);
 				} else {
 					errMsg[0] = "1";
@@ -201,7 +212,8 @@ public class AppClsServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
