@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZThemeMgBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,55 +15,59 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
- * @author tang
- * 功能说明：高端产品-主题管理
- * 原PS类：TZ_GD_THEMEGL_PKG：TZ_GD_THEMEGL_CLS
+ * @author tang 功能说明：高端产品-主题管理 原PS类：TZ_GD_THEMEGL_PKG：TZ_GD_THEMEGL_CLS
  */
 @Service("com.tranzvision.gd.TZThemeMgBundle.service.impl.ThemeGlServiceImpl")
 public class ThemeGlServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzPtZtxxTblMapper psTzPtZtxxTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
-	
+
 	/* 加载主题列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] { { "TZ_ZT_ID", "ASC" } };
 
-		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] { { "TZ_ZT_ID", "ASC" } };
-		fliterForm.orderByArr = orderByArr;
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_ZT_ID", "TZ_ZT_MC", "TZ_ZT_MS", "TZ_DESCR30" };
 
-		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_ZT_ID", "TZ_ZT_MC", "TZ_ZT_MS", "TZ_DESCR30" };
-		String jsonString = "";
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
 
-		// 可配置搜索通用函数;
-		Object[] obj = fliterForm.searchFilter(resultFldArray, comParams, numLimit, numStart, errorMsg);
+			if (obj != null && obj.length > 0) {
 
-		if (obj == null || obj.length == 0) {
-			strRet = "{\"total\":0,\"root\":[]}";
-		} else {
-			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-			for (int i = 0; i < list.size(); i++) {
-				String[] rowList = list.get(i);
-				jsonString = jsonString + ",{\"themeID\":\"" + rowList[0] + "\",\"themeName\":\"" + rowList[1]
-						+ "\",\"themeDesc\":\"" + rowList[2] + "\",\"themeState\":\"" + rowList[3] + "\"}";
+				@SuppressWarnings("unchecked")
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("themeID", rowList[0]);
+					mapList.put("themeName", rowList[1]);
+					mapList.put("themeDesc", rowList[2]);
+					mapList.put("themeState", rowList[3]);
+
+					listData.add(mapList);
+				}
+
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 			}
-			if (!"".equals(jsonString)) {
-				jsonString = jsonString.substring(1);
-			}
-
-			strRet = "{\"total\":" + obj[0] + ",\"root\":[" + jsonString + "]}";
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	// 功能说明：删除主题定义;
@@ -74,7 +80,7 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -86,7 +92,7 @@ public class ThemeGlServiceImpl extends FrameworkImpl {
 				if (strThemeId != null && !"".equals(strThemeId)) {
 					psTzPtZtxxTblMapper.deleteByPrimaryKey(strThemeId);
 					String sql = "DELETE from PS_TZ_PT_ZTZY_TBL WHERE TZ_ZT_ID=?";
-					jdbcTemplate.update(sql,new Object[]{strThemeId});
+					jdbcTemplate.update(sql, new Object[] { strThemeId });
 				}
 			}
 		} catch (Exception e) {

@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZThemeMgBundle.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,6 @@ import com.tranzvision.gd.TZThemeMgBundle.dao.PsTzPtZtzyTblMapper;
 import com.tranzvision.gd.TZThemeMgBundle.model.PsTzPtZtxxTbl;
 import com.tranzvision.gd.TZThemeMgBundle.model.PsTzPtZtzyTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -27,14 +28,15 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 	private PsTzPtZtzyTblMapper psTzPtZtzyTblMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private JacksonUtil jacksonUtil;
 
 	/* 获取主题定义信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -43,10 +45,12 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 				String str_zt_id = jacksonUtil.getString("themeID");
 				PsTzPtZtxxTbl psTzPtZtxxTbl = psTzPtZtxxTblMapper.selectByPrimaryKey(str_zt_id);
 				if (psTzPtZtxxTbl != null) {
-					strRet = "{\"formData\":{\"themeID\":\"" + TZUtility.transFormchar(psTzPtZtxxTbl.getTzZtId())
-							+ "\",\"themeName\":\"" + TZUtility.transFormchar(psTzPtZtxxTbl.getTzZtMc())
-							+ "\",\"themeDesc\":\"" + TZUtility.transFormchar(psTzPtZtxxTbl.getTzZtMs())
-							+ "\",\"themeState\":\"" + TZUtility.transFormchar(psTzPtZtxxTbl.getTzYxx()) + "\"}}";
+					Map<String, Object> map = new HashMap<>();
+					map.put("themeID", psTzPtZtxxTbl.getTzZtId());
+					map.put("themeName", psTzPtZtxxTbl.getTzZtMc());
+					map.put("themeDesc", psTzPtZtxxTbl.getTzZtMs());
+					map.put("themeState", psTzPtZtxxTbl.getTzYxx());
+					returnJsonMap.replace("formData", map);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该主题数据不存在";
@@ -61,13 +65,19 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 
 	/* 加载主题资源集合列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
-		String strComContent = "";
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		int total = 0;
 		try {
 			// 将字符串转换成json;
@@ -83,15 +93,16 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 						new Object[] { strThemeId, numStart, numLimit });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
-						String zyjhId = TZUtility.transFormchar((String) list.get(i).get("TZ_ZYJH_ID"));
-						String zyjhMc = TZUtility.transFormchar((String) list.get(i).get("TZ_ZYJH_MC"));
-						strComContent = strComContent + ",{\"themeID\":\"" + strThemeId + "\",\"resSetID\":\"" + zyjhId
-								+ "\",\"resSetDesc\":\"" + zyjhMc + "\"}";
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("themeID", strThemeId);
+						mapList.put("resSetID", (String) list.get(i).get("TZ_ZYJH_ID"));
+						mapList.put("resSetDesc", (String) list.get(i).get("TZ_ZYJH_MC"));
+						listData.add(mapList);
 					}
 				}
-				if (!"".equals(strComContent)) {
-					strComContent = strComContent.substring(1);
-				}
+				
+				mapRet.replace("total",total);
+				mapRet.replace("root", listData);
 
 			} else {
 				errorMsg[0] = "1";
@@ -102,14 +113,14 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
-		strComContent = "{\"total\":" + total + ",\"root\":[" + strComContent + "]}";
-		return strComContent;
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	@Override
 	/* 新增主题信息 */
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -153,7 +164,8 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 	@Override
 	/* 修改主题信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -206,7 +218,8 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 	@Override
 	/* 删除主题资源信息 */
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
