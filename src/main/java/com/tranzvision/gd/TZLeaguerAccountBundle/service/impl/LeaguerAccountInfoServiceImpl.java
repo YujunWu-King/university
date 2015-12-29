@@ -28,8 +28,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZLeaguerAccountBundle.service.impl.LeaguerAccountInfoServiceImpl")
 public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -47,7 +45,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "{}");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("OPRID")) {
@@ -209,7 +207,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("OPRID", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

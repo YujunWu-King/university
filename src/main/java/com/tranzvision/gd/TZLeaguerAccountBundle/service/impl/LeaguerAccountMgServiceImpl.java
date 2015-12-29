@@ -49,7 +49,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		mapRet.put("root", "[]");
 
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			
 			//获取当前机构;
@@ -74,9 +74,10 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					resultFldArray[j+1] = regFieldId;
 				}
 			}
-
+			
+			String[][] orderByArr = null;
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -121,11 +122,10 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		mapRet.put("root", "[]");
 
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			fliterForm.orderByArr = orderByArr;
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_ZHZ_DMS", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_ZHCE_DT", "ACCTLOCK"};
@@ -133,7 +133,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
 			strParams.replaceAll(admin, "");
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
