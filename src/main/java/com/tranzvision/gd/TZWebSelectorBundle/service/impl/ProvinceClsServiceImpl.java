@@ -23,8 +23,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.ProvinceClsServiceImpl")
 public class ProvinceClsServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -36,6 +34,7 @@ public class ProvinceClsServiceImpl extends FrameworkImpl{
 	public String tzGetHtmlContent(String strParams) {
 		try{
 			String pageID = "";
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(strParams);
 			
 			if (jacksonUtil.containsKey("TZ_PROV_ID")) {

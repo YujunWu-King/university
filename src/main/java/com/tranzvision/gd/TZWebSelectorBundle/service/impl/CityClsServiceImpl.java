@@ -23,8 +23,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.CityClsServiceImpl")
 public class CityClsServiceImpl extends FrameworkImpl{
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -34,6 +32,7 @@ public class CityClsServiceImpl extends FrameworkImpl{
 	@Override
 	// 选择省;
 	public String tzGetHtmlContent(String strParams) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			String pageID = "";
 			jacksonUtil.json2Map(strParams);

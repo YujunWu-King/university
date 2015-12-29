@@ -29,8 +29,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.CountryClsServiceImpl")
 public class CountryClsServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -45,7 +43,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		String language = "ZHS";
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -132,7 +130,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		String language = "";
 		String jgId = "";
 		String skinId = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		Map<String, Object> getMap;
 		// 是否是报名表;

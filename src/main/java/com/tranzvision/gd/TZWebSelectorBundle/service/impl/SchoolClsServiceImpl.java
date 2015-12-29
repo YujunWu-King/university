@@ -28,8 +28,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.SchoolClsServiceImpl")
 public class SchoolClsServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -40,7 +38,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 	public String tzGetJsonData(String strParams) {
 		String result = "";
 		ObjectMapper mapper = new ObjectMapper();
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -119,6 +117,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 
 		String language = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		// 是否是报名表;
 		if (jacksonUtil.containsKey("TPLID")) {
