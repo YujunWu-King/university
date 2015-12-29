@@ -31,8 +31,6 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
@@ -170,7 +168,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -208,7 +206,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("success", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			//重置密码检查;
 			if("CHGPWD".equals(oprType)){
