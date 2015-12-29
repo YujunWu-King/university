@@ -23,8 +23,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  */
 @Service("com.tranzvision.gd.TZSiteTemplateBundle.service.impl.TemplateModelSkinPicServiceImpl")
 public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
-	@Autowired
-	private JacksonUtil jacksonUtil;
 	@Autowired 
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -41,7 +39,7 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			if(jacksonUtil.containsKey("siteId") && jacksonUtil.containsKey("skinId")){
@@ -89,7 +87,7 @@ public class TemplateModelSkinPicServiceImpl extends FrameworkImpl  {
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("success", 0);
 		returnJsonMap.put("msg", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");

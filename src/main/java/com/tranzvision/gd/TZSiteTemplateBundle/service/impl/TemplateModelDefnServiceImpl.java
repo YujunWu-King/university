@@ -38,8 +38,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZSiteTemplateBundle.service.impl.TemplateModelDefnServiceImpl")
 public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -66,7 +64,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -137,7 +135,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("siteId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -207,7 +205,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -256,7 +254,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
 		if (jacksonUtil.containsKey("queryID")) {
 			try {
@@ -298,7 +296,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -383,7 +381,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root",arraylist );
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -430,7 +428,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -478,7 +476,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -530,7 +528,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");
@@ -584,7 +582,7 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		returnJsonMap.put("root", arraylist);
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			String siteId = jacksonUtil.getString("siteId");

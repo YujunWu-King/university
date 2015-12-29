@@ -25,8 +25,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZSiteTemplateBundle.service.impl.TemplateModelSkinServiceImpl")
 public class TemplateModelSkinServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired 
 	private SqlQuery jdbcTemplate;
@@ -44,7 +42,7 @@ public class TemplateModelSkinServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("skinId", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -103,7 +101,7 @@ public class TemplateModelSkinServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("skinId", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -162,7 +160,7 @@ public class TemplateModelSkinServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 

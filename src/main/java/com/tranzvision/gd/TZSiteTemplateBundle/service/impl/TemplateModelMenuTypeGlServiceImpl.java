@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemCdpfTMapper;
 import com.tranzvision.gd.TZSiteTemplateBundle.dao.PsTzSitemMtypTMapper;
+import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemCdpfT;
 import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypT;
 import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemMtypTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -28,11 +30,11 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 	@Autowired 
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzSitemMtypTMapper psTzSitemMtypTMapper;
+	@Autowired
+	private PsTzSitemCdpfTMapper psTzSitemCdpfTMapper;
 	
 	/* 查询菜单类型管理列表 */
 	@Override
@@ -43,7 +45,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(comParams);
 			if(jacksonUtil.containsKey("siteId")){
@@ -96,7 +98,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menutypeid", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -140,6 +142,24 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 	            int i = psTzSitemMtypTMapper.insertSelective(psTzSitemMtypT);
 	            if(i > 0){
 					returnJsonMap.replace("menutypeid", menutypeId);
+					
+					String siteIconCountSQL = " SELECT COUNT(1) FROM PS_TZ_SITEM_CDPF_T WHERE TZ_SITEM_ID=? and TZ_MENU_TYPE_ID=?";
+					int siteIconCount = jdbcTemplate.queryForObject(siteIconCountSQL, new Object[]{siteId,menutypeId},"Integer");
+					if(siteIconCount == 0){
+						String skinSQL = "SELECT TZ_SKIN_ID,TZ_SKIN_STATE,TZ_SKIN_NAME FROM PS_TZ_SITEM_SKIN_T WHERE TZ_SITEM_ID=?";
+						List<Map<String, Object>> skinList = jdbcTemplate.queryForList(skinSQL,new Object[]{siteId});
+						if(skinList != null){
+							for(int j = 0; j < skinList.size(); j++){
+								PsTzSitemCdpfT psTzSitemCdpfT = new PsTzSitemCdpfT();
+								psTzSitemCdpfT.setTzSitemId(siteId);
+								psTzSitemCdpfT.setTzMenuTypeId(menutypeId);
+								psTzSitemCdpfT.setTzSkinId((String)skinList.get(j).get("TZ_SKIN_ID"));
+								psTzSitemCdpfT.setTzSkinState((String)skinList.get(j).get("TZ_SKIN_STATE"));
+								psTzSitemCdpfT.setTzSkinName((String)skinList.get(j).get("TZ_SKIN_NAME"));
+								psTzSitemCdpfTMapper.insert(psTzSitemCdpfT);
+							}
+						}
+					}
 				}else{
 					errMsg[0] = "1";
 					errMsg[1] = "站点菜单类型信息保存失败";
@@ -160,7 +180,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("menutypeid", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -205,6 +225,24 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 	            int i = psTzSitemMtypTMapper.updateByPrimaryKeyWithBLOBs(psTzSitemMtypT);
 	            if(i > 0){
 					returnJsonMap.replace("menutypeid", menutypeId);
+					
+					String siteIconCountSQL = " SELECT COUNT(1) FROM PS_TZ_SITEM_CDPF_T WHERE TZ_SITEM_ID=? and TZ_MENU_TYPE_ID=?";
+					int siteIconCount = jdbcTemplate.queryForObject(siteIconCountSQL, new Object[]{siteId,menutypeId},"Integer");
+					if(siteIconCount == 0){
+						String skinSQL = "SELECT TZ_SKIN_ID,TZ_SKIN_STATE,TZ_SKIN_NAME FROM PS_TZ_SITEM_SKIN_T WHERE TZ_SITEM_ID=?";
+						List<Map<String, Object>> skinList = jdbcTemplate.queryForList(skinSQL,new Object[]{siteId});
+						if(skinList != null){
+							for(int j = 0; j < skinList.size(); j++){
+								PsTzSitemCdpfT psTzSitemCdpfT = new PsTzSitemCdpfT();
+								psTzSitemCdpfT.setTzSitemId(siteId);
+								psTzSitemCdpfT.setTzMenuTypeId(menutypeId);
+								psTzSitemCdpfT.setTzSkinId((String)skinList.get(j).get("TZ_SKIN_ID"));
+								psTzSitemCdpfT.setTzSkinState((String)skinList.get(j).get("TZ_SKIN_STATE"));
+								psTzSitemCdpfT.setTzSkinName((String)skinList.get(j).get("TZ_SKIN_NAME"));
+								psTzSitemCdpfTMapper.insert(psTzSitemCdpfT);
+							}
+						}
+					}
 				}else{
 					errMsg[0] = "1";
 					errMsg[1] = "站点菜单类型信息保持失败";
@@ -226,7 +264,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -284,7 +322,7 @@ public class TemplateModelMenuTypeGlServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

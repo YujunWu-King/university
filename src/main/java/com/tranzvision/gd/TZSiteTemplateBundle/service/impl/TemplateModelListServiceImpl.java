@@ -23,8 +23,6 @@ public class TemplateModelListServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private PsTzSitemDefnTMapper psTzSitemDefnTMapper;
 	
 	/* 查询许可权列表 */
@@ -36,7 +34,7 @@ public class TemplateModelListServiceImpl extends FrameworkImpl{
 		returnJsonMap.put("total", 0);
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
 		returnJsonMap.put("root", arraylist);
-		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEM_DEFN_T";
 			int total = jdbcTemplate.queryForObject(totalSQL, "Integer");
@@ -74,7 +72,7 @@ public class TemplateModelListServiceImpl extends FrameworkImpl{
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "";
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;

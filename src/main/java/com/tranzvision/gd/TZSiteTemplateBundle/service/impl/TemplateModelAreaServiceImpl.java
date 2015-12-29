@@ -23,8 +23,6 @@ import com.tranzvision.gd.util.sql.GetSeqNum;
 @Service("com.tranzvision.gd.TZSiteTemplateBundle.service.impl.TemplateModelAreaServiceImpl")
 public class TemplateModelAreaServiceImpl extends FrameworkImpl {
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzSitemAreaTMapper psTzSitemAreaTMapper;
@@ -35,7 +33,7 @@ public class TemplateModelAreaServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areaId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -90,7 +88,7 @@ public class TemplateModelAreaServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("areaId", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -144,7 +142,7 @@ public class TemplateModelAreaServiceImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -196,7 +194,7 @@ public class TemplateModelAreaServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
