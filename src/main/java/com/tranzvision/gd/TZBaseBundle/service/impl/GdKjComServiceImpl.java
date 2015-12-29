@@ -30,8 +30,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private ApplicationContext ctx;
 
 	/**
@@ -392,6 +390,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		}
 
 		try {
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			String isZcSQL = "SELECT 'Y' FROM PS_TZ_AQ_COMZC_TBL WHERE TZ_COM_ID=?";
 			isExistCom = jdbcTemplate.queryForObject(isZcSQL, new Object[] { sComID }, "String");
 
@@ -601,7 +600,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String resultSelectFlds = "";
 
 		try {
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			// 将字符串转换成json;
 			// JSONObject conJson = PaseJsonUtil.getJson(condition);
 			jacksonUtil.json2Map(condition);
@@ -980,7 +979,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		try {
 			// 将字符串转换成json;
 			// JSONObject conJson = PaseJsonUtil.getJson(condition);
-
+			JacksonUtil jacksonUtil = new JacksonUtil();
 			int i, j;
 			// 搜索字段名称;
 			String key = "";

@@ -39,8 +39,6 @@ public class Index {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private JacksonUtil jacksonUtil;
-	@Autowired
 	private GdKjComServiceImpl gdKjComService;
 	@Autowired
 	private GdKjInitServiceImpl gdKjInitService;
