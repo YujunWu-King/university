@@ -48,7 +48,7 @@
 		]
 	}],
     initComponent: function () {
-    	if(Ext.tzOrgID == "Admin"){
+    	if((Ext.tzOrgID).toUpperCase() == "ADMIN"){
     		this.title = "用户账号管理";
     	}else{
     		this.title = "内部用户管理";
@@ -106,7 +106,7 @@
                     dataIndex: 'acctLock',
                     minWidth: 100,
                     renderer : function(value, metadata, record) {
-
+                    	
                         var index = acctLock.find('TValue',value);
                         if(index!=-1){
                             return acctLock.getAt(index).data.TSDesc;

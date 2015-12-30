@@ -350,15 +350,16 @@
         }
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + "]";
+            //提交参数
+            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+            //保存数据
+            Ext.tzSubmit(tzParams,function(){
+                store.reload();
+                grid.commitChanges(grid);
+            },"",true,this);
+        }else{
+        	Ext.Msg.alert("提示","保存成功");
         }
-
-        //提交参数
-        var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        //保存数据
-        Ext.tzSubmit(tzParams,function(){
-            store.reload();
-            grid.commitChanges(grid);
-        },"",true,this);
     },
     closeUserInfos: function(btn){
         //用户账号信息列表
@@ -385,17 +386,20 @@
         }
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + "]";
+          //提交参数
+            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+            //保存数据
+            Ext.tzSubmit(tzParams,function(){
+            	
+              grid.commitChanges(grid);
+              grid.close();
+     
+            },"",true,this);
+        }else{
+        	grid.close();
         }
         
-        //提交参数
-        var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        //保存数据
-        Ext.tzSubmit(tzParams,function(){
-        	
-        	grid.commitChanges(grid);
-          grid.close();
- 
-        },"",true,this);
+        
     },
     resetPassword: function(){
         //选中行
@@ -599,7 +603,7 @@
         win.close();
     },
     searchUserList: function(btn){
-        if( Ext.tzOrgID == 'Admin'){
+        if( (Ext.tzOrgID).toUpperCase() == 'ADMIN'){
             Ext.tzShowCFGSearch({
 
                 cfgSrhId: 'TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_VW',
