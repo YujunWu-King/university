@@ -63,6 +63,24 @@ public class EmlSmsGetParamter {
 		}
 	}
 	
+	//后台自助信息获取绑定邮箱的URL
+	public String getBindEmailUrl(String[] paramters){
+		try{
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil(); 
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "select TZ_TOKEN_CODE from PS_TZ_AUDCYUAN_T a,PS_TZ_DZYX_YZM_TBL b,PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and b.TZ_JG_ID=c.TZ_JG_ID and c.TZ_DLZH_ID= b.TZ_DLZH_ID and a.TZ_AUDIENCE_ID=? and a.TZ_AUDCY_ID=? and b.TZ_EFF_FLAG='Y' and b.TZ_TOKEN_TYPE='EDIT'";
+			String tokencode = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[]{audId,audCyId});
+			String bindEmailUrl = "http://localhost:8080/university/dispatcher";
+			bindEmailUrl = bindEmailUrl + "?classid=selfBindEmail&TZ_TOKEN_CODE=" + tokencode ;
+			return bindEmailUrl;
+		}catch(Exception e){
+			e.printStackTrace();
+			return "";
+		}
+	}
 	
 	
 }
