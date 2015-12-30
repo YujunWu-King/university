@@ -251,7 +251,7 @@
             	afterrender: function(combox){
             		//当前登录人机构id
 	            	var value = Ext.tzOrgID;
-	            	if(value == "Admin"){
+	            	if(value.toUpperCase() == "ADMIN"){
 									//combox.setValue("NBYH");
 	            	}else{
 	            		//combox.setValue("NBYH");
