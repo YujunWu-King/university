@@ -1,6 +1,10 @@
 package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 
@@ -68,12 +72,13 @@ public class EmlSmsGetParamter {
 		try{
 			String audId = paramters[0];
 			String audCyId = paramters[1];
-			
+			HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			String serv = "http://"+ request.getServerName() + ":"+ request.getServerPort() + request.getContextPath();
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil(); 
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 			String opridSQL = "select TZ_TOKEN_CODE from PS_TZ_AUDCYUAN_T a,PS_TZ_DZYX_YZM_TBL b,PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and b.TZ_JG_ID=c.TZ_JG_ID and c.TZ_DLZH_ID= b.TZ_DLZH_ID and a.TZ_AUDIENCE_ID=? and a.TZ_AUDCY_ID=? and b.TZ_EFF_FLAG='Y' and b.TZ_TOKEN_TYPE='EDIT'";
 			String tokencode = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[]{audId,audCyId});
-			String bindEmailUrl = "http://localhost:8080/university/dispatcher";
+			String bindEmailUrl = serv + "/dispatcher";
 			bindEmailUrl = bindEmailUrl + "?classid=selfBindEmail&TZ_TOKEN_CODE=" + tokencode ;
 			return bindEmailUrl;
 		}catch(Exception e){
