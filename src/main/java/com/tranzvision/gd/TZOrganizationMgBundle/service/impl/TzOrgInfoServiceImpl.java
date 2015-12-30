@@ -729,7 +729,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 				Map<String, Object> mapRole = (Map<String, Object>) srcRole;
 
-				String roleId = tzJgId + mapRole.get("ROLENAME") == null ? "" : String.valueOf(mapRole.get("ROLENAME"));
+				String strSrcRoleName = mapRole.get("ROLENAME") == null ? "" : String.valueOf(mapRole.get("ROLENAME"));
+				String roleId = tzJgId + "_" + strSrcRoleName;
 				roleId = roleId.toUpperCase();
 
 				// 检查角色定义表中是否存在该角色
@@ -765,8 +766,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				// 复制角色的许可权
 				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyRolePermit");
 
-				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] {
-						mapRole.get("ROLENAME") == null ? "" : String.valueOf(mapRole.get("ROLENAME")) });
+				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] {strSrcRoleName});
 
 				for (Object srcPermit : listPermits) {
 

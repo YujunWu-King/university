@@ -30,6 +30,9 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class MessageSetInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
+	private FliterForm fliterForm;
+	
+	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -195,7 +198,6 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-			FliterForm fliterForm = new FliterForm();
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_XXJH_ID", "TZ_MSG_ID", "TZ_MSG_TEXT", "TZ_LANGUAGE_NAME", "TZ_JG_ID" };
