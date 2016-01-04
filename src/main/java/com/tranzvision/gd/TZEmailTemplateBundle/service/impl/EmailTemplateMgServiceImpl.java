@@ -152,7 +152,7 @@ public class EmailTemplateMgServiceImpl extends FrameworkImpl {
 			//当前登录的机构;
 			String orgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			if("initializ".equals(oprType)){
-				if(orgID != null && !"".equals(orgID) && !"ADMIN".equals(orgID)){
+				if(orgID != null && !"".equals(orgID) && !"ADMIN".equals(orgID.toUpperCase())){
 					/*删除该机构所有的元模版信息*/
 					String deleteSQL = "DELETE FROM PS_TZ_TMP_DEFN_TBL WHERE TZ_JG_ID = ?";
 					jdbcTemplate.update(deleteSQL,new Object[]{orgID});

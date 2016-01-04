@@ -73,7 +73,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerInfo', {
             	afterrender: function(combox){
             		//当前登录人机构id
 					var orgId = Ext.tzOrgID;
-					if(orgId != "Admin")
+					if(orgId.toUpperCase() != "ADMIN")
 					{
 						combox.readOnly = true;
 					}
