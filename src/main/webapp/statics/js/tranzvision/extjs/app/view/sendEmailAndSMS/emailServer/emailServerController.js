@@ -161,7 +161,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerController',
 				form.findField("emailorg").addCls("lanage_1");
 				//当前登录人机构id;
 				var orgId = Ext.tzOrgID;
-				if(orgId != "Admin")
+				if(orgId.toUpperCase() != "ADMIN")
 				{
 					form.findField("emailorg").value = Ext.tzOrgID;
 					form.findField("emailorg").readOnly = true;
