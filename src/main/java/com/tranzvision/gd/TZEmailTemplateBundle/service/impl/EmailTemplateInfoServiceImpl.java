@@ -296,8 +296,8 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 				String tmpSQL = "SELECT TZ_YMB_CSLBM,TZ_YMB_NRGM,TZ_DSREC_NAME,TZ_DSREC_ALIAS from PS_TZ_TMP_DEFN_TBL WHERE TZ_YMB_ID = ?";
 				Map<String, Object> map = jdbcTemplate.queryForMap(tmpSQL, new Object[]{strTmpId});
 				if(map != null){
-					  //String str_TmpNrgm = (String) map.get("TZ_YMB_CSLBM");
-					  String str_ymb_clsbm = (String) map.get("TZ_YMB_NRGM");
+					  //String str_TmpNrgm = (String) map.get("TZ_YMB_NRGM");
+					  String str_ymb_clsbm = (String) map.get("TZ_YMB_CSLBM");
 					  String str_ds_recName = (String) map.get("TZ_DSREC_NAME");
 					  String str_ds_recAlias = (String) map.get("TZ_DSREC_ALIAS");
 					  
