@@ -547,7 +547,7 @@
 			 //发送的邮件模板;
 			 "EmailTmpName": ["TZ_TEST_EML","TZ_TEST_EML2"],
 			 //创建的需要发送的听众ID;
-			 "audienceId": "385",
+			 "audienceId": "10",
 			 //是否有附件: Y 表示可以发送附件,"N"表示无附件;
 			 "file": "Y"
 		});

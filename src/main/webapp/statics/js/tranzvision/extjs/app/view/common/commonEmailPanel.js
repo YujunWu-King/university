@@ -80,6 +80,12 @@
 					emptyText: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ccAddrEmptText","多个邮箱使用英文分号隔开"),
 					name:'ccAddresseeEmail'
 				},{
+					xtype:'textarea',
+					fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.bcAddresseeEmail","密送"),
+					ignoreChangesFlag: true,
+					emptyText: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ccAddrEmptText","多个邮箱使用英文分号隔开"),
+					name:'bcAddresseeEmail'
+				},{
 					xtype: 'button',
 					text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.viewSJR","查看收件人信息"),
 					ignoreChangesFlag: true,
@@ -140,7 +146,7 @@
 	            ignoreChangesFlag: true,
 	            fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.attachUpload","附件"), 
 							buttonText: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.upload","上传"),
-							name: 'attachUpload',
+							name: 'orguploadfile',
 							buttonOnly:true,
 							listeners:{
 									change: function(file, value, eOpts){
@@ -167,7 +173,7 @@
 								var htmlCom = fm.down("component[name=attachUrl]");
 								htmlCom.getEl().dom.innerHTML = "";
 								
-								var fileuploadfield = fm.down("fileuploadfield[name=attachUpload]");
+								var fileuploadfield = fm.down("fileuploadfield[name=orguploadfile]");
 								fileuploadfield.show();
 								bt.hide();
 						}
@@ -353,7 +359,7 @@
 				var form = win.child('form').getForm();
 				
 				if(this.file != "Y"){
-					win.down('fileuploadfield[name=attachUpload]').hide();
+					win.down('fileuploadfield[name=orguploadfile]').hide();
 				}
 	
 				var tmpId = this.modelData[0]["tmpId"];
@@ -404,8 +410,8 @@ function addAttach(file, value){
 			url: upUrl,
 			//waitMsg: '图片正在上传，请耐心等待....',
 			success: function (form, action) {
-				htmlCom.getEl().dom.innerHTML ='<a target="_blank" href="'+ action.result.msg.accessPath+"/"+action.result.msg.sysFileName+'">'+action.result.msg.filename+'</a>';
-				form.findField("fjLj").setValue(action.result.msg.path+"/"+action.result.msg.sysFileName);
+				htmlCom.getEl().dom.innerHTML ='<a target="_blank" href="' + TzUniversityContextPath + action.result.msg.accessPath+"/"+action.result.msg.sysFileName+'">'+action.result.msg.filename+'</a>';
+				form.findField("fjLj").setValue(action.result.msg.accessPath+"/"+action.result.msg.sysFileName);
 				form.findField("fjMc").setValue(action.result.msg.filename);
 				
 				var deleteFile = file.findParentByType("form").down("button[name=deleteFile]");

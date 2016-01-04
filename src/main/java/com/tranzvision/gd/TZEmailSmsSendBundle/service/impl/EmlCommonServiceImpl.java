@@ -25,6 +25,8 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	@Autowired
+	private emlPreviewServiceImpl emlPreviewServiceImpl;
 	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -81,21 +83,28 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 			String emailTheme = "";
 			// 邮件内容;
 			String emailContent = "";
-			String emailSQL = "select A.TZ_EML_ADDR100,B.TZ_MAL_SUBJUECT,B.TZ_MAL_CONTENT from PS_TZ_EMLS_DEF_TBL A , PS_TZ_EMALTMPL_TBL B  WHERE B.TZ_JG_ID=? AND B.TZ_TMPL_ID=? AND B.TZ_EMLSERV_ID = A.TZ_EMLSERV_ID";
+			//元模板ID；
+			String ymbId = "";
+			String emailSQL = "select A.TZ_EML_ADDR100,B.TZ_MAL_SUBJUECT,B.TZ_MAL_CONTENT,TZ_YMB_ID from PS_TZ_EMLS_DEF_TBL A , PS_TZ_EMALTMPL_TBL B  WHERE B.TZ_JG_ID=? AND B.TZ_TMPL_ID=? AND B.TZ_EMLSERV_ID = A.TZ_EMLSERV_ID";
 			Map<String, Object> emailMap = jdbcTemplate.queryForMap(emailSQL, new Object[]{jgId,tmpId});
 			if(emailMap != null){
 				senderEmail = (String) emailMap.get("TZ_EML_ADDR100");
 				emailTheme = (String) emailMap.get("TZ_MAL_SUBJUECT");
 				emailContent = (String) emailMap.get("TZ_MAL_CONTENT");
+				ymbId = (String) emailMap.get("TZ_YMB_ID");
 			}
 			
 			// 收件人;
+			int count = 0;
 			String addresseeEmail = "";
 			String zyMail = "";
-			String mainEmailSQL = "select TZ_ZY_EMAIL from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=?";
+			String audCyId = "";
+			String mainEmailSQL = "select TZ_ZY_EMAIL,TZ_AUDCY_ID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=?";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(mainEmailSQL, new Object[]{audienceId});
 			if(list != null){
 				for(int i = 0; i < list.size(); i++){
+					count ++;
+					audCyId = (String) list.get(i).get("TZ_AUDCY_ID");
 					zyMail = (String) list.get(i).get("TZ_ZY_EMAIL");
 					if(zyMail != null && !"".equals(zyMail)){
 						addresseeEmail =  addresseeEmail + ";" + zyMail;
@@ -111,11 +120,22 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 			jsonMap.put("senderEmail", senderEmail);
 			jsonMap.put("AddresseeEmail", addresseeEmail);
 			jsonMap.put("emailTheme", emailTheme);
+			// 查看是否单个收件人，如果只有一个则直接解析邮件;
+			if(count == 1){
+				ArrayList<String[]> arrayList = emlPreviewServiceImpl.ayalyMbVar(jgId, ymbId, audienceId, audCyId);
+				for (int i = 0; i < arrayList.size(); i++) {
+					String[] str = arrayList.get(i);
+					
+					String name = str[0];
+					String value = str[1];
+					emailContent = emailContent.replaceAll(name, value);
+				}
+			}
 			jsonMap.put("emailContent", emailContent);
 			returnJsonMap.replace("formData", jsonMap);
 			
-			// 查看是否单个收件人，如果只有一个则直接解析邮件;
-			/**********TODO*******/
+			
+			
 		}catch(Exception e){
 			e.printStackTrace();		
 		}

@@ -24,7 +24,6 @@ public class EmlSmsGetParamter {
 			String audId = paramters[0];
 			String audCyId = paramters[1];
 			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[]{audId,audCyId});
-				
 			return name;
 		}catch(Exception e){
 			e.printStackTrace();
