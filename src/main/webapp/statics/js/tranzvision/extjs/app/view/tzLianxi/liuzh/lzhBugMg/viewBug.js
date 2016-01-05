@@ -256,11 +256,11 @@ function addAttach(file, value, attachmentType){
 
                             //viewStore.reload();
                             if(attachmentType=="IMG"){
-                                //Ext.getCmp( "titileImage").setSrc(accessPath);
+                                //Ext.getCmp( "titileImage").setSrc(TzUniversityContextPath + accessPath);
                                 //Ext.getCmp( "titleImageUrl").setValue(accessPath);
-                                file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(accessPath);
+                                file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath + accessPath);
                                 file.findParentByType("form").findParentByType("form").down('hiddenfield[name=titleImageUrl]').setValue(accessPath);
-                                //Ext.ComponentQuery.query('image[name=titileImage]')[0].setSrc(accessPath);
+                                //Ext.ComponentQuery.query('image[name=titileImage]')[0].setSrc(TzUniversityContextPath + accessPath);
                                 //Ext.ComponentQuery.query('hiddenfield[name=titleImageUrl]')[0].setValue(accessPath);
 
 

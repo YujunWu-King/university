@@ -59,7 +59,7 @@ public class TzTemplateParamServiceImpl extends FrameworkImpl {
 				String paraalias = jacksonUtil.getString("paraalias");
 				String systvar = jacksonUtil.getString("systvar");
 
-				String sql = "select 'Y' from PS_TZ_TMP_RRKF_TBL where TZ_JG_ID=? and TZ_YMB_ID=? and TZ_PARA_ID=?";
+				String sql = "select 'Y' from PS_TZ_TMP_PARA_TBL where TZ_JG_ID=? and TZ_YMB_ID=? and TZ_PARA_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { restemporg, restempid, paraid },
 						"String");
 
@@ -116,7 +116,7 @@ public class TzTemplateParamServiceImpl extends FrameworkImpl {
 				String paraalias = jacksonUtil.getString("paraalias");
 				String systvar = jacksonUtil.getString("systvar");
 
-				String sql = "select 'Y' from PS_TZ_TMP_RRKF_TBL where TZ_JG_ID=? and TZ_YMB_ID=? and TZ_PARA_ID=?";
+				String sql = "select 'Y' from PS_TZ_TMP_PARA_TBL where TZ_JG_ID=? and TZ_YMB_ID=? and TZ_PARA_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { restemporg, restempid, paraid },
 						"String");
 

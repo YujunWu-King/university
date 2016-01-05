@@ -60,8 +60,8 @@
 			var formData = responseData.formData;
 			form.setValues(formData);
 			form.setValues({siteId:siteId});
-			win.child('form').child('form').child("image").setSrc(formData.menutypeimg);
-			win.child('form').down('form[name=imgForm2]').child("image").setSrc(formData.menunowimg);
+			win.child('form').child('form').child("image").setSrc(TzUniversityContextPath + formData.menutypeimg);
+			win.child('form').down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + formData.menunowimg);
 			
 		});
         win.show();

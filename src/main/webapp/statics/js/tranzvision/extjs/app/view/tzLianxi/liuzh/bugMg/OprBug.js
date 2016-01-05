@@ -478,7 +478,7 @@ Ext.define('KitchenSink.view.tzLianxi.liuzh.bugMg.OprBug', {
                                 }
 
                                 if(attachmentType=="IMG"){
-                                    file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(accessPath);
+                                    file.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath + accessPath);
                                     file.findParentByType("form").findParentByType("form").down('hiddenfield[name=titleImageUrl]').setValue(accessPath);
                                 }
 

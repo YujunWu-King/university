@@ -40,6 +40,7 @@ import com.tranzvision.gd.TZRoleMgBundle.model.PsRoledefn;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -63,6 +64,9 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -244,13 +248,13 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						// 联系邮箱;
 						String tzOrganContactem = infoData.get("orgLxrEmail").toString();
 						// 静态文件存放路径
-						String tzJgJtfjPath = infoData.get("staticPath").toString();
+						String tzJgJtfjPath = infoData.get("staticPath")==null?"":String.valueOf(infoData.get("staticPath"));
 						// 登录系统文字;
-						String tzJgLoginInfo = infoData.get("orgLoginInf").toString();
+						String tzJgLoginInfo = infoData.get("orgLoginInf")==null?"":String.valueOf(infoData.get("orgLoginInf"));
 						// 登录页面版权信息;
 						String orgLoginCopr = infoData.get("orgLoginCopr").toString();
 						// 系统文件名;
-						String orgLoginBjImgUrl = infoData.get("orgLoginBjImgUrl").toString();
+						String orgLoginBjImgUrl = infoData.get("orgLoginBjImgUrl")==null?"":String.valueOf(infoData.get("orgLoginBjImgUrl"));
 						// 获取图片文件名
 						String sysFileName = "";
 						if (null != orgLoginBjImgUrl && !"".equals(orgLoginBjImgUrl)) {
@@ -713,7 +717,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 		String tzJgId = mapParams.get("orgId").toString().toUpperCase();
 
-		String strAdminJg = getHardCodePoint.getHardCodePointVal("TZ_GD_JG_ADMIN");
+		String strAdminJg = getSysHardCodeVal.getPlatformOrgID();
 		String strPlstBasic = getHardCodePoint.getHardCodePointVal("TZGD_BASIC");
 
 		Date dateNow = new Date();
@@ -893,7 +897,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				} // 许可权循环结束
 
 				// 将角色添加到机构里
-				sql = "SELECT 'Y' FROM TZ_JG_ROLE_T WHERE TZ_JG_ID=? and ROLENAME=?";
+				sql = "SELECT 'Y' FROM PS_TZ_JG_ROLE_T WHERE TZ_JG_ID=? and ROLENAME=?";
 				recExsit = sqlQuery.queryForObject(sql, new Object[] { tzJgId, roleId }, "String");
 
 				if (null == recExsit) {

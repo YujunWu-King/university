@@ -104,11 +104,16 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 							Object objActivate = mapFormData.get("activate");
 
-							List<String> listActivate = (List<String>) objActivate;
-
-							for (String activateType : listActivate) {
-								updActivate = updActivate + comma + activateType;
-								comma = ",";
+							String strActivate = String.valueOf(objActivate);
+							
+							if(strActivate.contains(",")){
+								List<String> listActivate = (List<String>) objActivate;
+								for (String activateType : listActivate) {
+									updActivate = updActivate + comma + activateType;
+									comma = ",";
+								}
+							}else{
+								updActivate = strActivate;
 							}
 
 						}

@@ -207,7 +207,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				}
 
 				// 机构站点实例静态文件路径
-				String strJgStaticFilesPath = "/" + strJgid.toLowerCase() + "/" + strSiteId;
+				String strJgStaticFilesPath = "/" + strJgid.toLowerCase() + "/" + strSiteIId;
 				String sql = "";
 
 				// css文件存储路径
@@ -227,6 +227,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapSkinM.get("TZ_SKIN_NAME"));
 				String strSkinCode = mapSkinM.get("TZ_SKIN_CODE") == null ? ""
 						: String.valueOf(mapSkinM.get("TZ_SKIN_CODE"));
+				
+				String strSkinCodeCss = strSkinCode.replace("{ContextPath}", request.getContextPath());
 
 				if ("update".equals(strFlag)) {
 					// 更新样式文件
@@ -235,7 +237,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						String strCssFile = "style_" + strJgid.toLowerCase() + ".css";
 
 						boolean boolRst = fileManageServiceImpl.UpdateFile(strSkinSavePath, strCssFile,
-								strSkinCode.getBytes());
+								strSkinCodeCss.getBytes());
 						if (!boolRst) {
 							errMsg[0] = "1";
 							errMsg[1] = "更新样式文件失败！";
@@ -254,6 +256,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(oprid);
 
 					psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
+					
+					mapRet.put("success", true);
+					mapRet.put("siteId", strSiteIId);
+					strRet = jacksonUtil.Map2json(mapRet);
 
 				} else if ("init".equals(strFlag)) {
 
@@ -310,7 +316,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							String strCssFile = "style_" + strJgid.toLowerCase() + ".css";
 
 							boolean boolRst = fileManageServiceImpl.UpdateFile(strSkinSavePath, strCssFile,
-									strSkinCode.getBytes());
+									strSkinCodeCss.getBytes());
 							if (!boolRst) {
 								errMsg[0] = "1";
 								errMsg[1] = "生成样式文件失败！";
@@ -331,20 +337,22 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(psTzSitemDefnTWithBLOBs.getTzLonginInitcode());
 						psTzSiteiDefnTWithBLOBs.setTzEnrollInitcode(psTzSitemDefnTWithBLOBs.getTzEnrollInitcode());
 						psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(psTzSitemDefnTWithBLOBs.getTzEnrollInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzAddedDttm(dateNow);
-						psTzSiteiDefnTWithBLOBs.setTzAddedOprid(oprid);
 						psTzSiteiDefnTWithBLOBs.setTzLastmantDttm(dateNow);
 						psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(oprid);
 
 						psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
 
 						// 3.初始化区域
-						sql = "select * from PS_TZ_SITEM_AREA_T where TZ_SITEM_ID=? and TZ_AREA_STATE='Y' order by TZ_AREA_XH asc";
+						//sql = "select * from PS_TZ_SITEM_AREA_T where TZ_SITEM_ID=? and TZ_AREA_STATE='Y' order by TZ_AREA_XH asc";
+						sql = "select * from PS_TZ_SITEM_AREA_T where TZ_SITEM_ID=? order by TZ_AREA_XH asc";
 						List<Map<String, Object>> listAreas = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapArea : listAreas) {
 
 							String strAreaId = mapArea.get("TZ_AREA_ID") == null ? ""
 									: String.valueOf(mapArea.get("TZ_AREA_ID"));
+							
+							String strAreaState = mapArea.get("TZ_AREA_STATE") == null ? "N"
+									: String.valueOf(mapArea.get("TZ_AREA_STATE"));
 
 							if (!"".equals(strAreaId)) {
 								sql = "select 'Y' from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
@@ -354,6 +362,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 								if ("Y".equals(recExists)) {
 									sql = "delete from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
 									sqlQuery.update(sql, new Object[] { strSiteIId, strAreaId });
+								}
+								
+								if(!"Y".equals(strAreaState)){
+									continue;
 								}
 
 								PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
@@ -365,8 +377,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 										: String.valueOf(mapArea.get("TZ_AREA_TYPE_ID")));
 								psTzSiteiAreaTWithBLOBs.setTzColuId(mapArea.get("TZ_COLU_ID") == null ? ""
 										: String.valueOf(mapArea.get("TZ_COLU_ID")));
-								psTzSiteiAreaTWithBLOBs.setTzAreaState(mapArea.get("TZ_AREA_STATE") == null ? ""
-										: String.valueOf(mapArea.get("TZ_AREA_STATE")));
+								psTzSiteiAreaTWithBLOBs.setTzAreaState(strAreaState);
 								psTzSiteiAreaTWithBLOBs.setTzAreaName(mapArea.get("TZ_AREA_NAME") == null ? ""
 										: String.valueOf(mapArea.get("TZ_AREA_NAME")));
 								psTzSiteiAreaTWithBLOBs.setTzAreaPosition(mapArea.get("TZ_AREA_POSITION") == null ? ""
@@ -390,13 +401,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						}
 
 						// 4.初始化区域类型
-						sql = "select * from PS_TZ_SITEM_ATYP_T where TZ_AREA_TYPE_STATE='Y' and TZ_SITEM_ID=?";
+						//sql = "select * from PS_TZ_SITEM_ATYP_T where TZ_AREA_TYPE_STATE='Y' and TZ_SITEM_ID=?";
+						sql = "select * from PS_TZ_SITEM_ATYP_T where TZ_SITEM_ID=?";
 						List<Map<String, Object>> listAreaTypes = sqlQuery.queryForList(sql,
 								new Object[] { strSiteId });
 						for (Map<String, Object> mapAreaType : listAreaTypes) {
 
 							String strAreaTypeId = mapAreaType.get("TZ_AREA_TYPE_ID") == null ? ""
 									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_ID"));
+							
+							String strAreaTypeState = mapAreaType.get("TZ_AREA_TYPE_STATE") == null ? "N"
+									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_STATE"));
 
 							sql = "select 'Y' from PS_TZ_SITEI_ATYP_T where TZ_SITEI_ID=? and TZ_AREA_TYPE_ID=?";
 							String recExists = sqlQuery.queryForObject(sql, new Object[] { strSiteIId, strAreaTypeId },
@@ -406,6 +421,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 								sql = "delete from PS_TZ_SITEI_ATYP_T where TZ_SITEI_ID=? and TZ_AREA_TYPE_ID=?";
 								sqlQuery.update(sql, new Object[] { strSiteIId, strAreaTypeId });
 							}
+							
+							if(!"Y".equals(strAreaTypeState)){
+								continue;
+							}
 
 							PsTzSiteiAtypT psTzSiteiAtypT = new PsTzSiteiAtypT();
 							psTzSiteiAtypT.setTzSiteiId(strSiteIId);
@@ -414,8 +433,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_NAME")));
 							psTzSiteiAtypT.setTzAreaType(mapAreaType.get("TZ_AREA_TYPE") == null ? ""
 									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE")));
-							psTzSiteiAtypT.setTzAreaTypeState(mapAreaType.get("TZ_AREA_TYPE_STATE") == null ? ""
-									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_STATE")));
+							psTzSiteiAtypT.setTzAreaTypeState(strAreaTypeState);
 							psTzSiteiAtypT.setTzAreaSetCode(mapAreaType.get("TZ_AREA_SET_CODE") == null ? ""
 									: String.valueOf(mapAreaType.get("TZ_AREA_SET_CODE")));
 							psTzSiteiAtypT.setTzAreaHtmlCode(mapAreaType.get("TZ_AREA_HTML_CODE") == null ? ""

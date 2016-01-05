@@ -418,14 +418,7 @@ function AreaColu(opt){
 
 /*获取二维码*/
 function SetImgCode(){
-	$.ajax({
-		async: false,
-		url: urlBegin+"/WEBLIB_GD_JGYH.TZ_GD_LOGIN.FieldFormula.Iscript_IamgeCodeGet",
-		dataType:'json',
-		success: function(response) {
-			$('#yzmImg').attr("src", response.codeImgUrl);
-		}
-	});
+	$('#yzmImg').attr("src", GenCaptchaUrl());
 }
 
 function Login(){

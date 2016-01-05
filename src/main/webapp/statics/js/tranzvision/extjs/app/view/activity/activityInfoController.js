@@ -42,7 +42,7 @@
 				Ext.tzLoad(tzParams,function(responseData){
 					var formData = responseData.formData;
 					codeForm.setValues(formData);
-					panel.down('image[name=codeImage]').setSrc(formData.codeImage);	
+					panel.down('image[name=codeImage]').setSrc(TzUniversityContextPath + formData.codeImage);	
 					
 				});
 	    });

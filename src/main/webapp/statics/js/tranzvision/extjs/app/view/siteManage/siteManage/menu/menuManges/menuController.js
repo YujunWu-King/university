@@ -309,8 +309,8 @@
 				var formData = responseData.formData;
 				form.setValues(formData);
 				var src = formData.menutypeimg;
-				/*panel.child('form').child('form').child("image").setSrc(formData.menutypeimg);
-				panel.child('form').down('form[name=imgForm2]').child("image").setSrc(formData.menunowimg);
+				/*panel.child('form').child('form').child("image").setSrc(TzUniversityContextPath + formData.menutypeimg);
+				panel.child('form').down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + formData.menunowimg);
 				*/
 				form.setValues({siteId:siteId});
 				//页面注册信息列表数据
@@ -492,8 +492,8 @@
 				form.setValues(formData);
 				form.setValues({siteId:siteId});
 				var src = formData.menutypeimg;
-				/*panel.child('form').child('form').child("image").setSrc(formData.menutypeimg);
-				panel.child('form').down('form[name=imgForm2]').child("image").setSrc(formData.menunowimg);
+				/*panel.child('form').child('form').child("image").setSrc(TzUniversityContextPath + formData.menutypeimg);
+				panel.child('form').down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + formData.menunowimg);
 				*/
 				//页面注册信息列表数据
 				var roleList = responseData.listData;	

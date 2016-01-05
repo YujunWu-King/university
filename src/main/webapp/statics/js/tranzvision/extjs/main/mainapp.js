@@ -1330,20 +1330,8 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         //获取验证码图片URL的方法
         getValidCodeImageURL: function()
         {
-            var tmpURL = "";
-
-            Ext.Ajax.request
-            ({
-                async: false,
-                url: Ext.tzGetGeneralURL() + '?tzParams=' + window.escape('{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}'),
-                success: function(response)
-                {
-                    var responseText = eval( "(" + response.responseText + ")" );
-                    tmpURL = responseText.codeImgUrl;
-                }
-            });
-
-            return tmpURL ;
+			var _captchaURL = TzUniversityContextPath + "/captcha";
+			return _captchaURL + "?" + Math.random();
         },
 		
 		//根据邮箱查看邮件发送历史;

@@ -461,8 +461,8 @@
             }
     },
     editOrgAccount: function(btn) {
-		   //选中行
         var grid =btn.up('grid');
+        //选中行
 		   var selList = grid.getSelectionModel().getSelection();
 		   //选中行长度
 		   var checkLen = selList.length;
@@ -530,10 +530,9 @@
 			cmp.show();
 		}
 	},
-	deleteOrgAccount: function(btn){
+    deleteOrgAccount: function(){
 	   //选中行
-        var grid =btn.up('grid');
-	   var selList = grid.getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
 	   //选中行长度
 	   var checkLen = selList.length;
 	   if(checkLen == 0){
@@ -560,7 +559,7 @@
                     }
                     tzParams = tzParams + org_params + "]}}";
 
-                    var store = grid.store;
+                    var store = this.getView().store;
                     store.remove(selList);
 					//删除服务器端数据
 					Ext.tzLoad(tzParams,function(responseData){
@@ -570,9 +569,8 @@
 			},this);
 	   }
     },
-    addOrgAdminMemAccount: function(btn) {
-        var grid =btn.up('grid');
-        if(grid.actType == "add"){
+    addOrgAdminMemAccount: function() {
+        if(this.getView().actType == "add"){
             Ext.MessageBox.alert("提示","请先保存机构信息后，再新增用户信息。");
             return;
         }
@@ -583,7 +581,7 @@
 		var cmp = this.createOrgUserCmpClass();
 
 
-        var formOrg =  grid.child("form").getForm();
+        var formOrg =  this.getView().child("form").getForm();
         var formOrgParams = formOrg.getValues();
         var orgId = formOrgParams["orgId"];
 
@@ -639,12 +637,11 @@
             cmp.show();
         }
     },
-    getJgdOrgInfoParams: function(btn){
-        var grid =btn.up('grid');
+    getJgdOrgInfoParams: function(){
         //机构信息表单
-        var form = grid.child("form").getForm();
+        var form = this.getView().child("form").getForm();
         //机构信息标志
-        var actType =grid.actType;
+        var actType = this.getView().actType;
         //更新操作参数
         var comParams = "";
         //新增
@@ -669,28 +666,26 @@
         var tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGDEF_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
     },
-    onJgdFormSave: function(btn){
-        var grid=btn.up('grid');
+    onJgdFormSave: function(){
         //机构信息表单
-        var form = grid.child("form").getForm();
+        var form = this.getView().child("form").getForm();
         if (form.isValid()) {
             //获取机构信息参数
             var tzParams = this.getJgdOrgInfoParams();
-            var orgView = grid;
+            var orgView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
                 orgView.actType = "update";
                 form.findField("orgId").setReadOnly(true);
             },"",true,this);
         }
     },
-    onJgdFormEnsure: function(btn){
-        var grid =btn.up("grid");
+    onJgdFormEnsure: function(){
         //机构信息表单
-        var form = grid.child("form").getForm();
+        var form = this.getView().child("form").getForm();
         if (form.isValid()) {
             //获取机构信息参数
             var tzParams = this.getJgdOrgInfoParams();
-            var comView = grid;
+            var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
                 //关闭窗口
                 comView.close();
@@ -698,9 +693,8 @@
         }
     },
     addOrgRole:function(btn){
-        var grid1 =btn.up('grid');
         var me = this;
-        if(grid1.actType == "add"){
+        if(this.getView().actType == "add"){
             Ext.MessageBox.alert("提示","请先保存机构信息后，再新增角色信息。");
             return;
         }
@@ -997,14 +991,13 @@
     copyOrgRole:function(btn){
         var form =btn.findParentByType("form").getForm();
         var orgID=form.findField("orgId").getValue();
-        var grid=btn.up('grid');
 
         if(orgID != null && orgID != "") {
             var roleGrid = this.lookupReference('orgRoleGrid');
             var roleStore = roleGrid.getStore();
             //获取机构信息参数
             var tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGDEF_STD","OperateType":"U","comParams":{"update":[{"typeFlag":"COPYROLE","data":{"orgId":"' + orgID + '"}}]}}';
-            var orgView =grid;
+            var orgView = this.getView();
             Ext.tzSubmit(tzParams, function (responseData) {
                 var tzStoreParams2 = '{"orgId":"' + orgID + '","queryType":"ROLE"}';
                 roleStore.tzStoreParams = tzStoreParams2;
@@ -1014,14 +1007,12 @@
     },
     /*保存机构角色修改信息*/
     onOrgRoleFormSave:function(btn){
-       // var grid =btn.up('grid');
-        var grid =btn.up('window').up('panel');
         var me = this;
         var win = btn.findParentByType('window');
         var form  = win.child('form').getForm();
         if(form.isValid()){
             var formParams = form.getValues();
-            var roleGrid  = grid.lookupReference('orgRoleGrid');
+            var roleGrid  = me.getView().lookupReference('orgRoleGrid');
             var modifiedRecords = roleGrid.getStore().getModifiedRecords();
             var record = roleGrid.getSelectionModel().getSelection()[0];
             var editJson = '{"typeFlag":"ROLE","data":'+Ext.JSON.encode(formParams)+'}';
@@ -1053,12 +1044,6 @@
          return;
          }*/
         this.editOrgAccountByOrgId(orgId);
-    },
-    //关闭
-    onPanelClose:function(btn){
-        //alert("onPanelClose");
-        var grid=btn.up('grid');
-        grid.close();
     },
     //orgInfoPanel.js 中的机构信息中的 机构用户 中的grid 中的编辑
     editUserAccountLine: function(view, rowIndex){
@@ -1172,5 +1157,10 @@
                 store.removeAt(rowIndex);
             }
         },this);
+    },
+    //关闭
+    onPanelClose:function(){
+        //alert("onPanelClose");
+        this.getView().close();
     }
 });

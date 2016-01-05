@@ -49,7 +49,7 @@
 				Ext.tzLoad(tzParams,function(responseData){
 					var formData = responseData.formData;
 					codeForm.setValues(formData);
-					panel.down('image[name=codeImage]').setSrc(formData.codeImage);	
+					panel.down('image[name=codeImage]').setSrc(TzUniversityContextPath + formData.codeImage);	
 					
 				});
 	    });
@@ -295,7 +295,7 @@
 						form.findField("publishStatusDesc").setValue("未发布");
 					}
 						//Ext.getCmp( "titileImage").setSrc(Ext.getCmp( "titleImageUrl").getValue());	
-					  panel.down('image[name=titileImage]').setSrc(panel.down('hiddenfield[name=titleImageUrl]').getValue());	
+					  panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	
 						//附件集
 						var tzStoreParams = "{'activityId':'"+activityId+"','gridTyp':'FJ'}";
 						attachGrid.store.tzStoreParams = tzStoreParams;

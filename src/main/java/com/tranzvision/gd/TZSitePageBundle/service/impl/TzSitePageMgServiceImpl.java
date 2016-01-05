@@ -54,7 +54,7 @@ public class TzSitePageMgServiceImpl extends FrameworkImpl {
 		}
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		return jacksonUtil.Map2json(mapData);
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 }

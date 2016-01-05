@@ -183,9 +183,9 @@
 				userInfoForm.add(typeField);
 			}
 			if(win.down('hiddenfield[name=titleImageUrl]').getValue()){
-				win.down('image[name=titileImage]').setSrc(win.down('hiddenfield[name=titleImageUrl]').getValue());	
+				win.down('image[name=titileImage]').setSrc(TzUniversityContextPath + win.down('hiddenfield[name=titleImageUrl]').getValue());	
 			}else{
-				win.down('image[name=titileImage]').setSrc("/tranzvision/images/mrtx02.jpg");
+				win.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
 			}
 		});
         win.show();
@@ -251,9 +251,9 @@
 				userInfoForm.add(typeField);					
 			}
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
-				msgForm.down('image[name=titileImage]').setSrc(msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
+				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
 			}else{
-				msgForm.down('image[name=titileImage]').setSrc("/tranzvision/images/mrtx02.jpg");
+				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
 			}
 		  });
 		 
@@ -322,9 +322,9 @@
 				userInfoForm.add(typeField);					
 			}
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
-				msgForm.down('image[name=titileImage]').setSrc(msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
+				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
 			}else{
-				msgForm.down('image[name=titileImage]').setSrc("/tranzvision/images/mrtx02.jpg");
+				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
 			}
 		  });
 		 
