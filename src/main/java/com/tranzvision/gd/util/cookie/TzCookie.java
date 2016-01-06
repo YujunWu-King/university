@@ -56,7 +56,7 @@ public class TzCookie {
 	}
 
 	/**
-	 * 新增一个Cookie-1
+	 * 新增一个Cookie；会话cookie，关闭浏览器后失效；
 	 * 
 	 * @param response
 	 * @param cookieName
