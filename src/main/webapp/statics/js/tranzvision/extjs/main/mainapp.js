@@ -1523,7 +1523,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                                         allowBlank: false,
                                                         validateOnChange: false,
                                                         validateOnBlur: true,
-                                                        vtype: 'codeValidator',
+                                                        //vtype: 'codeValidator',
                                                         listeners:
                                                         {
                                                             specialkey: function(textfield, e)
@@ -1602,13 +1602,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                                                 tzLoginParams.comParams.userName = userName;
                                                                 tzLoginParams.comParams.password = password;
                                                                 tzLoginParams.comParams.yzm = yzm;
-
+                                                                
                                                                 try
                                                                 {
                                                                     Ext.Ajax.request
                                                                     ({
                                                                         async: false,
-                                                                        url: Ext.tzGetGeneralURL(),
+                                                                        //url: Ext.tzGetGeneralURL(),
+                                                                        url: TzUniversityContextPath+"/login/dologin",
                                                                         params:
                                                                         {
                                                                             "tzParams": Ext.JSON.encode(tzLoginParams)
