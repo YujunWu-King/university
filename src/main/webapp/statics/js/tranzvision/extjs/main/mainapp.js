@@ -1523,7 +1523,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                                         allowBlank: false,
                                                         validateOnChange: false,
                                                         validateOnBlur: true,
-                                                        //vtype: 'codeValidator',
+                                                        vtype: 'codeValidator',
                                                         listeners:
                                                         {
                                                             specialkey: function(textfield, e)
