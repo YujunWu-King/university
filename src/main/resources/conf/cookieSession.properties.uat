@@ -1,5 +1,5 @@
 webAppRootKey=springmvc.root.uat
-cookieMaxAge=3600
+cookieMaxAge=-1
 cookieDomain=gd.uat.tranzvision.net
 cookiePath=/
 cookieHttpOnly=True
