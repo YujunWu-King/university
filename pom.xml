@@ -38,6 +38,7 @@
 		<freemarker.version>2.3.12</freemarker.version>
 		<quartz.version>2.2.2</quartz.version>
 		<c3p0.version>0.9.1.1</c3p0.version>
+		<imagescaling.version>0.8.6</imagescaling.version>
 	</properties>
 
 	<dependencies>
@@ -246,6 +247,12 @@
 			<groupId>org.imgscalr</groupId>
 			<artifactId>imgscalr-lib</artifactId>
 			<version>${imgscalr.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.mortennobel</groupId>
+			<artifactId>java-image-scaling</artifactId>
+			<version>${imagescaling.version}</version>
 		</dependency>
 
 		<dependency>
