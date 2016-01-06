@@ -24,7 +24,6 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgMgrTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgMgrTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -493,16 +492,16 @@ public class AccountInfoImpl extends FrameworkImpl {
 					PsTzAqYhxxTbl psTzAqYhxxTbl = psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
 					
 					if (psTzAqYhxxTbl != null) {
-						oprID = TZUtility.transFormchar(psTzAqYhxxTbl.getOprid());
-						name = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRealname());
-						bdEmail = TZUtility.transFormchar(psTzAqYhxxTbl.getTzEmail());
-						bdMobile = TZUtility.transFormchar(psTzAqYhxxTbl.getTzMobile());
-						perType = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRylx());
-						eBindFlg = TZUtility.transFormchar(psTzAqYhxxTbl.getTzYxbdBz());
-						mBindFlg = TZUtility.transFormchar(psTzAqYhxxTbl.getTzSjbdBz());
-						jhState = TZUtility.transFormchar(psTzAqYhxxTbl.getTzJihuoZt());
-						jhMethod = TZUtility.transFormchar(psTzAqYhxxTbl.getTzJihuoFs());
-						rylx = TZUtility.transFormchar(psTzAqYhxxTbl.getTzRylx());
+						oprID = psTzAqYhxxTbl.getOprid();
+						name = psTzAqYhxxTbl.getTzRealname();
+						bdEmail = psTzAqYhxxTbl.getTzEmail();
+						bdMobile = psTzAqYhxxTbl.getTzMobile();
+						perType = psTzAqYhxxTbl.getTzRylx();
+						eBindFlg = psTzAqYhxxTbl.getTzYxbdBz();
+						mBindFlg = psTzAqYhxxTbl.getTzSjbdBz();
+						jhState = psTzAqYhxxTbl.getTzJihuoZt();
+						jhMethod = psTzAqYhxxTbl.getTzJihuoFs();
+						rylx = psTzAqYhxxTbl.getTzRylx();
 					}
 
 					
@@ -511,8 +510,8 @@ public class AccountInfoImpl extends FrameworkImpl {
 					
 
 					if (map != null) {
-						mobile = TZUtility.transFormchar((String) map.get("TZ_ZY_SJ")).trim();
-						email = TZUtility.transFormchar((String) map.get("TZ_ZY_EMAIL")).trim();
+						mobile = (String) map.get("TZ_ZY_SJ");
+						email = (String) map.get("TZ_ZY_EMAIL");
 					}
 					
 					Psoprdefn psoprdefn = new Psoprdefn();
@@ -520,7 +519,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 					short localNum = 0;
 				
 					if (psoprdefn != null) {
-						password = TZUtility.transFormchar(psoprdefn.getOperpswd());
+						password = psoprdefn.getOperpswd();
 						if (!"".equals(password)) {
 							password = DESUtil.decrypt(password, "TZGD_Tranzvision");
 						}

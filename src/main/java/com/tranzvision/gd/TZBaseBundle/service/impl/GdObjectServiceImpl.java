@@ -43,9 +43,9 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 */
 	private final static String cookieLang = "tzlang";
 	/**
-	 * Cookie存储的机构信息 TODO 名称待定
+	 * Cookie存储的机构id
 	 */
-	private final static String cookieJgId = "TZGD_CONTEXT_LOGIN_ORGID";
+	private final static String cookieJgId = "tzmo";
 	
 	@Autowired
 	private SqlQuery jdbcTemplate;

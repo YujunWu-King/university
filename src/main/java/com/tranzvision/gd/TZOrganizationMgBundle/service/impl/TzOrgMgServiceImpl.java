@@ -16,7 +16,6 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationMgBundle.dao.PsTzJgBaseTMapper;
 import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -183,7 +182,7 @@ public class TzOrgMgServiceImpl extends FrameworkImpl {
 					mapOrg.put("staticPath", psTzJgBaseT.getTzJgJtfjPath());
 					mapOrg.put("orgLoginInf", psTzJgBaseT.getTzJgLoginInfo());
 					mapOrg.put("orgLoginBjImgUrl", orgLoginBjImgUrl);
-					mapOrg.put("orgLoginCopr", TZUtility.transFormchar(psTzJgBaseT.getTzJgLoginCopr()));
+					mapOrg.put("orgLoginCopr", psTzJgBaseT.getTzJgLoginCopr());
 
 					mapRet.replace("formData", mapOrg);
 				} else {

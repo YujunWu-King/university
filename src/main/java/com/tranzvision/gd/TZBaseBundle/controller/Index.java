@@ -17,7 +17,6 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjInitServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -32,9 +31,9 @@ public class Index {
 	 */
 	private final static String cookieLang = "tzlang";
 	/**
-	 * Cookie存储的机构信息 TODO 名称待定
+	 * Cookie存储的机构id
 	 */
-	private final static String cookieJgId = "TZGD_CONTEXT_LOGIN_ORGID";
+	private final static String cookieJgId = "tzmo";
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -89,10 +88,10 @@ public class Index {
 					gdKjComService.getFrameworkDescriptionResources(request, response));
 
 			request.setAttribute("tz_gdcp_theme_id_20150612184830",
-					TZUtility.transFormchar(gdKjComService.getUserGxhTheme(request, response)));
+					gdKjComService.getUserGxhTheme(request, response));
 
 			request.setAttribute("tz_gdcp_language_cd_20150612184830",
-					TZUtility.transFormchar(gdKjComService.getUserGxhLanguage(request, response)));
+					gdKjComService.getUserGxhLanguage(request, response));
 
 			request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
 
@@ -390,10 +389,9 @@ public class Index {
 				if (gdKjComService.isSessionValid(request) == false) {
 					tmpTimeOutFlag = "true";
 				}
-			}
-
+			}			
 			strRetContent = "{\"comContent\": " + strComContent + ",\"state\":{\"errcode\":" + errorCode
-					+ ",\"errdesc\": \"" + TZUtility.transFormchar(strErrorDesc) + "\",\"timeout\": " + tmpTimeOutFlag
+					+ ",\"errdesc\": \"" + strErrorDesc + "\",\"timeout\": " + tmpTimeOutFlag
 					+ ",\"authorizedInfo\": {" + authorizedInfomation + "}}}";
 		}
 		return strRetContent;

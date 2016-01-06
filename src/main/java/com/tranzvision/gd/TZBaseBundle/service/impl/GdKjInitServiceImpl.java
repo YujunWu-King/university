@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.GdKjInitService;
-import com.tranzvision.gd.util.base.TZUtility;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service
@@ -118,6 +119,7 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 	/* 获取框架标签描述资源信息集合的方法 */
 	private String getFrameworkLabelResources(HttpServletRequest request, HttpServletResponse response) {
 		// String tmpMsgSetID = "";
+		Map<String, Object> msgMap = new HashMap<String, Object>();
 		String tmpMsgID = "", tmpMsgText = "", tmpJSONString = "";
 
 		String languageId = this.getLoginLanguage(request, response);
@@ -137,9 +139,11 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 				// tmpMsgSetID = (String) map.get("TZ_XXJH_ID");
 				tmpMsgID = (String) map.get("TZ_MSG_ID");
 				tmpMsgText = (String) map.get("TZ_MSG_TEXT");
-
-				tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
-						+ TZUtility.transFormchar(tmpMsgText) + "\"";
+				/*
+				tmpJSONString = tmpJSONString + ",\"" + tmpMsgID + "\":\""
+						+ tmpMsgText + "\"";
+						*/
+				msgMap.put(tmpMsgID, tmpMsgText);
 			}
 		}
 
@@ -155,19 +159,25 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 					// tmpMsgSetID = (String) map.get("TZ_XXJH_ID");
 					tmpMsgID = (String) map.get("TZ_MSG_ID");
 					tmpMsgText = (String) map.get("TZ_MSG_TEXT");
-
-					tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
-							+ TZUtility.transFormchar(tmpMsgText) + "\"";
+					/*
+					tmpJSONString = tmpJSONString + ",\"" + tmpMsgID + "\":\""
+							+ tmpMsgText + "\"";
+							*/
+					msgMap.put(tmpMsgID, tmpMsgText);
 				}
 			}
 		}
-
+/*
 		if (tmpJSONString != null && !"".equals(tmpJSONString)) {
 			tmpJSONString = tmpJSONString.substring(1);
 		}
 
 		tmpJSONString = "\"" + this.getLoginLanguage(request, response) + "\":{\"languagePackage\":{" + tmpJSONString
 				+ "}}";
+				*/
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		tmpJSONString = "\"" + this.getLoginLanguage(request, response) + "\":{\"languagePackage\":" + jacksonUtil.Map2json(msgMap)
+				+ "}";
 		return tmpJSONString;
 	}
 

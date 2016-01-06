@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -129,18 +128,17 @@ public class FliterForm extends FrameworkImpl {
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(cfgFldSql,
 						new Object[] { comId, pageId, viewName });
 				for (int list_i = 0; list_i < list.size(); list_i++) {
-					fieldName = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FILTER_FLD")).trim();
-					fieldLabel = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FILTER_FLD_DESC")).trim();
+					fieldName = (String) list.get(list_i).get("TZ_FILTER_FLD");
+					fieldLabel = (String) list.get(list_i).get("TZ_FILTER_FLD_DESC");
 					//maxRows = (long) list.get(list_i).get("TZ_RESULT_MAX_NUM");
-					readOnly = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FLD_READONLY")).trim();
-					hiden = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FLD_HIDE")).trim();
-					promptTable = TZUtility.transFormchar((String) list.get(list_i).get("TZ_PROMPT_TBL_NAME")).trim();
-					promptTableFld = TZUtility.transFormchar((String) list.get(list_i).get("TZ_PROMPT_FLD")).trim();
-					promptTableDescFld = TZUtility.transFormchar((String) list.get(list_i).get("TZ_PROMPT_DESC_FLD"))
-							.trim();
-					isDowm = TZUtility.transFormchar((String) list.get(list_i).get("TZ_ISDOWN_FLD")).trim();
-					fldQzType = TZUtility.transFormchar((String) list.get(list_i).get("TZ_FLT_FLD_QZ_TYPE")).trim();
-					zhzJhId = TZUtility.transFormchar((String) list.get(list_i).get("TZ_ZHZJH_ID")).trim();
+					readOnly = (String) list.get(list_i).get("TZ_FLD_READONLY");
+					hiden = (String) list.get(list_i).get("TZ_FLD_HIDE");
+					promptTable = (String) list.get(list_i).get("TZ_PROMPT_TBL_NAME");
+					promptTableFld = (String) list.get(list_i).get("TZ_PROMPT_FLD");
+					promptTableDescFld = (String) list.get(list_i).get("TZ_PROMPT_DESC_FLD");
+					isDowm = (String) list.get(list_i).get("TZ_ISDOWN_FLD");
+					fldQzType = (String) list.get(list_i).get("TZ_FLT_FLD_QZ_TYPE");
+					zhzJhId = (String) list.get(list_i).get("TZ_ZHZJH_ID");
 
 					String fldReadOnly = "";
 					if ("1".equals(readOnly)) {
@@ -683,7 +681,7 @@ public class FliterForm extends FrameworkImpl {
 					int j = 0;
 					for (Object value : resultMap.values()) {
 
-						rowList[j] = TZUtility.transFormchar((String) value);
+						rowList[j] = (String) value;
 						j++;
 					}
 					list.add(rowList);

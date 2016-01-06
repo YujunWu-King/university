@@ -19,7 +19,6 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltprmFldT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -138,8 +137,8 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 
 						String str_is_qy = "", str_is_oprt = "";
 						if (psTzFilterYsfT != null) {
-							str_is_qy = TZUtility.transFormchar(psTzFilterYsfT.getTzFilterBdyQy());
-							str_is_oprt = TZUtility.transFormchar(psTzFilterYsfT.getTzIsDefOprt());
+							str_is_qy = psTzFilterYsfT.getTzFilterBdyQy();
+							str_is_oprt = psTzFilterYsfT.getTzIsDefOprt();
 						}
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("ComID", str_com_id);

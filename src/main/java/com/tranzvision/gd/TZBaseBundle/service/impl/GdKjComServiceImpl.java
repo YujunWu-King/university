@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZBaseBundle.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,6 @@ import com.tranzvision.gd.TZBaseBundle.service.Framework;
 import com.tranzvision.gd.TZBaseBundle.service.GdKjComService;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
-import com.tranzvision.gd.util.base.TZUtility;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -38,15 +38,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	 *****/
 	@Override
 	public String getFrameworkDescriptionResources(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String, Object> msgMap = new HashMap<String, Object>();
 		String tmpJSONString = "";
 		/*** 读取客户化的系统名称; **/
 		String jgId = this.getLoginOrgID(request, response);
 		String SuperOrgId = this.getSuperOrgId(request, response);
 		String tmpKhhSystemNameSQL = "SELECT TZ_JG_LOGIN_INFO FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 		String tmpKhhSystemName = "";
-		tmpKhhSystemName = TZUtility
-				.transFormchar(jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String"));
-
+		tmpKhhSystemName = jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String");
+		if(tmpKhhSystemName == null){
+			tmpKhhSystemName = "";
+		}
 		String languageId = this.getLoginLanguage(request, response);
 		String xxjhId = "TZGD_FWINIT_MSGSET";
 		// 查询登录机构下的系统消息定义;
@@ -69,8 +72,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						&& (tmpKhhSystemName != null || !"".equals(tmpKhhSystemName))) {
 					tmpMsgText = tmpKhhSystemName;
 				}
+				/*
 				tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
 						+ TZUtility.transFormchar(tmpMsgText) + "\"";
+						*/
+				msgMap.put(tmpMsgID, tmpMsgText);
 			}
 		}
 
@@ -90,17 +96,23 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							&& (tmpKhhSystemName != null || !"".equals(tmpKhhSystemName))) {
 						tmpMsgText = tmpKhhSystemName;
 					}
+					/*
 					tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
 							+ TZUtility.transFormchar(tmpMsgText) + "\"";
+							*/
+					msgMap.put(tmpMsgID, tmpMsgText);
 				}
 			}
 		}
-
+/*
 		if (tmpJSONString != null && !"".equals(tmpJSONString)) {
 			tmpJSONString = tmpJSONString.substring(1);
 		}
 		tmpJSONString = "{ " + languageId + ":{" + tmpJSONString + "}}";
-
+*/
+		returnMap.put(languageId, msgMap);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		tmpJSONString = jacksonUtil.Map2json(returnMap);
 		return tmpJSONString;
 
 	}
@@ -112,6 +124,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	 *******************************************************************/
 	public String getFieldTag(HttpServletRequest request, HttpServletResponse response, String sCID,
 			String sDefaultText, String[] errMsgArr) {
+		Map<String, Object> bqMap = new HashMap<String, Object>();
 		// 返回值;
 		String strRet = "{}";
 		// 语言编号;
@@ -193,21 +206,26 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					for (int k = 0; k < list.size(); k++) {
 						tmpBQID = (String) list.get(k).get("TZ_MSG_BQID");
 						tmpBQValue = (String) list.get(k).get("TZ_MSG_TEXT");
+						/*
 						if ("".equals(retBiaoQian)) {
-							retBiaoQian = "\"" + TZUtility.transFormchar(tmpBQID) + "\":\""
-									+ TZUtility.transFormchar(tmpBQValue) + "\"";
+							retBiaoQian = "\"" + tmpBQID + "\":\""
+									+ tmpBQValue + "\"";
 						} else {
-							retBiaoQian = retBiaoQian + ",\"" + TZUtility.transFormchar(tmpBQID) + "\":\""
-									+ TZUtility.transFormchar(tmpBQValue) + "\"";
-						}
+							retBiaoQian = retBiaoQian + ",\"" + tmpBQID + "\":\""
+									+ tmpBQValue + "\"";
+						}*/
+						bqMap.put(tmpBQID, tmpBQValue);
 					}
 				}
 
 			} else {
-				retBiaoQian = "\"" + TZUtility.transFormchar(sCID) + "\":\"" + TZUtility.transFormchar(strTagContent)
-						+ "\"";
+				/*retBiaoQian = "\"" + sCID + "\":\"" + strTagContent
+						+ "\"";*/
+				bqMap.put(sCID, strTagContent);
 			}
-			strRet = "{\"" + strLangID + "\":{\"languagePackage\":{" + retBiaoQian + "}}}";
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			retBiaoQian = jacksonUtil.Map2json(bqMap);
+			strRet = "{\"" + strLangID + "\":{\"languagePackage\":" + retBiaoQian + "}}";
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsgArr[0] = "1";
@@ -1161,7 +1179,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					Map<String, Object> map = list.get(k);
 					j = 0;
 					for (Object vl : map.values()) {
-						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + TZUtility.transFormchar((String) vl)
+						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + (String) vl
 								+ "\"";
 						j++;
 					}
