@@ -72,6 +72,21 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 */
 	final static String cookieWebLang = "tzweblang";
 
+	/**
+	 * Cookie存储的当前访问站点的机构id
+	 */
+	final static String cookieWebOrgId = "tzwo";
+
+	/**
+	 * Cookie存储的当前访问站点的站点id
+	 */
+	final static String cookieWebSiteId = "tzws";
+
+	/**
+	 * Cookie存储的当前登录网站的用户登录账号
+	 */
+	final static String cookieWebLoginedUserName = "tzwu";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -80,11 +95,11 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 * javax.servlet.http.HttpServletRequest,
 	 * javax.servlet.http.HttpServletResponse, java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-	 * java.util.ArrayList)
+	 * java.lang.String, java.util.ArrayList)
 	 */
 	@Override
-	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String userName,
-			String userPwd, String code, String language, ArrayList<String> errorMsg) {
+	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String siteid,
+			String userName, String userPwd, String code, String language, ArrayList<String> errorMsg) {
 
 		// 校验验证码
 		Patchca patchca = new Patchca();
@@ -143,6 +158,11 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 设置语言环境
 			this.switchSysLanguage(request, response, language);
+
+			// 设置cookie参数
+			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId());
+			tzCookie.addCookie(response, cookieWebSiteId, siteid);
+			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
 
 			errorMsg.add("success");
 			errorMsg.add("");

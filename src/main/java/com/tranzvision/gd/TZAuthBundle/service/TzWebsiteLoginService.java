@@ -22,6 +22,7 @@ public interface TzWebsiteLoginService {
 	 * @param request
 	 * @param response
 	 * @param orgid
+	 * @param siteid
 	 * @param userName
 	 * @param userPwd
 	 * @param code
@@ -29,8 +30,8 @@ public interface TzWebsiteLoginService {
 	 * @param errorMsg
 	 * @return
 	 */
-	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String userName,
-			String userPwd, String code, String language, ArrayList<String> errorMsg);
+	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String siteid,
+			String userName, String userPwd, String code, String language, ArrayList<String> errorMsg);
 
 	/**
 	 * 切换系统语言

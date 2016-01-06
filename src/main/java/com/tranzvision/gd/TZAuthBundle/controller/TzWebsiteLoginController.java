@@ -58,22 +58,22 @@ public class TzWebsiteLoginController {
 
 		try {
 			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
-			
+
 			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
 
 			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
 
 				String sql = "select TZ_LONGIN_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? and TZ_JG_ID=?";
-				String loginHtml = sqlQuery.queryForObject(sql, new Object[]{siteid,orgid}, "String");
-				
-				if(null!=loginHtml && !"".equals(loginHtml)){
+				String loginHtml = sqlQuery.queryForObject(sql, new Object[] { siteid, orgid }, "String");
+
+				if (null != loginHtml && !"".equals(loginHtml)) {
 					String ctxPath = request.getContextPath();
 					strRet = loginHtml.replace("{ContextPath}", ctxPath);
-				}else{
-					strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "该站点未设置登录页，请联系站点管理员。",
-							"This site haven't the login page, please contact Administrator.");
+				} else {
+					strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "",
+							"该站点未设置登录页，请联系站点管理员。", "This site haven't the login page, please contact Administrator.");
 				}
-				
+
 			} else {
 
 				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
@@ -121,8 +121,8 @@ public class TzWebsiteLoginController {
 					if (null != strUserName && !"".equals(strUserName)) {
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
-						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strUserName,
-								strPassWord, strYzmCode, strLang, aryErrorMsg);
+						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strSiteId,
+								strUserName, strPassWord, strYzmCode, strLang, aryErrorMsg);
 
 						String loginStatus = aryErrorMsg.get(0);
 						String errorMsg = aryErrorMsg.get(1);
