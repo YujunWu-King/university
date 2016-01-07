@@ -60,32 +60,32 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	/**
 	 * Session存储的用户信息变量名称
 	 */
-	final static String userSessionName = "loginUser";
+	public final String userSessionName = "loginUser";
 
 	/**
 	 * Session存储的用户当前登录语言
 	 */
-	final static String sysWebLanguage = "sysWebLanguage";
+	public final String sysWebLanguage = "sysWebLanguage";
 
 	/**
 	 * Cookie存储的系统语言信息
 	 */
-	final static String cookieWebLang = "tzweblang";
+	public final String cookieWebLang = "tzweblang";
 
 	/**
 	 * Cookie存储的当前访问站点的机构id
 	 */
-	final static String cookieWebOrgId = "tzwo";
+	public final String cookieWebOrgId = "tzwo";
 
 	/**
 	 * Cookie存储的当前访问站点的站点id
 	 */
-	final static String cookieWebSiteId = "tzws";
+	public final String cookieWebSiteId = "tzws";
 
 	/**
 	 * Cookie存储的当前登录网站的用户登录账号
 	 */
-	final static String cookieWebLoginedUserName = "tzwu";
+	public final String cookieWebLoginedUserName = "tzwu";
 
 	/*
 	 * (non-Javadoc)

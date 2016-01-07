@@ -60,27 +60,27 @@ public class TzLoginServiceImpl implements TzLoginService {
 	/**
 	 * Session存储的用户信息变量名称
 	 */
-	final static String managerSessionName = "loginManager";
+	public final String managerSessionName = "loginManager";
 
 	/**
 	 * Session存储的用户当前登录语言
 	 */
-	final static String sysLanguage = "sysLanguage";
+	public final String sysLanguage = "sysLanguage";
 
 	/**
 	 * Cookie存储的系统语言信息
 	 */
-	final static String cookieLang = "tzlang";
+	public final String cookieLang = "tzlang";
 	
 	/**
 	 * Cookie存储的当前登录机构id
 	 */
-	final static String cookieOrgId = "tzmo";
+	public final String cookieOrgId = "tzmo";
 	
 	/**
 	 * Cookie存储的当前登录用户登录名
 	 */
-	final static String cookieLoginedAdminName = "tzmu";
+	public final String cookieLoginedAdminName = "tzmu";
 
 	/*
 	 * (non-Javadoc)

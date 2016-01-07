@@ -142,7 +142,7 @@ Ext.define('KitchenSink.view.website.set.js.siteHomeSet',{
 					var newTab=window.open('about:blank');
 					try{
 					//	newTab.location.href = Ext.tzGetGeneralURL()+'?tzParams={"ComID":"TZ_HOME_SETED_COM","PageID":"TZ_HOME_SETED_STD","OperateType":"HTML","comParams":{"siteId":"'+resp.siteId+'","oprate":"D"}}';
-						newTab.location.href = Ext.tzGetGeneralURL()+'?classid=homePage&siteId='+resp.siteId+'&oprate=D';
+						setTimeout(function(){newTab.location.href = TzUniversityContextPath + '/decorate/index/'+ Ext.tzOrgID.toLowerCase() +'/'+ resp.siteId},200);
 					}catch(e){
 						Ext.Msg.alert("提示","您的浏览器阻止弹出窗口，请您允许本站点的弹窗！");
 					}			

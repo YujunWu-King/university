@@ -161,7 +161,6 @@ function onChooseStyle(siteId,skinId,siteIId,siteInsMid){
 	}
 	var comParams = '"add":[{"typeFlag":"'+typeFlag+'","data":{"siteId":"'+siteId+'","skinId":"'+skinId+'","siteIId":"'+siteIId+'"}}]';
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
-	var newTab=window.open('about:blank');
 	
 	Ext.Ajax.request({
 		url: Ext.tzGetGeneralURL(),
@@ -174,7 +173,13 @@ function onChooseStyle(siteId,skinId,siteIId,siteInsMid){
 			{
 				var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
 				contentPanel.getActiveTab().down("dataview").getStore().reload();
-				newTab.location.href=Ext.tzGetGeneralURL()+'?classid=homePage&siteId='+obj.comContent.siteId+'&oprate=D';
+				
+				var newTab=window.open('about:blank');
+				try{
+					setTimeout(function(){newTab.location.href= TzUniversityContextPath + '/decorate/index/'+ Ext.tzOrgID.toLowerCase() +'/'+ obj.comContent.siteId;},200);
+				}catch(e){
+					Ext.Msg.alert("提示","您的浏览器阻止弹出窗口，请您允许本站点的弹窗！");
+				}	
 			}else{
 				Ext.Msg.show({
 							title: '提示信息',

@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
+import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -48,10 +50,16 @@ public class TzWebsiteLoginController {
 
 	@Autowired
 	private TZGDObject tzGDObject;
+	
+	@Autowired
+	private TzCookie tzCookie;
+	
+	@Autowired
+	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
 
 	@RequestMapping(value = { "/{orgid}/{siteid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String userLoginOrg(HttpServletRequest request, HttpServletResponse response,
+	public String userLoginWebsite(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid) {
 
 		String strRet = "";
@@ -63,17 +71,8 @@ public class TzWebsiteLoginController {
 
 			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
 
-				String sql = "select TZ_LONGIN_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? and TZ_JG_ID=?";
-				String loginHtml = sqlQuery.queryForObject(sql, new Object[] { siteid, orgid }, "String");
-
-				if (null != loginHtml && !"".equals(loginHtml)) {
-					String ctxPath = request.getContextPath();
-					strRet = loginHtml.replace("{ContextPath}", ctxPath);
-				} else {
-					strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "",
-							"该站点未设置登录页，请联系站点管理员。", "This site haven't the login page, please contact Administrator.");
-				}
-
+				String loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
+				strRet = loginHtml;
 			} else {
 
 				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
@@ -135,8 +134,7 @@ public class TzWebsiteLoginController {
 
 							String ctxPath = request.getContextPath();
 
-							String indexUrl = ctxPath + "/dispatcher?classid=homePage&siteId=" + strSiteId
-									+ "&oprate=R";
+							String indexUrl = ctxPath + "/site/index/"+ strOrgId + "/" + strSiteId;
 
 							jsonMap.put("url", indexUrl);
 
@@ -183,14 +181,16 @@ public class TzWebsiteLoginController {
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-
+		
+		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
+		
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
 
 		orgid = orgid.toLowerCase();
 
-		String redirect = "redirect:" + "/user/login/" + orgid;
+		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
 
 		return redirect;
 	}
