@@ -64,7 +64,7 @@ window.layer = {
     },
     
     ready: function(callback){
-        return layer.use('/css/layer.css', callback);
+        return layer.use('../../css/website/layer.css', callback);
     }, 
     
     //普通对话框，类似系统默认的alert()
@@ -804,7 +804,7 @@ Class.pt.openLayer = function(){
 ready.run = function(){
     $ = jQuery; 
     win = $(window);
-    layer.use('../css/layer.css');
+    layer.use('../../css/website/layer.css');
     $.layer = function(deliver){
         var o = new Class(deliver);
         return o.index;
