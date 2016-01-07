@@ -3,3 +3,5 @@
 /src/main/resources/conf/log4j.properties merge=ours
 /src/main/webapp/statics/js/lib/ueditor/jsp/config.json merge=ours
 /src/main/webapp/WEB-INF/web.xml merge=ours
+.gitignore merge=ours
+.gitattributes merge=ours
