@@ -6,7 +6,8 @@ Ext.onReady(function() {
 
 	var siteid=urlParams.comParams.siteId;
 */
-	var siteid= $("#siteid").val();
+	//var siteid= $("#siteid").val();
+	var siteid= TZ_GD_LOGIN_SITEI_ID;
 
 	var areaid=	Ext.get(Ext.query('.main_left')[0]).getAttribute("area-id");
 

@@ -1,4 +1,4 @@
-var urlBegin="/psc/ALTZDEV/EMPLOYEE/CRM/s";
+var urlBegin= TzUniversityContextPath + "/dispatcher";
 
 
 function checkHisApply(classId,languageCd){
@@ -8,7 +8,7 @@ function checkHisApply(classId,languageCd){
 
 		$.ajax({
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -32,9 +32,9 @@ function checkHisApply(classId,languageCd){
 						}
 						 
 						if(confirmValue==true){
-							location.href =urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId;
+							location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId;
 						}else{
-							location.href =urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=appId&TZ_CLASS_ID='+classId;
+							location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId;
 						} 
 					}
 				}   
@@ -67,12 +67,11 @@ function BindEnter(obj)
 function JumpToColu(siteId,menuId,opentype){
 
 	if (opentype=="_blank")
-	{
-		//window.open(urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}',"newwindow");
-		window.open(urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R',"newwindow");
+	{		 //window.open(urlBegin+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}',"newwindow");
+		window.open(urlBegin+'?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R',"newwindow");
 	}else{
-		// location.href =urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}';
-		location.href =urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R';
+		// location.href =urlBegin+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}';
+		location.href =urlBegin+'?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R';
 	}
 }
 
@@ -115,7 +114,7 @@ $(".autoload").each(function(index,element){
 
 		$.ajax({
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -192,7 +191,7 @@ function QueryColu(page){
 
 $.ajax({
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams
 		},
@@ -264,7 +263,7 @@ function QueryColuZX(page){
 
 	$.ajax({
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams
 		},
@@ -345,7 +344,7 @@ var areaid=	getQueryString("areaId");
      
 	$.ajax({
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams
 		},
@@ -411,9 +410,8 @@ function AreaColu(opt){
 	}
 
     var newTab=window.open('about:blank');   
-
-	//newTab.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_AREA_COLU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
-	newTab.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=areaColu&siteId='+siteid+'&areaId='+areaid+'&areaZone='+areaZone+'&areaType='+areaType;
+	//newTab.location.href=urlBegin+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_AREA_COLU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	newTab.location.href=urlBegin+'?classid=areaColu&siteId='+siteid+'&areaId='+areaid+'&areaZone='+areaZone+'&areaType='+areaType;
 }
 
 /*获取二维码*/
@@ -432,7 +430,7 @@ function Login(){
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams,
 			language:$("#lang").val()
@@ -484,7 +482,7 @@ function Logout(){
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"siteId":"'+$("#siteid").val()+'","typeflg":"logout"}}';
 	$.ajax({
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams
 		},
@@ -512,16 +510,16 @@ function goToRegister(){
 /*忘记密码*/
 function forgetPwd(jgid){
 	jgid=$("#jgid").val();
-		//window.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"4"}}';
-		window.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=4';
+		//window.location.href=urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"4"}}';
+		window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=4';
 }
 
 /*重新激活*/
 function reactivate(jgid){
     jgid=$("#jgid").val();
 	$("#resetbnt").hide();
-	//window.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"3"}}';
-	window.location.href=urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=3';
+	//window.location.href=urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"3"}}';
+	window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=3';
 }
 
 
@@ -538,7 +536,7 @@ function getPerInfCard(){
 
 	$.ajax({
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -577,7 +575,7 @@ function getApplicationCenter(){
 
 	$.ajax({
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -598,14 +596,14 @@ function getApplicationCenter(){
 /*活动报名*/
 function hdbm(artId,ele){
 
-	var url = urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPREG_STD","OperateType":"HTML","comParams":{"APPLYID":"'+artId+'"}}';
+	var url = urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPREG_STD","OperateType":"HTML","comParams":{"APPLYID":"'+artId+'"}}';
 
 	tz_apply_click_to_signin_action2(url);
 
 }
 /*活动撤销*/
 function hdcx(artId,bmrId,ele){
-	var url = urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPBAR_VIEW_STD","OperateType":"EJSON","comParams":{"APPLYID":"'+ artId +'","BMRID":"'+ bmrId+'"}}';
+	var url = urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPBAR_VIEW_STD","OperateType":"EJSON","comParams":{"APPLYID":"'+ artId +'","BMRID":"'+ bmrId+'"}}';
 
 	tz_apply_click_to_cancel_reg(url);
 }
@@ -626,8 +624,7 @@ function openUpload(){
 		});
 	}
 function openUpload2(){
-    //var photoUrl = encodeURI('http://101.200.181.213:8550/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{}}');
-    var photoUrl = encodeURI(urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}');
+    var photoUrl = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}');
     up = $.layer({
         type: 2,
         title: false,
@@ -750,7 +747,7 @@ function LoadHeader( jgId, siteId, opt){
 			$.ajax({
 				async: false,
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -810,7 +807,7 @@ function LoadFooter( jgId, siteId, opt){
 			$.ajax({
 				async: false,
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -866,7 +863,7 @@ function LoadMenu( jgId, siteId, opt){
 			$.ajax({
 				async: false,
 				type:"POST",
-				url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url:urlBegin,
 				data:{
 					tzParams:tzParams
 				},
@@ -898,7 +895,7 @@ function LoadWelcome( jgId, siteId, opt){
 	$.ajax({
 		async: false,
 		type:"POST",
-		url:urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+		url:urlBegin,
 		data:{
 			tzParams:tzParams
 		},

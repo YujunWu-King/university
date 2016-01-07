@@ -17,6 +17,11 @@ function setTab(m,n){
 }
 
 $(document).ready(function(){
+	
+	$("#jgid").val(TZ_GD_LOGIN_SITEI_ORG_CODE);
+	$("#siteid").val(TZ_GD_LOGIN_SITEI_ID);
+	$("#operator").val(getOperatorType());
+	
 	LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	SetImgCode();

@@ -4,16 +4,16 @@
 Ext.Loader.setConfig({
 	enabled:true,
 	paths:{
-	  'KitchenSink': '/tranzvision/kitchensink/app',
-	  'Ext.ux':'/extjslib51/ux',
-	  'tranzvision.extension':'/tranzvision/extension'
+	  'KitchenSink': TzUniversityContextPath + '/statics/js/tranzvision/extjs/app',
+	  'Ext.ux': TzUniversityContextPath + '/statics/js/lib/extjs/ux',
+	  'tranzvision.extension': TzUniversityContextPath + '/statics/js/tranzvision/extjs/extension'
 	}
 });
 
 
 Ext.require(['Ext.grid.*', 'Ext.window.Window', 'Ext.container.Viewport', 'Ext.layout.container.Border', 'Ext.state.*', 'Ext.data.*', 'Ext.grid.plugin.BufferedRenderer','Ext.ux.colorpick.Field']);
 
-var urlBegin = "/psc/ALTZDEV/EMPLOYEE/CRM/s";
+var urlBegin = TzUniversityContextPath + "/dispatcher";
 var editEnrollFieldComponentID = "_A0000041";
 /*网站首页个人信息展示选择页面*/
 var editPersonInfoComponentID="_A0000090";
@@ -95,7 +95,7 @@ Ext.define('Ext.panel.EditWinPanel', {
 			}
 			
 			Ext.Ajax.request({
-				url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url: urlBegin,
 				params: {
 					tzParams:tzParams
 				},
@@ -320,7 +320,7 @@ var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_SETED_STD","Oper
 var menuStore = Ext.create('Ext.data.TreeStore', {
 		proxy: {
 			type: 'ajax',
-			url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams='+tzParams,
+			url: urlBegin + '?tzParams='+tzParams,
 			reader: {
 				root: 'comContent.root.children'
 			}
@@ -347,7 +347,7 @@ var coluDataStore = new Ext.create('Ext.data.Store', {
 				}),
 				proxy: {
 					type: 'ajax',
-					url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"","type":"all"}}',
+					url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"","type":"all"}}',
 					reader: {
 						type: 'json',
 						root: 'comContent'
@@ -413,7 +413,7 @@ var BeforNode;
 						 var comParams = '"update":[{"typeFlag":"sort","data":{"siteId":"'+siteid+'","menus":"'+array+'"}}]';
 						 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 						 Ext.Ajax.request({
-							url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+							url: urlBegin,
 							params: {
 							tzParams:tzParams
 							},
@@ -457,7 +457,7 @@ var BeforNode;
 						var comParams = '"update":[{"typeFlag":"delete","data":{"siteId":"'+siteid+'","menuId":"'+record.id+'"}}]';
 						var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 						Ext.Ajax.request({
-							url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+							url: urlBegin,
 							params: {
 							tzParams:tzParams
 							},
@@ -546,7 +546,7 @@ var BeforNode;
 				 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuId+'"}}';
 				 
 				 Ext.Ajax.request({
-						url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+						url: urlBegin,
 						params: {
 								tzParams: tzParams
 						},
@@ -616,7 +616,7 @@ var BeforNode;
 			  var comParams = '"update":[{"typeFlag":"sort","data":{"siteId":"'+siteid+'","menuId1":"'+thisNode.data.id+'","menuId2":"'+BeforNode+'"}}]';
 			  var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 					Ext.Ajax.request({
-							url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+							url: urlBegin,
 							params: {
 							tzParams:tzParams
 							},
@@ -691,7 +691,7 @@ var BeforNode;
 				}),
 				proxy: {
 					type: 'ajax',
-					url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'"}}',
+					url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'"}}',
 					reader: {
 						type: 'json',
 						root: 'comContent'
@@ -808,7 +808,7 @@ var BeforNode;
 							}),
 					     proxy: {
 						 type: 'ajax',
-						 url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuId+'","type":"some"}}',
+						 url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuId+'","type":"some"}}',
 						reader: {
 							type: 'json',
 							root: 'comContent'
@@ -880,7 +880,7 @@ var BeforNode;
 										 var comParams = '"update":[{"typeFlag":"changeColu","data":{"siteId":"'+siteid+'","menuId":"'+menuId+'","coluId":"'+records[0].data.value+'"}}]';
 										 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 										 Ext.Ajax.request({
-											url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+											url: urlBegin,
 											params: {
 											tzParams:tzParams
 											},
@@ -989,7 +989,7 @@ var BeforNode;
 
 										 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 										 Ext.Ajax.request({
-											url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+											url: urlBegin,
 											params: {
 											tzParams:tzParams
 											},
@@ -1311,7 +1311,7 @@ var BeforNode;
 							var comParams = '"update":[{"typeFlag":"delete","data":{"siteId":"'+siteid+'","menuId":"'+menuId+'"}}]';
 							var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 							Ext.Ajax.request({
-								url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+								url: urlBegin,
 								params: {
 								tzParams:tzParams
 								},
@@ -1431,7 +1431,7 @@ var BeforNode;
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
 			Ext.Ajax.request({
-				url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url: urlBegin,
 				params: {
 					tzParams:tzParams
 				},
@@ -1497,7 +1497,7 @@ var BeforNode;
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
 			Ext.Ajax.request({
-				url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url: urlBegin,
 				params: {
 					tzParams:tzParams
 				},
@@ -1572,7 +1572,7 @@ var BeforNode;
 			 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_EDITED_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'"}}';
 			 
 			 Ext.Ajax.request({
-					url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+					url: urlBegin,
 					params: {
 							tzParams: tzParams
 					},
@@ -1700,7 +1700,7 @@ var store = Ext.create('Ext.data.Store', {
 	proxy: {
 		type: 'ajax',
 		//url: '/tranzvision/kitchensink/app/view/website/set/json/areaData.json',
-		url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams='+tzParams,
+		url: urlBegin + '?tzParams='+tzParams,
 		reader: {
 			//root: 'topics',
 			root: 'comContent.topics'
@@ -1771,7 +1771,7 @@ var gridPanel = Ext.create('Ext.grid.Panel', {
 				var tzParams = '{"ComID":"TZ_AREA_ADD_COM","PageID":"TZ_AREA_ADD_STD","OperateType":"QF","comParams":{"typeflg":"add","siteId":"'+siteid+'","areaId":"'+areaId+'"}}';
 				
 				Ext.Ajax.request({
-							url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+							url: urlBegin,
 							params: {
 							tzParams:tzParams
 							},
@@ -1815,7 +1815,7 @@ gridPanel.on("cellclick", function(grid, td, cellIndex, record, tr, rowIndex, e,
 		var tzParams = '{"ComID":"TZ_AREA_ADD_COM","PageID":"TZ_AREA_ADD_STD","OperateType":"QF","comParams":{"typeflg":"add","siteId":"'+siteid+'","areaId":"'+areaId+'"}}';
 		
 		Ext.Ajax.request({
-					url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+					url: urlBegin,
 					params: {
 					tzParams:tzParams
 					},
@@ -1908,7 +1908,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 						{
 							
 
-							window.open("./WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							window.open( TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
 							return;
 						}
 
@@ -1945,7 +1945,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 
 								var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+								var siteid = Ext.get("siteid").getValue();
 								var areaid=	Ext.get(pel2).getAttribute("area-id");
 
 								if (!areaid)
@@ -1970,7 +1970,7 @@ var siteid = Ext.get("siteid").getValue();
 
 								var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_AREA_SETED_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","areaClass":"'+areaClass+'"}}';
 								Ext.Ajax.request({
-									url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+									url: urlBegin,
 									params: {
 										tzParams: tzParams
 									},
@@ -2336,13 +2336,13 @@ var siteid = Ext.get("siteid").getValue();
 						if (Ext.get(pel2).getAttribute("id") == "registe-area")
 						{
 							
-							window.open("./WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							window.open(TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
 							return;
 						}
 
                         /*个人信息显示区域 编辑部分--------------待做*/
                         if(Ext.get(pel2).getAttribute("id") == "perInfo"){
-                            window.open("./WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
+                            window.open(TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
                             return;
                         }
 
@@ -2381,7 +2381,7 @@ var siteid = Ext.get("siteid").getValue();
 
 								var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+								var siteid = Ext.get("siteid").getValue();
 								var areaid=	Ext.get(pel2).getAttribute("area-id");
 
 								if (!areaid)
@@ -2408,7 +2408,7 @@ var siteid = Ext.get("siteid").getValue();
 
 								var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_AREA_SETED_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","areaClass":"'+areaClass+'","eleid":"'+eleid+'"}}';
 								Ext.Ajax.request({
-									url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+									url: urlBegin,
 									params: {
 										tzParams: tzParams
 									},
@@ -2861,7 +2861,7 @@ var siteid = Ext.get("siteid").getValue();
 
 			var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+			var siteid = Ext.get("siteid").getValue();
 			var pagetype = Ext.get("pagetype").getValue();
 
 			var comId="";
@@ -2889,9 +2889,9 @@ var siteid = Ext.get("siteid").getValue();
 				comId="TZ_SITEI_SETED_COM";
 				pageId="TZ_SET_ENROLLP_STD";
 			}
-			//window.open(urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={"ComID":"'+comId+'","PageID":"'+pageId+'","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"P","pagetype":"'+pagetype+'"}}');
+			//window.open(urlBegin + '?tzParams={"ComID":"'+comId+'","PageID":"'+pageId+'","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"P","pagetype":"'+pagetype+'"}}');
 
-			window.open(urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?classid='+classId+'&siteId='+siteid+'&pagetype='+pagetype+'&oprate=P');
+			window.open(urlBegin + '?classid='+classId+'&siteId='+siteid+'&pagetype='+pagetype+'&oprate=P');
 		
 		},
 		btsave: function() {
@@ -2922,7 +2922,7 @@ var siteid = Ext.get("siteid").getValue();
 
 					var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+					var siteid = Ext.get("siteid").getValue();
 					var areaid=	cel2.getAttribute("area-id");
 
 					if (!areaid)
@@ -2966,7 +2966,7 @@ var siteid = Ext.get("siteid").getValue();
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
 			Ext.Ajax.request({
-				url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url: urlBegin,
 				method: 'post',
 				params: {
 					tzParams: tzParams
@@ -3029,7 +3029,7 @@ var siteid = Ext.get("siteid").getValue();
 
 					var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+					var siteid = Ext.get("siteid").getValue();
 					var areaid=	cel2.getAttribute("area-id");
 
 					if (!areaid)
@@ -3073,7 +3073,7 @@ var siteid = Ext.get("siteid").getValue();
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
 			Ext.Ajax.request({
-				url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+				url: urlBegin,
 				method: 'post',
 				
 				params: {
@@ -3199,7 +3199,7 @@ var siteid = Ext.get("siteid").getValue();
 
 				var siteid=urlParams.comParams.siteId;
 */
-var siteid = Ext.get("siteid").getValue();
+				var siteid = Ext.get("siteid").getValue();
 				//window.location.href='?tzParams={"ComID":"TZ_HOME_SETED_COM","PageID":"TZ_HOME_SETED_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"D"}}';
 				window.location.href='?classid=homePage&siteId='+siteid+'&oprate=D';
 			});

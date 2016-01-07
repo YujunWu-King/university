@@ -4,3 +4,15 @@ function getQueryString(name) {
 	if (r != null) return unescape(r[2]); return null; 
 }
 
+function getOperatorType(){
+	
+	var thisUrl = window.location.pathname;
+	if(thisUrl.indexOf("/decorate/")){
+		return "D";
+	}else if(thisUrl.indexOf("/preview/")){
+		return "P";
+	}else{
+		return "R";
+	}
+	
+}
