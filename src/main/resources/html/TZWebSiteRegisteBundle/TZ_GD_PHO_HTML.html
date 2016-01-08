@@ -7,6 +7,7 @@
 	<link href="page_stylecss" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="%bind(:20)/statics/css/website/jquery.Jcrop.css" type="text/css" />
 	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/browser.js"></script>
 	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.Jcrop.js"></script>
 	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.form.js"></script>
 	<script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/util/layer.js"></script>
@@ -98,6 +99,7 @@
 								fileSize = msg.msg.size;
 								fileSize = fileSize.substring(0,fileSize.length-1);
 								if(fileSize / 1024 <= maxFileSize){
+									
 									//文件访问路径
 									var filePath = msg.msg.accessPath;
 									if(filePath.charAt(0) != '/'){
@@ -106,14 +108,14 @@
 									if(filePath.charAt(filePath.length - 1) != '/'){
 										filePath = filePath + "/";
 									}
-									var img = filePath + msg.msg.sysFileName;
+									var img = "%bind(:20)"+filePath + msg.msg.sysFileName;
 									showimg.html("<img src='" + img + "' id='target' />");
 									scalingimg.html("<img src='" + img + "' id='preview' />");
 									imaUrl = img;
 									imaName = msg.msg.sysFileName;
 									imaPath = filePath;
 									filename = msg.msg.filename;
-									path = msg.msg.path;
+									//path = msg.msg.path;
 									$("#sysfilename").val(imaName);
 									//截取图片的js
 									$('#target').Jcrop({
@@ -173,12 +175,14 @@
 				                        if(html.comContent.success == "Y"){
 				 							window.parent.$("#photo").attr("src", html.comContent.url);					
 											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
-				                            closeThis();
+				                            //closeThis();
+											layer.close(layer.index);
+											$("#loading").fadeOut();
 				                        }else{
+				                        	 //closeThis();
 											 alert("%bind(:12)");
-											//layer.close(layer.index);
-											//$("#loading").fadeOut();
-											closeThis();
+											 layer.close(layer.index);
+											 $("#loading").fadeOut();
 										}
 				                    },
 						            error:function(xhr){
@@ -201,21 +205,21 @@
 					if(imaUrl != ""){
 				        $("#pldiv").text("%bind(:7)");
 						imaRotate();
-				        var data2 = "imaurl=" + imaUrl + "&imaPath=" + imaPath;
+				        var data2 = "imaName=" + imaName + "&imaPath=" + imaPath;
 				        var showimg = $("#showimg");
 				        var scalingimg = $("#photo_pre");
 				        //旋转图片并获取旋转后图片地址
 				        $.ajax({
 				            dataType:"json",
 				            type:"POST",
-				            url:"/jsp/ImageRotateTurnRight.jsp",
+				            url:"%bind(:20)/ImageRotateTurnRight",
 				            data:data2,
 				            success:function(msg){
 				                $("#pldiv").text("%bind(:8)");
 								layer.close(layer.index);
 				                //显示上传后的图片
-				                showimg.html("<img src='" + msg.imaUrl + "' id='target' />");
-				                scalingimg.html("<img src='" + msg.imaUrl + "' id='preview' />");
+				                showimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='target' />");
+				                scalingimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='preview' />");
 				                imaUrl = msg.imaUrl;
 				                imaName = msg.imaName;
 				                $("#sysfilename").val(msg.imaName);
@@ -246,21 +250,21 @@
 					if(imaUrl != ""){
 				        $("#pldiv").text("%bind(:7)");
 						imaRotate();
-				        var data2 = "imaurl=" + imaUrl + "&imaPath=" + imaPath;
+				        var data2 = "imaName=" + imaName + "&imaPath=" + imaPath;
 				        var showimg = $("#showimg");
 				        var scalingimg = $("#photo_pre");
 				        //旋转图片并获取旋转后图片地址
 				        $.ajax({
 				            dataType:"json",
 				            type:"POST",
-				            url:"/jsp/ImageRotateTurnLeft.jsp",
+				            url:"%bind(:20)/ImageRotateTurnLeft",
 				            data:data2,
 				            success:function(msg){
 				                $("#pldiv").text("%bind(:8)");
 								layer.close(layer.index);
 				                //显示上传后的图片
-				                showimg.html("<img src='" + msg.imaUrl + "' id='target' />");
-				                scalingimg.html("<img src='" + msg.imaUrl + "' id='preview' />");
+				                showimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='target' />");
+				                scalingimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='preview' />");
 				                imaUrl = msg.imaUrl;
 				                imaName = msg.imaName;
 				                $("#sysfilename").val(msg.imaName);
@@ -345,9 +349,9 @@
                     <img id="tempimg" dynsrc="" src="/" style="display:none" />
 					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
 					<form id="myupload"
-						action="/UpdServlet?filePath=linkfile/zhglPhoto" method="post"
+						action="%bind(:20)/UpdServlet?filePath=zhglPhoto" method="post"
 						enctype="multipart/form-data">
-						<input class="fileupload2" type="file" name="fileupload" id="fileupload" style="position:absolute"/>
+						<input class="fileupload2" type="file" name="orguploadfile" id="fileupload" style="position:absolute"/>
 					</form>
 				</div>
 				<div class="main_inner_content_info_text2" id="pldiv">
@@ -374,7 +378,7 @@
 					<div class="photosavbt">%bind(:19)</div>
 				</div>
 			</div>
-			<form id="crop_form" method="post" action="/ImaScalingServlet">
+			<form id="crop_form" method="post" action="%bind(:20)/ImaScalingServlet">
 				<!--通过生成尺寸和旋转角度 后台获取尺寸和旋转角度再进行裁剪-->
 				<input id="sysfilename" type="hidden" name="sysfilename" value="">
 				<input id="x1" type="hidden" name="x1" value="">

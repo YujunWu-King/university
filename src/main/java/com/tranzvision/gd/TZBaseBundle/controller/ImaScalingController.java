@@ -10,18 +10,14 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.imaScaling.ImaScaling;
 //import com.tranzvision.gd.util.imaScaling.Msg;
-import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 
 /**
  * 
@@ -31,14 +27,6 @@ import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 @Controller
 @RequestMapping(value = "/")
 public class ImaScalingController {
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	
-	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
-	
-	@Autowired
-	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
 	  
 	@RequestMapping(value = "ImaScalingServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	public @ResponseBody String orgUploadFileHandler(HttpServletRequest request, HttpServletResponse response) {
@@ -46,20 +34,12 @@ public class ImaScalingController {
 		Map<String, Object> map = new HashMap<>();
 		
 		try{
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
-			
 		    String currentPath = request.getParameter("imaPath");
 		    if ((currentPath == null) || ("".equals(currentPath))) {
-		    	currentPath = rootPath + "/" + orgid;
-		    }else{
-		    	currentPath = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(currentPath);
-		    	if("/".equals(currentPath.substring(0, 1))){
-		    		currentPath = rootPath +"/" + orgid + currentPath;
-		    	}else{
-		    		currentPath = rootPath +"/" + orgid +"/" + currentPath;
-		    	}
-		    	
+		    	map.put("ImaUrl", "");
+			    map.put("name", "");
+			    map.put("error", "保存失败");
+			    return jacksonUtil.Map2json(map);
 		    }
 		    String currentDirPath = request.getServletContext().getRealPath(currentPath);
 		    File userDir = new File(currentDirPath);
@@ -125,10 +105,7 @@ public class ImaScalingController {
 		    }
 		    //Msg msg = new Msg();
 		    ImaScaling.scissor(ix_1, iy_1, iw_2, ih_2, pathToSave.toString(), currentDirPath + "/new" + sysfilename);
-	
-		    if ((pathToSave.isFile()) && (pathToSave.exists())) {
-		      pathToSave.delete();
-		    }
+
 		    currentDirPath = currentDirPath.replace('\\', '/');
 		    
 		    
@@ -136,12 +113,6 @@ public class ImaScalingController {
 		    map.put("name", "new" + sysfilename);
 		    map.put("error", "");
 		    return jacksonUtil.Map2json(map);
-		    //msg.setImaUrl(currentPath);
-		    //msg.setName("new" + sysfilename);
-		    //String jsonString = JSON.toJSONString(msg);
-		    //String jsonString = "";
-		    //PrintWriter out2 = response.getWriter();
-		    //out2.print(jsonString);
 		}catch(Exception e){
 			e.printStackTrace();
 			map.put("ImaUrl", "");

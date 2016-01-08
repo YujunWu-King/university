@@ -105,7 +105,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String phoToData = contextPath + "/dispatcher";
-			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL", true, phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath);
+			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", true, phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath);
 			TZ_ENROLL_UPLOADPHO = objRep.repTitle(TZ_ENROLL_UPLOADPHO, siteId);
 			TZ_ENROLL_UPLOADPHO = objRep.repCss(TZ_ENROLL_UPLOADPHO, siteId);
 			return TZ_ENROLL_UPLOADPHO;
@@ -123,11 +123,12 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String sysFileName = jacksonUtil.getString("sysFileName");
 			String filename = jacksonUtil.getString("filename");
 		    String imaPath = jacksonUtil.getString("imaPath");
-		    String path = jacksonUtil.getString("path");
 		    if(sysFileName != null && !"".equals(sysFileName)
 		    		&& filename != null && !"".equals(filename)
-		    				&& imaPath != null && !"".equals(imaPath)
-		    						&& path != null && !"".equals(path)){
+		    				&& imaPath != null && !"".equals(imaPath)){
+		    	
+		    	String path = request.getServletContext().getRealPath(imaPath);
+		    	
 		       if((path.lastIndexOf(File.separator) + 1) != path.length()){
 		    	   path = path + File.separator ; 
 		       }
@@ -160,14 +161,20 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 		  		   PsTzOprPhtGlT psTzOprPhtGlT = new PsTzOprPhtGlT();
 		  		   psTzOprPhtGlT.setOprid(oprid);
 		  		   psTzOprPhtGlT.setTzAttachsysfilena(sysFileName);
-	  			   psTzOprPhtGlTMapper.insert(psTzOprPhtGlT);
+	  			   int success = psTzOprPhtGlTMapper.insert(psTzOprPhtGlT);
+	  			   if(success <= 0){
+	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+	  			   }
 	  			   
 	  			   PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
 	  			   psTzOprPhotoT.setTzAttachsysfilena(sysFileName);
 	  			   psTzOprPhotoT.setTzAttachfileName(filename);
 	  			   psTzOprPhotoT.setTzAttPUrl(path);
 	  			   psTzOprPhotoT.setTzAttAUrl(imaPath);
-	  			   psTzOprPhotoTMapper.insert(psTzOprPhotoT);
+	  			   success = psTzOprPhotoTMapper.insert(psTzOprPhotoT);
+	  			   if(success <= 0){
+	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+	  			   }
 	  			   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"Y", imaPath + "/" + sysFileName);
 		  	   }else{
 		  		   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
