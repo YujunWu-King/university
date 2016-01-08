@@ -140,15 +140,15 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 						String dirPath = "";
 						if(skinstor == null || "".equals(skinstor)){
 							if(orgid != null && !"".equals(orgid)){
-								dirPath = websitePath + File.separator + orgid + File.separator + siteId;
+								dirPath = websitePath + "/" + orgid + "/" + siteId;
 							}else{
-								dirPath = websitePath + File.separator + siteId;
+								dirPath = websitePath + "/" + siteId;
 							}
 						}else{
 							if(orgid != null && !"".equals(orgid)){
-								dirPath = websitePath + File.separator + orgid + File.separator + siteId + File.separator + skinstor;
+								dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
 							}else{
-								dirPath = websitePath + File.separator + siteId + File.separator + skinstor;
+								dirPath = websitePath + "/" + siteId + "/" + skinstor;
 							}
 						}
 						
@@ -161,9 +161,9 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 						
 						String filePath = "";
 						if(orgid != null && !"".equals(orgid)){
-							filePath = dir + File.separator +  "style_" + orgid.toLowerCase() + ".css";
+							filePath = dir + "/" +  "style_" + orgid.toLowerCase() + ".css";
 						}else{
-							filePath = dir + File.separator +  "style.css";
+							filePath = dir + "/" +  "style.css";
 						}
 						
 						File file = new File(filePath);
