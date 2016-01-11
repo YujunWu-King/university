@@ -277,7 +277,20 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	public PsTzAqYhxxTbl getLoginedUserInfo(HttpServletRequest request) {
 		// 从Session中获取登录用户信息
 		TzSession tzSession = new TzSession(request);
-		return (PsTzAqYhxxTbl) tzSession.getSession(userSessionName);
+		Object obj = tzSession.getSession(userSessionName);
+		PsTzAqYhxxTbl psTzAqYhxxTbl;
+		if(null==obj){
+			boolean debugging = getCookieSessionProps.getDebug();
+			if(debugging){
+				psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+				psTzAqYhxxTbl.setTzRealname("管理员");
+			}else{
+				psTzAqYhxxTbl = null;
+			}
+		}else{
+			psTzAqYhxxTbl = (PsTzAqYhxxTbl) obj;
+		}
+		return psTzAqYhxxTbl;
 	}
 
 	/*

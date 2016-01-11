@@ -249,8 +249,12 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 				break;
 			}
 
-			if (null == strRet || !"".equals(strRet)) {
+			if (null == strRet || "".equals(strRet)) {
 				strRet = "false";
+			}else{
+				
+				strRet = strRet.replace("{ContextPath}", request.getContextPath());
+				
 			}
 
 		} catch (Exception e) {

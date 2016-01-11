@@ -16,7 +16,7 @@ Ext.require(['Ext.grid.*', 'Ext.window.Window', 'Ext.container.Viewport', 'Ext.l
 var urlBegin = TzUniversityContextPath + "/dispatcher";
 var editEnrollFieldComponentID = "_A0000041";
 /*网站首页个人信息展示选择页面*/
-var editPersonInfoComponentID="_A0000090";
+var editPersonInfoComponentID="_A0000085";
 /*
 function getQueryString(name) { 
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
@@ -559,8 +559,18 @@ var BeforNode;
 							var thisForm = view.up("window").down("form").getForm();
 							thisForm.setValues(formData);
 
-								view.up("window").down("form").down('form[name=imgForm]').child("image").setSrc(TzUniversityContextPath + formData.menutypeimg);
-								view.up("window").down("form").down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + formData.menunowimg);
+							var showmenutypeimgpath = "";
+							if(formData.menutypeimg!=""){
+								showmenutypeimgpath = TzUniversityContextPath + formData.menutypeimg;
+							}
+							
+							var showmenunowimgpath = "";
+							if(formData.menunowimg!=""){
+								showmenunowimgpath = TzUniversityContextPath + formData.menunowimg;
+							}
+							
+							view.up("window").down("form").down('form[name=imgForm]').child("image").setSrc(showmenutypeimgpath);
+							view.up("window").down("form").down('form[name=imgForm2]').child("image").setSrc(showmenunowimgpath);
 							
 							var menuColuSelect = thisForm.findField('menuColu');
 							var addColuBtns = Ext.getCmp('coluBtnGroup');
@@ -712,8 +722,17 @@ var BeforNode;
 
 					var thisForm = this.up("form").getForm();
 					thisForm.findField('menuDescr').setValue(menuDescrValue);
-					Ext.getCmp("menuForm").down('form[name=imgForm]').child("image").setSrc(TzUniversityContextPath + menuTypeImg);
-					Ext.getCmp("menuForm").down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + menuNowImg);
+					
+					if(menuTypeImg!=""){
+						menuTypeImg = TzUniversityContextPath + menuTypeImg;
+					}
+					
+					if(menuNowImg!=""){
+						menuNowImg = TzUniversityContextPath + menuNowImg;
+					}
+					
+					Ext.getCmp("menuForm").down('form[name=imgForm]').child("image").setSrc(menuTypeImg);
+					Ext.getCmp("menuForm").down('form[name=imgForm2]').child("image").setSrc(menuNowImg);
 
 					var menuColuSelect = thisForm.findField('menuColu');
 					var addColuBtns = Ext.getCmp('coluBtnGroup');

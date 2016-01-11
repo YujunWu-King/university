@@ -101,7 +101,7 @@ public class TzMenuEditedServiceImpl extends FrameworkImpl {
 				if ("add".equals(strMenuId)) {
 					strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzMenuFormLoad", strSiteId, strMenuId,
 							strMenuName, strMenuColu, strMenuTypeId, strMenuDesc, strIsDel, strIsEdit, strCanAddMenu,
-							strCanAddColu, strMenuURL, strMenuOPType);
+							strCanAddColu, strMenuURL, strMenuOPType, "", "");
 				} else {
 					String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenuInfo");
 					List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql,

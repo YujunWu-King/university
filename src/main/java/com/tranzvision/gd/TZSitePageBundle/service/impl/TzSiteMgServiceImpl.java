@@ -227,7 +227,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapSkinM.get("TZ_SKIN_NAME"));
 				String strSkinCode = mapSkinM.get("TZ_SKIN_CODE") == null ? ""
 						: String.valueOf(mapSkinM.get("TZ_SKIN_CODE"));
-				
+
 				String strSkinCodeCss = strSkinCode.replace("{ContextPath}", request.getContextPath());
 
 				if ("update".equals(strFlag)) {
@@ -256,7 +256,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(oprid);
 
 					psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
-					
+
 					mapRet.put("success", true);
 					mapRet.put("siteId", strSiteIId);
 					strRet = jacksonUtil.Map2json(mapRet);
@@ -343,14 +343,16 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
 
 						// 3.初始化区域
-						//sql = "select * from PS_TZ_SITEM_AREA_T where TZ_SITEM_ID=? and TZ_AREA_STATE='Y' order by TZ_AREA_XH asc";
+						// sql = "select * from PS_TZ_SITEM_AREA_T where
+						// TZ_SITEM_ID=? and TZ_AREA_STATE='Y' order by
+						// TZ_AREA_XH asc";
 						sql = "select * from PS_TZ_SITEM_AREA_T where TZ_SITEM_ID=? order by TZ_AREA_XH asc";
 						List<Map<String, Object>> listAreas = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapArea : listAreas) {
 
 							String strAreaId = mapArea.get("TZ_AREA_ID") == null ? ""
 									: String.valueOf(mapArea.get("TZ_AREA_ID"));
-							
+
 							String strAreaState = mapArea.get("TZ_AREA_STATE") == null ? "N"
 									: String.valueOf(mapArea.get("TZ_AREA_STATE"));
 
@@ -363,8 +365,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									sql = "delete from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
 									sqlQuery.update(sql, new Object[] { strSiteIId, strAreaId });
 								}
-								
-								if(!"Y".equals(strAreaState)){
+
+								if (!"Y".equals(strAreaState)) {
 									continue;
 								}
 
@@ -401,7 +403,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						}
 
 						// 4.初始化区域类型
-						//sql = "select * from PS_TZ_SITEM_ATYP_T where TZ_AREA_TYPE_STATE='Y' and TZ_SITEM_ID=?";
+						// sql = "select * from PS_TZ_SITEM_ATYP_T where
+						// TZ_AREA_TYPE_STATE='Y' and TZ_SITEM_ID=?";
 						sql = "select * from PS_TZ_SITEM_ATYP_T where TZ_SITEM_ID=?";
 						List<Map<String, Object>> listAreaTypes = sqlQuery.queryForList(sql,
 								new Object[] { strSiteId });
@@ -409,7 +412,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 							String strAreaTypeId = mapAreaType.get("TZ_AREA_TYPE_ID") == null ? ""
 									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_ID"));
-							
+
 							String strAreaTypeState = mapAreaType.get("TZ_AREA_TYPE_STATE") == null ? "N"
 									: String.valueOf(mapAreaType.get("TZ_AREA_TYPE_STATE"));
 
@@ -421,8 +424,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 								sql = "delete from PS_TZ_SITEI_ATYP_T where TZ_SITEI_ID=? and TZ_AREA_TYPE_ID=?";
 								sqlQuery.update(sql, new Object[] { strSiteIId, strAreaTypeId });
 							}
-							
-							if(!"Y".equals(strAreaTypeState)){
+
+							if (!"Y".equals(strAreaTypeState)) {
 								continue;
 							}
 
@@ -585,14 +588,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 							}
 
-							// PS中有以下代码，暂时注释
-							// SQLExec("UPDATE PS_TZ_SITEI_MENU_T SET
-							// TZ_MENU_TYPE_ID=:1, TZ_TYPE_IMG=:2,TZ_NOW_IMG=:3
-							// WHERE TZ_MENU_TYPE_ID=:4 ",
-							// &recTZ_SITEI_MTYP_T.TZ_MENU_TYPE_ID.Value,
-							// &recTZ_SITEI_MTYP_T.TZ_TYPE_IMG.Value,
-							// &recTZ_SITEI_MTYP_T.TZ_NOW_IMG.Value,
-							// &strMenuTypeId);
+							// 更新菜单图片
+							sql = "update PS_TZ_SITEI_MENU_T set TZ_MENU_TYPE_ID=?,TZ_TYPE_IMG=?,TZ_NOW_IMG=? where TZ_MENU_TYPE_ID=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql,
+									new Object[] { psTzSiteiMtypT.getTzMenuTypeId(), psTzSiteiMtypT.getTzTypeImg(),
+											psTzSiteiMtypT.getTzNowImg(), strMenuTypeId, strSiteIId });
 
 						}
 
@@ -601,9 +601,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapColu : listColus) {
 
-							// String strColuId = mapColu.get("TZ_COLU_ID") ==
-							// null ? "":
-							// String.valueOf(mapColu.get("TZ_COLU_ID"));
+							String strColuId = mapColu.get("TZ_COLU_ID") == null ? ""
+									: String.valueOf(mapColu.get("TZ_COLU_ID"));
 
 							PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
 							psTzSiteiColuT.setTzSiteiId(strSiteIId);
@@ -624,15 +623,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 							psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
 
-							// PS有以下语句，暂时先注释
-							// SQLExec("UPDATE PS_TZ_SITEI_AREA_T SET
-							// TZ_COLU_ID=:1 WHERE TZ_COLU_ID=:2 ",
-							// &recTZ_SITEI_COLU_T.TZ_COLU_ID.Value,
-							// &strColuId);
-							// SQLExec("UPDATE PS_TZ_SITEI_MENU_T SET
-							// TZ_MENU_COLUMN=:1 WHERE TZ_MENU_COLUMN=:2 ",
-							// &recTZ_SITEI_COLU_T.TZ_COLU_ID.Value,
-							// &strColuId);
+							sql = "update PS_TZ_SITEI_AREA_T set TZ_COLU_ID=? where TZ_COLU_ID=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiColuT.getTzColuId(), strColuId, strSiteIId });
+
+							sql = "update PS_TZ_SITEI_MENU_T set TZ_MENU_COLUMN=? where TZ_MENU_COLUMN=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiColuT.getTzColuId(), strColuId, strSiteIId });
 
 						}
 
@@ -641,9 +636,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						List<Map<String, Object>> listTpls = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapTpl : listTpls) {
 
-							// String strTempId = mapTpl.get("TZ_TEMP_ID") ==
-							// null ? "":
-							// String.valueOf(mapTpl.get("TZ_TEMP_ID"));
+							String strTempId = mapTpl.get("TZ_TEMP_ID") == null ? ""
+									: String.valueOf(mapTpl.get("TZ_TEMP_ID"));
 
 							PsTzSiteiTempTWithBLOBs psTzSiteiTempTWithBLOBs = new PsTzSiteiTempTWithBLOBs();
 							psTzSiteiTempTWithBLOBs.setTzSiteiId(strSiteIId);
@@ -663,24 +657,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 							psTzSiteiTempTMapper.insertSelective(psTzSiteiTempTWithBLOBs);
 
-							// PS中欧以下语句，暂时先注释
-							/*
-							 * SQLExec(
-							 * "UPDATE PS_TZ_SITEI_COLU_T SET TZ_TEMP_ID=:1 WHERE TZ_TEMP_ID=:2 "
-							 * , &recTZ_SITEI_TEMP_T.TZ_TEMP_ID.Value,
-							 * &strTempId); SQLExec(
-							 * "UPDATE PS_TZ_SITEI_COLU_T SET TZ_CONT_TEMP=:1 WHERE TZ_CONT_TEMP=:2 "
-							 * , &recTZ_SITEI_TEMP_T.TZ_TEMP_ID.Value,
-							 * &strTempId);
-							 * 
-							 * SQLExec(
-							 * "UPDATE PS_TZ_SITEI_MTYP_T SET TZ_TEMP_ID=:1 WHERE TZ_TEMP_ID=:2 "
-							 * , &recTZ_SITEI_TEMP_T.TZ_TEMP_ID.Value,
-							 * &strTempId); SQLExec(
-							 * "UPDATE PS_TZ_SITEI_MTYP_T SET TZ_CONT_TEMP=:1 WHERE TZ_CONT_TEMP=:2 "
-							 * , &recTZ_SITEI_TEMP_T.TZ_TEMP_ID.Value,
-							 * &strTempId);
-							 */
+							sql = "update PS_TZ_SITEI_COLU_T set TZ_TEMP_ID=? where TZ_TEMP_ID=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiTempTWithBLOBs.getTzTempId(), strTempId, strSiteIId });
+
+							sql = "update PS_TZ_SITEI_COLU_T set TZ_CONT_TEMP=? where TZ_CONT_TEMP=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiTempTWithBLOBs.getTzTempId(), strTempId, strSiteIId });
+
+							sql = "update PS_TZ_SITEI_MTYP_T set TZ_TEMP_ID=? where TZ_TEMP_ID=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiTempTWithBLOBs.getTzTempId(), strTempId, strSiteIId });
+
+							sql = "update PS_TZ_SITEI_MTYP_T set TZ_CONT_TEMP=? where TZ_CONT_TEMP=? and TZ_SITEI_ID=?";
+							sqlQuery.update(sql, new Object[] { psTzSiteiTempTWithBLOBs.getTzTempId(), strTempId, strSiteIId });
 
 						}
 

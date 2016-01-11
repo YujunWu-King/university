@@ -417,10 +417,10 @@ public class GdObjectServiceImpl implements GdObjectService {
 
 			if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
 				String sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzGetMsgText");
-				retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { msgSetId, langCd, msgId, orgid },
+				retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId, orgid, msgId },
 						"String");
 				if (null == retMsgText || "".equals(retMsgText)) {
-					retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { msgSetId, langCd, msgId, ptOrid },
+					retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId, ptOrid, msgId },
 							"String");
 				}
 			}

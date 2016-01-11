@@ -55,7 +55,7 @@ public class TzStuLoginedIndexServiceImpl extends FrameworkImpl {
 
 			if ("welcome".equals(strTypeflg)) {
 				
-				String strOrgId = jacksonUtil.getString("orgId");
+				String strOrgId = jacksonUtil.getString("orgId").toUpperCase();
 
 				String strSiteId = jacksonUtil.getString("siteId");
 

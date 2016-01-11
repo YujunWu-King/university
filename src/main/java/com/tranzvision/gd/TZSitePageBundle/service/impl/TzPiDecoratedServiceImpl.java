@@ -48,6 +48,8 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
+			String ctxPath = request.getContextPath();
+
 			jacksonUtil.json2Map(strParams);
 
 			String siteId = jacksonUtil.getString("siteId");
@@ -60,7 +62,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 			// 由于英文的描述可能较长，所以中文和英文的信息项描述的长度不同 , 编辑照片的中英文路径
 			String edituserpt_url = "";
 			int td_long = 0;
-			String websiteImgCommonPath = getSysHardCodeVal.getWebsiteImgPath();
+			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteImgPath();
 			if (sysDefaultLang.equals(strLangID)) {
 				td_long = 120;
 				edituserpt_url = websiteImgCommonPath + "/common/edituser-pic.png";
@@ -70,7 +72,6 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 			}
 
 			// 当前用户ID（此用户是前台登录用户）
-			String todoCheck;
 			String m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			String m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 
@@ -89,12 +90,12 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapUserHeadImg.get("TZ_ATTACHSYSFILENA"));
 
 				if (!"".equals(strPhotoDir) && !"".equals(strPhotoName)) {
-					strPhoto = strPhotoDir + strPhotoName;
+					strPhoto = ctxPath + strPhotoDir + strPhotoName;
 				}
 
 			}
 			if ("".equals(strPhoto)) {
-				strPhoto = websiteImgCommonPath + "/common/bjphoto.jpg";
+				strPhoto = ctxPath + websiteImgCommonPath + "/common/bjphoto.jpg";
 			}
 
 			String strResultHeadImg = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerPhotoCard", strPhoto,
@@ -138,6 +139,8 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					sql = "select TZ_ZY_SJ from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY = 'ZCYH' and TZ_LYDX_ID = ?";
 					String str_phone = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
 
+					str_phone = str_phone == null ? "" : str_phone;
+
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_phone, String.valueOf(td_long));
 
@@ -152,6 +155,8 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					sql = "select TZ_ZY_EMAIL from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY = 'ZCYH' and TZ_LYDX_ID = ?";
 					String str_Email = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
 
+					str_Email = str_Email == null ? "" : str_Email;
+
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_Email, String.valueOf(td_long));
 
@@ -165,6 +170,8 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 					sql = "select TZ_SKYPE from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY = 'ZCYH' and TZ_LYDX_ID = ?";
 					String str_Skype = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
+
+					str_Skype = str_Skype == null ? "" : str_Skype;
 
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_Skype, String.valueOf(td_long));
@@ -183,9 +190,13 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 						String str_TZ_REG_FIELD_ID_value = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID },
 								"String");
 
+						str_TZ_REG_FIELD_ID_value = str_TZ_REG_FIELD_ID_value == null ? "" : str_TZ_REG_FIELD_ID_value;
+
 						sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID =? and TZ_REG_FIELD_ID =? and TZ_OPT_ID =?";
 						String str_TZ_REG_FIELD_ID_opt = sqlQuery.queryForObject(sql,
 								new Object[] { m_curOrgID, str_TZ_REG_FIELD_ID, str_TZ_REG_FIELD_ID_value }, "String");
+
+						str_TZ_REG_FIELD_ID_opt = str_TZ_REG_FIELD_ID_opt == null ? "" : str_TZ_REG_FIELD_ID_opt;
 
 						// 双语化下拉框代码 - 开始
 						if (!sysDefaultLang.equals(strLangID)) {
@@ -211,6 +222,8 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 						sql = "select " + str_TZ_REG_FIELD_ID + " from PS_TZ_REG_USER_T where OPRID = ?";
 						String str_TZ_REG_FIELD_ID_value = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID },
 								"String");
+
+						str_TZ_REG_FIELD_ID_value = str_TZ_REG_FIELD_ID_value == null ? "" : str_TZ_REG_FIELD_ID_value;
 
 						strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 								str_TZ_REG_FIELD_NAME, str_TZ_REG_FIELD_ID_value, String.valueOf(td_long));

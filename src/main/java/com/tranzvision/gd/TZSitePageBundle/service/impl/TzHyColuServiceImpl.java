@@ -82,7 +82,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			String strAreaId = "";
 
-			//String strAreaZone = "";
+			// String strAreaZone = "";
 
 			String strAreaType = "";
 
@@ -90,7 +90,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			String strFrom = "";
 
-			//String strPhone = "";
+			// String strPhone = "";
 
 			int numPageRow = 10;
 
@@ -104,7 +104,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			} else if ("A".equals(strFrom)) {
 				strAreaId = jacksonUtil.getString("areaId");
 
-				//strAreaZone = jacksonUtil.getString("areaZone");
+				// strAreaZone = jacksonUtil.getString("areaZone");
 
 				strAreaType = jacksonUtil.getString("areaType");
 
@@ -138,7 +138,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			SimpleDateFormat datetimeformat = new SimpleDateFormat(dtFormat);
 			String strDateNow = datetimeformat.format(new Date());
 
-			//前台登录用户的oprid
+			// 前台登录用户的oprid
 			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 			switch (strType) {
@@ -243,7 +243,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			 */
 
 			// 查询的最大行，最小行
-			//int numMaxRow = numNowPage * numPageRow;
+			// int numMaxRow = numNowPage * numPageRow;
 			int numMinRow = (numNowPage - 1) * numPageRow + 1;
 
 			List<Map<String, Object>> listSiteActivities = new ArrayList<Map<String, Object>>();
@@ -281,103 +281,106 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			Date dateNow = new Date();
 
-			for (Map<String, Object> mapActivity : listSiteActivities) {
-				strColuId = mapActivity.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapActivity.get("TZ_COLU_ID"));
-				String strArtId = mapActivity.get("TZ_ART_ID") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_ART_ID"));
-				String strActName = mapActivity.get("TZ_NACT_NAME") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_NACT_NAME"));
-				String dtAct = mapActivity.get("TZ_START_DT") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_START_DT"));
-				String strActCity = mapActivity.get("TZ_HD_CS") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_HD_CS"));
-				String strKqbm = mapActivity.get("TZ_QY_ZXBM") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_QY_ZXBM"));
-				String dtBmStart = mapActivity.get("TZ_APPF_DT") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_APPF_DT"));
-				String timeBmStart = mapActivity.get("TZ_APPF_TM") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_APPF_TM"));
-				String dtBmEnd = mapActivity.get("TZ_APPE_DT") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_APPE_DT"));
-				String timeBmEnd = mapActivity.get("TZ_APPE_TM") == null ? ""
-						: String.valueOf(mapActivity.get("TZ_APPE_TM"));
+			if (listSiteActivities != null) {
+				for (Map<String, Object> mapActivity : listSiteActivities) {
+					strColuId = mapActivity.get("TZ_COLU_ID") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_COLU_ID"));
+					String strArtId = mapActivity.get("TZ_ART_ID") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_ART_ID"));
+					String strActName = mapActivity.get("TZ_NACT_NAME") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_NACT_NAME"));
+					String dtAct = mapActivity.get("TZ_START_DT") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_START_DT"));
+					String strActCity = mapActivity.get("TZ_HD_CS") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_HD_CS"));
+					String strKqbm = mapActivity.get("TZ_QY_ZXBM") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_QY_ZXBM"));
+					String dtBmStart = mapActivity.get("TZ_APPF_DT") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_APPF_DT"));
+					String timeBmStart = mapActivity.get("TZ_APPF_TM") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_APPF_TM"));
+					String dtBmEnd = mapActivity.get("TZ_APPE_DT") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_APPE_DT"));
+					String timeBmEnd = mapActivity.get("TZ_APPE_TM") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_APPE_TM"));
 
-				String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId + "&columnId="
-						+ strColuId + "&artId=" + strArtId + "&oprate=R";
+					String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId
+							+ "&columnId=" + strColuId + "&artId=" + strArtId + "&oprate=R";
 
-				strResultContent = strResultContent
-						+ "<div class=\"main_mid_activity_list2\"><div class=\"main_mid_activity_list_date\"><div class=\"main_mid_activity_list_date_month\">"
-						+ monthFormat.format(monthFormat.parse(dtAct))
-						+ "</div><div class=\"main_mid_activity_list_date_day\">"
-						+ dayFormat.format(dayFormat.parse(dtAct))
-						+ "</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href=" + strUrl
-						+ ">" + strActName + "</a><br /><span class=\"font_gray_14px\">【" + strActCity
-						+ "】-</span><span class=\"font_gray_14px\">" + dtAct + "</span></div>";
+					strResultContent = strResultContent
+							+ "<div class=\"main_mid_activity_list2\"><div class=\"main_mid_activity_list_date\"><div class=\"main_mid_activity_list_date_month\">"
+							+ monthFormat.format(monthFormat.parse(dtAct))
+							+ "</div><div class=\"main_mid_activity_list_date_day\">"
+							+ dayFormat.format(dayFormat.parse(dtAct))
+							+ "</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href="
+							+ strUrl + ">" + strActName + "</a><br /><span class=\"font_gray_14px\">【" + strActCity
+							+ "】-</span><span class=\"font_gray_14px\">" + dtAct + "</span></div>";
 
-				// 是否可以报名
-				String strkBmFlg = "";
-				if ("Y".equals(strKqbm)) {
+					// 是否可以报名
+					String strkBmFlg = "";
+					if ("Y".equals(strKqbm)) {
 
-					if (dateFormat.parse(dtBmStart).getTime() < dateNow.getTime()
-							&& dateFormat.parse(dtBmEnd).getTime() > dateNow.getTime()) {
-						strkBmFlg = "Y";
-					} else {
-
-						if (dateFormat.parse(dtBmStart).getTime() == dateNow.getTime()
-								&& datetimeformat.parse(timeBmStart).getTime() < dateNow.getTime()) {
+						if (dateFormat.parse(dtBmStart).getTime() < dateNow.getTime()
+								&& dateFormat.parse(dtBmEnd).getTime() > dateNow.getTime()) {
 							strkBmFlg = "Y";
-						} else if (dateFormat.parse(dtBmEnd).getTime() == dateNow.getTime()
-								&& datetimeformat.parse(timeBmEnd).getTime() >= dateNow.getTime()) {
-							strkBmFlg = "Y";
+						} else {
+
+							if (dateFormat.parse(dtBmStart).getTime() == dateNow.getTime()
+									&& datetimeformat.parse(timeBmStart).getTime() < dateNow.getTime()) {
+								strkBmFlg = "Y";
+							} else if (dateFormat.parse(dtBmEnd).getTime() == dateNow.getTime()
+									&& datetimeformat.parse(timeBmEnd).getTime() >= dateNow.getTime()) {
+								strkBmFlg = "Y";
+							}
+
 						}
 
 					}
 
-				}
+					switch (strType) {
+					case "0":
 
-				switch (strType) {
-				case "0":
+						if ("Y".equals(strkBmFlg)) {
+							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
+							if (null != strBmrId && !"".equals(strBmrId)) {
+								strResultContent = strResultContent
+										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
+										+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
+										+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+							} else {
+								strResultContent = strResultContent
+										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
+										+ "\" href=\"javascript:void(0);\" onclick=\"hdbm(" + strArtId
+										+ ",this)\"><div class=\"bt_blue\">" + strSignUp + "</div></a></div>";
+							}
 
-					if ("Y".equals(strkBmFlg)) {
-						sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-						String strBmrId = sqlQuery.queryForObject(sql, new Object[] {strArtId, oprid}, "String");
-						if (null != strBmrId && !"".equals(strBmrId)) {
+						}
+
+						break;
+					case "1":
+						if ("Y".equals(strkBmFlg)) {
+							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
 							strResultContent = strResultContent
 									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
 									+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
 									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
-						} else {
-							strResultContent = strResultContent
-									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
-									+ "\" href=\"javascript:void(0);\" onclick=\"hdbm(" + strArtId
-									+ ",this)\"><div class=\"bt_blue\">" + strSignUp + "</div></a></div>";
 						}
+						break;
+					case "2":
+
+						break;
+
+					default:
+
+						break;
 
 					}
 
-					break;
-				case "1":
-					if ("Y".equals(strkBmFlg)) {
-						sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-						String strBmrId = sqlQuery.queryForObject(sql, new Object[] {strArtId, oprid}, "String");
-						strResultContent = strResultContent
-								+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
-								+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
-								+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
-					}
-					break;
-				case "2":
-
-					break;
-
-				default:
-
-					break;
+					strResultContent = strResultContent + "</div>";
 
 				}
-				
-				strResultContent = strResultContent + "</div>";
-
 			}
 
 			if ("".equals(strResultContent)) {

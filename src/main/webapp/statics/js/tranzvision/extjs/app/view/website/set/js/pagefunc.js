@@ -1,5 +1,7 @@
 var urlBegin= TzUniversityContextPath + "/dispatcher";
-
+var clsTzXlColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzXlColuServiceImpl";
+var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
+var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl";
 
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
@@ -102,11 +104,11 @@ $(".autoload").each(function(index,element){
 
 	var appCls ="";
 	if(areaType =="HY"){
-		appCls = "TZ_SITE_DECORATED_APP:TZ_HY_COLU_CLS";
+		appCls = clsTzHyColuServiceImpl;
 	}
 
 	if(areaType =="XL"){
-		appCls = "TZ_SITE_DECORATED_APP:TZ_XL_COLU_CLS";
+		appCls = clsTzXlColuServiceImpl;
 		
 	}
 
@@ -186,8 +188,8 @@ function QueryColu(page){
 	}
 
 
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_XL_COLU_CLS","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
-	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_XL_COLU_CLS","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
 
 $.ajax({
 		type:"POST",
@@ -258,8 +260,8 @@ function QueryColuZX(page){
 		areaType="";
 	}
 
-    	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_ZX_COLU_CLS","page":"'+page+'","pagesize":"10","qureyFrom":"M"}}';
-   // var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_ZX_COLU_CLS","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
+    	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzZxColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"M"}}';
+   // var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzZxColuServiceImpl+'","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
 
 	$.ajax({
 		type:"POST",
@@ -338,9 +340,9 @@ var areaid=	getQueryString("areaId");
 	{
 		areaType="";
 	}
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_HY_COLU_CLS","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
 
-	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"TZ_SITE_DECORATED_APP:TZ_HY_COLU_CLS","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
+	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
      
 	$.ajax({
 		type:"POST",

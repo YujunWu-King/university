@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,9 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzMenuSetedServiceImpl")
 public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
+	@Autowired
+	private HttpServletRequest request;
+	
 	@Autowired
 	private SqlQuery sqlQuery;
 
@@ -71,9 +76,11 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenus");
-				List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] {});
+				List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] {strSiteId});
 
 				String strMenuHtml = "";
+				
+				String ctxPath = request.getContextPath();
 
 				for (Map<String, Object> mapMenu : listMenus) {
 					String strMenuId = mapMenu.get("TZ_MENU_ID") == null ? ""
@@ -97,7 +104,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 					strNowImg = mapMenuImg.get("TZ_NOW_IMG") == null ? ""
 							: String.valueOf(mapMenuImg.get("TZ_NOW_IMG"));
 
-					String strMenuImg = strTypeImg;
+					String strMenuImg = ctxPath + strTypeImg;
 
 					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("id", strMenuId);
@@ -112,10 +119,10 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 					String strGloMenuId = tzGetSetSessionValue.getTzSiteGloMenuId();
 					String strMenuNowCls = "";
 					if (strMenuId.equals(strGloMenuId)) {
-						strMenuImg = strNowImg;
+						strMenuImg = ctxPath + strNowImg;
 						strMenuNowCls = "main_left_nav0_c";
 					} else {
-						strMenuImg = strTypeImg;
+						strMenuImg = ctxPath + strTypeImg;
 						strMenuNowCls = "main_left_nav0";
 					}
 
@@ -123,12 +130,14 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 							strMenuName, strMenuImg, strMenuNowCls, strSiteId, strOpenType.trim());
 				}
 
+				/*
 				strMenuHtml = strMenuHtml.replace((char) (10), ' ');
 				strMenuHtml = strMenuHtml.replace((char) (13), ' ');
 				strMenuHtml = strMenuHtml.replace("\\", "\\\\");
 				strMenuHtml = strMenuHtml.replace("'", "\\'");
 				strMenuHtml = strMenuHtml.replace("\"", "\\\"");
-
+				*/
+				
 				Map<String, Object> mapJson = new HashMap<String, Object>();
 				mapJson.put("id", "add");
 				mapJson.put("text",
