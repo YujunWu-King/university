@@ -198,7 +198,7 @@ function submitEnroll() {
 			data:{
 				tzParams:tzParams
 			},
-			url: "/university/dispatcher",
+			url: TzUniversityContextPath + "/dispatcher",
 			dataType: "json",
 			success: function(result){
 				if(result.comContent=='success'){
@@ -248,7 +248,7 @@ $(document).ready(function(){
 		},
 		dataType:"json",
 		async:false,
-		url: "/university/dispatcher",
+		url: TzUniversityContextPath + "/dispatcher",
 		success:function(data){
 		data = data.comContent;
 		var TipBlank = "";
@@ -317,7 +317,7 @@ $(document).ready(function(){
 									data:{
 										tzParams:tzParams
 									},
-									url: "/university/dispatcher",
+									url: TzUniversityContextPath + "/dispatcher",
 									dataType: "json",
 									success: function(result){
 										if(result.comContent =="success"){
@@ -354,7 +354,7 @@ $(document).ready(function(){
 									data:{
 										tzParams:tzParams
 									},
-									url: "/university/dispatcher",
+									url: TzUniversityContextPath + "/dispatcher",
 									dataType: "json",
 									success: function(result){
 										if(result.comContent =="success"){
@@ -646,7 +646,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['50%',''],
 				area: ['830px','610px'],
-				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
 			});
 		});
 	});
@@ -669,7 +669,7 @@ $(document).ready(function(){
 			offset: ['50%',''],
 			area: ['830px','720px'],
 			//iframe: {src: '/tranzvision/colselector_liu.html'}
-			iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
 		});
     });
     $("#TZ_SCH_CNAME_click").mouseover(function() {
@@ -691,7 +691,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','300px'],
-				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22}}'},
+				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22}}'},
 			});
 		});
     });
@@ -714,7 +714,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','400px'],
-				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22%7D%7D'},
+				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22%7D%7D'},
 			});
 		});
     });
@@ -875,7 +875,7 @@ $(document).ready(function(){
 			data:{
 				tzParams:tzParams
 			},
-			url: "/university/dispatcher",
+			url: TzUniversityContextPath + "/dispatcher",
 			dataType: "json",
 			success: function(result){
 					
@@ -944,7 +944,7 @@ function check_yzm(val){
 			data:{
 				tzParams:tzParams
 			},
-			url: "/university/dispatcher",
+			url: TzUniversityContextPath + "/dispatcher",
 			dataType: "json",
 			success: function(result){
 				result = result.comContent;
@@ -968,7 +968,7 @@ function check_yzm(val){
 
 //重新加载验证码
 function create_yzm(){
-	var _captchaURL = "/university/captcha";
+	var _captchaURL = TzUniversityContextPath + "/captcha";
 	$('#yzmImgEmail').attr('src',_captchaURL + "?" + Math.random());
 }
 
@@ -990,7 +990,7 @@ function check_yzmEmail(val){
 			data:{
 				tzParams:tzParams
 			},
-			url: "/university/dispatcher",
+			url: TzUniversityContextPath + "/dispatcher",
 			dataType: "json",
 			success: function(result){
 				if(result.comContent =="success"){
