@@ -27,9 +27,12 @@ import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegfieldEng;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl;
+import com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegisteServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 用户注册项模板管理，原PS：TZ_USER_REG_PKG:TZ_USER_MNG_CLS
@@ -45,6 +48,9 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private TZGDObject tzGdObject;
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -66,6 +72,9 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzYhzcXxzEngMapper psTzYhzcXxzEngMapper;
+	
+	@Autowired
+	private RegisteServiceImpl registeServiceImpl;
 
 	/**
 	 * 修改组件注册信息
@@ -587,9 +596,15 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 		String sql = "select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ENABLE='Y'";
 
 		String strSiteId = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
-
-		String viewHtml = "";
-
+		
+		String viewHtml = registeServiceImpl.userRegister(orgid, strSiteId);
+		try {
+			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML", true, viewHtml,request.getContextPath());
+		} catch (TzSystemException e) {
+			viewHtml = e.toString();
+			e.printStackTrace();
+		}
+		
 		return viewHtml;
 
 	}
