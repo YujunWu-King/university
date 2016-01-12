@@ -432,7 +432,7 @@ function Login(){
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
 		type:"POST",
-		url:urlBegin,
+		url: TzUniversityContextPath + "/user/login/dologin",
 		data:{
 			tzParams:tzParams,
 			language:$("#lang").val()
