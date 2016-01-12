@@ -360,7 +360,7 @@
             valueField: 'TZ_JG_ID',
             displayField: 'TZ_JG_NAME',
             //typeAhead: true,
-            queryMode: 'local',
+            queryMode: 'remote',
 						name: 'orgId',
 						afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
