@@ -179,7 +179,7 @@ function submitEnroll() {
 			_statusFlg="error";
 		}
 	}
-   
+   alert(_statusFlg);
 	//alert(_statusFlg+" "+_nameFlg+" "+_emailFlg+" "+_moblieFlg+" "+_passwordFlg+" "+_yzmFlg);
 	if(_statusFlg=="error"){
 		return false;
@@ -198,7 +198,7 @@ function submitEnroll() {
 			data:{
 				tzParams:tzParams
 			},
-			url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+			url: "/university/dispatcher",
 			dataType: "json",
 			success: function(result){
 				if(result.comContent=='success'){
@@ -238,14 +238,19 @@ var jsonValue;
 $(document).ready(function(){
 	document.getElementById('signupForm').reset();
 	create_yzm();
+	var fieldParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"GETNOWFIELD","comParams":{"strJgid":"'+strJgid+'"}}';
 	//加载页面字段
 	$.ajax({
 		type:"post",
-		data:"strJgid=" + strJgid,
+		//data:"strJgid=" + strJgid,
+		data:{
+			tzParams:fieldParams
+		},
 		dataType:"json",
 		async:false,
-		url:urlBegin+"/WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_GetNowField",
+		url: "/university/dispatcher",
 		success:function(data){
+		data = data.comContent;
 		var TipBlank = "";
 		var TipEmail = "";
 		var TipPhone = "";
@@ -312,10 +317,9 @@ $(document).ready(function(){
 									data:{
 										tzParams:tzParams
 									},
-									url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+									url: "/university/dispatcher",
 									dataType: "json",
 									success: function(result){
-								
 										if(result.comContent =="success"){
 											$('#' + fieldId + '_status').html("");
 											$('#status_' + fieldId).attr("value", 0); 
@@ -350,7 +354,7 @@ $(document).ready(function(){
 									data:{
 										tzParams:tzParams
 									},
-									url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+									url: "/university/dispatcher",
 									dataType: "json",
 									success: function(result){
 										if(result.comContent =="success"){
@@ -642,7 +646,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['50%',''],
 				area: ['830px','610px'],
-				iframe: {src: urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
 			});
 		});
 	});
@@ -664,7 +668,8 @@ $(document).ready(function(){
 			border : [3 , 0.3 , '#000', true],
 			offset: ['50%',''],
 			area: ['830px','720px'],
-			iframe: {src: '/tranzvision/colselector_liu.html'}
+			//iframe: {src: '/tranzvision/colselector_liu.html'}
+			iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
 		});
     });
     $("#TZ_SCH_CNAME_click").mouseover(function() {
@@ -686,7 +691,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','300px'],
-				iframe: {src: urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22}}'},
+				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22}}'},
 			});
 		});
     });
@@ -709,7 +714,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','400px'],
-				iframe: {src: urlBegin+'/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22%7D%7D'},
+				iframe: {src: '/university/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22%7D%7D'},
 			});
 		});
     });
@@ -870,7 +875,7 @@ $(document).ready(function(){
 			data:{
 				tzParams:tzParams
 			},
-			url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+			url: "/university/dispatcher",
 			dataType: "json",
 			success: function(result){
 					
@@ -932,13 +937,17 @@ function check_yzm(val){
 	var email = $("#TZ_EMAIL").val();
 	var mobile = $("#TZ_MOBILE").val();
 	if(val !=''){
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"CODEVALIDATOR","comParams":{"yzm":"'+val+'","yzfs":"'+yzfs+'","TZ_EMAIL":"'+email+'","TZ_MOBILE":"'+mobile+'","strJgid":"'+strJgid+'"}}';
 		$.ajax({
 			type: "get",
 			async :false,
-			data:{yzm:val,yzfs:yzfs,TZ_EMAIL:email,TZ_MOBILE:mobile,strJgid:strJgid},
-			url: urlBegin+"/WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_IamgeCodeValidate",
+			data:{
+				tzParams:tzParams
+			},
+			url: "/university/dispatcher",
 			dataType: "json",
 			success: function(result){
+				result = result.comContent;
 				if(result.resultFlg =="success"){
 					$('#yzm_status').html("");
 					$('#status_yzm').attr("value", 0); 
@@ -959,19 +968,8 @@ function check_yzm(val){
 
 //重新加载验证码
 function create_yzm(){
-	var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
-	$.ajax({
-		type: "get",
-		async :false,
-		data:{
-				tzParams:tzParams
-		},
-		url: urlBegin+"/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL",
-		dataType: "json",
-		success: function(result){
-			$('#yzmImgEmail').attr('src',result.codeImgUrl);
-		}
-	});
+	var _captchaURL = "/university/captcha";
+	$('#yzmImgEmail').attr('src',_captchaURL + "?" + Math.random());
 }
 
 //判断输入的验证码是否一致
@@ -985,14 +983,14 @@ function check_yzmEmail(val){
         }
 
 	if(val !=''){
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 		$.ajax({
 			type: "get",
 			async :false,
 			data:{
 				tzParams:tzParams
 			},
-			url: urlBegin + '/WEBLIB_ZSGL_D.TZ_ZSGL.FieldFormula.IScript_TZ_ZSGL',
+			url: "/university/dispatcher",
 			dataType: "json",
 			success: function(result){
 				if(result.comContent =="success"){
