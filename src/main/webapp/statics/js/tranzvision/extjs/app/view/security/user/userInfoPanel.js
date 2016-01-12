@@ -369,7 +369,7 @@
             	afterrender: function(combox){
             		//当前登录人机构id
 	            	var value = Ext.tzOrgID;
-	            	if(value == "Admin"){
+	            	if(value.toUpperCase() == "ADMIN"){
 	            		combox.readOnly = false ;
 	            	}else{
 	            		combox.readOnly = true;
