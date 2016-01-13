@@ -14,6 +14,8 @@ Ext.Loader.setConfig({
 Ext.require(['Ext.grid.*', 'Ext.window.Window', 'Ext.container.Viewport', 'Ext.layout.container.Border', 'Ext.state.*', 'Ext.data.*', 'Ext.grid.plugin.BufferedRenderer','Ext.ux.colorpick.Field']);
 
 var urlBegin = TzUniversityContextPath + "/dispatcher";
+var urlPreview = TzUniversityContextPath + "/preview";
+var urlDecorate = TzUniversityContextPath + "/decorate";
 var editEnrollFieldComponentID = "_A0000041";
 /*网站首页个人信息展示选择页面*/
 var editPersonInfoComponentID="_A0000085";
@@ -1017,7 +1019,6 @@ var BeforNode;
 											var obj = Ext.util.JSON.decode(response.responseText);
 											
 											coluDataStore.reload();
-											Ext.getCmp("menuForm").getForm().findField('menuColu').setValue(obj.comContent.data.colu_id);
 											
 											if(obj.comContent.success==true){
 											   Ext.toast({
@@ -1028,6 +1029,7 @@ var BeforNode;
 													slideInDuration: 400,
 													minWidth: 400
 												});
+											  Ext.getCmp("menuForm").getForm().findField('menuColu').setValue(obj.comContent.data.colu_id);
 											}
 										},
 											failure: function() {
@@ -1077,8 +1079,8 @@ var BeforNode;
 				html:'<span>菜单默认图标:</span>'
 			},{
 				xtype:'image',
-				width:35,
-				height:35,
+				width:24,
+				height:30,
 				border:1,
 				style: {
 				    borderColor: '#eee'
@@ -1096,7 +1098,7 @@ var BeforNode;
 				}
 			},{
 	            xtype: 'fileuploadfield',
-	            name: 'menutypeimg',
+	            name: 'orguploadfile',
 				margin:'0 0 0 20',
 	            buttonText: '上传',
 	            //msgTarget: 'side',
@@ -1183,11 +1185,12 @@ var BeforNode;
 				html:'<span>菜单激活图标:</span>'
 			},{
 				xtype:'image',
-				width:35,
-				height:35,
+				width:24,
+				height:30,
 				border:1,
 				style: {
-				    borderColor: '#eee'
+				    borderColor: "#eee",
+					backgroundColor: "#c1ddf1"
 				},
 				margin:'0 0 0 8',
 				src:''
@@ -1203,7 +1206,7 @@ var BeforNode;
 			},{
 	            xtype: 'fileuploadfield',
 				margin:'0 0 0 20',
-	            name: 'menunowimg',
+	            name: 'orguploadfile',
 	            buttonText: '上传',
 	            buttonOnly:true,
 				listeners:{
@@ -1927,7 +1930,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 						{
 							
 
-							window.open( TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							window.open( TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
 							return;
 						}
 
@@ -2355,13 +2358,13 @@ Ext.getCmp("gridPanel").reconfigure(store);
 						if (Ext.get(pel2).getAttribute("id") == "registe-area")
 						{
 							
-							window.open(TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
 							return;
 						}
 
                         /*个人信息显示区域 编辑部分--------------待做*/
                         if(Ext.get(pel2).getAttribute("id") == "perInfo"){
-                            window.open(TzUniversityContextPath + "/index?cmd=loadFramework#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
+                            window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
                             return;
                         }
 
@@ -2889,11 +2892,14 @@ Ext.getCmp("gridPanel").reconfigure(store);
 
 			var classId="";
 
+			var openPreviewUrl = urlPreview;
+			
 			if (pagetype=="homepage")
 			{
 				comId="TZ_HOME_SETED_COM";
 				pageId="TZ_HOME_SETED_STD";
 				classId="homePage";
+				openPreviewUrl = openPreviewUrl + "/index";
 			}
 
 			if (pagetype=="loginpage")
@@ -2901,6 +2907,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 				comId="TZ_SITEI_SETED_COM";
 				pageId="TZ_SET_LOGINP_STD";
 				classId="login";
+				openPreviewUrl = openPreviewUrl + "/login";
 			}
 
 			if (pagetype=="enrollpage")
@@ -2910,7 +2917,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 			}
 			//window.open(urlBegin + '?tzParams={"ComID":"'+comId+'","PageID":"'+pageId+'","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"P","pagetype":"'+pagetype+'"}}');
 
-			window.open(urlBegin + '?classid='+classId+'&siteId='+siteid+'&pagetype='+pagetype+'&oprate=P');
+			window.open(openPreviewUrl + '/'+ TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase()  +'/'+ siteid);
 		
 		},
 		btsave: function() {
@@ -3220,7 +3227,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 */
 				var siteid = Ext.get("siteid").getValue();
 				//window.location.href='?tzParams={"ComID":"TZ_HOME_SETED_COM","PageID":"TZ_HOME_SETED_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"D"}}';
-				window.location.href='?classid=homePage&siteId='+siteid+'&oprate=D';
+				window.location.href= urlDecorate + "/index/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/" + siteid;
 			});
 
 			Ext.get("sdkbarlogin").on("click",
@@ -3234,7 +3241,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 				*/
 				var siteid = Ext.get("siteid").getValue();
 				//window.location.href='?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SET_LOGINP_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid+'","oprate":"D"}}';
-				window.location.href='?classid=login&siteId='+siteid+'&oprate=D';
+				window.location.href= urlDecorate + "/login/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/" + siteid;
 			});
 
 			/*

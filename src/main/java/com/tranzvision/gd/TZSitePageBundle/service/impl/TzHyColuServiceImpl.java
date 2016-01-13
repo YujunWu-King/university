@@ -248,26 +248,47 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			List<Map<String, Object>> listSiteActivities = new ArrayList<Map<String, Object>>();
 
+			String strSQLName = "";
 			switch (strType) {
 			case "0":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDListByDateTimeGT");
+				if ("desc".equals(strOrderBy)) {
+					strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
+				} else {
+					strSQLName = "TzGetSiteHDListByDateTimeGT";
+				}
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
 				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, strOrderBy, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 				break;
 			case "1":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDListByOprid");
+				if ("desc".equals(strOrderBy)) {
+					strSQLName = "TzGetSiteHDListByOpridDesc";
+				} else {
+					strSQLName = "TzGetSiteHDListByOprid";
+				}
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
 				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, oprid, strOrderBy, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, oprid, numMinRow, numPageRow });
 				break;
 			case "2":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDListByDateTimeLT");
+				if ("desc".equals(strOrderBy)) {
+					strSQLName = "TzGetSiteHDListByDateTimeLTDesc";
+				} else {
+					strSQLName = "TzGetSiteHDListByDateTimeLT";
+				}
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
 				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, strOrderBy, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 				break;
 			default:
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDListByDateTimeGT");
+				if ("desc".equals(strOrderBy)) {
+					strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
+				} else {
+					strSQLName = "TzGetSiteHDListByDateTimeGT";
+				}
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
 				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, strOrderBy, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 				break;
 			}
 

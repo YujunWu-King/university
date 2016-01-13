@@ -4,6 +4,7 @@
 package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMenuTMapper;
@@ -46,6 +48,9 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzGetSetSessionValue tzGetSetSessionValue;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Autowired
 	private GetSeqNum getSeqNum;
@@ -183,6 +188,9 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
+			Date dateNow = new Date();
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 
@@ -191,6 +199,8 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
+				String strReplaceCtxPath = request.getContextPath() + "/";
+				
 				// 类型标志;
 				String strFlag = jacksonUtil.getString("typeFlag");
 
@@ -212,10 +222,10 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				String strMenuURL = mapData.get("menuLink") == null ? "" : String.valueOf(mapData.get("menuLink"));
 
 				String strMenuTypeImg = mapData.get("menutypeimg") == null ? ""
-						: String.valueOf(mapData.get("menutypeimg"));
+						: String.valueOf(mapData.get("menutypeimg")).replace(strReplaceCtxPath, "/");
 
 				String strMenuNowImg = mapData.get("menunowimg") == null ? ""
-						: String.valueOf(mapData.get("menunowimg"));
+						: String.valueOf(mapData.get("menunowimg")).replace(strReplaceCtxPath, "/");
 
 				String strMenuOPType = mapData.get("linkTarget") == null ? ""
 						: String.valueOf(mapData.get("linkTarget"));
@@ -270,6 +280,10 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 							psTzSiteiMenuT.setTzMenuUrl(strMenuURL);
 							psTzSiteiMenuT.setTzMenuOpurlType(strMenuOPType);
 							psTzSiteiMenuT.setTzMenuState("Y");
+							psTzSiteiMenuT.setTzAddedDttm(dateNow);
+							psTzSiteiMenuT.setTzAddedOprid(oprid);
+							psTzSiteiMenuT.setTzLastmantDttm(dateNow);
+							psTzSiteiMenuT.setTzLastmantOprid(oprid);
 
 							sql = "select max(TZ_MENU_XH) from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_STATE='Y'";
 							int numxh = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "int");
@@ -334,6 +348,8 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 							PsTzSiteiMenuT psTzSiteiMenuT = new PsTzSiteiMenuT();
 							psTzSiteiMenuT.setTzSiteiId(strSiteId);
 							psTzSiteiMenuT.setTzMenuId(strMenuId);
+							psTzSiteiMenuT.setTzLastmantDttm(dateNow);
+							psTzSiteiMenuT.setTzLastmantOprid(oprid);
 
 							if (null != strMenuName && !"".equals(strMenuName)) {
 								psTzSiteiMenuT.setTzMenuName(strMenuName);
@@ -344,7 +360,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 							}
 
 							if (null != strMenuTypeId && !"".equals(strMenuTypeId)) {
-								psTzSiteiMenuT.setTzMenuTypeId(strMenuColu);
+								psTzSiteiMenuT.setTzMenuTypeId(strMenuTypeId);
 							}
 
 							if (null != strMenuURL && !"".equals(strMenuURL)) {

@@ -136,15 +136,13 @@ public class TzMenuEditedServiceImpl extends FrameworkImpl {
 
 						sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenuImgs");
 						Map<String, Object> mapData = sqlQuery.queryForMap(sql,
-								new Object[] { strSiteId, strSiteId, strMenuId });
+								new Object[] { strSiteId, strMenuId, strSiteId });
 						if (null != mapData) {
 							strMenuTypeImg = mapData.get("TZ_TYPE_IMG") == null ? ""
 									: String.valueOf(mapData.get("TZ_TYPE_IMG"));
 							strMenuNowImg = mapData.get("TZ_NOW_IMG") == null ? ""
 									: String.valueOf(mapData.get("TZ_NOW_IMG"));
 						}
-
-						strMenuDesc = "";
 
 						Map<String, Object> mapJson = new HashMap<String, Object>();
 

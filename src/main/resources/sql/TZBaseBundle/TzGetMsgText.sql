@@ -21,7 +21,7 @@ from (
  				select 
  					upper(TZ_HARDCODE_VAL) TZ_LANGUAGE_CD 
   				from 
-  					PS_CMBC_HARDCD_PNT 
+  					PS_TZ_HARDCD_PNT 
  				where 
  					TZ_HARDCODE_PNT='TZGD_BASIC_LANGUAGE' 
  			) 
