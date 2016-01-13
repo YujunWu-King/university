@@ -5,7 +5,6 @@ Ext.define('KitchenSink.controller.Global', {
         'KitchenSink.view.thumbnails.Thumbnails',
         'KitchenSink.store.Thumbnails',
         'KitchenSink.store.Navigation',
-        'KitchenSink.view.common.externalLinkPanel',
         'KitchenSink.view.common.store.appTransStore',//translateValue使用
         'KitchenSink.view.common.store.comboxStore',//下拉框
         'KitchenSink.view.orgmgmt.initOrgInfo',
@@ -238,7 +237,11 @@ Ext.define('KitchenSink.controller.Global', {
             target : Ext.getCmp('tranzvision-framework-content-panel')
           });
 
-          myMask.show();
+          //如果已打开该功能菜单则不显示mask；
+          if( me.getContentPanel().getComponent(id)==null){
+              myMask.show();
+          };
+          
           Ext.defer
           (
             function(winObject,handerObject,comID,id)
@@ -343,35 +346,39 @@ Ext.define('KitchenSink.controller.Global', {
                 // </debug>
             }
 
-            if(node.get('isNewWin')&&node.get('isExternalLink')){
-                window.open(node.get('externalLink'));
-            }else{
-                if(node.get('isExternalLink')){
-                    cmp = new KitchenSink.view.common.externalLinkPanel({
-                        title:node.get('text'),
-                        externalLink:node.get('externalLink')
-                    });
-                }else{
-                    cmp = new ViewClass();
-                }
+             /*
+            *开始
+            *功能描述：如果当前菜单没有对应的新开窗口，则新开一个页签窗口；
+            *如果当前菜单已打开功能窗口，则只要将当前菜单对应功能窗口激活显示到前端即可
+            * 修改人：叶少威
+            * 时间：2015年12月22日 17:41:27
+            * */
+            var tmpCmpTab = contentPanel.getComponent(id);
+            var tab;
+            if(tmpCmpTab==null){
+                cmp = new ViewClass();
                 cmp.currentNodeId = id;
+                cmp.itemId = id;
 
-                var tab = contentPanel.add(cmp);
+                tab = contentPanel.add(cmp);
                 tab.on(Ext.tzTabOn(tab,cmp,cmp,me));
-                contentPanel.setActiveTab(tab);
-
-                this.setupPreview(clsProto);
-
-                this.updateTitle(node);
-
-                //2015-03-06-禁止出现滚动条
-                contentPanel.setOverflowXY("hidden","hidden");
-
-                if (cmp.floating) {
-                    cmp.show();
-                }
+            }else{
+                tab = cmp = tmpCmpTab;
             }
+            /*结束*/
 
+            contentPanel.setActiveTab(tab);
+			 
+            this.setupPreview(clsProto);
+
+            this.updateTitle(node);
+			
+            //2015-03-06-禁止出现滚动条
+            contentPanel.setOverflowXY("hidden","hidden");
+
+            if (cmp.floating) {
+                cmp.show();
+            }
         }
 
         var tmpId = id;
@@ -432,7 +439,7 @@ Ext.define('KitchenSink.controller.Global', {
             });
             subMenuPanel.currentNodeId = tmpId;
 
-            tmpMenuTab = contentPanel.insert(1,subMenuPanel);
+            tmpMenuTab = contentPanel.insert(0,subMenuPanel);
             tmpMenuTab.on(Ext.tzTabOn(tmpMenuTab,subMenuPanel,subMenuPanel,me));
 
             if(node.isLeaf() == false)
