@@ -256,9 +256,9 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 					Object appClsObj = ctx.getBean(strAreaAppCls);
 					if (appClsObj != null) {
 
-						FrameworkImpl tzFrameworkImplObj = (FrameworkImpl) appClsObj;
+						TzSiteActionServiceImpl tzSiteActionServiceImplObj = (TzSiteActionServiceImpl) appClsObj;
 
-						strRet = tzFrameworkImplObj.tzGetHtmlContent(strParams);
+						strRet = tzSiteActionServiceImplObj.tzGetHtmlContent(strParams);
 
 					}
 

@@ -232,22 +232,22 @@
                     }
 					,{
 					         "xtype": "filefield",
-				 		 	 "name": "headfile",
+				 		 	 "name": "orguploadfile",
 				 			 "fieldLabel": "LOGO",
 				 			 "buttonText": "选择",
 							 "listeners":{
 									change:function(thisField, value, eOpts ){
 										if(value.substring(value.lastIndexOf(".")+1).toLowerCase()=="jpg"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="png"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="gif"||value.substring(value.lastIndexOf(".")+1).toLowerCase()=="jpeg"){
 											editPanel.getForm().submit({
-																		url:"/UpdServlet?filePath=/linkfile/FileUpLoad/imges",
+																		url: TzUniversityContextPath + "/UpdServlet?filePath=website",
 																		waitMsg:"图片正在上传，请稍后......",
 																		success:function(form,action){ 
 																			var message = action.result.msg;
-																			editPanel.getForm().findField('headfile').setRawValue(value); 
-																			editPanel.child().child().getComponent('headimg').setSrc(message.accessPath+"/"+message.sysFileName);
+																			editPanel.getForm().findField('orguploadfile').setRawValue(value); 
+																			editPanel.child().child().getComponent('headimg').setSrc(TzUniversityContextPath + message.accessPath+"/"+message.sysFileName);
 																			var imgH =Ext.get("headarea").child("div").child("div").child("a").child("img").getHeight(); 
 																			var imgW =parseInt(message.imgHeight)*parseInt(message.imgWidth)/imgH;  
-																			Ext.get("headarea").child("div").child("div").child("a").child("img").set({"src":message.accessPath+"/"+message.sysFileName}); 
+																			Ext.get("headarea").child("div").child("div").child("a").child("img").set({"src":TzUniversityContextPath+message.accessPath+"/"+message.sysFileName}); 
 																			editPanel.getForm().findField('areaCode').setValue(Ext.get("headarea").dom.outerHTML);
 																			var bodyCode = Ext.get("all").dom.outerHTML;bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
 																			editPanel.getForm().findField('bodyCode').setValue(bodyCode);

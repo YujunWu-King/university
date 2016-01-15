@@ -18,4 +18,10 @@ $(document).ready(function(){
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	SetImgCode();
 	
+	document.onkeydown = function(e){
+		var ev = document.all ? window.event : e;
+			if(ev.keyCode==13) {
+				Login();
+		}
+	}
 });

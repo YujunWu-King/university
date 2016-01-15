@@ -72,7 +72,7 @@ public class TzXlDecoratedServiceImpl extends FrameworkImpl {
 				strColuName = mapColun.get("TZ_AREA_NAME") == null ? "" : String.valueOf(mapColun.get("TZ_AREA_NAME"));
 			} else {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidAreaNameBySiteidAreaid");
-				Map<String, Object> mapColun = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaType });
+				Map<String, Object> mapColun = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaId });
 				strColuId = mapColun.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapColun.get("TZ_COLU_ID"));
 				strColuName = mapColun.get("TZ_AREA_NAME") == null ? "" : String.valueOf(mapColun.get("TZ_AREA_NAME"));
 			}
@@ -244,110 +244,6 @@ public class TzXlDecoratedServiceImpl extends FrameworkImpl {
 		}
 
 		return strRet;
-	}
-
-	public String tzSaveArea(String strParams, String[] errMsg) {
-
-		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-
-			jacksonUtil.json2Map(strParams);
-
-			String strSiteId = jacksonUtil.getString("siteId");
-
-			String strAreaId = jacksonUtil.getString("areaId");
-
-			// String strAreaZone = jacksonUtil.getString("areaZone");
-
-			String strAreaType = jacksonUtil.getString("areaType");
-
-			String strAreaCode = jacksonUtil.getString("areaCode");
-
-			if (null != strAreaCode && !"".equals(strAreaCode)) {
-
-				if (null == strAreaId || "".equals(strAreaId)) {
-					String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
-					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
-				}
-
-				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
-
-				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaId(strAreaId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaSavecode(strAreaCode);
-
-				psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
-
-			}
-
-			errMsg[0] = "0";
-			mapRet.put("success", true);
-			strRet = jacksonUtil.Map2json(mapRet);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMsg[0] = "1";
-			errMsg[1] = "保存时异常！" + e.getMessage();
-			mapRet.put("success", false);
-			strRet = jacksonUtil.Map2json(mapRet);
-		}
-
-		return strRet;
-
-	}
-
-	public String tzReleaseArea(String strParams, String[] errMsg) {
-
-		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-
-			jacksonUtil.json2Map(strParams);
-
-			String strSiteId = jacksonUtil.getString("siteId");
-
-			String strAreaId = jacksonUtil.getString("areaId");
-
-			// String strAreaZone = jacksonUtil.getString("areaZone");
-
-			String strAreaType = jacksonUtil.getString("areaType");
-
-			String strAreaCode = jacksonUtil.getString("areaCode");
-
-			if (null != strAreaCode && !"".equals(strAreaCode)) {
-
-				if (null == strAreaId || "".equals(strAreaId)) {
-					String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
-					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
-				}
-
-				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
-
-				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaId(strAreaId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaPubcode(strAreaCode);
-
-				psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
-
-			}
-
-			errMsg[0] = "0";
-			mapRet.put("success", true);
-			strRet = jacksonUtil.Map2json(mapRet);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMsg[0] = "1";
-			errMsg[1] = "发布时异常！" + e.getMessage();
-			mapRet.put("success", false);
-			strRet = jacksonUtil.Map2json(mapRet);
-		}
-
-		return strRet;
-
 	}
 
 }

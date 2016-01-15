@@ -23,12 +23,20 @@ public interface TzSiteActionService {
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg);
 
 	/**
-	 * 站点发布
+	 * 站点区域代码发布
 	 * 
 	 * @param mapActData
 	 * @param errMsg
 	 * @return
 	 */
 	public String tzReleaseArea(Map<String, Object> mapActData, String[] errMsg);
+
+	/**
+	 * 获取站点区域的HTML代码
+	 * 
+	 * @param strParams
+	 * @return
+	 */
+	public String tzGetHtmlContent(String strParams);
 
 }

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
@@ -43,9 +42,6 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
-	@Autowired
-	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
@@ -192,169 +188,6 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 			errMsg[0] = "0";
 			errMsg[1] = "请求编辑的区域异常！";
-		}
-
-		return strRet;
-	}
-
-	@Override
-	public String tzGetHtmlContent(String strParams) {
-
-		String strRet = "";
-
-		try {
-
-			JacksonUtil jacksonUtil = new JacksonUtil();
-
-			jacksonUtil.json2Map(strParams);
-
-			String strOrgId = jacksonUtil.getString("orgId");
-			String strSiteId = jacksonUtil.getString("siteId");
-			String strAreaId = jacksonUtil.getString("areaId");
-			// String strAreaZone = jacksonUtil.getString("areaZone");
-			String strAreaType = jacksonUtil.getString("areaType");
-			String strOprate = jacksonUtil.getString("oprate");
-
-			if ((null == strOrgId || "".equals(strOrgId)) && (null == strSiteId || "".equals(strSiteId))) {
-				strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-				if (null == strOrgId || "".equals(strOrgId)) {
-					strOrgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-					if (null == strOrgId || "".equals(strOrgId)) {
-						return "false";
-					}
-				}
-			}
-
-			String sql = "";
-
-			if ((null != strOrgId && !"".equals(strOrgId)) && (null == strSiteId || "".equals(strSiteId))) {
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteidByOrgid");
-				strSiteId = sqlQuery.queryForObject(sql, new Object[] { strOrgId }, "String");
-			}
-
-			if (null == strAreaId || "".equals(strAreaId)) {
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatypeStateY");
-				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
-			}
-
-			switch (strOprate) {
-			case "R":
-				sql = "select TZ_AREA_PUBCODE from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=? and TZ_AREA_STATE='Y'";
-				strRet = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaId }, "String");
-				break;
-			case "P":
-			case "D":
-				sql = "select TZ_AREA_SAVECODE from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=? and TZ_AREA_STATE='Y'";
-				strRet = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaId }, "String");
-				break;
-			}
-
-			if (null == strRet || "".equals(strRet)) {
-				strRet = "false";
-			}else{
-				
-				strRet = strRet.replace("{ContextPath}", request.getContextPath());
-				
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			strRet = "false";
-		}
-
-		return strRet;
-
-	}
-
-	public String tzSaveArea(String strParams, String[] errMsg) {
-		String strRet = "";
-
-		try {
-
-			JacksonUtil jacksonUtil = new JacksonUtil();
-
-			jacksonUtil.json2Map(strParams);
-
-			String strSiteId = jacksonUtil.getString("siteId");
-			String strAreaId = jacksonUtil.getString("areaId");
-			// String strAreaZone = jacksonUtil.getString("areaZone");
-			String strAreaType = jacksonUtil.getString("areaType");
-			String strAreaCode = jacksonUtil.getString("areaCode");
-
-			if (null == strAreaId || "".equals(strAreaId)) {
-				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatypeStateY");
-				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
-			}
-
-			if (null != strAreaCode && !"".equals(strAreaCode)) {
-
-				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
-
-				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaId(strAreaId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaSavecode(strAreaCode);
-				psTzSiteiAreaTWithBLOBs.setTzLastmantDttm(new Date());
-				psTzSiteiAreaTWithBLOBs.setTzLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-
-				psTzSiteiAreaTMapper.updateByPrimaryKeyWithBLOBs(psTzSiteiAreaTWithBLOBs);
-
-			}
-
-			errMsg[0] = "0";
-			strRet = "{\"success\":true}";
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			strRet = "{\"success\":false}";
-			errMsg[0] = "1";
-			errMsg[1] = "页头区域保存时异常！";
-		}
-
-		return strRet;
-	}
-
-	public String tzReleaseArea(String strParams, String[] errMsg) {
-		String strRet = "";
-
-		try {
-
-			JacksonUtil jacksonUtil = new JacksonUtil();
-
-			jacksonUtil.json2Map(strParams);
-
-			String strSiteId = jacksonUtil.getString("siteId");
-			String strAreaId = jacksonUtil.getString("areaId");
-			// String strAreaZone = jacksonUtil.getString("areaZone");
-			String strAreaType = jacksonUtil.getString("areaType");
-			String strAreaCode = jacksonUtil.getString("areaCode");
-
-			if (null == strAreaId || "".equals(strAreaId)) {
-				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatypeStateY");
-				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
-			}
-
-			if (null != strAreaCode && !"".equals(strAreaCode)) {
-
-				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
-
-				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaId(strAreaId);
-				psTzSiteiAreaTWithBLOBs.setTzAreaPubcode(strAreaCode);
-				psTzSiteiAreaTWithBLOBs.setTzLastmantDttm(new Date());
-				psTzSiteiAreaTWithBLOBs.setTzLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-
-				psTzSiteiAreaTMapper.updateByPrimaryKeyWithBLOBs(psTzSiteiAreaTWithBLOBs);
-
-			}
-
-			errMsg[0] = "0";
-			strRet = "{\"success\":true}";
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			strRet = "{\"success\":false}";
-			errMsg[0] = "1";
-			errMsg[1] = "页头区域保存时异常！";
 		}
 
 		return strRet;

@@ -37,4 +37,15 @@ public class TzSiteActionServiceImpl implements TzSiteActionService {
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.tranzvision.gd.TZSitePageBundle.service.TzSiteActionService#
+	 * tzGetHtmlContent(java.lang.String)
+	 */
+	@Override
+	public String tzGetHtmlContent(String strParams) {
+		return null;
+	}
+
 }

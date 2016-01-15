@@ -32,17 +32,22 @@ public class TzWebsiteIndexController {
 	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
 
 	@RequestMapping(value = { "/{orgid}/{siteid}" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
 	public String websiteIndex(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid) {
 
+		orgid = orgid.toLowerCase();
+		
 		if (!tzWebsiteLoginServiceImpl.checkUserLogin(request, response)) {
-			orgid = orgid.toLowerCase();
 			String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
 			return redirect;
 		}
 
 		String strRet = tzWebsiteServiceImpl.getIndexPublishCode(request, orgid, siteid);
+		
+		if("errororg".equals(strRet)){
+			String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
+			return redirect;
+		}
 
 		return strRet;
 	}

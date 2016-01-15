@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.TzWebsiteService;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -43,6 +44,9 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	/*
 	 * (non-Javadoc)
@@ -146,6 +150,8 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String sql = "select TZ_INDEX_SAVECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
 
 			String strIndexHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
+			
+			strIndexHtml = siteRepCssServiceImpl.repTitle(strIndexHtml, siteid);
 
 			strIndexHtml = strIndexHtml.replace("{page_stylecss}",
 					orgidLower + "/" + siteid + "/" + "style_" + orgidLower + ".css");
@@ -154,7 +160,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
 					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
-
+			
 			strIndexHtml = strIndexHtml.replace("<!--#{javascripts}#-->", strJavascripts);
 
 			strRtn = strIndexHtml;
@@ -242,7 +248,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			if (!this.checkOrgId(orgid, loginOrgid)) {
 				strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效机构。",
 						"Invalid orgid.");
-				return strRtn;
+				return "errororg";
 			}
 
 			String sql = "select TZ_INDEX_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
@@ -353,7 +359,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 				return strRtn;
 			}
 
-			String sql = "select TZ_LOGIN_PRECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String sql = "select TZ_LOGIN_PRECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y' and TZ_SITE_FBZT='Y'";
 
 			String strLoginHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
 
@@ -396,7 +402,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 				return strRtn;
 			}
 
-			String sql = "select TZ_LONGIN_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String sql = "select TZ_LONGIN_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y' and TZ_SITE_FBZT='Y'";
 
 			String strLoginHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
 
