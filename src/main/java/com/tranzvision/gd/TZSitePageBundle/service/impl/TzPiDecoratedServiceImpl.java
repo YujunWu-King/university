@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -41,6 +42,9 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	public String tzGetHtmlData(String strParams) {
@@ -53,6 +57,9 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			String siteId = jacksonUtil.getString("siteId");
+			String orgId = jacksonUtil.getString("orgId").toUpperCase();
+			//判断是否为站点装修的请求
+			String isd = jacksonUtil.getString("isd");
 
 			// 根据站点实例id ， 找站点语言
 			String sysDefaultLang = getSysHardCodeVal.getSysDefaultLanguage();
@@ -72,8 +79,21 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 			}
 
 			// 当前用户ID（此用户是前台登录用户）
-			String m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
-			String m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+			String m_curOPRID = "";
+			String m_curOrgID = "";
+			if("Y".equals(isd)){
+				//如果是站点装修的请求，则使用后台的session
+				m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				m_curOrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			}else{
+				//如果不是站点装修的请求，则取前台用户的session
+				m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+				m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+			}
+			if(!m_curOrgID.equals(orgId)){
+				//如果当前用户登录的机构与请求的机构不一致，则返回空
+				return "";
+			}
 
 			// 处理头像部分 - 开始
 			// sql = "select TZ_GENDER from PS_TZ_REG_USER_T where OPRID=?";
@@ -95,7 +115,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 			}
 			if ("".equals(strPhoto)) {
-				strPhoto = ctxPath + websiteImgCommonPath + "/common/bjphoto.jpg";
+				strPhoto = websiteImgCommonPath + "/common/bjphoto.jpg";
 			}
 
 			String strResultHeadImg = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerPhotoCard", strPhoto,

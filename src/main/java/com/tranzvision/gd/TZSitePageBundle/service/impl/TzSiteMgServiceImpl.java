@@ -460,6 +460,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						// 5.初始化菜单
 						sql = "select * from PS_TZ_SITEM_MENU_T where TZ_SITEM_ID=? and TZ_MENU_STATE='Y' order by TZ_MENU_XH asc";
 						List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
+						int intMenuXH = 0;
 						for (Map<String, Object> mapMenu : listMenus) {
 
 							String strMenuTypeId = mapMenu.get("TZ_MENU_TYPE_ID") == null ? ""
@@ -479,8 +480,12 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									: String.valueOf(mapMenu.get("TZ_MENU_STATE")));
 							psTzSiteiMenuT.setTzIsEditor(mapMenu.get("TZ_IS_EDITOR") == null ? ""
 									: String.valueOf(mapMenu.get("TZ_IS_EDITOR")));
+							/*由于模板中的序号没有生成，此处采用记录序号
 							psTzSiteiMenuT.setTzMenuXh(mapMenu.get("TZ_MENU_XH") == null ? 0
 									: Integer.parseInt(String.valueOf(mapMenu.get("TZ_MENU_XH"))));
+							*/
+							intMenuXH++;
+							psTzSiteiMenuT.setTzMenuXh(intMenuXH);
 							psTzSiteiMenuT.setTzIsDel(
 									mapMenu.get("TZ_IS_DEL") == null ? "" : String.valueOf(mapMenu.get("TZ_IS_DEL")));
 

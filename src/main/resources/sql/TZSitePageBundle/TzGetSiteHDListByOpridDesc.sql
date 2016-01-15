@@ -47,5 +47,5 @@ where
  	)  
 order by 
 	PT2.TZ_MAX_ZD_SEQ desc, 
-	PT4.TZ_START_DT asc 
+	PT4.TZ_START_DT desc 
 limit ?,?

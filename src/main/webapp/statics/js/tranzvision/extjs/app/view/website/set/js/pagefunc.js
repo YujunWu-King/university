@@ -534,7 +534,7 @@ function getPerInfCard(){
 								var orgid=$("#jgid").val();
 				
 								
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_PI_INFOCARD_STD","OperateType":"JHTML","comParams":{"orgId":"'+orgid+'","siteId":"'+siteid+'","typeflg":"perinfo"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_PI_INFOCARD_STD","OperateType":"JHTML","comParams":{"orgId":"'+orgid+'","siteId":"'+siteid+'","typeflg":"perinfo","isd":"'+TZ_GD_SITEI_ISD+'"}}';
 
 	$.ajax({
 				type:"POST",

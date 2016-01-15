@@ -153,7 +153,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strIndexHtml = strIndexHtml.replace("{ContextPath}", ctxPath);
 
 			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
-					siteid) + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
+					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
 
 			strIndexHtml = strIndexHtml.replace("<!--#{javascripts}#-->", strJavascripts);
 
@@ -308,7 +308,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strLoginHtml = strLoginHtml.replace("{ContextPath}", ctxPath);
 
 			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
-					siteid) + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
+					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
 
 			strLoginHtml = strLoginHtml.replace("<!--#{javascripts}#-->", strJavascripts);
 

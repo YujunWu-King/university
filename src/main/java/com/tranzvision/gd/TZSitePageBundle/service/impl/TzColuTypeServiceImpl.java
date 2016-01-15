@@ -88,8 +88,9 @@ public class TzColuTypeServiceImpl extends FrameworkImpl {
 
 					Map<String, Object> mapJson = new HashMap<String, Object>();
 
-					strColuId = mapData.get("") == null ? "" : String.valueOf(mapData.get("TZ_COLU_ID"));
-					String strColuName = mapData.get("") == null ? "" : String.valueOf(mapData.get("TZ_COLU_NAME"));
+					strColuId = mapData.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapData.get("TZ_COLU_ID"));
+					String strColuName = mapData.get("TZ_COLU_NAME") == null ? ""
+							: String.valueOf(mapData.get("TZ_COLU_NAME"));
 
 					mapJson.put("value", strColuId);
 					mapJson.put("text", strColuName);
