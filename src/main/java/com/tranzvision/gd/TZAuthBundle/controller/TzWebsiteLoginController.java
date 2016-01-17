@@ -50,10 +50,10 @@ public class TzWebsiteLoginController {
 
 	@Autowired
 	private TZGDObject tzGDObject;
-	
+
 	@Autowired
 	private TzCookie tzCookie;
-	
+
 	@Autowired
 	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
 
@@ -96,17 +96,20 @@ public class TzWebsiteLoginController {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(request.getParameter("tzParams"));
 
-		String strOrgId = jacksonUtil.getString("orgid");
-		String strUserName = jacksonUtil.getString("userName");
-		String strPassWord = jacksonUtil.getString("passWord");
-		String strYzmCode = jacksonUtil.getString("yzmCode");
-		String strLang = jacksonUtil.getString("lang");
+		Map<String, Object> mapData = jacksonUtil.getMap("comParams");
+
+		String strOrgId = mapData.get("orgid") == null ? "" : String.valueOf(mapData.get("orgid"));
+		String strUserName = mapData.get("userName") == null ? "" : String.valueOf(mapData.get("userName"));
+		String strPassWord = mapData.get("passWord") == null ? "" : String.valueOf(mapData.get("passWord"));
+		String strYzmCode = mapData.get("yzmCode") == null ? "" : String.valueOf(mapData.get("yzmCode"));
+		String strLang = mapData.get("lang") == null ? "" : String.valueOf(mapData.get("lang"));
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
 		try {
 
 			if (null != strOrgId && !"".equals(strOrgId)) {
+				strOrgId = strOrgId.toUpperCase();
 				String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetSiteidByOrgid");
 
 				String strSiteId = sqlQuery.queryForObject(sql, new Object[] { strOrgId }, "String");
@@ -128,13 +131,13 @@ public class TzWebsiteLoginController {
 
 						jsonMap.put("success", boolResult);
 						jsonMap.put("errorCode", loginStatus);
-						jsonMap.put("error", errorMsg);
+						jsonMap.put("errorDesc", errorMsg);
 
 						if (boolResult) {
 
 							String ctxPath = request.getContextPath();
 
-							String indexUrl = ctxPath + "/site/index/"+ strOrgId + "/" + strSiteId;
+							String indexUrl = ctxPath + "/site/index/" + strOrgId + "/" + strSiteId;
 
 							jsonMap.put("url", indexUrl);
 
@@ -181,9 +184,9 @@ public class TzWebsiteLoginController {
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-		
+
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
-		
+
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();

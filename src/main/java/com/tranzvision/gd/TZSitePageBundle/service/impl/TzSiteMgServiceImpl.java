@@ -1490,8 +1490,16 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "")
 						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
+				
+				String strPreviewJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
+						orgid, strSiteId, "Y")
+						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
 
+				String strPreviewHTML = strReleasedHtml;
+				
 				strReleasedHtml = strReleasedHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+				
+				strPreviewHTML = strPreviewHTML.replace("<!--#{javascripts}#-->", strPreviewJavascripts);
 
 				strReleasedHtml = siteRepCssServiceImpl.repTitle(strReleasedHtml, strSiteId);
 				//strReleasedHtml = siteRepCssServiceImpl.repCss(strReleasedHtml, strSiteId);
@@ -1500,8 +1508,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strReleasedHtml = siteRepCssServiceImpl.repSiteid(strReleasedHtml, strSiteId);
 				strReleasedHtml = siteRepCssServiceImpl.repJgid(strReleasedHtml, orgid);
 				strReleasedHtml = siteRepCssServiceImpl.repLang(strReleasedHtml, siteLang);
+				
+				strPreviewHTML = siteRepCssServiceImpl.repTitle(strPreviewHTML, strSiteId);
+				//strPreviewHTML = siteRepCssServiceImpl.repCss(strPreviewHTML, strSiteId);
+				strPreviewHTML = siteRepCssServiceImpl.repWelcome(strPreviewHTML, "");
+				strPreviewHTML = siteRepCssServiceImpl.repSdkbar(strPreviewHTML, "");
+				strPreviewHTML = siteRepCssServiceImpl.repSiteid(strPreviewHTML, strSiteId);
+				strPreviewHTML = siteRepCssServiceImpl.repJgid(strPreviewHTML, orgid);
+				strPreviewHTML = siteRepCssServiceImpl.repLang(strPreviewHTML, siteLang);
+				
 				psTzSiteiDefnTWithBLOBs.setTzIndexPubcode(strReleasedHtml);
-				psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strReleasedHtml);
+				psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strPreviewHTML);
 				psTzSiteiDefnTWithBLOBs.setTzSiteFbzt("Y");
 				psTzSiteiDefnTWithBLOBs.setTzLastmantDttm(new Date());
 				psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
@@ -1564,8 +1581,16 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "")
 						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease", ctxPath);
+				
+				String strPreviewJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
+						orgid, strSiteId, "Y")
+						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
 
+				String strPreviewHTML = strReleaseHtml;
+				
 				strReleaseHtml = strReleaseHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+				
+				strPreviewHTML = strPreviewHTML.replace("<!--#{javascripts}#-->", strPreviewJavascripts);
 				
 				strReleaseHtml = siteRepCssServiceImpl.repTitle(strReleaseHtml, strSiteId);
 				//strReleaseHtml = siteRepCssServiceImpl.repCss(strReleaseHtml, strSiteId);
@@ -1574,8 +1599,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strReleaseHtml = siteRepCssServiceImpl.repSiteid(strReleaseHtml, strSiteId);
 				strReleaseHtml = siteRepCssServiceImpl.repJgid(strReleaseHtml, orgid);
 				strReleaseHtml = siteRepCssServiceImpl.repLang(strReleaseHtml, siteLang);
+				
+				strPreviewHTML = siteRepCssServiceImpl.repTitle(strPreviewHTML, strSiteId);
+				//strPreviewHTML = siteRepCssServiceImpl.repCss(strPreviewHTML, strSiteId);
+				strPreviewHTML = siteRepCssServiceImpl.repWelcome(strPreviewHTML, "");
+				strPreviewHTML = siteRepCssServiceImpl.repSdkbar(strPreviewHTML, "");
+				strPreviewHTML = siteRepCssServiceImpl.repSiteid(strPreviewHTML, strSiteId);
+				strPreviewHTML = siteRepCssServiceImpl.repJgid(strPreviewHTML, orgid);
+				strPreviewHTML = siteRepCssServiceImpl.repLang(strPreviewHTML, siteLang);
+				
 				psTzSiteiDefnTWithBLOBs.setTzLonginPubcode(strReleaseHtml);
-				psTzSiteiDefnTWithBLOBs.setTzLoginPrecode(strReleaseHtml);
+				psTzSiteiDefnTWithBLOBs.setTzLoginPrecode(strPreviewHTML);
 				psTzSiteiDefnTWithBLOBs.setTzSiteFbzt("Y");
 				psTzSiteiDefnTWithBLOBs.setTzLastmantDttm(new Date());
 				psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));

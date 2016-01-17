@@ -440,32 +440,32 @@ function Login(){
 		dataType:'json',
 		success:function(response){
 	
-			if (response.comContent.success == "true") {  
+			if (response.success == "true") {  
 			   $("#errormsg").hide();
-               	window.location.href=response.comContent.url;
+               	window.location.href=response.url;
 				
             }else{
-			   if (response.state.errcode=="1")
+			   if (response.errorCode=="1")
 			   {
-				    $("#errormsg").children("span").html(response.state.errdesc);
+				    $("#errormsg").children("span").html(response.errorDesc);
 					$("#errormsg").show();
 					$("#resetbnt").show();
 					
 			   }else
 			   {
-				   if (response.state.errcode=="2")
+				   if (response.errorCode=="2")
 				   {
 						$("#password").val("");
 						$("#yzm").val("");
 						SetImgCode();
 				   }
-				   if (response.state.errcode=="3")
+				   if (response.errorCode=="3")
 				   {
 					    $("#yzm").val("");
 						SetImgCode();
 				   }
 
-					 $("#errormsg").children("span").html(response.state.errdesc);
+					 $("#errormsg").children("span").html(response.errorDesc);
 					 $("#errormsg").show();
 			   }
 			  
