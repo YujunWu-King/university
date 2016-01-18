@@ -506,7 +506,7 @@ function Logout(){
 
 /*跳转到注册页*/
 function goToRegister(){
-	window.location.href="./enroll.html";
+	window.location.href= TzUniversityContextPath + "/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/enroll.html";
 }
 
 /*忘记密码*/

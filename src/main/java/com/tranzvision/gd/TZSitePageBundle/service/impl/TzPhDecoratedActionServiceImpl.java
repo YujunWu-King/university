@@ -14,6 +14,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -44,6 +45,9 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
+	
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg) {
@@ -64,6 +68,8 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			}
 
 			if (null != strAreaCode && !"".equals(strAreaCode)) {
+				
+				strAreaCode = siteRepCssServiceImpl.repWelcome(strAreaCode, "");
 				
 				String ctxPath = request.getContextPath();
 				strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
@@ -113,6 +119,8 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 			if (null != strAreaCode && !"".equals(strAreaCode)) {
 
+				strAreaCode = siteRepCssServiceImpl.repWelcome(strAreaCode, "");
+				
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
