@@ -58,9 +58,9 @@ public class SiteRepCssServiceImpl {
 			String websitePath = getSysHardCodeVal.getWebsiteCssPath();
 			String strCssDir = request.getContextPath();
 			if("".equals(skinstor) || skinstor == null){
-				strCssDir = strCssDir + websitePath + "/" + strJgId + "/" + strSiteId + "/" ;
+				strCssDir = strCssDir + websitePath + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/" ;
 			}else{
-				strCssDir = strCssDir + websitePath + "/" + strJgId + "/" + strSiteId + "/" + skinstor + "/";
+				strCssDir = strCssDir + websitePath + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/" + skinstor + "/";
 			}
 			
 			if(strJgId != null && !"".equals(strJgId)){

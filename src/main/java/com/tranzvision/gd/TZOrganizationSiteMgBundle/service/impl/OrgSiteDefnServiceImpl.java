@@ -135,21 +135,13 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 					returnJsonMap.replace("siteId", siteId);
 					//生成样式文件;
 					try{
-						String websitePath = getSysHardCodeVal.getWebsiteFileUploadPath();
+						String websitePath = getSysHardCodeVal.getWebsiteCssPath();
 						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
 						String dirPath = "";
 						if(skinstor == null || "".equals(skinstor)){
-							if(orgid != null && !"".equals(orgid)){
-								dirPath = websitePath + "/" + orgid + "/" + siteId;
-							}else{
-								dirPath = websitePath + "/" + siteId;
-							}
+							dirPath = websitePath + "/" + orgid.toLowerCase() + "/" + siteId;
 						}else{
-							if(orgid != null && !"".equals(orgid)){
-								dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
-							}else{
-								dirPath = websitePath + "/" + siteId + "/" + skinstor;
-							}
+							dirPath = websitePath + "/" + orgid.toLowerCase() + "/" + siteId + "/" + skinstor;
 						}
 						
 						String parentRealPath = request.getServletContext().getRealPath(dirPath);
@@ -264,12 +256,18 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 					//生成样式文件;
 					try{
 						String websitePath = getSysHardCodeVal.getWebsiteCssPath();
-						String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
+						//得到当前站点属于的机构;
+						String orgid = "";
+						psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
+						orgid = psTzSiteiDefnT.getTzJgId();
+						if(orgid == null || "".equals(orgid)){
+							orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
+						}
 						String dirPath = "";
 						if("".equals(skinstor)){
-							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" ;
+							dirPath = websitePath + "/" + orgid.toLowerCase() + "/" + siteId + "/" ;
 						}else{
-							dirPath = websitePath + "/" + orgid + "/" + siteId + "/" + skinstor;
+							dirPath = websitePath + "/" + orgid.toLowerCase() + "/" + siteId + "/" + skinstor;
 						}
 						
 						String parentRealPath = request.getServletContext().getRealPath(dirPath);
