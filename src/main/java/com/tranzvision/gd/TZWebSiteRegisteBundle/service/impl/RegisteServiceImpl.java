@@ -208,20 +208,20 @@ public class RegisteServiceImpl {
 						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
 				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", true, strActHtml,imgPath);
 					}
-				}
-			}else{
-				if(strActType.indexOf("EMAIL")>=0){
-					if("ENG".equals(strLang)){
-						strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Email' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
-					}else{
-						strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='邮箱验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
-					}
 				}else{
-					if(strActType.indexOf("MOBILE")>=0){
+					if(strActType.indexOf("EMAIL")>=0){
 						if("ENG".equals(strLang)){
-							strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Phone' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+							strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Email' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
 						}else{
-							strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='手机验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+							strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='邮箱验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+						}
+					}else{
+						if(strActType.indexOf("MOBILE")>=0){
+							if("ENG".equals(strLang)){
+								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Phone' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+							}else{
+								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='手机验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+							}
 						}
 					}
 				}
