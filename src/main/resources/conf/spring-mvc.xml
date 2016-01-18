@@ -22,6 +22,7 @@
 
 	<mvc:resources mapping="/statics/**" location="/statics/"
 		cache-period="31556926" />
+	<mvc:resources mapping="/**" location="/WEB-INF/html/" />
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
