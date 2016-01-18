@@ -38,7 +38,7 @@ public class SiteRepCssServiceImpl {
 				int numCharend = strConent.indexOf("</title>",numCharstart);
 				if(numCharend > numCharstart){
 					String strCharsub = strConent.substring(numCharstart, numCharend + 8);
-					strConent = strConent.replaceAll(strCharsub, "<title>" + strSiteName + "</title>");
+					strConent = strConent.replace(strCharsub, "<title>" + strSiteName + "</title>");
 				}
 			}
 		}
@@ -64,9 +64,9 @@ public class SiteRepCssServiceImpl {
 			}
 			
 			if(strJgId != null && !"".equals(strJgId)){
-				strConent = strConent.replaceAll("page_stylecss",  strCssDir + "style_" + strJgId.toLowerCase() + ".css");
+				strConent = strConent.replace("page_stylecss",  strCssDir + "style_" + strJgId.toLowerCase() + ".css");
 			}else{
-				strConent = strConent.replaceAll("page_stylecss",  strCssDir + "style.css");
+				strConent = strConent.replace("page_stylecss",  strCssDir + "style.css");
 			}
 			
 		}
@@ -94,9 +94,9 @@ public class SiteRepCssServiceImpl {
 			}
 			
 			if(strJgId != null && !"".equals(strJgId)){
-				strConent = strConent.replaceAll("page_stylecss",  strCssDir + "style_" + strJgId.toLowerCase() + ".css");
+				strConent = strConent.replace("page_stylecss",  strCssDir + "style_" + strJgId.toLowerCase() + ".css");
 			}else{
-				strConent = strConent.replaceAll("page_stylecss",  strCssDir + "style.css");
+				strConent = strConent.replace("page_stylecss",  strCssDir + "style.css");
 			}
 			
 		}
@@ -115,7 +115,7 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf(">",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 1);
-				strConent = strConent.replaceAll(strCharsub,  "<input id=\"siteid\" name=\"siteid\" type=\"hidden\" value=\"" + strSiteId + "\">");
+				strConent = strConent.replace(strCharsub,  "<input id=\"siteid\" name=\"siteid\" type=\"hidden\" value=\"" + strSiteId + "\">");
 			}
 		}
 		
@@ -134,7 +134,7 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf(">",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 1);
-				strConent = strConent.replaceAll(strCharsub,  "<input id=\"jgid\" name=\"jgid\" type=\"hidden\" value=\"" + strJgId + "\">");
+				strConent = strConent.replace(strCharsub,  "<input id=\"jgid\" name=\"jgid\" type=\"hidden\" value=\"" + strJgId + "\">");
 			}
 		}
 			
@@ -152,7 +152,7 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf(">",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 1);
-				strConent = strConent.replaceAll(strCharsub, "<input id=\"lang\" name=\"lang\" type=\"hidden\" value=\"" + strLang + "\">");
+				strConent = strConent.replace(strCharsub, "<input id=\"lang\" name=\"lang\" type=\"hidden\" value=\"" + strLang + "\">");
 			}
 		}
 				
@@ -170,7 +170,7 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf("</span>",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 7);
-				strConent = strConent.replaceAll(strCharsub, "<span id=\"menuName\">" + strMenuName + "</span>");
+				strConent = strConent.replace(strCharsub, "<span id=\"menuName\">" + strMenuName + "</span>");
 			}
 		}
 					
@@ -188,7 +188,7 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf(">",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 1);
-				strConent = strConent.replaceAll(strCharsub, "<input id=\"operator\" name=\"operator\" type=\"hidden\" value=\"" + strOperator + "\">");
+				strConent = strConent.replace(strCharsub, "<input id=\"operator\" name=\"operator\" type=\"hidden\" value=\"" + strOperator + "\">");
 			}
 		}
 						
@@ -200,13 +200,15 @@ public class SiteRepCssServiceImpl {
 		if(strConent == null || "".equals(strConent)){
 			return strConent;
 		}
+		
+		strWelcome = "<span id=\"welcome\"></span>";
 							
 		int numCharstart = strConent.indexOf("<span id=\"welcome\">");
 		if(numCharstart >= 0){
 			int numCharend = strConent.indexOf("</span>",numCharstart);
 			if(numCharend > numCharstart){
 				String strCharsub = strConent.substring(numCharstart, numCharend + 7);
-				strConent = strConent.replaceAll(strCharsub, strWelcome);
+				strConent = strConent.replace(strCharsub, strWelcome);
 			}
 		}
 							

@@ -2929,12 +2929,15 @@ Ext.getCmp("gridPanel").reconfigure(store);
 
 			if (pagetype=="loginpage")
 			{
-				savecontent =  "<body style=\"background:#fff\" onkeydown=\"BindEnter(event)\">" + bodyCode + "</body>";
+				//savecontent =  "<body style=\"background:#fff\" onkeydown=\"BindEnter(event)\">" + bodyCode + "</body>";
+				savecontent =  "<body style=\"background:#fff\">" + bodyCode + "</body>";
 			}
 			else{
 				savecontent =  "<body style=\"background:#fff\">" + bodyCode + "</body>";
 			}
 
+			savecontent = savecontent.replace(new RegExp(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi), "");
+			
 		    savecontent=savecontent.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
 			savecontent=Ext.JSON.encode(savecontent);
 
@@ -3036,11 +3039,14 @@ Ext.getCmp("gridPanel").reconfigure(store);
 			
 			 if (pagetype=="loginpage")
 			{
-				releasecontent =   "<body style=\"background:#fff\" onkeydown=\"BindEnter(event)\">" + bodyCode + "</body>";
+				//releasecontent =   "<body style=\"background:#fff\" onkeydown=\"BindEnter(event)\">" + bodyCode + "</body>";
+				releasecontent =   "<body style=\"background:#fff\">" + bodyCode + "</body>";
 			}
 			else{
 				releasecontent =   "<body style=\"background:#fff\">" + bodyCode + "</body>";
 			}
+			
+			releasecontent = releasecontent.replace(new RegExp(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi), "");
 
 			 releasecontent=releasecontent.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
 			 releasecontent=Ext.JSON.encode(releasecontent);

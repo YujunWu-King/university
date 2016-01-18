@@ -1269,6 +1269,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",
 						strSaveContent);
 
+				strSavedContent = siteRepCssServiceImpl.repTitle(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
 				strSavedContent = siteRepCssServiceImpl.repSiteid(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repJgid(strSavedContent, orgid);
@@ -1352,6 +1353,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
 
 				String strSavedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginSaveTpl", strSaveContent);
+				strSavedHtml = siteRepCssServiceImpl.repTitle(strSavedHtml, strSiteId);
 				strSavedHtml = siteRepCssServiceImpl.repWelcome(strSavedHtml, "");
 				strSavedHtml = siteRepCssServiceImpl.repSiteid(strSavedHtml, strSiteId);
 				strSavedHtml = siteRepCssServiceImpl.repJgid(strSavedHtml, orgid);
