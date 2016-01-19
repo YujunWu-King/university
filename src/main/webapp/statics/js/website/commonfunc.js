@@ -7,9 +7,9 @@ function getQueryString(name) {
 function getOperatorType(){
 	
 	var thisUrl = window.location.pathname;
-	if(thisUrl.indexOf("/decorate/")){
+	if(thisUrl.indexOf("/decorate/")>=0){
 		return "D";
-	}else if(thisUrl.indexOf("/preview/")){
+	}else if(thisUrl.indexOf("/preview/")>=0){
 		return "P";
 	}else{
 		return "R";
