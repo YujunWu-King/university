@@ -44,7 +44,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-	
+
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
@@ -147,10 +147,19 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 			String ctxPath = request.getContextPath();
 
-			String sql = "select TZ_INDEX_SAVECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String sql = "select TZ_INDEX_SAVECODE,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
 
-			String strIndexHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
-			
+			Map<String, Object> mapSiteiInfo = sqlQuery.queryForMap(sql, new Object[] { orgid, siteid });
+			String strIndexHtml = "";
+			String strSkinID = "";
+			if (mapSiteiInfo != null) {
+				strIndexHtml = mapSiteiInfo.get("TZ_INDEX_SAVECODE") == null ? "" : String.valueOf("TZ_INDEX_SAVECODE");
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf("TZ_SKIN_ID");
+
+				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
+				strIndexHtml = strIndexHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
+			}
+
 			strIndexHtml = siteRepCssServiceImpl.repTitle(strIndexHtml, siteid);
 
 			strIndexHtml = strIndexHtml.replace("{page_stylecss}",
@@ -160,7 +169,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
 					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
-			
+
 			strIndexHtml = strIndexHtml.replace("<!--#{javascripts}#-->", strJavascripts);
 
 			strRtn = strIndexHtml;
@@ -304,9 +313,19 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 
 			String ctxPath = request.getContextPath();
 
-			String sql = "select TZ_LONGIN_SAVECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String sql = "select TZ_LONGIN_SAVECODE,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
 
-			String strLoginHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
+			Map<String, Object> mapSiteiInfo = sqlQuery.queryForMap(sql, new Object[] { orgid, siteid });
+			String strLoginHtml = "";
+			String strSkinID = "";
+			if (mapSiteiInfo != null) {
+				strLoginHtml = mapSiteiInfo.get("TZ_LONGIN_SAVECODE") == null ? ""
+						: String.valueOf("TZ_LONGIN_SAVECODE");
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf("TZ_SKIN_ID");
+
+				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
+				strLoginHtml = strLoginHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
+			}
 
 			strLoginHtml = strLoginHtml.replace("{page_stylecss}",
 					orgidLower + "/" + siteid + "/" + "style_" + orgidLower + ".css");

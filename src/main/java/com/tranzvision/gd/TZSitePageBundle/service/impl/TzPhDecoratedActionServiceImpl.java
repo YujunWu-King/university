@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -48,6 +49,9 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 	
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Override
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg) {
@@ -175,6 +179,7 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			}
 
 			String sql = "";
+			String ctxPath = request.getContextPath();
 
 			if ((null != strOrgId && !"".equals(strOrgId)) && (null == strSiteId || "".equals(strSiteId))) {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteidByOrgid");
@@ -193,8 +198,15 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				break;
 			case "P":
 			case "D":
-				sql = "select TZ_AREA_SAVECODE from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=? and TZ_AREA_STATE='Y'";
-				strRet = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaId }, "String");
+				sql = "select TZ_AREA_SAVECODE,TZ_SKIN_ID from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=? and TZ_AREA_STATE='Y'";
+				Map<String,Object> mapSiteiInfo = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaId });
+				
+				strRet = mapSiteiInfo.get("TZ_AREA_SAVECODE")==null?"":String.valueOf(mapSiteiInfo.get("TZ_AREA_SAVECODE"));
+				
+				String strSkinID = mapSiteiInfo.get("TZ_SKIN_ID")==null?"":String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
+				String websiteSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID; 
+				strRet = strRet.replace("{ContextSkinPath}", websiteSkinPath);
+				
 				break;
 			}
 
@@ -202,7 +214,7 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				strRet = "false";
 			} else {
 
-				strRet = strRet.replace("{ContextPath}", request.getContextPath());
+				strRet = strRet.replace("{ContextPath}", ctxPath);
 
 			}
 

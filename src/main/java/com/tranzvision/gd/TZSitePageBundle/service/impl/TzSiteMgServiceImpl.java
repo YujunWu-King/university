@@ -306,6 +306,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 								+ "/video";
 						psTzSiteiDefnTWithBLOBs.setTzVideoView(strVideoView);
 
+						// 皮肤图片存储路径
+						//String strSkinsImg = getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId;
+
 						// 2.2实例化站点样式文件
 						psTzSiteiDefnTWithBLOBs.setTzSkinId(strSkinId);
 						psTzSiteiDefnTWithBLOBs.setTzSkinName(strSkinName);
@@ -327,16 +330,29 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						}
 
 						// 2.3实例化其他数据
+						String strIndexInitcode = psTzSitemDefnTWithBLOBs.getTzIndexInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzIndexInitcode();
+						String strIndexSavecode = psTzSitemDefnTWithBLOBs.getTzIndexInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzIndexInitcode();
+						String strLoginInitcode = psTzSitemDefnTWithBLOBs.getTzLonginInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzLonginInitcode();
+						String strLoginSavecode = psTzSitemDefnTWithBLOBs.getTzLonginInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzLonginInitcode();
+						String strEnrollInitcode = psTzSitemDefnTWithBLOBs.getTzEnrollInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzEnrollInitcode();
+						String strEnrollSavecode = psTzSitemDefnTWithBLOBs.getTzEnrollInitcode() == null ? ""
+								: psTzSitemDefnTWithBLOBs.getTzEnrollInitcode();
+
 						psTzSiteiDefnTWithBLOBs.setTzHomeHandPro(psTzSitemDefnTWithBLOBs.getTzHomeHandPro());
 						psTzSiteiDefnTWithBLOBs.setTzLoginHandPro(psTzSitemDefnTWithBLOBs.getTzLoginHandPro());
 						psTzSiteiDefnTWithBLOBs.setTzRegisHandPro(psTzSitemDefnTWithBLOBs.getTzRegisHandPro());
 						psTzSiteiDefnTWithBLOBs.setTzSiteFbzt("N");
-						psTzSiteiDefnTWithBLOBs.setTzIndexInitcode(psTzSitemDefnTWithBLOBs.getTzIndexInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzIndexSavecode(psTzSitemDefnTWithBLOBs.getTzIndexInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzLonginInitcode(psTzSitemDefnTWithBLOBs.getTzLonginInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(psTzSitemDefnTWithBLOBs.getTzLonginInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzEnrollInitcode(psTzSitemDefnTWithBLOBs.getTzEnrollInitcode());
-						psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(psTzSitemDefnTWithBLOBs.getTzEnrollInitcode());
+						psTzSiteiDefnTWithBLOBs.setTzIndexInitcode(strIndexInitcode);
+						psTzSiteiDefnTWithBLOBs.setTzIndexSavecode(strIndexSavecode);
+						psTzSiteiDefnTWithBLOBs.setTzLonginInitcode(strLoginInitcode);
+						psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(strLoginSavecode);
+						psTzSiteiDefnTWithBLOBs.setTzEnrollInitcode(strEnrollInitcode);
+						psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(strEnrollSavecode);
 						psTzSiteiDefnTWithBLOBs.setTzLastmantDttm(dateNow);
 						psTzSiteiDefnTWithBLOBs.setTzLastmantOprid(oprid);
 
@@ -370,6 +386,12 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									continue;
 								}
 
+								String strAreaInitcdoe = mapArea.get("TZ_AREA_CODE") == null ? ""
+										: String.valueOf(mapArea.get("TZ_AREA_CODE"));
+
+								String strAreaSavecode = mapArea.get("TZ_AREA_CODE") == null ? ""
+										: String.valueOf(mapArea.get("TZ_AREA_CODE"));
+
 								PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 								psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteIId);
@@ -386,10 +408,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 										: String.valueOf(mapArea.get("TZ_AREA_POSITION")));
 								psTzSiteiAreaTWithBLOBs.setTzAreaXh(mapArea.get("TZ_AREA_XH") == null ? 0
 										: Integer.parseInt(String.valueOf(mapArea.get("TZ_AREA_XH"))));
-								psTzSiteiAreaTWithBLOBs.setTzAreaCode(mapArea.get("TZ_AREA_CODE") == null ? ""
-										: String.valueOf(mapArea.get("TZ_AREA_CODE")));
-								psTzSiteiAreaTWithBLOBs.setTzAreaSavecode(mapArea.get("TZ_AREA_CODE") == null ? ""
-										: String.valueOf(mapArea.get("TZ_AREA_CODE")));
+								psTzSiteiAreaTWithBLOBs.setTzAreaCode(strAreaInitcdoe);
+								psTzSiteiAreaTWithBLOBs.setTzAreaSavecode(strAreaSavecode);
 
 								psTzSiteiAreaTWithBLOBs.setTzAddedDttm(dateNow);
 								psTzSiteiAreaTWithBLOBs.setTzAddedOprid(oprid);

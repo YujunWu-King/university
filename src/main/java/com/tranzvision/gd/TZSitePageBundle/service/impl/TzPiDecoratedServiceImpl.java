@@ -42,7 +42,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
-	
+
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -58,40 +58,48 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 			String siteId = jacksonUtil.getString("siteId");
 			String orgId = jacksonUtil.getString("orgId").toUpperCase();
-			//判断是否为站点装修的请求
+			// 判断是否为站点装修的请求
 			String isd = jacksonUtil.getString("isd");
 
 			// 根据站点实例id ， 找站点语言
 			String sysDefaultLang = getSysHardCodeVal.getSysDefaultLanguage();
-			String sql = "select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID = ?";
-			String strLangID = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
+			String sql = "select TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID = ?";
+			Map<String, Object> mapSiteiInfo = sqlQuery.queryForMap(sql, new Object[] { siteId });
+			String strLangID = "";
+			String strSkinID = "";
+			if (mapSiteiInfo != null) {
+				strLangID = mapSiteiInfo.get("TZ_SITE_LANG") == null ? ""
+						: String.valueOf(mapSiteiInfo.get("TZ_SITE_LANG"));
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? ""
+						: String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
+			}
 
 			// 由于英文的描述可能较长，所以中文和英文的信息项描述的长度不同 , 编辑照片的中英文路径
 			String edituserpt_url = "";
 			int td_long = 0;
-			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteImgPath();
+			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath();
 			if (sysDefaultLang.equals(strLangID)) {
 				td_long = 120;
-				edituserpt_url = websiteImgCommonPath + "/common/edituser-pic.png";
+				edituserpt_url = websiteImgCommonPath + "/" + strSkinID + "/edituser-pic.png";
 			} else {
 				td_long = 160;
-				edituserpt_url = websiteImgCommonPath + "/common/edituser-pic-en.png";
+				edituserpt_url = websiteImgCommonPath + "/" + strSkinID + "/edituser-pic-en.png";
 			}
 
 			// 当前用户ID（此用户是前台登录用户）
 			String m_curOPRID = "";
 			String m_curOrgID = "";
-			if("Y".equals(isd)){
-				//如果是站点装修的请求，则使用后台的session
+			if ("Y".equals(isd)) {
+				// 如果是站点装修的请求，则使用后台的session
 				m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				m_curOrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			}else{
-				//如果不是站点装修的请求，则取前台用户的session
+			} else {
+				// 如果不是站点装修的请求，则取前台用户的session
 				m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 				m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			}
-			if(!m_curOrgID.equals(orgId)){
-				//如果当前用户登录的机构与请求的机构不一致，则返回空
+			if (!m_curOrgID.equals(orgId)) {
+				// 如果当前用户登录的机构与请求的机构不一致，则返回空
 				return "";
 			}
 
@@ -115,7 +123,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 			}
 			if ("".equals(strPhoto)) {
-				strPhoto = websiteImgCommonPath + "/common/bjphoto.jpg";
+				strPhoto = websiteImgCommonPath + "/" + strSkinID + "/bjphoto.jpg";
 			}
 
 			String strResultHeadImg = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerPhotoCard", strPhoto,
