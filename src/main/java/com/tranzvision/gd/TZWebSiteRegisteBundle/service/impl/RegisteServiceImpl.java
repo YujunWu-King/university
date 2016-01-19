@@ -226,11 +226,12 @@ public class RegisteServiceImpl {
 					}
 				}
 			}
-			
+			//登录页面链接;
+			String loginUrl = request.getContextPath() + "/user/login/" + strJgid.toLowerCase() +"/"+strSiteId;
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath());
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath());
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
 			}
 			
 			//fields = tzGdObject.getHTMLText("HTML.test.test", true, "test111","test222");

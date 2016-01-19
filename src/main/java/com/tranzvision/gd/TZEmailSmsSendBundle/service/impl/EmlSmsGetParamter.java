@@ -51,7 +51,9 @@ public class EmlSmsGetParamter {
 				String tokenCodeSQL = "SELECT TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE='REG' AND TZ_EFF_FLAG='Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 				String strTokenSign = jdbcTemplate.queryForObject(tokenCodeSQL, String.class, new Object[]{strOprId, strOrgid,});
 				if(strTokenSign != null && !"".equals(strTokenSign)){
-					String strActUrl = "http://localhost:8080/university/dispatcher";
+					HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+					String serv = "http://"+ request.getServerName() + ":"+ request.getServerPort() + request.getContextPath();
+					String strActUrl = serv + "/dispatcher";
 					strActUrl = strActUrl + "?classid=enrollCls&tokensign=" + strTokenSign + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=2";
 					return strActUrl;
 				}else{

@@ -780,8 +780,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    	
 		    	Map<String, Object> returnMap = new HashMap<>();
 		    	returnMap.put("result", "success");
-		    	//TODO 修改登录链接
-		    	String strJumUrl = "/" + strJgId.toUpperCase() + "/login.html";
+		    	//修改登录链接
+			    String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? limit 0,1";
+			    String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[]{strJgId},"String");
+				String strJumUrl = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() +"/"+strSiteId;
 		    	returnMap.put("jumpurl", strJumUrl);
 		    	strResult = jacksonUtil.Map2json(returnMap);
 		    	return strResult;
@@ -959,9 +961,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							}catch(Exception e){
 								strJihuo = "";
 							}
-							//TODO 申请人登录页面链接;
+							//申请人登录页面链接;
 							String contextPath = request.getContextPath();
-							String loginUrl = contextPath + "/" + strOrgid.toUpperCase() +"/login.html";
+							String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() +"/"+strSiteId;
 							String imgPath = getSysHardCodeVal.getWebsiteImgPath();
 							imgPath = contextPath + imgPath + "/" + skinId;
 							
