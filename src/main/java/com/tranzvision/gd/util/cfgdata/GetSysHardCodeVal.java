@@ -89,6 +89,11 @@ public class GetSysHardCodeVal {
 	private String websiteImgPath;
 	
 	/**
+	 * 网站模板皮肤图片路径前缀
+	 */
+	private String websiteSkinsImgPath;
+	
+	/**
 	 * 前台注册页面路径前缀
 	 */
 	private String websiteEnrollPath;
@@ -131,6 +136,8 @@ public class GetSysHardCodeVal {
 			websiteCssPath = sysHardCodeValProps.getProperty("WebsiteCssPath");
 			
 			websiteImgPath = sysHardCodeValProps.getProperty("WebsiteImgPath");
+			
+			websiteSkinsImgPath = sysHardCodeValProps.getProperty("WebsiteSkinsImgPath");
 			
 			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
 
@@ -202,6 +209,10 @@ public class GetSysHardCodeVal {
 	
 	public String getWebsiteImgPath() {
 		return websiteImgPath;
+	}
+	
+	public String getWebsiteSkinsImgPath() {
+		return websiteSkinsImgPath;
 	}
 
 	public String getWebsiteEnrollPath() {

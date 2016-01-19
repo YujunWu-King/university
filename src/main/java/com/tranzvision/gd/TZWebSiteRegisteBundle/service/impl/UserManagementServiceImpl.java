@@ -96,7 +96,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				//通用链接;
 				String contextPath = request.getContextPath();
 				String commonUrl = contextPath + "/dispatcher";
-				String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = contextPath + imgPath + "/" + skinId;
 				
 				//修改密码;
@@ -476,7 +476,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			//通用链接;
 			String contextPath = request.getContextPath();
 			String commonUrl = contextPath + "/dispatcher";
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = contextPath + imgPath + "/" + skinId;
 			
 			String sql  = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";

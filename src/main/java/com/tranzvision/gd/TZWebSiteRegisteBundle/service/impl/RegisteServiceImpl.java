@@ -54,7 +54,7 @@ public class RegisteServiceImpl {
 			}
 			String strLang = psTzSiteiDefnT.getTzSiteLang();
 			String skinId = psTzSiteiDefnT.getTzSkinId();
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			//获取要显示的字段;
@@ -254,7 +254,7 @@ public class RegisteServiceImpl {
 			}
 			String strOrgId = psTzSiteiDefnT.getTzJgId();
 			String skinId = psTzSiteiDefnT.getTzSkinId();
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			strContent = this.userRegister(strOrgId, strSiteId);

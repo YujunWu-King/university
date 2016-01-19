@@ -906,7 +906,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strContent = "邮箱激活邮件已发送到您的注册邮箱，请<a href='http://mail." + splistEmail[1] + "/'>登录邮箱</a>激活。";
 				}
 				
-				String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
 				
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SUCCESSE_HTML", true,strContent,imgPath );
@@ -964,7 +964,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							//申请人登录页面链接;
 							String contextPath = request.getContextPath();
 							String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() +"/"+strSiteId;
-							String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+							String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 							imgPath = contextPath + imgPath + "/" + skinId;
 							
 							//已经激活
@@ -1041,7 +1041,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String strBeginUrl = contextPath + "/dispatcher";
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 		    String str_content = "";
@@ -1078,7 +1078,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String strBeginUrl = contextPath + "/dispatcher";
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			//激活方式;
@@ -1145,7 +1145,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String strBeginUrl = contextPath + "/dispatcher";
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			String str_content = "";
@@ -1206,7 +1206,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String strBeginUrl = contextPath + "/dispatcher";
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			String str_content = "";
@@ -1252,7 +1252,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				Map<String, Object> siteMap = jdbcTemplate.queryForMap(sql,new Object[]{strOrgid});
 				strSiteId = (String)siteMap.get("TZ_SITEI_ID");
 				String skinId = (String)siteMap.get("TZ_SKIN_ID");
-				String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
 				
 				String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ,TZ_EFF_FLAG,TZ_EMAIL FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_TYPE='EDIT' AND TZ_TOKEN_CODE=? AND TZ_JG_ID=? ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
@@ -1335,7 +1335,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String strBeginUrl = contextPath + "/dispatcher";
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
-			String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 		    String str_content = "";

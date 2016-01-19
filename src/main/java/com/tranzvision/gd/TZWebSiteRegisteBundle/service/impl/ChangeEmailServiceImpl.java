@@ -76,7 +76,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 
 				String contextPath = request.getContextPath();
 				String strBeginUrl = contextPath + "/dispatcher";
-				String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath ();
 				imgPath = contextPath + imgPath + "/" + skinId;
 
 				String tzWdzhEmail = "";
