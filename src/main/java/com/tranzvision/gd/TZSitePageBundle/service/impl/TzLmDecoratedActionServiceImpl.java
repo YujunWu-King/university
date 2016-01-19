@@ -64,7 +64,14 @@ public class TzLmDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 				}
 
+				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
+				
 				String ctxPath = request.getContextPath();
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
+				strAreaCode = strAreaCode.replace(strSkinImgPath, "{ContextSkinPath}/");
+				
 				strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
 				
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
@@ -167,7 +174,7 @@ public class TzLmDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 			String strResultContent = "";
 
-			String sql = "select TZ_AREA_PUBCODE,TZ_AREA_SAVECODE,TZ_SKIN_ID from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
+			String sql = "select TZ_AREA_PUBCODE,TZ_AREA_SAVECODE from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
 			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaId });
 
 			if (null != mapData) {
@@ -179,9 +186,9 @@ public class TzLmDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 					strResultContent = mapData.get("TZ_AREA_SAVECODE") == null ? ""
 							: String.valueOf(mapData.get("TZ_AREA_SAVECODE"));
 				}
-				
-				String strSkinID = mapData.get("TZ_SKIN_ID") == null ? ""
-						: String.valueOf(mapData.get("TZ_SKIN_ID"));
+								
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinID = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 				
 				String ctxPath = request.getContextPath();
 				

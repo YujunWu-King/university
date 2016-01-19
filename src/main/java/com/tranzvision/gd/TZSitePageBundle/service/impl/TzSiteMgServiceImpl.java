@@ -919,7 +919,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									// this.handleEnrollPage(strSiteId);
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
-										boolResult = this.saveEnrollpage(strEnrollPageCode, strSiteId, errMsg);
+										boolResult = registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId, errMsg);
 										if (boolResult) {
 											errMsg[0] = "0";
 											errMsg[1] = "站点保存完成！";
@@ -1283,7 +1283,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strPreviewContent = strSaveContent;
 
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
+				
 				String ctxPath = request.getContextPath();
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
+				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
+				
 				strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
 
 				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",
@@ -1306,6 +1313,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
 
 				strPreviewHtml = strPreviewHtml.replace("{ContextPath}", ctxPath);
+				
+				strPreviewHtml = strPreviewHtml.replace("{ContextSkinPath}", strSkinImgPath);
 
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "Y")
@@ -1369,7 +1378,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strPreviewContent = strSaveContent;
 
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
+				
 				String ctxPath = request.getContextPath();
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
+				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
+				
 				strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
 
 				String strSavedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginSaveTpl", strSaveContent);
@@ -1390,6 +1406,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
 
 				strPreviewHtml = strPreviewHtml.replace("{ContextPath}", ctxPath);
+				
+				strPreviewHtml = strPreviewHtml.replace("{ContextSkinPath}", strSkinImgPath);
 
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "Y")
@@ -1508,6 +1526,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapSiteiData.get("TZ_JG_ID")).toUpperCase();
 				String siteLang = mapSiteiData.get("TZ_SITE_LANG") == null ? ""
 						: String.valueOf(mapSiteiData.get("TZ_SITE_LANG")).toUpperCase();
+				
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
@@ -1521,6 +1542,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String ctxPath = request.getContextPath();
 				strReleasedHtml = strReleasedHtml.replace("{ContextPath}", ctxPath);
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
+				strReleasedHtml = strReleasedHtml.replace("{ContextSkinPath}", strSkinImgPath);
 
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "")
@@ -1601,6 +1625,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapSiteiData.get("TZ_JG_ID")).toUpperCase();
 				String siteLang = mapSiteiData.get("TZ_SITE_LANG") == null ? ""
 						: String.valueOf(mapSiteiData.get("TZ_SITE_LANG")).toUpperCase();
+				
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
@@ -1614,6 +1641,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String ctxPath = request.getContextPath();
 				strReleaseHtml = strReleaseHtml.replace("{ContextPath}", ctxPath);
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
+				strReleaseHtml = strReleaseHtml.replace("{ContextSkinPath}", strSkinImgPath);
 
 				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 						orgid, strSiteId, "")

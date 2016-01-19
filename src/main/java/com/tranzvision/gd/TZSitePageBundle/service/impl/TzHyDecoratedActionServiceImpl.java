@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -42,6 +43,9 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Override
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg) {
@@ -71,7 +75,14 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 			if (null != strAreaCode && !"".equals(strAreaCode)) {
 				
+				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
+				
 				String ctxPath = request.getContextPath();
+				
+				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
+				strAreaCode = strAreaCode.replace(strSkinImgPath, "{ContextSkinPath}/");
+				
 				strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
 				
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();

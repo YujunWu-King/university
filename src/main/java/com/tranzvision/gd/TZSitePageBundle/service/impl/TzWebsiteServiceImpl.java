@@ -153,8 +153,8 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String strIndexHtml = "";
 			String strSkinID = "";
 			if (mapSiteiInfo != null) {
-				strIndexHtml = mapSiteiInfo.get("TZ_INDEX_SAVECODE") == null ? "" : String.valueOf("TZ_INDEX_SAVECODE");
-				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf("TZ_SKIN_ID");
+				strIndexHtml = mapSiteiInfo.get("TZ_INDEX_SAVECODE") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_INDEX_SAVECODE"));
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
 
 				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
 				strIndexHtml = strIndexHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
@@ -260,7 +260,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 				return "errororg";
 			}
 
-			String sql = "select TZ_INDEX_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String sql = "select TZ_INDEX_PUBCODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y' and TZ_SITE_FBZT='Y'";
 
 			String strIndexHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
 
@@ -320,8 +320,8 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String strSkinID = "";
 			if (mapSiteiInfo != null) {
 				strLoginHtml = mapSiteiInfo.get("TZ_LONGIN_SAVECODE") == null ? ""
-						: String.valueOf("TZ_LONGIN_SAVECODE");
-				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf("TZ_SKIN_ID");
+						: String.valueOf(mapSiteiInfo.get("TZ_LONGIN_SAVECODE") );
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
 
 				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
 				strLoginHtml = strLoginHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
@@ -378,7 +378,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 				return strRtn;
 			}
 
-			String sql = "select TZ_LOGIN_PRECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y' and TZ_SITE_FBZT='Y'";
+			String sql = "select TZ_LOGIN_PRECODE from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
 
 			String strLoginHtml = sqlQuery.queryForObject(sql, new Object[] { orgid, siteid }, "String");
 
