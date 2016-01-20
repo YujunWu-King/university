@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -33,6 +34,8 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TZGDObject tzGdObject;
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -116,23 +119,26 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 	// 国家选择器;
 	public String tzGetHtmlContent(String strParams) {
 
-		String language = "";
+		String language = "ZHS";
+		String skinId = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		// 是否是报名表;
 		if (jacksonUtil.containsKey("TPLID")) {
 			// 根据报名表模板查询language;
 			String TPLID = jacksonUtil.getString("TPLID");
-			String sql = "SELECT TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
-			language = jdbcTemplate.queryForObject(sql, new Object[] { TPLID },"String");
+			String sql = "select a.TZ_APP_TPL_LAN,b.TZ_SKIN_ID from PS_TZ_APPTPL_DY_T a, PS_TZ_SITEI_DEFN_T b where a.TZ_JG_ID=b.TZ_JG_ID AND b.TZ_SITEI_ENABLE='Y' and a.TZ_APP_TPL_ID=? limit 0,1";
+			Map<String, Object> map = jdbcTemplate.queryForObject(sql, new Object[] { TPLID },"String");
+			language = (String)map.get("TZ_APP_TPL_LAN");
+			skinId = (String)map.get("TZ_SKIN_ID");
 		} else if (jacksonUtil.containsKey("siteId")) {
 			String siteId = jacksonUtil.getString("siteId");
 			
 			// 根据站点id查询;
-			String sql = "select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-			language = jdbcTemplate.queryForObject(sql, new Object[] { siteId },"String");
-		} else {
-			language = "ZHS";
+			String sql = "select TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteId });
+			language = (String)map.get("TZ_SITE_LANG");
+			skinId = (String)map.get("TZ_SKIN_ID");
 		}
 
 		if (language == null || "".equals(language)) {
@@ -144,8 +150,12 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 		String contextUrl = request.getContextPath();
 		String tzGeneralURL = contextUrl + "/dispatcher";
 		String schoolHtml = "";
+
+		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+		imgPath = request.getContextPath() + imgPath + "/" + skinId;
+
 		try {
-			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_SCHOOL_SELECT", true, tzGeneralURL,contextUrl);
+			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_SCHOOL_SELECT", true, tzGeneralURL,contextUrl,imgPath);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

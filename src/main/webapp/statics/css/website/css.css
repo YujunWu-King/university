@@ -357,7 +357,7 @@ a.ora:hover
 .top {
 	height: 110px;
 	width: 100%;
-	background-image: url(../images/top_bg.png);
+	background-image: url(images/top_bg.png);
 	background-repeat: no-repeat;
 	background-position: center;
 }
@@ -433,7 +433,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_2_c.png);
+	background-image: url(images/nav_2_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -444,7 +444,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_3_c.png);
+	background-image: url(images/nav_3_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -455,7 +455,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_4_c.png);
+	background-image: url(images/nav_4_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -467,7 +467,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_5_c.png);
+	background-image: url(images/nav_5_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -478,7 +478,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_6_c.png);
+	background-image: url(images/nav_6_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -489,7 +489,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #fff;
-	background-image: url(../images/nav_7_c.png);
+	background-image: url(images/nav_7_c.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -503,37 +503,37 @@ a.ora:hover
 	
 }
 .main_left_nav1_c:hover {
-	background-image: url(../images/nav_2_c.png);
+	background-image: url(images/nav_2_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
 }
 .main_left_nav2_c:hover {
-	background-image: url(../images/nav_3_c.png);
+	background-image: url(images/nav_3_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
 }
 .main_left_nav3_c:hover {
-	background-image: url(../images/nav_4_c.png);
+	background-image: url(images/nav_4_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
 }
 .main_left_nav4_c:hover {
-	background-image: url(../images/nav_5_c.png);
+	background-image: url(images/nav_5_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
 }
 .main_left_nav5_c:hover {
-	background-image: url(../images/nav_6_c.png);
+	background-image: url(images/nav_6_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
 }
 .main_left_nav6_c:hover {
-	background-image: url(../images/nav_7_c.png);
+	background-image: url(images/nav_7_c.png);
 	background-repeat: no-repeat;
 	cursor: pointer;
 	color: #fff;
@@ -556,7 +556,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_2.png);
+	background-image: url(images/nav_2.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -567,7 +567,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_3.png);
+	background-image: url(images/nav_3.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -578,7 +578,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_4.png);
+	background-image: url(images/nav_4.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -590,7 +590,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_5.png);
+	background-image: url(images/nav_5.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -601,7 +601,7 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_6.png);
+	background-image: url(images/nav_6.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
@@ -612,51 +612,51 @@ a.ora:hover
 	font-size: 16px;
 	line-height: 48px;
 	color: #046dba;
-	background-image: url(../images/nav_7.png);
+	background-image: url(images/nav_7.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	font-weight: bold;
 }
 
 .main_left_nav0:hover {
-	/*background-image: url(../images/nav_1_c.png);*/
+	/*background-image: url(images/nav_1_c.png);*/
 	background-color:#eee;
 	cursor: pointer;
 	/*color: #fff;*/
 	
 }
 .main_left_nav1:hover {
-	/*background-image: url(../images/nav_2_c.png);*/
+	/*background-image: url(images/nav_2_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 /*	color: #fff;*/
 }
 .main_left_nav2:hover {
-	/*background-image: url(../images/nav_3_c.png);*/
+	/*background-image: url(images/nav_3_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 	/*color: #fff;*/
 }
 .main_left_nav3:hover {
-	/*background-image: url(../images/nav_4_c.png);*/
+	/*background-image: url(images/nav_4_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 /*	color: #fff;*/
 }
 .main_left_nav4:hover {
-	/*background-image: url(../images/nav_5_c.png);*/
+	/*background-image: url(images/nav_5_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 	/*color: #fff;*/
 }
 .main_left_nav5:hover {
-	/*background-image: url(../images/nav_6_c.png);*/
+	/*background-image: url(images/nav_6_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 	/*color: #fff;*/
 }
 .main_left_nav6:hover {
-	/*background-image: url(../images/nav_7_c.png);*/
+	/*background-image: url(images/nav_7_c.png);*/
 	background-repeat: no-repeat;
 	cursor: pointer;
 	/*color: #fff;*/
@@ -692,7 +692,7 @@ a.ora:hover
 	width: 542px;
 }
 .main_mid_activity_list_date {
-	background-image: url(../images/date_bg.png);
+	background-image: url(images/date_bg.png);
 	background-repeat: no-repeat;
 	background-position: center center;
 	float: left;
@@ -747,7 +747,7 @@ a.ora:hover
 	margin: 0px;
 	padding: 0px;
 	line-height: 42px;
-	background-image: url(../images/li_bg.png);
+	background-image: url(images/li_bg.png);
 	background-repeat: no-repeat;
 }
 .main_mid_recruit_list_title {
@@ -1047,7 +1047,7 @@ a.ora:hover
 	min-height:550px;
 }
 .main_inner_title {
-	background-image: url(../images/inner_title_offReg_add_Exper.png);
+	background-image: url(images/inner_title_offReg_add_Exper.png);
 	background-repeat: no-repeat;
 	height: 35px;
 	width: 788px;
@@ -1088,7 +1088,7 @@ a.ora:hover
 	text-align:right;
 }
 .main_inner_line {
-	background-image: url(../images/inner_line.png);
+	background-image: url(images/inner_line.png);
 	background-repeat: no-repeat;
 	height: 39px;
 	width: 788px;
@@ -1113,7 +1113,7 @@ a.ora:hover
 	width: 110px;
 	margin-right: 1px;
 	margin-left: 1px;
-	background-image: url(../images/but-03.png);
+	background-image: url(images/but-03.png);
 	background-repeat: no-repeat;
 	text-align:center;
 	line-height: 41px;
@@ -1126,7 +1126,7 @@ a.ora:hover
 	width: 110px;
 	margin-right: 1px;
 	margin-left: 1px;
-	background-image: url(../images/but-02.png);
+	background-image: url(images/but-02.png);
 	background-repeat: no-repeat;
 	text-align:center;
 	line-height: 41px;
@@ -1139,7 +1139,7 @@ a.ora:hover
 	width: 110px;
 	margin-right: 1px;
 	margin-left: 1px;
-	background-image: url(../images/but-04.png);
+	background-image: url(images/but-04.png);
 	background-repeat: no-repeat;
 	text-align:center;
 	line-height: 41px;
@@ -1152,7 +1152,7 @@ a.ora:hover
 	width: 110px;
 	margin-right: 1px;
 	margin-left: 1px;
-	background-image: url(../images/but-01.png);
+	background-image: url(images/but-01.png);
 	background-repeat: no-repeat;
 	text-align: center;
 	line-height: 41px;
@@ -1179,7 +1179,7 @@ a.ora:hover
 	}
 .main_inner_content_title {
 	line-height: 36px;
-	background-image: url(../images/inner_content_title_bg.png);
+	background-image: url(images/inner_content_title_bg.png);
 	height: 36px;
 	width: 788px;
 	padding-left: 15px;
@@ -1187,7 +1187,7 @@ a.ora:hover
 	background-repeat: no-repeat;
 }
 .main_inner_content_top {
-	background-image: url(../images/inner_content_top_bg.png);
+	background-image: url(images/inner_content_top_bg.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 16px;
@@ -1305,7 +1305,7 @@ a.ora:hover
 
 
 .main_inner_content {
-	background-image: url(../images/inner_content_mid_bg.png);
+	background-image: url(images/inner_content_mid_bg.png);
 	background-repeat: repeat-y;
 	background-position: center;
 	height: auto;
@@ -1416,7 +1416,7 @@ a.ora:hover
 }
 
 .main_inner_content_foot {
-	background-image: url(../images/inner_content_foot_bg.png);
+	background-image: url(images/inner_content_foot_bg.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 19px;
@@ -1542,7 +1542,7 @@ a.ora:hover
 }
 
 .main_inner_content_info_upload {
-	background-image: url(../images/upload_bt.png);
+	background-image: url(images/upload_bt.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 35px;
@@ -1558,7 +1558,7 @@ a.ora:hover
 
 }
 .main_inner_content_info_upload2 {
-	background-image: url(../images/up_photo_bt.png);
+	background-image: url(images/up_photo_bt.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 35px;
@@ -1577,7 +1577,7 @@ a.ora:hover
 	font-size: 14px;
 	line-height: 58px;
 	color: #9f9f9f;
-	background-image: url(../images/inner_foot_bg.png);
+	background-image: url(images/inner_foot_bg.png);
 	background-repeat: no-repeat;
 	text-align: right;
 	height: 58px;
@@ -1824,7 +1824,7 @@ a.ora:hover
 	float: right;
 	height: 180px;
 	width: 657px;
-	background-image: url(../images/base_info_top_bg.png);
+	background-image: url(images/base_info_top_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;
 }
@@ -1857,7 +1857,7 @@ a.ora:hover
 	height: 35px;
 	width: 430px;
 	margin-top: 98px;
-	background-image: url(../images/upload_bt_2.png);
+	background-image: url(images/upload_bt_2.png);
 	background-repeat: no-repeat;
 }
 .main_inner_content_info_right_text:hover {
@@ -1967,21 +1967,21 @@ a.ora:hover
 	vertical-align: middle;
 }
 .main_inner_conntet_info_text_top {
-	/*background-image: url(../images/text_top_bg.png);
+	/*background-image: url(images/text_top_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	height: 5px;
 	width: 561px;
 }
 .main_inner_content_info_text_mid {
-	/*background-image: url(../images/text_mid_bg.png);
+	/*background-image: url(images/text_mid_bg.png);
 	background-repeat: repeat-y;
 	background-position: left;*/
 	height: auto;
 	width: 100%;
 }
 .main_inner_content_info_text_foot {
-	/*background-image: url(../images/text_foot_bg.png);
+	/*background-image: url(images/text_foot_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	clear: both;
@@ -1990,7 +1990,7 @@ a.ora:hover
 }
 
 .main_inner_conntet_info_text_top2 {
-	/*background-image: url(../images/text_top_bg.png);
+	/*background-image: url(images/text_top_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	height: 5px;
@@ -1998,7 +1998,7 @@ a.ora:hover
 	margin-left:115px;
 }
 .main_inner_content_info_text_mid2 {
-	/*background-image: url(../images/text_mid_bg.png);
+	/*background-image: url(images/text_mid_bg.png);
 	background-repeat: repeat-y;
 	background-position: left;*/
 	height: auto;
@@ -2006,7 +2006,7 @@ a.ora:hover
 	margin-left:115px;
 }
 .main_inner_content_info__text_foot2 {
-	/*background-image: url(../images/text_foot_bg.png);
+	/*background-image: url(images/text_foot_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	clear: both;
@@ -2121,7 +2121,7 @@ a.ora:hover
 }
 /* main full */
 .main_full_top {
-	background-image: url(../images/mid_top_bg.png);
+	background-image: url(images/mid_top_bg.png);
 	background-repeat: no-repeat;
 	height: 13px;
 	width: 825px;
@@ -2129,7 +2129,7 @@ a.ora:hover
 	margin-left: auto;
 }
 .main_full_foot {
-	background-image: url(../images/mid_foot_bg.png);
+	background-image: url(images/mid_foot_bg.png);
 	background-repeat: no-repeat;
 	height: 13px;
 	width: 825px;
@@ -2141,7 +2141,7 @@ a.ora:hover
 	width: 825px;
 	margin-right: auto;
 	margin-left: auto;
-	background-image: url(../images/mid_center_bg.png);
+	background-image: url(images/mid_center_bg.png);
 	background-repeat: repeat-y;
 	overflow: hidden;
 }
@@ -2202,7 +2202,7 @@ a.ora:hover
 	vertical-align: 3%;
 	}
 .main_full_lines {
-	background-image: url(../images/inner_line.png);
+	background-image: url(images/inner_line.png);
 	background-repeat: no-repeat;
 	height: 19px;
 	width: 788px;
@@ -2215,7 +2215,7 @@ a.ora:hover
 	margin-bottom: 23px;
 }
 .main_full_lines_720px {
-	background-image: url(../images/inner_line.png);
+	background-image: url(images/inner_line.png);
 	background-repeat: no-repeat;
 	height: 19px;
 	width: 720px;
@@ -2228,7 +2228,7 @@ a.ora:hover
 	margin-bottom: 23px;
 }
 .main_full_lines_400px {
-	background-image: url(../images/inner_line.png);
+	background-image: url(images/inner_line.png);
 	background-repeat: no-repeat;
 	height: 19px;
 	width: 400px;
@@ -2241,7 +2241,7 @@ a.ora:hover
 	margin-bottom: 23px;
 }
 .main_full_lines_400px2 {
-	background-image: url(../images/inner_line.png);
+	background-image: url(images/inner_line.png);
 	background-repeat: no-repeat;
 	height: 19px;
 	width: 400px;
@@ -2326,7 +2326,7 @@ a.ora:hover
 	margin-right: 7px;
 }
 .main_full_line_right_txt {
-	background-image: url(../images/full_text_bg.png);
+	background-image: url(images/full_text_bg.png);
 	background-repeat: no-repeat;
 	font-size: 14px;
 	color: #7f7f7f;
@@ -2483,7 +2483,7 @@ a.ora:hover
 .city_top {
     height: 48px;
     width: 588px;
-    background-image: url(../images/city_top_bg.png);
+    background-image: url(images/city_top_bg.png);
     background-repeat: no-repeat;
     margin-right: 0;
     margin-left: 0;
@@ -2491,7 +2491,7 @@ a.ora:hover
 .city_top3 {
     height: 48px;
     width: 815px;
-    background-image: url(../images/selector_top_bg.png);
+    background-image: url(images/selector_top_bg.png);
     background-repeat: repeat-x;
     margin-right: 0;
     margin-left: 0;
@@ -2509,7 +2509,7 @@ a.ora:hover
     margin-left: 0;
 }
 .city_foot {
-	background-image: url(../images/city_foot_bg.png);
+	background-image: url(images/city_foot_bg.png);
 	background-repeat: no-repeat;
 	height: 19px;
 	width: 588px;
@@ -2668,7 +2668,7 @@ a.ora:hover
 	font-weight: bold;
 }
 .main_letter_top {
-	background-image: url(../images/letter_top_bg.png);
+	background-image: url(images/letter_top_bg.png);
 	background-repeat: no-repeat;
 	height: 20px;
 	width: 961px;
@@ -2676,7 +2676,7 @@ a.ora:hover
 	margin-left: auto;
 }
 .main_letter_foot {
-	background-image: url(../images/letter_foot_bg.png);
+	background-image: url(images/letter_foot_bg.png);
 	background-repeat: no-repeat;
 	height: 20px;
 	width: 961px;
@@ -2688,7 +2688,7 @@ a.ora:hover
 	width: 961px;
 	margin-right: auto;
 	margin-left: auto;
-	background-image: url(../images/letter_mid_bg.png);
+	background-image: url(images/letter_mid_bg.png);
 	background-repeat: repeat-y;
 	overflow: hidden;
 }
@@ -2852,7 +2852,7 @@ a.ora:hover
 	font-size: 16px;
 }
 .main_letter_lene_text_top {
-	/*background-image: url(../images/let_txt_top_bg.png);
+	/*background-image: url(images/let_txt_top_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	height: 5px;
@@ -2860,7 +2860,7 @@ a.ora:hover
 	clear: both;
 }
 .main_letter_lene_text_mid {
-	/*background-image: url(../images/let_txt_mid_bg.png);
+	/*background-image: url(images/let_txt_mid_bg.png);
 	background-repeat: repeat-y;
 	background-position: left;*/
 	height: auto;
@@ -2869,7 +2869,7 @@ a.ora:hover
 	overflow:hidden;
 }
 .main_letter_lene_text_foot {
-	/*background-image: url(../images/let_txt_foot_bg.png);
+	/*background-image: url(images/let_txt_foot_bg.png);
 	background-repeat: no-repeat;
 	background-position: left;*/
 	clear: both;
@@ -3019,7 +3019,7 @@ a.ora:hover
 	padding-right: 18px;
 }
 .main_letter_top_title {
-	background-image: url(../images/top_title_bg.png);
+	background-image: url(images/top_title_bg.png);
 	background-repeat: repeat-x;
 	height: 35px;
 	width: 100%;
@@ -3037,14 +3037,14 @@ a.ora:hover
 	margin-right:auto;
 }
 .main_letter_top_title3 {
-	background-image: url(../images/top_title_under_bg.png);
+	background-image: url(images/top_title_under_bg.png);
 	background-repeat: repeat-x;
 	height: 10px;
 	width: 100%;
 	margin-top:5px;
 }
 .main_letter_top_title4 {
-	background-image: url(../images/top_title_under_bg.png);
+	background-image: url(images/top_title_under_bg.png);
 	background-repeat: repeat-x;
 	height: 10px;
 	width: 90%;
@@ -3273,7 +3273,7 @@ a.ora:hover
 	font-size: 16px;
 	font-weight: bold;
 	color: #666;
-	background-image: url(../images/tb_title_bg.png);
+	background-image: url(images/tb_title_bg.png);
 	background-repeat: repeat-x;
 }
 .cul4 {
@@ -3306,7 +3306,7 @@ a.ora:hover
 	margin: 0px;
 	padding: 0px;
 	line-height: 42px;
-	background-image: url(../images/li_long_bg.png);
+	background-image: url(images/li_long_bg.png);
 	background-repeat: no-repeat;
 }
 .main_mid_recruit_list_title2 {
@@ -3493,7 +3493,7 @@ a.ora:hover
 	line-height: 62px;
 	font-weight: bold;
 	color: #0064b2;
-	background-image: url(../images/up_title_bg.png);
+	background-image: url(images/up_title_bg.png);
 	background-repeat: no-repeat;
 	height: 62px;
 	width: 100%;
@@ -3652,7 +3652,7 @@ a.ora:hover
 
 	line-height: 35px;
 	color:#fff;
-	background-image: url(../images/gray_bg_bt.png) ;
+	background-image: url(images/gray_bg_bt.png) ;
 	background-repeat: repeat-x;
 	border: 1px solid #fff ;
 	border-radius:3px;
@@ -3746,7 +3746,7 @@ cursor:pointer;
 	font-size: 16px;
 	line-height: 35px;
 	color: #fff;
-	background-image: url(../images/blue_bg_bt.png);
+	background-image: url(images/blue_bg_bt.png);
 	background-repeat: repeat-x;
 	height: 37px;
 	width: 100%;

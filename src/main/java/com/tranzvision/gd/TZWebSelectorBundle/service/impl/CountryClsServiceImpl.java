@@ -61,6 +61,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 			if(language == null || "".equals(language)){
 				language = "ZHS";
 			}
+
 			//通过国家名称查询 BEGIN;
 			if("BYCOUNTRY".equals(strOType)){
 
@@ -171,7 +172,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 			jgId = "ADMIN";
 		}
 		
-		String imgPath = getSysHardCodeVal.getWebsiteImgPath();
+		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 		String title = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "C_TITLE", "国家/地区选择",

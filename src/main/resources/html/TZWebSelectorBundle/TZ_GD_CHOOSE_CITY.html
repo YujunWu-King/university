@@ -48,10 +48,12 @@
 	<body>
 		<div class="city_top">
 			<div class="city_close" onclick="closeThis();" style="margin-top: 3px;">
-				<img src="%bind(:5)/statics/images/website/del.png" width="15" height="15" />
+				<img src="%bind(:6)/del.png" width="15" height="15" />
 				&nbsp;
 			</div>
 		</div>
+		<input id="siteid" name="siteid" type="hidden" value="%bind(:7)">
+		<input id="TPLID" name="TPLID" type="hidden" value="%bind(:8)">
 		<div class="city_main">
 			<div class="city_main_title">
 				热门城市
@@ -72,8 +74,10 @@
 
 			
 			function openCity2(codee){
+				var siteId = $("#siteid").val();
+				var TPLID = $("#TPLID").val();
 				var provinceUrl = '%bind(:3)?tzParams=';
-				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"C4PROVINCE","TZ_CITY_ID":"%bind(:4)","PROCODE":"' + codee + '"}}';
+				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"C4PROVINCE","TZ_CITY_ID":"%bind(:4)","PROCODE":"' + codee + '","siteId":"' + siteId + '","TPLID":"' + TPLID + '"}}';
 				provinceUrl = provinceUrl + window.escape(params);
 				console.log(provinceUrl);
 				m = parent.$.layer({
