@@ -139,7 +139,7 @@ public class TzWebsiteLoginController {
 
 							String ctxPath = request.getContextPath();
 
-							String indexUrl = ctxPath + "/site/index/" + strOrgId + "/" + strSiteId;
+							String indexUrl = ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
 
 							jsonMap.put("url", indexUrl);
 
