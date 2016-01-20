@@ -126,7 +126,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			}
 
 			String strJhzt = dataMap.get("TZ_JIHUO_ZT") == null ? "" : String.valueOf(dataMap.get("TZ_JIHUO_ZT"));
-			if ("Y".equals(strJhzt)) {
+			if (!"Y".equals(strJhzt)) {
 				errorMsg.add("1");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
 						"TZGD_FWINIT_00050", language, "此帐号暂未激活，重复验证邮件。", "The account is not activated yet."));
@@ -135,7 +135,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 校验用户名、密码
 			args = new Object[] { dataMap.get("OPRID"), DESUtil.encrypt(userPwd, "TZGD_Tranzvision") };
-			String strFlag = sqlQuery.queryForObject(tzSQLObject.getSQLText("SQL.TZAuthBundle.TzCheckMa	nagerPwd"),
+			String strFlag = sqlQuery.queryForObject(tzSQLObject.getSQLText("SQL.TZAuthBundle.TzCheckManagerPwd"),
 					args, "String");
 
 			if (!"Y".equals(strFlag)) {
@@ -164,7 +164,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			tzCookie.addCookie(response, cookieWebSiteId, siteid);
 			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
 
-			errorMsg.add("success");
+			errorMsg.add("0");
 			errorMsg.add("");
 			return true;
 

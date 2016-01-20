@@ -115,11 +115,9 @@ public class TzWebsiteLoginController {
 				String strSiteId = sqlQuery.queryForObject(sql, new Object[] { strOrgId }, "String");
 
 				if (null != strSiteId && !"".equals(strSiteId)) {
-
 					sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetZcyhDlzhId");
 					strUserName = sqlQuery.queryForObject(sql, new Object[] { strUserName, strUserName, strOrgId },
 							"String");
-
 					if (null != strUserName && !"".equals(strUserName)) {
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
@@ -128,8 +126,12 @@ public class TzWebsiteLoginController {
 
 						String loginStatus = aryErrorMsg.get(0);
 						String errorMsg = aryErrorMsg.get(1);
-
-						jsonMap.put("success", boolResult);
+						if(boolResult){
+							jsonMap.put("success", "true");
+						}else{
+							jsonMap.put("success", "false");
+						}
+						
 						jsonMap.put("errorCode", loginStatus);
 						jsonMap.put("errorDesc", errorMsg);
 
