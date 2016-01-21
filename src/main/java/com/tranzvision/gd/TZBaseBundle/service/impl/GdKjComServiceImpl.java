@@ -466,7 +466,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			if (update != 1) {
 				// 查看权限;
-				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY limit 0,1";
+				String haveReadSQL = "SELECT  C.DISPLAYONLY FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY  C.DISPLAYONLY DESC limit 0,1";
 				try {
 					view = jdbcTemplate.queryForObject(haveReadSQL,
 							new Object[] { strUserID, sComID, sComID + "$%", sPageID }, "Integer");
@@ -489,7 +489,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				errMsgArr[1] = "配置错误，未配置组件页面[" + sComID + "][" + sPageID + "]对应的服务器端处理程序。";
 				return strRet;
 			}
-
+			
 			Framework obj = (Framework) ctx.getBean(strAppClass);
 			switch (OperateType.getOperateType(strOprType)) {
 			// 查询表单;

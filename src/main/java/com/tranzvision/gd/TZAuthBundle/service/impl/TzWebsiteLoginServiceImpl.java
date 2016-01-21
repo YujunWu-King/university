@@ -60,22 +60,26 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	/**
 	 * Session存储的用户信息变量名称
 	 */
-	public final String userSessionName = "loginUser";
+	// public final String userSessionName = "loginUser";
+	public final String userSessionName = "loginManager";
 
 	/**
 	 * Session存储的用户当前登录语言
 	 */
-	public final String sysWebLanguage = "sysWebLanguage";
+	// public final String sysWebLanguage = "sysWebLanguage";
+	public final String sysWebLanguage = "sysLanguage";
 
 	/**
 	 * Cookie存储的系统语言信息
 	 */
-	public final String cookieWebLang = "tzweblang";
+	// public final String cookieWebLang = "tzweblang";
+	public final String cookieWebLang = "tzlang";
 
 	/**
 	 * Cookie存储的当前访问站点的机构id
 	 */
-	public final String cookieWebOrgId = "tzwo";
+	// public final String cookieWebOrgId = "tzwo";
+	public final String cookieWebOrgId = "tzmo";
 
 	/**
 	 * Cookie存储的当前访问站点的站点id
@@ -85,7 +89,8 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	/**
 	 * Cookie存储的当前登录网站的用户登录账号
 	 */
-	public final String cookieWebLoginedUserName = "tzwu";
+	// public final String cookieWebLoginedUserName = "tzwu";
+	public final String cookieWebLoginedUserName = "tzmu";
 
 	/*
 	 * (non-Javadoc)
@@ -135,8 +140,8 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 校验用户名、密码
 			args = new Object[] { dataMap.get("OPRID"), DESUtil.encrypt(userPwd, "TZGD_Tranzvision") };
-			String strFlag = sqlQuery.queryForObject(tzSQLObject.getSQLText("SQL.TZAuthBundle.TzCheckManagerPwd"),
-					args, "String");
+			String strFlag = sqlQuery.queryForObject(tzSQLObject.getSQLText("SQL.TZAuthBundle.TzCheckManagerPwd"), args,
+					"String");
 
 			if (!"Y".equals(strFlag)) {
 				errorMsg.add("2");
@@ -279,15 +284,15 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		TzSession tzSession = new TzSession(request);
 		Object obj = tzSession.getSession(userSessionName);
 		PsTzAqYhxxTbl psTzAqYhxxTbl;
-		if(null==obj){
+		if (null == obj) {
 			boolean debugging = getCookieSessionProps.getDebug();
-			if(debugging){
+			if (debugging) {
 				psTzAqYhxxTbl = new PsTzAqYhxxTbl();
 				psTzAqYhxxTbl.setTzRealname("管理员");
-			}else{
+			} else {
 				psTzAqYhxxTbl = null;
 			}
-		}else{
+		} else {
 			psTzAqYhxxTbl = (PsTzAqYhxxTbl) obj;
 		}
 		return psTzAqYhxxTbl;
