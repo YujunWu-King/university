@@ -489,7 +489,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				errMsgArr[1] = "配置错误，未配置组件页面[" + sComID + "][" + sPageID + "]对应的服务器端处理程序。";
 				return strRet;
 			}
-			System.out.println(strAppClass);
+			
 			Framework obj = (Framework) ctx.getBean(strAppClass);
 			switch (OperateType.getOperateType(strOprType)) {
 			// 查询表单;

@@ -119,7 +119,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 						select: 'changeOrg',
 						afterrender: function(combox){
 							//当前登录人机构id
-							if(combox.value != 'Admin')
+							if( (combox.value).toUpperCase() != 'ADMIN')
 							{
 								combox.readOnly = true;
 							}
