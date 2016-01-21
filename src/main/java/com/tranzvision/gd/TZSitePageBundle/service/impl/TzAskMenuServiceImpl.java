@@ -125,7 +125,7 @@ public class TzAskMenuServiceImpl extends FrameworkImpl {
 			}
 
 			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetShowMenuCode");
-			String strMenuAppCls = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
+			String strMenuAppCls = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strSiteId, strMenuId }, "String");
 			if (null != strMenuAppCls && !"".equals(strMenuAppCls)) {
 
 				Object appClsObj = ctx.getBean(strMenuAppCls);
