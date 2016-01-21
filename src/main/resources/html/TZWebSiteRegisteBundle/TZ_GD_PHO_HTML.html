@@ -173,7 +173,7 @@
 				                    },
 				                    success:function(html){
 				                        if(html.comContent.success == "Y"){
-				 							window.parent.$("#photo").attr("src", html.comContent.url);					
+				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
 											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
 				                            //closeThis();
 											layer.close(layer.index);
@@ -339,7 +339,7 @@
 			<div class="photo_title">
 				%bind(:15)
 				<div id="idcity" class="city_close" onclick="closeThis();">
-					<img src="%bind(:20)/statics/images/website/del.png" width="15" height="15" />
+					<img src="%bind(:21)/del.png" width="15" height="15" />
 					&nbsp;
 				</div>
 			</div>
@@ -360,7 +360,7 @@
 			</div>
 			<div class="photo_left">
 				<div class="photo_img" id="showimg">
-					<img src="%bind(:20)/statics/images/website/upload.png" name="target" id="target" />
+					<img src="%bind(:21)/upload.png" name="target" id="target" />
 				</div>
 				<div class="photo_turn_left" id="turnLeft">
 				</div>
@@ -372,7 +372,7 @@
 					%bind(:17)
 				</div>
 				<div class="photo_preview" id="photo_pre">
-					<img id="preview" src="%bind(:20)/statics/images/website/33.jpg" />
+					<img id="preview" src="%bind(:21)/33.jpg" />
 				</div>
 				<div class="photo_bt" id="save">
 					<div class="photosavbt">%bind(:19)</div>

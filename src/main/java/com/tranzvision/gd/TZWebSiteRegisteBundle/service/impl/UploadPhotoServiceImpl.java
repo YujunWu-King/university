@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhtGlT;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -44,6 +45,8 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 	private PsTzOprPhtGlTMapper psTzOprPhtGlTMapper;
 	@Autowired
 	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -51,7 +54,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 		try{
 			jacksonUtil.json2Map(strParams);
 			
-			String language = "",tmpId = "",siteId = "",jgId = "";
+			String language = "",tmpId = "",siteId = "",jgId = "",skinId="";
 			Map<String , Object> map ;
 			String languageSQL = "";
 			if(jacksonUtil.containsKey("TPLID")){
@@ -61,18 +64,24 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 				if(map != null){
 					language = (String)map.get("TZ_APP_TPL_LAN");
 					jgId = (String)map.get("TZ_JG_ID");
+					String skinSQL = "select TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1";
+					skinId = jdbcTemplate.queryForObject(skinSQL, new Object[]{jgId},"String");
 				}
 			}else{
 				if(jacksonUtil.containsKey("siteId")){
 					siteId = jacksonUtil.getString("siteId");
-					languageSQL = "select TZ_JG_ID,TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					languageSQL = "select TZ_JG_ID,TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 					map = jdbcTemplate.queryForMap(languageSQL, new Object[]{siteId});
 					if(map != null){
 						language = (String)map.get("TZ_SITE_LANG");
 						jgId = (String)map.get("TZ_JG_ID");
+						skinId = (String)map.get("TZ_SKIN_ID");
 					}
 				}
 			}
+			
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 			if(language == null || "".equals(language)){
 				language = "ZHS";
@@ -105,7 +114,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String phoToData = contextPath + "/dispatcher";
-			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", true, phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath);
+			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", true, phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath,imgPath);
 			TZ_ENROLL_UPLOADPHO = objRep.repTitle(TZ_ENROLL_UPLOADPHO, siteId);
 			TZ_ENROLL_UPLOADPHO = objRep.repCss(TZ_ENROLL_UPLOADPHO, siteId);
 			return TZ_ENROLL_UPLOADPHO;
