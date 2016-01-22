@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZProjectGradingSetBundle.dao.PsTzPrjTypeTMapper;
-import com.tranzvision.gd.TZResourceCollectionMgBundle.dao.PsTzPtZyjhTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
