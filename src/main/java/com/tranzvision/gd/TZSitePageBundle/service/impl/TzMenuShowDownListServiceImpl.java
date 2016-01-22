@@ -22,8 +22,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-18
  */
-@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzMenuShowServiceImpl")
-public class TzMenuShowServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzMenuShowDownListServiceImpl")
+public class TzMenuShowDownListServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -76,7 +76,7 @@ public class TzMenuShowServiceImpl extends FrameworkImpl {
 
 					String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
 							orgid, strSiteId, "Y")
-							+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsNewsList", ctxPath);
+							+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsDownload", ctxPath);
 
 					strResultContent = strResultContent.replace("<!--#{javascripts}#-->", strJavascripts);
 

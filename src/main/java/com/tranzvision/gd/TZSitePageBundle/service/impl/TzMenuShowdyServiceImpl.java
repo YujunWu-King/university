@@ -65,6 +65,7 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 			String strSiteId = jacksonUtil.getString("siteId");
 			String strMenuId = jacksonUtil.getString("menuId");
 			String strOrgid = "";
+			String orgidLower = "";
 			String strLang = "";
 
 			tzGetSetSessionValue.setTzSiteGloMenuId(strMenuId);
@@ -76,6 +77,7 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 
 				if (null != mapSiteInfo) {
 					strOrgid = mapSiteInfo.get("TZ_JG_ID") == null ? "" : String.valueOf(mapSiteInfo.get("TZ_JG_ID"));
+					orgidLower = strOrgid.toLowerCase();
 					strLang = mapSiteInfo.get("TZ_SITE_LANG") == null ? ""
 							: String.valueOf(mapSiteInfo.get("TZ_SITE_LANG"));
 				}
@@ -114,41 +116,52 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 							if (null != str_art_out_url && !"".equals(str_art_out_url)) {
 								// 此处需要跳转
 								// %Response.RedirectURL(&str_art_out_url);
-								String todoCheck;
+								strRet = tzGDObject.getHTMLText("SQL.TZSitePageBundle.TzWinLocationAndOpenWin", "_self",
+										str_art_out_url);
 							} else {
 								strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE",
 										"66", strLang, "未找到内容", "Not found content");
-								strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.", ctxPath, strRet);
+								strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 							}
 						} else {
 							if (dt.getTime() <= dateNow.getTime()) {
-								strRet = siteRepCssServiceImpl.repTitle(str_html, strSiteId);
-								strRet = siteRepCssServiceImpl.repCss(str_html, strSiteId);
+
+								String strJavascripts = tzGDObject.getHTMLText(
+										"HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, strOrgid, strSiteId, "Y")
+										+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsContent", ctxPath);
+
+								strRet = str_html.replace("<!--#{javascripts}#-->", strJavascripts);
+
 							} else {
 								strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE",
 										"66", strLang, "未找到内容", "Not found content");
-								strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.", ctxPath, strRet);
+								strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 							}
 						}
 
 					} else {
 						strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE", "66",
 								strLang, "未找到内容", "Not found content");
-						strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.", ctxPath, strRet);
+						strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 					}
 
 				} else {
 					strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE", "66", strLang,
 							"未找到内容", "Not found content");
-					strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.", ctxPath, strRet);
+					strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 				}
 
 			} else {
 				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE", "66", strLang,
 						"未找到内容", "Not found content");
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.", ctxPath, strRet);
+				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 			}
+			
+			strRet = strRet.replace("{page_stylecss}",
+					orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
 
+			strRet = strRet.replace("{ContextPath}", ctxPath);
+			
 			strRet = siteRepCssServiceImpl.repTitle(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repCss(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repSiteid(strRet, strSiteId);
