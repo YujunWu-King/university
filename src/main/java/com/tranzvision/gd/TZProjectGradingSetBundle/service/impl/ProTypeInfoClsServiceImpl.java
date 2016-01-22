@@ -42,7 +42,6 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -52,13 +51,12 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 				String strProTypeId = jacksonUtil.getString("proTypeId");
 				PsTzPrjTypeT psTzPrjTypeT = PsTzPrjTypeTMapper.selectByPrimaryKey(strProTypeId);
 				if (psTzPrjTypeT != null) {
-					Map<String, Object> map = new HashMap<>();
-					map.put("proTypeId", psTzPrjTypeT.getTzPrjTypeId());
-					map.put("proTypeName", psTzPrjTypeT.getTzPrjTypeName());
-					map.put("proTypeDesc", psTzPrjTypeT.getTzPrjTypeDesc());
-					map.put("proTypeStatus", psTzPrjTypeT.getTzPrjTypeStatus());
 					
-					returnJsonMap.replace("formData", map);
+					returnJsonMap.put("proTypeId", psTzPrjTypeT.getTzPrjTypeId());
+					returnJsonMap.put("proTypeName", psTzPrjTypeT.getTzPrjTypeName());
+					returnJsonMap.put("proTypeDesc", psTzPrjTypeT.getTzPrjTypeDesc());
+					returnJsonMap.put("proTypeStatus", psTzPrjTypeT.getTzPrjTypeStatus());
+					
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "该项目分类数据不存在";
@@ -100,16 +98,19 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 				String strProTypeName = (String) infoData.get("proTypeName");
 				// 项目分类描述;
 				String strProTypeDesc = (String) infoData.get("proTypeDesc");
+				//项目分类有效状态
+				String strProTypeStatus = (String) infoData.get("proTypeStatus");
 				
 				PsTzPrjTypeT psTzPrjTypeT;
 				
 				if ("NEXT".equals(strProTypeId)) {
-					strProTypeId = String.valueOf("PRJ_TYPE_" + getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
+					strProTypeId = "PRJ_TYPE_" + String.valueOf(getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
 					psTzPrjTypeT = new PsTzPrjTypeT();
 					psTzPrjTypeT.setTzJgId(orgid);
 					psTzPrjTypeT.setTzPrjTypeId(strProTypeId);
 					psTzPrjTypeT.setTzPrjTypeName(strProTypeName);
 					psTzPrjTypeT.setTzPrjTypeDesc(strProTypeDesc);
+					psTzPrjTypeT.setTzPrjTypeStatus(strProTypeStatus);
 					psTzPrjTypeT.setRowAddedDttm(new Date());
 					psTzPrjTypeT.setRowAddedOprid(oprid);
 					psTzPrjTypeT.setRowLastmantDttm(new Date());
@@ -123,18 +124,19 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 					}
 				} else{
 					String sql = "select COUNT(1) from PS_TZ_PRJ_TYPE_T WHERE TZ_PRJ_TYPE_ID=?";
-					int count = jdbcTemplate.queryForObject(sql, new Object[] { strProTypeId }, "String");
+					int count = jdbcTemplate.queryForObject(sql, new Object[] { strProTypeId }, "Integer");
 					if (count > 0) {
 						psTzPrjTypeT = new PsTzPrjTypeT();
 						psTzPrjTypeT.setTzJgId(orgid);
 						psTzPrjTypeT.setTzPrjTypeId(strProTypeId);
 						psTzPrjTypeT.setTzPrjTypeName(strProTypeName);
 						psTzPrjTypeT.setTzPrjTypeDesc(strProTypeDesc);
+						psTzPrjTypeT.setTzPrjTypeStatus(strProTypeStatus);
 						psTzPrjTypeT.setRowAddedDttm(new Date());
 						psTzPrjTypeT.setRowAddedOprid(oprid);
 						psTzPrjTypeT.setRowLastmantDttm(new Date());
 						psTzPrjTypeT.setRowLastmantOprid(oprid);
-						int i = PsTzPrjTypeTMapper.insert(psTzPrjTypeT);
+						int i = PsTzPrjTypeTMapper.updateByPrimaryKeySelective(psTzPrjTypeT);
 						if (i > 0) {
 							returnJsonMap.replace("prjID", strProTypeId);
 						} else {
@@ -177,16 +179,18 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 				String strProTypeName = (String) infoData.get("proTypeName");
 				// 项目分类描述;
 				String strProTypeDesc = (String) infoData.get("proTypeDesc");
-				
+				//项目分类有效状态
+				String strProTypeStatus = (String) infoData.get("proTypeStatus");
 				PsTzPrjTypeT psTzPrjTypeT;
 				
 				if ("NEXT".equals(strProTypeId)) {
-					strProTypeId = String.valueOf("PRJ_TYPE_" + getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
+					strProTypeId = "PRJ_TYPE_" + String.valueOf(getSeqNum.getSeqNum("TZ_PRJ_TYPE_T", "TZ_PRJ_TYPE_ID"));
 					psTzPrjTypeT = new PsTzPrjTypeT();
 					psTzPrjTypeT.setTzJgId(orgid);
 					psTzPrjTypeT.setTzPrjTypeId(strProTypeId);
 					psTzPrjTypeT.setTzPrjTypeName(strProTypeName);
 					psTzPrjTypeT.setTzPrjTypeDesc(strProTypeDesc);
+					psTzPrjTypeT.setTzPrjTypeStatus(strProTypeStatus);
 					psTzPrjTypeT.setRowAddedDttm(new Date());
 					psTzPrjTypeT.setRowAddedOprid(oprid);
 					psTzPrjTypeT.setRowLastmantDttm(new Date());
@@ -200,18 +204,19 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 					}
 				} else{
 					String sql = "select COUNT(1) from PS_TZ_PRJ_TYPE_T WHERE TZ_PRJ_TYPE_ID=?";
-					int count = jdbcTemplate.queryForObject(sql, new Object[] { strProTypeId }, "String");
+					int count = jdbcTemplate.queryForObject(sql, new Object[] { strProTypeId }, "Integer");
 					if (count > 0) {
 						psTzPrjTypeT = new PsTzPrjTypeT();
 						psTzPrjTypeT.setTzJgId(orgid);
 						psTzPrjTypeT.setTzPrjTypeId(strProTypeId);
 						psTzPrjTypeT.setTzPrjTypeName(strProTypeName);
 						psTzPrjTypeT.setTzPrjTypeDesc(strProTypeDesc);
+						psTzPrjTypeT.setTzPrjTypeStatus(strProTypeStatus);
 						psTzPrjTypeT.setRowAddedDttm(new Date());
 						psTzPrjTypeT.setRowAddedOprid(oprid);
 						psTzPrjTypeT.setRowLastmantDttm(new Date());
 						psTzPrjTypeT.setRowLastmantOprid(oprid);
-						int i = PsTzPrjTypeTMapper.insert(psTzPrjTypeT);
+						int i = PsTzPrjTypeTMapper.updateByPrimaryKeySelective(psTzPrjTypeT);
 						if (i > 0) {
 							returnJsonMap.replace("prjID", strProTypeId);
 						} else {

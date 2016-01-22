@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZProjectGradingSetBundle.dao.PsTzPrjTypeTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
@@ -21,10 +19,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  */
 @Service("com.tranzvision.gd.TZProjectGradingSetBundle.service.impl.ProTypeClsServiceImpl")
 public class ProTypeClsServiceImpl extends FrameworkImpl {
-	@Autowired
-	private SqlQuery jdbcTemplate;
-	@Autowired
-	private PsTzPrjTypeTMapper PsTzPrjTypeTMapper;
 	@Autowired
 	private FliterForm fliterForm;
 	
