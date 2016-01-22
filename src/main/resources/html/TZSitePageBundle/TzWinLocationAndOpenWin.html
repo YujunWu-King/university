@@ -1,0 +1,14 @@
+<script type="text/javascript">
+var visitUrlType = "%bind(:1)";
+var visitUrl = "%bind(:2)";
+if(visitUrlType=="_self"){
+	window.location=visitUrl;
+}else{
+	var newTab=window.open('about:blank');
+	try{
+		setTimeout(function(){newTab.location.href= visitUrl,100);
+	}catch(e){
+		Ext.Msg.alert("提示","您的浏览器阻止弹出窗口，请您允许本站点的弹窗！");
+	}	
+}
+</script>

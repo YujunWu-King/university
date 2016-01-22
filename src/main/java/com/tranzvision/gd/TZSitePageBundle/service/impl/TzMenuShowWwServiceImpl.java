@@ -42,19 +42,20 @@ public class TzMenuShowWwServiceImpl extends FrameworkImpl {
 
 			if ((null != strSiteId && !"".equals(strSiteId)) && (null != strMenuId && !"".equals(strMenuId))) {
 
-				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzgetSiteMenuUrl");
+				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenuUrl");
 				Map<String, Object> mapMenuUrl = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strMenuId });
 
 				if (null != mapMenuUrl) {
 
-					String strUrl = mapMenuUrl.get("") == null ? "" : String.valueOf(mapMenuUrl.get(""));
-					// String strOpenType =
-					// mapMenuUrl.get("")==null?"":String.valueOf(mapMenuUrl.get(""));
+					String strUrl = mapMenuUrl.get("TZ_MENU_URL") == null ? ""
+							: String.valueOf(mapMenuUrl.get("TZ_MENU_URL"));
+					String strOpenType = mapMenuUrl.get("TZ_MENU_OPURL_TYPE") == null ? ""
+							: String.valueOf(mapMenuUrl.get("TZ_MENU_OPURL_TYPE"));
 
 					if (!"".equals(strUrl)) {
 						// 这里需要跳转
 						// %Response.RedirectURL(&strUrl);
-						String todoCheck;
+						strRet = tzGDObject.getHTMLText("SQL.TZSitePageBundle.TzWinLocationAndOpenWin", strOpenType, strUrl);
 					} else {
 						return "参数错误！";
 					}
