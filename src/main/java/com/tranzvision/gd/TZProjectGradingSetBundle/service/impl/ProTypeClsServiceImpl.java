@@ -25,7 +25,7 @@ public class ProTypeClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private PsTzPtZyjhTblMapper psTzPtZyjhTblMapper;
+	private PsTzPrjTypeTMapper PsTzPrjTypeTMapper;
 	@Autowired
 	private FliterForm fliterForm;
 	
