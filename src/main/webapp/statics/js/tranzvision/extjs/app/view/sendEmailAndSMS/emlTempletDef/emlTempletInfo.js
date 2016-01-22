@@ -73,6 +73,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_STD.emltempid","邮件模板编号"),
 					name: 'emltempid',
+					maxLength: 15,
 					allowBlank: false,
 					afterLabelTextTpl: [
 						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -86,6 +87,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_STD.emltempname","邮件模板名称"),
 					name: 'emltempname',
+					maxLength: 60,
 					afterLabelTextTpl: [
 						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
 					],
@@ -315,6 +317,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 								items:[{
 									xtype: 'textfield',
 									fieldLabel: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_STD.emltmpsubject","邮件主题"),
+									maxLength: 254,
 									name: 'emltmpsubject',
                                     margin:10
 								},{
