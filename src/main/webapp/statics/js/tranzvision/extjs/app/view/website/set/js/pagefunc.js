@@ -481,6 +481,8 @@ function Login(){
 
 /*退出系统*/
 function Logout(){
+	window.location = TzUniversityContextPath + "/user/login/logout";
+	/*
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"siteId":"'+$("#siteid").val()+'","typeflg":"logout"}}';
 	$.ajax({
 		type:"POST",
@@ -502,6 +504,7 @@ function Logout(){
 			  alert(response.state.errdesc);
 	    }    
 	});
+	*/
 }
 
 /*跳转到注册页*/
