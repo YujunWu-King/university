@@ -11,6 +11,8 @@ public class PsTzPrjTypeT {
 
     private String tzPrjTypeDesc;
 
+    private String tzPrjTypeStatus;
+
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -53,6 +55,14 @@ public class PsTzPrjTypeT {
 
     public void setTzPrjTypeDesc(String tzPrjTypeDesc) {
         this.tzPrjTypeDesc = tzPrjTypeDesc == null ? null : tzPrjTypeDesc.trim();
+    }
+
+    public String getTzPrjTypeStatus() {
+        return tzPrjTypeStatus;
+    }
+
+    public void setTzPrjTypeStatus(String tzPrjTypeStatus) {
+        this.tzPrjTypeStatus = tzPrjTypeStatus == null ? null : tzPrjTypeStatus.trim();
     }
 
     public Date getRowAddedDttm() {
