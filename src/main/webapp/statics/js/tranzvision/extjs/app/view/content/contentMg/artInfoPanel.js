@@ -215,7 +215,7 @@
             				xtype: "fileuploadfield",  
 										buttonText: '上传',
 										//name: 'picUpload',
-										name: 'orguploadfile',
+										name: 'websitefile',
 										buttonOnly:true,
 										listeners:{
 											change:function(file, value, eOpts){
@@ -262,7 +262,7 @@
 						            xtype: 'fileuploadfield',
 						            buttonText: '上传图片',
 									//name: 'picUpload',
-						            name: 'orguploadfile',
+						            name: 'websitefile',
 									buttonOnly:true,
 									listeners:{
 										change:function(file, value, eOpts){
@@ -282,8 +282,8 @@
 						    		'<tpl for=".">',
 						    		'<div class="thumb-wrap" id="{index}">',
 							        	'<div style="width:160px;height:113px;background:url({sltUrl});background-size:100%">',
-								        	'<img src="'+TzUniversityContextPath+'/statics/images/website/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_Editor({index})"/>',
-								        	'<img src="'+TzUniversityContextPath+'/statics/images/website/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
+								        	'<img src="'+TzUniversityContextPath+'/statics/images/tranzvision/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_Editor({index})"/>',
+								        	'<img src="'+TzUniversityContextPath+'/statics/images/tranzvision/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
 							        	'</div>',
 							        	'<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
 							        	'<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
@@ -340,7 +340,7 @@
 		            			xtype: 'fileuploadfield',
 		            			buttonText: '上传附件',
 											//name: 'attachmentUpload', 
-		            						name: 'orguploadfile',
+		            						name: 'websitefile',
 											buttonOnly:true,
 											width: 88,
 											listeners:{
@@ -460,40 +460,30 @@ function addAttach(file, value, attachmentType){
 		}
 	
 		//如果是附件则存在在附件的url中，如果是图片在存放在图片的url中;
-		var dateStr = Ext.Date.format(new Date(), 'Ymd');      
+		//var dateStr = Ext.Date.format(new Date(), 'Ymd');      
 		
 		var upUrl = "";
+		var siteId = file.findParentByType("artInfo").child("form").getForm().findField("siteId").getValue();
+		if(siteId==""){
+			Ext.Msg.alert("错误","不存在站点，请先为该机构新建站点");
+			return;
+		}
+		
 		if(attachmentType=="ATTACHMENT"){ 
 			upUrl = file.findParentByType("artInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
 			if(upUrl==""){
 				Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
 				return;
-			}else{
-				/*
-				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
-				}else{
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
-				}
-				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl;
 			}
 		}else{
 			upUrl = file.findParentByType("artInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
 			if(upUrl==""){
 				Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
 				return;
-			}else{
-				/*
-				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+dateStr;
-				}else{
-				   upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl+"/"+dateStr;
-				}
-				*/
-				upUrl = TzUniversityContextPath + '/UpdServlet?filePath='+upUrl;
 			}
 		}
+		
+		upUrl = TzUniversityContextPath + '/UpdWebServlet?siteid='+siteId+'&filePath='+upUrl;
 		
 		var myMask = new Ext.LoadMask({
 	    msg    : '加载中...',
@@ -519,7 +509,6 @@ function addAttach(file, value, attachmentType){
 			  tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_CONTENT_INF_STD","OperateType":"HTML","comParams":' + tzParams +'}';
 				
 				Ext.Ajax.request({
-				    //url: '/psc/TZDEV/EMPLOYEE/CRM/s/WEBLIB_GD_ATT_D.TZ_GD_ATT_FILE.FieldFormula.Iscript_AddArtAttach',
 				    url: Ext.tzGetGeneralURL,
 				    params: {
 				        tzParams: tzParams

@@ -504,15 +504,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			    }else{
 			    	//邮箱
 			    	if(strCheckedEmail != null && !"".equals(strCheckedEmail)){
-			    		// 校验验证码TODO
-			    		/*
+			    		// 校验验证码
 						Patchca patchca = new Patchca();
 						if (!patchca.verifyToken(request, strCheckedEmail)) {
 							errMsg[0] = "5";
 							errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang,"TZ_SITE_MESSAGE", "50", "验证码不正确", "The security code is incorrect");
 							return strResult;
 						}
-						*/
+						
 			    	}else{
 			    		errMsg[0] = "5";
 						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang,"TZ_SITE_MESSAGE", "50", "验证码不正确", "The security code is incorrect");
