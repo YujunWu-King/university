@@ -149,6 +149,7 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 	
@@ -225,6 +226,7 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 }
