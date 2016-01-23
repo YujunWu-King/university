@@ -37,7 +37,7 @@ public class ProTypeInfoClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	
-	/* 获取资源集合信息 */
+	/* 获取项目分类信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
