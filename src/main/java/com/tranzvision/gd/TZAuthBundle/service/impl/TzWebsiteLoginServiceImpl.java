@@ -134,7 +134,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			if (!"Y".equals(strJhzt)) {
 				errorMsg.add("1");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
-						"TZGD_FWINIT_00050", language, "此帐号暂未激活，重复验证邮件。", "The account is not activated yet."));
+						"TZGD_FWINIT_00050", language, "此帐号暂未激活，请激活后重试。", "The account is not activated yet."));
 				return false;
 			}
 

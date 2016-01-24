@@ -7,9 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -179,7 +176,9 @@ public class JacksonUtil {
 			return null;
 		}
 		try {
-			return String.valueOf(jsonMap.get(key));
+			if(jsonMap.containsKey(key)){
+				return String.valueOf(jsonMap.get(key));
+			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		} catch (ClassCastException e) {

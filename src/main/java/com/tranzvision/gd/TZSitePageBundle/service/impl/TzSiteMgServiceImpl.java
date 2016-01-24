@@ -276,38 +276,28 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						psTzSiteiDefnTWithBLOBs.setTzSiteiId(strSiteIId);
 						// 站点模板
 						psTzSiteiDefnTWithBLOBs.setTzSitemId(strSiteId);
-						// 站点语言
-						// psTzSiteiDefnTWithBLOBs.setTzSiteLang(psTzSiteiDefnTWithBLOBs.getTzSiteLang());
 
 						// 2.1生成各类文件的存储路径
-						// 图片存储路径
-						String strImgStor = getSysHardCodeVal.getWebsiteImgPath() + strJgStaticFilesPath;
-						psTzSiteiDefnTWithBLOBs.setTzImgStor(strImgStor);
+						// 图片存储文件夹
+						psTzSiteiDefnTWithBLOBs.setTzImgStor(psTzSitemDefnTWithBLOBs.getTzImgStor());
 
-						// 图片访问路径
-						String strImgView = getSysHardCodeVal.getWebsiteImgPath() + strJgStaticFilesPath;
-						psTzSiteiDefnTWithBLOBs.setTzImgView(strImgView);
+						// 图片访问文件夹
+						psTzSiteiDefnTWithBLOBs.setTzImgView(psTzSitemDefnTWithBLOBs.getTzImgView());
 
-						// 附件存储路径
-						String strAttStor = getSysHardCodeVal.getWebsiteFileUploadPath() + strJgStaticFilesPath;
-						psTzSiteiDefnTWithBLOBs.setTzAttsStor(strAttStor);
+						// 附件存储文件夹
+						psTzSiteiDefnTWithBLOBs.setTzAttsStor(psTzSitemDefnTWithBLOBs.getTzAttsStor());
 
-						// 附件访问路径
-						String strAttView = getSysHardCodeVal.getWebsiteFileUploadPath() + strJgStaticFilesPath;
-						psTzSiteiDefnTWithBLOBs.setTzAttsView(strAttView);
+						// 附件访问文件夹
+						psTzSiteiDefnTWithBLOBs.setTzAttsView(psTzSitemDefnTWithBLOBs.getTzAttsView());
 
-						// 视频存储路径
-						String strVideoStor = getSysHardCodeVal.getWebsiteFileUploadPath() + strJgStaticFilesPath
-								+ "/video";
-						psTzSiteiDefnTWithBLOBs.setTzVideoStor(strVideoStor);
+						// 视频存储文件夹
+						psTzSiteiDefnTWithBLOBs.setTzVideoStor(psTzSitemDefnTWithBLOBs.getTzVideoStor());
 
-						// 视频访问路径
-						String strVideoView = getSysHardCodeVal.getWebsiteFileUploadPath() + strJgStaticFilesPath
-								+ "/video";
-						psTzSiteiDefnTWithBLOBs.setTzVideoView(strVideoView);
+						// 视频访问文件夹
+						psTzSiteiDefnTWithBLOBs.setTzVideoView(psTzSitemDefnTWithBLOBs.getTzVideoView());
 
-						// 皮肤图片存储路径
-						//String strSkinsImg = getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId;
+						// 皮肤存储文件夹（应该用不到了）
+						psTzSiteiDefnTWithBLOBs.setTzSkinStor(psTzSitemDefnTWithBLOBs.getTzSkinStor());
 
 						// 2.2实例化站点样式文件
 						psTzSiteiDefnTWithBLOBs.setTzSkinId(strSkinId);
