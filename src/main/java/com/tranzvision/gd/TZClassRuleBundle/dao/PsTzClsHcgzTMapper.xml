@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClassRuleBundle.dao.PsTzClsHcgzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzT" >
+    <id column="TZ_CLS_HCGZ_ID" property="tzClsHcgzId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_CLS_HCGZ_NAME" property="tzClsHcgzName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLS_HCGZ_ID, TZ_JG_ID, TZ_CLS_HCGZ_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CLS_HCGZ_T
+    where TZ_CLS_HCGZ_ID = #{tzClsHcgzId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_CLS_HCGZ_T
+    where TZ_CLS_HCGZ_ID = #{tzClsHcgzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzT" >
+    insert into PS_TZ_CLS_HCGZ_T (TZ_CLS_HCGZ_ID, TZ_JG_ID, TZ_CLS_HCGZ_NAME
+      )
+    values (#{tzClsHcgzId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzClsHcgzName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzT" >
+    insert into PS_TZ_CLS_HCGZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClsHcgzId != null" >
+        TZ_CLS_HCGZ_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzClsHcgzName != null" >
+        TZ_CLS_HCGZ_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClsHcgzId != null" >
+        #{tzClsHcgzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClsHcgzName != null" >
+        #{tzClsHcgzName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzT" >
+    update PS_TZ_CLS_HCGZ_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClsHcgzName != null" >
+        TZ_CLS_HCGZ_NAME = #{tzClsHcgzName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_CLS_HCGZ_ID = #{tzClsHcgzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzT" >
+    update PS_TZ_CLS_HCGZ_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_CLS_HCGZ_NAME = #{tzClsHcgzName,jdbcType=VARCHAR}
+    where TZ_CLS_HCGZ_ID = #{tzClsHcgzId,jdbcType=VARCHAR}
+  </update>
+</mapper>

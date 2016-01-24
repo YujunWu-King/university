@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClassRuleBundle.dao.PsTzClsHcgzcsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzcsTKey" >
+    <id column="TZ_CLS_HCGZ_ID" property="tzClsHcgzId" jdbcType="VARCHAR" />
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzcsTKey" >
+    delete from PS_TZ_CLS_HCGZCS_T
+    where TZ_CLS_HCGZ_ID = #{tzClsHcgzId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzcsTKey" >
+    insert into PS_TZ_CLS_HCGZCS_T (TZ_CLS_HCGZ_ID, TZ_CLASS_ID)
+    values (#{tzClsHcgzId,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassRuleBundle.model.PsTzClsHcgzcsTKey" >
+    insert into PS_TZ_CLS_HCGZCS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClsHcgzId != null" >
+        TZ_CLS_HCGZ_ID,
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClsHcgzId != null" >
+        #{tzClsHcgzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
