@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationProcessBundle.dao.PsTzAppProStpTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    <id column="TZ_APPPRO_TMP_ID" property="tzAppproTmpId" jdbcType="VARCHAR" />
+    <id column="TZ_APPPRO_ID" property="tzAppproId" jdbcType="VARCHAR" />
+    <result column="TZ_SORT_NUM" property="tzSortNum" jdbcType="INTEGER" />
+    <result column="TZ_APPPRO_NAME" property="tzAppproName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" extends="BaseResultMap" >
+    <result column="TZ_DEF_CONTENT" property="tzDefContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APPPRO_TMP_ID, TZ_APPPRO_ID, TZ_SORT_NUM, TZ_APPPRO_NAME
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_DEF_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_APPPRO_STP_T
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpTKey" >
+    delete from PS_TZ_APPPRO_STP_T
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    insert into PS_TZ_APPPRO_STP_T (TZ_APPPRO_TMP_ID, TZ_APPPRO_ID, TZ_SORT_NUM, 
+      TZ_APPPRO_NAME, TZ_DEF_CONTENT)
+    values (#{tzAppproTmpId,jdbcType=VARCHAR}, #{tzAppproId,jdbcType=VARCHAR}, #{tzSortNum,jdbcType=INTEGER}, 
+      #{tzAppproName,jdbcType=VARCHAR}, #{tzDefContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    insert into PS_TZ_APPPRO_STP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppproTmpId != null" >
+        TZ_APPPRO_TMP_ID,
+      </if>
+      <if test="tzAppproId != null" >
+        TZ_APPPRO_ID,
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM,
+      </if>
+      <if test="tzAppproName != null" >
+        TZ_APPPRO_NAME,
+      </if>
+      <if test="tzDefContent != null" >
+        TZ_DEF_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppproTmpId != null" >
+        #{tzAppproTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproId != null" >
+        #{tzAppproId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        #{tzSortNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzAppproName != null" >
+        #{tzAppproName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefContent != null" >
+        #{tzDefContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    update PS_TZ_APPPRO_STP_T
+    <set >
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzAppproName != null" >
+        TZ_APPPRO_NAME = #{tzAppproName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefContent != null" >
+        TZ_DEF_CONTENT = #{tzDefContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    update PS_TZ_APPPRO_STP_T
+    set TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      TZ_APPPRO_NAME = #{tzAppproName,jdbcType=VARCHAR},
+      TZ_DEF_CONTENT = #{tzDefContent,jdbcType=LONGVARCHAR}
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT" >
+    update PS_TZ_APPPRO_STP_T
+    set TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      TZ_APPPRO_NAME = #{tzAppproName,jdbcType=VARCHAR}
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+  </update>
+</mapper>

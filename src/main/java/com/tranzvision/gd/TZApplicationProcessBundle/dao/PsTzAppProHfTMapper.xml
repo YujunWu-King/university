@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationProcessBundle.dao.PsTzAppProHfTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    <id column="TZ_APPPRO_TMP_ID" property="tzAppproTmpId" jdbcType="VARCHAR" />
+    <id column="TZ_APPPRO_ID" property="tzAppproId" jdbcType="VARCHAR" />
+    <id column="TZ_APPPRO_HF_BH" property="tzAppproHfBh" jdbcType="VARCHAR" />
+    <result column="TZ_APPPRO_COLOR" property="tzAppproColor" jdbcType="VARCHAR" />
+    <result column="TZ_CLS_RESULT" property="tzClsResult" jdbcType="VARCHAR" />
+    <result column="TZ_WFB_DEFALT_BZ" property="tzWfbDefaltBz" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" extends="BaseResultMap" >
+    <result column="TZ_APPPRO_CONTENT" property="tzAppproContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APPPRO_TMP_ID, TZ_APPPRO_ID, TZ_APPPRO_HF_BH, TZ_APPPRO_COLOR, TZ_CLS_RESULT, 
+    TZ_WFB_DEFALT_BZ
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_APPPRO_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_APPPRO_HF_T
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+      and TZ_APPPRO_HF_BH = #{tzAppproHfBh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfTKey" >
+    delete from PS_TZ_APPPRO_HF_T
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+      and TZ_APPPRO_HF_BH = #{tzAppproHfBh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    insert into PS_TZ_APPPRO_HF_T (TZ_APPPRO_TMP_ID, TZ_APPPRO_ID, TZ_APPPRO_HF_BH, 
+      TZ_APPPRO_COLOR, TZ_CLS_RESULT, TZ_WFB_DEFALT_BZ, 
+      TZ_APPPRO_CONTENT)
+    values (#{tzAppproTmpId,jdbcType=VARCHAR}, #{tzAppproId,jdbcType=VARCHAR}, #{tzAppproHfBh,jdbcType=VARCHAR}, 
+      #{tzAppproColor,jdbcType=VARCHAR}, #{tzClsResult,jdbcType=VARCHAR}, #{tzWfbDefaltBz,jdbcType=VARCHAR}, 
+      #{tzAppproContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    insert into PS_TZ_APPPRO_HF_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppproTmpId != null" >
+        TZ_APPPRO_TMP_ID,
+      </if>
+      <if test="tzAppproId != null" >
+        TZ_APPPRO_ID,
+      </if>
+      <if test="tzAppproHfBh != null" >
+        TZ_APPPRO_HF_BH,
+      </if>
+      <if test="tzAppproColor != null" >
+        TZ_APPPRO_COLOR,
+      </if>
+      <if test="tzClsResult != null" >
+        TZ_CLS_RESULT,
+      </if>
+      <if test="tzWfbDefaltBz != null" >
+        TZ_WFB_DEFALT_BZ,
+      </if>
+      <if test="tzAppproContent != null" >
+        TZ_APPPRO_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppproTmpId != null" >
+        #{tzAppproTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproId != null" >
+        #{tzAppproId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproHfBh != null" >
+        #{tzAppproHfBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproColor != null" >
+        #{tzAppproColor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClsResult != null" >
+        #{tzClsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWfbDefaltBz != null" >
+        #{tzWfbDefaltBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproContent != null" >
+        #{tzAppproContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    update PS_TZ_APPPRO_HF_T
+    <set >
+      <if test="tzAppproColor != null" >
+        TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClsResult != null" >
+        TZ_CLS_RESULT = #{tzClsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWfbDefaltBz != null" >
+        TZ_WFB_DEFALT_BZ = #{tzWfbDefaltBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppproContent != null" >
+        TZ_APPPRO_CONTENT = #{tzAppproContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+      and TZ_APPPRO_HF_BH = #{tzAppproHfBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    update PS_TZ_APPPRO_HF_T
+    set TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
+      TZ_CLS_RESULT = #{tzClsResult,jdbcType=VARCHAR},
+      TZ_WFB_DEFALT_BZ = #{tzWfbDefaltBz,jdbcType=VARCHAR},
+      TZ_APPPRO_CONTENT = #{tzAppproContent,jdbcType=LONGVARCHAR}
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+      and TZ_APPPRO_HF_BH = #{tzAppproHfBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT" >
+    update PS_TZ_APPPRO_HF_T
+    set TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
+      TZ_CLS_RESULT = #{tzClsResult,jdbcType=VARCHAR},
+      TZ_WFB_DEFALT_BZ = #{tzWfbDefaltBz,jdbcType=VARCHAR}
+    where TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR}
+      and TZ_APPPRO_ID = #{tzAppproId,jdbcType=VARCHAR}
+      and TZ_APPPRO_HF_BH = #{tzAppproHfBh,jdbcType=VARCHAR}
+  </update>
+</mapper>
