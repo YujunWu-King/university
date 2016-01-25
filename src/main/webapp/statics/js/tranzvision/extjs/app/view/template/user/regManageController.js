@@ -146,7 +146,7 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 			win = new ViewClass();
 			this.getView().add(win);
 		}
-		var tzStoreParams = "{'regId':'" + regId + "'}";
+		var tzStoreParams = "{\"regId\":\"" + regId + "\"}";
 		/*下拉框值Grid.store*/
 		var vinStroe = win.child('grid').store;
 

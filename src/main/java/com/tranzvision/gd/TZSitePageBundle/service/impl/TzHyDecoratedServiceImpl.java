@@ -222,7 +222,7 @@ public class TzHyDecoratedServiceImpl extends FrameworkImpl {
 
 			}
 
-			if (mapRet.containsKey("success")) {
+			if (!mapRet.containsKey("success")) {
 				mapRet.put("success", true);
 			}
 

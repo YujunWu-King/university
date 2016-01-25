@@ -48,7 +48,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private TZGDObject tzGdObject;
 
@@ -72,7 +72,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzYhzcXxzEngMapper psTzYhzcXxzEngMapper;
-	
+
 	@Autowired
 	private RegisteServiceImpl registeServiceImpl;
 
@@ -114,14 +114,14 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							Object objActivate = mapFormData.get("activate");
 
 							String strActivate = String.valueOf(objActivate);
-							
-							if(strActivate.contains(",")){
+
+							if (strActivate.contains(",")) {
 								List<String> listActivate = (List<String>) objActivate;
 								for (String activateType : listActivate) {
 									updActivate = updActivate + comma + activateType;
 									comma = ",";
 								}
-							}else{
+							} else {
 								updActivate = strActivate;
 							}
 
@@ -218,9 +218,10 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							// 处理双语 - 开始
 							if (mapGridRow.containsKey("regEnName")) {
 
-								String regEnName = String.valueOf(mapGridRow.get("regEnName"));
+								String regEnName = mapGridRow.get("regEnName") == null ? ""
+										: String.valueOf(mapGridRow.get("regEnName"));
 
-								if (!"".equals(regEnName)) {
+								if (!"".equals(regId)) {
 									sql = "select 'Y' from PS_TZ_REGFIELD_ENG where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and LANGUAGE_CD=?";
 									recExists = sqlQuery.queryForObject(sql, new Object[] { orgid, regId, languageCd },
 											"String");
@@ -232,8 +233,10 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 									psTzRegfieldEng.setLanguageCd(languageCd);
 									psTzRegfieldEng.setTzRegFieldName(regEnName);
 
-									if ("Y".equals(recExists)) {
-										psTzRegfieldEngMapper.insert(psTzRegfieldEng);
+									if (!"Y".equals(recExists)) {
+										if (!"".equals(regEnName)) {
+											psTzRegfieldEngMapper.insert(psTzRegfieldEng);
+										}
 									} else {
 										psTzRegfieldEngMapper.updateByPrimaryKey(psTzRegfieldEng);
 									}
@@ -596,15 +599,16 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 		String sql = "select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ENABLE='Y'";
 
 		String strSiteId = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
-		
+
 		String viewHtml = registeServiceImpl.userRegister(orgid, strSiteId);
 		try {
-			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML", true, viewHtml,request.getContextPath(),strSiteId);
+			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML", true, viewHtml,
+					request.getContextPath(), strSiteId);
 		} catch (TzSystemException e) {
 			viewHtml = e.toString();
 			e.printStackTrace();
 		}
-		
+
 		return viewHtml;
 
 	}
