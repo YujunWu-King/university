@@ -58,7 +58,7 @@ public class searchMailHistoryServiceImpl extends FrameworkImpl{
 						String sendTime = (String) list.get(i).get("TZ_FS_DT");
 						String operator = (String) list.get(i).get("ROW_ADDED_OPRID");
 						
-						if(operator != null && !"".equals(operator) && "TZ_GUEST".equals(operator)){
+						if(operator != null && !"".equals(operator) && !"TZ_GUEST".equals(operator)){
 							String relNameSQL = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 							operator = jdbcTemplate.queryForObject(relNameSQL,new Object[]{operator},"String");
 						}
