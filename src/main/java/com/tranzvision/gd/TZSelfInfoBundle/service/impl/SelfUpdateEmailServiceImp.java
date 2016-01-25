@@ -71,7 +71,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 					if(cntlogTm.before(curDate)){
 						//验证码超时;
 						try {
-							return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，验证已超时" );
+							return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，验证已超时" );
 						} catch (TzSystemException e) {
 							e.printStackTrace();
 							return "邮箱绑定失败，验证已超时";
@@ -82,7 +82,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 						String oprid = jdbcTemplate.queryForObject(sql, new Object[]{dlzhId,jgId},"String");
 						if(oprid==null || "".equals(oprid)){
 							try {
-								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，验证已超时" );
+								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，验证已超时" );
 							} catch (TzSystemException e) {
 								e.printStackTrace();
 								return "邮箱绑定失败，验证已超时";
@@ -94,7 +94,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 						int repInt = jdbcTemplate.queryForObject(repSQL, new Object[]{email,jgId,oprid},"Integer");
 						if(repInt > 0){
 							try {
-								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，该邮箱已被占用" );
+								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，该邮箱已被占用" );
 							} catch (TzSystemException e) {
 								e.printStackTrace();
 								return "邮箱绑定失败，该邮箱已被占用";
@@ -105,7 +105,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 							updateSQL = "UPDATE PS_TZ_DZYX_YZM_TBL SET TZ_EFF_FLAG='N' WHERE TZ_TOKEN_CODE=? and TZ_EFF_FLAG='Y'";
 							jdbcTemplate.update(updateSQL,new Object[]{tokenCode});
 							try {
-								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/right_green.png","邮箱绑定成功" );
+								return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/right_green.png","邮箱绑定成功" );
 							} catch (TzSystemException e) {
 								e.printStackTrace();
 								return "邮箱绑定成功";
@@ -114,7 +114,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 					}
 				}else{
 					try {
-						return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，验证码已失效" );
+						return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，验证码已失效" );
 					} catch (TzSystemException e) {
 						e.printStackTrace();
 						return "邮箱绑定失败，验证码已失效";
@@ -123,7 +123,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 						
 			}else{
 				try {
-					return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，验证码已失效");
+					return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，验证码已失效");
 				} catch (TzSystemException e) {
 					e.printStackTrace();
 					return "邮箱绑定失败，验证码已失效";
@@ -131,7 +131,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 			}
 		}else{
 			try {
-				return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/website/error_001.jpg","邮箱绑定失败，验证码已失效" );
+				return tzGdObject.getHTMLText("HTML.TZSelfInfoBundle.TZ_GD_EMAIL_NOTICE_HTML", true,request.getContextPath(),request.getContextPath()+"/statics/images/tranzvision/error_001.jpg","邮箱绑定失败，验证码已失效" );
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 				return "邮箱绑定失败，验证码已失效";
