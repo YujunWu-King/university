@@ -117,7 +117,6 @@
 			if(actType == "add" && btn != "but_ensure"){
 				var menuId = responseData.menuId;
 				form.setValues({menuid:menuId});
-				alert(menuId)
 				/*comView.child("form").child('form').child("image").setSrc(TzUniversityContextPath + responseData.typeImg);
 				comView.down('form[name=imgForm2]').child("image").setSrc(TzUniversityContextPath + responseData.nowImg);
 				*/

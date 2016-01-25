@@ -461,6 +461,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 				tmpLoginURL = request.getContextPath() + "/login";
 			}
 		}else{
+			tmpOrgID = "";
 			tmpLoginURL = request.getContextPath() + "/login";
 		}
 		

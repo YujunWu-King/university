@@ -67,12 +67,12 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletDef', {
                 text: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_MG_STD.emltempid","邮件模板编号"),
                 sortable: true,
                 dataIndex: 'emltempid',
-				width: 200
+				width: 180
             },{
                 text: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_MG_STD.emltempname","邮件模板名称"),
                 sortable: true,
                 dataIndex: 'emltempname',
-                width: 300
+                width: 280
             },{
                 text: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_MG_STD.restempid","元模版编号"),
                 sortable: true,
@@ -82,7 +82,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletDef', {
                 text: Ext.tzGetResourse("TZ_EML_TMPL_MG_COM.TZ_EML_TMPL_MG_STD.restempname","模板类型"),
                 sortable: true,
                 dataIndex: 'restempname',
-                width: 300
+                width: 280
             },{
                 text:Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_MG_STD.isuse","是否启用"),
                 sortable: true,
@@ -100,7 +100,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletDef', {
                 },{
               	menuDisabled: true,
                 sortable: false,
-			    width:60,
+                flex:1,
                 xtype: 'actioncolumn',
                 align:'center',
 			    items:[

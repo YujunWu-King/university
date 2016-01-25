@@ -170,9 +170,6 @@ public class ContentMgServiceImpl extends FrameworkImpl {
 				if (success > 0 && maxZdSEQ > 0) {
 					String updateMaxZdSeqSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
 					jdbcTemplate.update(updateMaxZdSeqSQL, new Object[] { siteId, columnId, maxZdSEQ });
-				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "删除数据失败";
 				}
 			}
 		} catch (Exception e) {

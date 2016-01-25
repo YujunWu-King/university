@@ -218,9 +218,9 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				String skinstor = jacksonUtil.getString("skinstor");
 				
 				String indexSaveCode = jacksonUtil.getString("indexSaveCode");
-				String indexPubCode = jacksonUtil.getString("indexPubCode");
+				//String indexPubCode = jacksonUtil.getString("indexPubCode");
 				String loginSaveCode = jacksonUtil.getString("loginSaveCode"); 
-				String loginPubCode = jacksonUtil.getString("loginPubCode");
+				//String loginPubCode = jacksonUtil.getString("loginPubCode");
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = new PsTzSiteiDefnTWithBLOBs();
 				psTzSiteiDefnT.setTzSiteiId(siteId);
@@ -244,9 +244,9 @@ public class OrgSiteDefnServiceImpl extends FrameworkImpl{
 				psTzSiteiDefnT.setTzSkinStor(skinstor);
 				
 				psTzSiteiDefnT.setTzIndexSavecode(indexSaveCode);
-				psTzSiteiDefnT.setTzIndexPubcode(indexPubCode);
+				//psTzSiteiDefnT.setTzIndexPubcode(indexPubCode);
 				psTzSiteiDefnT.setTzLonginSavecode(loginSaveCode);
-				psTzSiteiDefnT.setTzLonginPubcode(loginPubCode);
+				//psTzSiteiDefnT.setTzLonginPubcode(loginPubCode);
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				psTzSiteiDefnT.setTzLastmantOprid(oprid);
 				psTzSiteiDefnT.setTzLastmantDttm(new Date());

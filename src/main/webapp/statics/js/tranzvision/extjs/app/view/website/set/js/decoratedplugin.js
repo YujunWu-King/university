@@ -585,7 +585,7 @@ var BeforNode;
 							if(formData.addcolu=="Y"){
 								menuColuSelect.show();
 								addColuBtns.show();
-							}else if(formData.addcolu=="U"){
+							}else if(formData.addcolu=="URL"){
 								addURLFields.show();
 								menuColuSelect.hide();
 								addColuBtns.hide();
@@ -744,7 +744,7 @@ var BeforNode;
 					if(selected.data.addcolu=="Y"){
 						menuColuSelect.show();
 						addColuBtns.show();
-					}else if(selected.data.addcolu=="U"){
+					}else if(selected.data.addcolu=="URL"){
 						addURLFields.show();
 						menuColuSelect.hide();
 						addColuBtns.hide();
@@ -1369,7 +1369,7 @@ var BeforNode;
 										if(formData.addcolu=="Y"){
 											menuColuSelect.show();
 											addColuBtns.show();
-										}else if(formData.addcolu=="U"){
+										}else if(formData.addcolu=="URL"){
 											addURLFields.show();
 											menuColuSelect.hide();
 											addColuBtns.hide();
@@ -1621,7 +1621,7 @@ var BeforNode;
 						if(formData.addcolu=="Y"){
 							menuColuSelect.show();
 							addColuBtns.show();
-						}else if(formData.addcolu=="U"){
+						}else if(formData.addcolu=="URL"){
 							addURLFields.show();
 							menuColuSelect.hide();
 							addColuBtns.hide();
