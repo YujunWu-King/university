@@ -480,12 +480,12 @@
 				 height: 350,
                  fieldLabel: '保存时源代码',
 			     name: 'indexSaveCode'
-				},{
+				}/*,{
 				 xtype: 'textarea',
 				 height: 350,
                  fieldLabel: '发布时源代码',
 			     name: 'indexPubCode'
-				}]
+				}*/]
 			},{
 				title:'登录页源代码',
 				xtype: 'form',
@@ -507,12 +507,12 @@
 				 height: 350,
                  fieldLabel: '保存时源代码',
 			     name: 'loginSaveCode'
-				},{
+				}/*,{
 				 xtype: 'textarea',
 				 height: 350,
                  fieldLabel: '发布时源代码',
 			     name: 'loginPubCode'
-				}]
+				}*/]
 			}]
 		}]
     }],
