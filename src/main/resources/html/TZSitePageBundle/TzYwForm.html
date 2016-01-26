@@ -248,11 +248,13 @@
 							"listeners":{initialize:function(thisField,eOpts){
 								if(Ext.isEmpty(Ext.query('%bind(:5)')[0])){
 								}else{
-									thisField.setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML)
+									
+									console.log(Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML);
+									thisField.setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML);
 								}
 							},
 							change:function(thisField, newValue, oldValue, eOpts){
-								Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML=thisField.getValue();
+								Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML='<div class="foot_main"><div class="foot_main_left">'+thisField.getValue()+'</div></div>';
 								editPanel.getForm().findField('areaCode').setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.outerHTML);
 								var bodyCode = Ext.get("all").dom.outerHTML;
 								bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");

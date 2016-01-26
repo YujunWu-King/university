@@ -186,7 +186,7 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 				psTzYhzcXxzTbl.setTzSelectFlg(isSelect);
 				psTzYhzcXxzTbl.setTzOrder(order);
 				
-				if("Y".equals(recExists)){
+				if(!"Y".equals(recExists)){
 					psTzYhzcXxzTblMapper.insert(psTzYhzcXxzTbl);
 				}else{
 					psTzYhzcXxzTblMapper.updateByPrimaryKey(psTzYhzcXxzTbl);

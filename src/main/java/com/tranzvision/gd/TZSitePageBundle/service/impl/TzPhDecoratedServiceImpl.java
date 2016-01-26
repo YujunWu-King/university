@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
-import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
-import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
+import com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegisteServiceImpl;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -47,7 +47,13 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
 
 	@Autowired
-	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
+	private TzSiteMgServiceImpl tzSiteMgServiceImpl;
+
+	@Autowired
+	private RegisteServiceImpl registeServiceImpl;
+	
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -61,7 +67,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 			String strAreaZone = jacksonUtil.getString("areaZone");
 			String strAreaType = jacksonUtil.getString("areaType");
 
-			if (null != strAreaId && !"".equals(strAreaId)) {
+			if (null == strAreaId || "".equals(strAreaId)) {
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
 				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 			}
@@ -106,7 +112,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 
 				String strAreaCode = jacksonUtil.getString("areaCode");
 
-				String strHeadCode = jacksonUtil.getString("headCode");
+				// String strHeadCode = jacksonUtil.getString("headCode");
 
 				String strBodyCode = jacksonUtil.getString("bodyCode");
 
@@ -127,6 +133,8 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 
 				if (null != strAreaCode && !"".equals(strAreaCode)) {
 
+					strAreaCode = siteRepCssServiceImpl.repWelcome(strAreaCode, "");
+					
 					PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 					psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
@@ -142,45 +150,31 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 					psTzSiteiAreaTMapper.updateByPrimaryKeySelective(psTzSiteiAreaTWithBLOBs);
 				}
 
-				if (null != strHeadCode && null != strBodyCode) {
-
-					String strPageCode = "<html>" + strHeadCode + "<body>" + strBodyCode + "</body></html>";
-
-					String strDecoratedplugincss = jacksonUtil.getString("decoratedplugincss");
-					String strDecoratedpluginjs = jacksonUtil.getString("decoratedpluginjs");
-					String strDecoratedpluginbar = jacksonUtil.getString("decoratedpluginbar");
-
-					String strPrePageCode = strPageCode;
-					strPrePageCode = strPrePageCode.replace(strDecoratedplugincss, "");
-					strPrePageCode = strPrePageCode.replace(strDecoratedpluginjs, "");
-					strPrePageCode = strPrePageCode.replace(strDecoratedpluginbar, "");
-
-					PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
-
-					psTzSiteiDefnTWithBLOBs.setTzSiteiId(strSiteId);
+				if (null != strBodyCode && !"".equals(strBodyCode)) {
 
 					switch (strPageType) {
 					case "homepage":
-						psTzSiteiDefnTWithBLOBs.setTzIndexSavecode(strPageCode);
-						psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strPrePageCode);
+						tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, errMsg);
 						break;
 
 					case "loginpage":
-						psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(strPageCode);
-						psTzSiteiDefnTWithBLOBs.setTzLoginPrecode(strPrePageCode);
+						tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId, errMsg);
 						break;
 
 					case "enrollpage":
-						psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(strPageCode);
-						psTzSiteiDefnTWithBLOBs.setTzEnrollPrecode(strPrePageCode);
+						String strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
+						registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId, errMsg);
 						break;
 					}
 
-					psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnTWithBLOBs);
 				}
 
-				errMsg[0] = "0";
-				mapRet.put("success", true);
+				if (errMsg.length > 0 && !"0".equals(errMsg[0])) {
+					mapRet.put("success", false);
+				} else {
+					errMsg[0] = "0";
+					mapRet.put("success", true);
+				}
 				strRet = jacksonUtil.Map2json(mapRet);
 			}
 
