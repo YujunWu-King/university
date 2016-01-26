@@ -16,7 +16,10 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZApplicationProcessBundle.dao.PsTzAppProTmpTMapper;
 import com.tranzvision.gd.TZApplicationProcessBundle.dao.PsTzAppProStpTMapper;
+import com.tranzvision.gd.TZApplicationProcessBundle.dao.PsTzAppProHfTMapper;
 import com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProTmpT;
+import com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProHfT;
+import com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpT;
 import com.tranzvision.gd.TZApplicationProcessBundle.model.PsTzAppProStpTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -42,7 +45,9 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 	private PsTzAppProTmpTMapper PsTzAppProTmpTMapper;
 	@Autowired
 	private PsTzAppProStpTMapper PsTzAppProStpTMapper;	
-	
+	@Autowired
+	private PsTzAppProHfTMapper PsTzAppProHfTMapper;	
+
 	/* 查询报名流程列表 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -58,44 +63,113 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 
 		String strAppProcessTmpId = jacksonUtil.getString("TZ_APPPRO_TMP_ID");
 		
-		ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
-		try{
-			int total = 0;
-			// 查询总数;
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID=?";
-			total = sqlQuery.queryForObject(totalSQL, new Object[] { strAppProcessTmpId },"Integer");
-			String sql = "SELECT TZ_APPPRO_ID,TZ_SORT_NUM, TZ_APPPRO_NAME,TZ_DEF_CONTENT FROM PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID= ? order by TZ_SORT_NUM LIMIT ?,?";
-			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strAppProcessTmpId,numStart,numLimit });
-			for (Object objData : listData) {
-
-				Map<String, Object> mapData = (Map<String, Object>) objData;
-				String strAppProcessId = "";
-				String strAppProcessName = "";
-				String strSortNum;
-				String strAppProcessDefContent = "";
-
-				strAppProcessId = String.valueOf(mapData.get("TZ_APPPRO_ID"));
-				strAppProcessName = String.valueOf(mapData.get("TZ_APPPRO_NAME"));
-				strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
-				strAppProcessDefContent = String.valueOf(mapData.get("TZ_DEF_CONTENT"));
-				
-				Map<String, Object> mapJson = new HashMap<String, Object>();
-				mapJson.put("TZ_APPPRO_ID", strAppProcessId);
-				mapJson.put("TZ_SORT_NUM", strSortNum);
-				mapJson.put("TZ_APPPRO_NAME", strAppProcessName);
-				mapJson.put("TZ_DEF_CONTENT", strAppProcessDefContent);
-				mapJson.put("TZ_APPPRO_TMP_ID", strAppProcessTmpId);
-				listJson.add(mapJson);
-				mapRet.replace("total",total);
+		String strAppProcessTmpName = jacksonUtil.getString("TZ_APPPRO_TMP_NAME");
+		
+		String strAppProcessTmpIdNew = "";
+		
+		String strCopyFlag = "";
+		/*如果是复制的报名流程模版*/
+		if (jacksonUtil.containsKey("addOne")) {
+			strCopyFlag = jacksonUtil.getString("addOne");
+			if("new".equals(strCopyFlag)){
+				/*根据模版名称查询*/
+				String sqlGetAppProcessTmp = "SELECT TZ_APPPRO_TMP_ID FROM PS_TZ_APPPRO_TMP_T WHERE TZ_APPPRO_TMP_NAME= ?";
+				strAppProcessTmpIdNew =  sqlQuery.queryForObject(sqlGetAppProcessTmp, new Object[] { strAppProcessTmpName },"String");
+				/*复制流程信息*/
+				String sqlGetAppProcessInfo = "SELECT TZ_APPPRO_ID,TZ_SORT_NUM, TZ_APPPRO_NAME,TZ_DEF_CONTENT FROM PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID= ?";
+				List<?> listAppProcessInfoData = sqlQuery.queryForList(sqlGetAppProcessInfo, new Object[] { strAppProcessTmpId });
+				for (Object objData : listAppProcessInfoData) {
+					Map<String, Object> mapData = (Map<String, Object>) objData;
+					String strAppProcessId = "";
+					String strAppProcessName = "";
+					String strSortNum;
+					String strAppProcessDefContent = "";
+					strAppProcessId = String.valueOf(mapData.get("TZ_APPPRO_ID"));
+					strAppProcessName = String.valueOf(mapData.get("TZ_APPPRO_NAME"));
+					strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
+					strAppProcessDefContent = String.valueOf(mapData.get("TZ_DEF_CONTENT"));
+					PsTzAppProStpT psTzAppProStpT = new PsTzAppProStpT();
+					psTzAppProStpT.setTzAppproTmpId(strAppProcessTmpIdNew);
+					psTzAppProStpT.setTzAppproId(strAppProcessId);
+					psTzAppProStpT.setTzAppproName(strAppProcessName);
+					psTzAppProStpT.setTzSortNum(Integer.parseInt(strSortNum));
+					psTzAppProStpT.setTzDefContent(strAppProcessDefContent);
+					PsTzAppProStpTMapper.insert(psTzAppProStpT);
+					
+					/*复制常用回复短语信息*/
+					String sqlGetMsgInfo = "SELECT TZ_APPPRO_HF_BH,TZ_APPPRO_COLOR,TZ_CLS_RESULT,TZ_WFB_DEFALT_BZ,TZ_APPPRO_CONTENT  FROM PS_TZ_APPPRO_HF_T WHERE TZ_APPPRO_TMP_ID=? AND TZ_APPPRO_ID=?";
+					List<?> listMsgData = sqlQuery.queryForList(sqlGetMsgInfo, new Object[] { strAppProcessTmpId,strAppProcessId });
+					for (Object objMsgData : listMsgData) {
+						Map<String, Object> mapMsgData = (Map<String, Object>) objMsgData;
+						String strMsgId = "";
+						String strMsgName = "";
+						String strMsgColor = "";
+						String strMsgContent = "";
+						String strDefaultFlag = "";
+						
+						strMsgId = String.valueOf(mapMsgData.get("TZ_APPPRO_HF_BH"));
+						strMsgName = String.valueOf(mapMsgData.get("TZ_CLS_RESULT"));
+						strMsgColor = String.valueOf(mapMsgData.get("TZ_APPPRO_COLOR"));
+						strMsgContent = String.valueOf(mapMsgData.get("TZ_APPPRO_CONTENT"));
+						strDefaultFlag = String.valueOf(mapMsgData.get("TZ_WFB_DEFALT_BZ"));
+						
+						PsTzAppProHfT psTzAppProHfT = new PsTzAppProHfT();
+						psTzAppProHfT.setTzAppproTmpId(strAppProcessTmpIdNew);
+						psTzAppProHfT.setTzAppproId(strAppProcessId);
+						psTzAppProHfT.setTzAppproHfBh(strMsgId);
+						psTzAppProHfT.setTzClsResult(strMsgName);
+						psTzAppProHfT.setTzAppproColor(strMsgColor);
+						psTzAppProHfT.setTzAppproContent(strMsgContent);
+						psTzAppProHfT.setTzWfbDefaltBz(strDefaultFlag);
+						PsTzAppProHfTMapper.insert(psTzAppProHfT);
+					}
+				}
+				if(strAppProcessTmpIdNew == null) {
+					strAppProcessTmpId = "";
+				}else{
+					strAppProcessTmpId = strAppProcessTmpIdNew;
+				}
 			}
-			mapRet.replace("root", listJson);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = e.toString();
 		}
- 
+		if(!"".equals(strAppProcessTmpId)){
+			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+			try{
+				int total = 0;
+				// 查询总数;
+				String totalSQL = "SELECT COUNT(1) FROM PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID=?";
+				total = sqlQuery.queryForObject(totalSQL, new Object[] { strAppProcessTmpId },"Integer");
+				String sql = "SELECT TZ_APPPRO_ID,TZ_SORT_NUM, TZ_APPPRO_NAME,TZ_DEF_CONTENT FROM PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID= ? order by TZ_SORT_NUM LIMIT ?,?";
+				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strAppProcessTmpId,numStart,numLimit });
+				for (Object objData : listData) {
+
+					Map<String, Object> mapData = (Map<String, Object>) objData;
+					String strAppProcessId = "";
+					String strAppProcessName = "";
+					String strSortNum;
+					String strAppProcessDefContent = "";
+
+					strAppProcessId = String.valueOf(mapData.get("TZ_APPPRO_ID"));
+					strAppProcessName = String.valueOf(mapData.get("TZ_APPPRO_NAME"));
+					strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
+					strAppProcessDefContent = String.valueOf(mapData.get("TZ_DEF_CONTENT"));
+					
+					Map<String, Object> mapJson = new HashMap<String, Object>();
+					mapJson.put("TZ_APPPRO_ID", strAppProcessId);
+					mapJson.put("TZ_SORT_NUM", strSortNum);
+					mapJson.put("TZ_APPPRO_NAME", strAppProcessName);
+					mapJson.put("TZ_DEF_CONTENT", strAppProcessDefContent);
+					mapJson.put("TZ_APPPRO_TMP_ID", strAppProcessTmpId);
+					listJson.add(mapJson);
+					mapRet.replace("total",total);
+				}
+				mapRet.replace("root", listJson);
+			} catch (Exception e) {
+				e.printStackTrace();
+				errorMsg[0] = "1";
+				errorMsg[1] = e.toString();
+			}
+		}
+
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
@@ -299,5 +373,61 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 		}
 		
 		return strRet;
+	}
+	
+	/* 获取流程模版信息 */
+	@Override
+	public String tzQuery(String strParams, String[] errMsg) {
+		// 返回值;
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("formData", "{}");
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			
+			// 流程模版编号;
+			String strAppProcessTmpId = jacksonUtil.getString("TZ_APPPRO_TMP_ID");
+			
+			// 新的流程模版编号
+			String strAppProcessTmpIdNew = "";
+			
+			String strCopyFlag = "";
+			/*如果是复制的报名流程模版*/
+			if (jacksonUtil.containsKey("addOne")) {
+				strCopyFlag = jacksonUtil.getString("addOne");
+				if("new".equals(strCopyFlag)){
+					strAppProcessTmpIdNew = String.valueOf(getSeqNum.getSeqNum("PS_TZ_APPPRO_TMP_T", "TZ_APPPRO_TMP_ID"));
+					String strAppProcessTmpName = jacksonUtil.getString("TZ_APPPRO_TMP_NAME");
+					
+					PsTzAppProTmpT psTzAppProTmpTOld = PsTzAppProTmpTMapper.selectByPrimaryKey(strAppProcessTmpId);
+					String strAppProcessTmpStatus = psTzAppProTmpTOld.getTzAppproStatus();
+					/*添加模版*/
+					PsTzAppProTmpT psTzAppProTmpT = new PsTzAppProTmpT();
+					psTzAppProTmpT.setTzAppproTmpId(strAppProcessTmpIdNew);
+					psTzAppProTmpT.setTzAppproTmpName(strAppProcessTmpName);
+					psTzAppProTmpT.setTzAppproStatus(strAppProcessTmpStatus);
+					psTzAppProTmpT.setTzJgId(orgid);
+					psTzAppProTmpT.setRowAddedDttm(new Date());
+					psTzAppProTmpT.setRowAddedOprid(oprid);
+					psTzAppProTmpT.setRowLastmantDttm(new Date());
+					psTzAppProTmpT.setRowLastmantOprid(oprid);
+					PsTzAppProTmpTMapper.insert(psTzAppProTmpT);
+					
+					Map<String, Object> retMap = new HashMap<String, Object>();
+					retMap.put("TZ_APPPRO_TMP_ID", strAppProcessTmpIdNew);
+					retMap.put("TZ_APPPRO_TMP_NAME", strAppProcessTmpName);
+					retMap.put("TZ_APPPRO_STATUS", strAppProcessTmpStatus);
+					returnJsonMap.replace("formData",retMap);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return jacksonUtil.Map2json(returnJsonMap);
 	}
 }
