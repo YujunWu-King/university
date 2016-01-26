@@ -72,12 +72,13 @@ public class TzGgDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
 				
 				String ctxPath = request.getContextPath();
+				if(!"".equals(ctxPath)){
+					strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
+				}
 				
 				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
 				strAreaCode = strAreaCode.replace(strSkinImgPath, "{ContextSkinPath}/");
 				
-				strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
-
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);

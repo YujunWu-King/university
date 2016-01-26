@@ -254,7 +254,7 @@
 								}
 							},
 							change:function(thisField, newValue, oldValue, eOpts){
-								Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML='<div class="foot_main"><div class="foot_main_left">'+thisField.getValue()+'</div></div>';
+								Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML=thisField.getValue();
 								editPanel.getForm().findField('areaCode').setValue(Ext.get(Ext.query('%bind(:5)')[0]).dom.outerHTML);
 								var bodyCode = Ext.get("all").dom.outerHTML;
 								bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");

@@ -44,6 +44,11 @@ public class GetSysHardCodeVal {
 	private String dateFormat;
 
 	/**
+	 * 日期时间（小时:分钟）格式
+	 */
+	private String dateTimeHMFormat;
+
+	/**
 	 * 日期时间格式
 	 */
 	private String dateTimeFormat;
@@ -77,22 +82,22 @@ public class GetSysHardCodeVal {
 	 * 临时文件存储路径
 	 */
 	private String tmpFileUploadPath;
-	
+
 	/**
 	 * 前台网站css样式路径前缀
 	 */
 	private String websiteCssPath;
-	
+
 	/**
 	 * 前台网站图片路径前缀
 	 */
 	private String websiteImgPath;
-	
+
 	/**
 	 * 网站模板皮肤图片路径前缀
 	 */
 	private String websiteSkinsImgPath;
-	
+
 	/**
 	 * 前台注册页面路径前缀
 	 */
@@ -116,9 +121,11 @@ public class GetSysHardCodeVal {
 
 			menuTreeName = sysHardCodeValProps.getProperty("MenuTreeName");
 
-			dateFormat = sysHardCodeValProps.getProperty("DateFormate");
+			dateFormat = sysHardCodeValProps.getProperty("DateFormat");
 
-			dateTimeFormat = sysHardCodeValProps.getProperty("DateTimeFormate");
+			dateTimeHMFormat = sysHardCodeValProps.getProperty("DateTimeHMFormat");
+
+			dateTimeFormat = sysHardCodeValProps.getProperty("DateTimeFormat");
 
 			imageSuffix = this.stringToArrayList(sysHardCodeValProps.getProperty("ImageSuffix"));
 
@@ -132,13 +139,13 @@ public class GetSysHardCodeVal {
 			websiteFileUploadPath = sysHardCodeValProps.getProperty("WebsiteFileUploadPath");
 
 			tmpFileUploadPath = sysHardCodeValProps.getProperty("TmpFileUploadPath");
-			
+
 			websiteCssPath = sysHardCodeValProps.getProperty("WebsiteCssPath");
-			
+
 			websiteImgPath = sysHardCodeValProps.getProperty("WebsiteImgPath");
-			
+
 			websiteSkinsImgPath = sysHardCodeValProps.getProperty("WebsiteSkinsImgPath");
-			
+
 			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
 
 		} catch (IOException ioe) {
@@ -175,6 +182,10 @@ public class GetSysHardCodeVal {
 		return dateFormat;
 	}
 
+	public String getDateTimeHMFormat() {
+		return dateTimeHMFormat;
+	}
+
 	public String getDateTimeFormat() {
 		return dateTimeFormat;
 	}
@@ -202,15 +213,15 @@ public class GetSysHardCodeVal {
 	public String getTmpFileUploadPath() {
 		return tmpFileUploadPath;
 	}
-	
+
 	public String getWebsiteCssPath() {
 		return websiteCssPath;
 	}
-	
+
 	public String getWebsiteImgPath() {
 		return websiteImgPath;
 	}
-	
+
 	public String getWebsiteSkinsImgPath() {
 		return websiteSkinsImgPath;
 	}
