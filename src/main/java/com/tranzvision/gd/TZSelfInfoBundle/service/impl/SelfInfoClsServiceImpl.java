@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -26,6 +28,8 @@ public class SelfInfoClsServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private PsTzLxfsInfoTblMapper psTzLxfsInfoTblMapper;
 
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
@@ -62,9 +66,20 @@ public class SelfInfoClsServiceImpl extends FrameworkImpl {
 				errMsg[1] = "联系手机必填";
 				return strRet;
 			}
-
-			String SQL = "UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_EMAIL=?,TZ_ZY_SJ=? WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
-			jdbcTemplate.update(SQL, new Object[] { strEmail, strPhone, "NBYH", userid });
+			
+			String existSQL = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?" ;
+			int count = jdbcTemplate.queryForObject(existSQL,new Object[]{"NBYH", userid},"Integer");
+			if(count > 0){
+				String SQL = "UPDATE PS_TZ_LXFSINFO_TBL SET TZ_ZY_EMAIL=?,TZ_ZY_SJ=? WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
+				jdbcTemplate.update(SQL, new Object[] { strEmail, strPhone, "NBYH", userid });
+			}else{
+				PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
+				psTzLxfsInfoTbl.setTzLxfsLy("NBYH");
+				psTzLxfsInfoTbl.setTzLydxId(userid);
+				psTzLxfsInfoTbl.setTzZyEmail(strEmail);
+				psTzLxfsInfoTbl.setTzZySj(strPhone);
+				psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
+			}
 			return strRet;
 		} else {
 			errMsg[0] = "1";
