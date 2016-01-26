@@ -1075,6 +1075,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String strBeginUrl = contextPath + "/dispatcher";
+			String loginUrl = "/user/login/"+strOrgid.toLowerCase()+"/"+strSiteId;
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
@@ -1092,19 +1093,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    String str_content = "";
 		    if(strTabType.contains("MOBILE") && strTabType.contains("EMAIL")){
 		    	if("ENG".equals(strLang)){
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 		    	}else{
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 		    	}
 		    }else{
 		    	if(strTabType.contains("EMAIL")){
 		    		if("ENG".equals(strLang)){
-			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath );
+			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath ,loginUrl);
 			    	}else{
-			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath );
+			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 			    	}
 		    	}else{
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", true,strBeginUrl, strOrgid,contextPath, imgPath );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", true,strBeginUrl, strOrgid,contextPath, imgPath,loginUrl );
 		    	}
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
