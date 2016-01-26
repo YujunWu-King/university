@@ -30,7 +30,7 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private SqlQuery sqlQuery;
 
@@ -39,10 +39,10 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
-	
+
 	@Autowired
 	private RegisteServiceImpl registeServiceImpl;
-	
+
 	@Autowired
 	private TzSiteMgServiceImpl tzSiteMgServiceImpl;
 
@@ -106,7 +106,7 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 				String strAreaCode = jacksonUtil.getString("areaCode");
 
-				//String strHeadCode = jacksonUtil.getString("headCode");
+				// String strHeadCode = jacksonUtil.getString("headCode");
 
 				String strBodyCode = jacksonUtil.getString("bodyCode");
 
@@ -127,8 +127,9 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 				if (null != strAreaCode && !"".equals(strAreaCode)) {
 
 					String ctxPath = request.getContextPath();
-					strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
-					
+					if (!"".equals(ctxPath)) {
+						strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
+					}
 					PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 					psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
@@ -161,7 +162,7 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 					}
 
 				}
-				
+
 				if (errMsg.length > 0 && !"0".equals(errMsg[0])) {
 					mapRet.put("success", false);
 				} else {

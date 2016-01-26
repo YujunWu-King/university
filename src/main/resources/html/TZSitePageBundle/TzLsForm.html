@@ -21,7 +21,7 @@
 									}
 								},
 								change:function(thisField, newValue, oldValue, eOpts){
-									Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML=thisField.getValue();
+									Ext.get(Ext.query('%bind(:5)')[0]).dom.innerHTML= thisField.getValue();
 									var areaCode = Ext.get(Ext.query('%bind(:5)')[0]).dom.outerHTML;
 									areaCode=areaCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
 									editPanel.getForm().findField('areaCode').setValue(areaCode);

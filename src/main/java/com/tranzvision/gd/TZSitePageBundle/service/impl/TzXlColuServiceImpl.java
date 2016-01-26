@@ -3,6 +3,7 @@
  */
 package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -38,6 +40,9 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -208,14 +213,19 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			String strResultContent = "";
 			String dispatcherUrl = request.getContextPath() + "/dispatcher";
 
+			String dtFormat = getSysHardCodeVal.getDateTimeHMFormat();
+			SimpleDateFormat datetimeformat = new SimpleDateFormat(dtFormat);
+			
 			for (Map<String, Object> mapSiteArt : listSiteArts) {
+				
 				strColuId = mapSiteArt.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapSiteArt.get("TZ_COLU_ID"));
 				String strArtId = mapSiteArt.get("TZ_ART_ID") == null ? ""
 						: String.valueOf(mapSiteArt.get("TZ_ART_ID"));
 				String strArtTitle = mapSiteArt.get("TZ_ART_TITLE") == null ? ""
 						: String.valueOf(mapSiteArt.get("TZ_ART_TITLE"));
 				String strArtTime = mapSiteArt.get("TZ_ART_NEWS_DT") == null ? ""
-						: String.valueOf(mapSiteArt.get("TZ_ART_NEWS_DT"));
+						: datetimeformat.format(mapSiteArt.get("TZ_ART_NEWS_DT"));
+				
 
 				String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId + "&columnId="
 						+ strColuId + "&artId=" + strArtId + "&oprate=R";

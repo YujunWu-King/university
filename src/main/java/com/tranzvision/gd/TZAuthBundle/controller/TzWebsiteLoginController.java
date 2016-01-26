@@ -185,7 +185,7 @@ public class TzWebsiteLoginController {
 	@RequestMapping(value = "logout")
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 
-		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
 
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
 
