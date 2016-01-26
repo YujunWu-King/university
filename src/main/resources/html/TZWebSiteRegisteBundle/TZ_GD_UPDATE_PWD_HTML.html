@@ -169,7 +169,7 @@ function check_password(){
 							$("#new_repwd_style").removeClass("alert_display_none");
 							}
 
- if($("#status_PASSWORD").val()=="1"){
+ 	if($("#status_PASSWORD").val()=="1"){
 									$('#password_status').html("%bind(:5)");
 									$('#repassword_status').html(""); 
 									$('#status_password').attr("value", 1);
@@ -184,12 +184,16 @@ function check_password(){
 			
 			}
 	
-}
+	}
 
-//重新加载验证码
-function create_yzm(){
-	var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
-	$.ajax({
+	//重新加载验证码
+	function create_yzm(){
+	
+		var _captchaURL = "%bind(:7)/captcha";
+		$('#yzmImg').attr('src',_captchaURL + "?" + Math.random());
+	/*
+		var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
+		$.ajax({
 			type: "get",
 			async :false,
 			url:"%bind(:1)",
@@ -198,14 +202,14 @@ function create_yzm(){
 			},
 			dataType: "json",
 			success: function(result){
-				$('#yzmImg').attr('src',result.codeImgUrl);
-				  	
-				}
-		});
+				$('#yzmImg').attr('src',result.codeImgUrl); 	
+			}
+		});*/
+	}
 	
 
 
-$("#NewPassword").on("focus",function(){
+	$("#NewPassword").on("focus",function(){
 		var top = $("#NewPassword").position().top;
 		var left = $("#NewPassword").position().left;
 		var height = $("#NewPassword").height()
@@ -223,7 +227,7 @@ $("#NewPassword").on("focus",function(){
 	});
 
 
-setInterval(function(){
+	setInterval(function(){
 		var val = $("#NewPassword").val();
 		if(val != "" && val != null){
 			var patrn;
@@ -384,7 +388,7 @@ setInterval(function(){
 	},200);
 
 
-}
+
 
 </script>
 </head>
@@ -399,7 +403,7 @@ setInterval(function(){
 <div class="main_full">
   <div class="main_full_line">
     <div class="main_full_line_title_font_left">修改密码 <span class="font_gray_14px_dark">%bind(:6)</span></div> 
-    <div class="main_full_full_right"><a href="/%bind(:4)/login.html" class="blue_">&nbsp;&nbsp;&nbsp;返回</a></div>
+    <div class="main_full_full_right"><a href="%bind(:4)" class="blue_">&nbsp;&nbsp;&nbsp;返回</a></div>
   </div>
   <div class="main_full_lines_720px"></div>
   <div class="main_full_line">

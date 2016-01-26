@@ -1075,7 +1075,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String strBeginUrl = contextPath + "/dispatcher";
-			String loginUrl = "/user/login/"+strOrgid.toLowerCase()+"/"+strSiteId;
+			String loginUrl = contextPath+"/user/login/"+strOrgid.toLowerCase()+"/"+strSiteId;
 			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			String skinId = jdbcTemplate.queryForObject(sql,new Object[]{strSiteId},"String");
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
@@ -1133,7 +1133,6 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strLang = jacksonUtil.getString("lang");
 			strTokenSign = jacksonUtil.getString("tokensign");
 			strTokenSign2 = strTokenSign;
-		    
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "123", "请重置新密码", "Please Enter New Password.");
@@ -1142,25 +1141,25 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[]{strOrgid});
 			strSiteId = (String)siteMap.get("TZ_SITEI_ID");	
 			String skinId = (String)siteMap.get("TZ_SKIN_ID");
-			
 			String contextPath = request.getContextPath();
 			String strBeginUrl = contextPath + "/dispatcher";
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
+			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() +"/"+strSiteId;
+			
 			String str_content = "";
 			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 			Map<String, Object> yzmMap = jdbcTemplate.queryForMap(yzmSQL, new Object[]{strTokenSign,strOrgid});
 			if(yzmMap != null){
-					
-				dtYxq = (Date)siteMap.get("TZ_YZM_YXQ");
+				dtYxq = (Date)yzmMap.get("TZ_YZM_YXQ");
 				Date curDate = new Date();
 				if(curDate.before(dtYxq)){
 					//有效；
 					if("ENG".equals(strLang)){
-						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML", true,strBeginUrl, strTokenSign2, strLang, strOrgid, strStrongMsg, strNotice,contextPath,imgPath );
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML", true,strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
 					}else{
-						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML", true,strBeginUrl, strTokenSign2, strLang, strOrgid, strStrongMsg, strNotice,contextPath,imgPath );
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML", true,strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
 					}
 					
 					str_content = objRep.repTitle(str_content, strSiteId);

@@ -184,10 +184,14 @@ function check_password(){
 	
 }
 
-//重新加载验证码
-function create_yzm(){
-	var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
-	$.ajax({
+	//重新加载验证码
+	function create_yzm(){
+		
+		var _captchaURL = "%bind(:7)/captcha";
+		$('#yzmImg').attr('src',_captchaURL + "?" + Math.random());
+		/*
+		var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
+		$.ajax({
 			type: "get",
 			async :false,
 			url:"%bind(:1)",
@@ -196,11 +200,11 @@ function create_yzm(){
 			},
 			dataType: "json",
 			success: function(result){
-				$('#yzmImg').attr('src',result.codeImgUrl);
-				  	
-				}
+				$('#yzmImg').attr('src',result.codeImgUrl); 	
+			}
 		});
-
+		*/
+	}
 
 	$("#NewPassword").on("focus",function(){
 		var top = $("#NewPassword").position().top;
@@ -220,7 +224,7 @@ function create_yzm(){
 	});
 
 
-setInterval(function(){
+	setInterval(function(){
 		var val = $("#NewPassword").val();
 		if(val != "" && val != null){
 			var patrn;
@@ -381,7 +385,7 @@ setInterval(function(){
 	},200);
 
 	
-}
+
 
 </script>
 </head>
@@ -396,7 +400,7 @@ setInterval(function(){
 <div class="main_full">
   <div class="main_full_line">
     <div class="main_full_line_title_font_left">Change Password <span class="font_gray_14px_dark">%bind(:6)</span></div> 
-    <div class="main_full_full_right"><a href="/%bind(:4)/login.html" class="blue_">&nbsp;&nbsp;&nbsp;back</a></div>
+    <div class="main_full_full_right"><a href="%bind(:4)" class="blue_">&nbsp;&nbsp;&nbsp;back</a></div>
   </div>
   <div class="main_full_lines_720px"></div>
   <div class="main_full_line">
