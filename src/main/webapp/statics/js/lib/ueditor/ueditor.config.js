@@ -176,6 +176,8 @@
         //,maxListLevel : 3 //限制可以tab的级数, 设置-1为不限制
 
         //,autoTransWordToList:false  //禁止word中粘贴进来的列表自动变成列表标签
+		
+		,allowDivTransToP:false //禁止DIV标签转为P标签
 
         //fontfamily
         //字体设置 label留空支持多语言自动切换，若配置，则以配置值为准

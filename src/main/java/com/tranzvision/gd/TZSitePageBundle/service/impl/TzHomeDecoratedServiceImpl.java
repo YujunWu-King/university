@@ -108,7 +108,8 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { strSiteId });
 
 			if (mapData != null) {
-
+				String orgid = mapData.get("TZ_JG_ID") == null ? ""
+						: String.valueOf(mapData.get("TZ_JG_ID")).toLowerCase();
 				String strResultContent = "";
 				boolean canShow = true;
 				switch (oprate) {
@@ -116,8 +117,12 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 					if (!"1".equals(tzUserDisplayOnly) && !"1".equals(tzUserEditFlg)) {
 						canShow = false;
 					} else {
+						/*
 						strResultContent = mapData.get("TZ_INDEX_PUBCODE") == null ? ""
 								: String.valueOf(mapData.get("TZ_INDEX_PUBCODE"));
+						*/
+						String indexUrl = request.getContextPath() + "/site/index/" + orgid + "/" + strSiteId;
+						strResultContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzWinLocationAndOpenWin", "_self", indexUrl);
 					}
 					break;
 
@@ -144,23 +149,22 @@ public class TzHomeDecoratedServiceImpl extends FrameworkImpl {
 					return "无权访问";
 				}
 
-				String orgid = mapData.get("TZ_JG_ID") == null ? ""
-						: String.valueOf(mapData.get("TZ_JG_ID")).toLowerCase();
-				String siteLang = mapData.get("TZ_SITE_LANG") == null ? ""
-						: String.valueOf(mapData.get("TZ_SITE_LANG"));
-
-				String strCssDir = getSysHardCodeVal.getWebsiteCssPath() + "/" + orgid + "/" + strSiteId.toLowerCase();
-				String strCssFilePath = strCssDir + "/style_" + orgid + ".css";
-
-				strResultContent = strResultContent.replace("page_stylecss", strCssFilePath);
-
-				strResultContent = siteRepCssServiceImpl.repTitle(strResultContent, strSiteId);
-				strResultContent = siteRepCssServiceImpl.repCss(strResultContent, strSiteId);
-				strResultContent = siteRepCssServiceImpl.repSiteid(strResultContent, strSiteId);
-				strResultContent = siteRepCssServiceImpl.repJgid(strResultContent, orgid.toUpperCase());
-				strResultContent = siteRepCssServiceImpl.repLang(strResultContent, siteLang.toUpperCase());
-				strResultContent = siteRepCssServiceImpl.repOpr(strResultContent, oprate.toUpperCase());
-
+				if(!"R".equals(oprate)){
+					String siteLang = mapData.get("TZ_SITE_LANG") == null ? ""
+							: String.valueOf(mapData.get("TZ_SITE_LANG"));
+	
+					String strCssDir = getSysHardCodeVal.getWebsiteCssPath() + "/" + orgid + "/" + strSiteId.toLowerCase();
+					String strCssFilePath = strCssDir + "/style_" + orgid + ".css";
+	
+					strResultContent = strResultContent.replace("page_stylecss", strCssFilePath);
+	
+					strResultContent = siteRepCssServiceImpl.repTitle(strResultContent, strSiteId);
+					strResultContent = siteRepCssServiceImpl.repCss(strResultContent, strSiteId);
+					strResultContent = siteRepCssServiceImpl.repSiteid(strResultContent, strSiteId);
+					strResultContent = siteRepCssServiceImpl.repJgid(strResultContent, orgid.toUpperCase());
+					strResultContent = siteRepCssServiceImpl.repLang(strResultContent, siteLang.toUpperCase());
+					strResultContent = siteRepCssServiceImpl.repOpr(strResultContent, oprate.toUpperCase());
+				}
 				return strResultContent;
 			}
 

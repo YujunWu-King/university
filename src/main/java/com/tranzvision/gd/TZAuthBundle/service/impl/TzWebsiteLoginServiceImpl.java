@@ -165,8 +165,8 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			this.switchSysLanguage(request, response, language);
 
 			// 设置cookie参数
-			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId());
-			tzCookie.addCookie(response, cookieWebSiteId, siteid);
+			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24*3600);
+			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24*3600);
 			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
 
 			errorMsg.add("0");

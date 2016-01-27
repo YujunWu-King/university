@@ -89,4 +89,42 @@ public class EmlSmsGetParamter {
 	}
 	
 	
+	//考生申请人忘记密码url;
+		public String createUrlforPass (String[] paramters){
+			try{
+				String audId = paramters[0];
+				String audCyId = paramters[1];
+				
+				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil(); 
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+				String opridSQL = "SELECT OPRID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+				String strOprId = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[]{audId,audCyId});
+				if(strOprId != null && !"".equals(strOprId)){
+					String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+					String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class, new Object[]{strOprId});
+					
+					String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+					String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[]{strOrgid});
+				
+					String tokenCodeSQL = "SELECT TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE='EDIT' AND TZ_EFF_FLAG='Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
+					String strTokenSign = jdbcTemplate.queryForObject(tokenCodeSQL, String.class, new Object[]{strOprId, strOrgid,});
+					if(strTokenSign != null && !"".equals(strTokenSign)){
+						HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+						String serv = "http://"+ request.getServerName() + ":"+ request.getServerPort() + request.getContextPath();
+						String strActUrl = serv + "/dispatcher";
+						strActUrl = strActUrl + "?classid=enrollCls&tokensign=" + strTokenSign + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=5";
+						return strActUrl;
+					}else{
+						return "";
+					}
+				}else{
+					return "";
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				return "";
+			}
+		}
+	
+	
 }

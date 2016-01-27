@@ -1282,11 +1282,12 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
 				String ctxPath = request.getContextPath();
-
+				if(!"".equals(ctxPath)){
+					strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
+				}
+				
 				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
 				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
-
-				strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
 
 				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",
 						strSaveContent);
@@ -1374,18 +1375,19 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				if (!strSaveContent.startsWith("<body") || !strSaveContent.endsWith("</body>")) {
 					strSaveContent = "<body style=\"background:#fff\">" + strSaveContent + "</body>";
 				}
-				
+
 				String strPreviewContent = strSaveContent;
 
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
 				String ctxPath = request.getContextPath();
+				if(!"".equals(ctxPath)){
+					strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
+				}
 
 				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
 				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
-
-				strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
 
 				String strSavedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginSaveTpl", strSaveContent);
 				strSavedHtml = siteRepCssServiceImpl.repTitle(strSavedHtml, strSiteId);
@@ -1816,12 +1818,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				Pattern p = Pattern.compile("<body\\sstyle=\"background:#fff\">([\\s\\S]*)</body>");
 				Matcher m = p.matcher(strContent);
 				while (m.find()) {
-					System.out.println(m.group(1));
+					//System.out.println(m.group(1));
 					strRet = m.group(1);
 					break;
 				}
 
-				strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
+				if (strRet != null && !"".equals(strRet)) {
+					strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
+				}
 
 			}
 
@@ -1860,8 +1864,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					break;
 				}
 
-				strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
-
+				if (strRet != null && !"".equals(strRet)) {
+					strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
+				}
 			}
 
 		} catch (Exception e) {
@@ -1905,8 +1910,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					break;
 				}
 
-				strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
-
+				if (strRet != null && !"".equals(strRet)) {
+					strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
+				}
 			}
 
 		} catch (Exception e) {

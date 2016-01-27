@@ -62,7 +62,7 @@ public class AppClsServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("appClassId", rowList[0]);
-					mapList.put("appClassDesc", rowList[0]);
+					mapList.put("appClassDesc", rowList[1]);
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);
