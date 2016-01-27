@@ -428,7 +428,7 @@ public class FliterForm extends FrameworkImpl {
 
 							// 是不是下拉框;
 							String isSelect = "";
-							String isDropDownSql = "SELECT 'Y' from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and TZ_ISDOWN_FLD = '1'";
+							String isDropDownSql = "SELECT 'Y' from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=? and (TZ_ISDOWN_FLD = '1' or (TZ_ZHZJH_ID is not null and TZ_ZHZJH_ID<>'') )";
 							isSelect = jdbcTemplate.queryForObject(isDropDownSql,
 									new Object[] { comId, pageId, recname, fieldName }, "String");
 
