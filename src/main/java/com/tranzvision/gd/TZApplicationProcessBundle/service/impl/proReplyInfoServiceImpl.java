@@ -20,7 +20,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 /**
  * 
  * @author 张彬彬; 
- * 功能说明：报名流程详情类;
+ * 功能说明：常用回复短语详情类;
  * 原PS类：TZ_GD_PROTMPLATE_PKG:TZ_GD_BACKDT_CLS
  */
 @Service("com.tranzvision.gd.TZApplicationProcessBundle.service.impl.proReplyInfoServiceImpl")
