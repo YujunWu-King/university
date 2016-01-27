@@ -7,13 +7,16 @@
     <result column="TZ_TEMP_STATE" property="tzTempState" jdbcType="VARCHAR" />
     <result column="TZ_TEMP_NAME" property="tzTempName" jdbcType="VARCHAR" />
     <result column="TZ_TEMP_TYPE" property="tzTempType" jdbcType="VARCHAR" />
+    <result column="TZ_PCTEMP_SCRIPT_HTML" property="tzPctempScriptHtml" jdbcType="VARCHAR" />
+    <result column="TZ_MSTEMP_SCRIPT_HTML" property="tzMstempScriptHtml" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_TEMP_PCCODE" property="tzTempPccode" jdbcType="LONGVARCHAR" />
     <result column="TZ_TEMP_MSCODE" property="tzTempMscode" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_SITEI_ID, TZ_TEMP_ID, TZ_TEMP_STATE, TZ_TEMP_NAME, TZ_TEMP_TYPE
+    TZ_SITEI_ID, TZ_TEMP_ID, TZ_TEMP_STATE, TZ_TEMP_NAME, TZ_TEMP_TYPE, TZ_PCTEMP_SCRIPT_HTML, 
+    TZ_MSTEMP_SCRIPT_HTML
   </sql>
   <sql id="Blob_Column_List" >
     TZ_TEMP_PCCODE, TZ_TEMP_MSCODE
@@ -34,11 +37,13 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
     insert into PS_TZ_SITEI_TEMP_T (TZ_SITEI_ID, TZ_TEMP_ID, TZ_TEMP_STATE, 
-      TZ_TEMP_NAME, TZ_TEMP_TYPE, TZ_TEMP_PCCODE, 
-      TZ_TEMP_MSCODE)
+      TZ_TEMP_NAME, TZ_TEMP_TYPE, TZ_PCTEMP_SCRIPT_HTML, 
+      TZ_MSTEMP_SCRIPT_HTML, TZ_TEMP_PCCODE, TZ_TEMP_MSCODE
+      )
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzTempState,jdbcType=VARCHAR}, 
-      #{tzTempName,jdbcType=VARCHAR}, #{tzTempType,jdbcType=VARCHAR}, #{tzTempPccode,jdbcType=LONGVARCHAR}, 
-      #{tzTempMscode,jdbcType=LONGVARCHAR})
+      #{tzTempName,jdbcType=VARCHAR}, #{tzTempType,jdbcType=VARCHAR}, #{tzPctempScriptHtml,jdbcType=VARCHAR}, 
+      #{tzMstempScriptHtml,jdbcType=VARCHAR}, #{tzTempPccode,jdbcType=LONGVARCHAR}, #{tzTempMscode,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs" >
     insert into PS_TZ_SITEI_TEMP_T
@@ -57,6 +62,12 @@
       </if>
       <if test="tzTempType != null" >
         TZ_TEMP_TYPE,
+      </if>
+      <if test="tzPctempScriptHtml != null" >
+        TZ_PCTEMP_SCRIPT_HTML,
+      </if>
+      <if test="tzMstempScriptHtml != null" >
+        TZ_MSTEMP_SCRIPT_HTML,
       </if>
       <if test="tzTempPccode != null" >
         TZ_TEMP_PCCODE,
@@ -81,6 +92,12 @@
       <if test="tzTempType != null" >
         #{tzTempType,jdbcType=VARCHAR},
       </if>
+      <if test="tzPctempScriptHtml != null" >
+        #{tzPctempScriptHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMstempScriptHtml != null" >
+        #{tzMstempScriptHtml,jdbcType=VARCHAR},
+      </if>
       <if test="tzTempPccode != null" >
         #{tzTempPccode,jdbcType=LONGVARCHAR},
       </if>
@@ -101,6 +118,12 @@
       <if test="tzTempType != null" >
         TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR},
       </if>
+      <if test="tzPctempScriptHtml != null" >
+        TZ_PCTEMP_SCRIPT_HTML = #{tzPctempScriptHtml,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMstempScriptHtml != null" >
+        TZ_MSTEMP_SCRIPT_HTML = #{tzMstempScriptHtml,jdbcType=VARCHAR},
+      </if>
       <if test="tzTempPccode != null" >
         TZ_TEMP_PCCODE = #{tzTempPccode,jdbcType=LONGVARCHAR},
       </if>
@@ -116,6 +139,8 @@
     set TZ_TEMP_STATE = #{tzTempState,jdbcType=VARCHAR},
       TZ_TEMP_NAME = #{tzTempName,jdbcType=VARCHAR},
       TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR},
+      TZ_PCTEMP_SCRIPT_HTML = #{tzPctempScriptHtml,jdbcType=VARCHAR},
+      TZ_MSTEMP_SCRIPT_HTML = #{tzMstempScriptHtml,jdbcType=VARCHAR},
       TZ_TEMP_PCCODE = #{tzTempPccode,jdbcType=LONGVARCHAR},
       TZ_TEMP_MSCODE = #{tzTempMscode,jdbcType=LONGVARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
@@ -125,7 +150,9 @@
     update PS_TZ_SITEI_TEMP_T
     set TZ_TEMP_STATE = #{tzTempState,jdbcType=VARCHAR},
       TZ_TEMP_NAME = #{tzTempName,jdbcType=VARCHAR},
-      TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR}
+      TZ_TEMP_TYPE = #{tzTempType,jdbcType=VARCHAR},
+      TZ_PCTEMP_SCRIPT_HTML = #{tzPctempScriptHtml,jdbcType=VARCHAR},
+      TZ_MSTEMP_SCRIPT_HTML = #{tzMstempScriptHtml,jdbcType=VARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR}
   </update>

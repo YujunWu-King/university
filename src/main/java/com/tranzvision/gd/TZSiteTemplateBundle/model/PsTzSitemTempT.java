@@ -7,6 +7,10 @@ public class PsTzSitemTempT extends PsTzSitemTempTKey {
 
     private String tzTempType;
 
+    private String tzPctempScriptHtml;
+
+    private String tzMstempScriptHtml;
+
     public String getTzTempState() {
         return tzTempState;
     }
@@ -29,5 +33,21 @@ public class PsTzSitemTempT extends PsTzSitemTempTKey {
 
     public void setTzTempType(String tzTempType) {
         this.tzTempType = tzTempType == null ? null : tzTempType.trim();
+    }
+
+    public String getTzPctempScriptHtml() {
+        return tzPctempScriptHtml;
+    }
+
+    public void setTzPctempScriptHtml(String tzPctempScriptHtml) {
+        this.tzPctempScriptHtml = tzPctempScriptHtml == null ? null : tzPctempScriptHtml.trim();
+    }
+
+    public String getTzMstempScriptHtml() {
+        return tzMstempScriptHtml;
+    }
+
+    public void setTzMstempScriptHtml(String tzMstempScriptHtml) {
+        this.tzMstempScriptHtml = tzMstempScriptHtml == null ? null : tzMstempScriptHtml.trim();
     }
 }

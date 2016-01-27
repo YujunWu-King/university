@@ -61,24 +61,19 @@ public class TzMenuShowDownListServiceImpl extends FrameworkImpl {
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetOrgidSiteLangBySiteid");
 					Map<String, Object> mapSiteOrg = sqlQuery.queryForMap(sql, new Object[] { strSiteId });
 					String orgid = "";
-					String orgidLower = "";
 					if (mapSiteOrg != null) {
 						orgid = mapSiteOrg.get("TZ_JG_ID") == null ? "" : String.valueOf(mapSiteOrg.get("TZ_JG_ID"));
-						orgidLower = orgid.toLowerCase();
 					}
 
+					strResultContent = siteRepCssServiceImpl.repContextPath(strResultContent);
 					strResultContent = siteRepCssServiceImpl.repTitle(strResultContent, strSiteId);
+					strResultContent = siteRepCssServiceImpl.repCss(strResultContent, strSiteId);
 
-					strResultContent = strResultContent.replace("{page_stylecss}",
-							orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
+					String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsDownload",
+							ctxPath);
 
-					strResultContent = strResultContent.replace("{ContextPath}", ctxPath);
-
-					String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
-							orgid, strSiteId, "Y")
-							+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsDownload", ctxPath);
-
-					strResultContent = strResultContent.replace("<!--#{javascripts}#-->", strJavascripts);
+					strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strSelfJavascripts,
+							orgid, strSiteId, "Y");
 
 					return strResultContent;
 

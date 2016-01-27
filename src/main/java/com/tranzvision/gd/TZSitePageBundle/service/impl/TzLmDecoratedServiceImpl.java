@@ -6,8 +6,6 @@ package com.tranzvision.gd.TZSitePageBundle.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +13,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegisteServiceImpl;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -27,9 +26,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzLmDecoratedServiceImpl")
 public class TzLmDecoratedServiceImpl extends FrameworkImpl {
-
-	@Autowired
-	private HttpServletRequest request;
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -45,6 +41,9 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzSiteMgServiceImpl tzSiteMgServiceImpl;
+
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -126,10 +125,8 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 				if (null != strAreaCode && !"".equals(strAreaCode)) {
 
-					String ctxPath = request.getContextPath();
-					if (!"".equals(ctxPath)) {
-						strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
-					}
+					strAreaCode = siteRepCssServiceImpl.repResetContextPath(strAreaCode);
+
 					PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 					psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
