@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAdditionalInformationBundle.dao.PsTzSbmInfRepTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepT" >
+    <id column="TZ_SBMINF_ID" property="tzSbminfId" jdbcType="VARCHAR" />
+    <id column="TZ_SBMINF_TMP_ID" property="tzSbminfTmpId" jdbcType="VARCHAR" />
+    <id column="TZ_SBMINF_REP_ID" property="tzSbminfRepId" jdbcType="VARCHAR" />
+    <result column="TZ_SBMINF_REP" property="tzSbminfRep" jdbcType="VARCHAR" />
+    <result column="TZ_SORT_NUM" property="tzSortNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SBMINF_ID, TZ_SBMINF_TMP_ID, TZ_SBMINF_REP_ID, TZ_SBMINF_REP, TZ_SORT_NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SBMINF_REP_T
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepTKey" >
+    delete from PS_TZ_SBMINF_REP_T
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepT" >
+    insert into PS_TZ_SBMINF_REP_T (TZ_SBMINF_ID, TZ_SBMINF_TMP_ID, TZ_SBMINF_REP_ID, 
+      TZ_SBMINF_REP, TZ_SORT_NUM)
+    values (#{tzSbminfId,jdbcType=VARCHAR}, #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzSbminfRepId,jdbcType=VARCHAR}, 
+      #{tzSbminfRep,jdbcType=VARCHAR}, #{tzSortNum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepT" >
+    insert into PS_TZ_SBMINF_REP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSbminfId != null" >
+        TZ_SBMINF_ID,
+      </if>
+      <if test="tzSbminfTmpId != null" >
+        TZ_SBMINF_TMP_ID,
+      </if>
+      <if test="tzSbminfRepId != null" >
+        TZ_SBMINF_REP_ID,
+      </if>
+      <if test="tzSbminfRep != null" >
+        TZ_SBMINF_REP,
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSbminfId != null" >
+        #{tzSbminfId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfTmpId != null" >
+        #{tzSbminfTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRepId != null" >
+        #{tzSbminfRepId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRep != null" >
+        #{tzSbminfRep,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        #{tzSortNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepT" >
+    update PS_TZ_SBMINF_REP_T
+    <set >
+      <if test="tzSbminfRep != null" >
+        TZ_SBMINF_REP = #{tzSbminfRep,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAdditionalInformationBundle.model.PsTzSbmInfRepT" >
+    update PS_TZ_SBMINF_REP_T
+    set TZ_SBMINF_REP = #{tzSbminfRep,jdbcType=VARCHAR},
+      TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER}
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </update>
+</mapper>
