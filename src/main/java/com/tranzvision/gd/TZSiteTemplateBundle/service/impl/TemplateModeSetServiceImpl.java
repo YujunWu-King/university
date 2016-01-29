@@ -45,6 +45,8 @@ public class TemplateModeSetServiceImpl extends FrameworkImpl {
 				String templateType = jacksonUtil.getString("templateType");
 				String templatePCCode = jacksonUtil.getString("templatePCCode");
 				String templateMBCode = jacksonUtil.getString("templateMBCode");
+				String pcScriptName = jacksonUtil.getString("pcScriptName");
+				String mbScriptName = jacksonUtil.getString("mbScriptName");
 				String templateId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEM_TEMP_T", "TZ_TEMP_ID"));
 
 				PsTzSitemTempTWithBLOBs psTzSitemTempTWithBLOBs = new PsTzSitemTempTWithBLOBs();
@@ -55,6 +57,8 @@ public class TemplateModeSetServiceImpl extends FrameworkImpl {
 				psTzSitemTempTWithBLOBs.setTzTempType(templateType);
 				psTzSitemTempTWithBLOBs.setTzTempPccode(templatePCCode);
 				psTzSitemTempTWithBLOBs.setTzTempMscode(templateMBCode);
+				psTzSitemTempTWithBLOBs.setTzPctempScriptHtml(pcScriptName);
+				psTzSitemTempTWithBLOBs.setTzMstempScriptHtml(mbScriptName);
 
 				int i = psTzSitemTempTMapper.insert(psTzSitemTempTWithBLOBs);
 				if (i > 0) {
@@ -92,6 +96,8 @@ public class TemplateModeSetServiceImpl extends FrameworkImpl {
 				String templateType = jacksonUtil.getString("templateType");
 				String templatePCCode = jacksonUtil.getString("templatePCCode");
 				String templateMBCode = jacksonUtil.getString("templateMBCode");
+				String pcScriptName = jacksonUtil.getString("pcScriptName");
+				String mbScriptName = jacksonUtil.getString("mbScriptName");
 
 				PsTzSitemTempTWithBLOBs psTzSitemTempTWithBLOBs = new PsTzSitemTempTWithBLOBs();
 				psTzSitemTempTWithBLOBs.setTzSitemId(siteId);
@@ -101,6 +107,8 @@ public class TemplateModeSetServiceImpl extends FrameworkImpl {
 				psTzSitemTempTWithBLOBs.setTzTempType(templateType);
 				psTzSitemTempTWithBLOBs.setTzTempPccode(templatePCCode);
 				psTzSitemTempTWithBLOBs.setTzTempMscode(templateMBCode);
+				psTzSitemTempTWithBLOBs.setTzPctempScriptHtml(pcScriptName);
+				psTzSitemTempTWithBLOBs.setTzMstempScriptHtml(mbScriptName);
 
 				int i = psTzSitemTempTMapper.updateByPrimaryKeyWithBLOBs(psTzSitemTempTWithBLOBs);
 				if (i > 0) {
@@ -146,6 +154,8 @@ public class TemplateModeSetServiceImpl extends FrameworkImpl {
 					jsonMap.put("templatePCCode", psTzSitemTempT.getTzTempPccode());
 					jsonMap.put("templateMBCode", psTzSitemTempT.getTzTempMscode());
 					jsonMap.put("templateState", psTzSitemTempT.getTzTempState());
+					jsonMap.put("pcScriptName", psTzSitemTempT.getTzPctempScriptHtml());
+					jsonMap.put("mbScriptName", psTzSitemTempT.getTzMstempScriptHtml());
 					returnJsonMap.replace("formData", jsonMap);
 				} else {
 					errMsg[0] = "1";

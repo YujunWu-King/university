@@ -44,6 +44,8 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 				String templateType = jacksonUtil.getString("templateType");
 				String templatePCCode = jacksonUtil.getString("templatePCCode");
 				String templateMBCode = jacksonUtil.getString("templateMBCode");
+				String pcScriptName = jacksonUtil.getString("pcScriptName");
+				String mbScriptName = jacksonUtil.getString("mbScriptName");
 				String templateId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_TEMP_T", "TZ_TEMP_ID"));
 
 				PsTzSiteiTempTWithBLOBs psTzSiteiTempTWithBLOBs = new PsTzSiteiTempTWithBLOBs();
@@ -54,6 +56,8 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 				psTzSiteiTempTWithBLOBs.setTzTempType(templateType);
 				psTzSiteiTempTWithBLOBs.setTzTempPccode(templatePCCode);
 				psTzSiteiTempTWithBLOBs.setTzTempMscode(templateMBCode);
+				psTzSiteiTempTWithBLOBs.setTzPctempScriptHtml(pcScriptName);
+				psTzSiteiTempTWithBLOBs.setTzMstempScriptHtml(mbScriptName);
 
 				int i = psTzSiteiTempTMapper.insert(psTzSiteiTempTWithBLOBs);
 				if (i > 0) {
@@ -91,7 +95,8 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 				String templateType = jacksonUtil.getString("templateType");
 				String templatePCCode = jacksonUtil.getString("templatePCCode");
 				String templateMBCode = jacksonUtil.getString("templateMBCode");
-				
+				String pcScriptName = jacksonUtil.getString("pcScriptName");
+				String mbScriptName = jacksonUtil.getString("mbScriptName");
 
 				PsTzSiteiTempTWithBLOBs psTzSiteiTempTWithBLOBs = new PsTzSiteiTempTWithBLOBs();
 				psTzSiteiTempTWithBLOBs.setTzSiteiId(siteId);
@@ -101,6 +106,8 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 				psTzSiteiTempTWithBLOBs.setTzTempType(templateType);
 				psTzSiteiTempTWithBLOBs.setTzTempPccode(templatePCCode);
 				psTzSiteiTempTWithBLOBs.setTzTempMscode(templateMBCode);
+				psTzSiteiTempTWithBLOBs.setTzPctempScriptHtml(pcScriptName);
+				psTzSiteiTempTWithBLOBs.setTzMstempScriptHtml(mbScriptName);
 
 				int i = psTzSiteiTempTMapper.updateByPrimaryKeyWithBLOBs(psTzSiteiTempTWithBLOBs);
 				if (i > 0) {
@@ -146,6 +153,8 @@ public class OrgSiteTemplateServiceImpl extends FrameworkImpl {
 					jsonMap.put("templatePCCode", psTzSiteiTempT.getTzTempPccode());
 					jsonMap.put("templateMBCode", psTzSiteiTempT.getTzTempMscode());
 					jsonMap.put("templateState", psTzSiteiTempT.getTzTempState());
+					jsonMap.put("pcScriptName", psTzSiteiTempT.getTzPctempScriptHtml());
+					jsonMap.put("mbScriptName", psTzSiteiTempT.getTzMstempScriptHtml());
 					returnJsonMap.replace("formData", jsonMap);
 				} else {
 					errMsg[0] = "1";

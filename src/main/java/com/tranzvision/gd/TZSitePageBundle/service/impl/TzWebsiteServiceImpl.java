@@ -124,7 +124,6 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 		String strRtn = "";
 		try {
 
-			String orgidLower = orgid.toLowerCase();
 			orgid = orgid.toUpperCase();
 
 			Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
@@ -153,24 +152,22 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String strIndexHtml = "";
 			String strSkinID = "";
 			if (mapSiteiInfo != null) {
-				strIndexHtml = mapSiteiInfo.get("TZ_INDEX_SAVECODE") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_INDEX_SAVECODE"));
-				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
+				strIndexHtml = mapSiteiInfo.get("TZ_INDEX_SAVECODE") == null ? ""
+						: String.valueOf(mapSiteiInfo.get("TZ_INDEX_SAVECODE"));
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? ""
+						: String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
 
-				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
-				strIndexHtml = strIndexHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
+				strIndexHtml = siteRepCssServiceImpl.repSkinsImgPath(strIndexHtml, strSkinID);
+
 			}
 
+			strIndexHtml = siteRepCssServiceImpl.repContextPath(strIndexHtml);
+			strIndexHtml = siteRepCssServiceImpl.repCss(strIndexHtml, siteid);
 			strIndexHtml = siteRepCssServiceImpl.repTitle(strIndexHtml, siteid);
 
-			strIndexHtml = strIndexHtml.replace("{page_stylecss}",
-					orgidLower + "/" + siteid + "/" + "style_" + orgidLower + ".css");
-
-			strIndexHtml = strIndexHtml.replace("{ContextPath}", ctxPath);
-
-			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
-					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
-
-			strIndexHtml = strIndexHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
+			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts, orgid, siteid,
+					"Y");
 
 			strRtn = strIndexHtml;
 
@@ -289,8 +286,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 	public String getLoginSaveCode(HttpServletRequest request, String orgid, String siteid) {
 		String strRtn = "";
 		try {
-
-			String orgidLower = orgid.toLowerCase();
+			
 			orgid = orgid.toUpperCase();
 
 			Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
@@ -320,22 +316,20 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String strSkinID = "";
 			if (mapSiteiInfo != null) {
 				strLoginHtml = mapSiteiInfo.get("TZ_LONGIN_SAVECODE") == null ? ""
-						: String.valueOf(mapSiteiInfo.get("TZ_LONGIN_SAVECODE") );
-				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
+						: String.valueOf(mapSiteiInfo.get("TZ_LONGIN_SAVECODE"));
+				strSkinID = mapSiteiInfo.get("TZ_SKIN_ID") == null ? ""
+						: String.valueOf(mapSiteiInfo.get("TZ_SKIN_ID"));
 
-				String websiteImgSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID;
-				strLoginHtml = strLoginHtml.replace("{ContextSkinPath}", websiteImgSkinPath);
+				strLoginHtml = siteRepCssServiceImpl.repSkinsImgPath(strLoginHtml, strSkinID);
+
 			}
 
-			strLoginHtml = strLoginHtml.replace("{page_stylecss}",
-					orgidLower + "/" + siteid + "/" + "style_" + orgidLower + ".css");
+			strLoginHtml = siteRepCssServiceImpl.repContextPath(strLoginHtml);
+			strLoginHtml = siteRepCssServiceImpl.repCss(strLoginHtml, siteid);
 
-			strLoginHtml = strLoginHtml.replace("{ContextPath}", ctxPath);
-
-			String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
-					siteid, "Y") + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
-
-			strLoginHtml = strLoginHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
+			strLoginHtml = siteRepCssServiceImpl.repJavascriptTags(strLoginHtml, strSelfJavascripts, orgid, siteid,
+					"Y");
 
 			strRtn = strLoginHtml;
 

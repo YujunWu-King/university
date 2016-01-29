@@ -228,7 +228,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strSkinCode = mapSkinM.get("TZ_SKIN_CODE") == null ? ""
 						: String.valueOf(mapSkinM.get("TZ_SKIN_CODE"));
 
-				String strSkinCodeCss = strSkinCode.replace("{ContextPath}", request.getContextPath());
+				String strSkinCodeCss = siteRepCssServiceImpl.repContextPath(strSkinCode);
 
 				if ("update".equals(strFlag)) {
 					// 更新样式文件
@@ -677,6 +677,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									: String.valueOf(mapTpl.get("TZ_TEMP_PCCODE")));
 							psTzSiteiTempTWithBLOBs.setTzTempMscode(mapTpl.get("TZ_TEMP_MSCODE") == null ? ""
 									: String.valueOf(mapTpl.get("TZ_TEMP_MSCODE")));
+							psTzSiteiTempTWithBLOBs.setTzPctempScriptHtml(mapTpl.get("TZ_PCTEMP_SCRIPT_HTML") == null
+									? "" : String.valueOf(mapTpl.get("TZ_PCTEMP_SCRIPT_HTML")));
+							psTzSiteiTempTWithBLOBs.setTzMstempScriptHtml(mapTpl.get("TZ_MSTEMP_SCRIPT_HTML") == null
+									? "" : String.valueOf(mapTpl.get("TZ_MSTEMP_SCRIPT_HTML")));
 
 							psTzSiteiTempTMapper.insertSelective(psTzSiteiTempTWithBLOBs);
 
@@ -1282,12 +1286,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
 				String ctxPath = request.getContextPath();
-				if(!"".equals(ctxPath)){
-					strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
-				}
-				
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
-				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
+				strSaveContent = siteRepCssServiceImpl.repResetContextPath(strSaveContent);
+				strSaveContent = siteRepCssServiceImpl.repResetSkinsImgPath(strSaveContent, strSkinId);
 
 				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",
 						strSaveContent);
@@ -1303,20 +1303,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",
 						strPreviewContent);
 
-				String orgidLower = orgid.toLowerCase();
+				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
+				strPreviewHtml = siteRepCssServiceImpl.repCss(strPreviewHtml, strSiteId);
+				strPreviewHtml = siteRepCssServiceImpl.repSkinsImgPath(strPreviewHtml, strSkinId);
 
-				strPreviewHtml = strPreviewHtml.replace("{page_stylecss}",
-						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
-
-				strPreviewHtml = strPreviewHtml.replace("{ContextPath}", ctxPath);
-
-				strPreviewHtml = strPreviewHtml.replace("{ContextSkinPath}", strSkinImgPath);
-
-				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
-						orgid, strSiteId, "Y")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
-
-				strPreviewHtml = strPreviewHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
+						ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
 				strPreviewHtml = siteRepCssServiceImpl.repWelcome(strPreviewHtml, "");
@@ -1382,12 +1376,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
 				String ctxPath = request.getContextPath();
-				if(!"".equals(ctxPath)){
-					strSaveContent = strSaveContent.replace(ctxPath + "/", "{ContextPath}/");
-				}
 
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
-				strSaveContent = strSaveContent.replace(strSkinImgPath, "{ContextSkinPath}/");
+				strSaveContent = siteRepCssServiceImpl.repResetContextPath(strSaveContent);
+				strSaveContent = siteRepCssServiceImpl.repResetSkinsImgPath(strSaveContent, strSkinId);
 
 				String strSavedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginSaveTpl", strSaveContent);
 				strSavedHtml = siteRepCssServiceImpl.repTitle(strSavedHtml, strSiteId);
@@ -1401,20 +1392,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginReleaseTpl",
 						strPreviewContent);
 
-				String orgidLower = orgid.toLowerCase();
+				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
+				strPreviewHtml = siteRepCssServiceImpl.repCss(strPreviewHtml, strSiteId);
+				strPreviewHtml = siteRepCssServiceImpl.repSkinsImgPath(strPreviewHtml, strSkinId);
 
-				strPreviewHtml = strPreviewHtml.replace("{page_stylecss}",
-						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
-
-				strPreviewHtml = strPreviewHtml.replace("{ContextPath}", ctxPath);
-
-				strPreviewHtml = strPreviewHtml.replace("{ContextSkinPath}", strSkinImgPath);
-
-				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
-						orgid, strSiteId, "Y")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease", ctxPath);
-
-				strPreviewHtml = strPreviewHtml.replace("<!--#{javascripts}#-->", strJavascripts);
+				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
+						ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
 				strPreviewHtml = siteRepCssServiceImpl.repWelcome(strPreviewHtml, "");
@@ -1536,48 +1521,26 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strReleasedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",
 						strReleaseContent);
 
-				String orgidLower = orgid.toLowerCase();
-
-				strReleasedHtml = strReleasedHtml.replace("{page_stylecss}",
-						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
-
 				String ctxPath = request.getContextPath();
-				strReleasedHtml = strReleasedHtml.replace("{ContextPath}", ctxPath);
 
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
-				strReleasedHtml = strReleasedHtml.replace("{ContextSkinPath}", strSkinImgPath);
-
-				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
-						orgid, strSiteId, "")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
-
-				String strPreviewJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar",
-						ctxPath, orgid, strSiteId, "Y")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
-
-				String strPreviewHTML = strReleasedHtml;
-
-				strReleasedHtml = strReleasedHtml.replace("<!--#{javascripts}#-->", strJavascripts);
-
-				strPreviewHTML = strPreviewHTML.replace("<!--#{javascripts}#-->", strPreviewJavascripts);
-
+				strReleasedHtml = siteRepCssServiceImpl.repContextPath(strReleasedHtml);
+				strReleasedHtml = siteRepCssServiceImpl.repCss(strReleasedHtml, strSiteId);
+				strReleasedHtml = siteRepCssServiceImpl.repSkinsImgPath(strReleasedHtml, strSkinId);
 				strReleasedHtml = siteRepCssServiceImpl.repTitle(strReleasedHtml, strSiteId);
-				// strReleasedHtml =
-				// siteRepCssServiceImpl.repCss(strReleasedHtml, strSiteId);
 				strReleasedHtml = siteRepCssServiceImpl.repWelcome(strReleasedHtml, "");
 				strReleasedHtml = siteRepCssServiceImpl.repSdkbar(strReleasedHtml, "");
 				strReleasedHtml = siteRepCssServiceImpl.repSiteid(strReleasedHtml, strSiteId);
 				strReleasedHtml = siteRepCssServiceImpl.repJgid(strReleasedHtml, orgid);
 				strReleasedHtml = siteRepCssServiceImpl.repLang(strReleasedHtml, siteLang);
 
-				strPreviewHTML = siteRepCssServiceImpl.repTitle(strPreviewHTML, strSiteId);
-				// strPreviewHTML = siteRepCssServiceImpl.repCss(strPreviewHTML,
-				// strSiteId);
-				strPreviewHTML = siteRepCssServiceImpl.repWelcome(strPreviewHTML, "");
-				strPreviewHTML = siteRepCssServiceImpl.repSdkbar(strPreviewHTML, "");
-				strPreviewHTML = siteRepCssServiceImpl.repSiteid(strPreviewHTML, strSiteId);
-				strPreviewHTML = siteRepCssServiceImpl.repJgid(strPreviewHTML, orgid);
-				strPreviewHTML = siteRepCssServiceImpl.repLang(strPreviewHTML, siteLang);
+				String strPreviewHTML = strReleasedHtml;
+
+				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
+						ctxPath);
+				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, orgid,
+						strSiteId, "");
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzIndexPubcode(strReleasedHtml);
 				psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strPreviewHTML);
@@ -1635,48 +1598,26 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strReleaseHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginReleaseTpl",
 						strReleaseContent);
 
-				String orgidLower = orgid.toLowerCase();
-
-				strReleaseHtml = strReleaseHtml.replace("{page_stylecss}",
-						orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
-
 				String ctxPath = request.getContextPath();
-				strReleaseHtml = strReleaseHtml.replace("{ContextPath}", ctxPath);
 
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/";
-				strReleaseHtml = strReleaseHtml.replace("{ContextSkinPath}", strSkinImgPath);
-
-				String strJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath,
-						orgid, strSiteId, "")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease", ctxPath);
-
-				String strPreviewJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar",
-						ctxPath, orgid, strSiteId, "Y")
-						+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease", ctxPath);
-
-				String strPreviewHTML = strReleaseHtml;
-
-				strReleaseHtml = strReleaseHtml.replace("<!--#{javascripts}#-->", strJavascripts);
-
-				strPreviewHTML = strPreviewHTML.replace("<!--#{javascripts}#-->", strPreviewJavascripts);
-
+				strReleaseHtml = siteRepCssServiceImpl.repContextPath(strReleaseHtml);
+				strReleaseHtml = siteRepCssServiceImpl.repCss(strReleaseHtml, strSiteId);
+				strReleaseHtml = siteRepCssServiceImpl.repSkinsImgPath(strReleaseHtml, strSkinId);
 				strReleaseHtml = siteRepCssServiceImpl.repTitle(strReleaseHtml, strSiteId);
-				// strReleaseHtml = siteRepCssServiceImpl.repCss(strReleaseHtml,
-				// strSiteId);
 				strReleaseHtml = siteRepCssServiceImpl.repWelcome(strReleaseHtml, "");
 				strReleaseHtml = siteRepCssServiceImpl.repSdkbar(strReleaseHtml, "");
 				strReleaseHtml = siteRepCssServiceImpl.repSiteid(strReleaseHtml, strSiteId);
 				strReleaseHtml = siteRepCssServiceImpl.repJgid(strReleaseHtml, orgid);
 				strReleaseHtml = siteRepCssServiceImpl.repLang(strReleaseHtml, siteLang);
 
-				strPreviewHTML = siteRepCssServiceImpl.repTitle(strPreviewHTML, strSiteId);
-				// strPreviewHTML = siteRepCssServiceImpl.repCss(strPreviewHTML,
-				// strSiteId);
-				strPreviewHTML = siteRepCssServiceImpl.repWelcome(strPreviewHTML, "");
-				strPreviewHTML = siteRepCssServiceImpl.repSdkbar(strPreviewHTML, "");
-				strPreviewHTML = siteRepCssServiceImpl.repSiteid(strPreviewHTML, strSiteId);
-				strPreviewHTML = siteRepCssServiceImpl.repJgid(strPreviewHTML, orgid);
-				strPreviewHTML = siteRepCssServiceImpl.repLang(strPreviewHTML, siteLang);
+				String strPreviewHTML = strReleaseHtml;
+
+				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
+						ctxPath);
+				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, orgid,
+						strSiteId, "");
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzLonginPubcode(strReleaseHtml);
 				psTzSiteiDefnTWithBLOBs.setTzLoginPrecode(strPreviewHTML);
@@ -1818,7 +1759,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				Pattern p = Pattern.compile("<body\\sstyle=\"background:#fff\">([\\s\\S]*)</body>");
 				Matcher m = p.matcher(strContent);
 				while (m.find()) {
-					//System.out.println(m.group(1));
+					// System.out.println(m.group(1));
 					strRet = m.group(1);
 					break;
 				}

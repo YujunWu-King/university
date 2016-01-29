@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -28,7 +28,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyDecoratedActionServiceImpl")
 public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
-	
+
 	@Autowired
 	private HttpServletRequest request;
 
@@ -43,9 +43,9 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 
 	@Autowired
 	private PsTzSiteiAreaTMapper psTzSiteiAreaTMapper;
-	
+
 	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg) {
@@ -58,15 +58,16 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-			String strSiteId = mapActData.get("siteId")==null?"":String.valueOf(mapActData.get("siteId"));
+			String strSiteId = mapActData.get("siteId") == null ? "" : String.valueOf(mapActData.get("siteId"));
 
-			String strAreaId = mapActData.get("areaId")==null?"":String.valueOf(mapActData.get("areaId"));
+			String strAreaId = mapActData.get("areaId") == null ? "" : String.valueOf(mapActData.get("areaId"));
 
-			// String strAreaZone = mapActData.get("areaZone")==null?"":String.valueOf(mapActData.get("areaZone"));
+			// String strAreaZone =
+			// mapActData.get("areaZone")==null?"":String.valueOf(mapActData.get("areaZone"));
 
-			String strAreaType = mapActData.get("areaType")==null?"":String.valueOf(mapActData.get("areaType"));
+			String strAreaType = mapActData.get("areaType") == null ? "" : String.valueOf(mapActData.get("areaType"));
 
-			String strAreaCode = mapActData.get("areaCode")==null?"":String.valueOf(mapActData.get("areaCode"));
+			String strAreaCode = mapActData.get("areaCode") == null ? "" : String.valueOf(mapActData.get("areaCode"));
 
 			if (null == strAreaId || "".equals(strAreaId)) {
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
@@ -74,18 +75,13 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			}
 
 			if (null != strAreaCode && !"".equals(strAreaCode)) {
-				
+
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
-				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
-				
-				String ctxPath = request.getContextPath();
-				if(!"".equals(ctxPath)){
-					strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
-				}
-				
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
-				strAreaCode = strAreaCode.replace(strSkinImgPath, "{ContextSkinPath}/");
-				
+				String strSkinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
+
+				strAreaCode = siteRepCssServiceImpl.repResetContextPath(strAreaCode);
+				strAreaCode = siteRepCssServiceImpl.repResetSkinsImgPath(strAreaCode, strSkinId);
+
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
 				psTzSiteiAreaTWithBLOBs.setTzSiteiId(strSiteId);
@@ -122,15 +118,16 @@ public class TzHyDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-			String strSiteId = mapActData.get("siteId")==null?"":String.valueOf(mapActData.get("siteId"));
+			String strSiteId = mapActData.get("siteId") == null ? "" : String.valueOf(mapActData.get("siteId"));
 
-			String strAreaId = mapActData.get("areaId")==null?"":String.valueOf(mapActData.get("areaId"));
+			String strAreaId = mapActData.get("areaId") == null ? "" : String.valueOf(mapActData.get("areaId"));
 
-			// String strAreaZone = mapActData.get("areaZone")==null?"":String.valueOf(mapActData.get("areaZone"));
+			// String strAreaZone =
+			// mapActData.get("areaZone")==null?"":String.valueOf(mapActData.get("areaZone"));
 
-			String strAreaType = mapActData.get("areaType")==null?"":String.valueOf(mapActData.get("areaType"));
+			String strAreaType = mapActData.get("areaType") == null ? "" : String.valueOf(mapActData.get("areaType"));
 
-			String strAreaCode = mapActData.get("areaCode")==null?"":String.valueOf(mapActData.get("areaCode"));
+			String strAreaCode = mapActData.get("areaCode") == null ? "" : String.valueOf(mapActData.get("areaCode"));
 
 			if (null == strAreaId || "".equals(strAreaId)) {
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");

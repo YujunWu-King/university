@@ -65,7 +65,6 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 			String strSiteId = jacksonUtil.getString("siteId");
 			String strMenuId = jacksonUtil.getString("menuId");
 			String strOrgid = "";
-			String orgidLower = "";
 			String strLang = "";
 
 			tzGetSetSessionValue.setTzSiteGloMenuId(strMenuId);
@@ -77,7 +76,6 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 
 				if (null != mapSiteInfo) {
 					strOrgid = mapSiteInfo.get("TZ_JG_ID") == null ? "" : String.valueOf(mapSiteInfo.get("TZ_JG_ID"));
-					orgidLower = strOrgid.toLowerCase();
 					strLang = mapSiteInfo.get("TZ_SITE_LANG") == null ? ""
 							: String.valueOf(mapSiteInfo.get("TZ_SITE_LANG"));
 				}
@@ -125,12 +123,9 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 							}
 						} else {
 							if (dt.getTime() <= dateNow.getTime()) {
-
-								String strJavascripts = tzGDObject.getHTMLText(
-										"HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, strOrgid, strSiteId, "Y")
-										+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsContent", ctxPath);
-
-								strRet = str_html.replace("<!--#{javascripts}#-->", strJavascripts);
+								strRet = str_html;
+								String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsContent", ctxPath);
+								strRet = siteRepCssServiceImpl.repJavascriptTags(strRet, strSelfJavascripts, strOrgid, strSiteId, "Y");
 
 							} else {
 								strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE",
@@ -156,17 +151,14 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 						"未找到内容", "Not found content");
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzNoContent", ctxPath, strRet);
 			}
-			
-			strRet = strRet.replace("{page_stylecss}",
-					orgidLower + "/" + strSiteId + "/" + "style_" + orgidLower + ".css");
 
-			strRet = strRet.replace("{ContextPath}", ctxPath);
 			
+			strRet = siteRepCssServiceImpl.repContextPath(strRet);
 			strRet = siteRepCssServiceImpl.repTitle(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repCss(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repSiteid(strRet, strSiteId);
-			strRet = siteRepCssServiceImpl.repJgid(strRet, strOrgid);
-			strRet = siteRepCssServiceImpl.repLang(strRet, strLang);
+			strRet = siteRepCssServiceImpl.repJgid(strRet, strOrgid.toUpperCase());
+			strRet = siteRepCssServiceImpl.repLang(strRet, strLang.toUpperCase());
 
 		} catch (Exception e) {
 			e.printStackTrace();

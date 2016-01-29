@@ -16,7 +16,6 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -49,9 +48,6 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 	
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
-	
-	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Override
 	public String tzSaveArea(Map<String, Object> mapActData, String[] errMsg) {
@@ -78,13 +74,8 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
 				String strSkinId = sqlQuery.queryForObject(sql, new Object[]{strSiteId}, "String");
 				
-				String ctxPath = request.getContextPath();
-				if(!"".equals(ctxPath)){
-					strAreaCode = strAreaCode.replace(ctxPath + "/", "{ContextPath}/");
-				}
-				
-				String strSkinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinId + "/"; 
-				strAreaCode = strAreaCode.replace(strSkinImgPath, "{ContextSkinPath}/");
+				strAreaCode = siteRepCssServiceImpl.repResetContextPath(strAreaCode);
+				strAreaCode = siteRepCssServiceImpl.repResetSkinsImgPath(strAreaCode, strSkinId);
 
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaTWithBLOBs = new PsTzSiteiAreaTWithBLOBs();
 
@@ -187,7 +178,6 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 			}
 
 			String sql = "";
-			String ctxPath = request.getContextPath();
 
 			if ((null != strOrgId && !"".equals(strOrgId)) && (null == strSiteId || "".equals(strSiteId))) {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteidByOrgid");
@@ -212,8 +202,7 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
 				String strSkinID = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 				
-				String websiteSkinPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + strSkinID; 
-				strRet = strRet.replace("{ContextSkinPath}", websiteSkinPath);
+				strRet = siteRepCssServiceImpl.repSkinsImgPath(strRet, strSkinID);
 				
 				break;
 			}
@@ -222,7 +211,7 @@ public class TzPhDecoratedActionServiceImpl extends TzSiteActionServiceImpl {
 				strRet = "false";
 			} else {
 
-				strRet = strRet.replace("{ContextPath}", ctxPath);
+				strRet = siteRepCssServiceImpl.repContextPath(strRet);
 
 			}
 

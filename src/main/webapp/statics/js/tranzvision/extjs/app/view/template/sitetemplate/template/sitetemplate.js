@@ -95,16 +95,26 @@
             fieldLabel: 'PC模板源码',
             labelSeparator:':',//分隔符
             labelWindth:300,
-            height: 150,
+            height: 110,
 			name: 'templatePCCode'
             },{
+				xtype: 'textfield',
+	            fieldLabel: 'PC端JS代码HTML控件名称',
+	            emptyText:'请输入HTML控件名称，比如：TzScriptsNewsList',
+				name: 'pcScriptName'
+			},{
             xtype: 'textarea',
             fieldLabel: '手机端模板源码',
             labelSeparator:':',//分隔符
             labelWindth:300,
-            height: 150,
+            height: 110,
 			name: 'templateMBCode'
-            }]
+            },{
+				xtype: 'textfield',
+	            fieldLabel: '手机端JS代码HTML控件名称',
+	            emptyText:'请输入HTML控件名称，比如：TzScriptsNewsListM',
+				name: 'mbScriptName'
+			}]
 	}],//页面itemend
         
 	    buttons: [{

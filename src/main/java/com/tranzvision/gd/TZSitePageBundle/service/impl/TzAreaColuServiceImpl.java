@@ -37,7 +37,7 @@ public class TzAreaColuServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
-	
+
 	@Autowired
 	private TzGetSetSessionValue tzGetSetSessionValue;
 
@@ -83,28 +83,43 @@ public class TzAreaColuServiceImpl extends FrameworkImpl {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetMenuidByAreaid");
 				strMenuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strSiteId, strAreaId }, "String");
 			}
-			
+
 			tzGetSetSessionValue.setTzSiteGloMenuId(strMenuId);
 
 			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteiTempPCcode");
-			String strResultConten = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
+			// String strResultConten = sqlQuery.queryForObject(sql, new
+			// Object[] { strSiteId, strMenuId }, "String");
+			Map<String, Object> mapSiteiCode = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strMenuId });
+			String strResultContent = mapSiteiCode.get("TZ_TEMP_PCCODE") == null ? ""
+					: String.valueOf(mapSiteiCode.get("TZ_TEMP_PCCODE"));
+			String strScriptHtmlName = mapSiteiCode.get("TZ_PCTEMP_SCRIPT_HTML") == null ? ""
+					: String.valueOf(mapSiteiCode.get("TZ_PCTEMP_SCRIPT_HTML"));
 
-			sql = "select TZ_JG_ID,TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
+			String ctxPath = request.getContextPath();
+			String strScripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle." + strScriptHtmlName, ctxPath);
+
+			sql = "select TZ_JG_ID,TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? and TZ_SITEI_ENABLE='Y'";
 			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { strSiteId });
 			String strOrgId = mapData.get("TZ_JG_ID") == null ? "" : String.valueOf(mapData.get("TZ_JG_ID"));
 			String strLang = mapData.get("TZ_SITE_LANG") == null ? "" : String.valueOf(mapData.get("TZ_SITE_LANG"));
+			String strSkinId = mapData.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapData.get("TZ_SKIN_ID"));
 
 			sql = "select TZ_MENU_NAME from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_ID=? and TZ_MENU_STATE='Y'";
 			String strMenuName = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
 
-			strResultConten = siteRepCssServiceImpl.repTitle(strResultConten, strSiteId);
-			strResultConten = siteRepCssServiceImpl.repCss(strResultConten, strSiteId);
-			strResultConten = siteRepCssServiceImpl.repSiteid(strResultConten, strSiteId);
-			strResultConten = siteRepCssServiceImpl.repJgid(strResultConten, strOrgId.toUpperCase());
-			strResultConten = siteRepCssServiceImpl.repLang(strResultConten, strLang.toUpperCase());
-			strResultConten = siteRepCssServiceImpl.repMenuName(strResultConten, strMenuName);
+			strResultContent = siteRepCssServiceImpl.repContextPath(strResultContent);
+			strResultContent = siteRepCssServiceImpl.repSkinsImgPath(strResultContent, strSkinId);
+			strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strScripts, strOrgId,
+					strSiteId, "");
 
-			return strResultConten;
+			strResultContent = siteRepCssServiceImpl.repTitle(strResultContent, strSiteId);
+			strResultContent = siteRepCssServiceImpl.repCss(strResultContent, strSiteId);
+			strResultContent = siteRepCssServiceImpl.repSiteid(strResultContent, strSiteId);
+			strResultContent = siteRepCssServiceImpl.repJgid(strResultContent, strOrgId.toUpperCase());
+			strResultContent = siteRepCssServiceImpl.repLang(strResultContent, strLang.toUpperCase());
+			strResultContent = siteRepCssServiceImpl.repMenuName(strResultContent, strMenuName);
+
+			return strResultContent;
 
 		} catch (Exception e) {
 			e.printStackTrace();
