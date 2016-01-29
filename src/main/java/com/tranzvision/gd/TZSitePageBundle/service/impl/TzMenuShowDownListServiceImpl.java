@@ -51,8 +51,12 @@ public class TzMenuShowDownListServiceImpl extends FrameworkImpl {
 
 			if ((null != strSiteId && !"".equals(strSiteId)) && (null != strMenuId && !"".equals(strMenuId))) {
 
-				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteTplPcCodeByMenuid");
-				String strResultContent = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
+				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteiTempPCcode");
+				Map<String, Object> mapSiteiCode = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strMenuId });
+				String strResultContent = mapSiteiCode.get("TZ_TEMP_PCCODE") == null ? ""
+						: String.valueOf(mapSiteiCode.get("TZ_TEMP_PCCODE"));
+				String strScriptHtmlName = mapSiteiCode.get("TZ_PCTEMP_SCRIPT_HTML") == null ? ""
+						: String.valueOf(mapSiteiCode.get("TZ_PCTEMP_SCRIPT_HTML"));
 
 				if (null != strResultContent) {
 
@@ -64,7 +68,7 @@ public class TzMenuShowDownListServiceImpl extends FrameworkImpl {
 					if (mapSiteOrg != null) {
 						orgid = mapSiteOrg.get("TZ_JG_ID") == null ? "" : String.valueOf(mapSiteOrg.get("TZ_JG_ID"));
 					}
-					
+
 					sql = "select TZ_MENU_NAME from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_ID=? and TZ_MENU_STATE='Y'";
 					String strMenuName = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
 
@@ -73,7 +77,7 @@ public class TzMenuShowDownListServiceImpl extends FrameworkImpl {
 					strResultContent = siteRepCssServiceImpl.repCss(strResultContent, strSiteId);
 					strResultContent = siteRepCssServiceImpl.repMenuName(strResultContent, strMenuName);
 
-					String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsDownload",
+					String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle." + strScriptHtmlName,
 							ctxPath);
 
 					strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strSelfJavascripts,

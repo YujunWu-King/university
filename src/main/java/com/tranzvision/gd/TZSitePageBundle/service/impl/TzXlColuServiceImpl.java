@@ -204,7 +204,8 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 			// 查询的最大行，最小行
 			//int numMaxRow = numNowPage * numPageRow;
-			int numMinRow = (numNowPage - 1) * numPageRow + 1;
+			//int numMinRow = (numNowPage - 1) * numPageRow + 1;
+			int numMinRow = (numNowPage - 1) * numPageRow;
 
 			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsList");
 			List<Map<String, Object>> listSiteArts = sqlQuery.queryForList(sql,
