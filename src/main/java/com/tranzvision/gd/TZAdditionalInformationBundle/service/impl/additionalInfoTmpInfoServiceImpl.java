@@ -154,9 +154,9 @@ public class additionalInfoTmpInfoServiceImpl extends FrameworkImpl{
 					mapJson.put("content", strAdditionalInfoContent);
 					mapJson.put("remark", strAdditionalInfoRemark);
 					listJson.add(mapJson);
-					mapRet.replace("total",total);
 				}
 				mapRet.replace("root", listJson);
+				mapRet.replace("total",total);
 			} catch (Exception e) {
 				e.printStackTrace();
 				errorMsg[0] = "1";
