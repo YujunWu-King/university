@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationExportTemplateBundle.dao.PsTzFrmFldGlTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlT" >
+    <id column="TZ_EXPORT_TMP_ID" property="tzExportTmpId" jdbcType="VARCHAR" />
+    <id column="TZ_DC_FIELD_ID" property="tzDcFieldId" jdbcType="VARCHAR" />
+    <id column="TZ_FORM_FLD_ID" property="tzFormFldId" jdbcType="VARCHAR" />
+    <result column="TZ_CODE_TABLE_ID" property="tzCodeTableId" jdbcType="VARCHAR" />
+    <result column="TZ_SORT_NUM" property="tzSortNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_EXPORT_TMP_ID, TZ_DC_FIELD_ID, TZ_FORM_FLD_ID, TZ_CODE_TABLE_ID, TZ_SORT_NUM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FRMFLD_GL_T
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+      and TZ_FORM_FLD_ID = #{tzFormFldId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlTKey" >
+    delete from PS_TZ_FRMFLD_GL_T
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+      and TZ_FORM_FLD_ID = #{tzFormFldId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlT" >
+    insert into PS_TZ_FRMFLD_GL_T (TZ_EXPORT_TMP_ID, TZ_DC_FIELD_ID, TZ_FORM_FLD_ID, 
+      TZ_CODE_TABLE_ID, TZ_SORT_NUM)
+    values (#{tzExportTmpId,jdbcType=VARCHAR}, #{tzDcFieldId,jdbcType=VARCHAR}, #{tzFormFldId,jdbcType=VARCHAR}, 
+      #{tzCodeTableId,jdbcType=VARCHAR}, #{tzSortNum,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlT" >
+    insert into PS_TZ_FRMFLD_GL_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzExportTmpId != null" >
+        TZ_EXPORT_TMP_ID,
+      </if>
+      <if test="tzDcFieldId != null" >
+        TZ_DC_FIELD_ID,
+      </if>
+      <if test="tzFormFldId != null" >
+        TZ_FORM_FLD_ID,
+      </if>
+      <if test="tzCodeTableId != null" >
+        TZ_CODE_TABLE_ID,
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzExportTmpId != null" >
+        #{tzExportTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcFieldId != null" >
+        #{tzDcFieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFormFldId != null" >
+        #{tzFormFldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCodeTableId != null" >
+        #{tzCodeTableId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        #{tzSortNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlT" >
+    update PS_TZ_FRMFLD_GL_T
+    <set >
+      <if test="tzCodeTableId != null" >
+        TZ_CODE_TABLE_ID = #{tzCodeTableId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+      and TZ_FORM_FLD_ID = #{tzFormFldId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzFrmFldGlT" >
+    update PS_TZ_FRMFLD_GL_T
+    set TZ_CODE_TABLE_ID = #{tzCodeTableId,jdbcType=VARCHAR},
+      TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER}
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+      and TZ_FORM_FLD_ID = #{tzFormFldId,jdbcType=VARCHAR}
+  </update>
+</mapper>

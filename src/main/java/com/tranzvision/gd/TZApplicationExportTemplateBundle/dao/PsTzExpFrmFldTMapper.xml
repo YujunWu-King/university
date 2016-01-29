@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationExportTemplateBundle.dao.PsTzExpFrmFldTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldT" >
+    <id column="TZ_EXPORT_TMP_ID" property="tzExportTmpId" jdbcType="VARCHAR" />
+    <id column="TZ_DC_FIELD_ID" property="tzDcFieldId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_FIELD_NAME" property="tzDcFieldName" jdbcType="VARCHAR" />
+    <result column="TZ_SORT_NUM" property="tzSortNum" jdbcType="INTEGER" />
+    <result column="TZ_DC_FIELD_FGF" property="tzDcFieldFgf" jdbcType="VARCHAR" />
+    <result column="TZ_DC_COL_WIDTH" property="tzDcColWidth" jdbcType="SMALLINT" />
+    <result column="TZ_DC_COL_FILTER" property="tzDcColFilter" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_EXPORT_TMP_ID, TZ_DC_FIELD_ID, TZ_DC_FIELD_NAME, TZ_SORT_NUM, TZ_DC_FIELD_FGF, 
+    TZ_DC_COL_WIDTH, TZ_DC_COL_FILTER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_EXP_FRMFLD_T
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldTKey" >
+    delete from PS_TZ_EXP_FRMFLD_T
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldT" >
+    insert into PS_TZ_EXP_FRMFLD_T (TZ_EXPORT_TMP_ID, TZ_DC_FIELD_ID, TZ_DC_FIELD_NAME, 
+      TZ_SORT_NUM, TZ_DC_FIELD_FGF, TZ_DC_COL_WIDTH, 
+      TZ_DC_COL_FILTER)
+    values (#{tzExportTmpId,jdbcType=VARCHAR}, #{tzDcFieldId,jdbcType=VARCHAR}, #{tzDcFieldName,jdbcType=VARCHAR}, 
+      #{tzSortNum,jdbcType=INTEGER}, #{tzDcFieldFgf,jdbcType=VARCHAR}, #{tzDcColWidth,jdbcType=SMALLINT}, 
+      #{tzDcColFilter,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldT" >
+    insert into PS_TZ_EXP_FRMFLD_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzExportTmpId != null" >
+        TZ_EXPORT_TMP_ID,
+      </if>
+      <if test="tzDcFieldId != null" >
+        TZ_DC_FIELD_ID,
+      </if>
+      <if test="tzDcFieldName != null" >
+        TZ_DC_FIELD_NAME,
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM,
+      </if>
+      <if test="tzDcFieldFgf != null" >
+        TZ_DC_FIELD_FGF,
+      </if>
+      <if test="tzDcColWidth != null" >
+        TZ_DC_COL_WIDTH,
+      </if>
+      <if test="tzDcColFilter != null" >
+        TZ_DC_COL_FILTER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzExportTmpId != null" >
+        #{tzExportTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcFieldId != null" >
+        #{tzDcFieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcFieldName != null" >
+        #{tzDcFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        #{tzSortNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDcFieldFgf != null" >
+        #{tzDcFieldFgf,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcColWidth != null" >
+        #{tzDcColWidth,jdbcType=SMALLINT},
+      </if>
+      <if test="tzDcColFilter != null" >
+        #{tzDcColFilter,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldT" >
+    update PS_TZ_EXP_FRMFLD_T
+    <set >
+      <if test="tzDcFieldName != null" >
+        TZ_DC_FIELD_NAME = #{tzDcFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSortNum != null" >
+        TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDcFieldFgf != null" >
+        TZ_DC_FIELD_FGF = #{tzDcFieldFgf,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcColWidth != null" >
+        TZ_DC_COL_WIDTH = #{tzDcColWidth,jdbcType=SMALLINT},
+      </if>
+      <if test="tzDcColFilter != null" >
+        TZ_DC_COL_FILTER = #{tzDcColFilter,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationExportTemplateBundle.model.PsTzExpFrmFldT" >
+    update PS_TZ_EXP_FRMFLD_T
+    set TZ_DC_FIELD_NAME = #{tzDcFieldName,jdbcType=VARCHAR},
+      TZ_SORT_NUM = #{tzSortNum,jdbcType=INTEGER},
+      TZ_DC_FIELD_FGF = #{tzDcFieldFgf,jdbcType=VARCHAR},
+      TZ_DC_COL_WIDTH = #{tzDcColWidth,jdbcType=SMALLINT},
+      TZ_DC_COL_FILTER = #{tzDcColFilter,jdbcType=VARCHAR}
+    where TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR}
+      and TZ_DC_FIELD_ID = #{tzDcFieldId,jdbcType=VARCHAR}
+  </update>
+</mapper>
