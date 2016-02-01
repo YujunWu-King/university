@@ -6,6 +6,7 @@ package com.tranzvision.gd.TZClassSetBundle.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClassInfTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsAdminTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsBatchTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsBmlcTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsDjzlTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsMajorTMapper;
+import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsMorinfTMapper;
 import com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT;
-import com.tranzvision.gd.TZOrganizationMgBundle.model.PsTzJgBaseT;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsAdminTKey;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBatchTKey;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlcTKey;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlcTWithBLOBs;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsDjzlT;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsDjzlTKey;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsMajorT;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsMajorTKey;
+import com.tranzvision.gd.TZClassSetBundle.model.PsTzClsMorinfT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -54,6 +69,24 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzClassInfTMapper psTzClassInfTMapper;
+
+	@Autowired
+	private PsTzClsMajorTMapper psTzClsMajorTMapper;
+
+	@Autowired
+	private PsTzClsAdminTMapper psTzClsAdminTMapper;
+
+	@Autowired
+	private PsTzClsMorinfTMapper psTzClsMorinfTMapper;
+
+	@Autowired
+	private PsTzClsBmlcTMapper psTzClsBmlcTMapper;
+
+	@Autowired
+	private PsTzClsDjzlTMapper psTzClsDjzlTMapper;
+
+	@Autowired
+	private PsTzClsBatchTMapper psTzClsBatchTMapper;
 
 	/**
 	 * 获得班级列表（班级编号、班级名称、所属项目、项目类别）
@@ -345,16 +378,20 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-	
+
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
+		String str_bj_id = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
-			Date dateNow = new Date();
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			String str_y = "";
+
+			String sql = "";
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -363,31 +400,540 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-				
+
 				String typeFlag = jacksonUtil.getString("typeFlag");
-				String bjid = jacksonUtil.getString("bj_id");
-				
-				String str_lc = "";
-				   String str_zl = "";
-				   String str_y = "";
-				   
-				if("bj_jbxx".equals(typeFlag)){
-					
-				}else if("".equals(typeFlag)){
-					
-				}else if("".equals(typeFlag)){
-					
+
+				if ("bj_jbxx".equals(typeFlag)) {
+
+					Map<String, Object> mapData = jacksonUtil.getMap("data");
+					String str_bjid = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+					String str_bjname = mapData.get("bj_name") == null ? "" : String.valueOf(mapData.get("bj_name"));
+
+					sql = "select 'Y' from PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_CLASS_NAME=UPPER(?) and TZ_CLASS_ID<>?";
+
+					str_y = sqlQuery.queryForObject(sql, new Object[] { orgid, str_bjname, str_bjid }, "String");
+
+					break;
 				}
-				
+
 			}
-			
+
+			if (!"Y".equals(str_y)) {
+
+				for (int num = 0; num < dataLength; num++) {
+
+					// 表单内容
+					String strForm = actData[num];
+					// 解析json
+					jacksonUtil.json2Map(strForm);
+
+					String typeFlag = jacksonUtil.getString("typeFlag");
+					String bj = jacksonUtil.getString("bj_id");
+					str_bj_id = "";
+
+					Map<String, Object> mapData = jacksonUtil.getMap("data");
+
+					switch (typeFlag) {
+					case "bj_jbxx":
+						// 班级基本信息
+						str_bj_id = this.tzUpdate_bjxx(mapData);
+						break;
+
+					case "glry":
+						// 管理人员
+						str_bj_id = this.tzUpdate_glry(mapData);
+						break;
+
+					case "zyfx":
+						// 专业方向
+						str_bj_id = this.tzUpdate_zyfx(mapData);
+						break;
+
+					case "bmlc":
+						// 报名流程
+						sql = "delete from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?";
+						sqlQuery.update(sql, new Object[] { bj });
+
+						str_bj_id = this.tzUpdate_bmlc(mapData);
+						break;
+
+					case "djzl":
+						// 递交资料
+						sql = "delete from PS_TZ_CLS_DJZL_T where TZ_CLASS_ID=?";
+						sqlQuery.update(sql, new Object[] { bj });
+
+						str_bj_id = this.tzUpdate_djzl(mapData);
+						break;
+
+					case "gdxx":
+						// 更多信息
+						str_bj_id = this.tzUpdate_gdxx(mapData, bj);
+						break;
+					}
+
+					if ("".equals(str_bj_id)) {
+						errMsg[0] = "1";
+						errMsg[1] = "更新班级信息失败！请检查后重试。";
+					}
+
+				}
+
+			} else {
+				errMsg[0] = "1";
+				errMsg[1] = "班级名称在当前机构已经存在！";
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
-			errMsg[1] = "";
+			errMsg[1] = "系统异常：" + e.getMessage();
+		}
+
+		mapRet.put("bj_id", str_bj_id);
+		mapRet.put("siteId", "1");
+		mapRet.put("coluId", "");
+
+		return strRet;
+	}
+
+	// 更新班级的基本信息
+	public String tzUpdate_bjxx(Map<String, Object> mapData) {
+
+		String str_bj_id = "";
+
+		Date dateNow = new Date();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+
+			if (!"".equals(str_bj_id)) {
+
+				String sql = "select 'Y' from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?";
+				String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id }, "String");
+
+				if (!"Y".equals(recExists)) {
+					String strDateFormat = getSysHardCodeVal.getDateFormat();
+					SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+
+					PsTzClassInfT psTzClassInfT = new PsTzClassInfT();
+
+					psTzClassInfT.setTzClassId(str_bj_id);
+					psTzClassInfT.setTzClassName(
+							mapData.get("bj_name") == null ? "" : String.valueOf(mapData.get("bj_name")));
+					psTzClassInfT.setTzPrjId(mapData.get("xm_id") == null ? "" : String.valueOf(mapData.get("xm_id")));
+
+					Date tzStartDt = mapData.get("begin_time") == null ? null
+							: dateFormat.parse(String.valueOf(mapData.get("begin_time")));
+					psTzClassInfT.setTzStartDt(tzStartDt);
+
+					Date tzEndDt = mapData.get("end_time") == null ? null
+							: dateFormat.parse(String.valueOf(mapData.get("end_time")));
+					psTzClassInfT.setTzEndDt(tzEndDt);
+
+					Date tzAppStartDt = mapData.get("beginBm_time") == null ? null
+							: dateFormat.parse(String.valueOf(mapData.get("beginBm_time")));
+					psTzClassInfT.setTzAppStartDt(tzAppStartDt);
+
+					Date tzAppEndDt = mapData.get("endBm_time") == null ? null
+							: dateFormat.parse(String.valueOf(mapData.get("endBm_time")));
+					psTzClassInfT.setTzAppEndDt(tzAppEndDt);
+
+					psTzClassInfT
+							.setTzIsAppOpen(mapData.get("bm_kt") == null ? "" : String.valueOf(mapData.get("bm_kt")));
+					psTzClassInfT.setTzAppModalId(
+							mapData.get("bmb_mb") == null ? "" : String.valueOf(mapData.get("bmb_mb")));
+					psTzClassInfT.setTzZlpsScorMdId(
+							mapData.get("clps_cj_modal") == null ? "" : String.valueOf(mapData.get("clps_cj_modal")));
+					psTzClassInfT.setTzMscjScorMdId(
+							mapData.get("msps_cj_modal") == null ? "" : String.valueOf(mapData.get("msps_cj_modal")));
+					psTzClassInfT.setTzPsAppModalId(
+							mapData.get("psbmb_mb") == null ? "" : String.valueOf(mapData.get("psbmb_mb")));
+
+					String str_xs = mapData.get("bj_xs") == null ? "" : String.valueOf(mapData.get("bj_xs"));
+					if ("true".equals(str_xs)) {
+						str_xs = "Y";
+					} else {
+						str_xs = "N";
+					}
+					psTzClassInfT.setTzIsSubBatch(str_xs);
+
+					psTzClassInfT.setTzClassDesc(
+							mapData.get("bj_desc") == null ? "" : String.valueOf(mapData.get("bj_desc")));
+
+					String str_guest_apply = mapData.get("guest_apply") == null ? ""
+							: String.valueOf(mapData.get("guest_apply"));
+					if ("true".equals(str_guest_apply) || "on".equals(str_guest_apply)) {
+						str_guest_apply = "Y";
+					} else {
+						str_guest_apply = "N";
+					}
+					psTzClassInfT.setTzGuestApply(str_guest_apply);
+
+					psTzClassInfT.setRowLastmantDttm(dateNow);
+					psTzClassInfT.setRowLastmantOprid(oprid);
+
+					psTzClassInfTMapper.updateByPrimaryKeyWithBLOBs(psTzClassInfT);
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	// 更新专业方向
+	public String tzUpdate_zyfx(Map<String, Object> mapData) {
+
+		String str_bj_id = "";
+
+		Date dateNow = new Date();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+			String str_fx_id = mapData.get("fx_id") == null ? "" : String.valueOf(mapData.get("fx_id"));
+
+			if ("".equals(str_fx_id)) {
+				str_fx_id = String.valueOf(getSeqNum.getSeqNum("TZ_CLS_MAJOR_T", "TZ_MAJOR_ID"));
+			}
+
+			String sql = "select 'Y' from PS_TZ_CLS_MAJOR_T where TZ_CLASS_ID=? and TZ_MAJOR_ID=?";
+			String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id, str_fx_id }, "String");
+
+			PsTzClsMajorT psTzClsMajorT = new PsTzClsMajorT();
+			psTzClsMajorT.setTzClassId(str_bj_id);
+			psTzClsMajorT.setTzMajorId(str_fx_id);
+			psTzClsMajorT.setTzSortNum(
+					Integer.parseInt(mapData.get("fx_xh") == null ? "0" : String.valueOf(mapData.get("fx_xh"))));
+			psTzClsMajorT.setTzMajorName(mapData.get("fx_name") == null ? "" : String.valueOf(mapData.get("fx_name")));
+			psTzClsMajorT.setRowLastmantDttm(dateNow);
+			psTzClsMajorT.setRowLastmantOprid(oprid);
+
+			if ("Y".equals(recExists)) {
+				psTzClsMajorTMapper.updateByPrimaryKeySelective(psTzClsMajorT);
+			} else {
+				psTzClsMajorT.setRowAddedDttm(dateNow);
+				psTzClsMajorT.setRowAddedOprid(oprid);
+				psTzClsMajorTMapper.insertSelective(psTzClsMajorT);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	// 更新管理人员
+	public String tzUpdate_glry(Map<String, Object> mapData) {
+		String str_bj_id = "";
+
+		try {
+
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+			String oprid = mapData.get("ry_id") == null ? "" : String.valueOf(mapData.get("ry_id"));
+
+			PsTzClsAdminTKey psTzClsAdminTKey = new PsTzClsAdminTKey();
+			psTzClsAdminTKey.setTzClassId(str_bj_id);
+			psTzClsAdminTKey.setOprid(oprid);
+
+			psTzClsAdminTMapper.insert(psTzClsAdminTKey);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	// 更新更多信息
+	public String tzUpdate_gdxx(Map<String, Object> mapData, String str_bj_id) {
+
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+		try {
+
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+			String sql = "select TZ_ATTRIBUTE_ID from PS_TZ_CLS_ATTR_T where TZ_JG_ID=? and TZ_IS_USED='Y'";
+
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { orgid });
+
+			for (Map<String, Object> mapInfo : listData) {
+				String str_zd_id = mapInfo.get("TZ_ATTRIBUTE_ID") == null ? ""
+						: String.valueOf(mapInfo.get("TZ_ATTRIBUTE_ID"));
+				String strZd = mapData.get(str_zd_id) == null ? "" : String.valueOf(mapData.get(str_zd_id));
+				if (!"".equals(strZd)) {
+					PsTzClsMorinfT psTzClsMorinfT = new PsTzClsMorinfT();
+					psTzClsMorinfT.setTzClassId(str_bj_id);
+					psTzClsMorinfT.setTzAttributeId(str_zd_id);
+					psTzClsMorinfT.setTzAttributeValue(strZd);
+
+					sql = "select 'Y' from PS_TZ_CLS_MORINF_T where TZ_CLASS_ID=? and TZ_ATTRIBUTE_ID=?";
+					String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id, str_zd_id }, "String");
+
+					if ("Y".equals(recExists)) {
+						psTzClsMorinfTMapper.updateByPrimaryKey(psTzClsMorinfT);
+					} else {
+						psTzClsMorinfTMapper.insert(psTzClsMorinfT);
+					}
+
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	// 更新报名流程
+	public String tzUpdate_bmlc(Map<String, Object> mapData) {
+		String str_bj_id = "";
+
+		try {
+
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+			String str_lc_id = mapData.get("bmlc_id") == null ? "" : String.valueOf(mapData.get("bmlc_id"));
+
+			if ("".equals(str_lc_id)) {
+				str_lc_id = String.valueOf(getSeqNum.getSeqNum("TZ_APPPRO_STP_T", "TZ_APPPRO_ID"));
+			}
+
+			String sql = "select 'Y' from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=?";
+			String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id, str_lc_id }, "String");
+
+			PsTzClsBmlcTWithBLOBs psTzClsBmlcTWithBLOBs = new PsTzClsBmlcTWithBLOBs();
+			psTzClsBmlcTWithBLOBs.setTzClassId(str_bj_id);
+			psTzClsBmlcTWithBLOBs.setTzAppproId(str_lc_id);
+			psTzClsBmlcTWithBLOBs.setTzSortNum(
+					Integer.parseInt(mapData.get("bmlc_xh") == null ? "0" : String.valueOf(mapData.get("bmlc_xh"))));
+			psTzClsBmlcTWithBLOBs
+					.setTzAppproName(mapData.get("bmlc_name") == null ? "" : String.valueOf(mapData.get("bmlc_name")));
+			psTzClsBmlcTWithBLOBs
+					.setTzTmpContent(mapData.get("bmlc_desc") == null ? "" : String.valueOf(mapData.get("bmlc_desc")));
+			psTzClsBmlcTWithBLOBs.setTzDefContent("");
+
+			if ("Y".equals(recExists)) {
+				psTzClsBmlcTMapper.updateByPrimaryKeyWithBLOBs(psTzClsBmlcTWithBLOBs);
+			} else {
+				psTzClsBmlcTMapper.insert(psTzClsBmlcTWithBLOBs);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	// 更新递交资料
+	public String tzUpdate_djzl(Map<String, Object> mapData) {
+		String str_bj_id = "";
+
+		try {
+
+			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
+			String str_dj_id = mapData.get("djzl_id") == null ? "" : String.valueOf(mapData.get("djzl_id"));
+			String str_djzl_name = mapData.get("djzl_name") == null ? "" : String.valueOf(mapData.get("djzl_name"));
+
+			String sql = "select 'Y' from PS_TZ_CLS_DJZL_T where TZ_CLASS_ID=? and TZ_SBMINF_ID<>? and TZ_CONT_INTRO=?";
+			String strCkName = sqlQuery.queryForObject(sql, new Object[] { str_bj_id, str_dj_id, str_djzl_name },
+					"String");
+
+			if (!"Y".equals(strCkName)) {
+				if ("".equals(str_dj_id)) {
+					str_dj_id = String.valueOf(getSeqNum.getSeqNum("TZ_SBMINF_STP_T", "TZ_SBMINF_ID"));
+				}
+
+				sql = "select 'Y' from PS_TZ_CLS_DJZL_T where TZ_CLASS_ID=? and TZ_SBMINF_ID=?";
+				String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id, str_dj_id }, "String");
+
+				PsTzClsDjzlT psTzClsDjzlT = new PsTzClsDjzlT();
+				psTzClsDjzlT.setTzClassId(str_bj_id);
+				psTzClsDjzlT.setTzSbminfId(str_dj_id);
+				psTzClsDjzlT.setTzSortNum(Integer
+						.parseInt(mapData.get("djzl_xh") == null ? "0" : String.valueOf(mapData.get("djzl_xh"))));
+				psTzClsDjzlT.setTzContIntro(
+						mapData.get("djzl_name") == null ? "" : String.valueOf(mapData.get("djzl_name")));
+				psTzClsDjzlT.setTzRemark(mapData.get("djzl_bz") == null ? "" : String.valueOf(mapData.get("djzl_bz")));
+
+				if ("Y".equals(recExists)) {
+					psTzClsDjzlTMapper.updateByPrimaryKeyWithBLOBs(psTzClsDjzlT);
+				} else {
+					psTzClsDjzlTMapper.insert(psTzClsDjzlT);
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			str_bj_id = "";
+		}
+
+		return str_bj_id;
+	}
+
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
+
+				// 表单内容
+				String strForm = actData[num];
+				// 解析json
+				jacksonUtil.json2Map(strForm);
+
+				String typeFlag = jacksonUtil.getString("typeFlag");
+				Map<String, Object> mapInfo = jacksonUtil.getMap("data");
+
+				int delNum = 0;
+
+				switch (typeFlag) {
+				case "zyfx":
+					// 专业方向
+					delNum = this.delete_Zyfx(mapInfo, errMsg);
+					break;
+				case "pcgl":
+					// 批次管理
+					delNum = this.delete_Pcgl(mapInfo, errMsg);
+					break;
+				case "glry":
+					// 管理人员
+					delNum = this.delete_Glry(mapInfo, errMsg);
+					break;
+				case "bmlc":
+					// 报名流程
+					delNum = this.delete_Bmlc(mapInfo, errMsg);
+					break;
+				case "djzl":
+					// 递交资料
+					delNum = this.delete_Djzl(mapInfo, errMsg);
+					break;
+				}
+
+				if (delNum == 0 && errMsg.length == 0) {
+					errMsg[0] = "1";
+					errMsg[1] = "删除失败！";
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！" + e.getMessage();
 		}
 
 		return strRet;
+	}
+
+	// 删除专业方向
+	public int delete_Zyfx(Map<String, Object> mapInfo, String[] errMsg) {
+
+		String tzClassId = mapInfo.get("bj_id") == null ? "" : String.valueOf(mapInfo.get("bj_id"));
+		String tzMajorId = mapInfo.get("fx_id") == null ? "" : String.valueOf(mapInfo.get("fx_id"));
+
+		if ("".equals(tzClassId) || "".equals(tzMajorId)) {
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！参数错误！";
+			return 0;
+		}
+
+		PsTzClsMajorTKey psTzClsMajorTKey = new PsTzClsMajorTKey();
+		psTzClsMajorTKey.setTzClassId(tzClassId);
+		psTzClsMajorTKey.setTzMajorId(tzMajorId);
+
+		return psTzClsMajorTMapper.deleteByPrimaryKey(psTzClsMajorTKey);
+	}
+
+	// 删除批次
+	public int delete_Pcgl(Map<String, Object> mapInfo, String[] errMsg) {
+
+		String tzClassId = mapInfo.get("bj_id") == null ? "" : String.valueOf(mapInfo.get("bj_id"));
+		String tzBatchId = mapInfo.get("pc_id") == null ? "" : String.valueOf(mapInfo.get("pc_id"));
+
+		if ("".equals(tzClassId) || "".equals(tzBatchId)) {
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！参数错误！";
+			return 0;
+		}
+
+		PsTzClsBatchTKey psTzClsBatchTKey = new PsTzClsBatchTKey();
+		psTzClsBatchTKey.setTzClassId(tzClassId);
+		psTzClsBatchTKey.setTzBatchId(tzBatchId);
+
+		return psTzClsBatchTMapper.deleteByPrimaryKey(psTzClsBatchTKey);
+	}
+
+	// 删除管理人员
+	public int delete_Glry(Map<String, Object> mapInfo, String[] errMsg) {
+
+		String tzClassId = mapInfo.get("bj_id") == null ? "" : String.valueOf(mapInfo.get("bj_id"));
+		String oprid = mapInfo.get("ry_id") == null ? "" : String.valueOf(mapInfo.get("ry_id"));
+
+		if ("".equals(tzClassId) || "".equals(oprid)) {
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！参数错误！";
+			return 0;
+		}
+
+		PsTzClsAdminTKey psTzClsAdminTKey = new PsTzClsAdminTKey();
+		psTzClsAdminTKey.setTzClassId(tzClassId);
+		psTzClsAdminTKey.setOprid(oprid);
+
+		return psTzClsAdminTMapper.deleteByPrimaryKey(psTzClsAdminTKey);
+	}
+
+	// 删除报名流程
+	public int delete_Bmlc(Map<String, Object> mapInfo, String[] errMsg) {
+
+		String tzClassId = mapInfo.get("bj_id") == null ? "" : String.valueOf(mapInfo.get("bj_id"));
+		String tzAppproId = mapInfo.get("bmlc_id") == null ? "" : String.valueOf(mapInfo.get("bmlc_id"));
+
+		if ("".equals(tzClassId) || "".equals(tzAppproId)) {
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！参数错误！";
+			return 0;
+		}
+
+		PsTzClsBmlcTKey psTzClsBmlcTKey = new PsTzClsBmlcTKey();
+		psTzClsBmlcTKey.setTzClassId(tzClassId);
+		psTzClsBmlcTKey.setTzAppproId(tzAppproId);
+
+		return psTzClsBmlcTMapper.deleteByPrimaryKey(psTzClsBmlcTKey);
+	}
+
+	// 删除递交资料
+	public int delete_Djzl(Map<String, Object> mapInfo, String[] errMsg) {
+
+		String tzClassId = mapInfo.get("bj_id") == null ? "" : String.valueOf(mapInfo.get("bj_id"));
+		String tzSbminfId = mapInfo.get("djzl_id") == null ? "" : String.valueOf(mapInfo.get("djzl_id"));
+
+		if ("".equals(tzClassId) || "".equals(tzSbminfId)) {
+			errMsg[0] = "1";
+			errMsg[1] = "删除失败！参数错误！";
+			return 0;
+		}
+
+		PsTzClsDjzlTKey psTzClsDjzlTKey = new PsTzClsDjzlTKey();
+		psTzClsDjzlTKey.setTzClassId(tzClassId);
+		psTzClsDjzlTKey.setTzSbminfId(tzSbminfId);
+
+		return psTzClsDjzlTMapper.deleteByPrimaryKey(psTzClsDjzlTKey);
 	}
 
 }
