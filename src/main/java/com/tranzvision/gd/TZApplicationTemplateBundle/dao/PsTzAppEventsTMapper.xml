@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzAppEventsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsT" >
+    <id column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <id column="TZ_EVENT_ID" property="tzEventId" jdbcType="VARCHAR" />
+    <result column="TZ_QY_BZ" property="tzQyBz" jdbcType="VARCHAR" />
+    <result column="CMBC_APPCLS_PATH" property="cmbcAppclsPath" jdbcType="VARCHAR" />
+    <result column="CMBC_APPCLS_NAME" property="cmbcAppclsName" jdbcType="VARCHAR" />
+    <result column="CMBC_APPCLS_METHOD" property="cmbcAppclsMethod" jdbcType="VARCHAR" />
+    <result column="TZ_EVENT_TYPE" property="tzEventType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_TPL_ID, TZ_EVENT_ID, TZ_QY_BZ, CMBC_APPCLS_PATH, CMBC_APPCLS_NAME, CMBC_APPCLS_METHOD, 
+    TZ_EVENT_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_APP_EVENTS_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_EVENT_ID = #{tzEventId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsTKey" >
+    delete from PS_TZ_APP_EVENTS_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_EVENT_ID = #{tzEventId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsT" >
+    insert into PS_TZ_APP_EVENTS_T (TZ_APP_TPL_ID, TZ_EVENT_ID, TZ_QY_BZ, 
+      CMBC_APPCLS_PATH, CMBC_APPCLS_NAME, CMBC_APPCLS_METHOD, 
+      TZ_EVENT_TYPE)
+    values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzEventId,jdbcType=VARCHAR}, #{tzQyBz,jdbcType=VARCHAR}, 
+      #{cmbcAppclsPath,jdbcType=VARCHAR}, #{cmbcAppclsName,jdbcType=VARCHAR}, #{cmbcAppclsMethod,jdbcType=VARCHAR}, 
+      #{tzEventType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsT" >
+    insert into PS_TZ_APP_EVENTS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzEventId != null" >
+        TZ_EVENT_ID,
+      </if>
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ,
+      </if>
+      <if test="cmbcAppclsPath != null" >
+        CMBC_APPCLS_PATH,
+      </if>
+      <if test="cmbcAppclsName != null" >
+        CMBC_APPCLS_NAME,
+      </if>
+      <if test="cmbcAppclsMethod != null" >
+        CMBC_APPCLS_METHOD,
+      </if>
+      <if test="tzEventType != null" >
+        TZ_EVENT_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEventId != null" >
+        #{tzEventId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyBz != null" >
+        #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsPath != null" >
+        #{cmbcAppclsPath,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsName != null" >
+        #{cmbcAppclsName,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsMethod != null" >
+        #{cmbcAppclsMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEventType != null" >
+        #{tzEventType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsT" >
+    update PS_TZ_APP_EVENTS_T
+    <set >
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsPath != null" >
+        CMBC_APPCLS_PATH = #{cmbcAppclsPath,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsName != null" >
+        CMBC_APPCLS_NAME = #{cmbcAppclsName,jdbcType=VARCHAR},
+      </if>
+      <if test="cmbcAppclsMethod != null" >
+        CMBC_APPCLS_METHOD = #{cmbcAppclsMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEventType != null" >
+        TZ_EVENT_TYPE = #{tzEventType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_EVENT_ID = #{tzEventId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppEventsT" >
+    update PS_TZ_APP_EVENTS_T
+    set TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      CMBC_APPCLS_PATH = #{cmbcAppclsPath,jdbcType=VARCHAR},
+      CMBC_APPCLS_NAME = #{cmbcAppclsName,jdbcType=VARCHAR},
+      CMBC_APPCLS_METHOD = #{cmbcAppclsMethod,jdbcType=VARCHAR},
+      TZ_EVENT_TYPE = #{tzEventType,jdbcType=VARCHAR}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_EVENT_ID = #{tzEventId,jdbcType=VARCHAR}
+  </update>
+</mapper>

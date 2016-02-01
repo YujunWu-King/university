@@ -1,0 +1,671 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzAppXxxPzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzT" >
+    <id column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_BT_BZ" property="tzXxxBtBz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_SLID" property="tzXxxSlid" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_MC" property="tzXxxMc" jdbcType="VARCHAR" />
+    <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
+    <result column="TZ_PAGE_NO" property="tzPageNo" jdbcType="INTEGER" />
+    <result column="TZ_COM_LMC" property="tzComLmc" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_KZTSXX" property="tzXxxKztsxx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_JDTSXX" property="tzXxxJdtsxx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_MRZ" property="tzXxxMrz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_HZ" property="tzXxxHz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_HZLJ" property="tzXxxHzlj" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_CCLX" property="tzXxxCclx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_WBKDX" property="tzXxxWbkdx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_RQGS" property="tzXxxRqgs" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NFMIN" property="tzXxxNfmin" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NFMAX" property="tzXxxNfmax" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_PLFS" property="tzXxxPlfs" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_ZSXZGS" property="tzXxxZsxzgs" jdbcType="INTEGER" />
+    <result column="TZ_XXX_ZDXZGS" property="tzXxxZdxzgs" jdbcType="INTEGER" />
+    <result column="TZ_XXX_YXSCLX" property="tzXxxYxsclx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_YXSCDX" property="tzXxxYxscdx" jdbcType="INTEGER" />
+    <result column="TZ_XXX_MULTI" property="tzXxxMulti" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_SFCJ" property="tzXxxSfcj" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_TPCJLX" property="tzXxxTpcjlx" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_CHAR_BZ" property="tzXxxCharBz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_MINLEN" property="tzXxxMinlen" jdbcType="INTEGER" />
+    <result column="TZ_XXX_MAXLEN" property="tzXxxMaxlen" jdbcType="INTEGER" />
+    <result column="TZ_XXX_NUM_BZ" property="tzXxxNumBz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_MIN" property="tzXxxMin" jdbcType="BIGINT" />
+    <result column="TZ_XXX_MAX" property="tzXxxMax" jdbcType="BIGINT" />
+    <result column="TZ_XXX_XSWS" property="tzXxxXsws" jdbcType="INTEGER" />
+    <result column="TZ_XXX_GDGSJY" property="tzXxxGdgsjy" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_DRQ_BZ" property="tzXxxDrqBz" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_MIN_LINE" property="tzXxxMinLine" jdbcType="INTEGER" />
+    <result column="TZ_XXX_MAX_LINE" property="tzXxxMaxLine" jdbcType="INTEGER" />
+    <result column="TZ_XXX_SRQ_BZ" property="tzXxxSrqBz" jdbcType="VARCHAR" />
+    <result column="TZ_IS_DOWNLOAD" property="tzIsDownload" jdbcType="VARCHAR" />
+    <result column="TZ_IS_SHOW" property="tzIsShow" jdbcType="VARCHAR" />
+    <result column="TZ_TAPSTYLE" property="tzTapstyle" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_SUB" property="tzTjxSub" jdbcType="VARCHAR" />
+    <result column="TZ_IS_ONLINESHOW" property="tzIsOnlineshow" jdbcType="VARCHAR" />
+    <result column="TZ_SYNC_FLAG" property="tzSyncFlag" jdbcType="VARCHAR" />
+    <result column="TZ_SYNC_TYPE" property="tzSyncType" jdbcType="VARCHAR" />
+    <result column="TZ_SYNC_ORDER" property="tzSyncOrder" jdbcType="INTEGER" />
+    <result column="TZ_SYNC_SEP" property="tzSyncSep" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_TITLE" property="tzTitle" jdbcType="LONGVARCHAR" />
+    <result column="TZ_XXX_WZSM" property="tzXxxWzsm" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, TZ_XXX_SLID, TZ_XXX_MC, TZ_ORDER, TZ_PAGE_NO, 
+    TZ_COM_LMC, TZ_XXX_KZTSXX, TZ_XXX_JDTSXX, TZ_XXX_MRZ, TZ_XXX_HZ, TZ_XXX_HZLJ, TZ_XXX_CCLX, 
+    TZ_XXX_WBKDX, TZ_XXX_RQGS, TZ_XXX_NFMIN, TZ_XXX_NFMAX, TZ_XXX_PLFS, TZ_XXX_ZSXZGS, 
+    TZ_XXX_ZDXZGS, TZ_XXX_YXSCLX, TZ_XXX_YXSCDX, TZ_XXX_MULTI, TZ_XXX_SFCJ, TZ_XXX_TPCJLX, 
+    TZ_XXX_CHAR_BZ, TZ_XXX_MINLEN, TZ_XXX_MAXLEN, TZ_XXX_NUM_BZ, TZ_XXX_MIN, TZ_XXX_MAX, 
+    TZ_XXX_XSWS, TZ_XXX_GDGSJY, TZ_XXX_DRQ_BZ, TZ_XXX_MIN_LINE, TZ_XXX_MAX_LINE, TZ_XXX_SRQ_BZ, 
+    TZ_IS_DOWNLOAD, TZ_IS_SHOW, TZ_TAPSTYLE, TZ_TJX_SUB, TZ_IS_ONLINESHOW, TZ_SYNC_FLAG, 
+    TZ_SYNC_TYPE, TZ_SYNC_ORDER, TZ_SYNC_SEP
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_TITLE, TZ_XXX_WZSM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_APP_XXXPZ_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTKey" >
+    delete from PS_TZ_APP_XXXPZ_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
+    insert into PS_TZ_APP_XXXPZ_T (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, 
+      TZ_XXX_SLID, TZ_XXX_MC, TZ_ORDER, 
+      TZ_PAGE_NO, TZ_COM_LMC, TZ_XXX_KZTSXX, 
+      TZ_XXX_JDTSXX, TZ_XXX_MRZ, TZ_XXX_HZ, 
+      TZ_XXX_HZLJ, TZ_XXX_CCLX, TZ_XXX_WBKDX, 
+      TZ_XXX_RQGS, TZ_XXX_NFMIN, TZ_XXX_NFMAX, 
+      TZ_XXX_PLFS, TZ_XXX_ZSXZGS, TZ_XXX_ZDXZGS, 
+      TZ_XXX_YXSCLX, TZ_XXX_YXSCDX, TZ_XXX_MULTI, 
+      TZ_XXX_SFCJ, TZ_XXX_TPCJLX, TZ_XXX_CHAR_BZ, 
+      TZ_XXX_MINLEN, TZ_XXX_MAXLEN, TZ_XXX_NUM_BZ, 
+      TZ_XXX_MIN, TZ_XXX_MAX, TZ_XXX_XSWS, 
+      TZ_XXX_GDGSJY, TZ_XXX_DRQ_BZ, TZ_XXX_MIN_LINE, 
+      TZ_XXX_MAX_LINE, TZ_XXX_SRQ_BZ, TZ_IS_DOWNLOAD, 
+      TZ_IS_SHOW, TZ_TAPSTYLE, TZ_TJX_SUB, 
+      TZ_IS_ONLINESHOW, TZ_SYNC_FLAG, TZ_SYNC_TYPE, 
+      TZ_SYNC_ORDER, TZ_SYNC_SEP, TZ_TITLE, 
+      TZ_XXX_WZSM)
+    values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxBtBz,jdbcType=VARCHAR}, 
+      #{tzXxxSlid,jdbcType=VARCHAR}, #{tzXxxMc,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, 
+      #{tzPageNo,jdbcType=INTEGER}, #{tzComLmc,jdbcType=VARCHAR}, #{tzXxxKztsxx,jdbcType=VARCHAR}, 
+      #{tzXxxJdtsxx,jdbcType=VARCHAR}, #{tzXxxMrz,jdbcType=VARCHAR}, #{tzXxxHz,jdbcType=VARCHAR}, 
+      #{tzXxxHzlj,jdbcType=VARCHAR}, #{tzXxxCclx,jdbcType=VARCHAR}, #{tzXxxWbkdx,jdbcType=VARCHAR}, 
+      #{tzXxxRqgs,jdbcType=VARCHAR}, #{tzXxxNfmin,jdbcType=VARCHAR}, #{tzXxxNfmax,jdbcType=VARCHAR}, 
+      #{tzXxxPlfs,jdbcType=VARCHAR}, #{tzXxxZsxzgs,jdbcType=INTEGER}, #{tzXxxZdxzgs,jdbcType=INTEGER}, 
+      #{tzXxxYxsclx,jdbcType=VARCHAR}, #{tzXxxYxscdx,jdbcType=INTEGER}, #{tzXxxMulti,jdbcType=VARCHAR}, 
+      #{tzXxxSfcj,jdbcType=VARCHAR}, #{tzXxxTpcjlx,jdbcType=VARCHAR}, #{tzXxxCharBz,jdbcType=VARCHAR}, 
+      #{tzXxxMinlen,jdbcType=INTEGER}, #{tzXxxMaxlen,jdbcType=INTEGER}, #{tzXxxNumBz,jdbcType=VARCHAR}, 
+      #{tzXxxMin,jdbcType=BIGINT}, #{tzXxxMax,jdbcType=BIGINT}, #{tzXxxXsws,jdbcType=INTEGER}, 
+      #{tzXxxGdgsjy,jdbcType=VARCHAR}, #{tzXxxDrqBz,jdbcType=VARCHAR}, #{tzXxxMinLine,jdbcType=INTEGER}, 
+      #{tzXxxMaxLine,jdbcType=INTEGER}, #{tzXxxSrqBz,jdbcType=VARCHAR}, #{tzIsDownload,jdbcType=VARCHAR}, 
+      #{tzIsShow,jdbcType=VARCHAR}, #{tzTapstyle,jdbcType=VARCHAR}, #{tzTjxSub,jdbcType=VARCHAR}, 
+      #{tzIsOnlineshow,jdbcType=VARCHAR}, #{tzSyncFlag,jdbcType=VARCHAR}, #{tzSyncType,jdbcType=VARCHAR}, 
+      #{tzSyncOrder,jdbcType=INTEGER}, #{tzSyncSep,jdbcType=VARCHAR}, #{tzTitle,jdbcType=LONGVARCHAR}, 
+      #{tzXxxWzsm,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
+    insert into PS_TZ_APP_XXXPZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzXxxBtBz != null" >
+        TZ_XXX_BT_BZ,
+      </if>
+      <if test="tzXxxSlid != null" >
+        TZ_XXX_SLID,
+      </if>
+      <if test="tzXxxMc != null" >
+        TZ_XXX_MC,
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER,
+      </if>
+      <if test="tzPageNo != null" >
+        TZ_PAGE_NO,
+      </if>
+      <if test="tzComLmc != null" >
+        TZ_COM_LMC,
+      </if>
+      <if test="tzXxxKztsxx != null" >
+        TZ_XXX_KZTSXX,
+      </if>
+      <if test="tzXxxJdtsxx != null" >
+        TZ_XXX_JDTSXX,
+      </if>
+      <if test="tzXxxMrz != null" >
+        TZ_XXX_MRZ,
+      </if>
+      <if test="tzXxxHz != null" >
+        TZ_XXX_HZ,
+      </if>
+      <if test="tzXxxHzlj != null" >
+        TZ_XXX_HZLJ,
+      </if>
+      <if test="tzXxxCclx != null" >
+        TZ_XXX_CCLX,
+      </if>
+      <if test="tzXxxWbkdx != null" >
+        TZ_XXX_WBKDX,
+      </if>
+      <if test="tzXxxRqgs != null" >
+        TZ_XXX_RQGS,
+      </if>
+      <if test="tzXxxNfmin != null" >
+        TZ_XXX_NFMIN,
+      </if>
+      <if test="tzXxxNfmax != null" >
+        TZ_XXX_NFMAX,
+      </if>
+      <if test="tzXxxPlfs != null" >
+        TZ_XXX_PLFS,
+      </if>
+      <if test="tzXxxZsxzgs != null" >
+        TZ_XXX_ZSXZGS,
+      </if>
+      <if test="tzXxxZdxzgs != null" >
+        TZ_XXX_ZDXZGS,
+      </if>
+      <if test="tzXxxYxsclx != null" >
+        TZ_XXX_YXSCLX,
+      </if>
+      <if test="tzXxxYxscdx != null" >
+        TZ_XXX_YXSCDX,
+      </if>
+      <if test="tzXxxMulti != null" >
+        TZ_XXX_MULTI,
+      </if>
+      <if test="tzXxxSfcj != null" >
+        TZ_XXX_SFCJ,
+      </if>
+      <if test="tzXxxTpcjlx != null" >
+        TZ_XXX_TPCJLX,
+      </if>
+      <if test="tzXxxCharBz != null" >
+        TZ_XXX_CHAR_BZ,
+      </if>
+      <if test="tzXxxMinlen != null" >
+        TZ_XXX_MINLEN,
+      </if>
+      <if test="tzXxxMaxlen != null" >
+        TZ_XXX_MAXLEN,
+      </if>
+      <if test="tzXxxNumBz != null" >
+        TZ_XXX_NUM_BZ,
+      </if>
+      <if test="tzXxxMin != null" >
+        TZ_XXX_MIN,
+      </if>
+      <if test="tzXxxMax != null" >
+        TZ_XXX_MAX,
+      </if>
+      <if test="tzXxxXsws != null" >
+        TZ_XXX_XSWS,
+      </if>
+      <if test="tzXxxGdgsjy != null" >
+        TZ_XXX_GDGSJY,
+      </if>
+      <if test="tzXxxDrqBz != null" >
+        TZ_XXX_DRQ_BZ,
+      </if>
+      <if test="tzXxxMinLine != null" >
+        TZ_XXX_MIN_LINE,
+      </if>
+      <if test="tzXxxMaxLine != null" >
+        TZ_XXX_MAX_LINE,
+      </if>
+      <if test="tzXxxSrqBz != null" >
+        TZ_XXX_SRQ_BZ,
+      </if>
+      <if test="tzIsDownload != null" >
+        TZ_IS_DOWNLOAD,
+      </if>
+      <if test="tzIsShow != null" >
+        TZ_IS_SHOW,
+      </if>
+      <if test="tzTapstyle != null" >
+        TZ_TAPSTYLE,
+      </if>
+      <if test="tzTjxSub != null" >
+        TZ_TJX_SUB,
+      </if>
+      <if test="tzIsOnlineshow != null" >
+        TZ_IS_ONLINESHOW,
+      </if>
+      <if test="tzSyncFlag != null" >
+        TZ_SYNC_FLAG,
+      </if>
+      <if test="tzSyncType != null" >
+        TZ_SYNC_TYPE,
+      </if>
+      <if test="tzSyncOrder != null" >
+        TZ_SYNC_ORDER,
+      </if>
+      <if test="tzSyncSep != null" >
+        TZ_SYNC_SEP,
+      </if>
+      <if test="tzTitle != null" >
+        TZ_TITLE,
+      </if>
+      <if test="tzXxxWzsm != null" >
+        TZ_XXX_WZSM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBtBz != null" >
+        #{tzXxxBtBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxSlid != null" >
+        #{tzXxxSlid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMc != null" >
+        #{tzXxxMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzPageNo != null" >
+        #{tzPageNo,jdbcType=INTEGER},
+      </if>
+      <if test="tzComLmc != null" >
+        #{tzComLmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxKztsxx != null" >
+        #{tzXxxKztsxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxJdtsxx != null" >
+        #{tzXxxJdtsxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMrz != null" >
+        #{tzXxxMrz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxHz != null" >
+        #{tzXxxHz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxHzlj != null" >
+        #{tzXxxHzlj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxCclx != null" >
+        #{tzXxxCclx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxWbkdx != null" >
+        #{tzXxxWbkdx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxRqgs != null" >
+        #{tzXxxRqgs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNfmin != null" >
+        #{tzXxxNfmin,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNfmax != null" >
+        #{tzXxxNfmax,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxPlfs != null" >
+        #{tzXxxPlfs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxZsxzgs != null" >
+        #{tzXxxZsxzgs,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxZdxzgs != null" >
+        #{tzXxxZdxzgs,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxYxsclx != null" >
+        #{tzXxxYxsclx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxYxscdx != null" >
+        #{tzXxxYxscdx,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMulti != null" >
+        #{tzXxxMulti,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxSfcj != null" >
+        #{tzXxxSfcj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxTpcjlx != null" >
+        #{tzXxxTpcjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxCharBz != null" >
+        #{tzXxxCharBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMinlen != null" >
+        #{tzXxxMinlen,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMaxlen != null" >
+        #{tzXxxMaxlen,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxNumBz != null" >
+        #{tzXxxNumBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMin != null" >
+        #{tzXxxMin,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxMax != null" >
+        #{tzXxxMax,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxXsws != null" >
+        #{tzXxxXsws,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxGdgsjy != null" >
+        #{tzXxxGdgsjy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxDrqBz != null" >
+        #{tzXxxDrqBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMinLine != null" >
+        #{tzXxxMinLine,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMaxLine != null" >
+        #{tzXxxMaxLine,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxSrqBz != null" >
+        #{tzXxxSrqBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsDownload != null" >
+        #{tzIsDownload,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsShow != null" >
+        #{tzIsShow,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTapstyle != null" >
+        #{tzTapstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxSub != null" >
+        #{tzTjxSub,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsOnlineshow != null" >
+        #{tzIsOnlineshow,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncFlag != null" >
+        #{tzSyncFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncType != null" >
+        #{tzSyncType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncOrder != null" >
+        #{tzSyncOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzSyncSep != null" >
+        #{tzSyncSep,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTitle != null" >
+        #{tzTitle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzXxxWzsm != null" >
+        #{tzXxxWzsm,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
+    update PS_TZ_APP_XXXPZ_T
+    <set >
+      <if test="tzXxxBtBz != null" >
+        TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxSlid != null" >
+        TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMc != null" >
+        TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzPageNo != null" >
+        TZ_PAGE_NO = #{tzPageNo,jdbcType=INTEGER},
+      </if>
+      <if test="tzComLmc != null" >
+        TZ_COM_LMC = #{tzComLmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxKztsxx != null" >
+        TZ_XXX_KZTSXX = #{tzXxxKztsxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxJdtsxx != null" >
+        TZ_XXX_JDTSXX = #{tzXxxJdtsxx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMrz != null" >
+        TZ_XXX_MRZ = #{tzXxxMrz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxHz != null" >
+        TZ_XXX_HZ = #{tzXxxHz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxHzlj != null" >
+        TZ_XXX_HZLJ = #{tzXxxHzlj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxCclx != null" >
+        TZ_XXX_CCLX = #{tzXxxCclx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxWbkdx != null" >
+        TZ_XXX_WBKDX = #{tzXxxWbkdx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxRqgs != null" >
+        TZ_XXX_RQGS = #{tzXxxRqgs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNfmin != null" >
+        TZ_XXX_NFMIN = #{tzXxxNfmin,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNfmax != null" >
+        TZ_XXX_NFMAX = #{tzXxxNfmax,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxPlfs != null" >
+        TZ_XXX_PLFS = #{tzXxxPlfs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxZsxzgs != null" >
+        TZ_XXX_ZSXZGS = #{tzXxxZsxzgs,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxZdxzgs != null" >
+        TZ_XXX_ZDXZGS = #{tzXxxZdxzgs,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxYxsclx != null" >
+        TZ_XXX_YXSCLX = #{tzXxxYxsclx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxYxscdx != null" >
+        TZ_XXX_YXSCDX = #{tzXxxYxscdx,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMulti != null" >
+        TZ_XXX_MULTI = #{tzXxxMulti,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxSfcj != null" >
+        TZ_XXX_SFCJ = #{tzXxxSfcj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxTpcjlx != null" >
+        TZ_XXX_TPCJLX = #{tzXxxTpcjlx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxCharBz != null" >
+        TZ_XXX_CHAR_BZ = #{tzXxxCharBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMinlen != null" >
+        TZ_XXX_MINLEN = #{tzXxxMinlen,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMaxlen != null" >
+        TZ_XXX_MAXLEN = #{tzXxxMaxlen,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxNumBz != null" >
+        TZ_XXX_NUM_BZ = #{tzXxxNumBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMin != null" >
+        TZ_XXX_MIN = #{tzXxxMin,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxMax != null" >
+        TZ_XXX_MAX = #{tzXxxMax,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxXsws != null" >
+        TZ_XXX_XSWS = #{tzXxxXsws,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxGdgsjy != null" >
+        TZ_XXX_GDGSJY = #{tzXxxGdgsjy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxDrqBz != null" >
+        TZ_XXX_DRQ_BZ = #{tzXxxDrqBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxMinLine != null" >
+        TZ_XXX_MIN_LINE = #{tzXxxMinLine,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxMaxLine != null" >
+        TZ_XXX_MAX_LINE = #{tzXxxMaxLine,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxSrqBz != null" >
+        TZ_XXX_SRQ_BZ = #{tzXxxSrqBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsDownload != null" >
+        TZ_IS_DOWNLOAD = #{tzIsDownload,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsShow != null" >
+        TZ_IS_SHOW = #{tzIsShow,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTapstyle != null" >
+        TZ_TAPSTYLE = #{tzTapstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxSub != null" >
+        TZ_TJX_SUB = #{tzTjxSub,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsOnlineshow != null" >
+        TZ_IS_ONLINESHOW = #{tzIsOnlineshow,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncFlag != null" >
+        TZ_SYNC_FLAG = #{tzSyncFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncType != null" >
+        TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncOrder != null" >
+        TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzSyncSep != null" >
+        TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTitle != null" >
+        TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzXxxWzsm != null" >
+        TZ_XXX_WZSM = #{tzXxxWzsm,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
+    update PS_TZ_APP_XXXPZ_T
+    set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
+      TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
+      TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
+      TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      TZ_PAGE_NO = #{tzPageNo,jdbcType=INTEGER},
+      TZ_COM_LMC = #{tzComLmc,jdbcType=VARCHAR},
+      TZ_XXX_KZTSXX = #{tzXxxKztsxx,jdbcType=VARCHAR},
+      TZ_XXX_JDTSXX = #{tzXxxJdtsxx,jdbcType=VARCHAR},
+      TZ_XXX_MRZ = #{tzXxxMrz,jdbcType=VARCHAR},
+      TZ_XXX_HZ = #{tzXxxHz,jdbcType=VARCHAR},
+      TZ_XXX_HZLJ = #{tzXxxHzlj,jdbcType=VARCHAR},
+      TZ_XXX_CCLX = #{tzXxxCclx,jdbcType=VARCHAR},
+      TZ_XXX_WBKDX = #{tzXxxWbkdx,jdbcType=VARCHAR},
+      TZ_XXX_RQGS = #{tzXxxRqgs,jdbcType=VARCHAR},
+      TZ_XXX_NFMIN = #{tzXxxNfmin,jdbcType=VARCHAR},
+      TZ_XXX_NFMAX = #{tzXxxNfmax,jdbcType=VARCHAR},
+      TZ_XXX_PLFS = #{tzXxxPlfs,jdbcType=VARCHAR},
+      TZ_XXX_ZSXZGS = #{tzXxxZsxzgs,jdbcType=INTEGER},
+      TZ_XXX_ZDXZGS = #{tzXxxZdxzgs,jdbcType=INTEGER},
+      TZ_XXX_YXSCLX = #{tzXxxYxsclx,jdbcType=VARCHAR},
+      TZ_XXX_YXSCDX = #{tzXxxYxscdx,jdbcType=INTEGER},
+      TZ_XXX_MULTI = #{tzXxxMulti,jdbcType=VARCHAR},
+      TZ_XXX_SFCJ = #{tzXxxSfcj,jdbcType=VARCHAR},
+      TZ_XXX_TPCJLX = #{tzXxxTpcjlx,jdbcType=VARCHAR},
+      TZ_XXX_CHAR_BZ = #{tzXxxCharBz,jdbcType=VARCHAR},
+      TZ_XXX_MINLEN = #{tzXxxMinlen,jdbcType=INTEGER},
+      TZ_XXX_MAXLEN = #{tzXxxMaxlen,jdbcType=INTEGER},
+      TZ_XXX_NUM_BZ = #{tzXxxNumBz,jdbcType=VARCHAR},
+      TZ_XXX_MIN = #{tzXxxMin,jdbcType=BIGINT},
+      TZ_XXX_MAX = #{tzXxxMax,jdbcType=BIGINT},
+      TZ_XXX_XSWS = #{tzXxxXsws,jdbcType=INTEGER},
+      TZ_XXX_GDGSJY = #{tzXxxGdgsjy,jdbcType=VARCHAR},
+      TZ_XXX_DRQ_BZ = #{tzXxxDrqBz,jdbcType=VARCHAR},
+      TZ_XXX_MIN_LINE = #{tzXxxMinLine,jdbcType=INTEGER},
+      TZ_XXX_MAX_LINE = #{tzXxxMaxLine,jdbcType=INTEGER},
+      TZ_XXX_SRQ_BZ = #{tzXxxSrqBz,jdbcType=VARCHAR},
+      TZ_IS_DOWNLOAD = #{tzIsDownload,jdbcType=VARCHAR},
+      TZ_IS_SHOW = #{tzIsShow,jdbcType=VARCHAR},
+      TZ_TAPSTYLE = #{tzTapstyle,jdbcType=VARCHAR},
+      TZ_TJX_SUB = #{tzTjxSub,jdbcType=VARCHAR},
+      TZ_IS_ONLINESHOW = #{tzIsOnlineshow,jdbcType=VARCHAR},
+      TZ_SYNC_FLAG = #{tzSyncFlag,jdbcType=VARCHAR},
+      TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR},
+      TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
+      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
+      TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
+      TZ_XXX_WZSM = #{tzXxxWzsm,jdbcType=LONGVARCHAR}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzT" >
+    update PS_TZ_APP_XXXPZ_T
+    set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
+      TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
+      TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
+      TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      TZ_PAGE_NO = #{tzPageNo,jdbcType=INTEGER},
+      TZ_COM_LMC = #{tzComLmc,jdbcType=VARCHAR},
+      TZ_XXX_KZTSXX = #{tzXxxKztsxx,jdbcType=VARCHAR},
+      TZ_XXX_JDTSXX = #{tzXxxJdtsxx,jdbcType=VARCHAR},
+      TZ_XXX_MRZ = #{tzXxxMrz,jdbcType=VARCHAR},
+      TZ_XXX_HZ = #{tzXxxHz,jdbcType=VARCHAR},
+      TZ_XXX_HZLJ = #{tzXxxHzlj,jdbcType=VARCHAR},
+      TZ_XXX_CCLX = #{tzXxxCclx,jdbcType=VARCHAR},
+      TZ_XXX_WBKDX = #{tzXxxWbkdx,jdbcType=VARCHAR},
+      TZ_XXX_RQGS = #{tzXxxRqgs,jdbcType=VARCHAR},
+      TZ_XXX_NFMIN = #{tzXxxNfmin,jdbcType=VARCHAR},
+      TZ_XXX_NFMAX = #{tzXxxNfmax,jdbcType=VARCHAR},
+      TZ_XXX_PLFS = #{tzXxxPlfs,jdbcType=VARCHAR},
+      TZ_XXX_ZSXZGS = #{tzXxxZsxzgs,jdbcType=INTEGER},
+      TZ_XXX_ZDXZGS = #{tzXxxZdxzgs,jdbcType=INTEGER},
+      TZ_XXX_YXSCLX = #{tzXxxYxsclx,jdbcType=VARCHAR},
+      TZ_XXX_YXSCDX = #{tzXxxYxscdx,jdbcType=INTEGER},
+      TZ_XXX_MULTI = #{tzXxxMulti,jdbcType=VARCHAR},
+      TZ_XXX_SFCJ = #{tzXxxSfcj,jdbcType=VARCHAR},
+      TZ_XXX_TPCJLX = #{tzXxxTpcjlx,jdbcType=VARCHAR},
+      TZ_XXX_CHAR_BZ = #{tzXxxCharBz,jdbcType=VARCHAR},
+      TZ_XXX_MINLEN = #{tzXxxMinlen,jdbcType=INTEGER},
+      TZ_XXX_MAXLEN = #{tzXxxMaxlen,jdbcType=INTEGER},
+      TZ_XXX_NUM_BZ = #{tzXxxNumBz,jdbcType=VARCHAR},
+      TZ_XXX_MIN = #{tzXxxMin,jdbcType=BIGINT},
+      TZ_XXX_MAX = #{tzXxxMax,jdbcType=BIGINT},
+      TZ_XXX_XSWS = #{tzXxxXsws,jdbcType=INTEGER},
+      TZ_XXX_GDGSJY = #{tzXxxGdgsjy,jdbcType=VARCHAR},
+      TZ_XXX_DRQ_BZ = #{tzXxxDrqBz,jdbcType=VARCHAR},
+      TZ_XXX_MIN_LINE = #{tzXxxMinLine,jdbcType=INTEGER},
+      TZ_XXX_MAX_LINE = #{tzXxxMaxLine,jdbcType=INTEGER},
+      TZ_XXX_SRQ_BZ = #{tzXxxSrqBz,jdbcType=VARCHAR},
+      TZ_IS_DOWNLOAD = #{tzIsDownload,jdbcType=VARCHAR},
+      TZ_IS_SHOW = #{tzIsShow,jdbcType=VARCHAR},
+      TZ_TAPSTYLE = #{tzTapstyle,jdbcType=VARCHAR},
+      TZ_TJX_SUB = #{tzTjxSub,jdbcType=VARCHAR},
+      TZ_IS_ONLINESHOW = #{tzIsOnlineshow,jdbcType=VARCHAR},
+      TZ_SYNC_FLAG = #{tzSyncFlag,jdbcType=VARCHAR},
+      TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR},
+      TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
+      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+</mapper>

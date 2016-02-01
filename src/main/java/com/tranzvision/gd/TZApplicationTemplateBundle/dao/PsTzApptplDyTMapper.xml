@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzApptplDyTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyT" >
+    <id column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_MC" property="tzAppTplMc" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_MS" property="tzAppTplMs" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_YT" property="tzAppTplYt" jdbcType="VARCHAR" />
+    <result column="TZ_USE_TYPE" property="tzUseType" jdbcType="VARCHAR" />
+    <result column="TZ_APP_LABEL_WZ" property="tzAppLabelWz" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TSXX_FS" property="tzAppTsxxFs" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_LAN" property="tzAppTplLan" jdbcType="VARCHAR" />
+    <result column="TZ_ATTACHFILE_NAME" property="tzAttachfileName" jdbcType="VARCHAR" />
+    <result column="TZ_ATTSYSFILENAME" property="tzAttsysfilename" jdbcType="VARCHAR" />
+    <result column="TZ_ATT_A_URL" property="tzAttAUrl" jdbcType="VARCHAR" />
+    <result column="TZ_ATT_P_URL" property="tzAttPUrl" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TZFS" property="tzAppTzfs" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TZURL" property="tzAppTzurl" jdbcType="VARCHAR" />
+    <result column="TZ_APP_M_TPL_ID" property="tzAppMTplId" jdbcType="VARCHAR" />
+    <result column="TZ_EFFEXP_ZT" property="tzEffexpZt" jdbcType="VARCHAR" />
+    <result column="TZ_CHN_MODAL_ID" property="tzChnModalId" jdbcType="VARCHAR" />
+    <result column="TZ_ENG_MODAL_ID" property="tzEngModalId" jdbcType="VARCHAR" />
+    <result column="TZ_ENG_QY" property="tzEngQy" jdbcType="VARCHAR" />
+    <result column="TZ_CHN_QY" property="tzChnQy" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_ISSENDMAIL" property="tzIssendmail" jdbcType="VARCHAR" />
+    <result column="TZ_EML_MODAL_ID" property="tzEmlModalId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_APPTPL_JSON_STR" property="tzApptplJsonStr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_CH_M_CONTENT" property="tzChMContent" jdbcType="LONGVARCHAR" />
+    <result column="TZ_EN_M_CONTENT" property="tzEnMContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
+    TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, 
+    TZ_ATT_A_URL, TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, TZ_APP_M_TPL_ID, TZ_EFFEXP_ZT, 
+    TZ_CHN_MODAL_ID, TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ISSENDMAIL, TZ_EML_MODAL_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, TZ_EN_M_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_APPTPL_DY_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_APPTPL_DY_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
+    insert into PS_TZ_APPTPL_DY_T (TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, 
+      TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
+      TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, 
+      TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, TZ_ATT_A_URL, 
+      TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, 
+      TZ_APP_M_TPL_ID, TZ_EFFEXP_ZT, TZ_CHN_MODAL_ID, 
+      TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_ISSENDMAIL, TZ_EML_MODAL_ID, TZ_APPTPL_JSON_STR, 
+      TZ_CH_M_CONTENT, TZ_EN_M_CONTENT)
+    values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAppTplMc,jdbcType=VARCHAR}, 
+      #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, 
+      #{tzAppLabelWz,jdbcType=VARCHAR}, #{tzAppTsxxFs,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
+      #{tzAttachfileName,jdbcType=VARCHAR}, #{tzAttsysfilename,jdbcType=VARCHAR}, #{tzAttAUrl,jdbcType=VARCHAR}, 
+      #{tzAttPUrl,jdbcType=VARCHAR}, #{tzAppTzfs,jdbcType=VARCHAR}, #{tzAppTzurl,jdbcType=VARCHAR}, 
+      #{tzAppMTplId,jdbcType=VARCHAR}, #{tzEffexpZt,jdbcType=VARCHAR}, #{tzChnModalId,jdbcType=VARCHAR}, 
+      #{tzEngModalId,jdbcType=VARCHAR}, #{tzEngQy,jdbcType=VARCHAR}, #{tzChnQy,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzIssendmail,jdbcType=VARCHAR}, #{tzEmlModalId,jdbcType=VARCHAR}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, 
+      #{tzChMContent,jdbcType=LONGVARCHAR}, #{tzEnMContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
+    insert into PS_TZ_APPTPL_DY_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzAppTplMc != null" >
+        TZ_APP_TPL_MC,
+      </if>
+      <if test="tzAppTplMs != null" >
+        TZ_APP_TPL_MS,
+      </if>
+      <if test="tzAppTplYt != null" >
+        TZ_APP_TPL_YT,
+      </if>
+      <if test="tzUseType != null" >
+        TZ_USE_TYPE,
+      </if>
+      <if test="tzAppLabelWz != null" >
+        TZ_APP_LABEL_WZ,
+      </if>
+      <if test="tzAppTsxxFs != null" >
+        TZ_APP_TSXX_FS,
+      </if>
+      <if test="tzAppTplLan != null" >
+        TZ_APP_TPL_LAN,
+      </if>
+      <if test="tzAttachfileName != null" >
+        TZ_ATTACHFILE_NAME,
+      </if>
+      <if test="tzAttsysfilename != null" >
+        TZ_ATTSYSFILENAME,
+      </if>
+      <if test="tzAttAUrl != null" >
+        TZ_ATT_A_URL,
+      </if>
+      <if test="tzAttPUrl != null" >
+        TZ_ATT_P_URL,
+      </if>
+      <if test="tzAppTzfs != null" >
+        TZ_APP_TZFS,
+      </if>
+      <if test="tzAppTzurl != null" >
+        TZ_APP_TZURL,
+      </if>
+      <if test="tzAppMTplId != null" >
+        TZ_APP_M_TPL_ID,
+      </if>
+      <if test="tzEffexpZt != null" >
+        TZ_EFFEXP_ZT,
+      </if>
+      <if test="tzChnModalId != null" >
+        TZ_CHN_MODAL_ID,
+      </if>
+      <if test="tzEngModalId != null" >
+        TZ_ENG_MODAL_ID,
+      </if>
+      <if test="tzEngQy != null" >
+        TZ_ENG_QY,
+      </if>
+      <if test="tzChnQy != null" >
+        TZ_CHN_QY,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzIssendmail != null" >
+        TZ_ISSENDMAIL,
+      </if>
+      <if test="tzEmlModalId != null" >
+        TZ_EML_MODAL_ID,
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        TZ_APPTPL_JSON_STR,
+      </if>
+      <if test="tzChMContent != null" >
+        TZ_CH_M_CONTENT,
+      </if>
+      <if test="tzEnMContent != null" >
+        TZ_EN_M_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplMc != null" >
+        #{tzAppTplMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplMs != null" >
+        #{tzAppTplMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplYt != null" >
+        #{tzAppTplYt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseType != null" >
+        #{tzUseType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppLabelWz != null" >
+        #{tzAppLabelWz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTsxxFs != null" >
+        #{tzAppTsxxFs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLan != null" >
+        #{tzAppTplLan,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttachfileName != null" >
+        #{tzAttachfileName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsysfilename != null" >
+        #{tzAttsysfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttAUrl != null" >
+        #{tzAttAUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttPUrl != null" >
+        #{tzAttPUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTzfs != null" >
+        #{tzAppTzfs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTzurl != null" >
+        #{tzAppTzurl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppMTplId != null" >
+        #{tzAppMTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEffexpZt != null" >
+        #{tzEffexpZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChnModalId != null" >
+        #{tzChnModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngModalId != null" >
+        #{tzEngModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngQy != null" >
+        #{tzEngQy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChnQy != null" >
+        #{tzChnQy,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzIssendmail != null" >
+        #{tzIssendmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlModalId != null" >
+        #{tzEmlModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzChMContent != null" >
+        #{tzChMContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzEnMContent != null" >
+        #{tzEnMContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
+    update PS_TZ_APPTPL_DY_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplMc != null" >
+        TZ_APP_TPL_MC = #{tzAppTplMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplMs != null" >
+        TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplYt != null" >
+        TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseType != null" >
+        TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppLabelWz != null" >
+        TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTsxxFs != null" >
+        TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLan != null" >
+        TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttachfileName != null" >
+        TZ_ATTACHFILE_NAME = #{tzAttachfileName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttsysfilename != null" >
+        TZ_ATTSYSFILENAME = #{tzAttsysfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttAUrl != null" >
+        TZ_ATT_A_URL = #{tzAttAUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttPUrl != null" >
+        TZ_ATT_P_URL = #{tzAttPUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTzfs != null" >
+        TZ_APP_TZFS = #{tzAppTzfs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTzurl != null" >
+        TZ_APP_TZURL = #{tzAppTzurl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppMTplId != null" >
+        TZ_APP_M_TPL_ID = #{tzAppMTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEffexpZt != null" >
+        TZ_EFFEXP_ZT = #{tzEffexpZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChnModalId != null" >
+        TZ_CHN_MODAL_ID = #{tzChnModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngModalId != null" >
+        TZ_ENG_MODAL_ID = #{tzEngModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngQy != null" >
+        TZ_ENG_QY = #{tzEngQy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChnQy != null" >
+        TZ_CHN_QY = #{tzChnQy,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzIssendmail != null" >
+        TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlModalId != null" >
+        TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzChMContent != null" >
+        TZ_CH_M_CONTENT = #{tzChMContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzEnMContent != null" >
+        TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
+    update PS_TZ_APPTPL_DY_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_APP_TPL_MC = #{tzAppTplMc,jdbcType=VARCHAR},
+      TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
+      TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
+      TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
+      TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
+      TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
+      TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      TZ_ATTACHFILE_NAME = #{tzAttachfileName,jdbcType=VARCHAR},
+      TZ_ATTSYSFILENAME = #{tzAttsysfilename,jdbcType=VARCHAR},
+      TZ_ATT_A_URL = #{tzAttAUrl,jdbcType=VARCHAR},
+      TZ_ATT_P_URL = #{tzAttPUrl,jdbcType=VARCHAR},
+      TZ_APP_TZFS = #{tzAppTzfs,jdbcType=VARCHAR},
+      TZ_APP_TZURL = #{tzAppTzurl,jdbcType=VARCHAR},
+      TZ_APP_M_TPL_ID = #{tzAppMTplId,jdbcType=VARCHAR},
+      TZ_EFFEXP_ZT = #{tzEffexpZt,jdbcType=VARCHAR},
+      TZ_CHN_MODAL_ID = #{tzChnModalId,jdbcType=VARCHAR},
+      TZ_ENG_MODAL_ID = #{tzEngModalId,jdbcType=VARCHAR},
+      TZ_ENG_QY = #{tzEngQy,jdbcType=VARCHAR},
+      TZ_CHN_QY = #{tzChnQy,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
+      TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
+      TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      TZ_CH_M_CONTENT = #{tzChMContent,jdbcType=LONGVARCHAR},
+      TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyT" >
+    update PS_TZ_APPTPL_DY_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_APP_TPL_MC = #{tzAppTplMc,jdbcType=VARCHAR},
+      TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
+      TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
+      TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
+      TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
+      TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
+      TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      TZ_ATTACHFILE_NAME = #{tzAttachfileName,jdbcType=VARCHAR},
+      TZ_ATTSYSFILENAME = #{tzAttsysfilename,jdbcType=VARCHAR},
+      TZ_ATT_A_URL = #{tzAttAUrl,jdbcType=VARCHAR},
+      TZ_ATT_P_URL = #{tzAttPUrl,jdbcType=VARCHAR},
+      TZ_APP_TZFS = #{tzAppTzfs,jdbcType=VARCHAR},
+      TZ_APP_TZURL = #{tzAppTzurl,jdbcType=VARCHAR},
+      TZ_APP_M_TPL_ID = #{tzAppMTplId,jdbcType=VARCHAR},
+      TZ_EFFEXP_ZT = #{tzEffexpZt,jdbcType=VARCHAR},
+      TZ_CHN_MODAL_ID = #{tzChnModalId,jdbcType=VARCHAR},
+      TZ_ENG_MODAL_ID = #{tzEngModalId,jdbcType=VARCHAR},
+      TZ_ENG_QY = #{tzEngQy,jdbcType=VARCHAR},
+      TZ_CHN_QY = #{tzChnQy,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
+      TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+  </update>
+</mapper>

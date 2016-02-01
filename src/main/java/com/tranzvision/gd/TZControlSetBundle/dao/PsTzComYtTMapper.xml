@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZControlSetBundle.dao.PsTzComYtTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT" >
+    <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <id column="TZ_COM_YT_ID" property="tzComYtId" jdbcType="VARCHAR" />
+    <result column="TZ_COM_LX_ID" property="tzComLxId" jdbcType="VARCHAR" />
+    <result column="TZ_QY_BZ" property="tzQyBz" jdbcType="VARCHAR" />
+    <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_COM_ID, TZ_COM_YT_ID, TZ_COM_LX_ID, TZ_QY_BZ, TZ_ORDER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_COM_YT_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_COM_YT_ID = #{tzComYtId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtTKey" >
+    delete from PS_TZ_COM_YT_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_COM_YT_ID = #{tzComYtId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT" >
+    insert into PS_TZ_COM_YT_T (TZ_COM_ID, TZ_COM_YT_ID, TZ_COM_LX_ID, 
+      TZ_QY_BZ, TZ_ORDER)
+    values (#{tzComId,jdbcType=VARCHAR}, #{tzComYtId,jdbcType=VARCHAR}, #{tzComLxId,jdbcType=VARCHAR}, 
+      #{tzQyBz,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT" >
+    insert into PS_TZ_COM_YT_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzComYtId != null" >
+        TZ_COM_YT_ID,
+      </if>
+      <if test="tzComLxId != null" >
+        TZ_COM_LX_ID,
+      </if>
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ,
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComYtId != null" >
+        #{tzComYtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComLxId != null" >
+        #{tzComLxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyBz != null" >
+        #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        #{tzOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT" >
+    update PS_TZ_COM_YT_T
+    <set >
+      <if test="tzComLxId != null" >
+        TZ_COM_LX_ID = #{tzComLxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_COM_YT_ID = #{tzComYtId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT" >
+    update PS_TZ_COM_YT_T
+    set TZ_COM_LX_ID = #{tzComLxId,jdbcType=VARCHAR},
+      TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      TZ_ORDER = #{tzOrder,jdbcType=INTEGER}
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_COM_YT_ID = #{tzComYtId,jdbcType=VARCHAR}
+  </update>
+</mapper>

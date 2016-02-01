@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZRuleSetBundle.dao.PsTzJygzDyEngMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng" >
+    <id column="TZ_JYGZ_ID" property="tzJygzId" jdbcType="VARCHAR" />
+    <id column="LANGUAGE_CD" property="languageCd" jdbcType="VARCHAR" />
+    <result column="TZ_JYGZ_TSXX" property="tzJygzTsxx" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JYGZ_ID, LANGUAGE_CD, TZ_JYGZ_TSXX
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEngKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_JYGZ_DY_ENG
+    where TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEngKey" >
+    delete from PS_TZ_JYGZ_DY_ENG
+    where TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng" >
+    insert into PS_TZ_JYGZ_DY_ENG (TZ_JYGZ_ID, LANGUAGE_CD, TZ_JYGZ_TSXX
+      )
+    values (#{tzJygzId,jdbcType=VARCHAR}, #{languageCd,jdbcType=VARCHAR}, #{tzJygzTsxx,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng" >
+    insert into PS_TZ_JYGZ_DY_ENG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJygzId != null" >
+        TZ_JYGZ_ID,
+      </if>
+      <if test="languageCd != null" >
+        LANGUAGE_CD,
+      </if>
+      <if test="tzJygzTsxx != null" >
+        TZ_JYGZ_TSXX,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJygzId != null" >
+        #{tzJygzId,jdbcType=VARCHAR},
+      </if>
+      <if test="languageCd != null" >
+        #{languageCd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJygzTsxx != null" >
+        #{tzJygzTsxx,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng" >
+    update PS_TZ_JYGZ_DY_ENG
+    <set >
+      <if test="tzJygzTsxx != null" >
+        TZ_JYGZ_TSXX = #{tzJygzTsxx,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng" >
+    update PS_TZ_JYGZ_DY_ENG
+    set TZ_JYGZ_TSXX = #{tzJygzTsxx,jdbcType=VARCHAR}
+    where TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+</mapper>
