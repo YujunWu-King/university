@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
+    <id column="TZ_REF_LETTER_ID" property="tzRefLetterId" jdbcType="VARCHAR" />
+    <result column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_TJX_APP_INS_ID" property="tzTjxAppInsId" jdbcType="BIGINT" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_TYPE" property="tzTjxType" jdbcType="VARCHAR" />
+    <result column="TZ_REFLETTERTYPE" property="tzReflettertype" jdbcType="VARCHAR" />
+    <result column="TZ_TJR_ID" property="tzTjrId" jdbcType="VARCHAR" />
+    <result column="TZ_MBA_TJX_YX" property="tzMbaTjxYx" jdbcType="VARCHAR" />
+    <result column="TZ_REFERRER_NAME" property="tzReferrerName" jdbcType="VARCHAR" />
+    <result column="TZ_REFERRER_GNAME" property="tzReferrerGname" jdbcType="VARCHAR" />
+    <result column="TZ_COMP_CNAME" property="tzCompCname" jdbcType="VARCHAR" />
+    <result column="TZ_POSITION" property="tzPosition" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_TITLE" property="tzTjxTitle" jdbcType="VARCHAR" />
+    <result column="TZ_TJR_GX" property="tzTjrGx" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_PHONE_AREA" property="tzPhoneArea" jdbcType="VARCHAR" />
+    <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
+    <result column="TZ_GENDER" property="tzGender" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_YL_1" property="tzTjxYl1" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_YL_2" property="tzTjxYl2" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_YL_3" property="tzTjxYl3" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_YL_4" property="tzTjxYl4" jdbcType="VARCHAR" />
+    <result column="TZ_TJX_YL_5" property="tzTjxYl5" jdbcType="VARCHAR" />
+    <result column="TZ_ATT_A_URL" property="tzAttAUrl" jdbcType="VARCHAR" />
+    <result column="ATTACHSYSFILENAME" property="attachsysfilename" jdbcType="VARCHAR" />
+    <result column="ATTACHUSERFILE" property="attachuserfile" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_REF_LETTER_ID, TZ_APP_INS_ID, TZ_TJX_APP_INS_ID, OPRID, TZ_TJX_TYPE, TZ_REFLETTERTYPE, 
+    TZ_TJR_ID, TZ_MBA_TJX_YX, TZ_REFERRER_NAME, TZ_REFERRER_GNAME, TZ_COMP_CNAME, TZ_POSITION, 
+    TZ_TJX_TITLE, TZ_TJR_GX, TZ_EMAIL, TZ_PHONE_AREA, TZ_PHONE, TZ_GENDER, TZ_TJX_YL_1, 
+    TZ_TJX_YL_2, TZ_TJX_YL_3, TZ_TJX_YL_4, TZ_TJX_YL_5, TZ_ATT_A_URL, ATTACHSYSFILENAME, 
+    ATTACHUSERFILE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_KS_TJX_TBL
+    where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_KS_TJX_TBL
+    where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
+    insert into PS_TZ_KS_TJX_TBL (TZ_REF_LETTER_ID, TZ_APP_INS_ID, TZ_TJX_APP_INS_ID, 
+      OPRID, TZ_TJX_TYPE, TZ_REFLETTERTYPE, 
+      TZ_TJR_ID, TZ_MBA_TJX_YX, TZ_REFERRER_NAME, 
+      TZ_REFERRER_GNAME, TZ_COMP_CNAME, TZ_POSITION, 
+      TZ_TJX_TITLE, TZ_TJR_GX, TZ_EMAIL, 
+      TZ_PHONE_AREA, TZ_PHONE, TZ_GENDER, 
+      TZ_TJX_YL_1, TZ_TJX_YL_2, TZ_TJX_YL_3, 
+      TZ_TJX_YL_4, TZ_TJX_YL_5, TZ_ATT_A_URL, 
+      ATTACHSYSFILENAME, ATTACHUSERFILE, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
+    values (#{tzRefLetterId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, #{tzTjxAppInsId,jdbcType=BIGINT}, 
+      #{oprid,jdbcType=VARCHAR}, #{tzTjxType,jdbcType=VARCHAR}, #{tzReflettertype,jdbcType=VARCHAR}, 
+      #{tzTjrId,jdbcType=VARCHAR}, #{tzMbaTjxYx,jdbcType=VARCHAR}, #{tzReferrerName,jdbcType=VARCHAR}, 
+      #{tzReferrerGname,jdbcType=VARCHAR}, #{tzCompCname,jdbcType=VARCHAR}, #{tzPosition,jdbcType=VARCHAR}, 
+      #{tzTjxTitle,jdbcType=VARCHAR}, #{tzTjrGx,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{tzPhoneArea,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
+      #{tzTjxYl1,jdbcType=VARCHAR}, #{tzTjxYl2,jdbcType=VARCHAR}, #{tzTjxYl3,jdbcType=VARCHAR}, 
+      #{tzTjxYl4,jdbcType=VARCHAR}, #{tzTjxYl5,jdbcType=VARCHAR}, #{tzAttAUrl,jdbcType=VARCHAR}, 
+      #{attachsysfilename,jdbcType=VARCHAR}, #{attachuserfile,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
+    insert into PS_TZ_KS_TJX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzRefLetterId != null" >
+        TZ_REF_LETTER_ID,
+      </if>
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzTjxAppInsId != null" >
+        TZ_TJX_APP_INS_ID,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzTjxType != null" >
+        TZ_TJX_TYPE,
+      </if>
+      <if test="tzReflettertype != null" >
+        TZ_REFLETTERTYPE,
+      </if>
+      <if test="tzTjrId != null" >
+        TZ_TJR_ID,
+      </if>
+      <if test="tzMbaTjxYx != null" >
+        TZ_MBA_TJX_YX,
+      </if>
+      <if test="tzReferrerName != null" >
+        TZ_REFERRER_NAME,
+      </if>
+      <if test="tzReferrerGname != null" >
+        TZ_REFERRER_GNAME,
+      </if>
+      <if test="tzCompCname != null" >
+        TZ_COMP_CNAME,
+      </if>
+      <if test="tzPosition != null" >
+        TZ_POSITION,
+      </if>
+      <if test="tzTjxTitle != null" >
+        TZ_TJX_TITLE,
+      </if>
+      <if test="tzTjrGx != null" >
+        TZ_TJR_GX,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzPhoneArea != null" >
+        TZ_PHONE_AREA,
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE,
+      </if>
+      <if test="tzGender != null" >
+        TZ_GENDER,
+      </if>
+      <if test="tzTjxYl1 != null" >
+        TZ_TJX_YL_1,
+      </if>
+      <if test="tzTjxYl2 != null" >
+        TZ_TJX_YL_2,
+      </if>
+      <if test="tzTjxYl3 != null" >
+        TZ_TJX_YL_3,
+      </if>
+      <if test="tzTjxYl4 != null" >
+        TZ_TJX_YL_4,
+      </if>
+      <if test="tzTjxYl5 != null" >
+        TZ_TJX_YL_5,
+      </if>
+      <if test="tzAttAUrl != null" >
+        TZ_ATT_A_URL,
+      </if>
+      <if test="attachsysfilename != null" >
+        ATTACHSYSFILENAME,
+      </if>
+      <if test="attachuserfile != null" >
+        ATTACHUSERFILE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzRefLetterId != null" >
+        #{tzRefLetterId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzTjxAppInsId != null" >
+        #{tzTjxAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxType != null" >
+        #{tzTjxType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReflettertype != null" >
+        #{tzReflettertype,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjrId != null" >
+        #{tzTjrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMbaTjxYx != null" >
+        #{tzMbaTjxYx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferrerName != null" >
+        #{tzReferrerName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferrerGname != null" >
+        #{tzReferrerGname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCompCname != null" >
+        #{tzCompCname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPosition != null" >
+        #{tzPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxTitle != null" >
+        #{tzTjxTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjrGx != null" >
+        #{tzTjrGx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhoneArea != null" >
+        #{tzPhoneArea,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGender != null" >
+        #{tzGender,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl1 != null" >
+        #{tzTjxYl1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl2 != null" >
+        #{tzTjxYl2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl3 != null" >
+        #{tzTjxYl3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl4 != null" >
+        #{tzTjxYl4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl5 != null" >
+        #{tzTjxYl5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttAUrl != null" >
+        #{tzAttAUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachsysfilename != null" >
+        #{attachsysfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="attachuserfile != null" >
+        #{attachuserfile,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
+    update PS_TZ_KS_TJX_TBL
+    <set >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzTjxAppInsId != null" >
+        TZ_TJX_APP_INS_ID = #{tzTjxAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxType != null" >
+        TZ_TJX_TYPE = #{tzTjxType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReflettertype != null" >
+        TZ_REFLETTERTYPE = #{tzReflettertype,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjrId != null" >
+        TZ_TJR_ID = #{tzTjrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMbaTjxYx != null" >
+        TZ_MBA_TJX_YX = #{tzMbaTjxYx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferrerName != null" >
+        TZ_REFERRER_NAME = #{tzReferrerName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferrerGname != null" >
+        TZ_REFERRER_GNAME = #{tzReferrerGname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCompCname != null" >
+        TZ_COMP_CNAME = #{tzCompCname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPosition != null" >
+        TZ_POSITION = #{tzPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxTitle != null" >
+        TZ_TJX_TITLE = #{tzTjxTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjrGx != null" >
+        TZ_TJR_GX = #{tzTjrGx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhoneArea != null" >
+        TZ_PHONE_AREA = #{tzPhoneArea,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGender != null" >
+        TZ_GENDER = #{tzGender,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl1 != null" >
+        TZ_TJX_YL_1 = #{tzTjxYl1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl2 != null" >
+        TZ_TJX_YL_2 = #{tzTjxYl2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl3 != null" >
+        TZ_TJX_YL_3 = #{tzTjxYl3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl4 != null" >
+        TZ_TJX_YL_4 = #{tzTjxYl4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjxYl5 != null" >
+        TZ_TJX_YL_5 = #{tzTjxYl5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttAUrl != null" >
+        TZ_ATT_A_URL = #{tzAttAUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="attachsysfilename != null" >
+        ATTACHSYSFILENAME = #{attachsysfilename,jdbcType=VARCHAR},
+      </if>
+      <if test="attachuserfile != null" >
+        ATTACHUSERFILE = #{attachuserfile,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
+    update PS_TZ_KS_TJX_TBL
+    set TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT},
+      TZ_TJX_APP_INS_ID = #{tzTjxAppInsId,jdbcType=BIGINT},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_TJX_TYPE = #{tzTjxType,jdbcType=VARCHAR},
+      TZ_REFLETTERTYPE = #{tzReflettertype,jdbcType=VARCHAR},
+      TZ_TJR_ID = #{tzTjrId,jdbcType=VARCHAR},
+      TZ_MBA_TJX_YX = #{tzMbaTjxYx,jdbcType=VARCHAR},
+      TZ_REFERRER_NAME = #{tzReferrerName,jdbcType=VARCHAR},
+      TZ_REFERRER_GNAME = #{tzReferrerGname,jdbcType=VARCHAR},
+      TZ_COMP_CNAME = #{tzCompCname,jdbcType=VARCHAR},
+      TZ_POSITION = #{tzPosition,jdbcType=VARCHAR},
+      TZ_TJX_TITLE = #{tzTjxTitle,jdbcType=VARCHAR},
+      TZ_TJR_GX = #{tzTjrGx,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_PHONE_AREA = #{tzPhoneArea,jdbcType=VARCHAR},
+      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      TZ_GENDER = #{tzGender,jdbcType=VARCHAR},
+      TZ_TJX_YL_1 = #{tzTjxYl1,jdbcType=VARCHAR},
+      TZ_TJX_YL_2 = #{tzTjxYl2,jdbcType=VARCHAR},
+      TZ_TJX_YL_3 = #{tzTjxYl3,jdbcType=VARCHAR},
+      TZ_TJX_YL_4 = #{tzTjxYl4,jdbcType=VARCHAR},
+      TZ_TJX_YL_5 = #{tzTjxYl5,jdbcType=VARCHAR},
+      TZ_ATT_A_URL = #{tzAttAUrl,jdbcType=VARCHAR},
+      ATTACHSYSFILENAME = #{attachsysfilename,jdbcType=VARCHAR},
+      ATTACHUSERFILE = #{attachuserfile,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
+  </update>
+</mapper>

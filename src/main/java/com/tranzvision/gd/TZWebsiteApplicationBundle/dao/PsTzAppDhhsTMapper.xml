@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhhsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_LINE" property="tzXxxLine" jdbcType="SMALLINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_XXX_BH, TZ_XXX_LINE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_APP_DHHS_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsTKey" >
+    delete from PS_TZ_APP_DHHS_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT" >
+    insert into PS_TZ_APP_DHHS_T (TZ_APP_INS_ID, TZ_XXX_BH, TZ_XXX_LINE
+      )
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxLine,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT" >
+    insert into PS_TZ_APP_DHHS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzXxxLine != null" >
+        TZ_XXX_LINE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxLine != null" >
+        #{tzXxxLine,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT" >
+    update PS_TZ_APP_DHHS_T
+    <set >
+      <if test="tzXxxLine != null" >
+        TZ_XXX_LINE = #{tzXxxLine,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT" >
+    update PS_TZ_APP_DHHS_T
+    set TZ_XXX_LINE = #{tzXxxLine,jdbcType=SMALLINT}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+</mapper>

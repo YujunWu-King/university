@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <result column="TZ_APP_S_TEXT" property="tzAppSText" jdbcType="VARCHAR" />
+    <result column="TZ_KXX_QTZ" property="tzKxxQtz" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" extends="BaseResultMap" >
+    <result column="TZ_APP_L_TEXT" property="tzAppLText" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_XXX_BH, TZ_APP_S_TEXT, TZ_KXX_QTZ
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_APP_L_TEXT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_APP_CC_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcTKey" >
+    delete from PS_TZ_APP_CC_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    insert into PS_TZ_APP_CC_T (TZ_APP_INS_ID, TZ_XXX_BH, TZ_APP_S_TEXT, 
+      TZ_KXX_QTZ, TZ_APP_L_TEXT)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzAppSText,jdbcType=VARCHAR}, 
+      #{tzKxxQtz,jdbcType=VARCHAR}, #{tzAppLText,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    insert into PS_TZ_APP_CC_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzAppSText != null" >
+        TZ_APP_S_TEXT,
+      </if>
+      <if test="tzKxxQtz != null" >
+        TZ_KXX_QTZ,
+      </if>
+      <if test="tzAppLText != null" >
+        TZ_APP_L_TEXT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppSText != null" >
+        #{tzAppSText,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKxxQtz != null" >
+        #{tzKxxQtz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppLText != null" >
+        #{tzAppLText,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    update PS_TZ_APP_CC_T
+    <set >
+      <if test="tzAppSText != null" >
+        TZ_APP_S_TEXT = #{tzAppSText,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKxxQtz != null" >
+        TZ_KXX_QTZ = #{tzKxxQtz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppLText != null" >
+        TZ_APP_L_TEXT = #{tzAppLText,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    update PS_TZ_APP_CC_T
+    set TZ_APP_S_TEXT = #{tzAppSText,jdbcType=VARCHAR},
+      TZ_KXX_QTZ = #{tzKxxQtz,jdbcType=VARCHAR},
+      TZ_APP_L_TEXT = #{tzAppLText,jdbcType=LONGVARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT" >
+    update PS_TZ_APP_CC_T
+    set TZ_APP_S_TEXT = #{tzAppSText,jdbcType=VARCHAR},
+      TZ_KXX_QTZ = #{tzKxxQtz,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </update>
+</mapper>
