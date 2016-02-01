@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,10 @@ public class TemplateEngine {
 
 	@Autowired
 	private HttpServletRequest request;
-
+	
+	@Autowired
+	private HttpServletResponse response;
+	
 	@Autowired
 	private TZGDObject tzSQLObject;
 
@@ -310,7 +314,7 @@ public class TemplateEngine {
 		String sqlLang = "SELECT TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		String language = sqlQuery.queryForObject(sqlLang, new Object[] { tplId }, "String");
 
-		String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd("TZGD_APPONLINE_MSGSET", language);
+		String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET", language);
 		jacksonUtil.json2Map(msgSet);
 		if (jacksonUtil.containsKey(language)) {
 			msgSet = jacksonUtil.getString(language);
@@ -321,7 +325,7 @@ public class TemplateEngine {
 		componentData = componentData.replace("\"", "\\\\\"");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", true,
-					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet);
+					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet,contextUrl);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			tplHtml = "";
@@ -388,12 +392,12 @@ public class TemplateEngine {
 			mapOptJson.put("iconPath", iconPath);
 
 			String sqlRules = "SELECT * FROM PS_TZ_COM_JYGZPZ_T WHERE TZ_COM_ID = ? ORDER BY TZ_ORDER ASC";
-			List<?> rulelist = sqlQuery.queryForList(sqlRules, new Object[] { "tplYt" });
+			List<?> rulelist = sqlQuery.queryForList(sqlRules, new Object[] { componentId });
 			Map<String, Object> mapRuleRet = new HashMap<String, Object>();
 
 			for (Object rule : rulelist) {
 				Map<String, Object> rul = (Map<String, Object>) rule;
-				String ruleId = result.get("TZ_JYGZ_ID") == null ? "" : String.valueOf(result.get("TZ_JYGZ_ID"));
+				String ruleId = rul.get("TZ_JYGZ_ID") == null ? "" : String.valueOf(rul.get("TZ_JYGZ_ID"));
 				PsTzJygzDyT psTzJygzDyT = psTzJygzDyTMapper.selectByPrimaryKey(ruleId);
 
 				String ruleName = psTzJygzDyT.getTzJygzMc();
@@ -406,7 +410,7 @@ public class TemplateEngine {
 					PsTzJygzDyEng psTzJygzDyEng = psTzJygzDyEngMapper.selectByPrimaryKey(psTzJygzDyEngKey);
 					messages = psTzJygzDyEng.getTzJygzTsxx();
 				}
-				String isEnable = result.get("TZ_QY_BZ") == null ? "" : String.valueOf(result.get("TZ_QY_BZ"));
+				String isEnable = rul.get("TZ_QY_BZ") == null ? "" : String.valueOf(rul.get("TZ_QY_BZ"));
 
 				Map<String, Object> ruleJson = new HashMap<String, Object>();
 				ruleJson.put("ruleId", ruleId);
