@@ -2,7 +2,7 @@ select
 	PT2.TZ_COLU_ID,
     PT3.TZ_ART_ID,
     PT3.TZ_ART_TITLE, 
-    CAST(date_format(PT2.TZ_ART_NEWS_DT,'%Y-%m-%d %hh24:mm:ss') as char) TZ_ART_NEWS_DT
+    PT2.TZ_ART_NEWS_DT
 from 
 	PS_TZ_SITEI_COLU_T PT1, 
     PS_TZ_LM_NR_GL_T PT2, 
