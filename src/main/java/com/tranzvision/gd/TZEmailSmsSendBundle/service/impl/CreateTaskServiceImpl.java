@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzAudcyuanTMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzAudienceTMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxmbshliTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjfsrwTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzMalBcAddTMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzMalCcAddTMapper;
@@ -18,6 +19,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzRwFjianTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzYjmbshliTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudcyuanT;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzAudienceT;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxmbshliTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalBcAddT;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzMalCcAddT;
@@ -63,6 +65,8 @@ public class CreateTaskServiceImpl {
 	private PsTzYjmbshliTblMapper psTzYjmbshliTblMapper;
 	@Autowired
 	private PsTzRwFjianTblMapper psTzRwFjianTblMapper;
+	@Autowired
+	private PsTzDxmbshliTblMapper psTzDxmbshliTblMapper;
 
 	// 创建发送任务***参数：strJgId：机构ID；strTmpId:邮件或短信模板ID；taskType：发送类型，邮件MAL,短信SMS；sendtype:使用的发送手机或邮箱,A主要，B次要，C所有;
 	@SuppressWarnings("deprecation")
@@ -255,6 +259,19 @@ public class CreateTaskServiceImpl {
 		psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);
 		psTzYjmbshliTbl.setTzMalContent(content);
 		int i = psTzYjmbshliTblMapper.updateByPrimaryKeySelective(psTzYjmbshliTbl);
+		if(i > 0 ){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	//更新短信内容
+	public boolean updateSmsSendContent(String content){
+	   PsTzDxmbshliTbl psTzDxmbshliTbl = new PsTzDxmbshliTbl();
+	   psTzDxmbshliTbl.setTzEmlSmsTaskId(taskId);
+	   psTzDxmbshliTbl.setTzSmsContent(content);
+	   int i = psTzDxmbshliTblMapper.updateByPrimaryKeySelective(psTzDxmbshliTbl);
 		if(i > 0 ){
 			return true;
 		}else{

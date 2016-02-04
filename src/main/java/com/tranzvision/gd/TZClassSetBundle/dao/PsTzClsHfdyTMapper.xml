@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsHfdyTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyT" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_SBMINF_ID" property="tzSbminfId" jdbcType="VARCHAR" />
+    <id column="TZ_SBMINF_REP_ID" property="tzSbminfRepId" jdbcType="VARCHAR" />
+    <result column="TZ_SBMINF_REP" property="tzSbminfRep" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_SBMINF_ID, TZ_SBMINF_REP_ID, TZ_SBMINF_REP
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CLS_HFDY_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyTKey" >
+    delete from PS_TZ_CLS_HFDY_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyT" >
+    insert into PS_TZ_CLS_HFDY_T (TZ_CLASS_ID, TZ_SBMINF_ID, TZ_SBMINF_REP_ID, 
+      TZ_SBMINF_REP)
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzSbminfId,jdbcType=VARCHAR}, #{tzSbminfRepId,jdbcType=VARCHAR}, 
+      #{tzSbminfRep,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyT" >
+    insert into PS_TZ_CLS_HFDY_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzSbminfId != null" >
+        TZ_SBMINF_ID,
+      </if>
+      <if test="tzSbminfRepId != null" >
+        TZ_SBMINF_REP_ID,
+      </if>
+      <if test="tzSbminfRep != null" >
+        TZ_SBMINF_REP,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfId != null" >
+        #{tzSbminfId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRepId != null" >
+        #{tzSbminfRepId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRep != null" >
+        #{tzSbminfRep,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyT" >
+    update PS_TZ_CLS_HFDY_T
+    <set >
+      <if test="tzSbminfRep != null" >
+        TZ_SBMINF_REP = #{tzSbminfRep,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsHfdyT" >
+    update PS_TZ_CLS_HFDY_T
+    set TZ_SBMINF_REP = #{tzSbminfRep,jdbcType=VARCHAR}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+  </update>
+</mapper>

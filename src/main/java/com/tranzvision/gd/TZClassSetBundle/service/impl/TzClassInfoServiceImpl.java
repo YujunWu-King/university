@@ -68,6 +68,9 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 
 	@Autowired
+	private TzClassListServiceImpl tzClassListServiceImpl;
+
+	@Autowired
 	private PsTzClassInfTMapper psTzClassInfTMapper;
 
 	@Autowired
@@ -102,26 +105,31 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String queryID = jacksonUtil.getString("queryID");
 
-			boolean todoComplete;
 			if (null != queryID && !"".equals(queryID)) {
 				switch (queryID) {
 				case "2":
-					strRet = "";
+					// 专业方向
+					strRet = tzClassListServiceImpl.queryFxList(strParams, errorMsg);
 					break;
 				case "3":
-					strRet = "";
+					// 批次管理
+					strRet = tzClassListServiceImpl.queryPcList(strParams, errorMsg);
 					break;
 				case "4":
-					strRet = "";
+					// 管理人员
+					strRet = tzClassListServiceImpl.queryGlList(strParams, errorMsg);
 					break;
 				case "5":
-					strRet = "";
+					// 报名流程
+					strRet = tzClassListServiceImpl.queryBmlcList(strParams, errorMsg);
 					break;
 				case "6":
-					strRet = "";
+					// 递交资料
+					strRet = tzClassListServiceImpl.queryZlList(strParams, errorMsg);
 					break;
 				case "7":
-					strRet = "";
+					// 互斥班级
+					strRet = tzClassListServiceImpl.queryHCCls(strParams, errorMsg);
 					break;
 				}
 			} else {

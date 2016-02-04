@@ -1,0 +1,16 @@
+select 
+	A.TZ_ATTRIBUTE_ID,
+	A.TZ_ATTRIBUTE_NAME,
+	A.TZ_CONTROL_TYPE,
+	B.TZ_ATTRIBUTE_VALUE
+from 
+	PS_TZ_CLS_ATTR_T A
+left join 
+	PS_TZ_CLS_MORINF_T B
+on 
+	A.TZ_ATTRIBUTE_ID=B.TZ_ATTRIBUTE_ID
+where 
+	A.TZ_JG_ID=? 
+	and A.TZ_IS_USED='Y'
+	and B.TZ_CLASS_ID=? 
+order by A.TZ_SORT_NUM asc
