@@ -54,6 +54,16 @@ public class GetSysHardCodeVal {
 	private String dateTimeFormat;
 
 	/**
+	 * 时间格式
+	 */
+	private String timeFormat;
+	
+	/**
+	 * 时间（小时:分钟）格式
+	 */
+	private String timeHMFormat;
+
+	/**
 	 * 上传文件，禁止的后缀名
 	 */
 	private ArrayList<String> fileUploadDeniedExtensions;
@@ -127,6 +137,10 @@ public class GetSysHardCodeVal {
 
 			dateTimeFormat = sysHardCodeValProps.getProperty("DateTimeFormat");
 
+			timeFormat = sysHardCodeValProps.getProperty("TimeFormat");
+			
+			timeHMFormat = sysHardCodeValProps.getProperty("TimeHMFormat");
+
 			imageSuffix = this.stringToArrayList(sysHardCodeValProps.getProperty("ImageSuffix"));
 
 			fileUploadDeniedExtensions = this
@@ -188,6 +202,14 @@ public class GetSysHardCodeVal {
 
 	public String getDateTimeFormat() {
 		return dateTimeFormat;
+	}
+	
+	public String getTimeFormat() {
+		return timeFormat;
+	}
+	
+	public String getTimeHMFormat() {
+		return timeHMFormat;
 	}
 
 	public ArrayList<String> getImageSuffix() {

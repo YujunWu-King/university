@@ -204,7 +204,8 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 							}
 
 							sql = "select TZ_ART_NEWS_DT from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
-							Date tzArtNewsDt = sqlQuery.queryForObject(sql, new Object[] {}, "Date");
+							Date tzArtNewsDt = sqlQuery.queryForObject(sql,
+									new Object[] { tzSiteId, tzColuId, tzArtId }, "Date");
 							if ("Y".equals(tzArtPubState) && tzArtNewsDt == null) {
 								tzArtNewsDt = new Date();
 								psTzLmNrGlTWithBLOBs.setTzArtNewsDt(tzArtNewsDt);
@@ -233,7 +234,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "操作失败。"+e.getMessage();
+			errorMsg[1] = "操作失败。" + e.getMessage();
 		}
 
 		return strRet;

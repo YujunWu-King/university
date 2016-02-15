@@ -1,0 +1,11 @@
+select 
+	TZ_ZXBM_XXX_ID,
+	TZ_PX_XH,
+	TZ_ZXBM_XXX_NAME,
+	TZ_ZXBM_XXX_BT,
+	TZ_ZXBM_XXX_ZSXS 
+from 
+	PS_TZ_ZXBM_XXX_T 
+where 
+	TZ_ART_ID=? 
+order by TZ_PX_XH
