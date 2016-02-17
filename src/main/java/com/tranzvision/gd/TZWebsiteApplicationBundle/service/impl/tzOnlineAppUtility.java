@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.util.base.ObjectDoMethod;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -450,6 +451,56 @@ public class tzOnlineAppUtility {
 			String strXxxNumBz,int numXxxMin,int numXxxMax,String strXxxXsws,String strXxxGdgsjy,String strXxxDrqBz,
 			int numXxxMinLine,String strTjxSub,String strJygzTsxx){
 		String returnMessage = "";
+		
+		//是否需要校验推荐信
+		String strIsCheck = "Y";
+		
+		String sql = "SELECT TZ_REF_CHECK,TZ_REF_CHECK_APP FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
+		Map<String, Object> Map = sqlQuery.queryForMap(sql, new Object[] { strTplId,strXxxBh });
+		String strIsCheckRef = Map.get("TZ_REF_CHECK") == null ? "" : String.valueOf(Map.get("TZ_REF_CHECK"));
+		String strCheckAppClassId = Map.get("TZ_REF_CHECK_APP") == null ? "" : String.valueOf(Map.get("TZ_REF_CHECK_APP"));
+		if("Y".equals(strIsCheckRef)){
+			if(!"".equals(strCheckAppClassId)){
+				sql = "SELECT TZ_APPCLS_PATH,TZ_APPCLS_NAME,TZ_APPCLS_METHOD FROM PS_TZ_APPCLS_TBL WHERE TZ_APPCLS_ID = ?";
+				Map<String, Object> MapAppClass = sqlQuery.queryForMap(sql, new Object[] { strCheckAppClassId });
+				String strAppClassPath = "";
+			    String strAppClassName = ""; 
+			    String strAppClassMethod = "";
+			    strAppClassPath = MapAppClass.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapAppClass.get("TZ_APPCLS_PATH"));
+			    strAppClassName = MapAppClass.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapAppClass.get("TZ_APPCLS_NAME"));
+			    strAppClassMethod = MapAppClass.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapAppClass.get("TZ_APPCLS_METHOD"));
+			    try{
+			    	String[] parameterTypes = new String[] {"String[]" };
+					Object[] arglist = new Object[] { numAppInsId };
+					Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
+							parameterTypes, arglist);
+					strIsCheck = String.valueOf(objs);
+			    }catch(Exception e){
+			    	e.printStackTrace();
+			    	strIsCheck = "Y";
+			    }
+			}
+		}
+		
+		if("Y".equals(strIsCheck)&&"recommendletter".equals(strComMc)){
+			String sqlGetRefLetterCount = "";
+			//查看申请人已经提交的推荐信数量
+			int numRefletter = 0;
+			//是否需要推荐人提交了推荐信
+			if("Y".equals(strTjxSub)){
+				sqlGetRefLetterCount = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE ((A.ATTACHSYSFILENAME <> ' ' AND A.ATTACHUSERFILE <> ' ') OR EXISTS (SELECT * FROM PS_TZ_APP_INS_T B WHERE A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U')) AND A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y'";
+			}else{
+				sqlGetRefLetterCount = "SELECT COUNT('Y') FROM PS_TZ_KS_TJX_TBL WHERE TZ_MBA_TJX_YX = 'Y' AND TZ_APP_INS_ID = :1 AND TZ_MBA_TJX_YX = 'Y'";
+			}
+			numRefletter = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
+			
+			if(numXxxMinLine>0){
+				if(numRefletter<numXxxMinLine){
+					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+				}
+			}
+		}
+		
 		return returnMessage;
 	}
 	
