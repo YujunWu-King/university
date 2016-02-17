@@ -91,7 +91,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 
 			c += '	<b class="read-input" style="min-width: 120px;"></b>&nbsp;';
 			c += '	<b class="read-input" style="min-width: 120px;"></b>';
-			var uptoNow = '<b style="padding: 15px 0px 0px 15px; color: #666666; background: url(\"/survey/assets/img/read-check.gif\") no-repeat scroll -4px 4px; margin-left: 10px;"></b><span class="suffix" style="font-weight: normal;">至今</span>';
+			var uptoNow = '<b style="padding: 15px 0px 0px 15px; color: #666666; background: url(\"/statics/images/appeditor/read-check.gif\") no-repeat scroll -4px 4px; margin-left: 10px;"></b><span class="suffix" style="font-weight: normal;">至今</span>';
 
 			c += (data.todatebz == "Y" ? uptoNow : '');
 			c += '</div></div>'

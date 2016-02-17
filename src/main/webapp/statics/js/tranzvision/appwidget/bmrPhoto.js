@@ -44,7 +44,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
             c += '		<div class="main_inner_content_info_right_photo">';
             c += '        <input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '" data-id="' + data.instanceId + '">';
             c += '			<a id="photo' + data.itemId + '">';
-            c += '				<img width="125" height="158" src="' + (data.value.length < 1 ? "/tranzvision/images/bjphoto.jpg": data.value) + '" id="photo">';
+            c += '				<img width="125" height="158" src="' + (data.value.length < 1 ? "' + TzUniversityContextPath + '/statics/images/appeditor/bjphoto.jpg": data.value) + '" id="photo">';
             c += '			</a>';
             c += '		</div>';
             c += '		<div style="background-image:none;" class="main_inner_content_info_right_text_2"><span class="reg_title_star">*</span>' + data.title;
@@ -61,7 +61,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
         } else {
             c += '<div class="question-answer">';
             c += '	<div class="format">';
-            c += '		<img src="/tranzvision/images/bjphoto.jpg" width="120" height="165" />';
+            c += '		<img src="' + TzUniversityContextPath + '/statics/images/appeditor/bjphoto.jpg" width="120" height="165" />';
             c += '		<span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
             c += '	</div>';
             c += '</div>'
