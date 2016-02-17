@@ -78,6 +78,14 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				String strSortNum = "";
 				String strColumnWidth = "";
 				String strColumnFilter = "";
+			
+				strFieldId = String.valueOf(mapData.get("TZ_DC_FIELD_ID"));
+				strFieldName = String.valueOf(mapData.get("TZ_DC_FIELD_NAME"));
+				strFieldSep = String.valueOf(mapData.get("TZ_DC_FIELD_FGF"));
+				strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
+				strColumnWidth = String.valueOf(mapData.get("TZ_DC_COL_WIDTH"));
+				strColumnFilter = String.valueOf(mapData.get("TZ_DC_COL_FILTER"));
+				
 				//宽度默认100
 				if("".equals(strColumnWidth) || strColumnWidth == null){
 					strColumnWidth = "100";
@@ -86,16 +94,9 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				if("".equals(strColumnFilter) || strSortNum == null){
 					strSortNum = "string";
 				}
-
-				strFieldId = String.valueOf(mapData.get("TZ_DC_FIELD_ID"));
-				strFieldName = String.valueOf(mapData.get("TZ_DC_FIELD_NAME"));
-				strFieldSep = String.valueOf(mapData.get("TZ_DC_FIELD_FGF"));
-				strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
-				strColumnWidth = String.valueOf(mapData.get("TZ_DC_COL_WIDTH"));
-				strColumnFilter = String.valueOf(mapData.get("TZ_DC_COL_FILTER"));
 				
 				//获取导出字段对应的报名表字段;
-				Map<String, Object> mapJsonGlField = new HashMap<String, Object>();
+				
 				ArrayList<Map<String, Object>> listJsonGlField = new ArrayList<Map<String, Object>>();
 				String sqlGetGlField = "SELECT TZ_FORM_FLD_ID,(SELECT TZ_XXX_MC FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID= ? AND TZ_XXX_BH=A.TZ_FORM_FLD_ID) AS TZ_XXX_MC, TZ_CODE_TABLE_ID,(SELECT TZ_ZHZJH_MS FROM PS_TZ_PT_ZHZJH_TBL WHERE TZ_ZHZJH_ID=A.TZ_CODE_TABLE_ID) AS TZ_CODE_TABLE_NAME,TZ_SORT_NUM FROM PS_TZ_FRMFLD_GL_T A WHERE TZ_EXPORT_TMP_ID= ? AND TZ_DC_FIELD_ID= ?";
 				List<?> listDataGlField = sqlQuery.queryForList(sqlGetGlField, new Object[] { strAppModalId,strAppExportTplId,strFieldId });
@@ -112,7 +113,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 						strFieldGlTableName = String.valueOf(objFieldGlTableName);
 					}
 					String strSortNumGl = String.valueOf(mapDataGlField.get("TZ_SORT_NUM"));
-					
+					Map<String, Object> mapJsonGlField = new HashMap<String, Object>();
 					mapJsonGlField.put("appFormField", strFieldIdGl);
 					mapJsonGlField.put("appFormFieldName", strFieldNameGl);
 					mapJsonGlField.put("codeTable", strFieldGlTable);
