@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl" >
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <result column="TZ_NACT_NAME" property="tzNactName" jdbcType="VARCHAR" />
+    <result column="TZ_START_DT" property="tzStartDt" jdbcType="DATE" />
+    <result column="TZ_START_TM" property="tzStartTm" jdbcType="TIME" />
+    <result column="TZ_END_DT" property="tzEndDt" jdbcType="DATE" />
+    <result column="TZ_END_TM" property="tzEndTm" jdbcType="TIME" />
+    <result column="TZ_NACT_ADDR" property="tzNactAddr" jdbcType="VARCHAR" />
+    <result column="TZ_HD_CS" property="tzHdCs" jdbcType="VARCHAR" />
+    <result column="TZ_QY_ZXBM" property="tzQyZxbm" jdbcType="VARCHAR" />
+    <result column="TZ_APPF_DT" property="tzAppfDt" jdbcType="DATE" />
+    <result column="TZ_APPF_TM" property="tzAppfTm" jdbcType="TIME" />
+    <result column="TZ_APPE_DT" property="tzAppeDt" jdbcType="DATE" />
+    <result column="TZ_APPE_TM" property="tzAppeTm" jdbcType="TIME" />
+    <result column="TZ_XWS" property="tzXws" jdbcType="INTEGER" />
+    <result column="TZ_XSMS" property="tzXsms" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ART_ID, TZ_NACT_NAME, TZ_START_DT, TZ_START_TM, TZ_END_DT, TZ_END_TM, TZ_NACT_ADDR, 
+    TZ_HD_CS, TZ_QY_ZXBM, TZ_APPF_DT, TZ_APPF_TM, TZ_APPE_DT, TZ_APPE_TM, TZ_XWS, TZ_XSMS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_ART_HD_TBL
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_ART_HD_TBL
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl" >
+    insert into PS_TZ_ART_HD_TBL (TZ_ART_ID, TZ_NACT_NAME, TZ_START_DT, 
+      TZ_START_TM, TZ_END_DT, TZ_END_TM, 
+      TZ_NACT_ADDR, TZ_HD_CS, TZ_QY_ZXBM, 
+      TZ_APPF_DT, TZ_APPF_TM, TZ_APPE_DT, 
+      TZ_APPE_TM, TZ_XWS, TZ_XSMS
+      )
+    values (#{tzArtId,jdbcType=VARCHAR}, #{tzNactName,jdbcType=VARCHAR}, #{tzStartDt,jdbcType=DATE}, 
+      #{tzStartTm,jdbcType=TIME}, #{tzEndDt,jdbcType=DATE}, #{tzEndTm,jdbcType=TIME}, 
+      #{tzNactAddr,jdbcType=VARCHAR}, #{tzHdCs,jdbcType=VARCHAR}, #{tzQyZxbm,jdbcType=VARCHAR}, 
+      #{tzAppfDt,jdbcType=DATE}, #{tzAppfTm,jdbcType=TIME}, #{tzAppeDt,jdbcType=DATE}, 
+      #{tzAppeTm,jdbcType=TIME}, #{tzXws,jdbcType=INTEGER}, #{tzXsms,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl" >
+    insert into PS_TZ_ART_HD_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzNactName != null" >
+        TZ_NACT_NAME,
+      </if>
+      <if test="tzStartDt != null" >
+        TZ_START_DT,
+      </if>
+      <if test="tzStartTm != null" >
+        TZ_START_TM,
+      </if>
+      <if test="tzEndDt != null" >
+        TZ_END_DT,
+      </if>
+      <if test="tzEndTm != null" >
+        TZ_END_TM,
+      </if>
+      <if test="tzNactAddr != null" >
+        TZ_NACT_ADDR,
+      </if>
+      <if test="tzHdCs != null" >
+        TZ_HD_CS,
+      </if>
+      <if test="tzQyZxbm != null" >
+        TZ_QY_ZXBM,
+      </if>
+      <if test="tzAppfDt != null" >
+        TZ_APPF_DT,
+      </if>
+      <if test="tzAppfTm != null" >
+        TZ_APPF_TM,
+      </if>
+      <if test="tzAppeDt != null" >
+        TZ_APPE_DT,
+      </if>
+      <if test="tzAppeTm != null" >
+        TZ_APPE_TM,
+      </if>
+      <if test="tzXws != null" >
+        TZ_XWS,
+      </if>
+      <if test="tzXsms != null" >
+        TZ_XSMS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNactName != null" >
+        #{tzNactName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartDt != null" >
+        #{tzStartDt,jdbcType=DATE},
+      </if>
+      <if test="tzStartTm != null" >
+        #{tzStartTm,jdbcType=TIME},
+      </if>
+      <if test="tzEndDt != null" >
+        #{tzEndDt,jdbcType=DATE},
+      </if>
+      <if test="tzEndTm != null" >
+        #{tzEndTm,jdbcType=TIME},
+      </if>
+      <if test="tzNactAddr != null" >
+        #{tzNactAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHdCs != null" >
+        #{tzHdCs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyZxbm != null" >
+        #{tzQyZxbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppfDt != null" >
+        #{tzAppfDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppfTm != null" >
+        #{tzAppfTm,jdbcType=TIME},
+      </if>
+      <if test="tzAppeDt != null" >
+        #{tzAppeDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppeTm != null" >
+        #{tzAppeTm,jdbcType=TIME},
+      </if>
+      <if test="tzXws != null" >
+        #{tzXws,jdbcType=INTEGER},
+      </if>
+      <if test="tzXsms != null" >
+        #{tzXsms,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl" >
+    update PS_TZ_ART_HD_TBL
+    <set >
+      <if test="tzNactName != null" >
+        TZ_NACT_NAME = #{tzNactName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartDt != null" >
+        TZ_START_DT = #{tzStartDt,jdbcType=DATE},
+      </if>
+      <if test="tzStartTm != null" >
+        TZ_START_TM = #{tzStartTm,jdbcType=TIME},
+      </if>
+      <if test="tzEndDt != null" >
+        TZ_END_DT = #{tzEndDt,jdbcType=DATE},
+      </if>
+      <if test="tzEndTm != null" >
+        TZ_END_TM = #{tzEndTm,jdbcType=TIME},
+      </if>
+      <if test="tzNactAddr != null" >
+        TZ_NACT_ADDR = #{tzNactAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHdCs != null" >
+        TZ_HD_CS = #{tzHdCs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyZxbm != null" >
+        TZ_QY_ZXBM = #{tzQyZxbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppfDt != null" >
+        TZ_APPF_DT = #{tzAppfDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppfTm != null" >
+        TZ_APPF_TM = #{tzAppfTm,jdbcType=TIME},
+      </if>
+      <if test="tzAppeDt != null" >
+        TZ_APPE_DT = #{tzAppeDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppeTm != null" >
+        TZ_APPE_TM = #{tzAppeTm,jdbcType=TIME},
+      </if>
+      <if test="tzXws != null" >
+        TZ_XWS = #{tzXws,jdbcType=INTEGER},
+      </if>
+      <if test="tzXsms != null" >
+        TZ_XSMS = #{tzXsms,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl" >
+    update PS_TZ_ART_HD_TBL
+    set TZ_NACT_NAME = #{tzNactName,jdbcType=VARCHAR},
+      TZ_START_DT = #{tzStartDt,jdbcType=DATE},
+      TZ_START_TM = #{tzStartTm,jdbcType=TIME},
+      TZ_END_DT = #{tzEndDt,jdbcType=DATE},
+      TZ_END_TM = #{tzEndTm,jdbcType=TIME},
+      TZ_NACT_ADDR = #{tzNactAddr,jdbcType=VARCHAR},
+      TZ_HD_CS = #{tzHdCs,jdbcType=VARCHAR},
+      TZ_QY_ZXBM = #{tzQyZxbm,jdbcType=VARCHAR},
+      TZ_APPF_DT = #{tzAppfDt,jdbcType=DATE},
+      TZ_APPF_TM = #{tzAppfTm,jdbcType=TIME},
+      TZ_APPE_DT = #{tzAppeDt,jdbcType=DATE},
+      TZ_APPE_TM = #{tzAppeTm,jdbcType=TIME},
+      TZ_XWS = #{tzXws,jdbcType=INTEGER},
+      TZ_XSMS = #{tzXsms,jdbcType=VARCHAR}
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+  </update>
+</mapper>
