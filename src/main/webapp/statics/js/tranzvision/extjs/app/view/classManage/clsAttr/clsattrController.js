@@ -222,7 +222,8 @@
 			
 			grid = this.lookupReference('setDropdownWindowGrid');
 					//console.log(grid);
-			var tzStoreParams = "{'attrType':'"+attrType+"','attrValue':'"+attrValue+"'}";
+			//var tzStoreParams = "{'attrType':'"+attrType+"','attrValue':'"+attrValue+"'}";
+			var tzStoreParams = '{"attrType":"'+attrType+'","attrValue":"'+attrValue+'"}';
 			grid.store.tzStoreParams = tzStoreParams;
 			grid.store.load();		
 			
