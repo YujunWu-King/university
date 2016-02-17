@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxETMapper;
@@ -24,14 +25,19 @@ import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxTKey;
+import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPicTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFileTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
@@ -86,6 +92,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	private TzEventsItemOptionsServiceImpl tzEventsItemOptionsServiceImpl;
 
 	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;
+
+	@Autowired
 	private PsTzArtTitimgTMapper psTzArtTitimgTMapper;
 
 	@Autowired
@@ -108,6 +117,12 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzArtFileTMapper psTzArtFileTMapper;
+
+	@Autowired
+	private PsTzArtPicTMapper psTzArtPicTMapper;
+	
+	@Autowired
+	private ArtContentHtml artContentHtml;
 
 	/**
 	 * 获取活动信息
@@ -446,20 +461,19 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				strRet = jacksonUtil.Map2json(mapRet);
 
 				// 生成页面代码
-				String todoGenHtml;
-				String[] contentHtml = new String[] {};
+				String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
 
 				// 更新文章内容关联表
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 				psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
 				psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
 				psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
-				psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml[2]);
+				psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
 				psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 				psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 
 				if ("Y".equals(publishStatus)) {
-					psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml[2]);
+					psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
 				} else if ("N".equals(publishStatus)) {
 					psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
 				}
@@ -550,23 +564,24 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				strRet = jacksonUtil.Map2json(mapRet);
 
 				// 生成页面代码
-				String todoGenHtml;
-				String[] contentHtml = new String[] {};
-				String[] contentPhoneHtml = new String[] {};
+				String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
+				
+				String toGenPhoneHtml;
+				//String[] contentPhoneHtml = new String[] {};
 
 				// 更新文章内容关联表
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 				psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
 				psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
 				psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
-				psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml[2]);
-				psTzLmNrGlTWithBLOBs.setTzArtSjHtml(contentPhoneHtml[2]);
+				psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
+				psTzLmNrGlTWithBLOBs.setTzArtSjHtml("");
 				psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 				psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 
 				if ("Y".equals(publishStatus)) {
-					psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml[2]);
-					psTzLmNrGlTWithBLOBs.setTzArtSjContScr(contentPhoneHtml[2]);
+					psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+					psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 				} else if ("N".equals(publishStatus)) {
 					psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
 					psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
@@ -1174,44 +1189,123 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	 */
 	private String saveArtTpj(JacksonUtil jacksonUtil, String[] errorMsg) {
 		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
 		try {
 
-			Date dateNow = new Date();
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			
 			boolean doLoop = true;
 			ArrayList<String> sysFileNameArr = new ArrayList<String>();
 			int num = 0;
-			
-			while(doLoop){
-				
+
+			String activityId = jacksonUtil.getString("activityId");
+
+			while (doLoop) {
+
 				num++;
-				
+
 				String keyName = "data" + String.valueOf(num);
-				Map<String,Object> mapParams = jacksonUtil.getMap(keyName);
-				
-				//系统文件名
-				String sysFileName = mapParams.get("")==null?"":String.valueOf(mapParams.get(""));
-				//序号
-				String index = mapParams.get("")==null?"":String.valueOf(mapParams.get(""));
-				//路径
-				String src = mapParams.get("")==null?"":String.valueOf(mapParams.get(""));
-				//描述
-				String caption = mapParams.get("")==null?"":String.valueOf(mapParams.get(""));
-				//跳转URL
-				String picURL = mapParams.get("")==null?"":String.valueOf(mapParams.get(""));
-				
-				
-				
+				Map<String, Object> mapParams = jacksonUtil.getMap(keyName);
+
+				if (null == mapParams) {
+					break;
+				}
+
+				// 系统文件名
+				String sysFileName = mapParams.get("sysFileName") == null ? ""
+						: String.valueOf(mapParams.get("sysFileName"));
+				// 序号
+				int index = mapParams.get("index") == null ? 0
+						: Integer.parseInt(String.valueOf(mapParams.get("index")));
+				// 路径
+				// String src = mapParams.get("src") == null ? "" :
+				// String.valueOf(mapParams.get("src"));
+				// 描述
+				String caption = mapParams.get("caption") == null ? "" : String.valueOf(mapParams.get("caption"));
+				// 跳转URL
+				String picURL = mapParams.get("picURL") == null ? "" : String.valueOf(mapParams.get("picURL"));
+
+				PsTzArtPicT psTzArtPicT = new PsTzArtPicT();
+				psTzArtPicT.setTzArtId(activityId);
+				psTzArtPicT.setTzAttachsysfilena(sysFileName);
+				psTzArtPicT.setTzPriority(index);
+				psTzArtPicT.setTzImgDescr(caption);
+				psTzArtPicT.setTzImgTrsUrl(picURL);
+
+				String sql = "select 'Y' from PS_TZ_ART_PIC_T where TZ_ART_ID=? and TZ_ATTACHSYSFILENA=?";
+				String recExists = sqlQuery.queryForObject(sql, new Object[] { activityId, sysFileName }, "String");
+
+				int rst = 0;
+				if ("Y".equals(recExists)) {
+					rst = psTzArtPicTMapper.updateByPrimaryKey(psTzArtPicT);
+				} else {
+					rst = psTzArtPicTMapper.insert(psTzArtPicT);
+				}
+
+				if (rst > 0) {
+					sysFileNameArr.add(sysFileName);
+				}
+
 			}
-			
-			
+
+			if (jacksonUtil.containsKey("data0")) {
+				String data0 = jacksonUtil.getString("data0");
+				if ("deleteAll".equals(data0)) {
+					sysFileNameArr.clear();
+				}
+			}
+
+			if (null != sysFileNameArr && sysFileNameArr.size() > 0) {
+				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTPJs");
+				List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { activityId });
+
+				for (Map<String, Object> mapData : listData) {
+					String sysFname = mapData.get("TZ_ATTACHSYSFILENA") == null ? ""
+							: String.valueOf(mapData.get("TZ_ATTACHSYSFILENA"));
+					if (!sysFileNameArr.contains(sysFname)) {
+						// 若数据库中有，而提交的数据中没有，则删除表中记录，并删除物理文件
+						PsTzArtPicTKey psTzArtPicTKey = new PsTzArtPicTKey();
+						psTzArtPicTKey.setTzArtId(activityId);
+						psTzArtPicTKey.setTzAttachsysfilena(sysFname);
+						psTzArtPicTMapper.deleteByPrimaryKey(psTzArtPicTKey);
+
+						PsTzArtTpjT psTzArtTpjT = psTzArtTpjTMapper.selectByPrimaryKey(sysFname);
+
+						if (null == psTzArtTpjT) {
+							continue;
+						}
+
+						String delFilePath = "";
+
+						String tzAttPUrl = psTzArtTpjT.getTzAttPUrl();
+						String tzYsAttachsysnam = psTzArtTpjT.getTzYsAttachsysnam();
+						String tzSlAttachsysnam = psTzArtTpjT.getTzSlAttachsysnam();
+
+						if (null != tzAttPUrl && !"".equals(tzAttPUrl)) {
+							if (!tzAttPUrl.endsWith("/")) {
+								tzAttPUrl = tzAttPUrl + "/";
+							}
+
+							delFilePath = tzAttPUrl + sysFname;
+							fileManageServiceImpl.DeleteFile(delFilePath);
+
+							if (null != tzYsAttachsysnam && !"".equals(tzYsAttachsysnam)) {
+								delFilePath = tzAttPUrl + tzYsAttachsysnam;
+								fileManageServiceImpl.DeleteFile(delFilePath);
+							}
+
+							if (null != tzSlAttachsysnam && !"".equals(tzSlAttachsysnam)) {
+								delFilePath = tzAttPUrl + tzSlAttachsysnam;
+								fileManageServiceImpl.DeleteFile(delFilePath);
+							}
+
+						}
+
+					}
+				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "";
+			errorMsg[1] = "保存图片集失败。" + e.getMessage();
 		}
 
 		return strRet;
@@ -1227,17 +1321,21 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	 */
 	private String deleteActivityApplyInfo(String activityId, Map<String, Object> mapParams, String[] errorMsg) {
 		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
-			Date dateNow = new Date();
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String applyItemId = mapParams.get("applyItemId") == null ? ""
+					: String.valueOf(mapParams.get("applyItemId"));
+
+			PsTzZxbmXxxTKey psTzZxbmXxxTKey = new PsTzZxbmXxxTKey();
+			psTzZxbmXxxTKey.setTzArtId(activityId);
+			psTzZxbmXxxTKey.setTzZxbmXxxId(applyItemId);
+
+			psTzZxbmXxxTMapper.deleteByPrimaryKey(psTzZxbmXxxTKey);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "";
+			errorMsg[1] = "活动信息项失败。" + e.getMessage();
 		}
 
 		return strRet;
@@ -1253,17 +1351,36 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	 */
 	private String deleteArtAttachment(String activityId, Map<String, Object> mapParams, String[] errorMsg) {
 		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
-			Date dateNow = new Date();
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String attachmentID = mapParams.get("attachmentID") == null ? ""
+					: String.valueOf(mapParams.get("attachmentID"));
+
+			if (null != activityId && !"".equals(activityId)) {
+				PsTzArtFileTKey psTzArtFileTKey = new PsTzArtFileTKey();
+				psTzArtFileTKey.setTzArtId(activityId);
+				psTzArtFileTKey.setTzAttachsysfilena(attachmentID);
+				psTzArtFileTMapper.deleteByPrimaryKey(psTzArtFileTKey);
+			}
+
+			PsTzArtFjjT psTzArtFjjT = psTzArtFjjTMapper.selectByPrimaryKey(attachmentID);
+			if (null != psTzArtFjjT) {
+				String tzAttPUrl = psTzArtFjjT.getTzAttPUrl();
+				if (null != tzAttPUrl && !"".equals(tzAttPUrl)) {
+					if (!tzAttPUrl.endsWith("/")) {
+						tzAttPUrl = tzAttPUrl + "/";
+					}
+					String delFilePath = tzAttPUrl + attachmentID;
+					fileManageServiceImpl.DeleteFile(delFilePath);
+				}
+
+				psTzArtFjjTMapper.deleteByPrimaryKey(attachmentID);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "";
+			errorMsg[1] = "删除附件集失败。" + e.getMessage();
 		}
 
 		return strRet;
@@ -1294,10 +1411,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	 */
 	private String resizeANDbyte(String fileDir, String attachSysName, int width) {
 
-		String toCompleteTheMethod;
-		String strRet = "";
-		// String strRet = resizeImageUtil.resizeANDbyte(fileDir +
-		// attachSysName, fileDir, "new_" + attachSysName, width);
+		String strRet = resizeImageUtil.resize(fileDir + attachSysName, fileDir, "new_" + attachSysName, width);
 
 		return strRet;
 	}
