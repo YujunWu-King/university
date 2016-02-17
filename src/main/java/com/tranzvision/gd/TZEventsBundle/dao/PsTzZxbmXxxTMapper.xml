@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT" >
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <id column="TZ_ZXBM_XXX_ID" property="tzZxbmXxxId" jdbcType="VARCHAR" />
+    <result column="TZ_PX_XH" property="tzPxXh" jdbcType="INTEGER" />
+    <result column="TZ_ZXBM_XXX_NAME" property="tzZxbmXxxName" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_BT" property="tzZxbmXxxBt" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_ZSXS" property="tzZxbmXxxZsxs" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ART_ID, TZ_ZXBM_XXX_ID, TZ_PX_XH, TZ_ZXBM_XXX_NAME, TZ_ZXBM_XXX_BT, TZ_ZXBM_XXX_ZSXS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_ZXBM_XXX_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxTKey" >
+    delete from PS_TZ_ZXBM_XXX_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT" >
+    insert into PS_TZ_ZXBM_XXX_T (TZ_ART_ID, TZ_ZXBM_XXX_ID, TZ_PX_XH, 
+      TZ_ZXBM_XXX_NAME, TZ_ZXBM_XXX_BT, TZ_ZXBM_XXX_ZSXS
+      )
+    values (#{tzArtId,jdbcType=VARCHAR}, #{tzZxbmXxxId,jdbcType=VARCHAR}, #{tzPxXh,jdbcType=INTEGER}, 
+      #{tzZxbmXxxName,jdbcType=VARCHAR}, #{tzZxbmXxxBt,jdbcType=VARCHAR}, #{tzZxbmXxxZsxs,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT" >
+    insert into PS_TZ_ZXBM_XXX_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzZxbmXxxId != null" >
+        TZ_ZXBM_XXX_ID,
+      </if>
+      <if test="tzPxXh != null" >
+        TZ_PX_XH,
+      </if>
+      <if test="tzZxbmXxxName != null" >
+        TZ_ZXBM_XXX_NAME,
+      </if>
+      <if test="tzZxbmXxxBt != null" >
+        TZ_ZXBM_XXX_BT,
+      </if>
+      <if test="tzZxbmXxxZsxs != null" >
+        TZ_ZXBM_XXX_ZSXS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxId != null" >
+        #{tzZxbmXxxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPxXh != null" >
+        #{tzPxXh,jdbcType=INTEGER},
+      </if>
+      <if test="tzZxbmXxxName != null" >
+        #{tzZxbmXxxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxBt != null" >
+        #{tzZxbmXxxBt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxZsxs != null" >
+        #{tzZxbmXxxZsxs,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT" >
+    update PS_TZ_ZXBM_XXX_T
+    <set >
+      <if test="tzPxXh != null" >
+        TZ_PX_XH = #{tzPxXh,jdbcType=INTEGER},
+      </if>
+      <if test="tzZxbmXxxName != null" >
+        TZ_ZXBM_XXX_NAME = #{tzZxbmXxxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxBt != null" >
+        TZ_ZXBM_XXX_BT = #{tzZxbmXxxBt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxZsxs != null" >
+        TZ_ZXBM_XXX_ZSXS = #{tzZxbmXxxZsxs,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT" >
+    update PS_TZ_ZXBM_XXX_T
+    set TZ_PX_XH = #{tzPxXh,jdbcType=INTEGER},
+      TZ_ZXBM_XXX_NAME = #{tzZxbmXxxName,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_BT = #{tzZxbmXxxBt,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_ZSXS = #{tzZxbmXxxZsxs,jdbcType=VARCHAR}
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+  </update>
+</mapper>

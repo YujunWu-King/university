@@ -40,9 +40,9 @@ public class SqlQuery {
 		try {
 			return (T) jdbcTemplate.queryForObject(sql, varType2Class.change2Class(objType));
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -53,9 +53,9 @@ public class SqlQuery {
 		try {
 			return (T) jdbcTemplate.queryForObject(sql, args, varType2Class.change2Class(objType));
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -67,7 +67,7 @@ public class SqlQuery {
 		try {
 			return (List<T>) jdbcTemplate.queryForList(sql);
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -79,7 +79,7 @@ public class SqlQuery {
 		try {
 			return (List<T>) jdbcTemplate.queryForList(sql, args);
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -91,7 +91,7 @@ public class SqlQuery {
 		try {
 			return (List<T>) jdbcTemplate.queryForList(sql, varType2Class.change2Class(elmType));
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -102,9 +102,9 @@ public class SqlQuery {
 		try {
 			return jdbcTemplate.queryForMap(sql);
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -115,9 +115,9 @@ public class SqlQuery {
 		try {
 			return jdbcTemplate.queryForMap(sql, args);
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 
 		return null;
@@ -127,7 +127,7 @@ public class SqlQuery {
 		try {
 			return jdbcTemplate.update(sql);
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return -1;
 	}
@@ -136,9 +136,17 @@ public class SqlQuery {
 		try {
 			return jdbcTemplate.update(sql, args);
 		} catch (DataAccessException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return -1;
+	}
+	
+	public void execute(String sql){
+		try {
+			jdbcTemplate.execute(sql);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

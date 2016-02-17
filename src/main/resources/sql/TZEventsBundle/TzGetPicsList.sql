@@ -1,0 +1,13 @@
+select 
+	TZ_IMG_ID,
+	TZ_PRIORITY,
+	TZ_IMG_URL,
+	TZ_IMG_DESCR,
+	TZ_IMG_TRS_URL,
+	TZ_TITLE_200,
+	TZ_ATTSYSFILENAME 
+from 
+	PS_TZ_ART_PIC_T 
+where 
+	TZ_ART_ID=? 
+order by TZ_PRIORITY

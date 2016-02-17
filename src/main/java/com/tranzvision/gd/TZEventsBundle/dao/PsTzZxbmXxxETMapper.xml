@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxETMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET" >
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <id column="TZ_ZXBM_XXX_ID" property="tzZxbmXxxId" jdbcType="VARCHAR" />
+    <id column="LANGUAGE_CD" property="languageCd" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_NAME" property="tzZxbmXxxName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ART_ID, TZ_ZXBM_XXX_ID, LANGUAGE_CD, TZ_ZXBM_XXX_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxETKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_ZXBM_XXX_E_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxETKey" >
+    delete from PS_TZ_ZXBM_XXX_E_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET" >
+    insert into PS_TZ_ZXBM_XXX_E_T (TZ_ART_ID, TZ_ZXBM_XXX_ID, LANGUAGE_CD, 
+      TZ_ZXBM_XXX_NAME)
+    values (#{tzArtId,jdbcType=VARCHAR}, #{tzZxbmXxxId,jdbcType=VARCHAR}, #{languageCd,jdbcType=VARCHAR}, 
+      #{tzZxbmXxxName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET" >
+    insert into PS_TZ_ZXBM_XXX_E_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzZxbmXxxId != null" >
+        TZ_ZXBM_XXX_ID,
+      </if>
+      <if test="languageCd != null" >
+        LANGUAGE_CD,
+      </if>
+      <if test="tzZxbmXxxName != null" >
+        TZ_ZXBM_XXX_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxId != null" >
+        #{tzZxbmXxxId,jdbcType=VARCHAR},
+      </if>
+      <if test="languageCd != null" >
+        #{languageCd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxxName != null" >
+        #{tzZxbmXxxName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET" >
+    update PS_TZ_ZXBM_XXX_E_T
+    <set >
+      <if test="tzZxbmXxxName != null" >
+        TZ_ZXBM_XXX_NAME = #{tzZxbmXxxName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET" >
+    update PS_TZ_ZXBM_XXX_E_T
+    set TZ_ZXBM_XXX_NAME = #{tzZxbmXxxName,jdbcType=VARCHAR}
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_ZXBM_XXX_ID = #{tzZxbmXxxId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+</mapper>

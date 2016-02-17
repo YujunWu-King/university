@@ -18,14 +18,16 @@
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_ART_URL" property="tzArtUrl" jdbcType="LONGVARCHAR" />
     <result column="TZ_ART_HTML" property="tzArtHtml" jdbcType="LONGVARCHAR" />
+    <result column="TZ_ART_SJ_HTML" property="tzArtSjHtml" jdbcType="LONGVARCHAR" />
     <result column="TZ_ART_CONENT_SCR" property="tzArtConentScr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_ART_SJ_CONT_SCR" property="tzArtSjContScr" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_SITE_ID, TZ_COLU_ID, TZ_ART_ID, TZ_ART_NEWS_DT, TZ_ART_PUB_STATE, TZ_STATIC_ART_URL, 
     TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM
   </sql>
   <sql id="Blob_Column_List" >
-    TZ_ART_URL, TZ_ART_HTML, TZ_ART_CONENT_SCR
+    TZ_ART_URL, TZ_ART_HTML, TZ_ART_SJ_HTML, TZ_ART_CONENT_SCR, TZ_ART_SJ_CONT_SCR
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey" >
     select 
@@ -48,14 +50,14 @@
       TZ_ART_NEWS_DT, TZ_ART_PUB_STATE, TZ_STATIC_ART_URL, 
       TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, 
       TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM, 
-      TZ_ART_URL, TZ_ART_HTML, TZ_ART_CONENT_SCR
-      )
+      TZ_ART_URL, TZ_ART_HTML, TZ_ART_SJ_HTML, 
+      TZ_ART_CONENT_SCR, TZ_ART_SJ_CONT_SCR)
     values (#{tzSiteId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzArtId,jdbcType=VARCHAR}, 
       #{tzArtNewsDt,jdbcType=TIMESTAMP}, #{tzArtPubState,jdbcType=VARCHAR}, #{tzStaticArtUrl,jdbcType=VARCHAR}, 
       #{tzArtSeq,jdbcType=INTEGER}, #{tzMaxZdSeq,jdbcType=INTEGER}, #{tzFbz,jdbcType=VARCHAR}, 
       #{tzBltDept,jdbcType=VARCHAR}, #{tzLastmantOprid,jdbcType=VARCHAR}, #{tzLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{tzArtUrl,jdbcType=LONGVARCHAR}, #{tzArtHtml,jdbcType=LONGVARCHAR}, #{tzArtConentScr,jdbcType=LONGVARCHAR}
-      )
+      #{tzArtUrl,jdbcType=LONGVARCHAR}, #{tzArtHtml,jdbcType=LONGVARCHAR}, #{tzArtSjHtml,jdbcType=LONGVARCHAR}, 
+      #{tzArtConentScr,jdbcType=LONGVARCHAR}, #{tzArtSjContScr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs" >
     insert into PS_TZ_LM_NR_GL_T
@@ -102,8 +104,14 @@
       <if test="tzArtHtml != null" >
         TZ_ART_HTML,
       </if>
+      <if test="tzArtSjHtml != null" >
+        TZ_ART_SJ_HTML,
+      </if>
       <if test="tzArtConentScr != null" >
         TZ_ART_CONENT_SCR,
+      </if>
+      <if test="tzArtSjContScr != null" >
+        TZ_ART_SJ_CONT_SCR,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -149,8 +157,14 @@
       <if test="tzArtHtml != null" >
         #{tzArtHtml,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzArtSjHtml != null" >
+        #{tzArtSjHtml,jdbcType=LONGVARCHAR},
+      </if>
       <if test="tzArtConentScr != null" >
         #{tzArtConentScr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtSjContScr != null" >
+        #{tzArtSjContScr,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -190,8 +204,14 @@
       <if test="tzArtHtml != null" >
         TZ_ART_HTML = #{tzArtHtml,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzArtSjHtml != null" >
+        TZ_ART_SJ_HTML = #{tzArtSjHtml,jdbcType=LONGVARCHAR},
+      </if>
       <if test="tzArtConentScr != null" >
         TZ_ART_CONENT_SCR = #{tzArtConentScr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzArtSjContScr != null" >
+        TZ_ART_SJ_CONT_SCR = #{tzArtSjContScr,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
@@ -211,7 +231,9 @@
       TZ_LASTMANT_DTTM = #{tzLastmantDttm,jdbcType=TIMESTAMP},
       TZ_ART_URL = #{tzArtUrl,jdbcType=LONGVARCHAR},
       TZ_ART_HTML = #{tzArtHtml,jdbcType=LONGVARCHAR},
-      TZ_ART_CONENT_SCR = #{tzArtConentScr,jdbcType=LONGVARCHAR}
+      TZ_ART_SJ_HTML = #{tzArtSjHtml,jdbcType=LONGVARCHAR},
+      TZ_ART_CONENT_SCR = #{tzArtConentScr,jdbcType=LONGVARCHAR},
+      TZ_ART_SJ_CONT_SCR = #{tzArtSjContScr,jdbcType=LONGVARCHAR}
     where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
       and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
