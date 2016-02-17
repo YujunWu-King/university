@@ -1,0 +1,11 @@
+SELECT TZ_XXX_BH 
+ ,TZ_XXX_MC 
+  FROM PS_TZ_APP_XXXPZ_T A 
+ WHERE NOT EXISTS ( 
+ SELECT 'Y' 
+  FROM PS_TZ_APP_XXXPZ_T B 
+ WHERE B.TZ_APP_TPL_ID = ? 
+   AND A.TZ_XXX_BH = B.TZ_XXX_BH 
+   AND A.TZ_COM_LMC = B.TZ_COM_LMC) 
+   AND A.TZ_APP_TPL_ID = ? 
+   AND A.TZ_COM_LMC NOT IN ('TextExplain','Page','LayoutControls','Separator')

@@ -260,7 +260,8 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			win = new ViewClass();
 			this.getView().add(win);
 		}
-		var tzStoreParams = "{'tplid':'" + tplid + "'}";
+		//var tzStoreParams = "{'tplid':'" + tplid + "'}";
+		var tzStoreParams = '{"tplid":"' + tplid + '"}';
 		/*下拉框值Grid.store*/
 		var vinStroe = win.child('grid').store;
 		vinStroe.tzStoreParams = tzStoreParams;

@@ -310,7 +310,8 @@
 			
 			grid = this.lookupReference('fsetDropdownWindowGrid');
 					//console.log(grid);
-			var tzStoreParams = "{'attrType':'"+attrType+"','attrValue':'"+attrValue+"'}";
+			//var tzStoreParams = "{'attrType':'"+attrType+"','attrValue':'"+attrValue+"'}";
+			var tzStoreParams = '{"attrType":"'+attrType+'","attrValue":"'+attrValue+'"}';
 			grid.store.tzStoreParams = tzStoreParams;
 			grid.store.load();		
 			
@@ -516,7 +517,7 @@
 
 				Ext.tzSubmit(tzParams,function(responseData){
 
-				});
+				},"",true,this);
 				
 			}
 		}

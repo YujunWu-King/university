@@ -120,7 +120,7 @@ SurveyBuild.extend("GridMultipleChoice", "baseComponent", {
 				s += '<tr>';
 				s += '<th id="sq'+ i +'">'+ data["child"][i]["question"] +'</th>';
 				for (var j in data.option) {
-					s += '<td><img src="/survey/assets/img/read-check.gif"></td>';	
+					s += '<td><img src="/statics/images/appeditor/read-check.gif"></td>';	
 				}
 				s += '</tr>';	
 			}

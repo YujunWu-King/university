@@ -12,6 +12,7 @@
 	modal: true,
 	actType: 'add',
 	
+	
 	//header:false,
 	//frame: true,
    
@@ -73,6 +74,12 @@
 						}
 					},*/
 					columns: [{
+						text: Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMSX_NEW_STD.attrValue","属性"),
+						sortable: true,
+						dataIndex: 'attrValue',
+						hidden:true,
+						xtype: 'hiddenfield'
+					},{
 						text: Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMSX_NEW_STD.attrDropDownId","下拉值"),
 						sortable: true,
 						dataIndex: 'attrDropDownId',
