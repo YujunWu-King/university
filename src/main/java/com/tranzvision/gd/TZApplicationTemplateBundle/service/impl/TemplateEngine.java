@@ -1123,7 +1123,7 @@ public class TemplateEngine {
 	 * 获取模板相关控件
 	 */
 	@SuppressWarnings("unchecked")
-	private ArrayList<Map<String, Object>> getComDfn(String tplId) {
+	public ArrayList<Map<String, Object>> getComDfn(String tplId) {
 		String contextUrl = request.getContextPath();
 
 		String sqlLang = "SELECT TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
