@@ -53,7 +53,8 @@ public class SqlQuery {
 		try {
 			return (T) jdbcTemplate.queryForObject(sql, args, varType2Class.change2Class(objType));
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			ex.printStackTrace();
+			// 若SQL查询不到值，会抛出此异常，属于正常情况，不要将此异常信息输出到控制台
+			// ex.printStackTrace();
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		}
@@ -140,8 +141,8 @@ public class SqlQuery {
 		}
 		return -1;
 	}
-	
-	public void execute(String sql){
+
+	public void execute(String sql) {
 		try {
 			jdbcTemplate.execute(sql);
 		} catch (DataAccessException e) {
