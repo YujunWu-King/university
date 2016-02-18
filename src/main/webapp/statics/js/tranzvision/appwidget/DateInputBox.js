@@ -26,7 +26,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
                 c += '  </div>';
                 c += '  <div class="main_inner_content_info_right">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input_251px " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
-                c += '      <img id="' + data.itemId + '_Btn" src="/tranzvision/images/calendar.png" style="position:relative;left:-41px;cursor:pointer;">';
+                c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-41px;cursor:pointer;">';
                 c += '       <div style="margin-top:-42px;margin-left:256px">';
                 c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
                 c += '              <div class="onShow"></div>';

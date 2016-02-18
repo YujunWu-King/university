@@ -355,8 +355,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				edus += '<input type="text" title="' + child[i].EduExper2["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper2["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper2["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper2["itemId"] + '" value="' + child[i].EduExper2["value"] + '">&nbsp;';
 				edus += '<input type="text" title="' + child[i].EduExper3["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper3["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper3["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper3["itemId"] + '" value="' + child[i].EduExper3["value"] + '" style="'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
 
-				edus += '<img id="' + data.itemId + child[i].EduExper2["itemId"] + '_Btn" src="/tranzvision/images/calendar.png" style="position:relative;left:'+(child[i].EduExper4["value"] == "Y" ? "-40px" : "-168px")+';cursor:pointer;">';
-				edus += '<img id="' + data.itemId + child[i].EduExper3["itemId"] + '_Btn" src="/tranzvision/images/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
+				edus += '<img id="' + data.itemId + child[i].EduExper2["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:'+(child[i].EduExper4["value"] == "Y" ? "-40px" : "-168px")+';cursor:pointer;">';
+				edus += '<img id="' + data.itemId + child[i].EduExper3["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
 
 				if(j == 0){
 					edus += '<div class="tz_checkbox_div '+(child[i].EduExper4["value"] == "Y" ? "on_check": "")+'" style="margin: 0px;position: relative; left:'+(child[i].EduExper4["value"] == "Y" ? "-25px" : "-48px")+'">';

@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.qrcode.CreateQRCode;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -33,6 +35,12 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TZGDObject tzGDObject;
+	
+	@Autowired
+	private CreateQRCode createQRCode;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -92,6 +100,8 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			jacksonUtil.json2Map(strParams);
 
 			String activityId = jacksonUtil.getString("activityId");
@@ -99,19 +109,14 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 			String coluId = jacksonUtil.getString("coluId");
 
 			String qrcodeFileName = "TZ_ART_EVENT_PREVIEW_" + siteId + "_" + coluId + "_" + activityId + ".png";
-
-			String sql = "select TZ_IMG_STOR from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-			String imgStorePath = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
-
-			String qrcodeFilePath = imgStorePath + "/" + qrcodeFileName;
-
+			
 			String ctxPath = request.getContextPath();
 
 			String qrcodeUrl = request.getProtocol() + request.getServerName() + ":"
 					+ String.valueOf(request.getServerPort()) + ctxPath + "/event/preview/m/" + siteId + "/" + coluId
 					+ "/" + activityId;
 
-			String todoGenQrCode;
+			String qrcodeFilePath = createQRCode.encodeQRCode(orgid, qrcodeUrl, qrcodeFileName);
 
 			Map<String, Object> mapJson = new HashMap<String, Object>();
 			mapJson.put("codeImage", qrcodeFilePath);

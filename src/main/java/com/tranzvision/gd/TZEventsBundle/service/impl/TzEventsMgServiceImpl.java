@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -45,6 +46,9 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzLmNrGlTMapper psTzLmNrGlTMapper;
+	
+	@Autowired
+	private ArtContentHtml artContentHtml;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -193,8 +197,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 
-							String todoGenArtHtml;
-							String tzArtHtml = "";
+							String tzArtHtml = artContentHtml.getContentHtml(tzSiteId, tzColuId, tzArtId);
 							psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
 
 							if ("Y".equals(tzArtPubState)) {

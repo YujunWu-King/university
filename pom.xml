@@ -39,6 +39,8 @@
 		<quartz.version>2.2.2</quartz.version>
 		<c3p0.version>0.9.1.1</c3p0.version>
 		<imagescaling.version>0.8.6</imagescaling.version>
+		<zxingcore.version>3.2.1</zxingcore.version>
+		<zxingse.version>3.2.1</zxingse.version>
 	</properties>
 
 	<dependencies>
@@ -48,7 +50,7 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -248,7 +250,7 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>${imgscalr.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.mortennobel</groupId>
 			<artifactId>java-image-scaling</artifactId>
@@ -260,13 +262,13 @@
 			<artifactId>mail</artifactId>
 			<version>${mail.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${comlang3.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.sun.phobos</groupId>
 			<artifactId>freemarker</artifactId>
@@ -307,9 +309,23 @@
 		<dependency>
 			<groupId>c3p0</groupId>
 			<artifactId>c3p0</artifactId>
-			<version>0.9.1.1</version>
+			<version>${c3p0.version}</version>
 		</dependency>
 		<!-- quartz end -->
+
+		<!-- qrcode jar包 -->
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxingcore.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>${zxingse.version}</version>
+		</dependency>
+		<!-- qrcode jar包 end -->
 
 	</dependencies>
 

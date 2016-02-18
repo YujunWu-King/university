@@ -4093,13 +4093,13 @@ add by zhanglang
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
-	background-image: url(/onlineReg/images/radio_off_bg.png);
+	background-image: url(../../images/appeditor/radio_off_bg.png);
 	background-repeat: no-repeat;
 	margin: 5px 0px;
 	display: inline-block;
 }
 .tz_radio_div.on_check {
-	background-image: url(/onlineReg/images/radio_on_bg.png);
+	background-image: url(../../images/appeditor/radio_on_bg.png);
 }
 .tz_radio_checkbox {
 	opacity: 0;
@@ -4114,13 +4114,13 @@ add by zhanglang
 	width: 20px;
 	height: 20px;
 	cursor: pointer;
-	background-image: url(/onlineReg/images/checkbox_off_bg.png);
+	background-image: url(../../images/appeditor/checkbox_off_bg.png);
 	background-repeat: no-repeat;
 	margin: 5px 0px;
 	display: inline-block;
 }
 .tz_checkbox_div.on_check {
-	background-image: url(/onlineReg/images/checkbox_on_bg.png);
+	background-image: url(../../images/appeditor/checkbox_on_bg.png);
 }
 
 .main_inner_connent_info {
