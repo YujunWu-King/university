@@ -113,10 +113,12 @@
 			SurveyBuild.tzGeneralURL = "%bind(:5)";
 			MsgSet = %bind(:6);
 			//生成左侧工具条列表 ;
-			var componentData ="%bind(:4)";
+			//var componentData ="%bind(:4)";
+			var componentData =%bind(:4);
 			if(componentData){
-				var jsonData = $.parseJSON(componentData);
- 				SurveyBuild["_componentConfig"]=componentData = jsonData["componentDfn"];
+				//var jsonData = $.parseJSON(componentData);
+				var jsonData = componentData;
+ 				SurveyBuild["_componentConfig"] = componentData = jsonData["componentDfn"];
 
 				var typeStr1 = typeStr2 = typeStr3 = typeStr4 = typeStr5 = "";
 				function _getLi(obj){
