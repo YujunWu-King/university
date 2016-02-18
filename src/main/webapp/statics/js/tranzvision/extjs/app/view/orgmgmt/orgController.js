@@ -238,7 +238,7 @@
 
         var orgYxState = formParams["orgYxState"];
 
-        if (orgId == "Admin" && orgYxState == "N") {
+        if (orgId == "ADMIN" && orgYxState == "N") {
             Ext.Msg.alert("提示", "平台管理机构不允许失效操作！");
         } else {
             if (form.isValid()) {
@@ -279,7 +279,7 @@
         var orgId = formParams["orgId"];
         var orgYxState = formParams["orgYxState"];
 
-        if (orgId == "Admin" && orgYxState == "N") {
+        if (orgId == "ADMIN" && orgYxState == "N") {
             Ext.Msg.alert("提示", "平台管理机构不允许失效操作！");
         } else {
             if (form.isValid()) {
@@ -475,7 +475,7 @@
 		   }
 
 		   var orgId = selList[0].get("orgId");
-		   /*if(orgId == "Admin"){
+		   /*if(orgId == "ADMIN"){
 				Ext.Msg.alert("提示","平台管理机构为系统预留机构账号，不能修改");
 				return;
 		   }*/
@@ -540,8 +540,8 @@
 			return;
 	   }else{
 		    for(var i=0;i<checkLen;i++){
-				if(selList[i].get("orgId") == "Admin"){
-					Ext.Msg.alert("提示","平台管理机构Admin为系统预留机构账号，不能删除");
+				if(selList[i].get("orgId") == "ADMIN"){
+					Ext.Msg.alert("提示","平台管理机构ADMIN为系统预留机构账号，不能删除");
 					return;
 				}
 			}
@@ -1039,7 +1039,7 @@
         var selRec = store.getAt(rowIndex);
         //组件ID
         var orgId = selRec.get("orgId");
-        /*if(orgId == "Admin"){
+        /*if(orgId == "ADMIN"){
          Ext.Msg.alert("提示","平台管理机构为系统预留机构账号，不能修改");
          return;
          }*/

@@ -220,7 +220,7 @@
 				var formData = responseData.formData;
 				form.setValues(formData);
 			});
-            var tzStoreParams = '{"cfgSrhId": "TZ_GD_MESSAGE_COM.TZ_GD_MSGINFO_STD.TZ_PT_XXDY_VW","condition":{"TZ_XXJH_ID-operator": "01","TZ_XXJH_ID-value": "'+msgSetID+'","TZ_LANGUAGE_ID-operator": "01","TZ_LANGUAGE_ID-value": "'+TranzvisionMeikecityAdvanced.Boot.language+'","TZ_JG_ID-operator": "01","TZ_JG_ID-value": "Admin"}}';
+            var tzStoreParams = '{"cfgSrhId": "TZ_GD_MESSAGE_COM.TZ_GD_MSGINFO_STD.TZ_PT_XXDY_VW","condition":{"TZ_XXJH_ID-operator": "01","TZ_XXJH_ID-value": "'+msgSetID+'","TZ_LANGUAGE_ID-operator": "01","TZ_LANGUAGE_ID-value": "'+TranzvisionMeikecityAdvanced.Boot.language+'","TZ_JG_ID-operator": "01","TZ_JG_ID-value": "ADMIN"}}';
 			grid.store.tzStoreParams = tzStoreParams;
             grid.store.load();
 		});

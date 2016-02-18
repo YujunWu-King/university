@@ -38,11 +38,9 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFileTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicTKey;
-import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTpjT;
-import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.ResizeImageUtil;
@@ -120,7 +118,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzArtPicTMapper psTzArtPicTMapper;
-	
+
 	@Autowired
 	private ArtContentHtml artContentHtml;
 
@@ -565,9 +563,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				// 生成页面代码
 				String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
-				
+
 				String toGenPhoneHtml;
-				//String[] contentPhoneHtml = new String[] {};
+				// String[] contentPhoneHtml = new String[] {};
 
 				// 更新文章内容关联表
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
@@ -646,6 +644,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
 		// 返回值;
+		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
@@ -657,19 +656,171 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(strParams);
 
 		// 活动编号
-		// String activityId = jacksonUtil.getString("activityId");
+		String activityId = jacksonUtil.getString("activityId");
 		// 信息项id
-		// String applyItemId = jacksonUtil.getString("applyItemId");
+		String applyItemId = jacksonUtil.getString("applyItemId");
 
 		try {
 
-			tzEventsItemOptionsServiceImpl.tzQueryList(strParams, numLimit, numStart, errorMsg);
+			// 如果传了信息项id，则取信息项的值
+			if (null != applyItemId && !"".equals(applyItemId)) {
+				strRet = tzEventsItemOptionsServiceImpl.tzQueryList(strParams, numLimit, numStart, errorMsg);
+				return strRet;
+			}
+
+			// 没传信息项id，则取活动基本信息列表
+			String gridTyp = jacksonUtil.getString("gridTyp");
+			if (null != gridTyp && !"".equals(gridTyp)) {
+				gridTyp = gridTyp.toUpperCase();
+			}
+
+			String sql = "";
+			Map<String, Object> mapJson = new HashMap<String, Object>();
+			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+			int total = 0;
+
+			switch (gridTyp) {
+			case "FJ":
+				// 获取附件信息
+				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAttachsList");
+				List<Map<String, Object>> listFj = sqlQuery.queryForList(sql, new Object[] { activityId });
+				total = 0;
+
+				for (Map<String, Object> mapFj : listFj) {
+
+					String tzATTACHSYSFILENA = mapFj.get("TZ_ATTACHSYSFILENA") == null ? ""
+							: String.valueOf(mapFj.get("TZ_ATTACHSYSFILENA"));
+					String tzATTACHFILENAME = mapFj.get("TZ_ATTACHFILE_NAME") == null ? ""
+							: String.valueOf(mapFj.get("TZ_ATTACHFILE_NAME"));
+					String tzAttAUrl = mapFj.get("TZ_ATT_A_URL") == null ? ""
+							: String.valueOf(mapFj.get("TZ_ATT_A_URL"));
+
+					if (!tzAttAUrl.endsWith("/")) {
+						tzAttAUrl = tzAttAUrl + "/";
+					}
+
+					tzATTACHFILENAME = tzATTACHFILENAME + "|" + tzAttAUrl + tzATTACHSYSFILENA;
+
+					String attachmentUrl = tzAttAUrl + tzATTACHSYSFILENA;
+
+					mapJson.put("attachmentID", tzATTACHSYSFILENA);
+					mapJson.put("attachmentName", tzATTACHFILENAME);
+					mapJson.put("attachmentUrl", attachmentUrl);
+
+					listJson.add(mapJson);
+				}
+
+				sql = "select count(1) from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID = ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
+				total = sqlQuery.queryForObject(sql, new Object[] { activityId }, "int");
+
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+
+				break;
+
+			case "BMX":
+				// 获取报名信息项
+				sql = "select count(1) from PS_TZ_ZXBM_XXX_T where TZ_ART_ID=?";
+				total = sqlQuery.queryForObject(sql, new Object[] { activityId }, "int");
+
+				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventBmXxxList");
+				List<Map<String, Object>> listBmx = sqlQuery.queryForList(sql, new Object[] { activityId });
+				for (Map<String, Object> mapBmx : listBmx) {
+
+					String tzArtId = mapBmx.get("TZ_ART_ID") == null ? "" : String.valueOf(mapBmx.get("TZ_ART_ID"));
+
+					String tzZxbmXxxId = mapBmx.get("TZ_ZXBM_XXX_ID") == null ? ""
+							: String.valueOf(mapBmx.get("TZ_ZXBM_XXX_ID"));
+
+					int applyItemNum = mapBmx.get("TZ_PX_XH") == null ? 0
+							: Integer.parseInt(String.valueOf(mapBmx.get("TZ_PX_XH")));
+
+					String applyItemName = mapBmx.get("TZ_ZXBM_XXX_NAME") == null ? ""
+							: String.valueOf(mapBmx.get("TZ_ZXBM_XXX_NAME"));
+
+					String applyItemRequired = mapBmx.get("TZ_ZXBM_XXX_BT") == null ? ""
+							: String.valueOf(mapBmx.get("TZ_ZXBM_XXX_BT"));
+
+					String applyItemType = mapBmx.get("TZ_ZXBM_XXX_ZSXS") == null ? ""
+							: String.valueOf(mapBmx.get("TZ_ZXBM_XXX_ZSXS"));
+
+					String applyItemNameEng = mapBmx.get("EN_NAME") == null ? ""
+							: String.valueOf(mapBmx.get("EN_NAME"));
+
+					mapJson.put("activityId", tzArtId);
+					mapJson.put("applyItemId", tzZxbmXxxId);
+					mapJson.put("applyItemNum", applyItemNum);
+					mapJson.put("applyItemName", applyItemName);
+					mapJson.put("applyItemRequired", applyItemRequired);
+					mapJson.put("applyItemType", applyItemType);
+					mapJson.put("applyItemNameEng", applyItemNameEng);
+
+					listJson.add(mapJson);
+				}
+
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+
+				break;
+
+			case "TPJ":
+				// 获取图片集
+				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTpjsList");
+				List<Map<String, Object>> listTpj = sqlQuery.queryForList(sql, new Object[] { activityId });
+
+				for (Map<String, Object> mapTpj : listTpj) {
+
+					total++;
+
+					String sysfileName = mapTpj.get("TZ_ATTACHSYSFILENA") == null ? ""
+							: String.valueOf(mapTpj.get("TZ_ATTACHSYSFILENA"));
+
+					String priorityNum = mapTpj.get("TZ_PRIORITY") == null ? "0"
+							: String.valueOf(mapTpj.get("TZ_PRIORITY"));
+
+					String aatAccUrl = mapTpj.get("TZ_ATT_A_URL") == null ? ""
+							: String.valueOf(mapTpj.get("TZ_ATT_A_URL"));
+
+					String desc = mapTpj.get("TZ_IMG_DESCR") == null ? "" : String.valueOf(mapTpj.get("TZ_IMG_DESCR"));
+
+					String imgtrsUrl = mapTpj.get("TZ_IMG_TRS_URL") == null ? ""
+							: String.valueOf(mapTpj.get("TZ_IMG_TRS_URL"));
+
+					String sltPicName = mapTpj.get("TZ_SL_ATTACHSYSNAM") == null ? ""
+							: String.valueOf(mapTpj.get("TZ_SL_ATTACHSYSNAM"));
+
+					if (!aatAccUrl.endsWith("/")) {
+						aatAccUrl = aatAccUrl + "/";
+					}
+
+					mapJson.put("sysFileName", sysfileName);
+					mapJson.put("index", priorityNum);
+					mapJson.put("src", aatAccUrl + sysfileName);
+					mapJson.put("caption", desc);
+					mapJson.put("picURL", imgtrsUrl);
+					mapJson.put("sltUrl", aatAccUrl + sltPicName);
+
+					listJson.add(mapJson);
+
+				}
+
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+
+				break;
+
+			}
 
 		} catch (Exception e) {
-
-			// 这里的程序是否还有必要？
-			String toCheck;
-
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "查询失败。" + e.getMessage();
 		}
 
 		return jacksonUtil.Map2json(mapRet);

@@ -16,7 +16,7 @@
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
     actType: 'add',//默认新增
     lanageType:TranzvisionMeikecityAdvanced.Boot.language,//语言类型，默认中文
-	orgId:'Admin',
+	orgId:'ADMIN',
     items: [{
         xtype: 'form',
 		layout: {
@@ -77,7 +77,7 @@
 						queryMode: 'local',
 						name: 'orgId',
 						width: 180,
-						value: 'Admin',
+						value: 'ADMIN',
 						store: new KitchenSink.view.common.store.comboxStore({
 							recname: 'TZ_JG_BASE_T',
 							condition:{

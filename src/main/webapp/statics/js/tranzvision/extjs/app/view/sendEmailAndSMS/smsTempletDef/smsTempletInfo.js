@@ -122,7 +122,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
 						afterrender: function(combox){
 							//当前登录人机构id
 							console.log(combox.value);
-							if(combox.value != 'Admin')
+							if(combox.value != 'ADMIN')
 							{
 								combox.readOnly = true;
 							}

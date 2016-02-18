@@ -1,0 +1,19 @@
+select 
+	A.TZ_ART_ID,
+	A.TZ_ZXBM_XXX_ID,
+	A.TZ_PX_XH,
+	A.TZ_ZXBM_XXX_NAME,
+	A.TZ_ZXBM_XXX_BT,
+	A.TZ_ZXBM_XXX_ZSXS,
+	B.TZ_ZXBM_XXX_NAME as EN_NAME
+from 
+	PS_TZ_ZXBM_XXX_T A
+left join
+	PS_TZ_ZXBM_XXX_E_T B
+on (
+		A.TZ_ZXBM_XXX_ID=B.TZ_ZXBM_XXX_ID
+	)
+where 
+	A.TZ_ART_ID=? 
+	and B.LANGUAGE_CD='ENG'
+order by A.TZ_PX_XH
