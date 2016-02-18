@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta content="IE=Emulate9" http-equiv="X-UA-Compatible">
+		<title>招生网站</title>
+		
+		<link href="page_stylecss" rel="stylesheet" type="text/css" />
+		
+		<link rel="stylesheet" href="%bind(:1)/statics/css/appeditor/bootstrap.min2.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryui/jquery-ui.min.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/css/FortAwesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/css/appeditor/css.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/css/website/chosen.css">
+		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox.css" />
+		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.css" />
+
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:1)";
+		</script>
+		<script src="%bind(:1)/statics/js/lib/jquery/jquery.min.js" ></script>
+		<script src="%bind(:1)/statics/js/tranzvision/util/layer.js" ></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox.pack.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.js"></script>
+
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/common.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/flowplayer/flowplayer-3.2.12.min.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/swfobject.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/Survey.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/jquery.form.js"></script> 
+		
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/json.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/Answer.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/checkExplorer.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
+
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/formvalidator/formValidator.js"></script>
+		<script src="%bind(:1)/statics/js/lib/jquery/chosen.jquery.js" type="text/javascript"></script>
+
+		<script type="text/javascript">
+			MsgSet = %bind(:10);
+
+			SurveyBuild.BMB_LANG = "%bind(:18)";
+			var currentPageId = "";  
+			var componentData = %bind(:2);				//组件列表,报名表数据
+			var templId = "%bind(:3)";					//模板ＩＤ
+			SurveyBuild.appInsId = "%bind(:4)";			//报名表实例ID
+			var data = %bind(:5);			// 模板的data
+
+			if(componentData){
+ 				SurveyBuild["_componentConfig"] = componentData ;				
+				$.each(componentData,function(index,obj){
+					SurveyBuild["_componentIndex"].push(obj.className);
+				});
+			}
+
+			$(document).ready(function(){
+				
+				$("#tabNav .tab").click(function(){
+					
+					$(this).removeClass("tabNav").addClass("tabNav_c");
+					$(this).siblings().removeClass("tabNav_c").addClass("tabNav");
+					var pageno = $(this).index()+1;
+					$(".page" + pageno).show();
+					var pagelen = $("#tabNav .tab").length;
+					for(var i =1;i<= pagelen ;i++){
+						i != pageno && 	$(".page"+i).hide();
+					}
+					var tabClass = $("#tabNav").children("div:last-child").attr('class');
+
+				    currentPageId = $(this).attr("id");
+					if(tabClass.indexOf("tabNav_c") > -1){
+						$(".main_inner_save").show();
+						$(".main_inner_submit").show();
+						$(".main_inner_next").hide();
+						
+					}else{
+						$(".main_inner_save").show();
+						$(".main_inner_submit").hide();
+						$(".main_inner_next").show();
+					}
+					
+					
+					/*完成状态*/
+					if($(this).hasClass("tabNav_bg"))
+					{	/*完成 未选中 则完成选中*/
+						$(this).removeClass("tabNav_bg").addClass("tabNav_bg_c");
+					}else if($(this).hasClass("tabNav_bg2"))
+					{	/*未完成 未选中 则未完成选中*/
+						$(this).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
+					}
+					
+					$.each($(this).siblings(),function(i,page){	
+						
+						if($(page).hasClass("tabNav_bg_c"))
+						{
+							$(page).removeClass("tabNav_bg_c").addClass("tabNav_bg");
+						}
+						if($(page).hasClass("tabNav_bg_c2"))
+						{
+							$(page).removeClass("tabNav_bg_c2").addClass("tabNav_bg2");
+						}
+								
+					})
+	
+				});
+		
+ 
+				/*页签切换*/
+				function tabChange()
+				{
+					var tapno = $("#tabNav .tabNav_c").index();
+					tapno = tapno + 2;
+					$(".page" + tapno).show();
+					
+					var c_tab = $("#tabNav .tabNav_c");
+					c_tab.removeClass("tabNav_c").addClass("tabNav");
+					
+					c_tab.next().removeClass("tabNav").addClass("tabNav_c");
+
+					currentPageId = c_tab.next().attr("id");
+					
+					//console.log(c_tab.next().attr("id"));
+
+					var pagelen = $("#tabNav .tab").length;
+					for(var i =1;i<= pagelen ;i++){
+						i != tapno && 	$(".page"+i).hide();
+					}
+					
+					var tabClass = $("#tabNav").children("div:last-child").attr('class');
+					if(tabClass.indexOf("tabNav_c") > -1){
+						$(".main_inner_submit").show();
+						$(".main_inner_next").hide();
+					}else{
+						$(".main_inner_submit").hide();
+						$(".main_inner_next").show();
+					}
+				}
+				
+				$("#app_save").click(function(){
+
+					var formValidatorSave = $.formValidator.pageIsValid();
+					processing();
+					layer.closeAll();
+					noteing(MsgSet.SAVE_SUCCEED);
+				});
+
+				$("#app_next").click(function(){
+
+					var formValidatorNext = $.formValidator.pageIsValid();
+					processing();
+					
+					$("#"+currentPageId).removeClass("tabNav_bg").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("tabNav_bg2");					
+					
+					tabChange();
+
+					if($("#"+currentPageId).hasClass("tabNav_bg2"))
+				 	{	/*未完成 未选中 则未完成选中*/
+						$("#"+currentPageId).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
+				 	}
+					layer.closeAll();
+					noteing(MsgSet.SAVE_SUCCEED);
+				});
+				
+				$("#app_submit").click(function(){
+					var formValidatorSave = $.formValidator.pageIsValid();
+					processing();
+					layer.closeAll();
+					noteing(MsgSet.SAVE_SUCCEED);
+				});
+
+				$("#fancybox-main .fancybox-thumbs").fancybox({
+					prevEffect : "fade",
+					nextEffect : "fade",
+					padding : 10, //内边距
+					margin : 20, //外边距
+					autoSize : false,//是否自适应内容的宽高
+					autoResize : false,//是否自适应窗口变化
+					aspectRatio : true,//是否保持长宽比
+
+					closeBtn  : true, //是否显示关闭图标
+					arrows    : true, //是否显示两侧导航小箭头
+					loop : false,//是否循环播放
+					tpl : {
+						wrap	: '<div class="fancybox-wrap" tabIndex="-1"><div class="fancybox-skin"><div class="fancybox-outer"><div class="fancybox-inner"></div></div><div class="photoButton"><a class="small" title="缩小" onclick=setImageSize(this,"S")></a><a class="big" title="放大"  onclick=setImageSize(this,"B")></a></div></div></div>',	
+					},
+					helpers : {
+						thumbs : {
+							width  : 50,
+							height : 50,
+							position : "bottom"
+						},
+						overlay : {
+							closeClick : true,
+							showEarly  : false, // 立即打开 fancyBox 还是等内容加载完毕再打开
+						},
+						title : {
+							type : "outside" // title 的位置，可选 'float'、 'inside'、'outside' 或 'over'
+						},
+					},
+					afterLoad : function() {
+						this.title = (this.index + 1) + "/" + this.group.length + " " + this.title;
+					}
+				});
+			});
+		</script>
+	<script type="text/javascript">
+		//图片缩放
+		function setImageSize(eml,t){
+			var $aBtn = $(eml);
+			var $boxInier = $aBtn.closest(".photoButton").prev(".fancybox-outer").children(".fancybox-inner");
+			var $boxWrap = $aBtn.closest(".fancybox-wrap");
+			var w = parseInt($boxInier.css("width"));
+			var h = parseInt($boxInier.css("height"));
+		
+			var width,height;
+			if(t == "S"){
+				width = w * 0.9;
+				height = h * 0.9;
+			} else if(t == "B"){
+				width = w * 1.1;
+				height = h * 1.1;
+			}
+			//浏览器窗口宽度
+			if (window.innerWidth){
+				winWidth = window.innerWidth;
+			}else if ((document.body) && (document.body.clientWidth)){
+				winWidth = document.body.clientWidth;
+			}
+			// 获取浏览器窗口高度
+			if (window.innerHeight){
+				winHeight = window.innerHeight;
+			}else if ((document.body) && (document.body.clientHeight)){
+				winHeight = document.body.clientHeight;
+			}
+			var $oBtn = $aBtn.siblings("a");
+			if (t == "B" && width >= winWidth){
+				$aBtn.removeClass("big");
+				$aBtn.addClass("big-enabledClick");
+			}else if(t == "S" && width <= 150){
+				$aBtn.removeClass("small");
+				$aBtn.addClass("small-enabledClick");
+			}else{
+				if ($oBtn.hasClass("small-enabledClick")){
+					$oBtn.removeClass("small-enabledClick");
+					$oBtn.addClass("small");	
+				}
+				if ($oBtn.hasClass("big-enabledClick")){
+					$oBtn.removeClass("big-enabledClick");
+					$oBtn.addClass("big");	
+				}
+				
+				var wrapWidth = width+20;
+				var wrapHeight = height+20;
+				var left = winWidth/2-wrapWidth/2-10;
+				var top = winHeight/2-wrapHeight/2;
+				if(top < 20){top = 20;}
+				$boxInier.css('width',width+'px');
+				$boxInier.css('height',height+'px');
+			
+				$boxWrap.css('width',wrapWidth+'px');
+				$boxWrap.css('left',left);
+				$boxWrap.css('top',top)
+			}
+		}
+	//上传进度条
+	function loading(){
+		var loadi = layer.load("%bind(:16)…");
+		layer.area(loadi,"top:200px");
+	}
+	function processing(){								
+		var loadi = layer.load("%bind(:17)…");								
+		layer.area(loadi,"top:200px");						
+	}						
+	</script>	
+	
+	</head>
+	<body style="background: #fff">
+		<!-- head start -->
+			%bind(:11)
+		<!-- head end -->
+		
+		<!-- content start -->
+		<div id="main" class="main">
+			
+			<!-- left nav start -->
+			<!-- 预览不需要左侧菜单 -->
+			<!-- left nav end -->
+
+			<!-- main start -->
+			<div class="main_inner" style= "margin: 0 auto;float:none">
+				%BIND(:6)
+				<form method="post" name="main_list" id="main_list" style="padding: 20px 0;"></form>
+				<div id="app_save" class="main_inner_save" style="display:none">
+					<div class="bt_blue">%bind(:13)</div>
+				</div>
+				<div id="app_next" class="main_inner_next" style="display:none">
+					<div class="bt_blue" style="width:90px;">%bind(:15)</div>
+				</div>
+				<div id="app_submit" class="main_inner_submit" style="display:none">
+					<div class="bt_blue">%bind(:14)</div>
+				</div>
+				<div id="fancybox-main" style="display: none">
+        			<ul></ul>
+				</div>
+				<input id="ParamCon" type="hidden" name="ParamCon">
+				<input id="ParamValue" type="hidden" name="ParamValue">
+				
+				<input id="menuId" type="hidden" name="menuId" value="%bind(:9)">
+				<input id="siteId" type="hidden" name="siteId" value="%bind(:7)">
+				
+			</div>
+			<!-- main end -->
+		</div>
+		<!-- foot nav start -->
+			%bind(:12)
+		<!-- foot nav end -->
+		<script type="text/javascript">
+    		 $(document).ready(function(){
+				
+				LoadHeader("%bind(:8)","%bind(:7)");
+				LoadFooter("%bind(:8)","%bind(:7)");
+				LoadWelcome("%bind(:8)","%bind(:7)");
+			
+				checkExplorer($("#lang").val());	
+
+				processing();
+
+				var script1 = document.createElement("script");
+
+				script1.setAttribute("src","%bind(:1)/statics/js/tranzvision/appwidget/preLoadSurvey.js?_="+Math.random());
+
+				document.getElementsByTagName("head")[0].appendChild(script1);
+					
+				var $flowtips = $("#flowtips");
+				if (navigator.userAgent.indexOf("IE") >= 0) { 
+				//IE下的事件 
+					script1.onreadystatechange = function () { 
+						//IE下的判断，判断是否加载完成 
+						if (script1 && (script1.readyState == "loaded" || script1.readyState == "complete")) { 
+							script1.onreadystatechange = null; 
+
+							$("#main_list div[id*='Tip']").hover(function(){
+									
+									$tipsMsgDiv = $(this).children("div");
+									var offsetXY = $tipsMsgDiv.offset();
+									var tipsMsg = $tipsMsgDiv.attr("tips");
+									if(tipsMsg!="" && $.trim(tipsMsg).length > 0){
+										$flowtips.html(tipsMsg).css({"left":offsetXY.left+20,"top":offsetXY.top+6}).show();
+									}
+								},function(){
+									$flowtips.hide();
+								}
+							);	
+						} 
+					}; 
+				}else { 
+					script1.onload = function () { 
+						script1.onload = null; 
+						
+						$("#main_list div[id*='Tip']").hover(function(){
+								
+								$tipsMsgDiv = $(this).children("div");
+								var offsetXY = $tipsMsgDiv.offset();
+								var tipsMsg = $tipsMsgDiv.attr("tips");
+								//console.log(tipsMsg);
+								if(tipsMsg!="" && $.trim(tipsMsg).length > 0){
+									$flowtips.html(tipsMsg).css({"left":offsetXY.left+20,"top":offsetXY.top+6}).show();
+								}
+							},function(){
+								$flowtips.hide();
+							}
+						);	
+					}; 
+				}
+
+			});
+		</script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.js"></script>
+		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
+
+	</body>
+</html>
