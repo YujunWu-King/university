@@ -580,6 +580,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			
 			try {
 				
+				
+				strTplData = strTplData.replace("\\", "\\\\");
+				strInsData = strInsData.replace("\\", "\\\\");
+				
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
 								strTzGeneralURL, strComRegInfo ,
 								strTplId,strAppInsId,strClassId,strRefLetterId,strTplData,strInsData,strTabs,
