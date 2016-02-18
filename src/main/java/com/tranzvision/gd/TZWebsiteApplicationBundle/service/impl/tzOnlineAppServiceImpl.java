@@ -254,7 +254,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							String sqlGetIsGuest = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 							strIsGuest = sqlQuery.queryForObject(sqlGetIsGuest, new Object[] { strClassId }, "String");
 							if(!"Y".equals(strIsGuest)){
-								strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", strLanguage,"当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
+								strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", 
+										strLanguage,"当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
 							}
 						}else{
 							if(oprid.equals(strAppOprId)){
@@ -268,12 +269,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 									strAppFormReadOnly = "Y";
 								}else{
 									//非法访问
-									strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
+									strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+											"ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
 								}
 							}
 						}
 					}else{
-						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
+						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+								"ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
 					}
 					
 				}else if("TJX".equals(strTplType)){
@@ -292,18 +295,22 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						if(numAppInsIdRefer > 0){
 							//找到有效的被推荐人
 						}else{
-							strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage,"参数错误", "Parameter error.");
+							strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+									"PARAERROR", strLanguage,"参数错误", "Parameter error.");
 						}
 					}else{
-						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage,"参数错误", "Parameter error.");
+						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+								"PARAERROR", strLanguage,"参数错误", "Parameter error.");
 					}
 				}else{
-					strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "TEMPLATEERROR", strLanguage,"没有找到对应的模版", "Could not find the corresponding template");
+					strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+							"TEMPLATEERROR", strLanguage,"没有找到对应的模版", "Could not find the corresponding template");
 				}
 				//str_appform_main_html = "报名表语言"+ strLanguage + "报名表类型"+strTplType + "";
 			}else{
 				//没有找到对应的模版
-				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "TEMPLATEERROR", "没有找到对应的模版", "Could not find the corresponding template");
+				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+						"TEMPLATEERROR", "没有找到对应的模版", "Could not find the corresponding template");
 			}
 		}else{
 			//如果没有报名表实例编号，看是否有班级编号
@@ -321,11 +328,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 							if("".equals(strTplId) || strTplId == null){
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+										"PARAERROR", "参数错误", "Parameter error");
 							}
 							strIsGuest = "Y";
 						}else{
-							strMessageError = gdKjComServiceImpl.getMessageText(request,response, "TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
+							strMessageError = gdKjComServiceImpl.getMessageText(request,response, "TZGD_APPONLINE_MSGSET", 
+									"SESSION_INVAILD", "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
 						}
 					}else{
 						//是注册用户在线报名
@@ -348,30 +357,35 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 								strInsData = psTzAppInsT.getTzAppinsJsonStr();
 								
 								if("".equals(strTplId) || strTplId == null){
-									strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
+									strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
+											"PARAERROR", "参数错误", "Parameter error");
 								}
 								//如果报名表已提交，则只读显示
 								if("U".equals(strAppInsState)){
 									strAppFormReadOnly = "Y";
 								}
 							}else{
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+										"PARAERROR", "参数错误", "Parameter error");
 							}
 							
 						}else{
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 							if("".equals(strTplId) || strTplId == null){
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+										"PARAERROR", "参数错误", "Parameter error");
 							}
 						}
 					}	
 				}else{
-					strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "NOT_OPEN", "当前班级未开通在线报名", "Not open the online registration.");
+					strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+							"NOT_OPEN", "当前班级未开通在线报名", "Not open the online registration.");
 				}
 			}else{
 				//没有找到对应的模版
-				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
+				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
+						"PARAERROR", "参数错误", "Parameter error");
 			}
 		}
 		
@@ -479,7 +493,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			String strComRegInfo = "";
 			ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(strTplId);
 			strComRegInfo = jacksonUtil.List2json(comDfn);
-			
+			strComRegInfo = strComRegInfo.replace("\\", "\\\\");
 			
 			if(strTplData == null || "".equals(strTplData)){
 				strTplData = "''";
@@ -502,12 +516,18 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			String strUserInfoSet = "";
 			strUserInfoSet = this.getUserInfo();
 			
-			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE", strLanguage,"保存", "Save");
-			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SUBMIT", strLanguage,"提交", "Submit");
-			String strNext = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "NEXT", strLanguage,"下一步", "Next");
-			String strPrev = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PREV", strLanguage,"上一步", "Previous");
-			String strLoading = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "LOADING", strLanguage,"上传中", "Loading");
-			String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PROCESS", strLanguage,"正在处理", "Processing");
+			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"SAVE", strLanguage,"保存", "Save");
+			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+					"SUBMIT", strLanguage,"提交", "Submit");
+			String strNext = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+					"NEXT", strLanguage,"下一步", "Next");
+			String strPrev = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+					"PREV", strLanguage,"上一步", "Previous");
+			String strLoading = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+					"LOADING", strLanguage,"上传中", "Loading");
+			String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
+					"PROCESS", strLanguage,"正在处理", "Processing");
 			
 			String contextUrl = request.getContextPath();
 			String strTzGeneralURL = contextUrl + "/dispatcher";
