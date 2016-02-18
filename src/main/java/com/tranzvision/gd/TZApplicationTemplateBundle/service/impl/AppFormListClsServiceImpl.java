@@ -175,6 +175,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapTplDef.put("tplName", name);
 					mapTplDef.put("state", "Y");
 					mapTplDef.put("tplDesc", name);
+					mapTplDef.put("lang", language);
 					mapTplDef.put("tplUse", "REG");
 					mapTplDef.put("tplUseType", "BMB");
 					mapTplDef.put("labelPostion", "UP");

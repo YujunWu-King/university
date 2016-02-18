@@ -113,97 +113,81 @@ public class TemplateEngine {
 
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			Date dateNow = new Date();
-			String mainTplId = "";
 			try {
 				/* -------模板基本信息更新------- Begin */
 				PsTzApptplDyTWithBLOBs psTzApptplDyT = new PsTzApptplDyTWithBLOBs();
 				psTzApptplDyT.setTzAppTplId(tid);
 
 				// 模板名称
-				if (infoData.containsKey("tplName")) {
-					psTzApptplDyT.setTzAppTplMc((String) infoData.get("tplName"));
-				}
+				String tplName = infoData.get("tplName") == null ? "" : String.valueOf(infoData.get("tplName"));
+				psTzApptplDyT.setTzAppTplMc(tplName);
 
 				// 模板描述
-				if (infoData.containsKey("tplDesc")) {
-					psTzApptplDyT.setTzAppTplMs((String) infoData.get("tplDesc"));
-				}
+				String tplDesc = infoData.get("tplDesc") == null ? "" : String.valueOf(infoData.get("tplDesc"));
+				psTzApptplDyT.setTzAppTplMs(tplDesc);
 
 				// 模板用途（在线报名、在线调查）
-				if (infoData.containsKey("tplUse")) {
-					psTzApptplDyT.setTzAppTplYt((String) infoData.get("tplUse"));
-				}
+				String tplUse = infoData.get("tplUse") == null ? "" : String.valueOf(infoData.get("tplUse"));
+				psTzApptplDyT.setTzAppTplYt(tplUse);
 
 				// 模板类型（报名表、推荐信）
-				if (infoData.containsKey("tplUseType")) {
-					psTzApptplDyT.setTzUseType((String) infoData.get("tplUseType"));
-				}
+				String tplUseType = infoData.get("tplUseType") == null ? "" : String.valueOf(infoData.get("tplUseType"));
+				psTzApptplDyT.setTzUseType(tplUseType);
 
 				// 标签位置
-				if (infoData.containsKey("labelPostion")) {
-					psTzApptplDyT.setTzAppLabelWz((String) infoData.get("labelPostion"));
-				}
+				String labelPostion = infoData.get("labelPostion") == null ? "" : String.valueOf(infoData.get("labelPostion"));
+				psTzApptplDyT.setTzAppLabelWz(labelPostion);
 
 				// 提示信息方式
-				if (infoData.containsKey("showType")) {
-					psTzApptplDyT.setTzAppTsxxFs((String) infoData.get("showType"));
-				}
+				String showType = infoData.get("showType") == null ? "" : String.valueOf(infoData.get("showType"));
+				psTzApptplDyT.setTzAppTsxxFs(showType);
 
 				// 语言
-				if (infoData.containsKey("lang")) {
-					psTzApptplDyT.setTzAppTplLan((String) infoData.get("lang"));
+				String lang = infoData.get("lang") == null ? "" : String.valueOf(infoData.get("lang"));
+				if(StringUtils.isEmpty(lang)){
+					lang = tzLoginServiceImpl.getSysLanaguageCD(request);
 				}
+				psTzApptplDyT.setTzAppTplLan(lang);
 
 				// 文件名
-				if (infoData.containsKey("filename")) {
-					psTzApptplDyT.setTzAttachfileName((String) infoData.get("filename"));
-				}
+				String filename = infoData.get("filename") == null ? "" : String.valueOf(infoData.get("filename"));
+				psTzApptplDyT.setTzAttachfileName(filename);
 
 				// 系统文件名
-				if (infoData.containsKey("sysFileName")) {
-					psTzApptplDyT.setTzAttsysfilename((String) infoData.get("sysFileName"));
-				}
+				String sysFileName = infoData.get("sysFileName") == null ? "" : String.valueOf(infoData.get("sysFileName"));
+				psTzApptplDyT.setTzAttsysfilename(sysFileName);
 
 				// 绝对路径
-				if (infoData.containsKey("path")) {
-					psTzApptplDyT.setTzAttPUrl((String) infoData.get("path"));
-				}
+				String path = infoData.get("path") == null ? "" : String.valueOf(infoData.get("path"));
+				psTzApptplDyT.setTzAttPUrl(path);
 
 				// 访问路径
-				if (infoData.containsKey("accessPath")) {
-					psTzApptplDyT.setTzAttAUrl((String) infoData.get("accessPath"));
-				}
+				String accessPath = infoData.get("accessPath") == null ? "" : String.valueOf(infoData.get("accessPath"));
+				psTzApptplDyT.setTzAttAUrl(accessPath);
 
 				// 提交跳转方式
-				if (infoData.containsKey("targetType")) {
-					psTzApptplDyT.setTzAppTzfs((String) infoData.get("targetType"));
-				}
+				String targetType = infoData.get("targetType") == null ? "" : String.valueOf(infoData.get("targetType"));
+				psTzApptplDyT.setTzAppTzfs(targetType);
 
 				// Redirect Url
-				if (infoData.containsKey("redirectUrl")) {
-					psTzApptplDyT.setTzAppTzurl((String) infoData.get("redirectUrl"));
-				}
+				String redirectUrl = infoData.get("redirectUrl") == null ? "" : String.valueOf(infoData.get("redirectUrl"));
+				psTzApptplDyT.setTzAppTzurl(redirectUrl);
 
 				// 报名表状态
-				if (infoData.containsKey("state")) {
-					psTzApptplDyT.setTzEffexpZt((String) infoData.get("state"));
-				}
+				String state = infoData.get("state") == null ? "" : String.valueOf(infoData.get("state"));
+				psTzApptplDyT.setTzEffexpZt(state);
 
 				// 报名表主模板ID
-				if (infoData.containsKey("mainTemplate")) {
-					mainTplId = (String) infoData.get("mainTemplate");
-					psTzApptplDyT.setTzAppMTplId(mainTplId);
-				}
+				String mainTplId = infoData.get("mainTemplate") == null ? "" : String.valueOf(infoData.get("mainTemplate"));
+				psTzApptplDyT.setTzAppMTplId(mainTplId);
 
 				// 提交后是否发送邮件
-				if (infoData.containsKey("isSendMail")) {
-					psTzApptplDyT.setTzIssendmail((String) infoData.get("isSendMail"));
-				}
+				String isSendMail = infoData.get("isSendMail") == null ? "" : String.valueOf(infoData.get("isSendMail"));
+				psTzApptplDyT.setTzIssendmail(isSendMail);
 
 				// 邮件模板
-				if (infoData.containsKey("mailTemplate")) {
-					psTzApptplDyT.setTzEmlModalId((String) infoData.get("mailTemplate"));
-				}
+				String mailTemplate = infoData.get("mailTemplate") == null ? "" : String.valueOf(infoData.get("mailTemplate"));
+				psTzApptplDyT.setTzEmlModalId(mailTemplate);
 
 				// 报名表报文
 				psTzApptplDyT.setTzApptplJsonStr(jacksonUtil.Map2json(infoData));
@@ -231,29 +215,24 @@ public class TemplateEngine {
 						psTzAppEventsT.setTzEventId(key);
 
 						// 是否启用
-						if (event.containsKey("isEff")) {
-							psTzAppEventsT.setTzQyBz((String) infoData.get("isEff"));
-						}
+						String isEff = event.get("isEff") == null ? "" : String.valueOf(event.get("isEff"));
+						psTzAppEventsT.setTzQyBz(isEff);
 
 						// 应用程序类路径
-						if (event.containsKey("classPath")) {
-							psTzAppEventsT.setCmbcAppclsPath((String) infoData.get("classPath"));
-						}
+						String classPath = event.get("classPath") == null ? "" : String.valueOf(event.get("classPath"));
+						psTzAppEventsT.setCmbcAppclsPath(classPath);
 
 						// 应用程序类名称
-						if (event.containsKey("className")) {
-							psTzAppEventsT.setCmbcAppclsName((String) infoData.get("className"));
-						}
+						String className = event.get("className") == null ? "" : String.valueOf(event.get("className"));
+						psTzAppEventsT.setCmbcAppclsName(className);
 
 						// 应用程序类方法
-						if (event.containsKey("classFun")) {
-							psTzAppEventsT.setCmbcAppclsMethod((String) infoData.get("classFun"));
-						}
+						String classFun = event.get("classFun") == null ? "" : String.valueOf(event.get("classFun"));
+						psTzAppEventsT.setCmbcAppclsMethod(classFun);
 
 						// 事件类型
-						if (event.containsKey("eventType")) {
-							psTzAppEventsT.setTzEventType((String) infoData.get("eventType"));
-						}
+						String eventType = event.get("eventType") == null ? "" : String.valueOf(event.get("eventType"));
+						psTzAppEventsT.setTzEventType(eventType);
 
 						psTzAppEventsTMapper.insert(psTzAppEventsT);
 					}
@@ -267,29 +246,19 @@ public class TemplateEngine {
 
 					for (String key : itemsData.keySet()) {
 						Map<String, Object> item = (Map<String, Object>) itemsData.get(key);
-						String itemId = "";
-						String isDoubleLine = "";
-						String isSingleLine = "";
-						int pageno = 0;
+
 						// 信息项编号
-						if (item.containsKey("itemId")) {
-							itemId = (String) item.get("itemId");
-						}
+						String itemId = item.get("itemId") == null ? "" : String.valueOf(item.get("itemId"));
 
 						// 是否多行容器
-						if (item.containsKey("isDoubleLine")) {
-							isDoubleLine = (String) item.get("isDoubleLine");
-						}
+						String isDoubleLine = item.get("isDoubleLine") == null ? "" : String.valueOf(item.get("isDoubleLine"));
 
 						// 是否单行
-						if (item.containsKey("isSingleLine")) {
-							isSingleLine = (String) item.get("isSingleLine");
-						}
+						String isSingleLine = item.get("isSingleLine") == null ? "" : String.valueOf(item.get("isSingleLine"));
 
 						// 页码
-						if (item.containsKey("pageno")) {
-							pageno = Integer.parseInt("" + item.get("pageno"));
-						}
+						String pno = item.get("pageno") == null ? "0" : String.valueOf(item.get("pageno"));
+						int pageno = Integer.parseInt(pno);
 
 						this.savePerXXX(item);
 						this.saveTemplateField(item);
@@ -335,32 +304,25 @@ public class TemplateEngine {
 									psTzRqXxxPzT.setTzAppTplId(tid);
 									psTzRqXxxPzT.setTzDXxxBh(itemId);
 									// 信息项编号
-									String childItemid = "";
-									if (children.containsKey("itemId")) {
-										childItemid = (String) children.get("itemId");
-										psTzRqXxxPzT.setTzXxxBh(childItemid);
-									}
+									String childItemid = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
+									psTzRqXxxPzT.setTzXxxBh(childItemid);
 
 									// 排序
-									if (children.containsKey("orderby")) {
-										int order = Integer.parseInt("" + children.get("orderby"));
-										psTzRqXxxPzT.setTzOrder(order);
-									}
+									String orderby = children.get("orderby") == null ? "0" : String.valueOf(children.get("orderby"));
+									psTzRqXxxPzT.setTzOrder(Integer.parseInt(orderby));
+
 									int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
 									if (count > 0) {
 										children.put("pageno", pageno);
 										this.savePerXXX(children);
 									}
 
-									int childPageno = 0;
-									if (children.containsKey("pageno")) {
-										childPageno = Integer.parseInt("" + children.get("pageno"));
-									}
-
-									String isSingle = (String) children.get("isSingleLine");
+									String childPno = children.get("pageno") == null ? "0" : String.valueOf(children.get("pageno"));
+									int childPageno = Integer.parseInt(childPno);
+									
+									String isSingle = children.get("isSingleLine") == null ? "" : String.valueOf(children.get("isSingleLine"));
 									if (StringUtils.equals("Y", isSingle)) {
-										ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children
-												.get("children");
+										ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children.get("children");
 
 										for (Object obj : childs) {
 											Map<String, Object> child = (Map<String, Object>) obj;
@@ -370,16 +332,15 @@ public class TemplateEngine {
 
 											// 组合框信息项编号
 											psTzRqXxxPzT_.setTzDXxxBh(childItemid);
-											String tzXxxBh = child.get("itemId") == null ? ""
-													: String.valueOf(child.get("itemId"));
 
 											// 信息项编号
+											String tzXxxBh = child.get("itemId") == null ? "" : String.valueOf(child.get("itemId"));
 											psTzRqXxxPzT_.setTzXxxBh(tzXxxBh);
 
 											// 排序
-											String order_ = child.get("orderby") == null ? "0"
-													: String.valueOf(child.get("orderby"));
+											String order_ = child.get("orderby") == null ? "0" : String.valueOf(child.get("orderby"));
 											psTzRqXxxPzT_.setTzOrder(Integer.parseInt(order_));
+											
 											int count_ = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT_);
 											if (count_ > 0) {
 												child.put("pageno", childPageno);
@@ -406,9 +367,8 @@ public class TemplateEngine {
 								psTzRqXxxPzT.setTzDXxxBh(itemId);
 
 								// 信息项编号
-								if (children.containsKey("itemId")) {
-									psTzRqXxxPzT.setTzXxxBh((String) children.get("itemId"));
-								}
+								String itemId_ = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
+								psTzRqXxxPzT.setTzXxxBh(itemId_);
 
 								// 排序
 								psTzRqXxxPzT.setTzOrder(i);
@@ -429,9 +389,7 @@ public class TemplateEngine {
 				/* 检查主副报名表的差异 */
 				if (StringUtils.isNotBlank(mainTplId)) {
 					diffMsg = "";
-					List<?> resultlist = sqlQuery.queryForList(
-							tzSQLObject.getSQLText("SQL.TZApplicationTemplateBundle.TZ_CHECK_ZF_TPL_SQL"),
-							new Object[] { mainTplId, tid });
+					List<?> resultlist = sqlQuery.queryForList( tzSQLObject.getSQLText("SQL.TZApplicationTemplateBundle.TZ_CHECK_ZF_TPL_SQL"), new Object[] { mainTplId, tid });
 					for (Object obj : resultlist) {
 						Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -625,252 +583,196 @@ public class TemplateEngine {
 	@SuppressWarnings("unchecked")
 	private void savePerXXX(Map<String, Object> item) {
 		PsTzAppXxxPzTWithBLOBs psTzAppXxxPz = new PsTzAppXxxPzTWithBLOBs();
-		String itemId = "";
+
 		psTzAppXxxPz.setTzAppTplId(this.tid);
 
 		// 信息项编号
-		if (item.containsKey("itemId")) {
-			itemId = (String) item.get("itemId");
-			psTzAppXxxPz.setTzXxxBh(itemId);
-		}
+		String itemId = item.get("itemId") == null ? "" : String.valueOf(item.get("itemId"));
+		psTzAppXxxPz.setTzXxxBh(itemId);
 
 		// 信息项实例ID
-		if (item.containsKey("instanceId")) {
-			psTzAppXxxPz.setTzXxxSlid((String) item.get("instanceId"));
-		}
+		String instanceId = item.get("instanceId") == null ? "" : String.valueOf(item.get("instanceId"));
+		psTzAppXxxPz.setTzXxxSlid(instanceId);
 
 		// 信息项文字说明
-		if (item.containsKey("itemName")) {
-			psTzAppXxxPz.setTzXxxMc((String) item.get("itemName"));
-		}
+		String itemName = item.get("itemName") == null ? "" : String.valueOf(item.get("itemName"));
+		psTzAppXxxPz.setTzXxxMc(itemName);
 
 		// 信息项名称
-		if (item.containsKey("title")) {
-			psTzAppXxxPz.setTzTitle((String) item.get("title"));
-		}
+		String title = item.get("title") == null ? "" : String.valueOf(item.get("title"));
+		psTzAppXxxPz.setTzTitle(title);
 
 		// 排序序号
-		if (item.containsKey("orderby")) {
-			String order = "" + item.get("orderby");
-			psTzAppXxxPz.setTzOrder(Integer.parseInt(order));
-		}
+		String orderby = item.get("orderby") == null ? "0" : String.valueOf(item.get("orderby"));
+		psTzAppXxxPz.setTzOrder(Integer.parseInt(orderby));
 
 		// 分页号
-		if (item.containsKey("pageno")) {
-			String pageno = "" + item.get("pageno");
-			psTzAppXxxPz.setTzPageNo(Integer.parseInt(pageno));
-		}
+		String pageno = item.get("pageno") == null ? "0" : String.valueOf(item.get("pageno"));
+		psTzAppXxxPz.setTzPageNo(Integer.parseInt(pageno));
 
 		// 控件类名称
-		if (item.containsKey("classname")) {
-			psTzAppXxxPz.setTzComLmc((String) item.get("classname"));
-		}
+		String classname = item.get("classname") == null ? "" : String.valueOf(item.get("classname"));
+		psTzAppXxxPz.setTzComLmc(classname);
 
 		// 空值提示信息
-		if (item.containsKey("emptyText")) {
-			psTzAppXxxPz.setTzXxxKztsxx((String) item.get("emptyText"));
-		}
+		String emptyText = item.get("emptyText") == null ? "" : String.valueOf(item.get("emptyText"));
+		psTzAppXxxPz.setTzXxxKztsxx(emptyText);
 
 		// 焦点提示信息
-		if (item.containsKey("onFoucsMessage")) {
-			psTzAppXxxPz.setTzXxxJdtsxx((String) item.get("onFoucsMessage"));
-		}
+		String onFoucsMessage = item.get("onFoucsMessage") == null ? "" : String.valueOf(item.get("onFoucsMessage"));
+		psTzAppXxxPz.setTzXxxJdtsxx(onFoucsMessage);
 
 		// 默认值
-		if (item.containsKey("defaultval")) {
-			psTzAppXxxPz.setTzXxxMrz((String) item.get("defaultval"));
-		}
+		String defaultval = item.get("itemId") == null ? "" : String.valueOf(item.get("defaultval"));
+		psTzAppXxxPz.setTzXxxMrz(defaultval);
 
 		// 后缀
-		if (item.containsKey("suffix")) {
-			psTzAppXxxPz.setTzXxxHz((String) item.get("suffix"));
-		}
+		String suffix = item.get("suffix") == null ? "" : String.valueOf(item.get("suffix"));
+		psTzAppXxxPz.setTzXxxHz(suffix);
 
 		// 后缀链接
-		if (item.containsKey("suffixUrl")) {
-			psTzAppXxxPz.setTzXxxHzlj((String) item.get("suffixUrl"));
-		}
+		String suffixUrl = item.get("suffixUrl") == null ? "" : String.valueOf(item.get("suffixUrl"));
+		psTzAppXxxPz.setTzXxxHzlj(suffixUrl);
 
 		// 存储类型
-		if (item.containsKey("StorageType")) {
-			psTzAppXxxPz.setTzXxxCclx((String) item.get("StorageType"));
-		}
+		String storageType = item.get("StorageType") == null ? "" : String.valueOf(item.get("StorageType"));
+		psTzAppXxxPz.setTzXxxCclx(storageType);
 
 		// 文本框大小
-		if (item.containsKey("boxSize")) {
-			psTzAppXxxPz.setTzXxxWbkdx((String) item.get("boxSize"));
-		}
+		String boxSize = item.get("boxSize") == null ? "" : String.valueOf(item.get("boxSize"));
+		psTzAppXxxPz.setTzXxxWbkdx(boxSize);
 
 		// 日期格式
-		if (item.containsKey("dateformate")) {
-			psTzAppXxxPz.setTzXxxRqgs((String) item.get("dateformate"));
-		}
+		String dateformate = item.get("dateformate") == null ? "" : String.valueOf(item.get("dateformate"));
+		psTzAppXxxPz.setTzXxxRqgs(dateformate);
 
 		// 年份最小值
-		if (item.containsKey("minYear")) {
-			psTzAppXxxPz.setTzXxxNfmin((String) item.get("minYear"));
-		}
+		String minYear = item.get("minYear") == null ? "" : String.valueOf(item.get("minYear"));
+		psTzAppXxxPz.setTzXxxNfmin(minYear);
 
 		// 年份最大值
-		if (item.containsKey("maxYear")) {
-			psTzAppXxxPz.setTzXxxNfmax((String) item.get("maxYear"));
-		}
+		String maxYear = item.get("maxYear") == null ? "" : String.valueOf(item.get("maxYear"));
+		psTzAppXxxPz.setTzXxxNfmax(maxYear);
 
 		// 单选、多选排列方式
-		if (item.containsKey("plfs")) {
-			psTzAppXxxPz.setTzXxxPlfs((String) item.get("plfs"));
-		}
+		String plfs = item.get("plfs") == null ? "" : String.valueOf(item.get("plfs"));
+		psTzAppXxxPz.setTzXxxPlfs(plfs);
 
 		// 多选最少选择个数
-		if (item.containsKey("minSelect")) {
-			String minSelect = "" + item.get("minSelect");
-			psTzAppXxxPz.setTzXxxZsxzgs(Integer.parseInt(minSelect));
-		}
+		String minSelect = item.get("minSelect") == null ? "0" : String.valueOf(item.get("minSelect"));
+		psTzAppXxxPz.setTzXxxZsxzgs(Integer.parseInt(minSelect));
 
 		// 多选最多选择个数
-		if (item.containsKey("maxSelect")) {
-			String maxSelect = "" + item.get("maxSelect");
-			psTzAppXxxPz.setTzXxxZdxzgs(Integer.parseInt(maxSelect));
-		}
+		String maxSelect = item.get("maxSelect") == null ? "0" : String.valueOf(item.get("maxSelect"));
+		psTzAppXxxPz.setTzXxxZdxzgs(Integer.parseInt(maxSelect));
 
 		// 允许上传类型
-		if (item.containsKey("yxsclx")) {
-			psTzAppXxxPz.setTzXxxYxsclx((String) item.get("yxsclx"));
-		}
+		String yxsclx = item.get("yxsclx") == null ? "" : String.valueOf(item.get("yxsclx"));
+		psTzAppXxxPz.setTzXxxYxsclx(yxsclx);
 
 		// 允许上传大小
-		if (item.containsKey("yxscdx")) {
-			String yxscdx = "" + item.get("yxscdx");
-			psTzAppXxxPz.setTzXxxYxscdx(Integer.parseInt(yxscdx));
-		}
+		String yxscdx = item.get("yxscdx") == null ? "0" : String.valueOf(item.get("yxscdx"));
+		psTzAppXxxPz.setTzXxxYxscdx(Integer.parseInt(yxscdx));
 
 		// 允许多附件上传
-		if (item.containsKey("allowMultiAtta")) {
-			psTzAppXxxPz.setTzXxxMulti((String) item.get("allowMultiAtta"));
-		}
+		String allowMultiAtta = item.get("allowMultiAtta") == null ? "" : String.valueOf(item.get("allowMultiAtta"));
+		psTzAppXxxPz.setTzXxxMulti(allowMultiAtta);
 
 		// 图片是否裁剪
-		if (item.containsKey("tpsfcj")) {
-			psTzAppXxxPz.setTzXxxSfcj((String) item.get("tpsfcj"));
-		}
+		String tpsfcj = item.get("tpsfcj") == null ? "" : String.valueOf(item.get("tpsfcj"));
+		psTzAppXxxPz.setTzXxxSfcj(tpsfcj);
 
 		// 图片裁剪类型
-		if (item.containsKey("tpcjlx")) {
-			psTzAppXxxPz.setTzXxxTpcjlx((String) item.get("tpcjlx"));
-		}
+		String tpcjlx = item.get("tpcjlx") == null ? "" : String.valueOf(item.get("tpcjlx"));
+		psTzAppXxxPz.setTzXxxTpcjlx(tpcjlx);
 
 		// 文字说明
-		if (item.containsKey("wzsm")) {
-			psTzAppXxxPz.setTzXxxWzsm((String) item.get("wzsm"));
-		}
+		String wzsm = item.get("wzsm") == null ? "" : String.valueOf(item.get("wzsm"));
+		psTzAppXxxPz.setTzXxxWzsm(wzsm);
 
 		// 是否必填
-		if (item.containsKey("isRequire")) {
-			psTzAppXxxPz.setTzXxxBtBz((String) item.get("isRequire"));
-		}
+		String isRequire = item.get("isRequire") == null ? "" : String.valueOf(item.get("isRequire"));
+		psTzAppXxxPz.setTzXxxBtBz(isRequire);
 
 		// 是否字数限制
-		if (item.containsKey("isCheckStrLen")) {
-			psTzAppXxxPz.setTzXxxCharBz((String) item.get("isCheckStrLen"));
-		}
+		String isCheckStrLen = item.get("isCheckStrLen") == null ? "" : String.valueOf(item.get("isCheckStrLen"));
+		psTzAppXxxPz.setTzXxxCharBz(isCheckStrLen);
 
 		// 最小长度
-		if (item.containsKey("minLen")) {
-			String minLen = "" + item.get("minLen");
-			psTzAppXxxPz.setTzXxxMinlen(Integer.parseInt(minLen));
-		}
+		String minLen = item.get("minLen") == null ? "0" : String.valueOf(item.get("minLen"));
+		psTzAppXxxPz.setTzXxxMinlen(Integer.parseInt(minLen));
 
 		// 最大长度
-		if (item.containsKey("maxLen")) {
-			String maxLen = "" + item.get("maxLen");
-			psTzAppXxxPz.setTzXxxMaxlen(Integer.parseInt(maxLen));
-		}
+		String maxLen = item.get("maxLen") == null ? "0" : String.valueOf(item.get("maxLen"));
+		psTzAppXxxPz.setTzXxxMaxlen(Integer.parseInt(maxLen));
 
 		// 是否限制数字范围
-		if (item.containsKey("isNumSize")) {
-			psTzAppXxxPz.setTzXxxNumBz((String) item.get("isNumSize"));
-		}
+		String isNumSize = item.get("isNumSize") == null ? "" : String.valueOf(item.get("isNumSize"));
+		psTzAppXxxPz.setTzXxxNumBz(isNumSize);
 
 		// 最小值
-		if (item.containsKey("min")) {
-			String min = "" + item.get("min");
-			psTzAppXxxPz.setTzXxxMin(Long.parseLong(min));
-		}
+		String min = item.get("min") == null ? "0" : String.valueOf(item.get("min"));
+		psTzAppXxxPz.setTzXxxMin(Long.parseLong(min));
 
 		// 最大值
-		if (item.containsKey("max")) {
-			String max = "" + item.get("max");
-			psTzAppXxxPz.setTzXxxMax(Long.parseLong(max));
-		}
+		String max = item.get("max") == null ? "0" : String.valueOf(item.get("max"));
+		psTzAppXxxPz.setTzXxxMax(Long.parseLong(max));
 
 		// 小数位数
-		if (item.containsKey("digits")) {
-			String digits = "" + item.get("digits");
-			psTzAppXxxPz.setTzXxxXsws(Integer.parseInt(digits));
-		}
+		String digits = item.get("digits") == null ? "0" : String.valueOf(item.get("digits"));
+		psTzAppXxxPz.setTzXxxXsws(Integer.parseInt(digits));
 
 		// 固定规则校验
-		if (item.containsKey("preg")) {
-			psTzAppXxxPz.setTzXxxGdgsjy((String) item.get("preg"));
-		}
+		String preg = item.get("preg") == null ? "" : String.valueOf(item.get("preg"));
+		psTzAppXxxPz.setTzXxxGdgsjy(preg);
 
 		// 是否多行容器
-		if (item.containsKey("isDoubleLine")) {
-			psTzAppXxxPz.setTzXxxDrqBz((String) item.get("isDoubleLine"));
-		}
+		String isDoubleLine = item.get("isDoubleLine") == null ? "" : String.valueOf(item.get("isDoubleLine"));
+		psTzAppXxxPz.setTzXxxDrqBz(isDoubleLine);
 
 		// 最小行记录数
-		if (item.containsKey("minLines")) {
-			String minLines = "" + item.get("minLines");
-			psTzAppXxxPz.setTzXxxMinLine(Integer.parseInt(minLines));
-		}
+		String minLines = item.get("minLines") == null ? "0" : String.valueOf(item.get("minLines"));
+		psTzAppXxxPz.setTzXxxMinLine(Integer.parseInt(minLines));
 
 		// 最大行记录数
-		if (item.containsKey("maxLines")) {
-			String maxLines = "" + item.get("maxLines");
-			psTzAppXxxPz.setTzXxxMaxLine(Integer.parseInt(maxLines));
-		}
+		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
+		psTzAppXxxPz.setTzXxxMaxLine(Integer.parseInt(maxLines));
 
 		// 是否为单行组合
-		if (item.containsKey("isSingleLine")) {
-			psTzAppXxxPz.setTzXxxSrqBz((String) item.get("isSingleLine"));
-		}
+		String isSingleLine = item.get("isSingleLine") == null ? "" : String.valueOf(item.get("isSingleLine"));
+		psTzAppXxxPz.setTzXxxSrqBz(isSingleLine);
 
 		// 外网是否可下载
-		if (item.containsKey("isDownLoad")) {
-			psTzAppXxxPz.setTzIsDownload((String) item.get("isDownLoad"));
-		}
+		String isDownLoad = item.get("isDownLoad") == null ? "" : String.valueOf(item.get("isDownLoad"));
+		psTzAppXxxPz.setTzIsDownload(isDownLoad);
 
-		if (item.containsKey("tapStyle")) {
-			psTzAppXxxPz.setTzTapstyle((String) item.get("tapStyle"));
-		}
+		//TAB页签样式
+		String tapStyle = item.get("tapStyle") == null ? "" : String.valueOf(item.get("tapStyle"));
+		psTzAppXxxPz.setTzTapstyle(tapStyle);
 
-		if (item.containsKey("toCheck")) {
-			psTzAppXxxPz.setTzTjxSub((String) item.get("toCheck"));
-		}
+		//推荐信是否禁止提交
+		String toCheck = item.get("toCheck") == null ? "" : String.valueOf(item.get("toCheck"));
+		psTzAppXxxPz.setTzTjxSub(toCheck);
 
-		// if(item.containsKey("toCheckRefApp")){
-		// psTzAppXxxPz.setTzRefCheck((String)item.get("toCheckRefApp"));
-		// }
+		//推荐信是否需要校验
+//		String toCheckRefApp = item.get("toCheckRefApp") == null ? "" : String.valueOf(item.get("toCheckRefApp"));
+//		psTzAppXxxPz.setTzRefCheck(toCheckRefApp);
 
-		// if(item.containsKey("checkRefApp")){
-		// psTzAppXxxPz.setTzRefCheckApp((String)item.get("checkRefApp"));
-		// }
+		//推荐信是否校验校验Appclass
+//		String checkRefApp = item.get("checkRefApp") == null ? "" : String.valueOf(item.get("checkRefApp"));
+//		psTzAppXxxPz.setTzRefCheckApp(checkRefApp);
 
 		// 是否显示在报名表审核
-		if (item.containsKey("isShow")) {
-			psTzAppXxxPz.setTzIsShow((String) item.get("isShow"));
-		}
+		String isShow = item.get("isShow") == null ? "" : String.valueOf(item.get("isShow"));
+		psTzAppXxxPz.setTzIsShow(isShow);
 
 		// 是否启用PDF在线阅读
-		if (item.containsKey("isOnlineShow")) {
-			psTzAppXxxPz.setTzIsOnlineshow((String) item.get("isOnlineShow"));
-		}
+		String isOnlineShow = item.get("isOnlineShow") == null ? "" : String.valueOf(item.get("isOnlineShow"));
+		psTzAppXxxPz.setTzIsOnlineshow(isOnlineShow);
 
-		// //是否只读
-		// if(item.containsKey("isReadOnly")){
-		// psTzAppXxxPz.setReadonly((String)item.get("isReadOnly"));
-		// }
+		 //是否只读
+//		String isReadOnly = item.get("isReadOnly") == null ? "" : String.valueOf(item.get("isReadOnly"));
+//		psTzAppXxxPz.setReadonly(isReadOnly);
 
 		/*------- 是否Option Begin -------*/
 		if (item.containsKey("option")) {
@@ -896,31 +798,25 @@ public class TemplateEngine {
 				psTzAppXxxKxzT.setTzXxxkxzMc(code);
 
 				// 排序序号
-				if (option.containsKey("orderby")) {
-					String order = "" + option.get("orderby");
-					psTzAppXxxKxzT.setTzOrder(Integer.parseInt(order));
-				}
+				String orderby_ = option.get("orderby") == null ? "0" : String.valueOf(option.get("orderby"));
+				psTzAppXxxKxzT.setTzOrder(Integer.parseInt(orderby_));
 
 				// 可选值描述
-				if (option.containsKey("txt")) {
-					psTzAppXxxKxzT.setTzXxxkxzMs((String) option.get("txt"));
-				}
+				String txt = option.get("txt") == null ? "" : String.valueOf(option.get("txt"));
+				psTzAppXxxKxzT.setTzXxxkxzMs(txt);
 
 				// 是否为默认
-				if (option.containsKey("defaultval")) {
-					psTzAppXxxKxzT.setTzKxzMrzBz((String) option.get("defaultval"));
-				}
+				String defval = option.get("defaultval") == null ? "" : String.valueOf(option.get("defaultval"));
+				psTzAppXxxKxzT.setTzKxzMrzBz(defval);
 
 				// 是否为其他
-				if (option.containsKey("other")) {
-					psTzAppXxxKxzT.setTzKxzQtBz((String) option.get("other"));
-				}
+				String other = option.get("other") == null ? "" : String.valueOf(option.get("other"));
+				psTzAppXxxKxzT.setTzKxzQtBz(other);
 
 				// 权重
-				if (option.containsKey("weight")) {
-					String weight = "" + option.get("weight");
-					psTzAppXxxKxzT.setTzXxxkxzQz(new BigDecimal(weight));
-				}
+				String weight = option.get("weight") == null ? "0" : String.valueOf(option.get("weight"));
+				psTzAppXxxKxzT.setTzXxxkxzQz(new BigDecimal(weight));
+
 				psTzAppXxxKxzTMapper.insert(psTzAppXxxKxzT);
 			}
 		}
@@ -937,24 +833,19 @@ public class TemplateEngine {
 
 				// 信息项编号
 				psTzAppXxJygzT.setTzXxxBh(itemId);
-				// if (rule.containsKey("itemId")) {
-				// psTzAppXxJygzT.setTzXxxBh((String) rule.get("itemId"));
-				// }
 
 				// 校验规则ID
-				if (rule.containsKey("ruleId")) {
-					psTzAppXxJygzT.setTzJygzId((String) rule.get("ruleId"));
-				}
+				String ruleId = rule.get("ruleId") == null ? "" : String.valueOf(rule.get("ruleId"));
+				psTzAppXxJygzT.setTzJygzId(ruleId);
 
 				// 是否启用
-				if (rule.containsKey("isEnable")) {
-					psTzAppXxJygzT.setTzQyBz((String) rule.get("isEnable"));
-				}
+				String isEnable = rule.get("isEnable") == null ? "" : String.valueOf(rule.get("isEnable"));
+				psTzAppXxJygzT.setTzQyBz(isEnable);
 
 				// 提示信息
-				if (rule.containsKey("messages")) {
-					psTzAppXxJygzT.setTzJygzTsxx((String) rule.get("messages"));
-				}
+				String messages = rule.get("messages") == null ? "" : String.valueOf(rule.get("messages"));
+				psTzAppXxJygzT.setTzJygzTsxx(messages);
+
 				psTzAppXxJygzTMapper.insert(psTzAppXxJygzT);
 			}
 		}
@@ -970,28 +861,20 @@ public class TemplateEngine {
 				psTzAppXxSyncT.setTzAppTplId(this.tid);
 				psTzAppXxSyncT.setTzXxxBh(itemId);
 				// 是否启用
-				if (syncRule.containsKey("isEff")) {
-					psTzAppXxSyncT.setTzQyBz((String) syncRule.get("isEff"));
-				}
+				String isEff = syncRule.get("isEff") == null ? "" : String.valueOf(syncRule.get("isEff"));
+				psTzAppXxSyncT.setTzQyBz(isEff);
 
 				// 同步类型
-				if (syncRule.containsKey("syncType")) {
-					psTzAppXxSyncT.setTzSyncType((String) syncRule.get("syncType"));
-				}
+				String syncType = syncRule.get("syncType") == null ? "" : String.valueOf(syncRule.get("syncType"));
+				psTzAppXxSyncT.setTzSyncType(syncType);
 
 				// 同步顺序
-				if (syncRule.containsKey("syncOrder")) {
-					String order = "" + syncRule.get("syncOrder");
-					if (StringUtils.isBlank(order)) {
-						order = "0";
-					}
-					psTzAppXxSyncT.setTzSyncOrder(Integer.parseInt(order));
-				}
+				String syncOrder = syncRule.get("syncOrder") == null ? "0" : String.valueOf(syncRule.get("syncOrder"));
+				psTzAppXxSyncT.setTzSyncOrder(Integer.parseInt(syncOrder));
 
 				// 分隔符
-				if (syncRule.containsKey("syncSep")) {
-					psTzAppXxSyncT.setTzSyncSep((String) syncRule.get("syncSep"));
-				}
+				String syncSep = syncRule.get("syncSep") == null ? "" : String.valueOf(syncRule.get("syncSep"));
+				psTzAppXxSyncT.setTzSyncSep(syncSep);
 
 				psTzAppXxSyncTMapper.insert(psTzAppXxSyncT);
 			}
@@ -1085,8 +968,7 @@ public class TemplateEngine {
 		}
 
 		String tplHtml = "";
-
-		componentData = componentData.replace("\"", "\\\\\"");
+		componentData = componentData.replace("\\", "\\\\");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", true,
 					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
