@@ -22,7 +22,7 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 /**
- * @author WRL TZ_ONLINE_REG_COM:TZ_ONLINE_FORM_STD 
+ * @author WRL TZ_ONLINE_REG_PKG:TZ_ONLINE_FORM_CLS 
  * 报名表预览、管理员查看
  */
 @Service("com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormViewClsServiceImpl")
