@@ -327,8 +327,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				edus += '			<div class="onCorrect">&nbsp;</div></div>';
 				edus += '		</div>';
 				edus += '	</div>';
-				edus += '	<div class="main_inner_content_edit"><img width="15" height="15" src="/onlineReg/images/edit.png">' + MsgSet["EDIT"] + '</div>';
-				edus += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="/onlineReg/images/del.png">' + MsgSet["DEL"] + '</div></div>';
+				edus += '	<div class="main_inner_content_edit"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/edit.png">' + MsgSet["EDIT"] + '</div>';
+				edus += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div></div>';
 			}
 
 			//就读时间
@@ -355,8 +355,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				edus += '<input type="text" title="' + child[i].EduExper2["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper2["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper2["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper2["itemId"] + '" value="' + child[i].EduExper2["value"] + '">&nbsp;';
 				edus += '<input type="text" title="' + child[i].EduExper3["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper3["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper3["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper3["itemId"] + '" value="' + child[i].EduExper3["value"] + '" style="'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
 
-				edus += '<img id="' + data.itemId + child[i].EduExper2["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:'+(child[i].EduExper4["value"] == "Y" ? "-40px" : "-168px")+';cursor:pointer;">';
-				edus += '<img id="' + data.itemId + child[i].EduExper3["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
+				edus += '<img id="' + data.itemId + child[i].EduExper2["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:'+(child[i].EduExper4["value"] == "Y" ? "-40px" : "-168px")+';cursor:pointer;">';
+				edus += '<img id="' + data.itemId + child[i].EduExper3["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
 
 				if(j == 0){
 					edus += '<div class="tz_checkbox_div '+(child[i].EduExper4["value"] == "Y" ? "on_check": "")+'" style="margin: 0px;position: relative; left:'+(child[i].EduExper4["value"] == "Y" ? "-25px" : "-48px")+'">';
@@ -383,7 +383,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper5["itemName"] + '：</div>';
 				edus += '<div class="main_inner_content_info_right_103px_top">';
 				edus += '<input id="'+data["itemId"]+child[i].EduExper5["itemId"]+'" class="input_251px" type="text" data-regular="" title="' + child[i].EduExper5["itemName"] + '" value="'+child[i].EduExper5["value"]+'" name="'+data["itemId"]+child[i].EduExper5["itemId"]+'" />';
-				edus += '<img id="' + data["itemId"]+child[i].EduExper5["itemId"] + '_Btn" src="/tranzvision/images/search.png" style="position:relative;left:-40px;cursor:pointer;">';
+				edus += '<img id="' + data["itemId"]+child[i].EduExper5["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/search.png" style="position:relative;left:-40px;cursor:pointer;">';
 				edus += '<div style="margin-top:-40px;margin-left:256px"><div id="'+data["itemId"]+child[i].EduExper5["itemId"]+'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				edus += '<div class="onCorrect">&nbsp;</div></div></div>';
 				edus += '</div>';

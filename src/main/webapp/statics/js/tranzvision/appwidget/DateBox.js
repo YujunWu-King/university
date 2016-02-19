@@ -19,7 +19,7 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '  </div>';
                 c += '  <div class="answer">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
-                c += '      <img id="' + data.itemId + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;top:5px;left:-35px;cursor:pointer;">';
+                c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:5px;left:-35px;cursor:pointer;">';
                 c += '       <div style="margin-top:-31px;margin-left:225px">';
                 c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
                 c += '              <div class="onShow"></div>';
@@ -38,7 +38,7 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '	</div>';
                 c += '  <div class="answer" style="position: relative;">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " style="line-height: 39px;font-size:1.285em;margin:0 0 0 4px" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
-                c += '      <img id="' + data.itemId + '_Btn" src="../../images/appeditor/calendar.png" style="cursor: pointer; position: absolute; right: 10px; top: 8px;">';
+                c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="cursor: pointer; position: absolute; right: 10px; top: 8px;">';
                 c += '  </div>';
                 c += '</div>';
             }

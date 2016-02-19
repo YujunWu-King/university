@@ -30,7 +30,7 @@ SurveyBuild.extend("City", "baseComponent", {
 				c += '	</div>';
 				c += '	<div class="main_inner_content_info_right">';
 				c += '		<input id="' + data.itemId + '" class="input_251px" name="' + data.itemId + '" type="text"  title="' + data.itemName + '" value="' + data.value + '" />';
-				c += '		<img id="' + data.itemId + '_Btn" src="/tranzvision/images/search.png" style="position:relative;left:-40px;cursor:pointer;">';
+				c += '		<img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/search.png" style="position:relative;left:-40px;cursor:pointer;">';
 				c += '		<div style="margin-top:-40px;margin-left:256px">';
 				c += '			<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 				c += '				<div class="onShow"></div>';

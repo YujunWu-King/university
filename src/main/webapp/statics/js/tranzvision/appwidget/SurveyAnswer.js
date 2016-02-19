@@ -541,13 +541,13 @@ var SurveyBuild = {
 										if(state.errcode == 0){
 											if(rstObj.result="success"){
 												if(SurveyBuild.accessType == "P" && className == "ImgUpload"){
-													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineSurvey/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
+													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
 												} else  if(SurveyBuild.accessType == "M" && className == "ImgUpload"){
-													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img src="/onlineSurvey/images/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
+													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
 												}else if(SurveyBuild.accessType == "P" && className == "AttachUpload"){
-                                                   c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineSurvey/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
+                                                   c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
                                                 }else{
-                                                    c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img  src="/onlineSurvey/images/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
+                                                    c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img  src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
                                                 }
 												if(multiFlag == "Y"){
 													if (_children.length == 1 && _children[0].fileName == ""){

@@ -2244,7 +2244,7 @@ var SurveyBuild = {
         var _co = "",del = "",lsep = ""; //容器行信息、容器行删除按钮、行与行直接的间隔
         //容器中行删除按钮源码
         del += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
-        del += '  <img src="/onlineReg/images/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
+        del += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
         del += '</div>';
 
         //容器中行与行直接的间隔
@@ -2790,10 +2790,10 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
 													} else {
 														
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div>'+(sysfileSuffix == "pdf" && isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='"+rstObj.index+"'><img src='/onlineReg/images/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div>'+(sysfileSuffix == "pdf" && isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='"+rstObj.index+"'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
 													}
 													$("#"+itemId+"_AttList").children("ul").append(c);
 												}else{
@@ -2812,7 +2812,7 @@ var SurveyBuild = {
 													var $pdfReader = $("#"+itemId+"_A").closest("li").children(".main_inner_pdf_reader");
 													
 													if($pdfReader) $pdfReader.remove();
-													if(sysfileSuffix == "pdf" && isOnlineShow == "Y") $list.append("<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='1'><img src='/onlineReg/images/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>");
+													if(sysfileSuffix == "pdf" && isOnlineShow == "Y") $list.append("<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='1'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>");
 													
 												}
 												//提示隐藏
@@ -3241,7 +3241,7 @@ var SurveyBuild = {
 											var c = "";
 											c = '<ul><li>';
 											c +='	<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,\"'+cins+'\",'+indexJson+') file-index="'+index+'">'+rstObj.viewFileName+'</a>';
-											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+indexJson+')><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
+											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+indexJson+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
 											c +='</li></ul>';
 											//$("#"+data.itemId+index+"_AttList").children("ul").append(c);
 											$("#"+data.itemId+index+"_AttList").html(c);
