@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -44,6 +45,9 @@ public class FileUploadController {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	@Autowired
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
@@ -94,15 +98,16 @@ public class FileUploadController {
 		String funcdir = String.valueOf(allRequestParams.get("filePath"));
 		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
 		String siteid = allRequestParams.get("siteid") == null ? "" : String.valueOf(allRequestParams.get("siteid"));
-		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
 
 		String retJson = "";
 
 		if ("".equals(siteid)) {
-			Map<String, Object> mapRet = new HashMap<String, Object>();
-			mapRet.put("success", false);
-			mapRet.put("msg", "缺少参数siteid。");
+			//Map<String, Object> mapRet = new HashMap<String, Object>();
+			//mapRet.put("success", false);
+			//mapRet.put("msg", "缺少参数siteid。");
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
 		} else {
 			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
 		}
@@ -164,6 +169,10 @@ public class FileUploadController {
 			siteid = "/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
 		} else {
 			siteid = "";
+		}
+		
+		if(null==orgid || "".equals(orgid)){
+			orgid = "orgidnull";
 		}
 
 		// 是否临时文件的标记
