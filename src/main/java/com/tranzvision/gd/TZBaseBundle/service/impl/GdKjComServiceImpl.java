@@ -47,7 +47,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		String tmpKhhSystemNameSQL = "SELECT TZ_JG_LOGIN_INFO FROM PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 		String tmpKhhSystemName = "";
 		tmpKhhSystemName = jdbcTemplate.queryForObject(tmpKhhSystemNameSQL, new Object[] { jgId }, "String");
-		if(tmpKhhSystemName == null){
+		if (tmpKhhSystemName == null) {
 			tmpKhhSystemName = "";
 		}
 		String languageId = this.getLoginLanguage(request, response);
@@ -73,9 +73,10 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					tmpMsgText = tmpKhhSystemName;
 				}
 				/*
-				tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
-						+ TZUtility.transFormchar(tmpMsgText) + "\"";
-						*/
+				 * tmpJSONString = tmpJSONString + ",\"" +
+				 * TZUtility.transFormchar(tmpMsgID) + "\":\"" +
+				 * TZUtility.transFormchar(tmpMsgText) + "\"";
+				 */
 				msgMap.put(tmpMsgID, tmpMsgText);
 			}
 		}
@@ -97,19 +98,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						tmpMsgText = tmpKhhSystemName;
 					}
 					/*
-					tmpJSONString = tmpJSONString + ",\"" + TZUtility.transFormchar(tmpMsgID) + "\":\""
-							+ TZUtility.transFormchar(tmpMsgText) + "\"";
-							*/
+					 * tmpJSONString = tmpJSONString + ",\"" +
+					 * TZUtility.transFormchar(tmpMsgID) + "\":\"" +
+					 * TZUtility.transFormchar(tmpMsgText) + "\"";
+					 */
 					msgMap.put(tmpMsgID, tmpMsgText);
 				}
 			}
 		}
-/*
-		if (tmpJSONString != null && !"".equals(tmpJSONString)) {
-			tmpJSONString = tmpJSONString.substring(1);
-		}
-		tmpJSONString = "{ " + languageId + ":{" + tmpJSONString + "}}";
-*/
+		/*
+		 * if (tmpJSONString != null && !"".equals(tmpJSONString)) {
+		 * tmpJSONString = tmpJSONString.substring(1); } tmpJSONString = "{ " +
+		 * languageId + ":{" + tmpJSONString + "}}";
+		 */
 		returnMap.put(languageId, msgMap);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		tmpJSONString = jacksonUtil.Map2json(returnMap);
@@ -207,20 +208,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						tmpBQID = (String) list.get(k).get("TZ_MSG_BQID");
 						tmpBQValue = (String) list.get(k).get("TZ_MSG_TEXT");
 						/*
-						if ("".equals(retBiaoQian)) {
-							retBiaoQian = "\"" + tmpBQID + "\":\""
-									+ tmpBQValue + "\"";
-						} else {
-							retBiaoQian = retBiaoQian + ",\"" + tmpBQID + "\":\""
-									+ tmpBQValue + "\"";
-						}*/
+						 * if ("".equals(retBiaoQian)) { retBiaoQian = "\"" +
+						 * tmpBQID + "\":\"" + tmpBQValue + "\""; } else {
+						 * retBiaoQian = retBiaoQian + ",\"" + tmpBQID + "\":\""
+						 * + tmpBQValue + "\""; }
+						 */
 						bqMap.put(tmpBQID, tmpBQValue);
 					}
 				}
 
 			} else {
-				/*retBiaoQian = "\"" + sCID + "\":\"" + strTagContent
-						+ "\"";*/
+				/*
+				 * retBiaoQian = "\"" + sCID + "\":\"" + strTagContent + "\"";
+				 */
 				bqMap.put(sCID, strTagContent);
 			}
 			JacksonUtil jacksonUtil = new JacksonUtil();
@@ -444,17 +444,15 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			/***** 是否有访问权限 ******/
 			/*
-			boolean debug = false;
-			try {
-				Resource resource = new ClassPathResource("conf/cookieSession.properties");
-				Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-				debug = Boolean.parseBoolean(properties.getProperty("debug"));
-				System.out.println("========debug================>" + properties.getProperty("debug"));
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("========================>error");
-			}
-		    */
+			 * boolean debug = false; try { Resource resource = new
+			 * ClassPathResource("conf/cookieSession.properties"); Properties
+			 * properties = PropertiesLoaderUtils.loadProperties(resource);
+			 * debug = Boolean.parseBoolean(properties.getProperty("debug"));
+			 * System.out.println("========debug================>" +
+			 * properties.getProperty("debug")); } catch (Exception e) {
+			 * e.printStackTrace();
+			 * System.out.println("========================>error"); }
+			 */
 			// 更新权限;
 			String haveUpdateSQL = "SELECT C.TZ_EDIT_FLG FROM PSROLEUSER A,PSROLECLASS B,PS_TZ_AQ_COMSQ_TBL C WHERE A.ROLEUSER=? AND A.DYNAMIC_SW='N' AND A.ROLENAME = B.ROLENAME AND B.CLASSID=C.CLASSID AND (C.TZ_COM_ID=? OR C.TZ_COM_ID LIKE ?) AND C.TZ_PAGE_ID=? ORDER BY C.TZ_EDIT_FLG DESC limit 0,1";
 			try {
@@ -489,7 +487,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				errMsgArr[1] = "配置错误，未配置组件页面[" + sComID + "][" + sPageID + "]对应的服务器端处理程序。";
 				return strRet;
 			}
-			
+
 			Framework obj = (Framework) ctx.getBean(strAppClass);
 			switch (OperateType.getOperateType(strOprType)) {
 			// 查询表单;
@@ -961,6 +959,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				resultlist = jdbcTemplate.queryForList(sqlList);
 			}
 
+			String comma = "";
 			for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
 				strContent = "";
 				Map<String, Object> resultMap = resultlist.get(resultlist_i);
@@ -972,11 +971,15 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				strContent = strContent.substring(1);
 				strContent = "{" + strContent + "}";
 
-				strRet = strRet + "," + strContent;
+				strRet = strRet + comma + strContent;
+
+				if ("".equals(comma)) {
+					comma = ",";
+				}
 
 			}
 
-			strRet = strRet.substring(1);
+			// strRet = strRet.substring(1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1179,8 +1182,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					Map<String, Object> map = list.get(k);
 					j = 0;
 					for (Object vl : map.values()) {
-						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + (String) vl
-								+ "\"";
+						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + (String) vl + "\"";
 						j++;
 					}
 					strContent = strContent.substring(1);
