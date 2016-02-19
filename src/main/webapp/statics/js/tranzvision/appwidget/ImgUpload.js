@@ -57,7 +57,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 				for(var i=0; i<children.length; i++){
 					if(children[i].sysFileName != ""){
 						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a>';
-						c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="/onlineSurvey/images/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
+						c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
 						c += '</li>';
 					}
 				}

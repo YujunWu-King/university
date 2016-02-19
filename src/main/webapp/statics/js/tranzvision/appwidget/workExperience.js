@@ -191,8 +191,8 @@ SurveyBuild.extend("workExperience", "baseComponent", {
                 works += '<div class="main_inner_content_info_right_103px_top">';
                 works += '<input type="text" title="' + child[i].work_bdate["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].work_bdate["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].work_bdate["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].work_bdate["itemId"] + '" value="' + child[i].work_bdate["value"] + '">&nbsp;';
                 works += '<input type="text" title="' + child[i].work_edate["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].work_edate["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].work_edate["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].work_edate["itemId"] + '" value="' + child[i].work_edate["value"] + '" style="'+(child[i].work_tonow["value"] == "Y" ? "display:none;": "")+'">';
-                works += '<img id="' + data.itemId + child[i].work_bdate["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:'+ (child[i].work_tonow["value"] == "Y" ? "-40px" : "-168px") +';cursor:pointer;">';
-                works += '<img id="' + data.itemId + child[i].work_edate["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].work_tonow["value"] == "Y" ? "display:none;": "")+'">';
+                works += '<img id="' + data.itemId + child[i].work_bdate["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:'+ (child[i].work_tonow["value"] == "Y" ? "-40px" : "-168px") +';cursor:pointer;">';
+                works += '<img id="' + data.itemId + child[i].work_edate["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-61px;cursor:pointer;'+(child[i].work_tonow["value"] == "Y" ? "display:none;": "")+'">';
 
                 if(j == 0){
                     works += '<div class="tz_checkbox_div '+(child[i].work_tonow["value"] == "Y" ? "on_check": "")+'" style="margin: 0px;position: relative; left:'+(child[i].work_tonow["value"] == "Y" ? "-25px" : "-48px")+'">';
@@ -203,7 +203,7 @@ SurveyBuild.extend("workExperience", "baseComponent", {
                 works += '<div style="margin-top:-40px; margin-left:320px"><div id="' + data.itemId + child[i].work_edate["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onCorrect"><div class="onCorrect">&nbsp;</div></div></div>';
                 works += '</div>';
                 if(j != 0){
-                    works += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="/onlineReg/images/del.png">' + MsgSet["DEL"] + '</div>';
+                    works += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
                 }
                 works += '</div>';
             }

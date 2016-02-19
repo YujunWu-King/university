@@ -14,7 +14,7 @@ var SurveyBuild = {
     is_edit: false,
     is_edit_moda: true,
     _alph: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-    _color: ["#FFFFFF", "#5D762A", "#FF0000", "#800080", "#008000", "#855B00", "#000000", "#FFFF00", "#990000", "#FFA500", "#E4E4E4", "#D2691E", "#1EDDFF", "#FFFFB1", "#98FB98", "#BDB76B", "#666666", "#4B0082", "#041690", "#FFB6C1", "#DDA0DD", "#0000FF", "url(/assets/img/mixed.png);", "url(/assets/img/trans.png);"],
+    _color: ["#FFFFFF", "#5D762A", "#FF0000", "#800080", "#008000", "#855B00", "#000000", "#FFFF00", "#990000", "#FFA500", "#E4E4E4", "#D2691E", "#1EDDFF", "#FFFFB1", "#98FB98", "#BDB76B", "#666666", "#4B0082", "#041690", "#FFB6C1", "#DDA0DD", "#0000FF", "url(" + TzUniversityContextPath + "/statics/images/appeditor/mixed.png);", "url(" + TzUniversityContextPath + "/statics/images/appeditor/trans.png);"],
     comClass: {},//控件实例类
     _components: {},
     _componentConfig: [],//控件后台配置信息
@@ -3007,7 +3007,7 @@ var SurveyBuild = {
         var _co = "",del = "",lsep = ""; //容器行信息、容器行删除按钮、行与行直接的间隔
         //容器中行删除按钮源码
         del += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
-        del += '  <img src="/onlineReg/images/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
+        del += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
         del += '</div>';
 
         //容器中行与行直接的间隔
@@ -3848,9 +3848,9 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
 													} else {	
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
 													}
 													$("#"+itemId+"_AttList").children("ul").append(c);
 												}else{
@@ -3979,9 +3979,9 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
 													} else {	
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
 													}
 													$("#"+itemId+"_AttList").children("ul").append(c);
 												}else{
@@ -4252,7 +4252,7 @@ var SurveyBuild = {
 											var c = "";
 											c = '<ul><li>';
 											c +='	<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,\"'+cins+'\",'+index+') file-index="'+index+'">'+rstObj.fileName+'</a>';
-											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div>';
+											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div>';
 											c +='</li></ul>';
 											//$("#"+data.itemId+index+"_AttList").children("ul").append(c);
 											$("#"+data.itemId+index+"_AttList").html(c);

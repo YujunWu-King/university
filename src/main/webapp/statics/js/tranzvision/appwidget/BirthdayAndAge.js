@@ -53,7 +53,7 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 				c += '	<div class="main_inner_content_info_right">';
 				c += '		<input id="' + data["itemId"] + data.children[0]["itemId"] + '" name="' + data["itemId"] + data.children[0]["itemId"] + '" type="text" value="' + data.children[0]["value"] + '"class="input_120px margin-right-0px" readonly="readonly" onclick="this.focus()" title="' + data.children[0]["itemName"] + '">&nbsp;';
 				c += '		<input type="text" id="' + data["itemId"] + data.children[1]["itemId"] + '" value="' + data.children[1]["value"] + '" title="' + data.children[1]["itemName"] + '" class="input_120px"  readonly="readonly">';
-				c += '		<img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="../../images/appeditor/calendar.png" style="position:relative;left:-171px;cursor:pointer;">';
+				c += '		<img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-171px;cursor:pointer;">';
 				c += '		<div style="margin-top:-40px;margin-left:256px">';
 				c += '			<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 				c += '				<div class="onShow"></div>';

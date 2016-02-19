@@ -166,12 +166,10 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				Map<String, Object> mapParam = jacksonUtil.getMap("data");
-
-				String str_bj_id = String.valueOf(mapParam.getOrDefault("bj_id", ""));
-				String str_prj_id = String.valueOf(mapParam.getOrDefault("xm_id", ""));
-				String str_bj_name = String.valueOf(mapParam.getOrDefault("bj_name", ""));
-				String str_guest_apply = String.valueOf(mapParam.getOrDefault("guest_apply", ""));
+				String str_bj_id = jacksonUtil.getString("bj_id");
+				String str_prj_id = jacksonUtil.getString("xm_id");
+				String str_bj_name = jacksonUtil.getString("bj_name");
+				String str_guest_apply = jacksonUtil.getString("guest_apply");
 
 				String sql = "select 'Y' from PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_CLASS_NAME=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { orgid, str_bj_name }, "String");
@@ -223,7 +221,7 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 							return strRet;
 						}
 					} else {
-						int rst = psTzClassInfTMapper.insertSelective(psTzClassInfT);
+						int rst = psTzClassInfTMapper.updateByPrimaryKeySelective(psTzClassInfT);
 						if (rst == 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "更新失败！";
@@ -404,7 +402,7 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 
 				// hardCode 获取注册组件ID和页面ID
 				String str_com_page_id = getHardCodePoint.getHardCodePointVal("TZ_GD_GUEST_APPLY");
-				String[] aryComPage = str_com_page_id.split("+");
+				String[] aryComPage = str_com_page_id.split("\\+");
 				String str_com_id = "";
 				String str_page_id = "";
 				if (aryComPage.length == 2) {
@@ -414,10 +412,10 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 
 				String sql = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
 				String classId = sqlQuery.queryForObject(sql, new Object[] { str_com_id, str_page_id }, "String");
-				String guest_apply_url = request.getContextPath() + "/dispatcher?classid=" + classId + "&TZ_CLASS_ID"
+				String guest_apply_url = request.getContextPath() + "/dispatcher?classid=" + classId + "&TZ_CLASS_ID="
 						+ str_bj_id;
 
-				guest_apply_url = "<span style=\"font-size:10px;color:#FF0000;\">" + guest_apply_url + "</span>";
+				guest_apply_url = "&nbsp;<span style=\"font-size:12px;color:#FF0000;\">" + guest_apply_url + "</span>";
 
 				Map<String, Object> mapRet = new HashMap<String, Object>();
 				mapRet.put("guest_apply_url", guest_apply_url);

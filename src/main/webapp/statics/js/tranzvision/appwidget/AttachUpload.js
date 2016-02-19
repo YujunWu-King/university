@@ -58,8 +58,8 @@ SurveyBuild.extend("AttachUpload", "baseComponent", {
                 for(var i=0; i<children.length; i++){
                     if(children[i].sysFileName != ""){
                         c += '<li><a onclick="SurveyBuild.downLoadFile(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a>';
-                        c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="/onlineSurvey/images/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
-                        c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='"+children[i].orderby+"'><img src='/onlineSurvey/images/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
+                        c += '	<div class="img_del" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'<div>';
+                        c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='"+children[i].orderby+"'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
                     }
                 }
                 c += '			</ul>';
@@ -89,8 +89,8 @@ SurveyBuild.extend("AttachUpload", "baseComponent", {
                 for(var i=0; i<children.length; i++){
                     if(children[i].sysFileName != ""){
                         c += '<li><a onclick="SurveyBuild.downLoadFile(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a>';
-                        c += '	<img src="/onlineSurvey/images/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')">&nbsp;'+MsgSet["DEL"]+'<div>';
-                        c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='"+children[i].orderby+"'><img src='/onlineSurvey/images/preview.png' title='预览'/>&nbsp;</div>":"")+'</li>';
+                        c += '	<img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15"  title="'+MsgSet["DEL"]+'" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')">&nbsp;'+MsgSet["DEL"]+'<div>';
+                        c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='"+children[i].orderby+"'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='预览'/>&nbsp;</div>":"")+'</li>';
                     }
                 }
                 c += '		</ul>';

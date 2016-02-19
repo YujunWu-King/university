@@ -836,10 +836,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			
 			if(deleteFlag == true)
 			{
-				works += '<div onclick="SurveyBuild.deleteTjx(this);" class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:block"><img width="15" height="15" src="/onlineReg/images/del.png">' + MsgSet["DEL"] + '</div>';
+				works += '<div onclick="SurveyBuild.deleteTjx(this);" class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:block"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
 			}else
 			{
-				works += '<div onclick=SurveyBuild.deleteTjx(this,"'+data.title+'"); class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:none"><img width="15" height="15" src="/onlineReg/images/del.png">' + MsgSet["DEL"] + '</div>';
+				works += '<div onclick=SurveyBuild.deleteTjx(this,"'+data.title+'"); class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:none"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
 			}
 		}
 		//c += '<span class="reg_title_grey_17px">' + data.title + '_'+i+'：</span>';
@@ -1375,7 +1375,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			{
 				works += '		<ul><li>';
 				works += '			<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-				works += '			<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
+				works += '			<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
 				works += '		</li></ul>';
 			}
 			works += '		</div>';
@@ -1398,7 +1398,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '		<div id="'+data.itemId+i+'_AttList" class="main_inner_file_list">';
 			//works += '		<ul><li>';
 			//works += '			<a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+data.instanceId+'\") file-index="1">'+child[i].recommend_9["filename"]+'</a>';
-			//works += '			<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+data.instanceId+'\")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
+			//works += '			<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+data.instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
 			//works += '		</li></ul>';
 			works += '		</div>';
 			works += '	</div>';

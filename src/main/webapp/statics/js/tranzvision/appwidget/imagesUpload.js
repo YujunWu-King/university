@@ -23,7 +23,9 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
             c += '<div class="main_inner_connent_info_left"><span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
 			c += '<div class="main_inner_content_info_right" style="height:auto;position: relative;">';
 			c += '<div class="file_upload_button"><div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="'+data.itemId+'" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
+			
+<!-- 			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="'+data.itemId+'" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,''+ data.instanceId +'')">'; -->
+						c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="websitefile" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
 			c += '<div style="margin-left:426px;position: absolute;"><div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow"></div></div></div>';
 			c += '</div>';
 
@@ -34,7 +36,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 				for(var i=0; i<children.length; i++){
 					if (children[i].viewFileName != "" && children[i].sysFileName != ""){
 						c += '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,"'+data.instanceId+'") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
-						c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'")><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
+						c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
 					}
 				}
 				c += '</ul></div>';	
@@ -42,7 +44,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			} else {
 				c += '<div class="main_inner_single_file_list"><ul>';
 				c += '<li><a class="main_inner_file_a" id="'+data.itemId+'_A" file-index="1" onclick=SurveyBuild.viewImageSet(this,"'+data.instanceId+'")>'+ (children[0].viewFileName != "" && children[0].sysFileName != ""? children[0].viewFileName: "") +'</a>';
-				c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'") style="display:'+(children[0].viewFileName != "" && children[0].sysFileName != "" ? "":"none")+'"><img width="15" height="15" src="/onlineReg/images/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
+				c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'") style="display:'+(children[0].viewFileName != "" && children[0].sysFileName != "" ? "":"none")+'"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
 				c += '</ul></div>';
 				c += '</div>';	
 			}
