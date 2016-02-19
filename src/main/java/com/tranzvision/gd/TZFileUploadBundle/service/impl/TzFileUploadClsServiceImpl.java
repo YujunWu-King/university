@@ -83,7 +83,9 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 			psTzAppXxxPzTKey.setTzAppTplId(appTplId);
 			psTzAppXxxPzTKey.setTzXxxBh(parItemId);
 			PsTzAppXxxPzTWithBLOBs psTzAppXxxPzT = psTzAppXxxPzTMapper.selectByPrimaryKey(psTzAppXxxPzTKey);
-			itemName = psTzAppXxxPzT.getTzXxxMc();
+			if(psTzAppXxxPzT != null){
+				itemName = psTzAppXxxPzT.getTzXxxMc();
+			}
 		}
 
 		if (StringUtils.isBlank(itemName)) {
