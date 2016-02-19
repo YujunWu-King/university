@@ -54,9 +54,11 @@ public class TzClassOtherMsgServiceImpl extends FrameworkImpl {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			String sql = tzGDObject.getSQLText("SQL.TZClassSetBundle.TzGetOtherMsgList");
-			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { orgid, bj_id });
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { bj_id, orgid });
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();
+			
+			Map<String, Object> mapJsons = new HashMap<String, Object>();
 
 			for (Map<String, Object> mapData : listData) {
 
@@ -68,10 +70,12 @@ public class TzClassOtherMsgServiceImpl extends FrameworkImpl {
 				mapJson.put("zd_name", mapData.get("TZ_ATTRIBUTE_VALUE") == null ? ""
 						: String.valueOf(mapData.get("TZ_ATTRIBUTE_VALUE")));
 
-				mapRet.put(mapData.get("TZ_ATTRIBUTE_ID") == null ? "" : String.valueOf(mapData.get("TZ_ATTRIBUTE_ID")),
+				mapJsons.put(mapData.get("TZ_ATTRIBUTE_ID") == null ? "" : String.valueOf(mapData.get("TZ_ATTRIBUTE_ID")),
 						mapJson);
 
 			}
+			
+			mapRet.put("formData", mapJsons);
 
 			strRet = jacksonUtil.Map2json(mapRet);
 

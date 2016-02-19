@@ -1811,6 +1811,14 @@
 				edit_str = edit_str + ',{"typeFlag":"bmlc","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(rec.data)+'}';
 			}
 		});
+		var bmlc_remove=bmlc_grid.getRemovedRecords();
+		for(var i=0;i<bmlc_remove.length;i++){
+			if(remove_str == ""){
+				remove_str = '{"typeFlag":"bmlc","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(bmlc_remove[i].data)+'}';
+			}else{
+				remove_str = remove_str + ',{"typeFlag":"bmlc","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(bmlc_remove[i].data)+'}';
+	  		}
+		}
 		//递交资料
 		var djzl_grid=this.getView().down('grid[name=applyItemGrid1]').getStore();
 		djzl_grid.each(function(rec){
@@ -1820,6 +1828,14 @@
 				edit_str = edit_str + ',{"typeFlag":"djzl","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(rec.data)+'}';
 			}
 		});
+		var djzl_remove=djzl_grid.getRemovedRecords();
+		for(var i=0;i<djzl_remove.length;i++){
+			if(remove_str == ""){
+				remove_str = '{"typeFlag":"djzl","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(djzl_remove[i].data)+'}';
+			}else{
+				remove_str = remove_str + ',{"typeFlag":"djzl","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(djzl_remove[i].data)+'}';
+	  		}
+		}
 		//更多信息
 		var form2=this.getView().down('form[name=form_2]').getForm();
 		var comParams1 = "";

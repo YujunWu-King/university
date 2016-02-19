@@ -69,22 +69,47 @@ public class TzClassPcglServiceImpl extends FrameworkImpl {
 
 				if (psTzClsBatchT != null) {
 
+					String dtFormat = getSysHardCodeVal.getDateFormat();
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dtFormat);
+					
+					
 					String pcName = psTzClsBatchT.getTzBatchName();
 					Date pc_st_time = psTzClsBatchT.getTzStartDt();
+					String strPcStTime = "";
+					if(null!=pc_st_time){
+						strPcStTime = simpleDateFormat.format(pc_st_time);
+					}
+					
 					Date pc_sp_time = psTzClsBatchT.getTzEndDt();
+					String strPcSpTime = "";
+					if(null!=pc_sp_time){
+						strPcSpTime = simpleDateFormat.format(pc_sp_time);
+					}
+					
 					Date pc_stbm_time = psTzClsBatchT.getTzAppEndDt();
-					String pc_fb = psTzClsBatchT.getTzAppPubStatus();
+					String strPcStbmTime = "";
+					if(null!=pc_stbm_time){
+						strPcStbmTime = simpleDateFormat.format(pc_stbm_time);
+					}
+					
 					Date interviewConfirmDate = psTzClsBatchT.getTzMsqrDate();
+					String strInterviewConfirmDate = "";
+					if(null!=interviewConfirmDate){
+						strInterviewConfirmDate = simpleDateFormat.format(interviewConfirmDate);
+					}
+					
+					String pc_fb = psTzClsBatchT.getTzAppPubStatus();
+					
 
 					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("bj_id", bj_id);
 					mapJson.put("pc_id", pc_id);
 					mapJson.put("pc_name", pcName == null ? "" : pcName);
-					mapJson.put("pc_st_time", pc_st_time);
-					mapJson.put("pc_sp_time", pc_sp_time);
-					mapJson.put("pc_stbm_time", pc_stbm_time);
+					mapJson.put("pc_st_time", strPcStTime);
+					mapJson.put("pc_sp_time", strPcSpTime);
+					mapJson.put("pc_stbm_time", strPcStbmTime);
 					mapJson.put("pc_fb", pc_fb == null ? "" : pc_fb);
-					mapJson.put("interviewConfirmDate", interviewConfirmDate);
+					mapJson.put("interviewConfirmDate", strInterviewConfirmDate);
 
 					mapRet.replace("formData", mapJson);
 
@@ -123,10 +148,8 @@ public class TzClassPcglServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				Map<String, Object> mapParam = jacksonUtil.getMap("data");
-
-				String str_bj_id = String.valueOf(mapParam.getOrDefault("bj_id", ""));
-				String str_pc_name = String.valueOf(mapParam.getOrDefault("pc_name", ""));
+				String str_bj_id = jacksonUtil.getString("bj_id");
+				String str_pc_name = jacksonUtil.getString("pc_name");
 
 				if (!"".equals(str_bj_id) && !"".equals(str_pc_name)) {
 
@@ -137,27 +160,41 @@ public class TzClassPcglServiceImpl extends FrameworkImpl {
 
 					if (!"Y".equals(recExists)) {
 
+						PsTzClsBatchT psTzClsBatchT = new PsTzClsBatchT();
+
 						String dtFormat = getSysHardCodeVal.getDateFormat();
 						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dtFormat);
 
-						Date tzStartDt = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("pc_st_time", "")));
-						Date tzEndDt = simpleDateFormat.parse(String.valueOf(mapParam.getOrDefault("pc_sp_time", "")));
-						Date tzAppEndDt = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("pc_stbm_time", "")));
-						Date tzMsqrDate = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("interviewConfirmDate", "")));
-						String tzAppPubStatus = String.valueOf(mapParam.getOrDefault("pc_fb", ""));
+						String strStartDt = jacksonUtil.getString("pc_st_time");
+						if (null != strStartDt && !"".equals(strStartDt)) {
+							Date tzStartDt = simpleDateFormat.parse(strStartDt);
+							psTzClsBatchT.setTzStartDt(tzStartDt);
+						}
 
-						PsTzClsBatchT psTzClsBatchT = new PsTzClsBatchT();
+						String strEndDt = jacksonUtil.getString("pc_sp_time");
+						if (null != strEndDt && !"".equals(strEndDt)) {
+							Date tzEndDt = simpleDateFormat.parse(strEndDt);
+							psTzClsBatchT.setTzEndDt(tzEndDt);
+						}
+
+						String strAppEndDt = jacksonUtil.getString("pc_stbm_time");
+						if (null != strAppEndDt && !"".equals(strAppEndDt)) {
+							Date tzAppEndDt = simpleDateFormat.parse(strAppEndDt);
+							psTzClsBatchT.setTzAppEndDt(tzAppEndDt);
+						}
+
+						String strMsqrDate = jacksonUtil.getString("interviewConfirmDate");
+						if (null != strMsqrDate && !"".equals(strMsqrDate)) {
+							Date tzMsqrDate = simpleDateFormat.parse(strMsqrDate);
+							psTzClsBatchT.setTzMsqrDate(tzMsqrDate);
+						}
+
+						String tzAppPubStatus = jacksonUtil.getString("pc_fb");
+
 						psTzClsBatchT.setTzClassId(str_bj_id);
 						psTzClsBatchT.setTzBatchId(templateId);
 						psTzClsBatchT.setTzBatchName(str_pc_name);
-						psTzClsBatchT.setTzStartDt(tzStartDt);
-						psTzClsBatchT.setTzEndDt(tzEndDt);
-						psTzClsBatchT.setTzAppEndDt(tzAppEndDt);
 						psTzClsBatchT.setTzAppPubStatus(tzAppPubStatus);
-						psTzClsBatchT.setTzMsqrDate(tzMsqrDate);
 
 						int rst = psTzClsBatchTMapper.insert(psTzClsBatchT);
 						if (rst == 0) {
@@ -206,11 +243,9 @@ public class TzClassPcglServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				Map<String, Object> mapParam = jacksonUtil.getMap("data");
-
-				String str_bj_id = String.valueOf(mapParam.getOrDefault("bj_id", ""));
-				String str_pc_id = String.valueOf(mapParam.getOrDefault("pc_id", ""));
-				String str_pc_name = String.valueOf(mapParam.getOrDefault("pc_name", ""));
+				String str_bj_id = jacksonUtil.getString("bj_id");
+				String str_pc_id = jacksonUtil.getString("pc_id");
+				String str_pc_name = jacksonUtil.getString("pc_name");
 
 				if (null != str_bj_id && !"".equals(str_bj_id) && null != str_pc_id && !"".equals(str_pc_id)) {
 
@@ -220,29 +255,43 @@ public class TzClassPcglServiceImpl extends FrameworkImpl {
 
 					if (!"Y".equals(recExists)) {
 
+						PsTzClsBatchT psTzClsBatchT = new PsTzClsBatchT();
+
 						String dtFormat = getSysHardCodeVal.getDateFormat();
 						SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dtFormat);
 
-						Date tzStartDt = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("pc_st_time", "")));
-						Date tzEndDt = simpleDateFormat.parse(String.valueOf(mapParam.getOrDefault("pc_sp_time", "")));
-						Date tzAppEndDt = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("pc_stbm_time", "")));
-						Date tzMsqrDate = simpleDateFormat
-								.parse(String.valueOf(mapParam.getOrDefault("interviewConfirmDate", "")));
-						String tzAppPubStatus = String.valueOf(mapParam.getOrDefault("pc_fb", ""));
+						String strStartDt = jacksonUtil.getString("pc_st_time");
+						if (null != strStartDt && !"".equals(strStartDt)) {
+							Date tzStartDt = simpleDateFormat.parse(strStartDt);
+							psTzClsBatchT.setTzStartDt(tzStartDt);
+						}
 
-						PsTzClsBatchT psTzClsBatchT = new PsTzClsBatchT();
+						String strEndDt = jacksonUtil.getString("pc_sp_time");
+						if (null != strEndDt && !"".equals(strEndDt)) {
+							Date tzEndDt = simpleDateFormat.parse(strEndDt);
+							psTzClsBatchT.setTzEndDt(tzEndDt);
+						}
+
+						String strAppEndDt = jacksonUtil.getString("pc_stbm_time");
+						if (null != strAppEndDt && !"".equals(strAppEndDt)) {
+							Date tzAppEndDt = simpleDateFormat.parse(strAppEndDt);
+							psTzClsBatchT.setTzAppEndDt(tzAppEndDt);
+						}
+
+						String strMsqrDate = jacksonUtil.getString("interviewConfirmDate");
+						if (null != strMsqrDate && !"".equals(strMsqrDate)) {
+							Date tzMsqrDate = simpleDateFormat.parse(strMsqrDate);
+							psTzClsBatchT.setTzMsqrDate(tzMsqrDate);
+						}
+
+						String tzAppPubStatus = jacksonUtil.getString("pc_fb");
+
 						psTzClsBatchT.setTzClassId(str_bj_id);
 						psTzClsBatchT.setTzBatchId(str_pc_id);
 						psTzClsBatchT.setTzBatchName(str_pc_name);
-						psTzClsBatchT.setTzStartDt(tzStartDt);
-						psTzClsBatchT.setTzEndDt(tzEndDt);
-						psTzClsBatchT.setTzAppEndDt(tzAppEndDt);
 						psTzClsBatchT.setTzAppPubStatus(tzAppPubStatus);
-						psTzClsBatchT.setTzMsqrDate(tzMsqrDate);
 
-						int rst = psTzClsBatchTMapper.updateByPrimaryKey(psTzClsBatchT);
+						int rst = psTzClsBatchTMapper.updateByPrimaryKeySelective(psTzClsBatchT);
 						if (rst == 0) {
 							errMsg[0] = "1";
 							errMsg[1] = "更新批次【" + str_pc_name + "】失败！";
