@@ -111,6 +111,7 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			/*模板名称、模板报文JSON、实例数据JSON、*/
 			PsTzApptplDyTWithBLOBs psTzApptplDyT = psTzApptplDyTMapper.selectByPrimaryKey(tplId);
 			String tplData = psTzApptplDyT.getTzApptplJsonStr();
+			tplData = tplData.replace("\\", "\\\\");
 			String orgId = psTzApptplDyT.getTzJgId();
 			String language = psTzApptplDyT.getTzAppTplLan();
 			
