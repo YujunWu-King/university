@@ -2713,19 +2713,16 @@ var SurveyBuild = {
 				alert(MsgSet["FILE_COUNT"])
 				return;
 			}
-			var date = new Date();
-			var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
-			var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
-			var dateString = date.getFullYear().toString() + m + d;
+
 			try{
 				loading();/*上传进度条*/
 				var $form = document.getElementById("main_list");
 				$form.encoding = "multipart/form-data";
-				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
+				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
 				$("#main_list").ajaxSubmit({
 					dataType:'json',
 					type:'POST',
-					url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
+					url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
 					success: function(obj) {
 						if(obj.success){
 							//清空file控件的Value
@@ -2762,8 +2759,7 @@ var SurveyBuild = {
 								//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"','dhIndex':'"+index+"','refLetterId':'"+refLetterId+"'}}",
-									dataType: "json",
+									url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}',									dataType: "json",
 									async: false,
 									success: function(rst){
 										var state = rst.state;
@@ -3162,20 +3158,17 @@ var SurveyBuild = {
 		//console.log(num2+"--"+num)
 		var child = data.children[indexJson];
 		//生成日期
-		var date = new Date();
-		var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
-		var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
-		var dateString = date.getFullYear().toString() + m + d;
+
 		var allowSize=5;
 		var fileType = "jpg,png,pdf,doc,docx";
 		try{
 			loading();/*上传进度条*/
 			var $form = document.getElementById("main_list");
 			$form.encoding = "multipart/form-data";
-			$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
+			$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
 			$("#main_list").ajaxSubmit({
 				dataType:'json',
-				url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
+				url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
 				success: function(obj) {
 					if(obj.success){
 						//清空file控件的Value
@@ -3365,7 +3358,6 @@ var SurveyBuild = {
         s = $.trim(str.toString());
         s = s.replace(/\\/g,"\\\\")
         s = s.replace(/\"/g,"\\\"");
-        s = s.replace(/\'/g,"\\'");
         s = s.replace(/\t/g,"\\t");
         s = s.replace(/\f/g,"\\f");
         s = s.replace(/\//g,"\\/");
