@@ -2721,11 +2721,11 @@ var SurveyBuild = {
 				loading();/*上传进度条*/
 				var $form = document.getElementById("main_list");
 				$form.encoding = "multipart/form-data";
-				$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
+				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
 				$("#main_list").ajaxSubmit({
 					dataType:'json',
 					type:'POST',
-					url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
+					url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
 					success: function(obj) {
 						if(obj.success){
 							//清空file控件的Value
@@ -3125,10 +3125,10 @@ var SurveyBuild = {
         try{
             var $form = document.getElementById("main_list");
             $form.encoding = "multipart/form-data";
-            $form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment";
+            $form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment";
             $("#main_list").ajaxSubmit({
                 dataType:'json',
-                url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment",
+                url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment",
                 success: function(obj) {
                     if(obj.success){
                         var fileSize = obj.msg.size;
@@ -3172,10 +3172,10 @@ var SurveyBuild = {
 			loading();/*上传进度条*/
 			var $form = document.getElementById("main_list");
 			$form.encoding = "multipart/form-data";
-			$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
+			$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
 			$("#main_list").ajaxSubmit({
 				dataType:'json',
-				url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
+				url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
 				success: function(obj) {
 					if(obj.success){
 						//清空file控件的Value
