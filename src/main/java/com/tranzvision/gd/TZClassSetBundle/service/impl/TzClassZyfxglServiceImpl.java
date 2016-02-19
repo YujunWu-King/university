@@ -95,10 +95,8 @@ public class TzClassZyfxglServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				Map<String, Object> mapParam = jacksonUtil.getMap("data");
-
-				String bj_id = String.valueOf(mapParam.getOrDefault("bj_id", ""));
-				String fx_id = String.valueOf(mapParam.getOrDefault("fx_id", ""));
+				String bj_id = jacksonUtil.getString("bj_id");
+				String fx_id = jacksonUtil.getString("fx_id");
 
 				if (!"".equals(bj_id) && !"".equals(fx_id)) {
 
@@ -107,7 +105,7 @@ public class TzClassZyfxglServiceImpl extends FrameworkImpl {
 
 					if (!"Y".equals(recExists)) {
 
-						String fx_name = String.valueOf(mapParam.getOrDefault("fx_name", ""));
+						String fx_name = jacksonUtil.getString("fx_name");
 
 						sql = "select count(*) from PS_TZ_CLS_MAJOR_T where TZ_CLASS_ID=?";
 						int tzSortNum = sqlQuery.queryForObject(sql, new Object[] { bj_id }, "int");

@@ -208,7 +208,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					str_guest_apply = "true";
 					// 生成链接
 					String str_com_page_id = getHardCodePoint.getHardCodePointVal("TZ_GD_GUEST_APPLY");
-					String[] aryComPage = str_com_page_id.split("+");
+					String[] aryComPage = str_com_page_id.split("\\+");
 					if (null != aryComPage && aryComPage.length == 2) {
 						String str_com_id = aryComPage[0].trim();
 						String str_page_id = aryComPage[1].trim();
@@ -219,7 +219,8 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 						guest_apply_url = request.getContextPath() + "/dispacher?classid=" + classId + "&TZ_CLASS_ID="
 								+ str_bj_id;
-						guest_apply_url = "<span style=\"font-size:10px;color:#FF0000\">" + guest_apply_url + "</sapn>";
+						guest_apply_url = "&nbsp;<span style=\"font-size:12px;color:#FF0000\">" + guest_apply_url
+								+ "</sapn>";
 					}
 				} else {
 					str_guest_apply = "false";
@@ -232,10 +233,26 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 				String strDateFormat = getSysHardCodeVal.getDateFormat();
 				SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-				String str_st_dt = dateFormat.format(psTzClassInfT.getTzStartDt());
-				String str_end_dt = dateFormat.format(psTzClassInfT.getTzEndDt());
-				String str_bmst_dt = dateFormat.format(psTzClassInfT.getTzAppStartDt());
-				String str_bmend_dt = dateFormat.format(psTzClassInfT.getTzAppEndDt());
+
+				String str_st_dt = "";
+				if (psTzClassInfT.getTzStartDt() != null) {
+					str_st_dt = dateFormat.format(psTzClassInfT.getTzStartDt());
+				}
+
+				String str_end_dt = "";
+				if (psTzClassInfT.getTzEndDt() != null) {
+					str_end_dt = dateFormat.format(psTzClassInfT.getTzEndDt());
+				}
+
+				String str_bmst_dt = "";
+				if (psTzClassInfT.getTzAppStartDt() != null) {
+					str_bmst_dt = dateFormat.format(psTzClassInfT.getTzAppStartDt());
+				}
+
+				String str_bmend_dt = "";
+				if (psTzClassInfT.getTzAppEndDt() != null) {
+					str_bmend_dt = dateFormat.format(psTzClassInfT.getTzAppEndDt());
+				}
 
 				Map<String, String> mapJson = new HashMap<String, String>();
 				mapJson.put("bj_id", str_bj_id);
@@ -520,7 +537,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				String sql = "select 'Y' from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id }, "String");
 
-				if (!"Y".equals(recExists)) {
+				if ("Y".equals(recExists)) {
 					String strDateFormat = getSysHardCodeVal.getDateFormat();
 					SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 
@@ -531,21 +548,29 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 							mapData.get("bj_name") == null ? "" : String.valueOf(mapData.get("bj_name")));
 					psTzClassInfT.setTzPrjId(mapData.get("xm_id") == null ? "" : String.valueOf(mapData.get("xm_id")));
 
-					Date tzStartDt = mapData.get("begin_time") == null ? null
-							: dateFormat.parse(String.valueOf(mapData.get("begin_time")));
-					psTzClassInfT.setTzStartDt(tzStartDt);
+					String strStartDt = String.valueOf(mapData.get("begin_time"));
+					if (!"".equals(strStartDt)) {
+						Date tzStartDt = mapData.get("begin_time") == null ? null : dateFormat.parse(strStartDt);
+						psTzClassInfT.setTzStartDt(tzStartDt);
+					}
 
-					Date tzEndDt = mapData.get("end_time") == null ? null
-							: dateFormat.parse(String.valueOf(mapData.get("end_time")));
-					psTzClassInfT.setTzEndDt(tzEndDt);
+					String strEndDt = String.valueOf(mapData.get("end_time"));
+					if (!"".equals(strEndDt)) {
+						Date tzEndDt = mapData.get("end_time") == null ? null : dateFormat.parse(strEndDt);
+						psTzClassInfT.setTzEndDt(tzEndDt);
+					}
+					String strAppStartDt = String.valueOf(mapData.get("beginBm_time"));
+					if (!"".equals(strAppStartDt)) {
+						Date tzAppStartDt = mapData.get("beginBm_time") == null ? null
+								: dateFormat.parse(strAppStartDt);
+						psTzClassInfT.setTzAppStartDt(tzAppStartDt);
+					}
 
-					Date tzAppStartDt = mapData.get("beginBm_time") == null ? null
-							: dateFormat.parse(String.valueOf(mapData.get("beginBm_time")));
-					psTzClassInfT.setTzAppStartDt(tzAppStartDt);
-
-					Date tzAppEndDt = mapData.get("endBm_time") == null ? null
-							: dateFormat.parse(String.valueOf(mapData.get("endBm_time")));
-					psTzClassInfT.setTzAppEndDt(tzAppEndDt);
+					String strAppEndDt = String.valueOf(mapData.get("endBm_time"));
+					if (!"".equals(strAppEndDt)) {
+						Date tzAppEndDt = mapData.get("endBm_time") == null ? null : dateFormat.parse(strAppEndDt);
+						psTzClassInfT.setTzAppEndDt(tzAppEndDt);
+					}
 
 					psTzClassInfT
 							.setTzIsAppOpen(mapData.get("bm_kt") == null ? "" : String.valueOf(mapData.get("bm_kt")));
@@ -581,7 +606,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setRowLastmantDttm(dateNow);
 					psTzClassInfT.setRowLastmantOprid(oprid);
 
-					psTzClassInfTMapper.updateByPrimaryKeyWithBLOBs(psTzClassInfT);
+					psTzClassInfTMapper.updateByPrimaryKeySelective(psTzClassInfT);
 
 				}
 
@@ -668,7 +693,6 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 		try {
 
-			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
 			String sql = "select TZ_ATTRIBUTE_ID from PS_TZ_CLS_ATTR_T where TZ_JG_ID=? and TZ_IS_USED='Y'";
 
 			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { orgid });
