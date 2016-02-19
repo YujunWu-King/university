@@ -1357,15 +1357,18 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		if(xxxObject.containsKey("classname")){
 			strClassName = xxxObject.get("classname") == null ? "" : String.valueOf(xxxObject.get("classname"));
 			if("RefferTitle".equals(strClassName)){
-				sql = "SELECT B.TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A,ps_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID = ? AND A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID";
+				sql = "SELECT B.TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID = ? AND A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID";
 				String strTplLang = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
 				strValue = xxxObject.get("value") == null ? "" : String.valueOf(xxxObject.get("value"));
-				sql = "SELECT TZ_ZHZ_DMS,TZ_ZHZ_CMS FROM ps_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_APP_REF_TITLE' AND TZ_ZHZ_ID = ?";
+				sql = "SELECT TZ_ZHZ_DMS,TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_APP_REF_TITLE' AND TZ_ZHZ_ID = ?";
 				Map<String, Object> Map = sqlQuery.queryForMap(sql, new Object[] { strValue });
 				String strDms = "";
-				strDms = Map.get("TZ_ZHZ_DMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_DMS"));
 				String strZms = "";
-				strZms = Map.get("TZ_ZHZ_CMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_CMS"));
+				if(Map != null){
+					strDms = Map.get("TZ_ZHZ_DMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_DMS"));
+					strZms = Map.get("TZ_ZHZ_CMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_CMS"));
+				}
+				
 				if("ENG".equals(strTplLang)){
 					if(!"".equals(strZms)){
 						strValueS = strZms;
