@@ -14,7 +14,6 @@ public class ObjectDoMethod {
 			Method meth = cls.getMethod(MethodName, partypes);
 			retobj = meth.invoke(obj, arglist);
 		} catch (Throwable e) {
-			
 		}
 		return retobj;
 	}
@@ -27,7 +26,11 @@ public class ObjectDoMethod {
 				if (type[i] != null || !"".equals(type[i])) {
 					if ("String".equals(type[i])) {
 						cs[i] = String.class;
-					} else if ("int".equals(type[i])) {
+					} else if ("long".equals(type[i])) {
+						cs[i] = long.class;
+					}else if ("Long".equals(type[i])) {
+						cs[i] = Long.class;
+					}else if ("int".equals(type[i])) {
 						cs[i] = int.class;
 					} else if ("Integer".equals(type[i])) {
 						cs[i] = Integer.class;
