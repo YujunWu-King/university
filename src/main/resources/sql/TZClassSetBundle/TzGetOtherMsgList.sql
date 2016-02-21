@@ -5,12 +5,12 @@ select
 	B.TZ_ATTRIBUTE_VALUE
 from 
 	PS_TZ_CLS_ATTR_T A
-left join 
-	PS_TZ_CLS_MORINF_T B
+left join ( 
+		select * from PS_TZ_CLS_MORINF_T where TZ_CLASS_ID = ?
+    ) B
 on 
 	A.TZ_ATTRIBUTE_ID=B.TZ_ATTRIBUTE_ID
 where 
 	A.TZ_JG_ID=? 
 	and A.TZ_IS_USED='Y'
-	and B.TZ_CLASS_ID=? 
 order by A.TZ_SORT_NUM asc

@@ -11,6 +11,6 @@ left join
 on
 	A.OPRID = B.OPRID
 where
-	TZ_CLASS_ID=?
+	A.TZ_CLASS_ID=?
 order by OPRID asc
 limit ?,?

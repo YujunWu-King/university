@@ -476,17 +476,11 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 					case "bmlc":
 						// 报名流程
-						sql = "delete from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?";
-						sqlQuery.update(sql, new Object[] { bj });
-
 						str_bj_id = this.tzUpdate_bmlc(mapData);
 						break;
 
 					case "djzl":
 						// 递交资料
-						sql = "delete from PS_TZ_CLS_DJZL_T where TZ_CLASS_ID=?";
-						sqlQuery.update(sql, new Object[] { bj });
-
 						str_bj_id = this.tzUpdate_djzl(mapData);
 						break;
 
@@ -671,6 +665,9 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 			str_bj_id = mapData.get("bj_id") == null ? "" : String.valueOf(mapData.get("bj_id"));
 			String oprid = mapData.get("ry_id") == null ? "" : String.valueOf(mapData.get("ry_id"));
+
+			String sql = "delete from PS_TZ_CLS_ADMIN_T where TZ_CLASS_ID=? and OPRID=?";
+			sqlQuery.update(sql, new Object[] { str_bj_id, oprid });
 
 			PsTzClsAdminTKey psTzClsAdminTKey = new PsTzClsAdminTKey();
 			psTzClsAdminTKey.setTzClassId(str_bj_id);

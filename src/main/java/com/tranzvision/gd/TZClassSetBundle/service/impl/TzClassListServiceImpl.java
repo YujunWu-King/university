@@ -134,7 +134,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
@@ -221,7 +221,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
@@ -270,12 +270,9 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 
 							mapJson.put("bj_id", str_bj_id);
 
-							// ps中是用的OPRID，但OPRID用户时看不懂的，这里改为登录账号
-							// mapJson.put("ry_id", mapData.get("OPRID") == null
-							// ? "": String.valueOf(mapData.get("OPRID")));
-
-							mapJson.put("ry_id",
-									mapData.get("TZ_DLZH_ID") == null ? "" : String.valueOf(mapData.get("TZ_DLZH_ID")));
+							
+							mapJson.put("ry_id", mapData.get("OPRID") == null
+							? "": String.valueOf(mapData.get("OPRID")));
 
 							mapJson.put("gl_name", mapData.get("TZ_REALNAME") == null ? ""
 									: String.valueOf(mapData.get("TZ_REALNAME")));
@@ -303,7 +300,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
@@ -429,8 +426,8 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 							psTzClsBmlcTWithBLOBs.setTzTmpContent("");
 							psTzClsBmlcTMapper.insert(psTzClsBmlcTWithBLOBs);
 
-							// 更新保留流程步骤回复内容
-							sql = tzGDObject.getSQLText("SQL.TZClassSetBundle.TzGetBmlcbzhfList");
+							// 更新报名流程步骤回复内容
+							sql = tzGDObject.getSQLText("SQL.TZClassSetBundle.TzGetBmlcbzhfdyList");
 							List<Map<String, Object>> listBmlcbzhf = sqlQuery.queryForList(sql,
 									new Object[] { str_bmlc_id, tzAppproId });
 
@@ -485,7 +482,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
@@ -659,7 +656,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
@@ -720,7 +717,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[0] = "参数不正确！";
+			errorMsg[1] = "参数不正确！";
 		}
 
 		return strRet;
