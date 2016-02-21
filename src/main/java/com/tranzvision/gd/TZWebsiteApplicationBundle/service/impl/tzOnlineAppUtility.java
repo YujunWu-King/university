@@ -26,12 +26,18 @@ public class tzOnlineAppUtility {
 	@Autowired
 	private TZGDObject tzSQLObject;
 
+	public String requireValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,
+			int numPageNo){
+		return  "实例编号:" + String.valueOf(numAppInsId) +  "模版编号:" + strTplId;
+	};
+	
 	//必填校验
 	public String requireValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,
 			int numPageNo,String strXxxRqgs,String strXxxXfmin,String strXxxXfmax,String strXxxZsxzgs,String strXxxZdxzgs,
 			String strXxxYxsclx,String strXxxYxscdx,String strXxxBtBz,String strXxxCharBz,int numXxxMinlen,int numXxxMaxlen,
 			String strXxxNumBz,int numXxxMin,int numXxxMax,String strXxxXsws,String strXxxGdgsjy,String strXxxDrqBz,
 			int numXxxMinLine,String strTjxSub,String strJygzTsxx){
+		
 		String returnMessage = "";
 		
 		String strDxxxBh = "";
@@ -148,31 +154,40 @@ public class tzOnlineAppUtility {
 					getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";
 				    
 				    List<?> ListValues1 = sqlQuery.queryForList(getChildrenSql, 
-				    		new Object[] { numAppInsId,strTplId,strDxxxBh });
-				    for (Object ObjValue : ListValues1) {
-				    	Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
-				    	strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
-				    	if("".equals(strXxxValue)||strXxxValue==null||"N".equals(strXxxValue)){
-				    		//校验失败
-			    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-			    			break;
-						}
+				    		new Object[] { numAppInsId,strTplId,strXxxBh });
+				    if(ListValues1 != null){
+				    	for (Object ObjValue : ListValues1) {
+					    	Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
+					    	strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
+					    	if("".equals(strXxxValue)||strXxxValue==null||"N".equals(strXxxValue)){
+					    		//校验失败
+				    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+				    			break;
+							}
+					    }
+				    }else{
+				    	//校验失败
+		    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+		    			break;
 				    }
+				    
 				    break;
 				 default:
 			    	getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";
 				    
-				    List<?> ListValues2 = sqlQuery.queryForList(getChildrenSql, 
-				    		new Object[] { numAppInsId,strTplId,strDxxxBh });
-				    for (Object ObjValue : ListValues2) {
+		    		List<?> ListValues2 = sqlQuery.queryForList(getChildrenSql, 
+				    		new Object[] { numAppInsId,strTplId,strXxxBh });
+			    	for (Object ObjValue : ListValues2) {
 				    	Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
-				    	strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
+					    strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 				    	if("".equals(strXxxValue)||strXxxValue==null){
 				    		//校验失败
+				    		//System.out.println(strXxxMc, strJygzTsxx);
 			    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 			    			break;
 						}
-				    }
+				    	
+					 }
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -345,7 +360,7 @@ public class tzOnlineAppUtility {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return returnMessage;
+		return returnMessage + "Test";
 	}
 	//规则校验
 	public String regularValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,

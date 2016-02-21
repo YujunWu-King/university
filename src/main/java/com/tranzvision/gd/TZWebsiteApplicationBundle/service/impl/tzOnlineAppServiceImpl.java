@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,6 +112,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private PsTzLxfsInfoTblMapper psTzLxfsInfoTblMapper;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	@Autowired
+	private ApplicationContext ctx;
 		
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
@@ -682,10 +685,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			
 			numAppInsId = Long.parseLong(strAppInsId);
 			
-			strSessionInvalidTips = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", strLanguage, "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
-			strIllegalOperation = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作", "Illegal operation");
-			strParaError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage, "参数错误", "Parameter error.");
-			strVersionError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PAGE_INVALID", strLanguage, "当前页面已失效，请重新进入页面或刷新页面再试。", "The current page has expired, please re-enter the page and try again.");
+			strSessionInvalidTips = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", 
+					strLanguage, "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
+			strIllegalOperation = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", 
+					strLanguage, "非法操作", "Illegal operation");
+			strParaError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PARAERROR", 
+					strLanguage, "参数错误", "Parameter error.");
+			strVersionError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PAGE_INVALID", 
+					strLanguage, "当前页面已失效，请重新进入页面或刷新页面再试。", "The current page has expired, please re-enter the page and try again.");
 			
 			String sql = "";
 			if(!"".equals(strClassId) && strClassId != null){
@@ -1091,7 +1098,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			//jacksonUtil.json2Map(strJsonData);
+			
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
+			
+			
+			
 			if (mapAppData!=null){
 				this.delAppIns(numAppInsId);
 				for (Entry<String, Object> entry:mapAppData.entrySet()){
@@ -1122,7 +1133,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						if("Y".equals(strIsDoubleLine)){
 							this.saveDhLineNum(strItemIdLevel0, numAppInsId,(short)mapChildrens1.size());
 							for(Object children1:mapChildrens1){
-								/*多行容器*/
+								//多行容器
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 								for (Entry<String, Object> entryChildren:mapChildren1.entrySet()){
 									Map<String, Object> mapJsonChildrenItems = (Map<String, Object>)entryChildren.getValue();
@@ -1131,7 +1142,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 										strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
 									}
 									if(mapJsonChildrenItems.containsKey("children")){
-										/*多行容器下的子容器*/
+										//多行容器下的子容器
 										List<?> mapChildrens2 = (ArrayList<?>) mapJsonChildrenItems.get("children");
 										String strIsSingleLine2 = "";
 										if(mapJsonChildrenItems.containsKey("isSingleLine")){
@@ -1398,7 +1409,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}else{
 			strIsHidden = "N";
 		}
-		this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
+		//this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
 	}
 	
 	//将json数据解析保存到报名表存储表
@@ -1483,6 +1494,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	
 	/*设置字段是否隐藏*/
 	private void saveXxxHidden(Long numAppInsId ,String strItemId, String strIsHidden){
+		/*
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
 		if(count>0){
@@ -1497,6 +1509,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzAppHiddenT.setTzXxxBh(strItemId);
 			psTzAppHiddenT.setTzIsHidden(strIsHidden);
 			psTzAppHiddenTMapper.insert(psTzAppHiddenT);
+		}*/
+		PsTzAppHiddenT psTzAppHiddenT = new PsTzAppHiddenT();
+		psTzAppHiddenT.setTzAppInsId(numAppInsId);
+		psTzAppHiddenT.setTzXxxBh(strItemId);
+		psTzAppHiddenT.setTzIsHidden(strIsHidden);
+		int num = psTzAppHiddenTMapper.insert(psTzAppHiddenT);
+		if(num > 0){
+			
 		}
 	}
 	
@@ -1675,19 +1695,84 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				
 				if("save".equals(strOtype)){
 					if(numCurrentPageNo==numPageNo){
-						String[] parameterTypes = new String[] {"String[]" };
-						Object[] arglist = new Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-								strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+						/*
+						String[] parameterTypes = new String[] {"Long","String","String","String","String",
+								"int","String","String","String","String","String",
+								"String","String","String","String","int","int",
+								"String","int","int","String",
+								"String","String","int","String","String"};
+						Object[] arglist = new Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+								numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+								strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+								strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 								strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx};
 						Object objs = ObjectDoMethod.Load(strPath + "." + strName, strMethod,
 								parameterTypes, arglist);
-						String strReturn = String.valueOf(objs);
+								String strReturn = String.valueOf(objs);
+						*/
+						com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility tzOnlineAppUtility =
+								(com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility) 
+								ctx.getBean(strPath + "." + strName);
+						String strReturn = "";
+						switch(strMethod){
+							case "requireValidator":
+								strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "ahphValidator":
+								strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "charLenValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "valueValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "regularValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "dHLineValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "refLetterValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+						}
+						
 						if(!"".equals(strReturn)){
 							returnMsg = strReturn;
 							break;
 						}
 					}	
 				}else{
+					/*
 					String[] parameterTypes = new String[] {"String[]" };
 					Object[] arglist = new Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 							strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
@@ -1695,12 +1780,69 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					Object objs = ObjectDoMethod.Load(strPath + "." + strName, strMethod,
 							parameterTypes, arglist);
 					String strReturn = String.valueOf(objs);
+					*/
+					com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility tzOnlineAppUtility =
+							(com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility) 
+							ctx.getBean(strPath + "." + strName);
+					String strReturn = "";
+					switch(strMethod){
+						case "requireValidator":
+							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "ahphValidator":
+							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "charLenValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "valueValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "regularValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "dHLineValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "refLetterValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+					}
 					if(!"".equals(strReturn)){
 						if(!listPageNo.contains(numPageNo)){
 							listPageNo.add(numPageNo);
 						}
 						returnMsg = returnMsg + strReturn + "\n";	
 					}
+					
 					//页面全部设置成完成
 					Object[] args = new Object[] { numAppInsId };
 					sqlQuery.update("UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE = 'Y' WHERE TZ_APP_INS_ID = ?", args);
