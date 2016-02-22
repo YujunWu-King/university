@@ -42,13 +42,14 @@ SurveyBuild.extend("ViewAttachment", "baseComponent", {
                     for(var i=0; i<children.length; i++){
                         _sysFilename = children[i].sysFileName;
                         _fileName=children[i].fileName;
+						_accessPath=children[i].accessPath;
                         _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
                         if (children[i].viewFileName != "" && children[i].sysFileName != ""){
                             if(num==1){
-                                c += '<li  class="main_inner_content_info_right"><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadBmbFile("'+ data.instanceId +'","'+_sysFilename+'") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
+                                c += '<li  class="main_inner_content_info_right"><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadBmbFile("'+ data.instanceId +'","'+_sysFilename+'","' + _accessPath + '") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
                                 num=num+1;
                             }else{
-                                c += '<li  style="margin-left: 330px"><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadBmbFile("'+ data.instanceId +'","'+_sysFilename+'") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
+                                c += '<li  style="margin-left: 330px"><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadBmbFile("'+ data.instanceId +'","'+_sysFilename+'","' + _accessPath + '") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
                             }
                         }
                     }
