@@ -2873,7 +2873,7 @@ var SurveyBuild = {
 				if (picType.indexOf(_fileSuffix) != -1){
 					if(sysFileName == _sysFilename) imgPos=count;
 					count ++;
-					imgDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_sysFilename+"'},"
+					imgDate += '{"fileName":"'+SurveyBuild.specialCharReplace(_children[i].fileName)+'","sysFileName":"'+_sysFilename+'"},'
 				}
 			}
 			if (imgDate != ""){
@@ -2930,7 +2930,7 @@ var SurveyBuild = {
                 if (picType.indexOf(_fileSuffix) != -1){
                     if(sysFileName == _sysFilename) imgPos=count;
                     count ++;
-                    imgDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_sysFilename+"'},"
+                    imgDate += '{"fileName":"'+SurveyBuild.specialCharReplace(_children[i].fileName)+'","sysFileName":"'+_sysFilename+'"},';
                 }
             }
                 if (imgDate != "") {
@@ -3280,7 +3280,7 @@ var SurveyBuild = {
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
 		if (picType.indexOf(fileSuffix) != -1){
 			type="IMG";//图片
-			imgDate = "{'fileName':'"+SurveyBuild.specialCharReplace(child[cins].filename)+"','sysFileName':'"+sysFileName+"'}"
+			imgDate = '{"fileName":"'+SurveyBuild.specialCharReplace(child[cins].filename)+'","sysFileName":"'+sysFileName+'"}';
 			
 			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","imgDate":['+imgDate+']}}';
 		}else{
