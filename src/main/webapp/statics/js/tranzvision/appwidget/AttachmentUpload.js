@@ -12,7 +12,7 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 	isDownLoad:"Y",//允许打包下载
 	isOnlineShow:"N",//PDF在线阅读
 	"StorageType":"F",//存储类型-附件
-	children: [{"itemId":"attachment_Upload","itemName":"附件上传","title":"附件上传","orderby":"","fileName":"","sysFileName":"","path":"","viewFileName":""}],
+	children: [{"itemId":"attachment_Upload","itemName":"附件上传","title":"附件上传","orderby":"","fileName":"","sysFileName":"","path":"","accessPath":"","viewFileName":""}],
 
     _getHtml: function(data, previewmode) {
         var c = "", val = data.value ? data.value: data.defaultval;

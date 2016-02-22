@@ -2893,7 +2893,7 @@ var SurveyBuild = {
     },
 
     /*查看后台评委上传的附件-下载*/
-    downLoadBmbFile: function(d,sysFileName){
+    downLoadBmbFile: function(d,sysFileName,accessPath){
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
         var data = SurveyBuild._items[d];
         var _children = data.children;
@@ -2903,7 +2903,7 @@ var SurveyBuild = {
         var picType = ['BMP','JPG','JPEG','PNG','GIF'];
         //文件后缀
         var count = 0,imgPos;
-        var imgDate="";
+        var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
         if (picType.indexOf(fileSuffix) != -1){
             type="IMG";//图片
@@ -2913,41 +2913,22 @@ var SurveyBuild = {
                 if (picType.indexOf(_fileSuffix) != -1){
                     if(sysFileName == _sysFilename) imgPos=count;
                     count ++;
-                    imgDate += '{"fileName":"'+SurveyBuild.specialCharReplace(_children[i].fileName)+'","sysFileName":"'+_sysFilename+'"},';
+					attHtml += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
                 }
             }
-                if (imgDate != "") {
-                imgDate = imgDate.substring(0, imgDate.length - 1);
-            }
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'imgDate':["+imgDate+"]}}";
         }else{
             type="ATTACHMENT";//附件
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'fileDate':'fileDate','sysFileName':'"+sysFileName+"'}}";
+			attHtml = TzUniversityContextPath + accessPath + sysFileName;
         }
         /*********************判断图片***END****************************/
-        $.ajax({
-            type: "post",
-            url: SurveyBuild.tzGeneralURL+tzParams,
-            dataType: "json",
-            async: false,
-            success: function(rst){
-                var rstObj = rst.comContent;
-                if (rstObj.result == "success"){
-                    //  window.location.href = rstObj.resultDesc;
-                    if (type=="ATTACHMENT"){
-                        window.open(rstObj.resultDesc);
-                    }else if(type="IMG"){
-                        var $ul = $("#fancybox-main").children("ul");
-                        $ul.html(rstObj.resultDesc);
-                        var $li = $($ul.children("li")[imgPos]);
-                        $li.children("a").click();
-                    }
-                }else{
-                    alert(rstObj.resultDesc)
-                }
-            }
-        })
-
+		if (type=="ATTACHMENT"){
+			window.open(attHtml);
+		}else if(type="IMG"){
+			var $ul = $("#fancybox-main").children("ul");
+			$ul.html(attHtml);
+			var $li = $($ul.children("li")[imgPos]);
+			$li.children("a").click();
+		}
     },
 	/*FDP预览*/
 	PDFpreview : function(el,instanceId){
@@ -2967,7 +2948,7 @@ var SurveyBuild = {
         var orderby = $(el).attr("file-index");
 		var index = $(el).parent("li").index();
 		var sysFileName = _children[index].sysFileName;
-		
+		var accessPath = _children[index].accessPath;
 		//获取浏览器窗口宽度
 		if (window.innerWidth){
 			winWidth = window.innerWidth;
@@ -2991,7 +2972,7 @@ var SurveyBuild = {
 			winHeight = winHeight - 5;
 		}
 		var pdfReaderUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-		var params = "{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_PDFVIEW_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','winWidth':'"+winWidth+"','winHeight':'"+winHeight+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
+		var params = '{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_PDFVIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","winWidth":"'+winWidth+'","winHeight":"'+winHeight+'","fileDate":{"sysFileName":"'+sysFileName+'","accessPath":"' + accessPath + '"}}}';
 		pdfReaderUrl = pdfReaderUrl + window.escape(params);
 
 		$.layer({
