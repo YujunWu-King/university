@@ -2773,6 +2773,7 @@ var SurveyBuild = {
 														_children[0].sysFileName = rstObj.sysFileName;
 														_children[0].orderby = rstObj.index;
 														_children[0].path = obj.msg.path;
+														_children[0].accessPath = obj.msg.accessPath;
 														_children[0].viewFileName = rstObj.viewFileName;
 													} else {
 														_fc = cloneObj(_children[0]);
@@ -2782,6 +2783,7 @@ var SurveyBuild = {
 														_fc["sysFileName"] = rstObj.sysFileName;
 														_fc["orderby"] = rstObj.index;
 														_fc["path"] = obj.msg.path;
+														_fc["accessPath"] = obj.msg.accessPath;
 														_fc["viewFileName"] = rstObj.viewFileName;
 														_children.push(_fc);
 													}
@@ -2797,6 +2799,7 @@ var SurveyBuild = {
 													_children[0].sysFileName = rstObj.sysFileName;
 													_children[0].orderby = rstObj.index;
 													_children[0].path = obj.msg.path;
+													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 	
 													$("#"+itemId+"_A").text(rstObj.viewFileName);
@@ -2859,55 +2862,45 @@ var SurveyBuild = {
 		/*********************判断图片***START****************************/
 		var type;
 		var sysFileName = _children[index].sysFileName;
+		var accessPath = _children[index].accessPath;
 		//图片格式
 		var picType = ['BMP','JPG','JPEG','PNG','GIF'];
 		//文件后缀
 		var count = 0,imgPos;
 		var imgDate="";
+		var resultDesc = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
 		if (picType.indexOf(fileSuffix) != -1){
 			type="IMG";//图片
-			for (var i=0;i<_children.length;i++){
+			for (var i = 0; i < _children.length; i++){
 				var _sysFilename = _children[i].sysFileName;
 				var _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
 				if (picType.indexOf(_fileSuffix) != -1){
 					if(sysFileName == _sysFilename) imgPos=count;
 					count ++;
-					imgDate += '{"fileName":"'+SurveyBuild.specialCharReplace(_children[i].fileName)+'","sysFileName":"'+_sysFilename+'"},'
+					imgDate += '{"fileName":"' + SurveyBuild.specialCharReplace(_children[i].fileName) + '","sysFileName":"' + _sysFilename + '","accessPath","' + _children[i].accessPath + '"},';
+					resultDesc += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
 				}
 			}
 			if (imgDate != ""){
-				imgDate = 	imgDate.substring(0,imgDate.length-1);
+				imgDate = imgDate.substring(0,imgDate.length - 1);
 			}
 			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","imgDate":['+imgDate+']}}';
 		}else{
 			type="ATTACHMENT";//附件
+			resultDesc = TzUniversityContextPath + accessPath + sysFileName;
 			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","fileDate":{"sysFileName":"'+sysFileName+'"}}}';
 		}
 		/*********************判断图片***END****************************/
-        $.ajax({
-            type: "post",
-            url: SurveyBuild.tzGeneralURL+tzParams,
-            dataType: "json",
-            async: false,
-            success: function(rst){
-                var rstObj = rst.comContent;
-                if (rstObj.result == "success"){
-                  //  window.location.href = rstObj.resultDesc;
-				  if (type=="ATTACHMENT"){
-					window.open(rstObj.resultDesc);
-				  }else if(type="IMG"){
-					var $ul = $("#fancybox-main").children("ul");
-					$ul.html(rstObj.resultDesc);
-					var $li = $($ul.children("li")[imgPos]);
-					$li.children("a").click();
-				  }
-                }else{
-                    alert(rstObj.resultDesc)
-                }
-            }
-        })
 
+		if (type=="ATTACHMENT"){
+			window.open(resultDesc);
+		}else if(type="IMG"){
+			var $ul = $("#fancybox-main").children("ul");
+			$ul.html(resultDesc);
+			var $li = $($ul.children("li")[imgPos]);
+			$li.children("a").click();
+		}
     },
     /*查看后台评委上传的附件-下载*/
     downLoadBmbFile: function(d,sysFileName){
