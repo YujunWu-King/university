@@ -2879,10 +2879,10 @@ var SurveyBuild = {
 			if (imgDate != ""){
 				imgDate = 	imgDate.substring(0,imgDate.length-1);
 			}
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
+			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","imgDate":['+imgDate+']}}';
 		}else{
 			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
+			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","fileDate":{"sysFileName":"'+sysFileName+'"}}}';
 		}
 		/*********************判断图片***END****************************/
         $.ajax({
@@ -3051,7 +3051,7 @@ var SurveyBuild = {
         }
         $.ajax({
             type: "post",
-            url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}",
+            url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","fileDate":['+fileDate+']}}',
             dataType: "html",
             success: function(imgLiHtml){
                 var $ul = $("#fancybox-main").children("ul");
@@ -3282,10 +3282,10 @@ var SurveyBuild = {
 			type="IMG";//图片
 			imgDate = "{'fileName':'"+SurveyBuild.specialCharReplace(child[cins].filename)+"','sysFileName':'"+sysFileName+"'}"
 			
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
+			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","imgDate":['+imgDate+']}}';
 		}else{
 			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";	
+			tzParams = '?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_DOWNLOAD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","fileDate":{"sysFileName":"'+sysFileName+'"}}}';	
 		}
 		/*********************判断图片***END****************************/
 		$.ajax({
