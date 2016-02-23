@@ -12,7 +12,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 	allowMultiAtta: "Y",//允许多附件上传
 	isDownLoad:"Y",//允许打包下载
 	"StorageType":"F",//存储类型-附件
-	children: [{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","path":"","accessPath":"","viewFileName":""}],
+	children: [{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}],
 
     _getHtml: function(data, previewmode) {
         var c = "", val = data.value ? data.value: data.defaultval;

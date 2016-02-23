@@ -227,11 +227,6 @@ var SurveyBuild = {
 		
         var val = this._getAttrVal(el);
 		
-		/*
-		$("#tabNav div[data_id='" + instanceId + "']").html(val);
-		$("#question-box li[data_id='" + instanceId + "'] .pagename").html(val);
-		*/
-		
 		this._items[instanceId][attrName] = val;
 		this.is_edit = true;
 		
@@ -273,11 +268,6 @@ var SurveyBuild = {
             $activeLi.find(".suffix").html(val);
         } else if (attrName == "format") {
             $activeLi.find(".format").removeClass().addClass("format format" + val)
-            /* 所有可以设置控件属性的（edit）的报文中，都不在使用“wzsm”（报名人控件除外），暂时注释 by WRL 2015/08/14
-             } else if (attrName == "wzsm") {
-             //文字说明
-             $activeLi.find(".question-answer").html(val);
-             */
         } else if (attrName == "dateformate") {
             var format = "";
             if (val == "mm-dd-yy") {
@@ -305,10 +295,6 @@ var SurveyBuild = {
                 $activeLi.find(".edu_exper_desc").css("display", "none");
             }
             $activeLi.find(".edu_exper_desc").html(val);
-            /* 条件语句为空，暂时注释 by WRL 2015/08/14
-             } else if (attrName == "itemId") {
-             //$activeLi.find(".question-code").html(val);
-             */
         } else if (attrName == "isRequire") {
             var RequireValidatorObj = _rules["RequireValidator"];
             if (!rules["RequireValidator"] && RequireValidatorObj) {
@@ -1268,21 +1254,11 @@ var SurveyBuild = {
                     650);
                 var b = -1;
                 if (SurveyBuild.isDHContainer) {
-                    $(a).children().each(function(e) {
-                        if ($(this).attr("data-classname")) {
-                            b = e;
-                            $(this).remove();
-                            return
-                        }
-                    })
+					b = $(a).children().index($(".draggable-holder"));
+					$(".draggable-holder").remove();
                 } else {
-                    $("#question-box>li").each(function(e) {
-                        if ($(this).attr("data-classname")) {
-                            b = e;
-                            $(this).remove();
-                            return
-                        }
-                    });
+					b = $("#question-box").children().index($(".draggable-holder")) - 1;
+					$(".draggable-holder").remove();
                 }
 
                 _itemHtml = me._html(d);
@@ -1315,12 +1291,6 @@ var SurveyBuild = {
                     },
                     650);
             }
-            /* 暂时注释 By WRL @2015-08-19
-             var _eventbindEditor = component._eventbindEditor;
-             if (_eventbindEditor && typeof _eventbindEditor == "function") {
-             _eventbindEditor(component);
-             }
-             */
         };
         this.loadScript(f, callback);
         if ($.inArray(f, ["DHContainer","LayoutControls"]) != -1) {
@@ -1675,16 +1645,10 @@ var SurveyBuild = {
             },
             beforeClose: function() {
                 var c = editor.html();
-                //SurveyBuild._items[a].edit = 1;
                 SurveyBuild._items[a].title = c;
-				//console.log(SurveyBuild._items[a]);
 				instanceId = SurveyBuild._items[a].instanceId;
 			
 				$("#tabNav div[data_id='" + instanceId + "']").html(c);
-				//$("#question-box li[data_id='" + instanceId + "'] .pagename").html(c);
-                //$("#" + a).val(c);
-                //$("#" + a).trigger("onkeyup");
-                //$("#q" + a).find(".question-answer").html(c);
                 KindEditor.remove("#" + b)
             }
         })
@@ -2087,111 +2051,6 @@ var SurveyBuild = {
         $("#question-box li[data_id='" + l + "']").click();
         $.fancybox.close()
     },
-    /* 暂时注释 By WRL @2015-09-15
-    plusChild: function(f) {
-        this.is_edit = true;
-        var n = $(f).parents("tr").attr("id").split("-"),
-        k = n[0],
-        h = n[1],
-        l = 0,
-        o = "A" + ( + new Date()),
-        b = {},
-        g = 0;
-        var d = $("#build-right").height();
-        $("#build-right").height(d + 39);
-        $(f).parents("tr").after('<tr id="' + k + "-" + o + '"><td><input type="text" value="" class="ccode" oncontextmenu="return false;" maxlength="8" ondragenter="return false" onpaste="return false" onkeyup="SurveyBuild.saveCCode(this)"></td><td><input class="option-txt" value="" onkeyup="SurveyBuild.saveChild(this)" type="text"></td><td><a href="javascript:void(0);" class="text-success" onclick="SurveyBuild.plusChild(this)"><i class="icon-plus-sign"></i></a>&nbsp;<a href="javascript:void(0);" onclick="SurveyBuild.minusChild(this)" class="text-warning"><i class="icon-minus-sign"></i></a>&nbsp;<a href="javascript:void(0);" class="text-info"><i class="icon-move"></i></a></td></tr>');
-        this._items[k].sort = 1;
-        var m = "";
-        for (var e in this._items[k].child) {++g;
-            b[e] = cloneObj(this._items[k].child[e]);
-            b[e].orderby = g;
-            m += '<option id="first' + e + '" value="' + e + '">' + b[e].question + "</option>";
-            if (e == h) {++g;
-                b[o] = {
-                    add: 1,
-                    parent_id: k,
-                    code: "",
-                    question: "",
-                    orderby: g,
-                    is_rand: 0,
-                    settings: {
-                        mandatory: 1,
-                        other: 0,
-                        fixedwidth: ""
-                    }
-                };
-                m += '<option id="first' + o + '" value="' + o + '" selected></option>'
-            }
-        }
-        this._items[k].child = b;
-        if (this._items[k].qtype == 17) {
-            $("#selectTitle").html(m);
-            var l = 1,
-            a = 1;
-            for (var e in this._items[k].option) {
-                var j = 1 * this._items[k].option[e].code;
-                a = 1 + this._items[k].option[e].orderby;
-                if (j > l) {
-                    l = j
-                }
-            }
-            var p = "o" + o;
-            this._items[k].option[p] = {
-                qid: k,
-                add: 1,
-                code: ++l,
-                txt: "选项1",
-                orderby: a,
-                is_rand: 0,
-                settings: {
-                    other: 0,
-                    cid: o
-                }
-            };
-            this._changeTitle(k, o)
-        }
-        $(this._html(k)).find(".question-answer").replaceAll("#q" + k + " .question-answer")
-    },
-    minusChild: function(f) {
-        this.is_edit = true;
-        if ($(f).parents("tr").siblings().length == 0) {
-            this._error("至少要有一个子问题")
-        } else {
-            var e = $(f).parents("tr").attr("id").split("-"),
-            g = e[0],
-            h = e[1];
-            if (this._items[g].child.hasOwnProperty(h)) {
-                var b = $("#build-right").height();
-                $("#build-right").height(b - 39);
-                $(f).parents("tr").remove();
-                if (this._items[g].settings.direction == "Y") {
-                    var a = $("#q" + g + " tr th#c" + h).index();
-                    $("#q" + g + " tr th#c" + h).remove();
-                    $("#q" + g + " tr").each(function() {
-                        $(this).find("td").eq(a).remove()
-                    })
-                } else {
-                    $("#c" + h).parent().remove()
-                }
-                if (!this._items[g].child[h].hasOwnProperty("add")) {
-                    this._qid.push(this._items[g].child[h].qid)
-                }
-                delete this._items[g].child[h];
-                if (this._items[g].qtype == 17) {
-                    $("#first" + h).remove();
-                    var d = this._items[g].option;
-                    for (var c in d) {
-                        if ($option.settings["cid"] == h || "C" + d[c].settings.cid == h) {
-                            delete this._items[g].option[c]
-                        }
-                    }
-                }
-            } else {
-                this._error("非法操作")
-            }
-        }
-    },
-    */
     plusOption: function(f, showType) {
         this.is_edit = true;
         var m = $(f).parents("tr").attr("data-id").split("-"),
@@ -2239,14 +2098,14 @@ var SurveyBuild = {
 		if(showType=='autocpl'){
 			tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
             tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
-            tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+            tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
             tr += '<td><a onclick="SurveyBuild.plusOption(this,\'autocpl\');return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
             tr += '</tr>';
 		}else{			
 			tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
 			tr += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'defaultval\')" class="defaultval" value="1"></td>';
 			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
-			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+			tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
 			tr += '<td><a onclick="SurveyBuild.plusOption(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
 			tr += '</tr>';
 		}
@@ -2308,7 +2167,7 @@ var SurveyBuild = {
         //值
         tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
         //描述
-        tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         //操作
         tr += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
         tr += '</tr>';
@@ -2567,8 +2426,6 @@ var SurveyBuild = {
                 return $('<div class="draggable-holder">' + $(this).html() + "</div>")
             },
             stop: function(event, ui) {
-                //console.log("stop.");
-
                 $(".DHSort").sortable({
                     cursor: "move",
                     axis: "y",
@@ -2579,7 +2436,6 @@ var SurveyBuild = {
                         SurveyBuild.isDHForTwo = true;
                         SurveyBuild.isDHContainer = true;
                         SurveyBuild.currentDHID = $(event.target).closest("li").attr("data_id");
-                        //console.log("add.");
                         SurveyBuild.add(ui.item.attr("data-classname"), $(event.target));
                     },
                     update: function(event, ui) {
@@ -2635,7 +2491,6 @@ var SurveyBuild = {
         $("#question-edit").on("keypress", ".datemax,.datemin,.timertime",
         function(c) {
             var b = c.which;
-            //console.log(c.which + " : " + String.fromCharCode(c.which));
             return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
         });
         SurveyBuild._tid = a;
@@ -3596,17 +3451,17 @@ var SurveyBuild = {
         htmlSet += '<div class="edit_item_warp">';
         htmlSet += '	<span class="edit_item_label">第二步：</span>';
         htmlSet += '	<div class="edit_item_right">';
-        htmlSet += '		<a href="/survey/assets/js/manual20150914.doc" target="_blank">模板制作</a>';
+        htmlSet += '		<a href="' + TzUniversityContextPath + '/statics/js/tranzvision/appwidget/manual20150914.doc" target="_blank">模板制作</a>';
         htmlSet += '		<a data-animation="fade" data-reveal-id="myModal" class="big-link" onclick="SurveyBuild.showMsg(this,event)" data-for-id="help_tplMaking" href="#">(?)</a>';
         htmlSet += '	</div>';
         htmlSet += '</div>';
 
         htmlSet += '<div class="edit_item_warp">';
-        htmlSet += '	<form id="form1" name="form1" method="post" action="/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall" enctype="multipart/form-data">';
+        htmlSet += '	<form id="form1" name="form1" method="post" action="' + TzUniversityContextPath + '/UpdWebServlet?filePath=appFormPrintTpl" enctype="multipart/form-data">';
         htmlSet += '		<span class="edit_item_label">第三步：</span>';
         htmlSet += '		<div class="edit_item_right">';
         htmlSet += '			<div style="display: inherit;">';
-        htmlSet += '				<input class="right-uplfile" type="file" onchange="SurveyBuild.upload()" class="fileupload" name="fileupload" id="fileupload">';
+        htmlSet += '				<input class="right-uplfile" type="file" onchange="SurveyBuild.upload()" class="fileupload" name="websitefile" id="fileupload">';
         htmlSet += '			</div>';
         htmlSet += '			<input type="hidden" id="mbaSqXzsmj1" name="mbaSqXzsmj1" value="">';
         htmlSet += '			<input type="hidden" id="newfilename" name="newfilename">';
@@ -3617,7 +3472,7 @@ var SurveyBuild = {
         htmlSet += '</div>';
 		
         htmlSet += '<div id="PrintAttFile" style="margin-bottom:5px;" class="edit_item_warp">';
-        htmlSet += '<a style="color: #0c7bce;" target="_blank" id="downAtt" href="' + (data.hasOwnProperty("sysFileName") && data.hasOwnProperty("accessPath") ? data["accessPath"] + "/" + data["sysFileName"]: "javascript:void(0)") + '">' + (data.hasOwnProperty("filename") ? data["filename"]: "") + '</a>';
+        htmlSet += '<a style="color: #0c7bce;" target="_blank" id="downAtt" href="' + (data.hasOwnProperty("sysFileName") && data.hasOwnProperty("accessPath") ? TzUniversityContextPath + data["accessPath"] + "/" + data["sysFileName"]: "javascript:void(0)") + '">' + (data.hasOwnProperty("filename") ? data["filename"]: "") + '</a>';
         htmlSet += '&nbsp;&nbsp;&nbsp;&nbsp;<a id="deleteAtt" style="' + (data.hasOwnProperty("filename") && data["filename"].length > 1 ? "": "display:none") + '" href="javascript:void(0)" onclick="SurveyBuild.deleteAtt(this)">删除</a>';
         htmlSet += '</div>';
 		
@@ -3675,10 +3530,10 @@ var SurveyBuild = {
             sysfilename = sysfilename.toLowerCase();
             $("#form1").ajaxSubmit({
                 dataType:'json',
-                url:"/UpdServlet?filePath=/linkfile/FileUpLoad/imagesWall",
+                url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormPrintTpl",
                 success: function(obj) {
                     if(obj.success){
-                        $("#downAtt").attr("href",obj.msg.accessPath + "/" + obj.msg.sysFileName);
+                        $("#downAtt").attr("href",TzUniversityContextPath + obj.msg.accessPath + "/" + obj.msg.sysFileName);
                         $("#downAtt").text(obj.msg.filename);
 
                         this.is_edit = true;
@@ -3741,597 +3596,12 @@ var SurveyBuild = {
 		var items = this._items;
 		
 		$("#tabNav > div").each(function(){
-          //alert($(this).attr("data_id"));  //打印子div的ID
 		  var instanceId = $(this).attr("data_id");
-		  //console.log(items[instanceId].tapStyle);
 		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
 		  //$("#tabNav div[data_id='" + instanceId + "']").attr("style",items[instanceId].tapStyle);
 		  
 		});
     },
-	/*==================================================
-	+功能描述：报名表图片、附件控件上传
-	+开发人：张浪
-	===================================================*/
-	uploadAttachment: function(el,instanceId){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var data;
-		var $isDhContainer = $(el).closest(".dhcontainer");
-		if ($isDhContainer.length == 0){
-			data = SurveyBuild._items[instanceId];	
-		} else {
-			var dhIns = $isDhContainer.attr("data-instancid");
-			var index = $(el).closest(".main_inner_content_para").index();
-			data = SurveyBuild._items[dhIns].children[index][instanceId];
-		}
-		var itemId = data.itemId;
-		var itemName = data.itemName;
-		var className = data.classname;
-		var multiFlag = data.allowMultiAtta;
-		var _children = data["children"];
-		var path = $("#"+itemId).val();
-		filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
-		//文件后缀
-		var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
-		var allowFileType = data.fileType;
-		var allowSize = data.fileSize;
-		//允许上传的文件类型
-		var typeArr = allowFileType.split(",");
-		var isAllow = false;
-		if (allowFileType != "" && typeArr.length > 0){
-			for(var i=0; i<typeArr.length; i++){
-				if(sysfileSuffix == typeArr[i].toLowerCase()){
-					isAllow = true;	
-			}}
-			if(!isAllow){
-				//alert("只能上传格式为："+allowFileType+"的附件！");
-				alert(MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",allowFileType)+"!");
-				return;	}	
-		}
-		//最多只能上传10个附件
-		if(_children.length >= 10){
-			//alert("最多只能上传10个附件！");	
-			alert(MsgSet["FILE_COUNT"])
-			return;
-		} 
-		var date = new Date();
-		var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
-		var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
-		var dateString = date.getFullYear().toString() + m + d;
-		try{
-			loading();/*上传进度条*/
-			var $form = document.getElementById("main_list");
-			$form.encoding = "multipart/form-data";
-			$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
-			$("#main_list").ajaxSubmit({
-				dataType:'json',
-				url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
-				success: function(obj) {
-					if(obj.success){
-						var fileSize = obj.msg.size;
-						fileSize = fileSize.substring(0,fileSize.length-1);
-						if(allowSize !="" && fileSize/1024 > allowSize){
-							layer.close(layer.index);/*关闭上传进度条*/
-							alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
-						} else {
-							this.is_edit = true;
-							var maxOrderBy;
-							if (multiFlag == "Y"){
-								maxOrderBy = _children[_children.length-1].orderby;//已存在最大顺序编号
-							} else {
-								maxOrderBy = 0;
-							}
-							//上传成功后将文件存储到数据库
-								$.ajax({
-									type: "post",
-									url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"'}}",
-									dataType: "json",
-									async: false,
-									success: function(rst){
-										var state = rst.state;
-										var rstObj = rst.comContent;
-										if(state.errcode == 0){
-											if(rstObj.result="success"){
-												var c = "";
-												if(multiFlag == "Y"){
-													if (_children.length == 1 && _children[0].fileName == ""){
-														_children[0].fileName = rstObj.fileName;
-														_children[0].sysFileName = rstObj.sysFileName;
-														_children[0].orderby = rstObj.index;
-													} else {
-														_fc = cloneObj(_children[0]);
-														_fc["itemId"] += "_"+rstObj.index;
-														_fc["itemName"] += "_"+rstObj.index;
-														_fc["fileName"] = rstObj.fileName;
-														_fc["sysFileName"] = rstObj.sysFileName;
-														_fc["orderby"] = rstObj.index;
-														_children.push(_fc);
-													}
-													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
-													} else {	
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
-													}
-													$("#"+itemId+"_AttList").children("ul").append(c);
-												}else{
-													_children[0].fileName = rstObj.fileName;
-													_children[0].sysFileName = rstObj.sysFileName;
-													_children[0].orderby = rstObj.index;
-													
-													$("#"+itemId+"_A").text(rstObj.fileName);
-													var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-													if ($delEl.css("display") == "none"){
-														$delEl.css("display","");	
-													}
-												}
-											}else{
-												alert(rst.resultDesc);	
-											}
-										}else{
-											alert(state.errdesc);	
-										}
-									}
-								})
-							$("#"+itemId).val("");
-							layer.close(layer.index);/*关闭上传进度条*/
-						}
-					}else{
-						noteing(MsgSet["FILE_UPL_FAILED"], 2);
-					}
-				}
-			});
-		}catch(e){
-			alert(e);	
-		}
-	},    
-	/*==================================================
-	+功能描述：推荐信上传附件
-	+开发人：LZ
-	===================================================*/
-	uploadAttachment1: function(el,instanceId){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var data;
-		var $isDhContainer = $(el).closest(".dhcontainer");
-		data = SurveyBuild._items[instanceId];
-		var itemId = data.itemId;
-		var itemName = data.itemName;
-		var className = data.classname;
-		var multiFlag = data.allowMultiAtta;
-		var _children = data["children"];
-		var path = $("#"+itemId).val();
-		//console.log(path);
-		//console.log(itemId);
-		filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
-		//文件后缀
-		var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
-		var allowFileType = data.fileType;
-		var allowSize = data.fileSize;
-		//允许上传的文件类型
-		var typeArr = allowFileType.split(",");
-		var isAllow = false;
-		if (allowFileType != "" && typeArr.length > 0){
-			for(var i=0; i<typeArr.length; i++){
-				if(sysfileSuffix == typeArr[i].toLowerCase()){
-					isAllow = true;	
-			}}
-			if(!isAllow){
-				//alert("只能上传格式为："+allowFileType+"的附件！");
-				alert(MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",allowFileType)+"!");
-				return;	}	
-		}
-		//最多只能上传10个附件
-		if(_children.length >= 10){
-			//alert("最多只能上传10个附件！");	
-			alert(MsgSet["FILE_COUNT"])
-			return;
-		} 
-		var date = new Date();
-		var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
-		var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
-		var dateString = date.getFullYear().toString() + m + d;
-		try{
-			loading();/*上传进度条*/
-			var $form = document.getElementById("main_list");
-			$form.encoding = "multipart/form-data";
-			$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
-			$("#main_list").ajaxSubmit({
-				dataType:'json',
-				url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
-				success: function(obj) {
-					if(obj.success){
-						var fileSize = obj.msg.size;
-						fileSize = fileSize.substring(0,fileSize.length-1);
-						if(allowSize !="" && fileSize/1024 > allowSize){
-							layer.close(layer.index);/*关闭上传进度条*/
-							alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
-						} else {
-							this.is_edit = true;
-							var maxOrderBy;
-							if (multiFlag == "Y"){
-								maxOrderBy = _children[_children.length-1].orderby;//已存在最大顺序编号
-							} else {
-								maxOrderBy = 0;
-							}
-							//上传成功后将文件存储到数据库
-								$.ajax({
-									type: "post",
-									url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"'}}",
-									dataType: "json",
-									async: false,
-									success: function(rst){
-										var state = rst.state;
-										var rstObj = rst.comContent;
-										if(state.errcode == 0){
-											if(rstObj.result="success"){
-												var c = "";
-												if(multiFlag == "Y"){
-													if (_children.length == 1 && _children[0].fileName == ""){
-														_children[0].fileName = rstObj.fileName;
-														_children[0].sysFileName = rstObj.sysFileName;
-														_children[0].orderby = rstObj.index;
-													} else {
-														_fc = cloneObj(_children[0]);
-														_fc["itemId"] += "_"+rstObj.index;
-														_fc["itemName"] += "_"+rstObj.index;
-														_fc["fileName"] = rstObj.fileName;
-														_fc["sysFileName"] = rstObj.sysFileName;
-														_fc["orderby"] = rstObj.index;
-														_children.push(_fc);
-													}
-													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
-													} else {	
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.fileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
-													}
-													$("#"+itemId+"_AttList").children("ul").append(c);
-												}else{
-													_children[0].fileName = rstObj.fileName;
-													_children[0].sysFileName = rstObj.sysFileName;
-													_children[0].orderby = rstObj.index;
-													
-													$("#"+itemId+"_A").text(rstObj.fileName);
-													var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-													if ($delEl.css("display") == "none"){
-														$delEl.css("display","");	
-													}
-												}
-											}else{
-												alert(rst.resultDesc);	
-											}
-										}else{
-											alert(state.errdesc);	
-										}
-									}
-								})
-							$("#"+itemId).val("");
-							layer.close(layer.index);/*关闭上传进度条*/
-						}
-					}else{
-						noteing(MsgSet["FILE_UPL_FAILED"], 2);
-					}
-				}
-			});
-		}catch(e){
-			alert(e);	
-		}
-	}, 
-	/*报名表附件下载*/
-	downLoadFile: function(el,instanceId){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var data;
-		var $isDhContainer = $(el).closest(".dhcontainer");
-		if ($isDhContainer.length == 0){
-			data = SurveyBuild._items[instanceId];	
-		} else {
-			var dhIns = $isDhContainer.attr("data-instancid");
-			var index = $(el).closest(".main_inner_content_para").index();
-			data = SurveyBuild._items[dhIns].children[index][instanceId];
-		}
-		var itemId = data.itemId;
-		var _children = data.children;
-		var orderby = $(el).attr("file-index");
-		var index = $(el).parent("li").index();
-		$.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+_children[index].sysFileName+"'}}}",
-			dataType: "json",
-			async: false,
-			success: function(rst){
-				var rstObj = rst.comContent;
-				if (rstObj.result == "success"){
-					//alert(rst.resultDesc);
-					window.location.href = rstObj.resultDesc;
-				}else{
-					alert(rstObj.resultDesc)
-				}
-			}
-		})
-		
-	},
-	/*报名表图片查看*/
-	viewImageSet : function(el,instanceId){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var data;
-		var $isDhContainer = $(el).closest(".dhcontainer");
-		if ($isDhContainer.length == 0){
-			data = SurveyBuild._items[instanceId];	
-		} else {
-			var dhIns = $isDhContainer.attr("data-instancid");
-			var index = $(el).closest(".main_inner_content_para").index();
-			data = SurveyBuild._items[dhIns].children[index][instanceId];
-		}
-		var itemId = data.itemId;
-		var _children = data.children;
-		var orderby = $(el).prev("a").attr("file-index");
-		var index = $(el).parent("li").index();
-		
-		var fileDate = "";
-		for(var i=0; i<_children.length; i++){
-			fileDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_children[i].sysFileName+"'},"	
-		}
-		if (fileDate != ""){
-			fileDate = 	fileDate.substring(0,fileDate.length-1);
-		}
-		$.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}",
-			dataType: "html",
-			success: function(imgLiHtml){
-				var $ul = $("#fancybox-main").children("ul");
-				$ul.html(imgLiHtml);
-				var $li = $($ul.children("li")[index]);
-				$li.children("a").click();
-			}
-		})
-	},
-	
-	
-	/*报名表附件删除*/
-	deleteFile: function(el,instanceId){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var data;
-		var $isDhContainer = $(el).closest(".dhcontainer");
-		if ($isDhContainer.length == 0){
-			data = SurveyBuild._items[instanceId];	
-		} else {
-			var dhIns = $isDhContainer.attr("data-instancid");
-			var index = $(el).closest(".main_inner_content_para").index();
-			data = SurveyBuild._items[dhIns].children[index][instanceId];
-		}
-		var itemId = data.itemId;
-		var _children = data.children;
-		//var $del = $(el);
-		//var orderby = $del.prev("a").attr("file-index");
-		//var index = $(el).parent("li").index();
-		
-		var multiFlag = data.allowMultiAtta;//是否允许多附件上传
-		var liNum = $(el).parent("li").index();
-		if (_children.length > 1){
-			_children.splice(liNum, 1);
-		} else {
-			_children[0].fileName = "";
-			_children[0].sysFileName = "";
-			_children[0].orderby = "";
-		}
-		if(multiFlag == "Y"){
-			$(el).parent("li").remove();
-		} else {
-			$("#"+itemId+"_A").text("");
-			var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-			$delEl.css("display","none");	
-		}
-		/*
-		$.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEDEL_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+_children[index].sysFileName+"'}}}",
-			dataType: "json",
-			async: false,
-			success: function(rst){
-				var state = rst.state;
-				var rstObj = rst.comContent;
-				if(state.errcode == 0){
-					if (rstObj.result == "success"){
-						alert(rstObj.resultDesc);
-						var multiFlag = data.allowMultiAtta;//是否允许多附件上传
-						var liNum = $(el).parent("li").index();
-						if (_children.length > 1){
-							_children.splice(liNum, 1);
-						} else {
-							_children[0].fileName = "";
-							_children[0].sysFileName = "";
-							_children[0].orderby = "";
-						}
-						if(multiFlag == "Y"){
-							$(el).parent("li").remove();
-						} else {
-							$("#"+itemId+"_A").text("");
-							var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-							$delEl.css("display","none");	
-						}
-					}else{
-						alert(rstObj.resultDesc);
-					}
-				}else{
-					alert(state.errdesc);	
-				}
-			}
-		})
-		*/
-	},
-	
-	//教育经历扫描件上传
-	eduImgUpload: function(el,cins){
-		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var data = SurveyBuild._items[instanceId];
-		var index = $(el).closest(".main_inner_content_para").index();
-		var child = data.children[index];
-		try{
-			var $form = document.getElementById("main_list");
-			$form.encoding = "multipart/form-data";
-			$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment";
-			$("#main_list").ajaxSubmit({
-				dataType:'json',
-				url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment",
-				success: function(obj) {
-					if(obj.success){
-						var fileSize = obj.msg.size;
-						
-						this.is_edit = true;
-						//console.log(data.itemId+child[cins].itemId);
-						$("#"+data.itemId+child[cins].itemId+"Attch").attr("href",obj.msg.accessPath + "/" + obj.msg.sysFileName);
-						$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.filename);
-						
-						child[cins]["filename"] = obj.msg.filename;
-						child[cins]["sysFileName"] = obj.msg.sysFileName;
-						child[cins]["path"] = obj.msg.path;
-						child[cins]["accessPath"] = obj.msg.accessPath;
-					
-					}else{
-						noteing("附件上传失败！", 2);
-					}
-				}
-			});
-		}catch(e){
-			alert(e);	
-		}
-	},
-	//推荐信上传附件
-	TjxUpload: function(el,cins,num){
-		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var data = SurveyBuild._items[instanceId];
-		var appInsId = SurveyBuild.appInsId;
-		var index = num;
-		var child = data.children[index];
-		//生成日期
-		var date = new Date();
-		var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
-		var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
-		var dateString = date.getFullYear().toString() + m + d;
-		var allowSize=5;
-		try{
-			loading();/*上传进度条*/
-			var $form = document.getElementById("main_list");
-			$form.encoding = "multipart/form-data";
-			$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment";
-			$("#main_list").ajaxSubmit({
-				dataType:'json',
-				url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment",
-				success: function(obj) {
-					if(obj.success){
-						layer.close(layer.index);/*关闭上传进度条*/
-						var fileSize = obj.msg.size;
-						fileSize = fileSize.substring(0,fileSize.length-1);
-						if (fileSize/1024>allowSize)
-						{
-							alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
-						}else{
-							this.is_edit = true;
-							//$("#"+data.itemId+child[cins].itemId+"Attch").attr("href",obj.msg.accessPath + "/" + obj.msg.sysFileName);
-							//$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.filename);
-							//child[cins]["filename"] = obj.msg.filename;
-							//child[cins]["sysFileName"] = obj.msg.sysFileName;
-							//child[cins]["path"] = obj.msg.path;
-							//child[cins]["accessPath"] = obj.msg.accessPath;
-							var maxOrderBy = 0;
-							$.ajax({
-								type: "post",
-								url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}",
-								dataType: "json",
-								async: false,
-								success: function(rst){
-									var state = rst.state;
-									var rstObj = rst.comContent;
-									if(state.errcode == 0){
-										if(rstObj.result="success"){
-											//$("#"+data.itemId+child[cins].itemId+"Attch").attr("href",obj.msg.accessPath + "/" + rstObj.sysFileName);
-											//$("#"+data.itemId+child[cins].itemId+"Attch").text(rstObj.fileName);
-											child[cins]["filename"] = rstObj.fileName;
-											child[cins]["sysFileName"] = rstObj.sysFileName;
-											child[cins]["path"] = obj.msg.path;
-											child[cins]["accessPath"] = obj.msg.accessPath;
-											var c = "";
-											c = '<ul><li>';
-											c +='	<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,\"'+cins+'\",'+index+') file-index="'+index+'">'+rstObj.fileName+'</a>';
-											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div>';
-											c +='</li></ul>';
-											//$("#"+data.itemId+index+"_AttList").children("ul").append(c);
-											$("#"+data.itemId+index+"_AttList").html(c);
-										}else{
-											alert(rst.resultDesc);	
-										}
-									}else{
-										alert(state.errdesc);	
-									}
-								}
-							});
-						}
-					}else{
-						layer.close(layer.index);/*关闭上传进度条*/
-						noteing("附件上传失败！", 2);
-					}
-				}
-			});
-		}catch(e){
-			alert(e);	
-		}
-	},
-	//推荐信附件下载
-	TjxdownLoad: function(el,cins,num){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var data = SurveyBuild._items[instanceId];
-		var index = num;
-		var child = data.children[index];
-		var itemId = data.itemId;
-		
-		var orderby = 1;
-		var index = $(el).parent("li").index();
-		//console.log(cins);
-		//console.log(child[cins].filename);
-		var sysFileName=child[cins].sysFileName;
-		$.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}",
-			dataType: "json",
-			async: false,
-			success: function(rst){
-				var rstObj = rst.comContent;
-				if (rstObj.result == "success"){
-					//alert(rst.resultDesc);
-					window.location.href = rstObj.resultDesc;
-				}else{
-					alert(rstObj.resultDesc)
-				}
-			}
-		})
-		
-	},
-	/*报名表附件删除*/
-	Tjxdelete: function(el,cins,num){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var data = SurveyBuild._items[instanceId];
-		var index = num;
-		var child = data.children[index];
-		var itemId = data.itemId;
-
-		
-		//var itemId = data.itemId;
-		
-		var liNum = $(el).parent("li").index();
-		child.filename = "";
-		child.sysFileName = "";
-		child.orderby = "";
-		$("#"+data.itemId+index+"_AttList").html("");
-
-		/*if(multiFlag == "Y"){
-			$(el).parent("li").remove();
-		} else {
-			$("#"+itemId+"_A").text("");
-			var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-			$delEl.css("display","none");	
-		}*/
-	},
     reFocus:function(id){
         $("#"+id).trigger('blur');
     },

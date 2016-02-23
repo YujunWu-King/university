@@ -153,6 +153,9 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 		
 			String menuType = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[] { "TZ_ACCOUNT_MANAGEMENT" }, "String");
 			String menuId = sqlQuery.queryForObject("SELECT TZ_MENU_ID FROM PS_TZ_SITEI_MENU_T WHERE TZ_SITEI_ID=? AND TZ_MENU_TYPE_ID=?", new Object[] { siteId, menuType}, "String");
+			if(StringUtils.isBlank(menuId)){
+				menuId = "";
+			}
 			String viewHtml = "";
 			try {
 				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language);

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>PDF阅读器</title>
+		<link rel="stylesheet" href="/onlineReg/css/css.css" type="text/css">
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/formvalidator/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.media.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/pdfobject.js"></script>
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:4)";
+		</script>
+		<script type="text/javascript">
+			window.onload = function(){
+				var success = new PDFObject({ url: "%bind(:1)"}).embed("pdfBox");
+				
+				if(!success){
+					$(".city_main a.media").media({width:900,height:%bind(:3)});
+				}
+			}
+		</script>
+		<style>
+			body{margin:0px;overflow: hidden;}
+			.city_main{width:100%;height:%bind(:3)px;}
+			.city_close{margin:0px;}
+			.city_top3{width:auto;height:40px;}
+		</style>
+	</head>
+ 
+	<body>
+		<div class="city_top3">
+			<div class="city_close" onclick="closeThis();">
+				<img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15" />
+				&nbsp;
+			</div>
+			%bind(:2)
+		</div>
+		<div class="city_main" id="pdfBox">
+			<a style="display:none;" class="media" href="%bind(:1)">PDF</a>
+		</div>
+		<script language="javascript" type="text/javascript">
+			function closeThis(){
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index);
+			}
+		</script>
+	</body>
+</html>

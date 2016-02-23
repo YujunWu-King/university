@@ -2330,7 +2330,7 @@ var SurveyBuild = {
                         _fileChildren[0].fileName = "";
                         _fileChildren[0].sysFileName = "";
                         _fileChildren[0].orderby = "";
-                        _fileChildren[0].path = "";
+                        _fileChildren[0].accessPath = "";
                         _fileChildren[0].viewFileName = "";
                     }
 				}
@@ -2475,7 +2475,6 @@ var SurveyBuild = {
 					_fc[ins]["filename"] = "";
 					_fc[ins]["sysFileName"] = "";
 					_fc[ins]["orderby"] = "";
-					_fc[ins]["path"] = "";
 					_fc[ins]["accessPath"] = "";
 					_fc[ins]["viewFileName"] = "";
 					
@@ -2759,7 +2758,7 @@ var SurveyBuild = {
 								//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}',									dataType: "json",
+									url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}',									dataType: "json",
 									async: false,
 									success: function(rst){
 										var state = rst.state;
@@ -2772,7 +2771,6 @@ var SurveyBuild = {
 														_children[0].fileName = rstObj.fileName;
 														_children[0].sysFileName = rstObj.sysFileName;
 														_children[0].orderby = rstObj.index;
-														_children[0].path = obj.msg.path;
 														_children[0].accessPath = obj.msg.accessPath;
 														_children[0].viewFileName = rstObj.viewFileName;
 													} else {
@@ -2782,7 +2780,6 @@ var SurveyBuild = {
 														_fc["fileName"] = rstObj.fileName;
 														_fc["sysFileName"] = rstObj.sysFileName;
 														_fc["orderby"] = rstObj.index;
-														_fc["path"] = obj.msg.path;
 														_fc["accessPath"] = obj.msg.accessPath;
 														_fc["viewFileName"] = rstObj.viewFileName;
 														_children.push(_fc);
@@ -2798,7 +2795,6 @@ var SurveyBuild = {
 													_children[0].fileName = rstObj.fileName;
 													_children[0].sysFileName = rstObj.sysFileName;
 													_children[0].orderby = rstObj.index;
-													_children[0].path = obj.msg.path;
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 	
@@ -3041,7 +3037,7 @@ var SurveyBuild = {
             _children[0].fileName = "";
             _children[0].sysFileName = "";
             _children[0].orderby = "";
-			_children[0].path = "";
+			_children[0].accessPath = "";
 			_children[0].viewFileName = "";
 			
 			if(Require == "Y"){
@@ -3086,7 +3082,6 @@ var SurveyBuild = {
 
                         child[cins]["filename"] = obj.msg.filename;
                         child[cins]["sysFileName"] = obj.msg.sysFileName;
-                        child[cins]["path"] = obj.msg.path;
                         child[cins]["accessPath"] = obj.msg.accessPath;
 
                     }else{
@@ -3169,7 +3164,7 @@ var SurveyBuild = {
 							var maxOrderBy = 0;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}",
+								url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+data.itemId+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":""}}',
 								dataType: "json",
 								async: false,
 								success: function(rst){
@@ -3197,6 +3192,7 @@ var SurveyBuild = {
 									}
 								}
 							});
+
 						}
 					}else{
 						layer.close(layer.index);/*关闭上传进度条*/
