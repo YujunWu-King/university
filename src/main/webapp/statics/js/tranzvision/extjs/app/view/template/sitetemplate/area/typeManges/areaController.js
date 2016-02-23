@@ -1,6 +1,6 @@
 ﻿Ext.define('KitchenSink.view.template.sitetemplate.area.typeManges.areaController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.areaTypeInfo', 
+    alias: 'controller.areaTypeInfoTemplate', 
 	requires: [
        'KitchenSink.view.template.sitetemplate.area.typeManges.siteAreaTypeInfoPanel'
     ],

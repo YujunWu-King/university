@@ -11,7 +11,7 @@
         'KitchenSink.view.template.sitetemplate.area.typeManges.areaTypeStore'//json路径
     ],
     xtype: 'areaTypeManagement',
-	controller: 'areaTypeInfo',
+	controller: 'areaTypeInfoTemplate',
 	siteId:'',
 	store: {
         type: 'areaTypeStore'
