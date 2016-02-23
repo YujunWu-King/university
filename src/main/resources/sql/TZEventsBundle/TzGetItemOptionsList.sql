@@ -5,13 +5,14 @@ select
 	B.TZ_OPT_VALUE
 from 
 	PS_TZ_XXX_TRANS_T A
-left join
-	PS_TZ_XXX_TR_EN_T B
+left join (
+		select * from PS_TZ_XXX_TR_EN_T where LANGUAGE_CD='ENG' 
+	) B
 on (
 		A.TZ_XXX_TRANS_ID=B.TZ_XXX_TRANS_ID
+		and A.TZ_ART_ID=B.TZ_ART_ID
 	)
 where 
 	A.TZ_ART_ID=? 
 	and A.TZ_ZXBM_XXX_ID=?
-	and B.LANGUAGE_CD='ENG'
 order by A.TZ_PX_XH

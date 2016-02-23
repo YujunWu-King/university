@@ -8,12 +8,14 @@ select
 	B.TZ_ZXBM_XXX_NAME as EN_NAME
 from 
 	PS_TZ_ZXBM_XXX_T A
-left join
-	PS_TZ_ZXBM_XXX_E_T B
+left join (
+		select * from PS_TZ_ZXBM_XXX_E_T where LANGUAGE_CD='ENG' 
+	) B
+    
 on (
 		A.TZ_ZXBM_XXX_ID=B.TZ_ZXBM_XXX_ID
+        and A.TZ_ART_ID=B.TZ_ART_ID
 	)
 where 
-	A.TZ_ART_ID=? 
-	and B.LANGUAGE_CD='ENG'
+	A.TZ_ART_ID=?
 order by A.TZ_PX_XH

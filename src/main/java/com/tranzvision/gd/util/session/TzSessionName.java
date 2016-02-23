@@ -16,6 +16,9 @@ public final class TzSessionName {
 	 */
 	public static String TzSiteGloMenuId = "TzSiteGloMenuId";
 	
-	
+	/**
+	 * 活动管理，添加新活动时，记录新增的活动id、站点id、栏目id、发布状态id
+	 */
+	public static String TzAddingNewActivity = "addingNewEventInfo";
 	
 }
