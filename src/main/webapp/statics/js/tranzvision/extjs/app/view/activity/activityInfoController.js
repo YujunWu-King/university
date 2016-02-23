@@ -543,7 +543,7 @@
 		
 		grid = this.lookupReference('applyItemOptionsGrid');
 				
-		var tzStoreParams = "{'activityId':'"+activityId+"','applyItemId':'"+applyItemId+"'}";
+		var tzStoreParams = '{"activityId":"'+activityId+'","applyItemId":"'+applyItemId+'"}';
 		grid.store.tzStoreParams = tzStoreParams;
 		grid.store.load();		
 		//Ext.tzLoad(tzParams,function(responseData){

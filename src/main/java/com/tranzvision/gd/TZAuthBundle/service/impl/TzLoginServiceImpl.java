@@ -308,6 +308,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 			String strRtn = "";
 			if (debugging) {
 				strRtn = "ADMIN";
+				//strRtn = "SHTEST";
 			}
 			return strRtn;
 		}

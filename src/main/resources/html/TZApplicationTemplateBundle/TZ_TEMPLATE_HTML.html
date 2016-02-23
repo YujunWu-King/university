@@ -122,7 +122,14 @@
 
 				var typeStr1 = typeStr2 = typeStr3 = typeStr4 = typeStr5 = "";
 				function _getLi(obj){
-					return"<li class='move' data-classname="+obj.className+"><a href='javascript:;'onclick='SurveyBuild.add(\""+obj.className+"\")';return false;'><img	src="+obj.iconPath+" />"+obj.componentName+"</a></li>";
+					//return"<li class='move' data-classname="+obj.className+"><a href='javascript:;'onclick='SurveyBuild.add(\""+obj.className+"\")';return false;'><img	src="+obj.iconPath+" />"+obj.componentName+"</a></li>";
+					ret = "";
+					ret += '<li class = "move" data-classname = "' + obj.className + '">';
+					ret += '<a href = "javascript:void(0);" onclick = "SurveyBuild.add(\'' + obj.className + '\')">';
+					ret += '<img src="' + obj.iconPath + '"/>';
+					ret += obj.componentName;
+					ret += '</a></li>';
+					return ret;
 				}				
 				$.each(componentData,function(index,obj){
 					if(obj["displayArea"] == "A"){

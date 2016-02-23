@@ -295,19 +295,22 @@
 						form.findField("publishStatusDesc").setValue("未发布");
 					}
 						//Ext.getCmp( "titileImage").setSrc(Ext.getCmp( "titleImageUrl").getValue());	
-					  panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	
+						var titleImageUrl = panel.down('hiddenfield[name=titleImageUrl]').getValue();
+						if(titleImageUrl!=""){
+							panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + titleImageUrl);	
+						}
 						//附件集
-						var tzStoreParams = "{'activityId':'"+activityId+"','gridTyp':'FJ'}";
+						var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"FJ"}';
 						attachGrid.store.tzStoreParams = tzStoreParams;
 						attachGrid.store.load();			
 					  //报名信息项列表
-						var tzStoreParams = "{'activityId':'"+activityId+"','gridTyp':'BMX'}";
+						var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"BMX"}';
 						grid.store.tzStoreParams = tzStoreParams;
 						grid.store.load();	
 						
 						//图片集;
 						var picDataView = panel.down('dataview[name=picView]');
-						var tzStoreParams = "{'activityId':'"+activityId+"','gridTyp':'TPJ'}";
+						var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"TPJ"}';
 						picDataView.store.tzStoreParams = tzStoreParams;
 						picDataView.store.load();					
 				});

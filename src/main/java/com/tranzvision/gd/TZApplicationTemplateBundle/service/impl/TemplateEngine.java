@@ -263,36 +263,6 @@ public class TemplateEngine {
 						this.savePerXXX(item);
 						this.saveTemplateField(item);
 
-						/*------- 模板校验规则更新 Begin -------*/
-//						if (item.containsKey("rules")) {
-//							Map<String, Object> itemRules = (Map<String, Object>) item.get("rules");
-//							for (String keyi : itemRules.keySet()) {
-//								Map<String, Object> rule = (Map<String, Object>) itemRules.get(keyi);
-//								PsTzAppXxJygzT psTzAppXxJygzT = new PsTzAppXxJygzT();
-//								// 模板编号
-//								psTzAppXxJygzT.setTzAppTplId(tid);
-//
-//								// 信息项编号
-//								psTzAppXxJygzT.setTzXxxBh(itemId);
-//
-//								// 校验规则ID
-//								if (rule.containsKey("ruleId")) {
-//									psTzAppXxJygzT.setTzJygzId((String) rule.get("ruleId"));
-//								}
-//
-//								// 是否启用
-//								if (rule.containsKey("isEnable")) {
-//									psTzAppXxJygzT.setTzQyBz((String) rule.get("isEnable"));
-//								}
-//
-//								// 提示信息
-//								if (rule.containsKey("messages")) {
-//									psTzAppXxJygzT.setTzJygzTsxx((String) rule.get("messages"));
-//								}
-//								psTzAppXxJygzTMapper.insert(psTzAppXxJygzT);
-//							}
-//						}
-						/*------- 模板校验规则更新 End -------*/
 
 						/*------ 多行容器（通用多行容器、固定多行容器） Begin ------*/
 						if (StringUtils.equals("Y", isDoubleLine)) {
@@ -408,7 +378,7 @@ public class TemplateEngine {
 
 		String alterMsg = "";
 
-		if (StringUtils.isBlank(diffMsg)) {
+		if (StringUtils.isNotBlank(diffMsg)) {
 			alterMsg = "当前报名表模版中的如下信息项在主模版中不存在或控件类名称不一致，请检查当前模版信息项配置。";
 			alterMsg = alterMsg + "\n" + diffMsg;
 		}

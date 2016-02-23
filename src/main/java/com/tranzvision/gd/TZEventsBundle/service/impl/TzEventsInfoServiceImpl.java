@@ -45,6 +45,7 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.ResizeImageUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.session.TzGetSetSessionValue;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -122,6 +123,17 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private ArtContentHtml artContentHtml;
 
+	@Autowired
+	private TzGetSetSessionValue tzGetSetSessionValue;
+
+	private String sessSiteId = "siteId";
+
+	private String sessColuId = "coluId";
+
+	private String sessActivityId = "activityId";
+
+	private String sessPublishClick = "publishClick";
+
 	/**
 	 * 获取活动信息
 	 */
@@ -177,13 +189,15 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if (mapData != null) {
 				saveImageAccessUrl = mapData.get("TZ_IMG_VIEW") == null ? ""
 						: String.valueOf(mapData.get("TZ_IMG_VIEW"));
+				saveImageAccessUrl = saveImageAccessUrl.equals("null") ? "" : saveImageAccessUrl;
 				saveAttachAccessUrl = mapData.get("TZ_ATTS_VIEW") == null ? ""
 						: String.valueOf(mapData.get("TZ_ATTS_VIEW"));
+				saveAttachAccessUrl = saveAttachAccessUrl.equals("null") ? "" : saveAttachAccessUrl;
 			}
 			if (null == activityId || "".equals(activityId)) {
 
-				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-						"", "", "", "", "", "", saveImageAccessUrl, saveAttachAccessUrl, "");
+				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", enabledApply, "",
+						"", "", "", "0", "", "", "", siteId, coluId, saveImageAccessUrl, saveAttachAccessUrl, "");
 				return strRet;
 			}
 
@@ -250,21 +264,21 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
 
 			Date activityStartDate = mapEventInfo.get("TZ_START_DT") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_START_DT")));
+					: dateSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_START_DT")));
 			Date activityStartTime = mapEventInfo.get("TZ_START_TM") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_START_TM")));
+					: timeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_START_TM")));
 			Date activityEndDate = mapEventInfo.get("TZ_END_DT") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_END_DT")));
+					: dateSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_END_DT")));
 			Date activityEndTime = mapEventInfo.get("TZ_END_TM") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_END_TM")));
+					: timeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_END_TM")));
 			Date applyStartDate = mapEventInfo.get("TZ_APPF_DT") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPF_DT")));
+					: dateSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPF_DT")));
 			Date applyStartTime = mapEventInfo.get("TZ_APPF_TM") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPF_TM")));
+					: timeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPF_TM")));
 			Date applyEndDate = mapEventInfo.get("TZ_APPE_DT") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPE_DT")));
+					: dateSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPE_DT")));
 			Date applyEndTime = mapEventInfo.get("TZ_APPE_TM") == null ? null
-					: dtimeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPE_TM")));
+					: timeSimpleDateFormat.parse(String.valueOf(mapEventInfo.get("TZ_APPE_TM")));
 
 			String strActivityStartDate = "";
 			if (null != activityStartDate) {
@@ -503,6 +517,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String activityId = "";
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -515,7 +530,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				String strFlag = jacksonUtil.getString("typeFlag");
 				Map<String, Object> mapParams = jacksonUtil.getMap("data");
 
-				String activityId = "";
+				activityId = "";
 				switch (strFlag) {
 				case "ACTINFO":
 					// 活动基本信息
@@ -537,63 +552,78 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				}
 
-				String siteId = mapParams.get("siteId") == null ? "" : String.valueOf(mapParams.get("siteId"));
-				String coluId = mapParams.get("coluId") == null ? "" : String.valueOf(mapParams.get("coluId"));
-				String publishStatus = mapParams.get("publishClick") == null ? ""
-						: String.valueOf(mapParams.get("publishClick"));
-
-				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
-				String classId = sqlQuery.queryForObject(sql, "String");
-				String publishUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
-						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
-
-				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
-				classId = sqlQuery.queryForObject(sql, "String");
-				String viewUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
-						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
-
-				Map<String, Object> mapRet = new HashMap<String, Object>();
-				mapRet.put("activityId", activityId);
-				mapRet.put("siteId", siteId);
-				mapRet.put("coluId", coluId);
-				mapRet.put("publishUrl", publishUrl);
-				mapRet.put("viewUrl", viewUrl);
-
-				strRet = jacksonUtil.Map2json(mapRet);
-
-				// 生成页面代码
-				String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
-
-				String toGenPhoneHtml;
-				// String[] contentPhoneHtml = new String[] {};
-
-				// 更新文章内容关联表
-				PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
-				psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
-				psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
-				psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
-				psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
-				psTzLmNrGlTWithBLOBs.setTzArtSjHtml("");
-				psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
-				psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-
-				if ("Y".equals(publishStatus)) {
-					psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
-					psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
-				} else if ("N".equals(publishStatus)) {
-					psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
-					psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
-				}
-
-				psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-
 			}
+
+			//从session中读取参数
+			String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
+			if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
+				errorMsg[0] = "1";
+				errorMsg[1] = "机构站点参数错误！";
+				return strRet;
+			}
+
+			Map<String, Object> mapEventInfoSession = jacksonUtil.parseJson2Map(strEventInfoSession);
+
+			String siteId = mapEventInfoSession.get(sessSiteId) == null ? ""
+					: String.valueOf(mapEventInfoSession.get(sessSiteId));
+			String coluId = mapEventInfoSession.get(sessColuId) == null ? ""
+					: String.valueOf(mapEventInfoSession.get(sessColuId));
+			String publishStatus = mapEventInfoSession.get(sessPublishClick) == null ? ""
+					: String.valueOf(mapEventInfoSession.get(sessPublishClick));
+
+			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
+			String classId = sqlQuery.queryForObject(sql, "String");
+			String publishUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
+					+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
+
+			sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
+			classId = sqlQuery.queryForObject(sql, "String");
+			String viewUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
+					+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
+
+			Map<String, Object> mapRet = new HashMap<String, Object>();
+			mapRet.put("activityId", activityId);
+			mapRet.put("siteId", siteId);
+			mapRet.put("coluId", coluId);
+			mapRet.put("publishUrl", publishUrl);
+			mapRet.put("viewUrl", viewUrl);
+
+			strRet = jacksonUtil.Map2json(mapRet);
+
+			// 生成页面代码
+			String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
+
+			String toGenPhoneHtml;
+			// String[] contentPhoneHtml = new String[] {};
+
+			// 更新文章内容关联表
+			PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+			psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+			psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
+			psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
+			psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
+			psTzLmNrGlTWithBLOBs.setTzArtSjHtml("");
+			psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
+			psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+
+			if ("Y".equals(publishStatus)) {
+				psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+				psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
+			} else if ("N".equals(publishStatus)) {
+				psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+				psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
+			}
+
+			psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "";
+			errorMsg[1] = "保存失败！" + e.getMessage();
 		}
+
+		// 清空session中的活动编号等参数，避免出现更新错误的情况。
+		tzGetSetSessionValue.setTzAddingNewActivity("");
 
 		return strRet;
 	}
@@ -675,7 +705,6 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			}
 
 			String sql = "";
-			Map<String, Object> mapJson = new HashMap<String, Object>();
 			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 			int total = 0;
 
@@ -703,6 +732,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 					String attachmentUrl = tzAttAUrl + tzATTACHSYSFILENA;
 
+					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("attachmentID", tzATTACHSYSFILENA);
 					mapJson.put("attachmentName", tzATTACHFILENAME);
 					mapJson.put("attachmentUrl", attachmentUrl);
@@ -749,6 +779,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					String applyItemNameEng = mapBmx.get("EN_NAME") == null ? ""
 							: String.valueOf(mapBmx.get("EN_NAME"));
 
+					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("activityId", tzArtId);
 					mapJson.put("applyItemId", tzZxbmXxxId);
 					mapJson.put("applyItemNum", applyItemNum);
@@ -797,6 +828,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						aatAccUrl = aatAccUrl + "/";
 					}
 
+					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("sysFileName", sysfileName);
 					mapJson.put("index", priorityNum);
 					mapJson.put("src", aatAccUrl + sysfileName);
@@ -986,11 +1018,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			boolean boolRst = false;
 			String sql = "";
 
-			String dtFormat = getSysHardCodeVal.getDateFormat();
-			String tmFormat = getSysHardCodeVal.getTimeFormat();
+			String dtFormat = getSysHardCodeVal.getDateTimeHMFormat();
 
 			SimpleDateFormat dtSimpleDateFormat = new SimpleDateFormat(dtFormat);
-			SimpleDateFormat tmSimpleDateFormat = new SimpleDateFormat(tmFormat);
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -999,25 +1029,39 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String coluId = mapParams.get("coluId") == null ? "" : String.valueOf(mapParams.get("coluId"));
 			// 活动编号
 			String activityId = mapParams.get("activityId") == null ? "" : String.valueOf(mapParams.get("activityId"));
+
 			// 活动名称
 			String activityName = mapParams.get("activityName") == null ? ""
 					: String.valueOf(mapParams.get("activityName"));
-			// 活动开始日期
+
+			// 活动开始日期时间
 			String strActStartDate = mapParams.get("activityStartDate") == null ? ""
 					: String.valueOf(mapParams.get("activityStartDate"));
-			Date activityStartDate = dtSimpleDateFormat.parse(strActStartDate);
-			// 活动开始时间
 			String strActStartTime = mapParams.get("activityStartTime") == null ? ""
 					: String.valueOf(mapParams.get("activityStartTime"));
-			Date activityStartTime = tmSimpleDateFormat.parse(strActStartTime);
-			// 活动结束日期
+			Date activityStartDateTime = null;
+			if (!"".equals(strActStartDate)) {
+				if ("".equals(strActStartTime)) {
+					activityStartDateTime = dtSimpleDateFormat.parse(strActStartDate);
+				} else {
+					activityStartDateTime = dtSimpleDateFormat.parse(strActStartDate + " " + strActStartTime);
+				}
+			}
+
+			// 活动结束日期时间
 			String strActEndDate = mapParams.get("activityEndDate") == null ? ""
 					: String.valueOf(mapParams.get("activityEndDate"));
-			Date activityEndDate = dtSimpleDateFormat.parse(strActEndDate);
-			// 活动结束时间
 			String strActEndTime = mapParams.get("activityEndTime") == null ? ""
 					: String.valueOf(mapParams.get("activityEndTime"));
-			Date activityEndTime = tmSimpleDateFormat.parse(strActEndTime);
+			Date activityEndDateTime = null;
+			if (!"".equals(strActEndDate)) {
+				if ("".equals(strActEndTime)) {
+					activityEndDateTime = dtSimpleDateFormat.parse(strActEndDate);
+				} else {
+					activityEndDateTime = dtSimpleDateFormat.parse(strActEndDate + " " + strActEndTime);
+				}
+			}
+
 			// 地点
 			String activityPlace = mapParams.get("activityPlace") == null ? ""
 					: String.valueOf(mapParams.get("activityPlace"));
@@ -1050,25 +1094,41 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			// 是否启用在线报名
 			String enabledApply = mapParams.get("enabledApply") == null ? "N"
 					: String.valueOf(mapParams.get("enabledApply"));
-			// 报名开始日期
+			// 报名开始日期时间
 			String strApplyStartDate = mapParams.get("applyStartDate") == null ? ""
 					: String.valueOf(mapParams.get("applyStartDate"));
-			Date applyStartDate = dtSimpleDateFormat.parse(strApplyStartDate);
-			// 报名开始时间
 			String strApplyStartTime = mapParams.get("applyStartTime") == null ? ""
 					: String.valueOf(mapParams.get("applyStartTime"));
-			Date applyStartTime = tmSimpleDateFormat.parse(strApplyStartTime);
-			// 报名结束日期
+			Date applyStartDateTime = null;
+			if (!"".equals(strApplyStartDate)) {
+				if ("".equals(strApplyStartTime)) {
+					applyStartDateTime = dtSimpleDateFormat.parse(strApplyStartDate);
+				} else {
+					applyStartDateTime = dtSimpleDateFormat.parse(strApplyStartDate + " " + strApplyStartTime);
+				}
+			}
+
+			// 报名结束日期时间
 			String strApplyEndDate = mapParams.get("applyEndDate") == null ? ""
 					: String.valueOf(mapParams.get("applyEndDate"));
-			Date applyEndDate = dtSimpleDateFormat.parse(strApplyEndDate);
-			// 报名结束时间
 			String strApplyEndTime = mapParams.get("applyEndTime") == null ? ""
 					: String.valueOf(mapParams.get("applyEndTime"));
-			Date applyEndTime = tmSimpleDateFormat.parse(strApplyEndTime);
+			Date applyEndDateTime = null;
+			if (!"".equals(strApplyEndDate)) {
+				if ("".equals(strApplyEndTime)) {
+					applyEndDateTime = dtSimpleDateFormat.parse(strApplyEndDate);
+				} else {
+					applyEndDateTime = dtSimpleDateFormat.parse(strApplyEndDate + " " + strApplyEndTime);
+				}
+			}
+
 			// 席位数
-			int applyNum = mapParams.get("applyNum") == null ? 0
-					: Integer.parseInt(String.valueOf(mapParams.get("applyNum")));
+			int applyNum = 0;
+			String strApplyNum = mapParams.get("applyNum") == null ? "" : String.valueOf(mapParams.get("applyNum"));
+			if (!"".equals(strApplyNum)) {
+				applyNum = Integer.parseInt(strApplyNum);
+			}
+
 			// 显示模式
 			String showModel = mapParams.get("showModel") == null ? "" : String.valueOf(mapParams.get("showModel"));
 			// 发布状态
@@ -1083,17 +1143,17 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			// 活动基本信息表
 			PsTzArtHdTbl psTzArtHdTbl = new PsTzArtHdTbl();
 			psTzArtHdTbl.setTzNactName(activityName);
-			psTzArtHdTbl.setTzStartDt(activityStartDate);
-			psTzArtHdTbl.setTzStartTm(activityStartTime);
-			psTzArtHdTbl.setTzEndDt(activityEndDate);
-			psTzArtHdTbl.setTzEndTm(activityEndTime);
+			psTzArtHdTbl.setTzStartDt(activityStartDateTime);
+			psTzArtHdTbl.setTzStartTm(activityStartDateTime);
+			psTzArtHdTbl.setTzEndDt(activityEndDateTime);
+			psTzArtHdTbl.setTzEndTm(activityEndDateTime);
 			psTzArtHdTbl.setTzNactAddr(activityPlace);
 			psTzArtHdTbl.setTzHdCs(activityCity);
 			psTzArtHdTbl.setTzQyZxbm(enabledApply);
-			psTzArtHdTbl.setTzAppfDt(applyStartDate);
-			psTzArtHdTbl.setTzAppfTm(applyStartTime);
-			psTzArtHdTbl.setTzAppeDt(applyEndDate);
-			psTzArtHdTbl.setTzAppeTm(applyEndTime);
+			psTzArtHdTbl.setTzAppfDt(applyStartDateTime);
+			psTzArtHdTbl.setTzAppfTm(applyStartDateTime);
+			psTzArtHdTbl.setTzAppeDt(applyEndDateTime);
+			psTzArtHdTbl.setTzAppeTm(applyEndDateTime);
 			psTzArtHdTbl.setTzXws(applyNum);
 			psTzArtHdTbl.setTzXsms(showModel);
 
@@ -1108,10 +1168,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			psTzArtRecTblWithBLOBs.setTzImageTitle(titleImageTitle);
 			psTzArtRecTblWithBLOBs.setTzImageDesc(titleImageDesc);
 			psTzArtRecTblWithBLOBs.setTzAttachsysfilena(sysFileName);
-			psTzArtRecTblWithBLOBs.setTzStartDate(applyStartDate);
-			psTzArtRecTblWithBLOBs.setTzStartTime(applyStartTime);
-			psTzArtRecTblWithBLOBs.setTzEndDate(applyEndDate);
-			psTzArtRecTblWithBLOBs.setTzEndTime(applyEndTime);
+			psTzArtRecTblWithBLOBs.setTzStartDate(applyStartDateTime);
+			psTzArtRecTblWithBLOBs.setTzStartTime(applyStartDateTime);
+			psTzArtRecTblWithBLOBs.setTzEndDate(applyEndDateTime);
+			psTzArtRecTblWithBLOBs.setTzEndTime(applyEndDateTime);
 			psTzArtRecTblWithBLOBs.setRowLastmantDttm(dateNow);
 			psTzArtRecTblWithBLOBs.setRowLastmantOprid(oprid);
 
@@ -1129,7 +1189,11 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			if ("Y".equals(upArtClick)) {
 				sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID<>?";
-				int maxSEQ = sqlQuery.queryForObject(sql, new Object[] { siteId, coluId, activityId }, "int");
+				String strMaxSEQ = sqlQuery.queryForObject(sql, new Object[] { siteId, coluId, activityId }, "String");
+				int maxSEQ = 0;
+				if(null!=strMaxSEQ){
+					maxSEQ = Integer.parseInt(strMaxSEQ);
+				}
 				psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxSEQ + 1);
 			}
 
@@ -1150,6 +1214,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				int rst = psTzArtHdTblMapper.insert(psTzArtHdTbl);
 				if (rst > 0) {
 					boolRst = true;
+
 				}
 
 				psTzArtRecTblWithBLOBs.setTzArtId(activityId);
@@ -1171,9 +1236,13 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				}
 
 				psTzArtRecTblWithBLOBs.setTzArtId(activityId);
+				psTzArtRecTblWithBLOBs.setRowLastmantDttm(dateNow);
+				psTzArtRecTblWithBLOBs.setRowLastmantOprid(oprid);
 				psTzArtRecTblMapper.updateByPrimaryKeySelective(psTzArtRecTblWithBLOBs);
 
 				psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
+				psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
+				psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 				psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 
 			} else {
@@ -1181,6 +1250,19 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			}
 
 			if (boolRst) {
+
+				// 设置session变量，在更新时用到
+				Map<String, Object> mapEventInfoSession = new HashMap<String, Object>();
+				mapEventInfoSession.put(sessSiteId, siteId);
+				mapEventInfoSession.put(sessColuId, coluId);
+				mapEventInfoSession.put(sessActivityId, activityId);
+				mapEventInfoSession.put(sessPublishClick, publishClick);
+				
+				// 将活动参数写入session中
+				JacksonUtil jacksonUtil = new JacksonUtil();
+				String strEventInfoSession = jacksonUtil.Map2json(mapEventInfoSession);
+				tzGetSetSessionValue.setTzAddingNewActivity(strEventInfoSession);
+
 				// 同步报名人数,先锁表操作，避免同时更新引起报名人数和等候人数数据不对
 				mySqlLockService.lockRow(sqlQuery, "TZ_NAUDLIST_T");
 
@@ -1229,6 +1311,26 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String activityId = mapParams.get("activityId") == null ? "" : String.valueOf(mapParams.get("activityId"));
+			if ("".equals(activityId)) {
+				//从session中读取活动编号
+				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
+				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
+					errorMsg[0] = "1";
+					errorMsg[1] = "机构站点参数错误！";
+					return strRet;
+				}
+
+				JacksonUtil jacksonUtil = new JacksonUtil();
+				Map<String, Object> mapEventInfoSession = jacksonUtil.parseJson2Map(strEventInfoSession);
+
+				activityId = mapEventInfoSession.get(sessActivityId) == null ? ""
+						: String.valueOf(mapEventInfoSession.get(sessActivityId));
+			}
+			if ("".equals(activityId) || null == activityId) {
+				errorMsg[0] = "1";
+				errorMsg[1] = "参数错误。活动编号为空。";
+				return "";
+			}
 
 			// 信息项ID
 			String applyItemId = mapParams.get("applyItemId") == null ? ""
@@ -1305,6 +1407,26 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String activityId = mapParams.get("activityId") == null ? "" : String.valueOf(mapParams.get("activityId"));
+			if ("".equals(activityId)) {
+				//从session中读取活动编号
+				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
+				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
+					errorMsg[0] = "1";
+					errorMsg[1] = "机构站点参数错误！";
+					return strRet;
+				}
+
+				JacksonUtil jacksonUtil = new JacksonUtil();
+				Map<String, Object> mapEventInfoSession = jacksonUtil.parseJson2Map(strEventInfoSession);
+
+				activityId = mapEventInfoSession.get(sessActivityId) == null ? ""
+						: String.valueOf(mapEventInfoSession.get(sessActivityId));
+			}
+			if ("".equals(activityId) || null == activityId) {
+				errorMsg[0] = "1";
+				errorMsg[1] = "参数错误。活动编号为空。";
+				return "";
+			}
 
 			// 附件系统文件名
 			String attachmentID = mapParams.get("attachmentID") == null ? ""
@@ -1347,6 +1469,26 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			int num = 0;
 
 			String activityId = jacksonUtil.getString("activityId");
+			if ("".equals(activityId) || null == activityId || "null".equals(activityId)) {
+				//从session中读取活动编号
+				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
+				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
+					errorMsg[0] = "1";
+					errorMsg[1] = "机构站点参数错误！";
+					return strRet;
+				}
+				
+				Map<String, Object> mapEventInfoSession = jacksonUtil.parseJson2Map(strEventInfoSession);
+
+				activityId = mapEventInfoSession.get(sessActivityId) == null ? ""
+						: String.valueOf(mapEventInfoSession.get(sessActivityId));
+			}
+			if ("".equals(activityId) || null == activityId) {
+				errorMsg[0] = "1";
+				errorMsg[1] = "参数错误。活动编号为空。";
+				return "";
+			}
+			strRet = activityId;
 
 			while (doLoop) {
 

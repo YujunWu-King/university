@@ -191,7 +191,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										columnWidth:.65,
             				xtype: "fileuploadfield",  
 										buttonText: '上传',
-										name: 'picUpload',
+										name: 'orguploadfile',
 										buttonOnly:true,
 										listeners:{
 											change:function(file, value, eOpts){
@@ -235,7 +235,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 				    			items:[{
 						            xtype: 'fileuploadfield',
 						            buttonText: '上传图片',
-									name: 'picUpload',
+									name: 'orguploadfile',
 									buttonOnly:true,
 									listeners:{
 										change:function(file, value, eOpts){
@@ -254,9 +254,9 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 						    	tpl:[
 						    		'<tpl for=".">',
 						    		'<div class="thumb-wrap" id="{index}">',
-							        	'<div style="width:160px;height:113px;background:url({sltUrl});background-size:100%">',
-								        	'<img src="/linkfile/sysImages/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_E({index})"/>',
-								        	'<img src="/linkfile/sysImages/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
+							        	'<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{sltUrl});background-size:100%">',
+								        	'<img src="'+ TzUniversityContextPath +'/statics/images/tranzvision/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_E({index})"/>',
+								        	'<img src="'+ TzUniversityContextPath +'/statics/images/tranzvision/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
 							        	'</div>',
 							        	'<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
 							        	'<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
@@ -360,7 +360,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
     								items:[{
 		            			xtype: 'fileuploadfield',
 		            			buttonText: '上传附件',
-											name: 'attachmentUpload',  
+											name: 'orguploadfile',  
 											buttonOnly:true,
 											width: 88,
 											listeners:{
@@ -389,7 +389,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										flex: 1,
 										renderer: function(v){
 											  var arr = v.split("|");
-												return '<a href="'+arr[1]+'" target="_blank">'+arr[0]+'</a>';
+												return '<a href="'+TzUniversityContextPath+arr[1]+'" target="_blank">'+arr[0]+'</a>';
 										}
 									},{
 										menuDisabled: true,
@@ -805,8 +805,9 @@ function addAttach(file, value, attachmentType){
 		if(attachmentType=="ATTACHMENT"){ 
 			upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
 			if(upUrl==""){
-				Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
-				return;
+				//Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
+				//return;
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
 			}else{
 				/*
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
@@ -820,8 +821,9 @@ function addAttach(file, value, attachmentType){
 		}else{
 			upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
 			if(upUrl==""){
-				Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
-				return;
+				//Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
+				//return;
+				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
 			}else{
 				/*
 				if(upUrl.length == (upUrl.lastIndexOf("/")+1)){
@@ -914,7 +916,7 @@ function addAttach(file, value, attachmentType){
     											"src": accessPath,
     											"caption": action.result.msg.filename,
     											"picURL": "",
-    											"sltUrl": sltPath
+    											"sltUrl": TzUniversityContextPath + sltPath
     									});
 
     									viewStore.insert(picsCount ,r);

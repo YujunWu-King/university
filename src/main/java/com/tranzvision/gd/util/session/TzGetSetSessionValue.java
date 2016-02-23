@@ -19,26 +19,32 @@ public class TzGetSetSessionValue {
 
 	@Autowired
 	private HttpServletRequest request;
-	
-	private String getSessionVal(String sessionName){
+
+	private String getSessionVal(String sessionName) {
 		TzSession tzSession = new TzSession(request);
 		Object objSessionVal = tzSession.getSession(sessionName);
-		return objSessionVal==null?null:String.valueOf(objSessionVal);
+		return objSessionVal == null ? null : String.valueOf(objSessionVal);
 	}
-	
-	private void setSessionVal(String sessionName, String sessionValue){
+
+	private void setSessionVal(String sessionName, String sessionValue) {
 		TzSession tzSession = new TzSession(request);
 		tzSession.addSession(sessionName, sessionValue);
 	}
-	
-	public String getTzSiteGloMenuId(){
+
+	public String getTzSiteGloMenuId() {
 		return this.getSessionVal(TzSessionName.TzSiteGloMenuId);
 	}
-	
-	public void setTzSiteGloMenuId(String sessionValue){
+
+	public void setTzSiteGloMenuId(String sessionValue) {
 		this.setSessionVal(TzSessionName.TzSiteGloMenuId, sessionValue);
 	}
-	
-	
-	
+
+	public String getTzAddingNewActivity() {
+		return this.getSessionVal(TzSessionName.TzAddingNewActivity);
+	}
+
+	public void setTzAddingNewActivity(String sessionValue) {
+		this.setSessionVal(TzSessionName.TzAddingNewActivity, sessionValue);
+	}
+
 }

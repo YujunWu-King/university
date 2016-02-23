@@ -76,6 +76,8 @@ public class TzEventsItemOptionsServiceImpl extends FrameworkImpl {
 
 				mapJson.put("transNameEng",
 						mapData.get("TZ_OPT_VALUE") == null ? "" : String.valueOf(mapData.get("TZ_OPT_VALUE")));
+				
+				listJson.add(mapJson);
 
 			}
 
