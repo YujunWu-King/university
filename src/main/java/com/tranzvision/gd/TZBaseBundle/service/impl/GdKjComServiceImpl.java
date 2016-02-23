@@ -1191,7 +1191,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					strRet = strRet + "," + strContent;
 				}
 			}
-			strRet = strRet.substring(1);
+			if(strRet != null && !"".equals(strRet)){
+				strRet = strRet.substring(1);
+			}
 			strRet = "{\"" + recname + "\":[" + strRet + "]}";
 
 		} catch (Exception e) {
