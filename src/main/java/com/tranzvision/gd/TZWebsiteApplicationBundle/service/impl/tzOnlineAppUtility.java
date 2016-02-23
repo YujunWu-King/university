@@ -136,7 +136,7 @@ public class tzOnlineAppUtility {
 				case "imagesUpload":
 					int numFile = 0;
 					sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ATT_HD_JY_SQL");
-					numFile = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "Integer");
+					numFile = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,numAppInsId,strTplId,strXxxBh }, "Integer");
 					if(numFile>0){
 						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 					}

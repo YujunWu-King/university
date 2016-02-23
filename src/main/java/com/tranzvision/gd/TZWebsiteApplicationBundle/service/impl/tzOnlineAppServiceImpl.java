@@ -46,6 +46,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCompTbl;
 
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl;
 
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
@@ -84,6 +85,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	@Autowired
+	private tzOnlineAppViewServiceImpl tzOnlineAppViewServiceImpl;
 	@Autowired
 	private TemplateEngine templateEngine;
 	@Autowired
@@ -228,10 +231,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					if("Y".equals(strExistsZfFlag)){
 						strTplId = strAttachedTplId;
 						//根据报名表实例和附属模版编号去获得报名表Json数据(先保留，待开发完善)
+						String xxx = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 						strIsAdmin = "Y";
 						strAppFormReadOnly = "Y";
 					}
 				}
+				
+				String xxx = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+				System.out.println("Hello World:" + xxx);
 				//查看是否是查看附属模版 end
 				
 				//如果报名表已提交，则只读显示
@@ -241,9 +248,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				
 				String sqlGetAppTplInfo = "SELECT TZ_APP_TPL_LAN,TZ_USE_TYPE,TZ_JG_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 				Map<String, Object> MapAppTplInfo = sqlQuery.queryForMap(sqlGetAppTplInfo, new Object[] { strTplId });
-				strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
-				strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
-				strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
+				strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
+				strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
+				strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
 				
 				//如果报名表模版类型为报名表
 				if("BMB".equals(strTplType)){
@@ -396,11 +403,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		String sql = "";
 		sql = "SELECT TZ_APPTPL_JSON_STR,TZ_USE_TYPE,TZ_JG_ID,TZ_APP_TPL_LAN,TZ_APP_TZURL FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		Map<String, Object> MapAppTplInfo = sqlQuery.queryForMap(sql, new Object[] { strTplId });
-		strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
-		strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
-		strTplData = MapAppTplInfo.get("TZ_APPTPL_JSON_STR") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_APPTPL_JSON_STR"));
-		strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
-		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? "''":String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
+		strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
+		strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
+		strTplData = MapAppTplInfo.get("TZ_APPTPL_JSON_STR") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APPTPL_JSON_STR"));
+		strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
+		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
 		
 		//获得站点信息
 		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'";
@@ -421,7 +428,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			if(numAppInsId>0 && "BMB".equals(strTplType)){
 				//检查推荐信的完成状态 %This.checkRefletter(&strAppInsId, &strTplId);
 			}
-			//执行页面加载事件-模版级事件（待完成）
+			//执行页面加载事件-模版级事件开始
+			
+			//执行页面加载事件-模版级事件结束
+			
 			//报名表Tab页签展示
 			int numIndex = 0;
 			String strXxxBh = "";
@@ -585,6 +595,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				
 				
 				strTplData = strTplData.replace("\\", "\\\\");
+				//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 				strInsData = strInsData.replace("\\", "\\\\");
 				
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
@@ -604,6 +615,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}else{
 			str_appform_main_html = strMessageError;
 		}
+		 
+		//str_appform_main_html = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+		
 		return str_appform_main_html;
 	}
 	
@@ -1472,24 +1486,25 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			numOrderBy = Integer.parseInt(strOrderBy);
 		}
 		
-		/*
 		String strPath = "";
 		if(xxxObject.containsKey("path")){
 			strPath = xxxObject.get("path") == null ? "" : String.valueOf(xxxObject.get("path"));
-		}*/
-
-		PsTzFormAttT psTzFormAttT = new PsTzFormAttT();
-		psTzFormAttT.setTzAppInsId(numAppInsId);
-		psTzFormAttT.setTzXxxBh(strParentItemId);
-		psTzFormAttT.setTzIndex(numOrderBy);
-		psTzFormAttT.setAttachsysfilename(strSysFileName);
-		psTzFormAttT.setAttachuserfile(strUseFileName);
-		psTzFormAttT.setRowAddedOprid(oprid);
-		psTzFormAttT.setRowAddedDttm(new Date());
-		psTzFormAttT.setRowLastmantOprid(oprid);
-		psTzFormAttT.setRowLastmantDttm(new Date());
-		psTzFormAttTMapper.insert(psTzFormAttT);
+		}
 		
+		if(!"".equals(strSysFileName) && strSysFileName != null
+				&&!"".equals(strUseFileName) && strUseFileName != null){
+			PsTzFormAttT psTzFormAttT = new PsTzFormAttT();
+			psTzFormAttT.setTzAppInsId(numAppInsId);
+			psTzFormAttT.setTzXxxBh(strParentItemId);
+			psTzFormAttT.setTzIndex(numOrderBy);
+			psTzFormAttT.setAttachsysfilename(strSysFileName);
+			psTzFormAttT.setAttachuserfile(strUseFileName);
+			psTzFormAttT.setRowAddedOprid(oprid);
+			psTzFormAttT.setRowAddedDttm(new Date());
+			psTzFormAttT.setRowLastmantOprid(oprid);
+			psTzFormAttT.setRowLastmantDttm(new Date());
+			psTzFormAttTMapper.insert(psTzFormAttT);
+		}
 	}
 	
 	/*设置字段是否隐藏*/
@@ -1841,20 +1856,23 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							listPageNo.add(numPageNo);
 						}
 						returnMsg = returnMsg + strReturn + "\n";	
-					}
-					
-					//页面全部设置成完成
-					Object[] args = new Object[] { numAppInsId };
-					sqlQuery.update("UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE = 'Y' WHERE TZ_APP_INS_ID = ?", args);
-					
-					for (Integer numpageNo : listPageNo) {
-				         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
-				         String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh, new Object[] { strTplId, strComMc ,numpageNo }, "Integer");
-				         this.savePageCompleteState(numAppInsId, strXxxBh2, "N");
-				    }	
+					}	
 				}
+			} 
+			
+			if("submit".equals(strOtype)){
+				//页面全部设置成完成
+				Object[] args = new Object[] { numAppInsId };
+				sqlQuery.update("UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE = 'Y' WHERE TZ_APP_INS_ID = ?", args);
+
+				System.out.println("listPageNo的长度:"+listPageNo.size());
+				
+				for (Integer numPageNo2 : listPageNo) {
+			         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
+			         String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh, new Object[] { strTplId, "Page" ,numPageNo2 }, "String");
+			         this.savePageCompleteState(numAppInsId, strXxxBh2, "N"); 
+			    }
 			}
-		    
 	    }catch(Exception e){
 	    	e.printStackTrace();
 	    }
