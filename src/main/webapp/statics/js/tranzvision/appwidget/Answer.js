@@ -2773,6 +2773,7 @@ var SurveyBuild = {
 														_children[0].sysFileName = rstObj.sysFileName;
 														_children[0].orderby = rstObj.index;
 														_children[0].path = obj.msg.path;
+														_children[0].accessPath = obj.msg.accessPath;
 														_children[0].viewFileName = rstObj.viewFileName;
 													} else {
 														_fc = cloneObj(_children[0]);
@@ -2782,6 +2783,7 @@ var SurveyBuild = {
 														_fc["sysFileName"] = rstObj.sysFileName;
 														_fc["orderby"] = rstObj.index;
 														_fc["path"] = obj.msg.path;
+														_fc["accessPath"] = obj.msg.accessPath;
 														_fc["viewFileName"] = rstObj.viewFileName;
 														_children.push(_fc);
 													}
@@ -2797,6 +2799,7 @@ var SurveyBuild = {
 													_children[0].sysFileName = rstObj.sysFileName;
 													_children[0].orderby = rstObj.index;
 													_children[0].path = obj.msg.path;
+													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 	
 													$("#"+itemId+"_A").text(rstObj.viewFileName);
@@ -2839,78 +2842,58 @@ var SurveyBuild = {
 			}
 		} 
     },
-
     /*报名表附件下载*/
-    downLoadFile: function(el,instanceId){
-        var appInsId = SurveyBuild.appInsId;//报名表实例ID
+    downLoadFile: function(el, instanceId) {
+        var appInsId = SurveyBuild.appInsId; //报名表实例ID
         var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
-        if ($isDhContainer.length == 0){
+        if ($isDhContainer.length == 0) {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
             var index = $(el).closest(".main_inner_content_para").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
-        var itemId = data.itemId;
         var _children = data.children;
-        var orderby = $(el).attr("file-index");
         var index = $(el).parent("li").index();
-		/*********************判断图片***START****************************/
-		var type;
-		var sysFileName = _children[index].sysFileName;
-		//图片格式
-		var picType = ['BMP','JPG','JPEG','PNG','GIF'];
-		//文件后缀
-		var count = 0,imgPos;
-		var imgDate="";
+        /*********************判断图片***START****************************/
+        var type;
+        var sysFileName = _children[index].sysFileName;
+        var accessPath = _children[index].accessPath;
+        //图片格式
+        var picType = ['BMP', 'JPG', 'JPEG', 'PNG', 'GIF'];
+        //文件后缀
+        var count = 0,imgPos;
+        var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
-		if (picType.indexOf(fileSuffix) != -1){
-			type="IMG";//图片
-			for (var i=0;i<_children.length;i++){
-				var _sysFilename = _children[i].sysFileName;
-				var _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
-				if (picType.indexOf(_fileSuffix) != -1){
-					if(sysFileName == _sysFilename) imgPos=count;
-					count ++;
-					imgDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_sysFilename+"'},"
-				}
-			}
-			if (imgDate != ""){
-				imgDate = 	imgDate.substring(0,imgDate.length-1);
-			}
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
-		}else{
-			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
-		}
-		/*********************判断图片***END****************************/
-        $.ajax({
-            type: "post",
-            url: SurveyBuild.tzGeneralURL+tzParams,
-            dataType: "json",
-            async: false,
-            success: function(rst){
-                var rstObj = rst.comContent;
-                if (rstObj.result == "success"){
-                  //  window.location.href = rstObj.resultDesc;
-				  if (type=="ATTACHMENT"){
-					window.open(rstObj.resultDesc);
-				  }else if(type="IMG"){
-					var $ul = $("#fancybox-main").children("ul");
-					$ul.html(rstObj.resultDesc);
-					var $li = $($ul.children("li")[imgPos]);
-					$li.children("a").click();
-				  }
-                }else{
-                    alert(rstObj.resultDesc)
+        if (picType.indexOf(fileSuffix) != -1) {
+            type = "IMG"; //图片
+            for (var i = 0; i < _children.length; i++) {
+                var _sysFilename = _children[i].sysFileName;
+                var _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
+                if (picType.indexOf(_fileSuffix) != -1) {
+                    if (sysFileName == _sysFilename) imgPos = count;
+                    count++;
+                    attHtml += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
                 }
             }
-        })
-
+        } else {
+            type = "ATTACHMENT"; //附件
+            attHtml = TzUniversityContextPath + accessPath + sysFileName;
+        }
+        /*********************判断图片***END****************************/
+        if (type == "ATTACHMENT") {
+            window.open(attHtml);
+        } else if (type = "IMG") {
+            var $ul = $("#fancybox-main").children("ul");
+            $ul.html(attHtml);
+            var $li = $($ul.children("li")[imgPos]);
+            $li.children("a").click();
+        }
     },
+
     /*查看后台评委上传的附件-下载*/
-    downLoadBmbFile: function(d,sysFileName){
+    downLoadBmbFile: function(d,sysFileName,accessPath){
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
         var data = SurveyBuild._items[d];
         var _children = data.children;
@@ -2920,7 +2903,7 @@ var SurveyBuild = {
         var picType = ['BMP','JPG','JPEG','PNG','GIF'];
         //文件后缀
         var count = 0,imgPos;
-        var imgDate="";
+        var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
         if (picType.indexOf(fileSuffix) != -1){
             type="IMG";//图片
@@ -2930,41 +2913,22 @@ var SurveyBuild = {
                 if (picType.indexOf(_fileSuffix) != -1){
                     if(sysFileName == _sysFilename) imgPos=count;
                     count ++;
-                    imgDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_sysFilename+"'},"
+					attHtml += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
                 }
             }
-                if (imgDate != "") {
-                imgDate = imgDate.substring(0, imgDate.length - 1);
-            }
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'imgDate':["+imgDate+"]}}";
         }else{
             type="ATTACHMENT";//附件
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'fileDate':'fileDate','sysFileName':'"+sysFileName+"'}}";
+			attHtml = TzUniversityContextPath + accessPath + sysFileName;
         }
         /*********************判断图片***END****************************/
-        $.ajax({
-            type: "post",
-            url: SurveyBuild.tzGeneralURL+tzParams,
-            dataType: "json",
-            async: false,
-            success: function(rst){
-                var rstObj = rst.comContent;
-                if (rstObj.result == "success"){
-                    //  window.location.href = rstObj.resultDesc;
-                    if (type=="ATTACHMENT"){
-                        window.open(rstObj.resultDesc);
-                    }else if(type="IMG"){
-                        var $ul = $("#fancybox-main").children("ul");
-                        $ul.html(rstObj.resultDesc);
-                        var $li = $($ul.children("li")[imgPos]);
-                        $li.children("a").click();
-                    }
-                }else{
-                    alert(rstObj.resultDesc)
-                }
-            }
-        })
-
+		if (type=="ATTACHMENT"){
+			window.open(attHtml);
+		}else if(type="IMG"){
+			var $ul = $("#fancybox-main").children("ul");
+			$ul.html(attHtml);
+			var $li = $($ul.children("li")[imgPos]);
+			$li.children("a").click();
+		}
     },
 	/*FDP预览*/
 	PDFpreview : function(el,instanceId){
@@ -2984,7 +2948,7 @@ var SurveyBuild = {
         var orderby = $(el).attr("file-index");
 		var index = $(el).parent("li").index();
 		var sysFileName = _children[index].sysFileName;
-		
+		var accessPath = _children[index].accessPath;
 		//获取浏览器窗口宽度
 		if (window.innerWidth){
 			winWidth = window.innerWidth;
@@ -3008,7 +2972,7 @@ var SurveyBuild = {
 			winHeight = winHeight - 5;
 		}
 		var pdfReaderUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-		var params = "{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_PDFVIEW_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','winWidth':'"+winWidth+"','winHeight':'"+winHeight+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
+		var params = '{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_PDFVIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","winWidth":"'+winWidth+'","winHeight":"'+winHeight+'","fileDate":{"sysFileName":"'+sysFileName+'","accessPath":"' + accessPath + '"}}}';
 		pdfReaderUrl = pdfReaderUrl + window.escape(params);
 
 		$.layer({
@@ -3026,43 +2990,30 @@ var SurveyBuild = {
 		});
 	},
     /*报名表图片查看*/
-    viewImageSet : function(el,instanceId){
-        var appInsId = SurveyBuild.appInsId;//报名表实例ID
+    viewImageSet: function(el, instanceId) {
+        var appInsId = SurveyBuild.appInsId; //报名表实例ID
         var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
-        if ($isDhContainer.length == 0){
+        if ($isDhContainer.length == 0) {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
             var index = $(el).closest(".main_inner_content_para").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
-        var itemId = data.itemId;
         var _children = data.children;
-        var orderby = $(el).prev("a").attr("file-index");
         var index = $(el).parent("li").index();
 
-        var fileDate = "";
-        for(var i=0; i<_children.length; i++){
-            fileDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_children[i].sysFileName+"'},"
+        var imgHtmls = "";
+        for (var i = 0; i < _children.length; i++) {
+            imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
         }
-        if (fileDate != ""){
-            fileDate = 	fileDate.substring(0,fileDate.length-1);
-        }
-        $.ajax({
-            type: "post",
-            url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}",
-            dataType: "html",
-            success: function(imgLiHtml){
-                var $ul = $("#fancybox-main").children("ul");
-                $ul.html(imgLiHtml);
-                var $li = $($ul.children("li")[index]);
-                $li.children("a").click();
-            }
-        })
+
+        var $ul = $("#fancybox-main").children("ul");
+        $ul.html(imgHtmls);
+        var $li = $($ul.children("li")[index]);
+        $li.children("a").click();
     },
-
-
     /*报名表附件删除*/
     deleteFile: function(el,instanceId){
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
@@ -3257,60 +3208,43 @@ var SurveyBuild = {
 			alert(e);	
 		}
 	},
-	//推荐信附件下载
-	TjxdownLoad: function(el,cins,num){
-		var appInsId = SurveyBuild.appInsId;//报名表实例ID
-		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
-		var data = SurveyBuild._items[instanceId];
-		var index = num;
-		var child = data.children[indexJson];
-		var itemId = data.itemId;
-		
-		var orderby = 1;
-		var index = $(el).parent("li").index();
-		var sysFileName=child[cins].sysFileName;
-		/*********************判断图片***START****************************/
-		var type;
-		//图片格式
-		var picType = ['BMP','JPG','JPEG','PNG','GIF'];
-		//文件后缀
-		var count = 0,imgPos;
-		var imgDate="";
+    //推荐信附件下载
+    TjxdownLoad: function(el, cins, num) {
+        var appInsId = SurveyBuild.appInsId; //报名表实例ID
+        var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
+        var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+        var data = SurveyBuild._items[instanceId];
+        var index = num;
+        var child = data.children[indexJson];
+
+        var index = $(el).parent("li").index();
+        var sysFileName = child[cins].sysFileName;
+        var accessPath = child[cins].accessPath;
+        /*********************判断图片***START****************************/
+        var type;
+        //图片格式
+        var picType = ['BMP', 'JPG', 'JPEG', 'PNG', 'GIF'];
+        //文件后缀
+        var count = 0,imgPos;
+        var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
-		if (picType.indexOf(fileSuffix) != -1){
-			type="IMG";//图片
-			imgDate = "{'fileName':'"+SurveyBuild.specialCharReplace(child[cins].filename)+"','sysFileName':'"+sysFileName+"'}"
-			
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
-		}else{
-			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";	
-		}
-		/*********************判断图片***END****************************/
-		$.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+tzParams,
-			dataType: "json",
-			async: false,
-			success: function(rst){
-				var rstObj = rst.comContent;
-				if (rstObj.result == "success"){
-					//window.location.href = rstObj.resultDesc;
-				  if (type=="ATTACHMENT"){
-					window.open(rstObj.resultDesc);
-				  }else if(type="IMG"){
-					var $ul = $("#fancybox-main").children("ul");
-					$ul.html(rstObj.resultDesc);
-					var $li = $($ul.children("li")[0]);
-					$li.children("a").click();
-				  }
-				}else{
-					alert(rstObj.resultDesc)
-				}
-			}
-		})
-	},
+        if (picType.indexOf(fileSuffix) != -1) {
+            type = "IMG"; //图片
+            attHtml = "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + accessPath + sysFileName + "' title='" + SurveyBuild.specialCharReplace(child[cins].fileName) + "'>" + SurveyBuild.specialCharReplace(child[cins].fileName) + "</a></li>";
+        } else {
+            type = "ATTACHMENT"; //附件
+            attHtml = TzUniversityContextPath + accessPath + sysFileName;
+        }
+        /*********************判断图片***END****************************/
+        if (type == "ATTACHMENT") {
+            window.open(attHtml);
+        } else if (type = "IMG") {
+            var $ul = $("#fancybox-main").children("ul");
+            $ul.html(attHtml);
+            var $li = $($ul.children("li")[0]);
+            $li.children("a").click();
+        }
+    },
 	/*报名表附件删除*/
 	Tjxdelete: function(el,cins,num){
 		var appInsId = SurveyBuild.appInsId;//报名表实例ID
