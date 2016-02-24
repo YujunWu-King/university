@@ -146,6 +146,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			String ctxPath = request.getContextPath();
+			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
 
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
@@ -244,7 +245,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if ("Y".equals(publishStatus)) {
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 				String classId = sqlQuery.queryForObject(sql, "String");
-				publishUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
+				publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
 						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
 			}
 
@@ -255,11 +256,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String artType = mapEventInfo.get("TZ_ART_TYPE1") == null ? ""
 					: String.valueOf(mapEventInfo.get("TZ_ART_TYPE1"));
 
-			String dttFormat = getSysHardCodeVal.getDateTimeFormat();
 			String dtFormat = getSysHardCodeVal.getDateFormat();
 			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
 
-			SimpleDateFormat dtimeSimpleDateFormat = new SimpleDateFormat(dttFormat);
 			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
 			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
 
@@ -431,6 +430,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			String ctxPath = request.getContextPath();
+			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -455,7 +455,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 				String classId = sqlQuery.queryForObject(sql, "String");
-				String publishUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
+				String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
 						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
 
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
@@ -514,6 +514,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String ctxPath = request.getContextPath();
+			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -573,7 +574,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 			String classId = sqlQuery.queryForObject(sql, "String");
-			String publishUrl = ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
+			String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
 					+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
 
 			sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
@@ -1179,6 +1180,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 			psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
 			psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
+			psTzLmNrGlTWithBLOBs.setTzFbz("");
 
 			if ("Y".equals(publishClick)) {
 				psTzLmNrGlTWithBLOBs.setTzArtPubState(publishStatus);

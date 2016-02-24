@@ -3,6 +3,7 @@
  */
 package com.tranzvision.gd.util.qrcode;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,14 @@ public class CreateQRCode {
 			return "";
 		}
 
-		String qrcodeFilePath = getSysHardCodeVal.getWebsiteImgPath() + "/qrcode/" + orgid + "/" + fileName;
+		String qrcodeFilePath = getSysHardCodeVal.getWebsiteImgPath() + "/qrcode/" + orgid.toLowerCase();
+		String dirRealPath = request.getServletContext().getRealPath(qrcodeFilePath);
+		File dir = new File(dirRealPath);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+		qrcodeFilePath = qrcodeFilePath + "/" + fileName;
 
 		String fileRealPath = request.getServletContext().getRealPath(qrcodeFilePath);
 
