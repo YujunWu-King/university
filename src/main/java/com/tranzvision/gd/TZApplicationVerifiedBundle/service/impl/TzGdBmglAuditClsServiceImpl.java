@@ -972,6 +972,9 @@ System.out.println("==========strStuName======>"+strStuName);
 									"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
 									new Object[] { classId, TZ_APPPRO_ID }, "String");
 							timelineClass = "timeline-yuan1_i";
+							if(TZ_APPPRO_RST == null){
+								TZ_APPPRO_RST = "";
+							}
 						} else {
 							// 如果有值，查看是不是默认回复语;
 							int isDef = jdbcTemplate.queryForObject(
@@ -980,17 +983,15 @@ System.out.println("==========strStuName======>"+strStuName);
 							if (isDef > 0) {
 								timelineClass = "timeline-yuan1_i";
 							}
-
-							if ((TZ_SORT_NUM % 2) == 1) {
-								bmlcStepClass = "indexbm-lc-step1";
-							} else {
-								bmlcStepClass = "indexbm-lc-step2";
-							}
-
-							TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGdObject.getHTMLText(
-									"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV", true, bmlcStepClass,
-									step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, timelineClass);
 						}
+						if ((TZ_SORT_NUM % 2) == 1) {
+							bmlcStepClass = "indexbm-lc-step1";
+						} else {
+							bmlcStepClass = "indexbm-lc-step2";
+						}
+						TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGdObject.getHTMLText(
+								"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV", true, bmlcStepClass,
+								step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, timelineClass);
 					}
 
 				}
@@ -1000,8 +1001,8 @@ System.out.println("==========strStuName======>"+strStuName);
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						TZ_SORT_NUM = (int) list.get(i).get("TZ_SORT_NUM");
-						TZ_APPPRO_NAME = (String) list.get(i).get("TZ_APPPRO_NAME");
-						TZ_APPPRO_RST = (String) list.get(i).get("TZ_APPPRO_CONTENT");
+						TZ_APPPRO_NAME = (String) list.get(i).get("TZ_APPPRO_NAME")==null?"":(String) list.get(i).get("TZ_APPPRO_NAME");
+						TZ_APPPRO_RST = (String) list.get(i).get("TZ_APPPRO_CONTENT")==null?"":(String) list.get(i).get("TZ_APPPRO_CONTENT");
 
 						if ((TZ_SORT_NUM % 2) == 1) {
 							bmlcStepClass = "indexbm-lc-step1";

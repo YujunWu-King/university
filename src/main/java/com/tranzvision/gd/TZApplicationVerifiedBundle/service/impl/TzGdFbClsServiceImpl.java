@@ -1,14 +1,20 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock.Limit;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzAppproRstTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzAppproRstT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzAppproRstTKey;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -18,10 +24,16 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tang
  *
  */
-@Service("com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdFvClsServiceImpl")
-public class TzGdFvClsServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdFbClsServiceImpl")
+public class TzGdFbClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private PsTzAppproRstTMapper psTzAppproRstTMapper;
 	
 	
 	@Override
@@ -157,4 +169,82 @@ public class TzGdFvClsServiceImpl extends FrameworkImpl {
 
 		return jacksonUtil.Map2json(returnMap);
 	}
+	
+	// 修改是否发布;
+	@Override
+	public String tzUpdate(String[] actData, String[] errMsg) {
+		// 返回值;
+		Map<String, Object> returnMap = new HashMap<>();
+		returnMap.put("bj_id", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		if (actData.length == 0) {
+			return jacksonUtil.Map2json(returnMap);
+		}
+
+		try {
+
+			for (int num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				
+			    // 类型标志;
+			    String strFlag = jacksonUtil.getString("typeFlag");
+			    if("xs".equals(strFlag)){
+			    	// 信息内容;
+				    Map<String, Object> infoData = jacksonUtil.getMap("data");
+				    String str_bj_id = this.tzUpdate_xs(infoData,errMsg);
+				    returnMap.replace("bj_id", str_bj_id);
+			    }
+			}
+		}catch(Exception e){
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return jacksonUtil.Map2json(returnMap);
+	}
+	
+	// 修改是否发布;
+	public String tzUpdate_xs(Map<String, Object> infoData, String[] errMsg) {
+		// 返回值;
+		String str_bj_id = "";
+		try {
+			String updateOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		    str_bj_id = (String)infoData.get("bj_id");
+		    String str_opr_id = (String)infoData.get("opr_id");
+		    String str_bz_id = (String)infoData.get("bmlc_id");
+		    String str_desc = (String)infoData.get("ms_zg");
+		    long str_app_ins_id = jdbcTemplate.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?", new Object[]{str_bj_id, str_opr_id},"Long");
+		    
+		    PsTzAppproRstTKey psTzAppproRstTKey = new PsTzAppproRstTKey();
+		    psTzAppproRstTKey.setTzAppInsId(str_app_ins_id);
+		    psTzAppproRstTKey.setTzAppproId(str_bz_id);
+		    psTzAppproRstTKey.setTzClassId(str_bj_id);
+		    PsTzAppproRstT psTzAppproRstT = psTzAppproRstTMapper.selectByPrimaryKey(psTzAppproRstTKey);
+		    if(psTzAppproRstT != null){
+		    	psTzAppproRstT.setTzAppproRst(str_desc);
+		    	psTzAppproRstT.setRowLastmantDttm(new Date());
+		    	psTzAppproRstT.setRowLastmantOprid(updateOprid);
+		    	psTzAppproRstTMapper.updateByPrimaryKeySelective(psTzAppproRstT);
+		    }else{
+		    	psTzAppproRstT = new PsTzAppproRstT();
+		    	psTzAppproRstT.setTzAppInsId(str_app_ins_id);
+		    	psTzAppproRstT.setTzAppproId(str_bz_id);
+		    	psTzAppproRstT.setTzClassId(str_bj_id);
+		    	psTzAppproRstT.setTzAppproRst(str_desc);
+		    	psTzAppproRstT.setRowAddedDttm(new Date());
+		    	psTzAppproRstT.setRowAddedOprid(updateOprid);
+		    	psTzAppproRstT.setRowLastmantDttm(new Date());
+		    	psTzAppproRstT.setRowLastmantOprid(updateOprid);
+		    	psTzAppproRstTMapper.insert(psTzAppproRstT);
+		    }
+		}catch(Exception e){
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+				
+		return str_bj_id;
+	}
+	
 }

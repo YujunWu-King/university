@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -24,6 +25,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tang
  * 报名管理-导出到Excel
  */
+@Service("com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdBmglExcelClsServiceImpl")
 public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
