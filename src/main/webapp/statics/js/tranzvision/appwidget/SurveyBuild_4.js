@@ -259,11 +259,13 @@ var SurveyBuild = {
         var $activeLi = $("#question-box li.active");
 
         if (attrName == "title") {
+			/*Bug修改TextExplain的Title属性，在设计区域会重复显示Title内容   暂时注释by WRL 2016/2/24
             if (data["classname"] == 'TextExplain') {
                 $activeLi.find(".question-answer").html(val);
             } else {
                 $activeLi.find(".question-question").first().html(val);
-            }
+            }*/
+			$activeLi.find(".question-question").first().html(val);
         } else if (attrName == "suffix") {
             $activeLi.find(".suffix").html(val);
         } else if (attrName == "format") {
@@ -1039,7 +1041,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'C'}}",
+			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"C"}}',
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1089,7 +1091,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'C','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_zhs_qy+"'}]}}",
+			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"C","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_zhs_qy+'"}]}}',
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1111,7 +1113,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'E'}}",
+			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"E"}}',
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1162,7 +1164,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'E','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_eng_qy+"'}]}}",
+			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"E","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_eng_qy+'"}]}}',
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1257,7 +1259,7 @@ var SurveyBuild = {
 					b = $(a).children().index($(".draggable-holder"));
 					$(".draggable-holder").remove();
                 } else {
-					b = $("#question-box").children().index($(".draggable-holder")) - 1;
+               		b = $("#question-box").children().not("#question-new").index($(".draggable-holder"));
 					$(".draggable-holder").remove();
                 }
 
@@ -1276,7 +1278,6 @@ var SurveyBuild = {
                     }
                 }
             } else {
-                //$("#question-box").append(me._html(d));
                 $(me._html(d)).appendTo($("#question-box")).click();
                 $("html,body").scrollTop($(document).height());
                 setTimeout(function() {
@@ -2191,51 +2192,14 @@ var SurveyBuild = {
                 data = this._items[f];
             }
             if (data.option.hasOwnProperty(d)) {
-                var b = $("#build-right").height();
-                //$("#build-right").height(b - 37);
                 $(e).parents("tr").remove();
-                $("#s" + d).remove();
-		delete data.option[d]
+                $("#o" + d).remove();
+                delete data.option[d]
             } else {
                 this._error("非法操作")
             }
         }
     },
-    /* 暂时注释 By WRL @2015-09-15
-    saveTitle: function(a) {
-        this.is_edit = true;
-        var c = $(a).attr("data-id"),
-        b = $(a).val();
-        this._items[c].edit = 1;
-        this._items[c].settings.title = b;
-        $("#q" + c).find(".title").html(b)
-    },
-    saveSubTitle: function(a) {
-        this.is_edit = true;
-        var c = $(a).attr("data-id"),
-        b = $(a).val();
-        this._items[c].edit = 1;
-        this._items[c].settings.subtitle = b;
-        $("#q" + c).find(".subtitle").html(b)
-    },
-    changeTitle: function(a) {
-        var c = $(a).attr("data-id"),
-        b = $(a).val();
-        this._changeTitle(c, b)
-    },
-    _changeTitle: function(e, d) {
-        this.is_edit = true;
-        this._items[e].edit = 1;
-        var c = this._items[e].option,
-        b = "";
-        for (var a in c) {
-            if (c[a].settings.cid == d || "C" + c[a].settings.cid == d) {
-                b += '<tr id="' + e + "-" + a + '"><td><input type="text" class="ocode" onpaste="return false" ondragenter="return false" oncontextmenu="return false;" maxlength="5" value="' + c[a]["code"] + '" onkeyup="SurveyBuild.saveOCode(this)"/></td><td><input type="text" class="option-txt" value="' + htmlentities(c[a]["txt"]) + '" onkeyup="SurveyBuild.saveTxt(this)" /></td><td><a href="javascript:void(0);" class="text-success" onclick="SurveyBuild.plusOption(this);return false;"><i class="icon-plus-sign"></i></a>&nbsp;<a href="javascript:void(0);" class="text-warning" onclick="SurveyBuild.minusOption(this);return false;"><i class="icon-minus-sign"></i></a>&nbsp;<a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i></a></td></tr>'
-            }
-        }
-        $("#" + e + "-sub").html(b)
-    },
-    */
     /*修改问题后，自动保存*/
     saveQuestion: function(a) {
         this.is_edit = true;

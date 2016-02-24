@@ -97,7 +97,7 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.newDjzlXq',
 					//var responseData = Ext.JSON.decode(resText);
 					var responseData = resText;
 					for(var i in responseData){
-						predefinetpl += '<div class="tplitem" style="padding: 10px;cursor: pointer;border: 1px solid #eee;display: inline-table;margin: 5px;text-align:center;width:176px;" onclick="mybmb_cj(this)" data-id="'+responseData[i].tplid+'"><img src="/tranzvision/kitchensink/app/view/template/bmb/images/forms.png"><br><span class="tplname" title="' + responseData[i].tplname + '">' + Ext.String.ellipsis(responseData[i].tplname,16,true) + '</span></div>';
+						predefinetpl += '<div class="tplitem" style="padding: 10px;cursor: pointer;border: 1px solid #eee;display: inline-table;margin: 5px;text-align:center;width:176px;" onclick="mybmb_cj(this)" data-id="'+responseData[i].tplid+'"><img src="' + TzUniversityContextPath + '/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png"><br><span class="tplname" title="' + responseData[i].tplname + '">' + Ext.String.ellipsis(responseData[i].tplname,16,true) + '</span></div>';
 					}
 					me.isLoaded = true;
 				}

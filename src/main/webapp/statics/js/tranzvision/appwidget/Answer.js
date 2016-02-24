@@ -2012,7 +2012,7 @@ var SurveyBuild = {
                 _c = "<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             } else {
                 //单行控件
-                _c = "<div class='page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
+                _c = "<div class='page" + data.pageno + "' style='display:inline-block;' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             }
             $("#main_list").append(_c);
 
