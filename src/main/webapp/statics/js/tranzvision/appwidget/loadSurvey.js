@@ -122,7 +122,7 @@ if(dataApp){
 											filePerXxx["fileName"] = recApp["children"][i][j]["children"][x]["fileName"];
 											filePerXxx["sysFileName"] = recApp["children"][i][j]["children"][x]["sysFileName"];
 											filePerXxx["orderby"] = recApp["children"][i][j]["children"][x]["orderby"];
-											filePerXxx["path"] = recApp["children"][i][j]["children"][x]["path"];
+											filePerXxx["accessPath"] = recApp["children"][i][j]["children"][x]["accessPath"];
 											filePerXxx["viewFileName"] = recApp["children"][i][j]["children"][x]["viewFileName"];
 										})
 									}
@@ -151,7 +151,7 @@ if(dataApp){
 								//console.log(recApp["children"][i][j]["filename"]);	
 								perXxx["filename"] = recApp["children"][i][j]["filename"];
 								perXxx["sysFileName"] = recApp["children"][i][j]["sysFileName"];
-								perXxx["path"] = recApp["children"][i][j]["path"];
+								//perXxx["path"] = recApp["children"][i][j]["path"];	By WRL
 								perXxx["accessPath"] = recApp["children"][i][j]["accessPath"];
 								perXxx["viewFileName"] = recApp["children"][i][j]["viewFileName"];
 							}else{	
@@ -193,7 +193,8 @@ if(dataApp){
 						perXxx["fileName"] = recApp["children"][i]["fileName"];
 						perXxx["sysFileName"] = recApp["children"][i]["sysFileName"];
 						perXxx["orderby"] = recApp["children"][i]["orderby"];
-						perXxx["path"] = recApp["children"][i]["path"];
+						//perXxx["path"] = recApp["children"][i]["path"];	By WRL
+						perXxx["accessPath"] = recApp["children"][i]["accessPath"];
 						perXxx["viewFileName"] = recApp["children"][i]["viewFileName"];
 					})
 				}

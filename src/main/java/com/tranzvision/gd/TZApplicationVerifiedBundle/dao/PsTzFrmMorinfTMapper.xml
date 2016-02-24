@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzFrmMorinfTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <id column="TZ_ATTRIBUTE_ID" property="tzAttributeId" jdbcType="VARCHAR" />
+    <result column="TZ_ATTRIBUTE_VALUE" property="tzAttributeValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_ATTRIBUTE_ID, TZ_ATTRIBUTE_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FRM_MORINF_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ATTRIBUTE_ID = #{tzAttributeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfTKey" >
+    delete from PS_TZ_FRM_MORINF_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ATTRIBUTE_ID = #{tzAttributeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfT" >
+    insert into PS_TZ_FRM_MORINF_T (TZ_APP_INS_ID, TZ_ATTRIBUTE_ID, TZ_ATTRIBUTE_VALUE
+      )
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzAttributeId,jdbcType=VARCHAR}, #{tzAttributeValue,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfT" >
+    insert into PS_TZ_FRM_MORINF_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzAttributeId != null" >
+        TZ_ATTRIBUTE_ID,
+      </if>
+      <if test="tzAttributeValue != null" >
+        TZ_ATTRIBUTE_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzAttributeId != null" >
+        #{tzAttributeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAttributeValue != null" >
+        #{tzAttributeValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfT" >
+    update PS_TZ_FRM_MORINF_T
+    <set >
+      <if test="tzAttributeValue != null" >
+        TZ_ATTRIBUTE_VALUE = #{tzAttributeValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ATTRIBUTE_ID = #{tzAttributeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFrmMorinfT" >
+    update PS_TZ_FRM_MORINF_T
+    set TZ_ATTRIBUTE_VALUE = #{tzAttributeValue,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ATTRIBUTE_ID = #{tzAttributeId,jdbcType=VARCHAR}
+  </update>
+</mapper>

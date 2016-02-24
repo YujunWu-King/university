@@ -549,10 +549,10 @@
         var classID=record.get("classID");
         var oprID=record.get("oprID");
         var appInsID=record.get("appInsID");
-
+        
         if(appInsID!=""){
-            var tzParams="{ComID:'TZ_ONLINE_REG_COM',PageID:'TZ_ONLINE_APP_STD',OperateType:'HTML',comParams:{TZ_APP_INS_ID:'"+appInsID+"'}}";
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var mask ;
             var win = new Ext.Window({
                 name:'applicationFormWindow',

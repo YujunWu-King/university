@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzFormZlshTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT" >
+    <id column="TZ_SBMINF_ID" property="tzSbminfId" jdbcType="VARCHAR" />
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_ZL_AUDIT_STATUS" property="tzZlAuditStatus" jdbcType="VARCHAR" />
+    <result column="TZ_AUDIT_NOPASS_RS" property="tzAuditNopassRs" jdbcType="VARCHAR" />
+    <result column="TZ_SBMINF_REP_ID" property="tzSbminfRepId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SBMINF_ID, TZ_APP_INS_ID, TZ_ZL_AUDIT_STATUS, TZ_AUDIT_NOPASS_RS, TZ_SBMINF_REP_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FORM_ZLSH_T
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshTKey" >
+    delete from PS_TZ_FORM_ZLSH_T
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT" >
+    insert into PS_TZ_FORM_ZLSH_T (TZ_SBMINF_ID, TZ_APP_INS_ID, TZ_ZL_AUDIT_STATUS, 
+      TZ_AUDIT_NOPASS_RS, TZ_SBMINF_REP_ID)
+    values (#{tzSbminfId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, #{tzZlAuditStatus,jdbcType=VARCHAR}, 
+      #{tzAuditNopassRs,jdbcType=VARCHAR}, #{tzSbminfRepId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT" >
+    insert into PS_TZ_FORM_ZLSH_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSbminfId != null" >
+        TZ_SBMINF_ID,
+      </if>
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzZlAuditStatus != null" >
+        TZ_ZL_AUDIT_STATUS,
+      </if>
+      <if test="tzAuditNopassRs != null" >
+        TZ_AUDIT_NOPASS_RS,
+      </if>
+      <if test="tzSbminfRepId != null" >
+        TZ_SBMINF_REP_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSbminfId != null" >
+        #{tzSbminfId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzZlAuditStatus != null" >
+        #{tzZlAuditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAuditNopassRs != null" >
+        #{tzAuditNopassRs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRepId != null" >
+        #{tzSbminfRepId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT" >
+    update PS_TZ_FORM_ZLSH_T
+    <set >
+      <if test="tzZlAuditStatus != null" >
+        TZ_ZL_AUDIT_STATUS = #{tzZlAuditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAuditNopassRs != null" >
+        TZ_AUDIT_NOPASS_RS = #{tzAuditNopassRs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSbminfRepId != null" >
+        TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT" >
+    update PS_TZ_FORM_ZLSH_T
+    set TZ_ZL_AUDIT_STATUS = #{tzZlAuditStatus,jdbcType=VARCHAR},
+      TZ_AUDIT_NOPASS_RS = #{tzAuditNopassRs,jdbcType=VARCHAR},
+      TZ_SBMINF_REP_ID = #{tzSbminfRepId,jdbcType=VARCHAR}
+    where TZ_SBMINF_ID = #{tzSbminfId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

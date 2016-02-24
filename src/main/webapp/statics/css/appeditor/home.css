@@ -293,7 +293,7 @@ a#topcontrol:hover{background-position:0 -57px;color:#565656;}
 #question-type-box{overflow-y:auto;height:100%;}
 #question-type-box h5{border-bottom:1px solid #CFCBC2;padding:5px 2px 5px 2.2em;position:relative;}
 #question-type-box ul{margin-left:5px;}
-#question-type-box ul.inline li{width:120px;margin:3px;}
+#question-type-box ul.inline li{width:120px;margin:2px;}
 #question-type-box li a{color:#555;display:block;height:22px;line-height:22px;border: 1px solid #FFFFFF;}
 #question-type-box li a img{vertical-align: top;margin:3px 5px 0;*margin-top:0;}
 #question-type-box li a:hover{color:#555;background:#DCEBFF;border:1px dashed #ccc;}

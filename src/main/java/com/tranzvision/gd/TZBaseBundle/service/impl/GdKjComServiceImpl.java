@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -601,8 +602,6 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			int numStart, String[] errMsgArr) {
 		// 返回值;
 		String strRet = "";
-		// 数据内容;
-		String strContent = "";
 		// 总记录数;
 		int total = 0;
 		// 搜索最大行;
@@ -614,9 +613,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		}
 
 		String resultSelectFlds = "";
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		ArrayList<Map<String,Object>> listJson = new ArrayList<Map<String,Object>>();
 
 		try {
-			JacksonUtil jacksonUtil = new JacksonUtil();
 			// 将字符串转换成json;
 			// JSONObject conJson = PaseJsonUtil.getJson(condition);
 			jacksonUtil.json2Map(condition);
@@ -958,35 +959,31 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			} else {
 				resultlist = jdbcTemplate.queryForList(sqlList);
 			}
-
-			String comma = "";
+			
 			for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
-				strContent = "";
 				Map<String, Object> resultMap = resultlist.get(resultlist_i);
 				j = 0;
+				
+				Map<String, Object> mapJson = new HashMap<String,Object>();
 				for (Object vl : resultMap.values()) {
-					strContent = strContent + ",\"" + aryResult[j] + "\":\"" + vl + "\"";
+					mapJson.put(aryResult[j], vl);
 					j++;
 				}
-				strContent = strContent.substring(1);
-				strContent = "{" + strContent + "}";
-
-				strRet = strRet + comma + strContent;
-
-				if ("".equals(comma)) {
-					comma = ",";
-				}
+				
+				listJson.add(mapJson);
 
 			}
-
-			// strRet = strRet.substring(1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsgArr[0] = "1";
 			errMsgArr[1] = e.toString();
 		}
-		strRet = "{\"total\":" + total + ",\"root\":[" + strRet + "]}";
+		
+		Map<String,Object> mapRet = new HashMap<String,Object>();
+		mapRet.put("total", total);
+		mapRet.put("root", listJson);
+		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
 	}
 
@@ -1191,7 +1188,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					strRet = strRet + "," + strContent;
 				}
 			}
-			strRet = strRet.substring(1);
+			if(strRet != null && !"".equals(strRet)){
+				strRet = strRet.substring(1);
+			}
 			strRet = "{\"" + recname + "\":[" + strRet + "]}";
 
 		} catch (Exception e) {
