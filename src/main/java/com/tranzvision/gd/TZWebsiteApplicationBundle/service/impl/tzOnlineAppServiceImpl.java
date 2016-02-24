@@ -417,7 +417,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		
 		String strMenuType = "";
 		String strMenuId = "";
-		
+		 
 		sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?";
 		strMenuType = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT" }, "String");
 		sql = "SELECT TZ_MENU_ID FROM PS_TZ_SITEI_MENU_T WHERE TZ_SITEI_ID=? AND TZ_MENU_TYPE_ID=?";
