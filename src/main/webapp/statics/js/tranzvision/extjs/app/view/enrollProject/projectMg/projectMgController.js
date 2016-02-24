@@ -467,7 +467,7 @@
 				if(managerRst[0]){
 					var tzParams = this.getProjectDefnParams();
 					Ext.tzSubmit(tzParams,function(responseData){
-						if(actType=="add" && proView.proGrid.getStore() != null){
+						if(proView.proGrid.getStore() != null){
 							proView.proGrid.getStore().reload();
 						}
 						proView.close();
