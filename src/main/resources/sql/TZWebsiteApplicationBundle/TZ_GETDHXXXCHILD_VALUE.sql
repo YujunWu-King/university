@@ -1,11 +1,10 @@
-      SELECT TMP.TZ_APP_S_TEXT 
- ,TMP.TZ_COM_LMC 
+ SELECT TMP.TZ_APP_S_TEXT 
+ ,TMP.TZ_APP_L_TEXT
    FROM (SELECT A.TZ_APP_INS_ID 
 	 , A.TZ_APP_TPL_ID 
 	 , A.TZ_D_XXX_BH 
-	 , A.TZ_XXX_BH
 	 , A.TZ_APP_S_TEXT 
-	 ,A.TZ_COM_LMC,
+	 , A.TZ_APP_L_TEXT,
      if(@ptzappinsid = A.TZ_APP_INS_ID 
      	AND @ptzapptplid = A.TZ_APP_TPL_ID 
      	AND @ptzdxxxbh = A.TZ_D_XXX_BH,
@@ -22,4 +21,5 @@
    		AND TZ_D_XXX_BH = ?
    		AND TZ_XXX_BH LIKE ?
    		AND TZ_XXX_NO = ?
+   		AND TZ_COM_LMC = ?
    	 ) TMP where rank = ?
