@@ -1331,7 +1331,7 @@ a.ora:hover
 
 
 .main_inner_content {
-	background-image: url(images/inner_content_mid_bg.png);
+	background-image: url(../../images/appeditor/inner_content_mid_bg.png);
 	background-repeat: repeat-y;
 	background-position: center;
 	height: auto;
@@ -1451,7 +1451,7 @@ a.ora:hover
 }
 
 .main_inner_content_foot {
-	background-image: url(images/inner_content_foot_bg.png);
+	background-image: url(../../images/appeditor/inner_content_foot_bg.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	height: 19px;

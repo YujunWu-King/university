@@ -70,7 +70,7 @@ SurveyBuild.extend("Select", "baseComponent", {
             }
         } else {
             for (var i in data.option) {
-                e += '<li id="s' + i + '">' + data["option"][i]["txt"] + '</li>';
+                e += '<li id="o' + i + '">' + data["option"][i]["txt"] + '</li>';
             }
             c += '<div class="question-answer">';
             c += '      <b class="read-select"> - 请选择 - </b>';
