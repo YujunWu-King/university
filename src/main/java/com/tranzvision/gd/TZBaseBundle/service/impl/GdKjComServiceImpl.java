@@ -1000,13 +1000,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	@Override
 	/* 下拉框数据 */
 	public String getComboxValue(String recname, String condition, String result, String[] errMsgArr) {
-		String strRet = "";
+		//String strRet = "";
+		Map<String, Object> retMap = new HashMap<>();
+		ArrayList<Map<String, Object>> dataList = new ArrayList<>();
+		retMap.put(recname, dataList);
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 数据内容;
-		String strContent = "";
+		//String strContent = "";
 		try {
 			// 将字符串转换成json;
 			// JSONObject conJson = PaseJsonUtil.getJson(condition);
-			JacksonUtil jacksonUtil = new JacksonUtil();
+			
 			int i, j;
 			// 搜索字段名称;
 			String key = "";
@@ -1022,7 +1027,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			if (resultSelectFldsLen == 0) {
 				errMsgArr[0] = "1";
 				errMsgArr[1] = "未设置搜索结果字段";
-				return strRet;
+				return jacksonUtil.Map2json(retMap);
 			}
 
 			// 类型为number的值;
@@ -1184,30 +1189,40 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			if (list != null) {
 				for (int k = 0; k < list.size(); k++) {
-					strContent = "";
+					//strContent = "";
 					Map<String, Object> map = list.get(k);
 					j = 0;
+					Map<String, Object> jsonMap = new HashMap<>();
 					for (Object vl : map.values()) {
+						/**
 						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + (String) vl + "\"";
 						j++;
+						*/
+						jsonMap.put(aryResult[j], vl);
+						j++;
 					}
+					/*
 					strContent = strContent.substring(1);
 					strContent = "{" + strContent + "}";
 
 					strRet = strRet + "," + strContent;
+					*/
+					dataList.add(jsonMap);
 				}
 			}
+			/*
 			if(strRet != null && !"".equals(strRet)){
 				strRet = strRet.substring(1);
 			}
 			strRet = "{\"" + recname + "\":[" + strRet + "]}";
-
+			 */
+			retMap.replace(recname, dataList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsgArr[0] = "1";
 			errMsgArr[1] = e.toString();
 		}
-		return strRet;
+		return jacksonUtil.Map2json(retMap);
 	}
 
 	/* 获取指定组件页面的访问授权信息 */
