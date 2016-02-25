@@ -66,12 +66,12 @@ public class TzComPageAuthServiceImpl implements TzComPageAuthService {
 			String existSQL = "";
 			switch (vType) {
 			case "R":
-				existSQL = tzGDObject.getSQLText("SQL.TZAuthBundle.TzCheckUserComPgPermit");
+				existSQL = tzGDObject.getSQLText("SQL.TZAuthBundle.TzCheckUserComPgReadPermit");
 				break;
 
 			case "W":
 			default:
-				existSQL = tzGDObject.getSQLText("SQL.TZAuthBundle.TzCheckUserComPgPermit");
+				existSQL = tzGDObject.getSQLText("SQL.TZAuthBundle.TzCheckUserComPgUpdatePermit");
 				break;
 			}
 
@@ -82,7 +82,7 @@ public class TzComPageAuthServiceImpl implements TzComPageAuthService {
 				existComQx = 0;
 			}
 
-			if (existComQx == 0) {
+			if (existComQx != 1) {
 				errorMsg[0] = "1";
 				errorMsg[1] = "非法访问，您对组件页面[" + comName + "][" + pageName + "]的访问未获得授权。";
 				return false;
