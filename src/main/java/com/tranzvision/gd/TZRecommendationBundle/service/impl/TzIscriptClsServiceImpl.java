@@ -269,6 +269,14 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzGetJsonData(String strParams){
 		Map<String, Object> returnMap = new HashMap<>();
+		returnMap.put("TJX_ZT", "");
+		 returnMap.put("zhs_qy", "");
+		 returnMap.put("eng_qy", "");
+		 returnMap.put("tjxAppInsID", "");
+		 returnMap.put("refLetterId", "");
+		 returnMap.put("refAppTplId", "");
+		 returnMap.put("refFileName", "");
+		 returnMap.put("refFileUrl", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -339,14 +347,14 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 }else{
 				 str_tjx_app_tpl_id = jdbcTemplate.queryForObject("SELECT TZ_ENG_MODAL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? limit 0,1", new Object[]{str_app_tpl_id},"String");
 			 }
-			 returnMap.put("TJX_ZT", str_tjx_zt);
-			 returnMap.put("zhs_qy", str_qy_zhs);
-			 returnMap.put("eng_qy", str_qy_eng);
-			 returnMap.put("tjxAppInsID", str_tjx_app_ins_id);
-			 returnMap.put("refLetterId", str_ref_letter_id);
-			 returnMap.put("refAppTplId", str_tjx_app_tpl_id);
-			 returnMap.put("refFileName", str_refLetterSysFile);
-			 returnMap.put("refFileUrl", str_att_a_url);
+			 returnMap.replace("TJX_ZT", str_tjx_zt);
+			 returnMap.replace("zhs_qy", str_qy_zhs);
+			 returnMap.replace("eng_qy", str_qy_eng);
+			 returnMap.replace("tjxAppInsID", String.valueOf(str_tjx_app_ins_id));
+			 returnMap.replace("refLetterId", str_ref_letter_id);
+			 returnMap.replace("refAppTplId", str_tjx_app_tpl_id);
+			 returnMap.replace("refFileName", str_refLetterSysFile);
+			 returnMap.replace("refFileUrl", str_att_a_url);
 			 
 		}catch(Exception e){
 			e.printStackTrace();

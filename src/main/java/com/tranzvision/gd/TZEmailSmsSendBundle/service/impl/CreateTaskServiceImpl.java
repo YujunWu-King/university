@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -34,7 +35,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tang
  * @since 2015-11-30
  */
-@Service("com.tranzvision.gd.TZEmailTemplateBundle.service.impl.CreateTaskServiceImpl")
+@Service("com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl")
 public class CreateTaskServiceImpl {
 	// 发送任务ID;
 	private String taskId;
@@ -187,10 +188,12 @@ public class CreateTaskServiceImpl {
 			psTzAudcyuanT.setTzHuodId(hdId);
 			psTzAudcyuanT.setTzBmbId(bmbId);
 			int i = psTzAudcyuanTMapper.insert(psTzAudcyuanT);
+			System.out.println("=====================>xxxxxxxxxxx" + i);
 			if (i > 0) {
 				bl = true;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			bl = false;
 		}
 

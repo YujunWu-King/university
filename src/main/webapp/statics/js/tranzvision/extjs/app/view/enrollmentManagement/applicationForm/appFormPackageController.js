@@ -19,6 +19,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.appFormPackage
         var formParams = form.getValues();
 
         var strAppId = form.findField("appInsID").getValue();
+        alert(strAppId);
         var zldbName = form.findField("ysFilesName").getValue();
         //提交参数
         if (strAppId!=""){

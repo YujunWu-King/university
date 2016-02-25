@@ -256,23 +256,24 @@ public class TzTjxClsServiceImpl{
 		// 给邮箱发送邮件---开始;
 		// 创建邮件短信发送任务;
 		boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
+		
 		if (createTaskIns == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_E_FAIL", str_language, "", "");
 			return mess;
 		}
-
+		
 		// 创建短信、邮件发送的听众;
 		String createAudience = createTaskServiceImpl.createAudience("推荐信", "TJX");
 		if (createAudience == null || "".equals(createAudience)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_L_FAIL", str_language, "", "");
-			return mess;
+			return mess + "============>";
 		}
 
 		// 为听众添加听众成员;
 		boolean addAudCy = createTaskServiceImpl.addAudCy(strName, strName, "", "", strEmail, "", "", strOprid, "", "", String.valueOf(numAppinsId));
 		if (addAudCy == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "ADD_L_FAIL", str_language, "", "");
-			return mess;
+			return mess + "============>"+createAudience;
 		}
 
 		// 得到创建的任务ID;
