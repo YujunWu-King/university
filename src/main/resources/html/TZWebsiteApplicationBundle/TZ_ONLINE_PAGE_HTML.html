@@ -336,7 +336,7 @@
 								 }
 								 layer.closeAll();
 								 noteing(MsgSet.SAVE_SUCCEED);
-								 //SurveyBuild.saveTjx_fj();
+								 SurveyBuild.saveTjx_fj();
 							 
 							}else{
 								 layer.closeAll();
@@ -397,7 +397,7 @@
 									
 									 layer.closeAll();
 									 noteing(MsgSet.SAVE_SUCCEED);
-									 //SurveyBuild.saveTjx_fj();
+									 SurveyBuild.saveTjx_fj();
 								}else{
 									 layer.closeAll();
 									 noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc,2);
@@ -456,7 +456,7 @@
 									 }
 									 layer.closeAll();
 									 noteing(MsgSet.SAVE_SUCCEED);
-									 //SurveyBuild.saveTjx_fj();
+									 SurveyBuild.saveTjx_fj();
 								}else{
 									 layer.closeAll();
 									 noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc,2);
@@ -489,7 +489,7 @@
 								 if (f.comContent.code == "0") {
 									layer.closeAll(); 
 								 	noteing(MsgSet.SUBMIT_SUCCEED);
-									//SurveyBuild.saveTjx_fj();
+									SurveyBuild.saveTjx_fj();
 									pageReadOnly();
 									var isadmin = "%bind(:26)";
 									if(isadmin=="")
