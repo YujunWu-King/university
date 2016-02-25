@@ -126,7 +126,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 
-				if (errorMsg.length > 0) {
+				if (errorMsg.length > 0 && !"0".equals(errorMsg[0])) {
 					break;
 				} else {
 					// 表单内容

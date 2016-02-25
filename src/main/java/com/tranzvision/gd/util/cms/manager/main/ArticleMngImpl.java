@@ -95,7 +95,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				//活动信息;
 				art.setOpenActApp("N");
 				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
-						+ " D.TZ_END_DT,A.TZ_END_TM,D.TZ_QY_ZXBM "
+						+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
 						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=?";
 				try{
 					Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL,new Object[]{titleSysFileId});
