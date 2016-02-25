@@ -127,7 +127,7 @@ var SurveyBuild = {
 		
 		var _tz_app_ins_id=SurveyBuild.appInsId;
 		var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-		var param = "{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_SEND_REF_STD','OperateType':'DELETE','comParams':{'rec_app_ins_id':'"+_tz_app_ins_id+"'}}";
+		var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"DELETE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'"}}';
 		var _email_tx = $("#yincang_tx").val();
 		//$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.fileName);
 		$.ajax({
