@@ -807,7 +807,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		{
 			_tjx_zt="未发送";
 		}
-		if(_refFileUrl!=""&&_refFileUrl != "undefined")
+		if(_refFileUrl!="")
 		{
 			_tjx_zt="已完成";
 		}
