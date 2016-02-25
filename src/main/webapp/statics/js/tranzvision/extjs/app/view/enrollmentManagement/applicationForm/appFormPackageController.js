@@ -19,10 +19,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.appFormPackage
         var formParams = form.getValues();
 
         var strAppId = form.findField("appInsID").getValue();
-        var zldbName ="'"+ form.findField("ysFilesName").getValue() + "'" ;
+        var zldbName = form.findField("ysFilesName").getValue();
         //提交参数
         if (strAppId!=""){
-        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_DBDL_STD","OperateType":"U","comParams":{"add":[{"strAppId":'+strAppId+',"zldbName":'+zldbName+'}]} }';
+        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_DBDL_STD","OperateType":"U","comParams":{"add":[{"strAppId":'+strAppId+',"zldbName":"'+zldbName+'"}]} }';
 
         var tabPanel = win.lookupReference("packageTabPanel");
         Ext.tzSubmit(tzParams,function(responseData){tabPanel.setActiveTab(1);},"",true,this);
