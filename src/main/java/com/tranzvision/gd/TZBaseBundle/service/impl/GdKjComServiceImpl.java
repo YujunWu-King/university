@@ -241,10 +241,11 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	@Override
 	/* 根据字段名称获取TransValue值 */
 	public String getTransValue(HttpServletRequest request, HttpServletResponse response, String sFieldName) {
-		// 返回报文;
-		String strRet = "";
-		// 转化报文内容;
-		String strTransContent = "";
+		Map<String, Object> mapRet = new HashMap<>();
+		ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+		mapRet.put(sFieldName, listJson);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+
 		// 转换值，转换值短描述，转换值长描述;
 		String strTransID = "", strTransSDesc = "", strTransLDesc = "", strLanguageId = "";
 
@@ -265,6 +266,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					strTransID = (String) list.get(num).get("TZ_ZHZ_ID");
 					strTransSDesc = (String) list.get(num).get("TZ_ZHZ_DMS");
 					strTransLDesc = (String) list.get(num).get("TZ_ZHZ_CMS");
+					/*
 					if (num == 0) {
 						strTransContent = "{\"TValue\": \"" + strTransID + "\",\"TSDesc\": \"" + strTransSDesc
 								+ "\",\"TLDesc\": \"" + strTransLDesc + "\"}";
@@ -272,14 +274,21 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						strTransContent = strTransContent + ",{\"TValue\": \"" + strTransID + "\",\"TSDesc\": \""
 								+ strTransSDesc + "\",\"TLDesc\": \"" + strTransLDesc + "\"}";
 					}
+					*/
+					Map<String, Object> map = new HashMap<>();
+					map.put("TValue", strTransID);
+					map.put("TSDesc", strTransSDesc);
+					map.put("TLDesc", strTransLDesc);
+					listJson.add(map);
 				}
 			}
+			mapRet.replace(sFieldName, listJson);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return strRet;
+			return jacksonUtil.Map2json(mapRet);
 		}
-		strRet = "{\"" + sFieldName + "\":[" + strTransContent + "]}";
-		return strRet;
+		//strRet = "{\"" + sFieldName + "\":[" + strTransContent + "]}";
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/* 功能说明：根据组件ID获取该组件下所有页面使用到的资源 */

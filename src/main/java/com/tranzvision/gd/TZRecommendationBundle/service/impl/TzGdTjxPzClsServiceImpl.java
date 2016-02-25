@@ -19,7 +19,7 @@ import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * PS:TZ_GD_TJX_PKG:TZ_ISCRIPT_CLS
+ * PS:TZ_GD_TJX_PKG:TZ_GD_TJX_PZ_CLS
  * @author tang
  * 
  */
