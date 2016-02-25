@@ -68,7 +68,8 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=?";
 			total = sqlQuery.queryForObject(totalSQL, new Object[] { strAppExportTplId },"Integer");
 			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF ,TZ_SORT_NUM,TZ_DC_COL_WIDTH,TZ_DC_COL_FILTER FROM PS_TZ_EXP_FRMFLD_T  WHERE TZ_EXPORT_TMP_ID= ?";
-			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strAppExportTplId });
+			List<?> listData = sqlQuery.queryForList(sql, 
+					new Object[] { strAppExportTplId });
 			for (Object objData : listData) {
 
 				Map<String, Object> mapData = (Map<String, Object>) objData;
@@ -99,7 +100,8 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				
 				ArrayList<Map<String, Object>> listJsonGlField = new ArrayList<Map<String, Object>>();
 				String sqlGetGlField = "SELECT TZ_FORM_FLD_ID,(SELECT TZ_XXX_MC FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID= ? AND TZ_XXX_BH=A.TZ_FORM_FLD_ID) AS TZ_XXX_MC, TZ_CODE_TABLE_ID,(SELECT TZ_ZHZJH_MS FROM PS_TZ_PT_ZHZJH_TBL WHERE TZ_ZHZJH_ID=A.TZ_CODE_TABLE_ID) AS TZ_CODE_TABLE_NAME,TZ_SORT_NUM FROM PS_TZ_FRMFLD_GL_T A WHERE TZ_EXPORT_TMP_ID= ? AND TZ_DC_FIELD_ID= ?";
-				List<?> listDataGlField = sqlQuery.queryForList(sqlGetGlField, new Object[] { strAppModalId,strAppExportTplId,strFieldId });
+				List<?> listDataGlField = sqlQuery.queryForList(sqlGetGlField, 
+						new Object[] { strAppModalId,strAppExportTplId,strFieldId });
 				for (Object objDataGlField : listDataGlField) {
 					Map<?, Object> mapDataGlField = (Map<?, Object>) objDataGlField;
 					String strFieldIdGl = String.valueOf(mapDataGlField.get("TZ_FORM_FLD_ID"));
@@ -190,13 +192,15 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 						//查看模版名称石佛重复
 						String sqlExistAppExportTplName = "SELECT count(1) FROM PS_TZ_EXPORT_TMP_T WHERE TZ_EXPORT_TMP_ID <> ? AND TZ_JG_ID= ? AND TZ_EXPORT_TMP_NAME=?";
 
-						int isExistAppExportTplNameNum = sqlQuery.queryForObject(sqlExistAppExportTplName, new Object[] { strAppExportTplId,orgid,strAppExportTplName}, "Integer");
+						int isExistAppExportTplNameNum = sqlQuery.queryForObject(sqlExistAppExportTplName, 
+								new Object[] { strAppExportTplId,orgid,strAppExportTplName}, "Integer");
 
 						if(isExistAppExportTplNameNum == 0){
 							int isExistAppExportTplTypeNum = 0;
 							if(!"0".equals(strAppExportTplType) && "A".equals(strAppExportTplStatus)){
-								String sqlExistAppExportTplType = "SELECT count(1) FROM PS_TZ_EXPORT_TMP_T WHERE TZ_EXPORT_TMP_ID <> ? AND TZ_EXP_TMP_STATUS='A' AND TZ_APP_MODAL_ID=:2 AND TZ_EXPORT_TMP_TYPE=:3";
-								isExistAppExportTplTypeNum = sqlQuery.queryForObject(sqlExistAppExportTplType, new Object[] { strAppExportTplId,strAppModalId,strAppExportTplType }, "Integer");
+								String sqlExistAppExportTplType = "SELECT COUNT(1) FROM PS_TZ_EXPORT_TMP_T WHERE TZ_EXPORT_TMP_ID <> ? AND TZ_EXP_TMP_STATUS='A' AND TZ_APP_MODAL_ID=? AND TZ_EXPORT_TMP_TYPE=?";
+								isExistAppExportTplTypeNum = sqlQuery.queryForObject(sqlExistAppExportTplType, 
+										new Object[] { strAppExportTplId,strAppModalId,strAppExportTplType }, "Integer");
 							}
 							//当导出模版类型不为“Excel导出模版”时，且模版有效状态为有效时，检查导出模版类型是否唯一
 							if(isExistAppExportTplTypeNum == 0){
