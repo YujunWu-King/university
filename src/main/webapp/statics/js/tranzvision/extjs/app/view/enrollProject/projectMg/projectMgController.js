@@ -462,14 +462,14 @@
 			//专业方向grid验证
 			var profeRsut = this.professionValid();
 			var managerRst = this.managerValid();
-
+			
 			if(profeRsut[0]){
 				if(managerRst[0]){
 					var tzParams = this.getProjectDefnParams();
 					Ext.tzSubmit(tzParams,function(responseData){
-						if(actType=="add" && proView.proGrid.getStore() != null){
-							proView.proGrid.getStore().reload();
-						}
+						var contentPanel;
+						contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+						contentPanel.child("projectMg").store.reload();
 						proView.close();
 					},"",true,this);
 				}else{

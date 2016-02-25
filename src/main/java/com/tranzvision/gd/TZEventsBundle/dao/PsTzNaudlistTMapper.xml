@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <id column="TZ_HD_BMR_ID" property="tzHdBmrId" jdbcType="VARCHAR" />
+    <result column="TZ_CYR_NAME" property="tzCyrName" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_001" property="tzZxbmXxx001" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_002" property="tzZxbmXxx002" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_003" property="tzZxbmXxx003" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_004" property="tzZxbmXxx004" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_005" property="tzZxbmXxx005" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_006" property="tzZxbmXxx006" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_007" property="tzZxbmXxx007" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_008" property="tzZxbmXxx008" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_009" property="tzZxbmXxx009" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_010" property="tzZxbmXxx010" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_011" property="tzZxbmXxx011" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_012" property="tzZxbmXxx012" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_013" property="tzZxbmXxx013" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_014" property="tzZxbmXxx014" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_015" property="tzZxbmXxx015" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_016" property="tzZxbmXxx016" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_017" property="tzZxbmXxx017" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_018" property="tzZxbmXxx018" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_019" property="tzZxbmXxx019" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_XXX_020" property="tzZxbmXxx020" jdbcType="VARCHAR" />
+    <result column="TZ_ZXBM_LY" property="tzZxbmLy" jdbcType="VARCHAR" />
+    <result column="TZ_NREG_STAT" property="tzNregStat" jdbcType="VARCHAR" />
+    <result column="TZ_BMCY_ZT" property="tzBmcyZt" jdbcType="VARCHAR" />
+    <result column="TZ_BZSM" property="tzBzsm" jdbcType="VARCHAR" />
+    <result column="TZ_REG_TIME" property="tzRegTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_REG_CODE" property="tzRegCode" jdbcType="BIGINT" />
+    <result column="TZ_HD_QDM" property="tzHdQdm" jdbcType="VARCHAR" />
+    <result column="TZ_EWM_PATH" property="tzEwmPath" jdbcType="VARCHAR" />
+    <result column="TZ_QD_TIME" property="tzQdTime" jdbcType="TIMESTAMP" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ART_ID, TZ_HD_BMR_ID, TZ_CYR_NAME, TZ_ZXBM_XXX_001, TZ_ZXBM_XXX_002, TZ_ZXBM_XXX_003, 
+    TZ_ZXBM_XXX_004, TZ_ZXBM_XXX_005, TZ_ZXBM_XXX_006, TZ_ZXBM_XXX_007, TZ_ZXBM_XXX_008, 
+    TZ_ZXBM_XXX_009, TZ_ZXBM_XXX_010, TZ_ZXBM_XXX_011, TZ_ZXBM_XXX_012, TZ_ZXBM_XXX_013, 
+    TZ_ZXBM_XXX_014, TZ_ZXBM_XXX_015, TZ_ZXBM_XXX_016, TZ_ZXBM_XXX_017, TZ_ZXBM_XXX_018, 
+    TZ_ZXBM_XXX_019, TZ_ZXBM_XXX_020, TZ_ZXBM_LY, TZ_NREG_STAT, TZ_BMCY_ZT, TZ_BZSM, 
+    TZ_REG_TIME, TZ_REG_CODE, TZ_HD_QDM, TZ_EWM_PATH, TZ_QD_TIME, OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_NAUDLIST_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey" >
+    delete from PS_TZ_NAUDLIST_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
+    insert into PS_TZ_NAUDLIST_T (TZ_ART_ID, TZ_HD_BMR_ID, TZ_CYR_NAME, 
+      TZ_ZXBM_XXX_001, TZ_ZXBM_XXX_002, TZ_ZXBM_XXX_003, 
+      TZ_ZXBM_XXX_004, TZ_ZXBM_XXX_005, TZ_ZXBM_XXX_006, 
+      TZ_ZXBM_XXX_007, TZ_ZXBM_XXX_008, TZ_ZXBM_XXX_009, 
+      TZ_ZXBM_XXX_010, TZ_ZXBM_XXX_011, TZ_ZXBM_XXX_012, 
+      TZ_ZXBM_XXX_013, TZ_ZXBM_XXX_014, TZ_ZXBM_XXX_015, 
+      TZ_ZXBM_XXX_016, TZ_ZXBM_XXX_017, TZ_ZXBM_XXX_018, 
+      TZ_ZXBM_XXX_019, TZ_ZXBM_XXX_020, TZ_ZXBM_LY, 
+      TZ_NREG_STAT, TZ_BMCY_ZT, TZ_BZSM, 
+      TZ_REG_TIME, TZ_REG_CODE, TZ_HD_QDM, 
+      TZ_EWM_PATH, TZ_QD_TIME, OPRID
+      )
+    values (#{tzArtId,jdbcType=VARCHAR}, #{tzHdBmrId,jdbcType=VARCHAR}, #{tzCyrName,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx001,jdbcType=VARCHAR}, #{tzZxbmXxx002,jdbcType=VARCHAR}, #{tzZxbmXxx003,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx004,jdbcType=VARCHAR}, #{tzZxbmXxx005,jdbcType=VARCHAR}, #{tzZxbmXxx006,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx007,jdbcType=VARCHAR}, #{tzZxbmXxx008,jdbcType=VARCHAR}, #{tzZxbmXxx009,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx010,jdbcType=VARCHAR}, #{tzZxbmXxx011,jdbcType=VARCHAR}, #{tzZxbmXxx012,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx013,jdbcType=VARCHAR}, #{tzZxbmXxx014,jdbcType=VARCHAR}, #{tzZxbmXxx015,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx016,jdbcType=VARCHAR}, #{tzZxbmXxx017,jdbcType=VARCHAR}, #{tzZxbmXxx018,jdbcType=VARCHAR}, 
+      #{tzZxbmXxx019,jdbcType=VARCHAR}, #{tzZxbmXxx020,jdbcType=VARCHAR}, #{tzZxbmLy,jdbcType=VARCHAR}, 
+      #{tzNregStat,jdbcType=VARCHAR}, #{tzBmcyZt,jdbcType=VARCHAR}, #{tzBzsm,jdbcType=VARCHAR}, 
+      #{tzRegTime,jdbcType=TIMESTAMP}, #{tzRegCode,jdbcType=BIGINT}, #{tzHdQdm,jdbcType=VARCHAR}, 
+      #{tzEwmPath,jdbcType=VARCHAR}, #{tzQdTime,jdbcType=TIMESTAMP}, #{oprid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
+    insert into PS_TZ_NAUDLIST_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzHdBmrId != null" >
+        TZ_HD_BMR_ID,
+      </if>
+      <if test="tzCyrName != null" >
+        TZ_CYR_NAME,
+      </if>
+      <if test="tzZxbmXxx001 != null" >
+        TZ_ZXBM_XXX_001,
+      </if>
+      <if test="tzZxbmXxx002 != null" >
+        TZ_ZXBM_XXX_002,
+      </if>
+      <if test="tzZxbmXxx003 != null" >
+        TZ_ZXBM_XXX_003,
+      </if>
+      <if test="tzZxbmXxx004 != null" >
+        TZ_ZXBM_XXX_004,
+      </if>
+      <if test="tzZxbmXxx005 != null" >
+        TZ_ZXBM_XXX_005,
+      </if>
+      <if test="tzZxbmXxx006 != null" >
+        TZ_ZXBM_XXX_006,
+      </if>
+      <if test="tzZxbmXxx007 != null" >
+        TZ_ZXBM_XXX_007,
+      </if>
+      <if test="tzZxbmXxx008 != null" >
+        TZ_ZXBM_XXX_008,
+      </if>
+      <if test="tzZxbmXxx009 != null" >
+        TZ_ZXBM_XXX_009,
+      </if>
+      <if test="tzZxbmXxx010 != null" >
+        TZ_ZXBM_XXX_010,
+      </if>
+      <if test="tzZxbmXxx011 != null" >
+        TZ_ZXBM_XXX_011,
+      </if>
+      <if test="tzZxbmXxx012 != null" >
+        TZ_ZXBM_XXX_012,
+      </if>
+      <if test="tzZxbmXxx013 != null" >
+        TZ_ZXBM_XXX_013,
+      </if>
+      <if test="tzZxbmXxx014 != null" >
+        TZ_ZXBM_XXX_014,
+      </if>
+      <if test="tzZxbmXxx015 != null" >
+        TZ_ZXBM_XXX_015,
+      </if>
+      <if test="tzZxbmXxx016 != null" >
+        TZ_ZXBM_XXX_016,
+      </if>
+      <if test="tzZxbmXxx017 != null" >
+        TZ_ZXBM_XXX_017,
+      </if>
+      <if test="tzZxbmXxx018 != null" >
+        TZ_ZXBM_XXX_018,
+      </if>
+      <if test="tzZxbmXxx019 != null" >
+        TZ_ZXBM_XXX_019,
+      </if>
+      <if test="tzZxbmXxx020 != null" >
+        TZ_ZXBM_XXX_020,
+      </if>
+      <if test="tzZxbmLy != null" >
+        TZ_ZXBM_LY,
+      </if>
+      <if test="tzNregStat != null" >
+        TZ_NREG_STAT,
+      </if>
+      <if test="tzBmcyZt != null" >
+        TZ_BMCY_ZT,
+      </if>
+      <if test="tzBzsm != null" >
+        TZ_BZSM,
+      </if>
+      <if test="tzRegTime != null" >
+        TZ_REG_TIME,
+      </if>
+      <if test="tzRegCode != null" >
+        TZ_REG_CODE,
+      </if>
+      <if test="tzHdQdm != null" >
+        TZ_HD_QDM,
+      </if>
+      <if test="tzEwmPath != null" >
+        TZ_EWM_PATH,
+      </if>
+      <if test="tzQdTime != null" >
+        TZ_QD_TIME,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHdBmrId != null" >
+        #{tzHdBmrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCyrName != null" >
+        #{tzCyrName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx001 != null" >
+        #{tzZxbmXxx001,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx002 != null" >
+        #{tzZxbmXxx002,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx003 != null" >
+        #{tzZxbmXxx003,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx004 != null" >
+        #{tzZxbmXxx004,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx005 != null" >
+        #{tzZxbmXxx005,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx006 != null" >
+        #{tzZxbmXxx006,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx007 != null" >
+        #{tzZxbmXxx007,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx008 != null" >
+        #{tzZxbmXxx008,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx009 != null" >
+        #{tzZxbmXxx009,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx010 != null" >
+        #{tzZxbmXxx010,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx011 != null" >
+        #{tzZxbmXxx011,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx012 != null" >
+        #{tzZxbmXxx012,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx013 != null" >
+        #{tzZxbmXxx013,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx014 != null" >
+        #{tzZxbmXxx014,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx015 != null" >
+        #{tzZxbmXxx015,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx016 != null" >
+        #{tzZxbmXxx016,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx017 != null" >
+        #{tzZxbmXxx017,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx018 != null" >
+        #{tzZxbmXxx018,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx019 != null" >
+        #{tzZxbmXxx019,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx020 != null" >
+        #{tzZxbmXxx020,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmLy != null" >
+        #{tzZxbmLy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNregStat != null" >
+        #{tzNregStat,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBmcyZt != null" >
+        #{tzBmcyZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBzsm != null" >
+        #{tzBzsm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegTime != null" >
+        #{tzRegTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRegCode != null" >
+        #{tzRegCode,jdbcType=BIGINT},
+      </if>
+      <if test="tzHdQdm != null" >
+        #{tzHdQdm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEwmPath != null" >
+        #{tzEwmPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQdTime != null" >
+        #{tzQdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
+    update PS_TZ_NAUDLIST_T
+    <set >
+      <if test="tzCyrName != null" >
+        TZ_CYR_NAME = #{tzCyrName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx001 != null" >
+        TZ_ZXBM_XXX_001 = #{tzZxbmXxx001,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx002 != null" >
+        TZ_ZXBM_XXX_002 = #{tzZxbmXxx002,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx003 != null" >
+        TZ_ZXBM_XXX_003 = #{tzZxbmXxx003,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx004 != null" >
+        TZ_ZXBM_XXX_004 = #{tzZxbmXxx004,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx005 != null" >
+        TZ_ZXBM_XXX_005 = #{tzZxbmXxx005,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx006 != null" >
+        TZ_ZXBM_XXX_006 = #{tzZxbmXxx006,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx007 != null" >
+        TZ_ZXBM_XXX_007 = #{tzZxbmXxx007,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx008 != null" >
+        TZ_ZXBM_XXX_008 = #{tzZxbmXxx008,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx009 != null" >
+        TZ_ZXBM_XXX_009 = #{tzZxbmXxx009,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx010 != null" >
+        TZ_ZXBM_XXX_010 = #{tzZxbmXxx010,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx011 != null" >
+        TZ_ZXBM_XXX_011 = #{tzZxbmXxx011,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx012 != null" >
+        TZ_ZXBM_XXX_012 = #{tzZxbmXxx012,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx013 != null" >
+        TZ_ZXBM_XXX_013 = #{tzZxbmXxx013,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx014 != null" >
+        TZ_ZXBM_XXX_014 = #{tzZxbmXxx014,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx015 != null" >
+        TZ_ZXBM_XXX_015 = #{tzZxbmXxx015,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx016 != null" >
+        TZ_ZXBM_XXX_016 = #{tzZxbmXxx016,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx017 != null" >
+        TZ_ZXBM_XXX_017 = #{tzZxbmXxx017,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx018 != null" >
+        TZ_ZXBM_XXX_018 = #{tzZxbmXxx018,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx019 != null" >
+        TZ_ZXBM_XXX_019 = #{tzZxbmXxx019,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmXxx020 != null" >
+        TZ_ZXBM_XXX_020 = #{tzZxbmXxx020,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxbmLy != null" >
+        TZ_ZXBM_LY = #{tzZxbmLy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNregStat != null" >
+        TZ_NREG_STAT = #{tzNregStat,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBmcyZt != null" >
+        TZ_BMCY_ZT = #{tzBmcyZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBzsm != null" >
+        TZ_BZSM = #{tzBzsm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegTime != null" >
+        TZ_REG_TIME = #{tzRegTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRegCode != null" >
+        TZ_REG_CODE = #{tzRegCode,jdbcType=BIGINT},
+      </if>
+      <if test="tzHdQdm != null" >
+        TZ_HD_QDM = #{tzHdQdm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEwmPath != null" >
+        TZ_EWM_PATH = #{tzEwmPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQdTime != null" >
+        TZ_QD_TIME = #{tzQdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
+    update PS_TZ_NAUDLIST_T
+    set TZ_CYR_NAME = #{tzCyrName,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_001 = #{tzZxbmXxx001,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_002 = #{tzZxbmXxx002,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_003 = #{tzZxbmXxx003,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_004 = #{tzZxbmXxx004,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_005 = #{tzZxbmXxx005,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_006 = #{tzZxbmXxx006,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_007 = #{tzZxbmXxx007,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_008 = #{tzZxbmXxx008,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_009 = #{tzZxbmXxx009,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_010 = #{tzZxbmXxx010,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_011 = #{tzZxbmXxx011,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_012 = #{tzZxbmXxx012,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_013 = #{tzZxbmXxx013,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_014 = #{tzZxbmXxx014,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_015 = #{tzZxbmXxx015,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_016 = #{tzZxbmXxx016,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_017 = #{tzZxbmXxx017,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_018 = #{tzZxbmXxx018,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_019 = #{tzZxbmXxx019,jdbcType=VARCHAR},
+      TZ_ZXBM_XXX_020 = #{tzZxbmXxx020,jdbcType=VARCHAR},
+      TZ_ZXBM_LY = #{tzZxbmLy,jdbcType=VARCHAR},
+      TZ_NREG_STAT = #{tzNregStat,jdbcType=VARCHAR},
+      TZ_BMCY_ZT = #{tzBmcyZt,jdbcType=VARCHAR},
+      TZ_BZSM = #{tzBzsm,jdbcType=VARCHAR},
+      TZ_REG_TIME = #{tzRegTime,jdbcType=TIMESTAMP},
+      TZ_REG_CODE = #{tzRegCode,jdbcType=BIGINT},
+      TZ_HD_QDM = #{tzHdQdm,jdbcType=VARCHAR},
+      TZ_EWM_PATH = #{tzEwmPath,jdbcType=VARCHAR},
+      TZ_QD_TIME = #{tzQdTime,jdbcType=TIMESTAMP},
+      OPRID = #{oprid,jdbcType=VARCHAR}
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
+  </update>
+</mapper>

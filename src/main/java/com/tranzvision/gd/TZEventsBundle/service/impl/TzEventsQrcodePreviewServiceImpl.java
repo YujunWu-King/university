@@ -112,7 +112,7 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 			
 			String ctxPath = request.getContextPath();
 
-			String qrcodeUrl = request.getProtocol() + request.getServerName() + ":"
+			String qrcodeUrl = "http://" + request.getServerName() + ":"
 					+ String.valueOf(request.getServerPort()) + ctxPath + "/event/preview/m/" + siteId + "/" + coluId
 					+ "/" + activityId;
 
@@ -123,7 +123,7 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 			mapJson.put("phonePreviewUrl", qrcodeUrl);
 
 			mapRet.put("formData", mapJson);
-			strRet = jacksonUtil.Map2json(mapJson);
+			strRet = jacksonUtil.Map2json(mapRet);
 
 		} catch (Exception e) {
 			e.printStackTrace();
