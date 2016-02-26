@@ -480,6 +480,56 @@ Ext.define('KitchenSink.view.template.kjgl.kjController', {
         //提交参数
         var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
+    },
+	/*控件管理页面"保存"操作*/
+    onKjSave:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+		var removeJson = "";
+		var removeRecs = store.getRemovedRecords();
+		for(var i=0;i<removeRecs.length;i++){
+			if(removeJson == ""){
+				removeJson = Ext.JSON.encode(removeRecs[i].data);
+			}else{
+				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+			}
+		}
+		var comParams="";
+		if(removeJson != ""){
+			comParams = '"delete":[' + removeJson + "]";
+			var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			Ext.tzSubmit(tzParams,function(){
+				store.reload();
+			},"",true,this);
+		}else{
+			return;
+		}
+    },
+	/*控件管理页面"确认"操作*/
+    onKjEnsure:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+		var removeJson = "";
+		var removeRecs = store.getRemovedRecords();
+		for(var i=0;i<removeRecs.length;i++){
+			if(removeJson == ""){
+				removeJson = Ext.JSON.encode(removeRecs[i].data);
+			}else{
+				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+			}
+		}
+
+		var comParams="";
+		if(removeJson != ""){
+			comParams = '"delete":[' + removeJson + "]";
+			var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+
+			Ext.tzSubmit(tzParams,function(){
+			grid.close();
+			},"",true,this);
+		}else{
+			grid.close();
+		}
     }
 });
 

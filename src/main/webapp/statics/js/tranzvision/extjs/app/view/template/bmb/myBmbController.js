@@ -70,9 +70,10 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
 		}
-
-		var tzParams='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + tplid + '"}}'
-		var url = Ext.tzGetGeneralURL() + tzParams;
+		
+		//var tzParams='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + tplid + '"}}'
+		//var url = Ext.tzGetGeneralURL() + tzParams;
+		var url = TzUniversityContextPath + "/admission/diyform/" + tplid;
 		window.open(url, '_blank');
 	},
 	/*编辑报名表模板*/
@@ -89,8 +90,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		var selRec = store.getAt(rowIndex);
 		//模板ID
 		var tplid = selRec.get("tplid");
-		var tzParams='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + tplid + '"}}'
-		var url = Ext.tzGetGeneralURL() + tzParams;
+		//var tzParams='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + tplid + '"}}'
+		//var url = Ext.tzGetGeneralURL() + tzParams;
+		var url = TzUniversityContextPath + "/admission/diyform/" + tplid;
 		window.open(url, '_blank');
 	},
 
@@ -154,8 +156,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 				Ext.tzSubmit(tzParams,
 					function(jsonObject) {
 						store.reload();
-						var tzPar='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + jsonObject.id + '"}}'
-						var url = Ext.tzGetGeneralURL() + tzPar;
+						//var tzPar='?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + jsonObject.id + '"}}'
+						//var url = Ext.tzGetGeneralURL() + tzPar;
+						var url = TzUniversityContextPath + "/admission/diyform/" + jsonObject.id;
 						window.open(url, '_blank');
 					},"",true,this);
 			} else {
@@ -216,8 +219,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 					function (jsonObject) {
 						Ext.get(activeTab.id).select('input').elements[0].value = "";
 						store.reload();
-						var tzPar = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + jsonObject.id + '"}}'
-						var url = Ext.tzGetGeneralURL() + tzPar;
+						//var tzPar = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + jsonObject.id + '"}}'
+						//var url = Ext.tzGetGeneralURL() + tzPar;
+						var url = TzUniversityContextPath + "/admission/diyform/" + jsonObject.id;
 						window.open(url, '_blank');
 						win.close();
 					}, "", true, this);
