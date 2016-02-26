@@ -990,7 +990,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					if("TZ_MOBILE".equals(strField)){
 						String sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
-					}else if("TZ_MOBILE".equals(strField)){
+					}else if("TZ_EMAIL".equals(strField)){
 						String sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					}else{
@@ -1002,10 +1002,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						String sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { orgid,oprid }, "String");
 					}else{
-						String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '"+ orgid +"'";
+						String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '"+ oprid +"'";
 						strFieldValue = sqlQuery.queryForObject(sql, "String");
 					}
 				}
+				if(strFieldValue == null) 
+					strFieldValue = "";
 				if("".equals(strUserInfo)){
 					strUserInfo = "\"" + strField + "\""+ ":" + "\"" + strFieldValue + "\"";
 				}else{

@@ -31,56 +31,8 @@ Ext.define('KitchenSink.view.template.kjgl.kjSet', {
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:function(btn){
-            var grid = btn.findParentByType("grid");
-            var store = grid.getStore();
-            var removeJson = "";
-            var removeRecs = store.getRemovedRecords();
-            for(var i=0;i<removeRecs.length;i++){
-                if(removeJson == ""){
-                    removeJson = Ext.JSON.encode(removeRecs[i].data);
-                }else{
-                    removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-                }
-            }
-            var comParams="";
-            if(removeJson != ""){
-                comParams = '"delete":[' + removeJson + "]";
-            }else{
-                return;
-            }
-            var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
-            Ext.tzSubmit(tzParams,function(){
-                store.reload();
-            },"",true,this);
-        }},
-            {minWidth:80,text:"确认",iconCls:"ensure",handler:function(btn){
-                var grid = btn.findParentByType("grid");
-                var store = grid.getStore();
-                var removeJson = "";
-                var removeRecs = store.getRemovedRecords();
-                for(var i=0;i<removeRecs.length;i++){
-                    if(removeJson == ""){
-                        removeJson = Ext.JSON.encode(removeRecs[i].data);
-                    }else{
-                        removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-                    }
-                }
-                var comParams="";
-
-                if(removeJson != ""){
-                    comParams = '"delete":[' + removeJson + "]";
-                }else{
-                    grid.close();
-                    return;
-                }
-                var tzParams = '{"ComID":"TZ_KJGL_COM","PageID":"TZ_KJGL_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
-
-                Ext.tzSubmit(tzParams,function(){
-                    store.reload();
-                },"",true,grid);
-                grid.close();
-            }},
+        items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"onKjSave"},
+            {minWidth:80,text:"确认",iconCls:"ensure",handler:"onKjEnsure"},
             {minWidth:80,text:"关闭",iconCls:"close",handler:function(btn){
                 var grid = btn.findParentByType("grid");
                 grid.close();
