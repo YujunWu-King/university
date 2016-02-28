@@ -42,6 +42,8 @@
 		<zxingcore.version>3.2.1</zxingcore.version>
 		<zxingse.version>3.2.1</zxingse.version>
 		<dom4j.version>1.6.1</dom4j.version>
+		<poi.version>3.13</poi.version>
+		<poiooxml.version>3.13</poiooxml.version>
 	</properties>
 
 	<dependencies>
@@ -332,6 +334,17 @@
 			<version>${zxingse.version}</version>
 		</dependency>
 		<!-- qrcode jar包 end -->
+		
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poiooxml.version}</version>
+		</dependency>
 
 	</dependencies>
 

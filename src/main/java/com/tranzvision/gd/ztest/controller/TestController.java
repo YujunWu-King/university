@@ -21,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.poi.excel.Test;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
@@ -37,6 +38,9 @@ public class TestController {
 	String message = "Admin!";
 
 	private static final String TPLPrefix = "ztest/";
+	
+	@Autowired
+	private Test testExcel;
 
 	@RequestMapping("index")
 	public String index(ModelMap model, HttpServletRequest request) {
@@ -96,6 +100,7 @@ public class TestController {
 	}
 
 	/// *
+	@SuppressWarnings("rawtypes")
 	@RequestMapping("getalladmins")
 	public ModelAndView getAllUser() {
 
@@ -112,6 +117,26 @@ public class TestController {
 	@RequestMapping("captcha")
 	public void getCaptcha(HttpServletRequest request, HttpServletResponse response) {
 		patchaService.genCaptcha(request, response);
+	}
+	
+	@RequestMapping("exportexcel")
+	public void exportExcel(HttpServletRequest request, HttpServletResponse response) {
+		testExcel.exportDataSet();
+	}
+	
+	@RequestMapping("exportexceltpl")
+	public void exportExcelByTpl(HttpServletRequest request, HttpServletResponse response) {
+		testExcel.exportDataByTemplate();
+	}
+	
+	@RequestMapping("importexcel")
+	public void importExcel(HttpServletRequest request, HttpServletResponse response) {
+		testExcel.importData();
+	}
+	
+	@RequestMapping("importexceltpl")
+	public void importExcelTpl(HttpServletRequest request, HttpServletResponse response) {
+		testExcel.importDataTpl();
 	}
 
 }

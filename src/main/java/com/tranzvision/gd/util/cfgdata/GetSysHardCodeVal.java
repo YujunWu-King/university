@@ -57,7 +57,7 @@ public class GetSysHardCodeVal {
 	 * 时间格式
 	 */
 	private String timeFormat;
-	
+
 	/**
 	 * 时间（小时:分钟）格式
 	 */
@@ -114,6 +114,11 @@ public class GetSysHardCodeVal {
 	private String websiteEnrollPath;
 
 	/**
+	 * 下载文件存储路径
+	 */
+	private String downloadPath;
+
+	/**
 	 * 构造函数，系统固定参数配置
 	 */
 	public GetSysHardCodeVal() {
@@ -138,7 +143,7 @@ public class GetSysHardCodeVal {
 			dateTimeFormat = sysHardCodeValProps.getProperty("DateTimeFormat");
 
 			timeFormat = sysHardCodeValProps.getProperty("TimeFormat");
-			
+
 			timeHMFormat = sysHardCodeValProps.getProperty("TimeHMFormat");
 
 			imageSuffix = this.stringToArrayList(sysHardCodeValProps.getProperty("ImageSuffix"));
@@ -161,6 +166,8 @@ public class GetSysHardCodeVal {
 			websiteSkinsImgPath = sysHardCodeValProps.getProperty("WebsiteSkinsImgPath");
 
 			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
+
+			downloadPath = sysHardCodeValProps.getProperty("DownloadPath");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -203,11 +210,11 @@ public class GetSysHardCodeVal {
 	public String getDateTimeFormat() {
 		return dateTimeFormat;
 	}
-	
+
 	public String getTimeFormat() {
 		return timeFormat;
 	}
-	
+
 	public String getTimeHMFormat() {
 		return timeHMFormat;
 	}
@@ -250,5 +257,9 @@ public class GetSysHardCodeVal {
 
 	public String getWebsiteEnrollPath() {
 		return websiteEnrollPath;
+	}
+
+	public String getDownloadPath() {
+		return downloadPath;
 	}
 }
