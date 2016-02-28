@@ -39,11 +39,14 @@ public class Test {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
+	/**
+	 * 导出数据到excel文件
+	 */
 	public void exportDataSet() {
 
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String downloadPath = getSysHardCodeVal.getDownloadPath();
-		String dtFormat=getSysHardCodeVal.getDateFormat();
+		String dtFormat = getSysHardCodeVal.getDateFormat();
 		String dtimeFormat = getSysHardCodeVal.getDateTimeFormat();
 
 		ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "test");
@@ -63,7 +66,7 @@ public class Test {
 		mapData1.put("name", "张三");
 		mapData1.put("sex", "男");
 		mapData1.put("age", 30);
-		//mapData1.put("birthday", new Object[]{new Date(),dtimeFormat});
+		// mapData1.put("birthday", new Object[]{new Date(),dtimeFormat});
 		mapData1.put("birthday", new Date());
 		mapData1.put("salary", 10000.20d);
 		dataList.add(mapData1);
@@ -73,7 +76,7 @@ public class Test {
 		mapData2.put("name", "李四");
 		mapData2.put("sex", "女");
 		mapData2.put("age", 20);
-		mapData2.put("birthday", new Object[]{new Date(),dtFormat});
+		mapData2.put("birthday", new Object[] { new Date(), dtFormat });
 		mapData2.put("salary", 10000.12);
 		dataList.add(mapData2);
 
@@ -87,7 +90,7 @@ public class Test {
 		mapData3.put("age", 26);
 		try {
 			Date birthday = simpleDateFormat.parse(tdate);
-			mapData3.put("birthday", new Object[]{birthday,dtFormat});
+			mapData3.put("birthday", new Object[] { birthday, dtFormat });
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -104,6 +107,9 @@ public class Test {
 
 	}
 
+	/**
+	 * 生成模板数据文件
+	 */
 	public void exportDataByTemplate() {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String downloadPath = getSysHardCodeVal.getDownloadPath();
@@ -179,6 +185,9 @@ public class Test {
 
 	}
 
+	/**
+	 * 读取excel数据文件（简单列表）
+	 */
 	public void importData() {
 		String uploadPath = getSysHardCodeVal.getTmpFileUploadPath();
 
@@ -199,6 +208,9 @@ public class Test {
 
 	}
 
+	/**
+	 * 读取指定模板实例的数据文件
+	 */
 	public void importDataTpl() {
 		String uploadPath = getSysHardCodeVal.getTmpFileUploadPath();
 
