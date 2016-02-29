@@ -64,8 +64,12 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 				if(map != null){
 					language = (String)map.get("TZ_APP_TPL_LAN");
 					jgId = (String)map.get("TZ_JG_ID");
-					String skinSQL = "select TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1";
-					skinId = jdbcTemplate.queryForObject(skinSQL, new Object[]{jgId},"String");
+					String skinSQL = "select TZ_SITEI_ID,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1";
+					Map<String , Object> skinMap = jdbcTemplate.queryForMap(skinSQL, new Object[]{jgId});
+					if(skinMap != null){
+						siteId = (String)skinMap.get("TZ_SITEI_ID");
+						skinId = (String)skinMap.get("TZ_SKIN_ID");
+					}
 				}
 			}else{
 				if(jacksonUtil.containsKey("siteId")){

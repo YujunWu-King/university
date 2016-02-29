@@ -125,10 +125,17 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletInfo', {
                                                         var emailaddr = responseText.comContent.emailaddr;
                                                         var smssevname = responseText.comContent.smssevname;
 
-                                                        form.findField("tempemailserv").setValue(tempemailserv);
-                                                        form.findField("emailaddr").setValue(emailaddr);
-                                                        form.findField("tempsmsserv").setValue(tempsmsserv);
-                                                        form.findField("smssevname").setValue(smssevname);
+                                                        //form.findField("tempemailserv").setValue(tempemailserv);
+                                                        //form.findField("emailaddr").setValue(emailaddr);
+                                                        //form.findField("tempsmsserv").setValue(tempsmsserv);
+                                                        //form.findField("smssevname").setValue(smssevname);
+														var initValues = {
+															"tempemailserv":tempemailserv,
+															"emailaddr":emailaddr,
+															"tempsmsserv":tempsmsserv,
+															"smssevname":smssevname
+														}
+														form.setValues(initValues);
 
                                                     },
                                                     failure: function (response) {

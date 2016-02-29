@@ -174,6 +174,7 @@ public class FileUploadController {
 		if(null==orgid || "".equals(orgid)){
 			orgid = "orgidnull";
 		}
+		orgid = orgid.toLowerCase();
 
 		// 是否临时文件的标记
 		if (null == istmpfile || !"null".equals(funcdir)) {

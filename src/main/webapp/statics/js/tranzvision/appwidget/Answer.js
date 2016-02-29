@@ -3068,17 +3068,36 @@ var SurveyBuild = {
         try{
             var $form = document.getElementById("main_list");
             $form.encoding = "multipart/form-data";
-            $form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment";
+            $form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
             $("#main_list").ajaxSubmit({
                 dataType:'json',
-                url:TzUniversityContextPath + "/UpdWebServlet?filePath=/linkfile/FileUpLoad/appFormAttachment",
+                url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
                 success: function(obj) {
                     if(obj.success){
+						//清空file控件的Value
+						if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) { //IE浏览器
+							var file = $(el); 
+							file.after(file.clone().val("")); 
+							file.remove(); 
+							
+							var $fileInput = $(el);
+							var $uplBtn = $fileInput.prev(".bt_blue");
+							$fileInput.mousemove(function(e){
+								$uplBtn.css("opacity","0.8");	
+							});
+							$fileInput.mouseout(function(e) {
+								$uplBtn.css("opacity","1");
+							});
+						} else {//非IE浏览器
+							$(el).val("");	
+						}
                         var fileSize = obj.msg.size;
 
                         this.is_edit = true;
-                        $("#"+data.itemId+child[cins].itemId+"Attch").attr("href",obj.msg.accessPath + "/" + obj.msg.sysFileName);
+                        $("#"+data.itemId+child[cins].itemId+"Attch").attr("href",TzUniversityContextPath + obj.msg.accessPath + "/" + obj.msg.sysFileName);
                         $("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.filename);
+                        $("#"+data.itemId+child[cins].itemId+"Attch").attr("target","_blank");
+
 
                         child[cins]["filename"] = obj.msg.filename;
                         child[cins]["sysFileName"] = obj.msg.sysFileName;

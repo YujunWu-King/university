@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT" >
+    <id column="PROCESSINSTANCE" property="processinstance" jdbcType="INTEGER" />
+    <result column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <result column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
+    <result column="TZ_DR_LXBH" property="tzDrLxbh" jdbcType="VARCHAR" />
+    <result column="TZ_DR_TASK_DESC" property="tzDrTaskDesc" jdbcType="VARCHAR" />
+    <result column="TZ_START_DTT" property="tzStartDtt" jdbcType="TIMESTAMP" />
+    <result column="TZ_END_DTT" property="tzEndDtt" jdbcType="TIMESTAMP" />
+    <result column="TZ_DR_TOTAL_NUM" property="tzDrTotalNum" jdbcType="INTEGER" />
+    <result column="TZ_DR_SUCCESS_NUM" property="tzDrSuccessNum" jdbcType="INTEGER" />
+    <result column="TZ_DR_FAILD_NUM" property="tzDrFaildNum" jdbcType="INTEGER" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_IS_VIEW_ATT" property="tzIsViewAtt" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PROCESSINSTANCE, TZ_COM_ID, TZ_PAGE_ID, TZ_DR_LXBH, TZ_DR_TASK_DESC, TZ_START_DTT, 
+    TZ_END_DTT, TZ_DR_TOTAL_NUM, TZ_DR_SUCCESS_NUM, TZ_DR_FAILD_NUM, OPRID, TZ_IS_VIEW_ATT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_EXCEL_DRXX_T
+    where PROCESSINSTANCE = #{processinstance,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PS_TZ_EXCEL_DRXX_T
+    where PROCESSINSTANCE = #{processinstance,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT" >
+    insert into PS_TZ_EXCEL_DRXX_T (PROCESSINSTANCE, TZ_COM_ID, TZ_PAGE_ID, 
+      TZ_DR_LXBH, TZ_DR_TASK_DESC, TZ_START_DTT, 
+      TZ_END_DTT, TZ_DR_TOTAL_NUM, TZ_DR_SUCCESS_NUM, 
+      TZ_DR_FAILD_NUM, OPRID, TZ_IS_VIEW_ATT
+      )
+    values (#{processinstance,jdbcType=INTEGER}, #{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, 
+      #{tzDrLxbh,jdbcType=VARCHAR}, #{tzDrTaskDesc,jdbcType=VARCHAR}, #{tzStartDtt,jdbcType=TIMESTAMP}, 
+      #{tzEndDtt,jdbcType=TIMESTAMP}, #{tzDrTotalNum,jdbcType=INTEGER}, #{tzDrSuccessNum,jdbcType=INTEGER}, 
+      #{tzDrFaildNum,jdbcType=INTEGER}, #{oprid,jdbcType=VARCHAR}, #{tzIsViewAtt,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT" >
+    insert into PS_TZ_EXCEL_DRXX_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="processinstance != null" >
+        PROCESSINSTANCE,
+      </if>
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzPageId != null" >
+        TZ_PAGE_ID,
+      </if>
+      <if test="tzDrLxbh != null" >
+        TZ_DR_LXBH,
+      </if>
+      <if test="tzDrTaskDesc != null" >
+        TZ_DR_TASK_DESC,
+      </if>
+      <if test="tzStartDtt != null" >
+        TZ_START_DTT,
+      </if>
+      <if test="tzEndDtt != null" >
+        TZ_END_DTT,
+      </if>
+      <if test="tzDrTotalNum != null" >
+        TZ_DR_TOTAL_NUM,
+      </if>
+      <if test="tzDrSuccessNum != null" >
+        TZ_DR_SUCCESS_NUM,
+      </if>
+      <if test="tzDrFaildNum != null" >
+        TZ_DR_FAILD_NUM,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzIsViewAtt != null" >
+        TZ_IS_VIEW_ATT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="processinstance != null" >
+        #{processinstance,jdbcType=INTEGER},
+      </if>
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageId != null" >
+        #{tzPageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDrLxbh != null" >
+        #{tzDrLxbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDrTaskDesc != null" >
+        #{tzDrTaskDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartDtt != null" >
+        #{tzStartDtt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEndDtt != null" >
+        #{tzEndDtt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDrTotalNum != null" >
+        #{tzDrTotalNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDrSuccessNum != null" >
+        #{tzDrSuccessNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDrFaildNum != null" >
+        #{tzDrFaildNum,jdbcType=INTEGER},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsViewAtt != null" >
+        #{tzIsViewAtt,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT" >
+    update PS_TZ_EXCEL_DRXX_T
+    <set >
+      <if test="tzComId != null" >
+        TZ_COM_ID = #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageId != null" >
+        TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDrLxbh != null" >
+        TZ_DR_LXBH = #{tzDrLxbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDrTaskDesc != null" >
+        TZ_DR_TASK_DESC = #{tzDrTaskDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartDtt != null" >
+        TZ_START_DTT = #{tzStartDtt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEndDtt != null" >
+        TZ_END_DTT = #{tzEndDtt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDrTotalNum != null" >
+        TZ_DR_TOTAL_NUM = #{tzDrTotalNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDrSuccessNum != null" >
+        TZ_DR_SUCCESS_NUM = #{tzDrSuccessNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDrFaildNum != null" >
+        TZ_DR_FAILD_NUM = #{tzDrFaildNum,jdbcType=INTEGER},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsViewAtt != null" >
+        TZ_IS_VIEW_ATT = #{tzIsViewAtt,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PROCESSINSTANCE = #{processinstance,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT" >
+    update PS_TZ_EXCEL_DRXX_T
+    set TZ_COM_ID = #{tzComId,jdbcType=VARCHAR},
+      TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR},
+      TZ_DR_LXBH = #{tzDrLxbh,jdbcType=VARCHAR},
+      TZ_DR_TASK_DESC = #{tzDrTaskDesc,jdbcType=VARCHAR},
+      TZ_START_DTT = #{tzStartDtt,jdbcType=TIMESTAMP},
+      TZ_END_DTT = #{tzEndDtt,jdbcType=TIMESTAMP},
+      TZ_DR_TOTAL_NUM = #{tzDrTotalNum,jdbcType=INTEGER},
+      TZ_DR_SUCCESS_NUM = #{tzDrSuccessNum,jdbcType=INTEGER},
+      TZ_DR_FAILD_NUM = #{tzDrFaildNum,jdbcType=INTEGER},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_IS_VIEW_ATT = #{tzIsViewAtt,jdbcType=VARCHAR}
+    where PROCESSINSTANCE = #{processinstance,jdbcType=INTEGER}
+  </update>
+</mapper>
