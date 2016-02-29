@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -62,6 +65,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
 	private PsTzApptplDyTMapper psTzApptplDyTMapper;
@@ -377,7 +383,6 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetJsonData(String strParams) {
-
 		String strRet = "{}";
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -620,6 +625,62 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 				mapOptJson.put("weight", 0);
 				mapRet.put("A" + optId, mapOptJson);
 			}
+			return jacksonUtil.Map2json(mapRet);
+		}
+		
+		/* 报名表元数据导出 */
+		if (StringUtils.equals(oType, "METADATA")) {
+			String code = "0";
+			String msg = "";
+			String url = "";
+			
+			String tplId = jacksonUtil.getString("tid");
+			
+			if(StringUtils.isBlank(tplId)){
+				code = "1";
+				msg = "参数错误，未提供报名表模板编号！";
+			}
+			
+			if(StringUtils.equals(code, "0")){
+				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				String downloadPath = getSysHardCodeVal.getDownloadPath();
+				
+				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+				String s_dtm = datetimeFormate.format(new Date());
+				String fileName = s_dtm + "-" + Math.round(Math.random() * 899999999 + 100000000) + ".xlsx";
+
+				ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "METADATA");
+				
+				List<String[]> dataCellKeys = new ArrayList<String[]>();
+				List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+				Map<String, Object> mapData = new HashMap<String, Object>();
+				
+				String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_CCLX IN ('D','L','S')";
+				List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplId });
+				for (Object obj : resultlist) {
+					Map<String, Object> result = (Map<String, Object>) obj;
+					String xxxbh = result.get("TZ_XXX_BH") == null ? "" : String.valueOf(result.get("TZ_XXX_BH"));
+					String xxxmc = result.get("TZ_XXX_MC") == null ? "" : String.valueOf(result.get("TZ_XXX_MC"));
+					dataCellKeys.add(new String[] { xxxbh, xxxmc });
+					mapData.put(xxxbh, xxxbh);
+				}
+				dataList.add(mapData);
+				
+				boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
+				if (rst) {
+					code = "0";
+					msg = "导出元数据成功！";
+					url = excelHandle.getExportExcelPath();
+				} else {
+					code = "1";
+					msg = "导出元数据失败！";
+					url = "";
+				}
+			}
+			Map<String, Object> mapRet = new HashMap<String, Object>();
+			mapRet.put("code", code);
+			mapRet.put("msg", msg);
+			mapRet.put("url", url);
 			return jacksonUtil.Map2json(mapRet);
 		}
 		return strRet;

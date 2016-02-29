@@ -3457,21 +3457,25 @@ var SurveyBuild = {
         if(this.is_edit){
             //noteing("请首先保存当前模板！", 2)
         }else{
-            $.ajax({
-                type: "POST",
-                url: "./WEBLIB_REG.TZ_ONREG_PRINT.FieldFormula.Iscript_ExportTplData",
-                data: {
-                    tid: SurveyBuild._tid
-                },
-                dataType: "JSON",
-                success: function(obj) {
-                    if (obj.code == 1) {
-                        window.open(obj.url);
-                    } else {
-                        noteing(obj.msg, 2)
-                    }
-                }
-            });
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"METADATA","tid":"' + SurveyBuild._tid + '"}}';
+			$.ajax({
+				type: "GET",
+				dataType: "JSON",
+				url:SurveyBuild.tzGeneralURL,
+				data:{
+					tzParams:tzParams
+				},
+				success: function(f) {
+					if(f.state.errcode == "0"){
+						if(f.comContent.code == "0"){
+							srcUrl = TzUniversityContextPath + f.comContent.url;
+							window.open(srcUrl);
+						} else {
+							noteing(f.comContent.msg, 2)
+						}
+					}
+				}
+			});
         }
     },
     //上传模板
