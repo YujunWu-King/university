@@ -51,6 +51,8 @@ public class PsTzKsTjxTbl {
 
     private String tzAttAUrl;
 
+    private String tzAccessPath;
+
     private String attachsysfilename;
 
     private String attachuserfile;
@@ -257,6 +259,14 @@ public class PsTzKsTjxTbl {
 
     public void setTzAttAUrl(String tzAttAUrl) {
         this.tzAttAUrl = tzAttAUrl == null ? null : tzAttAUrl.trim();
+    }
+
+    public String getTzAccessPath() {
+        return tzAccessPath;
+    }
+
+    public void setTzAccessPath(String tzAccessPath) {
+        this.tzAccessPath = tzAccessPath == null ? null : tzAccessPath.trim();
     }
 
     public String getAttachsysfilename() {

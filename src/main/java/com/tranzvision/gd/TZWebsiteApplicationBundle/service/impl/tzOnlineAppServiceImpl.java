@@ -1489,8 +1489,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}
 		
 		String strPath = "";
-		if(xxxObject.containsKey("path")){
-			strPath = xxxObject.get("path") == null ? "" : String.valueOf(xxxObject.get("path"));
+		if(xxxObject.containsKey("accessPath")){
+			strPath = xxxObject.get("accessPath") == null ? "" : String.valueOf(xxxObject.get("accessPath"));
 		}
 		
 		if(!"".equals(strSysFileName) && strSysFileName != null
@@ -1499,6 +1499,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzFormAttT.setTzAppInsId(numAppInsId);
 			psTzFormAttT.setTzXxxBh(strParentItemId);
 			psTzFormAttT.setTzIndex(numOrderBy);
+			psTzFormAttT.setTzAccessPath(strPath);
 			psTzFormAttT.setAttachsysfilename(strSysFileName);
 			psTzFormAttT.setAttachuserfile(strUseFileName);
 			psTzFormAttT.setRowAddedOprid(oprid);

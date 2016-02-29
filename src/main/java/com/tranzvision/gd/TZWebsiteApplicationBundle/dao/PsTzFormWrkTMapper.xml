@@ -14,13 +14,16 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_REMARK_SHORT" property="tzRemarkShort" jdbcType="VARCHAR" />
+    <result column="TZ_IS_GUEST" property="tzIsGuest" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT" extends="BaseResultMap" >
     <result column="TZ_REMARK" property="tzRemark" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CLASS_ID, OPRID, TZ_APP_INS_ID, TZ_BATCH_ID, TZ_FORM_SP_STA, TZ_COLOR_SORT_ID, 
-    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+    TZ_REMARK_SHORT, TZ_IS_GUEST
   </sql>
   <sql id="Blob_Column_List" >
     TZ_REMARK
@@ -44,12 +47,14 @@
       TZ_BATCH_ID, TZ_FORM_SP_STA, TZ_COLOR_SORT_ID, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-      TZ_REMARK)
+      TZ_REMARK_SHORT, TZ_IS_GUEST, TZ_REMARK
+      )
     values (#{tzClassId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
       #{tzBatchId,jdbcType=VARCHAR}, #{tzFormSpSta,jdbcType=VARCHAR}, #{tzColorSortId,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
-      #{tzRemark,jdbcType=LONGVARCHAR})
+      #{tzRemarkShort,jdbcType=VARCHAR}, #{tzIsGuest,jdbcType=VARCHAR}, #{tzRemark,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT" >
     insert into PS_TZ_FORM_WRK_T
@@ -89,6 +94,12 @@
       </if>
       <if test="syncdttm != null" >
         SYNCDTTM,
+      </if>
+      <if test="tzRemarkShort != null" >
+        TZ_REMARK_SHORT,
+      </if>
+      <if test="tzIsGuest != null" >
+        TZ_IS_GUEST,
       </if>
       <if test="tzRemark != null" >
         TZ_REMARK,
@@ -131,6 +142,12 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzRemarkShort != null" >
+        #{tzRemarkShort,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsGuest != null" >
+        #{tzIsGuest,jdbcType=VARCHAR},
+      </if>
       <if test="tzRemark != null" >
         #{tzRemark,jdbcType=LONGVARCHAR},
       </if>
@@ -169,6 +186,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzRemarkShort != null" >
+        TZ_REMARK_SHORT = #{tzRemarkShort,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsGuest != null" >
+        TZ_IS_GUEST = #{tzIsGuest,jdbcType=VARCHAR},
+      </if>
       <if test="tzRemark != null" >
         TZ_REMARK = #{tzRemark,jdbcType=LONGVARCHAR},
       </if>
@@ -188,6 +211,8 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_REMARK_SHORT = #{tzRemarkShort,jdbcType=VARCHAR},
+      TZ_IS_GUEST = #{tzIsGuest,jdbcType=VARCHAR},
       TZ_REMARK = #{tzRemark,jdbcType=LONGVARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and OPRID = #{oprid,jdbcType=VARCHAR}
@@ -203,7 +228,9 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_REMARK_SHORT = #{tzRemarkShort,jdbcType=VARCHAR},
+      TZ_IS_GUEST = #{tzIsGuest,jdbcType=VARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and OPRID = #{oprid,jdbcType=VARCHAR}
   </update>

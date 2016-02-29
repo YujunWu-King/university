@@ -23,6 +23,10 @@ public class PsTzFormWrkT extends PsTzFormWrkTKey {
 
     private Date syncdttm;
 
+    private String tzRemarkShort;
+
+    private String tzIsGuest;
+
     private String tzRemark;
 
     public Long getTzAppInsId() {
@@ -103,6 +107,22 @@ public class PsTzFormWrkT extends PsTzFormWrkTKey {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzRemarkShort() {
+        return tzRemarkShort;
+    }
+
+    public void setTzRemarkShort(String tzRemarkShort) {
+        this.tzRemarkShort = tzRemarkShort == null ? null : tzRemarkShort.trim();
+    }
+
+    public String getTzIsGuest() {
+        return tzIsGuest;
+    }
+
+    public void setTzIsGuest(String tzIsGuest) {
+        this.tzIsGuest = tzIsGuest == null ? null : tzIsGuest.trim();
     }
 
     public String getTzRemark() {
