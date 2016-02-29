@@ -1,9 +1,15 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,7 +117,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl{
 				
 				// 打包文件名称;
 				String fileName = jacksonUtil.getString("zldbName");
-				strComContent = fileName;
+				//strComContent = fileName;
 				if(comParams != null && !"".equals(comParams)){ 
 					if(comParams.lastIndexOf(";") + 1 == comParams.length()){
 						comParams = comParams.substring(0,comParams.length()-1);
@@ -146,6 +152,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl{
 					}else{
 						fjlj = websiteDir + "/" + currentOprid + "/" + s_dt + "/" + "pack" + "/" + ID;
 					}
+					
+					
 				     
 					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
 					psTzExcelDattT.setProcessinstance(processInstance);
@@ -159,10 +167,84 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl{
 
 					String[] appids = comParams.split(";");
 					for(int i = 0; i < appids.length; i++){
+						//生产报名表xml文件;
 						String appInsID = appids[i];
 						String OPRID = jdbcTemplate.queryForObject("SELECT OPRID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ?", new Object[]{Long.parseLong(appInsID)},"String");
 						String TZ_APP_TPL_ID = jdbcTemplate.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?", new Object[]{Long.parseLong(appInsID)},"String");
 						tzDealWithXMLServiceImpl.replaceXMLPulish(appInsID, OPRID, TZ_APP_TPL_ID, true,fjlj + "/" + appInsID, errMsg);
+						String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID);
+						File tF = new File(tFile);
+						if(!tF.exists()){
+							tF.mkdirs();
+						}
+						
+						//将考生的材料复制;
+						String str_attachfilename = "",str_attachfile = "";
+						String sqlPackage = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') UNION SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_FORM_ATT2_T WHERE TZ_APP_INS_ID=? )";
+						List<Map<String, Object>> packList = jdbcTemplate.queryForList(sqlPackage,new Object[]{appInsID,appInsID,appInsID,appInsID});
+						if(packList != null && packList.size() > 0){
+							for(int j = 0; j < packList.size(); j++){
+								str_attachfilename = (String)packList.get(j).get("ATTACHSYSFILENAME");
+								str_attachfile = (String)packList.get(j).get("ATTACHUSERFILE");
+								if(str_attachfilename != null && !"".equals(str_attachfilename)
+										&& str_attachfile != null && !"".equals(str_attachfile)){
+									str_attachfile.replaceAll("/", "_");
+									String sFile = "";
+									this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
+								}
+							}
+						}
+						
+						//生产推荐信xml文件;	
+						long TZ_TJX_APP_INS_ID = 0;
+					    String TJR_TZ_TJX_APP_INS_ID = "", TJR_TZ_APP_TPL_ID = "";
+					    String tjxSql = "SELECT TZ_TJX_APP_INS_ID,B.TZ_APP_TPL_ID,TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL A, PS_TZ_APP_INS_T B WHERE A.TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y' AND A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U'";
+					    List<Map<String, Object>> tjxList = jdbcTemplate.queryForList(tjxSql,new Object[]{Long.parseLong(appInsID)});
+					    if(tjxList != null && tjxList.size() > 0){
+					    	for(int j = 0; j < tjxList.size(); j++){
+					    		TZ_TJX_APP_INS_ID = (long)tjxList.get(j).get("TZ_TJX_APP_INS_ID");
+					    		TJR_TZ_TJX_APP_INS_ID = String.valueOf(TZ_TJX_APP_INS_ID);
+					    		TJR_TZ_APP_TPL_ID = (String)tjxList.get(j).get("TZ_APP_TPL_ID");
+					    		//tjrName = (String)tjxList.get(j).get("TZ_REFERRER_NAME");
+					    		tzDealWithXMLServiceImpl.replaceXMLPulish(TJR_TZ_TJX_APP_INS_ID, OPRID, TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID, errMsg);
+					    		
+					    		
+					    		//将考生的推荐信材料复制;
+								String str_attachfilename2 = "",str_attachfile2 = "";
+								String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
+								List<Map<String, Object>> packTjxList = jdbcTemplate.queryForList(sqlPackagetjx,new Object[]{TZ_TJX_APP_INS_ID,TZ_TJX_APP_INS_ID,TZ_TJX_APP_INS_ID,TZ_TJX_APP_INS_ID});
+								if(packTjxList != null && packTjxList.size() > 0){
+									for(int k = 0; k < packTjxList.size(); k++){
+										str_attachfilename2 = (String)packTjxList.get(k).get("ATTACHSYSFILENAME");
+										str_attachfile2 = (String)packTjxList.get(k).get("ATTACHUSERFILE");
+										if(str_attachfilename2 != null && !"".equals(str_attachfilename2)
+												&& str_attachfile2 != null && !"".equals(str_attachfile2)){
+											str_attachfile2.replaceAll("/", "_");
+											String sFile = "";
+											
+											this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile2);
+										}
+									}
+								}
+					    	
+					    	}
+					    }
+					    
+					    /*如果是从后台上传的推荐信*/
+						String sqlTjx2 = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y'";
+						List<Map<String, Object>> tjxList2 = jdbcTemplate.queryForList(sqlTjx2,new Object[]{appInsID});
+						if(tjxList2 != null && tjxList2.size() > 0){
+							for(int j = 0; j < tjxList2.size(); j++){
+								str_attachfilename = (String)tjxList2.get(j).get("ATTACHSYSFILENAME");
+								str_attachfile = (String)tjxList2.get(j).get("ATTACHUSERFILE");
+								if(str_attachfilename != null && !"".equals(str_attachfilename)
+										&& str_attachfile != null && !"".equals(str_attachfile)){
+									str_attachfile.replaceAll("/", "_");
+									String sFile = "";
+									this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
+								}
+							}
+						}
 					}
 				}
 
@@ -173,6 +255,38 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl{
 		}
 
 		return strComContent;
+	}
+	
+	/*sFile:原文件地址，tFile目标文件地址*/
+	public void fileChannelCopy(String sFile, String tFile) {
+		FileInputStream fi = null;
+		FileOutputStream fo = null;
+		FileChannel in = null;
+		FileChannel out = null;
+
+		try {
+			File s = new File(sFile);
+			File t = new File(tFile);
+			if(s.exists() && s.isFile()){
+				fi = new FileInputStream(s);
+				fo = new FileOutputStream(t);
+				in = fi.getChannel();// 得到对应的文件通道
+				out = fo.getChannel();// 得到对应的文件通道
+				in.transferTo(0, in.size(), out);// 连接两个通道，并且从in通道读取，然后写入out通道
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fi.close();
+				in.close();
+				fo.close();
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 	
 	

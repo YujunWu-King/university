@@ -246,7 +246,7 @@ public class TzDealWithXMLServiceImpl {
 						 || mbSysFileName == null || "".equals(mbSysFileName)
 						 || mbFileUrl == null || "".equals(mbFileUrl)){
 					 errMsg[0] = "1";
-					 errMsg[1] = "打印报名表模板不存在";
+					 errMsg[1] = "报名表打印模板不存在";
 					 return "";
 				 }
 				 
@@ -262,7 +262,7 @@ public class TzDealWithXMLServiceImpl {
 				 File file = new File(sourceStr);
 				 if (!file.exists() || !file.isFile()) {
 					 errMsg[0] = "1";
-					 errMsg[1] = "打印报名表模板不存在";
+					 errMsg[1] = "报名表打印模板不存在";
 					 return "";
 				 }
 				 
@@ -337,9 +337,11 @@ public class TzDealWithXMLServiceImpl {
 					 
 					 String newFileName = "";
 					 if("TJX".equals(mbType)){
-						 newFileName = "推荐信_"+ name;
+						 //如果是推荐信，查看推荐人的姓名;
+						 String tzReferrer = jdbcTemplate.queryForObject("select TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL where TZ_TJX_APP_INS_ID=?", new Object[]{Long.parseLong(app_ins_id)},"String");
+						 newFileName = name + "_" + tzReferrer + "_推荐信.xml";
 					 }else{
-						 newFileName = "报名表_"+ name;
+						 newFileName = name + "_报名表.xml";
 					 }
 				     /*
 					 SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -348,7 +350,7 @@ public class TzDealWithXMLServiceImpl {
 					 */
 					 
 				     FileOutputStream output = new FileOutputStream(new File(
-				    		 dirStr + newFileName+".xml"));
+				    		 dirStr + newFileName));
 				     XMLWriter writer = new XMLWriter(output, format);
 				     
 				     writer.write(document);

@@ -628,7 +628,7 @@ System.out.println("==========strStuName======>"+strStuName);
 					new Object[] { appInsId }, "Integer");
 			if (total > 0) {
 				String strfileDate = "";
-				String sql = "SELECT DISTINCT TEMP.TZ_XXX_NO,APP.TZ_XXX_MC,APP.TZ_COM_LMC  FROM PS_TZ_TEMP_FIELD_T TEMP left join (select * from PS_TZ_APP_XXXPZ_T where TZ_XXX_CCLX='F') APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH where TEMP.TZ_APP_TPL_ID = ?  ORDER BY TEMP.TZ_XXX_NO";
+				String sql = "SELECT DISTINCT TEMP.TZ_XXX_NO,APP.TZ_XXX_MC,APP.TZ_COM_LMC  FROM PS_TZ_TEMP_FIELD_T TEMP ,PS_TZ_APP_XXXPZ_T APP WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_XXX_CCLX='F' AND APP.TZ_APP_TPL_ID = ? ORDER BY TEMP.TZ_XXX_NO";
 				int numFileID = 0;
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { TZ_APP_TPL_ID });
 				if (list != null && list.size() > 0) {
@@ -637,19 +637,49 @@ System.out.println("==========strStuName======>"+strStuName);
 						TZ_TITLE = (String) list.get(i).get("TZ_XXX_MC");
 						TZ_COM_LMC = (String) list.get(i).get("TZ_COM_LMC");
 						numFileID = numFileID + 1;
-
-						String fileName = "", sysFileName = "";
+System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_TITLE+"===========>"+TZ_COM_LMC);
+						String fileName = "", sysFileName = "", accessUrl = "";
 						strfileDate = "";
 						int fileNum = 1;
 						int xuhao = 1;
 
-						String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO=?) ORDER BY TZ_INDEX";
+						String fileSql = "SELECT ATTACHUSERFILE,ATTACHSYSFILENAME,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WhERE TZ_APP_INS_ID =? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO=?) ORDER BY TZ_INDEX";
 						List<Map<String, Object>> list2 = jdbcTemplate.queryForList(fileSql,
 								new Object[] { appInsId, TZ_APP_TPL_ID, TZ_XXX_BH });
 						if (list2 != null && list2.size() > 0) {
 							for (int j = 0; j < list2.size(); j++) {
 								fileName = (String) list2.get(j).get("ATTACHUSERFILE");
 								sysFileName = (String) list2.get(j).get("ATTACHSYSFILENAME");
+								accessUrl = (String) list2.get(j).get("TZ_ACCESS_PATH");
+								
+								System.out.println("========att2==================>"+appInsId+"===========>"+TZ_APP_TPL_ID+"===========>"+TZ_XXX_BH);
+								if(fileName != null && !"".equals(fileName)
+										&& sysFileName != null && !"".equals(sysFileName)
+										&& accessUrl != null && !"".equals(accessUrl)){
+									if(accessUrl.lastIndexOf("/") + 1 == accessUrl.length()){
+										accessUrl = request.getContextPath() + accessUrl + sysFileName;
+									}else{
+										accessUrl = request.getContextPath() + accessUrl + "/" + sysFileName;
+									}
+								}else{
+									accessUrl = "";
+								}
+								if(fileName == null){
+									fileName = "";
+								}
+								
+								if (fileNum == 1) {
+									strfileDate = tzGdObject.getHTMLText(
+											"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", true,
+											fileName, accessUrl, String.valueOf(numFileID));
+								} else {
+									strfileDate = strfileDate + "<br>"
+											+ tzGdObject.getHTMLText(
+													"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",
+													true, fileName, accessUrl, String.valueOf(numFileID));
+								}
+								
+								/*
 								if ("imagesUpload".equals(TZ_COM_LMC)) {
 									String urlImages = this.getUrlImages(appInsId, TZ_XXX_BH, sysFileName, errorMsg);
 									if (fileNum == 1) {
@@ -678,7 +708,7 @@ System.out.println("==========strStuName======>"+strStuName);
 										}
 									}
 								}
-
+								 */
 								xuhao = xuhao + 1;
 								fileNum = fileNum + 1;
 							}
@@ -697,10 +727,10 @@ System.out.println("==========strStuName======>"+strStuName);
 				}
 
 				strfileDate = "";
-				String fileName = "", sysFileName = "";
+				String fileName = "", sysFileName = "", accessUrl = "";
 				/* 后台管理员上传的附件lastIndexOf */
 				TZ_COM_LMC = "imagesUpload";
-				String fileSql2 = "SELECT A.TZ_XXX_BH,ATTACHUSERFILE,ATTACHSYSFILENAME,C.TZ_XXX_MC FROM PS_TZ_FORM_ATT_T A ,PS_TZ_FORM_ATT2_T C WhERE A.TZ_APP_INS_ID =? AND A.TZ_XXX_BH NOT IN (SELECT TEMP.TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T TEMP left join (select * from PS_TZ_APP_XXXPZ_T) APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND TEMP.TZ_APP_TPL_ID = ?) AND A.TZ_XXX_BH=C.TZ_XXX_BH AND C.TZ_APP_INS_ID = ? ORDER BY A.TZ_XXX_BH";
+				String fileSql2 = "SELECT A.TZ_XXX_BH,ATTACHUSERFILE,ATTACHSYSFILENAME,C.TZ_XXX_MC,A.TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T A ,PS_TZ_FORM_ATT2_T C WhERE A.TZ_APP_INS_ID =? AND A.TZ_XXX_BH NOT IN (SELECT TEMP.TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_T TEMP left join PS_TZ_APP_XXXPZ_T APP on TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND TEMP.TZ_APP_TPL_ID = ?) AND A.TZ_XXX_BH=C.TZ_XXX_BH AND C.TZ_APP_INS_ID = ? ORDER BY A.TZ_XXX_BH";
 				List<Map<String, Object>> list3 = jdbcTemplate.queryForList(fileSql2,
 						new Object[] { appInsId, TZ_APP_TPL_ID, appInsId });
 				if (list3 != null && list3.size() > 0) {
@@ -709,7 +739,30 @@ System.out.println("==========strStuName======>"+strStuName);
 						fileName = (String) list3.get(k).get("ATTACHUSERFILE");
 						sysFileName = (String) list3.get(k).get("ATTACHSYSFILENAME");
 						TZ_TITLE = (String) list3.get(k).get("TZ_XXX_MC");
-
+						accessUrl = (String) list3.get(k).get("TZ_ACCESS_PATH");
+						
+						if(fileName == null){
+							fileName = "";
+						}
+						
+						
+						if(fileName != null && !"".equals(fileName)
+								&& sysFileName != null && !"".equals(sysFileName)
+								&& accessUrl != null && !"".equals(accessUrl)){
+							if(accessUrl.lastIndexOf("/") + 1 == accessUrl.length()){
+								accessUrl = request.getContextPath() + accessUrl + sysFileName;
+							}else{
+								accessUrl = request.getContextPath() + accessUrl + "/" + sysFileName;
+							}
+						}else{
+							accessUrl = "";
+						}
+						
+						strfileDate = tzGdObject.getHTMLText(
+								"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", true, fileName,
+								accessUrl, String.valueOf(numFileID));
+						
+						/*
 						if ("imagesUpload".equals(TZ_COM_LMC)) {
 							String urlImages = this.getUrlImages(appInsId, TZ_XXX_BH, sysFileName, errorMsg);
 							strfileDate = tzGdObject.getHTMLText(
@@ -723,7 +776,7 @@ System.out.println("==========strStuName======>"+strStuName);
 										urlFiles, String.valueOf(numFileID));
 							}
 						}
-
+*/
 						Map<String, Object> jsonmap = new HashMap<>();
 						jsonmap.put("appInsId", appInsId);
 						jsonmap.put("strfileDate", strfileDate);
@@ -747,11 +800,10 @@ System.out.println("==========strStuName======>"+strStuName);
 		}
 		return jacksonUtil.Map2json(mapRet);
 	}
-
+/*
 	private String getUrlImages(long appInsId, String TZ_XXX_BH, String sysFileName, String[] errorMsg) {
 		String urlReturn = "";
-		// TODO
-		/* 文件访问路径 */
+
 		String attUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 		String fileUrl = jdbcTemplate.queryForObject(attUrlSQL, new Object[] { "TZ_AFORM_FILE_DIR" }, "String");
 		if ((fileUrl.lastIndexOf("/") + 1) != fileUrl.length()) {
@@ -763,8 +815,7 @@ System.out.println("==========strStuName======>"+strStuName);
 
 	private String getFiles(long appInsId, String TZ_XXX_BH, String sysFileName, String[] errorMsg) {
 		String urlReturn = "";
-		// TODO
-		/* 文件访问路径 */
+
 		String attUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 		String fileUrl = jdbcTemplate.queryForObject(attUrlSQL, new Object[] { "TZ_AFORM_FILE_DIR" }, "String");
 		if(fileUrl != null && !"".equals(fileUrl)){
@@ -779,7 +830,8 @@ System.out.println("==========strStuName======>"+strStuName);
 				+ fileUrl + sysFileName;
 		return urlReturn;
 	}
-
+*/
+	
 	private String getRefLetterFiles(String sysFileName) {
 		String urlReturn = "";
 		// TODO

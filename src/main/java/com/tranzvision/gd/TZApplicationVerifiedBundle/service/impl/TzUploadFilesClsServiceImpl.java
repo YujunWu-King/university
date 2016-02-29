@@ -50,7 +50,7 @@ public class TzUploadFilesClsServiceImpl extends FrameworkImpl {
 				// 报名表编号;
 				String strAppId = jacksonUtil.getString("strAppId");
 				// 学生姓名;
-				String stuName = jacksonUtil.getString("stuName");
+				//String stuName = jacksonUtil.getString("stuName");
 				//  附件名称;
 				String fileName = jacksonUtil.getString("FileName");
 				// 附件系统唯一名称;
@@ -72,13 +72,13 @@ public class TzUploadFilesClsServiceImpl extends FrameworkImpl {
 				psTzFormAttT.setTzIndex(1);
 				psTzFormAttT.setAttachsysfilename(strSysFile);
 				psTzFormAttT.setAttachuserfile(refLetterFile);
+				psTzFormAttT.setTzAccessPath(strFileUrl);
 				psTzFormAttT.setRowAddedDttm(new Date());
 				psTzFormAttT.setRowAddedOprid(oprid);
 				psTzFormAttT.setRowLastmantDttm(new Date());
 				psTzFormAttT.setRowLastmantOprid(oprid);
 				psTzFormAttTMapper.insert(psTzFormAttT);
-				
-				//TODO文件写数据表
+
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";
