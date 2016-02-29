@@ -398,7 +398,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		if (StringUtils.equals(oType, "CLASSINFO")) {
 			String classId = jacksonUtil.getString("CLASSID");
 
-			String sqlClass = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
+			String sqlClass = "SELECT TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 			String className = sqlQuery.queryForObject(sqlClass, new Object[] { classId }, "String");
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();

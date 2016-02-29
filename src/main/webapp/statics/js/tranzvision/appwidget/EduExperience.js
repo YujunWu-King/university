@@ -453,7 +453,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '<div class="main_inner_content_info_right input_100px">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" title="' + child[i].EduExper9["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper9")>';
+			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" title="' + child[i].EduExper9["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper9")>';
+			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" name="websitefile" title="' + child[i].EduExper9["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper9")>';
 			edus += '		<div style="margin-top: -40px; margin-left: 265px">';
 			edus += '			<div id="' + data["itemId"] + child[i].EduExper9["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 			edus += '				<div class="onShow"></div>';
@@ -471,7 +472,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '<div class="main_inner_content_info_right input_100px">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" title="' + child[i].EduExper10["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper10")>';
+			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" title="' + child[i].EduExper10["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper10")>';
+			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" name="websitefile" title="' + child[i].EduExper10["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper10")>';
 			edus += '		<div style="margin-top: -40px; margin-left: 265px">';
 			edus += '			<div id="' + data["itemId"] + child[i].EduExper10["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 			edus += '				<div class="onShow"></div>';
@@ -490,7 +492,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '<div class="main_inner_content_info_right input_100px">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" title="' + child[i].EduExper11["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper11")>';
+			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" title="' + child[i].EduExper11["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper11")>';
+			edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" name="websitefile" title="' + child[i].EduExper11["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper11")>';
 			edus += '		<div style="margin-top: -40px; margin-left: 265px">';
 			edus += '			<div id="' + data["itemId"] + child[i].EduExper11["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 			edus += '				<div class="onShow"></div>';

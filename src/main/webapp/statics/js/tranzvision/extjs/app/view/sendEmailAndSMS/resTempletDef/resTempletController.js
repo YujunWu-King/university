@@ -82,18 +82,20 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletController'
 						var emailaddr = responseText.comContent.emailaddr;
 						var smssevname = responseText.comContent.smssevname;
 						
-						form.findField("tempemailserv").setValue(tempemailserv);
-						form.findField("emailaddr").setValue(emailaddr);
-						form.findField("tempsmsserv").setValue(tempsmsserv);
-						form.findField("smssevname").setValue(smssevname);
-
+						var initValues = {
+							"tempemailserv":tempemailserv,
+							"emailaddr":emailaddr,
+							"tempsmsserv":tempsmsserv,
+							"smssevname":smssevname
+						}
+						form.setValues(initValues);
 					},
 					failure: function (response) {
 						//Ext.MessageBox.alert("错误", "错误");
 					}
 				});
 				
-				form.findField("isneed").setValue("Y");
+				form.setValues({"isneed":"Y"});
 				/*
 				form.findField("restemporg").on('change',
 					function(combox,newValue,oldValue){
