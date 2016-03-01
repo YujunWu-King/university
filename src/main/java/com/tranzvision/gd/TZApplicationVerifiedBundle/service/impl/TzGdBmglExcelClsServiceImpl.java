@@ -18,6 +18,8 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -37,6 +39,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -126,29 +130,31 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			
 			/*将文件上传之前，先重命名该文件*/
 			Date dt = new Date();
-			SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
+			//SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
 			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-			String sDtUrl = dateFormate.format(dt);
 			String sDttm = datetimeFormate.format(dt);
 			
-			String strUseFileName = sDttm + "_" + excelName + "." + "xls";
+			String strUseFileName = sDttm + "_" + excelName + "." + "xlsx";
 			
 			/*判断给定的URL地址是否以“/”结尾，若不是以"/"结尾，在URL地址后添加字符串“/”*/
 			//String sDirUrl = GetURL(URL.TZ_GD_EXPORT_EXCEL_URL);
-			String sDirUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
-			String sDirUrl = jdbcTemplate.queryForObject(sDirUrlSQL, new Object[] { "TZ_GD_EXPORT_EXCEL_URL" },"String");
-			if(sDirUrl == null || "".equals(sDirUrl)){
-				return;
-			}
+			//String sDirUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
+			//String sDirUrl = jdbcTemplate.queryForObject(sDirUrlSQL, new Object[] { "TZ_GD_EXPORT_EXCEL_URL" },"String");
+			//if(sDirUrl == null || "".equals(sDirUrl)){
+			//	return;
+			//}
+			/*
+			String sDirUrl = "";
+			sDirUrl = getSysHardCodeVal.getDownloadPath();
 			String fileSeparator = File.separator;
 			if((sDirUrl.lastIndexOf(fileSeparator)+1) == sDirUrl.length()){
-				/*donothing*/
+				
 			}else{
 				sDirUrl = sDirUrl + fileSeparator;
 			}
 			
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			/*创建一个新的目录*/
+			
 			sDirUrl = sDirUrl + oprid + fileSeparator + sDtUrl + fileSeparator;
 		
 			File dir =new File(sDirUrl);    
@@ -157,9 +163,16 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			{        
 				dir.mkdir();    
 			}
+			*/
+			int colum = 0;
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String downloadPath = getSysHardCodeVal.getDownloadPath();
+			ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "EXPORTBMBEXCEL");
+			List<String[]> dataCellKeys = new ArrayList<String[]>();
+			dataCellKeys.add(new String[] { "id"+ colum, "序号" });
 			
-			ArrayList<String> arr_title = new ArrayList<>();
-			arr_title.add("序号");
+			//ArrayList<String> arr_title = new ArrayList<>();
+			//arr_title.add("序号");
 			
 			String sqlExcelTpl = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlExcelTpl,new Object[]{excelTpl});
@@ -172,6 +185,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 					strFieldName = (String)list.get(i).get("TZ_DC_FIELD_NAME");
 					strFieldSep = (String)list.get(i).get("TZ_DC_FIELD_FGF");
 					String[] str = new String[]{strFieldID, strFieldName, strFieldSep};
+					colum ++;
+					dataCellKeys.add(new String[] { "id"+ colum, strFieldName });
 					arrExcelTplField.add(str);
 				}
 			}
@@ -187,17 +202,20 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			参数4：需要导出的数据的总行数
 			参数5：打开的Excel文件对象
 			*/
-			//TODO
 			//dealWithExcel.crExcel(arr_title, 1, 1, row_count + 1, wwb);
-			/*生成Excel标题*/
-			ArrayList<String> arr_data = new ArrayList<>();
+
+			//ArrayList<String> arr_data = new ArrayList<>();
+			List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 
 			// Hardcode定义取值视图;
 			String appFormInfoViewSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 			String appFormInfoView = jdbcTemplate.queryForObject(appFormInfoViewSQL, new Object[] {"TZ_FORM_VAL_REC"},"String");
 		
+			colum = 0;
 			for(int i = 0; i < row_count; i++){
-				arr_data.add(String.valueOf(i));
+				Map<String, Object> mapData = new HashMap<String, Object>();
+				mapData.put("id"+ colum,String.valueOf(i + 1));
+				
 				/*根据模板配置取出每个报名表的数据*/
 				for(int j = 0 ; j < arrExcelTplField.size(); j ++){
 					String sqlAppFormField = "SELECT A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,B.TZ_XXX_CCLX,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A ,PS_TZ_FORM_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND B.TZ_XXX_BH =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
@@ -339,16 +357,26 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				    	 
 				    }
 				    
-				    arr_data.add(strAppFormFieldValues);
+				    //arr_data.add(strAppFormFieldValues);
+				    colum = colum + 1;
+				    mapData.put("id"+colum, strAppFormFieldValues);
+				    dataList.add(mapData);
 				}
-				//TODO
+				
 				//dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count + 1, wwb);
+				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+				if (rst) {
+					System.out.println("---------生成的excel文件路径----------");
+					System.out.println(excelHandle.getExportExcelPath());
+				} else {
+					System.out.println("导出失败！");
+				}
 			}
 			
 			/*关闭打开的文件 TODO*/
 			//dealWithExcel.closeFile(&wwb);
 			
-			String urlExcel = "/linkfiles/exportExcel/" + oprid + "/" + sDtUrl + "/" + strUseFileName;
+			/*String urlExcel = "/linkfiles/exportExcel/" + oprid + "/" + sDtUrl + "/" + strUseFileName;*/
 			/* TODO
 			psTzExcelDattTMapper.selectByPrimaryKey(processinstance)
 			Local Record &TZ_EXCEL_DATT_T = CreateRecord(Record.TZ_EXCEL_DATT_T);
