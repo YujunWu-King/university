@@ -158,7 +158,9 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			}
 			String viewHtml = "";
 			try {
+				tplData = tplData.replaceAll("\\$", "~");
 				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language);
+				viewHtml = viewHtml.replaceAll("\\~", "\\$");
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

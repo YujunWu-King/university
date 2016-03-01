@@ -258,6 +258,9 @@ public class TemplateEngine {
 
 						// 页码
 						String pno = item.get("pageno") == null ? "0" : String.valueOf(item.get("pageno"));
+						if(StringUtils.isBlank(pno)){
+							pno = "0";
+						}
 						int pageno = Integer.parseInt(pno);
 
 						this.savePerXXX(item);
@@ -279,6 +282,9 @@ public class TemplateEngine {
 
 									// 排序
 									String orderby = children.get("orderby") == null ? "0" : String.valueOf(children.get("orderby"));
+									if(StringUtils.isBlank(orderby)){
+										orderby = "0";
+									}
 									psTzRqXxxPzT.setTzOrder(Integer.parseInt(orderby));
 
 									int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
@@ -288,6 +294,9 @@ public class TemplateEngine {
 									}
 
 									String childPno = children.get("pageno") == null ? "0" : String.valueOf(children.get("pageno"));
+									if(StringUtils.isBlank(childPno)){
+										childPno = "0";
+									}
 									int childPageno = Integer.parseInt(childPno);
 									
 									String isSingle = children.get("isSingleLine") == null ? "" : String.valueOf(children.get("isSingleLine"));
@@ -309,6 +318,9 @@ public class TemplateEngine {
 
 											// 排序
 											String order_ = child.get("orderby") == null ? "0" : String.valueOf(child.get("orderby"));
+											if(StringUtils.isBlank(order_)){
+												order_ = "0";
+											}
 											psTzRqXxxPzT_.setTzOrder(Integer.parseInt(order_));
 											
 											int count_ = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT_);
@@ -400,6 +412,9 @@ public class TemplateEngine {
 
 		String parItemId = item.get("itemId") == null ? "" : String.valueOf(item.get("itemId"));
 		String parOrderby = item.get("orderby") == null ? "0" : String.valueOf(item.get("orderby"));
+		if(StringUtils.isBlank(parOrderby)){
+			parOrderby = "0";
+		}
 		
 		//模板编号
 		psTzTempFieldT.setTzAppTplId(this.tid);
@@ -450,6 +465,9 @@ public class TemplateEngine {
 						//行内编号
 						if(children.containsKey("orderby")){
 							String orderby = children.get("orderby") == null ? "0" : String.valueOf(children.get("orderby"));
+							if(StringUtils.isBlank(orderby)){
+								orderby = "0";
+							}
 							psTzTempFieldTFixed.setTzLineOrder(Integer.parseInt(orderby));
 						}
 						//排序序号
@@ -574,6 +592,9 @@ public class TemplateEngine {
 
 		// 排序序号
 		String orderby = item.get("orderby") == null ? "0" : String.valueOf(item.get("orderby"));
+		if(StringUtils.isBlank(orderby)){
+			orderby = "0";
+		}
 		psTzAppXxxPz.setTzOrder(Integer.parseInt(orderby));
 
 		// 分页号
@@ -840,6 +861,9 @@ public class TemplateEngine {
 
 				// 同步顺序
 				String syncOrder = syncRule.get("syncOrder") == null ? "0" : String.valueOf(syncRule.get("syncOrder"));
+				if(StringUtils.isBlank(syncOrder)){
+					syncOrder = "0";
+				}
 				psTzAppXxSyncT.setTzSyncOrder(Integer.parseInt(syncOrder));
 
 				// 分隔符
@@ -939,14 +963,15 @@ public class TemplateEngine {
 
 		String tplHtml = "";
 		componentData = componentData.replace("\\", "\\\\");
+		componentData = componentData.replaceAll("\\$", "~");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", true,
 					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
+			tplHtml = tplHtml.replaceAll("\\~", "\\$");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			tplHtml = "";
 		}
-
 		return tplHtml;
 	}
 
