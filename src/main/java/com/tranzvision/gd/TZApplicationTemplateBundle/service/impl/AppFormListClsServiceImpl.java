@@ -487,6 +487,8 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 							: String.valueOf(result.get("ATTACHUSERFILE"));
 					String sysFileName = result.get("ATTACHSYSFILENAME") == null ? ""
 							: String.valueOf(result.get("ATTACHSYSFILENAME"));
+					String accessPath = result.get("TZ_ACCESS_PATH") == null ? ""
+							: String.valueOf(result.get("TZ_ACCESS_PATH"));
 
 					Map<String, Object> mapAttachJson = new HashMap<String, Object>();
 					mapAttachJson.put("itemId", itemId);
@@ -495,7 +497,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapAttachJson.put("orderby", ++i);
 					mapAttachJson.put("fileName", fileName);
 					mapAttachJson.put("sysFileName", sysFileName);
-					mapAttachJson.put("path", "");
+					mapAttachJson.put("accessPath", accessPath);
 					mapAttachJson.put("viewFileName", fileName);
 					listData.add(mapAttachJson);
 				}
