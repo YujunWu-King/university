@@ -1163,7 +1163,7 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 				psTzFormWrkT.setTzFormSpSta(strAuditState);
 				psTzFormWrkT.setTzColorSortId(strColorType);
 				psTzFormWrkT.setTzRemark(strRemark);
-				//psTzFormWrkT.setTzRemarkShort(strShortRemark);
+				psTzFormWrkT.setTzRemarkShort(strShortRemark);
 				psTzFormWrkT.setRowLastmantDttm(new Date());
 				psTzFormWrkT.setRowLastmantOprid(oprid);
 				psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);

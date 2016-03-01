@@ -1,6 +1,5 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,13 +12,21 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzBmbDceTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -41,6 +48,14 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	@Autowired
+	private PsTzBmbDceTMapper psTzBmbDceTMapper;
+	@Autowired
+	private PsTzExcelDrxxTMapper psTzExcelDrxxTMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
+	@Autowired
+	private PsprcsrqstMapper psprcsrqstMapper;
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -72,7 +87,12 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 					mapList.put("oprTime", rowList[2]);
 					mapList.put("processInstance", rowList[3]);
 					mapList.put("applicationEngineStatus", rowList[4]);
-					mapList.put("fileUrl", rowList[5]);
+					if(rowList[5] != null && !"".equals(rowList[5])){
+						mapList.put("fileUrl", request.getContextPath() + rowList[5]);
+					}else{
+						mapList.put("fileUrl", "");
+					}
+					
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);
@@ -92,7 +112,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 		if (actData.length == 0) {
 			return strRet;
 		}
-
+		int processinstance = 0;
 		try {
 
 			for (int num = 0; num < actData.length; num++) {
@@ -108,17 +128,83 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				
 				//报名表编号;
 				@SuppressWarnings("unchecked")
-				List<Map<String, Object>> appInsIdArray = (List<Map<String, Object>>)jacksonUtil.getList("applicantsList");
+				List<String> appInsIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+				
+				String strAppInsIdList = "";
+				int i = 0;
+				for(i = 0; i < appInsIdArray.size(); i++){
+					String strAppInsId = String.valueOf(appInsIdArray.get(i));
+					if("".equals(strAppInsIdList)){
+						strAppInsIdList = strAppInsId;
+					}else{
+						strAppInsIdList = strAppInsIdList + "," + strAppInsId;
+					}
+				}
+				
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				/*生成运行控制ID*/
+				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
+			    String s_dt = dateFormate.format(new Date());
+				String runCntlId = oprid + "_" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
+				
+				PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
+				psTzBmbDceT.setRunCntlId(runCntlId);
+				psTzBmbDceT.setTzAppTplId(appFormModalID);
+				psTzBmbDceT.setTzExportTmpId(excelTpl);
+				psTzBmbDceT.setTzAudList(strAppInsIdList);
+				psTzBmbDceT.setTzExcelName(excelName);
+				psTzBmbDceTMapper.insert(psTzBmbDceT);
+				
+				processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+				psTzExcelDrxxT.setProcessinstance(processinstance);
+				psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
+				psTzExcelDrxxT.setTzPageId("TZ_EXP_EXCEL_STD");
+				psTzExcelDrxxT.setTzDrLxbh("1");
+				psTzExcelDrxxT.setTzDrTaskDesc(excelName); 
+				psTzExcelDrxxT.setTzStartDtt(new Date());
+				psTzExcelDrxxT.setTzDrTotalNum(appInsIdArray.size());
+				psTzExcelDrxxT.setOprid(oprid);
+				psTzExcelDrxxT.setTzIsViewAtt("Y");
+				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+				
+				int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
+				String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
+				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+				psTzExcelDattT.setProcessinstance(processinstance);
+				psTzExcelDattT.setTzSysfileName(strExcelID);
+				psTzExcelDattT.setTzFileName(excelName);
+				psTzExcelDattT.setTzCfLj("A");
+				psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
+				psTzExcelDattT.setTzFwqFwlj(""); /*运行AE时产生*/
+				psTzExcelDattTMapper.insert(psTzExcelDattT);
+				
+				Psprcsrqst psprcsrqst = new Psprcsrqst();
+				psprcsrqst.setPrcsinstance(processinstance);
+				psprcsrqst.setOprid(oprid);
+				psprcsrqst.setRundttm(new Date());
+				psprcsrqst.setRunstatus("7");
+				psprcsrqstMapper.insert(psprcsrqst);
+				
+				this.tzGdDceAe(runCntlId, processinstance);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			
+			Psprcsrqst psprcsrqst = psprcsrqstMapper.selectByPrimaryKey(processinstance);
+			if(psprcsrqst != null){
+				psprcsrqst.setRunstatus("10");
+				psprcsrqstMapper.updateByPrimaryKey(psprcsrqst);
+			}
 		}
 		return strRet;
 	}
 	
 	/***TZ_GD_DCE_AE***/
-	public void tzGdDceAe(String runcntlId){
+	public void tzGdDceAe(String runcntlId,int processinstance){
 		String sql = "SELECT TZ_AUD_LIST ,RUN_CNTL_ID ,TZ_APP_TPL_ID ,TZ_EXPORT_TMP_ID ,TZ_EXCEL_NAME FROM PS_TZ_BMB_DCE_T WHERE RUN_CNTL_ID= ?";
 		Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{runcntlId});
 		if(map != null){
@@ -366,33 +452,32 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				//dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count + 1, wwb);
 				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
 				if (rst) {
-					System.out.println("---------生成的excel文件路径----------");
-					System.out.println(excelHandle.getExportExcelPath());
+					String urlExcel = excelHandle.getExportExcelPath();
+
+					PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(processinstance);
+					if(psTzExcelDattT != null){
+						//psTzExcelDattT.setProcessinstance(processinstance);
+						//psTzExcelDattT.setTzSysfileName(strExcelID);
+						//psTzExcelDattT.setTzFileName(excelName);
+						//psTzExcelDattT.setTzCfLj("A");
+						//psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
+						psTzExcelDattT.setTzFwqFwlj(urlExcel);
+						psTzExcelDattTMapper.updateByPrimaryKeySelective(psTzExcelDattT);
+					}
+					
+					Psprcsrqst psprcsrqst = psprcsrqstMapper.selectByPrimaryKey(processinstance);
+					if(psprcsrqst != null){
+						psprcsrqst.setRunstatus("9");
+						psprcsrqstMapper.updateByPrimaryKey(psprcsrqst);
+					}
 				} else {
-					System.out.println("导出失败！");
+					Psprcsrqst psprcsrqst = psprcsrqstMapper.selectByPrimaryKey(processinstance);
+					if(psprcsrqst != null){
+						psprcsrqst.setRunstatus("10");
+						psprcsrqstMapper.updateByPrimaryKey(psprcsrqst);
+					}
 				}
 			}
-			
-			/*关闭打开的文件 TODO*/
-			//dealWithExcel.closeFile(&wwb);
-			
-			/*String urlExcel = "/linkfiles/exportExcel/" + oprid + "/" + sDtUrl + "/" + strUseFileName;*/
-			/* TODO
-			psTzExcelDattTMapper.selectByPrimaryKey(processinstance)
-			Local Record &TZ_EXCEL_DATT_T = CreateRecord(Record.TZ_EXCEL_DATT_T);
-			&TZ_EXCEL_DATT_T.PROCESSINSTANCE.Value = TZ_BMB_DCE_AET.PROCESS_INSTANCE;
-			If &TZ_EXCEL_DATT_T.SelectByKey() Then
-			   &TZ_EXCEL_DATT_T.PROCESSINSTANCE.Value = TZ_BMB_DCE_AET.PROCESS_INSTANCE;
-			   &TZ_EXCEL_DATT_T.TZ_SYSFILE_NAME.Value = &strExcelID;
-			   &TZ_EXCEL_DATT_T.TZ_FILE_NAME.Value = &excelName;
-			   &TZ_EXCEL_DATT_T.TZ_CF_LJ.Value = "A";
-			   &TZ_EXCEL_DATT_T.TZ_FJ_REC_NAME.Value = "TZ_APP_CC_T";
-			   &TZ_EXCEL_DATT_T.TZ_FWQ_FWLJ.Value = &urlExcel;
-			   &TZ_EXCEL_DATT_T.Update();
-			End-If;
-			*/
-			
-			
 		}
 	}
 

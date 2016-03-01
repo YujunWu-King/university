@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzBmbDceTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    <id column="RUN_CNTL_ID" property="runCntlId" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <result column="TZ_EXPORT_TMP_ID" property="tzExportTmpId" jdbcType="VARCHAR" />
+    <result column="TZ_EXCEL_NAME" property="tzExcelName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" extends="BaseResultMap" >
+    <result column="TZ_AUD_LIST" property="tzAudList" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RUN_CNTL_ID, TZ_APP_TPL_ID, TZ_EXPORT_TMP_ID, TZ_EXCEL_NAME
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_AUD_LIST
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_BMB_DCE_T
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_BMB_DCE_T
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    insert into PS_TZ_BMB_DCE_T (RUN_CNTL_ID, TZ_APP_TPL_ID, TZ_EXPORT_TMP_ID, 
+      TZ_EXCEL_NAME, TZ_AUD_LIST)
+    values (#{runCntlId,jdbcType=VARCHAR}, #{tzAppTplId,jdbcType=VARCHAR}, #{tzExportTmpId,jdbcType=VARCHAR}, 
+      #{tzExcelName,jdbcType=VARCHAR}, #{tzAudList,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    insert into PS_TZ_BMB_DCE_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        RUN_CNTL_ID,
+      </if>
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzExportTmpId != null" >
+        TZ_EXPORT_TMP_ID,
+      </if>
+      <if test="tzExcelName != null" >
+        TZ_EXCEL_NAME,
+      </if>
+      <if test="tzAudList != null" >
+        TZ_AUD_LIST,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        #{runCntlId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExportTmpId != null" >
+        #{tzExportTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExcelName != null" >
+        #{tzExcelName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudList != null" >
+        #{tzAudList,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    update PS_TZ_BMB_DCE_T
+    <set >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExportTmpId != null" >
+        TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzExcelName != null" >
+        TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudList != null" >
+        TZ_AUD_LIST = #{tzAudList,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    update PS_TZ_BMB_DCE_T
+    set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR},
+      TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR},
+      TZ_AUD_LIST = #{tzAudList,jdbcType=LONGVARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
+    update PS_TZ_BMB_DCE_T
+    set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR},
+      TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+</mapper>
