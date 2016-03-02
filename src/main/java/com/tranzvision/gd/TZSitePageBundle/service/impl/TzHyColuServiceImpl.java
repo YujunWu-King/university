@@ -244,7 +244,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			// 查询的最大行，最小行
 			// int numMaxRow = numNowPage * numPageRow;
-			int numMinRow = (numNowPage - 1) * numPageRow + 1;
+			int numMinRow = (numNowPage - 1) * numPageRow;
 
 			List<Map<String, Object>> listSiteActivities = new ArrayList<Map<String, Object>>();
 
