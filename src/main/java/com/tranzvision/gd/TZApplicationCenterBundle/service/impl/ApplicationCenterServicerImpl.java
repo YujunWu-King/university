@@ -69,7 +69,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			String siteSQL = "select TZ_JG_ID,TZ_SKIN_STOR,TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { strSiteId });
 			if (siteMap != null) {
-				// str_jg_id = (String)siteMap.get("TZ_JG_ID");
+				str_jg_id = (String)siteMap.get("TZ_JG_ID");
 				// String skinstor = (String)siteMap.get("TZ_SKIN_STOR");
 				language = (String) siteMap.get("TZ_SITE_LANG");
 			}
@@ -271,6 +271,9 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 										TZ_APPPRO_RST = jdbcTemplate.queryForObject(
 												"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
 												new Object[] { classId, TZ_APPPRO_ID }, "String");
+										if(TZ_APPPRO_RST == null){
+											TZ_APPPRO_RST = "";
+										}
 										timelineClass = "timeline-yuan1_i";
 									} else {
 										// 如果有值，查看是不是默认回复语;
@@ -282,6 +285,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 										}
 
 									}
+									
 									if ((TZ_SORT_NUM % 2) == 1) {
 										bmlcStepClass = "indexbm-lc-step1";
 									} else {
@@ -509,6 +513,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					TZ_SQLC_TABLE, ApplicationCenter);
 			applicationCenterHtml = TZ_SQLC_TABAL_TOTAL_DIV;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "无法获取相关数据";
 		}
 		return applicationCenterHtml;

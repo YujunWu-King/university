@@ -777,7 +777,8 @@
         var strAppId = form.findField("appInsID").getValue();
         var stuName = form.findField("stuName").getValue();
         //文件名称
-        var refLetterFile = form.findField("refLetterFile").getValue();
+        //var refLetterFile = form.findField("refLetterFile").getValue();
+        var refLetterFile = form.findField("orguploadfile").getValue();
 
         if(refLetterFile != ""){
             var dateStr = Ext.Date.format(new Date(), 'Ymd');
@@ -817,11 +818,12 @@
                     ///linkfile/FileUpLoad/appFormAttachment/20150827
                     var accessPath = action.result.msg.accessPath;
                     ///export/home/PT852/webserv/ALTZDEV/applications/peoplesoft/PORTAL.war/linkfile/FileUpLoad/appFormAttachment/20150827
-                    var path = action.result.msg.path;
-
+                    //var path = action.result.msg.path;
+                    
+                    
                     if (strAppId!=""){
 
-                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{"add":[{"strAppId":"'+strAppId+'","stuName":"'+stuName+'","refLetterFile":"'+scFileName+'","FileName":"'+FileName+'","strSysFile":"'+sysfile+'","fileUrl":"'+path+'"}]} }';
+                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{"add":[{"strAppId":"'+strAppId+'","stuName":"'+stuName+'","refLetterFile":"'+scFileName+'","FileName":"'+FileName+'","strSysFile":"'+sysfile+'","fileUrl":"'+accessPath+'"}]} }';
                         Ext.tzSubmit(tzParams,function(responseData){
                             //form.reset();
                             //var fileGrid =  btn.findParentByType('grid');

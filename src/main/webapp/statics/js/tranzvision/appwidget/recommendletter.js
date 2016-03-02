@@ -371,7 +371,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             c += '</div>';
 			//名字
 			c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_gname_1'+'" '+(data.children.recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            c += '<span class="edu_item_label" style="width:150px;" id="'+data.instanceId+'-rec_name'+'">'+data.children.recommend_17["itemName"]+'：</span>';
+            c += '<span class="edu_item_label" style="width:150px;" id="'+data.instanceId+'-rec_gname'+'">'+data.children.recommend_17["itemName"]+'：</span>';
             c += '<b class="read-input" style="width:272px">&nbsp;</b>';
             c += '</div>';
 			//单位
@@ -494,8 +494,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//称呼-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_title">';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_18\')" value="'+child.recommend_18["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_18\')" value="'+child.recommend_18["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_18\')" value="'+child.recommend_18["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_18\')" value="'+child.recommend_18["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
 		list += '<td><input type="text" value="rec_title" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_18\')" '+(child.recommend_18["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
 		list += '</tr>';
@@ -503,8 +503,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//姓氏-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_name">';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_1\')" value="'+child.recommend_1["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_1\')" value="'+child.recommend_1["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_1\')" value="'+child.recommend_1["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_1\')" value="'+child.recommend_1["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
 		list += '<td><input type="text" value="rec_name" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
 		list += '</tr>';
@@ -512,8 +512,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//名字-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_gname">';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_17\')" value="'+child.recommend_17["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_17\')" value="'+child.recommend_17["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_17\')" value="'+child.recommend_17["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_17\')" value="'+child.recommend_17["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
 		list += '<td><input type="text" value="rec_gname" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_17\')" '+(child.recommend_17["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
 		list += '</tr>';
@@ -521,119 +521,119 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//单位-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_company">';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_2\')" value="'+child.recommend_2["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_2\')" value="'+child.recommend_2["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_2\')" value="'+child.recommend_2["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_2\')" value="'+child.recommend_2["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_company" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//单位-结束
 		//职务-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_post">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_3\')" value="'+child.recommend_3["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_3\')" value="'+child.recommend_3["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_3\')" value="'+child.recommend_3["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_3\')" value="'+child.recommend_3["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_post" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//职务-结束
 		//手机区号-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_phone_area">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_16\')" value="'+child.recommend_16["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_16\')" value="'+child.recommend_16["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_16\')" value="'+child.recommend_16["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_16\')" value="'+child.recommend_16["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_phone_area" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//手机-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_phone_no">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_4\')" value="'+child.recommend_4["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_4\')" value="'+child.recommend_4["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_4\')" value="'+child.recommend_4["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_4\')" value="'+child.recommend_4["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_phone_no" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//手机-结束
 		//邮箱-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_email">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_5\')" value="'+child.recommend_5["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_5\')" value="'+child.recommend_5["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_5\')" value="'+child.recommend_5["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_5\')" value="'+child.recommend_5["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_email" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//邮箱-结束
 		//性别-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_sex">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_15\')" value="'+child.recommend_15["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_15\')" value="'+child.recommend_15["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_15\')" value="'+child.recommend_15["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_15\')" value="'+child.recommend_15["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_sex" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_15\')" '+(child.recommend_15["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//性别-结束
 		//申请人关系-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_relation">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_6\')" value="'+child.recommend_6["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_6\')" value="'+child.recommend_6["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_6\')" value="'+child.recommend_6["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_6\')" value="'+child.recommend_6["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_relation" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_6\')" '+(child.recommend_6["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//申请人关系-结束
 		//备用字段一-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by1">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_10\')" value="'+child.recommend_10["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_10\')" value="'+child.recommend_10["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_10\')" value="'+child.recommend_10["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_10\')" value="'+child.recommend_10["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_by1" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_10\')" '+(child.recommend_10["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段一-结束
 		//备用字段二-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by2">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_11\')" value="'+child.recommend_11["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_11\')" value="'+child.recommend_11["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_11\')" value="'+child.recommend_11["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_11\')" value="'+child.recommend_11["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_by2" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_11\')" '+(child.recommend_11["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段二-结束
 		//备用字段三-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by3">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_12\')" value="'+child.recommend_12["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_12\')" value="'+child.recommend_12["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_12\')" value="'+child.recommend_12["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_12\')" value="'+child.recommend_12["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_by3" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_12\')" '+(child.recommend_12["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段三-结束
 		//备用字段四-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by4">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_13\')" value="'+child.recommend_13["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_13\')" value="'+child.recommend_13["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_13\')" value="'+child.recommend_13["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_13\')" value="'+child.recommend_13["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_by4" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_13\')" '+(child.recommend_13["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段四-结束
 		//备用字段五-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by5">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_14\')" value="'+child.recommend_14["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_14\')" value="'+child.recommend_14["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_14\')" value="'+child.recommend_14["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_14\')" value="'+child.recommend_14["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_by5" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_14\')" '+(child.recommend_14["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段五-结束
 		//推荐信语言-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_language">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_7\')" value="'+child.recommend_7["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_7\')" value="'+child.recommend_7["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_7\')" value="'+child.recommend_7["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_7\')" value="'+child.recommend_7["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_language" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
         list += '</tr>';
 		//推荐信语言-结束
 		//推荐信类型-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_way">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_8\')" value="'+child.recommend_8["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_8\')" value="'+child.recommend_8["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_8\')" value="'+child.recommend_8["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_8\')" value="'+child.recommend_8["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_way" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_8\')" '+(child.recommend_8["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//推荐信类型-结束
 		//上传附件-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_attach">';
-        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_9\')" value="'+child.recommend_9["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
-		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_9\')" value="'+child.recommend_9["title"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_9\')" value="'+child.recommend_9["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_9\')" value="'+child.recommend_9["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_attach" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_9\')" '+(child.recommend_9["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';

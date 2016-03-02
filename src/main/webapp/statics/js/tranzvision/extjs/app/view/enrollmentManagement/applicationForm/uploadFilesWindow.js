@@ -73,7 +73,8 @@
 					xtype: 'filefield',
 					fieldLabel: '',
 					buttonText:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.browse","浏览"),
-					name: 'refLetterFile',
+					//name: 'refLetterFile',
+					name: 'orguploadfile',
 					listeners:{
 						change:function(bt, value, eOpts){
 							addAttach(bt, value, eOpts);

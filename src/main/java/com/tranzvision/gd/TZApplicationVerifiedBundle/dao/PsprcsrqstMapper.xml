@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
+    <id column="PRCSINSTANCE" property="prcsinstance" jdbcType="INTEGER" />
+    <result column="RUNSTATUS" property="runstatus" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="RUNDTTM" property="rundttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PRCSINSTANCE, RUNSTATUS, OPRID, RUNDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from PSPRCSRQST
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PSPRCSRQST
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
+    insert into PSPRCSRQST (PRCSINSTANCE, RUNSTATUS, OPRID, 
+      RUNDTTM)
+    values (#{prcsinstance,jdbcType=INTEGER}, #{runstatus,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, 
+      #{rundttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
+    insert into PSPRCSRQST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prcsinstance != null" >
+        PRCSINSTANCE,
+      </if>
+      <if test="runstatus != null" >
+        RUNSTATUS,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="rundttm != null" >
+        RUNDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prcsinstance != null" >
+        #{prcsinstance,jdbcType=INTEGER},
+      </if>
+      <if test="runstatus != null" >
+        #{runstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rundttm != null" >
+        #{rundttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
+    update PSPRCSRQST
+    <set >
+      <if test="runstatus != null" >
+        RUNSTATUS = #{runstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rundttm != null" >
+        RUNDTTM = #{rundttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
+    update PSPRCSRQST
+    set RUNSTATUS = #{runstatus,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      RUNDTTM = #{rundttm,jdbcType=TIMESTAMP}
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+</mapper>

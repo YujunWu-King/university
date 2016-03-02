@@ -41,8 +41,8 @@ SurveyBuild.extend("ViewAttachment", "baseComponent", {
                     c += '<div class="main_inner_file_list" id="'+data.itemId+'_AttList"><ul>';
                     for(var i=0; i<children.length; i++){
                         _sysFilename = children[i].sysFileName;
-                        _fileName=children[i].fileName;
-						_accessPath=children[i].accessPath;
+                        _fileName = children[i].fileName;
+						_accessPath = children[i].accessPath;
                         _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
                         if (children[i].viewFileName != "" && children[i].sysFileName != ""){
                             if(num==1){
