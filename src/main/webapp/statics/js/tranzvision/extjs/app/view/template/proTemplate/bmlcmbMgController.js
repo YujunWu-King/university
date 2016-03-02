@@ -1040,7 +1040,8 @@
         var tzStoreParams = '{"TZ_APPPRO_TMP_ID":"'+TZ_APPPRO_TMP_ID+'","TZ_APPPRO_ID":"'+TZ_APPPRO_ID+'"}';
 
         var pageGrid = this.lookupReference('probackMsgGrid');
-        Ext.tzSubmit(tzParams,function(){
+        Ext.tzSubmit(tzParams,function(responseData){
+			form.setValues(responseData.formData);
             win.actType = "update";
             //form.findField("TZ_APPPRO_ID").setReadOnly(true);
             pageGrid.store.tzStoreParams = tzStoreParams;
