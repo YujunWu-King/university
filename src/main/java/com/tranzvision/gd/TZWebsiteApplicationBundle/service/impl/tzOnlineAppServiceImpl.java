@@ -1512,7 +1512,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	
 	/*设置字段是否隐藏*/
 	private void saveXxxHidden(Long numAppInsId ,String strItemId, String strIsHidden){
-		/*
+		/**/
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
 		if(count>0){
@@ -1527,14 +1527,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzAppHiddenT.setTzXxxBh(strItemId);
 			psTzAppHiddenT.setTzIsHidden(strIsHidden);
 			psTzAppHiddenTMapper.insert(psTzAppHiddenT);
-		}*/
-		PsTzAppHiddenT psTzAppHiddenT = new PsTzAppHiddenT();
-		psTzAppHiddenT.setTzAppInsId(numAppInsId);
-		psTzAppHiddenT.setTzXxxBh(strItemId);
-		psTzAppHiddenT.setTzIsHidden(strIsHidden);
-		int num = psTzAppHiddenTMapper.insert(psTzAppHiddenT);
-		if(num > 0){
-			
 		}
 	}
 	
