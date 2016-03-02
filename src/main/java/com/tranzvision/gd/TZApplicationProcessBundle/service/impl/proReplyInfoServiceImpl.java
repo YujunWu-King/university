@@ -95,6 +95,12 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 							Object[] args = new Object[] { strAppProcessTmpId,strAppProcessId,strMsgId };
 							sqlQuery.update("UPDATE PS_TZ_APPPRO_HF_T SET TZ_WFB_DEFALT_BZ='N' WHERE TZ_APPPRO_TMP_ID = ? AND TZ_APPPRO_ID=? AND TZ_APPPRO_HF_BH <> ?", args);
 						}
+						
+						Map<String, Object> mapJson = new HashMap<String, Object>();
+						mapJson.put("TZ_APPPRO_ID", strAppProcessId);
+						mapJson.put("TZ_APPPRO_TMP_ID", strAppProcessTmpId);
+						mapJson.put("TZ_APPPRO_HF_BH", strMsgId);
+						returnJson.replace("formData", mapJson);
 					} 
 				}
 			}
@@ -118,7 +124,8 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-
+		Map<String, Object> returnJson = new HashMap<String, Object>();
+		returnJson.put("formData", "{}");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -166,6 +173,11 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 							Object[] args = new Object[] { strAppProcessTmpId,strAppProcessId,strMsgId };
 							sqlQuery.update("UPDATE PS_TZ_APPPRO_HF_T SET TZ_WFB_DEFALT_BZ='N' WHERE TZ_APPPRO_TMP_ID = ? AND TZ_APPPRO_ID=? AND TZ_APPPRO_HF_BH <> ?", args);
 						}
+						Map<String, Object> mapJson = new HashMap<String, Object>();
+						mapJson.put("TZ_APPPRO_ID", strAppProcessId);
+						mapJson.put("TZ_APPPRO_TMP_ID", strAppProcessTmpId);
+						mapJson.put("TZ_APPPRO_HF_BH", strMsgId);
+						returnJson.replace("formData", mapJson);
 					}else{
 						errMsg[0] = "1";
 						errMsg[1] = "该常用回复短语信息不存在。"; 
@@ -177,7 +189,7 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		
+		strRet = jacksonUtil.Map2json(returnJson);
 		return strRet;
 	}
 	
