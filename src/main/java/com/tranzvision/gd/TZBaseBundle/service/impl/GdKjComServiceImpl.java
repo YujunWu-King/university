@@ -1056,8 +1056,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				// 操作符;
 				operate = (String) keyContent.get("operator");
 				if (keyContent.containsKey("value") && keyContent.containsKey("type")) {
-					value = (String) keyContent.get("value");
-					type = (String) keyContent.get("type");
+					value = String.valueOf(keyContent.get("value"));
+					type = String.valueOf(keyContent.get("type"));
 				} else {
 					continue;
 				}

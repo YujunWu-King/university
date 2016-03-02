@@ -82,19 +82,19 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				            	/*为听众添加成员:姓名，称谓，报名人联系方式*/
 				                String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 				 
-				                String mainMobilePhone = "", backupMobilePhone = "", mainPhone = "", backupPhone = "", mainEmail = "", backupEmail="", mainAddress = "", backupAddress="", wechat="", skype="";
-				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{sAppInsID});
+				                String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail="",  wechat="";
+				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{sOprID});
 				                if(lxfsMap != null){
 				                	mainMobilePhone = (String)lxfsMap.get("TZ_ZY_SJ");
 				                	backupMobilePhone = (String)lxfsMap.get("TZ_CY_SJ");
-				                	mainPhone = (String)lxfsMap.get("TZ_ZY_DH");
-				                	backupPhone = (String)lxfsMap.get("TZ_CY_DH");
+				                	//mainPhone = (String)lxfsMap.get("TZ_ZY_DH");
+				                	//backupPhone = (String)lxfsMap.get("TZ_CY_DH");
 				                	mainEmail = (String)lxfsMap.get("TZ_ZY_EMAIL");
 				                	backupEmail = (String)lxfsMap.get("TZ_CY_EMAIL");
-				                	mainAddress = (String)lxfsMap.get("TZ_ZY_TXDZ");
-				                	backupAddress = (String)lxfsMap.get("TZ_CY_TXDZ");
+				                	//mainAddress = (String)lxfsMap.get("TZ_ZY_TXDZ");
+				                	//backupAddress = (String)lxfsMap.get("TZ_CY_TXDZ");
 				                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
-				                	skype = (String)lxfsMap.get("TZ_SKYPE");
+				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
 				                createTaskServiceImpl.addAudCy(strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
 
@@ -110,19 +110,19 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 			        /*为听众添加成员:姓名，称谓，报名人联系方式*/
 		            String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 		 
-		            String mainMobilePhone = "", backupMobilePhone = "", mainPhone = "", backupPhone = "", mainEmail = "", backupEmail="", mainAddress = "", backupAddress="", wechat="", skype="";
-		            Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{sAppInsID});
+		            String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail="",  wechat="";
+		            Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{sOprID});
 		            if(lxfsMap != null){
 		               mainMobilePhone = (String)lxfsMap.get("TZ_ZY_SJ");
 		               backupMobilePhone = (String)lxfsMap.get("TZ_CY_SJ");
-		               mainPhone = (String)lxfsMap.get("TZ_ZY_DH");
-		               backupPhone = (String)lxfsMap.get("TZ_CY_DH");
+		               //mainPhone = (String)lxfsMap.get("TZ_ZY_DH");
+		               //backupPhone = (String)lxfsMap.get("TZ_CY_DH");
 		               mainEmail = (String)lxfsMap.get("TZ_ZY_EMAIL");
 		               backupEmail = (String)lxfsMap.get("TZ_CY_EMAIL");
-		               mainAddress = (String)lxfsMap.get("TZ_ZY_TXDZ");
-		               backupAddress = (String)lxfsMap.get("TZ_CY_TXDZ");
+		               //mainAddress = (String)lxfsMap.get("TZ_ZY_TXDZ");
+		               //backupAddress = (String)lxfsMap.get("TZ_CY_TXDZ");
 		               wechat = (String)lxfsMap.get("TZ_WEIXIN");
-		               skype = (String)lxfsMap.get("TZ_SKYPE");
+		               //skype = (String)lxfsMap.get("TZ_SKYPE");
 		             }
 		             createTaskServiceImpl.addAudCy(strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
 

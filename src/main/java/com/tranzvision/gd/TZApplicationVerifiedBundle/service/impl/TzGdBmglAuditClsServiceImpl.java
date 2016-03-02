@@ -155,8 +155,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 								"String");
 					}
 				}
-				System.out.println("==========strOprID======>"+strOprID);
-System.out.println("==========strStuName======>"+strStuName);
+
 				String str_app_tpl_id = ""; /* 报名表模版编号 */
 				String str_app_tpl_json = ""; /* 报名表模版Json */
 				String str_app_ins_json = ""; /* 报名表实例Json */
@@ -209,24 +208,29 @@ System.out.println("==========strStuName======>"+strStuName);
 				}
 
 				// 报名人联系方式;
+				
 				String mainMobilePhone = "", backupMobilePhone = "", mainPhone = "", backupPhone = "", mainEmail = "",
 						backupEmail = "", mainAddress = "", backupAddress = "", wechat = "", skype = "";
-				String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
-				Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL,
-						new Object[] { String.valueOf(strAppInsID) });
-				if (lxfsMap != null) {
-					mainMobilePhone = (String) lxfsMap.get("TZ_ZY_SJ");
-					backupMobilePhone = (String) lxfsMap.get("TZ_CY_SJ");
-					mainPhone = (String) lxfsMap.get("TZ_ZY_DH");
-					backupPhone = (String) lxfsMap.get("TZ_CY_DH");
-					mainEmail = (String) lxfsMap.get("TZ_ZY_EMAIL");
-					backupEmail = (String) lxfsMap.get("TZ_CY_EMAIL");
-					mainAddress = (String) lxfsMap.get("TZ_ZY_TXDZ");
-					backupAddress = (String) lxfsMap.get("TZ_CY_TXDZ");
-					wechat = (String) lxfsMap.get("TZ_WEIXIN");
-					skype = (String) lxfsMap.get("TZ_SKYPE");
-					;
+				String oprid = jdbcTemplate.queryForObject("select OPRID from PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? limit 0,1", new Object[]{strAppInsID},"String");
+
+				if(oprid != null && !"".equals(oprid)){
+					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL,
+							new Object[] { oprid });
+					if (lxfsMap != null) {
+						mainMobilePhone = (String) lxfsMap.get("TZ_ZY_SJ");
+						backupMobilePhone = (String) lxfsMap.get("TZ_CY_SJ");
+						mainPhone = (String) lxfsMap.get("TZ_ZY_DH");
+						backupPhone = (String) lxfsMap.get("TZ_CY_DH");
+						mainEmail = (String) lxfsMap.get("TZ_ZY_EMAIL");
+						backupEmail = (String) lxfsMap.get("TZ_CY_EMAIL");
+						mainAddress = (String) lxfsMap.get("TZ_ZY_TXDZ");
+						backupAddress = (String) lxfsMap.get("TZ_CY_TXDZ");
+						wechat = (String) lxfsMap.get("TZ_WEIXIN");
+						skype = (String) lxfsMap.get("TZ_SKYPE");
+					}
 				}
+				
 
 				Map<String, Object> jsonMap = new HashMap<>();
 				jsonMap.put("classID", strClassID);
@@ -416,12 +420,13 @@ System.out.println("==========strStuName======>"+strStuName);
 				sql = "SELECT TZ_APPPRO_ID,TZ_APPPRO_NAME FROM PS_TZ_CLS_BMLC_T WHERE TZ_CLASS_ID=? ORDER BY TZ_SORT_NUM";
 				list = jdbcTemplate.queryForList(sql, new Object[] { strClassID });
 			}
-			String str_lcid = "", str_lcname = "", str_color_id = "", str_fb_desc = "";
+			String str_lcid = "", str_lcname = "";
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					str_lcid = (String) list.get(i).get("TZ_APPPRO_ID");
 					str_lcname = (String) list.get(i).get("TZ_APPPRO_NAME")==null ? "":(String) list.get(i).get("TZ_APPPRO_NAME");
-
+					
+					String str_color_id = "", str_fb_desc = "";
 					Map<String, Object> approRstMap = jdbcTemplate.queryForMap(
 							"SELECT TZ_APPPRO_HF_BH,TZ_APPPRO_RST FROM PS_TZ_APPPRO_RST_T WHERE TZ_CLASS_ID=? AND TZ_APPPRO_ID=? AND TZ_APP_INS_ID=?",
 							new Object[] { strClassID, str_lcid, strAppInsID });
@@ -637,7 +642,7 @@ System.out.println("==========strStuName======>"+strStuName);
 						TZ_TITLE = (String) list.get(i).get("TZ_XXX_MC");
 						TZ_COM_LMC = (String) list.get(i).get("TZ_COM_LMC");
 						numFileID = numFileID + 1;
-System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_TITLE+"===========>"+TZ_COM_LMC);
+
 						String fileName = "", sysFileName = "", accessUrl = "";
 						strfileDate = "";
 						int fileNum = 1;
@@ -652,7 +657,6 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 								sysFileName = (String) list2.get(j).get("ATTACHSYSFILENAME");
 								accessUrl = (String) list2.get(j).get("TZ_ACCESS_PATH");
 								
-								System.out.println("========att2==================>"+appInsId+"===========>"+TZ_APP_TPL_ID+"===========>"+TZ_XXX_BH);
 								if(fileName != null && !"".equals(fileName)
 										&& sysFileName != null && !"".equals(sysFileName)
 										&& accessUrl != null && !"".equals(accessUrl)){
@@ -1130,6 +1134,7 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 	}
 
 	/* 修改报名人信息 */
+	@SuppressWarnings("unchecked")
 	private String tzEditStuInfo(Map<String, Object> infoData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -1149,7 +1154,11 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 			// 评审状态;
 			String strAuditState = (String) infoData.get("auditState");
 			// 标签;
-			String strTagList = (String) infoData.get("tag");
+			ArrayList<String> arrTag = new ArrayList<>();
+			if(infoData.get("tag") != null && !"".equals(infoData.get("tag"))){
+				arrTag = (ArrayList<String>)infoData.get("tag");
+			}
+			
 			// 备注;
 			String strRemark = (String) infoData.get("remark");
 			// 短备注;
@@ -1187,18 +1196,12 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 			jdbcTemplate.update("DELETE FROM PS_TZ_FORM_LABEL_T WHERE TZ_APP_INS_ID=?", new Object[] { strAppInsID });
 
 			String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			if (strTagList != null && strTagList.indexOf("[") == 0
-					&& (strTagList.lastIndexOf("]") + 1) == strTagList.length()) {
-				strTagList = strTagList.substring(1, strTagList.length() - 1);
-				String[] arrTag = strTagList.split(",");
-				if (arrTag != null && arrTag.length > 0) {
-					for (int i = 0; i < arrTag.length; i++) {
-						String strTag = arrTag[i];
+			
+				if (arrTag != null && arrTag.size() > 0) {
+					for (int i = 0; i < arrTag.size(); i++) {
+						String strTag = arrTag.get(i);
 						if (strTag != null && !"".equals(strTag)) {
-							if ("\"".equals(strTag.substring(0, 1))) {
-								strTag = strTag.substring(1, strTag.length() - 1);
-							}
-
+							
 							int strTagExist = 0;
 							String strTagNameExist = "";
 							strTagExist = jdbcTemplate.queryForObject(
@@ -1241,7 +1244,6 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 						}
 					}
 				}
-			}
 
 		} catch (Exception e) {
 			errMsg[0] = "1";
@@ -1639,39 +1641,42 @@ System.out.println("========att==================>"+TZ_XXX_BH+"===========>"+TZ_
 		        wechat = (String) infoData.get("wechat");
 		        skype = (String) infoData.get("skype");
 		        
-		        PsTzLxfsInfoTblKey psTzLxfsInfoTblKey = new PsTzLxfsInfoTblKey();
-		        psTzLxfsInfoTblKey.setTzLxfsLy("ZSBM");
-		        psTzLxfsInfoTblKey.setTzLydxId(strAppInsID);
-		        PsTzLxfsInfoTbl psTzLxfsInfoTbl = psTzLxfsInfoTblMapper.selectByPrimaryKey(psTzLxfsInfoTblKey);
-		        if(psTzLxfsInfoTbl != null){
-		        	psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-		        	psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
-		        	psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
-		        	psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
-		        	psTzLxfsInfoTbl.setTzZyDh(mainPhone);
-		        	psTzLxfsInfoTbl.setTzCyDh(backupPhone);
-		        	psTzLxfsInfoTbl.setTzZyEmail(mainEmail);
-		        	psTzLxfsInfoTbl.setTzCyEmail(backupEmail);
-		        	psTzLxfsInfoTbl.setTzZyTxdz(mainAddress);
-		        	psTzLxfsInfoTbl.setTzCyTxdz(backupAddress);
-		        	psTzLxfsInfoTbl.setTzWeixin(wechat);
-		        	psTzLxfsInfoTbl.setTzSkype(skype);
-		        	psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
-		        }else{
-		        	psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
-		        	psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-		        	psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
-		        	psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
-		        	psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
-		        	psTzLxfsInfoTbl.setTzZyDh(mainPhone);
-		        	psTzLxfsInfoTbl.setTzCyDh(backupPhone);
-		        	psTzLxfsInfoTbl.setTzZyEmail(mainEmail);
-		        	psTzLxfsInfoTbl.setTzCyEmail(backupEmail);
-		        	psTzLxfsInfoTbl.setTzZyTxdz(mainAddress);
-		        	psTzLxfsInfoTbl.setTzCyTxdz(backupAddress);
-		        	psTzLxfsInfoTbl.setTzWeixin(wechat);
-		        	psTzLxfsInfoTbl.setTzSkype(skype);
-		        	psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
+		        String oprid = jdbcTemplate.queryForObject("select OPRID from PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? limit 0,1", new Object[]{strAppInsID},"String");
+		        if(oprid != null && !"".equals(oprid)){
+			        PsTzLxfsInfoTblKey psTzLxfsInfoTblKey = new PsTzLxfsInfoTblKey();
+			        psTzLxfsInfoTblKey.setTzLxfsLy("ZCYH");
+			        psTzLxfsInfoTblKey.setTzLydxId(oprid);
+			        PsTzLxfsInfoTbl psTzLxfsInfoTbl = psTzLxfsInfoTblMapper.selectByPrimaryKey(psTzLxfsInfoTblKey);
+			        if(psTzLxfsInfoTbl != null){
+			        	psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+			        	psTzLxfsInfoTbl.setTzLydxId(oprid);
+			        	psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
+			        	psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
+			        	psTzLxfsInfoTbl.setTzZyDh(mainPhone);
+			        	psTzLxfsInfoTbl.setTzCyDh(backupPhone);
+			        	psTzLxfsInfoTbl.setTzZyEmail(mainEmail);
+			        	psTzLxfsInfoTbl.setTzCyEmail(backupEmail);
+			        	psTzLxfsInfoTbl.setTzZyTxdz(mainAddress);
+			        	psTzLxfsInfoTbl.setTzCyTxdz(backupAddress);
+			        	psTzLxfsInfoTbl.setTzWeixin(wechat);
+			        	psTzLxfsInfoTbl.setTzSkype(skype);
+			        	psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
+			        }else{
+			        	psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
+			        	psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+			        	psTzLxfsInfoTbl.setTzLydxId(oprid);
+			        	psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
+			        	psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
+			        	psTzLxfsInfoTbl.setTzZyDh(mainPhone);
+			        	psTzLxfsInfoTbl.setTzCyDh(backupPhone);
+			        	psTzLxfsInfoTbl.setTzZyEmail(mainEmail);
+			        	psTzLxfsInfoTbl.setTzCyEmail(backupEmail);
+			        	psTzLxfsInfoTbl.setTzZyTxdz(mainAddress);
+			        	psTzLxfsInfoTbl.setTzCyTxdz(backupAddress);
+			        	psTzLxfsInfoTbl.setTzWeixin(wechat);
+			        	psTzLxfsInfoTbl.setTzSkype(skype);
+			        	psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
+			        }
 		        }
 		    }
 		}catch (Exception e) {

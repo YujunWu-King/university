@@ -11,7 +11,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 /**
  * 高端产品-报名审核-报名流程结果公布
  * PS:TZ_GD_LCFB_PKG:TZ_GD_PLDR_CLS
- * @author tang
+ * 
  *
  */
 @Service("com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdPldrClsServiceImpl")

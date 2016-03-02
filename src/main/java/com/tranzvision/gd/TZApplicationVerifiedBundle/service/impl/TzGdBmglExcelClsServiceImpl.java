@@ -297,8 +297,9 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			String appFormInfoViewSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 			String appFormInfoView = jdbcTemplate.queryForObject(appFormInfoViewSQL, new Object[] {"TZ_FORM_VAL_REC"},"String");
 		
-			colum = 0;
+			
 			for(int i = 0; i < row_count; i++){
+				colum = 0;
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				mapData.put("id"+ colum,String.valueOf(i + 1));
 				
@@ -430,14 +431,19 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				            }
 				            
 				            /*拼装报名表字段值*/
+				            if(strAppFormFieldValue == null){
+				            	strAppFormFieldValue = "";
+				            }
 				            if(strAppFormFieldValues == null || "".equals(strAppFormFieldValues)){
 				            	strAppFormFieldValues = strAppFormFieldValue;
-				            }
-				            if(arrExcelTplField.get(j)[2] != null && !"".equals(arrExcelTplField.get(j)[2])){
-				            	strAppFormFieldValues = strAppFormFieldValues +  arrExcelTplField.get(j)[2] + strAppFormFieldValue;
 				            }else{
-				            	strAppFormFieldValues = strAppFormFieldValues + "," + strAppFormFieldValue;
+				            	if(arrExcelTplField.get(j)[2] != null && !"".equals(arrExcelTplField.get(j)[2])){
+				            		strAppFormFieldValues = strAppFormFieldValues +  arrExcelTplField.get(j)[2] + strAppFormFieldValue;
+						        }else{
+						        	strAppFormFieldValues = strAppFormFieldValues + "," + strAppFormFieldValue;
+						        }
 				            }
+				           
 				            
 				    	}
 				    	 
@@ -446,9 +452,9 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				    //arr_data.add(strAppFormFieldValues);
 				    colum = colum + 1;
 				    mapData.put("id"+colum, strAppFormFieldValues);
-				    dataList.add(mapData);
+				    
 				}
-				
+				dataList.add(mapData);
 				//dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count + 1, wwb);
 				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
 				if (rst) {
