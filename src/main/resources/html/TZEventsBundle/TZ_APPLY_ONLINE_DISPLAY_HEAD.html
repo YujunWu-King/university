@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>活动报名</title>
+<script type="text/javascript" src="/tranzvision/js/jquery.js"></script>
+<script type="text/javascript">
+	var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+	var head = document.getElementsByTagName("head").item(0);
+	//在子窗口中添加父窗口的外联样式
+	for (var i = 0; i < linkList.length; i++) {
+		var l = document.createElement("link");
+		l.rel = 'stylesheet'
+		l.type = 'text/css';
+		l.href = linkList[i].href;
+		head.appendChild(l);
+	}
+</script>
+
+<script type="text/javascript">
+	function tz_apply_click_to_signin_action(tz_apply_action_url, APPLYID) {
+
+		var action_url = tz_apply_action_url + "?APPLYID=" + APPLYID;
+		parent.tz_show_float_iframe_apply(action_url);
+
+	}
+	
+	function tz_apply_click_to_signin_action2(tz_apply_action_url) {
+
+		parent.tz_show_float_iframe_apply(tz_apply_action_url);
+
+	}
+
+	function tz_apply_click_to_cancel_reg(tz_apply_action_url) {
+		$.ajax({
+			type : "POST",
+			url : tz_apply_action_url,
+			//data: Params,
+			dataType : "json",
+			success : function(data) {
+				var result = data.comContent.result;
+				var resultDesc = data.comContent.resultDesc;
+
+				if (result == "0") {
+					alert(resultDesc);
+				} else {
+					alert(resultDesc);
+					parent.tz_close_float_iframe_apply();
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				if (textStatus == "timeout") {
+					alert("%bind(:2)");
+					return;
+				} else {
+					alert("%bind(:3)");
+					return;
+				}
+			}
+		});
+	}
+</script>
+</head>
+<body style="margin: 0px; padding: 0px;">
+	<div class="bottomNav" style="%bind(:4)">
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+			%bind(:1)
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

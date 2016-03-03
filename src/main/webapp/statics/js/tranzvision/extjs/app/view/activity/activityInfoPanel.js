@@ -916,7 +916,7 @@ function addAttach(file, value, attachmentType){
     											"src": accessPath,
     											"caption": action.result.msg.filename,
     											"picURL": "",
-    											"sltUrl": TzUniversityContextPath + sltPath
+    											"sltUrl": sltPath
     									});
 
     									viewStore.insert(picsCount ,r);

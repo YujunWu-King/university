@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>活动报名信息</title>
+<style type="text/css">
+.apply-back {
+	background-color: #666;
+	border: 1px solid #999;
+}
+
+.apply-back:hover {
+	background-color: #999
+}
+
+.apply-oprList {
+	width: 550px;
+	max-height: 450px;
+	margin: 250px auto 0;
+	padding-top: 15px;
+	background-color: #FFF;
+	border-radius: 5px;
+	box-shadow: 0 0 10px #666;
+}
+
+.apply-people {
+	margin-top: 5px;
+	max-height: 290px;
+	overflow: auto;
+}
+
+.apply-oprList table {
+	margin: 0 auto;
+	border: 1px solid #CCC
+}
+
+.apply-oprList th {
+	border: 1px solid #CCC;
+	height: 30px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFF;
+	background: #1E8826;
+}
+
+.apply-oprList td {
+	border: 1px solid #CCC;
+	height: 23px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.apply-back-btn {
+	border-top: 1px solid #ddd;
+	margin-top: 5px;
+	padding-bottom: 1px;
+}
+
+.apply-back-btn .btn.apply-back {
+	width: 80px;
+	height: 25px;
+	color: #FFF;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 8px auto;
+	display: block;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<div class="apply-oprList">
+		<div class="apply-people">
+			<div class="apply-people-list">
+				<table cellpadding="0" cellspacing="0">
+					<tr>
+						<th width="50" align="center">%bind(:2)</th>
+						<th width="115" align="center">%bind(:3)</th>
+						<th width="210" align="center">%bind(:4)</th>
+						<th width="110" align="center">%bind(:5)</th>
+					</tr>
+					%bind(:1)
+				</table>
+			</div>
+		</div>
+
+		<div class="apply-back-btn">
+			<input class="btn apply-back" type="button" name="returnBack"
+				value="%bind(:6)" onclick="parent.tz_close_float_iframe_apply();" />
+		</div>
+	</div>
+</body>
+</html>

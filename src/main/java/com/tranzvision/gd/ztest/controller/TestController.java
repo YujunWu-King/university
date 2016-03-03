@@ -20,6 +20,7 @@ import org.springframework.ui.ModelMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tranzvision.gd.util.base.Arith;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.poi.excel.Test;
 import com.tranzvision.gd.util.session.TzSession;
@@ -137,6 +138,21 @@ public class TestController {
 	@RequestMapping("importexceltpl")
 	public void importExcelTpl(HttpServletRequest request, HttpServletResponse response) {
 		testExcel.importDataTpl();
+	}
+	
+	@RequestMapping("testDivide")
+	public void testDivide(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			int a1 = 33;
+			int b1 = 100;
+			
+			double a = Arith.div((double) a1, (double) b1, 4);
+			
+			System.out.println(a);
+			System.out.println(a1/b1);
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
