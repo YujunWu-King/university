@@ -20,6 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.TemplateEngine;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -49,15 +55,18 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceI
 import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl;
 
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.ObjectDoMethod;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-
 
 /**
  * 申请人在线报名；原：TZ_ONLINE_REG_PKG:TZ_ONLINE_APP_CLS
@@ -117,6 +126,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private TZGDObject tzSQLObject;
 	@Autowired
 	private ApplicationContext ctx;
+	@Autowired
+	private SiteEnrollClsServiceImpl SiteEnrollClsServiceImpl;
+	@Autowired
+	private PsoprdefnMapper psoprdefnMapper;
+	@Autowired
+	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
+	@Autowired
+	private PsTzRegUserTMapper psTzRegUserTMapper;
+	@Autowired
+	private PsroleuserMapper psroleuserMapper;
 		
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
@@ -226,19 +245,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			if(!"".equals(strTplId) && strTplId !=null){
 				//查看是否是查看附属模版 Start
 				if(!"".equals(strAttachedTplId) && strAttachedTplId !=null){
-					String sqlExistsZfFlag = "SELECT 'Y' FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? AND TZ_APP_M_TPL_ID = ?";
+					String sqlExistsZfFlag = "SELECT 'Y' FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? AND TZ_APP_M_TPL_ID = ? LIMIT 1";
 					String strExistsZfFlag = sqlQuery.queryForObject(sqlExistsZfFlag, new Object[] { strTplId,strAttachedTplId }, "String");
 					if("Y".equals(strExistsZfFlag)){
 						strTplId = strAttachedTplId;
-						//根据报名表实例和附属模版编号去获得报名表Json数据(先保留，待开发完善)
-						String xxx = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+						//根据报名表实例和附属模版编号去获得报名表Json数据
+						strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 						strIsAdmin = "Y";
 						strAppFormReadOnly = "Y";
 					}
 				}
-				
-				String xxx = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
-				System.out.println("Hello World:" + xxx);
+
 				//查看是否是查看附属模版 end
 				
 				//如果报名表已提交，则只读显示
@@ -846,8 +863,111 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					strAppInsState = "S";
 				}
 				//如果是匿名报名，报名表保存，需要为匿名用户自动注册非激活账号，并创建用户信息
+				String strDefVal = "";
+				String strNAME= "";
+				String strFirstName = "";
+				String strLastName = "";
+				String strGuestOprId = "";
 				if("Y".equals(strGuestApply)&&"TZ_GUEST".equals(oprid)){
 					strIsGuest = "Y";
+					for (Entry<String, Object> entry:mapData.entrySet()){
+						Map<String, Object> mapJsonItems = (Map<String, Object>)entry.getValue();
+						String strIsDoubleLine = "";
+						if(mapJsonItems.containsKey("isDoubleLine")){
+							strIsDoubleLine = String.valueOf(mapJsonItems.get("isDoubleLine"));
+						}
+						String strIsSingleLine = "";
+						if(mapJsonItems.containsKey("isSingleLine")){
+							strIsSingleLine = String.valueOf(mapJsonItems.get("isSingleLine"));
+						}
+						String strIsFixedContainer = "";
+						if(mapJsonItems.containsKey("fixedContainer")){
+							strIsSingleLine = String.valueOf(mapJsonItems.get("fixedContainer"));
+						}
+						if("Y".equals(strIsDoubleLine)){
+							//多行容器
+							if("Y".equals(strIsFixedContainer)){
+								//固定多行容器
+							}else{
+								List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
+								for(Object children1:mapChildrens1){
+									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
+									for (Entry<String, Object> entryChildren:mapChildren1.entrySet()){
+										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>)entryChildren.getValue();
+										if(mapJsonChildrenItems.containsKey("children")){
+											//donothing
+										}else{
+											if(mapJsonChildrenItems.containsKey("defaultval")){
+												strDefVal = String.valueOf(mapJsonChildrenItems.get("defaultval"));
+												if(!"".equals(strDefVal) && strDefVal != null){
+													//取TZ_REALNAME
+													if("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")){
+														strNAME = String.valueOf(mapJsonChildrenItems.get("value"));
+													}
+													//取TZ_LAST_NAME
+													if("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")){
+														strLastName = String.valueOf(mapJsonChildrenItems.get("value"));
+													}
+													//取TZ_FIRST_NAME
+													if("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")){
+														strFirstName = String.valueOf(mapJsonChildrenItems.get("value"));
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}else{
+							if("Y".equals(strIsSingleLine)){
+								//当行控件 donothing
+							}else{
+								if(mapJsonItems.containsKey("defaultval")){
+									strDefVal = String.valueOf(mapJsonItems.get("defaultval"));
+									if(!"".equals(strDefVal) && strDefVal != null){
+										//取TZ_REALNAME
+										if("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")){
+											strNAME = String.valueOf(mapJsonItems.get("value"));
+										}
+										//取TZ_LAST_NAME
+										if("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")){
+											strLastName = String.valueOf(mapJsonItems.get("value"));
+										}
+										//取TZ_FIRST_NAME
+										if("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")){
+											strFirstName = String.valueOf(mapJsonItems.get("value"));
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					if(strLanguage != null && "ZHS".equals(strLanguage)){
+						if("".equals(strNAME) || strNAME == null ){
+							strNAME = "GUEST";
+						}
+					}else{
+						if("".equals(strLastName) || strLastName == null ){
+							if("".equals(strFirstName) || strFirstName == null ){
+								strNAME = "GUEST";
+							}else{
+								strNAME = strFirstName;
+							}
+						}else{
+							if("".equals(strFirstName) || strFirstName == null ){
+								strNAME = strLastName;
+							}else{
+								strNAME = strFirstName + " " +strFirstName;
+							}
+						}
+					}
+					if(strAppOrgId == null || "".equals(strAppOrgId)){
+						String sqlGetOrgId = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = :1 AND TZ_EFFEXP_ZT = 'Y' LIMIT 1";
+						strAppOrgId = sqlQuery.queryForObject(sqlGetOrgId, new Object[] { strTplId }, "String");
+					}
+					//创建用户
+					strGuestOprId = createGuestUser(strAppOrgId,strNAME);
 				}
 				
 				if("SAVE".equals(strOtype)){
@@ -1425,7 +1545,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}else{
 			strIsHidden = "N";
 		}
-		//this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
+		this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
 	}
 	
 	//将json数据解析保存到报名表存储表
@@ -2385,5 +2505,74 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		   psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
 		   psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
 	   }
+	}
+	
+	private String createGuestUser(String strOrgId,String strName){
+		
+		
+		String allChar = "0123456789";
+		StringBuffer sb = new StringBuffer();
+		Random random = new Random();
+			for (int i = 0; i < 6; i++) {
+			sb.append(allChar.charAt(random.nextInt(allChar.length())));
+		}
+		String strTZ_REPASSWORD = sb.toString();
+		
+		//开始创建账号;
+	    String oprId = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
+	    //生成登录账号;
+	    String dlzh = SiteEnrollClsServiceImpl.tzGenerateAcount(strOrgId, oprId);
+	    
+	    //保存用户信息;
+	    Psoprdefn psoprdefn = new Psoprdefn();
+	    psoprdefn.setOprid(oprId);
+	    String password = DESUtil.encrypt(strTZ_REPASSWORD, "TZGD_Tranzvision");
+	    psoprdefn.setOperpswd(password);
+	    psoprdefn.setAcctlock((short)0);
+	    psoprdefn.setLastupdoprid(oprId);
+	    psoprdefn.setLastupddttm(new Date());
+	    psoprdefnMapper.insert(psoprdefn);
+	    
+	    
+	    PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+	    psTzAqYhxxTbl.setTzDlzhId(dlzh);
+	    psTzAqYhxxTbl.setTzJgId(strOrgId);
+	    psTzAqYhxxTbl.setOprid(oprId);
+	    psTzAqYhxxTbl.setTzRealname(strName);
+	    psTzAqYhxxTbl.setTzRylx("ZCYH");
+	    psTzAqYhxxTbl.setTzZhceDt(new Date());
+	    psTzAqYhxxTbl.setTzBjsEml("N");
+	    psTzAqYhxxTbl.setTzBjsSms("N");
+	    psTzAqYhxxTbl.setRowAddedDttm(new Date());
+	    psTzAqYhxxTbl.setRowAddedOprid(oprId);
+	    psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+	    psTzAqYhxxTbl.setRowLastmantOprid(oprId);
+	    psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
+	    
+	    //保存用户注册信息
+	    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+	    psTzRegUserT.setOprid(oprId);
+	    psTzRegUserT.setTzRealname(strName);
+	    psTzRegUserT.setRowAddedDttm(new Date());
+	    psTzRegUserT.setRowAddedOprid(oprId);
+	    psTzRegUserT.setRowLastmantDttm(new Date());
+	    psTzRegUserT.setRowLastmantOprid(oprId);
+	    psTzRegUserTMapper.insert(psTzRegUserT);
+	    
+	  //添加角色;
+	    String roleSQL = " SELECT ROLENAME FROM PS_TZ_JG_ROLE_T WHERE TZ_JG_ID=? AND TZ_ROLE_TYPE='C'";
+	    List<Map<String, Object>> roleList = sqlQuery.queryForList(roleSQL,new Object[]{strOrgId});
+	    if(roleList != null && roleList.size() > 0 ){
+	    	for(int j = 0; j < roleList.size(); j++){
+	    		String rolename = (String)roleList.get(j).get("ROLENAME");
+	    		Psroleuser psroleuser = new Psroleuser();
+	    		psroleuser.setRoleuser(oprId);
+	    		psroleuser.setRolename(rolename);
+	    		psroleuser.setDynamicSw("N");
+	    		psroleuserMapper.insert(psroleuser);
+	    	}
+	    }
+		
+		return oprId;
 	}
 }
