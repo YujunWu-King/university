@@ -194,7 +194,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		String strIsGuest = "N";
 		//报名表提交后Url
 		String strAfterSubmitUrl = "";
-
+ 
 		//错误提示信息
 		String strMessageError = "";
 
