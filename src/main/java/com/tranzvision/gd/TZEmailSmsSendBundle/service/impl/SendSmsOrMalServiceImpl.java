@@ -71,9 +71,6 @@ public class SendSmsOrMalServiceImpl {
 	private String strYmbId;
 	
 	@Autowired
-	private AnalysisSysVar analysisSysVar;
-	
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private GetSeqNum getSeqNum;
@@ -542,6 +539,7 @@ public class SendSmsOrMalServiceImpl {
 				String ymbParaAlias = (String) map.get("TZ_PARA_ALIAS");
 				String sysvarId = (String) map.get("TZ_SYSVARID");
 				String[] sysVarParam = {audId, audCyId};
+				AnalysisSysVar analysisSysVar = new AnalysisSysVar();
 				analysisSysVar.setM_SysVarID(sysvarId);
 				analysisSysVar.setM_SysVarParam(sysVarParam);
 				Object obj = analysisSysVar.GetVarValue();

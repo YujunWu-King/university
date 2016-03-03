@@ -94,7 +94,10 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 
 		PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
 		// 当前登录人姓名
-		String userName = psTzAqYhxxTbl.getTzRealname();
+		String userName = "";
+		if(psTzAqYhxxTbl != null){
+			userName = psTzAqYhxxTbl.getTzRealname();
+		}
 
 		if (StringUtils.isBlank(userName)) {
 			userName = "GUEST";

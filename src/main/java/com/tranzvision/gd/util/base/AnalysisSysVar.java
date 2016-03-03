@@ -6,20 +6,16 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.tranzvision.gd.util.sql.SqlQuery;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * 
  * @author tang 20151201 解析系统变量: 原：TZ_SYSVAR:AnalysisSysVar
  */
-@Service("org.springframework.stereotype.Service.AnalysisSysVar")
-public class AnalysisSysVar {
-	@Autowired
-	private SqlQuery jdbcTemplate;
 
+public class AnalysisSysVar {
+
+	private JdbcTemplate jdbcTemplate;
 	// 系统变量编号
 	private String m_SysVarID;
 	// 系统变量参数列表
@@ -41,6 +37,10 @@ public class AnalysisSysVar {
 		this.m_SysVarParam = m_SysVarParam;
 	}
 
+	public AnalysisSysVar(){
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+	}
 	// 返回当前指定系统变量的值;
 	public Object GetVarValue() {
 		// 系统变量的计算结果
@@ -49,46 +49,54 @@ public class AnalysisSysVar {
 			String sysVarSQL = "select TZ_EFFFLG,TZ_SYSVARTYPE,TZ_VALMETHOD from PS_TZ_SYSVAR_T where TZ_SYSVARID=?";
 			Map<String, Object> sysvarMap = jdbcTemplate.queryForMap(sysVarSQL, new Object[] { m_SysVarID });
 			if (sysvarMap == null) {
-				return null;
+				return "";
 			}
 			String effFlg = (String) sysvarMap.get("TZ_EFFFLG");
 			String sysvarType = (String) sysvarMap.get("TZ_SYSVARTYPE");
 			String valMethod = (String) sysvarMap.get("TZ_VALMETHOD");
 			// 系统变量是否无效
 			if (!"Y".equals(effFlg)) {
-				return null;
+				return "";
 			}
 			// 取值和系统变量数据类型是否为空
 			if (sysvarType == null || "".equals(sysvarType) || valMethod == null || "".equals(valMethod)) {
-				return null;
+				return "";
 			}
 			// 取值是否正确
 			if (!"SQL".equals(valMethod) && !"APP".equals(valMethod) && !"CON".equals(valMethod)) {
-				return null;
+				return "";
 			}
 
 			// 分支1：SQL取值;
 			if ("SQL".equals(valMethod)) {
 				l_RetValue = this.parseSysVarSql(sysvarType);
+				if(l_RetValue==null){
+					return "";
+				}
 				return l_RetValue;
 			}
 
 			// 分支2：应用程序类获取
 			if ("APP".equals(valMethod)) {
 				l_RetValue = this.parseSysVarApp(sysvarType);
+				if(l_RetValue==null){
+					return "";
+				}
 				return l_RetValue;
 			}
 
 			// 分支3：常量
 			if ("CON".equals(valMethod)) {
-				
 				l_RetValue = this.parseSysVarCon(sysvarType);
+				if(l_RetValue==null){
+					return "";
+				}
 				return l_RetValue;
 			}
-			return null;
+			return "";
 
 		} catch (Exception e) {
-			l_RetValue = null;
+			l_RetValue = "";
 		}
 
 		return l_RetValue;
@@ -99,7 +107,7 @@ public class AnalysisSysVar {
 		/* STEP: 取出SQL String */
 		String sqlString;
 		String sqlStringSQL = "SELECT TZ_LNGSTRCONT FROM PS_TZ_SYSVAR_T WHERE TZ_SYSVARID=?";
-		sqlString = jdbcTemplate.queryForObject(sqlStringSQL, new Object[] { m_SysVarID }, "String");
+		sqlString = jdbcTemplate.queryForObject(sqlStringSQL, new Object[] { m_SysVarID }, String.class);
 		if (sqlString == null || "".equals(sqlStringSQL)) {
 			return null;
 		}
@@ -107,7 +115,7 @@ public class AnalysisSysVar {
 			// STEP: 看该系统变量有无对其他系统变量的引用，若有，则先求值
 			int hitCount;
 			String hitCountSQL = "SELECT COUNT(1) FROM PS_TZ_SV_CHAIN CHN WHERE CHN.TZ_SYSVARID = ?";
-			hitCount = jdbcTemplate.queryForObject(hitCountSQL, new Object[] { m_SysVarID }, "Integer");
+			hitCount = jdbcTemplate.queryForObject(hitCountSQL, new Object[] { m_SysVarID }, Integer.class);
 
 			if (hitCount > 0) {
 				// STEP: 求出被引用系统变量的值;
@@ -130,7 +138,7 @@ public class AnalysisSysVar {
 			// 字符串
 			if ("CHR".equals(sysvarType)) {
 				try {
-					String returnString = jdbcTemplate.queryForObject(sqlString, "String");
+					String returnString = jdbcTemplate.queryForObject(sqlString, String.class);
 					return returnString;
 				} catch (Exception e) {
 					return null;
@@ -140,7 +148,7 @@ public class AnalysisSysVar {
 			// 数字
 			if ("NUM".equals(sysvarType)) {
 				try {
-					int returnInt = jdbcTemplate.queryForObject(sqlString, "Integer");
+					int returnInt = jdbcTemplate.queryForObject(sqlString, Integer.class);
 					return returnInt;
 				} catch (Exception e) {
 					return null;
@@ -150,7 +158,7 @@ public class AnalysisSysVar {
 			// 日期
 			if ("DAT".equals(sysvarType) || "DTM".equals(sysvarType)) {
 				try {
-					Date returnDate = jdbcTemplate.queryForObject(sqlString, "Date");
+					Date returnDate = jdbcTemplate.queryForObject(sqlString, Date.class);
 					return returnDate;
 				} catch (Exception e) {
 					return null;
@@ -160,7 +168,7 @@ public class AnalysisSysVar {
 			// 时间
 			if ("TIM".equals(sysvarType)) {
 				try {
-					Time returnTime = jdbcTemplate.queryForObject(sqlString, "Time");
+					Time returnTime = jdbcTemplate.queryForObject(sqlString, Time.class);
 					return returnTime;
 				} catch (Exception e) {
 					return null;
@@ -201,11 +209,14 @@ public class AnalysisSysVar {
 	// 常量
 	public Object parseSysVarCon(String sysvarType) {
 		/* STEP: 获取值 */
+		System.out.println("==========1=================>"+m_SysVarID+"=======>"+sysvarType);
 		String conSQL = "SELECT VAR.TZ_CONSTANT FROM PS_TZ_SYSVAR_T VAR WHERE VAR.TZ_SYSVARID = ?";
-		String constValue = jdbcTemplate.queryForObject(conSQL, new Object[] { m_SysVarID }, "String");
+		String constValue = jdbcTemplate.queryForObject(conSQL, new Object[] { m_SysVarID }, String.class);
+		System.out.println("==========2=================>"+m_SysVarID+"=======>"+sysvarType);
 		if (constValue == null) {
 			return null;
 		}
+		System.out.println("==========3=================>"+m_SysVarID+"=======>"+sysvarType);
 		try {
 			// 字符串
 			if ("CHR".equals(sysvarType)) {
@@ -251,6 +262,7 @@ public class AnalysisSysVar {
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("==========4=================>"+m_SysVarID+"=======>"+sysvarType);
 			return null;
 		}
 	}

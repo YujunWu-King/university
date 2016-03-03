@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
@@ -188,7 +187,6 @@ public class CreateTaskServiceImpl {
 			psTzAudcyuanT.setTzHuodId(hdId);
 			psTzAudcyuanT.setTzBmbId(bmbId);
 			int i = psTzAudcyuanTMapper.insert(psTzAudcyuanT);
-			System.out.println("=====================>xxxxxxxxxxx" + i);
 			if (i > 0) {
 				bl = true;
 			}
