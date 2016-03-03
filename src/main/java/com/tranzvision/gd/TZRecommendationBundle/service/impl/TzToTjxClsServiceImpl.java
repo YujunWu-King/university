@@ -60,10 +60,19 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 						"select TZ_APP_INS_ID,TZ_MBA_TJX_YX,TZ_TJX_TYPE,TZ_TJX_APP_INS_ID from PS_TZ_KS_TJX_TBL where TZ_REF_LETTER_ID=? and OPRID=? limit 0,1",
 						new Object[] { strTjxId, strOprid });
 				if (map != null) {
-					numAppinsId = (int) map.get("TZ_APP_INS_ID");
+					try{
+						numAppinsId = Long.parseLong( map.get("TZ_APP_INS_ID").toString());
+					}catch(Exception e){
+						numAppinsId = 0L;
+					}
+					
 					strTjxYx = (String) map.get("TZ_MBA_TJX_YX");
 					strTjxType = (String) map.get("TZ_TJX_TYPE");
-					numTjxAppinsId = (int) map.get("TZ_TJX_APP_INS_ID");
+					try{
+						numTjxAppinsId = Long.parseLong(map.get("TZ_TJX_APP_INS_ID").toString());
+					}catch(Exception e){
+						numTjxAppinsId = 0L;
+					}
 				}
 
 				String str_tjx_mb_id = "", str_bmb_mb_id = "";
@@ -137,8 +146,8 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 				}
 				
 				//跳转到推荐信报名表的链接;
-				String strTzUrl = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[]{"TZ_TJX_URL"},"String");
-				strTzUrl = strTzUrl + "?classid=appId&TZ_APP_INS_ID=" + numTjxAppinsId + "&TZ_REF_LETTER_ID=" + strTjxId;
+				//String strTzUrl = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[]{"TZ_TJX_URL"},"String");
+				String strTzUrl = request.getContextPath() + "/dispatcher?classid=appId&TZ_APP_INS_ID=" + numTjxAppinsId + "&TZ_REF_LETTER_ID=" + strTjxId;
 				strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_TRANS_HTML", true, strTzUrl);
 				
 			}else{

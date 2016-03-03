@@ -155,9 +155,12 @@ public class EmlSmsGetParamter {
 			String strClassID = jdbcTemplate.queryForObject(
 					"SELECT TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?",
 					new Object[] { Long.valueOf(sAppInsID) }, String.class);
-			//String strLanguageId = tzLoginServiceImpl.getSysLanaguageCD(request);
-			
-			String strLanguageId = jdbcTemplate.queryForObject("SELECT TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A ,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID limit 0,1", new Object[]{Long.valueOf(sAppInsID)},String.class);
+			// String strLanguageId =
+			// tzLoginServiceImpl.getSysLanaguageCD(request);
+
+			String strLanguageId = jdbcTemplate.queryForObject(
+					"SELECT TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A ,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID limit 0,1",
+					new Object[] { Long.valueOf(sAppInsID) }, String.class);
 
 			if ("ENG".equals(strLanguageId)) {
 				strLanguageId = "ENG";
@@ -186,16 +189,200 @@ public class EmlSmsGetParamter {
 								new Object[] { strLanguageId, strAuditState, }, String.class);
 
 						strDjzlList = strDjzlList + "<tr>"
-								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"+strContentIntro+"</td>"
-								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"+strAuditStateDesc+"</td>"
-								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"+strFailedReason+"</td>"
-								+ "</tr>";
+								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"
+								+ strContentIntro + "</td>"
+								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"
+								+ strAuditStateDesc + "</td>"
+								+ "<td style=\"	border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #ffffff;\">"
+								+ strFailedReason + "</td>" + "</tr>";
 
 					}
 				}
 			}
-			return "<table style=\"font-family: verdana,arial,sans-serif;font-size:11px;color:#333333;border-width: 1px;border-color: #666666;border-collapse: collapse;\"><tr><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Materials Submitted</th><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Status</th><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Comments</th></tr>"+strDjzlList+"</table>";
+			return "<table style=\"font-family: verdana,arial,sans-serif;font-size:11px;color:#333333;border-width: 1px;border-color: #666666;border-collapse: collapse;\"><tr><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Materials Submitted</th><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Status</th><th style=\"border-width: 1px;padding: 8px;font-size:'10px';border-style: solid;border-color: #666666;background-color: #dedede;\">Comments</th></tr>"
+					+ strDjzlList + "</table>";
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 推荐信中班级名称;
+	public String getClassName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_bmb_id = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (str_bmb_id == null || "".equals(str_bmb_id)) {
+				return "";
+			}
+			String classSQL = "SELECT B.TZ_CLASS_NAME FROM PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID";
+			String str_class_name = jdbcTemplate.queryForObject(classSQL, String.class,
+					new Object[] { Long.parseLong(str_bmb_id) });
+			if (str_class_name == null) {
+				return "";
+			}
+			return str_class_name;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得发送推荐信邮件被推荐人姓名;;
+	public String getRecBName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT OPRID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_oprid = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (str_oprid == null || "".equals(str_oprid)) {
+				return "";
+			}
+			String tjrSQL = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+			String name = jdbcTemplate.queryForObject(tjrSQL, String.class, new Object[] { str_oprid });
+			if (name == null) {
+				return "";
+			}
+			return name;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得发送推荐信邮件推荐人姓名;
+	public String getRecName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_AUD_XM FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (name == null || "".equals(name)) {
+				return "";
+			} else {
+				return name;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐人姓名（推荐信提醒邮件）;
+	public String getTjxName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_AUD_XM FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (name == null || "".equals(name)) {
+				return "";
+			} else {
+				return name;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐人姓名（推荐信提醒邮件）;
+	public String getTjxUrl(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID,OPRID,TZ_ZY_EMAIL FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { audId, audCyId });
+
+			String str_oprid = "", str_bmb_id = "", str_email = "";
+			if (map != null) {
+				str_bmb_id = (String) map.get("TZ_BMB_ID");
+				str_oprid = (String) map.get("OPRID");
+				str_email = (String) map.get("TZ_ZY_EMAIL");
+
+				String str_ref_id = jdbcTemplate.queryForObject(
+						"SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_EMAIL=? AND OPRID=?",
+						new Object[] { Long.parseLong(str_bmb_id), str_email, str_oprid }, String.class);
+				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+						.getRequest();
+				String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+						+ request.getContextPath();
+				String strTzUrl = serv + "/dispatcher";
+				String str_url = strTzUrl + "?classid=refLetterApp&TZ_REF_LETTER_ID=" + str_ref_id + "&OPRID="
+						+ str_oprid;
+				return str_url;
+			} else {
+				return "链接生产失败，请联系管理员";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐人姓名（推荐信提醒邮件）;
+	public String getTjxEmail(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID,OPRID,TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { audId, audCyId });
+
+			String str_oprid = "", str_bmb_id = "", str_tjr_id = "";
+			if (map != null) {
+				str_bmb_id = (String) map.get("TZ_BMB_ID");
+				str_oprid = (String) map.get("OPRID");
+				str_tjr_id = (String) map.get("TZ_HUOD_ID");
+
+				String str_email = jdbcTemplate.queryForObject(
+						"SELECT TZ_EMAIL FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? AND OPRID=?",
+						new Object[] { Long.parseLong(str_bmb_id), str_tjr_id, str_oprid }, String.class);
+				if (str_email == null) {
+					return "";
+				}
+				return str_email;
+			} else {
+				return "链接生产失败，请联系管理员";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得发送推荐信邮件被推荐人姓名;;
+	public String getFirstName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT OPRID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_oprid = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (str_oprid == null || "".equals(str_oprid)) {
+				return "";
+			}
+			String regSQL = "SELECT TZ_FIRST_NAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+			String name = jdbcTemplate.queryForObject(regSQL, String.class, new Object[] { str_oprid });
+			if (name == null) {
+				return "";
+			}
+			return name;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";

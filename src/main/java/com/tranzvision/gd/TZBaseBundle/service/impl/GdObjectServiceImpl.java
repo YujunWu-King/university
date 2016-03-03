@@ -37,7 +37,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	/**
 	 * 当前访问页面编号
 	 */
-	private static final String gbl_CurrentAccessCPageID = "gbl_CurrentAccessCmpntID";
+	private static final String gbl_CurrentAccessCPageID = "gbl_CurrentAccessCPageID";
 	/**
 	 * Session存储的用户当前登录语言
 	 */
@@ -210,6 +210,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 			TzSession tzSession = new TzSession(request);
 			String comid = (String) tzSession.getSession(gbl_CurrentAccessCmpntID);
 			String pageid = (String) tzSession.getSession(gbl_CurrentAccessCPageID);
+			
 			String tmpAuthFlag = this.getAPByCPU(request, comid, pageid, this.getOPRID(request));
 			if ("W".equals(tmpAuthFlag) || "R".equals(tmpAuthFlag)) {
 				/* 如果当前用户（理论上应该是匿名访问用户）对当前访问的组件页面有访问权限，则仍然返回会话有效 */

@@ -218,14 +218,14 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 				psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 				
 				// 发送邮件;
-				boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_BINDEMAI", "MAL", "A");
-				if(createTaskIns == false){
+				String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_BINDEMAI", "MAL", "A");
+				if(taskId == null || "".equals(taskId)){
 					mess = "创建邮件发送任务失败！";
 				    return mess;
 				}
 				
 				// 创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("高端产品用户邮箱修改", "JSRW");
+				String createAudience = createTaskServiceImpl.createAudience(taskId,strJgid,"高端产品用户邮箱修改", "JSRW");
 				if(createAudience == null || "".equals(createAudience)){
 					mess = "创建邮件发送的听众失败！";
 				    return mess;
@@ -241,14 +241,13 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 				}
 				
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", oprid, "", "", "");
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", oprid, "", "", "");
 				if(addAudCy == false){
 					mess = "为听众添加听众成员失败！";
 				    return mess;
 				}
 				
 				// 得到创建的任务ID;
-		        String taskId = createTaskServiceImpl.getTaskId();
 		        if(taskId == null || "".equals(taskId)){
 		        	mess = "创建任务ID失败！";
 				    return mess;

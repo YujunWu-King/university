@@ -294,9 +294,14 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 String str_att_a_url = "";
 			 
 			 String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
-			 Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{str_app_ins_id, str_rownum});
+			 Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{str_app_ins_id,str_rownum});
 			 if(map != null){
-				 str_tjx_app_ins_id = (long)map.get("TZ_TJX_APP_INS_ID");
+				 try{
+					 str_tjx_app_ins_id = (long)map.get("TZ_TJX_APP_INS_ID");
+				 }catch(Exception e){
+					 str_tjx_app_ins_id = 0;
+				 }
+				 
 				 str_y = (String)map.get("STR_Y");
 				 str_ref_letter_id = (String)map.get("TZ_REF_LETTER_ID");
 				 str_tjx_language = (String)map.get("TZ_TJX_TYPE");

@@ -124,7 +124,7 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 			String orgid = jacksonUtil.getString("strJgid");
 
 			// 校验手机格式
-			String todo;
+			//String todo;
 			boolean boolPhone = true;
 
 			if (boolPhone) {
@@ -308,28 +308,27 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 			String sql = "select TZ_REALNAME from PS_TZ_REG_USER_T where OPRID=?";
 			String realname = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 
-			boolean createTaskIns = createTaskServiceImpl.createTaskIns(orgid, "TZ_SMS_N_001", "SMS", "A");
-			if (!createTaskIns) {
+			String taskId  = createTaskServiceImpl.createTaskIns(orgid, "TZ_SMS_N_001", "SMS", "A");
+			if (taskId == null || "".equals(taskId)) {
 				return "创建短信发送任务失败！";
 			}
 
-			String createAudience = createTaskServiceImpl.createAudience("高端产品用户手机修改", "JSRW");
+			String createAudience = createTaskServiceImpl.createAudience(taskId,orgid,"高端产品用户手机修改", "JSRW");
 			if (null == createAudience || "".equals(createAudience)) {
 				return "创建短信发送的听众失败！";
 			}
 
-			boolean addAudCy = createTaskServiceImpl.addAudCy(realname, realname, strMoble, "", "", "", "", oprid, "",
+			boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,realname, realname, strMoble, "", "", "", "", oprid, "",
 					"", "");
 			if (!addAudCy) {
 				return "为听众添加听众成员失败！";
 			}
 
-			boolean updateSmsSendContent = createTaskServiceImpl.updateSmsSendContent(content);
+			boolean updateSmsSendContent = createTaskServiceImpl.updateSmsSendContent(taskId,content);
 			if (!updateSmsSendContent) {
 				return "修改发送内容失败！";
 			}
 
-			String taskId = createTaskServiceImpl.getTaskId();
 			if (null == taskId || "".equals(taskId)) {
 				return "创建任务失败！";
 			}

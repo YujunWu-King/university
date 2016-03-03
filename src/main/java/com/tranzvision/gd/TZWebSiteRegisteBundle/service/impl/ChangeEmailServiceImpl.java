@@ -206,22 +206,22 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 					sureEmail);
 
 			// 发送邮件;
-			boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_N_001", "MAL", "A");
+			String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_N_001", "MAL", "A");
 
-			if (createTaskIns == false) {
+			if (taskId == null || "".equals(taskId)) {
 				mess = "创建邮件发送任务失败！";
 				return mess;
 			}
 
 			// 创建短信、邮件发送的听众;
-			String createAudience = createTaskServiceImpl.createAudience("高端产品用户邮箱修改", "JSRW");
+			String createAudience = createTaskServiceImpl.createAudience(taskId,strJgid,"高端产品用户邮箱修改", "JSRW");
 			if (createAudience == null || "".equals(createAudience)) {
 				mess = "创建邮件发送的听众失败！";
 				return mess;
 			}
 
 			// 为听众添加听众成员;
-			boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", oprid,
+			boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", oprid,
 					"", "", "");
 			if (addAudCy == false) {
 				mess = "为听众添加听众成员失败！";
@@ -229,20 +229,19 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 			}
 
 			// 修改主题;
-			boolean bl = createTaskServiceImpl.updateEmailSendTitle("创景高端产品-账户管理邮箱修改");
+			boolean bl = createTaskServiceImpl.updateEmailSendTitle(taskId,"创景高端产品-账户管理邮箱修改");
 			if (bl == false) {
 				mess = "修改发送主题失败！";
 				return mess;
 			}
 			// 修改内容;
-			bl = createTaskServiceImpl.updateEmailSendContent(content);
+			bl = createTaskServiceImpl.updateEmailSendContent(taskId,content);
 			if (bl == false) {
 				mess = "修改发送内容失败！";
 				return mess;
 			}
 
 			// 得到创建的任务ID;
-			String taskId = createTaskServiceImpl.getTaskId();
 			if (taskId == null || "".equals(taskId)) {
 				mess = "创建任务ID失败！";
 				return mess;

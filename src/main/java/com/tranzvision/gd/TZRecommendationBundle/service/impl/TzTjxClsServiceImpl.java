@@ -255,37 +255,35 @@ public class TzTjxClsServiceImpl{
 		
 		// 给邮箱发送邮件---开始;
 		// 创建邮件短信发送任务;
-		boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
+		String taskId = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
 		
-		if (createTaskIns == false) {
+		if (taskId==null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_E_FAIL", str_language, "", "");
 			return mess;
 		}
 		
 		// 创建短信、邮件发送的听众;
-		String createAudience = createTaskServiceImpl.createAudience("推荐信", "TJX");
+		String createAudience = createTaskServiceImpl.createAudience(taskId,strJgid,"推荐信", "TJX");
 		if (createAudience == null || "".equals(createAudience)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_L_FAIL", str_language, "", "");
-			return mess + "============>";
+			return mess;
 		}
 
 		// 为听众添加听众成员;
-		boolean addAudCy = createTaskServiceImpl.addAudCy(strName, strName, "", "", strEmail, "", "", strOprid, "", "", String.valueOf(numAppinsId));
+		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strName, strName, "", "", strEmail, "", "", strOprid, "", "", String.valueOf(numAppinsId));
 		if (addAudCy == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "ADD_L_FAIL", str_language, "", "");
-			return mess + "============>"+createAudience;
+			return mess;
 		}
 
-		// 得到创建的任务ID;
-		String taskId = createTaskServiceImpl.getTaskId();
 		if (taskId == null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_ID_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		sendSmsOrMalServiceImpl.send(taskId, "");
+		
 		mess = "SUCCESS";
-	   
 		return mess;
 	 }
 	   
@@ -384,28 +382,27 @@ public class TzTjxClsServiceImpl{
 		
 		// 给邮箱发送邮件---开始;
 		// 创建邮件短信发送任务;
-		boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, str_tx_email_id, "MAL", "A");
-		if (createTaskIns == false) {
+		String taskId = createTaskServiceImpl.createTaskIns(strJgid, str_tx_email_id, "MAL", "A");
+		if (taskId==null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_E_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 创建短信、邮件发送的听众;
-		String createAudience = createTaskServiceImpl.createAudience("推荐信", "TJX");
+		String createAudience = createTaskServiceImpl.createAudience(taskId,strJgid,"推荐信", "TJX");
 		if (createAudience == null || "".equals(createAudience)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_L_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 为听众添加听众成员;
-		boolean addAudCy = createTaskServiceImpl.addAudCy(strName, strName, "", "", strEmail, "", "", strOprid, "", strTjrId, String.valueOf(numAppinsId));
+		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strName, strName, "", "", strEmail, "", "", strOprid, "", strTjrId, String.valueOf(numAppinsId));
 		if (addAudCy == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "ADD_L_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 得到创建的任务ID;
-		String taskId = createTaskServiceImpl.getTaskId();
 		if (taskId == null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_ID_FAIL", str_language, "", "");
 			return mess;
