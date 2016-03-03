@@ -7,9 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -29,6 +32,10 @@ public class TzEventsSendSmsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -42,9 +49,11 @@ public class TzEventsSendSmsServiceImpl extends FrameworkImpl {
 			String strActivityId = jacksonUtil.getString("activityId");
 			// 报名人信息
 			List<?> listBmrIds = jacksonUtil.getList("bmrIds");
-
+			
+			String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			// 创建邮件发送听众
-			String crtAudi = createTaskServiceImpl.createAudience("报名人短信发送", "HDBM");
+			String crtAudi = createTaskServiceImpl.createAudience("",jgid,"报名人短信发送", "HDBM");
 
 			if (!"".equals(crtAudi)) {
 
@@ -80,7 +89,7 @@ public class TzEventsSendSmsServiceImpl extends FrameworkImpl {
 						wxh = mapBmrInfo.get("TZ_WEIXIN") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_WEIXIN"));
 					}
 
-					createTaskServiceImpl.addAudCy(strName, "", mainPhone, cyPhone, mainEmail, cyEmail, wxh, oprid, "",
+					createTaskServiceImpl.addAudCy(crtAudi,strName, "", mainPhone, cyPhone, mainEmail, cyEmail, wxh, oprid, "",
 							strActivityId, "");
 				}
 

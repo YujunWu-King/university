@@ -97,28 +97,27 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 		
 		String mess = "";
 		// 发送邮件;
-		boolean createTaskIns = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
-		if (createTaskIns == false) {
+		String taskId = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
+		if (taskId == null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_E_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 创建短信、邮件发送的听众;
-		String createAudience = createTaskServiceImpl.createAudience("推荐信感谢邮件", "TJXS");
+		String createAudience = createTaskServiceImpl.createAudience(taskId,strJgid,"推荐信感谢邮件", "TJXS");
 		if (createAudience == null || "".equals(createAudience)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_L_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 为听众添加听众成员;
-		boolean addAudCy = createTaskServiceImpl.addAudCy(str_tjr_name, str_tjr_name, "", "", str_tjr_email, "", "", str_ks_oprid, "", "", String.valueOf(numAppinsId));
+		boolean addAudCy = createTaskServiceImpl.addAudCy(taskId,str_tjr_name, str_tjr_name, "", "", str_tjr_email, "", "", str_ks_oprid, "", "", String.valueOf(numAppinsId));
 		if (addAudCy == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "ADD_L_FAIL", str_language, "", "");
 			return mess;
 		}
 
 		// 得到创建的任务ID;
-		String taskId = createTaskServiceImpl.getTaskId();
 		if (taskId == null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_ID_FAIL", str_language, "", "");
 			return mess;
@@ -140,7 +139,7 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 			String str_oprid = jacksonUtil.getString("OPRID");
 			// 班级id;
 			String str_bj_id = jacksonUtil.getString("bj_id");
-			String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);;
+			String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
 			int str_bmb_id = jdbcTemplate.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=? limit 0,1", new Object[]{str_bj_id, str_oprid},"Integer");
 			Map<String, Object> map = jdbcTemplate.queryForMap("SELECT TZ_REALNAME,TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? AND TZ_JG_ID=? limit 0,1",new Object[]{str_oprid, str_jg_id});
@@ -151,10 +150,10 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 			}
 			
 			// 创建短信、邮件发送的听众;
-			String crtAudi = createTaskServiceImpl.createAudience("推荐信催促邮件", "TJXC");
+			String crtAudi = createTaskServiceImpl.createAudience("",str_jg_id,"推荐信催促邮件", "TJXC");
 			if (crtAudi != null && !"".equals(crtAudi)) {
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(str_name, str_name, "", "", str_email, str_email, "", str_oprid, "", "", String.valueOf(str_bmb_id));
+				boolean addAudCy = createTaskServiceImpl.addAudCy(crtAudi,str_name, str_name, "", "", str_email, str_email, "", str_oprid, "", "", String.valueOf(str_bmb_id));
 				if(addAudCy){
 					returnMap.put("audienceId", crtAudi);
 				}

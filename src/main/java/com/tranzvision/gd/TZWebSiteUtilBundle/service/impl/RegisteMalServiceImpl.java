@@ -196,20 +196,20 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 				
 				// 发送邮件;
-				boolean createTaskIns = false;
+				String taskId = "";
 				if("ENG".equals(strLang)){
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_EN", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_EN", "MAL", "A");
 				}else{
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_ZH", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_ZH", "MAL", "A");
 				}
-				if(createTaskIns == false){
+				if(taskId == null || "".equals(taskId)){
 					errorMsg[0] = "30";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
 					return strResult;
 				}
 				
 				// 创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("考生申请人注册邮箱激活", "JSRW");
+				String createAudience = createTaskServiceImpl.createAudience(taskId,strOrgid,"考生申请人注册邮箱激活", "JSRW");
 				if(createAudience == null || "".equals(createAudience)){
 					errorMsg[0] = "31";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -225,7 +225,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
 				if(addAudCy == false){
 					errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -233,7 +233,6 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 得到创建的任务ID;
-		        String taskId = createTaskServiceImpl.getTaskId();
 		        if(taskId == null || "".equals(taskId)){
 		        	errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -363,20 +362,20 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 				
 				// 发送邮件;
-				boolean createTaskIns = false;
+				String taskId = "";
 				if("ENG".equals(strLang)){
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_EN", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_EN", "MAL", "A");
 				}else{
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_ZH", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_ACT_ZH", "MAL", "A");
 				}
-				if(createTaskIns == false){
+				if(taskId == null || "".equals(taskId)){
 					errorMsg[0] = "30";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
 					return strResult;
 				}
 				
 				// 创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("考生申请人注册邮箱激活", "JSRW");
+				String createAudience = createTaskServiceImpl.createAudience(taskId,strOrgid,"考生申请人注册邮箱激活", "JSRW");
 				if(createAudience == null || "".equals(createAudience)){
 					errorMsg[0] = "31";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -392,7 +391,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
 				if(addAudCy == false){
 					errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -400,7 +399,6 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 得到创建的任务ID;
-		        String taskId = createTaskServiceImpl.getTaskId();
 		        if(taskId == null || "".equals(taskId)){
 		        	errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -532,20 +530,20 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 				
 				// 发送邮件;
-				boolean createTaskIns = false;
+				String taskId = "";
 				if("ENG".equals(strLang)){
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_PASS_EN", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_PASS_EN", "MAL", "A");
 				}else{
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_PASS_ZH", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_PASS_ZH", "MAL", "A");
 				}
-				if(createTaskIns == false){
+				if(taskId == null || "".equals(taskId)){
 					errorMsg[0] = "30";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
 					return strResult;
 				}
 				
 				// 创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("考生申请人注册邮箱激活", "JSRW");
+				String createAudience = createTaskServiceImpl.createAudience(taskId,strOrgid,"考生申请人注册邮箱激活", "JSRW");
 				if(createAudience == null || "".equals(createAudience)){
 					errorMsg[0] = "31";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -561,7 +559,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
 				if(addAudCy == false){
 					errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -569,7 +567,6 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 得到创建的任务ID;
-		        String taskId = createTaskServiceImpl.getTaskId();
 		        if(taskId == null || "".equals(taskId)){
 		        	errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -698,20 +695,20 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 				
 				// 发送邮件;
-				boolean createTaskIns = false;
+				String taskId = "";
 				if("ENG".equals(strLang)){
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_CHG_EN", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_CHG_EN", "MAL", "A");
 				}else{
-					createTaskIns = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_CHG_EN", "MAL", "A");
+					taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_EML_CHG_EN", "MAL", "A");
 				}
-				if(createTaskIns == false){
+				if(taskId == null || "".equals(taskId)){
 					errorMsg[0] = "30";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
 					return strResult;
 				}
 				
 				// 创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("考生申请人注册邮箱激活", "JSRW");
+				String createAudience = createTaskServiceImpl.createAudience(taskId,strOrgid,"考生申请人注册邮箱激活", "JSRW");
 				if(createAudience == null || "".equals(createAudience)){
 					errorMsg[0] = "31";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -727,7 +724,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 为听众添加听众成员;
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, "", "", strEmail, "", "", strDlzhid, "", "", "");
 				if(addAudCy == false){
 					errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
@@ -735,7 +732,6 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				}
 				
 				// 得到创建的任务ID;
-		        String taskId = createTaskServiceImpl.getTaskId();
 		        if(taskId == null || "".equals(taskId)){
 		        	errorMsg[0] = "32";
 					errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "57", "邮件发送失败", "Failed to send mail");
