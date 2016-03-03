@@ -47,7 +47,7 @@
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.content","内容简介"),
 					name: 'content',
-                    maxLength:50,
+                    maxLength:100,
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ],
