@@ -1754,9 +1754,9 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			
 			/*邮件短信发送任务类*/
 			// 创建邮件发送听众;
-			String crtAudi =createTaskServiceImpl.createAudience("推荐信催促邮件", "TJXC");
+			String crtAudi =createTaskServiceImpl.createAudience("",str_jg_id,"推荐信催促邮件", "TJXC");
 			if(crtAudi != null && !"".equals(crtAudi)){
-				createTaskServiceImpl.addAudCy(str_name, str_name, "", "", str_email, str_email, "", str_oprid, "", "", String.valueOf(str_bmb_id));
+				createTaskServiceImpl.addAudCy(crtAudi,str_name, str_name, "", "", str_email, str_email, "", str_oprid, "", "", String.valueOf(str_bmb_id));
 				mapRet.replace("audienceId", crtAudi);
 			}
 		}catch(Exception e){

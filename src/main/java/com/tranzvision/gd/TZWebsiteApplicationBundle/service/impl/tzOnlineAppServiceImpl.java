@@ -1913,23 +1913,21 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strEmail = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
 				
 				//创建邮件短信发送任务
-				boolean createTaskIns = createTaskServiceImpl.createTaskIns(strAppOrgId, strEmlTmpId, "MAL", "A");
-				if(!createTaskIns){
+				String strTaskId = createTaskServiceImpl.createTaskIns(strAppOrgId, strEmlTmpId, "MAL", "A");
+				if(strTaskId==null || "".equals(strTaskId)){
 					return "false";
 				}
 				//创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience("报名表提交发送邮件", "BMBTJYJ");
+				String createAudience = createTaskServiceImpl.createAudience(strTaskId,strAppOrgId,"报名表提交发送邮件", "BMBTJYJ");
 				if("".equals(createAudience)||createAudience==null){
 					return "false";
 				}
 				//为听众添加听众成员
-				boolean addAudCy = createTaskServiceImpl.addAudCy(strName, strName, "", "", strEmail, "", "", strAppOprId, "", "", String.valueOf(numAppInsId));
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strName, strName, "", "", strEmail, "", "", strAppOprId, "", "", String.valueOf(numAppInsId));
 				if(!addAudCy){
 					return "false";
 				}
 				//得到创建的任务ID
-				String strTaskId = "";
-				strTaskId = createTaskServiceImpl.getTaskId();
 				if("".equals(strTaskId)||strTaskId==null){
 					return "false";
 				}else{

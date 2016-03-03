@@ -182,18 +182,18 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				        String fjLj = (String) dataMap.get("fjLj");
 				        String fjMc = (String) dataMap.get("fjMc");
 				        
-				        boolean bl = createTaskServiceImpl.createTaskIns(jgId, tmpId, "MAL", "A");
-				        if( bl == false ){
+				        String taskId = createTaskServiceImpl.createTaskIns(jgId, tmpId, "MAL", "A");
+				        if( taskId == null || "".equals(taskId)){
 				        	map.replace("success", "创建邮件发送任务失败");
 				        	strRet = jacksonUtil.Map2json(map);
 				    		return strRet;
 				        }
-
+				        boolean bl = true;
 				        //更新任务关联的听众ID;
-				        createTaskServiceImpl.updateAudId(audienceId);
+				        createTaskServiceImpl.updateAudId(taskId,audienceId);
 				        //添加抄送;
 				        if(ccAddresseeEmail != null && !"".equals(ccAddresseeEmail)){
-				        	bl = createTaskServiceImpl.addCCAddr(ccAddresseeEmail);
+				        	bl = createTaskServiceImpl.addCCAddr(taskId,ccAddresseeEmail);
 				        }
 				        if( bl == false ){
 				        	map.replace("success", "添加抄送失败");
@@ -202,7 +202,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				        }
 				        //添加密送;
 				        if(bcAddresseeEmail != null && !"".equals(bcAddresseeEmail)){
-				        	bl = createTaskServiceImpl.addBCAddr(bcAddresseeEmail);
+				        	bl = createTaskServiceImpl.addBCAddr(taskId,bcAddresseeEmail);
 				        }
 				        if( bl == false ){
 				        	map.replace("success", "添加抄送失败");
@@ -210,14 +210,14 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				    		return strRet;
 				        }
 				        //更新主题;
-				        bl = createTaskServiceImpl.updateEmailSendTitle(emailTheme);
+				        bl = createTaskServiceImpl.updateEmailSendTitle(taskId,emailTheme);
 				        if( bl == false ){
 				        	map.replace("success", "更新邮件主题失败");
 				        	strRet = jacksonUtil.Map2json(map);
 				    		return strRet;
 				        }
 				        //更新内容;
-				        bl = createTaskServiceImpl.updateEmailSendContent(emailContent);
+				        bl = createTaskServiceImpl.updateEmailSendContent(taskId,emailContent);
 				        if( bl == false ){
 				        	map.replace("success", "更新邮件内容失败");
 				        	strRet = jacksonUtil.Map2json(map);
@@ -226,15 +226,13 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				        //写附件表;
 				        if(fjLj != null && !"".equals(fjLj)
 				        		&& fjMc != null && !"".equals(fjMc) ){
-				        	bl = createTaskServiceImpl.addAttach(fjMc, fjLj);
+				        	bl = createTaskServiceImpl.addAttach(taskId,fjMc, fjLj);
 				        	if( bl == false ){
 					        	map.replace("success", "更新邮件附件失败");
 					        	strRet = jacksonUtil.Map2json(map);
 					    		return strRet;
 					        }
 				        }
-				        // 任务ID;
-				        String taskId = createTaskServiceImpl.getTaskId();
 				        sendSmsOrMalServiceImpl.send(taskId, "");
 				        
 				    }else{

@@ -42,7 +42,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 		if (actData.length == 0) {
 			return audID;
 		}
-
+		String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		try {
 			for (int num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -54,15 +54,15 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				boolean bMultiType = false;
 			      
 				if("DJZL".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("报名表递交资料审核", "JSRW");
+					audID = createTaskServiceImpl.createAudience("",str_jg_id,"报名表递交资料审核", "JSRW");
 				}
 				
 				if("TJX".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("推荐信未完全提交提醒", "JSRW");
+					audID = createTaskServiceImpl.createAudience("",str_jg_id,"推荐信未完全提交提醒", "JSRW");
 				}
 
 				if("MULTI".equals(strType)){
-					audID = createTaskServiceImpl.createAudience("报名表审核批量发送邮件", "JSRW");
+					audID = createTaskServiceImpl.createAudience("",str_jg_id,"报名表审核批量发送邮件", "JSRW");
 					bMultiType = true;
 				}
 				
@@ -96,7 +96,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
 				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
-				                createTaskServiceImpl.addAudCy(strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
+				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
 
 				            }
 				            
@@ -124,7 +124,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 		               wechat = (String)lxfsMap.get("TZ_WEIXIN");
 		               //skype = (String)lxfsMap.get("TZ_SKYPE");
 		             }
-		             createTaskServiceImpl.addAudCy(strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
+		             createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
 
 				}
 			}
