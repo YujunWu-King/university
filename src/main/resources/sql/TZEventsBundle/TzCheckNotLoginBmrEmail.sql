@@ -18,4 +18,4 @@ on
 where 
 	A.TZ_ART_ID=? 
 	and B.TZ_ZY_EMAIL=? 
-	and A.TZ_HD_BMR_ID<>?
+	and A.TZ_NREG_STAT in ('1','4')

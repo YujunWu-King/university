@@ -42,7 +42,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-	
+
 	@Autowired
 	private GetSeqNum getSeqNum;
 
@@ -141,9 +141,12 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 			}
 
 			// 插入节点的开始序号为（父节点的开始序号 + 当前节点的结束序号）/2; 对计算值进行四舍五入
-			long thisNodeNum = (long)parentNodeNum + (long)insertTreeNodeNumEnd;
+			long thisNodeNum = (long) parentNodeNum + (long) insertTreeNodeNumEnd;
 			BigDecimal newTreeNodeNum = new BigDecimal(thisNodeNum / 2);
 			insertTreeNodeNum = newTreeNodeNum.setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+			if (insertTreeNodeNum >= insertTreeNodeNumEnd) {
+				insertTreeNodeNum = insertTreeNodeNumEnd;
+			}
 
 			// 创建新节点数据
 			PsTreeNode psTreeNode = new PsTreeNode();
@@ -215,7 +218,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 			insertTreeNodeNumEnd = brotherNodeEnd;
 
 			// 插入节点的开始序号为（操作兄弟节点的开始序号 + 当前节点的结束序号）/2；对计算值进行四舍五入
-			long thisNodeNum = (long)brotherNodeNum + (long)insertTreeNodeNumEnd;
+			long thisNodeNum = (long) brotherNodeNum + (long) insertTreeNodeNumEnd;
 			BigDecimal newTreeNodeNum = new BigDecimal(thisNodeNum / 2);
 			insertTreeNodeNum = newTreeNodeNum.setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
 
@@ -315,7 +318,7 @@ public class TzMenuTreeNodeServiceImpl implements TzMenuTreeNodeService {
 	@Override
 	@Transactional
 	public void changeNode(String treeName, String oldNode, String preNode, String patentNode) {
-		
+
 		int seqNum = getSeqNum.getSeqNum("TZ_TREENODE_TMP", "TZ_SEQNUM");
 
 		try {

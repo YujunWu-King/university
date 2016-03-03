@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.tranzvision.gd.util.base.Arith;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -138,16 +139,20 @@ public class TreeNode {
 			}
 
 			TreeNode tmpNode;
-			while (listDeleteChildNodes.size() >= 1) {
-				tmpNode = listDeleteChildNodes.get(0);
-				tmpNode.deleteNodeFromDB();
-				listDeleteChildNodes.remove(0);
+			if (null != listDeleteChildNodes) {
+				while (listDeleteChildNodes.size() >= 1) {
+					tmpNode = listDeleteChildNodes.get(0);
+					tmpNode.deleteNodeFromDB();
+					listDeleteChildNodes.remove(0);
+				}
 			}
 
-			int listnum = listChildNodes.size();
-			for (int i = 0; i < listnum; i++) {
-				tmpNode = listChildNodes.get(i);
-				tmpNode.save(false, level + 1);
+			if (null != listChildNodes) {
+				int listnum = listChildNodes.size();
+				for (int i = 0; i < listnum; i++) {
+					tmpNode = listChildNodes.get(i);
+					tmpNode.save(false, level + 1);
+				}
 			}
 
 		} catch (Exception e) {
@@ -447,10 +452,10 @@ public class TreeNode {
 	 * @throws Exception
 	 */
 	private void refreshNodeNum(int nodeNum, int nodeNumEnd, int pNodeNum, boolean reCalculateFlag) throws Exception {
-		/*
-		 * int tmp = 0; if (reCalculateFlag == true) { tmp =
-		 * this.getChildNodeCount(); }
-		 */
+		
+		if (reCalculateFlag == true) {
+			this.getChildNodeCount();
+		}
 
 		int tmpTotalNodeNum = m_TotalChildNum + 1;
 
@@ -463,6 +468,10 @@ public class TreeNode {
 			m_TreeNodeNum = nodeNum;
 			m_TreeNodeNumEnd = nodeNumEnd;
 			m_ParentNodeNum = pNodeNum;
+			
+			this.setTreeNodeNum(m_TreeNodeNum);
+			this.setTreeNodeNumEnd(m_TreeNodeNumEnd);
+			this.setParentNodeNum(m_ParentNodeNum);
 
 			m_NotSavedFlag = true;
 
@@ -474,6 +483,7 @@ public class TreeNode {
 		int startNodeNum = 0;
 		int endNodeNum = 0;
 		int listnum = listChildNodes.size();
+
 		for (int i = 0; i < listnum; i++) {
 
 			if (i == 0) {
@@ -484,27 +494,29 @@ public class TreeNode {
 				childTotal2 = childTotal2 + listChildNodes.get(i).getTotalChildNodeNum() + 1;
 			}
 
-			double calAvgNodeNum = childTotal1 / tmpTotalNodeNum;
+			double calAvgNodeNum = Arith.div((double) childTotal1, (double) tmpTotalNodeNum, 4);
 			long calNodeNumEnd = nodeNumEnd - nodeNum;
-			double calNodeNum = calAvgNodeNum * calNodeNumEnd;
-			int calNodeNumFloor =  (int) Math.floor(calNodeNum);
-			
-			//startNodeNum = (int) Math.floor((childTotal1 / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			double calNodeNum = calAvgNodeNum * (double)calNodeNumEnd;
+			int calNodeNumFloor = (int) Math.floor(calNodeNum);
+
 			startNodeNum = calNodeNumFloor + nodeNum;
+			// startNodeNum = (int) Math.floor((childTotal1 / tmpTotalNodeNum) *
+			// (nodeNumEnd - nodeNum)) + nodeNum;
 			if (startNodeNum == nodeNum) {
 				startNodeNum = startNodeNum + 1;
 			}
-			if (startNodeNum == nodeNumEnd) {
+			if (startNodeNum >= nodeNumEnd) {
 				startNodeNum = startNodeNum - 1;
 			}
 
-			calAvgNodeNum = (1 + childTotal2) / tmpTotalNodeNum;
+			calAvgNodeNum = Arith.div((double) (1 + childTotal2), (double) tmpTotalNodeNum, 4);
 			calNodeNumEnd = nodeNumEnd - nodeNum;
-			calNodeNum = calAvgNodeNum * calNodeNumEnd;
-			calNodeNumFloor =  (int) Math.floor(calNodeNum);
-			
-			//endNodeNum = (int) Math.floor(((1 + childTotal2) / tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
+			calNodeNum = calAvgNodeNum * (double)calNodeNumEnd;
+			calNodeNumFloor = (int) Math.floor(calNodeNum);
+
 			endNodeNum = calNodeNumFloor + nodeNum;
+			// endNodeNum = (int) Math.floor(((1 + childTotal2) /
+			// tmpTotalNodeNum) * (nodeNumEnd - nodeNum)) + nodeNum;
 			if (i < (listnum - 1)) {
 				endNodeNum = endNodeNum - 1;
 			}

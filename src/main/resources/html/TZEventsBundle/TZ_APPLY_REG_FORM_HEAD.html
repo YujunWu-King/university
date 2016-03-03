@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>活动报名</title>
+<style type="text/css">
+* {
+	
+}
+
+input[type="text"], input[type="password"] {
+	border: solid 1px #d2d2d2;
+	border-left-color: #ccc;
+	border-top-color: #ccc;
+	border-radius: 2px;
+	box-shadow: inset 0 1px 0 #f8f8f8;
+	background-color: #fff;
+	padding: 4px 6px;
+	line-height: 18px;
+	color: #555;
+	vertical-align: baseline;
+	height: 18px;
+}
+
+ol, ul {
+	list-style: none
+}
+
+button, input {
+	border: 1px solid;
+	outline: none;
+	line-height: normal;
+}
+
+body, button, input, select, textarea {
+	font-size: 12px;
+	font-family: microsoft yahei;
+	color: #444;
+}
+
+.apply-poptit a {
+	color: #0088DB;
+	text-decoration: none;
+	cursor: pointer
+}
+
+.apply-poptit a:hover {
+	color: #2A5E8E
+}
+
+.apply-poptit a:focus {
+	outline: none
+}
+
+.apply-poptit h3 {
+	font-size: 16px;
+	padding-left: 15px;
+}
+
+.apply-items {
+	border: solid 1px #d2d2d2;
+	border-left-color: #ccc;
+	border-top-color: #ccc;
+	border-radius: 2px;
+	box-shadow: inset 0 1px 0 #f8f8f8;
+	background-color: #fff;
+	padding: 4px 6px;
+	line-height: 18px;
+	color: #555;
+	vertical-align: baseline;
+}
+
+.apply-items.inptype {
+	width: 320px; //
+	height: 18px;
+}
+
+.apply-items.seltype {
+	width: 335px;
+	height: 29px;
+}
+
+.apply-items:focus {
+	border-color: #95C8F1;
+	box-shadow: 0 0 4px #95C8F1;
+}
+
+.apply-signin {
+	font-size: 12px;
+}
+
+.apply-poptit {
+	border-bottom: 1px solid #ddd;
+	padding: 1px;
+	position: relative;
+	line-height: 40px;
+	height: 40px;
+}
+
+.apply-popbody {
+	padding: 60px 15px;
+	max-height: 325px;
+	margin-bottom: 30px;
+	color: #444;
+	overflow: auto;
+	margin: 0 auto;
+	text-align: center;
+	width: 600px
+}
+
+.apply-poptit .close {
+	float: right;
+	color: #999;
+	padding: 5px;
+	margin: -2px;
+	font: bold 18px/18px simsun;
+	text-shadow: 0 1px 0 #ddd
+}
+
+.apply-poptit .close:hover {
+	color: #444;
+}
+
+.apply-signin {
+	margin: -50px 20px -50px 80px;
+	text-align: left;
+	font-size: 14px;
+}
+
+.apply-signin h4 {
+	color: #999;
+	font-weight: 100; //
+	margin: 5px 70px 20px 15px;
+	font-size: 12px;
+}
+
+.apply-signin li {
+	padding-left: 60px;
+	margin-bottom: 15px;
+}
+
+.apply-signin li strong {
+	float: left;
+	margin-left: -120px;
+	width: 150px;
+	text-align: right;
+	margin-right: 20px;
+}
+
+.apply-btn {
+	margin-left: 125px;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.apply-btn .btn {
+	width: 80px;
+	height: 25px;
+	border-radius: 2px;
+	cursor: pointer;
+	color: #FFF;
+	font-size: 14px;
+	font-weight: bold;
+	margin: 0 10px;
+}
+
+.apply-back {
+	background-color: #666;
+	border: 1px solid #999;
+}
+
+.apply-back:hover {
+	background-color: #999
+}
+
+.apply-back {
+	background-color: #666;
+	border: 1px solid #999;
+}
+
+.apply-back:hover {
+	background-color: #999
+}
+
+.apply-popover {
+	z-index: 999999;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 660px;
+	max-height: 519px;
+	margin: -180px 0 0 -330px;
+	border-radius: 5px;
+	border: solid 2px #666;
+	background-color: #fff;
+	box-shadow: 0 0 10px #666;
+}
+</style>
+
+<script type="text/javascript" src="%bind(:13)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:13)/statics/js/tranzvision/func/captcha.js"></script>
+<script type="text/javascript">
+	var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+	var head = document.getElementsByTagName("head").item(0);
+	//在子窗口中添加父窗口的外联样式
+	for (var i = 0; i < linkList.length; i++) {
+		var l = document.createElement("link");
+		l.rel = 'stylesheet'
+		l.type = 'text/css';
+		l.href = linkList[i].href;
+		head.appendChild(l);
+	}
+	function createCode(obj) {
+		%bind(:3)%bind(:4)
+		$("#regCodeImg").attr("src",GenCaptchaUrl());
+	}
+	$(document).ready(function(){
+		createCode();
+	});
+</script>
+</head>
+<body>
+	<div class="apply-popover">
+		<div class="apply-poptit">
+			<a href="javascript:;" title="%bind(:9)" class="close"
+				onClick="parent.tz_close_float_iframe_apply();">×</a>
+			<h3>%bind(:7)</h3>
+		</div>
+		<div class="apply-popbody">
+			<form class="apply-signin" name="applyRegForm" method="post">
+				<h4>%bind(:8)</h4>
+				<ol id="items">
+				%bind(:1)
+				</ol>
+				<div class="apply-btn">
+					<input class="btn apply-back" type="button" name="submit"
+						value="%bind(:10)" onclick="parent.tz_close_float_iframe_apply();" />
+					<input class="btn apply-submit" type="button" name="submit"
+						value="%bind(:11)" onclick="tz_apply_float_iframe_submit();" />
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
+		function cmbcgbyyValueReplace(str) {
+
+			var s = "";
+
+			if (str == undefined) {
+				return str;
+			}
+
+			if (str.length == 0)
+				return "";
+
+			s = $.trim(str.toString());
+
+			s = s.replace(/\\/g, "\\\\")
+
+			s = s.replace(/\"/g, "\\\"");
+
+			s = s.replace(/\'/g, "\\'");
+
+			s = s.replace(/\t/g, "\\t");
+
+			s = s.replace(/\f/g, "\\f");
+
+			s = s.replace(/\//g, "\\/");
+
+			s = s.replace(/\n/g, "\\n");
+
+			return s;
+
+		}
+
+		/*提交事件*/
+		function tz_apply_float_iframe_submit() {
+			var allParam = $("input");
+			var selectParem = $("select");
+
+			var applyURL = "%bind(:2)";
+			var strParam = "{";
+
+			for (i = 0; i < allParam.length; i++) {
+
+				if ($(allParam[i]).attr("type") == "hidden"
+						|| $(allParam[i]).attr("type") == "text") {
+					var inputValue = $.trim($(allParam[i]).val());
+
+					if ($(allParam[i]).attr("required") == "required"
+							&& inputValue == "") {
+						alert("%bind(:12)");
+						return;
+					} else {
+						strParam = strParam
+								+ "\""
+								+ cmbcgbyyValueReplace($(allParam[i])
+										.attr("id")) + "\":\""
+								+ cmbcgbyyValueReplace(inputValue) + "\",";
+					}
+				}
+			}
+
+			for (i = 0; i < selectParem.length; i++) {
+
+				var inputValue = $.trim($(selectParem[i]).val());
+
+				if ($(selectParem[i]).attr("required") == "required"
+						&& inputValue == "") {
+					alert("%bind(:12)");
+					return;
+				} else {
+					strParam = strParam
+							+ "\""
+							+ cmbcgbyyValueReplace($(selectParem[i]).attr("id"))
+							+ "\":\"" + cmbcgbyyValueReplace(inputValue)
+							+ "\",";
+				}
+			}
+
+			strParam = strParam.substr(0, strParam.length - 1);
+			strParam = strParam + "}";
+
+			strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
+					+ strParam + "}";
+
+			// strComParams = $.parseJSON(strComParams);
+			// console.log(strComParams);
+			$.ajax({
+				type : "POST",
+				url : applyURL + "?tzParams=" + strComParams,
+				// data: {"tzParams":strComParams},
+				dataType : "json",
+				success : function(data) {
+					var result = data.comContent.result;
+					var resultDesc = data.comContent.resultDesc;
+					var artid = data.comContent.artid;
+					var bmrid = data.comContent.bmrid;
+					if (result == "1" || result == "2") {
+						alert(resultDesc);
+					} else {
+						alert(resultDesc);
+						parent.changebmzt(artid, bmrid);
+						parent.tz_close_float_iframe_apply();
+
+					}
+
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					if (textStatus == "timeout") {
+						alert("%bind(:5)");
+						return;
+					} else {
+						alert("%bind(:6)");
+						return;
+					}
+				}
+			});
+
+		}		
+	</script>
+</body>
+</html>

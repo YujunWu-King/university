@@ -146,7 +146,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
 
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
@@ -430,7 +430,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -514,7 +514,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = "http://" + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);

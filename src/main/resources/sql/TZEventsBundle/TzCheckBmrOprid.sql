@@ -1,0 +1,1 @@
+select 'Y' from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and OPRID=? and TZ_NREG_STAT in ('1','4')
