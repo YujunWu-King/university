@@ -21,7 +21,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @since 2016-1-29
  */
 
-@Service("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl")
+@Service("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppHisServiceImpl")
 public class tzOnlineAppHisServiceImpl {
 
 	@Autowired
