@@ -539,6 +539,7 @@
 					var fix = usefile.substring(usefile.lastIndexOf(".") + 1,usefile.length);
 
                     var sysfile = action.result.msg.sysFileName;
+                    
                     var accessPath = action.result.msg.accessPath;
 					//var path = action.result.msg.path;
                     //当前点击行索引
@@ -549,7 +550,7 @@
 					var tjrName = resRefLetterGridRecs.get("refLetterPerName");
                     resRefLetterGridRecs.set("refLetterUserFile",stuName + "_Recommendation_" + tjrName + "." + fix);
                     resRefLetterGridRecs.set("refLetterSysFile",sysfile);
-                    resRefLetterGridRecs.set("refLetterAurl",TzUniversityContextPath + accessPath + sysfile);
+                    resRefLetterGridRecs.set("refLetterAurl",accessPath + sysfile);
 					resRefLetterGridRecs.set("refLetterPurl",accessPath);
                     //重置表单
                     myMask.hide();

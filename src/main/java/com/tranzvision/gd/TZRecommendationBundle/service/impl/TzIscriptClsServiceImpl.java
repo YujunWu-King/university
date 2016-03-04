@@ -377,7 +377,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			return "";
 		}else{
 			url = jdbcTemplate.queryForObject("SELECT TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND ATTACHSYSFILENAME=?", new Object[]{str_app_ins_id,sysFileName},"String");
-			if(url == null || "".equals(url)){
+			if(url != null && !"".equals(url)){
 				if(url.lastIndexOf("/") + 1 != url.length()){
 					url = url + "/";
 				}

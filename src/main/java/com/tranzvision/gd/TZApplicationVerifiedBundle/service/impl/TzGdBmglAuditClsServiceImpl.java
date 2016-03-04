@@ -30,6 +30,7 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormAttTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormWrkTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT;
@@ -37,6 +38,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcTKey;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhccT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhccTKey;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkTKey;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
@@ -90,6 +92,9 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 	@Autowired
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
+	@Autowired
+	private PsTzFormAttTMapper psTzFormAttTMapper;
+	
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -576,7 +581,20 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 
 					if (str_refLetterSysFile != null && !"".equals(str_refLetterSysFile)
 							&& str_refLetterUserFile != null && !"".equals(str_refLetterUserFile)) {
-						str_att_a_url = this.getRefLetterFiles(str_refLetterSysFile);
+						
+						str_att_p_url = jdbcTemplate.queryForObject("SELECT TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND ATTACHSYSFILENAME=?", new Object[]{strAppInsID,str_refLetterSysFile},"String");
+						if(str_att_p_url == null ){
+							str_att_p_url = "";
+						}
+						//str_att_a_url = this.getRefLetterFiles(strAppInsID,str_refLetterSysFile);
+						if(str_att_p_url != null && !"".equals(str_att_p_url)){
+							if(str_att_p_url.lastIndexOf("/") + 1 != str_att_p_url.length()){
+								str_att_a_url = str_att_p_url + "/" + str_refLetterSysFile;
+							}else{
+								str_att_a_url = str_att_p_url + str_refLetterSysFile;
+							}
+							
+						}
 					}
 
 					numTotal = numTotal + 1;
@@ -847,11 +865,12 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		return urlReturn;
 	}
 */
-	
-	private String getRefLetterFiles(String sysFileName) {
+
+	/*
+	private String getRefLetterFiles(long strAppInsID,String sysFileName) {
 		String urlReturn = "";
-		// TODO
-		/* 文件访问路径 */
+		
+		
 		String attUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 		String fileUrl = jdbcTemplate.queryForObject(attUrlSQL, new Object[] { "TZ_AFORM_FILE_DIR" }, "String");
 		if ((fileUrl.lastIndexOf("/") + 1) != fileUrl.length()) {
@@ -862,7 +881,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				+ fileUrl + sysFileName;
 		return urlReturn;
 	}
-
+*/
+	
 	/* 修改学生类别信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
@@ -1323,7 +1343,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		    // 报名人oprID;
 		    String strOprId = (String) infoData.get("oprID");
 		    // 推荐人实例ID;
-		    long strRefLetterAppInsId = Long.valueOf((String) infoData.get("refLetterAppInsId"));
+		    long strRefLetterAppInsId = 0L;
+		    try{
+		    	strRefLetterAppInsId = Long.valueOf(infoData.get("refLetterAppInsId").toString());
+		    }catch(Exception e1){
+		    	strRefLetterAppInsId = 0L;
+		    }
+		     
 		    // 系统文件名;
 		    String strRefLetterSysFile = (String) infoData.get("refLetterSysFile");
 		      
@@ -1332,24 +1358,43 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		      
 		    String strRefLetterState = (String) infoData.get("refLetterState");
 		      
-		    String strRefLetterAurl = (String) infoData.get("refLetterAurl");
-		    //String strRefLetterPurl = (String) infoData.get("refLetterPurl");
+		    //String strRefLetterAurl = (String) infoData.get("refLetterAurl");
+		    String strRefLetterPurl = (String) infoData.get("refLetterPurl");
 		    
 		    if(strAppInsId > 0
 		    		&& strRefLetterId != null && !"".equals(strRefLetterId)
 		    		&& strOprId != null && !"".equals(strOprId)){
 		    	PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(strRefLetterId);
 		    	if(psTzKsTjxTbl != null){
+		    		//原附件信息;
+		    		String ySysName = psTzKsTjxTbl.getAttachsysfilename();
+
 		    		psTzKsTjxTbl.setTzAppInsId(strAppInsId);
 		    		psTzKsTjxTbl.setTzRefLetterId(strRefLetterId); 
 		    		psTzKsTjxTbl.setTzTjxAppInsId(strRefLetterAppInsId);
 		    		psTzKsTjxTbl.setOprid(strOprId);
 		    		psTzKsTjxTbl.setAttachsysfilename(strRefLetterSysFile);
 		    		psTzKsTjxTbl.setAttachuserfile(strRefLetterUserFile);
-		    		psTzKsTjxTbl.setTzAttAUrl(strRefLetterAurl);
+		    		psTzKsTjxTbl.setTzAttAUrl(strRefLetterPurl);
 		    		psTzKsTjxTbl.setRowLastmantOprid(oprid);
 		    		psTzKsTjxTbl.setRowLastmantDttm(new Date());
 		    		psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
+		    		
+		    		if(strRefLetterSysFile != null && !"".equals(strRefLetterSysFile)
+		    				&& !strRefLetterSysFile.equals(ySysName)){
+		    			PsTzFormAttT psTzFormAttT = new PsTzFormAttT();
+				    	psTzFormAttT.setTzAppInsId(strAppInsId);
+				    	psTzFormAttT.setTzXxxBh(strRefLetterSysFile);
+				    	psTzFormAttT.setTzIndex(1);
+				    	psTzFormAttT.setTzAccessPath(strRefLetterPurl);
+				    	psTzFormAttT.setAttachsysfilename(strRefLetterSysFile);
+				    	psTzFormAttT.setAttachuserfile(strRefLetterUserFile);
+				    	psTzFormAttT.setRowAddedDttm(new Date());
+				    	psTzFormAttT.setRowAddedOprid(oprid);
+				    	psTzFormAttT.setRowLastmantDttm(new Date());
+				    	psTzFormAttT.setRowLastmantOprid(oprid);
+				    	psTzFormAttTMapper.insert(psTzFormAttT);
+		    		}
 		    	}else{
 		    		errMsg[0] = "1";
 		    		errMsg[1] = "推荐人信息错误，请联系系统管理员";
@@ -1376,7 +1421,6 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		    	}
 		    }
 		    
-		    //TODO保存推荐信附件;
 		    
 		} catch (Exception e) {
 			e.printStackTrace();
