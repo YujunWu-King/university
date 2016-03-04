@@ -186,6 +186,7 @@ var SurveyBuild = {
         } else if (el.tagName == "SELECT") {
             val = $(el).val();
         }
+        val = $.trim(val);
         return val;
     },
     _clearAttrVal: function(el) {
@@ -250,22 +251,25 @@ var SurveyBuild = {
         }
 
         var val = this._getAttrVal(el);
-		
+        if (attrName == "fileType") {
+            //上传附件中的文件类型，去掉所有空额
+            val = val.replace(/[ ]/g, "")
+        }
         data[attrName] = val;
 
         var rules = data["rules"];
         var _rules = this._componentConfig[$.inArray(data["classname"], this._componentIndex)]["rules"];
 
         var $activeLi = $("#question-box li.active");
-
         if (attrName == "title") {
-			/*Bug修改TextExplain的Title属性，在设计区域会重复显示Title内容   暂时注释by WRL 2016/2/24
-            if (data["classname"] == 'TextExplain') {
-                $activeLi.find(".question-answer").html(val);
-            } else {
-                $activeLi.find(".question-question").first().html(val);
-            }*/
-			$activeLi.find(".question-question").first().html(val);
+            /*Bug修改TextExplain的Title属性，在设计区域会重复显示Title内容   暂时注释by WRL 2016/2/24
+             if (data["classname"] == 'TextExplain') {
+             $activeLi.find(".question-answer").html(val);
+             } else {
+             $activeLi.find(".question-question").first().html(val);
+             }*/
+            $activeLi.find(".question-question").first().html(val);
+            data["classname"] == "Page" && this._initTab();
         } else if (attrName == "suffix") {
             $activeLi.find(".suffix").html(val);
         } else if (attrName == "format") {
@@ -284,9 +288,9 @@ var SurveyBuild = {
                 format = "DD-MM-YYYY";
             } else if (val == "dd/mm/yy") {
                 format = "DD/MM/YYYY";
-            } else if(val == "yy/mm"){
+            } else if (val == "yy/mm") {
                 format = "YYYY/MM";
-            } else if(val == "yy-mm"){
+            } else if (val == "yy-mm") {
                 format = "YYYY-MM";
             }
             $activeLi.find(".question-answer").find("#" + instanceId + "Format").html(format);
@@ -374,27 +378,25 @@ var SurveyBuild = {
                                     linesNo.push(i);
                                 }
                                 data["linesNo"] = linesNo;
-                            }else{
-                                if(attrName == "defaultval"){
+                            } else {
+                                if (attrName == "defaultval") {
                                     //修改默认值时，直接将默认值赋值于value
-                                    if(val.indexOf("%BIND") == -1){
+                                    if (val.indexOf("%BIND") == -1) {
                                         data["value"] = val;
-                                    }else{
+                                    } else {
                                         data["value"] = "";
                                     }
-                                }else{
-									if(attrName == "isAttachedTemplate"){
-										if(val=="Y")
-										{	
-											$("#mainTemplate").show(); 
-											$("#mainTemplateSpan").show();
-										}else
-										{
-											$("#mainTemplate").hide();
-											$("#mainTemplateSpan").hide();
-										}
-									}
-								}
+                                } else {
+                                    if (attrName == "isAttachedTemplate") {
+                                        if (val == "Y") {
+                                            $("#mainTemplate").show();
+                                            $("#mainTemplateSpan").show();
+                                        } else {
+                                            $("#mainTemplate").hide();
+                                            $("#mainTemplateSpan").hide();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -500,12 +502,12 @@ var SurveyBuild = {
         if ($liActive.length == 0) {
             return checkBz
         }
-        var tipObj;     //提示信息目标元素
+        var tipObj; //提示信息目标元素
         var d = $liActive.attr("data_id");
-        if (!SurveyBuild.isDHContainer && this._items[d] && (this._items[d]["classname"] == "Page" || this._items[d]["classname"] == "Separator")) {
-            //分页符、文字描述控件跳过检查
-            return checkBz;
-        }
+        //if (!SurveyBuild.isDHContainer && this._items[d] && (this._items[d]["classname"] == "Page" || this._items[d]["classname"] == "Separator")) {
+        //    //分页符、文字描述控件跳过检查
+        //    return checkBz;
+        //}
         var $edit_box = $("#question-edit");
         var $itemId = $edit_box.find(".edit_itemId");
         var $itemName = $edit_box.find(".edit_itemName");
@@ -539,7 +541,7 @@ var SurveyBuild = {
             msg = "信息项名称不能为空";
         } else {
             //信息项编号是否重复
-            dance:for (var insId in this._items) {
+            dance: for (var insId in this._items) {
                 if (d != insId) {
                     if (this._items[insId]["itemId"] == $itemId.val()) {
                         has = true;
@@ -1419,22 +1421,23 @@ var SurveyBuild = {
         e += '  </legend>';
         e += '</fieldset>';
 
-        e += '<fieldset>';
-        e += '  <legend>';
-        e += '		<span class="edit_item_label">名称：</span>';
-        e += '		<input type="text" class="medium edit_itemName" onkeyup="SurveyBuild.saveAttr(this,\'itemName\')" value="' + data.itemName + '"/>';
-        e += '  </legend>';
-        e += '</fieldset>';
+        var nt = "";
+        nt += '<fieldset>';
+        nt += '  <legend>';
+        nt += '		<span class="edit_item_label">名称：</span>';
+        nt += '		<input type="text" class="medium edit_itemName" onkeyup="SurveyBuild.saveAttr(this,\'itemName\')" value="' + data.itemName + '"/>';
+        nt += '  </legend>';
+        nt += '</fieldset>';
 
-        e += '<div id="editor-bar" style="width:300px;">';
-        e += '	<button class="btn btn-primary btn-mini" onclick="SurveyBuild.editor(\'' + data.instanceId + '\')">';
-        e += '		<i class="icon-font"></i> 编辑文字或插入图片';
-        e += '	</button>';
-        e += '</div>';
-        e += '<textarea id="'+ data.instanceId +'" class="question-text" onkeyup="SurveyBuild.saveAttr(this,\'title\')">' + data.title + '</textarea>';
+        nt += '<div id="editor-bar" style="width:300px;">';
+        nt += '	<button class="btn btn-primary btn-mini" onclick="SurveyBuild.editor(\'' + data.instanceId + '\')">';
+        nt += '		<i class="icon-font"></i> 编辑文字或插入图片';
+        nt += '	</button>';
+        nt += '</div>';
+        nt += '<textarea id="'+ data.instanceId +'" class="question-text" onkeyup="SurveyBuild.saveAttr(this,\'title\')">' + data.title + '</textarea>';
 
-        e = (data["_CommonField"] == "Y" ? e: "") + data._edit(data);
-
+        //e = (data["_CommonField"] == "Y" ? e: "") + data._edit(data);
+        e = e + (data["classname"] == "Separator" ? "" : nt) +data._edit(data);
         e += '<div class="edit_item_warp" style="text-align: right;">';
         e += '  <button class="btn btn-small" onclick="SurveyBuild.remove(event,\'' + d + '\')"><i class="icon-trash"></i>删除</button>';
         e += '</div>';
@@ -1573,12 +1576,12 @@ var SurveyBuild = {
 			_style = "";
 		}
         //李丹丹修改，如果是分页符，则绑定和页签一样的事件
-        if (_currentData.classname == "Page") {
-            c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild._editTabs();return false;" style="' + _style + '">';
-        } else{
-            c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
-        }
-
+        //if (_currentData.classname == "Page") {
+        //    c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild._editTabs();return false;" style="' + _style + '">';
+        //} else{
+        //    c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
+        //}
+        c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
         if (_currentData["_CommonField"] == "Y") {
             c += '<div class="question-title"><b class="question-code">' + _currentData.orderby + '.</b><div class="question-question">' + _currentData.title + '</div></div>';
         }

@@ -2689,7 +2689,7 @@ var SurveyBuild = {
 			filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
 			//文件后缀
 			var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
-			var allowFileType = data.fileType;
+			var allowFileType = $.trim(data.fileType);
 			var allowSize = data.fileSize;
 			//允许上传的文件类型
 			var typeArr = allowFileType.split(",");
@@ -2717,11 +2717,11 @@ var SurveyBuild = {
 				loading();/*上传进度条*/
 				var $form = document.getElementById("main_list");
 				$form.encoding = "multipart/form-data";
-				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
+				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment&" + Math.random();
 				$("#main_list").ajaxSubmit({
 					dataType:'json',
 					type:'POST',
-					url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
+					url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment&" + Math.random(),
 					success: function(obj) {
 						if(obj.success){
 							//清空file控件的Value
@@ -3095,8 +3095,7 @@ var SurveyBuild = {
 
                         this.is_edit = true;
                         $("#"+data.itemId+child[cins].itemId+"Attch").attr("href",TzUniversityContextPath + obj.msg.accessPath + "/" + obj.msg.sysFileName);
-                        $("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.filename);
-                        $("#"+data.itemId+child[cins].itemId+"Attch").attr("target","_blank");
+                        $("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.filename.substring(0,20) + "...");
 
 
                         child[cins]["filename"] = obj.msg.filename;
