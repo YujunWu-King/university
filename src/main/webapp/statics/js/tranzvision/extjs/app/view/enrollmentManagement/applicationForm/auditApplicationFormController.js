@@ -458,8 +458,8 @@
 
 
         if(appInsID!=""&&refLetterID!=""&&appInsID!="0"&&refLetterID!="0"){
-            var tzParams="{ComID:'TZ_ONLINE_REG_COM',PageID:'TZ_ONLINE_APP_STD',OperateType:'HTML',comParams:{TZ_APP_INS_ID:'"+appInsID+"',TZ_REF_LETTER_ID:'"+refLetterID+"',TZ_MANAGER:'Y'}}";
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","TZ_REF_LETTER_ID":"'+refLetterID+'","TZ_MANAGER":"Y"}}';
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var win = new Ext.Window({
                 title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewRefLetter","查看推荐信"),
                 maximized : true,
@@ -500,16 +500,16 @@
 
         /*获取页面数据*/
 
-        var filename = form.findField("refLetterFile").getValue();
+        var filename = form.findField("orguploadfile").getValue();
 
 		var stuName = form.findField("stuName").getValue();
 
         if(filename != ""){
 
             var dateStr = Ext.Date.format(new Date(), 'Ymd');
-
+            
             var upUrl = form.findField("filePurl").getValue();
-
+            upUrl = TzUniversityContextPath + '/UpdServlet?filePath=enrollment';
             if(upUrl==""){
                 Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.error","错误"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.wdyscfjdlj","未定义上传附件的路径，请与管理员联系"));
                 return;
@@ -539,8 +539,9 @@
 					var fix = usefile.substring(usefile.lastIndexOf(".") + 1,usefile.length);
 
                     var sysfile = action.result.msg.sysFileName;
+                    
                     var accessPath = action.result.msg.accessPath;
-					var path = action.result.msg.path;
+					//var path = action.result.msg.path;
                     //当前点击行索引
                     var rowindex = form.findField("currentRowIndex").getValue();
                     var resRefLetterGrid = btn.findParentByType("auditApplicationForm").down('grid[name=refLetterGrid]');
@@ -549,8 +550,8 @@
 					var tjrName = resRefLetterGridRecs.get("refLetterPerName");
                     resRefLetterGridRecs.set("refLetterUserFile",stuName + "_Recommendation_" + tjrName + "." + fix);
                     resRefLetterGridRecs.set("refLetterSysFile",sysfile);
-                    resRefLetterGridRecs.set("refLetterAurl",accessPath + "/" + sysfile);
-					resRefLetterGridRecs.set("refLetterPurl",path);
+                    resRefLetterGridRecs.set("refLetterAurl",accessPath + sysfile);
+					resRefLetterGridRecs.set("refLetterPurl",accessPath);
                     //重置表单
                     myMask.hide();
                     form.reset();

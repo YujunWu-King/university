@@ -1,8 +1,5 @@
 package com.tranzvision.gd.TZRecommendationBundle.service.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -286,7 +283,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 String str_rownum = jacksonUtil.getString("rownum");
 			 String str_class_id = jacksonUtil.getString("class_id");
 			 String str_app_tpl_id = jacksonUtil.getString("TZ_APP_TPL_ID");
-			 long str_tjx_app_ins_id = 0;
+			 long str_tjx_app_ins_id = 0L;
 			 String str_y= "", str_tjx_zt= "", str_ref_letter_id= "";
 			 String str_tjx_language = "";
 			 String str_tjx_app_tpl_id = "";
@@ -297,9 +294,10 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{str_app_ins_id,str_rownum});
 			 if(map != null){
 				 try{
-					 str_tjx_app_ins_id = (long)map.get("TZ_TJX_APP_INS_ID");
+					 str_tjx_app_ins_id = Long.parseLong(map.get("TZ_TJX_APP_INS_ID").toString());
 				 }catch(Exception e){
-					 str_tjx_app_ins_id = 0;
+					 e.printStackTrace();
+					 str_tjx_app_ins_id = 0L;
 				 }
 				 
 				 str_y = (String)map.get("STR_Y");
@@ -311,7 +309,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 
 			 if(str_refLetterSysFile != null && !"".equals(str_refLetterSysFile)
 					 && str_refLetterUserFile != null && !"".equals(str_refLetterUserFile)){
-				 str_att_a_url = this.getRefLetterFiles(str_refLetterSysFile);
+				 str_att_a_url = this.getRefLetterFiles(str_app_ins_id,str_refLetterSysFile);
 			 }else{
 				 str_att_a_url = "";
 			 }
@@ -373,7 +371,27 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(returnMap);
 	}
 	
-	private String getRefLetterFiles(String sysFileName){
+	private String getRefLetterFiles(long str_app_ins_id,String sysFileName){
+		String url = "";
+		if(sysFileName == null || "".equals(sysFileName)){
+			return "";
+		}else{
+			url = jdbcTemplate.queryForObject("SELECT TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND ATTACHSYSFILENAME=?", new Object[]{str_app_ins_id,sysFileName},"String");
+			if(url != null && !"".equals(url)){
+				if(url.lastIndexOf("/") + 1 != url.length()){
+					url = url + "/";
+				}
+				if(request.getServerPort() == 80){
+					url = "http://" + request.getServerName() + request.getContextPath() + url + sysFileName;
+				}else{
+					url = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + url + sysFileName;
+				}
+			}
+			
+			
+		}
+		return url;
+		/*
 		String urlReturn = "";
 		int i = 0, rtn = 0;
 		Date dt ;
@@ -384,7 +402,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			str_ftp_path = str_ftp_path + "/";
 		}
 		
-		/*删除当前日期前30天的数据*/
+		
 		Calendar ca;
 		File file;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -408,12 +426,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			fileUrl = fileUrl + "/";
 		}
 		
-		/*先从文件服务器上查找，如果文件服务器上没有则从数据库上传至文件服务器*/
+		
 		file = new File(str_ftp_path + strCurrDate + "/" + sysFileName);
 		if(file.exists()){
 			rtn = 0;
 		}else{
-			//TODO
+			
 		}
 		
 		if(rtn == 0){
@@ -424,6 +442,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			}
 		}
 		return urlReturn;
+		*/
 	}
 	
 	@Override
