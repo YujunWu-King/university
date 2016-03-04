@@ -191,7 +191,6 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			     mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle, strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1, strAdd2, strAdd3, strAdd4, strAdd5, strTjrgx, str_sysfilename, str_filename, "S", "Y");
 			     if("SUCCESS".equals(mess)){
 			    	 mess =  tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId);
-			    	 System.out.println("=========================>"+mess+"=============>"+strTzsqrFlg);
 			    	 if("Y".equals(strTzsqrFlg)){
 			    		 // 发送邮件通知给申请人;
 			    		 if("SUCCESS".equals(mess)){
