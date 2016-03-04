@@ -113,18 +113,18 @@ var SurveyBuild = {
 
         }
     },
-    _initTab: function() {
-        var tabs = "",
-        i = 0;
-        $("#tabNav").empty();
-        $.each(this._items,function(h, obj) {
-            if (obj["classname"] == "Page") {
-                tabs += '<div data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;">' + obj.title + '</div>';
-		        ++i;
-            }
-        });
-        $("#tabNav").append(tabs);
-    },
+	_initTab: function() {
+		var tabs = "",
+		i = 0;
+		$("#tabNav").empty();
+		$.each(this._items,
+		function(h, obj) {
+			if (obj["classname"] == "Page") {
+				tabs += '<div data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;">' + obj.title + '</div>'; ++i;
+			}
+		});
+		$("#tabNav").append(tabs);
+	},
 	/*张彬彬修改*/
     _editTabs: function() {
         $("#question-box>li").removeClass("active");
