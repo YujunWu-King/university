@@ -446,6 +446,34 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				//检查推荐信的完成状态 %This.checkRefletter(&strAppInsId, &strTplId);
 			}
 			//执行页面加载事件-模版级事件开始
+			//模版级事件
+			String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'LO_A'";
+			List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
+			for (Object objDataGetModalEvents : listGetModalEvents) {
+				Map<String, Object> MapGetModalEvents = (Map<String, Object>) objDataGetModalEvents;
+				String strAppClassPath = "";
+			    String strAppClassName = ""; 
+			    String strAppClassMethod = "";
+			    String strEventReturn = "";
+			    strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
+			    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
+			    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
+			    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
+			    	/*
+			    	String[] parameterTypes = new String[] {"String[]" };
+					Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
+					Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
+							parameterTypes, arglist);
+					strEventReturn = String.valueOf(objs);
+					*/
+			    	//根据配置需要去调用对应的程序
+			    	tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
+			    			ctx.getBean(strAppClassPath + "." + strAppClassName);
+			    	switch(strAppClassMethod){
+			    	//根据报名表配置的方法名称去调用不同的方法
+			    	}
+			    }
+			}
 			
 			//执行页面加载事件-模版级事件结束
 			
@@ -993,11 +1021,20 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
 					    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
 					    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
+					    	/*
 					    	String[] parameterTypes = new String[] {"String[]" };
 							Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
 							Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
 									parameterTypes, arglist);
 							strEventReturn = String.valueOf(objs);
+							*/
+					    	//根据配置需要去调用对应的程序
+					    	tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
+					    			ctx.getBean(strAppClassPath + "." + strAppClassName);
+					    	switch(strAppClassMethod){
+					    	//根据报名表配置的方法名称去调用不同的方法
+					    	}
+							
 					    }
 					}
 					
@@ -1017,6 +1054,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
 					    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
 					    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
+					    	/*
 					    	String[] parameterTypes = new String[] {"String[]" };
 							Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
 							Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
@@ -1024,7 +1062,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							strEventReturn = String.valueOf(objs);
 							if(!"".equals(strEventReturn)){
 								strMsg = strMsg + strEventReturn + "\n";
-							}
+							}*/
+							tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
+					    			ctx.getBean(strAppClassPath + "." + strAppClassName);
+					    	switch(strAppClassMethod){
+					    	//根据报名表配置的方法名称去调用不同的方法
+					    	}
 					    }
 					}
 					
@@ -1840,9 +1883,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 								parameterTypes, arglist);
 								String strReturn = String.valueOf(objs);
 						*/
-						com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility tzOnlineAppUtility =
-								(com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility) 
-								ctx.getBean(strPath + "." + strName);
+						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 						String strReturn = "";
 						switch(strMethod){
 							case "requireValidator":
@@ -1911,8 +1952,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							parameterTypes, arglist);
 					String strReturn = String.valueOf(objs);
 					*/
-					com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility tzOnlineAppUtility =
-							(com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility) 
+					tzOnlineAppUtility tzOnlineAppUtility =
+							(tzOnlineAppUtility) 
 							ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
 					switch(strMethod){
