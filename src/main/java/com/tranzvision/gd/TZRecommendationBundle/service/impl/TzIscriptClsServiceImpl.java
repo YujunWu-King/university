@@ -197,7 +197,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			    	 if("Y".equals(strTzsqrFlg)){
 			    		 // 发送邮件通知给申请人;
 			    		 if("SUCCESS".equals(mess)){
-			    			 String strTz = tzTjxClsServiceImpl.sendTZ(numAppinsId, strOprid, strTjrId);
+			    			 tzTjxClsServiceImpl.sendTZ(numAppinsId, strOprid, strTjrId);
 			    		 }
 			    	 }
 			     }
@@ -345,6 +345,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 if(map2 != null){
 				 str_qy_zhs = (String)map2.get("TZ_CHN_QY");
 				 str_qy_eng = (String)map2.get("TZ_ENG_QY");
+			 }
+			 if(str_qy_zhs == null){
+				 str_qy_zhs = "";
+			 }
+			 if(str_qy_eng == null){
+				 str_qy_eng = "";
 			 }
 			 
 			 if("C".equals(str_tjx_language)){

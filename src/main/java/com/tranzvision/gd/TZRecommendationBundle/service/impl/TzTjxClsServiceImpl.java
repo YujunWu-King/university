@@ -368,6 +368,9 @@ public class TzTjxClsServiceImpl{
 			return strRtn;
 		}
 		
+		// 邮箱更改为申请人的邮箱;
+		strEmail = jdbcTemplate.queryForObject("SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{strOprid},"String");
+		
 		// 跳转到推荐信报名表的链接;
 		//String strTzUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/dispatcher";
 		// 需要配置hardcode点;
