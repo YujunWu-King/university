@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzAppEventsTMapper;
 import com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzAppXxJygzTMapper;
@@ -102,6 +103,7 @@ public class TemplateEngine {
 
 	private String tid;
 
+	@Transactional
 	@SuppressWarnings("unchecked")
 	public String saveTpl(String tid, Map<String, Object> infoData) {
 		this.tid = tid;
@@ -584,6 +586,9 @@ public class TemplateEngine {
 
 		// 信息项文字说明
 		String itemName = item.get("itemName") == null ? "" : String.valueOf(item.get("itemName"));
+		if(itemName.length() > 60){
+			System.out.println(itemName);
+		}
 		psTzAppXxxPz.setTzXxxMc(itemName);
 
 		// 信息项名称
@@ -835,6 +840,7 @@ public class TemplateEngine {
 
 				// 提示信息
 				String messages = rule.get("messages") == null ? "" : String.valueOf(rule.get("messages"));
+
 				psTzAppXxJygzT.setTzJygzTsxx(messages);
 
 				psTzAppXxJygzTMapper.insert(psTzAppXxJygzT);

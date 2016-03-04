@@ -152,7 +152,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			c += '			<a href="#" class="alpha"></a>';
 			c += '		</div>';
 
-            c += '		<div style="display: inherit;" class="main_inner_content_info_add" id="save_and_add0" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');">';
+            c += '		<div style="display: inherit;" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');">';
 			c += '			<div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div>';
 			c += '		</div>';
             c += '	</div>';
@@ -302,15 +302,15 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 					valDesc = MsgSet["ZK"];
 				}
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '	<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper1["itemName"] + '：</div>';
-				edus += '	<div class="main_inner_content_info_right_103px_top">' + valDesc + '</div>';
+				edus += '	<div class="main_inner_connent_info_left">' + child[i].EduExper1["itemName"] + '</div>';
+				edus += '	<div class="main_inner_content_info_right">' + valDesc + '</div>';
 				edus += '</div>';
 
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '	<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper1["itemName"] + '：</div>';
-				edus += '	<div class="main_inner_content_info_right_103px_top">';
+				edus += '	<div class="main_inner_connent_info_left">' + child[i].EduExper1["itemName"] + '</div>';
+				edus += '	<div class="main_inner_content_info_right">';
 				edus += '		<select id="'+data["itemId"]+child[i].EduExper1["itemId"]+'" class="chosen-select" style="width: 255px;" data-regular="" title="' + child[i].EduExper1["itemName"] + '" value="' + child[i].EduExper1["value"] + '" name="'+data["itemId"]+child[i].EduExper1["itemId"]+'">';
 				edus += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
 				edus += '			<option value="0"' + (child[i].EduExper1["value"] == "0" ? "selected='selected'": "") + '>' + MsgSet["BS"] + '</option>';
@@ -328,15 +328,18 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				edus += '		</div>';
 				edus += '	</div>';
 				edus += '	<div class="main_inner_content_edit"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/edit.png">' + MsgSet["EDIT"] + '</div>';
-				edus += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div></div>';
+				if(j != 0){
+					edus += '	<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del_bmb"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
+				}
+				edus += '</div>';
 			}
 
 			//就读时间
 			if(SurveyBuild._readonly){
 				//只读模式
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + MsgSet["LEARN_TIME"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px">';
+				edus += '<div class="main_inner_connent_info_left">' + MsgSet["LEARN_TIME"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<span>' + child[i].EduExper2["value"] + '</span>';
 				edus += '<span style="' + (child[i].EduExper4["value"] == "Y" ? "display:none;": "") + '">&nbsp;&nbsp;&nbsp;&nbsp;' + child[i].EduExper3["value"] + '</span>';
 				if(j == 0){
@@ -350,8 +353,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + MsgSet["LEARN_TIME"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px">';
+				edus += '<div class="main_inner_connent_info_left">' + MsgSet["LEARN_TIME"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<input type="text" title="' + child[i].EduExper2["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper2["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper2["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper2["itemId"] + '" value="' + child[i].EduExper2["value"] + '">&nbsp;';
 				edus += '<input type="text" title="' + child[i].EduExper3["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].EduExper3["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].EduExper3["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].EduExper3["itemId"] + '" value="' + child[i].EduExper3["value"] + '" style="'+(child[i].EduExper4["value"] == "Y" ? "display:none;": "")+'">';
 
@@ -365,7 +368,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 					edus += '</div>';
 					edus += '<span style="position: relative; left:'+(child[i].EduExper4["value"] == "Y"  ? "-23px" : "-46px")+'">'+  child[i].EduExper4["itemName"] +'</span>';
 				}
-				edus += '<div style="margin-top: -40px; margin-left: 280px"><div id="' + data.itemId + child[i].EduExper2["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onCorrect"><div class="onCorrect">&nbsp;</div></div></div>';
+				edus += '<div style="margin-top: -40px; margin-left: 320px"><div id="' + data.itemId + child[i].EduExper2["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onCorrect"><div class="onCorrect">&nbsp;</div></div></div>';
 				edus += '</div>';
 				edus += '</div>';
 			}
@@ -374,14 +377,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			if(SurveyBuild._readonly){
 				//只读模式
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper5["itemName"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">' + child[i].EduExper5["value"] + '</div>';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper5["itemName"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">' + child[i].EduExper5["value"] + '</div>';
 				edus += '</div>';
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper5["itemName"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper5["itemName"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<input id="'+data["itemId"]+child[i].EduExper5["itemId"]+'" class="input_251px" type="text" data-regular="" title="' + child[i].EduExper5["itemName"] + '" value="'+child[i].EduExper5["value"]+'" name="'+data["itemId"]+child[i].EduExper5["itemId"]+'" />';
 				edus += '<img id="' + data["itemId"]+child[i].EduExper5["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/search.png" style="position:relative;left:-40px;cursor:pointer;">';
 				edus += '<div style="margin-top:-40px;margin-left:256px"><div id="'+data["itemId"]+child[i].EduExper5["itemId"]+'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -394,14 +397,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			if(SurveyBuild._readonly){
 				//只读模式
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper6["itemName"] +  '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">' + child[i].EduExper6["value"]  + '</div>';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper6["itemName"] +  '</div>';
+				edus += '<div class="main_inner_content_info_right">' + child[i].EduExper6["value"]  + '</div>';
 				edus += '</div>';
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper6["itemName"] +  '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper6["itemName"] +  '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<input id="'+data["itemId"]+child[i].EduExper6["itemId"]+'" class="input_251px" type="text" data-regular="" title="' + child[i].EduExper6["itemName"] + '" value="'+child[i].EduExper6["value"]+'" name="'+data["itemId"]+child[i].EduExper6["itemId"]+'" />';
 				edus += '<div style="margin-top:-40px;margin-left:256px"><div id="'+data["itemId"]+child[i].EduExper6["itemId"]+'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				edus += '<div class="onCorrect">&nbsp;</div></div></div>';
@@ -413,14 +416,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			if(SurveyBuild._readonly){
 				//只读模式
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper7["itemName"] +  '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">' + child[i].EduExper7["value"] + '</div>';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper7["itemName"] +  '</div>';
+				edus += '<div class="main_inner_content_info_right">' + child[i].EduExper7["value"] + '</div>';
 				edus += '</div>';
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper7["itemName"] +  '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper7["itemName"] +  '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<input id="'+data["itemId"]+child[i].EduExper7["itemId"]+'" class="input_251px" type="text" data-regular="" title="' + child[i].EduExper7["itemName"] +  '" value="'+child[i].EduExper7["value"]+'" name="'+data["itemId"]+child[i].EduExper7["itemId"]+'" />';
 				edus += '<div style="margin-top:-40px;margin-left:256px"><div id="'+data["itemId"]+child[i].EduExper7["itemId"]+'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				edus += '<div class="onCorrect">&nbsp;</div></div></div>';
@@ -432,14 +435,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			if(SurveyBuild._readonly){
 				//只读模式
 				edus += '<div class="main_inner_content_info_autoheight cLH">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper8["itemName"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">' + child[i].EduExper8["value"] + '</div>';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper8["itemName"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">' + child[i].EduExper8["value"] + '</div>';
 				edus += '</div>';
 			}else {
 				//填写模式
 				edus += '<div class="main_inner_content_info_autoheight">';
-				edus += '<div class="main_inner_connent_info_left_103px_2">' + child[i].EduExper8["itemName"] + '：</div>';
-				edus += '<div class="main_inner_content_info_right_103px_top">';
+				edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper8["itemName"] + '</div>';
+				edus += '<div class="main_inner_content_info_right">';
 				edus += '<input id="'+data["itemId"]+child[i].EduExper8["itemId"]+'" class="input_251px" type="text" data-regular="" title="' + child[i].EduExper8["itemName"] + '" value="'+child[i].EduExper8["value"]+'" name="'+data["itemId"]+child[i].EduExper8["itemId"]+'" />';
 				edus += '<div style="margin-top:-40px;margin-left:256px"><div id="'+data["itemId"]+child[i].EduExper8["itemId"]+'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				edus += '<div class="onCorrect">&nbsp;</div></div></div>';
@@ -449,8 +452,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 
 			//上传毕业证书扫描件
 			edus += '<div class="main_inner_content_info_autoheight">';
-			edus += '<div class="main_inner_connent_info_left_185px">' + child[i].EduExper9["itemName"] + '：</div>';
-			edus += '<div class="main_inner_content_info_right input_100px">';
+			edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper9["itemName"] + '</div>';
+			edus += '<div class="main_inner_content_info_right" style="width: 100px;">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
 			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper9["itemId"] + 'File" title="' + child[i].EduExper9["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper9")>';
@@ -463,13 +466,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '	</div>';
 			edus += '</div>';
 
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper9["itemId"]+'Attch" class="fancybox" rel="" href="javascript:;"></a></div>';
+			var filename = child[i].EduExper9["filename"];
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper9["itemId"]+'Attch" class="fancybox" href="' + child[i].EduExper9["accessPath"] + child[i].EduExper9["sysFileName"] + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper9["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper9["itemId"]+'" value="'+child[i].EduExper9["value"]+'"></div>';
 
 			//上传学位证书扫描件
 			edus += '<div class="main_inner_content_info_autoheight">';
-			edus += '<div class="main_inner_connent_info_left_185px">' + child[i].EduExper10["itemName"] + '：</div>';
-			edus += '<div class="main_inner_content_info_right input_100px">';
+			edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper10["itemName"] + '</div>';
+			edus += '<div class="main_inner_content_info_right" style="width: 100px;">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
 			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper10["itemId"] + 'File" title="' + child[i].EduExper10["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper10")>';
@@ -482,14 +486,14 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '	</div>';
 			edus += '</div>';
 
-
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper10["itemId"]+'Attch"  class="fancybox" rel="" href="javascript:;"></a></div>';
+			var filename2 = child[i].EduExper10["filename"];
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper10["itemId"]+'Attch"  class="fancybox" href="' + child[i].EduExper10["accessPath"] + child[i].EduExper10["sysFileName"] + '" target="_blank">' + (filename2 ? filename2.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper10["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper10["itemId"]+'" value="'+child[i].EduExper10["value"]+'"></div>';
 
 			//上传成绩单原件扫描件
 			edus += '<div class="main_inner_content_info_autoheight">';
-			edus += '<div class="main_inner_connent_info_left_185px">' + child[i].EduExper11["itemName"] + '：</div>';
-			edus += '<div class="main_inner_content_info_right input_100px">';
+			edus += '<div class="main_inner_connent_info_left">' + child[i].EduExper11["itemName"] + '</div>';
+			edus += '<div class="main_inner_content_info_right" style="width: 100px;">';
 			edus += '	<div class="file_upload_button">';
 			edus += '		<div class="bt_blue">' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
 			//edus += '		<input type="file" id="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" name="' + data["itemId"] + child[i].EduExper11["itemId"] + 'File" title="' + child[i].EduExper11["itemName"] + '" class="fileupload_input" onchange=SurveyBuild.eduImgUpload(this,"EduExper11")>';
@@ -502,7 +506,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '	</div>';
 			edus += '</div>';
 
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper11["itemId"]+'Attch" class="fancybox" rel="" href="javascript:;"></a></div>';
+			var filename3 = child[i].EduExper10["filename"];
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper11["itemId"]+'Attch" class="fancybox" href="' + child[i].EduExper11["accessPath"] + child[i].EduExper11["sysFileName"] + '" target="_blank">' + (filename3 ? filename3.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper11["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper11["itemId"]+'" value="'+child[i].EduExper11["value"]+'"></div>';
 
 			edus += '</div>';
