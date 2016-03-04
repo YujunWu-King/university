@@ -69,27 +69,33 @@ SurveyBuild.extend("workExperience", "baseComponent", {
         var c = "", children = data.children,len = children.length;
         if (previewmode) {
             //title
-            c = '<div class="main_inner_content_title">';
-		    c += '<span class="reg_title_star">' + (data.isRequire == "Y" ?"*":"") + '</span><span class="reg_title_grey_17px">' + data.title + '</span>';
+			var c = "";
+            c += '<div class="main_inner_content_title">';
+			c += '	<span class="reg_title_star">' + (data.isRequire == "Y" ?"*":"") + '</span>';
+			c += '	<span class="reg_title_grey_17px">' + data.title + '</span>';
             c += '</div>';
             c += '<div class="main_inner_content_top"></div>';
 
             //content
-            c += '<div class="main_inner_content">';
-
             var works = this._getHtmlOne(data,0);
-
+            c += '<div class="main_inner_content">';
             c += works;
-            c += '<div class="main_inner_content_info">';
-            c += '<div id="main_inner_content_info_save0"><div id="save1" class="bt_blue">' + MsgSet["SAVE"] + '</div><a href="#" class="alpha"></a></div>';
-            c += '<div style="display: inherit;" class="main_inner_content_info_add" id="save_and_add0" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');"><div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div></div>';
-            c += '</div>';
+            c += '	<div class="main_inner_content_info">';
+            c += '		<div id="main_inner_content_info_save0">';
+			c += '			<div id="save1" class="bt_blue">' + MsgSet["SAVE"] + '</div>';
+			c += '			<a href="#" class="alpha"></a>';
+			c += '		</div>';
+            c += '		<div style="display: inherit;" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');">';
+			c += '			<div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div>';
+			c += '		</div>';
+            c += '	</div>';
             c += '</div>';
             //footer
             c += '<div class="main_inner_content_foot"></div>';
 
         } else {
-            c = '<div class="question-answer">' + (data.itemMs ? '<div class="edu_exper_itemMs" style="background-color:#d8d8d8;padding:2px 5px;margin-bottom:10px;">'+ data.itemMs +'</div>' : "");
+	    var c = "";
+            c += '<div class="question-answer">' + (data.itemMs ? '<div class="edu_exper_itemMs" style="background-color:#d8d8d8;padding:2px 5px;margin-bottom:10px;">'+ data.itemMs +'</div>' : "");
             c += '<div class="DHContainer" style="border:1px solid #ddd;padding:10px 20px;">'
 
             c += '<div class="edu_item_li">';
@@ -163,7 +169,6 @@ SurveyBuild.extend("workExperience", "baseComponent", {
         }
 
         for (var i in child) {
-            //works += '<div id="main_inner_content_para' + j + '" style="display: inherit;" >';
             works += '<div class="main_inner_content_para" style="display: inherit;" >';
             if(j != 0){
                 works += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
@@ -172,8 +177,8 @@ SurveyBuild.extend("workExperience", "baseComponent", {
             if(SurveyBuild._readonly){
                 //只读模式
                 works += '<div class="main_inner_content_info_autoheight cLH">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + MsgSet["WTIME"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px_top">';
+                works += '<div class="main_inner_connent_info_left">' + MsgSet["WTIME"] + '</div>';
+                works += '<div class="main_inner_content_info_right">';
                 works += '<span>' + child[i].work_bdate["value"] + '</span>';
                 works += '<span style="' + (child[i].work_tonow["value"] == "Y" ? "display:none;": "") + '">&nbsp;&nbsp;&nbsp;&nbsp;' + child[i].work_edate["value"] + '</span>';
                 if(j == 0){
@@ -187,8 +192,8 @@ SurveyBuild.extend("workExperience", "baseComponent", {
             }else {
                 //填写模式
                 works += '<div class="main_inner_content_info_autoheight">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + MsgSet["WTIME"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px_top">';
+                works += '<div class="main_inner_connent_info_left">' + MsgSet["WTIME"] + '</div>';
+                works += '<div class="main_inner_content_info_right">';
                 works += '<input type="text" title="' + child[i].work_bdate["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].work_bdate["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].work_bdate["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].work_bdate["itemId"] + '" value="' + child[i].work_bdate["value"] + '">&nbsp;';
                 works += '<input type="text" title="' + child[i].work_edate["itemName"] + '" onchange="SurveyBuild.reFocus(\'' + data.itemId + child[i].work_edate["itemId"] + '\');" readonly="readonly" id="' + data.itemId + child[i].work_edate["itemId"] + '" class="input_120px" name="' + data.itemId + child[i].work_edate["itemId"] + '" value="' + child[i].work_edate["value"] + '" style="'+(child[i].work_tonow["value"] == "Y" ? "display:none;": "")+'">';
                 works += '<img id="' + data.itemId + child[i].work_bdate["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:'+ (child[i].work_tonow["value"] == "Y" ? "-40px" : "-168px") +';cursor:pointer;">';
@@ -200,10 +205,12 @@ SurveyBuild.extend("workExperience", "baseComponent", {
                     works += '</div>';
                     works += '<span style="position: relative; left:'+(child[i].work_tonow["value"] == "Y"  ? "-23px" : "-46px")+'">'+  child[i].work_tonow["itemName"] +'</span>';
                 }
-                works += '<div style="margin-top:-40px; margin-left:320px"><div id="' + data.itemId + child[i].work_edate["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onCorrect"><div class="onCorrect">&nbsp;</div></div></div>';
+                works += '<div style="margin-top:-40px; margin-left:' + (j == 0 ? "320" : "260") + 'px"><div id="' + data.itemId + child[i].work_edate["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onCorrect"><div class="onCorrect">&nbsp;</div></div></div>';
                 works += '</div>';
                 if(j != 0){
-                    works += '<div onclick="SurveyBuild.deleteFun(this);" class="main_inner_content_del"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
+					works += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
+					works += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
+					works += '</div>';
                 }
                 works += '</div>';
             }
@@ -212,14 +219,14 @@ SurveyBuild.extend("workExperience", "baseComponent", {
             if(SurveyBuild._readonly){
                 //只读模式
                 works += '<div class="main_inner_content_info_autoheight cLH">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + child[i].work_comp["itemName"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px">' + child[i].work_comp["value"] + '</div>';
+                works += '<div class="main_inner_connent_info_left">' + child[i].work_comp["itemName"] + '</div>';
+                works += '<div class="main_inner_content_info_right">' + child[i].work_comp["value"] + '</div>';
                 works += '</div>';
             }else {
                 //填写模式
                 works += '<div class="main_inner_content_info_autoheight">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + child[i].work_comp["itemName"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px">';
+                works += '<div class="main_inner_connent_info_left">' + child[i].work_comp["itemName"] + '</div>';
+                works += '<div class="main_inner_content_info_right">';
                 works += '<input type="text" id="' + data.itemId + child[i].work_comp["itemId"] + '" class="input_411px" name="' + data.itemId + child[i].work_comp["itemId"] + '" value="' + child[i].work_comp["value"] + '">';
                 works += '<div style="margin-top: -40px; margin-left: 420px"><div id="' + data.itemId + child[i].work_comp["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow"><div class="onShow"></div></div></div>';
                 works += '</div>';
@@ -230,14 +237,14 @@ SurveyBuild.extend("workExperience", "baseComponent", {
             if(SurveyBuild._readonly){
                 //只读模式
                 works += '<div class="main_inner_content_info_autoheight cLH">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + child[i].work_zhiwu["itemName"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px">' + child[i].work_zhiwu["value"] + '</div>';
+                works += '<div class="main_inner_connent_info_left">' + child[i].work_zhiwu["itemName"] + '</div>';
+                works += '<div class="main_inner_content_info_right">' + child[i].work_zhiwu["value"] + '</div>';
                 works += '</div>';
             }else{
                 //填写模式
                 works += '<div class="main_inner_content_info_autoheight">';
-                works += '<div class="main_inner_connent_info_left_103px_2">' + child[i].work_zhiwu["itemName"] + '：</div>';
-                works += '<div class="main_inner_content_info_right_103px">';
+                works += '<div class="main_inner_connent_info_left">' + child[i].work_zhiwu["itemName"] + '</div>';
+                works += '<div class="main_inner_content_info_right">';
                 works += '<input type="text" title="' + child[i].work_zhiwu["itemName"] + '" id="' + data.itemId + child[i].work_zhiwu["itemId"] + '" class="input_97px" name="' + data.itemId + child[i].work_zhiwu["itemId"] + '" value="' + child[i].work_zhiwu["value"] + '">';
                 works += '<div style="margin-top: -40px; margin-left: 106px"><div id="' + data.itemId + child[i].work_zhiwu["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow"><div class="onShow"></div></div></div>';
                 works += '</div>';
