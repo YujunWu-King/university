@@ -309,7 +309,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 
 			 if(str_refLetterSysFile != null && !"".equals(str_refLetterSysFile)
 					 && str_refLetterUserFile != null && !"".equals(str_refLetterUserFile)){
-				 str_att_a_url = this.getRefLetterFiles(str_refLetterSysFile);
+				 str_att_a_url = this.getRefLetterFiles(str_app_ins_id,str_refLetterSysFile);
 			 }else{
 				 str_att_a_url = "";
 			 }
@@ -371,12 +371,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(returnMap);
 	}
 	
-	private String getRefLetterFiles(String sysFileName){
+	private String getRefLetterFiles(long str_app_ins_id,String sysFileName){
 		String url = "";
 		if(sysFileName == null || "".equals(sysFileName)){
 			return "";
 		}else{
-			url = jdbcTemplate.queryForObject("SELECT TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=12 AND ATTACHSYSFILENAME=?", new Object[]{sysFileName},"String");
+			url = jdbcTemplate.queryForObject("SELECT TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND ATTACHSYSFILENAME=?", new Object[]{str_app_ins_id,sysFileName},"String");
 			if(url == null || "".equals(url)){
 				if(url.lastIndexOf("/") + 1 != url.length()){
 					url = url + "/";

@@ -523,13 +523,24 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				return jacksonUtil.Map2json(mapRet);
 			}
 */
+			String blankSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
+			String str_none_blank = jdbcTemplate.queryForObject(blankSql, new Object[] { "TZ_REF_TITLE_NONE_BLANK" },
+					"String");
+			
+			strAppInsID = jdbcTemplate.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?", new Object[]{strClassID, strOprID},"Long");
+			
 			String sql = "SELECT TZ_REF_LETTER_ID,TZ_TJX_APP_INS_ID,TZ_TJR_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,TZ_EMAIL,TZ_PHONE_AREA,TZ_PHONE,TZ_GENDER,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID= ? AND OPRID = ? AND TZ_MBA_TJX_YX = 'Y' ORDER BY TZ_TJR_ID";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strAppInsID, strOprID });
-
+			strRefLetterAppInsID = 0L;
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					strRefLetterID = (String) list.get(i).get("TZ_REF_LETTER_ID");
-					strRefLetterAppInsID = (long) list.get(i).get("TZ_TJX_APP_INS_ID");
+					if(list.get(i).get("TZ_TJX_APP_INS_ID") != null){
+						strRefLetterAppInsID = Long.parseLong( list.get(i).get("TZ_TJX_APP_INS_ID").toString());
+					}else{
+						strRefLetterAppInsID = 0L;
+					}
+					
 					strRefLetterPerId = (String) list.get(i).get("TZ_TJR_ID");
 					str_tjr_title = (String) list.get(i).get("TZ_TJX_TITLE");
 					strRefLetterPerName = (String) list.get(i).get("TZ_REFERRER_NAME");
@@ -541,7 +552,6 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					str_refLetterSysFile = (String) list.get(i).get("ATTACHSYSFILENAME");
 					str_refLetterUserFile = (String) list.get(i).get("ATTACHUSERFILE");
 					
-					String str_none_blank = "";
 					str_name_suff = "";
 					if (str_tjr_title != null && !"".equals(str_tjr_title) && !str_tjr_title.equals(str_none_blank)) {
 						str_name_suff = str_tjr_title;
@@ -1307,7 +1317,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		try {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			// 报名表实例ID;
-		    long strAppInsId = Long.valueOf((String) infoData.get("appInsId"));
+		    long strAppInsId = Long.valueOf(infoData.get("appInsId").toString());
 		    // 推荐信id;
 		    String strRefLetterId = (String) infoData.get("refLetterId");
 		    // 报名人oprID;
@@ -1366,9 +1376,10 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 		    	}
 		    }
 		    
-		    /*保存到数据库 ? TODO*/
+		    //TODO保存推荐信附件;
 		    
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
