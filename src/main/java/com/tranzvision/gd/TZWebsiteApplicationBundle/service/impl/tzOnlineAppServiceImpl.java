@@ -205,6 +205,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		    strManagerView = request.getParameter("TZ_MANAGER");
 		    strCopyFrom = request.getParameter("APPCOPY");
 		    strAttachedTplId = request.getParameter("TZ_APP_TPL_ID");
+		    if(strClassId==null){
+		    	strClassId = "";
+		    }
+		    
 		}else{
 			strClassId = String.valueOf(jacksonUtil.getString("TZ_CLASS_ID"));
 			strAppInsId = String.valueOf(jacksonUtil.getString("TZ_APP_INS_ID"));
@@ -212,6 +216,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strManagerView = String.valueOf(jacksonUtil.getString("TZ_MANAGER"));
 			strCopyFrom = String.valueOf(jacksonUtil.getString("APPCOPY"));
 			strAttachedTplId = String.valueOf(jacksonUtil.getString("TZ_APP_TPL_ID"));
+			if(strClassId==null){
+		    	strClassId = "";
+		    }
 		}
 		
 		if(strRefLetterId==null) 
@@ -382,6 +389,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 								strAppInsState = psTzAppInsT.getTzAppFormSta();
 								strAppInsVersion = psTzAppInsT.getTzAppInsVersion();
 								strInsData = psTzAppInsT.getTzAppinsJsonStr();
+								if(strAppInsVersion == null){
+									strAppInsVersion = "";
+								}
 								
 								if("".equals(strTplId) || strTplId == null){
 									strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
@@ -741,6 +751,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strLanguage = String.valueOf(jacksonUtil.getString("TZ_LANGUAGE"));
 			strAppInsVersion = String.valueOf(jacksonUtil.getString("TZ_APP_INS_VERSION"));
 			strPageId = String.valueOf(jacksonUtil.getString("TZ_PAGE_ID"));
+			if(strAppInsVersion == null){
+				strAppInsVersion = "";
+			}
 			
 			numAppInsId = Long.parseLong(strAppInsId);
 			
@@ -852,6 +865,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				}
 			}
 			//当前报名表实例版本是否和数据库一致
+			if(strAppInsVersionDb == null){
+				strAppInsVersionDb = "";
+			}
+				
 			if(strAppInsVersion.equals(strAppInsVersionDb)){
 				DateFormat formatDate = new SimpleDateFormat("yyyyMMddhhmmss");
 			    String simpleDate = formatDate.format(new Date());
