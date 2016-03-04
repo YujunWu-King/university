@@ -504,6 +504,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			String strRefLetterState = "";
 			String str_refLetterSysFile = "";
 			String str_refLetterUserFile = "";
+			/*
 			String attUrlSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 			str_att_p_url = jdbcTemplate.queryForObject(attUrlSQL, new Object[] { "TZ_AFORM_FILE_DIR" }, "String");
 			if (str_att_p_url == null || "".equals(str_att_p_url)) {
@@ -521,7 +522,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				errorMsg[1] = "未定义TZ_REF_TITLE_NONE_BLANK的HardCode值";
 				return jacksonUtil.Map2json(mapRet);
 			}
-
+*/
 			String sql = "SELECT TZ_REF_LETTER_ID,TZ_TJX_APP_INS_ID,TZ_TJR_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,TZ_EMAIL,TZ_PHONE_AREA,TZ_PHONE,TZ_GENDER,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID= ? AND OPRID = ? AND TZ_MBA_TJX_YX = 'Y' ORDER BY TZ_TJR_ID";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strAppInsID, strOprID });
 
@@ -539,7 +540,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					strRefLetterPerSex = (String) list.get(i).get("TZ_GENDER");
 					str_refLetterSysFile = (String) list.get(i).get("ATTACHSYSFILENAME");
 					str_refLetterUserFile = (String) list.get(i).get("ATTACHUSERFILE");
-
+					
+					String str_none_blank = "";
 					str_name_suff = "";
 					if (str_tjr_title != null && !"".equals(str_tjr_title) && !str_tjr_title.equals(str_none_blank)) {
 						str_name_suff = str_tjr_title;
