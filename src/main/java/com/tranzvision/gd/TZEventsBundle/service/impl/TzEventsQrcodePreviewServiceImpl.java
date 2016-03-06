@@ -112,7 +112,7 @@ public class TzEventsQrcodePreviewServiceImpl extends FrameworkImpl {
 			
 			String ctxPath = request.getContextPath();
 
-			String qrcodeUrl = request.getScheme() + request.getServerName() + ":"
+			String qrcodeUrl = request.getScheme() + "://" + request.getServerName() + ":"
 					+ String.valueOf(request.getServerPort()) + ctxPath + "/event/preview/m/" + siteId + "/" + coluId
 					+ "/" + activityId;
 

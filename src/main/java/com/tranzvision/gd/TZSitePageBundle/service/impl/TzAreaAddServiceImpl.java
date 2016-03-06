@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -25,10 +28,16 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzAreaAddServiceImpl extends FrameworkImpl {
 
 	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
 	private TzPhDecoratedServiceImpl tzPhDecoratedServiceImpl;
+
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -96,6 +105,14 @@ public class TzAreaAddServiceImpl extends FrameworkImpl {
 					strAreaCode = strAreaCode.replace("'", "\\'");
 					strAreaCode = strAreaCode.replace("\"", "\\\"");
 
+					String ctxPath = request.getContextPath();
+					strAreaCode = strAreaCode.replace("{ContextPath}", ctxPath);
+
+					sql = "select TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					String skinId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
+					String skinImgPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath() + "/" + skinId;
+					strAreaCode = strAreaCode.replace("{ContextSkinPath}", skinImgPath);
+
 					return "\"" + strAreaCode + "\"";
 
 				} else {
@@ -136,11 +153,12 @@ public class TzAreaAddServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				//String typeFlag = jacksonUtil.getString("typeFlag");
+				// String typeFlag = jacksonUtil.getString("typeFlag");
 				Map<String, Object> formData = jacksonUtil.getMap("data");
 
 				String strAreaId = formData.get("areaId") == null ? "" : String.valueOf(formData.get("areaId"));
-				//String strAreaZone = formData.get("areaZone") == null ? "" : String.valueOf(formData.get("areaZone"));
+				// String strAreaZone = formData.get("areaZone") == null ? "" :
+				// String.valueOf(formData.get("areaZone"));
 				String strAreaType = formData.get("areaType") == null ? "" : String.valueOf(formData.get("areaType"));
 
 				String strAreaTypeId = "";

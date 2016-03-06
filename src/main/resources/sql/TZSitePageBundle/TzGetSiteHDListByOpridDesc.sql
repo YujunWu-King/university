@@ -26,7 +26,7 @@ where
  		select 
  			'Y' 
  		from 
- 			PS_TZ_NAUDLIST_T A, 
+ 			PS_TZ_NAUDLIST_T A 
  		left join
  			(
  				SELECT 

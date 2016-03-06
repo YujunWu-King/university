@@ -56,6 +56,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				String strAreasxh = jacksonUtil.getString("areasxh");
 				String arealm = jacksonUtil.getString("arealm");
 				String areacode = jacksonUtil.getString("areacode");
+				String areasavecode = jacksonUtil.getString("areasavecode");
 				String areaid = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_AREA_T", "TZ_AREA_ID"));
 				
 				
@@ -72,6 +73,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				}
 				psTzSiteiAreaT.setTzColuId(arealm);
 				psTzSiteiAreaT.setTzAreaCode(areacode);
+				psTzSiteiAreaT.setTzAreaSavecode(areasavecode);
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				psTzSiteiAreaT.setTzAddedDttm(new Date());
 				psTzSiteiAreaT.setTzAddedOprid(oprid);
@@ -118,7 +120,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				String strAreasxh = jacksonUtil.getString("areasxh");
 				String arealm = jacksonUtil.getString("arealm");
 				String areacode = jacksonUtil.getString("areacode");
-				
+				String areasavecode = jacksonUtil.getString("areasavecode");
 				
 				
 				PsTzSiteiAreaTWithBLOBs psTzSiteiAreaT = new PsTzSiteiAreaTWithBLOBs();
@@ -134,6 +136,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 				}
 				psTzSiteiAreaT.setTzColuId(arealm);
 				psTzSiteiAreaT.setTzAreaCode(areacode);
+				psTzSiteiAreaT.setTzAreaSavecode(areasavecode);
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				psTzSiteiAreaT.setTzLastmantDttm(new Date());
 				psTzSiteiAreaT.setTzLastmantOprid(oprid);
@@ -187,6 +190,7 @@ public class OrgSiteAreaServiceImpl extends FrameworkImpl {
 					jsonMap.put("areasxh", psTzSiteiAreaT.getTzAreaXh());
 					jsonMap.put("arealm", psTzSiteiAreaT.getTzColuId());
 					jsonMap.put("areacode",psTzSiteiAreaT.getTzAreaCode());
+					jsonMap.put("areasavecode",psTzSiteiAreaT.getTzAreaSavecode());
 					returnJsonMap.replace("formData", jsonMap);
 				}else{
 					errMsg[0] = "1";

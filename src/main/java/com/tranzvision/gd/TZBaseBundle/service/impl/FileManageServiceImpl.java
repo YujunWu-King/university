@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -46,6 +47,14 @@ public class FileManageServiceImpl implements FileManageService {
 	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
 
 		String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		if(null==parentRealPath){
+			try {
+				parentRealPath = request.getSession().getServletContext().getResource(parentPath).getPath();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
@@ -136,6 +145,14 @@ public class FileManageServiceImpl implements FileManageService {
 	@Override
 	public boolean DeleteFile(String parentPath, String fileName) {
 		String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		if(null==parentRealPath){
+			try {
+				parentRealPath = request.getSession().getServletContext().getResource(parentPath).getPath();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
@@ -168,6 +185,14 @@ public class FileManageServiceImpl implements FileManageService {
 	public boolean DeleteFile(String filePath) {
 
 		String fileRealPath = request.getServletContext().getRealPath(filePath);
+		if(null==fileRealPath){
+			try {
+				fileRealPath = request.getSession().getServletContext().getResource(filePath).getPath();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
 
 		File delFile = new File(fileRealPath);
 		// System.out.println(delFile.getAbsolutePath());

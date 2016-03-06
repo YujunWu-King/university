@@ -242,12 +242,12 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					}
 
 					strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_HEAD", strHtml,
-							timeOut, serverError, "");
+							timeOut, serverError, "", request.getContextPath());
 
 				} else {
 					// 没有启用在线报名 或 超过报名时间
 					strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_HEAD", "", timeOut,
-							serverError, "display:none");
+							serverError, "display:none", request.getContextPath());
 				}
 
 			}
