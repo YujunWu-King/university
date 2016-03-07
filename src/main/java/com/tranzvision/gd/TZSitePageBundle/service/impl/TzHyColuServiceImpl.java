@@ -187,7 +187,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 				}
 
 				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColuHY("
-						+ String.valueOf(numIndex) + ")\">" + String.valueOf(numIndex) + "</li>";
+						+ String.valueOf(numIndex) + ","+strType+")\">" + String.valueOf(numIndex) + "</li>";
 
 				if (numNowPage > maxPageNum) {
 					if (numIndex >= numNowPage) {
@@ -204,7 +204,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 				if (numNowPage > 2) {
 					setNowPageNum = numNowPage - 1;
 				}
-				strDivPage = "<li onclick=\"QueryColuHY(" + String.valueOf(setNowPageNum) + ")\">&lt;&lt;</li>"
+				strDivPage = "<li onclick=\"QueryColuHY(" + String.valueOf(setNowPageNum) + ","+strType+")\">&lt;&lt;</li>"
 						+ strDivPage;
 
 				int setTotalPageNum = numTotalPage;
@@ -212,7 +212,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					setTotalPageNum = numNowPage + 1;
 				}
 				strDivPage = strDivPage + "<li onclick=\"QueryColuHY(" + String.valueOf(setTotalPageNum)
-						+ ")\">&gt;&gt;</li>";
+						+ ","+strType+")\">&gt;&gt;</li>";
 
 			}
 
@@ -295,8 +295,9 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			String strResultContent = "";
 			String dispatcherUrl = request.getContextPath() + "/dispatcher";
 
-			String strDateFormat = getSysHardCodeVal.getDateFormat();
-			SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+			// String strDateFormat = getSysHardCodeVal.getDateFormat();
+			// SimpleDateFormat dateFormat = new
+			// SimpleDateFormat(strDateFormat);
 			SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
 			SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 
@@ -316,12 +317,12 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 							: String.valueOf(mapActivity.get("TZ_HD_CS"));
 					String strKqbm = mapActivity.get("TZ_QY_ZXBM") == null ? ""
 							: String.valueOf(mapActivity.get("TZ_QY_ZXBM"));
-					String dtBmStart = mapActivity.get("TZ_APPF_DT") == null ? ""
-							: String.valueOf(mapActivity.get("TZ_APPF_DT"));
+					// String dtBmStart = mapActivity.get("TZ_APPF_DT") == null
+					// ? "": String.valueOf(mapActivity.get("TZ_APPF_DT"));
 					String timeBmStart = mapActivity.get("TZ_APPF_TM") == null ? ""
 							: String.valueOf(mapActivity.get("TZ_APPF_TM"));
-					String dtBmEnd = mapActivity.get("TZ_APPE_DT") == null ? ""
-							: String.valueOf(mapActivity.get("TZ_APPE_DT"));
+					// String dtBmEnd = mapActivity.get("TZ_APPE_DT") == null ?
+					// "": String.valueOf(mapActivity.get("TZ_APPE_DT"));
 					String timeBmEnd = mapActivity.get("TZ_APPE_TM") == null ? ""
 							: String.valueOf(mapActivity.get("TZ_APPE_TM"));
 
@@ -341,20 +342,29 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					String strkBmFlg = "";
 					if ("Y".equals(strKqbm)) {
 
-						if (dateFormat.parse(dtBmStart).getTime() < dateNow.getTime()
-								&& dateFormat.parse(dtBmEnd).getTime() > dateNow.getTime()) {
+						// 新逻辑
+						if (datetimeformat.parse(timeBmStart).getTime() <= dateNow.getTime()
+								&& datetimeformat.parse(timeBmEnd).getTime() > dateNow.getTime()) {
 							strkBmFlg = "Y";
-						} else {
-
-							if (dateFormat.parse(dtBmStart).getTime() == dateNow.getTime()
-									&& datetimeformat.parse(timeBmStart).getTime() < dateNow.getTime()) {
-								strkBmFlg = "Y";
-							} else if (dateFormat.parse(dtBmEnd).getTime() == dateNow.getTime()
-									&& datetimeformat.parse(timeBmEnd).getTime() >= dateNow.getTime()) {
-								strkBmFlg = "Y";
-							}
-
 						}
+
+						/*
+						 * 老的逻辑 if (dateFormat.parse(dtBmStart).getTime() <
+						 * dateNow.getTime() &&
+						 * dateFormat.parse(dtBmEnd).getTime() >
+						 * dateNow.getTime()) { strkBmFlg = "Y"; } else {
+						 * 
+						 * if (dateFormat.parse(dtBmStart).getTime() ==
+						 * dateNow.getTime() &&
+						 * datetimeformat.parse(timeBmStart).getTime() <
+						 * dateNow.getTime()) { strkBmFlg = "Y"; } else if
+						 * (dateFormat.parse(dtBmEnd).getTime() ==
+						 * dateNow.getTime() &&
+						 * datetimeformat.parse(timeBmEnd).getTime() >=
+						 * dateNow.getTime()) { strkBmFlg = "Y"; }
+						 * 
+						 * }
+						 */
 
 					}
 

@@ -79,7 +79,7 @@ body {
 
 	var currentOrgId = "";
 
-	if(locationOrgId!=""){
+	if (locationOrgId != "") {
 		jgHidden = true;
 	}
 
@@ -167,14 +167,12 @@ body {
 									cpr.set("userName", form.findField(
 											"userName").getValue());
 
-									window.location.href = "${contextPath}" + responseText.indexUrl;
+									window.location.href = "${contextPath}"
+											+ responseText.indexUrl;
 
 								} else {
 
 									//Ext.Msg.alert("提示",responseText.error);
-
-									htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
-											+ responseText.error + "<div>";
 
 									Ext.getCmp("yzmpic")
 											.setSrc(GenCaptchaUrl());
@@ -186,6 +184,9 @@ body {
 										form.findField("password").setValue("");
 
 									}
+									
+									htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
+										+ responseText.error + "<div>";
 
 								}
 
@@ -337,23 +338,23 @@ body {
 														orgValue : 'GSM',
 														orgDesc : '北大光华'
 													} ]
-													*/
-												///*
-												proxy : {
+													 */
+													///*
+													proxy : {
 
-													type : 'ajax',
+														type : 'ajax',
 
-													url : "${contextPath}/login/getorgdata",
+														url : "${contextPath}/login/getorgdata",
 
-													reader : {
+														reader : {
 
-														type : 'json',
+															type : 'json',
 
-														rootProperty : 'org'
+															rootProperty : 'org'
+
+														}
 
 													}
-
-												}
 												//*/
 
 												},
@@ -393,7 +394,9 @@ body {
 																		async : false,
 
 																		url : '${contextPath}/login/checkorgstatus',
-																		params: {"orgid":locationOrgId},
+																		params : {
+																			"orgid" : locationOrgId
+																		},
 
 																		success : function(
 																				response) {
@@ -405,11 +408,12 @@ body {
 																			if (responseText.success == "true") {
 
 																				currentOrgId = responseText.orgId;
-																				
-																				cm.hide();
+
+																				cm
+																						.hide();
 
 																			} else if (responseText.success == "false") {
-																				
+
 																			} else {
 
 																			}
@@ -446,7 +450,25 @@ body {
 
 												blankText : '请填写用户名',
 
-												allowBlank : false
+												allowBlank : false,
+												
+												listeners : {
+
+													change : function(cm,
+															newVal, oldVal,
+															eOpts) {
+
+														var fm = cm
+																.findParentByType("form");
+
+														var htmlCom = fm
+																.down("component[name=errorMsg]");
+
+														htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;height:30px;'>&nbsp;<div>";
+
+													}
+
+												}
 
 											},
 											{
@@ -467,14 +489,32 @@ body {
 
 												border : false,
 
-												inputType : 'password'
+												inputType : 'password',
+
+												listeners : {
+
+													change : function(cm,
+															newVal, oldVal,
+															eOpts) {
+
+														var fm = cm
+																.findParentByType("form");
+
+														var htmlCom = fm
+																.down("component[name=errorMsg]");
+
+														htmlCom.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;height:30px;'>&nbsp;<div>";
+
+													}
+
+												}
 
 											},
 											{
 
 												layout : 'column',
 
-												bodyStyle : 'border: 0; margin-top:20px; margin-bottom:20px;',
+												bodyStyle : 'border: 0; margin-top:20px; margin-bottom:30px;',
 
 												//	margin: '20 0 0 0',
 
@@ -497,13 +537,34 @@ body {
 
 															blankText : '请填写验证码',
 
-															allowBlank : false
+															allowBlank : false,
 
-														//	validateOnChange: false,
+															//	validateOnChange: false,
 
-														//	validateOnBlur: true,
+															//	validateOnBlur: true,
 
-														//	vtype: 'codeValidator'
+															//	vtype: 'codeValidator',
+
+															listeners : {
+
+																change : function(
+																		cm,
+																		newVal,
+																		oldVal,
+																		eOpts) {
+
+																	var fm = cm
+																			.findParentByType("form");
+
+																	var htmlCom = fm
+																			.down("component[name=errorMsg]");
+
+																	htmlCom
+																			.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;height:30px;'>&nbsp;<div>";
+
+																}
+
+															}
 
 														},
 														{
@@ -543,7 +604,7 @@ body {
 
 												xtype : 'component',
 
-												html : '',
+												html : "<div style='padding:5px;margin-top: -20px;height:30px;'>&nbsp;<div>",
 
 												name : 'errorMsg'
 
@@ -657,16 +718,12 @@ body {
 																							"orgId",
 																							orgId);
 
-																			window.location.href = "${contextPath}" + responseText.indexUrl;
+																			window.location.href = "${contextPath}"
+																					+ responseText.indexUrl;
 
 																		} else {
 
 																			// Ext.Msg.alert("提示",responseText.error);
-
-																			htmlCom
-																					.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
-																					+ responseText.error
-																					+ "<div>";
 
 																			Ext
 																					.getCmp(
@@ -689,6 +746,11 @@ body {
 																								"");
 
 																			}
+
+																			htmlCom
+																					.getEl().dom.innerHTML = "<div style='padding:5px;margin-top: -20px;'><img src='${contextPath}/statics/images/login/alert.png' />&nbsp;"
+																					+ responseText.error
+																					+ "<div>";
 
 																		}
 
@@ -789,9 +851,7 @@ body {
 	<div
 		style="position: absolute; bottom: 0px; width: 100%; background: #fff; text-align: center; padding-top: 20px;">
 
-		${TZ_JG_LOGIN_COPR}
-
-	</div>
+		${TZ_JG_LOGIN_COPR}</div>
 
 </body>
 

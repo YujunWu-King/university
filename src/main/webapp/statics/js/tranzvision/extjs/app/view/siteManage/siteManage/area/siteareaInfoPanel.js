@@ -104,6 +104,13 @@
             fieldLabel: '区域源代码',
             preventScrollbars : false,
             name: 'areacode'
+        }, {
+            xtype: 'textareafield',  
+            grow: true,
+            height:100,
+            fieldLabel: '区域存储代码',
+            preventScrollbars : false,
+            name: 'areasavecode'
         }]
     }],
     buttons: [{
