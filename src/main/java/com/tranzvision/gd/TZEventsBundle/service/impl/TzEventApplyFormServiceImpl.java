@@ -227,11 +227,11 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 			str_items_html = str_items_html + "<li><strong>" + strBtHtml + authCode + "：</strong>"
 					+ "<input type=\"text\" class=\"apply-items inptype\" id=\"tz_regCode\" name=\"tz_regCode\" required style=\"width:120px\" />"
 					+ "<img id=\"regCodeImg\" src=\"\" onclick=\"createCode()\" alt=\"" + changeAuthCode
-					+ "\" style=\"height:22px; margin-left:20px; margin-right:10px; vertical-align:middle;\"/>"
+					+ "\" style=\"height:37px; margin-left:20px; margin-right:10px; vertical-align:middle;\"/>"
 					+ "</li>";
 
 			strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_REG_FORM_HEAD", str_items_html, strUrl, "",
-					"", timeOut, serverError, onlineApplyText, tipsMsg, closeBtn, backBtn, submitBtn, requireTips);
+					"", timeOut, serverError, onlineApplyText, tipsMsg, closeBtn, backBtn, submitBtn, requireTips, request.getContextPath());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -259,7 +259,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			// 活动ID
-			strApplyId = jacksonUtil.getString("APPLYID");
+			strApplyId = jacksonUtil.getString("TZ_APPLY_ID");
 			// 姓名
 			String str_bmr_name = jacksonUtil.getString("TZ_CYR_NAME");
 			// 手机

@@ -146,7 +146,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + "://" + request.getServerName() + ":"
+					+ request.getServerPort();
 
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
@@ -245,8 +246,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if ("Y".equals(publishStatus)) {
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 				String classId = sqlQuery.queryForObject(sql, "String");
-				publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
-						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
+				publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+						+ siteId + "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
 			}
 
 			String externalLink = mapEventInfo.get("TZ_OUT_ART_URL") == null ? ""
@@ -377,6 +378,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String artType) {
 		String strRet = "";
 
+		if("".equals(strApplyStartTime)){
+			strApplyStartTime="08:30";
+		}
+		
+		if("".equals(strApplyEndTime)){
+			strApplyEndTime="17:30";
+		}
+		
 		Map<String, Object> mapJson = new HashMap<String, Object>();
 		mapJson.put("activityId", activityId);
 		mapJson.put("activityName", activityName);
@@ -430,7 +439,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + "://" + request.getServerName() + ":"
+					+ request.getServerPort();
 
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
@@ -455,8 +465,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 				String classId = sqlQuery.queryForObject(sql, "String");
-				String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
-						+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
+				String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId
+						+ "&operatetype=HTML&siteId=" + siteId + "&columnId=" + coluId + "&artId=" + activityId
+						+ "&oprate=R";
 
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
 				classId = sqlQuery.queryForObject(sql, "String");
@@ -514,7 +525,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = request.getScheme() + request.getServerName() + ":" + request.getServerPort();
+			String ctxServerName = request.getScheme() + "://" + request.getServerName() + ":"
+					+ request.getServerPort();
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -555,7 +567,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			}
 
-			//从session中读取参数
+			// 从session中读取参数
 			String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
 			if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
 				errorMsg[0] = "1";
@@ -574,8 +586,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 			String classId = sqlQuery.queryForObject(sql, "String");
-			String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId=" + siteId
-					+ "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
+			String publishUrl = ctxServerName + ctxPath + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+					+ siteId + "&columnId=" + coluId + "&artId=" + activityId + "&oprate=R";
 
 			sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
 			classId = sqlQuery.queryForObject(sql, "String");
@@ -884,16 +896,11 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				String accessPath = mapParams.get("accessPath") == null ? ""
 						: String.valueOf(mapParams.get("accessPath"));
 
-				String fileDir = "";
+				String fileDir = request.getSession().getServletContext().getResource(accessPath).getPath();
+				path = fileDir;
 
 				switch (attachmentType) {
 				case "IMG":
-
-					if (path.endsWith("/")) {
-						fileDir = path;
-					} else {
-						fileDir = path + "/";
-					}
 
 					// 缩小图片
 					String flg1 = this.resize(fileDir, sysFileName, 100);
@@ -942,12 +949,6 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					break;
 
 				case "TPJ":
-
-					if (path.endsWith("/")) {
-						fileDir = path;
-					} else {
-						fileDir = path + "/";
-					}
 
 					// 缩小图片
 					String flg3 = this.resize(fileDir, sysFileName, 100);
@@ -1193,7 +1194,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID<>?";
 				String strMaxSEQ = sqlQuery.queryForObject(sql, new Object[] { siteId, coluId, activityId }, "String");
 				int maxSEQ = 0;
-				if(null!=strMaxSEQ){
+				if (null != strMaxSEQ) {
 					maxSEQ = Integer.parseInt(strMaxSEQ);
 				}
 				psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxSEQ + 1);
@@ -1231,6 +1232,48 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			} else if ("Y".equals(recExists1) && "Y".equals(recExists2)) {
 
+				sql = "select TZ_ATTACHSYSFILENA from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+				String titleImgFileName = sqlQuery.queryForObject(sql, new Object[] { activityId }, "String");
+
+				if (null != titleImgFileName && !"".equals(titleImgFileName)) {
+					// 如果存在标题图，并且与新的标题图文件名不一致，则删除旧的标题图片
+					if (!titleImgFileName.equals(sysFileName)) {
+
+						PsTzArtTitimgT psTzArtTitimgT = psTzArtTitimgTMapper.selectByPrimaryKey(titleImgFileName);
+
+						if (null != psTzArtTitimgT) {
+							String delArtTitleImgPath = "";
+
+							String tzAttAUrl = psTzArtTitimgT.getTzAttAUrl();
+							String tzYsAttachsysnam = psTzArtTitimgT.getTzYsAttachsysnam();
+							String tzSlAttachsysnam = psTzArtTitimgT.getTzSlAttachsysnam();
+
+							if (null != tzAttAUrl && !"".equals(tzAttAUrl)) {
+								if (!tzAttAUrl.endsWith("/")) {
+									tzAttAUrl = tzAttAUrl + "/";
+								}
+
+								delArtTitleImgPath = tzAttAUrl + titleImgFileName;
+								fileManageServiceImpl.DeleteFile(delArtTitleImgPath);
+
+								if (null != tzYsAttachsysnam && !"".equals(tzYsAttachsysnam)) {
+									delArtTitleImgPath = tzAttAUrl + tzYsAttachsysnam;
+									fileManageServiceImpl.DeleteFile(delArtTitleImgPath);
+								}
+
+								if (null != tzSlAttachsysnam && !"".equals(tzSlAttachsysnam)) {
+									delArtTitleImgPath = tzAttAUrl + tzSlAttachsysnam;
+									fileManageServiceImpl.DeleteFile(delArtTitleImgPath);
+								}
+
+								psTzArtTitimgTMapper.deleteByPrimaryKey(titleImgFileName);
+							}
+
+						}
+
+					}
+				}
+
 				psTzArtHdTbl.setTzArtId(activityId);
 				int rst = psTzArtHdTblMapper.updateByPrimaryKey(psTzArtHdTbl);
 				if (rst > 0) {
@@ -1259,7 +1302,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				mapEventInfoSession.put(sessColuId, coluId);
 				mapEventInfoSession.put(sessActivityId, activityId);
 				mapEventInfoSession.put(sessPublishClick, publishClick);
-				
+
 				// 将活动参数写入session中
 				JacksonUtil jacksonUtil = new JacksonUtil();
 				String strEventInfoSession = jacksonUtil.Map2json(mapEventInfoSession);
@@ -1314,7 +1357,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			String activityId = mapParams.get("activityId") == null ? "" : String.valueOf(mapParams.get("activityId"));
 			if ("".equals(activityId)) {
-				//从session中读取活动编号
+				// 从session中读取活动编号
 				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
 				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
 					errorMsg[0] = "1";
@@ -1410,7 +1453,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			String activityId = mapParams.get("activityId") == null ? "" : String.valueOf(mapParams.get("activityId"));
 			if ("".equals(activityId)) {
-				//从session中读取活动编号
+				// 从session中读取活动编号
 				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
 				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
 					errorMsg[0] = "1";
@@ -1472,14 +1515,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			String activityId = jacksonUtil.getString("activityId");
 			if ("".equals(activityId) || null == activityId || "null".equals(activityId)) {
-				//从session中读取活动编号
+				// 从session中读取活动编号
 				String strEventInfoSession = tzGetSetSessionValue.getTzAddingNewActivity();
 				if ("".equals(strEventInfoSession) || null == strEventInfoSession) {
 					errorMsg[0] = "1";
 					errorMsg[1] = "机构站点参数错误！";
 					return strRet;
 				}
-				
+
 				Map<String, Object> mapEventInfoSession = jacksonUtil.parseJson2Map(strEventInfoSession);
 
 				activityId = mapEventInfoSession.get(sessActivityId) == null ? ""
@@ -1529,7 +1572,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				int rst = 0;
 				if ("Y".equals(recExists)) {
-					rst = psTzArtPicTMapper.updateByPrimaryKey(psTzArtPicT);
+					rst = psTzArtPicTMapper.updateByPrimaryKeyWithBLOBs(psTzArtPicT);
 				} else {
 					rst = psTzArtPicTMapper.insert(psTzArtPicT);
 				}
@@ -1547,7 +1590,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			if (null != sysFileNameArr && sysFileNameArr.size() > 0) {
+			if (null != sysFileNameArr && sysFileNameArr.size() >= 0) {
 				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTPJs");
 				List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { activityId });
 
@@ -1556,10 +1599,6 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							: String.valueOf(mapData.get("TZ_ATTACHSYSFILENA"));
 					if (!sysFileNameArr.contains(sysFname)) {
 						// 若数据库中有，而提交的数据中没有，则删除表中记录，并删除物理文件
-						PsTzArtPicTKey psTzArtPicTKey = new PsTzArtPicTKey();
-						psTzArtPicTKey.setTzArtId(activityId);
-						psTzArtPicTKey.setTzAttachsysfilena(sysFname);
-						psTzArtPicTMapper.deleteByPrimaryKey(psTzArtPicTKey);
 
 						PsTzArtTpjT psTzArtTpjT = psTzArtTpjTMapper.selectByPrimaryKey(sysFname);
 
@@ -1569,27 +1608,32 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 						String delFilePath = "";
 
-						String tzAttPUrl = psTzArtTpjT.getTzAttPUrl();
+						String tzAttAUrl = psTzArtTpjT.getTzAttAUrl();
 						String tzYsAttachsysnam = psTzArtTpjT.getTzYsAttachsysnam();
 						String tzSlAttachsysnam = psTzArtTpjT.getTzSlAttachsysnam();
 
-						if (null != tzAttPUrl && !"".equals(tzAttPUrl)) {
-							if (!tzAttPUrl.endsWith("/")) {
-								tzAttPUrl = tzAttPUrl + "/";
+						if (null != tzAttAUrl && !"".equals(tzAttAUrl)) {
+							if (!tzAttAUrl.endsWith("/")) {
+								tzAttAUrl = tzAttAUrl + "/";
 							}
 
-							delFilePath = tzAttPUrl + sysFname;
+							delFilePath = tzAttAUrl + sysFname;
 							fileManageServiceImpl.DeleteFile(delFilePath);
 
 							if (null != tzYsAttachsysnam && !"".equals(tzYsAttachsysnam)) {
-								delFilePath = tzAttPUrl + tzYsAttachsysnam;
+								delFilePath = tzAttAUrl + tzYsAttachsysnam;
 								fileManageServiceImpl.DeleteFile(delFilePath);
 							}
 
 							if (null != tzSlAttachsysnam && !"".equals(tzSlAttachsysnam)) {
-								delFilePath = tzAttPUrl + tzSlAttachsysnam;
+								delFilePath = tzAttAUrl + tzSlAttachsysnam;
 								fileManageServiceImpl.DeleteFile(delFilePath);
 							}
+
+							PsTzArtPicTKey psTzArtPicTKey = new PsTzArtPicTKey();
+							psTzArtPicTKey.setTzArtId(activityId);
+							psTzArtPicTKey.setTzAttachsysfilena(sysFname);
+							psTzArtPicTMapper.deleteByPrimaryKey(psTzArtPicTKey);
 
 						}
 
@@ -1660,12 +1704,12 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			PsTzArtFjjT psTzArtFjjT = psTzArtFjjTMapper.selectByPrimaryKey(attachmentID);
 			if (null != psTzArtFjjT) {
-				String tzAttPUrl = psTzArtFjjT.getTzAttPUrl();
-				if (null != tzAttPUrl && !"".equals(tzAttPUrl)) {
-					if (!tzAttPUrl.endsWith("/")) {
-						tzAttPUrl = tzAttPUrl + "/";
+				String tzAttAUrl = psTzArtFjjT.getTzAttAUrl();
+				if (null != tzAttAUrl && !"".equals(tzAttAUrl)) {
+					if (!tzAttAUrl.endsWith("/")) {
+						tzAttAUrl = tzAttAUrl + "/";
 					}
-					String delFilePath = tzAttPUrl + attachmentID;
+					String delFilePath = tzAttAUrl + attachmentID;
 					fileManageServiceImpl.DeleteFile(delFilePath);
 				}
 

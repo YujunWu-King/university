@@ -56,21 +56,41 @@ public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 				String orgId = jacksonUtil.getString("orgId");
 
 				String sql = "SELECT * FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND TZ_LANGUAGE_ID=? AND TZ_JG_ID=?";
-				List<?> msgList = sqlQuery.queryForList(sql, new Object[] { msgSetID, sourceLanage, orgId });
+				List<Map<String, Object>> msgList = sqlQuery.queryForList(sql,
+						new Object[] { msgSetID, sourceLanage, orgId });
 
 				if (msgList.size() > 0) {
-					for (Object obj : msgList) {
-						Map<String, Object> mapObject = (Map<String, Object>) obj;
-						PsTzPtXxdyTbl psTzPtXxdyTbl = new PsTzPtXxdyTbl();
-						psTzPtXxdyTbl.setTzXxjhId(mapObject.get("TZ_XXJH_ID").toString());
-						psTzPtXxdyTbl.setTzMsgId(mapObject.get("TZ_MSG_ID").toString());
-						psTzPtXxdyTbl.setTzJgId(mapObject.get("TZ_JG_ID").toString());
-						psTzPtXxdyTbl.setTzLanguageId(targetLanage);
-						psTzPtXxdyTbl.setTzMsgText(mapObject.get("TZ_MSG_TEXT").toString());
-						psTzPtXxdyTbl.setTzMsgBqid(mapObject.get("TZ_MSG_BQID").toString());
-						psTzPtXxdyTbl.setTzMsgKey(mapObject.get("TZ_MSG_KEY").toString());
-						psTzPtXxdyTbl.setTzMsgDesc(mapObject.get("TZ_MSG_DESC").toString());
-						psTzPtXxdyTblMapper.insert(psTzPtXxdyTbl);
+					for (Map<String, Object> mapObject : msgList) {
+
+						String tzXxjhId = mapObject.get("TZ_XXJH_ID") == null ? ""
+								: String.valueOf(mapObject.get("TZ_XXJH_ID"));
+						String tzMsgId = mapObject.get("TZ_MSG_ID") == null ? ""
+								: String.valueOf(mapObject.get("TZ_MSG_ID"));
+						String tzJgId = mapObject.get("TZ_JG_ID") == null ? ""
+								: String.valueOf(mapObject.get("TZ_JG_ID"));
+
+						sql = "SELECT 'Y' FROM PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? AND TZ_LANGUAGE_ID=? AND TZ_JG_ID=? AND TZ_MSG_ID=?";
+						String recExists = sqlQuery.queryForObject(sql,
+								new Object[] { tzXxjhId, targetLanage, tzJgId, tzMsgId }, "String");
+
+						if (!"Y".equals(recExists)) {
+
+							PsTzPtXxdyTbl psTzPtXxdyTbl = new PsTzPtXxdyTbl();
+							psTzPtXxdyTbl.setTzXxjhId(tzXxjhId);
+							psTzPtXxdyTbl.setTzMsgId(tzMsgId);
+							psTzPtXxdyTbl.setTzJgId(tzJgId);
+							psTzPtXxdyTbl.setTzLanguageId(targetLanage);
+							psTzPtXxdyTbl.setTzMsgText(mapObject.get("TZ_MSG_TEXT") == null ? ""
+									: String.valueOf(mapObject.get("TZ_MSG_TEXT")));
+							psTzPtXxdyTbl.setTzMsgBqid(mapObject.get("TZ_MSG_BQID") == null ? ""
+									: String.valueOf(mapObject.get("TZ_MSG_BQID")));
+							psTzPtXxdyTbl.setTzMsgKey(mapObject.get("TZ_MSG_KEY") == null ? ""
+									: String.valueOf(mapObject.get("TZ_MSG_KEY")));
+							psTzPtXxdyTbl.setTzMsgDesc(mapObject.get("TZ_MSG_DESC") == null ? ""
+									: String.valueOf(mapObject.get("TZ_MSG_DESC")));
+							psTzPtXxdyTblMapper.insert(psTzPtXxdyTbl);
+
+						}
 					}
 
 				} else {
@@ -85,7 +105,7 @@ public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";
-			errMsg[1] = e.toString();
+			errMsg[1] = "同步失败：" + e.toString();
 		}
 		return strRet;
 	}

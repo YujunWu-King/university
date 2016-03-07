@@ -173,10 +173,12 @@ public class SiteRepCssServiceImpl {
 						+ "/";
 			}
 
+			String strRandom = String.valueOf(10*Math.random());
 			if (strJgId != null && !"".equals(strJgId)) {
-				strConent = strConent.replace("page_stylecss", strCssDir + "style_" + strJgId.toLowerCase() + ".css");
+				strConent = strConent.replace("page_stylecss",
+						strCssDir + "style_" + strJgId.toLowerCase() + ".css?v=" + strRandom);
 			} else {
-				strConent = strConent.replace("page_stylecss", strCssDir + "style.css");
+				strConent = strConent.replace("page_stylecss", strCssDir + "style.css?v=" + strRandom);
 			}
 
 		}
@@ -203,10 +205,12 @@ public class SiteRepCssServiceImpl {
 				strCssDir = strCssDir + websitePath + "/" + strJgId + "/" + strSiteId + "/" + skinstor + "/";
 			}
 
+			String strRandom = String.valueOf(10*Math.random());
 			if (strJgId != null && !"".equals(strJgId)) {
-				strConent = strConent.replace("page_stylecss", strCssDir + "style_" + strJgId.toLowerCase() + ".css");
+				strConent = strConent.replace("page_stylecss",
+						strCssDir + "style_" + strJgId.toLowerCase() + ".css?v=" + strRandom);
 			} else {
-				strConent = strConent.replace("page_stylecss", strCssDir + "style.css");
+				strConent = strConent.replace("page_stylecss", strCssDir + "style.css?v=" + strRandom);
 			}
 
 		}
@@ -339,9 +343,9 @@ public class SiteRepCssServiceImpl {
 			int numCharend = strConent.indexOf("</div>", numCharstart);
 			if (numCharend > numCharstart) {
 				String startContent = strConent.substring(0, numCharstart);
-				
+
 				int numCharend1 = strConent.indexOf("</div>", numCharend + 6);
-				
+
 				String endContent = strConent.substring(numCharend1 + 6, strConent.length());
 				strConent = startContent + strSdkbar + endContent;
 			}
