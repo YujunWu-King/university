@@ -364,6 +364,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			}
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
+					strAuditState = "";
+					strFailedReason="";
 					strFileID = (String) list.get(i).get("TZ_SBMINF_ID");
 					strContentIntro = (String) list.get(i).get("TZ_CONT_INTRO");
 					strRemark = (String) list.get(i).get("TZ_REMARK");
@@ -373,6 +375,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					if(zlshMap != null){
 						strAuditState = (String) zlshMap.get("TZ_ZL_AUDIT_STATUS");
 						strFailedReason = (String) zlshMap.get("TZ_AUDIT_NOPASS_RS");
+					}
+					if(strAuditState == null){
+						strAuditState = "";
+					}
+					
+					if(strFailedReason == null){
+						strFailedReason = "";
 					}
 					
 
@@ -456,6 +465,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						str_fb_desc = str_fb_desc.replaceAll("<p>", "");
 						str_fb_desc = str_fb_desc.replaceAll("</p>", "");
 					}
+					if(str_color_id == null){
+						str_color_id = "";
+					}
+					if(str_fb_desc == null){
+						str_fb_desc = "";
+					}
+					
 
 					Map<String, Object> jsonmap = new HashMap<>();
 					jsonmap.put("classID", strClassID);

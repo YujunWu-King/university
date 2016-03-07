@@ -131,7 +131,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "3";
-		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "48", "邮箱已注册，建议取回密码", "The email address has been registered, proposed to retrieve Password");
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "48", "邮箱已注册，建议取回密码", "It has been occupied");
 		            return strResult;
 		      	}
 		      	strResult = "\"success\"";
