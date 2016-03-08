@@ -468,7 +468,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '</div>';
 
 			var filename = child[i].EduExper9["filename"];
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper9["itemId"]+'Attch" class="fancybox" href="' + child[i].EduExper9["accessPath"] + child[i].EduExper9["sysFileName"] + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper9["itemId"]+'Attch" class="fancybox" href="' + TzUniversityContextPath + child[i].EduExper9["accessPath"] + child[i].EduExper9["sysFileName"] + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper9["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper9["itemId"]+'" value="'+child[i].EduExper9["value"]+'"></div>';
 
 			//上传学位证书扫描件
@@ -488,7 +488,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '</div>';
 
 			var filename2 = child[i].EduExper10["filename"];
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper10["itemId"]+'Attch"  class="fancybox" href="' + child[i].EduExper10["accessPath"] + child[i].EduExper10["sysFileName"] + '" target="_blank">' + (filename2 ? filename2.substring(0,20) + "..." : "") + '</a></div>';
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper10["itemId"]+'Attch"  class="fancybox" href="' + TzUniversityContextPath + child[i].EduExper10["accessPath"] + child[i].EduExper10["sysFileName"] + '" target="_blank">' + (filename2 ? filename2.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper10["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper10["itemId"]+'" value="'+child[i].EduExper10["value"]+'"></div>';
 
 			//上传成绩单原件扫描件
@@ -508,7 +508,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			edus += '</div>';
 
 			var filename3 = child[i].EduExper10["filename"];
-			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper11["itemId"]+'Attch" class="fancybox" href="' + child[i].EduExper11["accessPath"] + child[i].EduExper11["sysFileName"] + '" target="_blank">' + (filename3 ? filename3.substring(0,20) + "..." : "") + '</a></div>';
+			edus += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child[i].EduExper11["itemId"]+'Attch" class="fancybox" href="' + TzUniversityContextPath + child[i].EduExper11["accessPath"] + child[i].EduExper11["sysFileName"] + '" target="_blank">' + (filename3 ? filename3.substring(0,20) + "..." : "") + '</a></div>';
 			edus += '<input id="'+data["itemId"]+child[i].EduExper11["itemId"]+'" type="hidden" name="'+data["itemId"]+child[i].EduExper11["itemId"]+'" value="'+child[i].EduExper11["value"]+'"></div>';
 
 			edus += '</div>';

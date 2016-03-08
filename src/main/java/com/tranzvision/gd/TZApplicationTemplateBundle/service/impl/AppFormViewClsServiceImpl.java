@@ -150,9 +150,8 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			/*上传进度条描述*/
 			String processing = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PROCESS", language, "正在处理", "Processing");
 			
-		
-			String menuType = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[] { "TZ_ACCOUNT_MANAGEMENT" }, "String");
-			String menuId = sqlQuery.queryForObject("SELECT TZ_MENU_ID FROM PS_TZ_SITEI_MENU_T WHERE TZ_SITEI_ID=? AND TZ_MENU_TYPE_ID=?", new Object[] { siteId, menuType}, "String");
+			sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+			String menuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + orgId }, "String");
 			if(StringUtils.isBlank(menuId)){
 				menuId = "";
 			}
