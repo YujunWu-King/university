@@ -335,7 +335,7 @@ public class TzDealWithXMLServiceImpl {
 					 }else{
 						 name = name.replaceAll(" ", "_");
 					 }
-					 String mbType = jdbcTemplate.queryForObject("select TZ_USE_TYPE from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?", new Object[]{Long.parseLong(app_ins_id)},"String");
+					 String mbType = jdbcTemplate.queryForObject("select TZ_USE_TYPE from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?", new Object[]{str_app_modal_id},"String");
 					 if(mbType == null || "".equals(mbType)){
 						 mbType = "BMB"; 
 					 }
@@ -343,7 +343,18 @@ public class TzDealWithXMLServiceImpl {
 					 String newFileName = "";
 					 if("TJX".equals(mbType)){
 						 //如果是推荐信，查看推荐人的姓名;
-						 String tzReferrer = jdbcTemplate.queryForObject("select TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL where TZ_TJX_APP_INS_ID=?", new Object[]{Long.parseLong(app_ins_id)},"String");
+						 Map<String, Object> tjxMap = jdbcTemplate.queryForMap("select TZ_APP_INS_ID,TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL where TZ_TJX_APP_INS_ID=?", new Object[]{Long.parseLong(app_ins_id)});
+						 String tzReferrer = "";
+						 if(tjxMap != null){
+							 tzReferrer = (String)tjxMap.get("TZ_REFERRER_NAME");
+							 try{
+								 long bmbid = Long.parseLong(tjxMap.get("TZ_APP_INS_ID").toString());
+								 name = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL B WHERE B.OPRID = (SELECT OPRID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ?)", new Object[]{bmbid},"String");
+							 }catch(Exception e){
+								 name = "";
+							 }
+						 }
+						 
 						 newFileName = name + "_" + tzReferrer + "_推荐信.xml";
 					 }else{
 						 newFileName = name + "_报名表.xml";
