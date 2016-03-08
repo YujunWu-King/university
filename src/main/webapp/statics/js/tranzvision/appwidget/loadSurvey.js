@@ -126,6 +126,23 @@ if(dataApp){
 											filePerXxx["viewFileName"] = recApp["children"][i][j]["children"][x]["viewFileName"];
 										})
 									}
+								}else{
+									if(perXxx.hasOwnProperty("filename"))
+									{
+										perXxx["filename"] =  recApp["children"][i][j]["filename"];
+									}
+									if(perXxx.hasOwnProperty("sysFileName"))
+									{
+										perXxx["sysFileName"] =  recApp["children"][i][j]["sysFileName"];
+									}
+									if(perXxx.hasOwnProperty("path"))
+									{
+										perXxx["path"] =  recApp["children"][i][j]["path"];
+									}
+									if(perXxx.hasOwnProperty("accessPath"))
+									{
+										perXxx["accessPath"] =  recApp["children"][i][j]["accessPath"];
+									}
 								}
 							}else if(perXxx.classname  == "Radio" || perXxx.classname  == "Check"){
 								/*单选框和复选框处理方式*/

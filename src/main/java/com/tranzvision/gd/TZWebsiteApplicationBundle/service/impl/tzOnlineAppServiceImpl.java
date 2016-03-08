@@ -437,18 +437,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
 		
 		//获得站点信息
-		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'";
+		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
 		//站点编号
 		String strSiteId = "";
 		strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
 		
-		String strMenuType = "";
 		String strMenuId = "";
 		
-		sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?";
-		strMenuType = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT" }, "String");
-		sql = "SELECT TZ_MENU_ID FROM PS_TZ_SITEI_MENU_T WHERE TZ_SITEI_ID=? AND TZ_MENU_TYPE_ID=?";
-		strMenuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId,strMenuType }, "String");
+		sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+		strMenuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + strAppOrgId }, "String");
 		if(strMenuId == null) strMenuId = "";
 		
 		if("".equals(strMessageError)){
@@ -1470,6 +1467,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppFormSta("U");
+				psTzAppInsT.setTzAppSubDttm(new Date());
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
 				psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
@@ -1693,7 +1691,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	/*设置字段是否隐藏*/
 	private void saveXxxHidden(Long numAppInsId ,String strItemId, String strIsHidden){
 		/**/
-		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
 		if(count>0){
 			PsTzAppHiddenT psTzAppHiddenT = new PsTzAppHiddenT();

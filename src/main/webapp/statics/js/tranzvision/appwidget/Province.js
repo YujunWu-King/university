@@ -86,7 +86,7 @@ SurveyBuild.extend("Province", "baseComponent", {
 			var prov;
 			el.click(function(e) {
 				var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_PROVINCE_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"' + data.itemId + '"}}';
+				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_PROVINCE_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","TZ_PROV_ID":"' + data.itemId + '"}}';
 				provinceUrl = provinceUrl + window.escape(params);
 	
 				prov = $.layer({
