@@ -34,7 +34,7 @@ public class TzTjxClsServiceImpl{
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
 	
 	 // 保存推荐信信息;
-	 public String saveTJX(long numAppinsId,String strOprid, String strTjrId, String strEmail, String strTjxType, String strTitle, String strGname, String strName, String strCompany, String strPosition, String strPhone_area, String strPhone_no, String strGender, String strAdd1, String strAdd2, String strAdd3, String strAdd4, String strAdd5, String strTjrgx, String str_sysfilename, String str_filename, String str_refLetterType, String str_tjx_valid){
+	 public String saveTJX(long numAppinsId,String strOprid, String strTjrId, String strEmail, String strTjxType, String strTitle, String strGname, String strName, String strCompany, String strPosition, String strPhone_area, String strPhone_no, String strGender, String strAdd1, String strAdd2, String strAdd3, String strAdd4, String strAdd5, String strTjrgx, String str_sysfilename, String str_filename, String str_refLetterType, String str_tjx_valid,String accessPath,String attAUrl){
 		boolean b_flag = true;
 		String strRtn = "";
 		String strTjxId = "";
@@ -87,7 +87,9 @@ public class TzTjxClsServiceImpl{
 			            
 			        psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
 			        psTzKsTjxTbl.setAttachuserfile(str_filename);
-			            
+			        psTzKsTjxTbl.setTzAccessPath(accessPath);
+			        psTzKsTjxTbl.setTzAttAUrl(attAUrl);
+  
 			        psTzKsTjxTbl.setRowAddedDttm(new Date());
 			        psTzKsTjxTbl.setRowAddedOprid(strOprid); 
 			        psTzKsTjxTbl.setRowLastmantDttm(new Date());
@@ -121,6 +123,8 @@ public class TzTjxClsServiceImpl{
 			            
 			        psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
 			        psTzKsTjxTbl.setAttachuserfile(str_filename);
+			        psTzKsTjxTbl.setTzAccessPath(accessPath);
+			        psTzKsTjxTbl.setTzAttAUrl(attAUrl);
 
 			        psTzKsTjxTbl.setRowLastmantDttm(new Date());
 			        psTzKsTjxTbl.setRowLastmantOprid(strOprid);
