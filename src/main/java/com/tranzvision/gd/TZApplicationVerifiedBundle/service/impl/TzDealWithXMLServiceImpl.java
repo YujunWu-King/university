@@ -85,6 +85,11 @@ public class TzDealWithXMLServiceImpl {
 			int haveQx = jdbcTemplate.queryForObject(
 					"SELECT COUNT(1) FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ( SELECT TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ? limit 0,1) AND OPRID = ?",
 					new Object[] { app_ins_id, currentOprid }, "Integer");
+			if (haveQx == 0){
+				haveQx = jdbcTemplate.queryForObject(
+						" SELECT COUNT(1) FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ( SELECT TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ( SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL TJ WHERE TJ.TZ_TJX_APP_INS_ID =? AND TJ.TZ_MBA_TJX_YX='Y'  LIMIT 0,1) LIMIT 0,1) AND OPRID = ?",
+						new Object[] { app_ins_id, currentOprid }, "Integer");
+			}
 			if (haveQx == 0) {
 				haveQx = jdbcTemplate.queryForObject(
 						"SELECT COUNT(1) FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID = ( SELECT TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ? limit 0,1) AND TZ_PWEI_OPRID = ?",
