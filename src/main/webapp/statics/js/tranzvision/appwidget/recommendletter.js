@@ -1672,6 +1672,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				rec_by3 = SurveyBuild.specialCharReplace(rec_by3);
 				rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
 				rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
+				var _file=children[m-1].recommend_9["filename"];
+				var _sysfile=children[m-1].recommend_9["sysFileName"];
+				var _accessPath=children[m-1].recommend_9["accessPath"];
+				_file = SurveyBuild.specialCharReplace(_file);
+				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
+				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
 				
 				if (_yz==""){
 					
@@ -1692,7 +1698,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						/*
 						var param = "{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_SEND_REF_STD','OperateType':'SEND','comParams':{'rec_app_ins_id':'"+_tz_app_ins_id+"','TZ_APP_INS_VERSION':'"+_tz_app_version_id+"','rec_num':'"+rec_num+"','rec_title':'"+rec_title+"','rec_gname':'"+rec_gname+"','rec_name':'"+rec_name+"','rec_company':'"+rec_company+"','rec_post':'"+rec_post+"','rec_phone_area':'"+rec_phone_area+"','rec_phone_no':'"+rec_phone_no+"','rec_email':'"+rec_email+"','rec_sex':'"+rec_sex+"','rec_relation':'"+rec_relation+"','rec_language':'"+rec_language+"','email_tx':'"+_email_tx+"','rec_by1':'"+rec_by1+"','rec_by2':'"+rec_by2+"','rec_by3':'"+rec_by3+"','rec_by4':'"+rec_by4+"','rec_by5':'"+rec_by5+"'}}";*/
 
-						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'"}}';
+						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 
 						$.ajax({
 							type: "post",
@@ -1791,12 +1797,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
 				rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
 				
+				var _file=children[m-1].recommend_9["filename"];
+				var _sysfile=children[m-1].recommend_9["sysFileName"];
+				var _accessPath=children[m-1].recommend_9["accessPath"];
+				_file = SurveyBuild.specialCharReplace(_file);
+				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
+				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
+				
 				var _tz_app_ins_id=SurveyBuild.appInsId;
 				var _tz_app_version_id=SurveyBuild.appInsVersion;
 				var _email_tx = $("#yincang_tx").val();
 				_email_tx = SurveyBuild.specialCharReplace(_email_tx);
 				var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'"}}';
+				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				
 				$.ajax({
 					type: "post",
@@ -1917,6 +1930,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				var _file=children[m-1].recommend_9["filename"];
 				var _sysfile=children[m-1].recommend_9["sysFileName"];
+				var _accessPath=children[m-1].recommend_9["accessPath"];
 				rec_title = SurveyBuild.specialCharReplace(rec_title);
 				rec_gname = SurveyBuild.specialCharReplace(rec_gname);
 				rec_name = SurveyBuild.specialCharReplace(rec_name);
@@ -1933,7 +1947,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
 				_file = SurveyBuild.specialCharReplace(_file);
 				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
-				
+				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
 				if (rec_type=="U")
 				{
 					var _tz_tjx_valid = "N";
@@ -1943,7 +1957,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					var _tz_app_ins_id=SurveyBuild.appInsId;
 					var _tz_app_version_id=SurveyBuild.appInsVersion;
 					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SAVE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","tjx_valid":"'+_tz_tjx_valid+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+ '","rec_type":"'+rec_type+ '","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SAVE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","tjx_valid":"'+_tz_tjx_valid+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+ '","rec_type":"'+rec_type+ '","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 					var _email_tx = $("#yincang_tx").val();
 					//$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.fileName);
 					$.ajax({
