@@ -506,7 +506,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			// 班级编号;
 			String strClassID = jacksonUtil.getString("classID");
 			// 报名表编号;
-		    int strAppInsID = Integer.parseInt(jacksonUtil.getString("appInsID"));
+			long strAppInsID = Long.parseLong(jacksonUtil.getString("appInsID"));
 		    
 		    // 报名表审批摘要模板;
 		    String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -518,7 +518,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		    String strTagName = "", strTagNameContent = "";
 		    List<Map<String, Object>> tagList = jdbcTemplate.queryForList(sqlTag,new Object[]{strAppInsID});
 		    if(tagList != null){
-		    	for(int i = 1; i < tagList.size(); i++){
+		    	for(int i = 0; i < tagList.size(); i++){
 		    		//strTagId = (String)tagList.get(i).get("TZ_LABEL_ID");
 		    		strTagName = (String)tagList.get(i).get("TZ_LABEL_NAME");
 		    		//strTagNameContent = strTagNameContent + tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_TAG_DISPLAY_HTML", true,strTagName);
@@ -668,6 +668,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		    }
 		      
 		}catch(Exception e){
+			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}

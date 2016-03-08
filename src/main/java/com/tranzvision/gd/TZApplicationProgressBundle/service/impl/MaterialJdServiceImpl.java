@@ -78,7 +78,7 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			    int totalTjxNum = jdbcTemplate.queryForObject("select COUNT(1) from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y'", new Object[]{instanceId},"Integer");
 			    if(totalTjxNum > 0){
 			    	 String tjrxx = "";
-			         long tjxInstId = 0;
+			         long tjxInstId = 0L;
 			         String TZ_REF_LETTER_ID = "";
 			         String TZ_REFLETTERTYPE = "";
 			         String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
@@ -86,7 +86,11 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			         if(tjxList != null && tjxList.size() > 0){
 			        	for(int i = 0 ; i < tjxList.size(); i++){
 			        		tjrxx = (String)tjxList.get(i).get("TZ_REFERRER_NAME")==null?"":(String)tjxList.get(i).get("TZ_REFERRER_NAME");
-			        		tjxInstId = (long)tjxList.get(i).get("TZ_TJX_APP_INS_ID"); 
+			        		try{
+			        			tjxInstId = Long.parseLong(tjxList.get(i).get("TZ_TJX_APP_INS_ID").toString());
+			        		}catch(Exception e){
+			        			tjxInstId = 0L;
+			        		}
 			        		TZ_REF_LETTER_ID = (String)tjxList.get(i).get("TZ_REF_LETTER_ID")==null?"":(String)tjxList.get(i).get("TZ_REF_LETTER_ID"); 
 			        		TZ_REFLETTERTYPE = (String)tjxList.get(i).get("TZ_REFLETTERTYPE")==null?"":(String)tjxList.get(i).get("TZ_REFLETTERTYPE"); 
 

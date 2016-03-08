@@ -67,7 +67,11 @@
 		    $("#fileupload").change(function(){
 				var fileName = $("#fileupload").val();
 				//获取后缀
-				var fix = fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length);	
+				var fix = fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length);
+				if(fix == ""){
+					return ;
+				}
+
 				if((!window.SurveyBuild && (fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif"))||(window.SurveyBuild && window.SurveyBuild.tzGeneralURL && $.inArray(fix.toLowerCase(),fixArr)>=0)){
 					/*张浪注释
 						@2015-08-26 该方法不支持IE浏览器
@@ -141,10 +145,10 @@
 						});
 					}else{
 							alert("%bind(:9)" + maxFileSize + "%bind(:10)");
-						}
-					}else{
-						alert("%bind(:11)");
 					}
+				}else{
+						alert("%bind(:11)");
+				}
 					$("#fileupload").val("");
 			    });
 			

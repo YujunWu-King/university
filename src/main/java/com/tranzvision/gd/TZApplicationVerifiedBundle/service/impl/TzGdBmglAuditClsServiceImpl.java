@@ -364,6 +364,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			}
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
+					strAuditState = "";
+					strFailedReason="";
 					strFileID = (String) list.get(i).get("TZ_SBMINF_ID");
 					strContentIntro = (String) list.get(i).get("TZ_CONT_INTRO");
 					strRemark = (String) list.get(i).get("TZ_REMARK");
@@ -373,6 +375,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					if(zlshMap != null){
 						strAuditState = (String) zlshMap.get("TZ_ZL_AUDIT_STATUS");
 						strFailedReason = (String) zlshMap.get("TZ_AUDIT_NOPASS_RS");
+					}
+					if(strAuditState == null){
+						strAuditState = "";
+					}
+					
+					if(strFailedReason == null){
+						strFailedReason = "";
 					}
 					
 
@@ -456,6 +465,13 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						str_fb_desc = str_fb_desc.replaceAll("<p>", "");
 						str_fb_desc = str_fb_desc.replaceAll("</p>", "");
 					}
+					if(str_color_id == null){
+						str_color_id = "";
+					}
+					if(str_fb_desc == null){
+						str_fb_desc = "";
+					}
+					
 
 					Map<String, Object> jsonmap = new HashMap<>();
 					jsonmap.put("classID", strClassID);
@@ -1247,20 +1263,21 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 							} else {
 								String strLabelID = "";
 								strTagNameExist = jdbcTemplate.queryForObject(
-										"SELECT TZ_LABEL_ID FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID=? AND TZ_LABEL_NAME=? AND TZ_LABEL_STATUS<>'N' limit 0,1",
+										"SELECT TZ_LABEL_ID FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID=? AND TZ_LABEL_NAME=? AND TZ_LABEL_STATUS='Y' limit 0,1",
 										new Object[] { str_jg_id, strTag }, "String");
 								if (strTagNameExist != null && !"".equals(strTagNameExist)) {
 									/* 存在同名的标签 */
 									strLabelID = strTagNameExist;
 								} else {
-									strLabelID = "00000"
+									strLabelID = "00000000"
 											+ String.valueOf(getSeqNum.getSeqNum("TZ_LABEL_DFN_T", "TZ_LABEL_ID"));
-									strLabelID = strLabelID.substring(strLabelID.length() - 5, strLabelID.length());
+									strLabelID = strLabelID.substring(strLabelID.length() - 8, strLabelID.length());
 									PsTzLabelDfnT psTzLabelDfnT = new PsTzLabelDfnT();
 									psTzLabelDfnT.setTzLabelId(strLabelID);
 									psTzLabelDfnT.setTzLabelName(strTag);
 									psTzLabelDfnT.setTzLabelDesc(strTag);
 									psTzLabelDfnT.setTzJgId(str_jg_id);
+									psTzLabelDfnT.setTzLabelStatus("Y");
 									psTzLabelDfnT.setRowAddedDttm(new Date());
 									psTzLabelDfnT.setRowAddedOprid(oprid);
 									psTzLabelDfnT.setRowLastmantDttm(new Date());

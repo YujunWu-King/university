@@ -356,6 +356,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 }else{
 				 str_tjx_app_tpl_id = jdbcTemplate.queryForObject("SELECT TZ_ENG_MODAL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? limit 0,1", new Object[]{str_app_tpl_id},"String");
 			 }
+			 if(str_tjx_app_tpl_id == null){
+				 str_tjx_app_tpl_id = "";
+			 }
 			 returnMap.replace("TJX_ZT", str_tjx_zt);
 			 returnMap.replace("zhs_qy", str_qy_zhs);
 			 returnMap.replace("eng_qy", str_qy_eng);
