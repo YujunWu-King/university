@@ -200,6 +200,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						if (!tF.exists()) {
 							tF.mkdirs();
 						}
+						
+						int file_count = 1;
 
 						// 将考生的材料复制;
 						String str_attachfilename = "", str_attachfile = "";
@@ -216,7 +218,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 										&& sFile != null && !"".equals(sFile)) {
 									str_attachfile.replaceAll("/", "_");
 									sFile = request.getServletContext().getRealPath(sFile);
-									this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
+									
+									if(sFile.lastIndexOf(File.separator) + 1 == sFile.length()){
+										sFile = sFile + str_attachfilename;
+									}else{
+										sFile = sFile + File.separator + str_attachfilename;
+									}
+									this.fileChannelCopy(sFile, tFile + File.separator + file_count+"_"+str_attachfile);
+									file_count++;
 								}
 							}
 						}
@@ -258,7 +267,13 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 											str_attachfile2.replaceAll("/", "_");
 											
 											sFile = request.getServletContext().getRealPath(sFile);
-											this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile2);
+											if(sFile.lastIndexOf(File.separator) + 1 == sFile.length()){
+												sFile = sFile + str_attachfilename2;
+											}else{
+												sFile = sFile + File.separator + str_attachfilename2;
+											}
+											this.fileChannelCopy(sFile, tFile + File.separator + file_count+"_"+ str_attachfile2);
+											file_count++;
 										}
 									}
 								}
