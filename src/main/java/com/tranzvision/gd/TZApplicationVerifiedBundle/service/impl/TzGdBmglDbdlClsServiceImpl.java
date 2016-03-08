@@ -203,17 +203,19 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 
 						// 将考生的材料复制;
 						String str_attachfilename = "", str_attachfile = "";
-						String sqlPackage = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') UNION SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_FORM_ATT2_T WHERE TZ_APP_INS_ID=? )";
+						String sqlPackage = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') UNION SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_FORM_ATT2_T WHERE TZ_APP_INS_ID=? )";
 						List<Map<String, Object>> packList = jdbcTemplate.queryForList(sqlPackage,
 								new Object[] { appInsID, appInsID, appInsID, appInsID });
 						if (packList != null && packList.size() > 0) {
 							for (int j = 0; j < packList.size(); j++) {
 								str_attachfilename = (String) packList.get(j).get("ATTACHSYSFILENAME");
 								str_attachfile = (String) packList.get(j).get("ATTACHUSERFILE");
+								String sFile = (String) packList.get(j).get("TZ_ACCESS_PATH");;
 								if (str_attachfilename != null && !"".equals(str_attachfilename)
-										&& str_attachfile != null && !"".equals(str_attachfile)) {
+										&& str_attachfile != null && !"".equals(str_attachfile)
+										&& sFile != null && !"".equals(sFile)) {
 									str_attachfile.replaceAll("/", "_");
-									String sFile = "";
+									sFile = request.getServletContext().getRealPath(sFile);
 									this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
 								}
 							}
@@ -242,7 +244,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 
 								// 将考生的推荐信材料复制;
 								String str_attachfilename2 = "", str_attachfile2 = "";
-								String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
+								String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
 								List<Map<String, Object>> packTjxList = jdbcTemplate.queryForList(sqlPackagetjx,
 										new Object[] { TZ_TJX_APP_INS_ID, TZ_TJX_APP_INS_ID, TZ_TJX_APP_INS_ID,
 												TZ_TJX_APP_INS_ID });
@@ -250,11 +252,12 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 									for (int k = 0; k < packTjxList.size(); k++) {
 										str_attachfilename2 = (String) packTjxList.get(k).get("ATTACHSYSFILENAME");
 										str_attachfile2 = (String) packTjxList.get(k).get("ATTACHUSERFILE");
+										String sFile = (String) packTjxList.get(k).get("TZ_ACCESS_PATH");;
 										if (str_attachfilename2 != null && !"".equals(str_attachfilename2)
 												&& str_attachfile2 != null && !"".equals(str_attachfile2)) {
 											str_attachfile2.replaceAll("/", "_");
-											String sFile = "";
-
+											
+											sFile = request.getServletContext().getRealPath(sFile);
 											this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile2);
 										}
 									}
