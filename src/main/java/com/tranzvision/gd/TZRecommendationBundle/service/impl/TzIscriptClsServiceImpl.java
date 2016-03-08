@@ -50,7 +50,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			String strTjxType="";
 			String str_app_ins_version = "";
 			String strTjrId = "", strEmail= "";
-			String strTitle = "", strGname = "", strName = "", strCompany = "", strPosition = "", strPhone_area = "", strPhone_no = "", strGender = "", strAdd1 = "", strAdd2 = "", strAdd3 = "", strAdd4 = "", strAdd5 = "", strTjrgx = "", str_sysfilename = "", str_filename = "";
+			String strTitle = "", strGname = "", strName = "", strCompany = "", strPosition = "", strPhone_area = "", strPhone_no = "", strGender = "", strAdd1 = "", strAdd2 = "", strAdd3 = "", strAdd4 = "", strAdd5 = "", strTjrgx = "", str_sysfilename = "", str_filename = "",accessPath="",tzAttAUrl="";
 			String strTzsqrFlg = "";
 			String str_tjx_valid = "";
 			// 报名表ID;
@@ -146,6 +146,17 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			    	str_sysfilename = "";
 			    }
 			    
+			    accessPath = "";
+			    if(jacksonUtil.containsKey("accessPath")){
+			    	accessPath = jacksonUtil.getString("accessPath");
+			    }else{
+			    	accessPath = "";
+			    }
+			    tzAttAUrl = "";
+				if(accessPath != null && !"".equals(accessPath)){
+					tzAttAUrl = request.getServletContext().getRealPath(accessPath);
+				}
+			    
 			    
 			    strTjrgx = jacksonUtil.getString("rec_relation");
 			      
@@ -188,7 +199,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			if("SEND".equals(operateType)){
 				//保存并发送邮件;
 			     str_refLetterType = "S";
-			     mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle, strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1, strAdd2, strAdd3, strAdd4, strAdd5, strTjrgx, str_sysfilename, str_filename, "S", "Y");
+			     mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle, strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1, strAdd2, strAdd3, strAdd4, strAdd5, strTjrgx, str_sysfilename, str_filename, "S", "Y",accessPath,tzAttAUrl);
 			     if("SUCCESS".equals(mess)){
 			    	 mess =  tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId);
 			    	 if("Y".equals(strTzsqrFlg)){
@@ -246,12 +257,15 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						
 						psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
 						psTzKsTjxTbl.setAttachuserfile(str_filename);
+						psTzKsTjxTbl.setTzAccessPath(accessPath);
+						psTzKsTjxTbl.setTzAttAUrl(tzAttAUrl);
+
 						psTzKsTjxTbl.setRowLastmantDttm(new Date());
 						psTzKsTjxTbl.setRowLastmantOprid(strOprid);
 						psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
 					}
 				}else{
-					mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle, strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1, strAdd2, strAdd3, strAdd4, strAdd5, strTjrgx, str_sysfilename, str_filename, str_refLetterType, str_tjx_valid);
+					mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle, strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1, strAdd2, strAdd3, strAdd4, strAdd5, strTjrgx, str_sysfilename, str_filename, str_refLetterType, str_tjx_valid,accessPath,tzAttAUrl);
 				}
 			    
 			}
@@ -290,7 +304,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 String str_refLetterSysFile = "", str_refLetterUserFile = "";
 			 String str_att_a_url = "";
 			 
-			 String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
+			 String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
 			 Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{str_app_ins_id,str_rownum});
 			 if(map != null){
 				 try{
@@ -305,13 +319,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 				 str_tjx_language = (String)map.get("TZ_TJX_TYPE");
 				 str_refLetterSysFile = (String)map.get("ATTACHSYSFILENAME");
 				 str_refLetterUserFile = (String)map.get("ATTACHUSERFILE");
-			 }
-			 
-			 if(str_refLetterSysFile != null && !"".equals(str_refLetterSysFile)
-					 && str_refLetterUserFile != null && !"".equals(str_refLetterUserFile)){
-				 str_att_a_url = this.getRefLetterFiles(str_app_ins_id,str_refLetterSysFile);
-			 }else{
-				 str_att_a_url = "";
+				 str_att_a_url = (String)map.get("TZ_ACCESS_PATH");
 			 }
 			 
 			 if("Y".equals(str_y)){
@@ -359,6 +367,20 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 if(str_tjx_app_tpl_id == null){
 				 str_tjx_app_tpl_id = "";
 			 }
+			 if(str_refLetterSysFile == null){
+				 str_refLetterSysFile = ""; 
+			 }
+			 if(str_refLetterUserFile == null){
+				 str_refLetterUserFile = ""; 
+			 }
+			 if(str_att_a_url == null){
+				 str_att_a_url = ""; 
+			 }
+			 if("".equals(str_refLetterSysFile) || "".equals(str_refLetterUserFile) || "".equals(str_att_a_url)){
+				 str_refLetterSysFile = ""; 
+				 str_refLetterUserFile = ""; 
+				 str_att_a_url = ""; 
+			 }
 			 returnMap.replace("TJX_ZT", str_tjx_zt);
 			 returnMap.replace("zhs_qy", str_qy_zhs);
 			 returnMap.replace("eng_qy", str_qy_eng);
@@ -374,6 +396,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(returnMap);
 	}
 	
+	/*
 	private String getRefLetterFiles(long str_app_ins_id,String sysFileName){
 		String url = "";
 		if(sysFileName == null || "".equals(sysFileName)){
@@ -394,59 +417,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			
 		}
 		return url;
-		/*
-		String urlReturn = "";
-		int i = 0, rtn = 0;
-		Date dt ;
-		String strdt = "", str_file_name = "";
-		// 文件FTP临时存放路径/export/home/PT852/webserv/ALTZDEV/applications/peoplesoft/PORTAL.war//linkfile/FileUpLoad/appFormAttachment/;
-		String str_ftp_path = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[]{"TZ_APPFORM_FILE_DIR"},"String");
-		if(str_ftp_path.length() != (str_ftp_path.lastIndexOf("/") + 1)){
-			str_ftp_path = str_ftp_path + "/";
-		}
-		
-		
-		Calendar ca;
-		File file;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		for(i = 0; i < 30; i++){
-			ca=Calendar.getInstance();
-			ca.setTime(new Date());
-			ca.add(Calendar.DAY_OF_MONTH, (0-i));
-			dt = ca.getTime();
-			strdt =  sdf.format(dt);
-			file = new File(str_ftp_path + strdt);
-			if(file.exists() && file.isDirectory()){
-				file.delete();
-			}
-		}
-		
-		// 当前日期字符串;
-		String strCurrDate = sdf.format(new Date());
-		// /linkfile/FileUpLoad/appFormAttachment/;
-		String fileUrl = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[]{"TZ_AFORM_FILE_DIR"},"String");
-		if(fileUrl.length() != (fileUrl.lastIndexOf("/") + 1)){
-			fileUrl = fileUrl + "/";
-		}
-		
-		
-		file = new File(str_ftp_path + strCurrDate + "/" + sysFileName);
-		if(file.exists()){
-			rtn = 0;
-		}else{
-			
-		}
-		
-		if(rtn == 0){
-			if(request.getServerPort() == 80){
-				urlReturn = "http://" + request.getServerName() + request.getContextPath() + fileUrl + strCurrDate + "/" + sysFileName;
-			}else{
-				urlReturn = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + fileUrl + strCurrDate + "/" + sysFileName;
-			}
-		}
-		return urlReturn;
-		*/
 	}
+	*/
+	
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
