@@ -846,7 +846,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		works += '</div>';
 		if(child[i].recommend_18["useby"] == "Y"){
-			works += '<div class="main_inner_content_top"><span class="reg_title_grey_17px" style="padding-left:15px;line-height:36px;font-size:15px;">Please select "None-blank" if you do not see the appropriate title in which to address your recommender.</span></div>';
+			works += '<div class="main_inner_content_top"><span class="reg_title_grey_17px" style="padding-left:15px;line-height:36px;font-size:15px;font-family: helvetica,arial,verdana,sans-serif;">Please select "None-blank" if you do not see the appropriate title in which to address your recommender.</span></div>';
 			works += '<div class="main_inner_content" style="padding-top:20px">';
 		}else{
 			works += '<div class="main_inner_content_top"></div>';
