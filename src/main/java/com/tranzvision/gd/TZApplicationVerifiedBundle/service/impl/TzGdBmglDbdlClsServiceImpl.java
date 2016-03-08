@@ -227,7 +227,12 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 								new Object[] { Long.parseLong(appInsID) });
 						if (tjxList != null && tjxList.size() > 0) {
 							for (int j = 0; j < tjxList.size(); j++) {
-								TZ_TJX_APP_INS_ID = (long) tjxList.get(j).get("TZ_TJX_APP_INS_ID");
+								try{
+									TZ_TJX_APP_INS_ID = Long.parseLong( tjxList.get(j).get("TZ_TJX_APP_INS_ID").toString());
+								}catch(Exception e){
+									TZ_TJX_APP_INS_ID = 0L;
+								}
+								
 								TJR_TZ_TJX_APP_INS_ID = String.valueOf(TZ_TJX_APP_INS_ID);
 								TJR_TZ_APP_TPL_ID = (String) tjxList.get(j).get("TZ_APP_TPL_ID");
 								// tjrName =
