@@ -63,7 +63,7 @@ public class CityClsServiceImpl extends FrameworkImpl {
 				// 根据报名表模板查询language;
 				
 				String sql = "select a.TZ_APP_TPL_LAN,b.TZ_SKIN_ID from PS_TZ_APPTPL_DY_T a, PS_TZ_SITEI_DEFN_T b where a.TZ_JG_ID=b.TZ_JG_ID AND b.TZ_SITEI_ENABLE='Y' and a.TZ_APP_TPL_ID=? limit 0,1";
-				Map<String, Object> map = jdbcTemplate.queryForObject(sql, new Object[] { TPLID }, "String");
+				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { TPLID });
 				// language = (String)map.get("TZ_APP_TPL_LAN");
 				skinId = (String) map.get("TZ_SKIN_ID");
 			}  

@@ -85,7 +85,7 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
             var _prov_id=data["itemId"] + data.children[0]["itemId"];
 
             var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-            var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TZ_CITY_ID":"' + _prov_id + '"}}';
+            var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + _prov_id + '"}}';
             provinceUrl = provinceUrl + window.escape(params);
 
             prov = $.layer({
