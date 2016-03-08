@@ -39,7 +39,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private SqlQuery sqlQuery;
 
@@ -48,7 +48,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzGetSetSessionValue tzGetSetSessionValue;
-	
+
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -69,7 +69,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -81,10 +81,10 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 
 				String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenus");
-				List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] {strSiteId});
+				List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 
 				String strMenuHtml = "";
-				
+
 				String ctxPath = request.getContextPath();
 
 				for (Map<String, Object> mapMenu : listMenus) {
@@ -104,10 +104,14 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapMenuImg = sqlQuery.queryForMap(sql,
 							new Object[] { strSiteId, strMenuId, strSiteId });
 
-					strTypeImg = mapMenuImg.get("TZ_TYPE_IMG") == null ? ""
-							: String.valueOf(mapMenuImg.get("TZ_TYPE_IMG"));
-					strNowImg = mapMenuImg.get("TZ_NOW_IMG") == null ? ""
-							: String.valueOf(mapMenuImg.get("TZ_NOW_IMG"));
+					if (null != mapMenuImg) {
+
+						strTypeImg = mapMenuImg.get("TZ_TYPE_IMG") == null ? ""
+								: String.valueOf(mapMenuImg.get("TZ_TYPE_IMG"));
+						strNowImg = mapMenuImg.get("TZ_NOW_IMG") == null ? ""
+								: String.valueOf(mapMenuImg.get("TZ_NOW_IMG"));
+
+					}
 
 					String strMenuImg = ctxPath + strTypeImg;
 
@@ -136,13 +140,13 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				}
 
 				/*
-				strMenuHtml = strMenuHtml.replace((char) (10), ' ');
-				strMenuHtml = strMenuHtml.replace((char) (13), ' ');
-				strMenuHtml = strMenuHtml.replace("\\", "\\\\");
-				strMenuHtml = strMenuHtml.replace("'", "\\'");
-				strMenuHtml = strMenuHtml.replace("\"", "\\\"");
-				*/
-				
+				 * strMenuHtml = strMenuHtml.replace((char) (10), ' ');
+				 * strMenuHtml = strMenuHtml.replace((char) (13), ' ');
+				 * strMenuHtml = strMenuHtml.replace("\\", "\\\\"); strMenuHtml
+				 * = strMenuHtml.replace("'", "\\'"); strMenuHtml =
+				 * strMenuHtml.replace("\"", "\\\"");
+				 */
+
 				Map<String, Object> mapJson = new HashMap<String, Object>();
 				mapJson.put("id", "add");
 				mapJson.put("text",
@@ -184,13 +188,13 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			
+
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 
@@ -200,7 +204,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 
 				String strReplaceCtxPath = request.getContextPath() + "/";
-				
+
 				// 类型标志;
 				String strFlag = jacksonUtil.getString("typeFlag");
 

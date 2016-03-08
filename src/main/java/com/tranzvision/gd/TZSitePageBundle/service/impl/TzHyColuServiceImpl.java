@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
+import com.tranzvision.gd.util.Calendar.CalendarUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -187,7 +188,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 				}
 
 				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColuHY("
-						+ String.valueOf(numIndex) + ","+strType+")\">" + String.valueOf(numIndex) + "</li>";
+						+ String.valueOf(numIndex) + "," + strType + ")\">" + String.valueOf(numIndex) + "</li>";
 
 				if (numNowPage > maxPageNum) {
 					if (numIndex >= numNowPage) {
@@ -204,15 +205,15 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 				if (numNowPage > 2) {
 					setNowPageNum = numNowPage - 1;
 				}
-				strDivPage = "<li onclick=\"QueryColuHY(" + String.valueOf(setNowPageNum) + ","+strType+")\">&lt;&lt;</li>"
-						+ strDivPage;
+				strDivPage = "<li onclick=\"QueryColuHY(" + String.valueOf(setNowPageNum) + "," + strType
+						+ ")\">&lt;&lt;</li>" + strDivPage;
 
 				int setTotalPageNum = numTotalPage;
 				if ((numNowPage + 1) < numTotalPage) {
 					setTotalPageNum = numNowPage + 1;
 				}
-				strDivPage = strDivPage + "<li onclick=\"QueryColuHY(" + String.valueOf(setTotalPageNum)
-						+ ","+strType+")\">&gt;&gt;</li>";
+				strDivPage = strDivPage + "<li onclick=\"QueryColuHY(" + String.valueOf(setTotalPageNum) + "," + strType
+						+ ")\">&gt;&gt;</li>";
 
 			}
 
@@ -295,11 +296,8 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			String strResultContent = "";
 			String dispatcherUrl = request.getContextPath() + "/dispatcher";
 
-			// String strDateFormat = getSysHardCodeVal.getDateFormat();
-			// SimpleDateFormat dateFormat = new
-			// SimpleDateFormat(strDateFormat);
-			SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-			SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+			String strDateFormat = getSysHardCodeVal.getDateFormat();
+			SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 
 			Date dateNow = new Date();
 
@@ -329,12 +327,14 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId
 							+ "&columnId=" + strColuId + "&artId=" + strArtId + "&oprate=R";
 
+					CalendarUtil calendarUtil = new CalendarUtil(dateFormat.parse(dtAct));
+
 					strResultContent = strResultContent
 							+ "<div class=\"main_mid_activity_list2\"><div class=\"main_mid_activity_list_date\"><div class=\"main_mid_activity_list_date_month\">"
-							+ monthFormat.format(monthFormat.parse(dtAct))
+							+ calendarUtil.getDateMonthWord(strLang)
 							+ "</div><div class=\"main_mid_activity_list_date_day\">"
-							+ dayFormat.format(dayFormat.parse(dtAct))
-							+ "</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href="
+							+ calendarUtil.getDateDay()
+							+"</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href="
 							+ strUrl + ">" + strActName + "</a><br /><span class=\"font_gray_14px\">【" + strActCity
 							+ "】-</span><span class=\"font_gray_14px\">" + dtAct + "</span></div>";
 
