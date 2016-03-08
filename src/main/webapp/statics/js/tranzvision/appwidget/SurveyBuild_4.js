@@ -2371,113 +2371,116 @@ var SurveyBuild = {
         this._items[b].edit = 1;
         this._items[b].emptyText = $(a).val();
     },
-
-    init: function(a) {
-        $("#question-edit").on("keydown", "input:text",
-        function(d) {
-            if (d.which == 9) {
-                var b = $(":text").length,
-                c = $(":text").index(this);
-                c = ++c == b ? 0 : c;
-                $(":text").eq(c).focus().select();
-                return false
-            }
-        });
-        $("#question-type-box li.move").draggable({
-            connectToSortable: "#question-box,.DHContainer",
-            addClasses: false,
-            appendTo: "#build-box",
-            snapTolerance: 300,
-            revert: "invalid",
-            helper: function() {
-                return $('<div class="draggable-holder">' + $(this).html() + "</div>")
-            },
-            stop: function(event, ui) {
-                $(".DHSort").sortable({
-                    cursor: "move",
-                    axis: "y",
-                    opacity: 0.6,
-                    revert: true,
-                    //connectWith: '.DHContainer',
-                    receive: function(event, ui) {
-                        SurveyBuild.isDHForTwo = true;
-                        SurveyBuild.isDHContainer = true;
-                        SurveyBuild.currentDHID = $(event.target).closest("li").attr("data_id");
-                        SurveyBuild.add(ui.item.attr("data-classname"), $(event.target));
-                    },
-                    update: function(event, ui) {
-                        var dhObj = $(this).closest(".DHContainer");
-                        SurveyBuild.dhSort(dhObj);
-                    }
-                }).disableSelection();
-            }
-        });
-        $("#question-box").sortable({
-            cursor: "move",
-            // placeholder: "place-holder",
-            axis: "y",
-            opacity: 0.6,
-            revert: true,
-            cancel: "#question-new",
-            receive: function(event, ui) {
-                if (SurveyBuild.isDHForTwo != true) {
-                    SurveyBuild.isDHContainer = false;
-                    SurveyBuild.add(ui.item.attr("data-classname"), 1);
-                } else {
-                    SurveyBuild.isDHForTwo = false;
-                    $("#question-box>li").each(function(e) {
-                        if ($(this).attr("data-classname")) {
-                            $(this).remove();
-                            return
-                        }
-                    });
-                }
-
-            },
-            update: function(c, b) {
+	init: function(a) {
+		$("#question-edit").on("keydown", "input:text",
+		function(d) {
+			if (d.which == 9) {
+				var b = $(":text").length,
+				c = $(":text").index(this);
+				c = ++c == b ? 0 : c;
+				$(":text").eq(c).focus().select();
+				return false
+			}
+		});
+		$("#question-type-box li.move").draggable({
+			connectToSortable: "#question-box,.DHContainer",
+			addClasses: false,
+			appendTo: "#build-box",
+			snapTolerance: 300,
+			revert: "invalid",
+			helper: function() {
+				console.log("1.>");
+				return $('<div class="draggable-holder">' + $(this).html() + "</div>")
+			},
+			stop: function(event, ui) {
+				$(".DHSort").sortable({
+					cursor: "move",
+					axis: "y",
+					opacity: 0.6,
+					revert: true,
+					//connectWith: '.DHContainer',
+					receive: function(event, ui) {
+						SurveyBuild.isDHForTwo = true;
+						SurveyBuild.isDHContainer = true;
+						SurveyBuild.currentDHID = $(event.target).closest("li").attr("data_id");
+						console.log("2.>");
+						SurveyBuild.add(ui.item.attr("data-classname"), $(event.target));
+					},
+					update: function(event, ui) {
+						console.log("3.>");
+						var dhObj = $(this).closest(".DHContainer");
+						SurveyBuild.dhSort(dhObj);
+					}
+				}).disableSelection();
+			}
+		});
+		$("#question-box").sortable({
+			cursor: "move",
+			// placeholder: "place-holder",
+			axis: "y",
+			opacity: 0.6,
+			revert: true,
+			cancel: "#question-new",
+			receive: function(event, ui) {
+				if (SurveyBuild.isDHForTwo != true) {
+					SurveyBuild.isDHContainer = false;
+					SurveyBuild.add(ui.item.attr("data-classname"), 1);
+				} else {
+					SurveyBuild.isDHForTwo = false;
+					$("#question-box>li").each(function(e) {
+						$(".draggable-holder").remove();
+						//if ($(this).attr("data-classname")) {
+						//	$(this).remove();
+						//	return
+						//}
+					});
+				}
+			},
+			update: function(c, b) {
 				SurveyBuild.sort();
-            }
-        }).disableSelection();
+			}
+		}).disableSelection();
 
-       window.onbeforeunload = function() {
-            if (SurveyBuild.is_edit) {
-                return "当前页面有未保存内容\n选择“离开页面” 会丢失当前编辑的内容\n选择“留在此面” 可以继续编辑问题然后保存离开"
-            }
-        };
-        this._initHelpDesc();
-        this._htmlSet();
+		window.onbeforeunload = function() {
+			if (SurveyBuild.is_edit) {
+				return "当前页面有未保存内容\n选择“离开页面” 会丢失当前编辑的内容\n选择“留在此面” 可以继续编辑问题然后保存离开"
+			}
+		};
+		this._initHelpDesc();
+		this._htmlSet();
 
-        var events = '{"SA_A": "保存事件后","LO_A": "加载事件后","SU_A": "提交事件后"}';
-        this._events = JSON.parse(events);
-        this._items = this._data["items"];
-        $("#question-edit").on("keypress", ".qcode,.ocode,.ccode",
-        function(c) {
-            var b = c.which;
-            return b == 8 || b == 127 || b == 0 || b == 95 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
-        });
-        $("#question-edit").on("keypress", ".datemax,.datemin,.timertime",
-        function(c) {
-            var b = c.which;
-            return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
-        });
-        SurveyBuild._tid = a;
+		var events = '{"SA_A": "保存事件后","LO_A": "加载事件后","SU_A": "提交事件后"}';
+		this._events = JSON.parse(events);
 
-        if (SurveyBuild._items) {
-            SurveyBuild._load();
-            loaded($("#question-wrap"))
-        }
-        $(".DHSort").sortable({
-            cursor: "move",
-            axis: "y",
-            opacity: 0.6,
-            revert: true,
-            //connectWith: '.DHContainer',
-            update: function(c, b) {
-                var dhObj = $(this).closest(".DHContainer");
-                SurveyBuild.dhSort(dhObj);
-            }
-        }).disableSelection();
-    },
+		this._items = this._data["items"];
+		$("#question-edit").on("keypress", ".qcode,.ocode,.ccode",
+		function(c) {
+			var b = c.which;
+			return b == 8 || b == 127 || b == 0 || b == 95 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
+		});
+		$("#question-edit").on("keypress", ".datemax,.datemin,.timertime",
+		function(c) {
+			var b = c.which;
+			return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
+		});
+		SurveyBuild._tid = a;
+
+		if (SurveyBuild._items) {
+			SurveyBuild._load();
+			loaded($("#question-wrap"))
+		}
+		$(".DHSort").sortable({
+			cursor: "move",
+			axis: "y",
+			opacity: 0.6,
+			revert: true,
+			//connectWith: '.DHContainer',
+			update: function(c, b) {
+				var dhObj = $(this).closest(".DHContainer");
+				SurveyBuild.dhSort(dhObj);
+			}
+		}).disableSelection();
+	},
     _load: function (b) {
         var a = "", d = false;
         this._count = 0;

@@ -2332,7 +2332,13 @@ var SurveyBuild = {
                         _fileChildren[0].orderby = "";
                         _fileChildren[0].accessPath = "";
                         _fileChildren[0].viewFileName = "";
-                    }
+                    }else{
+						_fc[ins]["filename"] = "";
+						_fc[ins]["sysFileName"] = "";
+						_fc[ins]["path"] = "";
+						_fc[ins]["accessPath"] = "";
+						_fc[ins]["value"] = "";
+					}
 				}
             }
             if (!isFixedCon || isFixedCon != "Y"){

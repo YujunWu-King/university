@@ -82,7 +82,7 @@ SurveyBuild.extend("workExperience", "baseComponent", {
             c += works;
             c += '	<div class="main_inner_content_info">';
             c += '		<div id="main_inner_content_info_save0">';
-			c += '			<div id="save1" class="bt_blue">' + MsgSet["SAVE"] + '</div>';
+			c += '			<div id="saveWork" class="bt_blue" onclick="SurveyBuild.saveApp();">' + MsgSet["SAVE"] + '</div>';
 			c += '			<a href="#" class="alpha"></a>';
 			c += '		</div>';
             c += '		<div style="display: inherit;" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');">';

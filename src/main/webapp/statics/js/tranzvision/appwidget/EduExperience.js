@@ -11,7 +11,8 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			"title": MsgSet["LEARN_PHASE"],
 			"orderby": 1,
 			"value": "",
-			"StorageType": "S"
+			"StorageType": "S",
+			"classname":"Select"
 		},
 		"EduExper2": {
 			"instanceId": "EduExper2",
@@ -148,7 +149,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 			c +=  	edus ;
 			c += '	<div class="main_inner_content_info">';
 			c += '		<div id="main_inner_content_info_save0">';
-			c += '			<div id="save1" class="bt_blue">' + MsgSet["SAVE"] + '</div>';
+			c += '			<div id="saveEdu" class="bt_blue" onclick="SurveyBuild.saveApp();">' + MsgSet["SAVE"] + '</div>';
 			c += '			<a href="#" class="alpha"></a>';
 			c += '		</div>';
 
@@ -531,7 +532,7 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 		
 		var $startDtImg = $("#"+data["itemId"]+children[len-1].EduExper2["itemId"] + "_Btn");
 		var $endDtImg = $("#"+data["itemId"]+children[len-1].EduExper3["itemId"] + "_Btn");
-		
+
 		//就读院校
 		var $school = $("#"+data["itemId"]+children[len-1].EduExper5["itemId"]);
 		var $selectBtn = $("#"+data["itemId"]+children[len-1].EduExper5["itemId"] + "_Btn");
@@ -572,8 +573,6 @@ SurveyBuild.extend("EduExperience","baseComponent",{
 				$(this).closest(".tz_checkbox_div").removeClass("on_check");
 			}
 		});	
-			
-		
 		
 		if (data.isRequire == "Y"){
 			$studyStage.formValidator({tipID:data["itemId"]+children[len-1].EduExper1["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"})			
