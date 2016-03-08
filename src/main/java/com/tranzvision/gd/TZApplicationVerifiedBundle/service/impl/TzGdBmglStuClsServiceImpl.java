@@ -563,7 +563,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						if ("bmr".equals(strComClassName.substring(0, 3))) {
 							strInfoValue = strInfoDesc;
 						}
-
 						arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 					}
 				} 
@@ -619,8 +618,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				if (gridColumnList != null) {
 					for (int j = 0; j < gridColumnList.size(); j++) {
 						strColumnID = (String) gridColumnList.get(j).get("TZ_DC_FIELD_ID");
-						// strColumnName =
-						// (String)gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
+						String strColumnName = (String)gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
 						strColumnSpe = (String) gridColumnList.get(j).get("TZ_DC_FIELD_FGF");
 
 						String strColumnValue = ""; /* 当前考生对应当前列的值 */
@@ -658,7 +656,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 							}
 						}
-						strGridExpandDataMap.put("itemName", strColumnID);
+						strGridExpandDataMap = new HashMap<>();
+						strGridExpandDataMap.put("itemName", strColumnName);
 						strGridExpandDataMap.put("itemValue",strColumnValue);
 						listData.add(strGridExpandDataMap);
 					}
