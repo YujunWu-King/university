@@ -67,7 +67,8 @@ public class CmsUtils {
 		root.put(SITE_ID, siteId);
 		root.put("TzUniversityContextPath", contentPath);
 		
-		String jsAndCss = "<link href=\""+contentPath+"/statics/css/website/orgs/"+jgId.toLowerCase()+"/"+siteId+"/style_"+jgId.toLowerCase()+".css\" rel=\"stylesheet\" type=\"text/css\" />"
+		String strRandom = String.valueOf(10*Math.random());
+		String jsAndCss = "<link href=\""+contentPath+"/statics/css/website/orgs/"+jgId.toLowerCase()+"/"+siteId+"/style_"+jgId.toLowerCase()+".css?v="+ strRandom +"\" rel=\"stylesheet\" type=\"text/css\" />"
 				+ "<script type=\"text/javascript\" src=\""+contentPath+"/statics/js/lib/jquery/jquery.min.js\"></script>"
 				+ "<script type=\"text/javascript\" src=\""+contentPath+"/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
 				+ "<script type=\"text/javascript\" src=\""+contentPath+"/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
