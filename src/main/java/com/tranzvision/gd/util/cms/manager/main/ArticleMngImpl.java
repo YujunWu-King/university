@@ -96,9 +96,10 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setOpenActApp("N");
 				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
 						+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
-						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=?";
+						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? LIMIT 0,1";
+
 				try{
-					Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL,new Object[]{titleSysFileId});
+					Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL,new Object[]{id});
 					if(hdMap != null){
 						art.setStartDate((Date)hdMap.get("TZ_START_DT"));
 						art.setStartTime((Date)hdMap.get("TZ_START_TM"));
@@ -111,7 +112,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						}
 						art.setOpenActApp(isOpenHdBm);
 					}
-				}catch(Exception e){	
+				}catch(Exception e){
+					e.printStackTrace();
 				}
 				
 				

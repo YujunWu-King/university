@@ -516,7 +516,6 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
 		//判断是前台登录还是后台登录;
 		String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
-	   
 		if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 			// 查询机构是不是存在;
 			String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";

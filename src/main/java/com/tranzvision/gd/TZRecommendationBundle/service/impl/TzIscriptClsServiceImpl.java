@@ -281,13 +281,14 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 	public String tzGetJsonData(String strParams){
 		Map<String, Object> returnMap = new HashMap<>();
 		returnMap.put("TJX_ZT", "");
-		 returnMap.put("zhs_qy", "");
-		 returnMap.put("eng_qy", "");
-		 returnMap.put("tjxAppInsID", "");
-		 returnMap.put("refLetterId", "");
-		 returnMap.put("refAppTplId", "");
-		 returnMap.put("refFileName", "");
-		 returnMap.put("refFileUrl", "");
+		returnMap.put("zhs_qy", "");
+		returnMap.put("eng_qy", "");
+		returnMap.put("tjxAppInsID", "");
+		returnMap.put("refLetterId", "");
+		returnMap.put("refAppTplId", "");
+		returnMap.put("refFileName", "");
+		returnMap.put("refFileUrl", "");
+		returnMap.put("viewFileName", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -389,7 +390,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 returnMap.replace("refAppTplId", str_tjx_app_tpl_id);
 			 returnMap.replace("refFileName", str_refLetterSysFile);
 			 returnMap.replace("refFileUrl", str_att_a_url);
-			 
+			 returnMap.replace("viewFileName", str_refLetterUserFile);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

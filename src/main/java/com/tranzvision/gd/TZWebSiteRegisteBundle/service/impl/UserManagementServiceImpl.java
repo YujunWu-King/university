@@ -250,6 +250,12 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 						fieldsArr.add("TZ_SCH_CNAME");
 						fieldsArr.add("TZ_LEN_PROID");
 						fieldsArr.add("TZ_LEN_CITY");
+						ArrayList<String> doNotShowFieldsArr = new ArrayList<>();
+						doNotShowFieldsArr.add("TZ_PASSWORD");
+						doNotShowFieldsArr.add("TZ_REPASSWORD");
+						if(doNotShowFieldsArr.contains(regFieldId)){
+							continue;
+						}
 						if (fieldsArr.contains(regFieldId)) {
 							// 性别;
 							if ("TZ_GENDER".equals(regFieldId)) {
@@ -523,25 +529,15 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 		String strResultConten = "";
 		if ("USERINFO".equals(oprType)) {
 			strResultConten = this.getUserInfo(comParams, errorMsg);
-		}
-
-		if ("SAVEUSERINFO".equals(oprType)) {
+		}else if ("SAVEUSERINFO".equals(oprType)) {
 			strResultConten = this.saveUserInfo(comParams, errorMsg);
-		}
-
-		if ("PWD".equals(oprType)) {
+		}else if ("PWD".equals(oprType)) {
 			strResultConten = this.savePassword(comParams, errorMsg);
-		}
-
-		if ("NOTICE".equals(oprType)) {
+		}else if ("NOTICE".equals(oprType)) {
 			strResultConten = this.saveNotice(comParams, errorMsg);
-		}
-
-		if ("EMAIL".equals(oprType)) {
+		}else if ("EMAIL".equals(oprType)) {
 			strResultConten = this.bindOrUnbindEmail(comParams, errorMsg);
-		}
-
-		if ("MOBILE".equals(oprType)) {
+		}else if ("MOBILE".equals(oprType)) {
 			strResultConten = this.bindOrUnbindMobile(comParams, errorMsg);
 		}
 		return strResultConten;
@@ -616,8 +612,8 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			String lxfsSQL = "select TZ_ZY_SJ,TZ_ZY_EMAIL from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 			Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { oprid });
 			if (lxfsMap != null) {
-				returnMap.put("userEmail", yhxxMap.get("TZ_ZY_EMAIL"));
-				returnMap.put("userMoblie", yhxxMap.get("TZ_ZY_SJ"));
+				returnMap.put("userEmail", lxfsMap.get("TZ_ZY_EMAIL"));
+				returnMap.put("userMoblie", lxfsMap.get("TZ_ZY_SJ"));
 			}
 
 			// 绑定/解除绑定邮箱;
@@ -746,12 +742,12 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 
 					}
 
-					if ("TZ_EMAIL".equals(regFieldId) && strUserEmail != null && !"".equals(strUserEmail)) {
+					if ("TZ_EMAIL".equals(regFieldId) && (strUserEmail == null || "".equals(strUserEmail))) {
 						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
 								regFieldYsmc + " " + strBlankTips);
 					}
 
-					if ("TZ_MOBILE".equals(regFieldId) && strUserMoblie != null && !"".equals(strUserMoblie)) {
+					if ("TZ_MOBILE".equals(regFieldId) && (strUserMoblie == null || "".equals(strUserMoblie))) {
 						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
 								regFieldYsmc + " " + strBlankTips);
 					}

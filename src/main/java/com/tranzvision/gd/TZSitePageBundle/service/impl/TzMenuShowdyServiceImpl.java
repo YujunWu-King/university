@@ -81,7 +81,7 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 				}
 
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidBySiteidMenuid");
-				String strColuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
+				String strColuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
 
 				if (null != strColuId && !"".equals(strColuId)) {
 
@@ -91,14 +91,14 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapArtInfo = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strColuId });
 
 					String str_art_id = mapArtInfo.get("TZ_ART_ID") == null ? ""
-							: String.valueOf(mapSiteInfo.get("TZ_ART_ID"));
+							: String.valueOf(mapArtInfo.get("TZ_ART_ID"));
 					String str_html = mapArtInfo.get("TZ_ART_CONENT_SCR") == null ? ""
-							: String.valueOf(mapSiteInfo.get("TZ_ART_CONENT_SCR"));
+							: String.valueOf(mapArtInfo.get("TZ_ART_CONENT_SCR"));
 
 					String dtFormat = getSysHardCodeVal.getDateTimeFormat();
 					SimpleDateFormat format = new SimpleDateFormat(dtFormat);
 					Date dt = mapArtInfo.get("TZ_ART_NEWS_DT") == null ? dateNow
-							: format.parse(String.valueOf(mapSiteInfo.get("TZ_ART_NEWS_DT")));
+							: format.parse(String.valueOf(mapArtInfo.get("TZ_ART_NEWS_DT")));
 
 					if (null != str_art_id && !"".equals(str_art_id)) {
 
@@ -155,7 +155,7 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 			
 			strRet = siteRepCssServiceImpl.repContextPath(strRet);
 			strRet = siteRepCssServiceImpl.repTitle(strRet, strSiteId);
-			strRet = siteRepCssServiceImpl.repCss(strRet, strSiteId);
+			//strRet = siteRepCssServiceImpl.repCss(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repSiteid(strRet, strSiteId);
 			strRet = siteRepCssServiceImpl.repJgid(strRet, strOrgid.toUpperCase());
 			strRet = siteRepCssServiceImpl.repLang(strRet, strLang.toUpperCase());
