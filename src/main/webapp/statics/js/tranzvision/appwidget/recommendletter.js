@@ -809,7 +809,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		if(_refFileUrl!="")
 		{
-			_tjx_zt="已完成";
+			//_tjx_zt="已完成";
 		}
 		var _zd="";
 		if (_tjx_zt=="已完成"){
@@ -1476,7 +1476,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//推荐信状态
 			works += '<div class="main_inner_content_info_autoheight" id="Tjxzt_'+i+'" style="text-align:center;display:none">';
 			works += '<div id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="font_orange_16px">'+_tjx_zt+'</span>';
-			/*推荐信链接*/
+			//推荐信链接
 			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
 					works += '&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewUrl("'+refLetterUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
