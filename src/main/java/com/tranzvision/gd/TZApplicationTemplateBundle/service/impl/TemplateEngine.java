@@ -656,10 +656,16 @@ public class TemplateEngine {
 
 		// 多选最少选择个数
 		String minSelect = item.get("minSelect") == null ? "0" : String.valueOf(item.get("minSelect"));
+		if("".equals(minSelect)){
+			minSelect = "0";
+		}
 		psTzAppXxxPz.setTzXxxZsxzgs(Integer.parseInt(minSelect));
 
 		// 多选最多选择个数
 		String maxSelect = item.get("maxSelect") == null ? "0" : String.valueOf(item.get("maxSelect"));
+		if("".equals(maxSelect)){
+			maxSelect = "0";
+		}
 		psTzAppXxxPz.setTzXxxZdxzgs(Integer.parseInt(maxSelect));
 
 		// 允许上传类型
@@ -668,6 +674,9 @@ public class TemplateEngine {
 
 		// 允许上传大小
 		String yxscdx = item.get("yxscdx") == null ? "0" : String.valueOf(item.get("yxscdx"));
+		if("".equals(yxscdx)){
+			yxscdx = "0";
+		}
 		psTzAppXxxPz.setTzXxxYxscdx(Integer.parseInt(yxscdx));
 
 		// 允许多附件上传
@@ -695,11 +704,18 @@ public class TemplateEngine {
 		psTzAppXxxPz.setTzXxxCharBz(isCheckStrLen);
 
 		// 最小长度
-		String minLen = item.get("minLen") == null ? "0" : String.valueOf(item.get("minLen"));
+		String minLen = item.get("minLen") == null ? "0" :  String.valueOf(item.get("minLen"));
+		
+		if("".equals(minLen)){
+			minLen = "0";
+		}
 		psTzAppXxxPz.setTzXxxMinlen(Integer.parseInt(minLen));
 
 		// 最大长度
 		String maxLen = item.get("maxLen") == null ? "0" : String.valueOf(item.get("maxLen"));
+		if("".equals(maxLen)){
+			maxLen = "0";
+		}
 		psTzAppXxxPz.setTzXxxMaxlen(Integer.parseInt(maxLen));
 
 		// 是否限制数字范围
@@ -708,14 +724,23 @@ public class TemplateEngine {
 
 		// 最小值
 		String min = item.get("min") == null ? "0" : String.valueOf(item.get("min"));
+		if("".equals(min)){
+			min = "0";
+		}
 		psTzAppXxxPz.setTzXxxMin(Long.parseLong(min));
 
 		// 最大值
 		String max = item.get("max") == null ? "0" : String.valueOf(item.get("max"));
+		if("".equals(max)){
+			max = "0";
+		}
 		psTzAppXxxPz.setTzXxxMax(Long.parseLong(max));
 
 		// 小数位数
 		String digits = item.get("digits") == null ? "0" : String.valueOf(item.get("digits"));
+		if("".equals(digits)){
+			digits = "0";
+		}
 		psTzAppXxxPz.setTzXxxXsws(Integer.parseInt(digits));
 
 		// 固定规则校验
@@ -728,10 +753,16 @@ public class TemplateEngine {
 
 		// 最小行记录数
 		String minLines = item.get("minLines") == null ? "0" : String.valueOf(item.get("minLines"));
+		if("".equals(minLines)){
+			minLines = "0";
+		}
 		psTzAppXxxPz.setTzXxxMinLine(Integer.parseInt(minLines));
 
 		// 最大行记录数
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
+		if("".equals(maxLines)){
+			maxLines = "0";
+		}
 		psTzAppXxxPz.setTzXxxMaxLine(Integer.parseInt(maxLines));
 
 		// 是否为单行组合
