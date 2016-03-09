@@ -323,6 +323,10 @@ public class ComRegImpl extends FrameworkImpl {
 				psTzAqPagzcTbl.setTzPageId(sPageID);
 				
 				psTzAqPagzcTblMapper.deleteByPrimaryKey(psTzAqPagzcTbl);
+				
+				//如果页面删除了，则删除改组件和页面对应的权限;
+				String deleteSQL = "DELETE from PS_TZ_AQ_COMSQ_TBL WHERE TZ_COM_ID=? AND TZ_PAGE_ID=?";
+				jdbcTemplate.update(deleteSQL,new Object[]{sComID,sPageID});
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";
