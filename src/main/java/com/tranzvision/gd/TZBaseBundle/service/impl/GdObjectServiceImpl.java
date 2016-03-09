@@ -51,6 +51,11 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 * Cookie存储的机构id
 	 */
 	private final static String cookieJgId = "tzmo";
+	
+	/**
+	 * 记录登录类型，后台 - GLY；前台 - SQR；
+	 */
+	private final static String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -509,16 +514,26 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
 		// 得到语言;
 		String tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-
+		//判断是前台登录还是后台登录;
+		String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
+	   
 		if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 			// 查询机构是不是存在;
 			String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
 			int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
-			if (count > 0) {
-				tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
-			} else {
-				tmpLoginURL = request.getContextPath() + "/login";
+			if("SQR".equals(tmpLoginType)){
+				String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE lower(TZ_JG_ID)=lower(?) AND TZ_SITEI_ENABLE='Y' order by TZ_LASTMANT_DTTM desc limit 0,1", new Object[]{tmpOrgID},"String");
+				if(!"".equals(siteId)){
+					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
+				}
+			}else{
+				if (count > 0) {
+					tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
+				} else {
+					tmpLoginURL = request.getContextPath() + "/login";
+				}
 			}
+			
 		} else {
 			tmpOrgID = "";
 			tmpLoginURL = request.getContextPath() + "/login";

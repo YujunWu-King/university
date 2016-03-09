@@ -155,6 +155,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					int XUHAO = getSeqNum.getSeqNum("TZ_ZLDB_AE", "TZ_PACKAGE_ID");
 					String ID = "000000000" + String.valueOf(XUHAO);
 					ID = ID.substring(ID.length() - 9, ID.length());
+					ID = currentOprid+"_"+dateFormate+"_"+ ID;
 
 					String fjlj = "";
 					String packDir = "";
@@ -190,12 +191,20 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						String OPRID = jdbcTemplate.queryForObject(
 								"SELECT OPRID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ?",
 								new Object[] { Long.parseLong(appInsID) }, "String");
+						String relName = jdbcTemplate.queryForObject(
+								"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?",
+								new Object[] { OPRID }, "String");
+						if(relName!=null && !"".equals(relName)){
+							relName = relName.replaceAll(" ", "_");
+						}else{
+							relName = "";
+						}
 						String TZ_APP_TPL_ID = jdbcTemplate.queryForObject(
 								"SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?",
 								new Object[] { Long.parseLong(appInsID) }, "String");
 						tzDealWithXMLServiceImpl.replaceXMLPulish(appInsID, OPRID, TZ_APP_TPL_ID, true,
-								fjlj + "/" + appInsID, errMsg);
-						String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID);
+								fjlj + "/" + appInsID+"_"+relName, errMsg);
+						String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID+"_"+relName);
 						File tF = new File(tFile);
 						if (!tF.exists()) {
 							tF.mkdirs();
@@ -282,17 +291,24 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						}
 
 						/* 如果是从后台上传的推荐信 */
-						String sqlTjx2 = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y'";
+						String sqlTjx2 = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y'";
 						List<Map<String, Object>> tjxList2 = jdbcTemplate.queryForList(sqlTjx2,
 								new Object[] { appInsID });
 						if (tjxList2 != null && tjxList2.size() > 0) {
 							for (int j = 0; j < tjxList2.size(); j++) {
 								str_attachfilename = (String) tjxList2.get(j).get("ATTACHSYSFILENAME");
 								str_attachfile = (String) tjxList2.get(j).get("ATTACHUSERFILE");
+								String accessPath = (String) tjxList2.get(j).get("TZ_ACCESS_PATH");
 								if (str_attachfilename != null && !"".equals(str_attachfilename)
-										&& str_attachfile != null && !"".equals(str_attachfile)) {
+										&& str_attachfile != null && !"".equals(str_attachfile)
+										&& accessPath != null && !"".equals(accessPath)) {
 									str_attachfile.replaceAll("/", "_");
-									String sFile = "";
+									String sFile = request.getServletContext().getRealPath(accessPath);
+									if(sFile.lastIndexOf(File.separator) + 1 == sFile.length()){
+										sFile = sFile + str_attachfilename;
+									}else{
+										sFile = sFile + File.separator + str_attachfilename;
+									}
 									this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
 								}
 							}
@@ -306,7 +322,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					
 			    	sourcePathArr.add(sourceDir);
 			    	String packDir2 = request.getServletContext().getRealPath(packDir);
-			    	packDir2 = packDir2 + File.separator + fileName.replaceAll("/", "") + "_" + ID + ".rar";
+			    	packDir2 = packDir2 + File.separator + ID + ".rar";
 			        this.createZip(sourcePathArr,packDir2);
 			        Psprcsrqst psprcsrqst2 = psprcsrqstMapper.selectByPrimaryKey(processInstance);
 					if(psprcsrqst2 != null){
@@ -317,7 +333,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					PsTzExcelDattT psTzExcelDattT2 = psTzExcelDattTMapper.selectByPrimaryKey(processInstance);
 					if(psTzExcelDattT2 != null){
 						psTzExcelDattT2.setTzFwqFwlj(packDir);
-						psTzExcelDattT2.setTzSysfileName(fileName.replaceAll("/", "") + "_" + ID + ".rar");
+						psTzExcelDattT2.setTzSysfileName( ID + ".rar");
 						psTzExcelDattTMapper.updateByPrimaryKey(psTzExcelDattT2);
 					}
 				}
@@ -484,4 +500,44 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
  		}
  		return jacksonUtil.Map2json(returnJsonMap);
  	}
+ 	
+ 	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+ 		String strReturn = "{}";
+		if(actData == null || actData.length == 0 ){
+			return strReturn;
+		}
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		for(int i = 0; i<actData.length; i++){
+			String strComInfo = actData [i];
+			jacksonUtil.json2Map(strComInfo);
+			String AEId = jacksonUtil.getString("AEId");
+			if(AEId != null && !"".equals(AEId)){
+				int processinstance = Integer.parseInt(AEId);
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(processinstance);
+				if(psTzExcelDattT != null){
+					String lj = psTzExcelDattT.getTzFwqFwlj();
+					String fileName = psTzExcelDattT.getTzSysfileName();
+					if(lj != null && !"".equals(lj)
+						&& fileName != null && !"".equals(fileName)){
+						lj = request.getServletContext().getRealPath(lj);
+						if(lj.lastIndexOf(File.separator) + 1 != lj.length()){
+							lj = lj + File.separator + fileName;
+						}else{
+							lj = lj + fileName;
+						}
+						File file = new File(lj);
+						if(file.exists() && file.isFile()){
+							file.delete();
+						}
+					}
+				}
+				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);
+				psTzExcelDattTMapper.deleteByPrimaryKey(processinstance);
+				psprcsrqstMapper.deleteByPrimaryKey(processinstance);
+				
+			}
+		}
+		return strReturn;
+	}
 }
