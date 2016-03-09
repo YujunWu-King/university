@@ -29,7 +29,7 @@
             tpl: [
                 '<tpl for=".">',
                     '<div class="send-type-item" style="float:left;margin:30px 20px;cursor:pointer">',
-                        '<img src="/tranzvision/kitchensink/resources/images/msgtype-icons/{thumb}" />',
+                        '<img src="'+ TzUniversityContextPath +'/statics/images/tranzvision/{thumb}" />',
                         '<h3 style="text-align:center;font-size:12px;font-weight:bold;">{name}</h3>',
                     '</div>',
                 '</tpl>'

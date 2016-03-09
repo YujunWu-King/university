@@ -3,6 +3,7 @@
  */
 package com.tranzvision.gd.TZEventsBundle.service.impl;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -151,7 +152,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 					Map<String, Object> mapParams = new HashMap<String, Object>();
 
-					String strUrl = request.getContextPath() + "/dispatcher?tzParams=";
+					String strBaseUrl = request.getContextPath() + "/dispatcher?tzParams=";
 
 					String btnHtml = "";
 
@@ -167,9 +168,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 						String strUrlParams = jacksonUtil.Map2json(mapParams);
 
-						strUrl = strUrl + strUrlParams;
-
-						strUrl = strUrl.replace("\"", "\\\"");
+						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
 
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_CANCEL_BTN", strUrl,
 								cancelText);
@@ -184,10 +183,8 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						mapParams.put("comParams", mapComParams);
 
 						String strUrlParams = jacksonUtil.Map2json(mapParams);
-
-						strUrl = strUrl + strUrlParams;
-
-						strUrl = strUrl.replace("\"", "\\\"");
+						
+						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
 
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_APPLY_BTN", strUrl,
 								onlineApplyText);
@@ -206,23 +203,21 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 								strActXW, String.valueOf(numYBM), String.valueOf(numWait), allSeatText, appliedNumText,
 								waitingNumText);
 						break;
-					case "":
+					case "3":
 						/* 显示总席位数，已报名人数，且可以查看已报名人的姓名 */
 						if (numYBM > 0) {
 							// 生成查看报名人的URL
 
-							mapComParams.put("APPLYID", strApplyId);
+							mapComParams.replace("APPLYID", strApplyId);
 
-							mapParams.put("ComID", "TZ_APPONL_COM");
-							mapParams.put("PageID", "TZ_APPINFO_STD");
-							mapParams.put("OperateType", "HTML");
-							mapParams.put("comParams", mapComParams);
+							mapParams.replace("ComID", "TZ_APPONL_COM");
+							mapParams.replace("PageID", "TZ_APPINFO_STD");
+							mapParams.replace("OperateType", "HTML");
+							mapParams.replace("comParams", mapComParams);
 
 							String strUrlParams = jacksonUtil.Map2json(mapParams);
 
-							strUrl = strUrl + strUrlParams;
-
-							strUrl = strUrl.replace("\"", "\\\"");
+							String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
 
 							String strYBMurl = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_A",
 									strUrl, String.valueOf(numYBM));
