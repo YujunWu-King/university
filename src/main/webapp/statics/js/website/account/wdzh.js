@@ -29,27 +29,34 @@ $(document)
 					$("#BIRTHDATE").click(function() {
 						laydate();
 					});
-					$.each([ $("#TZ_COUNTRY"), $("#TZ_COUNTRY_click") ],
-							function(i, el) {
-								el.click(function(e) {
-									var countryUrl = encodeURI(tzGdWdzhCountryUrl);
-									$("#ParamCon").val("TZ_COUNTRY");
-									s = $.layer({
-										type : 2,
-										title : false,
-										fix : false,
-										closeBtn : false,
-										shadeClose : false,
-										shade : [ 0.3, '#000', true ],
-										border : [ 3, 0.3, '#000', true ],
-										offset : [ '50%', '' ],
-										area : [ '830px', '610px' ],
-										iframe : {
-											src : countryUrl
-										},
+					$
+							.each(
+									[ $("#TZ_COUNTRY"), $("#TZ_COUNTRY_click") ],
+									function(i, el) {
+										el
+												.click(function(e) {
+													var countryUrl = encodeURI(tzGdWdzhCountryUrl);
+													$("#ParamCon").val(
+															"TZ_COUNTRY");
+													s = $.layer({
+														type : 2,
+														title : false,
+														fix : false,
+														closeBtn : false,
+														shadeClose : false,
+														shade : [ 0.3, '#000',
+																true ],
+														border : [ 3, 0.3,
+																'#000', true ],
+														offset : [ '50%', '' ],
+														area : [ '830px',
+																'610px' ],
+														iframe : {
+															src : countryUrl
+														},
+													});
+												});
 									});
-								});
-							});
 					$("#TZ_COUNTRY_click").mouseover(function() {
 						$("#TZ_COUNTRY_click").css("cursor", "pointer");
 					});
@@ -352,7 +359,7 @@ function changeBindMobile() {
 					$("#bind_Mobile").html(tzGdWdzhReleaseBind);
 				} else {
 					$("#BindMobile").html(tzGdWdzhAbsence);
-					$("#bind_Mobile").html(tzGdWdzhDoBind);
+					$("#bind_Mobile").html(tzGdWdzhDoBind).attr("phonebindstate","N");
 					$("#change_Mobile").hide();
 				}
 				alert(tzGdWdzhPassSucTips);
@@ -383,25 +390,25 @@ function openUpload() {
 	});
 }
 function changeEmail() {
-	var changeEmailUrl = encodeURI(tzGdWdzhChangeEmailUrl);
-	$.layer({
-		type : 2,
-		title : false,
-		fix : false,
-		closeBtn : 2,
-		shadeClose : false,
-		shade : [ 0.3, '#000', true ],
-		border : [ 3, 0.3, '#000', true ],
-		offset : [ '100%', '' ],
-		area : [ '589px', '306px' ],
-		iframe : {
-			src : changeEmailUrl
-					+ "?tzParams={'ComID':'TZ_SITE_UTIL_COM','PageID':'TZ_SITE_ENROLL_STD','OperateType':'HTML','comParams': {'siteid':'"
-					+ $("#siteid").val() + "','orgid':'"
-					+ $("#jgid").val() + "','lang':'"
-					+ $("#lang").val() + "','sen':'6'}}"
-		}
-	});
+	changeEmailUrlParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'
+			+ $("#siteid").val() + '","orgid":"' + $("#jgid").val()
+			+ '","lang":"' + $("#lang").val() + '","sen":"6"}}';
+	changeEmailUrl = tzGdWdzhChangeEmailUrl + "?tzParams=" + encodeURI(changeEmailUrlParams);
+	$
+			.layer({
+				type : 2,
+				title : false,
+				fix : false,
+				closeBtn : 2,
+				shadeClose : false,
+				shade : [ 0.3, '#000', true ],
+				border : [ 3, 0.3, '#000', true ],
+				offset : [ '100%', '' ],
+				area : [ '589px', '306px' ],
+				iframe : {
+					src : changeEmailUrl
+				}
+			});
 }
 
 function changeMobile() {
@@ -427,7 +434,7 @@ function bindMobile(el) {
 	if (attrState == "Y") {
 		changeBindMobile();
 		// myrefresh();
-		setTab(1, 3);
+		//setTab(1, 3);
 	} else {
 		changeMobile();
 	}

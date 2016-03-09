@@ -162,16 +162,19 @@ $("#oldpass").focus(function() {
 	var pass = document.getElementById("oldpass");
 	pass.type = "password";
 	$(this).val("");
+	$("#messTip").hide();
 });
 $("#newpass").focus(function() {
 	var pass = document.getElementById("newpass");
 	pass.type = "password";
 	$(this).val("");
+	$("#messTip").hide();
 });
 $("#cfpass").focus(function() {
 	var pass = document.getElementById("cfpass");
 	pass.type = "password";
 	$(this).val("");
+	$("#messTip").hide();
 });
 $("#btnpass")
 		.click(
@@ -182,7 +185,7 @@ $("#btnpass")
 
 					if ($oldPass.length < 1) {
 						var pass = document.getElementById("oldpass");
-						pass.type = "text";
+						//pass.type = "text";
 						// $("#oldpass").val(tzGdFixpwdOldPass + " " + tzGdFixpwdBlankTips);
 
 						$("#messTip").html(
@@ -194,7 +197,7 @@ $("#btnpass")
 
 					if ($newPass.length < 1) {
 						var pass = document.getElementById("newpass");
-						pass.type = "text";
+						//pass.type = "text";
 						// $("#newpass").val(tzGdFixpwdNewPass + " " + tzGdFixpwdBlankTips);
 						$("#messTip").html(
 								'<img src="'+ tzGdFixpwdImgPath +'/alert.png" width="16" height="16" class="alert_img" />'
@@ -214,7 +217,7 @@ $("#btnpass")
 
 					if ($cfPass.length < 1) {
 						var pass = document.getElementById("cfpass");
-						pass.type = "text";
+						//pass.type = "text";
 						// $("#cfpass").val(tzGdFixpwdConfPass + " " + tzGdFixpwdBlankTips);
 						$("#messTip").html(
 								'<img src="'+ tzGdFixpwdImgPath +'/alert.png" width="16" height="16" class="alert_img" />'
@@ -224,7 +227,7 @@ $("#btnpass")
 					}
 					if ($newPass != $cfPass) {
 						var pass = document.getElementById("cfpass");
-						pass.type = "text";
+						//pass.type = "text";
 						// $("#cfpass").val(" " + tzGdFixpwdNotSameTips);
 						$("#messTip").html(
 								'<img src="'+ tzGdFixpwdImgPath +'/alert.png" width="16" height="16" class="alert_img" />'
@@ -262,6 +265,9 @@ $("#btnpass")
 							"tzParams" : tzParams
 						},
 						success : function(jsondata) {
+							$("#oldpass").val("");
+							$("#newpass").val("");
+							$("#cfpass").val("");
 							alert(jsondata.comContent.success);
 							/*
 							 * if( jsondata == "N"){ var pass =
