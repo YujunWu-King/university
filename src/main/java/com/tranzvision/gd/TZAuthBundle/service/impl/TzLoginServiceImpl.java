@@ -71,16 +71,21 @@ public class TzLoginServiceImpl implements TzLoginService {
 	 * Cookie存储的系统语言信息
 	 */
 	public final String cookieLang = "tzlang";
-	
+
 	/**
 	 * Cookie存储的当前登录机构id
 	 */
 	public final String cookieOrgId = "tzmo";
-	
+
 	/**
 	 * Cookie存储的当前登录用户登录名
 	 */
 	public final String cookieLoginedAdminName = "tzmu";
+
+	/**
+	 * 记录登录类型，后台 - GLY；前台 - SQR；
+	 */
+	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
 
 	/*
 	 * (non-Javadoc)
@@ -146,11 +151,12 @@ public class TzLoginServiceImpl implements TzLoginService {
 
 			// 设置语言环境
 			this.switchSysLanguage(request, response, "");
-			
+
 			// 设置cookie参数
 			tzCookie.addCookie(response, cookieOrgId, psTzAqYhxxTblKey.getTzJgId());
 			tzCookie.addCookie(response, cookieLoginedAdminName, psTzAqYhxxTblKey.getTzDlzhId());
-			
+			tzCookie.addCookie(response, cookieContextLoginType, "GLY");
+
 			errorMsg.add("success");
 			errorMsg.add("");
 			return true;
@@ -308,7 +314,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 			String strRtn = "";
 			if (debugging) {
 				strRtn = "ADMIN";
-				//strRtn = "SHTEST";
+				// strRtn = "SHTEST";
 			}
 			return strRtn;
 		}

@@ -92,6 +92,11 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	// public final String cookieWebLoginedUserName = "tzwu";
 	public final String cookieWebLoginedUserName = "tzmu";
 
+	/**
+	 * 记录登录类型，后台 - GLY；前台 - SQR；
+	 */
+	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -165,9 +170,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			this.switchSysLanguage(request, response, language);
 
 			// 设置cookie参数
-			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24*3600);
-			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24*3600);
+			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24 * 3600);
+			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24 * 3600);
 			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
+			tzCookie.addCookie(response, cookieContextLoginType, "SQR");
 
 			errorMsg.add("0");
 			errorMsg.add("");

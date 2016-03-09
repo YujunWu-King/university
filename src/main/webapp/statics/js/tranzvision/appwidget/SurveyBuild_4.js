@@ -2305,6 +2305,15 @@ var SurveyBuild = {
         if (!this.checkAttrVal()) {
             return
         }
+		var pageSize = $("#tabNav").children().size();
+		if(pageSize > 0){
+			if(pageSize == 1){
+				noteing("建议分页报名表至少分两页！", 2)
+			}
+			if(!this.checkPage()){
+				return;
+			}
+		}
         var a = {},b = true,d = "Page",c = 0,pageno = 0;
         $("#question-box>li").each(function(f) {
             var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
@@ -2389,7 +2398,6 @@ var SurveyBuild = {
 			snapTolerance: 300,
 			revert: "invalid",
 			helper: function() {
-				console.log("1.>");
 				return $('<div class="draggable-holder">' + $(this).html() + "</div>")
 			},
 			stop: function(event, ui) {
@@ -2403,11 +2411,9 @@ var SurveyBuild = {
 						SurveyBuild.isDHForTwo = true;
 						SurveyBuild.isDHContainer = true;
 						SurveyBuild.currentDHID = $(event.target).closest("li").attr("data_id");
-						console.log("2.>");
 						SurveyBuild.add(ui.item.attr("data-classname"), $(event.target));
 					},
 					update: function(event, ui) {
-						console.log("3.>");
 						var dhObj = $(this).closest(".DHContainer");
 						SurveyBuild.dhSort(dhObj);
 					}
@@ -3594,6 +3600,19 @@ var SurveyBuild = {
 		s = s.replace(/\//g,"\\/");
 		s = s.replace(/\n/g,"\\n");
 		return s;
+	},
+	checkPage: function() {
+		var first = $("#question-box > li").first().attr("data_id");
+		if(first){
+			classname = this._items[first]["classname"];
+			if(classname != "Page"){
+				SurveyBuild._error("报名表第一个信息项必须是分页符！");
+				return false;
+			}
+			return true;
+		}else{
+			return true;
+		}
 	}
 };
 var MsgSet = {};
