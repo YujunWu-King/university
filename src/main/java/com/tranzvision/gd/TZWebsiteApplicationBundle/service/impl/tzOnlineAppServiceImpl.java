@@ -1382,8 +1382,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 												}
 											}
 										}else if("F".equals(strStorageType)){
-											//推荐信附件信息
-											this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapJsonChildrenItems, numAppInsId);
+											//推荐信附件信息和其他固定容器附件
+											if(!"recommendletter".equals(strClassName)){
+												this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapJsonChildrenItems, numAppInsId);
+											}
 										}
 									}
 								}
