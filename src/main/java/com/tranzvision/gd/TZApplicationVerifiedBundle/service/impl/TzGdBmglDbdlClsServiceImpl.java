@@ -155,7 +155,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					int XUHAO = getSeqNum.getSeqNum("TZ_ZLDB_AE", "TZ_PACKAGE_ID");
 					String ID = "000000000" + String.valueOf(XUHAO);
 					ID = ID.substring(ID.length() - 9, ID.length());
-					ID = currentOprid+"_"+dateFormate+"_"+ ID;
+					ID = currentOprid+"_"+s_dt+"_"+ ID;
 
 					String fjlj = "";
 					String packDir = "";
@@ -258,7 +258,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 								// tjrName =
 								// (String)tjxList.get(j).get("TZ_REFERRER_NAME");
 								tzDealWithXMLServiceImpl.replaceXMLPulish(TJR_TZ_TJX_APP_INS_ID, OPRID,
-										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID, errMsg);
+										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID + "_" + relName, errMsg);
 
 								// 将考生的推荐信材料复制;
 								String str_attachfilename2 = "", str_attachfile2 = "";
