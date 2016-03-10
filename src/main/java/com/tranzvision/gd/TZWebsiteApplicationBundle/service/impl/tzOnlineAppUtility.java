@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.util.base.ObjectDoMethod;
@@ -25,6 +26,8 @@ public class tzOnlineAppUtility {
 	private SqlQuery sqlQuery;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	@Autowired
+	private ApplicationContext ctx;
 
 	public String requireValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,
 			int numPageNo){
@@ -485,11 +488,11 @@ public class tzOnlineAppUtility {
 			    strAppClassName = MapAppClass.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapAppClass.get("TZ_APPCLS_NAME"));
 			    strAppClassMethod = MapAppClass.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapAppClass.get("TZ_APPCLS_METHOD"));
 			    try{
-			    	String[] parameterTypes = new String[] {"String[]" };
-					Object[] arglist = new Object[] { numAppInsId };
-					Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
-							parameterTypes, arglist);
-					strIsCheck = String.valueOf(objs);
+			    	tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
+			    			ctx.getBean(strAppClassPath + "." + strAppClassName);
+			    	switch(strAppClassMethod){
+			    	//根据报名表配置的方法名称去调用不同的方法
+			    	}
 			    }catch(Exception e){
 			    	e.printStackTrace();
 			    	strIsCheck = "Y";
@@ -507,8 +510,7 @@ public class tzOnlineAppUtility {
 			}else{
 				sqlGetRefLetterCount = "SELECT COUNT('Y') FROM PS_TZ_KS_TJX_TBL WHERE TZ_MBA_TJX_YX = 'Y' AND TZ_APP_INS_ID = :1 AND TZ_MBA_TJX_YX = 'Y'";
 			}
-			numRefletter = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
-			
+			numRefletter = sqlQuery.queryForObject(sqlGetRefLetterCount, new Object[] { numAppInsId }, "Integer");
 			if(numXxxMinLine>0){
 				if(numRefletter<numXxxMinLine){
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
