@@ -539,7 +539,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			int isBmYet = jdbcTemplate.queryForObject(
 					"select count(1) from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and OPRID=?",
 					new Object[] { classId, oprId }, "Integer");
-			if (isBmYet > 0) {
+			if (isBmYet == 0) {
 				//有没有历史报名表;
 		        int isHaveHisApp = jdbcTemplate.queryForObject(
 						"SELECT count(1) FROM PS_TZ_FORM_WRK_T A ,PS_TZ_CLASS_INF_T B WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.OPRID = ?  AND B.TZ_JG_ID = ?",
