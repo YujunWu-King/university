@@ -219,6 +219,7 @@ body, button, input, select, textarea {
 	}
 	$(document).ready(function(){
 		createCode();
+		$("#TZ_CYR_NAME").focus();
 	});
 </script>
 </head>
@@ -331,6 +332,7 @@ body, button, input, select, textarea {
 
 			// strComParams = $.parseJSON(strComParams);
 			// console.log(strComParams);
+			strComParams = encodeURIComponent(strComParams);
 			$.ajax({
 				type : "POST",
 				url : applyURL + "?tzParams=" + strComParams,
