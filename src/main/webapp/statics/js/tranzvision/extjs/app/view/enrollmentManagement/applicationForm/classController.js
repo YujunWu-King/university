@@ -731,6 +731,7 @@
         var appInsID;
         if(!obj.store){
             var selList = obj.findParentByType("grid").getSelectionModel().getSelection();
+            
             if(selList.length<1) {
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
                 return;

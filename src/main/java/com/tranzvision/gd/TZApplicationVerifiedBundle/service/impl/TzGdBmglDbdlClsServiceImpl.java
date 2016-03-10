@@ -155,7 +155,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					int XUHAO = getSeqNum.getSeqNum("TZ_ZLDB_AE", "TZ_PACKAGE_ID");
 					String ID = "000000000" + String.valueOf(XUHAO);
 					ID = ID.substring(ID.length() - 9, ID.length());
-					ID = currentOprid+"_"+dateFormate+"_"+ ID;
+					ID = currentOprid+"_"+s_dt+"_"+ ID;
 
 					String fjlj = "";
 					String packDir = "";
@@ -258,21 +258,21 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 								// tjrName =
 								// (String)tjxList.get(j).get("TZ_REFERRER_NAME");
 								tzDealWithXMLServiceImpl.replaceXMLPulish(TJR_TZ_TJX_APP_INS_ID, OPRID,
-										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID, errMsg);
+										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID + "_" + relName, errMsg);
 
 								// 将考生的推荐信材料复制;
 								String str_attachfilename2 = "", str_attachfile2 = "";
 								String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
 								List<Map<String, Object>> packTjxList = jdbcTemplate.queryForList(sqlPackagetjx,
-										new Object[] { TZ_TJX_APP_INS_ID, TZ_TJX_APP_INS_ID, TZ_TJX_APP_INS_ID,
-												TZ_TJX_APP_INS_ID });
+										new Object[] { TZ_TJX_APP_INS_ID, TZ_TJX_APP_INS_ID });
 								if (packTjxList != null && packTjxList.size() > 0) {
 									for (int k = 0; k < packTjxList.size(); k++) {
 										str_attachfilename2 = (String) packTjxList.get(k).get("ATTACHSYSFILENAME");
 										str_attachfile2 = (String) packTjxList.get(k).get("ATTACHUSERFILE");
 										String sFile = (String) packTjxList.get(k).get("TZ_ACCESS_PATH");;
 										if (str_attachfilename2 != null && !"".equals(str_attachfilename2)
-												&& str_attachfile2 != null && !"".equals(str_attachfile2)) {
+												&& str_attachfile2 != null && !"".equals(str_attachfile2)
+												&& sFile != null && !"".equals(sFile)) {
 											str_attachfile2.replaceAll("/", "_");
 											
 											sFile = request.getServletContext().getRealPath(sFile);

@@ -32,7 +32,7 @@
  				A.TZ_HD_BMR_ID = B.TZ_LYDX_ID 
  			)
  		where  
- 			A.TZ_ART_ID = pt2.TZ_ART_ID 
+ 			A.TZ_ART_ID = PT2.TZ_ART_ID 
  			and (A.TZ_NREG_STAT='1' or A.TZ_NREG_STAT='4') 
  			and A.OPRID = ?
  	)
