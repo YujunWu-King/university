@@ -1,21 +1,21 @@
 /*====================================================================
-+ ¹¦ÄÜÃèÊö£º¶àĞĞÎÄ±¾¿ò¿Ø¼ş£¬¿É¿ØÖÆÎÄ±¾¿òÏÔÊ¾´óĞ¡¼°ÊäÈë×Ö·û·¶Î§		++
-+ ¿ª·¢ÈË£ºÕÅÀË														++
-+ ¿ª·¢ÈÕÆÚ£º2015-05-05												++
++ åŠŸèƒ½æè¿°ï¼šå¤šè¡Œæ–‡æœ¬æ¡†æ§ä»¶ï¼Œå¯æ§åˆ¶æ–‡æœ¬æ¡†æ˜¾ç¤ºå¤§å°åŠè¾“å…¥å­—ç¬¦èŒƒå›´		++
++ å¼€å‘äººï¼šå¼ æµª														++
++ å¼€å‘æ—¥æœŸï¼š2015-05-05												++
 =====================================================================*/
 SurveyBuild.extend("Degree", "baseComponent", {
-    itemName: "Ñ§Î»",
-    title:"Ñ§Î»",
+    itemName: "å­¦ä½",
+    title:"å­¦ä½",
     "StorageType":"S",
     option: {},
     _init: function(d, previewmode) {
         if ($.isEmptyObject(this.option)) {
-            /*Èç¹ûÏÂÀ­¿òÎŞÑ¡ÏîÖµ£¬½«³õÊ¼»¯this.option*/
+            /*å¦‚æœä¸‹æ‹‰æ¡†æ— é€‰é¡¹å€¼ï¼Œå°†åˆå§‹åŒ–this.option*/
         } else {
-            /*Èç¹ûÏÂÀ­¿òÓĞÑ¡ÏîÖµ£¬Ö±½Ó·µ»Ø*/
+            /*å¦‚æœä¸‹æ‹‰æ¡†æœ‰é€‰é¡¹å€¼ï¼Œç›´æ¥è¿”å›*/
             return;
         }
-		var degree = ["²©Ê¿",'Ë¶Ê¿','Ñ§Ê¿'];
+		var degree = ["åšå£«",'ç¡•å£«','å­¦å£«'];
         for (var i = 1; i <= 3; ++i) {
             this.option[d + i] = {
                 code: i,
@@ -31,7 +31,7 @@ SurveyBuild.extend("Degree", "baseComponent", {
         var c = "",e = "";
         if (previewmode) {
             if(SurveyBuild._readonly){
-                //Ö»¶ÁÄ£Ê½
+                //åªè¯»æ¨¡å¼
                 var valDesc = "";
                 for (var i in data.option) {
                     if(data.value == data["option"][i]["code"]){
@@ -45,7 +45,7 @@ SurveyBuild.extend("Degree", "baseComponent", {
                 c += '  <div class="main_inner_content_info_right" >' + valDesc + '</div>';
                 c += '</div>'
             }else{
-                //ÌîĞ´Ä£Ê½
+                //å¡«å†™æ¨¡å¼
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in data.option) {
@@ -76,7 +76,7 @@ SurveyBuild.extend("Degree", "baseComponent", {
                 e += '<li id="s' + i + '">' + data["option"][i]["txt"] + '</li>';
             }
             c += '<div class="question-answer">';
-            c += '  <b class="read-select"> - ÇëÑ¡Ôñ - </b>';
+            c += '  <b class="read-select"> - è¯·é€‰æ‹© - </b>';
             c += '  <span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
             c += '  <ul class="select-box">' + e + '</ul>';
             c += '</div>'
@@ -104,14 +104,14 @@ SurveyBuild.extend("Degree", "baseComponent", {
         }
 
         e += '<fieldset id="option-box">';
-        e += '	<span class="edit_item_label titlewidth"><i class="icon-list-alt"></i> ¿ÉÑ¡ÖµÉèÖÃ</span>';
+        e += '	<span class="edit_item_label titlewidth"><i class="icon-list-alt"></i> å¯é€‰å€¼è®¾ç½®</span>';
         e += '  <table class="table table-bordered data-table">';
         e += '       <thead>';
         e += '           <tr>';
-        e += '               <th class="thw">Ä¬ÈÏ</th>';
-        e += '               <th>Öµ</th>';
-        e += '               <th class="alLeft">ÃèÊö<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">ÅúÁ¿±à¼­</button></th>';
-        e += '               <th width="45">²Ù×÷</th>';
+        e += '               <th class="thw">é»˜è®¤</th>';
+        e += '               <th>å€¼</th>';
+        e += '               <th class="alLeft">æè¿°<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">æ‰¹é‡ç¼–è¾‘</button></th>';
+        e += '               <th width="45">æ“ä½œ</th>';
         e += '           </tr>';
         e += '       </thead>';
         e += '       <tbody class="ui-sortable">' + list + '</tbody>';
@@ -119,24 +119,24 @@ SurveyBuild.extend("Degree", "baseComponent", {
         e += '</fieldset>';
 
         e += '<div class="edit_item_warp">';
-        e += '  <span class="edit_item_label">Ä¬ÈÏÖµ£º</span>';
+        e += '  <span class="edit_item_label">é»˜è®¤å€¼ï¼š</span>';
         e += '  <input type="text" class="medium" id="defaultval" onkeyup="SurveyBuild.saveAttr(this,\'defaultval\')" value="' + data.defaultval + '"/>';
         e += '</div>';
 
         e += '<div class="edit_item_warp" style="text-align:right;">';
-        e += '  <a href="javascript:void(0);" onclick="SurveyBuild.DynamicBindVal()" class="">¶¯Ì¬°ó¶¨Öµ</a>';
+        e += '  <a href="javascript:void(0);" onclick="SurveyBuild.DynamicBindVal()" class="">åŠ¨æ€ç»‘å®šå€¼</a>';
         e += '</div>';
 
         e += '<div class="edit_jygz">';
-        e += '	<span class="title"><i class="icon-cog"></i> Ğ£Ñé¹æÔò</span>';
+        e += '	<span class="title"><i class="icon-cog"></i> æ ¡éªŒè§„åˆ™</span>';
 		e += '  <div class="groupbox">';
         e += '  <div class="edit_item_warp" style="margin-top:5px;">';
-        e += '      <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require"> <label for="is_require">ÊÇ·ñ±ØÌî</label>';
+        e += '      <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require"> <label for="is_require">æ˜¯å¦å¿…å¡«</label>';
         e += '  </div>';
 		e += '  </div>';
 		
         e += '  <div class="edit_item_warp">';
-        e += '      <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> ¸ß¼¶ÉèÖÃ</a>';
+        e += '      <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> é«˜çº§è®¾ç½®</a>';
         e += '  </div>';
         e += '</div>';
         return e;
@@ -149,14 +149,14 @@ SurveyBuild.extend("Degree", "baseComponent", {
 		$inputBox.functionValidator({
 			fun:function(val,elem){
 				
-				//Ö´ĞĞ¸ß¼¶ÉèÖÃÖĞµÄ×Ô¶¨Òå¹æÔò
+				//æ‰§è¡Œé«˜çº§è®¾ç½®ä¸­çš„è‡ªå®šä¹‰è§„åˆ™
 				/*********************************************\
-				 ** ×¢Òâ£º×Ô¶¨Òå¹æÔòÖĞ²»ÒªÊ¹ÓÃformValidator **
+				 ** æ³¨æ„ï¼šè‡ªå®šä¹‰è§„åˆ™ä¸­ä¸è¦ä½¿ç”¨formValidator **
 				\*********************************************/
 				var _result = true;
 				if (ValidationRules) {
 					$.each(data["rules"],function(classname, classObj) {
-						//µ¥Ñ¡Å¥²»ĞèÒªÔÚ¸ß¼¶¹æÔòÖĞµÄ±ØÑ¡ÅĞ¶Ï
+						//å•é€‰é’®ä¸éœ€è¦åœ¨é«˜çº§è§„åˆ™ä¸­çš„å¿…é€‰åˆ¤æ–­
 						if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
 							var _ruleClass = ValidationRules[classname];
 							if (_ruleClass && _ruleClass._Validator) {
