@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Date;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -141,6 +143,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetHtmlContent(String comParams) {
+		
 		// 返回值;
 		String str_appform_main_html = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -447,11 +450,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
 		strMenuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + strAppOrgId }, "String");
 		if(strMenuId == null) strMenuId = "";
-		System.out.println("Hello"+numAppInsId+"World:"+strTplId+"Type:"+strTplType);
+		
+		String strTest = "";
 		if("".equals(strMessageError)){
 			if(numAppInsId>0 && "BMB".equals(strTplType)){
 				//检查推荐信的完成状态 
-				System.out.println("Hello"+numAppInsId+"World:"+strTplId);
 				this.checkRefletter(numAppInsId, strTplId);
 			}
 			//执行页面加载事件-模版级事件开始
@@ -672,7 +675,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		 
 		//str_appform_main_html = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 		
-		return str_appform_main_html;
+		return str_appform_main_html + strTest;
 	}
 	
 	@Override
@@ -2723,11 +2726,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
 	    	numPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "Integer");
 	    	
-	    	String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = :2 AND TZ_COM_LMC = 'Page' LIMIT 1";
+	    	String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
 	    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
 	    	
 		    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
-		    System.out.println("Hello"+strTplId+"World:"+numPageNo);
 			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
 			for (Object objData : listData) {
 				Map<String, Object> MapData = (Map<String, Object>) objData;
@@ -2819,7 +2821,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					}
 				}
 			}
-			
 			if(!"".equals(strPageXxxBh)){
 				if("".equals(strMsg)){
 					this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 

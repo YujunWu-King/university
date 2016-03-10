@@ -335,7 +335,7 @@ public class tzOnlineAppUtility {
 				    if("".equals(strDxxxBh)||strDxxxBh!=null){
 				    	strDxxxBh = strXxxBh;
 				    }
-				    String sqlGetDhXxx = "SELECT DISTINCT TZ_XXX_BH FROM PS_TZ_APP_DHCC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_NO = ?";
+				    String sqlGetDhXxx = "SELECT DISTINCT TZ_XXX_BH FROM PS_TZ_APP_DHCC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
 				    List<?> ListDhXxx = sqlQuery.queryForList(sqlGetDhXxx, 
 				    		new Object[] { numAppInsId,strTplId,strXxxBh });
 				    for (Object ObjDhXxx : ListDhXxx) {
@@ -350,7 +350,7 @@ public class tzOnlineAppUtility {
 				    			break;
 				    		}
 				    	}
-				    	if(this.isInteger(strXxxZsxzgs)){
+				    	if(this.isInteger(strXxxZdxzgs)){
 				    		int numXxxZdxzgs = Integer.parseInt(strXxxZdxzgs);
 				    		if(numXxxZdxzgs>0&&numCheckCount>numXxxZdxzgs){
 				    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
@@ -363,7 +363,7 @@ public class tzOnlineAppUtility {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return returnMessage + "Test";
+		return returnMessage;
 	}
 	//规则校验
 	public String regularValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,
@@ -508,7 +508,7 @@ public class tzOnlineAppUtility {
 			if("Y".equals(strTjxSub)){
 				sqlGetRefLetterCount = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE ((A.ATTACHSYSFILENAME <> ' ' AND A.ATTACHUSERFILE <> ' ') OR EXISTS (SELECT * FROM PS_TZ_APP_INS_T B WHERE A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U')) AND A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y'";
 			}else{
-				sqlGetRefLetterCount = "SELECT COUNT('Y') FROM PS_TZ_KS_TJX_TBL WHERE TZ_MBA_TJX_YX = 'Y' AND TZ_APP_INS_ID = :1 AND TZ_MBA_TJX_YX = 'Y'";
+				sqlGetRefLetterCount = "SELECT COUNT('Y') FROM PS_TZ_KS_TJX_TBL WHERE TZ_MBA_TJX_YX = 'Y' AND TZ_APP_INS_ID = ?";
 			}
 			numRefletter = sqlQuery.queryForObject(sqlGetRefLetterCount, new Object[] { numAppInsId }, "Integer");
 			if(numXxxMinLine>0){
