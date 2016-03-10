@@ -312,4 +312,20 @@ public class CreateTaskServiceImpl {
 			return false;
 		}
 	}
+	
+	//修改发件人;
+	public boolean updateEmailSender(String taskId,String emailAddr, String emailAlias){
+		PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
+		if(psTzDxyjfsrwTbl != null){
+			psTzDxyjfsrwTbl.setTzEmailSender(emailAddr);
+			psTzDxyjfsrwTbl.setTzSenderAlias(emailAlias);
+			int i = psTzDxyjfsrwTblMapper.updateByPrimaryKeySelective(psTzDxyjfsrwTbl);
+			if(i > 0 ){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		return false;
+	}
 }
