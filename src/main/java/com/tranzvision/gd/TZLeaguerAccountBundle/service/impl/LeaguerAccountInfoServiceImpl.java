@@ -53,11 +53,22 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				// oprid;
 				String str_oprid = jacksonUtil.getString("OPRID");
 				// 头像地址;
-				String titleImageUrlSQL = "SELECT B.TZ_ATT_A_URL FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
-				String titleImageUrl = jdbcTemplate.queryForObject(titleImageUrlSQL, new Object[]{str_oprid},"String");
-				if(titleImageUrl == null){
-					titleImageUrl = "";
+				String titleImageUrlSQL = "SELECT B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
+				Map<String , Object> imgMap = jdbcTemplate.queryForMap(titleImageUrlSQL,new Object[]{str_oprid});
+				String titleImageUrl = "";
+				if(imgMap != null){
+					String tzAttAUrl = (String)imgMap.get("TZ_ATT_A_URL");
+					String sysImgName = (String)imgMap.get("TZ_ATTACHSYSFILENA");
+					if(tzAttAUrl != null &&!"".equals(tzAttAUrl)
+						&& sysImgName != null &&!"".equals(sysImgName)){
+						if(tzAttAUrl.lastIndexOf("/") + 1 == tzAttAUrl.length()){
+							titleImageUrl = tzAttAUrl + sysImgName;
+						}else{
+							titleImageUrl = tzAttAUrl + "/" + sysImgName;
+						}
+					}
 				}
+
 				
 				//性别;
 				String str_sex = "",str_name="",str_acctlook="";

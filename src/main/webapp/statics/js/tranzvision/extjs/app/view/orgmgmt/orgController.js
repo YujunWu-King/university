@@ -393,6 +393,9 @@
 
         //操作标志
         cmp.actType = "add";
+        //用户Grid
+        var userGrid = btn.findParentByType("grid");
+        cmp.userGridStore = userGrid.getStore();
 
         cmp.on('afterrender',function(){
             //设置机构编号值，是从机构信息里新建账户进去的，创建后添加到机构管理员表，同时刷新grid
@@ -901,6 +904,10 @@
     	//操作标志
         cmp.actType = "update";
 
+        //用户Grid
+        var userGrid = btn.findParentByType("grid");
+        cmp.userGridStore = userGrid.getStore();
+
         //登录账号
 		var usAccNum = selList[0].get("usAccNum");
 		//机构编号
@@ -1059,6 +1066,9 @@
         cmp.actType = "update";
 
         var store = view.findParentByType("grid").store;
+        //用户Grid
+        cmp.userGridStore = store;
+	
         var selRec = store.getAt(rowIndex);
         //登录账号
         var usAccNum = selRec.get("usAccNum");

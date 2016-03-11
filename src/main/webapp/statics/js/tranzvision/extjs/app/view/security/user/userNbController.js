@@ -1,9 +1,9 @@
-﻿Ext.define('KitchenSink.view.security.user.userController', {
+﻿Ext.define('KitchenSink.view.security.user.userNbController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.userMg',
+    alias: 'controller.userNbMg',
     createUserAccClass: function(){
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_YHZHGL_COM"]["TZ_AQ_YHZHXX_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_NB_YHZHGL_COM"]["TZ_NB_YHZHXX_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有访问或修改数据的权限');
             return;
@@ -11,7 +11,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AQ_YHZHXX_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_NB_YHZHXX_STD，请检查配置。');
             return;
         }
 
@@ -81,7 +81,7 @@
             
     	
             //参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"","orgId":"'+Ext.tzOrgID+'"}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"","orgId":"'+Ext.tzOrgID+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //用户账号信息数据
@@ -156,7 +156,7 @@
             form.findField("usAccNum").setReadOnly(true);
             form.findField("usAccNum").setFieldStyle('background:#F4F4F4');
             //参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //用户账号信息数据
@@ -221,7 +221,7 @@
             var grid = this.lookupReference('userRoleGrid');
             form.findField("usAccNum").setReadOnly(true);
             //参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //用户账号信息数据
@@ -279,7 +279,7 @@
             //用户角色信息列表
             var grid = this.lookupReference('userRoleGrid');
             //参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHXX_STD","OperateType":"QF","comParams":{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //用户账号信息数据
@@ -351,7 +351,7 @@
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + "]";
             //提交参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
             //保存数据
             Ext.tzSubmit(tzParams,function(){
                 store.reload();
@@ -387,7 +387,7 @@
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + "]";
           //提交参数
-            var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+            var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
             //保存数据
             Ext.tzSubmit(tzParams,function(){
             	
@@ -411,10 +411,10 @@
             return;
         }
         //重置密码窗口
-        var win = this.lookupReference('setPasswordWindow');
+        var win = this.lookupReference('setNbPasswordWindow');
 
         if (!win) {
-            className = 'KitchenSink.view.security.user.setPassword';
+            className = 'KitchenSink.view.security.user.setNbPassword';
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
             //新建类
@@ -447,7 +447,7 @@
                 }
                 comParams = '"data":[' + editJson + "]";
                 //提交参数
-                var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"LOCK","comParams":{'+comParams+'}}';
+                var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHGL_STD","OperateType":"LOCK","comParams":{'+comParams+'}}';
                 Ext.tzSubmit(tzParams,function(){
                 },"锁定账号成功",true,this);
             }
@@ -504,7 +504,7 @@
         //}
         var comParams = '"'+actType+'":[' + editJson + "]";
         //提交参数
-        var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //console.log(tzParams);
         return tzParams;
     },
@@ -533,10 +533,6 @@
             form.findField("originOrgId").setValue(orgID);
             var tzStoreParams = '{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}';
             grid.store.tzStoreParams = tzStoreParams;
-            //reLoad User Grid
-            if(userInfo.userGridStore){
-                userInfo.userGridStore.load();
-            }
             userInfo.commitChanges(userInfo);
         },"",false,this);
     },
@@ -554,10 +550,6 @@
             //关闭页面
             userInfo.commitChanges(userInfo);
             userInfo.close();
-            //reLoad User Grid
-            if(userInfo.userGridStore){
-                userInfo.userGridStore.load();
-            }
         },"",false,this);
     },
     onFormClose: function(){
@@ -594,7 +586,7 @@
         }
         comParams = '"data":[' + editJson + "]";
         //提交参数
-        var tzParams = '{"ComID":"TZ_AQ_YHZHGL_COM","PageID":"TZ_AQ_YHZHGL_STD","OperateType":"PWD","comParams":{'+pwdParams+","+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_AQ_NB_YHZHGL_COM","PageID":"TZ_NB_YHZHGL_STD","OperateType":"PWD","comParams":{'+pwdParams+","+comParams+'}}';
         Ext.tzSubmit(tzParams,function(){
             //重置表单
             form.reset();
@@ -611,35 +603,19 @@
         win.close();
     },
     searchUserList: function(btn){
-        if( (Ext.tzOrgID).toUpperCase() == 'ADMIN'){
-            Ext.tzShowCFGSearch({
+    	Ext.tzShowCFGSearch({
 
-                cfgSrhId: 'TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_VW',
-                condition:
-                {
-                    // "TZ_JG_ID": Ext.tzOrgID
-                },
-                callback: function(seachCfg){
-                    var store = btn.findParentByType("grid").store;
-                    store.tzStoreParams = seachCfg;
-                    store.load();
-                }
-            });
-        }else{
-            Ext.tzShowCFGSearch({
-
-                cfgSrhId: 'TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_NB_VW',
-                condition:
-                {
-                    "TZ_JG_ID": Ext.tzOrgID
-                },
-                callback: function(seachCfg){
-                    var store = btn.findParentByType("grid").store;
-                    store.tzStoreParams = seachCfg;
-                    store.load();
-                }
-            });
-        }
+            cfgSrhId: 'TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHGL_STD.TZ_YHZH_NB_VW',
+            condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
 
     }
 });

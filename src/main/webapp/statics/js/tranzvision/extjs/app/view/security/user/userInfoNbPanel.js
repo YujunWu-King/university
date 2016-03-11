@@ -1,7 +1,7 @@
-﻿Ext.define('KitchenSink.view.security.user.userInfoPanel', {
+﻿Ext.define('KitchenSink.view.security.user.userInfoNbPanel', {
     extend: 'Ext.panel.Panel',
     xtype: 'userAccInfo', 
-    controller: 'userMg',
+    controller: 'userNbMg',
 	requires: [
 	    'Ext.data.*',
         'Ext.grid.*',
@@ -10,15 +10,14 @@
         'Ext.ux.ProgressBarPager',
 		'KitchenSink.view.security.user.userRoleModel',
 		'KitchenSink.view.common.store.comboxStore',
-        'KitchenSink.view.security.user.userRoleStore'
+        'KitchenSink.view.security.user.userRoleNbStore'
 	],
 	listeners:{
 		resize: function(win){
 			win.doLayout();
 		}
 	},
-	actType: '',
-	userGridStore:'',	//用户Grid Store
+	actType: '',	
     title: '用户定义', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
     items: [{
@@ -42,7 +41,7 @@
         items: [{
             xtype: 'textfield',
             //fieldLabel: '登录账号',
-						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.usAccNum","登录账号"),
+						fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.usAccNum","登录账号"),
 						name: 'usAccNum',
 						maxLength: 30,
             afterLabelTextTpl: [
@@ -61,26 +60,26 @@
         }, {
             xtype: 'textfield',
             //fieldLabel: '用户名称',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.usName","用户名称"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.usName","用户名称"),
 			maxLength: 30,
 			name: 'usName'
         }, {
             xtype: 'textfield',
             //fieldLabel: '手机号码',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.mobile","手机号码"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.mobile","手机号码"),
 				maxLength: 25,
 			name: 'mobile'
         }, {
             xtype: 'textfield',
             //fieldLabel: '电子邮箱',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.email","电子邮箱"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.email","电子邮箱"),
 			name: 'email',
 				maxLength: 70,
 			vtype: 'email'
         }, /*{
             xtype: 'checkbox',
             //fieldLabel: '手机绑定标志',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.mBindFlag","手机绑定标志"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.mBindFlag","手机绑定标志"),
 			name: 'mBindFlag',
 			inputValue: 'Y',
 			listeners: {
@@ -113,7 +112,7 @@
 			}
     }*/{
 			xtype: 'combobox',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.mBindFlag","手机绑定标志"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.mBindFlag","手机绑定标志"),
 			editable:false,
 			emptyText:'请选择',
 			queryMode: 'remote',
@@ -143,13 +142,13 @@
 		},{
         xtype: 'textfield',
         //fieldLabel: '绑定手机号码',
-				fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.bdMobile","绑定手机号码"),
+				fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.bdMobile","绑定手机号码"),
 				maxLength: 25,
 				name: 'bdMobile'
     },/*{
        xtype: 'checkbox',
        //fieldLabel: '邮箱绑定标志',
-			 fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
+			 fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
 			 name: 'eBindFlag',
 			 inputValue: 'Y',
 			 listeners: {
@@ -181,7 +180,7 @@
 			 }
     },*/ {
 	xtype: 'combobox',
-		fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
+		fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.eBindFlag","邮箱绑定标志"),
 		editable:false,
 		emptyText:'请选择',
 		queryMode: 'remote',
@@ -210,13 +209,13 @@
 	},{
         xtype: 'textfield',
         //fieldLabel: '电子邮箱',
-			  fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.bdEmail","绑定电子邮箱"),
+			  fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.bdEmail","绑定电子邮箱"),
 			  name: 'bdEmail',
 				maxLength: 70,
 			  vtype: 'email'
     },{
     		xtype: 'combobox',
-        fieldLabel: Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.jhState","激活状态"),
+        fieldLabel: Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.jhState","激活状态"),
         editable:false,
         emptyText:'请选择',
         queryMode: 'remote',
@@ -226,7 +225,7 @@
     		store: new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_ZT")
     },{
     		xtype: 'combobox',
-        fieldLabel: Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.jhMethod","激活方式"),
+        fieldLabel: Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.jhMethod","激活方式"),
         editable:false,
         emptyText:'请选择',
         queryMode: 'remote',
@@ -236,7 +235,7 @@
     		store: new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_FS")
     },{
     		xtype: 'combobox',
-        fieldLabel: Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.rylx","账号类型"),
+        fieldLabel: Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.rylx","账号类型"),
         editable:false,
         emptyText:'请选择',
         queryMode: 'remote',
@@ -251,24 +250,18 @@
         listeners:{
             	afterrender: function(combox){
             		//当前登录人机构id
-	            	var value = Ext.tzOrgID;
-	            	if(value.toUpperCase() == "ADMIN"){
-									//combox.setValue("NBYH");
-	            	}else{
-	            		//combox.setValue("NBYH");
-	            		combox.readOnly = true;
-	            	}
+	            	combox.readOnly = true;
 	            }
 	          }
 	          
     }, /*{
             xtype: 'checkbox',
             //fieldLabel: '锁定账号',
-						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.acctLock","锁定账号"),
+						fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.acctLock","锁定账号"),
 						name: 'acctLock'
     }*/{
 			xtype: 'combobox',
-			fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.acctLock","锁定账号"),
+			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.acctLock","锁定账号"),
 			editable:false,
 			emptyText:'请选择',
 			queryMode: 'remote',
@@ -280,19 +273,19 @@
     //{
     //        xtype: 'displayfield',
             //fieldLabel: '激活状态',
-		//	fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.jhState","激活状态"),
+		//	fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.jhState","激活状态"),
 		//	name: 'jhState'
     //    },
     // {
     //        xtype: 'displayfield',
             //fieldLabel: '激活方式',
-		//	fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.jhMethod","激活方式"),
+		//	fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.jhMethod","激活方式"),
 		//	name: 'jhMethod'
     //    }, 
     {
             xtype: 'textfield',
             //fieldLabel: '账号密码',
-						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.password","账号密码"),
+						fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.password","账号密码"),
 						name: 'password',
 						inputType: 'password',
 						afterLabelTextTpl: [
@@ -304,7 +297,7 @@
         },{
             xtype: 'textfield',
             //fieldLabel: '账号密码',
-						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.reptPassword","确认密码"),
+						fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.reptPassword","确认密码"),
 						name: 'reptPassword',
 						inputType: 'password',
 						afterLabelTextTpl: [
@@ -331,13 +324,13 @@
         }, {
             xtype: 'textfield',
             //fieldLabel: '用户名称',
-            fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.orgNo","机构编号"),
+            fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.orgNo","机构编号"),
             hidden:true,
             name: 'orgNo'
         },{
             xtype: 'combobox',
             //fieldLabel: '机构名称',
-						fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.userOrg","机构名称"),
+						fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.userOrg","机构名称"),
 						forceSelection: true,
 						editable: false,
 						store: new KitchenSink.view.common.store.comboxStore({
@@ -369,12 +362,9 @@
             listeners:{
             	afterrender: function(combox){
             		//当前登录人机构id
-	            	var value = Ext.tzOrgID;
-	            	if(value.toUpperCase() == "ADMIN"){
-	            		combox.readOnly = false ;
-	            	}else{
-	            		combox.readOnly = true;
-	            	}
+	
+	            	combox.readOnly = true;
+
 	            	//console.log(combox.findRecordByValue(value));
 	            },
 	            change: function(thisComb, newValue, oldValue, eOpts ){
@@ -394,7 +384,7 @@
         }, {
             xtype: 'textfield',
             //fieldLabel: '用户名称',
-            //fieldLabel:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.originOrgId","用户原机构"),
+            //fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.originOrgId","用户原机构"),
             hidden: true,
             name: 'originOrgId'
         }]
@@ -407,23 +397,23 @@
 		reference: 'userRoleGrid',
 		style:"margin:10px",
 		store: {
-			type: 'userRoleStore'
+			type: 'userRoleNbStore'
 		},
 		columns: [{ 
 			//text: '角色编号',
-			text:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.roleID","角色编号"),
+			text:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.roleID","角色编号"),
 			dataIndex: 'roleID',
 			hidden: true
 		},{
 			//text: '角色名称',
-			text:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.roleName","角色名称"),
+			text:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.roleName","角色名称"),
 			dataIndex: 'roleName',
 			minWidth: 100,
 			flex: 1
 		},{
 			xtype : 'checkcolumn',
 			//text: '选中角色',
-			text:Ext.tzGetResourse("TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHXX_STD.isRole","选中角色"),
+			text:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.isRole","选中角色"),
 			dataIndex: 'isRole',
 			width: 100
 		}]
@@ -432,7 +422,7 @@
 		//	xtype: 'pagingtoolbar',
 		//	pageSize: 10,
 			/*store: {
-				type: 'userRoleStore'
+				type: 'userRoleNbStore'
 			},*/
 		/*	listeners:{
 				afterrender: function(pbar){

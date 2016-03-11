@@ -10,7 +10,7 @@ Ext.define('KitchenSink.view.security.user.userStore', {
 	tzStoreParams: '{"cfgSrhId":"TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_VW"}',
 	proxy: Ext.tzListProxy(),
 	constructor: function () {
-		 	if( (Ext.tzOrgID).toUpperCase() == 'ADMIN'){
+		  if( (Ext.tzOrgID).toUpperCase() == 'ADMIN'){
 		  	 this.tzStoreParams = '{"cfgSrhId":"TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_VW"}';
 		  }else{
 		  	 this.tzStoreParams ='{"cfgSrhId":"TZ_AQ_YHZHGL_COM.TZ_AQ_YHZHGL_STD.TZ_YHZH_NB_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}';
