@@ -17,7 +17,8 @@
 			win.doLayout();
 		}
 	},
-	actType: '',	
+	actType: '',
+	userGridStore:'',	//用户Grid Store
     title: '用户定义', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
     items: [{
