@@ -33,7 +33,7 @@ Ext.define('Ext.ux.Ueditor',{
             height = me.height - 109;
             
             var toolbars = [
-                    ['fullscreen', 'source', '|', 'undo', 'redo', '|',
+                    ['source', '|', 'undo', 'redo', '|',
                         'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat',
         				'formatmatch',  'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist', 'selectall', 'cleardoc', '|', 'fontfamily', 'fontsize', '|','searchreplace','spechars',
@@ -47,7 +47,7 @@ Ext.define('Ext.ux.Ueditor',{
             	var model = me.model;
             	if(model == "simple"){
             			toolbars = [[
-                    'fullscreen', 'source', '|',
+                    'source', '|',
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', 
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   
@@ -56,7 +56,7 @@ Ext.define('Ext.ux.Ueditor',{
             	
             	if(model == "normal"){
             		 toolbars = [[
-                    'fullscreen', 'source', '|',
+                    'source', '|',
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', '|','insertimage', 'attachment',
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   

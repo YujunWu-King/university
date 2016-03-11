@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Date;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -141,6 +143,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetHtmlContent(String comParams) {
+		
 		// 返回值;
 		String str_appform_main_html = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -448,9 +451,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		strMenuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + strAppOrgId }, "String");
 		if(strMenuId == null) strMenuId = "";
 		
+		String strTest = "";
 		if("".equals(strMessageError)){
 			if(numAppInsId>0 && "BMB".equals(strTplType)){
-				//检查推荐信的完成状态 %This.checkRefletter(&strAppInsId, &strTplId);
+				//检查推荐信的完成状态 
+				this.checkRefletter(numAppInsId, strTplId);
 			}
 			//执行页面加载事件-模版级事件开始
 			//模版级事件
@@ -670,7 +675,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		 
 		//str_appform_main_html = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 		
-		return str_appform_main_html;
+		return str_appform_main_html + strTest;
 	}
 	
 	@Override
@@ -1876,7 +1881,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
 				strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
 				numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
-				numXxxMinLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
+				numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
 				strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
 				strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
 				strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
@@ -1925,28 +1930,28 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 								break;
 							case "valueValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+								strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 								break;
 							case "regularValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+								strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 								break;
 							case "dHLineValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+								strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 								break;
 							case "refLetterValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+								strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
@@ -1996,28 +2001,28 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 							break;
 						case "valueValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 							break;
 						case "regularValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 							break;
 						case "dHLineValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
 									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
 							break;
 						case "refLetterValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
@@ -2028,7 +2033,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						if(!listPageNo.contains(numPageNo)){
 							listPageNo.add(numPageNo);
 						}
-						returnMsg = returnMsg + strReturn + "\n";	
+						returnMsg = returnMsg + strReturn + "\n";
 					}	
 				}
 			} 
@@ -2037,8 +2042,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				//页面全部设置成完成
 				Object[] args = new Object[] { numAppInsId };
 				sqlQuery.update("UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE = 'Y' WHERE TZ_APP_INS_ID = ?", args);
-
-				System.out.println("listPageNo的长度:"+listPageNo.size());
 				
 				for (Integer numPageNo2 : listPageNo) {
 			         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
@@ -2630,5 +2633,203 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	    }
 		
 		return oprId;
+	}
+	
+	//检查推荐信对应页面完成状态
+	private void checkRefletter(Long numAppInsId,String strTplId){
+		   
+		String strMsg = "";
+	    /*信息项编号*/
+	    String strXxxBh = "";
+	   
+	    /*信息项名称*/
+	    String strXxxMc = "";
+	   
+	    /*控件类名称*/
+	    String strComMc = "";
+	   
+	    /*分页号*/
+	    int numPageNo;
+	   
+	    /*信息项日期格式*/
+	    String strXxxRqgs = "";
+	   
+	    /*信息项日期年份最小值*/
+	    String strXxxXfmin = "";
+	   
+	    /*信息项日期年份最大值*/
+	    String strXxxXfmax = "";
+	   
+	    /*信息项多选最少选择数量*/
+	    String strXxxZsxzgs = "";
+	   
+	    /*信息项多选最多选择数量*/
+	    String strXxxZdxzgs = "";
+	   
+	    /*信息项文件允许上传类型*/
+	    String strXxxYxsclx = "";
+	   
+	    /*信息项文件允许上传大小*/
+	    String strXxxYxscdx = "";
+	   
+	    /*信息项是否必填*/
+	    String strXxxBtBz = "";
+	   
+	    /*信息项是否启用字数范围*/
+	    String strXxxCharBz = "";
+	   
+	    /*信息项字数最小长度*/
+	    int numXxxMinlen;
+	   
+	    /*信息项字数最大长度*/
+	    int numXxxMaxlen;
+	   
+	    /*信息项是否启用数字范围*/
+	    String strXxxNumBz = "";
+	   
+	    /*信息项字数最小长度*/
+	    int numXxxMin;
+	   
+	    /*信息项字数最大长度*/
+	    int numXxxMax;
+	   
+	    /*信息项字段小数位数*/
+	    String strXxxXsws = "";
+	   
+	    /*信息项字段固定格式校验*/
+	    String strXxxGdgsjy = "";
+	   
+	    /*信息项字段是否多容器*/
+	    String strXxxDrqBz = "";
+	   
+	    /*信息项最小行记录数*/
+	    int numXxxMinLine;
+	   
+	    /*信息项最大行记录数*/
+	    int numXxxMaxLine;
+	   
+	    /*推荐信收集齐前是否允许提交报名表*/
+	    String strTjxSub = "";
+	   
+	    /*信息项校验规则*/
+	    String strJygzId;
+	   
+	    String strJygzTsxx;
+	   
+	    /*信息项校验程序*/
+	    String strPath, strName, strMethod;
+
+	    String strPageXxxBh = "";
+	    
+	    try{
+	    	
+	    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
+	    	numPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "Integer");
+	    	
+	    	String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
+	    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
+	    	
+		    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
+			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
+			for (Object objData : listData) {
+				Map<String, Object> MapData = (Map<String, Object>) objData;
+				strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
+				strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
+				strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
+				strXxxRqgs = MapData.get("TZ_XXX_RQGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_RQGS"));
+				strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMIN"));
+				strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMAX"));
+				strXxxZsxzgs = MapData.get("TZ_XXX_ZSXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZSXZGS"));
+				strXxxZdxzgs = MapData.get("TZ_XXX_ZDXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZDXZGS"));
+				strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
+				strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
+				strXxxBtBz = MapData.get("TZ_XXX_BT_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BT_BZ"));
+				strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
+				numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
+				numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+				strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
+				numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
+				numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+				strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
+				strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
+				strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
+				numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
+				numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
+				strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
+				strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
+				strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
+				strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
+				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
+				
+				if(!"".equals(strPath)&&!"".equals(strName)&&!"".equals(strMethod)){
+					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
+					String strReturn = "";
+					switch(strMethod){
+						case "requireValidator":
+							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "ahphValidator":
+							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "charLenValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "valueValidator":
+							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "regularValidator":
+							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "dHLineValidator":
+							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "refLetterValidator":
+							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+					}
+					if(!"".equals(strReturn)){
+						strMsg = strReturn;
+						break;
+					}
+				}
+			}
+			if(!"".equals(strPageXxxBh)){
+				if("".equals(strMsg)){
+					this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
+				}else{
+					this.savePageCompleteState(numAppInsId, strPageXxxBh, "N"); 
+				}	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
