@@ -533,6 +533,10 @@
             form.findField("originOrgId").setValue(orgID);
             var tzStoreParams = '{"usAccNum":"'+usAccNum+'","orgId":"'+orgID+'"}';
             grid.store.tzStoreParams = tzStoreParams;
+            //reLoad User Grid
+            if(userInfo.userGridStore){
+                userInfo.userGridStore.load();
+            }
             userInfo.commitChanges(userInfo);
         },"",false,this);
     },
@@ -550,6 +554,10 @@
             //关闭页面
             userInfo.commitChanges(userInfo);
             userInfo.close();
+            //reLoad User Grid
+            if(userInfo.userGridStore){
+                userInfo.userGridStore.load();
+            }
         },"",false,this);
     },
     onFormClose: function(){
