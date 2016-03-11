@@ -2045,8 +2045,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				
 				for (Integer numPageNo2 : listPageNo) {
 			         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
+			         
 			         String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh, new Object[] { strTplId, "Page" ,numPageNo2 }, "String");
-			         this.savePageCompleteState(numAppInsId, strXxxBh2, "N"); 
+			         if(strXxxBh2!=null && !"".equals(strXxxBh2)){
+				         this.savePageCompleteState(numAppInsId, strXxxBh2, "N"); 
+			         }
 			    }
 			}
 	    }catch(Exception e){
@@ -2056,6 +2059,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	}
 	//更新页面完成状态
 	private void savePageCompleteState(Long numAppInsId,String strXxxBh,String strPageCompleteState){
+		
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strXxxBh }, "Integer");
 		if(count>0){

@@ -392,37 +392,39 @@ public class tzOnlineAppUtility {
 				    	strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 				    	if(!"".equals(strXxxValue)&&strXxxValue!=null){
 				    		//
+				    		
 				    		switch(strXxxGdgsjy){
 				    			case "email":
 				    				boolean isEmail = this.isValidEmail(strXxxValue);
-				    				if(!isEmail){
+				    				if(isEmail == false){
 				    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				    				}
 				    				break;
 				    			case "telphone":
 				    				boolean isPhone = this.isValidPhone(strXxxValue);
-				    				if(!isPhone){
+				    				if(isPhone == false){
 				    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				    				}
 				    				break;
 				    			case "idcard":
 				    				boolean isIdCard = this.isValidIdcard(strXxxValue);
-				    				if(!isIdCard){
+				    				if(isIdCard == false){
 				    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				    				}
 				    				break;
 				    			case "url":
 				    				boolean isUrl = this.isValidUrl(strXxxValue);
-				    				if(!isUrl){
+				    				if(isUrl == false){
 				    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				    				}
 				    				break;
 				    		}
-				    		if(!"".equals(strXxxValue)&&strXxxValue!=null){
+				    		if(!"".equals(returnMessage)&&returnMessage!=null){
 				    			break;
 				    		}
 						}
 				    }
+				    break;
 				case "EnglishAlphabet":
 					boolean isEnglishLetter = this.isEnglishLetter(strXxxValue);
 					if(!isEnglishLetter){
@@ -550,6 +552,9 @@ public class tzOnlineAppUtility {
 		boolean isMatch = true;
 		
 		int numPhoneLen = strValue.length();
+		
+		
+		
 		if(numPhoneLen>24||numPhoneLen<6){
 			isMatch = false;
 		}
@@ -569,7 +574,7 @@ public class tzOnlineAppUtility {
                 + "(:[0-9]{1,4})?" // 端口- :80  
                 + "((/?)|" // a slash isn't required if there is no file name  
                 + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$"; 
-		
+
 		boolean isMatch = strValue.matches(regex);
 		
 		return isMatch;
