@@ -217,7 +217,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 				var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_ADD_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
 				Ext.tzSubmit(tzParams,
 					function (jsonObject) {
-						Ext.get(activeTab.id).select('input').elements[0].value = "";
+						//Ext.get(activeTab.id).select('input').elements[0].value = "";
 						store.reload();
 						//var tzPar = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_EDIT_STD","OperateType":"HTML","comParams":{"TZ_APP_TPL_ID":"' + jsonObject.id + '"}}'
 						//var url = Ext.tzGetGeneralURL() + tzPar;
