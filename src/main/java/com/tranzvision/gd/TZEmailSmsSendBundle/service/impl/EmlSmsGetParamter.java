@@ -389,4 +389,217 @@ public class EmlSmsGetParamter {
 		}
 	}
 
+	// 获得考生（推荐信后台催促邮件）;
+	public String getTjxKshtName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_AUD_XM FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (name == null || "".equals(name)) {
+				return "";
+			} else {
+				return name;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐信未完成人员姓名（推荐信后台催促邮件）;
+	public String getTjxWwcName(String[] paramters) {
+		try {
+			String str_ref_name = "";
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String str_none_blank = jdbcTemplate.queryForObject(
+					"SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?",
+					new Object[] { "TZ_REF_TITLE_NONE_BLANK" }, String.class);
+
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_bmb_id = "";
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+					"SELECT OPRID,TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?",
+					new Object[] { audId, audCyId });
+			if (map != null) {
+				// str_oprid = (String)map.get("OPRID");
+				str_bmb_id = (String) map.get("TZ_BMB_ID");
+			}
+			if (str_bmb_id == null || "".equals(str_bmb_id)) {
+				str_bmb_id = "0";
+			}
+
+			String sql = "SELECT TZ_TJX_APP_INS_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,ATTACHSYSFILENAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
+			List<Map<String, Object>> list = null;
+
+			try{
+				list = jdbcTemplate.queryForList(sql,
+					new Object[] { Long.parseLong(str_bmb_id) });
+			}catch(Exception e){
+				list = null;
+			}
+			if (list != null && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					long str_tjx_bmb_id = 0L;
+					try {
+						str_tjx_bmb_id = Long.parseLong(list.get(i).get("TZ_TJX_APP_INS_ID").toString());
+					} catch (Exception e) {
+						str_tjx_bmb_id = 0L;
+					}
+					String str_tjr_title = (String) list.get(i).get("TZ_TJX_TITLE");
+					String str_ref_name_1 = (String) list.get(i).get("TZ_REFERRER_NAME");
+					String str_tjr_gname = (String) list.get(i).get("TZ_REFERRER_GNAME");
+					String str_file_name = (String) list.get(i).get("ATTACHSYSFILENAME");
+
+					String str_name_suff = "";
+
+					if (str_tjr_title != null && !"".equals(str_tjr_title) && str_tjr_title.equals(str_none_blank)) {
+						str_name_suff = str_tjr_title;
+					}
+
+					if (str_tjr_gname != null && !"".equals(str_tjr_gname)) {
+						if (str_name_suff != null && !"".equals(str_name_suff)) {
+							str_name_suff = str_name_suff + " " + str_tjr_gname;
+						} else {
+							str_name_suff = str_tjr_gname;
+						}
+					}
+
+					if (str_ref_name_1 == null) {
+						str_ref_name_1 = "";
+					}
+
+					if (str_name_suff != null && !"".equals(str_name_suff)) {
+						str_ref_name_1 = str_name_suff + " " + str_ref_name_1;
+					}
+
+					if (str_file_name == null || "".equals(str_file_name)) {
+						String str_states = "";
+						try{
+							str_states = jdbcTemplate.queryForObject(
+								"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
+								new Object[] { str_tjx_bmb_id }, String.class);
+						}catch(Exception e){
+							str_states = "";
+						}
+						if (!"U".equals(str_states)) {
+							if (str_ref_name == null || "".equals(str_ref_name)) {
+								str_ref_name = str_ref_name_1;
+							} else {
+								str_ref_name = str_ref_name + ", " + str_ref_name_1;
+							}
+						}
+					}
+				}
+			}
+			return str_ref_name;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐信已完成人员姓名（推荐信后台催促邮件）;
+	public String getTjxYwcName(String[] paramters) {
+		try {
+			String str_ref_name = "";
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String str_none_blank = jdbcTemplate.queryForObject(
+					"SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?",
+					new Object[] { "TZ_REF_TITLE_NONE_BLANK" }, String.class);
+
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_bmb_id = "";
+			Map<String, Object> map = jdbcTemplate.queryForMap(
+					"SELECT OPRID,TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?",
+					new Object[] { audId, audCyId });
+			if (map != null) {
+				// str_oprid = (String)map.get("OPRID");
+				str_bmb_id = (String) map.get("TZ_BMB_ID");
+			}
+			if (str_bmb_id == null || "".equals(str_bmb_id)) {
+				str_bmb_id = "0";
+			}
+
+			String sql = "SELECT TZ_TJX_APP_INS_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,ATTACHSYSFILENAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
+			List<Map<String, Object>> list = null;
+			try{
+				list = jdbcTemplate.queryForList(sql,
+						new Object[] { Long.parseLong(str_bmb_id) });
+			}catch(Exception e){
+				list = null;
+			}
+			if (list != null && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					long str_tjx_bmb_id = 0L;
+					try {
+						str_tjx_bmb_id = Long.parseLong(list.get(i).get("TZ_TJX_APP_INS_ID").toString());
+					} catch (Exception e) {
+						str_tjx_bmb_id = 0L;
+					}
+					String str_tjr_title = (String) list.get(i).get("TZ_TJX_TITLE");
+					String str_ref_name_1 = (String) list.get(i).get("TZ_REFERRER_NAME");
+					String str_tjr_gname = (String) list.get(i).get("TZ_REFERRER_GNAME");
+					String str_file_name = (String) list.get(i).get("ATTACHSYSFILENAME");
+
+					String str_name_suff = "";
+
+					if (str_tjr_title != null && !"".equals(str_tjr_title) && str_tjr_title.equals(str_none_blank)) {
+						str_name_suff = str_tjr_title;
+					}
+
+					if (str_tjr_gname != null && !"".equals(str_tjr_gname)) {
+						if (str_name_suff != null && !"".equals(str_name_suff)) {
+							str_name_suff = str_name_suff + " " + str_tjr_gname;
+						} else {
+							str_name_suff = str_tjr_gname;
+						}
+					}
+
+					if (str_ref_name_1 == null) {
+						str_ref_name_1 = "";
+					}
+
+					if (str_name_suff != null && !"".equals(str_name_suff)) {
+						str_ref_name_1 = str_name_suff + " " + str_ref_name_1;
+					}
+
+					if (str_file_name != null && !"".equals(str_file_name)) {
+						if (str_ref_name == null || "".equals(str_file_name)) {
+							str_ref_name = str_ref_name_1;
+						}else{
+							str_ref_name = str_ref_name + ", " + str_ref_name_1;
+						}
+					}else{
+						String str_states = "";
+						try{
+							str_states = jdbcTemplate.queryForObject(
+								"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
+								new Object[] { str_tjx_bmb_id }, String.class);
+						}catch(Exception e){
+							str_states = "";
+						}
+						if ("U".equals(str_states)) {
+							if (str_ref_name == null || "".equals(str_ref_name)) {
+								str_ref_name = str_ref_name_1;
+							} else {
+								str_ref_name = str_ref_name + ", " + str_ref_name_1;
+							}
+						}
+					}
+				}
+			}
+			return str_ref_name;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 }
