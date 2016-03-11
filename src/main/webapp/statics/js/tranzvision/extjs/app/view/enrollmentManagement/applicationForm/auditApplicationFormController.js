@@ -823,8 +823,25 @@
                     
                     
                     if (strAppId!=""){
-
-                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{"add":[{"strAppId":"'+strAppId+'","stuName":"'+stuName+'","refLetterFile":"'+scFileName+'","FileName":"'+FileName+'","strSysFile":"'+sysfile+'","fileUrl":"'+accessPath+'"}]} }';
+                    	var tzparamsVar = {
+                    		"ComID":"TZ_BMGL_BMBSH_COM",
+                    		"PageID":"TZ_UPLOADFILES_STD",
+                    		"OperateType":"U",
+                    		"comParams":
+                    			{ "add":
+                    				[{
+                    					"strAppId":strAppId,
+                    					"stuName":stuName,
+                    					"refLetterFile":scFileName,
+                    					"FileName":FileName,
+                    					"strSysFile":sysfile,
+                    					"fileUrl":accessPath
+                    				}]
+                    			} 
+                    	};
+                    	var tzParams = Ext.util.JSON.encode(tzparamsVar);
+                    	
+                        //var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_UPLOADFILES_STD","OperateType":"U","comParams":{"add":[{"strAppId":"'+strAppId+'","stuName":"'+stuName+'","refLetterFile":"'+scFileName+'","FileName":"'+FileName+'","strSysFile":"'+sysfile+'","fileUrl":"'+accessPath+'"}]} }';
                         Ext.tzSubmit(tzParams,function(responseData){
                             //form.reset();
                             //var fileGrid =  btn.findParentByType('grid');
