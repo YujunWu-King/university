@@ -37,7 +37,7 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
 	
 	//发送推荐信邮件;
-	public String sendTJX_Thanks(int numAppinsId){
+	public String sendTJX_Thanks(Long numAppInsId){
 		String strRtn = "";
 		//numAppinsId 推荐信报名表编号;
 		// 推荐信姓名,考生oprid,推荐人邮箱;
@@ -45,7 +45,7 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 		String str_tjr_title = "";
 		String str_name_suff = "";
 		String str_tjr_name = "", str_ks_oprid = "", str_tjr_email = "";
-		Map<String, Object> map = jdbcTemplate.queryForMap("SELECT OPRID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,TZ_EMAIL FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'",new Object[]{numAppinsId});
+		Map<String, Object> map = jdbcTemplate.queryForMap("SELECT OPRID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,TZ_EMAIL FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'",new Object[]{numAppInsId});
 		if(map != null ){
 			str_ks_oprid = (String)map.get("OPRID");
 			str_tjr_title = (String)map.get("TZ_TJX_TITLE");
@@ -77,12 +77,12 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 		
 		// 语言,机构ID;
 		String str_language = "" , strJgid = "";
-		Map<String, Object> jgLangMap = jdbcTemplate.queryForMap("SELECT B.TZ_APP_TPL_LAN,B.TZ_JG_ID FROM PS_TZ_APP_INS_T A,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID limit 0,1",new Object[]{numAppinsId});
+		Map<String, Object> jgLangMap = jdbcTemplate.queryForMap("SELECT B.TZ_APP_TPL_LAN,B.TZ_JG_ID FROM PS_TZ_APP_INS_T A,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID limit 0,1",new Object[]{numAppInsId});
 		if(jgLangMap != null){
 			str_language = (String)jgLangMap.get("TZ_APP_TPL_LAN");
 			strJgid = (String)jgLangMap.get("TZ_JG_ID");
 		}
-		if(numAppinsId == 0){
+		if(numAppInsId == 0){
 			strRtn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "NO_INS_ID", str_language, "", "");
 		    return strRtn;
 		}
@@ -111,7 +111,7 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 		}
 
 		// 为听众添加听众成员;
-		boolean addAudCy = createTaskServiceImpl.addAudCy(taskId,str_tjr_name, str_tjr_name, "", "", str_tjr_email, "", "", str_ks_oprid, "", "", String.valueOf(numAppinsId));
+		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,str_tjr_name, str_tjr_name, "", "", str_tjr_email, "", "", str_ks_oprid, "", "", String.valueOf(numAppInsId));
 		if (addAudCy == false) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "ADD_L_FAIL", str_language, "", "");
 			return mess;
@@ -122,7 +122,6 @@ public class TzTjxThanksServiceImpl extends FrameworkImpl{
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_ID_FAIL", str_language, "", "");
 			return mess;
 		}
-
 		sendSmsOrMalServiceImpl.send(taskId, "");
 		mess = "SUCCESS";
 		return mess;
