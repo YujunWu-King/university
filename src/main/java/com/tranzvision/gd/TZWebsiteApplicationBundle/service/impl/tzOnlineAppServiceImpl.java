@@ -55,6 +55,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCompTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl;
+import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
@@ -138,6 +139,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 	@Autowired
 	private PsroleuserMapper psroleuserMapper;
+	@Autowired
+	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
 		
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
@@ -1100,13 +1103,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				    	strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType);
 				    	//如果是推荐信，则提交后发送邮件
 				    	if("TJX".equals(strTplType)){
-				    		
+				    		String strSubmitTjxSendEmail =  tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 				    	}
 				    	if("BMB".equals(strTplType)){
-				    		//发送邮件
-				    		String strSubmitSendEmail = this.sendSubmitEmail(numAppInsId, strTplId, strAppOprId, strAppOrgId, strTplType);
 				    		//同步报名人联系方式
 				    		this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
+				    		//发送邮件
+				    		String strSubmitSendEmail = this.sendSubmitEmail(numAppInsId, strTplId, strAppOprId, strAppOrgId, strTplType);
 				    	}
 				    	
 					}
@@ -1158,6 +1161,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		String strField = "";		
 		String strFieldValue = "";
 		String strUserInfo = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";	
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
 		for (Object objData : listData) {
@@ -1190,18 +1196,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				}
 				if(strFieldValue == null) 
 					strFieldValue = "";
-				if("".equals(strUserInfo)){
-					strUserInfo = "\"" + strField + "\""+ ":" + "\"" + strFieldValue + "\"";
-				}else{
-					strUserInfo = strUserInfo + "," + "\"" + strField + "\""+ ":" + "\"" + strFieldValue + "\"";
-				}
 				
+				map.put(strField, strFieldValue);
+
 			}catch(Exception e){
 				e.printStackTrace();
 				continue;
 			}
 		}
-		strUserInfo = "{" + strUserInfo + "}";
+		strUserInfo = jacksonUtil.Map2json(map);
 		
 		return strUserInfo;
 	}
@@ -2088,7 +2091,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		String strName = "";
 		//邮件模版
 		String strEmlTmpId = "";
-		String sql = "SELECT TZ_EML_MODAL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = :1 AND TZ_ISSENDMAIL = 'Y'";
+		String sql = "SELECT TZ_EML_MODAL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? AND TZ_ISSENDMAIL = 'Y'";
 		strEmlTmpId = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
 		if(!"".equals(strEmlTmpId)&&strEmlTmpId!=null){
 			if("BMB".equals(strTplType)){
@@ -2096,14 +2099,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strName = sqlQuery.queryForObject(sql, new Object[] { strAppOprId }, "String");
 				sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
 				strEmail = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-				
 				//创建邮件短信发送任务
 				String strTaskId = createTaskServiceImpl.createTaskIns(strAppOrgId, strEmlTmpId, "MAL", "A");
 				if(strTaskId==null || "".equals(strTaskId)){
 					return "false";
 				}
 				//创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience(strTaskId,strAppOrgId,"报名表提交发送邮件", "BMBTJYJ");
+				String createAudience = createTaskServiceImpl.createAudience(strTaskId,strAppOrgId,"报名表提交发送邮件", "BMB");
 				if("".equals(createAudience)||createAudience==null){
 					return "false";
 				}
@@ -2119,8 +2121,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					//发送邮件
 					sendSmsOrMalServiceImpl.send(strTaskId,"");
 				}
-			}else if("TJX".equals(strTplType)){
-				//推荐信
 			}else{
 				return "true";
 			}
@@ -2252,11 +2252,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			   			//备用手机合并
 			   			if(!"".equals(strBysjHb)&&strBysjHb!=null){
 			   				if(!"".equals(strBysj)&&strBysj!=null){
-			   					strZysjHb = strBysjHb + strSyncSep + strBysj;
+			   					strBysjHb = strBysjHb + strSyncSep + strBysj;
 				   			}
 			   			}else{
 			   				if(!"".equals(strBysj)&&strBysj!=null){
-			   					strZysjHb = strBysj;
+			   					strBysjHb = strBysj;
 				   			}
 			   			}
 			   			break;
@@ -2308,7 +2308,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			   			//备用电话合并
 			   			if(!"".equals(strBydhHb)&&strBydhHb!=null){
 			   				if(!"".equals(strBydh)&&strBydh!=null){
-			   					strBydhHb = strBysjHb + strSyncSep + strBydh;
+			   					strBydhHb = strBydhHb + strSyncSep + strBydh;
 				   			}
 			   			}else{
 			   				if(!"".equals(strBydh)&&strBydh!=null){
@@ -2326,7 +2326,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				   			}
 			   			}else{
 			   				if(!"".equals(strZyyx)&&strZyyx!=null){
-			   					strZyyxHb = strBydh;
+			   					strZyyxHb = strZyyx;
 				   			}
 			   			}
 			   			break;
@@ -2340,7 +2340,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				   			}
 			   			}else{
 			   				if(!"".equals(strByyx)&&strByyx!=null){
-			   					strByyxHb = strBydh;
+			   					strByyxHb = strByyx;
 				   			}
 			   			}
 			   			break;
@@ -2395,7 +2395,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
 			   				strBydz = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
 			   			}
-			   			//主要地址合并
+			   			//次要地址合并
 			   			if(!"".equals(strBydzHb)&&strBydzHb!=null){
 			   				if(!"".equals(strBydz)&&strBydz!=null){
 			   					strBydzHb = strZydzHb + strSyncSep + strBydz;
@@ -2478,7 +2478,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	   String strSkypeZc = "";
 	   
 	   String sqlGetZcInfo = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_ZY_TXYB,TZ_CY_TXDZ,TZ_CY_TXYB,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = ? AND TZ_LYDX_ID = ?";
-	   Map<String, Object> MapGetZcInfo = sqlQuery.queryForMap(sqlGetZcInfo);
+	   Map<String, Object> MapGetZcInfo = sqlQuery.queryForMap(sqlGetZcInfo,new Object[] { "ZCYH",strAppOprId });
 	   if(MapGetZcInfo != null){
 		   strZysjZc = MapGetZcInfo.get("TZ_ZY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_SJ"));
 		   strBysjZc = MapGetZcInfo.get("TZ_CY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_SJ"));
@@ -2528,6 +2528,44 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		   if("".equals(strSkypeHb)||strSkypeHb==null){
 			   strSkypeHb = strSkypeZc;
 		   }
+	   }
+	   
+	   //mysql如果字符过长会报错，需要截取长度
+	   if(strZysjHb.length()>20){
+		   strZysjHb = strZysjHb.substring(0, 20);
+	   }
+	   if(strBysjHb.length()>20){
+		   strBysjHb = strBysjHb.substring(0, 20);
+	   }
+	   if(strZydhHb.length()>20){
+		   strZydhHb = strZydhHb.substring(0, 20);
+	   }
+	   if(strBydhHb.length()>20){
+		   strBydhHb = strBydhHb.substring(0, 20);
+	   }
+	   if(strZyyxHb.length()>100){
+		   strZyyxHb = strZyyxHb.substring(0, 100);
+	   }
+	   if(strByyxHb.length()>100){
+		   strByyxHb = strByyxHb.substring(0, 100);
+	   }
+	   if(strZydzHb.length()>254){
+		   strZydzHb = strZydzHb.substring(0, 254);
+	   }
+	   if(strZyybHb.length()>10){
+		   strZyybHb = strZyybHb.substring(0, 10);
+	   }
+	   if(strBydzHb.length()>254){
+		   strBydzHb = strBydzHb.substring(0, 254);
+	   }
+	   if(strByybHb.length()>10){
+		   strByybHb = strByybHb.substring(0, 10);
+	   }
+	   if(strWxHb.length()>20){
+		   strWxHb = strWxHb.substring(0, 20);
+	   }
+	   if(strSkypeHb.length()>70){
+		   strSkypeHb = strSkypeHb.substring(0, 70);
 	   }
 	   
 	   String sqlCount = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZSBM' AND TZ_LYDX_ID = ?";
