@@ -508,9 +508,9 @@ var SurveyBuild = {
         //    //分页符、文字描述控件跳过检查
         //    return checkBz;
         //}
-        var $edit_box = $("#question-edit");
-        var $itemId = $edit_box.find(".edit_itemId");
-        var $itemName = $edit_box.find(".edit_itemName");
+
+        var $itemId = $("#question-edit").find(".edit_itemId");
+        var $itemName = $("#question-edit").find(".edit_itemName");
         var has = false,data;
 
         if (SurveyBuild.isDHContainer) {
@@ -529,12 +529,12 @@ var SurveyBuild = {
             checkBz = false;
             tipObj = $itemId;
             msg = "信息项编号只允许字母数字以及下划线";
-        } else if (!$itemName.val().length > 30) {
+        } else if ($itemName.length > 0 && !$itemName.val().length > 30) {
             /*信息项编号长度限制*/
             checkBz = false;
             tipObj = $itemId;
             msg = "信息项编号长度不能超过30";
-        } else if (!$itemName.val()) {
+        } else if ($itemName.length > 0 && !$itemName.val()) {
             /*信息项名称必填*/
             checkBz = false;
             tipObj = $itemName;
@@ -2464,10 +2464,18 @@ var SurveyBuild = {
 			var b = c.which;
 			return b == 8 || b == 127 || b == 0 || b == 95 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
 		});
-		$("#question-edit").on("keypress", ".datemax,.datemin,.timertime",
+		$("#question-edit").on("keypress", ".datemax,.datemin,.minLen,.maxLen,.numSizeMax,.numSizeMin,.numDecws,.minSelect,.maxSelect,.minLines,.maxLines",
 		function(c) {
 			var b = c.which;
 			return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
+		});
+		$("#question-edit").on("keypress", ".edit_itemId", function(c) {
+			var b = c.which;
+			return b == 8 || b >= 65 && b <= 90 || b >= 97 && b <= 122 || b == 95 || b >= 48 && b <= 57;
+		});
+		$("#question-edit").on("keypress", ".edit_itemId", function(c) {
+			var b = c.which;
+			return b == 8 || b >= 65 && b <= 90 || b >= 97 && b <= 122 || b == 95 || b >= 48 && b <= 57;
 		});
 		SurveyBuild._tid = a;
 

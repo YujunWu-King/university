@@ -10,9 +10,9 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 
 	_getHtml: function(data, previewmode) {
 		var c = '';
-		if (previewmode) {
+		if (previewmode) { 
 			c += '<div class="question-answer" id="' + data.itemId + '">';
-			c += '	<div class="main_inner_connent_info">' + data.title + '</div>';
+			c += '	<div class="main_inner_connent_info lineheight16">' + data.title + '</div>';
 			c += '</div>';
 		} else {
 			c = '<div class="question-answer"></div>';

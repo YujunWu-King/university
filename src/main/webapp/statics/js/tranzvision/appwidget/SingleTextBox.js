@@ -98,7 +98,7 @@ SurveyBuild.extend("SingleTextBox", "baseComponent", {
 
         e += '  <div class="edit_item_warp">';
         e += '      <span class="edit_item_label">最少：</span>';
-        e += '      <input type="text" class="medium" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '"/>';
+        e += '      <input type="text" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '"/>';
         e += '  </div>';
 
         e += '  <div class="edit_item_warp">';
