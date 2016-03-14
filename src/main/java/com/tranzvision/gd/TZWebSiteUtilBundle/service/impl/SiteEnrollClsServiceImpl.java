@@ -1089,7 +1089,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    }catch(Exception e){
 		    	
 		    }
-		    
+
 		    String str_content = "";
 		    if(strTabType.contains("MOBILE") && strTabType.contains("EMAIL")){
 		    	if("ENG".equals(strLang)){
@@ -1098,6 +1098,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 		    	}
 		    }else{
+		    	
 		    	if(strTabType.contains("EMAIL")){
 		    		if("ENG".equals(strLang)){
 			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath ,loginUrl);
@@ -1343,9 +1344,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    }
 		  
 		    if("ENG".equals(strLang)){
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath );
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }else{
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath);
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
 		    str_content = objRep.repCss(str_content, strSiteId);
