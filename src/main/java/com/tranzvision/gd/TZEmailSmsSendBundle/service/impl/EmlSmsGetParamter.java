@@ -436,10 +436,9 @@ public class EmlSmsGetParamter {
 			String sql = "SELECT TZ_TJX_APP_INS_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,ATTACHSYSFILENAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
 			List<Map<String, Object>> list = null;
 
-			try{
-				list = jdbcTemplate.queryForList(sql,
-					new Object[] { Long.parseLong(str_bmb_id) });
-			}catch(Exception e){
+			try {
+				list = jdbcTemplate.queryForList(sql, new Object[] { Long.parseLong(str_bmb_id) });
+			} catch (Exception e) {
 				list = null;
 			}
 			if (list != null && list.size() > 0) {
@@ -479,11 +478,11 @@ public class EmlSmsGetParamter {
 
 					if (str_file_name == null || "".equals(str_file_name)) {
 						String str_states = "";
-						try{
+						try {
 							str_states = jdbcTemplate.queryForObject(
-								"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
-								new Object[] { str_tjx_bmb_id }, String.class);
-						}catch(Exception e){
+									"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
+									new Object[] { str_tjx_bmb_id }, String.class);
+						} catch (Exception e) {
 							str_states = "";
 						}
 						if (!"U".equals(str_states)) {
@@ -529,10 +528,9 @@ public class EmlSmsGetParamter {
 
 			String sql = "SELECT TZ_TJX_APP_INS_ID,TZ_TJX_TITLE,TZ_REFERRER_NAME,TZ_REFERRER_GNAME,ATTACHSYSFILENAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
 			List<Map<String, Object>> list = null;
-			try{
-				list = jdbcTemplate.queryForList(sql,
-						new Object[] { Long.parseLong(str_bmb_id) });
-			}catch(Exception e){
+			try {
+				list = jdbcTemplate.queryForList(sql, new Object[] { Long.parseLong(str_bmb_id) });
+			} catch (Exception e) {
 				list = null;
 			}
 			if (list != null && list.size() > 0) {
@@ -573,16 +571,16 @@ public class EmlSmsGetParamter {
 					if (str_file_name != null && !"".equals(str_file_name)) {
 						if (str_ref_name == null || "".equals(str_file_name)) {
 							str_ref_name = str_ref_name_1;
-						}else{
+						} else {
 							str_ref_name = str_ref_name + ", " + str_ref_name_1;
 						}
-					}else{
+					} else {
 						String str_states = "";
-						try{
+						try {
 							str_states = jdbcTemplate.queryForObject(
-								"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
-								new Object[] { str_tjx_bmb_id }, String.class);
-						}catch(Exception e){
+									"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
+									new Object[] { str_tjx_bmb_id }, String.class);
+						} catch (Exception e) {
 							str_states = "";
 						}
 						if ("U".equals(str_states)) {
@@ -602,4 +600,50 @@ public class EmlSmsGetParamter {
 		}
 	}
 
+	// 获得考生姓名（推荐信感谢邮件）;
+	public String getTjxKsName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT OPRID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String str_oprid = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (str_oprid != null && !"".equals(str_oprid)) {
+				String str_tjxname = jdbcTemplate.queryForObject(
+						"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[] { str_oprid },
+						String.class);
+				if (str_tjxname != null && !"".equals(str_tjxname)) {
+					return str_tjxname;
+				} else {
+					return "";
+				}
+			} else {
+				return "";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 获得推荐人姓名（推荐信感谢邮件）;
+	public String getTjxThanksName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_AUD_XM FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (name == null || "".equals(name)) {
+				return "";
+			} else {
+				return name;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 }
