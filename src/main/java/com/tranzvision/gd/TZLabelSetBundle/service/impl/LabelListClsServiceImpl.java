@@ -92,7 +92,10 @@ public class LabelListClsServiceImpl extends FrameworkImpl {
 				listData.add(mapRetJson);
 			}
 		
-			mapRet.replace("total", resultlist.size());
+			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_LABEL_DFN_T WHERE TZ_JG_ID = ? AND TZ_LABEL_STATUS <> 'N'";
+			int numTotal = sqlQuery.queryForObject(totalSQL, new Object[] { orgId}, "Integer");
+			
+			mapRet.replace("total", numTotal);
 			mapRet.replace("root", listData);
 		} catch (Exception e) {
 			e.printStackTrace();
