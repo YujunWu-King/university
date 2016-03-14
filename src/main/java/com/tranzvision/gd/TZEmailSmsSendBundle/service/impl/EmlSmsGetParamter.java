@@ -495,6 +495,7 @@ public class EmlSmsGetParamter {
 					}
 				}
 			}
+			
 			return str_ref_name;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -569,7 +570,7 @@ public class EmlSmsGetParamter {
 					}
 
 					if (str_file_name != null && !"".equals(str_file_name)) {
-						if (str_ref_name == null || "".equals(str_file_name)) {
+						if (str_ref_name == null || "".equals(str_ref_name)) {
 							str_ref_name = str_ref_name_1;
 						} else {
 							str_ref_name = str_ref_name + ", " + str_ref_name_1;
