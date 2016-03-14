@@ -661,6 +661,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 
 			String strUserEmail = "";
 			String strUserMoblie = "";
+			String strUserSkype = "";
 			// 获取机构id;
 			String strJgid = "";
 			String strLang = "";
@@ -671,6 +672,10 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 
 			if (jacksonUtil.containsKey("userMoblie")) {
 				strUserMoblie = jacksonUtil.getString("userMoblie");
+			}
+			
+			if (jacksonUtil.containsKey("TZ_SKYPE")) {
+				strUserSkype = jacksonUtil.getString("TZ_SKYPE");
 			}
 
 			if (jacksonUtil.containsKey("jgid")) {
@@ -781,6 +786,12 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_ZY_SJ=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserMoblie, oprid });
 			}
+			
+			if (strUserSkype != null && !"".equals(strUserSkype)) {
+				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_SKYPE=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
+				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserSkype, oprid });
+			}
+			
 
 			String strPassSucTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "29",
 					"修改成功", "The modification is successful");

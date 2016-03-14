@@ -20,6 +20,7 @@
         }
     ],
     items:[
+	/*
         {
             xtype:'home',
             id:'tranzvision-framework-home-panel',
@@ -27,6 +28,7 @@
             closable:false,
             tabIndex:-1
         }
+	*/	
     ],
     showTitle: true,
     scrollable: true,

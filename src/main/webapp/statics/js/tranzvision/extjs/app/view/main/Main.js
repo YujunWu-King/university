@@ -41,7 +41,8 @@ Ext.define('KitchenSink.view.main.Main', {
         collapsible: true,
         collapsed: true,
         width: 350,
-        minWidth: 100
+        minWidth: 100,
+		hidden: true
     }],
 
     applyState: function(state) {

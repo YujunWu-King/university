@@ -25,7 +25,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * 
  * @author tang 2015-10-23 功能说明：高端产品-招生系统框架通用类
  */
-
 @Service
 public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComService {
 	@Autowired

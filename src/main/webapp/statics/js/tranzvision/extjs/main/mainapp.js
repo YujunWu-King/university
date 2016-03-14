@@ -396,7 +396,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         //负责客户端与服务端统一交互的方法
         submit: function(params,callback,msg,saveFlag,saveTarget,failureFn)
         {
-            if(msg == "" || msg == undefined)
+            if(msg === "" || msg == undefined)
             {
                 //msg = "保存成功";
                 msg = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00025");
@@ -438,7 +438,10 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                 /*判断服务器是否返回了正确的信息*/
                                 if(jsonObject.state.errcode == 0)
                                 {
-                                    boot.showToast(msg);
+									if(msg)
+									{
+										boot.showToast(msg);
+									}                                    
 
                                     //提交Form表单修改，重置表单修改状态
                                     if(saveFlag === true)
@@ -905,11 +908,11 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         },
 
         //从服务器获取指定hardcode点的值
-        getHardcodeValue: function(hardvodeName)
+        getHardcodeValue: function(hardcodeName)
         {
             //hardcode值
             var hardvodeValue="";
-            var tzParams = '{"OperateType":"HARDCODE","hardcodeName":"'+hardvodeName+'"}';
+            var tzParams = '{"OperateType":"HARDCODE","hardcodeName":"'+hardcodeName+'"}';
 
             try
             {
@@ -1537,6 +1540,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                                     },
                                                     {
                                                         width: 95,
+                                                        height: 31,
                                                         xtype: "image",
                                                         src: '',
                                                         name: "yzmpic_20150626",

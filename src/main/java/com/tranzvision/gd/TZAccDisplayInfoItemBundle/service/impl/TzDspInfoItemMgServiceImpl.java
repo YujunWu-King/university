@@ -530,7 +530,7 @@ public class TzDspInfoItemMgServiceImpl extends FrameworkImpl {
 									psTzRegfieldEng.setLanguageCd(languageCd);
 									psTzRegfieldEng.setTzRegFieldName(regEnName);
 
-									if ("Y".equals(recExists)) {
+									if (!"Y".equals(recExists)) {
 										psTzRegfieldEngMapper.insert(psTzRegfieldEng);
 									} else {
 										psTzRegfieldEngMapper.updateByPrimaryKey(psTzRegfieldEng);
