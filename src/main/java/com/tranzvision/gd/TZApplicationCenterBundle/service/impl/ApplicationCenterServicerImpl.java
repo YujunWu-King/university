@@ -229,6 +229,9 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 									"SELECT COALESCE(B.TZ_ZHZ_DMS,A.TZ_ZHZ_DMS)  TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID=?) B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND A.TZ_ZHZ_ID=?",
 									new Object[] { language, TZ_APP_FORM_STA }, "String");
 						}
+						if(appFormStatusDesc == null){
+							appFormStatusDesc = "";
+						}
 
 						if (applyNum > 0 && isShow == false && bmlcTotalNum > 0) {
 							isShow = true;
