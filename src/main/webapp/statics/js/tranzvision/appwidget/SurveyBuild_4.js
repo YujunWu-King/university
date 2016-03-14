@@ -1425,7 +1425,7 @@ var SurveyBuild = {
         nt += '<fieldset>';
         nt += '  <legend>';
         nt += '		<span class="edit_item_label">名称：</span>';
-        nt += '		<input type="text" class="medium edit_itemName" onkeyup="SurveyBuild.saveAttr(this,\'itemName\')" value="' + data.itemName + '"/>';
+        nt += '		<input type="text" class="medium edit_itemName" onkeyup="SurveyBuild.saveAttr(this,\'itemName\')" value="' + data.itemName + '" maxlength="60"/>';
         nt += '  </legend>';
         nt += '</fieldset>';
 

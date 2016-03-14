@@ -88,12 +88,12 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
         var e = '';
         e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label">年份最小值：</span>';
-        e += '	<input type="text" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
+        e += '	<input type="text" maxlength="4" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
         e += '</div>';
 
         e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label">年份最大值：</span>';
-        e += '	<input type="text" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
+        e += '	<input type="text" maxlength="4" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
         e += '</div>';
         e += '<div class="edit_jygz">';
 		e += '	<span class="title"><i class="icon-cog"></i> 校验规则</span>';

@@ -82,12 +82,12 @@ SurveyBuild.extend("Completion", "baseComponent", {
         //最少
         e += '      <div class="edit_item_warp">';
         e += '            <span class="edit_item_label">最少：</span>';
-        e += '          <input type="text" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '"/>';
+        e += '          <input type="text" maxlength="11" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '"/>';
         e += '      </div>';
         //最多
         e += '      <div class="edit_item_warp">';
         e += '            <span class="edit_item_label">最多：<a href="#" data-for-id="help_maxLen" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>';
-        e += '          <input type="text" class="medium maxLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxLen\')" value="' + data.maxLen + '"/>';
+        e += '          <input type="text" maxlength="11" class="medium maxLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxLen\')" value="' + data.maxLen + '"/>';
         e += '      </div>';
 
         //校验规则

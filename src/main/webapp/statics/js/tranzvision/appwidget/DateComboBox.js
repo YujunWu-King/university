@@ -6,7 +6,6 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 	dateformate: "yy-mm-dd",
 	"minYear": "1960",
 	"maxYear": "2030",
-
 	children: [
 		{
 			"itemId": "com_startdate",
@@ -111,8 +110,8 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		e += '<option value="yy/mm/dd" ' + (data.dateformate == "yy/mm/dd" ? "selected='selected'": "") + '>yyyy/MM/dd</option>';
 		e += '</select></div>';
 				
-		e += '<div class="edit_item_warp"><span class="edit_item_label">年份最小值：</span>  <input type="text" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/></div>';
-		e += '<div class="edit_item_warp"><span class="edit_item_label">年份最大值：</span>  <input type="text" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/></div>';
+		e += '<div class="edit_item_warp"><span class="edit_item_label">年份最小值：</span>  <input type="text" maxlength="4" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/></div>';
+		e += '<div class="edit_item_warp"><span class="edit_item_label">年份最大值：</span>  <input type="text" maxlength="4" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/></div>';
 
         e += '<div class="edit_item_warp">';
         e += '  <span class="edit_item_label">默认值：</span>';

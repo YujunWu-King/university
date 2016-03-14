@@ -145,13 +145,13 @@ SurveyBuild.extend("MultipleChoice", "baseComponent", {
         //最少选择
         e += '	        <div class="edit_item_warp">';
         e += '		        <span class="edit_item_label">最少选择：</span>';
-        e += '		        <input type="text" class="medium minSelect" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minSelect\')" value="' + data.minSelect + '"/>';
+        e += '		        <input type="text" maxlength="11" class="medium minSelect" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minSelect\')" value="' + data.minSelect + '"/>';
         e += '	        </div>';
 
         //最多选择
         e += '	        <div class="edit_item_warp mb10">';
         e += '		        <span class="edit_item_label">最多选择：</span>';
-        e += '		        <input type="text" class="medium maxSelect" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxSelect\')" value="' + data.maxSelect + '"/>';
+        e += '		        <input type="text" maxlength="11" class="medium maxSelect" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxSelect\')" value="' + data.maxSelect + '"/>';
         e += '	        </div>';
         e += '      </div>';
 

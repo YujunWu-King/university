@@ -81,12 +81,12 @@ SurveyBuild.extend("EnglishAlphabet", "baseComponent", {
 
 		e += '	<div class="edit_item_warp">';
 		e += '		<span class="edit_item_label">最少：</span>';
-		e += '		<input type="text" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '" style="ime-mode: disabled;"/>';
+		e += '		<input type="text" maxlength="11" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minLen\')" value="' + data.minLen + '" style="ime-mode: disabled;"/>';
 		e += '	</div>';
 
 		e += '	<div class="edit_item_warp mb10">';
 		e += '		<span class="edit_item_label">最多：</span>';
-		e += '		<input type="text" class="medium maxLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxLen\')" value="' + data.maxLen + '" style="ime-mode: disabled;"/>';
+		e += '		<input type="text" maxlength="11" class="medium maxLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxLen\')" value="' + data.maxLen + '" style="ime-mode: disabled;"/>';
 		e += '	</div>';
 		e += '</div>';
 

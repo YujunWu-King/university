@@ -50,12 +50,12 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 
 		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
 		e += '          	<span class="edit_item_label">最小行数：</span>';
-		e += '				<input type="text" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+		e += '				<input type="text" maxlength="1" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
 		e += '          </div>';
 
 		e += '          <div class="edit_item_warp mb10">';
 		e += '          	<span class="edit_item_label">最大行数：</span>';
-		e += '				<input type="text" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+		e += '				<input type="text" maxlength="1" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
 		e += '          </div>';
 
 		e += '      </div>';

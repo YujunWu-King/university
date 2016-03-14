@@ -476,10 +476,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		e +='<div class="groupbox">';
 		e +='<div class="edit_item_warp">';
 		e +='<span class="edit_item_label">最少封数：</span>';
-		e +='  <input type="text" class="medium" style="ime-mode:disabled" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+		e +='  <input type="text" class="medium" maxlength="1" style="ime-mode:disabled" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
 		e +='</div>';
 		e +='<div class="edit_item_warp"><span class="edit_item_label">最多封数：</span>';
-		e +='  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+		e +='  <input type="text" class="medium" maxlength="1" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
 		e +='</div>';
 		e +='<div class="edit_item_warp mb10"><span class="edit_item_label">默认显示：</span>';
 		e +='  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'defaultLines\')" value="' + data.defaultLines + '"/>';
