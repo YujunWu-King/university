@@ -4174,3 +4174,6 @@ textarea[disabled], textarea[readonly] {
 	background-color:#F5F5F5;
 }
 button.ui-datepicker-close { display: none; }
+.lineheight16 {
+	line-height: 1.6;
+}
