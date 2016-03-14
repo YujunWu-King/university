@@ -105,12 +105,12 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 
 		e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label">年份最小值：</span>';
-		e += '	<input type="text" class="medium datemin" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
+		e += '	<input type="text" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
 		e += '</div>';
 
 		e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label">年份最大值：</span>';
-		e += '	<input type="text" class="medium datemax" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
+		e += '	<input type="text" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
 		e += '</div>';
 
         e += '<div class="edit_item_warp">';
@@ -231,30 +231,30 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 	_validatorAttr: function(data) {
 		var msg;
 		var $edit_box = $("#question-edit");
-		var dateMax = data.maxYear;
-		var dateMin = data.minYear;
+		var maxYear = data.maxYear;
+		var minYear = data.minYear;
 		var curYear = new Date().getFullYear();
-		if (!dateMin) {
+		if (!minYear) {
 			msg = "年份最小值不能为空！";
-			var $targetObj = $edit_box.find(".datemin");
+			var $targetObj = $edit_box.find(".minYear");
 			SurveyBuild.fail($targetObj, msg);
 			return false;
 		}
-		if (!dateMax) {
+		if (!maxYear) {
 			msg = "年份最大值不能为空！";
-			var $targetObj = $edit_box.find(".datemax");
+			var $targetObj = $edit_box.find(".maxYear");
 			SurveyBuild.fail($targetObj, msg);
 			return false;
 		}
-		if (parseInt(dateMax) < parseInt(dateMin)) {
+		if (parseInt(maxYear) < parseInt(minYear)) {
 			msg = "年份最大值要大于年份最小值！";
-			var $targetObj = $edit_box.find(".datemax");
+			var $targetObj = $edit_box.find(".maxYear");
 			SurveyBuild.fail($targetObj, msg);
 			return false;
 		}
-		if (parseInt(dateMax) > parseInt(curYear)) {
+		if (parseInt(maxYear) > parseInt(curYear)) {
 			msg = "年份最大值要小于当前年份！";
-			var $targetObj = $edit_box.find(".datemax");
+			var $targetObj = $edit_box.find(".maxYear");
 			SurveyBuild.fail($targetObj, msg);
 			return false;
 		}

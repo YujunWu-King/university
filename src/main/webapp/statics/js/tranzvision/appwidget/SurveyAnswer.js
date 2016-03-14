@@ -204,7 +204,7 @@ var SurveyBuild = {
                 var b = c.which;
                 return b == 8 || b == 127 || b == 0 || b == 95 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
             });
-        $("#question-edit").on("keypress", ".datemax,.datemin,.timertime",
+        $("#question-edit").on("keypress", ".maxYear,.minYear,.timertime",
             function(c) {
                 var b = c.which;
                 return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
