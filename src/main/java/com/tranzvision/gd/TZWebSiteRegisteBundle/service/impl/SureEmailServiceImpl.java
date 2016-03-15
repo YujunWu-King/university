@@ -32,7 +32,9 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 	public String tzGetHtmlContent(String strParams) {
 		
 		//确认修改后跳转页面;跳转到com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegEmailSuccessServiceImpl.tzGetHtmlContent;
-		String RegEmailSuccess = request.getContextPath()+"/dispatcher?classid=regemailsuccess";
+		String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+		+ request.getContextPath() + "/dispatcher";
+		String RegEmailSuccess = serv+"?classid=regemailsuccess";
 		//String RegEmailSuccess = GenerateScriptContentURL(%Portal, %Node, Record.WEBLIB_GD_USER, Field.TZ_GD_USER, "FieldFormula", "Iscript_RegEmailSuccess");
 		
 		//验证是否通过;
