@@ -1,0 +1,5 @@
+此目录用于保存导出的报名表，目录结构如下：
+./export/[orgid]/[bmbTplid]/[在此目录下生成 header.html 和 footer.html]
+./export/[orgid]/[bmbTplid]/[bmbInsId]/[在此目录下生成报名表实例的html文件以及转换后的pdf文件]
+
+由于报名表中有较多的敏感信息，所以生成的pdf文件不能通过http直接访问到，要有一个程序来做导出，由这个程序来读取指定pdf文件，实现文件的下载；
