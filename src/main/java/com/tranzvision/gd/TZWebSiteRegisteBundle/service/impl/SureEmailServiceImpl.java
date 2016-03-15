@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
-import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -41,11 +40,12 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 		Date cntlogAddtiem;
 		Date curDate = new Date();
 		String dlzhId = "", tzJgId = "", tzEmail = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
+		//JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
-			jacksonUtil.json2Map(strParams);
-			String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");
-
+			//jacksonUtil.json2Map(strParams);
+			//String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");
+			String tokenCode = request.getParameter("TZ_TOKEN_CODE");
+			
 			String strTokenFLg = "";
 			PsTzDzyxYzmTbl psTzDzyxYzmTbl = psTzDzyxYzmTblMapper.selectByPrimaryKey(tokenCode);
 			if(psTzDzyxYzmTbl != null){
@@ -53,8 +53,9 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 				tzEmail = psTzDzyxYzmTbl.getTzEmail();
 				dlzhId = psTzDzyxYzmTbl.getTzDlzhId();
 				tzJgId = psTzDzyxYzmTbl.getTzJgId();
+			
 				if("Y".equals(strTokenFLg)){
-					cntlogAddtiem = psTzDzyxYzmTbl.getTzCntlogAddtime();
+					cntlogAddtiem = psTzDzyxYzmTbl.getTzYzmYxq();
 					if(cntlogAddtiem.before(curDate)){
 						// 验证码超时;
 			            RegEmailSuccess = RegEmailSuccess + "&strJgid=" + tzJgId + "&FLAGE=N&errorFlg=overtime";
