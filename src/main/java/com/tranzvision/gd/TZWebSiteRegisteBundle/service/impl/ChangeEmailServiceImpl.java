@@ -198,7 +198,10 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 			}
 			// 确认修改邮箱 ;
 			//com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.SureEmailServiceImpl;
-			String sureEmail = request.getContextPath()+"/dispatcher?classid=sureemail";
+			String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+			+ request.getContextPath();
+			String sureEmail = serv + "/dispatcher";
+			sureEmail  = sureEmail+"?classid=sureemail&TZ_TOKEN_CODE="+strYZM;
 
 			// 给当前填写的邮箱发送激活邮件---开始;
 			// 发送内容;
