@@ -44,6 +44,7 @@
 		<dom4j.version>1.6.1</dom4j.version>
 		<poi.version>3.13</poi.version>
 		<poiooxml.version>3.13</poiooxml.version>
+		<httpclient.version>4.5.2</httpclient.version>
 	</properties>
 
 	<dependencies>
@@ -52,7 +53,7 @@
 			<artifactId>dom4j</artifactId>
 			<version>${dom4j.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -334,7 +335,7 @@
 			<version>${zxingse.version}</version>
 		</dependency>
 		<!-- qrcode jar包 end -->
-		
+
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -344,6 +345,12 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>${poiooxml.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
 		</dependency>
 
 	</dependencies>
