@@ -165,10 +165,10 @@ var Survey = {
 		$.post("/ajax/survey",{op:"status",sid:sid,status:newStatus},function(data){
 			if(data.code>0){
 				if(status == '1'){
-					$(obj).attr({'title':'停止','data-status':'2'}).children('i').removeClass('icon-play').addClass('icon-stop');
+					$(obj).attr({"title":"停止","data-status":"2"}).children('i').removeClass('icon-play').addClass('icon-stop');
 				}
 				else{
-					$(obj).attr({'title':'进行中','data-status':'1'}).children('i').removeClass('icon-pause').removeClass('icon-stop').addClass('icon-play');
+					$(obj).attr({"title":"进行中","data-status":"1"}).children('i').removeClass('icon-pause').removeClass('icon-stop').addClass('icon-play');
 				}
 				$(obj).children('i').toggleClass('status-live');
 			}
