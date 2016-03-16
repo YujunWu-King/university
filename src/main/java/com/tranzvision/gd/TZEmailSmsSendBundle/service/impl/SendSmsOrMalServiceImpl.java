@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.mailer.TranzvisionMail;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl;
 
 /**
@@ -82,6 +84,8 @@ public class SendSmsOrMalServiceImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private SendSmsService sendSmsService;
 	@Autowired
 	private PsTzEmlsDefTblMapper psTzEmlsDefTblMapper;
 	@Autowired
@@ -285,7 +289,8 @@ public class SendSmsOrMalServiceImpl {
 					}else{
 						content = this.analysisEmlOrSmsContent(strJgId, strYmbId, audId, audCyId, "SMS", "", smsContent);
 					}
-					
+					Map<String,String> mapRst = new HashMap<String, String>();
+					String errCode = "",errMsg = "";
 					// 主要手机;
 					if("A".equals(sendSmsType)){
 						 blRept = this.checkIsSendSms(strTaskId, mainPhone);
@@ -297,12 +302,16 @@ public class SendSmsOrMalServiceImpl {
 						 }else{
 							 if(mainPhone != null && !"".equals(mainPhone)){
 								 sendPhone = mainPhone;
-								 String smsSendResult = "";
-								 //TODO发送短信接口
-					             //smsSendResult = sendSmsWebservices.sendSms(smsUserName, smsUserPwd, smsSourceNo, content, mainPhone);
-								 if("true".equals(smsSendResult)){
+								 //发送短信;
+								 mapRst = sendSmsService.doSendSms(mainPhone, content);
+								 if(mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))){
+									 errCode = mapRst.get("code");
+									 errMsg = mapRst.get("msg");
+									 this.writeTaskLog(strTaskId, strRwSlId,errCode , errMsg);
+								 }else{
 									 sendSuccess = true;
 								 }
+
 							 }else{
 								 //为空;
 								 this.writeLsSmsData(strRwSlId, mainPhone, "", "NULL", strTaskId,prcsinstanceId);
@@ -323,10 +332,13 @@ public class SendSmsOrMalServiceImpl {
 						 }else{
 							 if(secondphone != null && !"".equals(secondphone)){
 								 sendPhone = secondphone;
-								 String smsSendResult = "";
-								 //TODO发送短信接口
-					             //smsSendResult = sendSmsWebservices.sendSms(smsUserName, smsUserPwd, smsSourceNo, content, secondphone);
-								 if("true".equals(smsSendResult)){
+								 //发送短信
+								 mapRst = sendSmsService.doSendSms(secondphone, content);
+								 if(mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))){
+									 errCode = mapRst.get("code");
+									 errMsg = mapRst.get("msg");
+									 this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+								 }else{
 									 sendSuccess = true;
 								 }
 							 }else{
@@ -354,11 +366,11 @@ public class SendSmsOrMalServiceImpl {
 									 && secondphone != null && !"".equals(secondphone)){
 								 if(mainPhone != null && !"".equals(mainPhone)){
 									 sendPhone = mainPhone;
-									 String smsSendResult = "";
-									 //TODO发送短信接口
-						             //smsSendResult = sendSmsWebservices.sendSms(smsUserName, smsUserPwd, smsSourceNo, content, mainPhone);
-									 //只要一个号码发送成功即成功
-									 if("true".equals(smsSendResult)){
+									 //发送短信接口
+									 mapRst = sendSmsService.doSendSms(mainPhone, content);
+									 if(mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))){
+										 errMsg = mapRst.get("msg");
+									 }else{
 										 sendSuccess = true;
 									 }
 								 }
@@ -369,14 +381,31 @@ public class SendSmsOrMalServiceImpl {
 									 }else{
 										 sendPhone = sendPhone + ","+ secondphone;
 									 }
-									 
-									 String smsSendResult = "";
-									 //TODO发送短信接口
-						             //smsSendResult = sendSmsWebservices.sendSms(smsUserName, smsUserPwd, smsSourceNo, content, secondphone);
-									 if("true".equals(smsSendResult)){
+
+									 //发送短信;
+									 mapRst = sendSmsService.doSendSms(secondphone, content);
+									 if(mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))){
+										 if("".equals(errCode)){
+											 errCode = mapRst.get("code");
+										 }else{
+											 errCode = errCode + ";" + mapRst.get("code");
+										 }
+										 if("".equals(errMsg)){
+											 errMsg = mapRst.get("msg");
+										 }else{
+											 errMsg = errMsg + ";" +mapRst.get("msg");
+										 }
+										  
+										 
+									 }else{
 										 sendSuccess = true;
 									 }
+						             
 								 }
+								 if(sendSuccess != true){
+									 this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);
+								 }
+								 
 							 }else{
 								//为空;
 								 this.writeLsSmsData(strRwSlId, secondphone, "", "NULL", strTaskId,prcsinstanceId);
