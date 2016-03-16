@@ -73,18 +73,14 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 					//是否html
 					String str_ishtml = (String) dataMap.get("ishtml");
 					// ueditor是否实例化
-					String str_isUeditor = (String) dataMap.get("emlContentMode");
+					//String str_isUeditor = (String) dataMap.get("emlContentMode");
 					//邮件主题
 					String str_emlTmplSubject = (String) dataMap.get("emltmpsubject");
 
 					//邮件内容
 					String str_emlTmplContent="";
 					if("Y".equals(str_ishtml)){
-						if( "ueditor".equals(str_isUeditor)){
-							str_emlTmplContent = jacksonUtil.getString("emltmpcontentHtml");
-						}else{
-							str_emlTmplContent = jacksonUtil.getString("emltmpcontent");
-						}
+						str_emlTmplContent = jacksonUtil.getString("emltmpcontentHtml");
 					}else{
 						str_emlTmplContent = jacksonUtil.getString("emltmpcontent");
 					}
@@ -196,18 +192,14 @@ public class EmailTemplateInfoServiceImpl extends FrameworkImpl {
 					//是否html
 					String str_ishtml = (String) dataMap.get("ishtml");
 					// ueditor是否实例化
-					String str_isUeditor = (String) dataMap.get("emlContentMode");
+					//String str_isUeditor = (String) dataMap.get("emlContentMode");
 					//邮件主题
 					String str_emlTmplSubject = (String) dataMap.get("emltmpsubject");
 
 					//邮件内容
 					String str_emlTmplContent="";
 					if("Y".equals(str_ishtml)){
-						if( "ueditor".equals(str_isUeditor)){
-							str_emlTmplContent = (String) dataMap.get("emltmpcontentHtml");
-						}else{
-							str_emlTmplContent = (String) dataMap.get("emltmpcontent");
-						}
+						str_emlTmplContent = (String) dataMap.get("emltmpcontentHtml");
 					}else{
 						str_emlTmplContent = (String) dataMap.get("emltmpcontent");
 					}
