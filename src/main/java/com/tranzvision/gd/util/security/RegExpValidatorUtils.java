@@ -40,7 +40,7 @@ public final class RegExpValidatorUtils {
 	}
 
 	/**
-	 * 验证网址Url
+	 * 验证网址URL
 	 * 
 	 * @param str
 	 *            待验证的字符串
