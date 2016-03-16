@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSmsTemplateBundle.dao.PsTzSmsServTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSmsTemplateBundle.model.PsTzSmsServTbl" >
+    <id column="TZ_SMS_SERV_ID" property="tzSmsServId" jdbcType="VARCHAR" />
+    <result column="TZ_SMS_SERV_NAME" property="tzSmsServName" jdbcType="VARCHAR" />
+    <result column="TZ_SMS_USR_NAME" property="tzSmsUsrName" jdbcType="VARCHAR" />
+    <result column="TZ_SMS_USR_PWD" property="tzSmsUsrPwd" jdbcType="VARCHAR" />
+    <result column="TZ_SOURCE_NO" property="tzSourceNo" jdbcType="VARCHAR" />
+    <result column="TZ_DESCR254" property="tzDescr254" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SMS_SERV_ID, TZ_SMS_SERV_NAME, TZ_SMS_USR_NAME, TZ_SMS_USR_PWD, TZ_SOURCE_NO, 
+    TZ_DESCR254, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SMSSERV_TBL
+    where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_SMSSERV_TBL
+    where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSmsTemplateBundle.model.PsTzSmsServTbl" >
+    insert into PS_TZ_SMSSERV_TBL (TZ_SMS_SERV_ID, TZ_SMS_SERV_NAME, TZ_SMS_USR_NAME, 
+      TZ_SMS_USR_PWD, TZ_SOURCE_NO, TZ_DESCR254, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
+    values (#{tzSmsServId,jdbcType=VARCHAR}, #{tzSmsServName,jdbcType=VARCHAR}, #{tzSmsUsrName,jdbcType=VARCHAR}, 
+      #{tzSmsUsrPwd,jdbcType=VARCHAR}, #{tzSourceNo,jdbcType=VARCHAR}, #{tzDescr254,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSmsTemplateBundle.model.PsTzSmsServTbl" >
+    insert into PS_TZ_SMSSERV_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSmsServId != null" >
+        TZ_SMS_SERV_ID,
+      </if>
+      <if test="tzSmsServName != null" >
+        TZ_SMS_SERV_NAME,
+      </if>
+      <if test="tzSmsUsrName != null" >
+        TZ_SMS_USR_NAME,
+      </if>
+      <if test="tzSmsUsrPwd != null" >
+        TZ_SMS_USR_PWD,
+      </if>
+      <if test="tzSourceNo != null" >
+        TZ_SOURCE_NO,
+      </if>
+      <if test="tzDescr254 != null" >
+        TZ_DESCR254,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSmsServId != null" >
+        #{tzSmsServId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsServName != null" >
+        #{tzSmsServName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsUsrName != null" >
+        #{tzSmsUsrName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsUsrPwd != null" >
+        #{tzSmsUsrPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSourceNo != null" >
+        #{tzSourceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr254 != null" >
+        #{tzDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSmsTemplateBundle.model.PsTzSmsServTbl" >
+    update PS_TZ_SMSSERV_TBL
+    <set >
+      <if test="tzSmsServName != null" >
+        TZ_SMS_SERV_NAME = #{tzSmsServName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsUsrName != null" >
+        TZ_SMS_USR_NAME = #{tzSmsUsrName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSmsUsrPwd != null" >
+        TZ_SMS_USR_PWD = #{tzSmsUsrPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSourceNo != null" >
+        TZ_SOURCE_NO = #{tzSourceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr254 != null" >
+        TZ_DESCR254 = #{tzDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSmsTemplateBundle.model.PsTzSmsServTbl" >
+    update PS_TZ_SMSSERV_TBL
+    set TZ_SMS_SERV_NAME = #{tzSmsServName,jdbcType=VARCHAR},
+      TZ_SMS_USR_NAME = #{tzSmsUsrName,jdbcType=VARCHAR},
+      TZ_SMS_USR_PWD = #{tzSmsUsrPwd,jdbcType=VARCHAR},
+      TZ_SOURCE_NO = #{tzSourceNo,jdbcType=VARCHAR},
+      TZ_DESCR254 = #{tzDescr254,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR}
+  </update>
+</mapper>
