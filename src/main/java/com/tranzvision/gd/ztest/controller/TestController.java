@@ -1,7 +1,5 @@
 package com.tranzvision.gd.ztest.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,29 +8,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.ui.ModelMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tranzvision.gd.util.base.Arith;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.poi.excel.Test;
 import com.tranzvision.gd.util.session.TzSession;
+import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/tranzvision/testurl")
 public class TestController {
 
 	@Autowired
 	private AdminService adminService;
+	
+	@Autowired
+	private SendSmsService sendSmsService;
 	
 	private Patchca patchaService;
 
@@ -151,6 +148,16 @@ public class TestController {
 			System.out.println(a);
 			System.out.println(a1/b1);
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("sendsms")
+	public void testSendSms(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Map<String,String> mapRst = sendSmsService.doSendSms("18612929610", "你好，这是一条测试短信【清华经管】");
+			System.out.println(mapRst);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
