@@ -136,16 +136,19 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 						tabchange: function(tabPanel,newCard){
 							if (newCard.title == "编辑邮件内容")
 							{
+								
 								var form = tabPanel.findParentByType('form').getForm();
 								
-								var emlContentMode = form.findField("emlContentMode");
-								var emlContent = form.findField("emltmpcontent");
-								var emlContentHtml = form.findField("emltmpcontentHtml");
+								//var emlContentMode = form.findField("emlContentMode");
+								//var emlContent = form.findField("emltmpcontent");
+								//var emlContentHtml = form.findField("emltmpcontentHtml");
+								/*
 								if(emlContentMode.value != 'ueditor')
 								{
 									emlContentHtml.setValue(emlContent.value);
 									emlContentMode.setValue('ueditor');
 								};
+								*/
 								
 								var copyItemsDom = document.getElementsByName("itememlCopy");
 								
@@ -164,6 +167,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletInfo', {
 										}
 									});
 								}
+								
 							}									
 						}
 					},

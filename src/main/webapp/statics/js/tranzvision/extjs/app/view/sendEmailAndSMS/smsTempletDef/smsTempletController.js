@@ -172,7 +172,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletController'
 					//信息项数据
 				
 					var	smsTmplItemGrid = panel.down('grid[name=smsTmplItemGrid]');
-					var tzStoreParamsItem = "{'restempid':'"+restempid+"'}";
+					var tzStoreParamsItem = '{"restempid":"'+restempid+'"}';
 					smsTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
 					smsTmplItemGrid.store.load();	
 						

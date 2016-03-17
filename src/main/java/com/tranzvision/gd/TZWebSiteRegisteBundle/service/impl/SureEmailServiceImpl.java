@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
-import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -32,18 +31,21 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 	public String tzGetHtmlContent(String strParams) {
 		
 		//确认修改后跳转页面;跳转到com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.RegEmailSuccessServiceImpl.tzGetHtmlContent;
-		String RegEmailSuccess = request.getContextPath()+"/dispatcher?classid=regemailsuccess";
+		String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+		+ request.getContextPath() + "/dispatcher";
+		String RegEmailSuccess = serv+"?classid=regemailsuccess";
 		//String RegEmailSuccess = GenerateScriptContentURL(%Portal, %Node, Record.WEBLIB_GD_USER, Field.TZ_GD_USER, "FieldFormula", "Iscript_RegEmailSuccess");
 		
 		//验证是否通过;
 		Date cntlogAddtiem;
 		Date curDate = new Date();
 		String dlzhId = "", tzJgId = "", tzEmail = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
+		//JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
-			jacksonUtil.json2Map(strParams);
-			String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");
-
+			//jacksonUtil.json2Map(strParams);
+			//String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");
+			String tokenCode = request.getParameter("TZ_TOKEN_CODE");
+			
 			String strTokenFLg = "";
 			PsTzDzyxYzmTbl psTzDzyxYzmTbl = psTzDzyxYzmTblMapper.selectByPrimaryKey(tokenCode);
 			if(psTzDzyxYzmTbl != null){
@@ -51,8 +53,9 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 				tzEmail = psTzDzyxYzmTbl.getTzEmail();
 				dlzhId = psTzDzyxYzmTbl.getTzDlzhId();
 				tzJgId = psTzDzyxYzmTbl.getTzJgId();
+			
 				if("Y".equals(strTokenFLg)){
-					cntlogAddtiem = psTzDzyxYzmTbl.getTzCntlogAddtime();
+					cntlogAddtiem = psTzDzyxYzmTbl.getTzYzmYxq();
 					if(cntlogAddtiem.before(curDate)){
 						// 验证码超时;
 			            RegEmailSuccess = RegEmailSuccess + "&strJgid=" + tzJgId + "&FLAGE=N&errorFlg=overtime";
