@@ -43,14 +43,13 @@ var RegisterTips={
 	_send2_zhs:"重新发送",
 	_enring_eng:"wait a moment, please...",
 	_enring_zhs:"注册中，请稍等...",
+	_register_eng:"register successfully",
+	_register_zhs:"注册成功",
+	_SmsSuccess_zhs:"短信已发送到您手机，请注意查收！",
+	_SmsSuccess_eng:"Sent successfully",
+	_SmsTimeshort_zhs:"发送时间间隔太短,请等待一段时间后再试。",
+	_SmsTimeshort_eng:"Send too fast,Try again later",
 }
-
-
-
-
-
-
-
 
 /*注册页面提交按钮事件*/
 function submitEnroll() {
@@ -1033,16 +1032,35 @@ function send_yzm(){
 			return;
 		}
 	}
-	
+	var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+mobile+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'",	"sen":"2"}}';
 	$.ajax({
-		type: "get",
-		async :false,
-		data: {yzfs:yzfs,TZ_EMAIL:email,TZ_MOBILE:mobile,strJgid:strJgid},
-		url: urlBegin+"/WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_Send_VerificationCode",
-		dataType: "json",
-		success: function(result){
-			if(result.success == "Y"){atime();alert(result.msg);}
-				else{alert(result.msg);}
+		type:"post",
+		dataType:"json",
+		async:false,
+		data: {
+			tzParams:tzParams
+			},
+		url: TzUniversityContextPath + "/dispatcher",
+		success:function(result){
+			if(result.comContent=="success"){
+				atime();
+				if ($("#lang").val()=="ENG")
+					{
+					alert(RegisterTips._SmsSuccess_eng);
+				}else{
+					alert(RegisterTips._SmsSuccess_zhs);
+				}
+			}
+			else if(result.comContent=="shtime"){
+				if ($("#lang").val()=="ENG"){
+					alert(RegisterTips._SmsTimeshort_eng);
+				}else{
+					alert(RegisterTips._SmsTimeshort_zhs);
+				}
+			}
+			else{
+					alert(result.state.errdesc);
+			}
 		}
 	});
 }
