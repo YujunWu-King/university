@@ -216,12 +216,12 @@
     }
     //删除数据
     if(removedData.length !== 0){
-        JSONData.delete = [];
+        JSONData.deleted = [];
         for(var x =removedData.length-1;x>=0;x--){
-            JSONData.delete[x] = {};
-            JSONData.delete[x].appINSID = removedData[x].data.appINSID;
-            JSONData.delete[x].classID = classID;
-            JSONData.delete[x].batchID = batchID;
+            JSONData.deleted[x] = {};
+            JSONData.deleted[x].appINSID = removedData[x].data.appINSID;
+            JSONData.deleted[x].classID = classID;
+            JSONData.deleted[x].batchID = batchID;
         }
     }
     //更新数据
@@ -277,12 +277,12 @@
                 }
             }
             if(removedData.length !== 0){
-                JSONData.delete = [];
+                JSONData.deleted = [];
                 for(var x =removedData.length-1;x>=0;x--){
-                    JSONData.delete[x] = {};
-                    JSONData.delete[x].appINSID = removedData[x].data.appINSID;
-                    JSONData.delete[x].classID = classID;
-                    JSONData.delete[x].batchID = batchID;
+                    JSONData.deleted[x] = {};
+                    JSONData.deleted[x].appINSID = removedData[x].data.appINSID;
+                    JSONData.deleted[x].classID = classID;
+                    JSONData.deleted[x].batchID = batchID;
                 }
             }
             //更新数据
