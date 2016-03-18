@@ -6,6 +6,7 @@ Ext.define('KitchenSink.view.template.kjgl.kjModel', {
         {name: 'kjEnName'},
         {name: 'kjJsUrl'},
         {name: 'kjPtUrl'},
+		{name: 'kjExpHtml'},
         {name: 'kjState'}
     ]
 });

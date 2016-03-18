@@ -34,7 +34,7 @@ import com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzTempFieldT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZControlSetBundle.dao.PsTzComDyTMapper;
-import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT;
+import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs;
 import com.tranzvision.gd.TZRuleSetBundle.dao.PsTzJygzDyEngMapper;
 import com.tranzvision.gd.TZRuleSetBundle.dao.PsTzJygzDyTMapper;
 import com.tranzvision.gd.TZRuleSetBundle.model.PsTzJygzDyEng;
@@ -1053,7 +1053,7 @@ public class TemplateEngine {
 		for (Object obj : resultlist) {
 			Map<String, Object> result = (Map<String, Object>) obj;
 			String componentId = result.get("TZ_COM_ID") == null ? "" : String.valueOf(result.get("TZ_COM_ID"));
-			PsTzComDyT psTzComDyT = psTzComDyTMapper.selectByPrimaryKey(componentId);
+			PsTzComDyTWithBLOBs psTzComDyT = psTzComDyTMapper.selectByPrimaryKey(componentId);
 
 			String componentName = psTzComDyT.getTzComMc();
 			String displayArea = result.get("TZ_COM_LX_ID") == null ? "" : String.valueOf(result.get("TZ_COM_LX_ID"));
