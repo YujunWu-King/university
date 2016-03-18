@@ -82,12 +82,53 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 				if("5".equals(strSen)){
 					strResponse = this.modifyPasswordByPass(strParams, errMsg);
 				}
+				if("6".equals(strSen)){
+					strResponse = this.phoneVerifyByForget(strParams, errMsg);
+				}
+				if("7".equals(strSen)){
+					strResponse = this.sendMessageForPass(strParams, errMsg);
+				}
 			}
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
+		return strResponse;
+	}
+	
+	@Override
+	public String tzGetHtmlContent(String strParams) {
+		String strSiteid = request.getParameter("siteid");
+		String strOrgid = request.getParameter("orgid");
+		String strPhone = request.getParameter("phone");
+		String strYzm = request.getParameter("yzm");
+		String strLang = request.getParameter("lang");
+		String strSen = request.getParameter("sen");
+		String classid = request.getParameter("classid");
+		
+		String strResponse = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try{
+			if(classid != null && !"".equals(classid)){
+				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang + "\",\"yzm\":\"" + strYzm + "\",\"phone\":\"" + strPhone + "\",\"sen\":\"" + strSen + "\"}";
+			}else{
+				jacksonUtil.json2Map(strParams);
+				strOrgid = jacksonUtil.getString("orgid");
+				strLang = jacksonUtil.getString("lang");
+				strSen = jacksonUtil.getString("sen");
+			}
+			
+			if("4".equals(strSen)){
+				 return this.createPageForFixPass(strParams);
+			}
+			
+			String strMessage = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "119", "链接错误，请确认您输入的URL地址无误！", "Url is invalid, please makesure the url is valid!");
+	        return strMessage;
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return strResponse;
 	}
 	
@@ -187,7 +228,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		return strResult;
 	}
 	
-	//发送验证码
+	//发送验证码-注册
 	public String sendMessage(String strParams,String[] errorMsg){
 		
 		String strPhone = "";   
@@ -234,7 +275,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	
 		      	boolean sendYzmFlag = true;
 		      	
-		      	String sqlGetYzmInfo = "SELECT TZ_CNTLOG_ADDTIME,TZ_YZM_YXQ,TZ_SJYZM FROM PS_TZ_SHJI_YZM_TBL WHERE TZ_EFF_FLAG='Y' AND TZ_JG_ID=? AND TZ_MOBILE_PHONE=?  ORDER BY TZ_CNTLOG_ADDTIME DESC";
+		      	String sqlGetYzmInfo = "SELECT TZ_CNTLOG_ADDTIME,TZ_YZM_YXQ,TZ_SJYZM FROM PS_TZ_SHJI_YZM_TBL WHERE TZ_EFF_FLAG='Y' AND TZ_JG_ID=? AND TZ_MOBILE_PHONE=?  ORDER BY TZ_CNTLOG_ADDTIME DESC LIMIT 0,1";
 				Map<String, Object> MapGetYzmInfo = jdbcTemplate.queryForMap(sqlGetYzmInfo, 
 						new Object[] { strOrgid,strPhone });
 				if(MapGetYzmInfo == null){
@@ -252,7 +293,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 				      			//发送时间间隔太短
 				      			errorMsg[0] = "10";
 					      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
-										"125", "发送时间间隔太短,请等待一段时间后再试", "Try again later.");
+										"128", "发送时间间隔太短,请等待一段时间后再试", "Try again later.");
 				      			sendYzmFlag = false;
 				      		}else{
 				      			if(dtYzmAddDate != null){
@@ -280,12 +321,12 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					Calendar ca=Calendar.getInstance();
 					ca.setTime(new Date());
 					ca.add(Calendar.MINUTE, 1);
-					psTzShjiYzmTbl.setTzCntlogAddtime(ca.getTime());
+					psTzShjiYzmTbl.setTzYzmYxq(ca.getTime());
 					psTzShjiYzmTbl.setTzEffFlag("Y");
 					psTzShjiYzmTblMapper.insert(psTzShjiYzmTbl);
 					
 					//给当前填写的手机号码发送验证码
-					String strSmsContent = "本次验证码为：" + strYzm;
+					String strSmsContent = "本次验证码为：" + strYzm+"【清华经管】";
 					String strUserName = "";
 							
 					String oprid = "";
@@ -343,6 +384,162 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		return strResult;
 	}
 	
+	
+	//手机找回密码-发送验证码
+	public String sendMessageForPass(String strParams,String[] errorMsg){
+		
+		String strPhone = "";   
+		String strOrgid = "";
+		String strLang = "";
+		   
+		String strResult = "\"failure\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try{
+			jacksonUtil.json2Map(strParams);
+			if(jacksonUtil.containsKey("phone") 
+					&& jacksonUtil.containsKey("orgid") 
+					&& jacksonUtil.containsKey("lang"))
+				strPhone = String.valueOf(jacksonUtil.getString("phone").trim()).toLowerCase();
+				strOrgid = String.valueOf(jacksonUtil.getString("orgid").trim());
+		      	strLang =  String.valueOf(jacksonUtil.getString("lang").trim());
+		      	
+		      	//手机格式;
+		      	ValidateUtil validateUtil = new ValidateUtil();
+		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	if(bl == false){
+		      		errorMsg[0] = "1";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
+							"47",  "您填写的手机号码有误", "Malformed phone.");
+		            return strResult;
+		      	}
+		      	
+		        //手机是否被占用
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT = 'Y'";
+		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
+		      	if(count <= 0){
+		      		errorMsg[0] = "2";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "129",
+		      				"手机不存在，请先注册", "The mobile phone does not exist, please register");
+		      		return strResult;
+		      	}
+		      	
+		      	//校验验证码的有效期
+		      	//DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		      	Date dtYzmValidDate = null;
+		      	Date dtYzmAddDate = null;
+		      	String strYzm = "";
+		      	Date nowDate = new Date();
+		      	
+		      	boolean sendYzmFlag = true;
+		      	
+		      	String sqlGetYzmInfo = "SELECT TZ_CNTLOG_ADDTIME,TZ_YZM_YXQ,TZ_SJYZM FROM PS_TZ_SHJI_YZM_TBL WHERE TZ_EFF_FLAG='Y' AND TZ_JG_ID=? AND TZ_MOBILE_PHONE=?  ORDER BY TZ_CNTLOG_ADDTIME DESC LIMIT 0,1";
+				Map<String, Object> MapGetYzmInfo = jdbcTemplate.queryForMap(sqlGetYzmInfo, 
+						new Object[] { strOrgid,strPhone });
+				if(MapGetYzmInfo == null){
+					//发送验证码
+				}else{
+					try{
+						//dtYzmValidDate = format.parse(String.valueOf(MapGetYzmInfo.get("TZ_YZM_YXQ")));
+				      	//dtYzmAddDate = format.parse(String.valueOf(MapGetYzmInfo.get("TZ_CNTLOG_ADDTIME")));
+						dtYzmValidDate = (Date)(MapGetYzmInfo.get("TZ_YZM_YXQ"));
+						dtYzmAddDate = (Date)(MapGetYzmInfo.get("TZ_CNTLOG_ADDTIME"));
+				      	strYzm = MapGetYzmInfo.get("TZ_SJYZM") == null ? "" : String.valueOf(MapGetYzmInfo.get("TZ_SJYZM"));
+				      	
+				      	if(!"".equals(strYzm)){
+				      		if(dtYzmValidDate.after(nowDate)){
+				      			//发送时间间隔太短
+				      			errorMsg[0] = "10";
+					      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
+										"128", "发送时间间隔太短,请等待一段时间后再试", "Try again later.");
+				      			sendYzmFlag = false;
+				      			return strResult;
+				      		}else{
+				      			if(dtYzmAddDate != null){
+				      				Object[] args = new Object[] { strOrgid,strPhone,dtYzmAddDate };
+				      				jdbcTemplate.update("UPDATE PS_TZ_SHJI_YZM_TBL SET TZ_EFF_FLAG='N' WHERE TZ_JG_ID=? AND TZ_MOBILE_PHONE=? AND TZ_CNTLOG_ADDTIME=?", args);
+				      			}
+				      		}
+				      	}
+				      	
+					}catch(Exception e){
+						e.printStackTrace();
+					}	
+				}
+				
+				//发送验证码
+				if(sendYzmFlag){
+					strYzm = String.valueOf("0000" + (int)(Math.random()*100000));
+					strYzm = strYzm.substring(strYzm.length()-4, strYzm.length());
+					
+					PsTzShjiYzmTbl psTzShjiYzmTbl = new PsTzShjiYzmTbl();
+					psTzShjiYzmTbl.setTzJgId(strOrgid);
+					psTzShjiYzmTbl.setTzMobilePhone(strPhone);
+					psTzShjiYzmTbl.setTzCntlogAddtime(new Date());
+					psTzShjiYzmTbl.setTzSjyzm(strYzm);
+					Calendar ca=Calendar.getInstance();
+					ca.setTime(new Date());
+					ca.add(Calendar.MINUTE, 1);
+					psTzShjiYzmTbl.setTzYzmYxq(ca.getTime());
+					
+					psTzShjiYzmTbl.setTzEffFlag("Y");
+					psTzShjiYzmTblMapper.insert(psTzShjiYzmTbl);
+					
+					//给当前填写的手机号码发送验证码
+					String strSmsContent = "本次验证码为：" + strYzm+"【清华经管】";
+					String strUserName = "";
+							
+					String oprid = "";
+					oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					
+					//得到注册用户姓名;
+					String relenameSQL = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=? limit 0,1";
+					try{
+						strUserName = jdbcTemplate.queryForObject(relenameSQL, new Object[]{oprid},"String");
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					
+					//创建邮件短信发送任务
+					String taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_SMS_N_001", "SMS", "A");
+					if(taskId==null || "".equals(taskId)){
+						errorMsg[0] = "30";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
+					// 创建短信、邮件发送的听众;
+					String createAudience = createTaskServiceImpl.createAudience(taskId,strOrgid,"考生申请用户注册手机验证", "JSRW");
+					if(createAudience == null || "".equals(createAudience)){
+						errorMsg[0] = "31";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
+					// 为听众添加听众成员;
+					boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strUserName, strUserName, strPhone, "", "", "", "", oprid, "", "", "");
+					if(addAudCy == false){
+						errorMsg[0] = "32";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
+					
+					boolean updateSmsSendContent = createTaskServiceImpl.updateSmsSendContent(taskId,strSmsContent);
+					if(updateSmsSendContent == false){
+						errorMsg[0] = "33";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
+					sendSmsOrMalServiceImpl.send(taskId, "");
+					strResult = "\"success\"";
+			        return strResult;
+				}   	
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "100";
+			errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+		}
+		
+		return strResult;
+	}
+	
 	//忘记密码-手机找回-下一步验证手机验证码
 	public String checkMobileCode(String strParams,String[] errorMsg){
 		
@@ -371,13 +568,21 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      			&& strOrgid != null && !"".equals(strOrgid)
 		      			&& strYzm != null && !"".equals(strYzm)){
 		      		//是否存在有效验证码
-			      	String sql = "SELECT COUNT(1) FROM PS_TZ_SHJI_YZM_TBL  WHERE TZ_EFF_FLAG = 'Y' AND TZ_JG_ID = ? AND TZ_MOBILE_PHONE = ? and TZ_SJYZM= ?";
-			      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strOrgid,strPhone,strYzm},"Integer");
-			      	if(count > 0){
-				      	strResult = "\"success\"";
-				      	errorMsg[0] = "0";
-				      	errorMsg[1] = strTzGeneralURL + "?classid=smsCls&phone=" + strPhone + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4&yzm=" + strYzm;
-				      	 
+			      	String sql = "SELECT TZ_YZM_YXQ FROM PS_TZ_SHJI_YZM_TBL  WHERE TZ_EFF_FLAG = 'Y' AND TZ_JG_ID = ? AND TZ_MOBILE_PHONE = ? and TZ_SJYZM= ? LIMIT 0,1";
+			      	Map<String, Object> yzmMap = jdbcTemplate.queryForMap(sql, new Object[]{strOrgid,strPhone,strYzm});
+			      	
+			      	if(yzmMap != null){
+			      		Date dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
+			      		Date curDate = new Date();
+			      		if(curDate.before(dtYxq)){
+			      			strResult = "\"success\"";
+					      	errorMsg[0] = "0";
+					      	errorMsg[1] = strTzGeneralURL + "?classid=smsCls&phone=" + strPhone + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=3&yzm=" + strYzm;
+			      		}else{
+			      			errorMsg[0] = "10";
+				      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "130",
+				      				"验证码已失效,请重新发送验证码到手机。", "Verification Code has timed out!");
+			      		}
 			      	}else{
 			      		errorMsg[0] = "20";
 			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "50",
@@ -504,20 +709,15 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 	public String createPageForFixPass(String strParams){
 		String strOrgid = "";
 		String strSiteId = "";
-		String strTokenSign = "";
-		String strTokenSign2 = "";
 		String strLang = "";
 		String strPhone = "";
 		String strYzm = "";
-		Date dtYxq;
 		String strResult = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
-			strTokenSign = jacksonUtil.getString("tokensign");
-			strTokenSign2 = strTokenSign;
 			strPhone = jacksonUtil.getString("phone").trim();
 			strYzm = jacksonUtil.getString("yzm").trim();
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
@@ -543,9 +743,9 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			if(count> 0){
 				//有效；
 				if("ENG".equals(strLang)){
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML", true,strBeginUrl, strPhone, strLang, loginUrl, strOrgid,strStrongMsg, strNotice,contextPath,imgPath );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML", true,strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
 				}else{
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML", true,strBeginUrl, strPhone, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML", true,strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
 				}
 				
 				str_content = objRep.repTitle(str_content, strSiteId);
@@ -554,7 +754,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			}else{
 				//无效；
 				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4";
-				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！", "Reset password time for 30 minutes, has timed out, please re send forget password message!");
+				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "130", "验证码已失效，请重新发送手机验证码！", "Security Code has timed out, please resend message!");
 				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", true,message,strBeginUrl );
 				return str_content;
 			}	
@@ -562,7 +762,55 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			e.printStackTrace();
 			return strResult;
 		}
-		
 	}
+	
+	//校验手机号码
+		public String phoneVerifyByForget(String strParams,String[] errorMsg){
+			String strPhone = "";
+			   
+			String strOrgid = "";
+			String strLang = "";
+			   
+			String strResult = "\"failure\"";
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			try{
+				jacksonUtil.json2Map(strParams);
+				if(jacksonUtil.containsKey("phone") 
+						&& jacksonUtil.containsKey("orgid") 
+						&& jacksonUtil.containsKey("lang"))
+					strPhone = jacksonUtil.getString("phone").trim().toLowerCase();
+					strOrgid = jacksonUtil.getString("orgid").trim();
+			      	strLang =  jacksonUtil.getString("lang").trim();
+
+			      	//手机格式;
+			      	ValidateUtil validateUtil = new ValidateUtil();
+			      	boolean  bl = validateUtil.validatePhone(strPhone);
+			      	if(bl == false){
+			      		errorMsg[0] = "1";
+			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "47",
+			      				"手机号码不正确", "The mobile phone is incorrect .");
+			            return strResult;
+			      	}
+			      	
+			      	//是否绑定手机
+			      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT ='Y'";
+			      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
+			      	if(count <= 0){
+			      		errorMsg[0] = "2";
+			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "129",
+			      				"手机不存在，请先注册", "The mobile phone does not exist, please register");
+			            return strResult;
+			      	}
+			      	strResult = "\"success\"";
+			        return strResult;
+			}catch(Exception e){
+				e.printStackTrace();
+				errorMsg[0] = "100";
+				errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", 
+						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+			}
+			
+			return strResult;
+		}
 
 }
