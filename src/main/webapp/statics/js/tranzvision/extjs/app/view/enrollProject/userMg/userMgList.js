@@ -102,7 +102,7 @@
                menuDisabled: true,
 			   menuText: '操作',
                sortable: false,
-			   with:50,
+			   "with":50,
 			   align: 'center',
 			   			 items:[
 			   			  {text: '查看',iconCls: 'view',tooltip: '查看',handler:'viewUserByRow'}

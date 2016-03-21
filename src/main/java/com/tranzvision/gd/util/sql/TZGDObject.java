@@ -409,6 +409,34 @@ public class TZGDObject
 	
 	/**
 	 * 参数说明：
+	 * htmlText				String类型。
+	 * refreshFlag			boolean类型，用于指定本次调用是否重新从对应的文件中读取HTML对象的内容，否则直接从缓存中获取。
+	 * args					String类型的数组，用于合成HTML代码所需要参数列表，系统将用该参数指定的字符串顺序替换%bind(:n)。例如，使用arg[0]替换所有的%bind(:1),
+	 *                      使用arg[1]替换所有的%bind(:2)，...，使用arg[n-1]替换所有的%bind(:n)，但“\%bind(:n)”不会被替换，即只要“%bind(:n)”前面
+	 *                      添加了“\”，则该字符串将被系统忽略而不会被替换。注意，这个变量数组可以采用个数不确定的参数列表的形式，例如p1,p2,p3...pn。
+	 * 返回结果：
+	 * 返回结果String类型的SQL对象对应的文本内容，如果找不到对应的SQL对象，则抛出TzSystemException类型的异常。
+	 */
+	public String getText(String htmlText,String...args) throws TzSystemException
+	{
+		if(args != null)
+		{
+			for(int i=0;i<args.length;i++)
+			{
+				String repStr1 = "(?<!\\\\)(?i)%bind\\(\\:" + (i + 1) + "\\)";
+				String repStr2 = "\\\\(?i)%bind\\(\\:" + (i + 1) + "\\)";
+				String repStr3 = "%bind(:" + (i + 1) + ")";
+				args[i] = args[i] == null ? "" : args[i];
+				htmlText = htmlText.replaceAll(repStr1, args[i]);
+				htmlText = htmlText.replaceAll(repStr2, repStr3);
+			}
+		}
+		
+		return htmlText;
+	}
+	
+	/**
+	 * 参数说明：
 	 * tblName				String类型，指定需要创建的表记录对象的名称。
 	 * 返回结果：
 	 * 返回结果TzRecord类型的指定表名称的实例对象。

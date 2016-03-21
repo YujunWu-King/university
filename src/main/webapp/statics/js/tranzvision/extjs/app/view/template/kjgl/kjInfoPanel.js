@@ -91,8 +91,13 @@ Ext.define('KitchenSink.view.template.kjgl.kjInfoPanel', {
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ]
+                }, {
+                    xtype: 'textarea',
+                    fieldLabel: '导出HTML',
+                    editable:true,
+                    name: 'kjExpHtml'
                 },
-                    {
+                  {
                         xtype: 'combo',
                         fieldLabel: '状态',
                         allowBlank:false,

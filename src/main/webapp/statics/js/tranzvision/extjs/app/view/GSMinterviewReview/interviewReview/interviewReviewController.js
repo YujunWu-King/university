@@ -253,10 +253,10 @@
         }
         //如果有删除的记录
         if(removedRecords.length!==0){
-            datas.delete = [];
+            datas.deleted = [];
             for(var x = removedRecords.length-1;x>=0;x--){
                 delete removedRecords[x].data.id;
-                datas.delete.push(removedRecords[x].data);
+                datas.deleted.push(removedRecords[x].data);
             }
         }
         datas = Ext.JSON.encode(datas);

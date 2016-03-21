@@ -21,7 +21,7 @@ import com.tranzvision.gd.TZControlSetBundle.dao.PsTzComJygzpzTMapper;
 import com.tranzvision.gd.TZControlSetBundle.dao.PsTzComYtTMapper;
 import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyEng;
 import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyEngKey;
-import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT;
+import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs;
 import com.tranzvision.gd.TZControlSetBundle.model.PsTzComJygzpzT;
 import com.tranzvision.gd.TZControlSetBundle.model.PsTzComYtT;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -75,7 +75,7 @@ public class ComsInfoClsServiceImpl extends FrameworkImpl {
 
 				String kjID = jacksonUtil.getString("kjID");
 				
-				PsTzComDyT psTzComDyT = psTzComDyTMapper.selectByPrimaryKey(kjID);
+				PsTzComDyTWithBLOBs psTzComDyT = psTzComDyTMapper.selectByPrimaryKey(kjID);
 				
 				PsTzComDyEngKey psTzComDyEngKey = new PsTzComDyEngKey();
 				psTzComDyEngKey.setTzComId(kjID);
@@ -95,6 +95,7 @@ public class ComsInfoClsServiceImpl extends FrameworkImpl {
 					}
 					mapData.put("kjJsUrl", psTzComDyT.getTzComJslj());
 					mapData.put("kjPtUrl", psTzComDyT.getTzComIconlj());
+					mapData.put("kjExpHtml", psTzComDyT.getTzComExphtml());
 					mapData.put("kjState", psTzComDyT.getTzEffexpZt());
 
 					Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -147,17 +148,19 @@ public class ComsInfoClsServiceImpl extends FrameworkImpl {
 					String kjEnName = (String) infoData.get("kjEnName");
 					String kjJsUrl = (String) infoData.get("kjJsUrl");
 					String kjPtUrl = (String) infoData.get("kjPtUrl");
+					String kjExpHtml = (String) infoData.get("kjExpHtml");
 					String kjState = (String) infoData.get("kjState");
 
 					String sql = "SELECT COUNT(1) FROM PS_TZ_COM_DY_T WHERE TZ_COM_ID=?";
 					int count = sqlQuery.queryForObject(sql, new Object[] { kjID }, "Integer");
 
 					if (count > 0) {
-						PsTzComDyT psTzComDyT = new PsTzComDyT();
+						PsTzComDyTWithBLOBs psTzComDyT = new PsTzComDyTWithBLOBs();
 						psTzComDyT.setTzComId(kjID);
 						psTzComDyT.setTzComMc(kjName);
 						psTzComDyT.setTzComJslj(kjJsUrl);
 						psTzComDyT.setTzComIconlj(kjPtUrl);
+						psTzComDyT.setTzComExphtml(kjExpHtml);
 						psTzComDyT.setTzEffexpZt(kjState);
 						psTzComDyT.setRowLastmantDttm(dateNow);
 						psTzComDyT.setRowLastmantOprid(oprid);
@@ -169,11 +172,12 @@ public class ComsInfoClsServiceImpl extends FrameworkImpl {
 						psTzComDyEng.setLanguageCd("ENG");
 						psTzComDyEngMapper.updateByPrimaryKeySelective(psTzComDyEng);
 					} else {
-						PsTzComDyT psTzComDyT = new PsTzComDyT();
+						PsTzComDyTWithBLOBs psTzComDyT = new PsTzComDyTWithBLOBs();
 						psTzComDyT.setTzComId(kjID);
 						psTzComDyT.setTzComMc(kjName);
 						psTzComDyT.setTzComJslj(kjJsUrl);
 						psTzComDyT.setTzComIconlj(kjPtUrl);
+						psTzComDyT.setTzComExphtml(kjExpHtml);
 						psTzComDyT.setTzEffexpZt(kjState);
 						psTzComDyT.setRowAddedDttm(dateNow);
 						psTzComDyT.setRowAddedOprid(oprid);

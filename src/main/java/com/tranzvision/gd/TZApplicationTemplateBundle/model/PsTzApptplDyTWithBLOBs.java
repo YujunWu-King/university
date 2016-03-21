@@ -7,6 +7,10 @@ public class PsTzApptplDyTWithBLOBs extends PsTzApptplDyT {
 
     private String tzEnMContent;
 
+    private String tzHeader;
+
+    private String tzFooter;
+
     public String getTzApptplJsonStr() {
         return tzApptplJsonStr;
     }
@@ -29,5 +33,21 @@ public class PsTzApptplDyTWithBLOBs extends PsTzApptplDyT {
 
     public void setTzEnMContent(String tzEnMContent) {
         this.tzEnMContent = tzEnMContent == null ? null : tzEnMContent.trim();
+    }
+
+    public String getTzHeader() {
+        return tzHeader;
+    }
+
+    public void setTzHeader(String tzHeader) {
+        this.tzHeader = tzHeader == null ? null : tzHeader.trim();
+    }
+
+    public String getTzFooter() {
+        return tzFooter;
+    }
+
+    public void setTzFooter(String tzFooter) {
+        this.tzFooter = tzFooter == null ? null : tzFooter.trim();
     }
 }

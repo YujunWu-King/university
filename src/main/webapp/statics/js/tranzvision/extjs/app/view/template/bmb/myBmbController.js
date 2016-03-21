@@ -355,5 +355,74 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
                 store.load();
             }
         });
-    }
+    },
+	/*报名表打印设置*/
+    onBmbPrintSet: function(view, rowIndex) {
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		//模板ID
+		var tplid = selRec.get("tplid");
+		var me = this;
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONREG_PRINT_STD"];
+
+		if (pageResSet == "" || pageResSet == undefined) {
+			Ext.MessageBox.alert("提示", "您没有修改报名表模板打印配置的权限");
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if (className == "" || className == undefined) {
+			Ext.MessageBox.alert("提示", "未找到该功能页面对应的JS类，页面ID为：TZ_ONREG_PRINT_STD，请检查配置。");
+			return;
+		}
+
+		var win = this.lookupReference('myPrintSetWindow');
+		if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			//新建类
+			win = new ViewClass();
+			this.getView().add(win);
+		}
+
+		var form = win.child("form").getForm();
+        var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PRINT_STD","OperateType":"QF","comParams":{"tplid":"'+tplid+'"}}';
+        //加载数据
+        Ext.tzLoad(tzParams,function(responseData){
+            //组件注册信息数据
+            var formData = responseData.formData;
+            form.setValues(formData);
+    		win.show();
+        });
+
+	},
+	/*保存（打印设置）*/
+	onPrintSave: function(btn) {
+		//获取窗口
+		var win = btn.findParentByType("window");
+		var form = win.child("form").getForm();
+		var formParams = form.getValues();
+		
+        var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PRINT_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        Ext.tzSubmit(tzParams,function(response){},"",true,this);
+	},
+	/*确定（打印设置）*/
+	onPrintEnsure: function(btn) {
+		//获取窗口
+		var win = btn.findParentByType("window");
+		var form = win.child("form").getForm();
+		var formParams = form.getValues();
+		
+        var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PRINT_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        Ext.tzSubmit(tzParams,function(response){
+        	win.close();
+        },"",true,this);
+	},
+	/*关闭（打印设置）*/
+	onPrintClose: function(btn) {
+		//获取窗口
+		var win = btn.findParentByType("window");
+		win.close();
+	},
 });

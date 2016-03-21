@@ -13,15 +13,16 @@
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_COM_ICONLJ" property="tzComIconlj" jdbcType="LONGVARCHAR" />
+    <result column="TZ_COM_EXPHTML" property="tzComExphtml" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_COM_ID, TZ_COM_MC, TZ_COM_JSLJ, TZ_EFFEXP_ZT, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
     ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <sql id="Blob_Column_List" >
-    TZ_COM_ICONLJ
+    TZ_COM_ICONLJ, TZ_COM_EXPHTML
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
@@ -35,17 +36,19 @@
     delete from PS_TZ_COM_DY_T
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs" >
     insert into PS_TZ_COM_DY_T (TZ_COM_ID, TZ_COM_MC, TZ_COM_JSLJ, 
       TZ_EFFEXP_ZT, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
       ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM, TZ_COM_ICONLJ)
+      SYNCDTTM, TZ_COM_ICONLJ, TZ_COM_EXPHTML
+      )
     values (#{tzComId,jdbcType=VARCHAR}, #{tzComMc,jdbcType=VARCHAR}, #{tzComJslj,jdbcType=VARCHAR}, 
       #{tzEffexpZt,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
       #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP}, #{tzComIconlj,jdbcType=LONGVARCHAR})
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzComIconlj,jdbcType=LONGVARCHAR}, #{tzComExphtml,jdbcType=LONGVARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs" >
     insert into PS_TZ_COM_DY_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzComId != null" >
@@ -80,6 +83,9 @@
       </if>
       <if test="tzComIconlj != null" >
         TZ_COM_ICONLJ,
+      </if>
+      <if test="tzComExphtml != null" >
+        TZ_COM_EXPHTML,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -116,9 +122,12 @@
       <if test="tzComIconlj != null" >
         #{tzComIconlj,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzComExphtml != null" >
+        #{tzComExphtml,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs" >
     update PS_TZ_COM_DY_T
     <set >
       <if test="tzComMc != null" >
@@ -151,10 +160,13 @@
       <if test="tzComIconlj != null" >
         TZ_COM_ICONLJ = #{tzComIconlj,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzComExphtml != null" >
+        TZ_COM_EXPHTML = #{tzComExphtml,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs" >
     update PS_TZ_COM_DY_T
     set TZ_COM_MC = #{tzComMc,jdbcType=VARCHAR},
       TZ_COM_JSLJ = #{tzComJslj,jdbcType=VARCHAR},
@@ -165,7 +177,8 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      TZ_COM_ICONLJ = #{tzComIconlj,jdbcType=LONGVARCHAR}
+      TZ_COM_ICONLJ = #{tzComIconlj,jdbcType=LONGVARCHAR},
+      TZ_COM_EXPHTML = #{tzComExphtml,jdbcType=LONGVARCHAR}
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT" >

@@ -3425,7 +3425,7 @@ var SurveyBuild = {
         htmlSet += '<div class="edit_item_warp">';
         htmlSet += '	<span class="edit_item_label">第一步：</span>';
         htmlSet += '	<div class="edit_item_right">';
-        htmlSet += '		<div style="display: inherit;" onclick="SurveyBuild.export();">';
+        htmlSet += '		<div style="display: inherit;" onclick="SurveyBuild.expSource();">';
         htmlSet += '			<div class="bt_blue">导出报名表元数据</div>';
         htmlSet += '		</div>';
         htmlSet += '	</div>';
@@ -3473,7 +3473,7 @@ var SurveyBuild = {
         $("#template-setting-box").html(htmlSet);
     },
     //导出源数据
-    export: function(){
+    expSource: function(){
         if(this.is_edit){
             //noteing("请首先保存当前模板！", 2)
         }else{

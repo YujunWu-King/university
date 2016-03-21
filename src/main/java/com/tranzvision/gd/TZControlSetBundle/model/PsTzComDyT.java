@@ -23,8 +23,6 @@ public class PsTzComDyT {
 
     private Date syncdttm;
 
-    private String tzComIconlj;
-
     public String getTzComId() {
         return tzComId;
     }
@@ -103,13 +101,5 @@ public class PsTzComDyT {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
-    }
-
-    public String getTzComIconlj() {
-        return tzComIconlj;
-    }
-
-    public void setTzComIconlj(String tzComIconlj) {
-        this.tzComIconlj = tzComIconlj == null ? null : tzComIconlj.trim();
     }
 }
