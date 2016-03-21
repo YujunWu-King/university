@@ -7,16 +7,16 @@
 <div class="city_main">
 	<div class="padding_div_40px"></div>
 	<div class="main_inner_right_line_50px">
-    	<div class="main_inner_right_line_left5"> 手 机 号：</div>
-        <div class="main_inner_right_line_mid3">
-        	<input id="newstel" name="newstel" type="text" class="input_251px" value="%bind(:4)"/>
+    	<div class="main_inner_right_line_left5"> Phone：</div>
+        <div class="main_inner_right_line_mid3" style="width:230px">
+        	<input id="newstel" name="newstel" type="text" class="input_251px" style ="width:231px" value="%bind(:4)"/>
         </div>
-        <div class="main_inner_right_line_right2">
-          	<input id="gainyzm" type="button" value="发送验证码" onclick="gainyzm()"/>
+        <div class="main_inner_right_line_right2" style="width:200px">
+          	<input id="gainyzm" type="button" value="Send Security Code" onclick="gainyzm()"/>
         </div>
   	</div>
   	<div class="main_inner_right_line_50px">
-    	<div class="main_inner_right_line_left5"> 验 证 码：</div>
+    	<div class="main_inner_right_line_left5"> Security Code：</div>
     	<div class="main_inner_right_line_mid4">
       		<input id="newsyzm" name="newsyzm" type="text" class="input_152px"/>
 		
@@ -26,7 +26,7 @@
   	<div class="main_inner_right_line_50px">
     	<div class="main_inner_right_line_left5"></div>
     	<div class="main_inner_right_line_mid4">
-      		<div id="ymobile" class="bt_blue" style="width:152px;">确认修改</div>
+      		<div id="ymobile" class="bt_blue" style="width:152px;">Confirm</div>
     	</div>
   	</div>
     <input id="strJgid" name="strJgid" type="hidden" value="%bind(:5)"/>
@@ -44,9 +44,9 @@
 		var strJgid=$("#strJgid").val();
 		$("#newsyzm").val("");
 		$("#yzmtext").text("");
-		if(newstel==""){alert("请输入手机号！");}
+		if(newstel==""){alert("Mobile Phone Cannot be blank!");}
 		else{
-			var fsyzm = {"orgid": strJgid, "phone": newstel, "lang": "ZHS" };
+			var fsyzm = {"orgid": strJgid, "phone": newstel, "lang": "ENG" };
 
 			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"SEND","comParams":' + JSON.stringify( fsyzm ) + '}';
 			$.ajax({
@@ -59,7 +59,7 @@
 				url:"%bind(:2)",
 				success:function(result){
 					var success = result.comContent;
-					if(success=="success"){atime();alert("验证码已发送到您手机，请注意查收！")}
+					if(success=="success"){atime();alert("The security code has been sent to your mobile phone, please check!")}
 					else{alert(result.state.errdesc);}
 				}
 			});
@@ -70,8 +70,8 @@
 		var newsyzm=$("#newsyzm").val();
 		var newstel=$("#newstel").val();
 		var strJgid=$("#strJgid").val();
-		if(newsyzm==""){$("#yzmtext").text("*请输入验证码！");}
-		else if(newstel==""){$("#yzmtext").text("*请输入手机号！");}
+		if(newsyzm==""){$("#yzmtext").text("*Security Code Cannot be blank!");}
+		else if(newstel==""){$("#yzmtext").text("*Mobile Phone Cannot be blank!");}
 		else{
 			var saveYzm = {"orgid": strJgid, "phone": newstel, "yzm": newsyzm, "lang": "ZHS"};
 
@@ -103,7 +103,7 @@
 			$("#gainyzm").removeAttr("disabled");
 			$("#newstel").removeAttr("readOnly");
 			$("#gainyzm").css("color","#fff");			
-			$("#gainyzm").val("发送验证码");
+			$("#gainyzm").val("Send Security Code");
 			$("#gainyzm").css("background-image","");
 			wait =60;
 		} else{
@@ -111,7 +111,7 @@
 			$("#gainyzm").prop("disabled","true");
 			$("#gainyzm").css("opacity","1");
 			$("#gainyzm").css("color","#A9A9A9");
-			$("#gainyzm").val("重新发送("+wait+")");
+			$("#gainyzm").val("Resend Security Code("+wait+")");
 			$("#newstel").prop("readOnly","true");
 			$("#gainyzm").css("background-image","url(%bind(:1)/statics/images/tranzvision/gray_bg_bt.png)");
 			if(wait>=0){
@@ -119,7 +119,7 @@
 			stop = setTimeout("atime()",1000);
 		}
 	}
-
+	
 	function btime() {
 		$("#gainyzm").css("cursor","pointer");
 		$("#gainyzm").css("opacity","0.8");
