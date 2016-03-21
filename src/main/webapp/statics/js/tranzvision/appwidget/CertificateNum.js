@@ -69,7 +69,7 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-                
+                var e = "";
                 for (var i in children[0].option) {
                     e += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
                 }
