@@ -325,8 +325,12 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					psTzShjiYzmTbl.setTzEffFlag("Y");
 					psTzShjiYzmTblMapper.insert(psTzShjiYzmTbl);
 					
+					String getSmsSuffiSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+					String strSmsSuffix = jdbcTemplate.queryForObject(getSmsSuffiSql, new Object[] { "TZ_SMS_SEND_SUFFIX" }, "String");
+					if(strSmsSuffix == null) strSmsSuffix = "";
+					
 					//给当前填写的手机号码发送验证码
-					String strSmsContent = "本次验证码为：" + strYzm+"【清华经管】";
+					String strSmsContent = "本次验证码为：" + strYzm + strSmsSuffix;
 					String strUserName = "";
 							
 					String oprid = "";
@@ -484,8 +488,11 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					psTzShjiYzmTbl.setTzEffFlag("Y");
 					psTzShjiYzmTblMapper.insert(psTzShjiYzmTbl);
 					
+					String getSmsSuffiSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+					String strSmsSuffix = jdbcTemplate.queryForObject(getSmsSuffiSql, new Object[] { "TZ_SMS_SEND_SUFFIX" }, "String");
+					if(strSmsSuffix == null) strSmsSuffix = "";
 					//给当前填写的手机号码发送验证码
-					String strSmsContent = "本次验证码为：" + strYzm+"【清华经管】";
+					String strSmsContent = "本次验证码为：" + strYzm + strSmsSuffix;
 					String strUserName = "";
 							
 					String oprid = "";
