@@ -1063,7 +1063,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				if (bindEmailFlg <= 0) {
 					// 判断是否绑定了邮箱，如果未绑定邮箱，则禁止解绑手机;
 					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "N",
-							bindMobile, is_Bind, strBingTips3);
+							bindMobile, is_Bind, strBingTips1);
 				} else {
 					// 如果已绑定邮箱，则可以解绑手机;
 					// 更新;
