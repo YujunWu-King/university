@@ -117,6 +117,12 @@ public class GetSysHardCodeVal {
 	 * 下载文件存储路径
 	 */
 	private String downloadPath;
+	
+	/**
+	 * WkHtml2Pdf可执行文件
+	 */
+	private String wkHtml2Pdf;
+
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -168,7 +174,8 @@ public class GetSysHardCodeVal {
 			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
 
 			downloadPath = sysHardCodeValProps.getProperty("DownloadPath");
-
+			
+			wkHtml2Pdf = sysHardCodeValProps.getProperty("WkHtml2Pdf");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (Exception e) {
@@ -262,4 +269,9 @@ public class GetSysHardCodeVal {
 	public String getDownloadPath() {
 		return downloadPath;
 	}
+	
+	public String getWkHtml2Pdf() {
+		return wkHtml2Pdf;
+	}
+
 }

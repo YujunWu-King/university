@@ -20,6 +20,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcTKey;
 import com.tranzvision.gd.util.ExecuteShell.ExecuteShellComand;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -36,6 +37,9 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	@Autowired
 	private FileManageServiceImpl fileManageServiceImpl;
@@ -123,14 +127,24 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				String pdfFileName = title + insid + ".pdf";
 				fileManageServiceImpl.DeleteFile(path, pdfFileName);
 				
-				ExecuteShellComand shellComand = new ExecuteShellComand();
-
-				String pdfPath = request.getServletContext().getRealPath(path);
-				//header.html、footer.html文件HTTP访问路径
-				parentPath =  "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath() + parentPath;
-				String sourcePath =  "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath() + path;
+				String wkh = getSysHardCodeVal.getWkHtml2Pdf();
 				
-				shellComand.executeCommand(parentPath, sourcePath, htmlFileName,pdfFileName,pdfPath);
+				StringBuffer command = new StringBuffer(wkh);
+
+				String http = "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath();
+				String headerParam = " --header-html " + http + parentPath + "header.html ";
+				String footerParam = " --footer-html " + http + parentPath + "footer.html ";
+				String sourceName = http + path + htmlFileName;
+				String targetName = request.getServletContext().getRealPath(path) + pdfFileName;
+				
+				command.append(headerParam);
+				command.append(footerParam);
+				command.append(sourceName);
+				command.append(" " + targetName);
+				
+				ExecuteShellComand shellComand = new ExecuteShellComand();
+				System.out.println(command.toString());
+				shellComand.executeCommand(command.toString());
 
 				return request.getContextPath() + path + pdfFileName;
 			}
@@ -376,6 +390,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String getXxxVal(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc,String xxxCclx) {
+		//TODO 对于多行文本
 		
 		String val = "";
 		if (StringUtils.equals(xxxCclx, "D")) {
