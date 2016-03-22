@@ -71,7 +71,6 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				code = "1";
 				msg = "参数-报名表实例编号为空！";
 			} else {
-
 				url = this.createPdf(insid);
 			}
 		}
@@ -127,10 +126,11 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 
 				String pdfPath = request.getServletContext().getRealPath(path);
+				//header.html、footer.html文件HTTP访问路径
 				parentPath =  "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath() + parentPath;
-				String httpPath =  "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath() + path;
+				String sourcePath =  "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath() + path;
 				
-				shellComand.executeCommand(parentPath,httpPath,htmlFileName,pdfFileName,pdfPath);
+				shellComand.executeCommand(parentPath, sourcePath, htmlFileName,pdfFileName,pdfPath);
 
 				return request.getContextPath() + path + pdfFileName;
 			}
