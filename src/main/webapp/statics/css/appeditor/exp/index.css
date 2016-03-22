@@ -82,7 +82,7 @@
 	padding:0 20px;
 }
 .listcon{
-	margin-bottom:25px;
+	//margin-bottom:25px;
 }
 .question{
 	font-size:16px;
@@ -196,7 +196,6 @@
 	font-weight: bold;
 	height: auto;
 	line-height: 39px;
-	margin-left: 10px;
 	text-align: left;
 }
 .content_info_right{
@@ -218,6 +217,6 @@
 .content_para{
 	background-color:#f2f2f2;
 }
-
-
-  
+.content_para .listcon{
+	padding-left: 15px;
+}
