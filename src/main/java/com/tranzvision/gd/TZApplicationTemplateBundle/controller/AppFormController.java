@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -165,9 +164,7 @@ public class AppFormController {
 				 String code = retMap.get("code") == null ? "" : String.valueOf(retMap.get("code"));
 				 String msg = retMap.get("msg") == null ? "" : String.valueOf(retMap.get("msg"));
 				 String url = retMap.get("url") == null ? "" : String.valueOf(retMap.get("url"));
-//				String code = "0";
-//				String msg = "";
-//				String url = "\\statics\\export\\ZBBDEV\\18\\14\\张彬彬测试报名表模版-张彬彬14.pdf";
+				 String filename = retMap.get("filename") == null ? "" : String.valueOf(retMap.get("filename"));
 
 				if (!StringUtils.equals(code, "0")) {
 					errorCode = code;
@@ -197,8 +194,7 @@ public class AppFormController {
 
 					// set headers for the response
 					String headerKey = "Content-Disposition";
-					String filename = new String(downloadFile.getName().getBytes(), "ISO8859-1");
-//					String filename = URLDecoder.decode(downloadFile.getName(), "UTF-8");
+					filename = new String(filename.getBytes(), "ISO8859-1");
 					
 					String headerValue = String.format("attachment; filename=\"%s\"", filename);
 					response.setHeader(headerKey, headerValue);

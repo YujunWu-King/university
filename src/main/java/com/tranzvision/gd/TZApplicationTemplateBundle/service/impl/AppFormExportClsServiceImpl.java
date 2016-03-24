@@ -58,6 +58,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		String code = "0";
 		String msg = "";
 		String url = "";
+		String title = "";
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
@@ -75,13 +76,28 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				code = "1";
 				msg = "参数-报名表实例编号为空！";
 			} else {
-				url = this.createPdf(insid);
+				PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
+				// 当前登录人姓名
+				String userName = "";
+				if (psTzAqYhxxTbl != null) {
+					userName = psTzAqYhxxTbl.getTzRealname();
+				}
+				
+				//报名表模板编号、模板名称
+				String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
+				Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
+				String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
+				String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
+				//title
+				title = tplname + "-" + userName;
+				url = this.createPdf(tplid,insid,title);
 			}
 		}
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("code", code);
 		mapRet.put("msg", msg);
 		mapRet.put("url", url);
+		mapRet.put("filename", title);
 		
 		return jacksonUtil.Map2json(mapRet);
 	}
@@ -92,39 +108,23 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 * @param insid	报名表实例编号
 	 * @return
 	 */
-	private String createPdf(String insid) {
+	private String createPdf(String tplid,String insid,String title) {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		
-		PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
-		// 当前登录人姓名
-		String userName = "";
-		if (psTzAqYhxxTbl != null) {
-			userName = psTzAqYhxxTbl.getTzRealname();
-		}
-		
-		//报名表模板编号、模板名称
-		String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
-		Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
-		String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
-		String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
-		
+
 		//最终生成文件路径
 		String parentPath = "/bmb/export/" + orgid + "/" + tplid + "/";
 		String path = parentPath + insid + "/";
-		
-		//title
-		String title = tplname + "-" + userName;
-		
+
 		//HTML格式报名表字符串
 		String formHtml = this.CreateHtml(insid, tplid, title);
 		
 		try {
-			String htmlFileName = title + insid + ".html";
+			String htmlFileName = tplid + "_" + insid + ".html";
 			
 			fileManageServiceImpl.DeleteFile(path, htmlFileName);
 			boolean isSuccess = fileManageServiceImpl.CreateFile(path, htmlFileName, formHtml.getBytes());
 			if(isSuccess){
-				String pdfFileName = title + insid + ".pdf";
+				String pdfFileName = tplid + "_" + insid + ".pdf";
 				fileManageServiceImpl.DeleteFile(path, pdfFileName);
 				
 				String wkh = getSysHardCodeVal.getWkHtml2Pdf();
