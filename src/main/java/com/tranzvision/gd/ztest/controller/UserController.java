@@ -96,14 +96,14 @@ public class UserController {
 			}
 			
 			tmpStr += "<br>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-			tmpStr += "<br>HelloWorld1==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld1",true);
-			tmpStr += "<br>HelloWorld2==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld2",false);
-			tmpStr += "<br>HelloWorld3==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld3",false);
+			tmpStr += "<br>HelloWorld1==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld1");
+			tmpStr += "<br>HelloWorld2==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld2");
+			tmpStr += "<br>HelloWorld3==>>" + tzSQLObject.getSQLText("SQL.test.HelloWorld3");
 			
 			tmpStr += "<br>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-			tmpStr += "<br>HelloWorld1==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld1",true,"LiGang");
-			tmpStr += "<br>HelloWorld2==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld2",false);
-			tmpStr += "<br>HelloWorld3==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld3",false);
+			tmpStr += "<br>HelloWorld1==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld1","LiGang");
+			tmpStr += "<br>HelloWorld2==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld2");
+			tmpStr += "<br>HelloWorld3==>>" + tzSQLObject.getHTMLText("HTML.test.HelloWorld3");
 		}
 		catch(TzSystemException e)
 		{

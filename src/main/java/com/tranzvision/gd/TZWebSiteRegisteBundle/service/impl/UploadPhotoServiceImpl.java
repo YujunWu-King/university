@@ -118,7 +118,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			
 			String contextPath = request.getContextPath();
 			String phoToData = contextPath + "/dispatcher";
-			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", true, phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath,imgPath);
+			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", phoToData, LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD, TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO, TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto,contextPath,imgPath);
 			TZ_ENROLL_UPLOADPHO = objRep.repTitle(TZ_ENROLL_UPLOADPHO, siteId);
 			TZ_ENROLL_UPLOADPHO = objRep.repCss(TZ_ENROLL_UPLOADPHO, siteId);
 			return TZ_ENROLL_UPLOADPHO;
@@ -176,7 +176,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 		  		   psTzOprPhtGlT.setTzAttachsysfilena(sysFileName);
 	  			   int success = psTzOprPhtGlTMapper.insert(psTzOprPhtGlT);
 	  			   if(success <= 0){
-	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","N","");
 	  			   }
 	  			   
 	  			   PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
@@ -186,18 +186,18 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 	  			   psTzOprPhotoT.setTzAttAUrl(imaPath);
 	  			   success = psTzOprPhotoTMapper.insert(psTzOprPhotoT);
 	  			   if(success <= 0){
-	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+	  				 return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","N","");
 	  			   }
-	  			   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"Y", imaPath + "/" + sysFileName);
+	  			   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","Y", imaPath + "/" + sysFileName);
 		  	   }else{
-		  		   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+		  		   return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","N","");
 		  	   }
 		    }
-		    return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+		    return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","N","");
 		}catch(Exception e){
 			e.printStackTrace();
 			try{
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", true,"N","");
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON","N","");
 			}catch(Exception e1){
 				e1.printStackTrace();
 				return "【TZ_PHOTO_UPLOAD_JSON】HTML对象未定义";

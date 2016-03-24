@@ -750,9 +750,9 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			if(count> 0){
 				//有效；
 				if("ENG".equals(strLang)){
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML", true,strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
 				}else{
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML", true,strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
 				}
 				
 				str_content = objRep.repTitle(str_content, strSiteId);
@@ -762,7 +762,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 				//无效；
 				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4";
 				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "130", "验证码已失效，请重新发送手机验证码！", "Security Code has timed out, please resend message!");
-				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", true,message,strBeginUrl );
+				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL",message,strBeginUrl );
 				return str_content;
 			}	
 		}catch(Exception e){

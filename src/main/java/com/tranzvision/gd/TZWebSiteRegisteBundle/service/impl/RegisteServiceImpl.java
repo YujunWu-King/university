@@ -107,7 +107,7 @@ public class RegisteServiceImpl {
 				    if(fieldsArr.contains(regFieldId)){
 				    	//密码
 				    	if("TZ_PASSWORD".equals(regFieldId) || "TZ_REPASSWORD".equals(regFieldId)){
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PASSWORD_HTML", true, "*", regFldYsmc, regFieldId,regDefValue,imgPath );
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PASSWORD_HTML", "*", regFldYsmc, regFieldId,regDefValue,imgPath );
 				    	}
 				    	
 				    	//性别;
@@ -123,39 +123,39 @@ public class RegisteServiceImpl {
 				    		}
 				    		
 				    		if("ENG".equals(strLang)){
-				    			fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_EN_HTML", true, isRequired, regFldYsmc, regFieldId,str1,str2 );
+				    			fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_EN_HTML", isRequired, regFldYsmc, regFieldId,str1,str2 );
 				    		}else{
-				    			fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_HTML", true, isRequired, regFldYsmc, regFieldId,str1,str2 );
+				    			fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_HTML", isRequired, regFldYsmc, regFieldId,str1,str2 );
 				    		}
 				    	}
 				    	
 				    	//BIRTHDATE;
 				    	if("BIRTHDATE".equals(regFieldId)){
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_COUNTRY;
 				    	if("TZ_COUNTRY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
 				    	if("TZ_LEN_PROID".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_CITY;
 				    	if("TZ_LEN_CITY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    }else{
 				    	//是否下拉框;
@@ -186,9 +186,9 @@ public class RegisteServiceImpl {
 				    				}
 				    			}
 				    		}
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOXR_HTML", true, isRequired, regFldYsmc, regFieldId,combox ,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOXR_HTML", isRequired, regFldYsmc, regFieldId,combox ,imgPath);
 				    	}else{
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", true, isRequired, regFldYsmc, regFieldId, "", "", regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "", "", regDefValue,imgPath);
 				    	}
 				    }
 				}
@@ -203,10 +203,10 @@ public class RegisteServiceImpl {
 				if(strActType.indexOf("MOBILE")>=0 && strActType.indexOf("EMAIL")>=0){
 					if("ENG".equals(strLang)){
 						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
-				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", true, strActHtml,imgPath);
+				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", strActHtml,imgPath);
 					}else{
 						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
-				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", true, strActHtml,imgPath);
+				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", strActHtml,imgPath);
 					}
 				}else{
 					if(strActType.indexOf("EMAIL")>=0){
@@ -229,12 +229,12 @@ public class RegisteServiceImpl {
 			//登录页面链接;
 			String loginUrl = request.getContextPath() + "/user/login/" + strJgid.toLowerCase() +"/"+strSiteId;
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", true, fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
 			}
 			
-			//fields = tzGdObject.getHTMLText("HTML.test.test", true, "test111","test222");
+			//fields = tzGdObject.getHTMLText("HTML.test.test", "test111","test222");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			fields = "";
@@ -259,7 +259,7 @@ public class RegisteServiceImpl {
 			
 			strContent = this.userRegister(strOrgId, strSiteId);
 			strContent = strContent.replaceAll("\\$",  "\\\\\\$");
-			strContent = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SETREGISTEPAGE_HTML",true, strContent,request.getContextPath());
+			strContent = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SETREGISTEPAGE_HTML",strContent,request.getContextPath());
 			//截取body内容
 			int numCharstart = 0;
 		    int numCharend = 0;
@@ -284,13 +284,13 @@ public class RegisteServiceImpl {
 				String jgid = psTzSiteiDefnT.getTzJgId();
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
 		        
-		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true);
-		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true,request.getContextPath());
+		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
+		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
 		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 				String strReleasContent1 = doctypeHtml
 						+ "<html>" 
-						+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",true, 
+						+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",
 								explorerHtml,request.getContextPath()) 
 						+ strReleasContent +  "</html>";
 				
@@ -310,8 +310,8 @@ public class RegisteServiceImpl {
 		        	strReleasContent1 = objRep.repLang(strReleasContent1, "");
 		        }
 		        
-		        String strReleasContent2 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true) + "<html>" 
-		        + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SAVE_HEAD_HTML",true,request.getContextPath()) + strReleasContent + "</html>";
+		        String strReleasContent2 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML") + "<html>" 
+		        + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SAVE_HEAD_HTML",request.getContextPath()) + strReleasContent + "</html>";
 		        
 		        strReleasContent2 = objRep.repWelcome(strReleasContent2, "");
 		        strReleasContent2 = objRep.repSiteid(strReleasContent2, strSiteId);
@@ -356,13 +356,12 @@ public class RegisteServiceImpl {
 			if(psTzSiteiDefnT != null){
 				String jgid = psTzSiteiDefnT.getTzJgId();
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
-		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML",true);
-		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",true,request.getContextPath());
+		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
+		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
 		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 		        strReleasContent = doctypeHtml
-		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML",
-		        			true,explorerHtml,request.getContextPath()) 
+		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,request.getContextPath()) 
 		        	+ strReleasContent + "</html>";
 		        strReleasContent = objRep.repTitle(strReleasContent, strSiteId);
 		        strReleasContent = objRep.repCss(strReleasContent, strSiteId);
