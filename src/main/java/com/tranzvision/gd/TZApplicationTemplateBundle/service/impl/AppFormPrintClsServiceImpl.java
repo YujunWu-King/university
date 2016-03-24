@@ -135,10 +135,7 @@ public class AppFormPrintClsServiceImpl extends FrameworkImpl {
 		PsTzApptplDyTWithBLOBs psTzApptplDy = psTzApptplDyTMapper.selectByPrimaryKey(tplid);
 		String header = psTzApptplDy.getTzHeader();
 		String footer = psTzApptplDy.getTzFooter();
-		header = header.replaceAll("/university/", "/");
-		footer = footer.replaceAll("/university/", "/");
-		header = header.replaceAll("/statics/", "../../../../statics/");
-		footer = footer.replaceAll("/statics/", "../../../../statics/");
+
 		try {
 			if(header == null){
 				header = "";
@@ -149,6 +146,10 @@ public class AppFormPrintClsServiceImpl extends FrameworkImpl {
 			header = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_HEADER", true, request.getContextPath(), header);
 			
 			footer = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_FOOTER", true, footer);
+			header = header.replaceAll("/university/", "/");
+			footer = footer.replaceAll("/university/", "/");
+			header = header.replaceAll("/statics/", "../../../../statics/");
+			footer = footer.replaceAll("/statics/", "../../../../statics/");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

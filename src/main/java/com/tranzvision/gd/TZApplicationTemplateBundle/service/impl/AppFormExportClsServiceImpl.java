@@ -129,25 +129,27 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				String wkh = getSysHardCodeVal.getWkHtml2Pdf();
 				
-				StringBuffer command = new StringBuffer(wkh);
+				StringBuffer command = new StringBuffer("\"" + wkh + "\"");
+				command.append(" --header-html ");
 
-//				String http = "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath();
-//				String headerParam = " --header-html " + http + parentPath + "header.html ";
-//				String footerParam = " --footer-html " + http + parentPath + "footer.html ";
-				String headerParam = " --header-html " + request.getServletContext().getRealPath(parentPath) + "header.html ";
-				String footerParam = " --footer-html " + request.getServletContext().getRealPath(parentPath) + "footer.html ";
-				String sourceName = request.getServletContext().getRealPath(path) + htmlFileName;
-				String targetName = request.getServletContext().getRealPath(path) + pdfFileName;
-				
+				String headerParam = "\"" + request.getServletContext().getRealPath(parentPath) + "header.html" + "\" ";
 				command.append(headerParam);
+				
+				command.append(" --footer-html ");
+				String footerParam = "\"" + request.getServletContext().getRealPath(parentPath) + "footer.html" + "\" ";
 				command.append(footerParam);
+				
+				String sourceName = "\"" + request.getServletContext().getRealPath(path) + htmlFileName + "\" ";
+				String targetName = "\"" + request.getServletContext().getRealPath(path) + pdfFileName + "\"";
+
 				command.append(sourceName);
-				command.append(" " + targetName);
+				command.append(targetName);
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 				System.out.println(command.toString());
+
 				String retval = shellComand.executeCommand(command.toString());
-				if(retval.toUpperCase().endsWith("DONE")){
+				if(retval.toUpperCase().trim().endsWith("DONE")){
 					return path + pdfFileName;
 				}else{
 					return "";
@@ -208,6 +210,8 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 			formHtml = "";
 		}
+		formHtml = formHtml.replaceAll("/university/", "/");
+		formHtml = formHtml.replaceAll("/statics/", "../../../../../statics/");
 		return formHtml;
 	}
 
