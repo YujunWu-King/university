@@ -1,12 +1,3 @@
-/*机构管理成员信息表*/
-delete from PS_TZ_JG_MGR_T where TZ_JG_ID='DYTMBA';
-
-/*机构管理角色信息表*/
-delete from PS_TZ_JG_ROLE_T where TZ_JG_ID='DYTMBA';
-
-/*机构基本信息表*/
-delete from PS_TZ_JG_BASE_T where TZ_JG_ID='DYTMBA';
-
 /*功能菜单树节点定义表*/
 delete from PS_TZ_AQ_CDJD_TBL where TREE_NAME='TZ_GD_GNCD_MENU' and TZ_MENU_NUM in (select TREE_NODE from PSTREENODE where TREE_NODE='DYTMBA' or TREE_NODE like 'DYTMBA_%');
 

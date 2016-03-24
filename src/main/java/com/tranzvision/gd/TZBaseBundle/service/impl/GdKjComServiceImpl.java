@@ -266,14 +266,13 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					strTransSDesc = (String) list.get(num).get("TZ_ZHZ_DMS");
 					strTransLDesc = (String) list.get(num).get("TZ_ZHZ_CMS");
 					/*
-					if (num == 0) {
-						strTransContent = "{\"TValue\": \"" + strTransID + "\",\"TSDesc\": \"" + strTransSDesc
-								+ "\",\"TLDesc\": \"" + strTransLDesc + "\"}";
-					} else {
-						strTransContent = strTransContent + ",{\"TValue\": \"" + strTransID + "\",\"TSDesc\": \""
-								+ strTransSDesc + "\",\"TLDesc\": \"" + strTransLDesc + "\"}";
-					}
-					*/
+					 * if (num == 0) { strTransContent = "{\"TValue\": \"" +
+					 * strTransID + "\",\"TSDesc\": \"" + strTransSDesc +
+					 * "\",\"TLDesc\": \"" + strTransLDesc + "\"}"; } else {
+					 * strTransContent = strTransContent + ",{\"TValue\": \"" +
+					 * strTransID + "\",\"TSDesc\": \"" + strTransSDesc +
+					 * "\",\"TLDesc\": \"" + strTransLDesc + "\"}"; }
+					 */
 					Map<String, Object> map = new HashMap<>();
 					map.put("TValue", strTransID);
 					map.put("TSDesc", strTransSDesc);
@@ -286,7 +285,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			e.printStackTrace();
 			return jacksonUtil.Map2json(mapRet);
 		}
-		//strRet = "{\"" + sFieldName + "\":[" + strTransContent + "]}";
+		// strRet = "{\"" + sFieldName + "\":[" + strTransContent + "]}";
 		return jacksonUtil.Map2json(mapRet);
 	}
 
@@ -330,6 +329,10 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 					String pageInfoSQL = "SELECT TZ_PAGE_ISWBURL,TZ_PAGE_WBURL,TZ_PAGE_NEWWIN,TZ_PAGE_KHDJS,TZ_PAGE_MRSY FROM PS_TZ_AQ_PAGZC_TBL WHERE (TZ_COM_ID=? OR TZ_COM_ID LIKE ?) AND TZ_PAGE_ID=? limit 0,1";
 					Map<String, Object> map = null;
 					map = jdbcTemplate.queryForMap(pageInfoSQL, new Object[] { sComID, sComID + "$%", sPageID });
+
+					if (map == null) {
+						continue;
+					}
 
 					isExternalURL = (String) map.get("TZ_PAGE_ISWBURL");
 					externalURL = (String) map.get("TZ_PAGE_WBURL");
@@ -621,9 +624,9 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 		}
 
 		String resultSelectFlds = "";
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		ArrayList<Map<String,Object>> listJson = new ArrayList<Map<String,Object>>();
+		ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 
 		try {
 			// 将字符串转换成json;
@@ -967,17 +970,17 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			} else {
 				resultlist = jdbcTemplate.queryForList(sqlList);
 			}
-			
+
 			for (int resultlist_i = 0; resultlist_i < resultlist.size(); resultlist_i++) {
 				Map<String, Object> resultMap = resultlist.get(resultlist_i);
 				j = 0;
-				
-				Map<String, Object> mapJson = new HashMap<String,Object>();
+
+				Map<String, Object> mapJson = new HashMap<String, Object>();
 				for (Object vl : resultMap.values()) {
 					mapJson.put(aryResult[j], vl);
 					j++;
 				}
-				
+
 				listJson.add(mapJson);
 
 			}
@@ -987,8 +990,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			errMsgArr[0] = "1";
 			errMsgArr[1] = e.toString();
 		}
-		
-		Map<String,Object> mapRet = new HashMap<String,Object>();
+
+		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", total);
 		mapRet.put("root", listJson);
 		strRet = jacksonUtil.Map2json(mapRet);
@@ -999,18 +1002,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 	@Override
 	/* 下拉框数据 */
 	public String getComboxValue(String recname, String condition, String result, String[] errMsgArr) {
-		//String strRet = "";
+		// String strRet = "";
 		Map<String, Object> retMap = new HashMap<>();
 		ArrayList<Map<String, Object>> dataList = new ArrayList<>();
 		retMap.put(recname, dataList);
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 数据内容;
-		//String strContent = "";
+		// String strContent = "";
 		try {
 			// 将字符串转换成json;
 			// JSONObject conJson = PaseJsonUtil.getJson(condition);
-			
+
 			int i, j;
 			// 搜索字段名称;
 			String key = "";
@@ -1188,32 +1191,31 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 			if (list != null) {
 				for (int k = 0; k < list.size(); k++) {
-					//strContent = "";
+					// strContent = "";
 					Map<String, Object> map = list.get(k);
 					j = 0;
 					Map<String, Object> jsonMap = new HashMap<>();
 					for (Object vl : map.values()) {
 						/**
-						strContent = strContent + ",\"" + aryResult[j] + "\":\"" + (String) vl + "\"";
-						j++;
-						*/
+						 * strContent = strContent + ",\"" + aryResult[j] +
+						 * "\":\"" + (String) vl + "\""; j++;
+						 */
 						jsonMap.put(aryResult[j], vl);
 						j++;
 					}
 					/*
-					strContent = strContent.substring(1);
-					strContent = "{" + strContent + "}";
-
-					strRet = strRet + "," + strContent;
-					*/
+					 * strContent = strContent.substring(1); strContent = "{" +
+					 * strContent + "}";
+					 * 
+					 * strRet = strRet + "," + strContent;
+					 */
 					dataList.add(jsonMap);
 				}
 			}
 			/*
-			if(strRet != null && !"".equals(strRet)){
-				strRet = strRet.substring(1);
-			}
-			strRet = "{\"" + recname + "\":[" + strRet + "]}";
+			 * if(strRet != null && !"".equals(strRet)){ strRet =
+			 * strRet.substring(1); } strRet = "{\"" + recname + "\":[" + strRet
+			 * + "]}";
 			 */
 			retMap.replace(recname, dataList);
 		} catch (Exception e) {
