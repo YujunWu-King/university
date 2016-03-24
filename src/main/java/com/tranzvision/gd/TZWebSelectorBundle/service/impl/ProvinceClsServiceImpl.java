@@ -71,13 +71,13 @@ public class ProvinceClsServiceImpl extends FrameworkImpl{
 					String strDesc = (String)list.get(i).get("DESCR");
 					//String strState = (String)list.get(i).get("STATE");
 					String states = strDesc.substring(0,strDesc.indexOf(" "));
-					proInfo = proInfo + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_PROVINCE_A_HTML", true, states);
+					proInfo = proInfo + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_PROVINCE_A_HTML", states);
 				}
 			}
 			
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
-			return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_PROVINCE_SELECTOR_HTML", true, proInfo,pageID,request.getContextPath(),imgPath);
+			return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_PROVINCE_SELECTOR_HTML", proInfo,pageID,request.getContextPath(),imgPath);
 		}catch(Exception e){
 			e.printStackTrace();
 			return "";

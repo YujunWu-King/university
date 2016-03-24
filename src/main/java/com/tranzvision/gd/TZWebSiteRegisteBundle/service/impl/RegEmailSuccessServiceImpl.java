@@ -71,7 +71,7 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 			if("Y".equals(FLAGE)){
-				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_HTML", true,
+				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_HTML",
 						contextPaht,imgPath+"/right_green.png", "邮箱已经修改成功",loginUrl);
 			}else{
 				if("overtime".equals(strErrorFlg)){
@@ -94,13 +94,13 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 					strErrorDesc = "邮箱修改失败";
 				}
 				
-				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_ERROR_HTML", true,
+				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_ERROR_HTML",
 						imgPath+"/error_001.jpg", strErrorDesc,contextPaht);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 			try {
-				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_ERROR_HTML", true,
+				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_ERROR_HTML",
 						contextPaht+"/statics/images/website/error_001.jpg", strErrorDesc,contextPaht);
 			} catch (TzSystemException e1){
 				e1.printStackTrace();

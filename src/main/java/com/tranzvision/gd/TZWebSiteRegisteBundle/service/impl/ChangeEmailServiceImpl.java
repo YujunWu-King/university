@@ -81,10 +81,10 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 
 				String tzWdzhEmail = "";
 				if ("ENG".equals(strLang)) {
-					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL", true,
+					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL",
 							strBeginUrl, strJgid, contextPath, imgPath);
 				} else {
-					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL", true,
+					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL",
 							strBeginUrl, strJgid, contextPath, imgPath);
 				}
 
@@ -115,7 +115,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 				int count = jdbcTemplate.queryForObject(emailZySQL, new Object[] { strEmail, strJgid }, "Integer");
 				if (count > 0) {
 					mess = "该邮箱已被占用，请重新输入！";
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 				}
 
 				String yzmSQL = " SELECT TZ_YZM_YXQ,TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE  TZ_EFF_FLAG='Y'  AND TZ_JG_ID=? AND TZ_EMAIL=? ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
@@ -127,29 +127,29 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 						Date curDate = new Date();
 						if (curDate.before(yzmYxq)) {
 							mess = "shtime";
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 						} else {
 							String updateYzmSQL = "UPDATE PS_TZ_DZYX_YZM_TBL SET TZ_EFF_FLAG='N' WHERE TZ_TOKEN_CODE=?";
 							jdbcTemplate.update(updateYzmSQL, new Object[] { tokenCode });
 
 							mess = this.registerESave(strEmail, strJgid);
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 						}
 					}
 				}
 
 				mess = this.registerESave(strEmail, strJgid);
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 
 			} else {
 				mess = "请输入正确的邮箱！";
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				mess = "修改失败";
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", true, mess);
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", mess);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return e1.toString();
@@ -205,7 +205,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 
 			// 给当前填写的邮箱发送激活邮件---开始;
 			// 发送内容;
-			String content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_QUEREN_HTML", true, strUserName,
+			String content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_QUEREN_HTML", strUserName,
 					sureEmail);
 
 			// 发送邮件;

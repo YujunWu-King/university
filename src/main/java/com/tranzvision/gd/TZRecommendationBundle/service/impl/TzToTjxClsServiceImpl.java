@@ -92,8 +92,7 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 						str_tjx_sx = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET",
 								"REF_FAIL", "ENG", "", "");
 
-						strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML", true,
-								str_tjx_sx,contextPath);
+						strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML", str_tjx_sx,contextPath);
 						return strRtn;
 
 					} else {
@@ -104,8 +103,7 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 						str_tjx_sx = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET",
 								"REF_FAIL", "ZHS", "", "");
 
-						strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML", true,
-								str_tjx_sx,contextPath);
+						strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML",	str_tjx_sx,contextPath);
 						return strRtn;
 					}
 				} else {
@@ -124,7 +122,7 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 
 				// 报名表ID不存在，错误---------------------;
 				if (numAppinsId < 0) {
-					strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML", true, "非法操作",contextPath);
+					strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML","非法操作",contextPath);
 					return strRtn;
 				}
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -148,10 +146,10 @@ public class TzToTjxClsServiceImpl extends FrameworkImpl {
 				//跳转到推荐信报名表的链接;
 				//String strTzUrl = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?", new Object[]{"TZ_TJX_URL"},"String");
 				String strTzUrl = request.getContextPath() + "/dispatcher?classid=appId&TZ_APP_INS_ID=" + numTjxAppinsId + "&TZ_REF_LETTER_ID=" + strTjxId;
-				strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_TRANS_HTML", true, strTzUrl);
+				strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_TRANS_HTML",strTzUrl);
 				
 			}else{
-				strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML", true, "参数不完整",contextPath);
+				strRtn = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_GD_TJX_ERROR_HTML","参数不完整",contextPath);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
