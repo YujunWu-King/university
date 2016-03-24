@@ -109,7 +109,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
 		
 		//最终生成文件路径
-		String parentPath = "/statics/export/" + orgid + "/" + tplid + "/";
+		String parentPath = "/bmb/export/" + orgid + "/" + tplid + "/";
 		String path = parentPath + insid + "/";
 		
 		//title
@@ -131,10 +131,12 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				StringBuffer command = new StringBuffer(wkh);
 
-				String http = "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath();
-				String headerParam = " --header-html " + http + parentPath + "header.html ";
-				String footerParam = " --footer-html " + http + parentPath + "footer.html ";
-				String sourceName = http + path + htmlFileName;
+//				String http = "http://"+ request.getServerName()+ ":"+ request.getServerPort()+ request.getContextPath();
+//				String headerParam = " --header-html " + http + parentPath + "header.html ";
+//				String footerParam = " --footer-html " + http + parentPath + "footer.html ";
+				String headerParam = " --header-html " + request.getServletContext().getRealPath(parentPath) + "header.html ";
+				String footerParam = " --footer-html " + request.getServletContext().getRealPath(parentPath) + "footer.html ";
+				String sourceName = request.getServletContext().getRealPath(path) + htmlFileName;
 				String targetName = request.getServletContext().getRealPath(path) + pdfFileName;
 				
 				command.append(headerParam);

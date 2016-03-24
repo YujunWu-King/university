@@ -135,7 +135,10 @@ public class AppFormPrintClsServiceImpl extends FrameworkImpl {
 		PsTzApptplDyTWithBLOBs psTzApptplDy = psTzApptplDyTMapper.selectByPrimaryKey(tplid);
 		String header = psTzApptplDy.getTzHeader();
 		String footer = psTzApptplDy.getTzFooter();
-
+		header = header.replaceAll("/university/", "/");
+		footer = footer.replaceAll("/university/", "/");
+		header = header.replaceAll("/statics/", "../../../../statics/");
+		footer = footer.replaceAll("/statics/", "../../../../statics/");
 		try {
 			if(header == null){
 				header = "";
@@ -144,12 +147,13 @@ public class AppFormPrintClsServiceImpl extends FrameworkImpl {
 				footer = "";
 			}
 			header = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_HEADER", true, request.getContextPath(), header);
+			
 			footer = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_FOOTER", true, footer);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}
 
-		String parentPath = "/statics/export/" + orgid + "/" + tplid + "/";
+		String parentPath = "/bmb/export/" + orgid + "/" + tplid + "/";
 		try {
 			fileManageServiceImpl.DeleteFile(parentPath, "header.html");
 			fileManageServiceImpl.CreateFile(parentPath, "header.html", header.getBytes());
