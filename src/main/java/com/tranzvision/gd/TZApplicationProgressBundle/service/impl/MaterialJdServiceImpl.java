@@ -100,30 +100,30 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			                	if("S".equals(TZ_REFLETTERTYPE)){
 			                		/*已发送推荐信邮件，并完成了推荐信*/
 			                		TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", true,tjrxx, fillOnline, tjsSubmit, "icon-yes");
+			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", tjrxx, fillOnline, tjsSubmit, "icon-yes");
 			                	}else{
 			                		TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", true,tjrxx, uploadTjx, tjsSubmit, "icon-yes");
+			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", tjrxx, uploadTjx, tjsSubmit, "icon-yes");
 			                	}
 			                }else{
 			                	if("S".equals(TZ_REFLETTERTYPE)){
 			                		if(tjxInstId > 0){
 			                			TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-				        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", true, tjrxx, fillOnline, tjsUSubmit, "icon-no");
+				        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2",tjrxx, fillOnline, tjsUSubmit, "icon-no");
 			                		}else{
 			                			TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-				        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", true, tjrxx, send, tjsUSubmit, "icon-no");
+				        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2",tjrxx, send, tjsUSubmit, "icon-no");
 			                		}
 			                	}else{
 			                		TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2", true, tjrxx, uploadTjx, tjsUSubmit, "icon-no");
+			        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR2",tjrxx, uploadTjx, tjsUSubmit, "icon-no");
 			                	}
 			                }
 			        	}
 			         }
 			    }
 			    TZ_OPEN_WINDOW_TABLE_TH = tzGDObject.getHTMLText(
-						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH", true, tjr, fszt, tjxtjzt);
+						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH",tjr, fszt, tjxtjzt);
 			}else{
 				if("DJZL".equals(viewType)){
 					//资料递交;
@@ -175,26 +175,26 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			        			}
 			        			
 			        			TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-		        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", true,TZ_CONT_INTRO, zlSpZtDesc, TZ_AUDIT_NOPASS_RS, class_css);
+		        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", TZ_CONT_INTRO, zlSpZtDesc, TZ_AUDIT_NOPASS_RS, class_css);
 			                    
 			        		}
 			        	}
 			        	
 			        	if(total == 0){
 			        		TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-	        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", true,noSQJD, noSQJD, noSQJD, "");
+	        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", noSQJD, noSQJD, noSQJD, "");
 			        	}
 			        }else{
 			        	TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
-        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", true, noSQJD, noSQJD, noSQJD, "");
+        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR",noSQJD, noSQJD, noSQJD, "");
 			        }
 			        TZ_OPEN_WINDOW_TABLE_TH =  tzGDObject.getHTMLText(
-    						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH", true,  zldj, shjg, btgYy);
+    						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH", zldj, shjg, btgYy);
 				}
 			}
 			
 			infoScheduleHtml =  tzGDObject.getHTMLText(
-					"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML", true, TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR);
+					"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR);
 		}catch(Exception e){
 			e.printStackTrace();
 			infoScheduleHtml = "无法获取数据";

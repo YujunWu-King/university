@@ -143,9 +143,9 @@ public class AppFormPrintClsServiceImpl extends FrameworkImpl {
 			if(footer == null){
 				footer = "";
 			}
-			header = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_HEADER", true, request.getContextPath(), header);
+			header = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_HEADER",request.getContextPath(), header);
 			
-			footer = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_FOOTER", true, footer);
+			footer = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_FORM_EXPORT_FOOTER",footer);
 			header = header.replaceAll("/university/", "/");
 			footer = footer.replaceAll("/university/", "/");
 			header = header.replaceAll("/statics/", "../../../../statics/");

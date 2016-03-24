@@ -205,7 +205,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 		String formHtml = "";
 		try {
-			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML", true, request.getContextPath(), title, html.toString());
+			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML",request.getContextPath(), title, html.toString());
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			formHtml = "";

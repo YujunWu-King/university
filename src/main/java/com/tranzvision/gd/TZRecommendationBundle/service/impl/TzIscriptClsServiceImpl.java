@@ -444,8 +444,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			String readerTitle = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "PDF_VIEW", lan, "PDF预览", "PDF preview");
 			//文件FTP临时存放路径/export/home/PT852/webserv/ALTZDEV/applications/peoplesoft/PORTAL.war//linkfile/FileUpLoad/appFormAttachment/;
 			int height = Integer.parseInt(winHeight) - 40;
-			reutrnHtml = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_PDF_READER_HTML", true,
-					pdfFileUrl, readerTitle, String.valueOf(height),request.getContextPath());
+			reutrnHtml = tzGdObject.getHTMLText("HTML.TZRecommendationBundle.TZ_PDF_READER_HTML", pdfFileUrl, readerTitle, String.valueOf(height),request.getContextPath());
 		}catch(Exception e){
 			e.printStackTrace();
 			reutrnHtml = "";

@@ -602,7 +602,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 		String viewHtml = registeServiceImpl.userRegister(orgid, strSiteId);
 		try {
-			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML", true, viewHtml,
+			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML",viewHtml,
 					request.getContextPath(), strSiteId);
 		} catch (TzSystemException e) {
 			viewHtml = e.toString();

@@ -1002,8 +1002,7 @@ public class TemplateEngine {
 		componentData = componentData.replace("\\", "\\\\");
 		componentData = componentData.replaceAll("\\$", "~");
 		try {
-			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", true,
-					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
+			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
 			tplHtml = tplHtml.replaceAll("\\~", "\\$");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
