@@ -144,9 +144,12 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 				System.out.println(command.toString());
-				shellComand.executeCommand(command.toString());
-
-				return request.getContextPath() + path + pdfFileName;
+				int retval = shellComand.executeCommand(command.toString());
+				if(retval == 0){
+					return path + pdfFileName;
+				}else{
+					return "";
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2,9 +2,9 @@ package com.tranzvision.gd.TZApplicationTemplateBundle.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportClsServiceImpl;
@@ -44,14 +43,15 @@ public class AppFormController {
 	@Autowired
 	private TzComPageAuthServiceImpl tzComPageAuthServiceImpl;
 
+	
 	@Autowired
 	private GdKjComServiceImpl gdKjComService;
+	
+	@Autowired
+	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
-
-	@Autowired
-	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 
 	private static final int BUFFER_SIZE = 4096;
 
@@ -113,7 +113,7 @@ public class AppFormController {
 		return strRetContent;
 	}
 
-	@RequestMapping(value = {"/expform/{insid}" }, produces = "application/pdf;charset=UTF-8")
+	@RequestMapping(value = { "/expform/{insid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String exportAppForm(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "insid") String insid) throws IOException {
@@ -126,7 +126,7 @@ public class AppFormController {
 		// 组件名称
 		String comName = "TZ_ONLINE_REG_COM";
 		// 页面名称
-		String pageName = "TZ_ONREG_EXPORT_STD";
+		String pageName = "TZ_ONREG_EXP_STD";
 		// OPRID
 		String oprid = gdKjComService.getOPRID(request);
 		// OrgId
@@ -140,6 +140,13 @@ public class AppFormController {
 		}
 
 		if (StringUtils.equals("0", errorCode)) {
+			if (StringUtils.isBlank(insid)) {
+				errorCode = "1";
+				strErrorDesc = "参数-报名表实例编号为空！";
+			}
+		}
+
+		if (StringUtils.equals("0", errorCode)) {
 			String sql = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T TPL, PS_TZ_APP_INS_T INS WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND INS.TZ_APP_INS_ID = ? LIMIT 0,1";
 			String tplOrgId = sqlQuery.queryForObject(sql, new Object[] { insid }, "String");
 			if (!StringUtils.equals(orgid, tplOrgId)) {
@@ -147,27 +154,25 @@ public class AppFormController {
 				strErrorDesc = "您无权导出其他机构的报名表数据！";
 			}
 		}
-		// 校验组件页面的读写访问权限
-		boolean permission = tzComPageAuthServiceImpl.checkUpdatePermission(oprid, comName, pageName, errorMsg);
-		if (permission) {
-			// 更新权限
-			if (StringUtils.isBlank(insid)) {
-				errorCode = "1";
-				strErrorDesc = "参数-报名表实例编号为空！";
-			} else {
-//				String retJson = appFormExportClsServiceImpl.tzGetJsonData("{\"insid\":\"" + insid + "\"}");
-//				JacksonUtil jacksonUtil = new JacksonUtil();
-//				Map<String, Object> retMap = jacksonUtil.parseJson2Map(retJson);
-//				String code = retMap.get("code") == null ? "" : String.valueOf(retMap.get("code"));
-//				String msg = retMap.get("msg") == null ? "" : String.valueOf(retMap.get("msg"));
-//				String url = retMap.get("url") == null ? "" : String.valueOf(retMap.get("url"));
-				String code = "0";
-				String msg = "";
-				String url = "/statics/export/ZBBDEV/18/14/张彬彬测试报名表模版-张彬彬14.pdf";
-				if(!StringUtils.equals(code, "0")){
+		if (StringUtils.equals("0", errorCode)) {
+			// 校验组件页面的读写访问权限
+			boolean permission = tzComPageAuthServiceImpl.checkUpdatePermission(oprid, comName, pageName, errorMsg);
+			if (permission) {
+				// 更新权限
+				 String retJson = appFormExportClsServiceImpl.tzGetJsonData("{\"insid\":\"" + insid + "\"}");
+				 JacksonUtil jacksonUtil = new JacksonUtil();
+				 Map<String, Object> retMap = jacksonUtil.parseJson2Map(retJson);
+				 String code = retMap.get("code") == null ? "" : String.valueOf(retMap.get("code"));
+				 String msg = retMap.get("msg") == null ? "" : String.valueOf(retMap.get("msg"));
+				 String url = retMap.get("url") == null ? "" : String.valueOf(retMap.get("url"));
+//				String code = "0";
+//				String msg = "";
+//				String url = "\\statics\\export\\ZBBDEV\\18\\14\\张彬彬测试报名表模版-张彬彬14.pdf";
+
+				if (!StringUtils.equals(code, "0")) {
 					errorCode = code;
 					strErrorDesc = msg;
-				}else{
+				} else {
 					// get absolute path of the application
 					ServletContext context = request.getServletContext();
 					String appPath = context.getRealPath("");
@@ -187,12 +192,15 @@ public class AppFormController {
 					System.out.println("MIME type: " + mimeType);
 
 					// set content attributes for the response
-					response.setContentType(mimeType);
+					response.setContentType(mimeType + ";charset=UTF-8");
 					response.setContentLength((int) downloadFile.length());
 
 					// set headers for the response
 					String headerKey = "Content-Disposition";
-					String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
+					String filename = new String(downloadFile.getName().getBytes(), "ISO8859-1");
+//					String filename = URLDecoder.decode(downloadFile.getName(), "UTF-8");
+					
+					String headerValue = String.format("attachment; filename=\"%s\"", filename);
 					response.setHeader(headerKey, headerValue);
 
 					// get output stream of the response
@@ -210,14 +218,14 @@ public class AppFormController {
 					inputStream.close();
 					outStream.close();
 				}
+			} else {
+				// 无更新权限
+				errorCode = errorMsg[0];
+				strErrorDesc = errorMsg[1];
 			}
-		} else {
-			// 无更新权限
-			errorCode = errorMsg[0];
-			strErrorDesc = errorMsg[1];
 		}
 
-		if ("0".equals(errorCode)) {
+		if ("1".equals(errorCode)) {
 			strRetContent = strErrorDesc;
 		}
 
