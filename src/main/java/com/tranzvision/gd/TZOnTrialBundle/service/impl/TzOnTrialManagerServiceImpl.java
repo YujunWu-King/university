@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZOnTrialBundle.dao.PsTzOnTrialTMapper;
 import com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZOnTrialBundle.service.impl.TzOnTrialManagerServiceImpl")
 public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
@@ -25,6 +26,8 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private PsTzOnTrialTMapper psTzOnTrialTMapper;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -221,6 +224,18 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 					String orgId = (String)map.get("orgId");
 					String dlzh = (String)map.get("dlzh");
 					String sfSale = (String)map.get("sfSale");
+					
+					//查询账号是不是已经被其他机构试用了;
+					if(orgId != null && !"".equals(orgId)
+							&& dlzh != null && !"".equals(dlzh)){
+						int count = jdbcTemplate.queryForObject("select COUNT(1) from PS_TZ_ON_TRIAL_T where TZ_JG_ID=? AND TZ_DLZH_ID=? AND TZ_SEQ_NUM<>?", new Object[]{orgId,dlzh,seqNum},"Integer");
+						if(count > 0){
+							errMsg[0] = "1";
+							errMsg[1] = "该试用账号已经被其他机构使用，请选择其他的试用账号";
+							return "";
+						}
+					}
+					
 					
 					PsTzOnTrialTWithBLOBs psTzOnTrialT = psTzOnTrialTMapper.selectByPrimaryKey(seqNum);
 					if(psTzOnTrialT != null){

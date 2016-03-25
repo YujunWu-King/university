@@ -97,7 +97,29 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagement', {
                 text: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_MNG_STD.endTime","试用结束时间"),
                 sortable: true,
                 dataIndex: 'endTime',
-                width: 150
+                width: 150,
+                renderer: function(v){
+                	if(v != null && v != ''){
+                    	var s = v.replace(/-/g,"/");
+                    	var date = new Date(s);
+                    	
+                    	currentDate = new Date();
+
+                    	var days = date.getTime() - currentDate.getTime();
+                    	var between = days/ (1000 * 60 * 60 * 24);
+      
+        				if(between > 0 && between < 3){
+        					return '<span style="color:red">'+v+'</span>';
+        				}else{
+        					return v;
+        				}
+                    	
+                	}else{
+                		return "";
+                	}
+                	
+					
+				}
             },{
               	menuDisabled: true,
                 sortable: false,
