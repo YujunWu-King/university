@@ -14,6 +14,7 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             "value": "1",
             "orderby":1,
             "StorageType": "S",
+            "option": {},
             "classname":"Select"
         },
         {
@@ -26,46 +27,36 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             "classname":"SingleTextBox"
         }
     ],
+    _init: function(d, previewmode) {
+        if ($.isEmptyObject(this.children[0]["option"])) {
+            /*如果下拉框无选项值，将初始化this.option*/
+        } else {
+            /*如果下拉框有选项值，直接返回*/
+            return;
+        }
+
+		var degree = [MsgSet["IDNUM_SFZ"],MsgSet["IDNUM_HKB"],MsgSet["IDNUM_HZ"],MsgSet["IDNUM_JUNGZ"],MsgSet["IDNUM_SBZ"],MsgSet["IDNUM_GATXZ"],MsgSet["IDNUM_TWTXZ"],MsgSet["IDNUM_LSSFZ"],MsgSet["IDNUM_WGRJLZ"],MsgSet["IDNUM_JINGGZ"],MsgSet["IDNUM_QT"]];
+        for (var i = 1; i <= 11; ++i) {
+        	this.children[0]["option"][d + i] = {
+                code: i,
+                txt: degree[i-1],
+                orderby: i,
+                defaultval: 'N',
+                other: 'N',
+                weight: 0
+            }
+        }
+    },
     _getHtml: function(data, previewmode) {
         var c = "",children = data.children;
         if (previewmode) {
            if(SurveyBuild._readonly){
                 //只读模式
                var valDesc = "";
-               switch(children[0]["value"]){
-                   case "1":
-                       valDesc = MsgSet["IDNUM_SFZ"];
-                       break;
-                   case "2":
-                       valDesc = MsgSet["IDNUM_HKB"];
-                       break;
-                   case "3":
-                       valDesc = MsgSet["IDNUM_HZ"];
-                       break;
-                   case "4":
-                       valDesc = MsgSet["IDNUM_JUNGZ"];
-                       break;
-                   case "5":
-                       valDesc = MsgSet["IDNUM_SBZ"];
-                       break;
-                   case "6":
-                       valDesc = MsgSet["IDNUM_GATXZ"];
-                       break;
-                   case "7":
-                       valDesc = MsgSet["IDNUM_TWTXZ"];
-                       break;
-                   case "8":
-                       valDesc = MsgSet["IDNUM_LSSFZ"];
-                       break;
-                   case "9":
-                       valDesc = MsgSet["IDNUM_WGRJLZ"];
-                       break;
-                   case "10":
-                       valDesc = MsgSet["IDNUM_JINGGZ"];
-                       break;
-                   case "11":
-                       valDesc = MsgSet["IDNUM_QT"];
-                       break;
+               for (var i in children[0].option) {
+                   if(data.value == children[0]["option"][i]["code"]){
+                       valDesc = children[0]["option"][i]["txt"];
+                   }
                }
                 c += '<div class="main_inner_content_info_autoheight cLH">';
                 c += '  <div class="main_inner_connent_info_left">';
@@ -78,6 +69,11 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+                var e = "";
+                for (var i in children[0].option) {
+                    e += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
+                }
+                
                 c += '<div class="main_inner_content_info_autoheight">';
                 c += '  <div class="main_inner_connent_info_left">';
                 c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
@@ -85,17 +81,7 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
                 c += '  <div class="main_inner_content_info_right">';
                 c += '      <div class="main_inner_content_info_right_l100px">';
                 c += '          <select title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="chosen-select input_100px" value="' + children[0]["value"] + '" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                c += '              <option value="1" ' + (children[0]["value"] == "1" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_SFZ"]+'</option>';
-                c += '              <option value="2" ' + (children[0]["value"] == "2" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_HKB"]+'</option>';
-                c += '              <option value="3" ' + (children[0]["value"] == "3" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_HZ"]+'</option>';
-                c += '              <option value="4" ' + (children[0]["value"] == "4" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_JUNGZ"]+'</option>';
-                c += '              <option value="5" ' + (children[0]["value"] == "5" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_SBZ"]+'</option>';
-                c += '              <option value="6" ' + (children[0]["value"] == "6" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_GATXZ"]+'</option>';
-                c += '              <option value="7" ' + (children[0]["value"] == "7" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_TWTXZ"]+'</option>';
-                c += '              <option value="8" ' + (children[0]["value"] == "8" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_LSSFZ"]+'</option>';
-                c += '              <option value="9" ' + (children[0]["value"] == "9" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_WGRJLZ"]+'</option>';
-                c += '              <option value="10" ' + (children[0]["value"] == "10" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_JINGGZ"]+'</option>';
-                c += '              <option value="11" ' + (children[0]["value"] == "11" ? "selected='selected'": "") + '>'+MsgSet["IDNUM_QT"]+'</option>';
+                c += 				e;
                 c += '          </select>';
                 c += '      </div>';
 

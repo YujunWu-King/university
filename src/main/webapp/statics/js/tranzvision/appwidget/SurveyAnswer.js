@@ -532,7 +532,7 @@ var SurveyBuild = {
 								//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_UPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"'}}",
+									url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_UPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'"}}',
 									dataType: "json",
 									async: false,
 									success: function(rst){
@@ -761,7 +761,7 @@ var SurveyBuild = {
 
         var fileDate = "";
         for(var i=0; i<_children.length; i++){
-            fileDate += "{'fileName':'"+SurveyBuild.specialCharReplace(_children[i].fileName)+"','sysFileName':'"+_children[i].sysFileName+"'},"
+            fileDate += '{"fileName":"'+SurveyBuild.specialCharReplace(_children[i].fileName)+'","sysFileName":"'+_children[i].sysFileName+'"},'
         }
         if (fileDate != ""){
             fileDate = 	fileDate.substring(0,fileDate.length-1);
@@ -769,7 +769,7 @@ var SurveyBuild = {
 		try{
         $.ajax({
             type: "post",
-            url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_ZXDC_UPD_COM','PageID':'TZ_IMG_VIEW_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','accessType':'"+ SurveyBuild.accessType +"','fileDate':["+fileDate+"]}}",
+            url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_ZXDC_UPD_COM","PageID":"TZ_IMG_VIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","accessType":"'+ SurveyBuild.accessType +'","fileDate":['+fileDate+']}}',
             dataType: "html",
             success: function(imgLiHtml){
 				if(SurveyBuild.accessType == "P"){

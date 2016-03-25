@@ -98,6 +98,11 @@ Ext.define('KitchenSink.view.template.bmb.myBmb', {
                             iconCls: 'set',
                             tooltip: '设置管理权限',
                             handler: 'onBmbTplSet'
+                        },
+                        {
+                            iconCls: 'set',
+                            tooltip: '打印设置',
+                            handler: 'onBmbPrintSet'
                         }
                     ]
                 }],

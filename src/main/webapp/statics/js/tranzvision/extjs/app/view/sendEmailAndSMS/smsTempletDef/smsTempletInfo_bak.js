@@ -24,9 +24,9 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
             smsServStore: new KitchenSink.view.common.store.comboxStore({
 				recname: 'TZ_SMSSERV_TBL',
 				condition:{
-					}
+					
 				},
-				result:'TZ_SMS_SERV_ID,TZ_SMS_SERV_NAME'
+				"result":'TZ_SMS_SERV_ID,TZ_SMS_SERV_NAME'
 			}),
 		    resTmplStore: new KitchenSink.view.common.store.comboxStore({
 				recname: 'TZ_TMP_DEFN_TBL',
@@ -37,7 +37,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
 						type:"01"
 					}
 				},
-				result:'TZ_YMB_ID,TZ_YMB_NAME'
+				"result":'TZ_YMB_ID,TZ_YMB_NAME'
 			})
         };
 		Ext.apply(this,{

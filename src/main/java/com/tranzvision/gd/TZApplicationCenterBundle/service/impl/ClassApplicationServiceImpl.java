@@ -128,7 +128,7 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 			// 没开通;
 			if (totalNum == 0) {
 				applicationCenterHtml = tzGDObject.getHTMLText(
-						"HTML.TZApplicationCenterBundle.TZ_GD_CLASS_SELECT_HTML", true, DearCandidate + "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + noOpenProject, ZSGL_URL, strCssDir, ApplicationCenter, str_jg_id, strSiteId,request.getContextPath());
+						"HTML.TZApplicationCenterBundle.TZ_GD_CLASS_SELECT_HTML", DearCandidate + "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + noOpenProject, ZSGL_URL, strCssDir, ApplicationCenter, str_jg_id, strSiteId,request.getContextPath());
 				applicationCenterHtml = siteRepCssServiceImpl.repTitle(applicationCenterHtml, strSiteId);
 				applicationCenterHtml=siteRepCssServiceImpl.repCss(applicationCenterHtml, strSiteId);
 				return applicationCenterHtml;
@@ -306,7 +306,7 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 									}
 
 									TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_BJ_BMSQ_LC_STEP_DIV", true,bmlcStepClass, step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, timelineClass);
+											"HTML.TZApplicationCenterBundle.TZ_BJ_BMSQ_LC_STEP_DIV", bmlcStepClass, step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, timelineClass);
 
 								}
 							}
@@ -350,35 +350,29 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 
 						// 未提交报名表;
 						if (!"U".equals(TZ_APP_FORM_STA)) {
-							bmztTd_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_A",
-									true, view, applyFromUrl);
-							bmztTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_TD",
-									true, bmWidth, bmbTjZt, appFormStatusDesc, bmztTd_A);
+							bmztTd_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_A", view, applyFromUrl);
+							bmztTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_TD", bmWidth, bmbTjZt, appFormStatusDesc, bmztTd_A);
 							// 存在资料模型;
 							if (djzlTotalNum > 0) {
-								zltjTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_ZLDJ_USHOW_TD",
-										true, bmWidth, zlshQk, unsubmitWz);
+								zltjTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_ZLDJ_USHOW_TD", bmWidth, zlshQk, unsubmitWz);
 							}
 
 							if (tjxkjNum > 0) {
 								if (colspan == 3) {
 									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", true, "24%", tjxxx,
+											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", "24%", tjxxx,
 											unsubmitWz);
 								} else {
 									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", true, bmWidth,
+											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", bmWidth,
 											tjxxx, unsubmitWz);
 								}
 							}
 						} else {
 							// 已提交报名表;
-							bmztTd_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_A",
-									true, view, applyFromUrl);
-							print_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_PRINT_A", true,
-									print, applyFormPrint);
-							bmztTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_TD",
-									true, bmWidth, bmbTjZt, appFormStatusDesc, bmztTd_A + "&nbsp;&nbsp;" + print_A);
+							bmztTd_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_A", view, applyFromUrl);
+							print_A = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_PRINT_A", print, applyFormPrint);
+							bmztTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_STATUS_SHOW_TD", bmWidth, bmbTjZt, appFormStatusDesc, bmztTd_A + "&nbsp;&nbsp;" + print_A);
 
 							if (djzlTotalNum > 0) {
 								int num = 0;
@@ -421,10 +415,9 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 
 								// 查看资料进度超链接;
 								String openZlspjd_A = tzGDObject.getHTMLText(
-										"HTML.TZApplicationCenterBundle.TZ_OPEN_WINDOW_VIEW_A", true, view, classId,
+										"HTML.TZApplicationCenterBundle.TZ_OPEN_WINDOW_VIEW_A", view, classId,
 										String.valueOf(TZ_APP_INS_ID), language, "DJZL");
-								zltjTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_ZLDJ_SHOW_TD",
-										true, bmWidth, zlshQk, zlSpZtDesc, openZlspjd_A);
+								zltjTd = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_ZLDJ_SHOW_TD", bmWidth, zlshQk, zlSpZtDesc, openZlspjd_A);
 
 							}
 
@@ -439,15 +432,15 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 										new Object[] { TZ_APP_INS_ID }, "Integer");
 								// 查看推荐信信息页面超链接;
 								String openTjx_A = tzGDObject.getHTMLText(
-										"HTML.TZApplicationCenterBundle.TZ_OPEN_WINDOW_VIEW_A", true, view, classId,
+										"HTML.TZApplicationCenterBundle.TZ_OPEN_WINDOW_VIEW_A", view, classId,
 										String.valueOf(TZ_APP_INS_ID), language, "TJX");
 								if (colspan == 3) {
 									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", true, "24%", tjxxx,
+											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", "24%", tjxxx,
 											totalTjxTjNum + "/" + totalTjxNum, openTjx_A);
 								} else {
 									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", true, bmWidth, tjxxx,
+											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", bmWidth, tjxxx,
 											totalTjxTjNum + "/" + totalTjxNum, openTjx_A);
 								}
 
@@ -456,10 +449,10 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 
 						if (bmlcTotalNum > 0) {
 							TZ_SQLC_TABLE = TZ_SQLC_TABLE + tzGDObject.getHTMLText(
-									"HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_APPLY_YES_LC_TABLE", true,ApplicationStatus, className, expandOrShrink, expandOrShrinkActive, "block", TZ_BJ_BM_LC_STEP_DIV, String.valueOf(colspan), bmztTd + zltjTd + tjxTd);
+									"HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_APPLY_YES_LC_TABLE", ApplicationStatus, className, expandOrShrink, expandOrShrinkActive, "block", TZ_BJ_BM_LC_STEP_DIV, String.valueOf(colspan), bmztTd + zltjTd + tjxTd);
 						} else {
 							TZ_SQLC_TABLE = TZ_SQLC_TABLE + tzGDObject.getHTMLText(
-									"HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_APPLY_NO_LC_TABLE", true,ApplicationStatus, className, expandOrShrinkActive, String.valueOf(colspan), bmztTd + zltjTd + tjxTd);
+									"HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_APPLY_NO_LC_TABLE", ApplicationStatus, className, expandOrShrinkActive, String.valueOf(colspan), bmztTd + zltjTd + tjxTd);
 						}
 
 						isSetpDisplay = "none";
@@ -467,8 +460,7 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 						// 循环报名流程;
 						if (bmlcTotalNum == 0) {
 							TZ_SQLC_TABLE = TZ_SQLC_TABLE									 
-									+ tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_NO_LC_TABLE",
-											true, className, classDesc, apply, classId, language);
+									+ tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_NO_LC_TABLE", className, classDesc, apply, classId, language);
 						} else {
 							TZ_SORT_NUM = 0;
 							String bmlcSql2 = "select a.TZ_APPPRO_NAME,b.TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLC_T a LEFT JOIN (select * from PS_TZ_CLS_BMLCHF_T where TZ_WFB_DEFALT_BZ='on') b ON a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=?  order by a.TZ_SORT_NUM asc";
@@ -487,7 +479,7 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 									}
 
 									TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_BJ_BMSQ_LC_STEP_DIV", true, bmlcStepClass,
+											"HTML.TZApplicationCenterBundle.TZ_BJ_BMSQ_LC_STEP_DIV", bmlcStepClass,
 											step + "&nbsp" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST,
 											"timeline-yuan1_i");
 									
@@ -508,16 +500,14 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 							}
 
 							TZ_SQLC_TABLE = TZ_SQLC_TABLE
-									+ tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_YES_LC_TABLE",
-											true, className, classDesc, apply, TZ_BJ_BM_LC_STEP_DIV, classId, "block", expandOrShrink, expandOrShrinkActive, language);
+									+ tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_ZXSQ_YES_LC_TABLE", className, classDesc, apply, TZ_BJ_BM_LC_STEP_DIV, classId, "block", expandOrShrink, expandOrShrinkActive, language);
 							isSetpDisplay = "none";
 						}
 					}
 				}
 			}
 
-			String classSelectHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_CLASS_SELECT_HTML", true,
-					TZ_SQLC_TABLE, ZSGL_URL, strCssDir, ApplicationCenter, str_jg_id, strSiteId, request.getContextPath());
+			String classSelectHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_CLASS_SELECT_HTML", TZ_SQLC_TABLE, ZSGL_URL, strCssDir, ApplicationCenter, str_jg_id, strSiteId, request.getContextPath());
 			applicationCenterHtml = classSelectHtml;
 			applicationCenterHtml = siteRepCssServiceImpl.repTitle(applicationCenterHtml, strSiteId);
 			applicationCenterHtml=siteRepCssServiceImpl.repCss(applicationCenterHtml, strSiteId);

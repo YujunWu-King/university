@@ -908,7 +908,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
 				
-				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SUCCESSE_HTML", true,strContent,imgPath );
+				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SUCCESSE_HTML",strContent,imgPath );
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
@@ -969,9 +969,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							//已经激活
 							if("Y".equals(strJihuo)){
 								if("ENG".equals(strLang)){
-									strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_ENG_HTML", true,loginUrl,contextPath,imgPath );
+									strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_ENG_HTML",loginUrl,contextPath,imgPath );
 								}else{
-									strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_HTML", true,loginUrl,contextPath,imgPath );
+									strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_HTML",loginUrl,contextPath,imgPath );
 								}
 								
 								strResult = objRep.repTitle(strResult, strSiteId);
@@ -996,9 +996,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 										psTzDzyxYzmTblMapper.updateByPrimaryKeySelective(psTzDzyxYzmTbl);
 										
 										if("ENG".equals(strLang)){
-											strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_ENG_HTML", true,loginUrl,request.getContextPath(),imgPath );
+											strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_ENG_HTML",loginUrl,request.getContextPath(),imgPath );
 										}else{
-											strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_HTML", true,loginUrl,request.getContextPath(),imgPath );
+											strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REGSUCCESS_HTML",loginUrl,request.getContextPath(),imgPath );
 										}
 										
 										strResult = objRep.repTitle(strResult, strSiteId);
@@ -1006,13 +1006,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 										return strResult;
 									}else{
 										String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "64", "激活账号链接已失效，请重新发送激活账号邮件！", "Activate the account link is invalid, please re send the activation account mail!");
-										String strTipHtml4 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL", true,message);
+										String strTipHtml4 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL",message);
 										return this.createPageForEmlActByParameter(strSiteId, strLang, strOrgid, strTipHtml4);
 									}
 								}else{
 									//激活码的状态无效；
 									String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "124", "激活账号链接已失效，请重新发送激活账号邮件！", "Activate the account link is invalid, please re send the activation account mail!");
-									String strTipHtml2 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL", true,message);
+									String strTipHtml2 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL",message);
 									return this.createPageForEmlActByParameter(strSiteId, strLang, strOrgid, strTipHtml2);
 								}
 							}
@@ -1023,7 +1023,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 			}
 			String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "64", "激活账号链接已失效，请重新发送激活账号邮件！", "Activate the account link is invalid, please re send the activation account mail!");
-			String strTipHtml3 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL", true,message);
+			String strTipHtml3 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL",message);
 			return this.createPageForEmlActByParameter(strSiteId, strLang, strOrgid, strTipHtml3);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1046,9 +1046,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    String str_content = "";
 		  
 		    if("ENG".equals(strLang)){
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath );
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath );
 		    }else{
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath);
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath);
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
 		    str_content = objRep.repCss(str_content, strSiteId);
@@ -1093,20 +1093,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    String str_content = "";
 		    if(strTabType.contains("MOBILE") && strTabType.contains("EMAIL")){
 		    	if("ENG".equals(strLang)){
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML",strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 		    	}else{
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML",strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 		    	}
 		    }else{
 		    	
 		    	if(strTabType.contains("EMAIL")){
 		    		if("ENG".equals(strLang)){
-			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath ,loginUrl);
+			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML",strBeginUrl, strOrgid, strLang,contextPath, imgPath ,loginUrl);
 			    	}else{
-			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_HTML", true,strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
+			    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_HTML",strBeginUrl, strOrgid, strLang,contextPath, imgPath,loginUrl );
 			    	}
 		    	}else{
-		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", true,strBeginUrl, strOrgid,contextPath, imgPath,loginUrl );
+		    		str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML",strBeginUrl, strOrgid,contextPath, imgPath,loginUrl );
 		    	}
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
@@ -1158,9 +1158,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				if(curDate.before(dtYxq)){
 					//有效；
 					if("ENG".equals(strLang)){
-						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML", true,strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_ENG_HTML",strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
 					}else{
-						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML", true,strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice,contextPath,imgPath );
 					}
 					
 					str_content = objRep.repTitle(str_content, strSiteId);
@@ -1170,13 +1170,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					//无效；
 					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4";
 					String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！", "Reset password time for 30 minutes, has timed out, please re send forget password message!");
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", true,message,strBeginUrl );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL",message,strBeginUrl );
 					return str_content;
 				}
 			}else{
 				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4";
 				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "59", "重置密码链接已失效，请重新发送忘记密码邮件！", "Reset password link has failed, please re send forget password mail!");
-				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL", true,message,strBeginUrl );
+				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL",message,strBeginUrl );
 				return str_content;
 			}
 			
@@ -1211,9 +1211,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			
 			String str_content = "";
 			if("ENG".equals(strLang)){
-				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL", true,strBeginUrl,strOrgid,contextPath,imgPath);
+				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL",strBeginUrl,strOrgid,contextPath,imgPath);
 			}else{
-				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL", true,strBeginUrl,strOrgid,contextPath,imgPath);
+				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL",strBeginUrl,strOrgid,contextPath,imgPath);
 			}
 			
 		    str_content = objRep.repTitle(str_content, strSiteId);
@@ -1279,27 +1279,27 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							psTzDzyxYzmTblMapper.updateByPrimaryKeySelective(psTzDzyxYzmTbl);
 							
 							String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "29", "修改成功！", "The modification is successful!");							
-							strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML", true,message,imgPath);
+							strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",message,imgPath);
 							strResult = objRep.repTitle(strResult, strSiteId);
 							strResult = objRep.repCss(strResult, strSiteId);
 							return strResult;
 						}else{
 							String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "68", "链接已超时！", "Link has timed out!");							
-							strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML", true,message,imgPath);
+							strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",message,imgPath);
 							strResult = objRep.repTitle(strResult, strSiteId);
 							strResult = objRep.repCss(strResult, strSiteId);
 							return strResult;
 						}
 					}else{
 						String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "69", "链接已失效！", "Link has failed!");							
-						strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML", true,message,imgPath);
+						strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",message,imgPath);
 						strResult = objRep.repTitle(strResult, strSiteId);
 						strResult = objRep.repCss(strResult, strSiteId);
 						return strResult;
 					}
 				}else{
 					String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "69", "链接已失效！", "Link has failed!");							
-					strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML", true,message,imgPath);
+					strResult  = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",message,imgPath);
 					strResult = objRep.repTitle(strResult, strSiteId);
 					strResult = objRep.repCss(strResult, strSiteId);
 					return strResult;
@@ -1344,9 +1344,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    }
 		  
 		    if("ENG".equals(strLang)){
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }else{
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML", true,strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
 		    str_content = objRep.repCss(str_content, strSiteId);

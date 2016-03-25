@@ -692,12 +692,12 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 
 							if (fileNum == 1) {
 								strfileDate = tzGdObject.getHTMLText(
-										"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", true, fileName,
+										"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
 										accessUrl, String.valueOf(numFileID));
 							} else {
 								strfileDate = strfileDate + "<br>"
 										+ tzGdObject.getHTMLText(
-												"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", true, fileName,
+												"HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML",fileName,
 												accessUrl, String.valueOf(numFileID));
 							}
 
@@ -749,8 +749,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						accessUrl = "";
 					}
 
-					strfileDate = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", true,
-							fileName, accessUrl, String.valueOf(numFileID));
+					strfileDate = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_IMAGELINK_HTML", fileName, accessUrl, String.valueOf(numFileID));
 
 					Map<String, Object> jsonmap = new HashMap<>();
 					jsonmap.put("appInsId", appInsId);
@@ -1012,7 +1011,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 							bmlcStepClass = "indexbm-lc-step2";
 						}
 						TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGdObject.getHTMLText(
-								"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV", true, bmlcStepClass,
+								"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV",bmlcStepClass,
 								step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, timelineClass);
 					}
 
@@ -1035,7 +1034,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						}
 
 						TZ_BJ_BM_LC_STEP_DIV = TZ_BJ_BM_LC_STEP_DIV + tzGdObject.getHTMLText(
-								"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV", true, bmlcStepClass,
+								"HTML.TZApplicationCenterBundle.TZ_BJ_BM_LC_STEP_DIV",bmlcStepClass,
 								step + "&nbsp;" + TZ_SORT_NUM, TZ_APPPRO_NAME, TZ_APPPRO_RST, "timeline-yuan1_i");
 
 					}
@@ -1044,11 +1043,9 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			}
 
 			if (TZ_BJ_BM_LC_STEP_DIV != null && !"".equals(TZ_BJ_BM_LC_STEP_DIV)) {
-				returnHtml = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_BMLC_PREVEIW_HTML", true,
-						strCssDir, TZ_BJ_BM_LC_STEP_DIV);
+				returnHtml = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_BMLC_PREVEIW_HTML", strCssDir, TZ_BJ_BM_LC_STEP_DIV);
 			} else {
-				returnHtml = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_BMLC_PREVEIW_HTML", true,
-						strCssDir, "未配置流程");
+				returnHtml = tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_BMLC_PREVEIW_HTML", strCssDir, "未配置流程");
 			}
 
 		} catch (Exception e) {

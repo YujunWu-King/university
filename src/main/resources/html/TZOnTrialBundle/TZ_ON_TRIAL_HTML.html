@@ -1,0 +1,143 @@
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="x-ua-compatible" content="IE=edge">
+<title>北京创景咨询云招生系统试用申请</title>
+<link href="%bind(:1)/statics/css/website/onTrial.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+	var TzUniversityContextPath = '%bind(:1)';
+</script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>     
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/layer.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/func/trial.js"></script>
+</head><body style="background:#fff">
+<div id="all">
+<!-- top start -->
+<div area-id="" area-type="YT" area-postion="H" area-movedown="false" area-moveup="false" area-copy="false" area-del="false" area-edit="true" area-add="false" class="top assdiv header-mt46" id="headarea">
+  <div class="top_main">
+    <div class="top_main_left"> 
+    <a href="#"> 
+    	<img width="480" height="110" src="%bind(:1)/statics/css/website/images/logo.png"> 
+    </a> 
+    </div>
+  </div>
+</div>
+
+<div id="main">
+	<form action="" method="post" enctype="multipart/form-data" name="signupForm" id="signupForm">
+	
+	<input id="status_TZ_ORG_NAME" type="hidden" name="status_TZ_ORG_NAME" value="0"/>
+    <input id="status_TZ_CONTACT_NAME" type="hidden" name="status_TZ_CONTACT_NAME" value="0"/>
+    <input id="status_TZ_CONTACT_PHONE" type="hidden" name="status_TZ_CONTACT_PHONE" value="0"/>
+    <input id="status_TZ_EMAIL" type="hidden" name="status_TZ_EMAIL" value="0"/>
+	<input id="status_yzm" type="hidden" name="status_yzm" value="0"/>
+	
+	<div class="main_full_top"></div>
+	<div class="main_full">
+	  	<div class="main_full_line">
+	    	<div class="main_full_line_title">试用申请</div>
+	  	</div>
+		<div class="main_full_lines"></div>
+		<div class="main_full_line">请填写以下信息，审核通过后，我们将有专人与您取得联系并提供后续服务</div>
+
+		<div class="search_icodiv">
+			<div class="main_full_line">
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>机构名称:
+				</div>
+				<div class="main_full_line_right">
+			      	<input name="TZ_ORG_NAME" type="text" class="input_351px" id="TZ_ORG_NAME"  value=""/>
+			      	<span id="TZ_ORG_NAMEStyle" class="alert_display_none">
+						<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"/>
+				  		<label id="TZ_ORG_NAME_status"></label>
+					</span>
+			    </div>
+			</div>
+		</div>
+		
+		<div class="search_icodiv">
+			<div class="main_full_line">
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>联系人:
+				</div>
+				<div class="main_full_line_right">
+			      	<input name="TZ_CONTACT_NAME" type="text" class="input_351px" id="TZ_CONTACT_NAME"  value=""/>
+			      	<span id="TZ_CONTACT_NAMEStyle" class="alert_display_none">
+						<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"/>
+				  		<label id="TZ_CONTACT_NAME_status"></label>
+					</span>
+			    </div>
+			</div>
+		</div>
+		
+		<div class="search_icodiv">
+			<div class="main_full_line">
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>联系电话:
+				</div>
+				<div class="main_full_line_right">
+			      	<input name="TZ_CONTACT_PHONE" type="text" class="input_351px" id="TZ_CONTACT_PHONE"  value=""/>
+			      	<span id="TZ_CONTACT_PHONEStyle" class="alert_display_none">
+						<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"/>
+				  		<label id="TZ_CONTACT_PHONE_status"></label>
+					</span>
+			    </div>
+			</div>
+		</div>
+		
+		<div class="search_icodiv">
+			<div class="main_full_line">
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>Email:
+				</div>
+				<div class="main_full_line_right">
+			      	<input name="TZ_EMAIL" type="text" class="input_351px" id="TZ_EMAIL"  value=""/>
+			      	<span id="TZ_EMAILStyle" class="alert_display_none">
+						<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"/>
+				  		<label id="TZ_EMAIL_status"></label>
+					</span>
+			    </div>
+			</div>
+		</div>
+		
+		
+		
+		<div class="search_icodiv">
+			<div class="main_full_line">
+				<div class="main_full_line_left">
+					<span class="reg_title_star"></span>机构网站:
+				</div>
+				<div class="main_full_line_right">
+			      	<input name="TZ_ORG_WEBSITE" type="text" class="input_351px" id="TZ_ORG_WEBSITE"  value=""/>
+			      	<span id="TZ_ORG_WEBSITEStyle" class="alert_display_none">
+						<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"/>
+				  		<label id="TZ_ORG_WEBSITE_status"></label>
+					</span>
+			    </div>
+			</div>
+		</div>
+	  	
+		<div class="main_full_line" id="yzfsEmail">
+			<div class="main_full_line_left">
+				<span class="reg_title_star">*</span>验证码:
+			</div>
+			<div class="main_full_line_right">
+			    <input name="yzmEmail" type="text" class="input_225px" id="yzmEmail"  onblur="check_yzmEmail(this.value)"/>
+			      <a id="changeImgEmail" href="javascript:void(0)"><img id="yzmImgEmail" src="" width="113" height="34" class="img_num" /></a>
+			      <span id="yzmEmailStyle" class="alert_display_none">
+					<img src="%bind(:1)/statics/css/website/images/alert.png" width="16" height="16" class="alert_img"  />
+				  	<label id="yzm_Emailstatus"></label>
+				</span>
+			    </div>
+		</div>
+		<div class="main_full_line">请尽可能地填写准确完整的机构电话、机构邮箱及机构网址</div>
+	  	<div class="main_full_line">
+				<div class="bt_register" id="submitbutton"><span style="color:#FFFFFF">提交</span></div>
+		</div>
+	</div>
+	<div class="main_full_foot"></div>
+	<div style="clear:both;"></div>
+</form>
+</div>
+</div>
+</body></html>

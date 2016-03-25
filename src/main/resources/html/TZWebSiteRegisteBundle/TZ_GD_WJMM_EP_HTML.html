@@ -62,19 +62,20 @@
 			   $('#userMobile_status').html("<span>请输入正确的手机号</span>");
 			   $('#mobileStyle').removeClass("alert_display_none");
 			}else{
+				var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"6"}}';
 				$.ajax({
 					type: "get",
 					async :false,
-					data:{Moblie:val},
+					data:{tzParams:tzParams},
 					url:"%bind(:1)",
 					dataType: "json",
 					success: function(result){
-						if(result.resultFlg =="success"){
+						if(result.comContent =="success"){
 							$('#userMobile_status').html("");
 							$('#mobileStyle').addClass("alert_display_none");
 							flag=true;
 						}else{
-							$('#userMobile_status').html("<span>"+result.errorDescr+"</span>");
+							$('#userMobile_status').html("<span>"+result.state.errdesc+"</span>");
 							$('#mobileStyle').removeClass("alert_display_none");
 							flag=false;
 						}
@@ -122,23 +123,23 @@
 			$("#yzm").val("");
 			$("#Mobile_User").text("");
 			if(check_mobile(tel)){
-				if(tel==""){alert("请输入手机号！");}
+				if(tel==""){alert("请输入手机号!");}
 				else{
+					var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"7"}}';
 					$.ajax({
 						type:"post",
-						dataType:"html",
+						dataType:"json",
 						async:false,
-						data: "Yzm="+ yzm+"&Tel="+ tel,
-						url:"%bind(:1)"+"&Tel="+tel,
-						success:function(data){
-							if(data=="验证码已发送到您手机，请注意查收！"){atime();}
-							else if(data=="shtime"){alert("发送时间间隔太短,请等待一段时间后再试。");}
-							else{alert(data);}
+						data: {tzParams:tzParams},
+						url:"%bind(:1)",
+						success:function(result){
+							if(result.comContent=="success"){atime();alert("验证码已发送到您手机，请注意查收！");}
+							else{alert(result.state.errdesc);}
 						}
 					});
 				}
 			}else{
-				alert("请输入正确的手机号");
+				alert("请输入正确的手机号！");
 			}
 		}
   	};
@@ -148,31 +149,25 @@
 		var tel=$("#Mobile_User").val();
 		if(yzm==""){$("#yzm_status").html("<span>请输入验证码</span>");$("#yzmStyle").removeClass("alert_display_none");}
 		else{
+			var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
 			$.ajax({
 				type:"post",
-				dataType:"html",
+				dataType:"json",
 				async:false,
-				data: "Yzm="+ yzm+"&Tel="+ tel,
+				data:{tzParams:tzParams},
 				url:"%bind(:1)",
-				success:function(data){	
-					if(data=="success"){
+				success:function(result){	
+					if(result.comContent=="success"){
 						clearTimeout(stop);
 						$("#yzm_status").html("");
 						$("#yzmStyle").addClass("alert_display_none");
 						btime();
-						window.location.href="%bind(:1)"+"&username="+tel;
+						window.location.href="%bind(:1)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&phone="+tel+"&lang=%bind(:3)&sen=4&yzm="+yzm;
+					}else{
+						$("#yzm_status").html(result.state.errdesc);
+						$("#yzmStyle").removeClass("alert_display_none");
 					}
-					else 
-						if(data=="fail"){
-								$("#yzm_status").html("验证码错误，请重新输入");
-								$("#yzmStyle").removeClass("alert_display_none");
-						}
-						else{
-							$("#yzm_status").html("验证已超时，请重新获取验证码");
-							$("#yzmStyle").removeClass("alert_display_none");
-						}
-						
-					}
+				}
 			});
 		}
 	};

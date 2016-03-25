@@ -46,9 +46,9 @@
 		$("#yzmtext").text("");
 		if(newstel==""){alert("请输入手机号！");}
 		else{
-			var fsyzm = {"strJgid": strJgid, "Tel": newstel };
+			var fsyzm = {"orgid": strJgid, "phone": newstel, "lang": "ZHS" };
 
-			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"INIT","comParams":' + JSON.stringify( fsyzm ) + '}';
+			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"SEND","comParams":' + JSON.stringify( fsyzm ) + '}';
 			$.ajax({
 				type:"post",
 				dataType:"json",
@@ -57,11 +57,10 @@
 					"tzParams" : tzParams
 				},
 				url:"%bind(:2)",
-				success:function(data){
-					var success = data.comContent.success;
-					if(success=="验证码已发送到您手机，请注意查收！"){atime();}
-					else if(success=="shtime"){alert("发送时间间隔太短,请等待一段时间后再试。");}
-					else{alert(success);}
+				success:function(result){
+					var success = result.comContent;
+					if(success=="success"){atime();alert("验证码已发送到您手机，请注意查收！")}
+					else{alert(result.state.errdesc);}
 				}
 			});
 		}
@@ -72,8 +71,9 @@
 		var newstel=$("#newstel").val();
 		var strJgid=$("#strJgid").val();
 		if(newsyzm==""){$("#yzmtext").text("*请输入验证码！");}
+		else if(newstel==""){$("#yzmtext").text("*请输入手机号！");}
 		else{
-			var saveYzm = {"strJgid": strJgid, "Tel": newstel, "Yzm": newsyzm};
+			var saveYzm = {"orgid": strJgid, "phone": newstel, "yzm": newsyzm, "lang": "ZHS"};
 
 			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"SURE","comParams":' + JSON.stringify( saveYzm ) + '}';
 			$.ajax({
@@ -84,10 +84,10 @@
 					"tzParams" : tzParams
 				},
 				url:"%bind(:3)",
-				success:function(data){	
- 					var success = data.comContent.success;
+				success:function(result){	
+ 					var success = result.comContent;
 					if(success=="success"){clearTimeout(stop);$("#yzmtext").text("");alert("修改成功！");btime();myrefresh();}
-							else{$("#yzmtext").text(success);}
+							else{$("#yzmtext").text(result.state.errdesc);}
 				}
 			});
 		}

@@ -86,7 +86,7 @@ public class CityClsServiceImpl extends FrameworkImpl {
 						String strDesc = (String) list.get(i).get("DESCR");
 						String strState = (String) list.get(i).get("STATE");
 						String states = strDesc.substring(0, strDesc.indexOf(" "));
-						proInfo = proInfo + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_PRO2", true,
+						proInfo = proInfo + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_PRO2",
 								states, strState);
 					}
 				}
@@ -97,16 +97,15 @@ public class CityClsServiceImpl extends FrameworkImpl {
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						String strCity = (String) list.get(i).get("TZ_CITY");
-						hotcity = hotcity + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3",
-								true, strCity);
+						hotcity = hotcity + tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", strCity);
 					}
 				}
 				hotcity = hotcity
-						+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", true, "新加坡");
+						+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", "新加坡");
 
 				String contextUrl = request.getContextPath();
 				String tzGeneralURL = contextUrl + "/dispatcher";
-				return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_GD_CHOOSE_CITY", true, hotcity, proInfo,
+				return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_GD_CHOOSE_CITY", hotcity, proInfo,
 						tzGeneralURL, pageID, contextUrl,imgPath,siteId,TPLID);
 			}
 
@@ -120,12 +119,12 @@ public class CityClsServiceImpl extends FrameworkImpl {
 					for (int i = 0; i < list.size(); i++) {
 						String city = (String) list.get(i).get("TZ_CITY");
 						cityInfo = cityInfo
-								+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", true, city);
+								+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", city);
 					}
 				}
 
 				String contextUrl = request.getContextPath();
-				return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITY4", true, cityInfo, pageID,
+				return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITY4", cityInfo, pageID,
 						contextUrl,imgPath);
 			}
 		} catch (Exception e) {

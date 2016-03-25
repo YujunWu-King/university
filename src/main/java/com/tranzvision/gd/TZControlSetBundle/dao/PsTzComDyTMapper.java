@@ -1,19 +1,20 @@
 package com.tranzvision.gd.TZControlSetBundle.dao;
 
 import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyT;
+import com.tranzvision.gd.TZControlSetBundle.model.PsTzComDyTWithBLOBs;
 
 public interface PsTzComDyTMapper {
     int deleteByPrimaryKey(String tzComId);
 
-    int insert(PsTzComDyT record);
+    int insert(PsTzComDyTWithBLOBs record);
 
-    int insertSelective(PsTzComDyT record);
+    int insertSelective(PsTzComDyTWithBLOBs record);
 
-    PsTzComDyT selectByPrimaryKey(String tzComId);
+    PsTzComDyTWithBLOBs selectByPrimaryKey(String tzComId);
 
-    int updateByPrimaryKeySelective(PsTzComDyT record);
+    int updateByPrimaryKeySelective(PsTzComDyTWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(PsTzComDyT record);
+    int updateByPrimaryKeyWithBLOBs(PsTzComDyTWithBLOBs record);
 
     int updateByPrimaryKey(PsTzComDyT record);
 }

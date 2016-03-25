@@ -149,9 +149,18 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 
 							if ("TOP".equals(topFlag.toUpperCase())) {
 								sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID<>?";
-								int tzMaxZdSeq = sqlQuery.queryForObject(sql,
-										new Object[] { tzSiteId, tzColuId, tzArtId }, "int");
-
+								String maxSeq = sqlQuery.queryForObject(sql,
+										new Object[] { tzSiteId, tzColuId, tzArtId }, "String");
+								
+								int tzMaxZdSeq = 0;
+								if(null!=maxSeq){
+									try{
+										tzMaxZdSeq = Integer.parseInt(maxSeq);
+									}catch(Exception e){
+										tzMaxZdSeq = 0;
+									}
+								}
+								
 								PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 								psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
 								psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);

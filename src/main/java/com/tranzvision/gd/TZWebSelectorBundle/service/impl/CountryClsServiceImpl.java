@@ -187,7 +187,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		String tzGeneralURL = request.getContextPath() + "/dispatcher";
 		String nationalHtml = "";
 		try {
-			nationalHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_NATIONAL_SELECT", true, tzGeneralURL, title, query, chooseState, ok, language,request.getContextPath(),imgPath);
+			nationalHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_NATIONAL_SELECT", tzGeneralURL, title, query, chooseState, ok, language,request.getContextPath(),imgPath);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

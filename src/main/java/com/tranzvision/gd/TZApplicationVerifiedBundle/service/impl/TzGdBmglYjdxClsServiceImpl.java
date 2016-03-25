@@ -167,18 +167,18 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				    	strAuditStateDesc = jdbcTemplate.queryForObject("select if(B.TZ_ZHZ_CMS IS NULL ,A.TZ_ZHZ_CMS,B.TZ_ZHZ_CMS) TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (select * from PS_TZ_PT_ZHZXX_LNG where TZ_LANGUAGE_ID=?) B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID = B.TZ_ZHZ_ID WHERE A.TZ_EFF_STATUS='A' AND A.TZ_ZHZJH_ID = 'TZ_BMB_DJWJSPZT' AND A.TZ_ZHZ_ID = ?", new Object[]{strLanguageId,strAuditState,},"String");
 				    	
 				    	strDjzlList = strDjzlList + "<tr>" + tzGdObject.getHTMLText(
-								"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML", true, strContentIntro) 
+								"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML",strContentIntro) 
 				    			+ tzGdObject.getHTMLText(
-				    					"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML", true, strAuditStateDesc)
+				    					"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML",strAuditStateDesc)
 				    			+ tzGdObject.getHTMLText(
-										"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML", true, strFailedReason) + "</tr>";
+										"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_TR_TD_HTML",strFailedReason) + "</tr>";
 				    
 				    }
 				}
 			}
 			
 			return tzGdObject.getHTMLText(
-					"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_CONTENT_HTML", true, strDjzlList);
+					"HTML.TZApplicationVerifiedBundle.TZ_GD_DJZL_CONTENT_HTML",strDjzlList);
 		}catch(Exception e){
 			return e.toString();
 		}

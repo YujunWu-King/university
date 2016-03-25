@@ -95,7 +95,7 @@ public class TzPdfViewClsServiceImpl extends FrameworkImpl {
 		int height = Integer.parseInt(winHeight) - 40;
 
 		try {
-			retHtml = tzGdObject.getHTMLText("HTML.TZFileUploadBundle.TZ_PDF_READER_HTML", true, sysfileName,
+			retHtml = tzGdObject.getHTMLText("HTML.TZFileUploadBundle.TZ_PDF_READER_HTML",sysfileName,
 					readerTitle, String.valueOf(height), contextUrl);
 		} catch (TzSystemException e) {
 			e.printStackTrace();

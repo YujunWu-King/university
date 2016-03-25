@@ -565,7 +565,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 				"TZGD_FWINIT_00039", tmpLanguageCd, tempDefaultPostfixCN, tempDefaultPostfixEN);
 
 		try {
-			strRetContent = tzGDObject.getHTMLText(htmlObject, true, tmpInvalidSessionPrefix, tmpLoginURL,
+			strRetContent = tzGDObject.getHTMLText(htmlObject, tmpInvalidSessionPrefix, tmpLoginURL,
 					tmpInvalidSessionMiddle, tmpInvalidSessionPostfix, tmpOrgID, request.getContextPath());
 			strRetContent = siteRepCssServiceImpl.repCssByJg(strRetContent, tmpOrgID);
 		} catch (TzSystemException e) {

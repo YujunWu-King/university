@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.tranzvision.gd.util.base.Arith;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.poi.excel.Test;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.ztest.model.Admin;
@@ -155,11 +156,21 @@ public class TestController {
 	@RequestMapping("sendsms")
 	public void testSendSms(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			Map<String,String> mapRst = sendSmsService.doSendSms("18612929610", "你好，这是一条测试短信【清华经管】");
-			System.out.println(mapRst);
+			//Map<String,String> mapRst = sendSmsService.doSendSms("18612929610", "你好，这是一条测试短信【清华经管】");
+			//System.out.println(mapRst);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	@RequestMapping("regutil")
+	public void testRegExpUtil(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			System.out.println("判断是否合法字符："+ RegExpValidatorUtils.isEmail("shihua_23@163.com"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }

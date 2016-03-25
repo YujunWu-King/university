@@ -155,7 +155,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 		try {
-			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_SCHOOL_SELECT", true, tzGeneralURL,contextUrl,imgPath);
+			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_SCHOOL_SELECT", tzGeneralURL,contextUrl,imgPath);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

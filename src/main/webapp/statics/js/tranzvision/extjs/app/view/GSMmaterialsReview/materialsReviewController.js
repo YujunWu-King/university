@@ -1674,12 +1674,12 @@
         //console.log(removedData,updateData,newData)
 
         if(removedData.length !== 0){
-            JSONData.delete = [];
+            JSONData.deleted = [];
             for(var x =removedData.length-1;x>=0;x--){
-                JSONData.delete[x] = {};
-                JSONData.delete[x].appInsID = removedData[x].data.appInsID;
-                JSONData.delete[x].classID = classID;
-                JSONData.delete[x].batchID = batchID;
+                JSONData.deleted[x] = {};
+                JSONData.deleted[x].appInsID = removedData[x].data.appInsID;
+                JSONData.deleted[x].classID = classID;
+                JSONData.deleted[x].batchID = batchID;
             }
         }
         //更新数据

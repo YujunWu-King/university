@@ -36,6 +36,8 @@
     <result column="TZ_APPTPL_JSON_STR" property="tzApptplJsonStr" jdbcType="LONGVARCHAR" />
     <result column="TZ_CH_M_CONTENT" property="tzChMContent" jdbcType="LONGVARCHAR" />
     <result column="TZ_EN_M_CONTENT" property="tzEnMContent" jdbcType="LONGVARCHAR" />
+    <result column="TZ_HEADER" property="tzHeader" jdbcType="LONGVARCHAR" />
+    <result column="TZ_FOOTER" property="tzFooter" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
@@ -45,7 +47,7 @@
     ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ISSENDMAIL, TZ_EML_MODAL_ID
   </sql>
   <sql id="Blob_Column_List" >
-    TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, TZ_EN_M_CONTENT
+    TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
   </sql>
   <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
@@ -70,7 +72,8 @@
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
       TZ_ISSENDMAIL, TZ_EML_MODAL_ID, TZ_APPTPL_JSON_STR, 
-      TZ_CH_M_CONTENT, TZ_EN_M_CONTENT)
+      TZ_CH_M_CONTENT, TZ_EN_M_CONTENT, TZ_HEADER, 
+      TZ_FOOTER)
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAppTplMc,jdbcType=VARCHAR}, 
       #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, 
       #{tzAppLabelWz,jdbcType=VARCHAR}, #{tzAppTsxxFs,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
@@ -81,7 +84,8 @@
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
       #{tzIssendmail,jdbcType=VARCHAR}, #{tzEmlModalId,jdbcType=VARCHAR}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, 
-      #{tzChMContent,jdbcType=LONGVARCHAR}, #{tzEnMContent,jdbcType=LONGVARCHAR})
+      #{tzChMContent,jdbcType=LONGVARCHAR}, #{tzEnMContent,jdbcType=LONGVARCHAR}, #{tzHeader,jdbcType=LONGVARCHAR}, 
+      #{tzFooter,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
     insert into PS_TZ_APPTPL_DY_T
@@ -182,6 +186,12 @@
       <if test="tzEnMContent != null" >
         TZ_EN_M_CONTENT,
       </if>
+      <if test="tzHeader != null" >
+        TZ_HEADER,
+      </if>
+      <if test="tzFooter != null" >
+        TZ_FOOTER,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzAppTplId != null" >
@@ -279,6 +289,12 @@
       </if>
       <if test="tzEnMContent != null" >
         #{tzEnMContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzHeader != null" >
+        #{tzHeader,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzFooter != null" >
+        #{tzFooter,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -378,6 +394,12 @@
       <if test="tzEnMContent != null" >
         TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzHeader != null" >
+        TZ_HEADER = #{tzHeader,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzFooter != null" >
+        TZ_FOOTER = #{tzFooter,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
   </update>
@@ -413,7 +435,9 @@
       TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
       TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       TZ_CH_M_CONTENT = #{tzChMContent,jdbcType=LONGVARCHAR},
-      TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR}
+      TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR},
+      TZ_HEADER = #{tzHeader,jdbcType=LONGVARCHAR},
+      TZ_FOOTER = #{tzFooter,jdbcType=LONGVARCHAR}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyT" >
