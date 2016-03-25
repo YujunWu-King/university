@@ -36,6 +36,7 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 		String result = "";
 		String strErrorDesc = "";
 		String contextPaht = request.getContextPath();
+		String imgPath = "";
 		//JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			//jacksonUtil.json2Map(strParams);
@@ -67,12 +68,12 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 			
 			
 			String loginUrl = request.getContextPath()+"/user/login/"+strJgid.toLowerCase()+"/"+siteId;
-			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+			imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 			if("Y".equals(FLAGE)){
 				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_HTML", true,
-						contextPaht,imgPath+"/right_green.png", "邮箱已经修改成功",loginUrl);
+						contextPaht,imgPath, "邮箱已经修改成功",loginUrl);
 			}else{
 				if("overtime".equals(strErrorFlg)){
 					 strErrorDesc = "邮箱修改失败，验证已超时";
@@ -101,7 +102,7 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 			try {
 				result = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_EMAIL_EITE_ERROR_HTML", true,
-						contextPaht+"/statics/images/website/error_001.jpg", strErrorDesc,contextPaht);
+						imgPath+"/error_001.jpg", strErrorDesc,contextPaht);
 			} catch (TzSystemException e1){
 				e1.printStackTrace();
 			}
