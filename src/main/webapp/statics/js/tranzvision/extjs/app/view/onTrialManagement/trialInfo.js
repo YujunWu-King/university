@@ -127,8 +127,8 @@ Ext.define('KitchenSink.view.onTrialManagement.trialInfo', {
             queryMode: 'remote',
 			name: 'orgId',
 			listeners:{
-				change: function(combo,newValue, oldValue, eOpts){
-					var form = this.findParentByType("form").getForm();
+                select: function(combo,newValue, eOpts){
+                	var form = this.findParentByType("form").getForm();
 					form.findField("dlzh").setValue("");
 					form.findField("dlzhName").setValue("");
                 }

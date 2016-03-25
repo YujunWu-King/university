@@ -24,7 +24,7 @@ function submitEnroll() {
 	var _statusFlg = "";
 	var _orgNameFlg=$("#status_TZ_ORG_NAME").val();
 	var _orgContactNameFlg=$("#status_TZ_CONTACT_NAME").val();
-	var _orgContactNamePhoneFlg=$("#status_TZ_CONTACT_PHONE").val();
+	var _orgContactPhoneFlg=$("#status_TZ_CONTACT_PHONE").val();
 	var _orgEmailFlg=$("#status_TZ_EMAIL").val();
 	var _yzmFlg=$("#status_yzm").val();
 	
@@ -40,8 +40,8 @@ function submitEnroll() {
 		_statusFlg="error";
 	}
 	
-	if(_orgContactNamePhoneFlg ==1 || $('#TZ_CONTACT_PHONE').val()==''){
-		$('#TZ_CONTACT_PHONE_status').html("<span>请填写联系人</span>");
+	if(_orgContactPhoneFlg ==1 || $('#TZ_CONTACT_PHONE').val()==''){
+		$('#TZ_CONTACT_PHONE_status').html("<span>请填写联系电话</span>");
 		$("#TZ_CONTACT_PHONEStyle").removeClass("alert_display_none");
 		_statusFlg="error";
 	}
@@ -69,7 +69,7 @@ function submitEnroll() {
 		return false;
 	}
 
-	if(_orgNameFlg=="0" && _orgContactNameFlg=="0" && _orgContactNamePhoneFlg=="0" && _orgEmailFlg=="0" && _yzmFlg=="0"){
+	if(_orgNameFlg=="0" && _orgContactNameFlg=="0" && _orgContactPhoneFlg=="0" && _orgEmailFlg=="0" && _yzmFlg=="0"){
 
 		var signupsContent =$("#signupForm").serializeJson();
 
@@ -173,7 +173,7 @@ $(document).ready(function(){
 			   $('#TZ_EMAILStyle').removeClass("alert_display_none");
 			}else{
 				$('#TZ_EMAIL_status').html("");
-				$('#TZ_EMAIL_status').attr("value", 0);
+				$('#status_TZ_EMAIL').attr("value", 0);
 				$('#TZ_EMAILStyle').addClass("alert_display_none");
 			}
 		}else{
@@ -218,6 +218,7 @@ function check_yzmEmail(val){
 					$('#yzm_Emailstatus').html("<span>"+result.state.errdesc+"</span>");
 					$('#status_yzm').attr("value", 1);
 					$("#yzmEmailStyle").removeClass("alert_display_none");
+					create_yzm();
 				}
 			}
 		});
