@@ -12,7 +12,7 @@ public class ExecuteShellComand {
 	 *            要执行的命令字符串
 	 * @return
 	 */
-	public String executeCommand(String command) {
+	public String executeCommand(String command[]) {
 		StringBuffer output = new StringBuffer();
 		try {
 

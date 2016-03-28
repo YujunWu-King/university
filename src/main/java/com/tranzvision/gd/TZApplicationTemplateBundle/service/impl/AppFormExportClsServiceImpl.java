@@ -93,6 +93,10 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				url = this.createPdf(tplid,insid,title);
 			}
 		}
+		if(StringUtils.isBlank(url)){
+			code = "1";
+			msg = "导出PDF报名表失败！";
+		}
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("code", code);
 		mapRet.put("msg", msg);
@@ -129,26 +133,17 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				String wkh = getSysHardCodeVal.getWkHtml2Pdf();
 				
-				StringBuffer command = new StringBuffer("\"" + wkh + "\"");
-				command.append(" --header-html ");
-
-				String headerParam = "\"" + request.getServletContext().getRealPath(parentPath) + "header.html" + "\" ";
-				command.append(headerParam);
-				
-				command.append(" --footer-html ");
-				String footerParam = "\"" + request.getServletContext().getRealPath(parentPath) + "footer.html" + "\" ";
-				command.append(footerParam);
-				
-				String sourceName = "\"" + request.getServletContext().getRealPath(path) + htmlFileName + "\" ";
-				String targetName = "\"" + request.getServletContext().getRealPath(path) + pdfFileName + "\"";
-
-				command.append(sourceName);
-				command.append(targetName);
+				String[] command = new String[7];
+				command[0] = wkh;
+				command[1] = "--header-html";
+				command[2] = request.getServletContext().getRealPath(parentPath) + "header.html";
+				command[3] = "--footer-html";
+				command[4] = request.getServletContext().getRealPath(parentPath) + "footer.html";
+				command[5] = request.getServletContext().getRealPath(path) + htmlFileName;
+				command[6] = request.getServletContext().getRealPath(path) + pdfFileName;
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
-				System.out.println(command.toString());
-
-				String retval = shellComand.executeCommand(command.toString());
+				String retval = shellComand.executeCommand(command);
 				if(retval.toUpperCase().trim().endsWith("DONE")){
 					return path + pdfFileName;
 				}else{
