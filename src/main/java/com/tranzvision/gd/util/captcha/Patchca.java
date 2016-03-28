@@ -16,6 +16,8 @@ import com.github.bingoohuang.patchca.filter.predefined.*;
 import com.github.bingoohuang.patchca.custom.ConfigurableCaptchaService;
 import com.github.bingoohuang.patchca.utils.encoder.EncoderHelper;
 import com.github.bingoohuang.patchca.word.RandomWordFactory;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.session.TzSession;
 
 /**
@@ -34,6 +36,8 @@ public class Patchca {
 
 	private TzSession tzSession = null;
 
+	private GetCookieSessionProps getSessionProps;
+
 	final static String tokenName = "captchaToken";
 
 	/**
@@ -45,6 +49,14 @@ public class Patchca {
 	 * 验证码最大长度
 	 */
 	private int maxLength = 4;
+
+	/**
+	 * 构造函数
+	 */
+	public Patchca() {
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		getSessionProps = (GetCookieSessionProps) getSpringBeanUtil.getAutowiredSpringBean("GetCookieSessionProps");
+	}
 
 	/**
 	 * 实例化tzSession对象
@@ -214,6 +226,12 @@ public class Patchca {
 	 * @return boolean
 	 */
 	public boolean verifyToken(HttpServletRequest request, String ckToken) {
+
+		boolean debugging = getSessionProps.getDebug();
+		if (debugging) {
+			return true;
+		}
+
 		String token = this.getToken(request);
 		if (token == null) {
 			return false;
@@ -222,7 +240,7 @@ public class Patchca {
 		token = token.toUpperCase();
 		if (token.equals(ckToken.trim().toUpperCase())) {
 			// 销毁sessionToken
-			//this.removeToken(request);
+			// this.removeToken(request);
 			return true;
 		}
 		return false;

@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 
 /**
  * PS类: TZ_GD_COM_EMLSMS_APP:emlSmsGetParamter
@@ -683,6 +684,150 @@ public class EmlSmsGetParamter {
 			} else {
 				return "";
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 试用申请联系人姓名;
+	public String getSyLxrName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_AUD_XM FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String name = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (name == null || "".equals(name)) {
+				return "";
+			} else {
+				return name;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 试用前台登录地址;
+	public String getSyQtUrl(String[] paramters) {
+		try {
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String seqStr = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[] { audId, audCyId });
+			if (seqStr != null && !"".equals(seqStr)) {
+				String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_ON_TRIAL_T WHERE TZ_SEQ_NUM=?";
+				String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class,
+						new Object[] { Integer.parseInt(seqStr) });
+				if (strOrgid != null && !"".equals(strOrgid)) {
+					String siteSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+					String siteId = jdbcTemplate.queryForObject(siteSQL, String.class, new Object[] { strOrgid });
+					if (siteId != null && !"".equals(siteId)) {
+						HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+								.getRequestAttributes()).getRequest();
+						String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+								+ request.getContextPath();
+						String url = serv + "/user/login/" + strOrgid.toLowerCase() + "/" + siteId;
+						return url;
+					}
+				}
+			}
+			return "";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 试用后台登录地址;
+	public String getSyHtUrl(String[] paramters) {
+		try {
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String seqStr = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[] { audId, audCyId });
+			if (seqStr != null && !"".equals(seqStr)) {
+				String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_ON_TRIAL_T WHERE TZ_SEQ_NUM=?";
+				String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class,
+						new Object[] { Integer.parseInt(seqStr) });
+				if (strOrgid != null && !"".equals(strOrgid)) {
+					HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+							.getRequestAttributes()).getRequest();
+					String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+							+ request.getContextPath();
+					String url = serv + "/login/" + strOrgid.toLowerCase();
+					return url;
+				}
+			}
+			return "";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 试用登录账号及密码
+	public String getSyDlzh(String[] paramters) {
+		try {
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String seqStr = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[] { audId, audCyId });
+			if (seqStr != null && !"".equals(seqStr)) {
+				String dlSQL = "SELECT TZ_JG_ID,TZ_DLZH_ID from PS_TZ_ON_TRIAL_T WHERE TZ_SEQ_NUM=?";
+				Map<String, Object> map = jdbcTemplate.queryForMap(dlSQL, new Object[] { Integer.parseInt(seqStr) });
+				if (map != null) {
+					String jg = (String) map.get("TZ_JG_ID");
+					String dlzh = (String) map.get("TZ_DLZH_ID");
+					if (jg != null && !"".equals(jg) && dlzh != null && !"".equals(dlzh)) {
+						String password = jdbcTemplate.queryForObject(
+								"select B.OPERPSWD from PS_TZ_AQ_YHXX_TBL A,PSOPRDEFN B WHERE A.TZ_DLZH_ID=? AND A.TZ_JG_ID=? AND A.OPRID=B.OPRID",
+								String.class, new Object[] { dlzh, jg });
+						if (password != null && !"".equals(password)) {
+							password = DESUtil.decrypt(password, "TZGD_Tranzvision");
+							return dlzh + "/" + password;
+						}
+
+					}
+				}
+			}
+			return "";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	// 试用到期时间
+	public String getSyGqsj(String[] paramters) {
+		try {
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String opridSQL = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			String seqStr = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[] { audId, audCyId });
+			if (seqStr != null && !"".equals(seqStr)) {
+				String gqSQL = "select DATE_FORMAT(TZ_END_TIME,'%Y-%m-%d %H:%i') TZ_END_TIME from PS_TZ_ON_TRIAL_T WHERE TZ_SEQ_NUM=?";
+				String date = jdbcTemplate.queryForObject(gqSQL, String.class,
+						new Object[] { Integer.parseInt(seqStr) });
+				if (date != null && !"".equals(date)) {
+					return date;
+				}
+			}
+			return "";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
