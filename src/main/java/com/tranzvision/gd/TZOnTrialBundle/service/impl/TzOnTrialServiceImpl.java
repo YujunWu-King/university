@@ -273,4 +273,18 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 		}
 		return loginHtml;
 	}
+	
+	
+	/*使用申请页面*/
+	public String tzMApply(){
+		String contextPath = request.getContextPath();
+		String loginHtml = "";
+		try {
+			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_ON_TRIAL_M_HTML", true,contextPath);
+		} catch (TzSystemException e) {
+			e.printStackTrace();
+			loginHtml = "申请试用访问失败，请于管理员联系";
+		}
+		return loginHtml;
+	}
 }
