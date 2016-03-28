@@ -59,6 +59,10 @@ Ext.define('KitchenSink.view.onTrialManagement.trialInfo', {
 			name: 'contactPhone'
         }, {
             xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_INF_STD.contactTel","座机"),
+			name: 'contactTel'
+        }, {
+            xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_INF_STD.contactEmail","联系人邮箱"),
 			name: 'contactEmail'
         },{

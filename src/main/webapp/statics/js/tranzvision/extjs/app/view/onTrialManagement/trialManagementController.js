@@ -89,6 +89,7 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagementController', {
 					form.findField("submitTime").setReadOnly(true);
 					form.findField("contactName").setReadOnly(true);
 					form.findField("contactPhone").setReadOnly(true);
+					form.findField("contactTel").setReadOnly(true);
 					form.findField("contactEmail").setReadOnly(true);
 					form.findField("startTime").setReadOnly(true);
 					form.findField("endTime").setReadOnly(true);
@@ -98,6 +99,7 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagementController', {
 					form.findField("submitTime").addCls("lanage_1");
 					form.findField("contactName").addCls("lanage_1");
 					form.findField("contactPhone").addCls("lanage_1");
+					form.findField("contactTel").addCls("lanage_1");
 					form.findField("contactEmail").addCls("lanage_1");
 					form.findField("startTime").addCls("lanage_1");
 					form.findField("endTime").addCls("lanage_1");

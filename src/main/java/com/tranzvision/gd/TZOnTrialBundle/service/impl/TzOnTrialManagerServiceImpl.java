@@ -147,6 +147,7 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 					mapData.put("seqNum", tzSeqNum);
 					mapData.put("contactName", psTzOnTrialT.getTzContactName());
 					mapData.put("contactPhone", psTzOnTrialT.getTzContactPhone());
+					mapData.put("contactTel", psTzOnTrialT.getTzTel());
 					mapData.put("contactEmail", psTzOnTrialT.getTzEmail());
 					mapData.put("orgName", psTzOnTrialT.getTzOrgName());
 					mapData.put("website", psTzOnTrialT.getTzOrgWebsite());

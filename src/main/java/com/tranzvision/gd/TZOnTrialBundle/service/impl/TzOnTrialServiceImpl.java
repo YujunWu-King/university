@@ -153,6 +153,12 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 					return strResult;
 			    }
 			    
+			    //座机;
+			    String tel = "";
+			    if(dataMap.containsKey("TZ_CONTACT_TEL")){ 
+			    	tel = ((String)dataMap.get("TZ_CONTACT_TEL")).trim();
+			    }
+			    
 			    //机构网址;
 			    String website = "";
 			    if(dataMap.containsKey("TZ_ORG_WEBSITE")){ 
@@ -165,6 +171,7 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 			    psTzOnTrialT.setTzOrgName(orgName);
 			    psTzOnTrialT.setTzContactName(contactName);
 			    psTzOnTrialT.setTzContactPhone(contactPhone);
+			    psTzOnTrialT.setTzTel(tel);
 			    psTzOnTrialT.setTzEmail(email);
 			    psTzOnTrialT.setTzOrgWebsite(website);
 			    psTzOnTrialT.setRowAddTime(new Date());
@@ -189,15 +196,21 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 				}
 
 				// 为听众添加听众成员;
-				String sjrEmail = jdbcTemplate.queryForObject("select TZ_EMAIL from PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID='Admin' and TZ_JG_ID='ADMIN' limit 0,1", "String");
+				String sjrEmail = jdbcTemplate.queryForObject(" select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ONTRIAL_EMAIL'", "String");
 				if(sjrEmail == null || "".equals(sjrEmail)){
 					sjrEmail = "Jun.Gao@tranzvision.com.cn";
 				}
-				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,"管理员", "管理员", "", "", sjrEmail, "", "", "","", "", "");
-				if (addAudCy == false) {
-					errMsg[0] = "1";
-					errMsg[1] = "申请试用发送邮件失败，请于管理员联系";
-					return strResult;
+				String[] emailList = sjrEmail.split(";");
+				for(int i = 0; i < emailList.length; i++){
+					if(emailList[i] != null && !"".equals(emailList[i])){
+						boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,"管理员", "管理员", "", "", emailList[i], "", "", "","", "", "");
+						if (addAudCy == false) {
+							errMsg[0] = "1";
+							errMsg[1] = "申请试用发送邮件失败，请于管理员联系";
+							return strResult;
+						}
+					}
+					
 				}
 
 				sendSmsOrMalServiceImpl.send(taskId, "");

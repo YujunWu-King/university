@@ -83,10 +83,14 @@ function submitEnroll() {
 			url: TzUniversityContextPath + "/dispatcher",
 			dataType: "json",
 			success: function(result){
-				alert(result.state.errdesc);
-				create_yzm();
-				$("#yzmEmail").val("");
-				
+				var success = result.comContent;
+				if(success == "success"){
+					window.open(TzUniversityContextPath + "/trialSuccess",'_self') 
+				}else{
+					alert(result.state.errdesc);
+					create_yzm();
+					$("#yzmEmail").val("");
+				}
 			}
 		});
   	}
