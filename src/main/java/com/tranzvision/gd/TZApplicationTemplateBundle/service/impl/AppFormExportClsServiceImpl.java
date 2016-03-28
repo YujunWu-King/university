@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
 				//title
 				title = tplname + "-" + userName;
-				url = this.createPdf(tplid,insid,title);
+				url = this.createPdf(tplid,insid,title,"");
 			}
 		}
 		if(StringUtils.isBlank(url)){
@@ -109,10 +110,13 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	/**
 	 * 创建报名表实例的PDF格式文件
 	 * 
-	 * @param insid	报名表实例编号
+	 * @param tplid
+	 * @param insid
+	 * @param title
+	 * @param filename
 	 * @return
 	 */
-	private String createPdf(String tplid,String insid,String title) {
+	private String createPdf(String tplid,String insid,String title,String filename) {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 		//最终生成文件路径
@@ -140,7 +144,18 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				command[3] = "--footer-html";
 				command[4] = request.getServletContext().getRealPath(parentPath) + "footer.html";
 				command[5] = request.getServletContext().getRealPath(path) + htmlFileName;
-				command[6] = request.getServletContext().getRealPath(path) + pdfFileName;
+				if(StringUtils.isBlank(filename)){
+					command[6] = request.getServletContext().getRealPath(path) + pdfFileName;
+				}else{
+					String pdfPath = filename.substring(0,filename.lastIndexOf("/"));
+					pdfPath = request.getServletContext().getRealPath(pdfPath);
+					File dir = new File(pdfPath);
+					// System.out.println(dir.getAbsolutePath());
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
+					command[6] = request.getServletContext().getRealPath(filename);
+				}
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 				String retval = shellComand.executeCommand(command);
@@ -616,4 +631,54 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		return isHas;
 	}
 	
+	/**
+	 * 生产PDF文件
+	 * @param path		PDF文件存放路径
+	 * @param filename	文件名称
+	 * @param insid		实例编号
+	 * @return			是否创建PDF成功
+	 */
+	public boolean generatePdf(String path,String filename,String insid){
+		//报名表打包文件路径
+		String pdfPath = "";
+		String bmbPackRarDir = getSysHardCodeVal.getBmbPackRarDir();
+		if(StringUtils.endsWith(bmbPackRarDir, "/")){
+			pdfPath = bmbPackRarDir + path;
+		}else{
+			pdfPath = bmbPackRarDir + "/" + path;
+		}
+		
+		if(!StringUtils.endsWith(filename.toUpperCase(), ".PDF")){
+			filename = filename + ".pdf";
+		}
+		
+		if(StringUtils.endsWith(pdfPath, "/")){
+			filename = pdfPath + filename;
+		}else{
+			filename = pdfPath + "/" + filename;
+		}
+		
+		PsTzAqYhxxTbl psTzAqYhxxTbl = tzLoginServiceImpl.getLoginedManagerInfo(request);
+		// 当前登录人姓名
+		String userName = "";
+		if (psTzAqYhxxTbl != null) {
+			userName = psTzAqYhxxTbl.getTzRealname();
+		}
+		
+		//报名表模板编号、模板名称
+		String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
+		Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
+		String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
+		String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
+		//title
+		String title = tplname + "-" + userName;
+		
+		String url = this.createPdf(tplid, insid, title, filename);
+		
+		if(StringUtils.isBlank(url)){
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
