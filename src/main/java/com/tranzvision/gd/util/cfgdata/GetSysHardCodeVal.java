@@ -117,12 +117,21 @@ public class GetSysHardCodeVal {
 	 * 下载文件存储路径
 	 */
 	private String downloadPath;
-	
+
 	/**
 	 * WkHtml2Pdf可执行文件
 	 */
 	private String wkHtml2Pdf;
 
+	/**
+	 * 存储单个导出PDF报名表的路径
+	 */
+	private String bmbSinglePdfDir;
+
+	/**
+	 * 存储批量打包报名表RAR文件的路径
+	 */
+	private String bmbPackRarDir;
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -174,8 +183,13 @@ public class GetSysHardCodeVal {
 			websiteEnrollPath = sysHardCodeValProps.getProperty("WebsiteEnrollPath");
 
 			downloadPath = sysHardCodeValProps.getProperty("DownloadPath");
-			
+
 			wkHtml2Pdf = sysHardCodeValProps.getProperty("WkHtml2Pdf");
+
+			bmbSinglePdfDir = sysHardCodeValProps.getProperty("BmbSinglePdfDir");
+
+			bmbPackRarDir = sysHardCodeValProps.getProperty("BmbPackRarDir");
+
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (Exception e) {
@@ -269,9 +283,17 @@ public class GetSysHardCodeVal {
 	public String getDownloadPath() {
 		return downloadPath;
 	}
-	
+
 	public String getWkHtml2Pdf() {
 		return wkHtml2Pdf;
+	}
+
+	public String getBmbSinglePdfDir() {
+		return bmbSinglePdfDir;
+	}
+
+	public String getBmbPackRarDir() {
+		return bmbPackRarDir;
 	}
 
 }

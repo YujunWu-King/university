@@ -18,3 +18,5 @@ WebsiteSkinsImgPath=\/statics\/images\/website\/skins
 WebsiteEnrollPath=\/WEB-INF\/html
 DownloadPath=\/statics\/download
 WkHtml2Pdf=\/root\/software\/wkhtmltox\/bin\/wkhtmltopdf
+BmbSinglePdfDir=\/bmb\/singlepdf
+BmbPackRarDir=\/bmb\/packrar
