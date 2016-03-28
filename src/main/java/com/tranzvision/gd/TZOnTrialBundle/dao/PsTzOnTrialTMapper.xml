@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOnTrialBundle.dao.PsTzOnTrialTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialT" >
+    <id column="TZ_SEQ_NUM" property="tzSeqNum" jdbcType="INTEGER" />
+    <result column="TZ_ORG_NAME" property="tzOrgName" jdbcType="VARCHAR" />
+    <result column="TZ_CONTACT_NAME" property="tzContactName" jdbcType="VARCHAR" />
+    <result column="TZ_CONTACT_PHONE" property="tzContactPhone" jdbcType="VARCHAR" />
+    <result column="TZ_TEL" property="tzTel" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="ROW_ADD_TIME" property="rowAddTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_SH_RST" property="tzShRst" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+    <result column="TZ_START_TIME" property="tzStartTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_END_TIME" property="tzEndTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_SF_SALE" property="tzSfSale" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_ORG_WEBSITE" property="tzOrgWebsite" jdbcType="LONGVARCHAR" />
+    <result column="TZ_REMARK" property="tzRemark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SEQ_NUM, TZ_ORG_NAME, TZ_CONTACT_NAME, TZ_CONTACT_PHONE, TZ_TEL, TZ_EMAIL, ROW_ADD_TIME, 
+    TZ_SH_RST, TZ_JG_ID, TZ_DLZH_ID, TZ_START_TIME, TZ_END_TIME, TZ_SF_SALE
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_ORG_WEBSITE, TZ_REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_ON_TRIAL_T
+    where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PS_TZ_ON_TRIAL_T
+    where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" >
+    insert into PS_TZ_ON_TRIAL_T (TZ_SEQ_NUM, TZ_ORG_NAME, TZ_CONTACT_NAME, 
+      TZ_CONTACT_PHONE, TZ_TEL, TZ_EMAIL, 
+      ROW_ADD_TIME, TZ_SH_RST, TZ_JG_ID, 
+      TZ_DLZH_ID, TZ_START_TIME, TZ_END_TIME, 
+      TZ_SF_SALE, TZ_ORG_WEBSITE, TZ_REMARK
+      )
+    values (#{tzSeqNum,jdbcType=INTEGER}, #{tzOrgName,jdbcType=VARCHAR}, #{tzContactName,jdbcType=VARCHAR}, 
+      #{tzContactPhone,jdbcType=VARCHAR}, #{tzTel,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{rowAddTime,jdbcType=TIMESTAMP}, #{tzShRst,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzDlzhId,jdbcType=VARCHAR}, #{tzStartTime,jdbcType=TIMESTAMP}, #{tzEndTime,jdbcType=TIMESTAMP}, 
+      #{tzSfSale,jdbcType=VARCHAR}, #{tzOrgWebsite,jdbcType=LONGVARCHAR}, #{tzRemark,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" >
+    insert into PS_TZ_ON_TRIAL_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSeqNum != null" >
+        TZ_SEQ_NUM,
+      </if>
+      <if test="tzOrgName != null" >
+        TZ_ORG_NAME,
+      </if>
+      <if test="tzContactName != null" >
+        TZ_CONTACT_NAME,
+      </if>
+      <if test="tzContactPhone != null" >
+        TZ_CONTACT_PHONE,
+      </if>
+      <if test="tzTel != null" >
+        TZ_TEL,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="rowAddTime != null" >
+        ROW_ADD_TIME,
+      </if>
+      <if test="tzShRst != null" >
+        TZ_SH_RST,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+      <if test="tzStartTime != null" >
+        TZ_START_TIME,
+      </if>
+      <if test="tzEndTime != null" >
+        TZ_END_TIME,
+      </if>
+      <if test="tzSfSale != null" >
+        TZ_SF_SALE,
+      </if>
+      <if test="tzOrgWebsite != null" >
+        TZ_ORG_WEBSITE,
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSeqNum != null" >
+        #{tzSeqNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzOrgName != null" >
+        #{tzOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContactName != null" >
+        #{tzContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContactPhone != null" >
+        #{tzContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTel != null" >
+        #{tzTel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddTime != null" >
+        #{rowAddTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzShRst != null" >
+        #{tzShRst,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartTime != null" >
+        #{tzStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEndTime != null" >
+        #{tzEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSfSale != null" >
+        #{tzSfSale,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrgWebsite != null" >
+        #{tzOrgWebsite,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        #{tzRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" >
+    update PS_TZ_ON_TRIAL_T
+    <set >
+      <if test="tzOrgName != null" >
+        TZ_ORG_NAME = #{tzOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContactName != null" >
+        TZ_CONTACT_NAME = #{tzContactName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContactPhone != null" >
+        TZ_CONTACT_PHONE = #{tzContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTel != null" >
+        TZ_TEL = #{tzTel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddTime != null" >
+        ROW_ADD_TIME = #{rowAddTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzShRst != null" >
+        TZ_SH_RST = #{tzShRst,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStartTime != null" >
+        TZ_START_TIME = #{tzStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEndTime != null" >
+        TZ_END_TIME = #{tzEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSfSale != null" >
+        TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrgWebsite != null" >
+        TZ_ORG_WEBSITE = #{tzOrgWebsite,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK = #{tzRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" >
+    update PS_TZ_ON_TRIAL_T
+    set TZ_ORG_NAME = #{tzOrgName,jdbcType=VARCHAR},
+      TZ_CONTACT_NAME = #{tzContactName,jdbcType=VARCHAR},
+      TZ_CONTACT_PHONE = #{tzContactPhone,jdbcType=VARCHAR},
+      TZ_TEL = #{tzTel,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      ROW_ADD_TIME = #{rowAddTime,jdbcType=TIMESTAMP},
+      TZ_SH_RST = #{tzShRst,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      TZ_START_TIME = #{tzStartTime,jdbcType=TIMESTAMP},
+      TZ_END_TIME = #{tzEndTime,jdbcType=TIMESTAMP},
+      TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR},
+      TZ_ORG_WEBSITE = #{tzOrgWebsite,jdbcType=LONGVARCHAR},
+      TZ_REMARK = #{tzRemark,jdbcType=LONGVARCHAR}
+    where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialT" >
+    update PS_TZ_ON_TRIAL_T
+    set TZ_ORG_NAME = #{tzOrgName,jdbcType=VARCHAR},
+      TZ_CONTACT_NAME = #{tzContactName,jdbcType=VARCHAR},
+      TZ_CONTACT_PHONE = #{tzContactPhone,jdbcType=VARCHAR},
+      TZ_TEL = #{tzTel,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      ROW_ADD_TIME = #{rowAddTime,jdbcType=TIMESTAMP},
+      TZ_SH_RST = #{tzShRst,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      TZ_START_TIME = #{tzStartTime,jdbcType=TIMESTAMP},
+      TZ_END_TIME = #{tzEndTime,jdbcType=TIMESTAMP},
+      TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR}
+    where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
+  </update>
+</mapper>
