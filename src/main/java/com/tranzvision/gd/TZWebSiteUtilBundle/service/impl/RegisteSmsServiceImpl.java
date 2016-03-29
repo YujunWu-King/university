@@ -329,8 +329,10 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					String strSmsSuffix = jdbcTemplate.queryForObject(getSmsSuffiSql, new Object[] { "TZ_SMS_SEND_SUFFIX" }, "String");
 					if(strSmsSuffix == null) strSmsSuffix = "";
 					
+					String strSmsPrefix = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
+							"132", "本次验证码为：", "Verification Code:");
 					//给当前填写的手机号码发送验证码
-					String strSmsContent = "本次验证码为：" + strYzm + strSmsSuffix;
+					String strSmsContent = strSmsPrefix + strYzm + strSmsSuffix;
 					String strUserName = "";
 							
 					String oprid = "";
@@ -343,9 +345,15 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					}catch(Exception e){
 						e.printStackTrace();
 					}
-					
+					String getSmsSendTmpSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+					String strSmsSendTmp = jdbcTemplate.queryForObject(getSmsSendTmpSql, new Object[] { "TZ_SMS_SEND_TPL" }, "String");
+					if(strSmsSendTmp == null){
+						errorMsg[0] = "32";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
 					//创建邮件短信发送任务
-					String taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_SMS_N_001", "SMS", "A");
+					String taskId = createTaskServiceImpl.createTaskIns(strOrgid, strSmsSendTmp, "SMS", "A");
 					if(taskId==null || "".equals(taskId)){
 						errorMsg[0] = "30";
 						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
@@ -491,8 +499,12 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					String getSmsSuffiSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
 					String strSmsSuffix = jdbcTemplate.queryForObject(getSmsSuffiSql, new Object[] { "TZ_SMS_SEND_SUFFIX" }, "String");
 					if(strSmsSuffix == null) strSmsSuffix = "";
+					
+					String strSmsPrefix = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
+							"132", "本次验证码为：", "Verification Code:");
+					
 					//给当前填写的手机号码发送验证码
-					String strSmsContent = "本次验证码为：" + strYzm + strSmsSuffix;
+					String strSmsContent = strSmsPrefix + strYzm + strSmsSuffix;
 					String strUserName = "";
 							
 					String oprid = "";
@@ -506,8 +518,15 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 						e.printStackTrace();
 					}
 					
+					String getSmsSendTmpSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+					String strSmsSendTmp = jdbcTemplate.queryForObject(getSmsSendTmpSql, new Object[] { "TZ_SMS_SEND_TPL" }, "String");
+					if(strSmsSendTmp == null){
+						errorMsg[0] = "32";
+						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
+						return strResult;
+					}
 					//创建邮件短信发送任务
-					String taskId = createTaskServiceImpl.createTaskIns(strOrgid, "TZ_SMS_N_001", "SMS", "A");
+					String taskId = createTaskServiceImpl.createTaskIns(strOrgid, strSmsSendTmp, "SMS", "A");
 					if(taskId==null || "".equals(taskId)){
 						errorMsg[0] = "30";
 						errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "127", "短信发送失败", "Failed to send SMS。");
