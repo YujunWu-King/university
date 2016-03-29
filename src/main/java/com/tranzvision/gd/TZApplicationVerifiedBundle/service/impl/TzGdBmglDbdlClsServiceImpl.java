@@ -59,8 +59,6 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private TzDealWithXMLServiceImpl tzDealWithXMLServiceImpl;
-	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsprcsrqstMapper psprcsrqstMapper;
