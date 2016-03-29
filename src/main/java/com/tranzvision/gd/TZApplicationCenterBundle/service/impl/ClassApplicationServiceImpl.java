@@ -74,10 +74,11 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 				language = (String) siteMap.get("TZ_SITE_LANG");
 				String websitePath = getSysHardCodeVal.getWebsiteCssPath();
 				
+				String strRandom = String.valueOf(10*Math.random());
 				if("".equals(skinstor) || skinstor == null){
-					strCssDir = request.getContextPath() + websitePath + "/" + str_jg_id.toLowerCase() + "/" + strSiteId + "/"+ "style_" + str_jg_id.toLowerCase() + ".css" ;
+					strCssDir = request.getContextPath() + websitePath + "/" + str_jg_id.toLowerCase() + "/" + strSiteId + "/"+ "style_" + str_jg_id.toLowerCase() + ".css?v=" + strRandom ;
 				}else{
-					strCssDir = request.getContextPath() + websitePath + "/" + str_jg_id.toLowerCase() + "/" + strSiteId + "/" + skinstor + "/"+ "style_" + str_jg_id.toLowerCase() + ".css";
+					strCssDir = request.getContextPath() + websitePath + "/" + str_jg_id.toLowerCase() + "/" + strSiteId + "/" + skinstor + "/"+ "style_" + str_jg_id.toLowerCase() + ".css?v=" + strRandom;
 				}
 			}
 
