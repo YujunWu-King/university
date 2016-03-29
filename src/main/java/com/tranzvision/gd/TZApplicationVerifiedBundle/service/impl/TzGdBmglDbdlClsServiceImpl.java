@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportClsServiceImpl;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
@@ -63,6 +64,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private PsprcsrqstMapper psprcsrqstMapper;
+	@Autowired
+	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -159,13 +162,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 
 					String fjlj = "";
 					String packDir = "";
-					String websiteDir = getSysHardCodeVal.getWebsiteFileUploadPath();
+					//String websiteDir = getSysHardCodeVal.getWebsiteFileUploadPath();
+					String websiteDir = getSysHardCodeVal.getBmbPackRarDir();
 					if (websiteDir.lastIndexOf("/") + 1 == websiteDir.length()) {
-						fjlj = websiteDir + currentOprid + "/" + s_dt + "/" + "pack" + "/" + ID;
-						packDir = websiteDir + currentOprid + "/" + s_dt + "/" + "pack";
+						fjlj = websiteDir + ID;
+						packDir = websiteDir;
 					} else {
-						fjlj = websiteDir + "/" + currentOprid + "/" + s_dt + "/" + "pack" + "/" + ID;
-						packDir = websiteDir + "/" + currentOprid + "/" + s_dt + "/" + "pack";
+						fjlj = websiteDir + "/" + ID;
+						packDir = websiteDir + "/";
 					}
 
 					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
@@ -199,16 +203,19 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						}else{
 							relName = "";
 						}
+						/*
 						String TZ_APP_TPL_ID = jdbcTemplate.queryForObject(
 								"SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?",
 								new Object[] { Long.parseLong(appInsID) }, "String");
 						tzDealWithXMLServiceImpl.replaceXMLPulish(appInsID, OPRID, TZ_APP_TPL_ID, true,
 								fjlj + "/" + appInsID+"_"+relName, errMsg);
+							*/	
 						String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID+"_"+relName);
 						File tF = new File(tFile);
 						if (!tF.exists()) {
 							tF.mkdirs();
 						}
+						appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_报名表.pdf", appInsID);
 						
 						int file_count = 1;
 
@@ -241,7 +248,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 
 						// 生产推荐信xml文件;
 						long TZ_TJX_APP_INS_ID = 0;
-						String TJR_TZ_TJX_APP_INS_ID = "", TJR_TZ_APP_TPL_ID = "";
+						//String TJR_TZ_TJX_APP_INS_ID = "", TJR_TZ_APP_TPL_ID = "";
 						String tjxSql = "SELECT TZ_TJX_APP_INS_ID,B.TZ_APP_TPL_ID,TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL A, PS_TZ_APP_INS_T B WHERE A.TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y' AND A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U'";
 						List<Map<String, Object>> tjxList = jdbcTemplate.queryForList(tjxSql,
 								new Object[] { Long.parseLong(appInsID) });
@@ -253,13 +260,15 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 									TZ_TJX_APP_INS_ID = 0L;
 								}
 								
+								/*
 								TJR_TZ_TJX_APP_INS_ID = String.valueOf(TZ_TJX_APP_INS_ID);
 								TJR_TZ_APP_TPL_ID = (String) tjxList.get(j).get("TZ_APP_TPL_ID");
-								// tjrName =
-								// (String)tjxList.get(j).get("TZ_REFERRER_NAME");
 								tzDealWithXMLServiceImpl.replaceXMLPulish(TJR_TZ_TJX_APP_INS_ID, OPRID,
 										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID + "_" + relName, errMsg);
-
+								*/
+								String tzReferrer = (String)tjxList.get(j).get("TZ_REFERRER_NAME");
+								appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID));
+								
 								// 将考生的推荐信材料复制;
 								String str_attachfilename2 = "", str_attachfile2 = "";
 								String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
@@ -322,7 +331,12 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					
 			    	sourcePathArr.add(sourceDir);
 			    	String packDir2 = request.getServletContext().getRealPath(packDir);
-			    	packDir2 = packDir2 + File.separator + ID + ".rar";
+			    	if(packDir2.lastIndexOf(File.separator) == packDir2.length()){
+			    		packDir2 = packDir2 + ID + ".rar";
+			    	}else{
+			    		packDir2 = packDir2 + File.separator + ID + ".rar";
+			    	}
+			    	
 			        this.createZip(sourcePathArr,packDir2);
 			        Psprcsrqst psprcsrqst2 = psprcsrqstMapper.selectByPrimaryKey(processInstance);
 					if(psprcsrqst2 != null){
