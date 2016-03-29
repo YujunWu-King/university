@@ -746,8 +746,10 @@
         }
 
         if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_PRINT_ADMIN_STD","OperateType":"HTML","comParams":{"appInsID":"'+appInsID+'"}}';
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            //var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_PRINT_ADMIN_STD","OperateType":"HTML","comParams":{"appInsID":"'+appInsID+'"}}';
+            //var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+        	
+        	var viewUrl = TzUniversityContextPath+"/admission/expform/"+appInsID;
             window.location.href=viewUrl;
         }else{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
