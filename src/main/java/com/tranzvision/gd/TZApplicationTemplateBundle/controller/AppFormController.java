@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportClsServiceImpl;
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormListClsServiceImpl;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzComPageAuthServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
@@ -42,15 +44,17 @@ public class AppFormController {
 	@Autowired
 	private TzComPageAuthServiceImpl tzComPageAuthServiceImpl;
 
-	
 	@Autowired
 	private GdKjComServiceImpl gdKjComService;
-	
+
 	@Autowired
 	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
+	
+	@Autowired
+	private PsTzExcelDattTMapper psTzExcelDattTMapper;
 
 	private static final int BUFFER_SIZE = 4096;
 
@@ -158,13 +162,13 @@ public class AppFormController {
 			boolean permission = tzComPageAuthServiceImpl.checkUpdatePermission(oprid, comName, pageName, errorMsg);
 			if (permission) {
 				// 更新权限
-				 String retJson = appFormExportClsServiceImpl.tzGetJsonData("{\"insid\":\"" + insid + "\"}");
-				 JacksonUtil jacksonUtil = new JacksonUtil();
-				 Map<String, Object> retMap = jacksonUtil.parseJson2Map(retJson);
-				 String code = retMap.get("code") == null ? "" : String.valueOf(retMap.get("code"));
-				 String msg = retMap.get("msg") == null ? "" : String.valueOf(retMap.get("msg"));
-				 String url = retMap.get("url") == null ? "" : String.valueOf(retMap.get("url"));
-				 String filename = retMap.get("filename") == null ? "" : String.valueOf(retMap.get("filename"));
+				String retJson = appFormExportClsServiceImpl.tzGetJsonData("{\"insid\":\"" + insid + "\"}");
+				JacksonUtil jacksonUtil = new JacksonUtil();
+				Map<String, Object> retMap = jacksonUtil.parseJson2Map(retJson);
+				String code = retMap.get("code") == null ? "" : String.valueOf(retMap.get("code"));
+				String msg = retMap.get("msg") == null ? "" : String.valueOf(retMap.get("msg"));
+				String url = retMap.get("url") == null ? "" : String.valueOf(retMap.get("url"));
+				String filename = retMap.get("filename") == null ? "" : String.valueOf(retMap.get("filename"));
 
 				if (!StringUtils.equals(code, "0")) {
 					errorCode = code;
@@ -195,7 +199,7 @@ public class AppFormController {
 					// set headers for the response
 					String headerKey = "Content-Disposition";
 					filename = new String(filename.getBytes(), "ISO8859-1");
-					
+
 					String headerValue = String.format("attachment; filename=\"%s\"", filename);
 					response.setHeader(headerKey, headerValue);
 
@@ -214,6 +218,113 @@ public class AppFormController {
 					inputStream.close();
 					outStream.close();
 				}
+			} else {
+				// 无更新权限
+				errorCode = errorMsg[0];
+				strErrorDesc = errorMsg[1];
+			}
+		}
+
+		if ("1".equals(errorCode)) {
+			strRetContent = strErrorDesc;
+		}
+
+		return strRetContent;
+	}
+
+	@RequestMapping(value = { "/exprar/{seqnum}" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String exportAppFormRar(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "seqnum") String seqnum) throws IOException {
+		// 错误时的返回值
+		String strRetContent = "";
+		// 错误描述;
+		String strErrorDesc = "";
+		// 错误码;
+		String errorCode = "0";
+		// 组件名称
+		String comName = "TZ_ONLINE_REG_COM";
+		// 页面名称
+		String pageName = "TZ_ONREG_EXP_STD";
+		// OPRID
+		String oprid = gdKjComService.getOPRID(request);
+		// OrgId
+		//String orgid = gdKjComService.getLoginOrgID(request, response);
+		// 错误信息
+		String[] errorMsg = { "0", "" };
+
+		if (StringUtils.isBlank(seqnum)) {
+			errorCode = "1";
+			strErrorDesc = "下载的文件不存在！";
+		}
+
+		if (StringUtils.equals("0", errorCode)) {
+			// 校验组件页面的读写访问权限
+			boolean permission = tzComPageAuthServiceImpl.checkUpdatePermission(oprid, comName, pageName, errorMsg);
+			if (permission) {
+				
+				
+				// get absolute path of the application
+				ServletContext context = request.getServletContext();
+				//String appPath = context.getRealPath("");
+				
+
+				// construct the complete absolute path of the file
+				//String fullPath = appPath + url;
+				//File downloadFile = new File(fullPath);
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(Integer.parseInt(seqnum));
+				if(psTzExcelDattT == null){
+					// 无更新权限
+					errorMsg[0] = "1";
+					errorMsg[1] = "不存在下载的文件";
+					return "不存在下载的文件";
+				}
+				String fullPath = "";
+				String lj = psTzExcelDattT.getTzFwqFwlj();
+				String filename = psTzExcelDattT.getTzSysfileName();
+				if(lj.lastIndexOf("/") + 1 == lj.length()){
+					lj = lj + filename;
+				}else{
+					lj = lj + "/" + filename;
+				}
+				fullPath = request.getServletContext().getRealPath(lj);
+				File downloadFile = new File(fullPath);
+				FileInputStream inputStream = new FileInputStream(downloadFile);
+
+				// get MIME type of the file
+				String mimeType = context.getMimeType(fullPath);
+				if (mimeType == null) {
+					// set to binary type if MIME mapping not found
+					mimeType = "application/octet-stream";
+				}
+				System.out.println("MIME type: " + mimeType);
+
+				// set content attributes for the response
+				response.setContentType(mimeType + ";charset=UTF-8");
+				response.setContentLength((int) downloadFile.length());
+
+				// set headers for the response
+				String headerKey = "Content-Disposition";
+				filename = new String(filename.getBytes(), "ISO8859-1");
+
+				String headerValue = String.format("attachment; filename=\"%s\"", filename);
+				response.setHeader(headerKey, headerValue);
+
+				// get output stream of the response
+				OutputStream outStream = response.getOutputStream();
+
+				byte[] buffer = new byte[BUFFER_SIZE];
+				int bytesRead = -1;
+
+				// write bytes read from the input stream into the output
+				// stream
+				while ((bytesRead = inputStream.read(buffer)) != -1) {
+					outStream.write(buffer, 0, bytesRead);
+				}
+
+				inputStream.close();
+				outStream.close();
+
 			} else {
 				// 无更新权限
 				errorCode = errorMsg[0];

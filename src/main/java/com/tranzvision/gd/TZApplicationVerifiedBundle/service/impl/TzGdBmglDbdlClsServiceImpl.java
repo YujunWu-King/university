@@ -64,6 +64,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	private PsprcsrqstMapper psprcsrqstMapper;
 	@Autowired
 	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
+	
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -74,7 +75,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-
+		
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {{"PROCESSINSTANCE","DESC"}};
@@ -335,7 +336,9 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 			    		packDir2 = packDir2 + File.separator + ID + ".rar";
 			    	}
 			    	
+			    	//打包;
 			        this.createZip(sourcePathArr,packDir2);
+			        
 			        Psprcsrqst psprcsrqst2 = psprcsrqstMapper.selectByPrimaryKey(processInstance);
 					if(psprcsrqst2 != null){
 						psprcsrqst2.setRunstatus("9");
@@ -365,7 +368,9 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 
 		return strComContent;
 	}
-
+	
+	
+	
 	/* sFile:原文件地址，tFile目标文件地址 */
 	public void fileChannelCopy(String sFile, String tFile) {
 		FileInputStream fi = null;
@@ -533,15 +538,23 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					if(lj != null && !"".equals(lj)
 						&& fileName != null && !"".equals(fileName)){
 						lj = request.getServletContext().getRealPath(lj);
+						
+						String deleteFile = fileName.substring(0, fileName.lastIndexOf(".rar"));
+						
 						if(lj.lastIndexOf(File.separator) + 1 != lj.length()){
+							deleteFile = lj + File.separator + deleteFile;
 							lj = lj + File.separator + fileName;
 						}else{
+							deleteFile = lj + deleteFile;
 							lj = lj + fileName;
 						}
 						File file = new File(lj);
 						if(file.exists() && file.isFile()){
 							file.delete();
 						}
+						
+						File deFile = new File(deleteFile);
+						deleteDir(deFile);
 					}
 				}
 				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);
@@ -552,4 +565,24 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 		}
 		return strReturn;
 	}
+ 	
+ 	
+ 	/**
+     * 递归删除目录下的所有文件及子目录下所有文件
+     * @param dir 将要删除的文件目录
+     */
+    private static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            //递归删除目录中的子目录下
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
+    }
 }
