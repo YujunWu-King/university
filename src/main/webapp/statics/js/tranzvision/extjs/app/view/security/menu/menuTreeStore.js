@@ -9,7 +9,6 @@ Ext.define('KitchenSink.view.security.menu.menuTreeStore', {
         var root;
         var tzParams ='{"ComID":"TZ_AQ_MENU_COM","PageID":"TZ_AQ_MENUXX_STD","OperateType":"QF","comParams":{"typeFlag":"TREE","menuId":"'+ config.menuId+'","dataLanguage":"' + config.dataLanguage + '"}}';
 	      Ext.tzLoadAsync(tzParams,function(responseData){
-           //菜单信息数据
             root = responseData.root;
         });
 
