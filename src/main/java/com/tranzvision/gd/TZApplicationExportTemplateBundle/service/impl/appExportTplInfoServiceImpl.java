@@ -513,14 +513,30 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				String strAppExportTplId = jacksonUtil.getString("tplID");
 				String strAppModalID = jacksonUtil.getString("modalID");
 				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
-				
-				String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID= ? AND TZ_XXX_CCLX IN ('D','S','L','R')";
+				String strXxxBh = "";
+				String strXxxMc = "";
+				String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID= ? AND TZ_XXX_CCLX IN ('D','S','L','R')";
 				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strAppModalID });
 				for (Object objData : listData) {
 
 					Map<String, Object> mapData = (Map<String, Object>) objData;
-					String strXxxBh = "";
-					String strXxxMc = "";
+					
+
+					strXxxBh = String.valueOf(mapData.get("TZ_XXX_BH"));
+					strXxxMc = String.valueOf(mapData.get("TZ_XXX_MC"));
+					//
+					Map<String, Object> mapJson = new HashMap<String, Object>();
+					mapJson.put("infoID", strXxxBh);
+					mapJson.put("infoName", strXxxMc);
+					listJson.add(mapJson);
+				}
+				
+				String sqlAppIns = "SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID= ? AND TZ_XXX_CCLX = 'R'";
+				List<?> listDataAppIns = sqlQuery.queryForList(sqlAppIns, new Object[] { strAppModalID });
+				for (Object objData : listDataAppIns) {
+
+					Map<String, Object> mapData = (Map<String, Object>) objData;
+					
 
 					strXxxBh = String.valueOf(mapData.get("TZ_XXX_BH"));
 					strXxxMc = String.valueOf(mapData.get("TZ_XXX_MC"));
