@@ -536,11 +536,9 @@
 				var tzParams = this.getItmeOptionsParams(win);
 
 				Ext.tzSubmit(tzParams,function(responseData){
-					//重置表单
-					form.reset();
 					//关闭窗口
 					win.close();
-				});
+				},"",true,this);
 			}	
 		}	
 	},
