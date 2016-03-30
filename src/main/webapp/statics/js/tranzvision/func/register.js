@@ -178,7 +178,7 @@ function submitEnroll() {
 			_statusFlg="error";
 		}
 	}
-   alert(_statusFlg);
+   
 	//alert(_statusFlg+" "+_nameFlg+" "+_emailFlg+" "+_moblieFlg+" "+_passwordFlg+" "+_yzmFlg);
 	if(_statusFlg=="error"){
 		return false;
@@ -881,7 +881,9 @@ $(document).ready(function(){
 				if(result.comContent.result=='success'){
 					//$("#resetbtn").trigger("click");
 					//loading();
-						
+					if($("#yzfs").val() == "M"){
+						alert("注册成功");
+					}
 					window.location.href=result.comContent.jumpurl;
 				}else{
 					alert(result.state.errdesc);

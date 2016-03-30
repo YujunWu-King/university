@@ -648,7 +648,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			    	}
 			    }
 			    
-			    if(!"M".equals(strActivateType)){
+			    if("M".equals(strActivateType)){
+			    	String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT 0,1", new Object[]{strOrgId},"String");
+			    	strJumUrl = request.getContextPath() + "/user/login/"+strOrgId.toLowerCase()+"/"+siteId;
+			    }else{
 			    	 String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId + "\",\"lang\":\"" + strLang + "\",\"dlzhid\":\"" + oprId + "\",\"sen\":\"2\"}";
 			         String strEmailSendResult = registeMalServiceImpl.tzQuery(strEmailSendParas,errMsg );
 			         if(!"0".equals(errMsg[0])){
