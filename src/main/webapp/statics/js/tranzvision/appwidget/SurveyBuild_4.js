@@ -3414,8 +3414,8 @@ var SurveyBuild = {
         htmlSet += '		<option value="VAL" ' + (data.hasOwnProperty("showType") && data.showType == "VAL" ? " selected=\'selected\'": "") + '>Validate</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
-        */
 
+        
         htmlSet += '<div class="header-title">';
         htmlSet += '	<span class="title"><i class="icon-cog"></i> 打印设置</span>';
         htmlSet += '</div>';
@@ -3461,7 +3461,7 @@ var SurveyBuild = {
         htmlSet += '</div>';
 		
         htmlSet += '</div>';
-
+        */
         htmlSet += '<div class="edit_item_warp">';
         htmlSet += '	<a onclick="SurveyBuild.EventSet(this);" href="javascript:void(0);"><i class="icon-cogs"></i> 高级设置</a>';
         htmlSet += '</div>';
