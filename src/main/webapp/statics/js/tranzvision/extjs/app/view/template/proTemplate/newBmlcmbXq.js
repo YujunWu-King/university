@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.template.proTemplate.newBmlcmbXq',
 {
     extend : 'Ext.tab.Panel',
-	xtype : 'side-navigation-tabs',
+	xtype : 'side-navigation-tabs_bmlc',
 	config : {
         fields : undefined 
     },

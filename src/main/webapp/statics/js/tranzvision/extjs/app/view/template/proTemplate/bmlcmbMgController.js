@@ -580,19 +580,19 @@
         }
 
         win.show();
-        if (!window.mybmb_cj) {
-            window.mybmb_cj = function(el) {
-                Ext.each(Ext.query(".tplitem"),
-                    function(i) {
-                        this.style.backgroundColor = null
-                    });
-                el.style.backgroundColor = "rgb(173, 216, 230)";
-                var activeTab = win.items.items[0].getActiveTab();
+        
+		window.mybmb_cj = function(el) {
+			Ext.each(Ext.query(".tplitem"),
+				function(i) {
+					this.style.backgroundColor = null
+				});
+			el.style.backgroundColor = "rgb(173, 216, 230)";
+			var activeTab = win.items.items[0].getActiveTab();
 
-                var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
-                document.getElementById(Ext.get(activeTab.id).query('input')[0].id).value = newName;
-            }
-        }
+			var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
+			document.getElementById(Ext.get(activeTab.id).query('input')[0].id).value = newName;
+		}
+        
     },
 
     /*新增报名表模板页面，确定*/

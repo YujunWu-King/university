@@ -11,7 +11,12 @@ Ext.define('KitchenSink.view.template.proTemplate.newBmlcmb', {
 	autoScroll: true,
 	bodyStyle: 'padding: 5px;',
 	actType: 'add',
-	items: [new KitchenSink.view.template.proTemplate.newBmlcmbXq()],
+	items: [
+		//new KitchenSink.view.template.proTemplate.newBmlcmbXq()
+		{
+			xtype: 'side-navigation-tabs_bmlc',
+		}
+		],
 	buttons: [{
 		text: Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.ensure","确定"),
 		iconCls: "ensure",
