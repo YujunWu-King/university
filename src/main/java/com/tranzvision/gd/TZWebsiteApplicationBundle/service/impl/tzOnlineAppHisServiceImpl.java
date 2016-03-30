@@ -117,13 +117,14 @@ public class tzOnlineAppHisServiceImpl {
 		 String strXxxSlid = "";
 		 String strComLmc = "";
 		 String strMaxLine = "";
+		 String strMinLine = "";
 		 int numMaxLine = 0;
+		 int numMinLine = 0;
 		 int numDhLine = 0;
-		 String strGetXxxInfoMultipleSql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_SLID,A.TZ_COM_LMC,A.TZ_XXX_MAX_LINE FROM PS_TZ_APP_XXXPZ_T A "
+		 String strGetXxxInfoMultipleSql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_SLID,A.TZ_COM_LMC,A.TZ_XXX_MIN_LINE,A.TZ_XXX_MAX_LINE FROM PS_TZ_APP_XXXPZ_T A "
 		 		+ "WHERE TZ_APP_TPL_ID = ? "
 		 		+ "AND EXISTS (SELECT * FROM PS_TZ_TEMP_FIELD_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH) "
-		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience','recommendletter')"
-		 		+ "AND A.TZ_XXX_BH IN ('Recommend')";
+		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience')";
 		 List<?> XxxInfoMultipleList = sqlQuery.queryForList(strGetXxxInfoMultipleSql, 
 		    		new Object[] { strTplId });
 		 for (Object XxxInfoMultiple : XxxInfoMultipleList) {
@@ -132,12 +133,24 @@ public class tzOnlineAppHisServiceImpl {
 			 strXxxSlid = mapXxxInfoMultiple.get("TZ_XXX_SLID") == null ? "" : String.valueOf(mapXxxInfoMultiple.get("TZ_XXX_SLID"));
 			 strComLmc = mapXxxInfoMultiple.get("TZ_COM_LMC") == null ? "" : String.valueOf(mapXxxInfoMultiple.get("TZ_COM_LMC"));
 			 strMaxLine = mapXxxInfoMultiple.get("TZ_XXX_MAX_LINE") == null ? "" : String.valueOf(mapXxxInfoMultiple.get("TZ_XXX_MAX_LINE"));
+			 strMinLine = mapXxxInfoMultiple.get("TZ_XXX_MIN_LINE") == null ? "" : String.valueOf(mapXxxInfoMultiple.get("TZ_XXX_MIN_LINE"));
 			 if(!"".equals(strMaxLine)){
 				 numMaxLine = Integer.parseInt(strMaxLine);
 			 }
+			 if(!"".equals(strMinLine)){
+				 numMinLine = Integer.parseInt(strMinLine);
+			 }
 
 			 String sqlGetXxxLine = "SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-			 numDhLine = sqlQuery.queryForObject(sqlGetXxxLine, new Object[] { numAppInsId,strXxxBh }, "Integer");
+			 String strDhLine = "";
+			 strDhLine = sqlQuery.queryForObject(sqlGetXxxLine, new Object[] { numAppInsId,strXxxBh }, "String");
+			
+			 if(strDhLine!=null){
+				 numDhLine = Integer.parseInt(strDhLine);
+			 }else{
+				 numDhLine = 1;
+			 }
+			 
 			 if(numDhLine>numMaxLine){
 				 numDhLine = numMaxLine;
 			 }
@@ -147,18 +160,25 @@ public class tzOnlineAppHisServiceImpl {
 			 String strAppXxxInsChild = "";
 			 Map<String, Object> mapChild = null;
 			 ArrayList<Map<String, Object>> listChild = new ArrayList<Map<String, Object>>();
+			 
+			 ArrayList<Integer> listLinesNo = new ArrayList<Integer>();
+			 
+			 for(int j=numDhLine;j<numMaxLine;j++){
+				 listLinesNo.add(j);
+			 }
+			 
 			 for(int i = 1;i <= numDhLine;i++){
 				 mapChild = new HashMap<String, Object>();
 				 strAppXxxInsChildList = "";
-				 String sqlGetChildrenInfo = "SELECT A.TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T A WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ?  ORDER BY TZ_ORDER";
+				 String sqlGetChildrenInfo = "SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ?  ORDER BY TZ_ORDER";
 				 List<?> childrenInfoList = sqlQuery.queryForList(sqlGetChildrenInfo, 
 				    		new Object[] { strTplId,strXxxBh });
 				 for (Object childrenInfo : childrenInfoList) {
 					 Map<String, Object> mapChildrenInfo = (Map<String, Object>) childrenInfo;
 					 strXxxBhChild = mapChildrenInfo.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapChildrenInfo.get("TZ_XXX_BH"));
 					 Map<String, Object> mapAppXxxInsJson = new HashMap<String, Object>();
-					 if("recommendletter".equals(strComLmc)){
-						 mapAppXxxInsJson = this.getRefLetterXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp); 
+					 if("EduExperience".equals(strComLmc) || "workExperience".equals(strComLmc)){
+						 mapAppXxxInsJson = this.getEduOrWorkExprXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp); 
 					 }else{
 						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp);
 					 }
@@ -183,6 +203,9 @@ public class tzOnlineAppHisServiceImpl {
 					mapAppXxxInsJson.put("value", "");
 					mapAppXxxInsJson.put("wzsm", "");
 					mapAppXxxInsJson.put("children",listChild);
+					mapAppXxxInsJson.put("minLines",strMinLine);
+					mapAppXxxInsJson.put("maxLines",strMaxLine);
+					mapAppXxxInsJson.put("linesNo",listLinesNo);
 					 
 					map.put(strXxxSlid, mapAppXxxInsJson);
 					
@@ -191,6 +214,7 @@ public class tzOnlineAppHisServiceImpl {
 		 }
 		 
 		 strAppInsJson = jacksonUtil.Map2json(map);
+		 //System.out.println(strAppInsJson);
 		 return strAppInsJson;
 	}
 	
@@ -233,7 +257,7 @@ public class tzOnlineAppHisServiceImpl {
 			switch(strXxxCclx){
 			case "S":
 				sqlGetValue = "SELECT TZ_APP_S_TEXT,TZ_APP_L_TEXT FROM PS_TZ_APP_CC_VW2 WHERE TZ_APP_INS_ID = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?";
-				Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sql, new Object[] { numAppInsId,strXxxBh, strComLmc });
+				Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { numAppInsId,strXxxBh, strComLmc });
 				if(MapXxxValue!=null){
 					strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
 					strAppXxxValueL = MapXxxValue.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_L_TEXT"));
@@ -291,7 +315,7 @@ public class tzOnlineAppHisServiceImpl {
 				
 				break;
 			case "F":
-				
+				/*
 			    arrAppFileJson = new ArrayList<Map<String, Object>>();
 				String strXxxMc = "";
 				String strSysFileName = "";
@@ -331,6 +355,8 @@ public class tzOnlineAppHisServiceImpl {
 				}
 				if(arrAppFileJson.isEmpty()) 
 					flag = false;
+					*/
+				flag = false;
 				break;
 				default:
 					arrAppChildrenJson = new ArrayList<Map<String, Object>>();
@@ -396,9 +422,10 @@ public class tzOnlineAppHisServiceImpl {
 				if(mapAppXxxOptionJson != null){
 					mapXxxInfo.put("option", mapAppXxxOptionJson);
 				}
+				/*
 				if(arrAppFileJson != null){
 					mapXxxInfo.put("children", arrAppFileJson);
-				}
+				}*/
 				if(arrAppChildrenJson != null){
 					mapXxxInfo.put("children", arrAppChildrenJson);
 				}
@@ -714,6 +741,247 @@ public class tzOnlineAppHisServiceImpl {
 		return null;
 	}
 	
+	//工作经历和教育背景信息字段
+	private Map<String, Object> getEduOrWorkExprXxxInfoJson(Long numAppInsId, String strTplId, String strXxxBh,int numDhSeq, String strOprNameApp){
+		
+		//报名表使用模版编号
+		String strAppTplIdHis = "";
+		//报名表信息项存储类型
+		String strXxxCclx = "";
+		String strComLmc = "";
+		String strXxxSlid = "";
+		
+		//是否带入
+		boolean flag = true;
+		
+		String strAppXxxValueS = "";
+		String strAppXxxValueL = "";
+		
+		String sql = "";
+		
+		Map<String, Object> mapAppXxxOptionJson = null;
+		
+		try{
+			ArrayList<Map<String, Object>> arrAppFileJson = null;
+			
+			String strSysFileName = "";
+			String strUseFileName = "";
+			String strViewFileName = "";
+			
+			sql = "SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+			strAppTplIdHis = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+		
+			 //查看是否在容器中
+			String strDxxxBh = "";
+			String strXxxBhLike = "";
+			String sqlGetDxxxBh = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 1";
+
+		    strDxxxBh = sqlQuery.queryForObject(sqlGetDxxxBh, new Object[] { strAppTplIdHis,strXxxBh }, "String");
+		    if(!"".equals(strDxxxBh) && strDxxxBh!=null){
+		    	strXxxBhLike = strDxxxBh + strXxxBh; 
+		    }else{
+		    	strDxxxBh = strXxxBh;
+		    	strXxxBhLike = strXxxBh;
+		    }
+		    
+		    String strItemId = "";
+		    
+			sql = "SELECT TZ_XXX_SLID,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
+			
+			Map<String, Object> MapXxxPz = sqlQuery.queryForMap(sql, new Object[] { strTplId, strXxxBh });
+			if(MapXxxPz!=null){
+				strXxxCclx = MapXxxPz.get("TZ_XXX_CCLX") == null ? "" : String.valueOf(MapXxxPz.get("TZ_XXX_CCLX"));
+				strXxxSlid = MapXxxPz.get("TZ_XXX_SLID") == null ? "" : String.valueOf(MapXxxPz.get("TZ_XXX_SLID"));
+				strComLmc = MapXxxPz.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapXxxPz.get("TZ_COM_LMC"));
+				String sqlGetValue = "";
+				switch(strXxxCclx){
+				case "S":
+					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
+					
+					Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { 
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+					
+					if(MapXxxValue!=null){
+						strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
+						strAppXxxValueL = MapXxxValue.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_L_TEXT"));
+					}
+					
+					if(numDhSeq > 1){
+						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
+					}else{
+						strItemId = strXxxBh;
+					}
+					/*
+					if("Select".equals(strComLmc)){
+						//如果是下拉列表
+						String strExistsOption = "";
+						String sqlOption = "SELECT 'Y' FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
+						strExistsOption = sqlQuery.queryForObject(sqlOption,
+								new Object[] { strTplId, strXxxBh, strAppXxxValueS }, "String");
+						if("".equals(strExistsOption) || strExistsOption == null){
+							strAppXxxValueS = "";
+							strAppXxxValueL = "";
+						}
+					}*/
+					break;
+				case "L":
+					if(numDhSeq > 1){
+						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
+					}else{
+						strItemId = strXxxBh;
+					}
+					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
+					Map<String, Object> MapXxxValueL = sqlQuery.queryForMap(sqlGetValue, 
+							new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+					if(MapXxxValueL!=null){
+						strAppXxxValueS = MapXxxValueL.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_S_TEXT"));
+						strAppXxxValueL = MapXxxValueL.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_L_TEXT"));
+					}
+					if(strAppXxxValueL == null){
+						strAppXxxValueS = "";
+						strAppXxxValueL = "";
+					}else{
+						strAppXxxValueS = strAppXxxValueL;
+					}
+					break;
+				case "D":
+					if(numDhSeq > 1){
+						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
+					}else{
+						strItemId = strXxxBh;
+					}
+					/*
+					mapAppXxxOptionJson = new HashMap<String, Object>();
+					String sqlGetAppXxxOption = "SELECT TZ_XXXKXZ_MC,TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? ORDER BY TZ_ORDER";
+					String strXxxkxzMc = "";
+					String strXxxkxzMs = "";
+					String strIsChecked = "";
+					int numOption = 0;
+					List<?> appXxxOptionList = sqlQuery.queryForList(sqlGetAppXxxOption,
+				    		new Object[] { strTplId,strXxxBh });
+					for (Object appXxxOptionObj : appXxxOptionList) {
+						Map<String, Object> mapAppXxxOption = (Map<String, Object>) appXxxOptionObj;
+						strXxxkxzMc = mapAppXxxOption.get("TZ_XXXKXZ_MC") == null ? "" : String.valueOf(mapAppXxxOption.get("TZ_XXXKXZ_MC"));
+						strXxxkxzMs = mapAppXxxOption.get("TZ_XXXKXZ_MS") == null ? "" : String.valueOf(mapAppXxxOption.get("TZ_XXXKXZ_MS"));
+						
+						String strOptionSlid = "";
+						switch(strXxxSlid){
+						case "rec_sex":
+							if("M".equals(strXxxkxzMc)){
+								strOptionSlid = "MAN";
+							}else{
+								strOptionSlid = "WOMAN";
+							}
+							break;
+						case "rec_way":
+							if("S".equals(strXxxkxzMc)){
+								strOptionSlid = "SEND";
+							}else{
+								strOptionSlid = "UPLOAD";
+							}
+							break;
+						case "rec_language":
+							if("C".equals(strXxxkxzMc)){
+								strOptionSlid = "ZHS";
+							}else{
+								strOptionSlid = "ENG";
+							}
+							break;
+						}
+						numOption++;
+						String sqlIsChecked = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE5");
+						strIsChecked = sqlQuery.queryForObject(sqlIsChecked, new Object[] { 
+								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq }, "String");
+						if(strIsChecked == "Y"){
+							strAppXxxValueS = strXxxkxzMc;
+						}else{
+							strIsChecked = "N";
+						}
+						Map<String, Object> mapAppXxxOptionJson1 = new HashMap<String, Object>();
+						mapAppXxxOptionJson1.put("code", strXxxkxzMc);
+						mapAppXxxOptionJson1.put("txt", strXxxkxzMs);
+						mapAppXxxOptionJson1.put("other", "N");
+						mapAppXxxOptionJson1.put("checked", strIsChecked);
+						
+						mapAppXxxOptionJson.put(strOptionSlid, mapAppXxxOptionJson1);
+					}*/
+					
+					break;
+				case "F":
+					
+					if(numDhSeq > 1){
+						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
+					}else{
+						strItemId = strXxxBh;
+					}
+					/*
+					String strAppxxxChildrenFbh = "";
+					
+					String sqlGetAppxxxChildrenFbh = "";
+					sqlGetAppxxxChildrenFbh = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE4");
+					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
+				    String strXxxMc = "";
+
+					String strFileIndex = "";
+				    if(strAppxxxChildrenFbh != null){
+				    	
+						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
+						
+						Map<String, Object> mapAppFileObj = sqlQuery.queryForMap(sqlGetFile, 
+					    		new Object[] { numAppInsId,strDxxxBh,strAppxxxChildrenFbh,strXxxBh,strComLmc });
+						
+						if(mapAppFileObj != null) {
+							strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
+							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
+							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
+							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
+							if(strXxxMc.length()>17){
+								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
+								if("".equals(suffix) || suffix == null){
+									strViewFileName = strUseFileName;
+								}else{
+									strViewFileName = strOprNameApp + "_" + strXxxMc.substring(1, 15) + "..._" + strFileIndex + "." + suffix;
+								}
+							}else{
+								strViewFileName = strUseFileName;
+							}
+						}
+				    }*/
+					break;
+				}
+			}
+			if(flag){
+				Map<String, Object> mapXxxInfo = new HashMap<String, Object>();
+				mapXxxInfo.put("instanceId", strXxxSlid);
+				mapXxxInfo.put("itemId", strItemId);
+				mapXxxInfo.put("classname", strComLmc);
+				mapXxxInfo.put("isDoubleLine", "N");
+				mapXxxInfo.put("isSingleLine", "N");
+				mapXxxInfo.put("value", strAppXxxValueS);
+				mapXxxInfo.put("wzsm", strAppXxxValueL);
+				if("F".equals(strXxxCclx)){
+					mapXxxInfo.put("filename", "");
+					mapXxxInfo.put("sysFileName", "");
+					mapXxxInfo.put("path", "");
+					mapXxxInfo.put("accessPath", "");
+				}
+
+				//返回Map对象
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put(strXxxSlid, mapXxxInfo);
+				//JacksonUtil jacksonUtil = new JacksonUtil();
+				//System.out.println("World:"+ jacksonUtil.Map2json(map));
+				return map;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("Hello");
+		}
+		return null;
+	}
+	
 	//多行容器
 	private Map<String, Object> getDhXxxInfoJson(Long numAppInsId, String strTplId, String strXxxBh,int numDhSeq, String strOprNameApp){
 		
@@ -851,6 +1119,7 @@ public class tzOnlineAppHisServiceImpl {
 					
 					break;
 				case "F":
+					/*
 					if(numDhSeq > 1){
 						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
 					}else{
@@ -911,7 +1180,8 @@ public class tzOnlineAppHisServiceImpl {
 						mapAppFileJson.put("viewFileName", "");
 						
 						arrAppFileJson.add(mapAppFileJson);
-				    }
+				    }*/
+					flag = false;
 					break;
 					default:
 					arrAppChildrenJson = new ArrayList<Map<String, Object>>();
@@ -965,9 +1235,10 @@ public class tzOnlineAppHisServiceImpl {
 				if(mapAppXxxOptionJson != null){
 					mapXxxInfo.put("option", mapAppXxxOptionJson);
 				}
+				/*
 				if(arrAppFileJson != null){
 					mapXxxInfo.put("children", arrAppFileJson);
-				}
+				}*/
 				
 				if(arrAppChildrenJson != null){
 					mapXxxInfo.put("children", arrAppChildrenJson);

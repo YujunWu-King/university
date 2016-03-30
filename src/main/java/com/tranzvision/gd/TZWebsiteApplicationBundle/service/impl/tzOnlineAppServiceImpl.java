@@ -141,7 +141,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private PsroleuserMapper psroleuserMapper;
 	@Autowired
 	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
-		
+	@Autowired
+	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
+	
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -568,6 +570,25 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strComRegInfo = jacksonUtil.List2json(comDfn);
 			strComRegInfo = strComRegInfo.replace("\\", "\\\\");
 			
+			/*最新历史报名表实例编号*/
+			String strHisAppInsId = "";
+			
+			Long numHisAppInsId = 0l;
+			
+			if("".equals(strAppInsId) || strAppInsId == null){
+				if("Y".equals(strCopyFrom)){
+					String sqlGetHisAppInsId = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T A ,PS_TZ_CLASS_INF_T B "
+							+ "WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.OPRID = ? AND B.TZ_JG_ID = ? ORDER BY A.ROW_ADDED_DTTM DESC limit 0,1";
+					strHisAppInsId = sqlQuery.queryForObject(sqlGetHisAppInsId, new Object[] { strAppOprId,strAppOrgId }, "String");
+					if(!"".equals(strHisAppInsId) && strHisAppInsId != null){
+						numHisAppInsId = Long.parseLong(strHisAppInsId);
+						strInsData = tzOnlineAppHisServiceImpl.getHisAppInfoJson(numHisAppInsId, strTplId);
+						//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numHisAppInsId, strTplId);
+						
+					}
+				}
+			}
+
 			if(strTplData == null || "".equals(strTplData)){
 				strTplData = "''";
 			}
@@ -678,7 +699,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		 
 		//str_appform_main_html = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 		
-		return str_appform_main_html + strTest;
+		return str_appform_main_html;
 	}
 	
 	@Override
