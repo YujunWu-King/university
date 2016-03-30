@@ -192,7 +192,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 					
 					
 					short acctLockNum;
-					if ("1".equals(acctLock)) {
+					if ("on".equals(acctLock) || "1".equals(acctLock)) {
 						acctLockNum = 1;
 					} else {
 						acctLockNum = 0;
@@ -388,7 +388,7 @@ public class AccountInfoImpl extends FrameworkImpl {
 								jhState, jhMethod, updateOprid, oprID});
 
 					short acctLockNum;
-					if ("1".equals(acctLock)) {
+					if ("1".equals(acctLock)|| "on".equals(acctLock)) {
 						acctLockNum = 1;
 					} else {
 						acctLockNum = 0;

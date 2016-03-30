@@ -124,6 +124,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			long appInsID = 0;
 			// 学生信息列表sql;
 			String sqlStudentList = "";
+			
 			if (numLimit == 0) {
 				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
 						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
@@ -156,7 +157,18 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			if (strAuditGridTplID == null) {
 				strAuditGridTplID = "";
 			}
-
+			
+			
+			
+			// 多行存储;
+			String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+			List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
+					new Object[] { strBmbTpl, strAuditGridTplID });
+			
+			String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+			List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+			
+			
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlStudentList, new Object[] { strClassID });
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
@@ -176,13 +188,15 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					strInterviewResult = (String) list.get(i).get("TZ_MS_RESULT_DESC");
 
 					Map<String, Object> strGridColumnStoreMap = new HashMap<>();
-					;
+					
+					
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
-						/* 将模板中需要显示的数据全部查出存入数组 */
+						// 将模板中需要显示的数据全部查出存入数组 
 						String strInfoID = "", strInfoValue = "", strInfoDesc = "", strComClassName = "",
-								strInfoSelectID = ""; /* 控件类名称，下拉存储描述信息项编号 */
+								strInfoSelectID = "";
+								 // 控件类名称，下拉存储描述信息项编号;
 						ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
-
+						
 						// 单行存储;
 						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_XXX_CCLX,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 						List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
@@ -209,11 +223,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 							}
 						}
-
+			
 						// 多行存储;
-						String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-						List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
-								new Object[] { strBmbTpl, strAuditGridTplID });
+						//String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+						//List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,new Object[] { strBmbTpl, strAuditGridTplID });
 						if (appFormDataMultiList != null) {
 							for (int j = 0; j < appFormDataMultiList.size(); j++) {
 								strInfoID = (String) appFormDataMultiList.get(j).get("TZ_XXX_BH");
@@ -235,12 +248,11 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValueAll });
 							}
 						}
-
+				
 						// Hardcode定义视图取值;
 						if (appFormInfoView != null && !"".equals(appFormInfoView)) {
-							String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-							List<Map<String, Object>> appFormDataViewList = jdbcTemplate
-									.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+							//String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+							//List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
 							if (appFormDataViewList != null) {
 								for (int j = 0; j < appFormDataViewList.size(); j++) {
 									strInfoID = (String) appFormDataViewList.get(j).get("TZ_XXX_BH");
@@ -253,7 +265,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							}
 						}
 
-						/* 查询grid需要显示的报名表字段并拼装模板数据 */
+						// 查询grid需要显示的报名表字段并拼装模板数据 
+						
 						String strColumnID = "", strColumnSpe = "", strColumnFieldID = "", strColumnFieldCodeTable = "";
 						String sqlGridColumn = "SELECT TZ_DC_FIELD_ID ,TZ_DC_FIELD_NAME ,if(TZ_DC_FIELD_FGF='',',',if(TZ_DC_FIELD_FGF is null,',',TZ_DC_FIELD_FGF)) TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
 						List<Map<String, Object>> gridColumnList = jdbcTemplate.queryForList(sqlGridColumn,
@@ -264,8 +277,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								// strColumnName =
 								// (String)gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
 								strColumnSpe = (String) gridColumnList.get(j).get("TZ_DC_FIELD_FGF");
-
-								String strColumnValue = ""; /* 当前考生对应当前列的值 */
+								// 当前考生对应当前列的值 
+								String strColumnValue = ""; 
 								String sqlGridColumnField = "SELECT TZ_FORM_FLD_ID,TZ_CODE_TABLE_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=? AND TZ_DC_FIELD_ID=? ORDER BY TZ_SORT_NUM ASC";
 								List<Map<String, Object>> gridColumnFieldList = jdbcTemplate.queryForList(
 										sqlGridColumnField, new Object[] { strAuditGridTplID, strColumnID });
@@ -304,6 +317,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								strGridColumnStoreMap.put(strColumnID, strColumnValue);
 							}
 						}
+						
 					}
 
 					if (strGridColumnStoreMap == null || strGridColumnStoreMap.isEmpty()) {
