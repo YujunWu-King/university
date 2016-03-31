@@ -939,6 +939,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strTokenSign = jacksonUtil.getString("tokensign");
 		    strOrgid = jacksonUtil.getString("orgid");
 		    strLang = jacksonUtil.getString("lang");
+		    System.out.println("==========================>"+strTokenSign+"=====>"+strOrgid+"=====>"+strLang);
 		    String sql = "SELECT TZ_SITEI_ID ,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{strOrgid});
 			if(map != null){
@@ -1027,6 +1028,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			}
 			String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "64", "激活账号链接已失效，请重新发送激活账号邮件！", "Activate the account link is invalid, please re send the activation account mail!");
 			String strTipHtml3 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL",message);
+			System.out.println("=========================>"+strSiteId+"====>"+strLang+"====>"+strOrgid+"====>"+strTipHtml3);
 			return this.createPageForEmlActByParameter(strSiteId, strLang, strOrgid, strTipHtml3);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -1047,11 +1049,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
 		    String str_content = "";
-		  
+		    if(strOrgid == null){
+		    	strOrgid = "";
+		    }
 		    if("ENG".equals(strLang)){
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath );
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase());
 		    }else{
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath);
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase());
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
 		    str_content = objRep.repCss(str_content, strSiteId);
