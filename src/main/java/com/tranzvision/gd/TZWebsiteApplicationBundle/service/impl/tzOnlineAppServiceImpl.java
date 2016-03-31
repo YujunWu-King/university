@@ -2064,8 +2064,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			
 			if("submit".equals(strOtype)){
 				//页面全部设置成完成
-				Object[] args = new Object[] { numAppInsId };
-				sqlQuery.update("UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE = 'Y' WHERE TZ_APP_INS_ID = ?", args);
+				
+				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
+				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, 
+			    		new Object[] { strTplId,"Page" });
+				for (Object ObjValue : ListPageXxxBh) {
+					Map<String, Object> MapXxxBh = (Map<String, Object>) ObjValue;
+					String strPageXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
+					if(strPageXxxBh!=null && !"".equals(strPageXxxBh)){
+				         this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
+			         }
+				}
 				
 				for (Integer numPageNo2 : listPageNo) {
 			         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
