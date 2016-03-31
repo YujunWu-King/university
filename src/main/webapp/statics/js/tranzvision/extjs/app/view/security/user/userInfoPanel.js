@@ -131,7 +131,9 @@
 						bdMobile.allowBlank = false;
 						bdMobile.setReadOnly( false);
 						bdMobile.setFieldStyle('background:#FFFFFF');
-						bdMobile.setValue(mobile);
+						if(bdMobile.getValue() == ""){
+							bdMobile.setValue(mobile);
+						}
 					}else{
 						bdMobile.allowBlank = true;
 						bdMobile.setReadOnly( true);
@@ -198,7 +200,9 @@
 						bdEmail.allowBlank = false;
 						bdEmail.setReadOnly( false);
 						bdEmail.setFieldStyle('background:#FFFFFF');
-						bdEmail.setValue(email);
+						if(bdEmail.getValue() == ''){
+							bdEmail.setValue(email);
+						}
 					}else{
 						bdEmail.allowBlank = true;
 						bdEmail.setReadOnly( true);

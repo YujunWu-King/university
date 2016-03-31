@@ -195,7 +195,9 @@ public class RegisteServiceImpl {
 				
 			}
 			
-		
+			//是否只是手机验证;
+			boolean phoneBl = false;
+			
 			String strActHtml = "";
 			String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
 			String strActType = jdbcTemplate.queryForObject(regMbSQL, new Object[]{strJgid},"String");
@@ -217,21 +219,33 @@ public class RegisteServiceImpl {
 						}
 					}else{
 						if(strActType.indexOf("MOBILE")>=0){
+							phoneBl = true;
 							if("ENG".equals(strLang)){
-								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Phone' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Phone' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='M'>";
 							}else{
-								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='手机验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
+								strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='手机验证' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='M'>";
 							}
 						}
 					}
 				}
 			}
+			
+			String emialYzDisplay = "",phoneYzDisplay = "";
+			if(phoneBl){
+				emialYzDisplay = "style=\"display:none\"";
+				phoneYzDisplay = "";
+			}else{
+				emialYzDisplay = "";
+				phoneYzDisplay = "style=\"display:none\"";
+			}
+			
+					
 			//登录页面链接;
 			String loginUrl = request.getContextPath() + "/user/login/" + strJgid.toLowerCase() +"/"+strSiteId;
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay);
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay);
 			}
 			
 			//fields = tzGdObject.getHTMLText("HTML.test.test", "test111","test222");

@@ -225,12 +225,12 @@ function submitEnroll() {
 
 
 function BindEnter(obj)
- 			{
-	 			if(obj.keyCode == 13)        
-	 			{              
-					submitEnroll();
-				}
-			}
+{
+	if(obj.keyCode == 13)        
+	{              
+		 $("#submitbutton").trigger("click");
+	}
+}
 
 
 var jsonValue;
@@ -902,13 +902,13 @@ $(document).ready(function(){
 });
 
 
-
+/*
 $(document).keyup(function(event){
   if(event.keyCode ==13){
     $("#submitbutton").trigger("click");
   }
 });
-
+*/
 var i;
 function loading(){
 	var Tipenr="";
