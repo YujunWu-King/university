@@ -321,6 +321,33 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 						errMsg[0] = "1";
 						errMsg[1] = "报名流程模板名称不能重复！";
 					}
+				}else if("MEM".equals(typeFlag)){
+					/*模版编号*/
+					String strAppProcessTmpId = String.valueOf(mapData.get("TZ_APPPRO_TMP_ID"));
+					/*流程编号*/
+					String strAppProcessId =  String.valueOf(mapData.get("TZ_APPPRO_ID")); 
+					/*流程名称*/
+					String strAppProcessName = String.valueOf(mapData.get("TZ_APPPRO_NAME"));
+					/*排序序号*/
+					String strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM")); 
+					
+					strAppProcessName = strAppProcessName.trim();
+						
+					String sqlGetAppProcess = "select COUNT(1) from PS_TZ_APPPRO_STP_T WHERE TZ_APPPRO_TMP_ID=? AND TZ_APPPRO_ID=?";
+					int count = sqlQuery.queryForObject(sqlGetAppProcess, new Object[] { strAppProcessTmpId,strAppProcessId }, "Integer");
+					if(count>0){
+						
+						PsTzAppProStpT psTzAppProStpT = new PsTzAppProStpT();
+						psTzAppProStpT.setTzAppproTmpId(strAppProcessTmpId);
+						psTzAppProStpT.setTzAppproId(strAppProcessId);
+						psTzAppProStpT.setTzAppproName(strAppProcessName);
+						psTzAppProStpT.setTzSortNum(Integer.parseInt(strSortNum));
+						PsTzAppProStpTMapper.updateByPrimaryKeySelective(psTzAppProStpT);
+						
+					}else{
+						errMsg[0] = "1";
+						errMsg[1] = "报名流程" + strAppProcessName + "不存在"; 
+					}
 				}
 			}
 		} catch (Exception e) {

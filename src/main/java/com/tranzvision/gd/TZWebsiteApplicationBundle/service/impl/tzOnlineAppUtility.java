@@ -330,9 +330,9 @@ public class tzOnlineAppUtility {
 				case "BirthdayAndAge":
 					break;
 				case "Check":
-					String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
 				    String strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
-				    if("".equals(strDxxxBh)||strDxxxBh!=null){
+				    if("".equals(strDxxxBh)||strDxxxBh == null){
 				    	strDxxxBh = strXxxBh;
 				    }
 				    String sqlGetDhXxx = "SELECT DISTINCT TZ_XXX_BH FROM PS_TZ_APP_DHCC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
@@ -425,12 +425,37 @@ public class tzOnlineAppUtility {
 						}
 				    }
 				    break;
-				case "EnglishAlphabet":
-					boolean isEnglishLetter = this.isEnglishLetter(strXxxValue);
-					if(!isEnglishLetter){
-    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-    				}
-					break;	
+				case "CertificateNum":
+					String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
+				    String strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
+				    
+				    if("".equals(strDxxxBh)||strDxxxBh ==null){
+				    	strDxxxBh = strXxxBh;
+				    }
+					String sqlGetCertificateType = "SELECT TZ_XXX_BH FROM PS_TZ_APP_CC_VW "
+							+ "WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_NO = 'com_CerType' AND TZ_APP_S_TEXT = '1'";
+					List<?> ListXxxBh = sqlQuery.queryForList(sqlGetCertificateType, 
+				    		new Object[] { numAppInsId,strTplId,strDxxxBh });
+					for (Object ObjValue : ListXxxBh) {
+						 Map<String, Object> MapXxxBh = (Map<String, Object>) ObjValue;
+						 String strCertificateTypeXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
+						 String strCertificateNoXxxBh = "";
+		
+						 if(!"".equals(strCertificateTypeXxxBh)){
+							 strCertificateNoXxxBh = strCertificateTypeXxxBh.replace("com_CerType", "com_CerNum");
+							 String sqlGetCertificateNo = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE "
+							 		+ "FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = 'com_CerNum'";
+							 String strGetCertificateNo = sqlQuery.queryForObject(sqlGetCertificateNo, 
+									 new Object[] { numAppInsId,strTplId,strDxxxBh,strCertificateNoXxxBh }, "String");
+							 
+							 boolean isIdCard = this.isValidIdcard(strGetCertificateNo);
+		    				 if(isIdCard == false){
+		    					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+		    					break;
+		    				 }
+						 }
+					 }
+					 break;
 			}	
 		}catch(Exception e){
 			e.printStackTrace();
