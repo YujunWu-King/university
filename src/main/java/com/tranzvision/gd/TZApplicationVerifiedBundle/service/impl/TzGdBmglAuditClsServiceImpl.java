@@ -114,10 +114,6 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						"String");
 				if (str_att_p_url == null || "".equals(str_att_p_url)) {
 					str_att_p_url = "";
-					// TODO
-					// errMsg[0] = "1";
-					// errMsg[1] = "未定义TZ_AFORM_FILE_DIR的URL值";
-					// return "";
 				}
 
 				// 获取班级名称、所属项目，所属项目名称，报名表模板ID;
@@ -216,7 +212,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						new Object[] { strAppInsID }, "String");
 
 				if (oprid != null && !"".equals(oprid)) {
-					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
 					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { oprid });
 					if (lxfsMap != null) {
 						mainMobilePhone = (String) lxfsMap.get("TZ_ZY_SJ");
@@ -1669,11 +1665,11 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						new Object[] { strAppInsID }, "String");
 				if (oprid != null && !"".equals(oprid)) {
 					PsTzLxfsInfoTblKey psTzLxfsInfoTblKey = new PsTzLxfsInfoTblKey();
-					psTzLxfsInfoTblKey.setTzLxfsLy("ZCYH");
+					psTzLxfsInfoTblKey.setTzLxfsLy("ZSBM");
 					psTzLxfsInfoTblKey.setTzLydxId(oprid);
 					PsTzLxfsInfoTbl psTzLxfsInfoTbl = psTzLxfsInfoTblMapper.selectByPrimaryKey(psTzLxfsInfoTblKey);
 					if (psTzLxfsInfoTbl != null) {
-						psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
 						psTzLxfsInfoTbl.setTzLydxId(oprid);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
@@ -1688,7 +1684,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
 					} else {
 						psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
-						psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
 						psTzLxfsInfoTbl.setTzLydxId(oprid);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
