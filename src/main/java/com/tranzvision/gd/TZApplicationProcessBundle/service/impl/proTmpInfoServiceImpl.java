@@ -206,6 +206,7 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 					String strAppProcessTmpId = String.valueOf(mapData.get("TZ_APPPRO_TMP_ID"));
 					String strAppProcessTmpName = String.valueOf(mapData.get("TZ_APPPRO_TMP_NAME"));
 					String strAppProcessTmpStatus = String.valueOf(mapData.get("TZ_APPPRO_STATUS"));
+					strAppProcessTmpName = strAppProcessTmpName.trim();
 					/*模版名称是否已经存在*/
 					String sql = "SELECT count(1) FROM PS_TZ_APPPRO_TMP_T WHERE TZ_JG_ID= ? AND TZ_APPPRO_TMP_ID <> ? AND TZ_APPPRO_TMP_NAME= ?";
 
@@ -283,6 +284,7 @@ public class proTmpInfoServiceImpl extends FrameworkImpl{
 					String strAppProcessTmpId = String.valueOf(mapData.get("TZ_APPPRO_TMP_ID"));
 					String strAppProcessTmpName = String.valueOf(mapData.get("TZ_APPPRO_TMP_NAME"));
 					String strAppProcessTmpStatus = String.valueOf(mapData.get("TZ_APPPRO_STATUS"));
+					strAppProcessTmpName = strAppProcessTmpName.trim();
 					/*模版名称是否已经存在*/
 					String sql = "SELECT count(1) FROM PS_TZ_APPPRO_TMP_T WHERE TZ_JG_ID= ? AND TZ_APPPRO_TMP_ID <> ? AND TZ_APPPRO_TMP_NAME= ?";
 
