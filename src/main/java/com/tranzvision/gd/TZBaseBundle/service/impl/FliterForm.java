@@ -666,7 +666,7 @@ public class FliterForm extends FrameworkImpl {
 			} else {
 				sqlList = "SELECT " + result + " FROM " + tableName + sqlWhere + orderby + " limit ?,?";
 			}
-System.out.println("=================sqlList=====================>"+sqlList);
+
 			try {
 				List<Map<String, Object>> resultlist = null;
 				if (numLimit != 0) {
