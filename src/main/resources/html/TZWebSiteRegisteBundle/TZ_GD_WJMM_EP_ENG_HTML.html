@@ -22,7 +22,7 @@
 		if(val!=''){
 			var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 			if (!patrn.test(val)){
-			   $('#userEmail_status').html("<span>The email address is incorrect!</span>");
+			   $('#userEmail_status').html("<span>The email address is incorrect.</span>");
 			   $('#userEmailStyle').removeClass("alert_display_none");
 			}else{
 	var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"5"}}';
@@ -59,7 +59,7 @@
 		if(val!=''){
 			var patrn=/^\d{8}$|^\d{11}$/;
 			if (!patrn.test(val)){
-			   $('#userMobile_status').html("<span>The mobile phone is incorrect .</span>");
+			   $('#userMobile_status').html("<span>The mobile phone is incorrect.</span>");
 			   $('#mobileStyle').removeClass("alert_display_none");
 			}else{
 				var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"6"}}';
@@ -75,7 +75,7 @@
 							$('#mobileStyle').addClass("alert_display_none");
 							flag=true;
 						}else{
-							$('#userMobile_status').html("<span>"+result.state.errdesc+"</span>");
+							$('#userMobile_status').html("<span id=\"checkmobilerst\">"+result.state.errdesc+"</span>");
 							$('#mobileStyle').removeClass("alert_display_none");
 							flag=false;
 						}
@@ -93,7 +93,7 @@
 		if($("#sendemail").prop("disabled") != "true"){
 			var email=$("#Email_User").val();
 			if(check_email(email)){
-				if(email==""){alert("The email address is incorrect!");}
+				if(email==""){alert("The email address is incorrect.");}
 				else{
 		var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)",	"sen":"6"}}';
 					$.ajax({
@@ -105,13 +105,13 @@
 							},
 						url:"%bind(:1)",
 						success:function(result){
-							if(result.comContent=="success"){emailtime();alert("The mail has been sent to your mailbox, please check!");}
+							if(result.comContent=="success"){emailtime();alert("The mail has been sent to your mailbox, please check.");}
 							else{alert(result.state.errdesc);}
 						}
 					});
 				}
 			}else{
-				alert("The email address is incorrect!");
+				alert("The email address is incorrect.");
 			}
 		}
   	};
@@ -123,7 +123,7 @@
 			$("#yzm").val("");
 			$("#Mobile_User").text("");
 			if(check_mobile(tel)){
-				if(tel==""){alert("The mobile phone is incorrect");}
+				if(tel==""){alert("The mobile phone is incorrect.");}
 				else{
 					var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"7"}}';
 					$.ajax({
@@ -133,13 +133,13 @@
 						data: {tzParams:tzParams},
 						url:"%bind(:1)",
 						success:function(result){
-							if(result.comContent=="success"){atime();alert("The security code has been sent to your mobile phone, please check!");}
+							if(result.comContent=="success"){atime();alert("The security code has been sent to your mobile phone, please check.");}
 							else{alert(result.state.errdesc);}
 						}
 					});
 				}
 			}else{
-				alert("The mobile phone is incorrect!");
+				alert($("#checkmobilerst").text());
 			}
 		}
   	};
@@ -147,7 +147,7 @@
 	function ymobile(){ 
 		var yzm=$("#yzm").val();
 		var tel=$("#Mobile_User").val();
-		if(yzm==""){$("#yzm_status").html("<span>请输入验证码</span>");$("#yzmStyle").removeClass("alert_display_none");}
+		if(yzm==""){$("#yzm_status").html("<span>It cannot be blank!</span>");$("#yzmStyle").removeClass("alert_display_none");}
 		else{
 			var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
 			$.ajax({
@@ -276,7 +276,7 @@
 					<div class="padding_div_50px"></div>
 					<div class="main_full_line">
 						<div class="main_full_line_right">
-			    			 <div style="width: 241px" class="bt_blue" id="sendemail" onclick="send_email()"><span style="color:#FFFFFF">Send Mail</span></div>
+			    			 <div style="width: 241px" class="bt_blue" id="sendemail" onclick="send_email()"><span style="color:#FFFFFF;font-weight: bold;">Send Mail</span></div>
 						</div>
 			  		</div>
 				</div>
@@ -304,7 +304,7 @@
 					</div>
 					<div class="main_full_line">
 						<div class="main_full_line_right">
-			    			<input type="button" value="Next" class="input_105px" onclick="ymobile()"/>
+			    			<input type="button" value="Next" class="bt_blue input_105px" style="width: 95px;font-weight: bold;" onclick="ymobile()"/>
 						</div>
 			  		</div>
 				</div>

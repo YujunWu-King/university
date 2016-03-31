@@ -833,7 +833,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			}
 
 			// 获得系统中旧密码;
-			String strOldHashPassSQL = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=?";
+			String strOldHashPassSQL = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=? AND ACCTLOCK=0";
 			String strOldHashPass = jdbcTemplate.queryForObject(strOldHashPassSQL, new Object[] { oprid }, "String");
 
 			if (strOldPass == null || "".equals(strOldPass.trim())) {

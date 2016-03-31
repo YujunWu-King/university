@@ -47,7 +47,7 @@ public class Test {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String downloadPath = getSysHardCodeVal.getDownloadPath();
 		String dtFormat = getSysHardCodeVal.getDateFormat();
-		String dtimeFormat = getSysHardCodeVal.getDateTimeFormat();
+		//String dtimeFormat = getSysHardCodeVal.getDateTimeFormat();
 
 		ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "test");
 

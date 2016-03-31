@@ -305,7 +305,7 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 
 						// 将报名流程步骤回复短语表克隆到班级报名流程步骤回复短语表
 						sql = "delete from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=?";
-						sqlQuery.update(sql, new Object[] { str_lc_id });
+						sqlQuery.update(sql, new Object[] { str_bj_id, str_lc_id });
 
 						sql = "select TZ_APPPRO_HF_BH,TZ_APPPRO_COLOR,TZ_CLS_RESULT,TZ_APPPRO_CONTENT,TZ_WFB_DEFALT_BZ from PS_TZ_APPPRO_HF_T where TZ_APPPRO_TMP_ID=? and TZ_APPPRO_ID=?";
 						List<Map<String, Object>> listAppproHfData = sqlQuery.queryForList(sql,
