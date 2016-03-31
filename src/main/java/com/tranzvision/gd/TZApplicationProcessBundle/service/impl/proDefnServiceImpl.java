@@ -59,7 +59,7 @@ public class proDefnServiceImpl extends FrameworkImpl{
 				String strAppProcessId = jacksonUtil.getString("TZ_APPPRO_ID");
 				/*流程名称*/
 				String strAppProcessName = jacksonUtil.getString("TZ_APPPRO_NAME");
-				
+				strAppProcessName = strAppProcessName.trim();
 				/*流程名称是否已经存在*/
 				int isExistAppProcessNum = 0;
 				String sql = "";
@@ -154,6 +154,8 @@ public class proDefnServiceImpl extends FrameworkImpl{
 				String strAppProcessName = jacksonUtil.getString("TZ_APPPRO_NAME");
 				/*排序序号*/
 				String strSortNum = jacksonUtil.getString("TZ_SORT_NUM");
+				
+				strAppProcessName = strAppProcessName.trim();
 
 				/*流程名称是否已经存在*/
 				int isExistAppProcessNum = 0;
