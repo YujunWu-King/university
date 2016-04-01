@@ -96,6 +96,16 @@
                     enableTextSelection:true
                 },
                 columnLines: true,
+                listeners: {
+                    afterrender: {
+                    	fn: function(stuGrid){ 
+                    		stuGrid.getStore().addListener("refresh",
+                    				function(thisStore){
+                    			stuGrid.getView().getSelectionModel().deselectAll();
+                    		},this);
+                    	}
+                    }
+                },
                 dockedItems:{
                     overflowHandler: 'Menu',
                     xtype:"toolbar",
