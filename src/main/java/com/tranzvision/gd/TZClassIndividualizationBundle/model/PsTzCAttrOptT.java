@@ -5,6 +5,8 @@ public class PsTzCAttrOptT extends PsTzCAttrOptTKey {
 
     private String tzIsUsed;
 
+    private Integer tzOrder;
+
     public String getTzDropDownValue() {
         return tzDropDownValue;
     }
@@ -19,5 +21,13 @@ public class PsTzCAttrOptT extends PsTzCAttrOptTKey {
 
     public void setTzIsUsed(String tzIsUsed) {
         this.tzIsUsed = tzIsUsed == null ? null : tzIsUsed.trim();
+    }
+
+    public Integer getTzOrder() {
+        return tzOrder;
+    }
+
+    public void setTzOrder(Integer tzOrder) {
+        this.tzOrder = tzOrder;
     }
 }

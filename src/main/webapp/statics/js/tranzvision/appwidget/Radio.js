@@ -44,9 +44,8 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				}
 				e += '<li>';
 				e += '<div class="tz_radio_div ' + (data["option"][i]["checked"] == "Y" ? "on_check": "") + '">';
-				e += '<label style="margin-left:10px;" for="o' + data.itemId + data["option"][i]["code"] + '"><input class="tz_radio_checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "sur_radio_box") + '"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="radio" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"] + '" style="width:20px;height:20px;">' + data["option"][i]["txt"] + '</label>';
-				e += '</div>'
-
+				e += '<label style="margin-left:10px;" for="o' + data.itemId + data["option"][i]["code"] + '"><input class="tz_radio_checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "sur_radio_box") + '"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="radio" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"] + '" style="width:20px;height:20px;">';
+				e += data["option"][i]["txt"];
 				if (data["option"][i]["other"] == "Y") {
 					if (SurveyBuild._readonly) {
 						//只读模式
@@ -56,6 +55,8 @@ SurveyBuild.extend("Radio", "baseComponent", {
 						e += '<input type="text" id="other' + data.itemId + '" style=" display:' + (data["option"][i]["checked"] == "Y" ? "inline-block": "none") + ';width: 150px; height: 20px; line-height:20px; margin-left: 10px;" value="' + data.othervalue + '"/>';
 					}
 				}
+				e += '</label>';
+				e += '</div>'
 				e += '</li>';
 			}
 

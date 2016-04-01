@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.classManage.clsAttr.setDropdownModel', {
         {name: 'attrDropDownId'},
         {name: 'attrDropDownDesc'},
         {name: 'attrDDEnabled'},
-		{name: 'attrDDEnabledDesc'}
+		{name: 'attrDDEnabledDesc'},
+		{name: 'attrOrder'}
 	]
 });
