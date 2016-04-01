@@ -170,6 +170,10 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 						return strRet;
 					}
 				}
+				
+				if(StringUtils.isBlank(language)){
+					language = tzLoginServiceImpl.getSysLanaguageCD(request);
+				}
 
 				String newTplId = "" + getSeqNum.getSeqNum("TZ_APPTPL_DY_T", "TZ_APP_TPL_ID");
 				if (StringUtils.isBlank(id)) {
@@ -196,8 +200,6 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapTplDef.put("events", new HashMap<String, Object>());
 					mapTplDef.put("items", new HashMap<String, Object>());
 					String tzApptplJsonStr = jacksonUtil.Map2json(mapTplDef);
-
-					System.out.println("--------空模板报文-------" + tzApptplJsonStr);
 
 					PsTzApptplDyTWithBLOBs psTzApptplDyT = new PsTzApptplDyTWithBLOBs();
 					psTzApptplDyT.setTzAppTplId(newTplId);
@@ -416,7 +418,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		/* 专业方向 */
 		if (StringUtils.equals(oType, "MAJOR")) {
 			String classId = jacksonUtil.getString("CLASSID");
-			String sqlMajor = "SELECT TZ_MAJOR_ID, TZ_MAJOR_NAME FROM PS_TZ_CLS_MAJOR_T WHERE TZ_CLASS_ID = ? ORDER BY TZ_MAJOR_ID";
+			String sqlMajor = "SELECT TZ_MAJOR_ID, TZ_MAJOR_NAME FROM PS_TZ_CLS_MAJOR_T WHERE TZ_CLASS_ID = ? ORDER BY TZ_SORT_NUM";
 			List<?> resultlist = sqlQuery.queryForList(sqlMajor, new Object[] { classId });
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -443,7 +445,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		/* 班级批次 */
 		if (StringUtils.equals(oType, "BATCH")) {
 			String classId = jacksonUtil.getString("CLASSID");
-			String sqlBatch = "SELECT B.TZ_BATCH_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_IS_SUB_BATCH = 'Y' AND C.TZ_CLASS_ID = ?";
+			String sqlBatch = "SELECT B.TZ_BATCH_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_IS_SUB_BATCH = 'Y' AND B.TZ_APP_PUB_STATUS = 'Y' AND C.TZ_CLASS_ID = ? ORDER BY B.TZ_BATCH_ID";
 			List<?> resultlist = sqlQuery.queryForList(sqlBatch, new Object[] { classId });
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();

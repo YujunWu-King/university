@@ -54,7 +54,7 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
                 //只读模式
                var valDesc = "";
                for (var i in children[0].option) {
-                   if(data.value == children[0]["option"][i]["code"]){
+                   if(children[0]["value"] == children[0]["option"][i]["code"]){
                        valDesc = children[0]["option"][i]["txt"];
                    }
                }
@@ -138,56 +138,6 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             //return "身份证输入不合法！";
             $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
         }
-        /*户口簿*/
-        if($cerType.val() == "2"){
-            //return "户口簿XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*护照*/
-        if($cerType.val() == "3"){
-            //return "护照XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*军官证*/
-        if($cerType.val() == "4"){
-            //return "军官证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*士兵证*/
-        if($cerType.val() == "5"){
-            //return "士兵证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*港澳居民来往内地通行证*/
-        if($cerType.val() == "6"){
-            //return "港澳居民来往内地通行证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*台湾同胞来往内地通行证*/
-        if($cerType.val() == "7"){
-            //return "台湾同胞来往内地通行证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*临时身份证*/
-        if($cerType.val() == "8"){
-            //return "临时身份证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*外国人居留证*/
-        if($cerType.val() == "9"){
-            // return "外国人居留证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*警官证*/
-        if($cerType.val() == "10"){
-            //return "警官证XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
-        /*其他证件*/
-        if($cerType.val() == "10"){
-            //return "其他证件XXXXXXXXXXXXXX！";
-            $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-        }
 
 
         $cerType.change(function() {
@@ -197,56 +147,6 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             if(cerCodeType == "1"){
                 //return "身份证输入不合法！";
                 $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
-            }
-            /*户口簿*/
-            if(cerCodeType == "2"){
-                //return "户口簿XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*护照*/
-            if(cerCodeType == "3"){
-                //return "护照XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*军官证*/
-            if(cerCodeType == "4"){
-                //return "军官证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*士兵证*/
-            if(cerCodeType == "5"){
-                //return "士兵证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*港澳居民来往内地通行证*/
-            if(cerCodeType == "6"){
-                //return "港澳居民来往内地通行证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*台湾同胞来往内地通行证*/
-            if(cerCodeType == "7"){
-                //return "台湾同胞来往内地通行证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*临时身份证*/
-            if(cerCodeType == "8"){
-                //return "临时身份证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*外国人居留证*/
-            if(cerCodeType == "9"){
-                // return "外国人居留证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*警官证*/
-            if(cerCodeType == "10"){
-                //return "警官证XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
-            }
-            /*其他证件*/
-            if(cerCodeType == "11"){
-                //return "其他证件XXXXXXXXXXXXXX！";
-                $cerCode.attr("data-regular","/^[A-Za-z,\\s]+$/");
             }
         });
 
@@ -258,7 +158,6 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
                 if (ValidationRules) {
                     $.each(data["rules"],function(classname, classObj) {
                         //单选钮不需要在高级规则中的必选判断
-                        //if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y" && classname!="RequireValidator") {
                         if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
                             var _ruleClass = ValidationRules[classname];
                             if (_ruleClass && _ruleClass._Validator) {
