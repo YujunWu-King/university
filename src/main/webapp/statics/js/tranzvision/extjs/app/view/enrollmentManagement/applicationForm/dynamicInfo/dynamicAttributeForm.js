@@ -73,6 +73,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.dynamicInfo.dy
                             xtype: 'combobox',
                             columnWidth: 1,
                             autoSelect: false,
+                            editable:false,
                             fieldLabel:show_name,
                             store: new KitchenSink.view.common.store.comboxStore({
                                 recname: 'TZ_F_ATTR_OPT_T',
