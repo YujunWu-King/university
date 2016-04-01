@@ -118,12 +118,12 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			String contextUrl = request.getContextPath();
 			   
 			String siteId = sqlQuery.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'", new Object[] { orgId }, "String");
-
+			siteId = (siteId == null ? "" : siteId);
 			String onlineHead = "";
 			String onlineFoot = "";
 			try {
-				onlineHead = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_HEAD_HTML");
-				onlineFoot = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_FOOT_HTML");
+				onlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML");
+				onlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML");
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

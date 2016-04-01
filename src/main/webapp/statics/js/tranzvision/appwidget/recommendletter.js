@@ -371,7 +371,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             c += '</div>';
 			//名字
 			c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_gname_1'+'" '+(data.children.recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            c += '<span class="edu_item_label" style="width:150px;" id="'+data.instanceId+'-rec_gname'+'">'+data.children.recommend_17["itemName"]+'：</span>';
+            c += '<span class="edu_item_label" style="width:150px;" id="'+data.instanceId+'-rec_name'+'">'+data.children.recommend_17["itemName"]+'：</span>';
             c += '<b class="read-input" style="width:272px">&nbsp;</b>';
             c += '</div>';
 			//单位
@@ -809,7 +809,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		if(_refFileUrl!="")
 		{
-			//_tjx_zt="已完成";
+			_tjx_zt="已完成";
 		}
 		var _zd="";
 		if (_tjx_zt=="已完成"){

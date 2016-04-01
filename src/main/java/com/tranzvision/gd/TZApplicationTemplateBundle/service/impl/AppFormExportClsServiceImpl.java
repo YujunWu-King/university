@@ -201,15 +201,15 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 			if (StringUtils.equals("Y", drqFlag)) {
 				//多行容器
-				String dhContent = this.getDHContent(insid, tplid, xxxBh, xxxMc, xxxLmc, i + ".>");
+				String dhContent = this.getDHContent(insid, tplid, xxxBh, xxxMc, xxxLmc, i + ".");
 				html.append(dhContent);
 			} else if (StringUtils.equals("Y", srqFlag)) {
 				//组合框类型
-				String singleContent = this.getSingleContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".>");
+				String singleContent = this.getSingleContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".");
 				html.append(singleContent);
 			} else {
 				//简单类型
-				String content = this.getContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".>");
+				String content = this.getContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".");
 				html.append(content);
 			}
 			i++;

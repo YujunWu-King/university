@@ -432,21 +432,39 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 			//姓名-结束
 
 			//单位-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_2["itemName"] +'" id="' + data.itemId + child[i].recommend_2["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_2["itemId"] + '" value="' + _ref_company + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_2["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_company + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_2["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_2["itemName"] +'" id="' + data.itemId + child[i].recommend_2["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_2["itemId"] + '" value="' + _ref_company + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//单位-结束
 
 			//职务-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_3["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_3["itemName"] +'" id="' + data.itemId + child[i].recommend_3["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_3["itemId"] + '" value="' + _ref_zw + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_3["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_zw + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_3["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_3["itemName"] +'" id="' + data.itemId + child[i].recommend_3["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_3["itemId"] + '" value="' + _ref_zw + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//职务-结束
 
 			//手机-开始
@@ -486,12 +504,21 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 			//邮箱-结束
 
 			//性别-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_15["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-			works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_5["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_15["itemId"] + '" value="' + _ref_sex + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_15["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_sex + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_15["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+    			works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_5["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_15["itemId"] + '" value="' + _ref_sex + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//性别-结束
 
 			//申请人关系-开始
@@ -513,48 +540,93 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 			//申请人关系-结束
 
 			//备用字段一-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_10["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_10["itemName"] +'" id="' + data.itemId + child[i].recommend_10["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_10["itemId"] + '" value="' + _ref_yl1 + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_10["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_yl1 + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_10["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_10["itemName"] +'" id="' + data.itemId + child[i].recommend_10["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_10["itemId"] + '" value="' + _ref_yl1 + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//备用字段一-结束
 
 			//备用字段二-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_11["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_11["itemName"] +'" id="' + data.itemId + child[i].recommend_11["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_11["itemId"] + '" value="' + _ref_yl2 + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_11["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_yl2 + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_11["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_11["itemName"] +'" id="' + data.itemId + child[i].recommend_11["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_11["itemId"] + '" value="' + _ref_yl2 + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//备用字段二-结束
 
 			//备用字段三-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_12["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_12["itemName"] +'" id="' + data.itemId + child[i].recommend_12["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_12["itemId"] + '" value="' + _ref_yl3 + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_12["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_yl3 + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_12["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_12["itemName"] +'" id="' + data.itemId + child[i].recommend_12["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_12["itemId"] + '" value="' + _ref_yl3 + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//备用字段三-结束
 
 			//备用字段四-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_13["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_13["itemName"] +'" id="' + data.itemId + child[i].recommend_13["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_13["itemId"] + '" value="' + _ref_yl4 + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_13["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_yl4 + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_13["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_13["itemName"] +'" id="' + data.itemId + child[i].recommend_13["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_13["itemId"] + '" value="' + _ref_yl4 + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//备用字段四-结束
 
 			//备用字段五-开始
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_14["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_14["itemName"] +'" id="' + data.itemId + child[i].recommend_14["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_14["itemId"] + '" value="' + _ref_yl5 + '">';
-            works += '</div>';
-            works += '</div>';
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_14["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">' + _ref_yl5 + '</div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+                works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_14["itemName"] +'：</div>';
+                works += '<div class="main_inner_content_info_right">';
+                works += '<input type="text" disabled="disabled" title="'+ child[i].recommend_14["itemName"] +'" id="' + data.itemId + child[i].recommend_14["itemId"] + '" class="input_251px" name="' + data.itemId + child[i].recommend_14["itemId"] + '" value="' + _ref_yl5 + '">';
+                works += '</div>';
+                works += '</div>';
+            }
 			//备用字段五结束
 
             works += '</div>';
