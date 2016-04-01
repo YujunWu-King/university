@@ -161,14 +161,30 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emlTempletDef.emlTempletController'
 				form.findField("emltemporg").setReadOnly(true);
 				form.findField("emltempid").addCls("lanage_1");
 				form.findField("emltemporg").addCls("lanage_1");
+				
+				var tzParamsJson = {
+						"ComID":"TZ_EML_TMPL_MG_COM",
+						"PageID":"TZ_EML_TMPL_STD",
+						"OperateType":"QF",
+						"comParams":{
+							"emltempid": emltempid,
+							"emltemporg": emltemporg
+						}
+				}
+				
 				//参数
-				var tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_STD","OperateType":"QF","comParams":{"emltempid":"'+emltempid+'","emltemporg":"'+emltemporg+'"}}';
+				var tzParams = Ext.JSON.encode(tzParamsJson);
+				//var tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_STD","OperateType":"QF","comParams":{"emltempid":"'+emltempid+'","emltemporg":"'+emltemporg+'"}}';
 				
 				Ext.tzLoad(tzParams,function(responseData){	
 					form.setValues(responseData);
 					//信息项数据
 					var	emlTmplItemGrid = panel.down('grid[name=emlTmplItemGrid]');
-					var tzStoreParamsItem = '{"restempid":"'+restempid+'"}';
+					var tzStoreParamsItemJson = {
+							"restempid": restempid	
+					}
+					var tzStoreParamsItem = Ext.JSON.encode(tzStoreParamsItemJson);
+					//var tzStoreParamsItem = '{"restempid":"'+restempid+'"}';
 					emlTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
 					emlTmplItemGrid.store.load();
 					panel.commitChanges(panel);

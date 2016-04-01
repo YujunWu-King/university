@@ -234,8 +234,18 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletController'
 				form.findField("restempid").addCls("lanage_1");
 				form.findField("restemporg").addCls("lanage_1");
 				
+				var tzParamsJson = {
+						"ComID":"TZ_RES_TMPL_MG_COM",
+						"PageID":"TZ_RES_TMPL_STD",
+						"OperateType":"QF",
+						"comParams":{
+							"restempid": restempid,
+							"restemporg": restemporg
+						}
+				} 
 				//参数
-				var tzParams = '{"ComID":"TZ_RES_TMPL_MG_COM","PageID":"TZ_RES_TMPL_STD","OperateType":"QF","comParams":{"restempid":"'+restempid+'","restemporg":"'+restemporg+'"}}';
+				var tzParams = Ext.JSON.encode(tzParamsJson);
+				//var tzParams = '{"ComID":"TZ_RES_TMPL_MG_COM","PageID":"TZ_RES_TMPL_STD","OperateType":"QF","comParams":{"restempid":"'+restempid+'","restemporg":"'+restemporg+'"}}';
 				
 				/*
 				Ext.Ajax.request({
@@ -263,15 +273,21 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.resTempletDef.resTempletController'
 					form.setValues(responseData);	
 					//参数信息数据
 					var	resTmplRaraGrid = panel.down('grid[name=resTmplRaraGrid]');
-					var tzStoreParamsPara = '{"restempid":"'+restempid+'","restemporg":"'+restemporg+'","listtype":"'+'PARA'+'"}';
+					var tzStoreParamsParaJson = {
+							"restempid": restempid,
+							"restemporg": restemporg,
+							"listtype": "PARA"
+					}
+					//var tzStoreParamsPara = '{"restempid":"'+restempid+'","restemporg":"'+restemporg+'","listtype":"'+'PARA'+'"}';
+					var tzStoreParamsPara = Ext.JSON.encode(tzStoreParamsParaJson);
 					resTmplRaraGrid.store.tzStoreParams = tzStoreParamsPara;
 					resTmplRaraGrid.store.load();
 					/**/
 					//内容采集规则数据
-					var	resTmplContentGrid = panel.down('grid[name=resTmplContentGrid]');
-					var tzStoreParamsContent = '{"restempid":"'+restempid+'","restemporg":"'+restemporg+'","listtype":"'+'CONTENT'+'"}';
-					resTmplContentGrid.store.tzStoreParams = tzStoreParamsContent;
-					resTmplContentGrid.store.load();
+					//var	resTmplContentGrid = panel.down('grid[name=resTmplContentGrid]');
+					//var tzStoreParamsContent = '{"restempid":"'+restempid+'","restemporg":"'+restemporg+'","listtype":"'+'CONTENT'+'"}';
+					//resTmplContentGrid.store.tzStoreParams = tzStoreParamsContent;
+					//resTmplContentGrid.store.load();
 					
 				});
 			});

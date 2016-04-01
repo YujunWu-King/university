@@ -101,14 +101,14 @@ public class TzGdSmsTmpInfoClsServiceImpl extends FrameworkImpl {
 						existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_smsTmplId},"Integer");
 						if(existNum > 0){
 							errMsg[0] = "1";
-							errMsg[1] = "机构" + str_restemporg + "已经定义过模版编号为" + str_smsTmplId + "的短信模版，请务重复定义。";
+							errMsg[1] = "短信模版编号已经被占用，请修改短信模版编号。";
 						}else{
 							//名称是否已经被使用;
 							existSQL = "SELECT count(1) FROM PS_TZ_SMSTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_NAME = ? AND  TZ_TMPL_ID <> ?";
 							existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_smsTmplName, str_smsTmplId},"Integer");
 							if(existNum > 0){
 								errMsg[0] = "1";
-								errMsg[1] = "机构" + str_restemporg + "已经定义过模版名称为" + str_smsTmplName + "的短信模版，请务重复定义。";
+								errMsg[1] = "短信模版名称已经被占用，请修改短信模版名称。";
 							}else{
 								String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 								
