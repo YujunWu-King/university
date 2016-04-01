@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZSelfInfoBundle.dao.PsTzShjiYzmTblMapper;
 import com.tranzvision.gd.TZSelfInfoBundle.model.PsTzShjiYzmTbl;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -62,6 +63,9 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzShjiYzmTblMapper psTzShjiYzmTblMapper;
+	
+	@Autowired
+	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -98,6 +102,9 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 				strRet = tzGDObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_MOBILE", ctxPath, RegisterInit_url,
 						SureTel_url, mobile, orgid);
 			}
+			
+			strRet = siteRepCssServiceImpl.repCss(strRet, siteId);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			strRet = "发生异常。" + e.getMessage();
