@@ -882,7 +882,11 @@ $(document).ready(function(){
 					//$("#resetbtn").trigger("click");
 					//loading();
 					if($("#yzfs").val() == "M"){
-						alert("注册成功");
+						if ($("#lang").val()=="ENG"){
+							alert("Registration success");
+						}else{
+							alert("注册成功");
+						}
 					}
 					window.location.href=result.comContent.jumpurl;
 				}else{
