@@ -179,13 +179,14 @@
 				                        if(html.comContent.success == "Y"){
 				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
 											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
-				                            //closeThis();
-											layer.close(layer.index);
+				                            
+											//layer.close(layer.index);
 											$("#loading").fadeOut();
+											closeThis();
 				                        }else{
 				                        	 //closeThis();
 											 alert("%bind(:12)");
-											 layer.close(layer.index);
+											 //layer.close(layer.index);
 											 $("#loading").fadeOut();
 										}
 				                    },
