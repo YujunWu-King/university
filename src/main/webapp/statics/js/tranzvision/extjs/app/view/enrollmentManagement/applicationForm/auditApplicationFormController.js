@@ -322,9 +322,10 @@
 
         //提交参数
         var tzParams=""
-        if(comParams!=""){
-            tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_BKMSG_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        }
+        tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_BKMSG_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        //if(comParams!=""){
+        //    tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_BKMSG_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        //}
         //alert(tzParams);
         return tzParams;
     },
