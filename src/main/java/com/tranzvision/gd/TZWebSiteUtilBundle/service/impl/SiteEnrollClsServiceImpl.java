@@ -1053,9 +1053,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		    	strOrgid = "";
 		    }
 		    if("ENG".equals(strLang)){
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase());
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }else{
-		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase());
+		    	str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML",strBeginUrl, strOrgid, strTip, strLang,contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);
 		    }
 		    str_content = objRep.repTitle(str_content, strSiteId);
 		    str_content = objRep.repCss(str_content, strSiteId);
