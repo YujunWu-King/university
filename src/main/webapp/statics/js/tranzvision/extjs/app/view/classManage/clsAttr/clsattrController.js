@@ -129,15 +129,17 @@
 		var Grid = btn.findParentByType("grid");
         var attrItemCellEditing = Grid.getPlugin('attrItemCellEditing');
         var attrItemStore =  Grid.getStore();
-        var rowCount = attrItemStore.getCount();
-            //console.log(applyItemGrid);
+        var rowCount = attrItemStore.getCount() + 1;
+        
+            console.log(rowCount);
         attrItemCellEditing.cancelEdit();
             // Create a model instance
             var r = Ext.create('KitchenSink.view.classManage.clsAttr.setDropdownModel', {
                 attrValue:"",
                 attrDropDownId: "",
 				attrDropDownDesc:"",
-				attrDDEnabled: "Y"
+				attrDDEnabled: "Y",
+				attrOrder:rowCount
             });
 
         attrItemStore.insert(rowCount,r);

@@ -58,6 +58,22 @@
 					ptype: 'cellediting',
 					pluginId: 'attrItemCellEditing'
 					},
+		            viewConfig: {
+		                plugins: {
+		                    ptype: 'gridviewdragdrop',
+		                    dragText: '拖拽进行选项的排序'
+		                },
+		                listeners: {
+		                    drop: function(node, data, dropRec, dropPosition) {
+		                        data.view.store.beginUpdate();
+		                        var items = data.view.store.data.items;
+		                        for (var i = 0; i < items.length; i++) {
+		                            items[i].set('attrOrder', i + 1);
+		                        }
+		                        data.view.store.endUpdate();
+		                    }
+		                }
+		            },
 					columns: [{
 						text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.attribute","属性"),
 						sortable: true,
@@ -72,7 +88,8 @@
 						flex: 1,
 						editor: {
 							xtype:'textfield',
-							maxLength:15
+							maxLength:15,
+							allowBlank: false
 						}
 					},{ 
 						text: Ext.tzGetResourse("TZ_GD_BJSX_COM.TZ_GD_SETLIST_STD.attrDropDownDesc","下拉值描述"),
@@ -82,7 +99,8 @@
 						flex: 2,
 						editor: {
 							xtype:'textfield',
-							maxLength:50
+							maxLength:50,
+							allowBlank: false
 						}
 					},
 					{
@@ -130,7 +148,13 @@
 									handler: "deleteItem"
 								}
 					   ]
-					 }]	
+					 },{
+			                xtype: 'hiddenfield',
+			                text: '排序',
+			                sortable: false,
+			                dataIndex: 'attrOrder',
+			                hidden: true
+			            }]	
 				}]
   }],
     buttons: [{

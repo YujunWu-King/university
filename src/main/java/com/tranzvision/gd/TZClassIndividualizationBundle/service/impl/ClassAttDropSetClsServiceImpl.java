@@ -57,7 +57,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 		try {
 			
 			//列表SQL
-			String sql = "SELECT TZ_DROP_DOWN_ID,TZ_DROP_DOWN_VALUE,TZ_IS_USED FROM PS_TZ_C_ATTR_OPT_T WHERE TZ_JG_ID = ? AND TZ_ATTRIBUTE_ID = ?";
+			String sql = "SELECT TZ_DROP_DOWN_ID,TZ_DROP_DOWN_VALUE,TZ_IS_USED,TZ_ORDER FROM PS_TZ_C_ATTR_OPT_T WHERE TZ_JG_ID = ? AND TZ_ATTRIBUTE_ID = ? ORDER BY TZ_ORDER";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { orgId, attrId});
 
 			
@@ -68,6 +68,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 				String attrDropDownDesc = result.get("TZ_DROP_DOWN_VALUE") == null ? "" : String.valueOf(result.get("TZ_DROP_DOWN_VALUE"));
 				String attrDDEnabled = result.get("TZ_IS_USED") == null ? "" : String.valueOf(result.get("TZ_IS_USED"));
 				String attrDDEnabledDesc = sqlQuery.queryForObject("SELECT IFNULL ((SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_ZHZJH_ID = A.TZ_ZHZJH_ID AND TZ_ZHZ_ID = A.TZ_ZHZ_ID AND TZ_LANGUAGE_ID = ?), A.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A WHERE TZ_ZHZJH_ID = 'TZ_ATTR_ENABLED' AND TZ_ZHZ_ID = ?", new Object[] { language,attrDDEnabled },"String");
+				String attrOrder = result.get("TZ_ORDER") == null ? "0" : String.valueOf(result.get("TZ_ORDER"));
 
 				Map<String, Object> mapRetJson = new HashMap<String, Object>();
 				mapRetJson.put("attrValue",attrId);
@@ -75,6 +76,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 				mapRetJson.put("attrDropDownDesc",attrDropDownDesc);
 				mapRetJson.put("attrDDEnabled",attrDDEnabled);
 				mapRetJson.put("attrDDEnabledDesc",attrDDEnabledDesc);
+				mapRetJson.put("attrOrder",attrOrder);
 
 				listData.add(mapRetJson);
 			}
@@ -123,6 +125,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 				String attrDropDownId = (String)infoData.get("attrDropDownId");
 				String attrDropDownDesc = (String)infoData.get("attrDropDownDesc");
 				String attrDDEnabled = (String)infoData.get("attrDDEnabled");
+				int attrOrder = infoData.get("attrOrder") == null ? 0 : Integer.parseInt(String.valueOf(infoData.get("attrOrder")));
 		
 				if(StringUtils.isBlank(attrDropDownId)){
 					continue;
@@ -139,7 +142,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 					PsTzCAttrOptT.setTzDropDownId(attrDropDownId);
 					PsTzCAttrOptT.setTzDropDownValue(attrDropDownDesc);
 					PsTzCAttrOptT.setTzIsUsed(attrDDEnabled);
-					
+					PsTzCAttrOptT.setTzOrder(attrOrder);
 					psTzCAttrOptTMapper.updateByPrimaryKeySelective(PsTzCAttrOptT);
 				}else{
 					PsTzCAttrOptT psTzCAttrOptT = new PsTzCAttrOptT();
@@ -149,6 +152,7 @@ public class ClassAttDropSetClsServiceImpl extends FrameworkImpl {
 					psTzCAttrOptT.setTzDropDownId(attrDropDownId);
 					psTzCAttrOptT.setTzDropDownValue(attrDropDownDesc);
 					psTzCAttrOptT.setTzIsUsed(attrDDEnabled);
+					psTzCAttrOptT.setTzOrder(attrOrder);
 					
 					psTzCAttrOptTMapper.insert(psTzCAttrOptT);
 				}
