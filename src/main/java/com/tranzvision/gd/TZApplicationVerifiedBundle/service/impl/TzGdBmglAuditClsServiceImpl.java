@@ -213,7 +213,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 
 				if (oprid != null && !"".equals(oprid)) {
 					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
-					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { oprid });
+					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { strAppInsID });
 					if (lxfsMap != null) {
 						mainMobilePhone = (String) lxfsMap.get("TZ_ZY_SJ");
 						backupMobilePhone = (String) lxfsMap.get("TZ_CY_SJ");
@@ -1666,11 +1666,11 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				if (oprid != null && !"".equals(oprid)) {
 					PsTzLxfsInfoTblKey psTzLxfsInfoTblKey = new PsTzLxfsInfoTblKey();
 					psTzLxfsInfoTblKey.setTzLxfsLy("ZSBM");
-					psTzLxfsInfoTblKey.setTzLydxId(oprid);
+					psTzLxfsInfoTblKey.setTzLydxId(strAppInsID);
 					PsTzLxfsInfoTbl psTzLxfsInfoTbl = psTzLxfsInfoTblMapper.selectByPrimaryKey(psTzLxfsInfoTblKey);
 					if (psTzLxfsInfoTbl != null) {
 						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-						psTzLxfsInfoTbl.setTzLydxId(oprid);
+						psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
 						psTzLxfsInfoTbl.setTzZyDh(mainPhone);
@@ -1685,7 +1685,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					} else {
 						psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
 						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-						psTzLxfsInfoTbl.setTzLydxId(oprid);
+						psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
 						psTzLxfsInfoTbl.setTzZyDh(mainPhone);

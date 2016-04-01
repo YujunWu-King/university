@@ -192,7 +192,8 @@
 				                    },
 						            error:function(xhr){
 						                btn.html(xhr.responseText);
-										layer.close(layer.index);
+						                $("#loading").fadeOut();
+										//layer.close(layer.index);
 						            }
 				                })
 				            },
