@@ -20,7 +20,7 @@
 	},
 	//添加内容;
     addArt: function() {
-    	
+    	var contentGrid = this.getView();
     	//是否有访问权限
 			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CONTENT_MG_COM"]["TZ_CONTENT_INF_STD"];
 			if( pageResSet == "" || pageResSet == undefined){
@@ -94,6 +94,14 @@
 						cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
 				});
 			});
+    	
+    	cmp.on('close',function(panel){
+            try{
+                contentGrid.store.reload();
+            }catch (e){
+                /*do nothing*/
+            }
+        });
 			
       tab = contentPanel.add(cmp);     
 	  tab.on(Ext.tzTabOn(tab,this.getView(),cmp));	
@@ -174,6 +182,7 @@
     },
     //编辑内容
 	editSelArt:function(){
+		var contentGrid = this.getView();
 		 //选中行
 	   var selList = this.getView().getSelectionModel().getSelection();
 	   //选中行长度
@@ -188,10 +197,11 @@
 		 var articleId= selList[0].get("articleId");
 	   var coluId= selList[0].get("columnId");
 	   //显示活动信息编辑页面
-	   this.editArticleByID(articleId,coluId);
+	   this.editArticleByID(contentGrid,articleId,coluId);
 	},
 	//编辑内容
 	editArt:function(view, rowIndex){
+		var contentGrid = view.findParentByType("grid");
 		 var store = view.findParentByType("grid").store;
 		 var selRec = store.getAt(rowIndex);
 		 //内容ID
@@ -204,9 +214,10 @@
 			}
 			
 	   //显示活动信息编辑页面
-	   this.editArticleByID(articleId,coluId);
+	   this.editArticleByID(contentGrid,articleId,coluId);
+	   
 	},
-	editArticleByID: function(articleId,coluId){
+	editArticleByID: function(contentGrid,articleId,coluId){
 			//是否有访问权限
 			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CONTENT_MG_COM"]["TZ_CONTENT_INF_STD"];
 			if( pageResSet == "" || pageResSet == undefined){
@@ -302,6 +313,14 @@
 				});
 				
 			});
+			
+			cmp.on('close',function(panel){
+	            try{
+	                contentGrid.store.reload();
+	            }catch (e){
+	                /*do nothing*/
+	            }
+	        });
 			
 			tab = contentPanel.add(cmp);     
 			tab.on(Ext.tzTabOn(tab,this.getView(),cmp));
