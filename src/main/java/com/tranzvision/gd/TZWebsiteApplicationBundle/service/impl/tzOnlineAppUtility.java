@@ -479,7 +479,7 @@ public class tzOnlineAppUtility {
 					//行数校验
 					String sql = "SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 			    	int numDhLine = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strXxxBh }, "Integer");
-			    	if(numDhLine<numXxxMinlen){
+			    	if(numDhLine<numXxxMinLine){
 			    		returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 			    	}
 			    	break;
