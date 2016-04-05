@@ -33,18 +33,18 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 
 		win.show();
 
-		if (!window.mybmb_cj) {
-			window.mybmb_cj = function(el) {
-				Ext.each(Ext.query(".tplitem"),
-					function(i) {
-						this.style.backgroundColor = null
-					});
-				el.style.backgroundColor = "rgb(173, 216, 230)";
-				var activeTab = win.items.items[0].getActiveTab();
-
-				var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
-				document.getElementById(Ext.get(activeTab.id).query('input')[0].id).value = newName;
-			}
+		window.mybmb_cj = function(el) {
+			Ext.each(Ext.query(".tplitem"),
+				function(i) {
+					this.style.backgroundColor = null
+				});
+			el.style.backgroundColor = "rgb(173, 216, 230)";
+			console.log(win.items);
+			
+			var activeTab = win.items.items[0].getActiveTab();
+			
+			var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
+			document.getElementById(Ext.get(activeTab.id).query('input')[0].id).value = newName;
 		}
 	},
    //选中后编辑

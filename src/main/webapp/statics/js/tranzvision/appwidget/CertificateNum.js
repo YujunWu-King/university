@@ -137,6 +137,8 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
         if($cerType.val() == "1"){
             //return "身份证输入不合法！";
             $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
+        }else{
+        	$cerCode.attr("data-regular","");
         }
 
 
@@ -147,6 +149,8 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             if(cerCodeType == "1"){
                 //return "身份证输入不合法！";
                 $cerCode.attr("data-regular","/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/");
+            }else{
+            	$cerCode.attr("data-regular","");
             }
         });
 
