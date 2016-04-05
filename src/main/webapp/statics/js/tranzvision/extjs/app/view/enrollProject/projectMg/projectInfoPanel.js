@@ -111,7 +111,7 @@
 				style:'margin-left:5px',
 				name: 'appFormName'	
 			}]
-        },{
+        },/*{
 			layout: {
 				type: 'column'
 			},
@@ -180,7 +180,7 @@
 				name: 'ps_appf_modal_desc',
 				style:'margin-left:8px'
 			}]
-		},{
+		},*/{
 			layout: {
 				type: 'column'
 			},
