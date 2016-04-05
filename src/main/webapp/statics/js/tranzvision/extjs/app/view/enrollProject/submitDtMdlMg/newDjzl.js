@@ -11,7 +11,12 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.newDjzl', {
 	autoScroll: true,
 	bodyStyle: 'padding: 5px;',
 	actType: 'add',
-	items: [new KitchenSink.view.enrollProject.submitDtMdlMg.newDjzlXq()],
+	items: [
+		//new KitchenSink.view.enrollProject.submitDtMdlMg.newDjzlXq()
+		{
+			xtype: 'side-navigation-tabs_djzl',
+		}
+		],
 	buttons: [{
 		text: Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.ensure","确定"),
 		iconCls: "ensure",

@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.newDjzlXq', 
 {
     extend : 'Ext.tab.Panel',
-	xtype : 'side-navigation-tabs',
+	xtype : 'side-navigation-tabs_djzl',
 	config : {
         fields : undefined 
     },
