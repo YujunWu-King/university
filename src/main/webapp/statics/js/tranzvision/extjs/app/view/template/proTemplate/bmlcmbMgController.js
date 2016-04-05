@@ -698,7 +698,7 @@
     //赵广武添加，新增报名流程模版选择页面------结束
     addProDataInfo: function(btn){
         if(this.getView().actType == "add"){
-            Ext.MessageBox.alert("提示","请先保存组件注册信息后，再新增页面注册信息。");
+            Ext.MessageBox.alert("提示","请先保存模板信息后，再新增报名流程。");
             return;
         }
         //是否有访问权限
