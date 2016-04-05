@@ -195,6 +195,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					switch (tzXSMS) {
 					case "1":
 						/* 不显示 */
+						strHtml = btnHtml;
 						break;
 
 					case "2":

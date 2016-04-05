@@ -183,18 +183,18 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			for (int i = numIndex; i <= numTotalPage; i++) {
 				String strPageNowClass = "";
 
-				if (numNowPage == numIndex) {
+				if (numNowPage == i) {
 					strPageNowClass = "class=\"now\"";
 				}
 
 				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColuHY("
-						+ String.valueOf(numIndex) + "," + strType + ")\">" + String.valueOf(numIndex) + "</li>";
+						+ String.valueOf(i) + "," + strType + ")\">" + String.valueOf(i) + "</li>";
 
 				if (numNowPage > maxPageNum) {
-					if (numIndex >= numNowPage) {
+					if (i >= numNowPage) {
 						break;
 					}
-				} else if (numIndex >= maxPageNum) {
+				} else if (i >= maxPageNum) {
 					break;
 				}
 

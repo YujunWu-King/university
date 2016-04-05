@@ -75,12 +75,14 @@
             xtype: 'textfield',
             //fieldLabel: '联系人电话',
             fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgLxrPhone","联系人电话"),
+			maxLength: 30,
             name: 'orgLxrPhone'
         }, {
             xtype: 'textfield',
             //fieldLabel: '联系人邮箱',
             fieldLabel: Ext.tzGetResourse("TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.orgLxrEmail","联系人邮箱"),
             name: 'orgLxrEmail',
+			maxLength: 75,
             vtype: 'email'
         }, {
             xtype: 'textfield',
