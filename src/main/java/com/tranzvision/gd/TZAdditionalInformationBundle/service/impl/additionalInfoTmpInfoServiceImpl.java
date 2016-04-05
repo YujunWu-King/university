@@ -309,6 +309,43 @@ public class additionalInfoTmpInfoServiceImpl extends FrameworkImpl{
 						errMsg[1] = "递交资料模型名称不能重复！";
 					}
 				}
+				
+				if ("PAGE".equals(typeFlag)) {
+					
+					//提交资料模版编号
+					String strAdditionalInfoTmpId = String.valueOf(mapData.get("smtDtTmpID"));
+					//提交资料内容编号
+					String strAdditionalInfoContentId = String.valueOf(mapData.get("smtDtID"));
+					//资料内容简介
+					String strAdditionalInfoContent = String.valueOf(mapData.get("content"));
+					//资料备注
+					String strAdditionalInfoRemark = String.valueOf(mapData.get("remark"));
+					//排序序号
+					String strAdditionalInfoOrder = String.valueOf(mapData.get("order"));
+					
+					int numAdditionalInfoOrder = 1;
+					
+					if(!"".equals(strAdditionalInfoOrder) && strAdditionalInfoOrder != null){
+						numAdditionalInfoOrder = Integer.parseInt(strAdditionalInfoOrder);
+					}
+					
+					String sqlGetAppProcess = "select COUNT(1) from PS_TZ_SBMINF_STP_T WHERE TZ_SBMINF_TMP_ID=? AND TZ_SBMINF_ID=?";
+					int count = sqlQuery.queryForObject(sqlGetAppProcess, new Object[] { strAdditionalInfoTmpId,strAdditionalInfoContentId }, "Integer");
+					if(count>0){
+						
+						PsTzSbmInfStpT psTzSbmInfStpT = new PsTzSbmInfStpT();
+						psTzSbmInfStpT.setTzSbminfTmpId(strAdditionalInfoTmpId);
+						psTzSbmInfStpT.setTzSbminfId(strAdditionalInfoContentId);
+						psTzSbmInfStpT.setTzContIntro(strAdditionalInfoContent);
+						psTzSbmInfStpT.setTzRemark(strAdditionalInfoRemark);
+						psTzSbmInfStpT.setTzSortNum(numAdditionalInfoOrder);
+						PsTzSbmInfStpTMapper.updateByPrimaryKeySelective(psTzSbmInfStpT);
+						
+					}else{
+						errMsg[0] = "1";
+						errMsg[1] = "资料简介" + strAdditionalInfoContent + "不存在"; 
+					}
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
