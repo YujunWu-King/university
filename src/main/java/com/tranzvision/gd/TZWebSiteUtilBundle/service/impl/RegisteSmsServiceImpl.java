@@ -710,7 +710,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			    	returnMap.put("result", "success");
 		      		
 			    	//修改登录链接
-				    String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? limit 0,1";
+				    String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE = 'Y' limit 0,1";
 				    String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[]{strOrgid},"String");
 					String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() +"/"+strSiteId;
 			    	returnMap.put("jumpurl", strJumUrl);
