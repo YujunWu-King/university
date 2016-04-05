@@ -56,7 +56,8 @@ Ext.define('KitchenSink.view.enrollProject.proClassify.proClassifyInfoPanal', {
             valueField: 'TValue',
             displayField: 'TSDesc',
             store: new KitchenSink.view.common.store.appTransStore("TZ_PRJ_TYPE_STATUS"),
-            allowBlank: false
+            allowBlank: false,
+			value:'Y'
         }]
     }],
     buttons: [{
