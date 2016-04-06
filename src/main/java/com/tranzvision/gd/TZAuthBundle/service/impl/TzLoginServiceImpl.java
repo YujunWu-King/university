@@ -60,7 +60,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
-	
+
 	@Autowired
 	private PsTzOnTrialTMapper psTzOnTrialTMapper;
 
@@ -115,6 +115,16 @@ public class TzLoginServiceImpl implements TzLoginService {
 		}
 
 		try {
+
+			// 校验机构的有效性
+			String sql = "select TZ_JG_EFF_STA from PS_TZ_JG_BASE_T where TZ_JG_ID=?";
+			String tzJgEffStu = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
+			if (!"Y".equals(tzJgEffStu)) {
+				errorMsg.add("2");
+				errorMsg.add("登录失败，无效的机构。");
+				return false;
+			}
+
 			Map<String, Object> dataMap;
 
 			// 校验用户名
@@ -146,38 +156,40 @@ public class TzLoginServiceImpl implements TzLoginService {
 				errorMsg.add("登录失败，请确认用户名和密码是否正确。");
 				return false;
 			}
-			
-			//判断是不是试用账号;
+
+			// 判断是不是试用账号;
 			int seqNum = 0;
-			try{
-				seqNum = sqlQuery.queryForObject("select TZ_SEQ_NUM from PS_TZ_ON_TRIAL_T where TZ_JG_ID=? AND TZ_DLZH_ID=? limit 0,1", new Object[]{orgid,userName },"Integer");
-			}catch(Exception e){
+			try {
+				seqNum = sqlQuery.queryForObject(
+						"select TZ_SEQ_NUM from PS_TZ_ON_TRIAL_T where TZ_JG_ID=? AND TZ_DLZH_ID=? limit 0,1",
+						new Object[] { orgid, userName }, "Integer");
+			} catch (Exception e) {
 				seqNum = 0;
 			}
-			if(seqNum > 0){
-				//是使用账号，判断是不是第一次登录;
+			if (seqNum > 0) {
+				// 是使用账号，判断是不是第一次登录;
 				PsTzOnTrialTWithBLOBs psTzOnTrialT = psTzOnTrialTMapper.selectByPrimaryKey(seqNum);
 				Date startTime = psTzOnTrialT.getTzStartTime();
 				Date endTime = psTzOnTrialT.getTzEndTime();
-				if(startTime == null || endTime==null){
-					//第一次登录;
-					 Calendar c = Calendar.getInstance();
-					 startTime = c.getTime();
-					 c.add(Calendar.DAY_OF_MONTH, 14);
-					 endTime = c.getTime();
-					 psTzOnTrialT.setTzStartTime(startTime);
-					 psTzOnTrialT.setTzEndTime(endTime);
-					 psTzOnTrialTMapper.updateByPrimaryKeySelective(psTzOnTrialT);
-				}else{
-					//判断试用时间是不是失效;
+				if (startTime == null || endTime == null) {
+					// 第一次登录;
+					Calendar c = Calendar.getInstance();
+					startTime = c.getTime();
+					c.add(Calendar.DAY_OF_MONTH, 14);
+					endTime = c.getTime();
+					psTzOnTrialT.setTzStartTime(startTime);
+					psTzOnTrialT.setTzEndTime(endTime);
+					psTzOnTrialTMapper.updateByPrimaryKeySelective(psTzOnTrialT);
+				} else {
+					// 判断试用时间是不是失效;
 					Date currentDate = new Date();
-					if(currentDate.after(endTime)){
+					if (currentDate.after(endTime)) {
 						errorMsg.add("3");
 						errorMsg.add("试用账号已经过期。");
 						return false;
 					}
 				}
-				
+
 			}
 
 			// 读取用户信息

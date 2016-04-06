@@ -10,7 +10,12 @@ Ext.define('KitchenSink.view.template.bmb.myBmbRegWindow', {
 	autoScroll: true,
 	bodyStyle: 'padding: 5px;',
 	actType: 'add',
-	items: [new KitchenSink.view.tab.SideNavigationTabs()],
+	items: [
+//	        new KitchenSink.view.tab.SideNavigationTabs()
+	        {
+	        	xtype:'side-navigation-tabs'
+	        }
+	        ],
 	buttons: [{
 		text: '确定',
 		iconCls: "ensure",

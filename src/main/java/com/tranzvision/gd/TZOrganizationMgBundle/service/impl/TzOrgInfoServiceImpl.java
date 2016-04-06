@@ -41,6 +41,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -150,8 +151,18 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						String tzOrganContact = infoData.get("orgLxrName").toString();
 						// 联系电话;
 						String tzOrganContactph = infoData.get("orgLxrPhone").toString();
+						if(!RegExpValidatorUtils.isMobile(tzOrganContactph)){
+							errMsg[0] = "1";
+							errMsg[1] = "请输入正确的手机号。";
+							return strRet;
+						}
 						// 联系邮箱;
 						String tzOrganContactem = infoData.get("orgLxrEmail").toString();
+						if(!RegExpValidatorUtils.isEmail(tzOrganContactem)){
+							errMsg[0] = "1";
+							errMsg[1] = "请输入正确的邮箱地址。";
+							return strRet;
+						}
 						// 静态文件存放路径
 						String tzJgJtfjPath = infoData.get("staticPath").toString();
 						// 登录系统文字;

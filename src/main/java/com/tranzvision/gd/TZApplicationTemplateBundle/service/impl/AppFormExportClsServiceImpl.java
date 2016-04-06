@@ -58,47 +58,63 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	public String tzGetJsonData(String strParams) {
 		String code = "0";
 		String msg = "";
+		
 		String url = "";
 		String title = "";
+		String insid = "";
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+		/*用户是否属于某个机构*/
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		if (StringUtils.isBlank(orgId)) {
 			code = "1";
 			msg = "您当前没有机构，不能参与报名表打印！";
 		}
-		comMap = new HashMap<String, String>();
+		/*报名表实例是否存在*/
 		if(StringUtils.equals("0", code)){
 			jacksonUtil.json2Map(strParams);
-			String insid = jacksonUtil.getString("insid");
+			insid = jacksonUtil.getString("insid");
 			
 			if (StringUtils.isBlank(insid)) {
 				code = "1";
 				msg = "参数-报名表实例编号为空！";
-			} else {
-				String sqlUserName = "";
-				
-				sqlUserName = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
-				String strOpridApp = sqlQuery.queryForObject(sqlUserName, new Object[] { insid }, "String");
-				
-				sqlUserName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
-				String userName = sqlQuery.queryForObject(sqlUserName, new Object[] { strOpridApp }, "String");
-				
-				//报名表模板编号、模板名称
-				String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
-				Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
-				String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
-				String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
-				//title
-				title = tplname + "-" + userName;
-				url = this.createPdf(tplid,insid,title,"");
 			}
 		}
-		if(StringUtils.isBlank(url)){
-			code = "1";
-			msg = "导出PDF报名表失败！";
+		/*报名表是否进行了报名表导出设置*/
+		if(StringUtils.equals("0", code)){
+			String sqlOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
+			String oprid = sqlQuery.queryForObject(sqlOprid, new Object[] { insid }, "String");
+			
+			String sqlRealName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
+			String userName = sqlQuery.queryForObject(sqlRealName, new Object[] { oprid }, "String");
+			
+			//报名表模板编号、模板名称
+			String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
+			Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
+			String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
+			String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
+			//title
+			title = tplname + "-" + userName;
+			
+			//最终生成文件路径
+			String parentPath = "/bmb/export/" + orgId + "/" + tplid + "/";
+			String header = request.getServletContext().getRealPath(parentPath) + "header.html";
+			String footer = request.getServletContext().getRealPath(parentPath) + "footer.html";
+			
+			File headerFile = new File(header);
+			File footerFile = new File(footer);
+			if (!headerFile.exists() || !footerFile.exists()) {
+				code = "1";
+				msg = "对应的报名表未进行报名表导出设置！";
+			}else{
+				url = this.createPdf(tplid,insid,title,"");
+				if(StringUtils.isBlank(url)){
+					code = "1";
+					msg = "导出PDF报名表失败！";
+				}
+			}
 		}
+
 		String filename = title + ".pdf";
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("code", code);

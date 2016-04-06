@@ -474,9 +474,9 @@
 			return;
 	   }else{
 	   	 var i = 0;
+		 var bl = false;
 	   	 for(i = checkLen; i>0; i--){
 	   	 	 var applyItemId = selList[i-1].data.applyItemId;
-	   	 	 var bl = false;
 	   	 	 if(applyItemId =="TZ_CYR_NAME" || applyItemId =="TZ_ZY_EMAIL" || applyItemId =="TZ_ZY_SJ"){
 	   	 	 	  bl = true;
         		Ext.Array.splice( selList, i-1,1 ) 
@@ -485,9 +485,11 @@
 				Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
 				
 					if(btnId == 'yes'){					   
-				   	var store = applyItemGrid.store;
-				   	store.remove(selList);
-				   	Ext.MessageBox.alert('提示', '【姓名】、【邮箱】、【手机】不可删除');
+						var store = applyItemGrid.store;
+						store.remove(selList);
+						if(bl){
+							Ext.MessageBox.alert('提示', '【姓名】、【邮箱】、【手机】不可删除');
+						}
 					}												  
 				},this);   
 	   }

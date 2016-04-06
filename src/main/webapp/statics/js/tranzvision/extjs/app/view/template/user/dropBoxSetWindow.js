@@ -104,6 +104,7 @@ Ext.define('KitchenSink.view.template.user.dropBoxSetWindow', {
                     dataIndex: 'optId',
                     editor: {
                         xtype: 'textfield',
+						maxLength: 10,
                         allowBlank: false
                     }
                 },

@@ -216,7 +216,6 @@
                                     change:function(file, value, eOpts){
                                         if (file.findParentByType('ClassInfo').actType=="add" ||(file.findParentByType('ClassInfo').actType=="update"&&value!=""&&eOpts!=""))
                                         {
-                                            Ext.MessageBox.confirm("提示","是否复制项目下报名表模版、递交资料模型等默认数据到当前班级？",callBack);
                                             function callBack(id){
                                                 if (id=="yes")
                                                 {
@@ -254,6 +253,7 @@
                                                     });
                                                 }
                                             }
+											Ext.MessageBox.confirm("提示","是否复制项目下报名表模版、递交资料模型等默认数据到当前班级？",callBack);
                                         }
                                     }
                                 }

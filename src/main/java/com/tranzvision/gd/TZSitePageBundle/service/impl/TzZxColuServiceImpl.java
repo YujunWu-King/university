@@ -136,18 +136,18 @@ public class TzZxColuServiceImpl extends FrameworkImpl {
 			for (int i = numIndex; i <= numTotalPage; i++) {
 				String strPageNowClass = "";
 
-				if (numNowPage == numIndex) {
+				if (numNowPage == i) {
 					strPageNowClass = "class=\"now\"";
 				}
 
-				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColu(" + String.valueOf(numIndex)
-						+ ")\">" + String.valueOf(numIndex) + "</li>";
+				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColu(" + String.valueOf(i)
+						+ ")\">" + String.valueOf(i) + "</li>";
 
 				if (numNowPage > maxPageNum) {
-					if (numIndex >= numNowPage) {
+					if (i >= numNowPage) {
 						break;
 					}
-				} else if (numIndex >= maxPageNum) {
+				} else if (i >= maxPageNum) {
 					break;
 				}
 
