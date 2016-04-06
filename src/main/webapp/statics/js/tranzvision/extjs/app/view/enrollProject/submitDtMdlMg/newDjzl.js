@@ -6,7 +6,6 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.newDjzl', {
 	reference: 'myBmbRegWindow1137',
 	title:Ext.tzGetResourse("TZ_GD_SMTDTMDL_COM.TZ_GD_SMTDTSET_STD.newTpl","新建模板"),
 	closable: true,
-	closeAction: 'hide',
 	modal: true,
 	autoScroll: true,
 	bodyStyle: 'padding: 5px;',
@@ -29,6 +28,6 @@ Ext.define('KitchenSink.view.enrollProject.submitDtMdlMg.newDjzl', {
 	}],
 	onNewCloseZlgl: function(btn) {
 		var win = btn.findParentByType("window");
-		win.close();
+		win.destory();
 	}
 });
