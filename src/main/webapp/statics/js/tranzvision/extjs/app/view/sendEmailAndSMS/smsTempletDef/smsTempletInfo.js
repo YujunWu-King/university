@@ -68,6 +68,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_STD.smstempid","短信模板编号"),
 					name: 'smstempid',
+					maxLength: 15,
 					allowBlank: false,
 					afterLabelTextTpl: [
 						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -81,6 +82,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.smsTempletDef.smsTempletInfo', {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_SMS_TMPL_MG_COM.TZ_SMS_TMPL_STD.smstempname","短信模板名称"),
 					name: 'smstempname',
+					maxLength: 60,
 					afterLabelTextTpl: [
 						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
 					],
