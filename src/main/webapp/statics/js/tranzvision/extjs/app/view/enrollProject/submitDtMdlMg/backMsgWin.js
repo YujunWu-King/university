@@ -80,7 +80,11 @@
 			minWidth: 300,
             flex:1,
 			editor: {
-                 xtype:'textfield'
+                 xtype:'textfield',
+				 allowBlank: false,
+				 afterLabelTextTpl: [
+					'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+				 ]
             }
 		},{
 						menuDisabled: true,
