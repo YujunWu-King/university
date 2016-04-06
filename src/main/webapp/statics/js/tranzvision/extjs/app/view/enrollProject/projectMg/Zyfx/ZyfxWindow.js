@@ -43,12 +43,20 @@ Ext.define('KitchenSink.view.enrollProject.projectMg.Zyfx.ZyfxWindow', {
                 xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.pro_zyfx_id","专业方向ID"),
                 name: 'pro_zyfx_id',
-                allowBlank:false
+                maxLength: 15,
+				allowBlank: false,
+				afterLabelTextTpl: [
+					'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+				]
             },{
                 xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.pro_zyfx_name","专业方向名称"),
                 name: 'pro_zyfx_name',
-                allowBlank:false
+                maxLength: 100,
+				allowBlank: false,
+				afterLabelTextTpl: [
+					'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+				]
             }
             ]
         }],
