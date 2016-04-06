@@ -6,7 +6,6 @@ Ext.define('KitchenSink.view.template.proTemplate.newBmlcmb', {
 	reference: 'myBmbRegWindow1',
 	title: Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.xjmb","新建模板"),
 	closable: true,
-	closeAction: 'hide',
 	modal: true,
 	autoScroll: true,
 	bodyStyle: 'padding: 5px;',
@@ -29,6 +28,6 @@ Ext.define('KitchenSink.view.template.proTemplate.newBmlcmb', {
 	}],
 	onNewClose: function(btn) {
 		var win = btn.findParentByType("window");
-		win.close();
+		win.destory();
 	}
 });
