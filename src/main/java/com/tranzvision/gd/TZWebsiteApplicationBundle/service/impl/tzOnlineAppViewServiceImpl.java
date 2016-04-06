@@ -399,7 +399,17 @@ public class tzOnlineAppViewServiceImpl {
 				mapXxxInfo.put("itemId", strXxxBh);
 				mapXxxInfo.put("classname", strComLmc);
 				mapXxxInfo.put("isDoubleLine", "N");
-				mapXxxInfo.put("isSingleLine", "N");
+				if("BirthdayAndAge".equals(strComLmc)
+						|| "DateComboBox".equals(strComLmc)
+						|| "mobilePhone".equals(strComLmc)
+						|| "CertificateNum".equals(strComLmc)
+						|| "MailingAddress".equals(strComLmc)
+						|| "YearsAndMonth".equals(strComLmc)){
+					mapXxxInfo.put("isSingleLine", "Y");
+				}else{
+					mapXxxInfo.put("isSingleLine", "N");
+				}
+				
 				mapXxxInfo.put("value", strAppXxxValueS);
 				mapXxxInfo.put("wzsm", strAppXxxValueL);
 				
@@ -1185,7 +1195,7 @@ public class tzOnlineAppViewServiceImpl {
 
 							String sqlGetChildrenValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE2");
 							Map<String, Object> mapGetChildrenValue = sqlQuery.queryForMap(sqlGetChildrenValue, 
-									new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + strAppxxxChildrenBh,strAppxxxChildrenBh,numDhSeq });
+									new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + strAppxxxChildrenBh + "%",strAppxxxChildrenBh,numDhSeq });
 							if(mapGetChildrenValue != null){
 								strAppxxxChildrenValue = mapGetChildrenValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(mapGetChildrenValue.get("TZ_APP_S_TEXT"));
 								strAppxxxChildrenComLmc = mapGetChildrenValue.get("TZ_COM_LMC") == null ? "" : String.valueOf(mapGetChildrenValue.get("TZ_COM_LMC"));
