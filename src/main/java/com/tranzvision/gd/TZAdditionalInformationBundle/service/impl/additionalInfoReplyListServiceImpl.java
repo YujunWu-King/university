@@ -120,37 +120,43 @@ public class additionalInfoReplyListServiceImpl extends FrameworkImpl{
 					String strAdditionalInfoContentId = String.valueOf(mapData.get("smtDtID"));
 					String strMsgId = String.valueOf(mapData.get("msgId"));
 					String strMsgContent = String.valueOf(mapData.get("msgContent"));
-					if(strMsgContent.length()>100){
-						strMsgContent = strMsgContent.substring(1, 100);
-					}
 					String strOrderNum = String.valueOf(mapData.get("order"));
-					
-					if (strMsgId == null || "".equals(strMsgId)) {
-						
-						strMsgId = "GD_MSG_" + String.valueOf(getSeqNum.getSeqNum("TZ_SBMINF_REP_T", "TZ_SBMINF_REP_ID"));
-					}
-					
-					String sqlGetMsgInfoTmp = "select COUNT(1) from PS_TZ_SBMINF_REP_T WHERE TZ_SBMINF_TMP_ID=? AND TZ_SBMINF_ID = ? AND TZ_SBMINF_REP_ID = ?";
-					int count = sqlQuery.queryForObject(sqlGetMsgInfoTmp, new Object[] { strAdditionalInfoTmpId,strAdditionalInfoContentId,strMsgId }, "Integer");
-					if (count > 0) {
-						PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
-						psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
-						psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
-						psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
-						psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
-						psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
-						
-						PsTzSbmInfRepTMapper.updateByPrimaryKeySelective(psTzSbmInfRepT);
+					if(strMsgContent == null || "".equals(strMsgContent)){
+						errMsg[0] = "1";
+						errMsg[1] = "回复短语内容不能为空。";
+					}else if(strMsgContent.length()>100){
+						//strMsgContent = strMsgContent.substring(1, 100);
+						errMsg[0] = "1";
+						errMsg[1] = "回复短语内容长度必须小于100字。";
 					}else{
-						PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
-						psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
-						psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
-						psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
-						psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
-						psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+						if (strMsgId == null || "".equals(strMsgId)) {
+							
+							strMsgId = "GD_MSG_" + String.valueOf(getSeqNum.getSeqNum("TZ_SBMINF_REP_T", "TZ_SBMINF_REP_ID"));
+						}
 						
-						PsTzSbmInfRepTMapper.insert(psTzSbmInfRepT);
+						String sqlGetMsgInfoTmp = "select COUNT(1) from PS_TZ_SBMINF_REP_T WHERE TZ_SBMINF_TMP_ID=? AND TZ_SBMINF_ID = ? AND TZ_SBMINF_REP_ID = ?";
+						int count = sqlQuery.queryForObject(sqlGetMsgInfoTmp, new Object[] { strAdditionalInfoTmpId,strAdditionalInfoContentId,strMsgId }, "Integer");
+						if (count > 0) {
+							PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
+							psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
+							psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
+							psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
+							psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
+							psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+							
+							PsTzSbmInfRepTMapper.updateByPrimaryKeySelective(psTzSbmInfRepT);
+						}else{
+							PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
+							psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
+							psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
+							psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
+							psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
+							psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+							
+							PsTzSbmInfRepTMapper.insert(psTzSbmInfRepT);
+						}
 					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -191,38 +197,43 @@ public class additionalInfoReplyListServiceImpl extends FrameworkImpl{
 					String strAdditionalInfoContentId = String.valueOf(mapData.get("smtDtID"));
 					String strMsgId = String.valueOf(mapData.get("msgId"));
 					String strMsgContent = String.valueOf(mapData.get("msgContent"));
-					if(strMsgContent.length()>100){
-						strMsgContent = strMsgContent.substring(1, 100);
-					}
 					String strOrderNum = String.valueOf(mapData.get("order"));
-					
-					if (strMsgId == null || "".equals(strMsgId)) {
-						
-						strMsgId = "GD_MSG_" + String.valueOf(getSeqNum.getSeqNum("TZ_SBMINF_REP_T", "TZ_SBMINF_REP_ID"));
-					}
-					
-					String sqlGetMsgInfoTmp = "select COUNT(1) from PS_TZ_SBMINF_REP_T WHERE TZ_SBMINF_TMP_ID=? AND TZ_SBMINF_ID = ? AND TZ_SBMINF_REP_ID = ?";
-					int count = sqlQuery.queryForObject(sqlGetMsgInfoTmp, new Object[] { strAdditionalInfoTmpId,strAdditionalInfoContentId,strMsgId }, "Integer");
-					if (count > 0) {
-						
-						PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
-						psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
-						psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
-						psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
-						psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
-						psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
-						
-						PsTzSbmInfRepTMapper.updateByPrimaryKeySelective(psTzSbmInfRepT);
+					if(strMsgContent == null || "".equals(strMsgContent)){
+						errMsg[0] = "1";
+						errMsg[1] = "回复短语内容不能为空。";
+					}else if(strMsgContent.length()>100){
+						errMsg[0] = "1";
+						errMsg[1] = "回复短语内容长度必须小于100字。";
 					}else{
-						PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
-						psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
-						psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
-						psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
-						psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
-						psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+						if (strMsgId == null || "".equals(strMsgId)) {
+							
+							strMsgId = "GD_MSG_" + String.valueOf(getSeqNum.getSeqNum("TZ_SBMINF_REP_T", "TZ_SBMINF_REP_ID"));
+						}
 						
-						PsTzSbmInfRepTMapper.insert(psTzSbmInfRepT);
+						String sqlGetMsgInfoTmp = "select COUNT(1) from PS_TZ_SBMINF_REP_T WHERE TZ_SBMINF_TMP_ID=? AND TZ_SBMINF_ID = ? AND TZ_SBMINF_REP_ID = ?";
+						int count = sqlQuery.queryForObject(sqlGetMsgInfoTmp, new Object[] { strAdditionalInfoTmpId,strAdditionalInfoContentId,strMsgId }, "Integer");
+						if (count > 0) {
+							
+							PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
+							psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
+							psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
+							psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
+							psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
+							psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+							
+							PsTzSbmInfRepTMapper.updateByPrimaryKeySelective(psTzSbmInfRepT);
+						}else{
+							PsTzSbmInfRepT psTzSbmInfRepT = new PsTzSbmInfRepT();
+							psTzSbmInfRepT.setTzSbminfTmpId(strAdditionalInfoTmpId);
+							psTzSbmInfRepT.setTzSbminfId(strAdditionalInfoContentId);
+							psTzSbmInfRepT.setTzSbminfRepId(strMsgId);
+							psTzSbmInfRepT.setTzSbminfRep(strMsgContent);
+							psTzSbmInfRepT.setTzSortNum(Integer.parseInt(strOrderNum));
+							
+							PsTzSbmInfRepTMapper.insert(psTzSbmInfRepT);
+						}
 					}
+
 				}
 			}
 		} catch (Exception e) {
