@@ -99,9 +99,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.color.colorWindow', {
         }
         var formParams = form.getValues();
 
+
         var tzParams = '{"ComID":"TZ_BMGL_COLOR_COM","PageID":"TZ_BMGL_COLOR2_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
-        win.findParentByType("colorSet").store.reload();
+            var colorId = formParams.colorSortID;
+            if(colorId == 'NEXT'){
+            	form.setValues({colorSortID:response});
+            };
+        	win.findParentByType("colorSet").store.reload();
         },"",true,this);
 
     }

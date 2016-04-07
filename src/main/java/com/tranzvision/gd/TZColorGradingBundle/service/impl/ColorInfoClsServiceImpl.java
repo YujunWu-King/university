@@ -123,13 +123,13 @@ public class ColorInfoClsServiceImpl extends FrameworkImpl {
 				String colorCode = jacksonUtil.getString("colorCode");
 				
 				if(StringUtils.equals(colorSortID, "NEXT")){
-					String sql = "SELECT COUNT(1) FROM PS_TZ_COLOR_SORT_T WHERE TZ_JG_ID = ? AND (TZ_COLOR_NAME = ? OR TZ_COLOR_CODE = ?) AND TZ_COLOR_STATUS <> 'N'";
+					String sql = "SELECT COUNT(1) FROM PS_TZ_COLOR_SORT_T WHERE TZ_JG_ID = ? AND (TZ_COLOR_NAME = ? OR TZ_COLOR_CODE = ?)";
 					int count = sqlQuery.queryForObject(sql, new Object[] { orgId,colorName,colorCode }, "Integer");
 
 					if (count > 0) {
-//						errMsg[0] = "1";
-//						errMsg[1] = "当前部门存在有相同名称或码制的颜色定义。";
-//						return strRet;
+						errMsg[0] = "1";
+						errMsg[1] = "当前部门存在有相同名称或码制的颜色定义。";
+						return strRet;
 					}else{
 						PsTzColorSortT psTzColorSortT = new PsTzColorSortT();
 						colorSortID = "" + getSeqNum.getSeqNum("TZ_COLOR_SORT_T", "TZ_COLOR_SORT_ID");
@@ -144,17 +144,29 @@ public class ColorInfoClsServiceImpl extends FrameworkImpl {
 						psTzColorSortT.setRowLastmantDttm(dateNow);
 						psTzColorSortT.setRowLastmantOprid(oprid);
 						
-						psTzColorSortTMapper.insert(psTzColorSortT);
+						int isize = psTzColorSortTMapper.insert(psTzColorSortT);
+						if(isize > 0){
+							return colorSortID;
+						}
 					}
 				}else{
-					PsTzColorSortT psTzColorSortT = new PsTzColorSortT();
-					psTzColorSortT.setTzColorSortId(colorSortID);
-					psTzColorSortT.setTzColorName(colorName);
-					psTzColorSortT.setTzColorCode(colorCode);
-					psTzColorSortT.setRowLastmantDttm(dateNow);
-					psTzColorSortT.setRowLastmantOprid(oprid);
-					
-					psTzColorSortTMapper.updateByPrimaryKeySelective(psTzColorSortT);
+					String sql = "SELECT COUNT(1) FROM PS_TZ_COLOR_SORT_T WHERE TZ_JG_ID = ? AND (TZ_COLOR_NAME = ? OR TZ_COLOR_CODE = ?) AND TZ_COLOR_SORT_ID <> ?";
+					int count = sqlQuery.queryForObject(sql, new Object[] { orgId,colorName,colorCode,colorSortID }, "Integer");
+
+					if (count > 0) {
+						errMsg[0] = "1";
+						errMsg[1] = "当前部门存在有相同名称或码制的颜色定义。";
+						return strRet;
+					}else{
+						PsTzColorSortT psTzColorSortT = new PsTzColorSortT();
+						psTzColorSortT.setTzColorSortId(colorSortID);
+						psTzColorSortT.setTzColorName(colorName);
+						psTzColorSortT.setTzColorCode(colorCode);
+						psTzColorSortT.setRowLastmantDttm(dateNow);
+						psTzColorSortT.setRowLastmantOprid(oprid);
+						
+						psTzColorSortTMapper.updateByPrimaryKeySelective(psTzColorSortT);
+					}
 				}
 			}
 		} catch (Exception e) {
