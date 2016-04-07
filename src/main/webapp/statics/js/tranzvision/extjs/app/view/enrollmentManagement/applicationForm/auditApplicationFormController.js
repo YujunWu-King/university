@@ -257,7 +257,7 @@
         var comView = this.getView();
         Ext.tzSubmit(tzParams,function(responseData){
             store.reload();
-        },"",true,this);
+        },"",true,win);
 
     },
     onBackMsgClose: function(btn){
