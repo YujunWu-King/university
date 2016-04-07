@@ -25,6 +25,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -155,7 +156,7 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 		      	strLang =  String.valueOf(jacksonUtil.getString("lang").trim());
 		      	
 		      	//手机格式;
-		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	boolean  bl = RegExpValidatorUtils.isMobile(strPhone);
 		      	if(bl == false){
 		      		errorMsg[0] = "1";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
@@ -164,7 +165,7 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 		      	}
 		      	
 		        //手机是否被占用
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND TZ_SJBD_BZ='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
 		      	int count = sqlQuery.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "2";
@@ -311,12 +312,11 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
-			String strMoble = jacksonUtil.getString("");
+			String strMoble = jacksonUtil.getString("phone");
 			String orgid = jacksonUtil.getString("strJgid");
 
 			// 校验手机格式
-			//String todo;
-			boolean boolPhone = true;
+			boolean boolPhone = RegExpValidatorUtils.isMobile(strMoble);
 
 			if (boolPhone) {
 				String sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE = ? and TZ_JG_ID=? limit 0,1";
@@ -426,7 +426,7 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 					// 校验验证码是否正确
 					if (strYzm.toUpperCase().equals(strTzSjyzm.toUpperCase())) {
 						// 如果绑定了手机，则修改用户的主要手机时，则要同时修改绑定手机，同时要判断新的绑定手机是否在该机构下重复，如果重复，则修改失败，同时要提示用户;
-						sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_RYLX=? and TZ_MOBILE=? and OPRID<>?";
+						sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_RYLX=? and TZ_MOBILE=? and TZ_SJBD_BZ='Y' and OPRID<>?";
 						String phoneUsed = sqlQuery.queryForObject(sql, new Object[] { strOrgid, "ZCYH", strPhone, oprid },
 								"String");
 
@@ -447,13 +447,13 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 					} else {
 						errorMsg[0] = "20";
 			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "50",
-			      				"验证码不正确", "Wrong Verification Code!");
+			      				"验证码不正确", "Wrong Security Code!");
 					}
 				}
 			} else {
 				errorMsg[0] = "30";
-	      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "56",
-	      				"参数错误", "Parameters Error !");
+	      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "50",
+	      				"验证码不正确", "Wrong Security Code!");
 			}
 
 		} catch (Exception e) {

@@ -457,11 +457,20 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 			    }
 			    
 			   //邮箱是否存在
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT ='Y'";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
 		      	if(count <= 0){
 		      		errorMsg[0] = "3";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "54", "邮箱不存在，请先注册", "The mailbox does not exist, please register");
+		            return strResult;
+		      	}
+		      	
+		      	//判断该账号是否已锁定
+		      	sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND exists(SELECT ACCTLOCK FROM PSOPRDEFN WHERE OPRID=A.OPRID AND ACCTLOCK='0')";
+		      	count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
+		      	if(count <= 0){
+		      		errorMsg[0] = "3";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "133", "抱歉，该账号已锁定。", "Sorry,this account has been locked.");
 		            return strResult;
 		      	}
 		      	
@@ -625,7 +634,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 			    }
 			    
 			   //邮箱是否存在
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_YXBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "3";

@@ -100,6 +100,9 @@ public class CreateTaskServiceImpl {
 				psTzDxyjfsrwTbl.setTzWebmalFlag((String) eMap.get("TZ_WEBMAL_FLAG"));
 				psTzDxyjfsrwTbl.setTzDynamicFlag((String) eMap.get("TZ_DYNAMIC_FLAG"));
 				psTzDxyjfsrwTbl.setTzEmlIfPrt((String) eMap.get("TZ_EML_IF_PRT"));
+				
+				String serverHost = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+				emailContent = emailContent.replace("<img src=\"/", "<img src=\""+ serverHost +"/");
 
 				String emailServSQL = "select TZ_EML_ADDR100,TZ_EML_ALIAS from PS_TZ_EMLS_DEF_TBL where TZ_EMLSERV_ID=?";
 				Map<String, Object> eMap2 = jdbcTemplate.queryForMap(emailServSQL, new Object[] { emlServId });

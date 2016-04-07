@@ -320,10 +320,12 @@ function changeBindEmail() {
 					$("#bind_Email").html(tzGdWdzhReleaseBind);
 					$("#BindEmail").html(data.comContent.email);
 					$("#change_Email").show();
+					$("#bind_Email").attr("emailBindState","Y");
 				} else {
 					$("#BindEmail").html(tzGdWdzhAbsence);
 					$("#bind_Email").html(tzGdWdzhDoBind);
 					$("#change_Email").hide();
+					$("#bind_Email").attr("emailBindState","N");
 				}
 				alert(tzGdWdzhPassSucTips);
 			} else {
@@ -441,9 +443,15 @@ function bindMobile(el) {
 }
 
 function bindEmail(el) {
-	changeBindEmail();/*
-						 * var attrState=$(el).attr("emailBindState"); if
-						 * (attrState=="Y"){ changeBindEmail(); // myrefresh();
-						 * setTab(1,3); }else{ changeEmail(); }
-						 */
+	//changeBindEmail();
+
+	var attrState=$(el).attr("emailBindState"); 
+	if(attrState=="Y"){ 
+		changeBindEmail(); 
+		// myrefresh();
+		// setTab(1,3); 
+	}else{ 
+		changeEmail(); 
+	}
+
 }

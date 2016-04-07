@@ -84,10 +84,12 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 				List<Map<String, Object>> listMenus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 
 				String strMenuHtml = "";
+				int menu_i = 0;
 
 				String ctxPath = request.getContextPath();
 
 				for (Map<String, Object> mapMenu : listMenus) {
+					menu_i++;
 					String strMenuId = mapMenu.get("TZ_MENU_ID") == null ? ""
 							: String.valueOf(mapMenu.get("TZ_MENU_ID"));
 					String strMenuName = mapMenu.get("TZ_MENU_NAME") == null ? ""
@@ -127,7 +129,10 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 
 					String strGloMenuId = tzGetSetSessionValue.getTzSiteGloMenuId();
 					String strMenuNowCls = "";
-					if (strMenuId.equals(strGloMenuId)) {
+					if(("".equals(strGloMenuId) || null==strGloMenuId) && menu_i==1){
+						strMenuImg = ctxPath + strNowImg;
+						strMenuNowCls = "main_left_nav0_c";
+					}else if (strMenuId.equals(strGloMenuId)) {
 						strMenuImg = ctxPath + strNowImg;
 						strMenuNowCls = "main_left_nav0_c";
 					} else {

@@ -502,7 +502,7 @@
 			var tabPanel = panel.child('form').child('tabpanel');
 			var grid = tabPanel.getActiveTab();
 			//参数
-			var tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGGL_STD","OperateType":"QF","comParams":{"orgId":"'+orgId+'"}}';
+			var tzParams = '{"ComID":"TZ_GD_ORGGL_COM","PageID":"TZ_GD_ORGGL_STD","OperateType":"QF","comParams":{"orgId":"'+ encodeURIComponent(orgId) +'"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//组件注册信息数据
@@ -555,9 +555,9 @@
                     var org_params = "";
                     for(i=0;i<checkLen;i++){
                         if(i == 0){
-                            org_params = '{"orgId":"'+selList[i].get("orgId")+'"}';
+                            org_params = '{"orgId":"'+ encodeURIComponent(selList[i].get("orgId")) +'"}';
                         }else{
-                            org_params = org_params + ',{"orgId":"'+selList[i].get("orgId")+'"}';
+                            org_params = org_params + ',{"orgId":"'+ encodeURIComponent(selList[i].get("orgId")) +'"}';
                         }
                     }
                     tzParams = tzParams + org_params + "]}}";

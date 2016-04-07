@@ -130,7 +130,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 					tzSiteLang, "验证码", "Auth Code");
 			String tipsMsg = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG", "MSG11",
 					tzSiteLang, "请输入报名注册信息，报名成功之后将发送确认短信或邮件到以下手机号码或电子邮箱（您可以更改手机号码或电子邮箱地址）",
-					"请输入报名注册信息，报名成功之后将发送确认短信或邮件到以下手机号码或电子邮箱（您可以更改手机号码或电子邮箱地址）");
+					"Please fill this form.You will receive a message or an email when applied success.(You can change the mobile or the email address)");
 			String closeBtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG", "MSG12",
 					tzSiteLang, "关闭", "Close");
 			String backBtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG", "MSG13",
