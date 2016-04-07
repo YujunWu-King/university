@@ -87,7 +87,8 @@
 						flex: 1,
 						editor: {
 							xtype:'textfield',
-							maxLength:15
+							maxLength:15,
+							allowBlank: false
 						}
 					},{ 
 						text: Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMSX_NEW_STD.attrDropDownDesc","下拉值描述"),
@@ -97,7 +98,8 @@
 						flex: 2,
 						editor: {
 							xtype:'textfield',
-							maxLength:50
+							maxLength:50,
+							allowBlank: false
 						}
 					},/*{
 						xtype: 'checkcolumn',

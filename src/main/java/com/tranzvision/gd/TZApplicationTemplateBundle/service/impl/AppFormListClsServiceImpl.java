@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -421,7 +422,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			String sqlMajor = "SELECT TZ_MAJOR_ID, TZ_MAJOR_NAME FROM PS_TZ_CLS_MAJOR_T WHERE TZ_CLASS_ID = ? ORDER BY TZ_SORT_NUM";
 			List<?> resultlist = sqlQuery.queryForList(sqlMajor, new Object[] { classId });
 
-			Map<String, Object> mapRet = new HashMap<String, Object>();
+			Map<String, Object> mapRet = new LinkedHashMap<String, Object>();
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
 

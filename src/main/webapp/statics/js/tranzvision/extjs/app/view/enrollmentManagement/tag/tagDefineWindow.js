@@ -44,6 +44,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.tag.tagDefineWindow', {
             {
                 xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_BMGL_TAG_COM.TZ_BMGL_TAG_STD.tagName","标签名称"),
+                maxLength:40,
                 name: 'tagName',
                 allowBlank:false
             }

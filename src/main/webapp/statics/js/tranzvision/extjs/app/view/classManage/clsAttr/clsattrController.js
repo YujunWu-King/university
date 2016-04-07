@@ -389,6 +389,27 @@
             //记录查重
             var attrDropDownId = store.getAt(i).get("attrDropDownId");
             var attrDropDownDesc = store.getAt(i).get("attrDropDownDesc");
+            
+			if (attrDropDownId==""){
+				Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_BJSX_COM.TZ_GD_SETLIST_STD.prompt","提示"), Ext.tzGetResourse("TZ_GD_BJSX_COM.TZ_GD_SETLIST_STD.xlznotblank","下拉值不能为空"),function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							attrItemCellEditing.startEdit(store.getAt(i), 1);
+						}
+				    }
+				)
+				return false;
+			}
+			
+			if (attrDropDownDesc==""){
+				Ext.MessageBox.alert(Ext.tzGetResourse("TZ_GD_BJSX_COM.TZ_GD_SETLIST_STD.prompt","提示"), Ext.tzGetResourse("TZ_GD_BJSX_COM.TZ_GD_SETLIST_STD.xlzmsnotblank","下拉值描述不能为空"),function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+						    attrItemCellEditing.startEdit(store.getAt(i), 2);
+						}
+				    }
+				)
+				return;
+			}
+			
             var attrDropItemCount =0;
             var attrDropItemDescCount =0;
 

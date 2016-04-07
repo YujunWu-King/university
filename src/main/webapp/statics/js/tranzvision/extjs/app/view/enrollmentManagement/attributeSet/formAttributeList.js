@@ -69,13 +69,7 @@
                     sortable: true,
                     dataIndex: 'attrDesc',
                     minWidth: 200,
-                    flex:1,
-                    allowBlank:false,
-                    blankText: Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMGL_SXSZ_STD.attrIsRequired","属性名称必填"),
-                    editor: {
-                        xtype:'textfield',
-                        allowBlank :false
-                    }
+                    flex:1
                 },{
                     width:10,
                     dataIndex:'attrTypeDesc',
@@ -85,16 +79,6 @@
                     sortable: false,
                     dataIndex: 'attrType',
                     minWidth: 120,
-                    editor: {
-                        xtype: 'combobox',
-                        emptyText:Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMGL_SXSZ_STD.pleaseSelect","请选择..."),
-                        queryMode: 'remote',
-                        editable:false,
-                        name: 'attrType',
-                        valueField: 'TValue',
-                        displayField: 'TSDesc',
-                        store: attrTypeStore
-                    },
                     renderer: function(value,metadata,record){
                         var index = attrTypeStore.find('TValue',value);
                         if(index!=-1){
@@ -108,18 +92,6 @@
 					sortable: false,
 					dataIndex: 'attrEnabled',
 					width: 120,
-					editor: {
-							xtype: 'combobox',
-							emptyText:Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMGL_SXSZ_STD.pleaseSelect","请选择..."),
-							queryMode: 'remote',
-							editable:false,
-							hiddenName:'attrEnabled',
-							allowBlank:false,
-							name: 'attrEnabled',
-							valueField: 'TValue',
-							displayField: 'TSDesc',
-							store: attrEnabledStore
-					},
 					renderer: function(value,metadata,record){   
 							var index = attrEnabledStore.find('TValue',value);   
 							if(index!=-1){   

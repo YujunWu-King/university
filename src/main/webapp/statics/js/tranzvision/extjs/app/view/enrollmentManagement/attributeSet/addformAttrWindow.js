@@ -44,6 +44,7 @@
 			{ 
 				xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_BMGL_SXSZ_COM.TZ_BMSX_NEW_STD.attrDesc","属性名称"),
+                maxLength:40,
                 name: 'attrDesc',
 				allowBlank:false
             },{
