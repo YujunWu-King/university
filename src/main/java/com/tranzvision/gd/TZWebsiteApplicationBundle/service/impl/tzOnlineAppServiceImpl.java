@@ -436,13 +436,27 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		
 		//如果存在报名表模版
 		String sql = "";
-		sql = "SELECT TZ_APPTPL_JSON_STR,TZ_USE_TYPE,TZ_JG_ID,TZ_APP_TPL_LAN,TZ_APP_TZURL FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
+		sql = "SELECT TZ_APPTPL_JSON_STR,TZ_USE_TYPE,TZ_JG_ID,TZ_APP_TPL_LAN,TZ_APP_TZURL,TZ_LEFT_WIDTH,TZ_RIGHT_WIDTH FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		Map<String, Object> MapAppTplInfo = sqlQuery.queryForMap(sql, new Object[] { strTplId });
 		strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
 		strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
 		strTplData = MapAppTplInfo.get("TZ_APPTPL_JSON_STR") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APPTPL_JSON_STR"));
 		strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
 		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
+		String leftWidth = "";
+		leftWidth = MapAppTplInfo.get("TZ_LEFT_WIDTH") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_LEFT_WIDTH"));
+		String rightWidth = "";
+		rightWidth = MapAppTplInfo.get("TZ_RIGHT_WIDTH") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_RIGHT_WIDTH"));
+		
+		
+		String leftWidthStyle = "";
+		if(leftWidth != null && !"".equals(leftWidth) && !"0".equals(leftWidth)){
+			leftWidthStyle = "width:" + leftWidth + "px";
+		}
+		String rightWidthStyle = "";
+		if(rightWidth != null && !"".equals(rightWidth) && !"0".equals(rightWidth)){
+			rightWidthStyle =  "width:" + rightWidth + "px";
+		}
 		
 		//获得站点信息
 		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
@@ -685,7 +699,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 								strSiteId,strAppOrgId,strMenuId,strAppFormReadOnly,strMsgSet,strLanguage,
 								strSave,strNext,strSubmit,strTplType,strLoading,strProcessing,strAfterSubmitUrl,
 								strOnlineHead,strOnlineFoot,strOnlineLeft,strIsAdmin,strMainInnerStyle,strUserInfoSet,
-								strMainStyle,strPrev,strAppInsVersion,contextUrl);
+								strMainStyle,strPrev,strAppInsVersion,contextUrl,leftWidthStyle,rightWidthStyle);
 				
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);
