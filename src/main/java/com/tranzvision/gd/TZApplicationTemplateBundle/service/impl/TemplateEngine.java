@@ -190,6 +190,20 @@ public class TemplateEngine {
 				// 邮件模板
 				String mailTemplate = infoData.get("mailTemplate") == null ? "" : String.valueOf(infoData.get("mailTemplate"));
 				psTzApptplDyT.setTzEmlModalId(mailTemplate);
+				
+				//Left Width
+				String leftWidth = infoData.get("leftWidth") == null ? "0" : String.valueOf(infoData.get("leftWidth"));
+				if(StringUtils.isBlank(leftWidth)){
+					leftWidth = "0";
+				}
+				psTzApptplDyT.setTzLeftWidth(Integer.parseInt(leftWidth));
+				
+				//Right Width
+				String rightWidth = infoData.get("rightWidth") == null ? "0" : String.valueOf(infoData.get("rightWidth"));
+				if(StringUtils.isBlank(rightWidth)){
+					rightWidth = "0";
+				}
+				psTzApptplDyT.setTzRightWidth(Integer.parseInt(rightWidth));
 
 				// 报名表报文
 				psTzApptplDyT.setTzApptplJsonStr(jacksonUtil.Map2json(infoData));

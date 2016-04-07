@@ -3397,7 +3397,22 @@ var SurveyBuild = {
         htmlSet += '		<option ' + (data.hasOwnProperty("tplUseType") && data.tplUseType == "TJX" ? " selected=\'selected\'": "") + ' value="TJX">推荐信</option>';
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
+        
+    	if(!data.hasOwnProperty("leftWidth")){
+    		data.leftWidth = "310";
+    	}
+        htmlSet += '<fieldset><legend>';
+        htmlSet += '	<span class="edit_item_label">Left Width：</span>';
+        htmlSet += '	<input type="text" maxlength="11" class="medium" onkeyup="SurveyBuild.save0Attr(this,\'leftWidth\')" value="' + data.leftWidth + '">';
+        htmlSet += '</legend></fieldset>';
 
+    	if(!data.hasOwnProperty("rightWidth")){
+    		data.rightWidth = "390";
+    	}
+        htmlSet += '<fieldset><legend>';
+        htmlSet += '	<span class="edit_item_label">Right Width：</span>';
+        htmlSet += '	<input type="text" maxlength="11" class="medium" onkeyup="SurveyBuild.save0Attr(this,\'rightWidth\')" value="' + data.rightWidth + '">';
+        htmlSet += '</legend></fieldset>';
         /* 暂时注释 By WRL @2015-10-30 (BUG 1139)
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">标签位置：</span>';

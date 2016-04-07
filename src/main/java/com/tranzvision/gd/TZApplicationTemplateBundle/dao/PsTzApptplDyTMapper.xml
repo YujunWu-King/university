@@ -31,6 +31,8 @@
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
     <result column="TZ_ISSENDMAIL" property="tzIssendmail" jdbcType="VARCHAR" />
     <result column="TZ_EML_MODAL_ID" property="tzEmlModalId" jdbcType="VARCHAR" />
+    <result column="TZ_LEFT_WIDTH" property="tzLeftWidth" jdbcType="INTEGER" />
+    <result column="TZ_RIGHT_WIDTH" property="tzRightWidth" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_APPTPL_JSON_STR" property="tzApptplJsonStr" jdbcType="LONGVARCHAR" />
@@ -44,7 +46,8 @@
     TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, 
     TZ_ATT_A_URL, TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, TZ_APP_M_TPL_ID, TZ_EFFEXP_ZT, 
     TZ_CHN_MODAL_ID, TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ISSENDMAIL, TZ_EML_MODAL_ID
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ISSENDMAIL, TZ_EML_MODAL_ID, 
+    TZ_LEFT_WIDTH, TZ_RIGHT_WIDTH
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
@@ -71,9 +74,10 @@
       TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-      TZ_ISSENDMAIL, TZ_EML_MODAL_ID, TZ_APPTPL_JSON_STR, 
-      TZ_CH_M_CONTENT, TZ_EN_M_CONTENT, TZ_HEADER, 
-      TZ_FOOTER)
+      TZ_ISSENDMAIL, TZ_EML_MODAL_ID, TZ_LEFT_WIDTH, 
+      TZ_RIGHT_WIDTH, TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, 
+      TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
+      )
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAppTplMc,jdbcType=VARCHAR}, 
       #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, 
       #{tzAppLabelWz,jdbcType=VARCHAR}, #{tzAppTsxxFs,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
@@ -83,9 +87,10 @@
       #{tzEngModalId,jdbcType=VARCHAR}, #{tzEngQy,jdbcType=VARCHAR}, #{tzChnQy,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
-      #{tzIssendmail,jdbcType=VARCHAR}, #{tzEmlModalId,jdbcType=VARCHAR}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, 
-      #{tzChMContent,jdbcType=LONGVARCHAR}, #{tzEnMContent,jdbcType=LONGVARCHAR}, #{tzHeader,jdbcType=LONGVARCHAR}, 
-      #{tzFooter,jdbcType=LONGVARCHAR})
+      #{tzIssendmail,jdbcType=VARCHAR}, #{tzEmlModalId,jdbcType=VARCHAR}, #{tzLeftWidth,jdbcType=INTEGER}, 
+      #{tzRightWidth,jdbcType=INTEGER}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, #{tzChMContent,jdbcType=LONGVARCHAR}, 
+      #{tzEnMContent,jdbcType=LONGVARCHAR}, #{tzHeader,jdbcType=LONGVARCHAR}, #{tzFooter,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
     insert into PS_TZ_APPTPL_DY_T
@@ -176,6 +181,12 @@
       </if>
       <if test="tzEmlModalId != null" >
         TZ_EML_MODAL_ID,
+      </if>
+      <if test="tzLeftWidth != null" >
+        TZ_LEFT_WIDTH,
+      </if>
+      <if test="tzRightWidth != null" >
+        TZ_RIGHT_WIDTH,
       </if>
       <if test="tzApptplJsonStr != null" >
         TZ_APPTPL_JSON_STR,
@@ -281,6 +292,12 @@
       <if test="tzEmlModalId != null" >
         #{tzEmlModalId,jdbcType=VARCHAR},
       </if>
+      <if test="tzLeftWidth != null" >
+        #{tzLeftWidth,jdbcType=INTEGER},
+      </if>
+      <if test="tzRightWidth != null" >
+        #{tzRightWidth,jdbcType=INTEGER},
+      </if>
       <if test="tzApptplJsonStr != null" >
         #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -385,6 +402,12 @@
       <if test="tzEmlModalId != null" >
         TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
       </if>
+      <if test="tzLeftWidth != null" >
+        TZ_LEFT_WIDTH = #{tzLeftWidth,jdbcType=INTEGER},
+      </if>
+      <if test="tzRightWidth != null" >
+        TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER},
+      </if>
       <if test="tzApptplJsonStr != null" >
         TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -433,6 +456,8 @@
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
       TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
+      TZ_LEFT_WIDTH = #{tzLeftWidth,jdbcType=INTEGER},
+      TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER},
       TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       TZ_CH_M_CONTENT = #{tzChMContent,jdbcType=LONGVARCHAR},
       TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR},
@@ -469,7 +494,9 @@
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
-      TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR}
+      TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
+      TZ_LEFT_WIDTH = #{tzLeftWidth,jdbcType=INTEGER},
+      TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
   </update>
 </mapper>

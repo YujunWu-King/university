@@ -61,6 +61,10 @@ public class PsTzApptplDyT {
 
     private String tzEmlModalId;
 
+    private Integer tzLeftWidth;
+
+    private Integer tzRightWidth;
+
     public String getTzAppTplId() {
         return tzAppTplId;
     }
@@ -291,5 +295,21 @@ public class PsTzApptplDyT {
 
     public void setTzEmlModalId(String tzEmlModalId) {
         this.tzEmlModalId = tzEmlModalId == null ? null : tzEmlModalId.trim();
+    }
+
+    public Integer getTzLeftWidth() {
+        return tzLeftWidth;
+    }
+
+    public void setTzLeftWidth(Integer tzLeftWidth) {
+        this.tzLeftWidth = tzLeftWidth;
+    }
+
+    public Integer getTzRightWidth() {
+        return tzRightWidth;
+    }
+
+    public void setTzRightWidth(Integer tzRightWidth) {
+        this.tzRightWidth = tzRightWidth;
     }
 }

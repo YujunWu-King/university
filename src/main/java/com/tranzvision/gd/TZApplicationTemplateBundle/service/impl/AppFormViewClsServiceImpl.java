@@ -155,10 +155,20 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			if(StringUtils.isBlank(menuId)){
 				menuId = "";
 			}
+			
+			String leftWidth = "";
+			if(psTzApptplDyT.getTzLeftWidth() != null && psTzApptplDyT.getTzLeftWidth() > 0){
+				leftWidth = String.valueOf(psTzApptplDyT.getTzLeftWidth()) + "px";
+			}
+			String rightWidth = "";
+			if(psTzApptplDyT.getTzRightWidth() != null && psTzApptplDyT.getTzRightWidth() > 0){
+				rightWidth = String.valueOf(psTzApptplDyT.getTzRightWidth()) + "px";
+			}
+			
 			String viewHtml = "";
 			try {
 				tplData = tplData.replaceAll("\\$", "~");
-				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language);
+				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language,leftWidth,rightWidth);
 				viewHtml = viewHtml.replaceAll("\\~", "\\$");
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
