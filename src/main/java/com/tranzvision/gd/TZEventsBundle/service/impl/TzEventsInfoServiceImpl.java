@@ -378,14 +378,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String artType) {
 		String strRet = "";
 
-		if("".equals(strApplyStartTime)){
-			strApplyStartTime="08:30";
+		if ("".equals(strApplyStartTime)) {
+			strApplyStartTime = "08:30";
 		}
-		
-		if("".equals(strApplyEndTime)){
-			strApplyEndTime="17:30";
+
+		if ("".equals(strApplyEndTime)) {
+			strApplyEndTime = "17:30";
 		}
-		
+
 		Map<String, Object> mapJson = new HashMap<String, Object>();
 		mapJson.put("activityId", activityId);
 		mapJson.put("activityName", activityName);
@@ -1318,13 +1318,51 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				int waitingNum = sqlQuery.queryForObject(sql, new Object[] { activityId }, "int");
 
 				if (applyNum < appliedNum) {
-					// 席位数小于已报名数
+					// 席位数小于已报名数，将已报名的变为等待
+					// 获取要更新的用户
+					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzSelectBmrForUpdateToWaiting");
+					List<Map<String, Object>> listBmrids = sqlQuery.queryForList(sql,
+							new Object[] { activityId, appliedNum - applyNum });
+
+					String strBmrids = "";
+					for (Map<String, Object> mapBmrid : listBmrids) {
+						String bmrid = mapBmrid.get("TZ_HD_BMR_ID") == null ? ""
+								: String.valueOf(mapBmrid.get("TZ_HD_BMR_ID"));
+						if ("".equals(strBmrids)) {
+							strBmrids = "'" + bmrid + "'";
+						} else {
+							strBmrids = strBmrids + ",'" + bmrid + "'";
+						}
+					}
+
+					// 更新用户为等待状态
 					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzUpdateHDBmrToWaiting");
-					sqlQuery.update(sql, new Object[] { activityId, activityId, appliedNum - applyNum });
+					sql = sql.replace(":BMRIDS", strBmrids);
+
+					sqlQuery.update(sql, new Object[] { activityId });
 				} else if (applyNum > appliedNum && waitingNum > 0) {
 					// 席位数大于已报名人数，且存在排队人数，则自动进补
+					// 获取要更新的用户
+					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzSelectBmrForUpdateToApplied");
+					List<Map<String, Object>> listBmrids = sqlQuery.queryForList(sql,
+							new Object[] { activityId, applyNum - appliedNum });
+
+					String strBmrids = "";
+					for (Map<String, Object> mapBmrid : listBmrids) {
+						String bmrid = mapBmrid.get("TZ_HD_BMR_ID") == null ? ""
+								: String.valueOf(mapBmrid.get("TZ_HD_BMR_ID"));
+						if ("".equals(strBmrids)) {
+							strBmrids = "'" + bmrid + "'";
+						} else {
+							strBmrids = strBmrids + ",'" + bmrid + "'";
+						}
+					}
+
+					// 更新用户状态为已报名
 					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzUpdateHDBmrToApplied");
-					sqlQuery.update(sql, new Object[] { activityId, activityId, applyNum - appliedNum });
+					sql = sql.replace(":BMRIDS", strBmrids);
+
+					sqlQuery.update(sql, new Object[] { activityId });
 				}
 
 				// 解锁

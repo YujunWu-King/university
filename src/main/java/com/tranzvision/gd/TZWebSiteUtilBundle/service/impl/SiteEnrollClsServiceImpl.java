@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
@@ -68,6 +69,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private PsTzDzyxYzmTblMapper psTzDzyxYzmTblMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	// 原：WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_GetNowField
 	@Override
@@ -1273,6 +1276,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
 			strSiteId = jacksonUtil.getString("siteid");
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
@@ -1283,14 +1287,21 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String skinId = jdbcTemplate.queryForObject(sql, new Object[] { strSiteId }, "String");
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
-
+			
+			//获取当前用户联系方式中的邮箱
+			sql = "select TZ_ZY_EMAIL from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
+			String lxfsEmail = jdbcTemplate.queryForObject(sql, new Object[]{oprid}, "String");
+			if (lxfsEmail == null) {
+				lxfsEmail = "";
+			}
+			
 			String str_content = "";
 			if ("ENG".equals(strLang)) {
 				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL", strBeginUrl,
-						strOrgid, contextPath, imgPath);
+						strOrgid, contextPath, imgPath,lxfsEmail);
 			} else {
 				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL", strBeginUrl,
-						strOrgid, contextPath, imgPath);
+						strOrgid, contextPath, imgPath,lxfsEmail);
 			}
 
 			str_content = objRep.repTitle(str_content, strSiteId);

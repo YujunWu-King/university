@@ -42,6 +42,7 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.RegExpValidatorUtils;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -65,7 +66,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
-	
+
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
@@ -133,6 +134,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					// 机构账号信息;
 					// 机构编号;
 					String tzJgId = infoData.get("orgId").toString().toUpperCase();
+					TzFilterIllegalCharacter tzFilterIllegalCharacter = new TzFilterIllegalCharacter();
+					tzJgId = tzFilterIllegalCharacter.filterAllIllegalCharacter(tzJgId);
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
@@ -151,14 +154,14 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						String tzOrganContact = infoData.get("orgLxrName").toString();
 						// 联系电话;
 						String tzOrganContactph = infoData.get("orgLxrPhone").toString();
-						if(!RegExpValidatorUtils.isMobile(tzOrganContactph)){
+						if (!RegExpValidatorUtils.isMobile(tzOrganContactph)) {
 							errMsg[0] = "1";
 							errMsg[1] = "请输入正确的手机号。";
 							return strRet;
 						}
 						// 联系邮箱;
 						String tzOrganContactem = infoData.get("orgLxrEmail").toString();
-						if(!RegExpValidatorUtils.isEmail(tzOrganContactem)){
+						if (!RegExpValidatorUtils.isEmail(tzOrganContactem)) {
 							errMsg[0] = "1";
 							errMsg[1] = "请输入正确的邮箱地址。";
 							return strRet;
@@ -197,6 +200,12 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						psTzJgBaseT.setRowLastmantOprid(oprid);
 
 						psTzJgBaseTMapper.insert(psTzJgBaseT);
+						
+						//将机构ID返回
+						Map<String, Object> mapRet = new HashMap<String, Object>();
+						mapRet.put("orgid", tzJgId);
+						
+						strRet = jacksonUtil.Map2json(mapRet);
 					}
 
 				} else if ("MEM".equals(typeFlag)) {
@@ -242,6 +251,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				if ("ORG".equals(typeFlag)) {
 					// 机构编号;
 					String tzJgId = infoData.get("orgId").toString().toUpperCase();
+					TzFilterIllegalCharacter tzFilterIllegalCharacter = new TzFilterIllegalCharacter();
+					tzJgId = tzFilterIllegalCharacter.filterAllIllegalCharacter(tzJgId);
 
 					String sql = "select 'Y' from PS_TZ_JG_BASE_T WHERE TZ_JG_ID=?";
 					String recExists = sqlQuery.queryForObject(sql, new Object[] { tzJgId }, "String");
@@ -259,13 +270,16 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						// 联系邮箱;
 						String tzOrganContactem = infoData.get("orgLxrEmail").toString();
 						// 静态文件存放路径
-						String tzJgJtfjPath = infoData.get("staticPath")==null?"":String.valueOf(infoData.get("staticPath"));
+						String tzJgJtfjPath = infoData.get("staticPath") == null ? ""
+								: String.valueOf(infoData.get("staticPath"));
 						// 登录系统文字;
-						String tzJgLoginInfo = infoData.get("orgLoginInf")==null?"":String.valueOf(infoData.get("orgLoginInf"));
+						String tzJgLoginInfo = infoData.get("orgLoginInf") == null ? ""
+								: String.valueOf(infoData.get("orgLoginInf"));
 						// 登录页面版权信息;
 						String orgLoginCopr = infoData.get("orgLoginCopr").toString();
 						// 系统文件名;
-						String orgLoginBjImgUrl = infoData.get("orgLoginBjImgUrl")==null?"":String.valueOf(infoData.get("orgLoginBjImgUrl"));
+						String orgLoginBjImgUrl = infoData.get("orgLoginBjImgUrl") == null ? ""
+								: String.valueOf(infoData.get("orgLoginBjImgUrl"));
 						// 获取图片文件名
 						String sysFileName = "";
 						if (null != orgLoginBjImgUrl && !"".equals(orgLoginBjImgUrl)) {
@@ -290,12 +304,18 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 						psTzJgBaseT.setRowLastmantOprid(oprid);
 
 						psTzJgBaseTMapper.updateByPrimaryKeyWithBLOBs(psTzJgBaseT);
+						
+						//将机构ID返回
+						Map<String, Object> mapRet = new HashMap<String, Object>();
+						mapRet.put("orgid", tzJgId);
+						
+						strRet = jacksonUtil.Map2json(mapRet);
 
 					} else {
 						errorMsg += comma + tzJgId;
 						comma = ",";
 					}
-
+					
 				} else if ("USER".equals(typeFlag)) {
 					// 修改机构管理员
 					this.tzEditOrgMemAccountInfo(infoData, errMsg);
@@ -306,6 +326,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 					// 复制机构角色
 					this.tzCopyOrgRole(infoData, errMsg);
 				}
+				
 			}
 			if (!"".equals(errorMsg)) {
 				errMsg[0] = "1";
@@ -332,7 +353,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		if (actData == null || actData.length == 0) {
 			return strRet;
 		}
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
@@ -473,7 +494,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+
 		jacksonUtil.json2Map(strParams);
 		String queryType = jacksonUtil.getString("queryType");
 
@@ -495,7 +516,8 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				String[] resultFldArray = { "TZ_JG_ID", "TZ_DLZH_ID", "TZ_REALNAME" };
 
 				// 可配置搜索通用函数;
-				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
+						errorMsg);
 
 				if (obj != null && obj.length > 0) {
 
@@ -550,7 +572,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 		mapRet.put("message", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+
 		try {
 			jacksonUtil.json2Map(strParams);
 
@@ -781,7 +803,7 @@ public class TzOrgInfoServiceImpl extends FrameworkImpl {
 				// 复制角色的许可权
 				sql = tzSQLObject.getSQLText("SQL.TZOrganizationMgBundle.TzCopyRolePermit");
 
-				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] {strSrcRoleName});
+				List<?> listPermits = sqlQuery.queryForList(sql, new Object[] { strSrcRoleName });
 
 				for (Object srcPermit : listPermits) {
 

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TzFilterIllegalCharacter {
 
-	//private String filterRegEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+	private String filterRegExAll = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 	
 	private String filterRegEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 
@@ -30,6 +30,21 @@ public class TzFilterIllegalCharacter {
 	 */
 	public String filterDirectoryIllegalCharacter(String str) throws PatternSyntaxException {
 		Pattern p = Pattern.compile(this.filterRegEx);
+		Matcher m = p.matcher(str);
+		return m.replaceAll("").trim();
+	}
+	
+	/**
+	 * 过滤所有的非法字符
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public String filterAllIllegalCharacter(String str) throws PatternSyntaxException {
+		//先替换掉英文双引号
+		str = str.replace("\"", "");
+		//其他字符用正则替换
+		Pattern p = Pattern.compile(this.filterRegExAll);
 		Matcher m = p.matcher(str);
 		return m.replaceAll("").trim();
 	}

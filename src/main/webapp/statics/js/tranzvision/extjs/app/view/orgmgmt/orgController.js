@@ -247,8 +247,8 @@
                 var orgView = this.getView();
                 Ext.tzSubmit(tzParams, function (responseData) {
                     orgView.actType = "update";
-                    form.findField("orgId").setReadOnly(true);
-
+                    form.findField("orgId").setValue(responseData.orgid).setReadOnly(true);
+					orgId = responseData.orgid;
                     var tzStoreParams1 = '{"orgId":"' + orgId + '","queryType":"USER","cfgSrhId":"TZ_GD_ORGGL_COM.TZ_GD_ORGDEF_STD.TZ_JG_USER_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "' + orgId + '"}}';
                     var tzStoreParams2 = '{"orgId":"' + orgId + '","queryType":"ROLE"}';
                     memStore.tzStoreParams = tzStoreParams1;
