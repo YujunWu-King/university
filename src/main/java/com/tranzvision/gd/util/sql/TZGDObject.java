@@ -8,8 +8,6 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -381,8 +379,15 @@ public class TZGDObject
 				String repStr1 = "(?<!\\\\)(?i)%bind\\(\\:" + (i + 1) + "\\)";
 				String repStr2 = "\\\\(?i)%bind\\(\\:" + (i + 1) + "\\)";
 				String repStr3 = "%bind(:" + (i + 1) + ")";
+				String val = args[i] == null ? "" : args[i];
+				if(val.contains("\\")){
+					val = val.replace("\\", "\\\\");
+				}
+				if(val.contains("$")){
+					val = val.replace("$", "\\$");
+				}
 				
-				htmlText = htmlText.replaceAll(repStr1, args[i]);
+				htmlText = htmlText.replaceAll(repStr1, val);
 				htmlText = htmlText.replaceAll(repStr2, repStr3);
 			}
 		}
@@ -428,9 +433,16 @@ public class TZGDObject
 				String repStr1 = "(?<!\\\\)(?i)%bind\\(\\:" + (i + 1) + "\\)";
 				String repStr2 = "\\\\(?i)%bind\\(\\:" + (i + 1) + "\\)";
 				String repStr3 = "%bind(:" + (i + 1) + ")";
-				args[i] = args[i] == null ? "" : args[i];
+				String val = args[i] == null ? "" : args[i];
+				if(val.contains("\\")){
+					val = val.replace("\\", "\\\\");
+				}
+				if(val.contains("$")){
+					val = val.replace("$", "\\$");
+				}
 				
-				htmlText = htmlText.replaceAll(repStr1, args[i]);
+				//System.out.println(val);
+				htmlText = htmlText.replaceAll(repStr1, val);
 				htmlText = htmlText.replaceAll(repStr2, repStr3);
 			}
 		}
