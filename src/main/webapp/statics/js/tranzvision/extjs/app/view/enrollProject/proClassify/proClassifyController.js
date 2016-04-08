@@ -228,16 +228,20 @@
 				}
 				var tzParams = '{"ComID":"TZ_ZS_XMLBSZ_COM","PageID":"TZ_ZS_XMLBDY_STD","OperateType":"U","comParams":{'+comParams+'}}';
 				Ext.tzSubmit(tzParams,function(responseData){
-					panel.actType = "update";
-					form.findField("proTypeId").setReadOnly(true);
-					form.findField("proTypeId").addCls('lanage_1');
-					if(responseData['prjID']){
-						//form.findField("proTypeId").setValue(responseData['prjID']);
-						form.setValues({proTypeId:responseData.prjID});
+					if(btn.name=="ensure"){
+						panel.close();
+					}else{
+						panel.actType = "update";
+						form.findField("proTypeId").setReadOnly(true);
+						form.findField("proTypeId").addCls('lanage_1');
+						if(responseData['prjID']){
+							//form.findField("proTypeId").setValue(responseData['prjID']);
+							form.setValues({proTypeId:responseData.prjID});
 
-					};
-					for(var i=0;i<msArrInfoPanelArr.length;i++){
-						msArrInfoPanelArr[i].store.load();
+						};
+						for(var i=0;i<msArrInfoPanelArr.length;i++){
+							msArrInfoPanelArr[i].store.load();
+						}
 					}
 				},"",true,this);
 			}
@@ -254,8 +258,9 @@
 	},
 	onProjectEnsure: function(btn){
 		//确定按钮
+		btn.name="ensure";
 		this.onProjectSave(btn);
-		this.onProjectClose(btn);
+		//this.onProjectClose(btn);
 	},
 	//编辑
 	editPrjTypeDfn: function(btn) {

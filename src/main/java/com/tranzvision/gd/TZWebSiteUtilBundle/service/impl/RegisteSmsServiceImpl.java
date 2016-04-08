@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZSelfInfoBundle.dao.PsTzShjiYzmTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -150,7 +151,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 
 		      	//手机格式;
 		      	ValidateUtil validateUtil = new ValidateUtil();
-		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	boolean  bl = RegExpValidatorUtils.isMobile(strPhone);
 		      	if(bl == false){
 		      		errorMsg[0] = "1";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "47",
@@ -200,7 +201,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	
 		      	//手机格式;
 		      	ValidateUtil validateUtil = new ValidateUtil();
-		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	boolean  bl = RegExpValidatorUtils.isMobile(strPhone);
 		      	if(bl == false){
 		      		errorMsg[0] = "1";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "47", "手机号码不正确", "The mobile phone is incorrect .");
@@ -246,7 +247,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	
 		      	//手机格式;
 		      	ValidateUtil validateUtil = new ValidateUtil();
-		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	boolean  bl = RegExpValidatorUtils.isMobile(strPhone);
 		      	if(bl == false){
 		      		errorMsg[0] = "1";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
@@ -415,7 +416,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	
 		      	//手机格式;
 		      	ValidateUtil validateUtil = new ValidateUtil();
-		      	boolean  bl = validateUtil.validatePhone(strPhone);
+		      	boolean  bl = RegExpValidatorUtils.isMobile(strPhone);
 		      	if(bl == false){
 		      		errorMsg[0] = "1";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", 
@@ -808,7 +809,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 
 			      	//手机格式;
 			      	ValidateUtil validateUtil = new ValidateUtil();
-			      	boolean  bl = validateUtil.validatePhone(strPhone);
+			      	boolean bl = RegExpValidatorUtils.isMobile(strPhone);
 			      	if(bl == false){
 			      		errorMsg[0] = "1";
 			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "47",
@@ -825,6 +826,16 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			      				"手机不存在，请先注册", "The mobile phone does not exist, please register");
 			            return strResult;
 			      	}
+			      	
+			        //判断该账号是否已锁定
+			      	sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_MOBILE) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND exists(SELECT ACCTLOCK FROM PSOPRDEFN WHERE OPRID=A.OPRID AND ACCTLOCK='0')";
+			      	count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
+			      	if(count <= 0){
+			      		errorMsg[0] = "3";
+			      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "133", "抱歉，该账号已锁定。", "Sorry,this account has been locked.");
+			            return strResult;
+			      	}
+			      	
 			      	strResult = "\"success\"";
 			        return strResult;
 			}catch(Exception e){

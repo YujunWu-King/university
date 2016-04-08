@@ -82,10 +82,10 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 				String tzWdzhEmail = "";
 				if ("ENG".equals(strLang)) {
 					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EN_EMAIL",
-							strBeginUrl, strJgid, contextPath, imgPath);
+							strBeginUrl, strJgid, contextPath, imgPath,email);
 				} else {
 					tzWdzhEmail = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_EMAIL",
-							strBeginUrl, strJgid, contextPath, imgPath);
+							strBeginUrl, strJgid, contextPath, imgPath,email);
 				}
 
 				tzWdzhEmail = objRep.repTitle(tzWdzhEmail, siteId);

@@ -276,6 +276,8 @@ public class CreateTaskServiceImpl {
 	
 	//更新内容;
 	public boolean updateEmailSendContent(String taskId,String content){
+		String serverHost = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		content = content.replace("<img src=\"/", "<img src=\""+ serverHost +"/");
 		PsTzYjmbshliTbl psTzYjmbshliTbl = new PsTzYjmbshliTbl();
 		psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);
 		psTzYjmbshliTbl.setTzMalContent(content);
