@@ -47,7 +47,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.color.colorWindow', {
             {
                 xtype: 'textfield',
                 fieldLabel: Ext.tzGetResourse("TZ_BMGL_COLOR_COM.TZ_BMGL_COLOR_STD.colorName","颜色名称"),
-                maxlength:40,
+                maxLength:40,
                 name: 'colorName',
                 allowBlank:false
             }
