@@ -2922,9 +2922,16 @@ Ext.getCmp("gridPanel").reconfigure(store);
 		},
 		btsave: function() {
 			
-			var bodyCode = Ext.get("all").dom.outerHTML;
-
 			var pagetype = Ext.get("pagetype").getValue();
+			if(pagetype=="loginpage"){
+				var captchaUrl = $("#yzmImg").attr("src");
+				$("#yzmImg").attr("src","");
+				var bodyCode = Ext.get("all").dom.outerHTML;
+				$("#yzmImg").attr("src",captchaUrl);
+			}else{
+				var bodyCode = Ext.get("all").dom.outerHTML;
+			}
+			
 			var savecontent ="";
 
 			if (pagetype=="loginpage")
@@ -3031,10 +3038,16 @@ Ext.getCmp("gridPanel").reconfigure(store);
 		},
 		btrelease: function() {
 			
-			var bodyCode = Ext.get("all").dom.outerHTML;
-
 			var pagetype = Ext.get("pagetype").getValue();
-
+			if(pagetype=="loginpage"){
+				var captchaUrl = $("#yzmImg").attr("src");
+				$("#yzmImg").attr("src","");
+				var bodyCode = Ext.get("all").dom.outerHTML;
+				$("#yzmImg").attr("src",captchaUrl);
+			}else{
+				var bodyCode = Ext.get("all").dom.outerHTML;
+			}
+			
 			var releasecontent ="";
 			
 			 if (pagetype=="loginpage")
