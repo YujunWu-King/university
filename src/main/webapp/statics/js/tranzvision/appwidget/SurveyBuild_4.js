@@ -114,13 +114,12 @@ var SurveyBuild = {
         }
     },
 	_initTab: function() {
-		var tabs = "",
-		i = 0;
+		var tabs = "", i = 0;
 		$("#tabNav").empty();
-		$.each(this._items,
-		function(h, obj) {
+		$.each(this._items, function(h, obj) {
 			if (obj["classname"] == "Page") {
-				tabs += '<div data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;">' + obj.title + '</div>'; ++i;
+				tabs += '<div data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;" style="' + obj.tapStyle + '">' + obj.title + '</div>';
+				++i;
 			}
 		});
 		$("#tabNav").append(tabs);
@@ -138,7 +137,7 @@ var SurveyBuild = {
                 tabs += '       <input data_id="' + h + '" type="text" class="option-txt" value="' + obj.itemName + '" onkeyup="SurveyBuild.saveTabAttr(this,\'itemName\')" />';
                 tabs += '   </td>';
                 tabs += '   <td>';
-                tabs += '       <input data_id="' + h + '" type="text" class="option-txt" value="' + obj.tapWidth + '" onkeyup="SurveyBuild.saveTapNumAttr(this,\'tapWidth\')" />';
+                tabs += '       <input data_id="' + h + '" type="text" class="option-txt" value="' + obj.tapWidth + '" onkeyup="SurveyBuild.saveTabAttr(this,\'tapWidth\')" />';
                 tabs += '   </td>';
 				tabs += '   <td>';
                 tabs += '   <a href="javascript:void(0);" style="color:#0088cc;" onmouseover="this.style.color=\'#faac3c\'"  onmouseout="this.style.color=\'#0088cc\'" onclick="SurveyBuild.editorTap(\'' + h + '\')">编辑</a>';
@@ -149,7 +148,10 @@ var SurveyBuild = {
 
         e += '<fieldset id="option-box">';
 		var data = this._data;
-		e += '<div class="edit_item_warp" style="padding-bottom:8px"><span class="edit_item_label"><span style="color:red">*</span>页签高度：</span><input type="text" style="width:170px;" onkeyup="SurveyBuild.saveTapHeight(this,\'pageHeight\')" value="' + (data.hasOwnProperty("pageHeight") ? data.pageHeight: "55") + '"> px</div>';
+		if(!data.hasOwnProperty("pageHeight")){
+			data.pageHeight = 55;
+		}
+		e += '<div class="edit_item_warp" style="padding-bottom:8px"><span class="edit_item_label"><span style="color:red">*</span>页签高度：</span><input type="text" style="width:170px;" onkeyup="SurveyBuild.saveTabAttr(this,\'pageHeight\')" value="' + data.pageHeight + '"> px</div>';
 		
         e += '  <table class="table table-bordered data-table">';
         e += '      <thead>';
@@ -165,43 +167,57 @@ var SurveyBuild = {
 
         $(window).scrollTop();
         $("#question-edit").html(e)
+    },
+    saveTabAttr: function(el, attrName) {
+        if (!el || !attrName) return;
+        var instanceId = $(el).attr("data_id");
+        var val = this._getAttrVal(el);
+	
+        if(attrName == "itemName"){
+        	this._items[instanceId][attrName] = val;
+            $("#question-box li[data_id='" + instanceId + "'] .pagename").html(val);
+        }
+        if(attrName == "tapWidth"){
+            if (!el || !attrName) return;
+            var instanceId = $(el).attr("data_id");
+            var val = this._getAttrVal(el);
+            
+            this._items[instanceId][attrName] = val;
+            
+    		var data = this._data;
+    		var pageHeight = data.hasOwnProperty("pageHeight") ? data.pageHeight : "55";
+    		
+    		$.each(this._items, function(h, obj) {
+    			if (obj["classname"] == "Page") {
+    				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px";
+    				$("#tabNav div[data_id='" + h + "']").attr("style",obj.tapStyle);
+    			}
+    		});
+        }
+        if(attrName == "pageHeight"){
+            if (!el || !attrName) return;
+            data = this._data;
+    		var val = this._getAttrVal(el);
+            data[attrName] = val;
+    		
+    		$.each(this._items, function(h, obj) {
+                if (obj["classname"] == "Page") {
+    				obj.tapHeight = val;
+    				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ val + "px";
+                }
+            });
+    		
+    		var items = this._items;
+    		
+    		$("#tabNav > div").each(function(){
+    		  var instanceId = $(this).attr("data_id");
+    		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
+    		  $("#tabNav div[data_id='" + instanceId + "']").attr("style",items[instanceId].tapStyle);
+    		});
+        }
 
     },
-    saveTjx_fj: function() {
-		var _max_tjx_sm=$("#max_tjx_ts").val();
-		for (var i=1;i<=_max_tjx_sm;i++)
-		{
-			$("#saveRec_"+(i-1)).click();
-		}
-    },
-    _getAttrVal: function(el) {
-        var val = "";
-        if (el.tagName == "INPUT") {
-            val = $(el).val();
-            if ($(el).attr("type") == "radio" || $(el).attr("type") == "checkbox") {
-                val = $(el).prop("checked") ? "Y": "N";
-            }
-        } else if (el.tagName == "TEXTAREA") {
-            val = $(el).val();
-        } else if (el.tagName == "SELECT") {
-            val = $(el).val();
-        }
-        val = $.trim(val);
-        return val;
-    },
-    _clearAttrVal: function(el) {
-        if (el.tagName == "INPUT") {
-            if ($(el).attr("type") == "radio" || $(el).attr("type") == "checkbox") {
-                $(el).attr("checked", false);
-            } else {
-                $(el).val("");
-            }
-        } else if (el.tagName == "TEXTAREA") {
-            $(el).html("");
-        } else if (el.tagName == "SELECT") {
-            $(el).val("");
-        }
-    },
+    /* 暂时注释掉 By WRL @20160411
     saveTabAttr: function(el, attrName) {
 		
         if (!el || !attrName) return;
@@ -236,7 +252,68 @@ var SurveyBuild = {
 				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px";
 			}
 		});
+    },
+
+	saveTapHeight: function(el, attrName) {
+        if (!el || !attrName) return;
+        data = this._data;
+		var tapHeight;
+		tapHeight = this._getAttrVal(el);
+        data[attrName] = tapHeight;
+
+        this.is_edit = true;
 		
+		$.each(this._items, function(h, obj) {
+            if (obj["classname"] == "Page") {
+				obj.tapHeight = tapHeight;
+				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ tapHeight + "px";
+            }
+        });
+		
+		var items = this._items;
+		
+		$("#tabNav > div").each(function(){
+		  var instanceId = $(this).attr("data_id");
+		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
+		  //$("#tabNav div[data_id='" + instanceId + "']").attr("style",items[instanceId].tapStyle);
+		  
+		});
+    },
+    */
+    saveTjx_fj: function() {
+		var _max_tjx_sm=$("#max_tjx_ts").val();
+		for (var i=1;i<=_max_tjx_sm;i++)
+		{
+			$("#saveRec_"+(i-1)).click();
+		}
+    },
+    _getAttrVal: function(el) {
+        var val = "";
+        if (el.tagName == "INPUT") {
+            val = $(el).val();
+            if ($(el).attr("type") == "radio" || $(el).attr("type") == "checkbox") {
+                val = $(el).prop("checked") ? "Y": "N";
+            }
+        } else if (el.tagName == "TEXTAREA") {
+            val = $(el).val();
+        } else if (el.tagName == "SELECT") {
+            val = $(el).val();
+        }
+        val = $.trim(val);
+        return val;
+    },
+    _clearAttrVal: function(el) {
+        if (el.tagName == "INPUT") {
+            if ($(el).attr("type") == "radio" || $(el).attr("type") == "checkbox") {
+                $(el).attr("checked", false);
+            } else {
+                $(el).val("");
+            }
+        } else if (el.tagName == "TEXTAREA") {
+            $(el).html("");
+        } else if (el.tagName == "SELECT") {
+            $(el).val("");
+        }
     },
     /*level0级属性赋值*/
     saveAttr: function(el, attrName) {
@@ -3579,31 +3656,6 @@ var SurveyBuild = {
         data[attrName] = this._getAttrVal(el);
 
         this.is_edit = true;
-    },
-	saveTapHeight: function(el, attrName) {
-        if (!el || !attrName) return;
-        data = this._data;
-		var tapHeight;
-		tapHeight = this._getAttrVal(el);
-        data[attrName] = tapHeight;
-
-        this.is_edit = true;
-		
-		$.each(this._items, function(h, obj) {
-            if (obj["classname"] == "Page") {
-				obj.tapHeight = tapHeight;
-				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ tapHeight + "px";
-            }
-        });
-		
-		var items = this._items;
-		
-		$("#tabNav > div").each(function(){
-		  var instanceId = $(this).attr("data_id");
-		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
-		  //$("#tabNav div[data_id='" + instanceId + "']").attr("style",items[instanceId].tapStyle);
-		  
-		});
     },
     reFocus:function(id){
         $("#"+id).trigger('blur');

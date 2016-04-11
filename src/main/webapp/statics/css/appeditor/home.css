@@ -1197,8 +1197,8 @@ a#pageBottomBtn:hover{background-position:0 -57px;color:#565656;}
 #statusText {color: #ffffcc;line-height: 32px;padding: 0 15px 0 35px;text-align: left;}
 
 
-.tabNav{ cursor: pointer; background-color:#e2e2e2; background-repeat: no-repeat; color: #333; float: left; font-size: 14px; height: 41px; /*line-height: 41px;*/ margin-left: 1px; margin-right: 1px; text-align: center; width: 110px; border-radius:5px 5px 0 0;}
-.tabNav_c{ cursor: pointer; background-color:#cccccc; background-repeat: no-repeat; color: #333; float: left; font-size: 14px; height: 41px; /*line-height: 41px;*/ margin-left: 5px; margin-right: 1px; text-align: center; width: 110px; border-radius:5px 5px 0 0;}
+.tabNav{ cursor: pointer; background-color:#e2e2e2; background-repeat: no-repeat; color: #333; float: left; font-size: 14px; height: 41px;min-height:29px; /*line-height: 41px;*/ margin-left: 1px; margin-right: 1px; text-align: center; width: 110px; border-radius:5px 5px 0 0;}
+.tabNav_c{ cursor: pointer; background-color:#cccccc; background-repeat: no-repeat; color: #333; float: left; font-size: 14px; height: 41px;min-height:29px; /*line-height: 41px;*/ margin-left: 5px; margin-right: 1px; text-align: center; width: 110px; border-radius:5px 5px 0 0;}
 
 a.bw:link, a.bw:visited { background-color: inherit; color: #fff; text-decoration: none;}
 .tabContent{border: 0 none;left: 320px;padding: 0;position: fixed;right: 0;text-align: center;top: 10px;z-index: 9;margin-top:0px;}
