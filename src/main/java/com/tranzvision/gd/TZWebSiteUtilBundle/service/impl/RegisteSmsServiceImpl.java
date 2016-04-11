@@ -160,7 +160,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	}
 		      	
 		      	//手机是否被占用
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_SJBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "2";
@@ -209,7 +209,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	}
 		      	
 		      	//手机是否被占用
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_SJBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid.toLowerCase()},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "2";
@@ -256,7 +256,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	}
 		      	
 		        //手机是否被占用
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_SJBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
 		      	if(count > 0){
 		      		errorMsg[0] = "2";
@@ -425,7 +425,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	}
 		      	
 		        //手机是否被占用
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT = 'Y'";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT = 'Y' AND TZ_SJBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
 		      	if(count <= 0){
 		      		errorMsg[0] = "2";
@@ -818,7 +818,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			      	}
 			      	
 			      	//是否绑定手机
-			      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT ='Y'";
+			      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_MOBILE) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?) AND TZ_JIHUO_ZT ='Y' AND TZ_SJBD_BZ='Y'";
 			      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strPhone,strOrgid},"Integer");
 			      	if(count <= 0){
 			      		errorMsg[0] = "2";

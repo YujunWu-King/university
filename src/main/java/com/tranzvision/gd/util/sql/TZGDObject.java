@@ -381,10 +381,10 @@ public class TZGDObject
 				String repStr3 = "%bind(:" + (i + 1) + ")";
 				String val = args[i] == null ? "" : args[i];
 				if(val.contains("\\")){
-					val = val.replace("\\", "\\\\");
+					//val = val.replace("\\", "\\\\");
 				}
 				if(val.contains("$")){
-					val = val.replace("$", "\\$");
+					//val = val.replace("$", "\\$");
 				}
 				
 				htmlText = htmlText.replaceAll(repStr1, val);
