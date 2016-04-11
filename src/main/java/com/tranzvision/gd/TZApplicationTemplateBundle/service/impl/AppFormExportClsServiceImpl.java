@@ -233,7 +233,9 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 		String formHtml = "";
 		try {
-			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML",request.getContextPath(), title, html.toString());
+			String htm = html.toString();
+			htm = htm.replace("$", "\\$");
+			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML",request.getContextPath(), title, htm);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			formHtml = "";
@@ -307,11 +309,12 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		} else {
 			comHtml = comMap.get(xxxLmc);
 		}
+		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
+		int length = StringUtils.countMatches(comHtml, "%bind");
 		
-		
-		String maxLineSql = "SELECT MAX(TZ_LINE_ORDER) FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_SRQ_BZ = 'Y') limit 0,1";
-		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
-		length = length + 2;
+//		String maxLineSql = "SELECT MAX(TZ_LINE_ORDER) FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_SRQ_BZ = 'Y') limit 0,1";
+//		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
+//		length = length + 2;
 		
 		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, xxxBh});
@@ -372,11 +375,13 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		} else {
 			comHtml = comMap.get(xxxLmc);
 		}
+		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
+		int length = StringUtils.countMatches(comHtml, "%bind");
 		
 		
-		String maxLineSql = "SELECT MAX(TZ_LINE_ORDER) FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_SRQ_BZ = 'Y') limit 0,1";
-		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
-		length = length + 2;
+//		String maxLineSql = "SELECT MAX(TZ_LINE_ORDER) FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_SRQ_BZ = 'Y') limit 0,1";
+//		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
+//		length = length + 2;
 		
 		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_XXX_SRQ_BZ = '' AND TZ_XXX_BH REGEXP BINARY ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, parentXxxBh, line, "^" + xxxBh});

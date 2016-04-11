@@ -1014,10 +1014,11 @@ public class TemplateEngine {
 
 		String tplHtml = "";
 		componentData = componentData.replace("\\", "\\\\");
-		componentData = componentData.replaceAll("\\$", "~");
+		componentData = componentData.replace("$", "\\$");
+//		componentData = componentData.replaceAll("\\$", "~");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
-			tplHtml = tplHtml.replaceAll("\\~", "\\$");
+//			tplHtml = tplHtml.replaceAll("\\~", "\\$");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			tplHtml = "";
