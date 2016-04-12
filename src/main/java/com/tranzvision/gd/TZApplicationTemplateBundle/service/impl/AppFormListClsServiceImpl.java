@@ -396,10 +396,33 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			return strRet;
 		}
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		/* 考生基本信息 */
 		if (StringUtils.equals(oType, "KSPHOTO")) {
-			// AUTO :获取个人图片信息
+			// 判断当前登录人是否有个人照片信息
+			String ishasSql = "SELECT 'Y' FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID = ?";
+			String isHas = sqlQuery.queryForObject(ishasSql, new Object[] { oprId }, "String");
+			if(StringUtils.equals("Y", isHas)){
+				String sql = "SELECT PH.TZ_ATTACHSYSFILENA,PH.TZ_ATTACHFILE_NAME,PH.TZ_ATT_P_URL,PH.TZ_ATT_A_URL FROM PS_TZ_OPR_PHT_GL_T GL, PS_TZ_OPR_PHOTO_T PH WHERE GL.TZ_ATTACHSYSFILENA = PH.TZ_ATTACHSYSFILENA AND GL.OPRID = ?";
+				Map<String, Object> photoMap = sqlQuery.queryForMap(sql, new Object[] { oprId });
+				
+				String sysfilename = photoMap.get("TZ_ATTACHSYSFILENA") == null ? "" : String.valueOf(photoMap.get("TZ_ATTACHSYSFILENA"));
+				String filename = photoMap.get("TZ_ATTACHFILE_NAME") == null ? "" : String.valueOf(photoMap.get("TZ_ATTACHFILE_NAME"));
+				String path = photoMap.get("TZ_ATT_P_URL") == null ? "" : String.valueOf(photoMap.get("TZ_ATT_P_URL"));
+				String imapath = photoMap.get("TZ_ATTACHSYSFILENA") == null ? "" : String.valueOf(photoMap.get("TZ_ATT_A_URL"));
+				
+				String photo = imapath + sysfilename;
+				
+				Map<String, Object> mapRet = new HashMap<String, Object>();
+				mapRet.put("photo", photo);
+				mapRet.put("sysFileName", sysfilename);
+				mapRet.put("filename", filename);
+				mapRet.put("path", path);
+				mapRet.put("imaPath", imapath);
+
+				return jacksonUtil.Map2json(mapRet);
+			}
+			return strRet;
 		}
 
 		/* 考生班级信息 */
