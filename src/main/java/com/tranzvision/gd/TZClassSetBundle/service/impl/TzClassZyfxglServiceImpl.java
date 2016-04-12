@@ -164,7 +164,8 @@ public class TzClassZyfxglServiceImpl extends FrameworkImpl {
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
-				Map<String, Object> mapParam = jacksonUtil.getMap("data");
+//				Map<String, Object> mapParam = jacksonUtil.getMap("data");
+				Map<String, Object> mapParam = jacksonUtil.getMap();
 
 				String bj_id = String.valueOf(mapParam.getOrDefault("bj_id", ""));
 				String fx_id = String.valueOf(mapParam.getOrDefault("fx_id", ""));

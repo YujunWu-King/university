@@ -309,7 +309,11 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			 Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{str_app_ins_id,str_rownum});
 			 if(map != null){
 				 try{
-					 str_tjx_app_ins_id = Long.parseLong(map.get("TZ_TJX_APP_INS_ID").toString());
+					 String tjx_ins_id = map.get("TZ_TJX_APP_INS_ID") == null ? "0": String.valueOf(map.get("TZ_TJX_APP_INS_ID"));
+					 if("".equals(tjx_ins_id)){
+						 tjx_ins_id = "0";
+					 }
+					 str_tjx_app_ins_id = Long.parseLong(tjx_ins_id);
 				 }catch(Exception e){
 					 e.printStackTrace();
 					 str_tjx_app_ins_id = 0L;
