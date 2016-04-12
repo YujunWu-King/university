@@ -387,7 +387,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 						} else {
 							userPhoto = TZ_ATT_A_URL + "/" + TZ_ATTACHSYSFILENA;
 						}
-
+						userPhoto = contextPath + userPhoto;
 					}
 				}
 				if (userPhoto == null || "".equals(userPhoto)) {

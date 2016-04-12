@@ -319,7 +319,7 @@ public class ChangeMobileServiceImpl extends FrameworkImpl {
 			boolean boolPhone = RegExpValidatorUtils.isMobile(strMoble);
 
 			if (boolPhone) {
-				String sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE = ? and TZ_JG_ID=? limit 0,1";
+				String sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE = ? and TZ_JG_ID=? AND TZ_SJBD_BZ='Y' limit 0,1";
 				String phoneExists = sqlQuery.queryForObject(sql, new Object[] { strMoble, orgid }, "String");
 
 				if ("Y".equals(phoneExists)) {

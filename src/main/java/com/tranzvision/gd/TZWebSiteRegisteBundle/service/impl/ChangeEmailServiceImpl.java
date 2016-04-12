@@ -111,7 +111,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 			boolean boolEmail = validateUtil.validateEmail(strEmail);
 			if (boolEmail) {
 				// 邮箱是否被占用;
-				String emailZySQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=?";
+				String emailZySQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=? AND TZ_YXBD_BZ='Y'";
 				int count = jdbcTemplate.queryForObject(emailZySQL, new Object[] { strEmail, strJgid }, "Integer");
 				if (count > 0) {
 					mess = "该邮箱已被占用，请重新输入！";
