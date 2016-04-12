@@ -1,0 +1,8 @@
+webAppRootKey=springmvc.root.demo
+cookieMaxAge=-1
+cookieDomain=demo.tranzvision.net
+cookiePath=/
+cookieHttpOnly=True
+cookieSecure=False
+sessionMaxInactive=3600
+debug=false

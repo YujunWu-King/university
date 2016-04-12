@@ -1,0 +1,12 @@
+jdbc_driverClassName=com.mysql.jdbc.Driver
+jdbc_url=jdbc\:mysql\://10.116.43.97\:3306/university?useUnicode\=true&characterEncoding\=utf8
+jdbc_username=university
+jdbc_password=ZgLCT0labU7HdqYB
+druid_maxActive=20
+druid_initialSize=1
+druid_maxWait=60000
+druid_maxIdle=20
+druid_minIdle=3
+druid_removeAbandoned=true
+druid_removeAbandonedTimeout=180
+druid_connectionProperties=clientEncoding\=UTF-8
