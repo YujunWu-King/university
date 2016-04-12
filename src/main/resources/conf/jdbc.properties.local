@@ -1,7 +1,10 @@
 jdbc_driverClassName=com.mysql.jdbc.Driver
-jdbc_url=jdbc\:mysql\://202.120.24.114\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
-jdbc_username=TZGDDEV
-jdbc_password=GDDEV@tz001
+jdbc_url=jdbc\:mysql\://101.200.181.213\:3306/TZGDUAT?useUnicode\=true&characterEncoding\=utf8
+jdbc_username=TZGDUAT
+jdbc_password=GDUAT@tz001
+#jdbc_url=jdbc\:mysql\://202.120.24.114\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
+#jdbc_username=TZGDDEV
+#jdbc_password=GDDEV@tz001
 #jdbc_url=jdbc\:mysql\://127.0.0.1\:3306/TZGDDEV?useUnicode\=true&characterEncoding\=utf8
 #jdbc_username=root
 #jdbc_password=123456
