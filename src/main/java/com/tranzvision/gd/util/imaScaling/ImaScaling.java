@@ -12,61 +12,53 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-public class ImaScaling
-{
-  private static String getExtention(String fileName)
-  {
-    int pos = fileName.lastIndexOf(".");
-    return fileName.substring(pos + 1);
-  }
+public class ImaScaling {
+	private static String getExtention(String fileName) {
+		int pos = fileName.lastIndexOf(".");
+		return fileName.substring(pos + 1);
+	}
 
-  public static void scissor(int x1, int y1, int width, int height, String originPath, String savePath)
-    throws IOException
-  {
-    FileInputStream is = null;
-    ImageInputStream iis = null;
-    try
-    {
-      is = new FileInputStream(originPath);
+	public static void scissor(int x1, int y1, int width, int height, String originPath, String savePath)
+			throws IOException {
+		FileInputStream is = null;
+		ImageInputStream iis = null;
+		try {
+			is = new FileInputStream(originPath);
 
-      Iterator<?> it = 
-        ImageIO.getImageReadersByFormatName(getExtention(originPath)
-        .toLowerCase());
-      ImageReader reader = (ImageReader)it.next();
+			String imgSuffix = ImgSuffixUtil.getImgSuffix(originPath);
 
-      iis = ImageIO.createImageInputStream(is);
+			Iterator<?> it = ImageIO.getImageReadersByFormatName(imgSuffix);
+			ImageReader reader = (ImageReader) it.next();
 
-      reader.setInput(iis, true);
+			iis = ImageIO.createImageInputStream(is);
 
-      ImageReadParam param = reader.getDefaultReadParam();
+			reader.setInput(iis, true);
 
-      Rectangle rect = new Rectangle(x1, y1, width, height);
+			ImageReadParam param = reader.getDefaultReadParam();
 
-      param.setSourceRegion(rect);
+			Rectangle rect = new Rectangle(x1, y1, width, height);
 
-      BufferedImage bi = reader.read(0, param);
+			param.setSourceRegion(rect);
 
-      ImageIO.write(bi, getExtention(originPath).toLowerCase(), new File(
-        savePath));
-    } finally {
-      if (is != null)
-        is.close();
-      if (iis != null)
-        iis.close();
-    }
-  }
+			BufferedImage bi = reader.read(0, param);
 
-  public static void scaleImage(int width, int height, String originPath, String savePath)
-    throws IOException
-  {
-    File file = new File(originPath);
+			ImageIO.write(bi, imgSuffix, new File(savePath));
+		} finally {
+			if (is != null)
+				is.close();
+			if (iis != null)
+				iis.close();
+		}
+	}
 
-    BufferedImage sourceImage = ImageIO.read(file);
+	public static void scaleImage(int width, int height, String originPath, String savePath) throws IOException {
+		File file = new File(originPath);
 
-    ResampleOp resampleOp = new ResampleOp(width, height);
-    BufferedImage rescaledTomato = resampleOp.filter(sourceImage, null);
-    ImageIO.write(rescaledTomato, getExtention(originPath).toLowerCase(), 
-      new File(savePath));
-  }
+		BufferedImage sourceImage = ImageIO.read(file);
+
+		ResampleOp resampleOp = new ResampleOp(width, height);
+		BufferedImage rescaledTomato = resampleOp.filter(sourceImage, null);
+		ImageIO.write(rescaledTomato, getExtention(originPath).toLowerCase(), new File(savePath));
+	}
 
 }
