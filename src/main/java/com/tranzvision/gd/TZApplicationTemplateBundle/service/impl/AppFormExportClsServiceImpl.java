@@ -606,7 +606,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 			val.append(para.toString());
 			
 		}
-		val.append("</div>");
+		val.append("<br style=\"clear:both\"></div>");
 		
 		try {
 			if (StringUtils.isNotBlank(comHtml)) {
