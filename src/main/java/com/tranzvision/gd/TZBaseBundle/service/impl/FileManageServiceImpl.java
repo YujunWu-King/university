@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -36,6 +35,40 @@ public class FileManageServiceImpl implements FileManageService {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
+	/**
+	 * 获取给定文件夹、文件的绝对路径；
+	 * 
+	 * @param path
+	 * @return
+	 */
+	public String getRealPath(String path) {
+		String realPath = "";
+		String ctxPath = request.getContextPath();
+		if (!path.startsWith(ctxPath)) {
+			path = ctxPath + path;
+		}
+
+		realPath = request.getServletContext().getRealPath(path);
+		if (null == realPath) {
+			try {
+				realPath = request.getSession().getServletContext().getRealPath(path);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+		}
+		if (!"".equals(ctxPath)) {
+			String ctxPathName = ctxPath.replace("/", "");
+			if (realPath.contains("/")) {
+				realPath = realPath.replace("/" + ctxPathName + "/" + ctxPathName + "/", "/" + ctxPathName + "/");
+			} else {
+				realPath = realPath.replace("\\" + ctxPathName + "\\" + ctxPathName + "\\", "\\" + ctxPathName + "\\");
+			}
+		}
+
+		return realPath;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -46,16 +79,8 @@ public class FileManageServiceImpl implements FileManageService {
 	@Override
 	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
 
-		String parentRealPath = request.getServletContext().getRealPath(parentPath);
-		if(null==parentRealPath){
-			try {
-				parentRealPath = request.getSession().getServletContext().getResource(parentPath).getPath();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
-
+		String parentRealPath = this.getRealPath(parentPath);
+		
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
 		if (!dir.exists()) {
@@ -90,15 +115,19 @@ public class FileManageServiceImpl implements FileManageService {
 
 		return false;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see com.tranzvision.gd.TZBaseBundle.service.FileManageService#UpdateFile(java.lang.String, java.lang.String, byte[])
+	 * 
+	 * @see
+	 * com.tranzvision.gd.TZBaseBundle.service.FileManageService#UpdateFile(java
+	 * .lang.String, java.lang.String, byte[])
 	 */
 	@Override
 	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
 
-		String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		//String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
@@ -108,7 +137,7 @@ public class FileManageServiceImpl implements FileManageService {
 
 		File serverFile = new File(dir.getAbsolutePath() + File.separator + fileName);
 		if (serverFile.exists()) {
-			//文件存在则删除
+			// 文件存在则删除
 			serverFile.delete();
 		}
 
@@ -144,15 +173,8 @@ public class FileManageServiceImpl implements FileManageService {
 	 */
 	@Override
 	public boolean DeleteFile(String parentPath, String fileName) {
-		String parentRealPath = request.getServletContext().getRealPath(parentPath);
-		if(null==parentRealPath){
-			try {
-				parentRealPath = request.getSession().getServletContext().getResource(parentPath).getPath();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
+		//String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
@@ -184,15 +206,8 @@ public class FileManageServiceImpl implements FileManageService {
 	@Override
 	public boolean DeleteFile(String filePath) {
 
-		String fileRealPath = request.getServletContext().getRealPath(filePath);
-		if(null==fileRealPath){
-			try {
-				fileRealPath = request.getSession().getServletContext().getResource(filePath).getPath();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
+		//String fileRealPath = request.getServletContext().getRealPath(filePath);
+		String fileRealPath = this.getRealPath(filePath);
 
 		File delFile = new File(fileRealPath);
 		// System.out.println(delFile.getAbsolutePath());
@@ -222,7 +237,8 @@ public class FileManageServiceImpl implements FileManageService {
 
 		ArrayList<Integer> aryImgWH = new ArrayList<Integer>();
 
-		String fileRealPath = request.getServletContext().getRealPath(filePath);
+		//String fileRealPath = request.getServletContext().getRealPath(filePath);
+		String fileRealPath = this.getRealPath(filePath);
 		File imageFile = new File(fileRealPath);
 		if (!imageFile.exists()) {
 			logger.info("Get image width & height failed.The image:" + fileRealPath + " is not exists");
@@ -236,7 +252,7 @@ public class FileManageServiceImpl implements FileManageService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return aryImgWH;
 	}
 

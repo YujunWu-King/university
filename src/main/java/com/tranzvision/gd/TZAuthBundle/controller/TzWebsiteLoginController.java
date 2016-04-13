@@ -99,7 +99,7 @@ public class TzWebsiteLoginController {
 		Map<String, Object> mapData = jacksonUtil.getMap("comParams");
 
 		String strOrgId = mapData.get("orgid") == null ? "" : String.valueOf(mapData.get("orgid"));
-		String strUserName = mapData.get("userName") == null ? "" : String.valueOf(mapData.get("userName"));
+		String strUserName = mapData.get("userName") == null ? "" : String.valueOf(mapData.get("userName")).trim();
 		String strPassWord = mapData.get("passWord") == null ? "" : String.valueOf(mapData.get("passWord"));
 		String strYzmCode = mapData.get("yzmCode") == null ? "" : String.valueOf(mapData.get("yzmCode"));
 		String strLang = mapData.get("lang") == null ? "" : String.valueOf(mapData.get("lang"));

@@ -225,7 +225,7 @@ public class TzLoginController {
 		Map<String, Object> formData = jacksonUtil.getMap("comParams");
 
 		String orgid = (String) formData.get("orgId");
-		String userName = (String) formData.get("userName");
+		String userName = formData.get("userName")==null?"":String.valueOf(formData.get("userName")).trim();
 		String userPwd = (String) formData.get("password");
 		String code = (String) formData.get("yzm");
 
