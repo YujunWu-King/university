@@ -128,7 +128,7 @@ public class ColorInfoClsServiceImpl extends FrameworkImpl {
 
 					if (count > 0) {
 						errMsg[0] = "1";
-						errMsg[1] = "当前部门存在有相同名称或码制的颜色定义。";
+						errMsg[1] = "当前部门存在有相同名称或码值的颜色定义。";
 						return strRet;
 					}else{
 						PsTzColorSortT psTzColorSortT = new PsTzColorSortT();
@@ -155,7 +155,7 @@ public class ColorInfoClsServiceImpl extends FrameworkImpl {
 
 					if (count > 0) {
 						errMsg[0] = "1";
-						errMsg[1] = "当前部门存在有相同名称或码制的颜色定义。";
+						errMsg[1] = "当前部门存在有相同名称或码值的颜色定义。";
 						return strRet;
 					}else{
 						PsTzColorSortT psTzColorSortT = new PsTzColorSortT();

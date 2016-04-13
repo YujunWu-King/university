@@ -85,17 +85,17 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 
         e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label">最小值：</span>';
-		e += '	<input type="text" class="medium numSizeMin" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'min\')" value="' + data.min + '"/>';
+		e += '	<input type="text" maxlength="15" class="medium numSizeMin" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'min\')" value="' + data.min + '"/>';
 		e += '</div>';
 
         e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label">最大值：</span>';
-		e += '	<input type="text" class="medium numSizeMax" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'max\')" value="' + data.max + '"/>';
+		e += '	<input type="text" maxlength="15"class="medium numSizeMax" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'max\')" value="' + data.max + '"/>';
 		e += '</div>';
 
 		e += '<div class="edit_item_warp mb10">';
 		e += '	<span class="edit_item_label">小数位数：</span>';
-		e += '	<input type="text" class="medium numDecws" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'digits\')" value="' + data.digits + '"/>';
+		e += '	<input type="text" maxlength="1" class="medium numDecws" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'digits\')" value="' + data.digits + '"/>';
 		e += '</div>';
 		
 		e += '</div>';

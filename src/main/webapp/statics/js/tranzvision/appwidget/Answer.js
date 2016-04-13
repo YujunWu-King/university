@@ -1038,11 +1038,12 @@ var SurveyBuild = {
 				loading();/*上传进度条*/
 				var $form = document.getElementById("main_list");
 				$form.encoding = "multipart/form-data";
-				$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment&" + Math.random();
+				var tzParam = "?filePath=appFormAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
+				$form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
 				$("#main_list").ajaxSubmit({
 					dataType:'json',
 					type:'POST',
-					url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment&" + Math.random(),
+					url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
 					success: function(obj) {
 						if(obj.success){
 							//清空file控件的Value
@@ -1390,12 +1391,16 @@ var SurveyBuild = {
         var index = $(el).closest(".main_inner_content_para").index();
         var child = data.children[index];
         try{
+
+        	
+        	
             var $form = document.getElementById("main_list");
             $form.encoding = "multipart/form-data";
-            $form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
+			var tzParam = "?filePath=appFormAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
+			$form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
             $("#main_list").ajaxSubmit({
                 dataType:'json',
-                url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
+                url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
                 success: function(obj) {
                     if(obj.success){
 						//清空file控件的Value
@@ -1453,10 +1458,11 @@ var SurveyBuild = {
 			loading();/*上传进度条*/
 			var $form = document.getElementById("main_list");
 			$form.encoding = "multipart/form-data";
-			$form.action = TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment";
+			var tzParam = "?filePath=appFormAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
+			$form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
 			$("#main_list").ajaxSubmit({
 				dataType:'json',
-				url:TzUniversityContextPath + "/UpdWebServlet?filePath=appFormAttachment",
+				url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
 				success: function(obj) {
 					if(obj.success){
 						//清空file控件的Value

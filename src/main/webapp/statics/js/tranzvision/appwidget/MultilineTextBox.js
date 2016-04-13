@@ -35,6 +35,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
 			c += '              <div class="onShow"></div>';
 			c += '          </div>';
+			c += '			<span id="' + data.itemId + 'Size"></span>';
 			c += '	</div>';
 			c += '	<div class="main_inner_content_info_autoheight_real">';
 			c += '		<div class="main_inner_content_info_text_mid">';
@@ -158,6 +159,12 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			allowEmpty = false;
 			errorMsg = MsgSet["REQUIRE"];
 		}
+		$inputBox.keyup(function(){
+			var len = $inputBox.val().length;
+			if (len != 0){
+				$("#" + data.itemId + "Size").text("已输入"+len+"字");
+			}
+		});
 		
 		$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 		$inputBox.functionValidator({

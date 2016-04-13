@@ -1363,8 +1363,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '	<div class="main_inner_content_info_right">';
 			works += '		<div class="file_upload_button">';
 			works += '			<div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			//works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+//			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
 			works += '			<div style="margin-top:-35px;margin-left:280px">';
 			works += '				<span id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
 			works += '					<div class="onCorrect">&nbsp;</div>';
@@ -1389,8 +1389,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '	<div class="main_inner_content_info_right">';
 			works += '		<div class="file_upload_button">';
 			works += '			<div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			//works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+//			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
 			works += '			<div style="margin-top:-35px;margin-left:280px">';
 			works += '				<span id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
 			works += '					<div class="onCorrect">&nbsp;</div>';

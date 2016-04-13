@@ -267,7 +267,7 @@
     // }}}
     // Initialization {{{
     // Sanitize some options {{{
-    if ($.browser.msie && ($.browser.version.split('.')[0] === '6')) {
+    if ($.browser.msie && (($.browser.version + "").split('.')[0] === '6')) {
       ie6mode = true;
     }
     if (typeof(obj) !== 'object') {

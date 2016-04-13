@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
@@ -354,5 +355,26 @@ public class FileUploadController {
 		return (new StringBuilder()).append(year).append(month).append(day).append(hour).append(minute).append(second)
 				.append(mi).append(num).append("_").append(rand).toString();
 	}
+	@RequestMapping(value = "SingleUpdWebServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String webUploadHandler(MultipartHttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams) {
 
+		String language = String.valueOf(allRequestParams.get("language"));
+		String funcdir = String.valueOf(allRequestParams.get("filePath"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String siteid = allRequestParams.get("siteid") == null ? "" : String.valueOf(allRequestParams.get("siteid"));
+		String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+		
+		String keyName = String.valueOf(allRequestParams.get("keyName"));
+		MultipartFile file = (MultipartFile) request.getFile(keyName); 
+		String retJson = "";
+
+		if ("".equals(siteid)) {
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+		} else {
+			retJson = this.doSaveFile(orgid, rootPath, funcdir, language, istmpfile, file, siteid);
+		}
+		return retJson;
+	}
 }
