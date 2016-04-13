@@ -457,7 +457,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 			    }
 			    
 			   //邮箱是否存在
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y'";
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND A.TZ_YXBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
 		      	if(count <= 0){
 		      		errorMsg[0] = "3";

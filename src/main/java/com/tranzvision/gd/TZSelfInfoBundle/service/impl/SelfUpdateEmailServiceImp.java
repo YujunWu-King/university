@@ -90,7 +90,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 							
 						}
 						
-						String repSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JIHUO_ZT = 'Y' AND LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=? and OPRID<>?";
+						String repSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JIHUO_ZT = 'Y' AND LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=? and TZ_YXBD_BZ='Y' and OPRID<>?";
 						int repInt = jdbcTemplate.queryForObject(repSQL, new Object[]{email,jgId,oprid},"Integer");
 						if(repInt > 0){
 							try {
@@ -153,7 +153,7 @@ public class SelfUpdateEmailServiceImp extends FrameworkImpl {
 		//获得新邮箱;
 		String strEmail = jacksonUtil.getString("newEmail");
 		//判断邮箱格式;
-		String repSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JIHUO_ZT = 'Y' AND LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=? and OPRID<>? ";
+		String repSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JIHUO_ZT = 'Y' AND LOWER(TZ_EMAIL) = LOWER(?) AND TZ_JG_ID=? and TZ_YXBD_BZ='Y' and OPRID<>? ";
 		int rptInt = jdbcTemplate.queryForObject(repSQL, new Object[]{strEmail,jgId,oprid},"Integer");
 		if(rptInt > 0){
 			return "\"该邮箱已被占用，请重新输入！\"";

@@ -148,6 +148,7 @@ public class CreateTaskServiceImpl {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "";
 		}
 

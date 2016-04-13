@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZSelfInfoBundle.dao.PsTzShjiYzmTblMapper;
 import com.tranzvision.gd.TZSelfInfoBundle.model.PsTzShjiYzmTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -77,11 +78,10 @@ public class SelfUpdatePhoneServiceImpl extends FrameworkImpl {
 			String strPhone = jacksonUtil.getString("newPhone");
 
 			// 判断手机格式
-			String todo;
-			boolean boolPhone = true;
-
+			boolean boolPhone = RegExpValidatorUtils.isMobile(strPhone);
+			
 			if (boolPhone) {
-				String sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE=? and TZ_JG_ID=? and OPRID<>? limit 0,1";
+				String sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE=? and TZ_JG_ID=? and TZ_SJBD_BZ='Y' and OPRID<>? limit 0,1";
 				String phoneUsed = sqlQuery.queryForObject(sql, new Object[] { strPhone, orgid, oprid }, "String");
 
 				if ("Y".equals(phoneUsed)) {
@@ -187,7 +187,7 @@ public class SelfUpdatePhoneServiceImpl extends FrameworkImpl {
 							 * sqlQuery.queryForObject(sql, new Object[] {
 							 * oprid, orgid, "NBYH" }, "String");
 							 */
-							sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE = ? and TZ_JG_ID=? and OPRID<>? limit 0,1";
+							sql = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JIHUO_ZT = 'Y' and TZ_MOBILE = ? and TZ_JG_ID=? and TZ_SJBD_BZ='Y' and OPRID<>? limit 0,1";
 							String phoneUsed = sqlQuery.queryForObject(sql, new Object[] { strPhone, orgid, oprid },
 									"String");
 
@@ -197,7 +197,7 @@ public class SelfUpdatePhoneServiceImpl extends FrameworkImpl {
 								return strRet;
 							}
 
-							sql = "update PS_TZ_AQ_YHXX_TBL set TZ_MOBILE=?,TZ_SJBD_BZ='Y' where TZ_JIHUO_ZT='Y' and OPRID=? AND TZ_JG_ID=? and TZ_RYLX=? and TZ_SJBD_BZ='Y'";
+							sql = "update PS_TZ_AQ_YHXX_TBL set TZ_MOBILE=?,TZ_SJBD_BZ='Y' where TZ_JIHUO_ZT='Y' and OPRID=? AND TZ_JG_ID=? and TZ_RYLX=?";
 							sqlQuery.update(sql, new Object[] { strPhone, oprid, orgid, "NBYH" });
 
 							sql = "update PS_TZ_SHJI_YZM_TBL set TZ_EFF_FLAG='N' where TZ_EFF_FLAG='Y' and TZ_JG_ID=? and TZ_MOBILE_PHONE=?";

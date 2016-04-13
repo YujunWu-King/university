@@ -61,7 +61,7 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 			            RegEmailSuccess = RegEmailSuccess + "&strJgid=" + tzJgId + "&FLAGE=N&errorFlg=overtime";
 					}else{
 						// 查看是否绑定了邮箱，如果绑定了邮箱，则要同时修改绑定邮箱，同时要判断新的绑定邮箱是否在该机构下重复，如果重复，则修改失败，同时要提示用户;
-				        String bindSQL = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_EMAIL=?";
+				        String bindSQL = "select 'Y' from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_EMAIL=? and TZ_YXBD_BZ='Y'";
 						String strBindEmailFlg = jdbcTemplate.queryForObject(bindSQL, new Object[]{tzJgId,tzEmail},"String");
 						if("Y".equals(strBindEmailFlg)){
 							RegEmailSuccess = RegEmailSuccess + "&strJgid=" + tzJgId + "&FLAGE=N&errorFlg=repeat";

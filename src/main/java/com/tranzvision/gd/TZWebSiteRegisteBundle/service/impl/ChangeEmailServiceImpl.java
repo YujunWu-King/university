@@ -210,6 +210,7 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 
 			// 发送邮件;
 			String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_N_001", "MAL", "A");
+			//String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_BINDEMAI", "MAL", "A");
 
 			if (taskId == null || "".equals(taskId)) {
 				mess = "创建邮件发送任务失败！";
