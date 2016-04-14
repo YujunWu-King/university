@@ -58,8 +58,10 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppVie
 import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhotoTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhotoT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 
@@ -143,6 +145,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
 	@Autowired
 	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
+	@Autowired
+	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
 	
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
@@ -1775,7 +1779,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strPath = xxxObject.get("path") == null ? "" : String.valueOf(xxxObject.get("path"));
 		}
 		
-		if(!"".equals(strSysFileName)||!"".equals(strUseFileName)||!"".equals(strImaPath)||!"".equals(strPath)){
+		if(!"".equals(strSysFileName) && !"".equals(strUseFileName) && !"".equals(strImaPath) && !"".equals(strPath)){
 			
 			String strAttPurl = "";
 			String strTzAttachSysfile = "";
@@ -1794,13 +1798,30 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				PsTzFormPhotoT psTzFormPhotoT = new PsTzFormPhotoT();
 				psTzFormPhotoT.setTzAppInsId(numAppInsId);
 				psTzFormPhotoT.setTzAttachsysfilena(strSysFileName);
-				psTzFormPhotoTMapper.updateByPrimaryKeySelective(psTzFormPhotoT);
+				psTzFormPhotoTMapper.insert(psTzFormPhotoT);
+			}
+			//更新TZ_OPR_PHOTO_T//
+			sql = "SELECT COUNT(1) FROM PS_TZ_OPR_PHOTO_T WHERE TZ_ATTACHSYSFILENA = ?";
+			int counFile = sqlQuery.queryForObject(sql, new Object[] { strSysFileName }, "Integer");
+			if(counFile>0){
+				PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
+				psTzOprPhotoT.setTzAttachsysfilena(strSysFileName);
+				psTzOprPhotoT.setTzAttachfileName(strUseFileName);
+				psTzOprPhotoT.setTzAttAUrl(strImaPath);
+				psTzOprPhotoT.setTzAttPUrl(strPath);
+				psTzOprPhotoTMapper.updateByPrimaryKeySelective(psTzOprPhotoT);
+			}else{
+				PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
+				psTzOprPhotoT.setTzAttachsysfilena(strSysFileName);
+				psTzOprPhotoT.setTzAttachfileName(strUseFileName);
+				psTzOprPhotoT.setTzAttAUrl(strImaPath);
+				psTzOprPhotoT.setTzAttPUrl(strPath);
+				psTzOprPhotoTMapper.insert(psTzOprPhotoT);
 			}	
-			//更新TZ_OPR_PHOTO_T//待完善
 		}
 	}
 	
-	//检查是否填写完成(待完成)
+	//检查是否填写完成
 	private String checkFiledValid(Long numAppInsId,String strTplId,String strPageId,String strOtype){
 		String returnMsg = "";
 		   
