@@ -5,7 +5,8 @@ function pageReadOnly()
 	$("form textarea").prop("readonly", "readonly");
 	$("form input").prop("disabled", true);
 	$("form select").prop("disabled", true); 
-	$("form textarea").prop("disabled", true);
+//	$("form textarea").prop("disabled", true);
+	$("form textarea").unbind();
 	$("form input").nextAll('img').unbind("click");
 	
 	$(".main_inner_content_info").hide();

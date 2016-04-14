@@ -200,10 +200,10 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	public String CreateHtml(String insid, String tplid,String title) {
 
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_DRQ_BZ,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = '' AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_ORDER,TZ_LINE_NUM,TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_DRQ_BZ,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = '' AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_ORDER,TZ_LINE_NUM,TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid });
 		StringBuffer html = new StringBuffer("");
-		int i = 1;
+
 		for (Object obj : resultlist) {
 			Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -217,18 +217,17 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 			if (StringUtils.equals("Y", drqFlag)) {
 				//多行容器
-				String dhContent = this.getDHContent(insid, tplid, xxxBh, xxxMc, xxxLmc, i + ".");
+				String dhContent = this.getDHContent(insid, tplid, xxxBh, xxxMc, xxxLmc);
 				html.append(dhContent);
 			} else if (StringUtils.equals("Y", srqFlag)) {
 				//组合框类型
-				String singleContent = this.getSingleContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".");
+				String singleContent = this.getSingleContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx);
 				html.append(singleContent);
 			} else {
 				//简单类型
-				String content = this.getContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx, i + ".");
+				String content = this.getContent(insid, tplid, xxxBh, xxxNo, xxxMc, xxxLmc, xxxCclx);
 				html.append(content);
 			}
-			i++;
 		}
 
 		String formHtml = "";
@@ -258,7 +257,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 * @param i			序号
 	 * @return			简单控件对应的HTML源码
 	 */
-	private String getContent(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc, String xxxCclx, String i) {
+	private String getContent(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc, String xxxCclx) {
 		//控件的源HTML
 		String comHtml = "";
 		if (!comMap.containsKey(xxxLmc)) {
@@ -273,7 +272,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 
 		try {
 			if (StringUtils.isNotBlank(comHtml)) {
-				comHtml = tzGdObject.getText(comHtml, i, xxxMc, val);
+				comHtml = tzGdObject.getText(comHtml, xxxMc, val);
 			} else {
 				comHtml = "";
 			}
@@ -299,7 +298,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 * @return			组合控件的HTML源码
 	 */
 	@SuppressWarnings("unchecked")
-	private String getSingleContent(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc, String xxxCclx, String i) {
+	private String getSingleContent(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc, String xxxCclx) {
 		//控件的源HTML
 		String comHtml = "";
 		if (!comMap.containsKey(xxxLmc)) {
@@ -312,18 +311,13 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
 		int length = StringUtils.countMatches(comHtml, "%bind");
 		
-//		String maxLineSql = "SELECT MAX(TZ_LINE_ORDER) FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_SRQ_BZ = 'Y') limit 0,1";
-//		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
-//		length = length + 2;
-		
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, xxxBh});
 		
 		String[] values = new String[length];
-		values[0] = i;
-		values[1] = xxxMc;
+		values[0] = xxxMc;
 		
-		int j = 2;
+		int j = 1;
 		for (Object obj : resultlist) {
 			Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -383,14 +377,13 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 //		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
 //		length = length + 2;
 		
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_XXX_SRQ_BZ = '' AND TZ_XXX_BH REGEXP BINARY ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_XXX_SRQ_BZ = '' AND TZ_XXX_BH REGEXP BINARY ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, parentXxxBh, line, "^" + xxxBh});
 		
 		String[] values = new String[length];
-		values[0] = "";
-		values[1] = xxxMc;
+		values[0] = xxxMc;
 		
-		int j = 2;
+		int j = 1;
 		for (Object obj : resultlist) {
 			Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -520,7 +513,10 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 			} else {
 				String sql = "SELECT TZ_APP_L_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 				val = sqlQuery.queryForObject(sql, new Object[] { insid, xxxBh }, "String");
+				val = val.replace("\\n", "<br>");
 			}
+		}else if(StringUtils.equals("Page", xxxLmc)){
+			val = xxxMc;
 		}
 		return val;
 	}
@@ -537,7 +533,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 * @return			多行容器HTML源码
 	 */
 	@SuppressWarnings("unchecked")
-	private String getDHContent(String insid, String tplid, String xxxBh, String xxxMc, String xxxLmc, String i) {
+	private String getDHContent(String insid, String tplid, String xxxBh, String xxxMc, String xxxLmc) {
 		//控件的源HTML
 		String comHtml = "";
 		if (!comMap.containsKey(xxxLmc)) {
@@ -553,9 +549,9 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		int maxLine = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, xxxBh }, "Integer");
 		String sql = "";
 		if (StringUtils.contains("DHContainer,LayoutControls", xxxLmc)) {
-			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_XXX_SRQ_BZ <> '' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_XXX_SRQ_BZ <> '' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		}else{
-			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Page','Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
 		}
 		
 		StringBuffer val = new StringBuffer("");
@@ -587,14 +583,14 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 					if (StringUtils.contains("DHContainer,LayoutControls", xxxLmc)) {
 						singleContent = this.getSingleContentInDH(insid, tplid,xxxBh, xxxBh1, xxxNo1, xxxMc1, xxxLmc1, xxxCclx1, j);
 					}else{
-						singleContent = this.getSingleContent(insid, tplid, xxxBh1, xxxNo1, xxxMc1, xxxLmc1, xxxCclx1, "");
+						singleContent = this.getSingleContent(insid, tplid, xxxBh1, xxxNo1, xxxMc1, xxxLmc1, xxxCclx1);
 					}
 
 					if (StringUtils.isNoneBlank(singleContent)) {
 						para.append(singleContent);
 					}
 				} else {
-					String content = this.getContent(insid, tplid, xxxBh1, xxxNo1, xxxMc1, xxxLmc1, xxxCclx1, "");
+					String content = this.getContent(insid, tplid, xxxBh1, xxxNo1, xxxMc1, xxxLmc1, xxxCclx1);
 					if (StringUtils.isNoneBlank(content)) {
 						para.append(content);
 					}
@@ -610,7 +606,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		
 		try {
 			if (StringUtils.isNotBlank(comHtml)) {
-				comHtml = tzGdObject.getText(comHtml, i, xxxMc, val.toString());
+				comHtml = tzGdObject.getText(comHtml,xxxMc, val.toString());
 			} else {
 				comHtml = "";
 			}
