@@ -3,8 +3,7 @@
     xtype: 'contentPanel',
     requires:[
         'Ext.ux.TabCloseMenu',
-        'tranzvision.extension.ContentPanelMaximize',
-        'KitchenSink.view.home.Home'
+        'tranzvision.extension.ContentPanelMaximize'
     ],
     id: 'tranzvision-framework-content-panel',
     plugins:[
