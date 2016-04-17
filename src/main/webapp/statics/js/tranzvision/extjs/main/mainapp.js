@@ -471,8 +471,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
 
                                         if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                         {
-                                            var win = new tranzvision.view.window.ReloginWindow();
-                                            win.show();
+											/*var win = new tranzvision.view.window.ReloginWindow();
+											win.show();*/
+											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+												if(optional=="yes"){											
+													var org=Ext.tzOrgID.toLowerCase();
+													window.location.href="/s/"+org+"/login.html";
+												}
+											});
                                         }
                                     }
                                     catch(e2)
@@ -579,8 +585,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     {
                                         if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                         {
-                                            var win = new tranzvision.view.window.ReloginWindow();
-                                            win.show();
+                                            /*var win = new tranzvision.view.window.ReloginWindow();
+											win.show();*/
+											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+												if(optional=="yes"){											
+													var org=Ext.tzOrgID.toLowerCase();
+													window.location.href="/s/"+org+"/login.html";
+												}
+											});
                                         }
                                     }
                                     catch(e2)
@@ -671,8 +683,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     {
                                         if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                         {
-                                            var win = new tranzvision.view.window.ReloginWindow();
-                                            win.show();
+                                            /*var win = new tranzvision.view.window.ReloginWindow();
+											win.show();*/
+											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+												if(optional=="yes"){											
+													var org=Ext.tzOrgID.toLowerCase();
+													window.location.href="/s/"+org+"/login.html";
+												}
+											});
                                         }
                                     }
                                     catch(e2)
@@ -781,8 +799,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     {
                                         if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                         {
-                                            var win = new tranzvision.view.window.ReloginWindow();
-                                            win.show();
+                                            /*var win = new tranzvision.view.window.ReloginWindow();
+											win.show();*/
+											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+												if(optional=="yes"){											
+													var org=Ext.tzOrgID.toLowerCase();
+													window.location.href="/s/"+org+"/login.html";
+												}
+											});
                                         }
                                     }
                                     catch(e2)
@@ -941,8 +965,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     {
                                         if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                         {
-                                            var win = new tranzvision.view.window.ReloginWindow();
-                                            win.show();
+                                            /*var win = new tranzvision.view.window.ReloginWindow();
+											win.show();*/
+											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+												if(optional=="yes"){											
+													var org=Ext.tzOrgID.toLowerCase();
+													window.location.href="/s/"+org+"/login.html";
+												}
+											});
                                         }
                                     }
                                     catch(e2)
@@ -1273,8 +1303,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                             {
-                                                var win = new tranzvision.view.window.ReloginWindow();
-                                                win.show();
+                                                /*var win = new tranzvision.view.window.ReloginWindow();
+												win.show();*/
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="yes"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href="/s/"+org+"/login.html";
+													}
+												});
                                             }
                                         }
                                         catch(e2)
@@ -2645,8 +2681,14 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             if(Ext.getCmp("tranzvision_relogin_20150626") == undefined)
                                             {
-                                                var win = new tranzvision.view.window.ReloginWindow();
-                                                win.show();
+												/*var win = new tranzvision.view.window.ReloginWindow();
+												win.show();*/
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="yes"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href="/s/"+org+"/login.html";
+													}
+												});
                                             }
                                         }
                                         catch(e2)
