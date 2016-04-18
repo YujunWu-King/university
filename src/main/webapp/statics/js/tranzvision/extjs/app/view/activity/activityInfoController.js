@@ -63,7 +63,7 @@
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
 					Ext.Msg.alert("提示","保存出错");
 			}else{
-					Ext.tzSubmit(tzParams,function(responseData){
+				Ext.tzSubmit(tzParams,function(responseData){
 					if(actType=="add"){
 						
 						comView.actType = "update";	

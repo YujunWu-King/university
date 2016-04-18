@@ -86,7 +86,8 @@
             xtype: 'textfield',
             fieldLabel: '站点名称',
 			name: 'siteName',
-			allowBlank:false
+			allowBlank:false,
+			maxLength: 100
         }]
     }],
     buttons: [{

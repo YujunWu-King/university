@@ -110,6 +110,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            xtype: 'textfield',
             fieldLabel: '活动地点',
 						name: 'activityPlace',
+						maxLength: 50,
 						afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
@@ -118,6 +119,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
             xtype: 'textfield',
             fieldLabel: '活动城市',
 						name: 'activityCity',
+						maxLength: 30,
 						afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],

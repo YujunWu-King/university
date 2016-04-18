@@ -258,7 +258,7 @@
 		}
 		var comParams = "";
 		if(removeJson != ""){
-			comParams = '"delete":[' + removeJson + "]";
+			comParams = '"update":[' + removeJson + "]";
 		}
 		var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMSH_HFY_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		Ext.tzSubmit(tzParams,function(){

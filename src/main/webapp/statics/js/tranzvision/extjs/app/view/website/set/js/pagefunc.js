@@ -425,11 +425,11 @@ function SetImgCode(){
 
 function Login(){
 
-    var userName = $("#userName").val();
+    var userName = encodeURI($("#userName").val());
 
-	var password = $("#password").val();
+	var password = encodeURI($("#password").val());
 
-	var yzm = $("#yzm").val();
+	var yzm = encodeURI($("#yzm").val());
 
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({

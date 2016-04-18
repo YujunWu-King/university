@@ -19,6 +19,8 @@
 						Ext.tzSubmit(tzParams,function(resp){
 							panel.actType = "update";
 							form.setValues({siteId:resp.siteId});	
+							form.findField('siteLanguage').setReadOnly(true);
+							form.findField('siteLanguage').addCls("lanage_1");
 							lanIntroduce.setHidden(false);
 						},"",true,this);
 					}
