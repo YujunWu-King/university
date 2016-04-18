@@ -883,7 +883,7 @@ $(document).ready(function(){
 					//loading();
 					if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
-							alert("Registration success");
+							alert("Registration successful.");
 						}else{
 							alert("注册成功");
 						}

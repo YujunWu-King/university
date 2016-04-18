@@ -362,14 +362,38 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 							}
 
 							if (tjxkjNum > 0) {
-								if (colspan == 3) {
-									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", "24%", tjxxx,
-											unsubmitWz);
-								} else {
-									tjxTd = tzGDObject.getHTMLText(
-											"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", bmWidth,
-											tjxxx, unsubmitWz);
+								// 报名人填写的推荐人数;
+								int totalTjxNum = jdbcTemplate.queryForObject(
+										"select COUNT(1) from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y'",
+										new Object[] { TZ_APP_INS_ID }, "Integer");
+								if(totalTjxNum > 0){
+									// 推荐人已经提交推荐信的人数;
+									int totalTjxTjNum = jdbcTemplate.queryForObject(
+											"SELECT COUNT(1) FROM PS_TZ_KS_TJX_TBL A WHERE ((A.ATTACHSYSFILENAME <> '' AND A.ATTACHUSERFILE <> '' AND A.ATTACHSYSFILENAME IS NOT NULL AND A.ATTACHUSERFILE IS NOT NULL) OR EXISTS (SELECT 'Y' FROM PS_TZ_APP_INS_T B WHERE A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U')) AND A.TZ_APP_INS_ID = ? and A.TZ_MBA_TJX_YX='Y'",
+											new Object[] { TZ_APP_INS_ID }, "Integer");
+									// 查看推荐信信息页面超链接;
+									String openTjx_A = tzGDObject.getHTMLText(
+											"HTML.TZApplicationCenterBundle.TZ_OPEN_WINDOW_VIEW_A", view, classId,
+											String.valueOf(TZ_APP_INS_ID), language, "TJX");
+									if (colspan == 3) {
+										tjxTd = tzGDObject.getHTMLText(
+												"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", "24%", tjxxx,
+												totalTjxTjNum + "/" + totalTjxNum, openTjx_A);
+									} else {
+										tjxTd = tzGDObject.getHTMLText(
+												"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_SHOW_TD", bmWidth, tjxxx,
+												totalTjxTjNum + "/" + totalTjxNum, openTjx_A);
+									}
+								}else{
+									if (colspan == 3) {
+										tjxTd = tzGDObject.getHTMLText(
+												"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", "24%", tjxxx,
+												unsubmitWz);
+									} else {
+										tjxTd = tzGDObject.getHTMLText(
+												"HTML.TZApplicationCenterBundle.TZ_GD_BM_TJX_USHOW_TD", bmWidth,
+												tjxxx, unsubmitWz);
+									}
 								}
 							}
 						} else {
