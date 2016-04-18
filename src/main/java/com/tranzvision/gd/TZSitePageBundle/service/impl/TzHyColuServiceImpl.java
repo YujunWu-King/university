@@ -146,7 +146,9 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			case "0":
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
 				strOrderBy = "asc";
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+				// numTotalRow = sqlQuery.queryForObject(sql, new Object[] {
+				// strSiteId, strColuId, strDateNow }, "int");
+				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
 				break;
 			case "1":
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByOprid");
@@ -161,7 +163,8 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			default:
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
 				strOrderBy = "asc";
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+				//numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
 				break;
 			}
 
@@ -187,8 +190,8 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					strPageNowClass = "class=\"now\"";
 				}
 
-				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColuHY("
-						+ String.valueOf(i) + "," + strType + ")\">" + String.valueOf(i) + "</li>";
+				strDivPage = strDivPage + "<li " + strPageNowClass + " onclick=\"QueryColuHY(" + String.valueOf(i) + ","
+						+ strType + ")\">" + String.valueOf(i) + "</li>";
 
 				if (numNowPage > maxPageNum) {
 					if (i >= numNowPage) {
@@ -258,8 +261,10 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					strSQLName = "TzGetSiteHDListByDateTimeGT";
 				}
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+				// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
+				// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
 				break;
 			case "1":
 				if ("desc".equals(strOrderBy)) {
@@ -288,8 +293,8 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					strSQLName = "TzGetSiteHDListByDateTimeGT";
 				}
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
-				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+				//listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+				listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
 				break;
 			}
 
@@ -332,9 +337,8 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					strResultContent = strResultContent
 							+ "<div class=\"main_mid_activity_list2\"><div class=\"main_mid_activity_list_date\"><div class=\"main_mid_activity_list_date_month\">"
 							+ calendarUtil.getDateMonthWord(strLang)
-							+ "</div><div class=\"main_mid_activity_list_date_day\">"
-							+ calendarUtil.getDateDay()
-							+"</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href="
+							+ "</div><div class=\"main_mid_activity_list_date_day\">" + calendarUtil.getDateDay()
+							+ "</div></div><div class=\"main_mid_activity_list_title2\"><a target=\"_blank\" href="
 							+ strUrl + ">" + strActName + "</a><br /><span class=\"font_gray_14px\">【" + strActCity
 							+ "】-</span><span class=\"font_gray_14px\">" + dtAct + "</span></div>";
 
