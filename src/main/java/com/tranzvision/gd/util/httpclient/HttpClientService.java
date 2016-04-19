@@ -19,6 +19,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 实现Http的Get、Post请求，获取响应内容
@@ -27,6 +29,8 @@ import org.apache.http.message.BasicNameValuePair;
  * @since 2016-03-15
  */
 public class HttpClientService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HttpClientService.class);
 
 	private final String USER_AGENT = "Mozilla/5.0";
 
@@ -246,8 +250,8 @@ public class HttpClientService {
 
 		responseCode = response.getStatusLine().getStatusCode();
 
-		System.out.println("\nSending 'GET' request to URL : " + url);
-		System.out.println("Response Code : " + responseCode);
+		logger.info("\nSending 'GET' request to URL : " + requestUrl);
+		logger.info("Response Code : " + responseCode);
 
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
@@ -258,7 +262,7 @@ public class HttpClientService {
 		}
 
 		String content = result.toString();
-		System.out.println(content);
+		logger.info("Response Content : " + content);
 
 		return content;
 
@@ -276,9 +280,9 @@ public class HttpClientService {
 		post.setEntity(new UrlEncodedFormEntity(postParameters));
 
 		HttpResponse response = client.execute(post);
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + post.getEntity());
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		logger.info("\nSending 'POST' request to URL : " + url);
+		logger.info("Post parameters : " + post.getEntity());
+		logger.info("Response Code : " + response.getStatusLine().getStatusCode());
 
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
@@ -289,7 +293,7 @@ public class HttpClientService {
 		}
 
 		String content = result.toString();
-		System.out.println(content);
+		logger.info("Response Content : " + content);
 
 		return content;
 
