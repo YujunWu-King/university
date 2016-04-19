@@ -20,6 +20,7 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '  <div class="answer">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
                 c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:5px;left:-35px;cursor:pointer;">';
+                c += '        <span style="margin-left: -25px;">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></span>" : "</span>");
                 c += '       <div style="margin-top:-31px;margin-left:225px">';
                 c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
                 c += '              <div class="onShow"></div>';
@@ -40,12 +41,13 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " style="line-height: 39px;font-size:1.285em;margin:0 0 0 4px" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
                 c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="cursor: pointer; position: absolute; right: 10px; top: 8px;">';
                 c += '  </div>';
+                c += '     <span >'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "</span>");
                 c += '</div>';
             }
         } else {
             c += '<div class="question-answer">';
             c += '  <div class="format ">';
-            c += '      <b class="read-input"></b>';
+            c += '      <b class="read-input"></b><span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
             c += '  </div>';
             c += '</div>';
         }
@@ -53,7 +55,8 @@ SurveyBuild.extend("DateBox", "Completion", {
     },
     _edit: function(data) {
         var e = '';
-		
+        e = '<div class="edit_item_warp"><span class="edit_item_label">后缀：<a href="#" data-for-id="help_suffix" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffix\')" value="' + data.suffix + '"/></div>';
+        e += '<div class="edit_item_warp"><span class="edit_item_label">后缀链接：</span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffixUrl\')" value="' + data.suffixUrl + '"/></div>';
 		e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label" >日期格式：</span>';
         e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'dateformate\')">';
