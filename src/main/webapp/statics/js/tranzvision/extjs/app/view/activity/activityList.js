@@ -11,6 +11,7 @@
     ],
     xtype: 'activityMg',
     controller: 'activityMg',
+	reference: 'activityListGridPanal',
     columnLines: true,
     selModel: {
         type: 'checkboxmodel'
@@ -78,10 +79,11 @@
 								minWidth: 125,                
 								flex: 1
             },{
-								text: '手机版', 
+			   text: '手机版', 
                menuDisabled: true,
                sortable: false,
-			   			 minWidth:70,
+			   hidden:true,
+			   minWidth:70,
                align:'center',
                xtype: 'actioncolumn',
 			  			 items:[

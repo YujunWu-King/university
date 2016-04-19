@@ -55,6 +55,7 @@
 		//组件注册表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取组件注册信息参数
 			var tzParams = this.getActivityInfoParams();
 			var comView = this.getView();
@@ -65,12 +66,16 @@
 			}else{
 				Ext.tzSubmit(tzParams,function(responseData){
 					if(actType=="add"){
-						
-						comView.actType = "update";	
-				  	form.findField("activityId").setValue(responseData.activityId);
-				  	comView.commitChanges(comView);
-				  }
-			},"",true,this);
+						comView.actType = "update";
+						form.findField("activityId").setValue(responseData.activityId);
+						comView.commitChanges(comView);
+					}
+					
+					for(var i=0;i<msArrInfoPanelArr.length;i++){
+						msArrInfoPanelArr[i].store.load();
+					}
+					
+				},"",true,this);
 			}
 	
 		}else{
@@ -81,6 +86,7 @@
 		//组件注册表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取组件注册信息参数
 			var tzParams = this.getActivityInfoParams();
 			var comView = this.getView();
@@ -90,7 +96,11 @@
 					Ext.Msg.alert("提示","保存出错");
 			}else{
 					Ext.tzSubmit(tzParams,function(responseData){
-							comView.close();
+						comView.close();
+							
+						for(var i=0;i<msArrInfoPanelArr.length;i++){
+							msArrInfoPanelArr[i].store.load();
+						}
 					},"",true,this);
 			}
 		}else{
@@ -102,6 +112,7 @@
 		//内容表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
 			var comView = this.getView();
 			var actType = comView.actType;
@@ -127,6 +138,10 @@
 				  	}
 				  	
 				  	comView.commitChanges(comView);
+					
+						for(var i=0;i<msArrInfoPanelArr.length;i++){
+							msArrInfoPanelArr[i].store.load();
+						}
 				  	
 					},"发布成功",true,this);
 			}
@@ -139,8 +154,8 @@
 		//内容表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
-			
 			var comView = this.getView();
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
@@ -165,6 +180,10 @@
 				  	}
 				  	
 				  	comView.commitChanges(comView);
+					
+						for(var i=0;i<msArrInfoPanelArr.length;i++){
+							msArrInfoPanelArr[i].store.load();
+						}
 				  	
 					},"撤销成功",true,this);
 			}
@@ -177,8 +196,8 @@
 		//内容表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
-			
 			var comView = this.getView();
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
@@ -195,6 +214,10 @@
 					  	form.findField("activityId").setValue(responseData.activityId);
 					  	comView.commitChanges(comView);
 					  }
+					  
+						for(var i=0;i<msArrInfoPanelArr.length;i++){
+							msArrInfoPanelArr[i].store.load();
+						}
 			},"置顶成功",true,this);
 			}
 	
@@ -392,6 +415,7 @@
 				}
 			}
 			//关闭窗口
+			win.ignoreChangesFlag = true;
 			win.close();
 			dataView.refresh();
 		}	

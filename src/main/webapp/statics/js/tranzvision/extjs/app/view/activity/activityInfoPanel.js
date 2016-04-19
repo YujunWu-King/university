@@ -470,6 +470,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										xtype: 'numberfield',
 										fieldLabel: '席位数',
 										minValue: 0,
+										value: '',
 										name: 'applyNum'
 							},{
 										xtype: 'fieldset',
@@ -762,7 +763,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 		},{
 			text: '手机版预览',
 			iconCls:"preview",
-			handler: 'previewPhoneArt'
+			handler: 'previewPhoneArt',
+			hidden: true
 		},{
 			text: '保存',
 			iconCls:"save",

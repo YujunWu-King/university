@@ -86,7 +86,8 @@ Ext.define('KitchenSink.view.ThemeSwitcher', function() {
 			                	var langid = languages[i].languageid;
 			                	//语言名称
 			                	var langname = languages[i].languageName;
-			                	items.push(makeItem(langid,langname,'language'));
+			                	//2016-04-19 暂时不允许切换语言，需要时放开即可。
+								//items.push(makeItem(langid,langname,'language'));
 			                }
 							if(items.length > 0){
 								items.push("-");
