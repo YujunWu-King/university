@@ -113,7 +113,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					"print");
 
 			// 是否开通了申请班级;
-			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' ";
+			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 			int totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_jg_id }, "Integer");
 			// 没开通;
 			if (totalNum == 0) {
@@ -145,11 +145,11 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			String TZ_APP_MODAL_ID = "";
 
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String applyNumSQL = "select count(distinct b.TZ_CLASS_ID) APPLY_NUM from PS_TZ_APP_INS_T a,PS_TZ_FORM_WRK_T b where a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and b.TZ_CLASS_ID in (select c.TZ_CLASS_ID from PS_TZ_CLASS_INF_T c where c.TZ_JG_ID=? and c.TZ_IS_APP_OPEN='Y') and b.OPRID=?";
+			String applyNumSQL = "select count(distinct b.TZ_CLASS_ID) APPLY_NUM from PS_TZ_APP_INS_T a,PS_TZ_FORM_WRK_T b where a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and b.TZ_CLASS_ID in (select c.TZ_CLASS_ID from PS_TZ_CLASS_INF_T c where c.TZ_JG_ID=? and c.TZ_IS_APP_OPEN='Y' and c.TZ_APP_START_DT IS NOT NULL AND c.TZ_APP_START_TM IS NOT NULL AND c.TZ_APP_END_DT IS NOT NULL AND c.TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(c.TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(c.TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(c.TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(c.TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()) and b.OPRID=?";
 			applyNum = jdbcTemplate.queryForObject(applyNumSQL, new Object[] { str_jg_id, oprid }, "Integer");
 
 			// 循环开通的班级;
-			String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d') TZ_APP_START_DT,DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d') TZ_APP_END_DT,TZ_CLASS_DESC,TZ_APP_MODAL_ID from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
+			String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d') TZ_APP_START_DT,DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d') TZ_APP_END_DT,TZ_CLASS_DESC,TZ_APP_MODAL_ID from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
 			List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
 			if (classList != null && classList.size() > 0) {
 				for (int i = 0; i < classList.size(); i++) {
@@ -193,7 +193,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					int djzlTotalNum = jdbcTemplate.queryForObject(
 							"select count(1) from PS_TZ_CLS_DJZL_T where TZ_CLASS_ID=?", new Object[] { classId },
 							"Integer");
-					;
+					
 
 					// 报名表中是否有推荐信控件;
 					int tjxkjNum = jdbcTemplate.queryForObject(

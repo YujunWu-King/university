@@ -9,7 +9,9 @@
     <result column="TZ_START_DT" property="tzStartDt" jdbcType="DATE" />
     <result column="TZ_END_DT" property="tzEndDt" jdbcType="DATE" />
     <result column="TZ_APP_START_DT" property="tzAppStartDt" jdbcType="DATE" />
+    <result column="TZ_APP_START_TM" property="tzAppStartTm" jdbcType="TIME" />
     <result column="TZ_APP_END_DT" property="tzAppEndDt" jdbcType="DATE" />
+    <result column="TZ_APP_END_TM" property="tzAppEndTm" jdbcType="TIME" />
     <result column="TZ_IS_APP_OPEN" property="tzIsAppOpen" jdbcType="VARCHAR" />
     <result column="TZ_APP_MODAL_ID" property="tzAppModalId" jdbcType="VARCHAR" />
     <result column="TZ_IS_SUB_BATCH" property="tzIsSubBatch" jdbcType="VARCHAR" />
@@ -29,9 +31,9 @@
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CLASS_ID, TZ_JG_ID, TZ_PRJ_ID, TZ_CLASS_NAME, TZ_START_DT, TZ_END_DT, TZ_APP_START_DT, 
-    TZ_APP_END_DT, TZ_IS_APP_OPEN, TZ_APP_MODAL_ID, TZ_IS_SUB_BATCH, TZ_ZLPS_SCOR_MD_ID, 
-    TZ_MSCJ_SCOR_MD_ID, TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_APP_START_TM, TZ_APP_END_DT, TZ_APP_END_TM, TZ_IS_APP_OPEN, TZ_APP_MODAL_ID, TZ_IS_SUB_BATCH, 
+    TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <sql id="Blob_Column_List" >
     TZ_CLASS_DESC
@@ -51,20 +53,22 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
     insert into PS_TZ_CLASS_INF_T (TZ_CLASS_ID, TZ_JG_ID, TZ_PRJ_ID, 
       TZ_CLASS_NAME, TZ_START_DT, TZ_END_DT, 
-      TZ_APP_START_DT, TZ_APP_END_DT, TZ_IS_APP_OPEN, 
-      TZ_APP_MODAL_ID, TZ_IS_SUB_BATCH, TZ_ZLPS_SCOR_MD_ID, 
-      TZ_MSCJ_SCOR_MD_ID, TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, 
-      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-      TZ_CLASS_DESC)
+      TZ_APP_START_DT, TZ_APP_START_TM, TZ_APP_END_DT, 
+      TZ_APP_END_TM, TZ_IS_APP_OPEN, TZ_APP_MODAL_ID, 
+      TZ_IS_SUB_BATCH, TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, 
+      TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_CLASS_DESC
+      )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
       #{tzClassName,jdbcType=VARCHAR}, #{tzStartDt,jdbcType=DATE}, #{tzEndDt,jdbcType=DATE}, 
-      #{tzAppStartDt,jdbcType=DATE}, #{tzAppEndDt,jdbcType=DATE}, #{tzIsAppOpen,jdbcType=VARCHAR}, 
-      #{tzAppModalId,jdbcType=VARCHAR}, #{tzIsSubBatch,jdbcType=VARCHAR}, #{tzZlpsScorMdId,jdbcType=VARCHAR}, 
-      #{tzMscjScorMdId,jdbcType=VARCHAR}, #{tzPsAppModalId,jdbcType=VARCHAR}, #{tzGuestApply,jdbcType=VARCHAR}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
-      #{tzClassDesc,jdbcType=LONGVARCHAR})
+      #{tzAppStartDt,jdbcType=DATE}, #{tzAppStartTm,jdbcType=TIME}, #{tzAppEndDt,jdbcType=DATE}, 
+      #{tzAppEndTm,jdbcType=TIME}, #{tzIsAppOpen,jdbcType=VARCHAR}, #{tzAppModalId,jdbcType=VARCHAR}, 
+      #{tzIsSubBatch,jdbcType=VARCHAR}, #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, 
+      #{tzPsAppModalId,jdbcType=VARCHAR}, #{tzGuestApply,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzClassDesc,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
     insert into PS_TZ_CLASS_INF_T
@@ -90,8 +94,14 @@
       <if test="tzAppStartDt != null" >
         TZ_APP_START_DT,
       </if>
+      <if test="tzAppStartTm != null" >
+        TZ_APP_START_TM,
+      </if>
       <if test="tzAppEndDt != null" >
         TZ_APP_END_DT,
+      </if>
+      <if test="tzAppEndTm != null" >
+        TZ_APP_END_TM,
       </if>
       <if test="tzIsAppOpen != null" >
         TZ_IS_APP_OPEN,
@@ -158,8 +168,14 @@
       <if test="tzAppStartDt != null" >
         #{tzAppStartDt,jdbcType=DATE},
       </if>
+      <if test="tzAppStartTm != null" >
+        #{tzAppStartTm,jdbcType=TIME},
+      </if>
       <if test="tzAppEndDt != null" >
         #{tzAppEndDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppEndTm != null" >
+        #{tzAppEndTm,jdbcType=TIME},
       </if>
       <if test="tzIsAppOpen != null" >
         #{tzIsAppOpen,jdbcType=VARCHAR},
@@ -226,8 +242,14 @@
       <if test="tzAppStartDt != null" >
         TZ_APP_START_DT = #{tzAppStartDt,jdbcType=DATE},
       </if>
+      <if test="tzAppStartTm != null" >
+        TZ_APP_START_TM = #{tzAppStartTm,jdbcType=TIME},
+      </if>
       <if test="tzAppEndDt != null" >
         TZ_APP_END_DT = #{tzAppEndDt,jdbcType=DATE},
+      </if>
+      <if test="tzAppEndTm != null" >
+        TZ_APP_END_TM = #{tzAppEndTm,jdbcType=TIME},
       </if>
       <if test="tzIsAppOpen != null" >
         TZ_IS_APP_OPEN = #{tzIsAppOpen,jdbcType=VARCHAR},
@@ -282,7 +304,9 @@
       TZ_START_DT = #{tzStartDt,jdbcType=DATE},
       TZ_END_DT = #{tzEndDt,jdbcType=DATE},
       TZ_APP_START_DT = #{tzAppStartDt,jdbcType=DATE},
+      TZ_APP_START_TM = #{tzAppStartTm,jdbcType=TIME},
       TZ_APP_END_DT = #{tzAppEndDt,jdbcType=DATE},
+      TZ_APP_END_TM = #{tzAppEndTm,jdbcType=TIME},
       TZ_IS_APP_OPEN = #{tzIsAppOpen,jdbcType=VARCHAR},
       TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
       TZ_IS_SUB_BATCH = #{tzIsSubBatch,jdbcType=VARCHAR},
@@ -307,7 +331,9 @@
       TZ_START_DT = #{tzStartDt,jdbcType=DATE},
       TZ_END_DT = #{tzEndDt,jdbcType=DATE},
       TZ_APP_START_DT = #{tzAppStartDt,jdbcType=DATE},
+      TZ_APP_START_TM = #{tzAppStartTm,jdbcType=TIME},
       TZ_APP_END_DT = #{tzAppEndDt,jdbcType=DATE},
+      TZ_APP_END_TM = #{tzAppEndTm,jdbcType=TIME},
       TZ_IS_APP_OPEN = #{tzIsAppOpen,jdbcType=VARCHAR},
       TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
       TZ_IS_SUB_BATCH = #{tzIsSubBatch,jdbcType=VARCHAR},

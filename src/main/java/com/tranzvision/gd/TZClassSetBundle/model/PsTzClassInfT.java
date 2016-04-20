@@ -17,7 +17,11 @@ public class PsTzClassInfT {
 
     private Date tzAppStartDt;
 
+    private Date tzAppStartTm;
+
     private Date tzAppEndDt;
+
+    private Date tzAppEndTm;
 
     private String tzIsAppOpen;
 
@@ -103,12 +107,28 @@ public class PsTzClassInfT {
         this.tzAppStartDt = tzAppStartDt;
     }
 
+    public Date getTzAppStartTm() {
+        return tzAppStartTm;
+    }
+
+    public void setTzAppStartTm(Date tzAppStartTm) {
+        this.tzAppStartTm = tzAppStartTm;
+    }
+
     public Date getTzAppEndDt() {
         return tzAppEndDt;
     }
 
     public void setTzAppEndDt(Date tzAppEndDt) {
         this.tzAppEndDt = tzAppEndDt;
+    }
+
+    public Date getTzAppEndTm() {
+        return tzAppEndTm;
+    }
+
+    public void setTzAppEndTm(Date tzAppEndTm) {
+        this.tzAppEndTm = tzAppEndTm;
     }
 
     public String getTzIsAppOpen() {

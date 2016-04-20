@@ -273,7 +273,23 @@
                             name: 'bm_kt',
                             valueField: 'TValue',
                             displayField: 'TSDesc',
-                            store: new KitchenSink.view.common.store.appTransStore("TZ_IS_APP_OPEN")
+                            store: new KitchenSink.view.common.store.appTransStore("TZ_IS_APP_OPEN"),
+                            listeners: {
+                                change: function(combox, newValue, oldValue){ 
+                                	var form = combox.findParentByType("form").getForm();
+                                	if(newValue == "Y"){
+                                		form.findField("beginBm_time").allowBlank = false;
+                                		form.findField("beginBm_tm").allowBlank = false;
+                                		form.findField("endBm_time").allowBlank = false;
+                                		form.findField("endBm_tm").allowBlank = false;
+                                	}else{
+                                		form.findField("beginBm_time").allowBlank = true;
+                                		form.findField("beginBm_tm").allowBlank = true;
+                                		form.findField("endBm_time").allowBlank = true;
+                                		form.findField("endBm_tm").allowBlank = true;
+                                	}
+                                }
+                            }
                         },{
                             xtype: "container",
                             layout: "hbox",
@@ -345,10 +361,20 @@
                             format: 'Y-m-d',
                             name: 'beginBm_time'
                         },{
+                            xtype: 'timefield',
+                            fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.beginBm_tm","报名开始时间"),
+                            format: 'H:i',
+                			name: 'beginBm_tm'
+                        },{
                             xtype: 'datefield',
                             fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.endBm_time","报名结束日期"),
                             format: 'Y-m-d',
                             name: 'endBm_time'
+                        },{
+                            xtype: 'timefield',
+                            fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.endBm_tm","报名结束时间"),
+                            format: 'H:i',
+                			name: 'endBm_tm'
                         },{
                             layout: {
                                 type: 'column'

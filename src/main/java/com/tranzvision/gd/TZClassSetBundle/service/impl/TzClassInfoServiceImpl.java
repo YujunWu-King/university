@@ -232,7 +232,9 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				String str_bj_desc = psTzClassInfT.getTzClassDesc();
 
 				String strDateFormat = getSysHardCodeVal.getDateFormat();
+				String strTimeFormat = getSysHardCodeVal.getTimeHMFormat();
 				SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+				SimpleDateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
 
 				String str_st_dt = "";
 				if (psTzClassInfT.getTzStartDt() != null) {
@@ -248,10 +250,20 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				if (psTzClassInfT.getTzAppStartDt() != null) {
 					str_bmst_dt = dateFormat.format(psTzClassInfT.getTzAppStartDt());
 				}
+				
+				String str_bmst_tm = null;
+				if(psTzClassInfT.getTzAppStartTm() != null){
+					str_bmst_tm = timeFormat.format(psTzClassInfT.getTzAppStartTm());
+				}
 
 				String str_bmend_dt = "";
 				if (psTzClassInfT.getTzAppEndDt() != null) {
 					str_bmend_dt = dateFormat.format(psTzClassInfT.getTzAppEndDt());
+				}
+				
+				String str_bmend_tm = null;
+				if(psTzClassInfT.getTzAppEndTm() != null){
+					str_bmend_tm = timeFormat.format(psTzClassInfT.getTzAppEndTm());
 				}
 
 				Map<String, String> mapJson = new HashMap<String, String>();
@@ -262,7 +274,9 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				mapJson.put("begin_time", str_st_dt);
 				mapJson.put("end_time", str_end_dt);
 				mapJson.put("beginBm_time", str_bmst_dt);
+				mapJson.put("beginBm_tm", str_bmst_tm);
 				mapJson.put("endBm_time", str_bmend_dt);
+				mapJson.put("endBm_tm", str_bmend_tm);
 				mapJson.put("bmb_mb", str_bmb_id);
 				mapJson.put("bj_desc", str_bj_desc);
 				mapJson.put("bj_xs", str_bj_xs);
@@ -327,7 +341,9 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					String tzClassId = String.valueOf(getSeqNum.getSeqNum("TZ_CLASS_INF_T", "TZ_CLASS_ID"));
 
 					String strDateFormat = getSysHardCodeVal.getDateFormat();
+					String strTimeFormat = getSysHardCodeVal.getTimeHMFormat();
 					SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+					SimpleDateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
 
 					PsTzClassInfT psTzClassInfT = new PsTzClassInfT();
 
@@ -353,11 +369,21 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 						Date tzAppStartDt = dateFormat.parse(beginBm_time);
 						psTzClassInfT.setTzAppStartDt(tzAppStartDt);
 					}
+					String beginBm_tm = jacksonUtil.getString("beginBm_tm");
+					if (null != beginBm_tm && !"".equals(beginBm_tm)) {
+						Date tzAppStartTm = timeFormat.parse(beginBm_tm);
+						psTzClassInfT.setTzAppStartTm(tzAppStartTm);
+					}
 
 					String endBm_time = jacksonUtil.getString("endBm_time");
 					if (null != endBm_time && !"".equals(endBm_time)) {
 						Date tzAppEndDt = dateFormat.parse(endBm_time);
 						psTzClassInfT.setTzAppEndDt(tzAppEndDt);
+					}
+					String endBm_tm = jacksonUtil.getString("endBm_tm");
+					if (null != endBm_tm && !"".equals(endBm_tm)) {
+						Date tzAppEndTm = timeFormat.parse(endBm_tm);
+						psTzClassInfT.setTzAppEndTm(tzAppEndTm);
 					}
 
 					String bj_xs = jacksonUtil.getString("bj_xs");
@@ -533,37 +559,63 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 
 				if ("Y".equals(recExists)) {
 					String strDateFormat = getSysHardCodeVal.getDateFormat();
+					String strTimeFormat = getSysHardCodeVal.getTimeHMFormat();
+					
 					SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+					SimpleDateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
 
-					PsTzClassInfT psTzClassInfT = new PsTzClassInfT();
-
-					psTzClassInfT.setTzClassId(str_bj_id);
+					PsTzClassInfT psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(str_bj_id);
+					//psTzClassInfT.setTzClassId(str_bj_id);
 					psTzClassInfT.setTzClassName(
 							mapData.get("bj_name") == null ? "" : String.valueOf(mapData.get("bj_name")));
 					psTzClassInfT.setTzPrjId(mapData.get("xm_id") == null ? "" : String.valueOf(mapData.get("xm_id")));
 
 					String strStartDt = String.valueOf(mapData.get("begin_time"));
-					if (!"".equals(strStartDt)) {
-						Date tzStartDt = mapData.get("begin_time") == null ? null : dateFormat.parse(strStartDt);
+					if (!"".equals(strStartDt) && strStartDt != null) {
+						Date tzStartDt = dateFormat.parse(strStartDt);
 						psTzClassInfT.setTzStartDt(tzStartDt);
+					}else{
+						psTzClassInfT.setTzStartDt(null);
 					}
 
 					String strEndDt = String.valueOf(mapData.get("end_time"));
-					if (!"".equals(strEndDt)) {
-						Date tzEndDt = mapData.get("end_time") == null ? null : dateFormat.parse(strEndDt);
+					if (!"".equals(strEndDt) && strEndDt != null) {
+						Date tzEndDt = dateFormat.parse(strEndDt);
 						psTzClassInfT.setTzEndDt(tzEndDt);
+					}else{
+						psTzClassInfT.setTzEndDt(null);
 					}
+					
 					String strAppStartDt = String.valueOf(mapData.get("beginBm_time"));
-					if (!"".equals(strAppStartDt)) {
-						Date tzAppStartDt = mapData.get("beginBm_time") == null ? null
-								: dateFormat.parse(strAppStartDt);
+					if (!"".equals(strAppStartDt) && strAppStartDt != null) {
+						Date tzAppStartDt = dateFormat.parse(strAppStartDt);
 						psTzClassInfT.setTzAppStartDt(tzAppStartDt);
+					}else{
+						psTzClassInfT.setTzAppStartDt(null);
+					}
+					
+					String strAppStartTm = String.valueOf(mapData.get("beginBm_tm"));
+					if (!"".equals(strAppStartTm) && mapData.get("beginBm_tm") != null) {
+						Date tzAppStartTm = timeFormat.parse(strAppStartTm);
+						psTzClassInfT.setTzAppStartTm(tzAppStartTm);
+					}else{
+						psTzClassInfT.setTzAppStartTm(null);
 					}
 
 					String strAppEndDt = String.valueOf(mapData.get("endBm_time"));
-					if (!"".equals(strAppEndDt)) {
-						Date tzAppEndDt = mapData.get("endBm_time") == null ? null : dateFormat.parse(strAppEndDt);
+					if (!"".equals(strAppEndDt) && strAppEndDt != null) {
+						Date tzAppEndDt = dateFormat.parse(strAppEndDt);
 						psTzClassInfT.setTzAppEndDt(tzAppEndDt);
+					}else{
+						psTzClassInfT.setTzAppEndDt(null);
+					}
+					
+					String strAppEndTm = String.valueOf(mapData.get("endBm_tm"));
+					if (!"".equals(strAppEndTm) && mapData.get("endBm_tm") != null) {
+						Date tzAppEndTm = timeFormat.parse(strAppEndTm);
+						psTzClassInfT.setTzAppEndTm(tzAppEndTm);
+					}else{
+						psTzClassInfT.setTzAppEndTm(null);
 					}
 
 					psTzClassInfT
@@ -600,7 +652,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setRowLastmantDttm(dateNow);
 					psTzClassInfT.setRowLastmantOprid(oprid);
 
-					psTzClassInfTMapper.updateByPrimaryKeySelective(psTzClassInfT);
+					psTzClassInfTMapper.updateByPrimaryKeyWithBLOBs(psTzClassInfT);
 
 				}
 
