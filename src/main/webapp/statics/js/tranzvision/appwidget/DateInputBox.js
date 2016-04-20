@@ -16,7 +16,8 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
                 c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
                 c += '  </div>';
                 c += '  <div class="main_inner_content_info_readonly_right" >' + data.value + '</div>';
-                c += '</div>'
+		c += '<span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
+                c += '</div>';
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
@@ -27,6 +28,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
                 c += '  <div class="main_inner_content_info_right">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input_251px " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
                 c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-41px;cursor:pointer;">';
+                c += '        <span style="margin-left: -25px;">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></span>" : "</span>");
                 c += '       <div style="margin-top:-42px;margin-left:256px">';
                 c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
                 c += '              <div class="onShow"></div>';
@@ -38,7 +40,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
         } else {
             c += '<div class="question-answer">';
             c += '  <div class="format ">';
-            c += '      <b class="read-input"></b>';
+            c += '      <b class="read-input"></b><span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
             c += '  </div>';
             c += '</div>';
         }
@@ -46,7 +48,8 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
     },
     _edit: function(data) {
         var e = '';
-		
+        e = '<div class="edit_item_warp"><span class="edit_item_label">后缀：<a href="#" data-for-id="help_suffix" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffix\')" value="' + data.suffix + '"/></div>';
+        e += '<div class="edit_item_warp"><span class="edit_item_label">后缀链接：</span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffixUrl\')" value="' + data.suffixUrl + '"/></div>';
 		e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label" >日期格式：</span>';
         e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'dateformate\')">';
