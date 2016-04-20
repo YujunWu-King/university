@@ -72,6 +72,7 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 			SurveyBuild.fail($max, "最大行数不能超过15行！");
 			return false;	
 		}
+		 return true;
 	},
 	_eventbindEditor: function(data) {
 		$("#question-box li[data_id='" + data.instanceId + "']").find(".DHContainer").droppable({

@@ -205,7 +205,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	public String CreateHtml(String insid, String tplid,String title) {
 
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_DRQ_BZ,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = '' AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_ORDER,TZ_LINE_NUM,TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_DRQ_BZ,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = '' AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_ORDER,TZ_LINE_NUM,TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid });
 		StringBuffer html = new StringBuffer("");
 
@@ -265,6 +265,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	private String getContent(String insid, String tplid, String xxxBh, String xxxNo, String xxxMc, String xxxLmc, String xxxCclx) {
 		//控件的源HTML
 		String comHtml = "";
+
 		if (!comMap.containsKey(xxxLmc)) {
 			String sql = "SELECT TZ_COM_EXPHTML FROM PS_TZ_COM_DY_T WHERE TZ_COM_JSLJ REGEXP BINARY  '" + xxxLmc + ".js$' limit 0,1";
 			comHtml = sqlQuery.queryForObject(sql, new Object[] {}, "String");
@@ -316,7 +317,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
 		int length = StringUtils.countMatches(comHtml, "%bind");
 		
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, xxxBh});
 		
 		String[] values = new String[length];
@@ -382,7 +383,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 //		int length = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, tplid}, "Integer");
 //		length = length + 2;
 		
-		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_XXX_SRQ_BZ = '' AND TZ_XXX_BH REGEXP BINARY ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_XXX_SRQ_BZ = '' AND TZ_XXX_BH REGEXP BINARY ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_LINE_ORDER";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, parentXxxBh, line, "^" + xxxBh});
 		
 		String[] values = new String[length];
@@ -557,9 +558,9 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		int maxLine = sqlQuery.queryForObject(maxLineSql, new Object[] { tplid, xxxBh }, "Integer");
 		String sql = "";
 		if (StringUtils.contains("DHContainer,LayoutControls", xxxLmc)) {
-			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_XXX_SRQ_BZ <> '' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_XXX_SRQ_BZ <> '' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_LINE_ORDER";
 		}else{
-			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator','TextExplain') ORDER BY TZ_LINE_ORDER";
+			sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX,TZ_XXX_SRQ_BZ FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_LINE_NUM = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_LINE_ORDER";
 		}
 		
 		StringBuffer val = new StringBuffer("");

@@ -623,15 +623,17 @@ var SurveyBuild = {
                     if (this._items[insId]["itemId"] == $itemId.val()) {
                         has = true;
                         break;
-                    } else if (!SurveyBuild.isDHContainer && this._items[insId]["isDoubleLine"] == "Y") {
+//                    } else if (!SurveyBuild.isDHContainer && this._items[insId]["isDoubleLine"] == "Y") {
+                    } else if (this._items[insId]["isDoubleLine"] == "Y") {
                         //普通信息项与容器中信息项编号也不能重复
                         for (var insDHId in this._items[insId]["children"]) {
                             if (d != insDHId && this._items[insId]["children"][insDHId]["itemId"] == $itemId.val()) {
                                 has = true;
-                                break dance;
+                                break;
                             }
                         }
                     }
+//                    break dance;
                 }
             }
             if (has) {
