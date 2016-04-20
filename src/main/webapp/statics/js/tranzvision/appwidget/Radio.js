@@ -32,10 +32,11 @@ SurveyBuild.extend("Radio", "baseComponent", {
 		}
 	},
 	_getHtml: function(data, previewmode) {
-		var c = "",e = "";
+		var c = "",e = "",j = 0;
 
 		if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+			
 			for (var i in data.option) {
 				if(SurveyBuild.appInsId == "0"){
 					if(data["option"][i]["code"] == data["value"]){
@@ -43,9 +44,10 @@ SurveyBuild.extend("Radio", "baseComponent", {
 					}
 				}
 				e += '<li>';
-				e += '<div class="tz_radio_div ' + (data["option"][i]["checked"] == "Y" ? "on_check": "") + '">';
-				e += '<label style="margin-left:10px;" for="o' + data.itemId + data["option"][i]["code"] + '"><input class="tz_radio_checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "sur_radio_box") + '"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="radio" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"] + '" style="width:20px;height:20px;">';
-				e += data["option"][i]["txt"];
+				e += '	<div class="tz_radio_div ' + (data["option"][i]["checked"] == "Y" ? "on_check": "") + '">';
+				e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">';
+				e += '		<input class="tz_radio_checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "sur_radio_box") + '"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="radio" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"] + '" style="width:20px;height:20px;">';
+				e += '<span  style="margin-left:10px;">' + data["option"][i]["txt"] + '</span>';
 				if (data["option"][i]["other"] == "Y") {
 					if (SurveyBuild._readonly) {
 						//只读模式
@@ -55,9 +57,17 @@ SurveyBuild.extend("Radio", "baseComponent", {
 						e += '<input type="text" id="other' + data.itemId + '" style=" display:' + (data["option"][i]["checked"] == "Y" ? "inline-block": "none") + ';width: 150px; height: 20px; line-height:20px; margin-left: 10px;" value="' + data.othervalue + '"/>';
 					}
 				}
+				if(j == 0 && !SurveyBuild._readonly){
+	                e += '      <div style="display:inline;margin-left:5px">';
+	                e += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+	                e += '              <div class="onShow"></div>';
+	                e += '          </div>';
+	                e += '      </div>';
+				}
 				e += '</label>';
 				e += '</div>'
 				e += '</li>';
+				j++;
 			}
 
 			c += '<div class="main_inner_content_info_autoheight">';
@@ -67,7 +77,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 			c += '	<div class="main_inner_content_options_right question-answer" style="margin-bottom:12px;">';
 			c += '		<ul class="format ' + data.format + '">' + e + '</ul>';
 			c += '	</div>';
-			c += '  <div><div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow"></div></div></div>';
+//			c += '  <div><div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow"></div></div></div>';
 			c += '</div>';
 		} else {
 			for (var i in data.option) {

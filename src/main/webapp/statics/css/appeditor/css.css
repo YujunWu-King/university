@@ -4139,7 +4139,7 @@ add by zhanglang
   float: left;
   height: 39px;
   margin-right: 7px;
-  width: 41px;
+  width: 31px;
 }
 .main_inner_content_info_right_l140px {
 margin-right: 7px;
@@ -4176,4 +4176,7 @@ textarea[disabled], textarea[readonly] {
 button.ui-datepicker-close { display: none; }
 .lineheight16 {
 	line-height: 1.6;
+}
+label .onError{
+	background-position: 0px 4px;
 }

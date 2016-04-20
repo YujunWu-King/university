@@ -29,14 +29,15 @@ SurveyBuild.extend("Check", "baseComponent", {
     },
     _getHtml: function(data, previewmode) {
 
-        var c = "",e = "";
+        var c = "",e = "",j = 0;
         if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
             for (var i in data.option) {
                 e += '<li>';
 				e += '<div class="tz_checkbox_div '+(data["option"][i]["checked"] == "Y" ? "on_check" : "")+'">';
-                e += '<label style="margin-left:10px;" for="o' + data.itemId + data["option"][i]["code"] + '"><input class="tz_radio_checkbox '+(data["option"][i]["other"]=="Y"?"sur_other_box":"")+'"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="checkbox" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'" style="width:20px;height:20px;"/>';
-                e += data["option"][i]["txt"];
+                e += '<label for="o' + data.itemId + data["option"][i]["code"] + '">';
+                e += '<input class="tz_radio_checkbox '+(data["option"][i]["other"]=="Y"?"sur_other_box":"")+'"instanceId=' + i + ' id="o' + data.itemId + data["option"][i]["code"] + '" name="' + data.itemId + '" type="checkbox" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'" style="width:20px;height:20px;"/>';
+                e += '<span style="margin-left:10px;">' + data["option"][i]["txt"] + '</span>';
                 if (data["option"][i]["other"] == "Y"){
                     if(SurveyBuild._readonly){
                         //只读模式
@@ -46,9 +47,15 @@ SurveyBuild.extend("Check", "baseComponent", {
                         e += '<input type="text" id="other' + data.itemId + '" style=" display:'+(data["option"][i]["checked"] == "Y" ? "inline-block": "none")+';width: 150px; height: 20px; line-height:20px; margin-left: 10px;" value="' + data.othervalue + '"/>';
                     }
                 }
+				if(j == 0 && !SurveyBuild._readonly){
+	                e += '	<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+	                e += '		<div class="onShow"></div>';
+	                e += '	</div>';
+				}
                 e += '</label>';
 				e += '</div>'
                 e += '</li>';
+				j++;
             }
 
             c += '<div class="main_inner_content_info_autoheight">';
@@ -200,9 +207,9 @@ SurveyBuild.extend("Check", "baseComponent", {
 
         if (ValidationRules) {
             $.each(data["rules"],function(classname, classObj) {
-                if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+                if ($.inArray(classname, SurveyBuild._baseRules) == -1) {
                     //必填校验
-                    if(classname == "RequireValidator" && data.isRequire == "Y"){
+                    if(classname == "RequireValidator"){
                         allowEmpty = false;
                         ReqErrorMsg = classObj["messages"];
                     }
@@ -213,6 +220,7 @@ SurveyBuild.extend("Check", "baseComponent", {
                 }
             });
         }
+
 		$inputBox.formValidator({tipID:(data["itemId"] + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;", empty:allowEmpty, onEmpty:ReqErrorMsg});
         if(!allowEmpty){
             $inputBox.inputValidator({min:1, onError:ReqErrorMsg});

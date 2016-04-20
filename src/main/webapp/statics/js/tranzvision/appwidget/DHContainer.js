@@ -50,12 +50,12 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 
 		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
 		e += '          	<span class="edit_item_label">最小行数：</span>';
-		e += '				<input type="text" maxlength="1" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+		e += '				<input type="text" maxlength="1" class="medium edit_attaType minLines" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
 		e += '          </div>';
 
 		e += '          <div class="edit_item_warp mb10">';
 		e += '          	<span class="edit_item_label">最大行数：</span>';
-		e += '				<input type="text" maxlength="1" class="medium edit_attaType" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+		e += '				<input type="text" maxlength="2" class="medium edit_attaType maxLines" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
 		e += '          </div>';
 
 		e += '      </div>';
@@ -65,6 +65,13 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 		e += '      </div>';
 		e += '</div>';
 		return e;
+	},
+	_validatorAttr: function(data){
+		var $max = $("#question-edit .maxLines");
+		if (data.maxLines > 15){
+			SurveyBuild.fail($max, "最大行数不能超过15行！");
+			return false;	
+		}
 	},
 	_eventbindEditor: function(data) {
 		$("#question-box li[data_id='" + data.instanceId + "']").find(".DHContainer").droppable({
