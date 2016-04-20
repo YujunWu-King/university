@@ -55,8 +55,6 @@ SurveyBuild.extend("DateBox", "Completion", {
     },
     _edit: function(data) {
         var e = '';
-       // e = '<div class="edit_item_warp"><span class="edit_item_label">后缀：<a href="#" data-for-id="help_suffix" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffix\')" value="' + data.suffix + '"/></div>';
-       // e += '<div class="edit_item_warp"><span class="edit_item_label">后缀链接：</span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffixUrl\')" value="' + data.suffixUrl + '"/></div>';
 		e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label" >日期格式：</span>';
         e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'dateformate\')">';

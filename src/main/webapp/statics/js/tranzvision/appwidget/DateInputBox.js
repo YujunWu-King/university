@@ -16,7 +16,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
                 c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
                 c += '  </div>';
                 c += '  <div class="main_inner_content_info_readonly_right" >' + data.value + '</div>';
-		c += '<span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
+		        c += '<span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span>';
                 c += '</div>';
             }else{
                 //填写模式
