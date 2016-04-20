@@ -226,6 +226,12 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 					if (success <= 0) {
 						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", "N", "");
 					}
+					
+					
+					
+					
+					
+					
 					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PHOTO_UPLOAD_JSON", "Y",
 							imaPath + "/" + sysFileName);
 				} else {

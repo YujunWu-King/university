@@ -82,19 +82,25 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		}
 		/*报名表是否进行了报名表导出设置*/
 		if(StringUtils.equals("0", code)){
-			String sqlOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
-			String oprid = sqlQuery.queryForObject(sqlOprid, new Object[] { insid }, "String");
+			String sqlOprid = "SELECT OPRID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
+
+			Map<String, Object> workMap = sqlQuery.queryForMap(sqlOprid, new Object[] { insid });
+			String oprid = workMap.get("OPRID") == null ? "" : String.valueOf(workMap.get("OPRID"));
+			String classid = workMap.get("TZ_CLASS_ID") == null ? "" : String.valueOf(workMap.get("TZ_CLASS_ID"));
+			
+			String classSql = "SELECT TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
+			String className = sqlQuery.queryForObject(classSql, new Object[] { classid }, "String");
+			
 			
 			String sqlRealName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
 			String userName = sqlQuery.queryForObject(sqlRealName, new Object[] { oprid }, "String");
 			
-			//报名表模板编号、模板名称
-			String sql = "SELECT TPL.TZ_APP_TPL_ID,TPL.TZ_APP_TPL_MC FROM PS_TZ_APP_INS_T INS,PS_TZ_APPTPL_DY_T TPL WHERE TPL.TZ_APP_TPL_ID = INS.TZ_APP_TPL_ID AND TZ_APP_INS_ID = ? LIMIT 0,1";
-			Map<String, Object> mapTplInfo = sqlQuery.queryForMap(sql, new Object[] { insid });
-			String tplid = mapTplInfo.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_ID"));
-			String tplname = mapTplInfo.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(mapTplInfo.get("TZ_APP_TPL_MC"));
+			//报名表模板编号、模板名称 
+			String sql = "SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ? LIMIT 0,1";
+			String tplid =  sqlQuery.queryForObject(sql, new Object[] { insid },"String");
+			
 			//title
-			title = tplname + "-" + userName;
+			title = className + "-" + userName;
 			
 			//最终生成文件路径
 			String parentPath = "/bmb/export/" + orgId + "/" + tplid + "/";
@@ -234,7 +240,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		try {
 			String htm = html.toString();
 			htm = htm.replace("$", "\\$");
-			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML",request.getContextPath(), title, htm);
+			formHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APP_FORM_EXPORT_HTML",request.getContextPath(), title, htm,insid);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			formHtml = "";
@@ -513,7 +519,9 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 			} else {
 				String sql = "SELECT TZ_APP_L_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 				val = sqlQuery.queryForObject(sql, new Object[] { insid, xxxBh }, "String");
-				val = val.replace("\\n", "<br>");
+				System.out.println(val);
+				val = val.replaceAll("\\n", "<br>");
+				System.out.println(val);
 			}
 		}else if(StringUtils.equals("Page", xxxLmc)){
 			val = xxxMc;
