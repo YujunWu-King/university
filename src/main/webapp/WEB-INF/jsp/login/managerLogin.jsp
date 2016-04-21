@@ -266,7 +266,7 @@ body {
 
 					},
 
-					codeValidatorText : '输入的验证码不正确!',
+					codeValidatorText : '输入的验证码不正确!'
 
 				});
 
