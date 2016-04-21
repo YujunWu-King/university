@@ -262,10 +262,12 @@ public class FileManageServiceImpl implements FileManageService {
 		return aryImgWH;
 	}
 
-	/**
-	 * 对文件流输出下载的中文文件名进行编码 屏蔽各种浏览器版本的差异性
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @throws UnsupportedEncodingException
+	 * @see com.tranzvision.gd.TZBaseBundle.service.FileManageService#
+	 * encodeChineseDownloadFileName(javax.servlet.http.HttpServletRequest,
+	 * java.lang.String)
 	 */
 	public String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName)
 			throws UnsupportedEncodingException {
