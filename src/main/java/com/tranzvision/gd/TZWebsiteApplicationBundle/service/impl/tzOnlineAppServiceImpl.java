@@ -1487,7 +1487,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						}else if("S".equals(strStorageType)||"L".equals(strStorageType)){
 							this.savePerXxxIns("", mapJsonItems, numAppInsId);
 							if("bmrPhoto".equals(strClassName)){
-								this.saveBmrPhoto("", mapJsonItems, numAppInsId);
+								//this.saveBmrPhoto("", mapJsonItems, numAppInsId);
 							}
 						}	
 					}
