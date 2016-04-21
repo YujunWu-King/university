@@ -2255,7 +2255,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			   strSyncType = MapData.get("TZ_SYNC_TYPE") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_TYPE"));	
 			   strSyncSep = MapData.get("TZ_SYNC_SEP") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_SEP"));
 			   //查看是否在容器中
-			   String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+			   String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
 			   strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
 			   if(!"".equals(strDxxxBh)&&strDxxxBh!=null){
 				   strXxxBhLike = strDxxxBh + strXxxBh;

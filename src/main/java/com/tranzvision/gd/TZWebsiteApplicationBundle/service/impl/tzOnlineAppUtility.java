@@ -69,7 +69,7 @@ public class tzOnlineAppUtility {
 					String strStartDate = "";
 					String strEndDate = "";
 					 //查看是否在容器中
-					sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
 				    strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
 				    if(!"".equals(strDxxxBh)&&strDxxxBh!=null){
 				    	strXxxBhLike = strDxxxBh + strXxxBh;
@@ -112,7 +112,7 @@ public class tzOnlineAppUtility {
 				case "mobilePhone":
 				case "YearsAndMonth":
 					 //查看是否在容器中
-					sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
 				    strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
 				    if(!"".equals(strDxxxBh)&&strDxxxBh!=null){
 				    	strXxxBhLike = strDxxxBh + strXxxBh;
