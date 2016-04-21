@@ -6,8 +6,13 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 	children: {},
 	minLines: 1,
 	maxLines: 4,
-	linesNo:[1,2,3],
-
+	_init: function(d, previewmode) {
+		var linesNo = [];
+		for (var i = 1; i < this.maxLines; i++) {
+			linesNo.push(i);
+		}
+		this["linesNo"] = linesNo;
+	},
 	_getHtml: function(data, previewmode) {
 		var c = "", children = data.children;
 		if (previewmode) {
