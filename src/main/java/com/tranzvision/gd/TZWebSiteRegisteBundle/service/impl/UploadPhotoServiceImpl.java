@@ -204,7 +204,7 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 
 						File yFile = new File(tzAttpUrl + tzAttashSysFile);
 						if (yFile.exists() && yFile.isFile()) {
-							yFile.delete();
+							//yFile.delete();
 						}
 					}
 

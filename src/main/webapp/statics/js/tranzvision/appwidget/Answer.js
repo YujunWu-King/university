@@ -363,7 +363,9 @@ var SurveyBuild = {
                 var _co = "";
                 for (var i = 0; i < data.children.length; i++) {
                     _co += me._addOneRec(data.children, i);
-                    this.ArrShift(data.children[i],d);
+					if(i > 0){
+						this.ArrShift(data.children[i],d);
+					}
                 }
                 _c = $("<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_inner_content").prepend(_co).parents('.dhcontainer');
             } else if (data["fixedContainer"] && data["fixedContainer"] == "Y") {
