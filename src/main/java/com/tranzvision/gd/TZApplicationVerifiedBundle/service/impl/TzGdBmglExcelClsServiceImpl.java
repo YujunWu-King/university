@@ -415,6 +415,11 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				            		List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sqlMutilValue,new Object[]{Long.parseLong(arrAppInsID [i]), strAppFormField});
 				            		if(list2 != null && list2.size() > 0){
 				            			for(int h = 0; h < list2.size(); h++){
+				            				strCheckBoxRadioValue = (String) list2.get(h).get("TZ_APP_S_TEXT");
+				            				if(strCheckBoxRadioValue == null){
+				            					strCheckBoxRadioValue = "";
+				            				}
+				            				strCheckBoxRadioOtherValue = (String) list2.get(h).get("TZ_KXX_QTZ");
 				            				/*如果有可选项其他值则取该值*/
 				            				if(strCheckBoxRadioOtherValue != null && !"".equals(strCheckBoxRadioOtherValue)){
 				            					strCheckBoxRadioValue = strCheckBoxRadioOtherValue;
