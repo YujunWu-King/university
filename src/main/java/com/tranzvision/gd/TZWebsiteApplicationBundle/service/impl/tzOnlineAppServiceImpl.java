@@ -2830,113 +2830,119 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 
 	    String strPageXxxBh = "";
 	    
+	    String strPageNo = "";
+	    
 	    try{
 	    	
 	    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
-	    	numPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "Integer");
 	    	
-	    	String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
-	    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
+	    	strPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "String");
 	    	
-		    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
-			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
-			for (Object objData : listData) {
-				Map<String, Object> MapData = (Map<String, Object>) objData;
-				strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
-				strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
-				strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
-				strXxxRqgs = MapData.get("TZ_XXX_RQGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_RQGS"));
-				strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMIN"));
-				strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMAX"));
-				strXxxZsxzgs = MapData.get("TZ_XXX_ZSXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZSXZGS"));
-				strXxxZdxzgs = MapData.get("TZ_XXX_ZDXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZDXZGS"));
-				strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
-				strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
-				strXxxBtBz = MapData.get("TZ_XXX_BT_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BT_BZ"));
-				strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
-				numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
-				numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
-				strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
-				numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
-				numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
-				strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
-				strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
-				strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
-				numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
-				numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
-				strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
-				strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
-				strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
-				strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
-				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
-				
-				if(!"".equals(strPath)&&!"".equals(strName)&&!"".equals(strMethod)){
-					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
-					String strReturn = "";
-					switch(strMethod){
-						case "requireValidator":
-							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+	    	if(strPageNo != null){
+	    		numPageNo = Integer.parseInt(strPageNo);
+	    		String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
+		    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
+		    	
+			    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
+				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
+				for (Object objData : listData) {
+					Map<String, Object> MapData = (Map<String, Object>) objData;
+					strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
+					strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
+					strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
+					strXxxRqgs = MapData.get("TZ_XXX_RQGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_RQGS"));
+					strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMIN"));
+					strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMAX"));
+					strXxxZsxzgs = MapData.get("TZ_XXX_ZSXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZSXZGS"));
+					strXxxZdxzgs = MapData.get("TZ_XXX_ZDXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZDXZGS"));
+					strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
+					strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
+					strXxxBtBz = MapData.get("TZ_XXX_BT_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BT_BZ"));
+					strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
+					numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
+					numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+					strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
+					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
+					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+					strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
+					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
+					strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
+					numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
+					numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
+					strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
+					strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
+					strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
+					strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
+					strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
+					
+					if(!"".equals(strPath)&&!"".equals(strName)&&!"".equals(strMethod)){
+						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
+						String strReturn = "";
+						switch(strMethod){
+							case "requireValidator":
+								strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "ahphValidator":
+								strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "charLenValidator":
+								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "valueValidator":
+								strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "regularValidator":
+								strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "dHLineValidator":
+								strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+							case "refLetterValidator":
+								strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+								break;
+						}
+						if(!"".equals(strReturn)){
+							strMsg = strReturn;
 							break;
-						case "ahphValidator":
-							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "charLenValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "valueValidator":
-							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "regularValidator":
-							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "dHLineValidator":
-							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "refLetterValidator":
-							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-					}
-					if(!"".equals(strReturn)){
-						strMsg = strReturn;
-						break;
+						}
 					}
 				}
-			}
-			if(!"".equals(strPageXxxBh)){
-				if("".equals(strMsg)){
-					this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
-				}else{
-					this.savePageCompleteState(numAppInsId, strPageXxxBh, "N"); 
-				}	
-			}
+				if(!"".equals(strPageXxxBh)){
+					if("".equals(strMsg)){
+						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
+					}else{
+						this.savePageCompleteState(numAppInsId, strPageXxxBh, "N"); 
+					}	
+				}
+	    	}		
 		}catch(Exception e){
 			e.printStackTrace();
 		}
