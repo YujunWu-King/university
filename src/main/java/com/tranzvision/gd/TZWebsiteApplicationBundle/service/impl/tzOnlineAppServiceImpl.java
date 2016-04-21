@@ -2836,10 +2836,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	    	
 	    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
 	    	
-	    	strPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "String");
 	    	
-	    	if(strPageNo != null){
-	    		numPageNo = Integer.parseInt(strPageNo);
+	    	numPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "Integer");
+	    	
+	    	//strPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "String");
+	    	
+	    	
+	    		//numPageNo = Integer.parseInt(strPageNo);
 	    		String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
 		    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
 		    	
@@ -2942,7 +2945,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						this.savePageCompleteState(numAppInsId, strPageXxxBh, "N"); 
 					}	
 				}
-	    	}		
+	    		
 		}catch(Exception e){
 			e.printStackTrace();
 		}
