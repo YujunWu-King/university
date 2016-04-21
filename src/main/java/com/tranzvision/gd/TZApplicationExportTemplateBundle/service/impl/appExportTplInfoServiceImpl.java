@@ -67,7 +67,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 			// 查询总数;
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=?";
 			total = sqlQuery.queryForObject(totalSQL, new Object[] { strAppExportTplId },"Integer");
-			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF ,TZ_SORT_NUM,TZ_DC_COL_WIDTH,TZ_DC_COL_FILTER FROM PS_TZ_EXP_FRMFLD_T  WHERE TZ_EXPORT_TMP_ID= ?";
+			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF ,TZ_SORT_NUM,TZ_DC_COL_WIDTH,TZ_DC_COL_FILTER FROM PS_TZ_EXP_FRMFLD_T  WHERE TZ_EXPORT_TMP_ID= ? ORDER BY TZ_SORT_NUM";
 			List<?> listData = sqlQuery.queryForList(sql, 
 					new Object[] { strAppExportTplId });
 			for (Object objData : listData) {
