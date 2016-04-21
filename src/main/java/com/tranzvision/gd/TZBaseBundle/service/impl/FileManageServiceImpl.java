@@ -8,11 +8,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +82,7 @@ public class FileManageServiceImpl implements FileManageService {
 	public boolean CreateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
 
 		String parentRealPath = this.getRealPath(parentPath);
-		
+
 		File dir = new File(parentRealPath);
 		// System.out.println(dir.getAbsolutePath());
 		if (!dir.exists()) {
@@ -126,7 +128,8 @@ public class FileManageServiceImpl implements FileManageService {
 	@Override
 	public boolean UpdateFile(String parentPath, String fileName, byte[] fileBytes) throws Exception {
 
-		//String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		// String parentRealPath =
+		// request.getServletContext().getRealPath(parentPath);
 		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
@@ -173,7 +176,8 @@ public class FileManageServiceImpl implements FileManageService {
 	 */
 	@Override
 	public boolean DeleteFile(String parentPath, String fileName) {
-		//String parentRealPath = request.getServletContext().getRealPath(parentPath);
+		// String parentRealPath =
+		// request.getServletContext().getRealPath(parentPath);
 		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
@@ -206,7 +210,8 @@ public class FileManageServiceImpl implements FileManageService {
 	@Override
 	public boolean DeleteFile(String filePath) {
 
-		//String fileRealPath = request.getServletContext().getRealPath(filePath);
+		// String fileRealPath =
+		// request.getServletContext().getRealPath(filePath);
 		String fileRealPath = this.getRealPath(filePath);
 
 		File delFile = new File(fileRealPath);
@@ -237,7 +242,8 @@ public class FileManageServiceImpl implements FileManageService {
 
 		ArrayList<Integer> aryImgWH = new ArrayList<Integer>();
 
-		//String fileRealPath = request.getServletContext().getRealPath(filePath);
+		// String fileRealPath =
+		// request.getServletContext().getRealPath(filePath);
 		String fileRealPath = this.getRealPath(filePath);
 		File imageFile = new File(fileRealPath);
 		if (!imageFile.exists()) {
@@ -254,6 +260,33 @@ public class FileManageServiceImpl implements FileManageService {
 		}
 
 		return aryImgWH;
+	}
+
+	/**
+	 * 对文件流输出下载的中文文件名进行编码 屏蔽各种浏览器版本的差异性
+	 * 
+	 * @throws UnsupportedEncodingException
+	 */
+	public String encodeChineseDownloadFileName(HttpServletRequest request, String pFileName)
+			throws UnsupportedEncodingException {
+
+		String filename = null;
+		String agent = request.getHeader("USER-AGENT");
+		if (null != agent) {
+			if (-1 != agent.indexOf("Firefox")) {// Firefox
+				filename = "=?UTF-8?B?"
+						+ (new String(org.apache.commons.codec.binary.Base64.encodeBase64(pFileName.getBytes("UTF-8"))))
+						+ "?=";
+			} else if (-1 != agent.indexOf("Chrome")) {// Chrome
+				filename = new String(pFileName.getBytes(), "ISO8859-1");
+			} else {// IE7+
+				filename = java.net.URLEncoder.encode(pFileName, "UTF-8");
+				filename = StringUtils.replace(filename, "+", "%20");// 替换空格
+			}
+		} else {
+			filename = pFileName;
+		}
+		return filename;
 	}
 
 }

@@ -23,6 +23,7 @@ import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormListCl
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzComPageAuthServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -52,9 +53,12 @@ public class AppFormController {
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
-	
+
 	@Autowired
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
+	
+	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;
 
 	private static final int BUFFER_SIZE = 4096;
 
@@ -198,7 +202,9 @@ public class AppFormController {
 
 					// set headers for the response
 					String headerKey = "Content-Disposition";
-					filename = new String(filename.getBytes(), "ISO8859-1");
+					// filename = new String(filename.getBytes(), "ISO8859-1");
+					// filename = new String(filename.getBytes(), "UTF-8");
+					filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
 
 					String headerValue = String.format("attachment; filename=\"%s\"", filename);
 					response.setHeader(headerKey, headerValue);
@@ -249,7 +255,7 @@ public class AppFormController {
 		// OPRID
 		String oprid = gdKjComService.getOPRID(request);
 		// OrgId
-		//String orgid = gdKjComService.getLoginOrgID(request, response);
+		// String orgid = gdKjComService.getLoginOrgID(request, response);
 		// 错误信息
 		String[] errorMsg = { "0", "" };
 
@@ -262,18 +268,16 @@ public class AppFormController {
 			// 校验组件页面的读写访问权限
 			boolean permission = tzComPageAuthServiceImpl.checkUpdatePermission(oprid, comName, pageName, errorMsg);
 			if (permission) {
-				
-				
+
 				// get absolute path of the application
 				ServletContext context = request.getServletContext();
-				//String appPath = context.getRealPath("");
-				
+				// String appPath = context.getRealPath("");
 
 				// construct the complete absolute path of the file
-				//String fullPath = appPath + url;
-				//File downloadFile = new File(fullPath);
+				// String fullPath = appPath + url;
+				// File downloadFile = new File(fullPath);
 				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(Integer.parseInt(seqnum));
-				if(psTzExcelDattT == null){
+				if (psTzExcelDattT == null) {
 					// 无更新权限
 					errorMsg[0] = "1";
 					errorMsg[1] = "不存在下载的文件";
@@ -282,9 +286,9 @@ public class AppFormController {
 				String fullPath = "";
 				String lj = psTzExcelDattT.getTzFwqFwlj();
 				String filename = psTzExcelDattT.getTzSysfileName();
-				if(lj.lastIndexOf("/") + 1 == lj.length()){
+				if (lj.lastIndexOf("/") + 1 == lj.length()) {
 					lj = lj + filename;
-				}else{
+				} else {
 					lj = lj + "/" + filename;
 				}
 				fullPath = request.getServletContext().getRealPath(lj);
@@ -305,7 +309,8 @@ public class AppFormController {
 
 				// set headers for the response
 				String headerKey = "Content-Disposition";
-				filename = new String(filename.getBytes(), "ISO8859-1");
+				//filename = new String(filename.getBytes(), "ISO8859-1");
+				filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
 
 				String headerValue = String.format("attachment; filename=\"%s\"", filename);
 				response.setHeader(headerKey, headerValue);
@@ -338,4 +343,7 @@ public class AppFormController {
 
 		return strRetContent;
 	}
+
+
+
 }
