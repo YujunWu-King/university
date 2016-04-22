@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -204,7 +205,11 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 
 						File yFile = new File(tzAttpUrl + tzAttashSysFile);
 						if (yFile.exists() && yFile.isFile()) {
-							//yFile.delete();
+							String ishasSql = "SELECT 'Y' FROM PS_TZ_APP_CC_T WHERE TZ_APP_S_TEXT REGEXP BINARY  '" + tzAttashSysFile + "$' limit 0,1";
+							String isHas = jdbcTemplate.queryForObject(ishasSql, new Object[] {}, "String");
+							if(!StringUtils.equals("Y", isHas)){
+								yFile.delete();
+							}
 						}
 					}
 

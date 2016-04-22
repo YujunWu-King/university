@@ -397,6 +397,26 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		}
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		/* 推荐人姓名 */
+		if (StringUtils.equals(oType, "RNAME")) {
+			String userName = "";
+			String insid = jacksonUtil.getString("insid");
+			if(StringUtils.isNotBlank(insid) && StringUtils.length(insid) > 0){
+				String sqlOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
+				String refereesOprid = sqlQuery.queryForObject(sqlOprid, new Object[] { insid }, "String");
+				
+				String sqlRealName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
+				userName = sqlQuery.queryForObject(sqlRealName, new Object[] { refereesOprid }, "String");
+			}		
+			if(userName == null){
+				userName = "";
+			}
+			Map<String, Object> mapRet = new HashMap<String, Object>();
+			mapRet.put("refName", userName);
+
+			return jacksonUtil.Map2json(mapRet);
+		}
 		/* 考生基本信息 */
 		if (StringUtils.equals(oType, "KSPHOTO")) {
 			// 判断当前登录人是否有个人照片信息

@@ -29,14 +29,22 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			if(data.isShowLabel == "Y") {
 				c += '	<div class="main_inner_content_info_autoheight_title">';
 				c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*" : "") + '</span>' + data.title;
+				c += '      <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px;padding: 0px;background: transparent;display:inline-block;float: none;height: 18px;">';
+				c += '      	<div class="onShow"></div>';
+				c += '      </div>';
+				c += '		<span id="' + data.itemId + 'Size" style="font-weight:normal;"></span>';
 				c += '	</div>';
 			}
-			c += '	<div class="main_inner_content_info_autoheight_d height-lineHeight-36px" >';
-			c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-			c += '              <div class="onShow"></div>';
-			c += '          </div>';
-			c += '			<span id="' + data.itemId + 'Size"></span>';
-			c += '	</div>';
+			
+			if(data.isShowLabel != "Y") {
+				c += '<div class="main_inner_content_info_autoheight_d height-lineHeight-36px" >';
+				c += '	<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"">';
+				c += '		<div class="onShow"></div>';
+				c += '	</div>';
+				c += '	<span id="' + data.itemId + 'Size"></span>';
+				c += '</div>';
+			}
+
 			c += '	<div class="main_inner_content_info_autoheight_real">';
 			c += '		<div class="main_inner_content_info_text_mid">';
 			c += '			<textarea  class="main_text_area" data-regular="' + regular + '" title="' + data.itemName + '" style="height: 140px; white-space: pre-wrap;" rows="' + data.rows + '" cols="'+ data.cols +'" id="' + data.itemId + '" name="' + data.itemId + '">' + data.value + '</textarea>';
