@@ -233,7 +233,6 @@
             return;
         };
 
-
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
         if(store.getCount( )>0){
@@ -246,8 +245,21 @@
         }else{
             this.loadFieldsStore(exportTplID,modalID,store);
         }
+		/*提交保存，保存页面数据
+		
+		if (form.isValid() && sava_flag) {
+            var tzParams = this.getTplInfoParams2();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+                comView.actType = "update";
+                form.findField("tplID").setReadOnly(true);
+                form.findField("tplID").addCls("lanage_1");
+            },"",true,this);
+        }else{
+			alert("不保存");
+		}*/
     },
-   loadFieldsStore:function(exportTplID,modalID,store){
+   loadFieldsStore:function(exportTplID,modalID,store,btn){
        var tzParams = '{"ComID":"TZ_BMGL_DCMB_COM","PageID":"TZ_DCMB_INFO_STD","OperateType":"loadAppFormFields","comParams":{"modalID":"'+modalID+'","tplID":"'+exportTplID+'"}}';
        //加载数据
        Ext.tzLoad(tzParams,function(responseData){
@@ -384,7 +396,7 @@
                         store.add(model);
                     }
                 };
-
+				store.commitChanges();
             }
         })
     },
@@ -411,7 +423,8 @@
             },"",true,this);
         }
     },
-    getTplInfoParams: function(){
+	getTplInfoParams2: function(){
+		/*该方法不处理删除的数据，供加载字段时使用，防止重新加载的字段在保存的时候又被删除*/
         var form = this.getView().child("form").getForm();
         //表单数据
         var formParams = form.getValues();
@@ -433,16 +446,76 @@
         //字段列表
         var grid = this.getView().child("grid");
         var store = grid.getStore();
+        
+        //grid修改json字符串
+        var editRecs = store.getModifiedRecords();
+        for(var i=0;i<editRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"typeFlag":"FIELD","data":'+Ext.JSON.encode(editRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ','+'{"typeFlag":"FIELD","data":'+Ext.JSON.encode(editRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_BMGL_DCMB_COM","PageID":"TZ_DCMB_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        store.commitChanges();
+        return tzParams;
+    },
+    getTplInfoParams: function(){
+        var form = this.getView().child("form").getForm();
+        //表单数据
+        var formParams = form.getValues();
+		
+        //组件信息标志
+        var actType = this.getView().actType;
+        //更新操作参数
+        var comParams = "";
+        //新增
+        if(actType == "add"){
+            comParams = '"add":[{"typeFlag":"TPL","data":'+Ext.JSON.encode(formParams)+'}]';
+        }
+        //修改json字符串
+        var editJson = "";
+        if(actType == "update"){
+            editJson = '{"typeFlag":"TPL","data":'+Ext.JSON.encode(formParams)+'}';
+        }
+
+        //字段列表
+        var grid = this.getView().child("grid");
+        var store = grid.getStore();
         //删除json字符串
         var removeJson = "";
         //删除记录
         var removeRecs = store.getRemovedRecords();
+		var removeRecsFiled = "";
+		var updateRecsFiled = "";
+		var deleteflag = true;
         for(var i=0;i<removeRecs.length;i++){
-            if(removeJson == ""){
-                removeJson = Ext.JSON.encode(removeRecs[i].data);
-            }else{
-                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-            }
+			deleteflag = true;
+			removeRecsFiled = removeRecs[i].get("fieldID");
+			/*是否是需要删除的字段*/
+			var editRecs1 = store.getModifiedRecords();
+			for(var m=0;m<editRecs1.length;m++){
+				updateRecsFiled = editRecs1[m].get("fieldID");
+				if(removeRecsFiled == updateRecsFiled){
+					deleteflag = false;
+					break;
+				}
+			}
+			if(deleteflag){
+				if(removeJson == ""){
+					removeJson = Ext.JSON.encode(removeRecs[i].data);
+				}else{
+					removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+				}
+			} 
         }
         if(removeJson != ""){
             if(comParams == ""){
