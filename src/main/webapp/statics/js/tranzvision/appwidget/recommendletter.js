@@ -809,7 +809,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		if(_refFileUrl!="")
 		{
-			_tjx_zt="已完成";
+			//_tjx_zt="已完成";
 		}
 		var _zd="";
 		if (_tjx_zt=="已完成"){
@@ -1950,15 +1950,17 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
 				if (rec_type=="U")
 				{
+					rec_language = "";
 					var _tz_tjx_valid = "N";
 					if(_yz==""){
 						_tz_tjx_valid = "Y";
 					}
 					var _tz_app_ins_id=SurveyBuild.appInsId;
 					var _tz_app_version_id=SurveyBuild.appInsVersion;
+					var _email_tx = $("#yincang_tx").val();
 					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
 					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SAVE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","tjx_valid":"'+_tz_tjx_valid+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+ '","rec_type":"'+rec_type+ '","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
-					var _email_tx = $("#yincang_tx").val();
+					
 					//$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.fileName);
 					$.ajax({
 						type: "post",
