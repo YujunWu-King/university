@@ -355,11 +355,17 @@
 
 					if(appReadOnly=="Y"){
 						 processing();
-						 $("#"+currentPageId).removeClass("tabNav_bg").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("tabNav_bg2");					
-						 tabChange("prev");
-
-						 $("#"+currentPageId).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
-
+						 var isadmin = "%bind(:26)";
+						 if(isadmin=="Y"){
+							 $("#"+currentPageId).removeClass("tabNav_bg").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("tabNav_bg2");	
+							 tabChange("prev");
+							 $("#"+currentPageId).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
+						 }else{
+							 $("#"+currentPageId).removeClass("tabNav_bg2").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("tabNav_bg");	
+							 tabChange("prev");
+							 $("#"+currentPageId).removeClass("tabNav_bg2").removeClass("tabNav_bg").removeClass("tabNav_bg_c2").addClass("tabNav_bg_c");
+						 }
+						 
 						 layer.closeAll();
 					}else
 					{
@@ -416,12 +422,18 @@
 
 					if(appReadOnly=="Y"){
 						processing();
-					    $("#"+currentPageId).removeClass("tabNav_bg").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("	tabNav_bg2");					
-						tabChange("next");
-
-					    $("#"+currentPageId).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
-
-						 layer.closeAll();
+						var isadmin = "%bind(:26)";
+						if(isadmin=="Y"){
+							$("#"+currentPageId).removeClass("tabNav_bg").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("	tabNav_bg2");					
+							tabChange("next");
+						    $("#"+currentPageId).removeClass("tabNav_bg2").addClass("tabNav_bg_c2");
+						}else{
+							$("#"+currentPageId).removeClass("tabNav_bg2").removeClass("tabNav_bg_c").removeClass("tabNav_bg_c2").addClass("tabNav_bg");
+							tabChange("next");
+							$("#"+currentPageId).removeClass("tabNav_bg2").removeClass("tabNav_bg").removeClass("tabNav_bg_c2").addClass("tabNav_bg_c");
+						}
+					    
+						layer.closeAll();
 					}else{
 						var formValidatorNext = $.formValidator.pageIsValid();
 						processing();
