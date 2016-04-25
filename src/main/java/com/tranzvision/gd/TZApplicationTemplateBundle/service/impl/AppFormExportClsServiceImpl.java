@@ -443,7 +443,8 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				type = "checkbox";
 			}
 			
-			String sql = "SELECT TZ_APP_S_TEXT,TZ_KXX_QTZ,TZ_IS_CHECKED,(SELECT TZ_KXZ_QT_BZ FROM PS_TZ_APPXXX_KXZ_T B WHERE A.TZ_XXX_BH = B.TZ_XXX_BH AND B.TZ_APP_TPL_ID=? limit 0,1) AS 'TZ_KXZ_QT_BZ' FROM PS_TZ_APP_DHCC_T A WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+//			String sql = "SELECT TZ_APP_S_TEXT,TZ_KXX_QTZ,TZ_IS_CHECKED,(SELECT TZ_KXZ_QT_BZ FROM PS_TZ_APPXXX_KXZ_T B WHERE A.TZ_XXX_BH = B.TZ_XXX_BH AND B.TZ_APP_TPL_ID=? limit 0,1) AS 'TZ_KXZ_QT_BZ' FROM PS_TZ_APP_DHCC_T A WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+			String sql = "SELECT C.TZ_APP_S_TEXT,C.TZ_KXX_QTZ,C.TZ_IS_CHECKED,K.TZ_KXZ_QT_BZ FROM PS_TZ_APPXXX_KXZ_T K LEFT JOIN PS_TZ_APP_DHCC_T C ON K.TZ_XXX_BH = C.TZ_XXX_BH AND K.TZ_XXXKXZ_MC = C.TZ_XXXKXZ_MC WHERE K.TZ_APP_TPL_ID = ? AND C.TZ_APP_INS_ID = ? AND K.TZ_XXX_BH = ? ORDER BY K.TZ_ORDER;";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplid, insid, xxxBh });
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
