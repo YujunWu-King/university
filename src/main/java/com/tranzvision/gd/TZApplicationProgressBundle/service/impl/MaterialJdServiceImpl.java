@@ -174,6 +174,20 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			        				class_css = "icon-no";
 			        			}
 			        			
+			        			if(TZ_CONT_INTRO.contains("\\")){
+			        				TZ_CONT_INTRO = TZ_CONT_INTRO.replace("\\", "\\\\");
+								}
+								if(TZ_CONT_INTRO.contains("$")){
+									TZ_CONT_INTRO = TZ_CONT_INTRO.replace("$", "\\$");
+								}
+								
+								if(TZ_AUDIT_NOPASS_RS.contains("\\")){
+									TZ_AUDIT_NOPASS_RS = TZ_AUDIT_NOPASS_RS.replace("\\", "\\\\");
+								}
+								if(TZ_AUDIT_NOPASS_RS.contains("$")){
+									TZ_AUDIT_NOPASS_RS = TZ_AUDIT_NOPASS_RS.replace("$", "\\$");
+								}
+			        			
 			        			TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
 		        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR", TZ_CONT_INTRO, zlSpZtDesc, TZ_AUDIT_NOPASS_RS, class_css);
 			                    
@@ -188,11 +202,18 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			        	TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
         						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR",noSQJD, noSQJD, noSQJD, "");
 			        }
+			        
 			        TZ_OPEN_WINDOW_TABLE_TH =  tzGDObject.getHTMLText(
     						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH", zldj, shjg, btgYy);
 				}
 			}
 			
+			if(TZ_GD_ZLSQ_TR.contains("\\")){
+				TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR.replace("\\", "\\\\");
+			}
+			if(TZ_GD_ZLSQ_TR.contains("$")){
+				TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR.replace("$", "\\$");
+			}
 			infoScheduleHtml =  tzGDObject.getHTMLText(
 					"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR);
 		}catch(Exception e){
