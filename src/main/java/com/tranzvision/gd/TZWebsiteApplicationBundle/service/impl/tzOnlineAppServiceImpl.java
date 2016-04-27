@@ -366,7 +366,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				String strClassIsOpen = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 				if("Y".equals(strClassIsOpen)){
 					//班级开放报名
-					if("TZ_GUEST".equals(oprid)){
+					if("TZ_GUEST".equals(oprid) || "".equals(oprid)){
 						//如果是Guest用户，看班级是否允许匿名报名
 						sql = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 						String strGuestApply = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
@@ -379,6 +379,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							}
 							strIsGuest = "Y";
 						}else{
+							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
+							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
+							if("".equals(strTplId) || strTplId == null){
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+										"PARAERROR", "参数错误", "Parameter error");
+							}
 							strMessageError = gdKjComServiceImpl.getMessageText(request,response, "TZGD_APPONLINE_MSGSET", 
 									"SESSION_INVAILD", "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
 						}
@@ -818,7 +824,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strGuestApply = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 				sql = "SELECT TZ_JG_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 				strAppOrgId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-				if(!"Y".equals(strGuestApply) && "TZ_GUEST".equals(oprid)){
+				if(!"Y".equals(strGuestApply) && ("TZ_GUEST".equals(oprid) || "".equals(oprid))){
 					//该班级未开发匿名报名
 					errMsg[0] = "1";
 					errMsg[1] = strSessionInvalidTips;
