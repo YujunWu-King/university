@@ -61,7 +61,7 @@
             xtype: 'textfield',
             //fieldLabel: '用户名称',
 			fieldLabel:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.usName","用户名称"),
-			maxLength: 30,
+			maxLength: 150,
 			name: 'usName'
         }, {
             xtype: 'textfield',
