@@ -1369,7 +1369,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							psTzDzyxYzmTblMapper.updateByPrimaryKeySelective(psTzDzyxYzmTbl);
 
 							String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,
-									"TZ_SITE_MESSAGE", "29", "修改成功！", "The modification is successful!");
+									"TZ_SITE_MESSAGE", "29", "修改成功", "The modification is successful.");
 							strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",
 									message, imgPath + "/right_green.png");
 							strResult = objRep.repTitle(strResult, strSiteId);
@@ -1377,7 +1377,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							return strResult;
 						} else {
 							String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,
-									"TZ_SITE_MESSAGE", "68", "链接已超时！", "Link has timed out!");
+									"TZ_SITE_MESSAGE", "68", "链接已超时", "Link has timed out.");
 							strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",
 									message, imgPath + wrongPic);
 							strResult = objRep.repTitle(strResult, strSiteId);
@@ -1386,7 +1386,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						}
 					} else {
 						String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,
-								"TZ_SITE_MESSAGE", "69", "链接已失效！", "Link has failed!");
+								"TZ_SITE_MESSAGE", "69", "链接已失效", "Link has failed.");
 						strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML",
 								message, imgPath + wrongPic);
 						strResult = objRep.repTitle(strResult, strSiteId);
@@ -1395,7 +1395,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					}
 				} else {
 					String message = strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,
-							"TZ_SITE_MESSAGE", "69", "链接已失效！", "Link has failed!");
+							"TZ_SITE_MESSAGE", "69", "链接已失效", "Link has failed.");
 					strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_DONE_SUCCESS_ENG_HTML", message,
 							imgPath + wrongPic);
 					strResult = objRep.repTitle(strResult, strSiteId);
