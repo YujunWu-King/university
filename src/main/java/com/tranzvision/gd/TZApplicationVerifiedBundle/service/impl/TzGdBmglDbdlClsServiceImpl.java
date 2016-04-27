@@ -32,10 +32,13 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 原PS类：TZ_GD_BMGL_BMBSH_PKG:TZ_GD_BMGL_DBDL_CLS
@@ -64,6 +67,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	private PsprcsrqstMapper psprcsrqstMapper;
 	@Autowired
 	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
+	@Autowired
+	private TZGDObject tZGDObject;
 	
 
 	@Override
@@ -119,7 +124,23 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 		int processInstance = 0;
 		String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
+			/*
+			BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_DBDL_PROC_01");
+			//指定调度作业的相关参数
+			EngineParameters schdProcessParameters = new EngineParameters();
+
+			schdProcessParameters.setBatchServer("TZGDDEV01");
+			schdProcessParameters.setCycleExpression("");
+			schdProcessParameters.setLoginUserAccount("Admin");
+			schdProcessParameters.setPlanExcuteDateTime(new Date());
+			schdProcessParameters.setRunControlId("TZGD-TEST-20151228");
+			
+			//调度作业
+			tmpEngine.schedule(schdProcessParameters);
+			 */
+			
 			for (int num = 0; num < actData.length; num++) {
+				
 				// 表单内容;
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
@@ -202,13 +223,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						}else{
 							relName = "";
 						}
-						/*
-						String TZ_APP_TPL_ID = jdbcTemplate.queryForObject(
-								"SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?",
-								new Object[] { Long.parseLong(appInsID) }, "String");
-						tzDealWithXMLServiceImpl.replaceXMLPulish(appInsID, OPRID, TZ_APP_TPL_ID, true,
-								fjlj + "/" + appInsID+"_"+relName, errMsg);
-							*/	
+
 						String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID+"_"+relName);
 						File tF = new File(tFile);
 						if (!tF.exists()) {
@@ -259,12 +274,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 									TZ_TJX_APP_INS_ID = 0L;
 								}
 								
-								/*
-								TJR_TZ_TJX_APP_INS_ID = String.valueOf(TZ_TJX_APP_INS_ID);
-								TJR_TZ_APP_TPL_ID = (String) tjxList.get(j).get("TZ_APP_TPL_ID");
-								tzDealWithXMLServiceImpl.replaceXMLPulish(TJR_TZ_TJX_APP_INS_ID, OPRID,
-										TJR_TZ_APP_TPL_ID, true, fjlj + "/" + appInsID + "_" + relName, errMsg);
-								*/
+
 								String tzReferrer = (String)tjxList.get(j).get("TZ_REFERRER_NAME");
 								appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID));
 								
@@ -298,7 +308,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 							}
 						}
 
-						/* 如果是从后台上传的推荐信 */
+						// 如果是从后台上传的推荐信; 
 						String sqlTjx2 = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y'";
 						List<Map<String, Object>> tjxList2 = jdbcTemplate.queryForList(sqlTjx2,
 								new Object[] { appInsID });
@@ -351,6 +361,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						psTzExcelDattT2.setTzSysfileName( ID + ".rar");
 						psTzExcelDattTMapper.updateByPrimaryKey(psTzExcelDattT2);
 					}
+					
 				}
 
 			}
