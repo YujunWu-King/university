@@ -166,7 +166,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getMessageText(HttpServletRequest request, HttpServletResponse response, String msgSetId,
 			String msgId, String defaultCNMsg, String defaultENMsg) {
 		String tmpMsgText = "";
-		String loginLanguage = this.getLoginOrgID(request, response);
+		String loginLanguage = this.getLoginLanguage(request, response);
 		String jgId = this.getLoginOrgID(request, response);
 		String superOrgId = this.getSuperOrgId(request, response);
 
