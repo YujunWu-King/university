@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZBatchBundle.dao.TzJcslIdzzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZBatchBundle.model.TzJcslIdzzT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_JCSL_IDSEED" property="tzJcslIdseed" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_JCSL_IDSEED
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JCSL_IDZZ_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TZ_JCSL_IDZZ_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcslIdzzT" >
+    insert into TZ_JCSL_IDZZ_T (TZ_JG_ID, TZ_JCSL_IDSEED)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzJcslIdseed,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcslIdzzT" >
+    insert into TZ_JCSL_IDZZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJcslIdseed != null" >
+        TZ_JCSL_IDSEED,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcslIdseed != null" >
+        #{tzJcslIdseed,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcslIdzzT" >
+    update TZ_JCSL_IDZZ_T
+    <set >
+      <if test="tzJcslIdseed != null" >
+        TZ_JCSL_IDSEED = #{tzJcslIdseed,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcslIdzzT" >
+    update TZ_JCSL_IDZZ_T
+    set TZ_JCSL_IDSEED = #{tzJcslIdseed,jdbcType=INTEGER}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

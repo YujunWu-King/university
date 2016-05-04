@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZBatchBundle.dao.TzJcFwqdxTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_JCFWQ_MC" property="tzJcfwqMc" jdbcType="VARCHAR" />
+    <result column="TZ_FWQ_IP" property="tzFwqIp" jdbcType="VARCHAR" />
+    <result column="TZ_JCFWQ_MS" property="tzJcfwqMs" jdbcType="VARCHAR" />
+    <result column="TZ_CZXT_LX" property="tzCzxtLx" jdbcType="VARCHAR" />
+    <result column="TZ_RWXH_JG" property="tzRwxhJg" jdbcType="INTEGER" />
+    <result column="TZ_ZDBX_RWS" property="tzZdbxRws" jdbcType="INTEGER" />
+    <result column="TZ_BEIZHU" property="tzBeizhu" jdbcType="VARCHAR" />
+    <result column="TZ_YXZT" property="tzYxzt" jdbcType="VARCHAR" />
+    <result column="TZ_ZJXTSJ" property="tzZjxtsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_BS_SLID" property="tzBsSlid" jdbcType="VARCHAR" />
+    <result column="TZ_TJR" property="tzTjr" jdbcType="VARCHAR" />
+    <result column="TZ_TJSJ" property="tzTjsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_ZHXGR" property="tzZhxgr" jdbcType="VARCHAR" />
+    <result column="TZ_ZHXGSJ" property="tzZhxgsj" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_JCFWQ_MC, TZ_FWQ_IP, TZ_JCFWQ_MS, TZ_CZXT_LX, TZ_RWXH_JG, TZ_ZDBX_RWS, 
+    TZ_BEIZHU, TZ_YXZT, TZ_ZJXTSJ, TZ_BS_SLID, TZ_TJR, TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JC_FWQDX_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxTKey" >
+    delete from TZ_JC_FWQDX_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxT" >
+    insert into TZ_JC_FWQDX_T (TZ_JG_ID, TZ_JCFWQ_MC, TZ_FWQ_IP, 
+      TZ_JCFWQ_MS, TZ_CZXT_LX, TZ_RWXH_JG, 
+      TZ_ZDBX_RWS, TZ_BEIZHU, TZ_YXZT, 
+      TZ_ZJXTSJ, TZ_BS_SLID, TZ_TJR, 
+      TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzJcfwqMc,jdbcType=VARCHAR}, #{tzFwqIp,jdbcType=VARCHAR}, 
+      #{tzJcfwqMs,jdbcType=VARCHAR}, #{tzCzxtLx,jdbcType=VARCHAR}, #{tzRwxhJg,jdbcType=INTEGER}, 
+      #{tzZdbxRws,jdbcType=INTEGER}, #{tzBeizhu,jdbcType=VARCHAR}, #{tzYxzt,jdbcType=VARCHAR}, 
+      #{tzZjxtsj,jdbcType=TIMESTAMP}, #{tzBsSlid,jdbcType=VARCHAR}, #{tzTjr,jdbcType=VARCHAR}, 
+      #{tzTjsj,jdbcType=TIMESTAMP}, #{tzZhxgr,jdbcType=VARCHAR}, #{tzZhxgsj,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxT" >
+    insert into TZ_JC_FWQDX_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJcfwqMc != null" >
+        TZ_JCFWQ_MC,
+      </if>
+      <if test="tzFwqIp != null" >
+        TZ_FWQ_IP,
+      </if>
+      <if test="tzJcfwqMs != null" >
+        TZ_JCFWQ_MS,
+      </if>
+      <if test="tzCzxtLx != null" >
+        TZ_CZXT_LX,
+      </if>
+      <if test="tzRwxhJg != null" >
+        TZ_RWXH_JG,
+      </if>
+      <if test="tzZdbxRws != null" >
+        TZ_ZDBX_RWS,
+      </if>
+      <if test="tzBeizhu != null" >
+        TZ_BEIZHU,
+      </if>
+      <if test="tzYxzt != null" >
+        TZ_YXZT,
+      </if>
+      <if test="tzZjxtsj != null" >
+        TZ_ZJXTSJ,
+      </if>
+      <if test="tzBsSlid != null" >
+        TZ_BS_SLID,
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR,
+      </if>
+      <if test="tzTjsj != null" >
+        TZ_TJSJ,
+      </if>
+      <if test="tzZhxgr != null" >
+        TZ_ZHXGR,
+      </if>
+      <if test="tzZhxgsj != null" >
+        TZ_ZHXGSJ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcfwqMc != null" >
+        #{tzJcfwqMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFwqIp != null" >
+        #{tzFwqIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcfwqMs != null" >
+        #{tzJcfwqMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCzxtLx != null" >
+        #{tzCzxtLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRwxhJg != null" >
+        #{tzRwxhJg,jdbcType=INTEGER},
+      </if>
+      <if test="tzZdbxRws != null" >
+        #{tzZdbxRws,jdbcType=INTEGER},
+      </if>
+      <if test="tzBeizhu != null" >
+        #{tzBeizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYxzt != null" >
+        #{tzYxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZjxtsj != null" >
+        #{tzZjxtsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBsSlid != null" >
+        #{tzBsSlid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjsj != null" >
+        #{tzTjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZhxgr != null" >
+        #{tzZhxgr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhxgsj != null" >
+        #{tzZhxgsj,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxT" >
+    update TZ_JC_FWQDX_T
+    <set >
+      <if test="tzFwqIp != null" >
+        TZ_FWQ_IP = #{tzFwqIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcfwqMs != null" >
+        TZ_JCFWQ_MS = #{tzJcfwqMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCzxtLx != null" >
+        TZ_CZXT_LX = #{tzCzxtLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRwxhJg != null" >
+        TZ_RWXH_JG = #{tzRwxhJg,jdbcType=INTEGER},
+      </if>
+      <if test="tzZdbxRws != null" >
+        TZ_ZDBX_RWS = #{tzZdbxRws,jdbcType=INTEGER},
+      </if>
+      <if test="tzBeizhu != null" >
+        TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYxzt != null" >
+        TZ_YXZT = #{tzYxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZjxtsj != null" >
+        TZ_ZJXTSJ = #{tzZjxtsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBsSlid != null" >
+        TZ_BS_SLID = #{tzBsSlid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjsj != null" >
+        TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZhxgr != null" >
+        TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhxgsj != null" >
+        TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcFwqdxT" >
+    update TZ_JC_FWQDX_T
+    set TZ_FWQ_IP = #{tzFwqIp,jdbcType=VARCHAR},
+      TZ_JCFWQ_MS = #{tzJcfwqMs,jdbcType=VARCHAR},
+      TZ_CZXT_LX = #{tzCzxtLx,jdbcType=VARCHAR},
+      TZ_RWXH_JG = #{tzRwxhJg,jdbcType=INTEGER},
+      TZ_ZDBX_RWS = #{tzZdbxRws,jdbcType=INTEGER},
+      TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
+      TZ_YXZT = #{tzYxzt,jdbcType=VARCHAR},
+      TZ_ZJXTSJ = #{tzZjxtsj,jdbcType=TIMESTAMP},
+      TZ_BS_SLID = #{tzBsSlid,jdbcType=VARCHAR},
+      TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
+      TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
+      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR}
+  </update>
+</mapper>

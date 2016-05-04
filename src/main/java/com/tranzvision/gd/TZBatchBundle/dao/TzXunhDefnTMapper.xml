@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZBatchBundle.dao.TzXunhDefnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_XH_MC" property="tzXhMc" jdbcType="VARCHAR" />
+    <result column="TZ_XH_MS" property="tzXhMs" jdbcType="VARCHAR" />
+    <result column="TZ_EE_BZ" property="tzEeBz" jdbcType="VARCHAR" />
+    <result column="TZ_XH_QZBDS" property="tzXhQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_ZDYXH_BZ" property="tzZdyxhBz" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_Y" property="tzXhzdY" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_W" property="tzXhzdW" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_M1" property="tzXhzdM1" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_D" property="tzXhzdD" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_H" property="tzXhzdH" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_M2" property="tzXhzdM2" jdbcType="VARCHAR" />
+    <result column="TZ_XHZD_S" property="tzXhzdS" jdbcType="VARCHAR" />
+    <result column="TZ_Y_QZGZ" property="tzYQzgz" jdbcType="VARCHAR" />
+    <result column="TZ_Y_QSNF" property="tzYQsnf" jdbcType="INTEGER" />
+    <result column="TZ_Y_JZNF" property="tzYJznf" jdbcType="INTEGER" />
+    <result column="TZ_Y_LBQZ" property="tzYLbqz" jdbcType="VARCHAR" />
+    <result column="TZ_Y_XHQZ" property="tzYXhqz" jdbcType="VARCHAR" />
+    <result column="TZ_Y_QZBDS" property="tzYQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_M1_QZGZ" property="tzM1Qzgz" jdbcType="VARCHAR" />
+    <result column="TZ_M1_QSYF" property="tzM1Qsyf" jdbcType="INTEGER" />
+    <result column="TZ_M1_JZYF" property="tzM1Jzyf" jdbcType="INTEGER" />
+    <result column="TZ_M1_LBQZ" property="tzM1Lbqz" jdbcType="VARCHAR" />
+    <result column="TZ_M1_XHQZ" property="tzM1Xhqz" jdbcType="VARCHAR" />
+    <result column="TZ_M1_QZBDS" property="tzM1Qzbds" jdbcType="VARCHAR" />
+    <result column="TZ_RZ_RY_BZ" property="tzRzRyBz" jdbcType="VARCHAR" />
+    <result column="TZ_D_QZGZ" property="tzDQzgz" jdbcType="VARCHAR" />
+    <result column="TZ_D_QSRQ" property="tzDQsrq" jdbcType="INTEGER" />
+    <result column="TZ_D_JZRQ" property="tzDJzrq" jdbcType="INTEGER" />
+    <result column="TZ_D_LBQZ" property="tzDLbqz" jdbcType="VARCHAR" />
+    <result column="TZ_D_XHQZ" property="tzDXhqz" jdbcType="VARCHAR" />
+    <result column="TZ_D_ZDRQ" property="tzDZdrq" jdbcType="INTEGER" />
+    <result column="TZ_D_QZBDS" property="tzDQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_W_QZGZ" property="tzWQzgz" jdbcType="VARCHAR" />
+    <result column="TZ_W_QSRQ" property="tzWQsrq" jdbcType="INTEGER" />
+    <result column="TZ_W_JZRQ" property="tzWJzrq" jdbcType="INTEGER" />
+    <result column="TZ_W_LBQZ" property="tzWLbqz" jdbcType="VARCHAR" />
+    <result column="TZ_W_XHQZ" property="tzWXhqz" jdbcType="VARCHAR" />
+    <result column="TZ_W_ZDRQ1" property="tzWZdrq1" jdbcType="INTEGER" />
+    <result column="TZ_W_ZDZC" property="tzWZdzc" jdbcType="INTEGER" />
+    <result column="TZ_W_ZDRQ2" property="tzWZdrq2" jdbcType="INTEGER" />
+    <result column="TZ_W_QZBDS" property="tzWQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_H_QZGZ" property="tzHQzgz" jdbcType="VARCHAR" />
+    <result column="TZ_H_QSXS" property="tzHQsxs" jdbcType="INTEGER" />
+    <result column="TZ_H_JZXS" property="tzHJzxs" jdbcType="INTEGER" />
+    <result column="TZ_H_LBQZ" property="tzHLbqz" jdbcType="VARCHAR" />
+    <result column="TZ_H_XHQZ" property="tzHXhqz" jdbcType="VARCHAR" />
+    <result column="TZ_H_QZBDS" property="tzHQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_M2_QZGZ" property="tzM2Qzgz" jdbcType="VARCHAR" />
+    <result column="TZ_M2_QSFZ" property="tzM2Qsfz" jdbcType="INTEGER" />
+    <result column="TZ_M2_JZFZ" property="tzM2Jzfz" jdbcType="INTEGER" />
+    <result column="TZ_M2_LBQZ" property="tzM2Lbqz" jdbcType="VARCHAR" />
+    <result column="TZ_M2_XHQZ" property="tzM2Xhqz" jdbcType="VARCHAR" />
+    <result column="TZ_M2_QZBDS" property="tzM2Qzbds" jdbcType="VARCHAR" />
+    <result column="TZ_S_QZGZ" property="tzSQzgz" jdbcType="VARCHAR" />
+    <result column="TZ_S_QSM" property="tzSQsm" jdbcType="INTEGER" />
+    <result column="TZ_S_JZM" property="tzSJzm" jdbcType="INTEGER" />
+    <result column="TZ_S_LBQZ" property="tzSLbqz" jdbcType="VARCHAR" />
+    <result column="TZ_S_XHQZ" property="tzSXhqz" jdbcType="VARCHAR" />
+    <result column="TZ_S_QZBDS" property="tzSQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_TJR" property="tzTjr" jdbcType="VARCHAR" />
+    <result column="TZ_TJSJ" property="tzTjsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_ZHXGR" property="tzZhxgr" jdbcType="VARCHAR" />
+    <result column="TZ_ZHXGSJ" property="tzZhxgsj" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_XH_MC, TZ_XH_MS, TZ_EE_BZ, TZ_XH_QZBDS, TZ_ZDYXH_BZ, TZ_XHZD_Y, TZ_XHZD_W, 
+    TZ_XHZD_M1, TZ_XHZD_D, TZ_XHZD_H, TZ_XHZD_M2, TZ_XHZD_S, TZ_Y_QZGZ, TZ_Y_QSNF, TZ_Y_JZNF, 
+    TZ_Y_LBQZ, TZ_Y_XHQZ, TZ_Y_QZBDS, TZ_M1_QZGZ, TZ_M1_QSYF, TZ_M1_JZYF, TZ_M1_LBQZ, 
+    TZ_M1_XHQZ, TZ_M1_QZBDS, TZ_RZ_RY_BZ, TZ_D_QZGZ, TZ_D_QSRQ, TZ_D_JZRQ, TZ_D_LBQZ, 
+    TZ_D_XHQZ, TZ_D_ZDRQ, TZ_D_QZBDS, TZ_W_QZGZ, TZ_W_QSRQ, TZ_W_JZRQ, TZ_W_LBQZ, TZ_W_XHQZ, 
+    TZ_W_ZDRQ1, TZ_W_ZDZC, TZ_W_ZDRQ2, TZ_W_QZBDS, TZ_H_QZGZ, TZ_H_QSXS, TZ_H_JZXS, TZ_H_LBQZ, 
+    TZ_H_XHQZ, TZ_H_QZBDS, TZ_M2_QZGZ, TZ_M2_QSFZ, TZ_M2_JZFZ, TZ_M2_LBQZ, TZ_M2_XHQZ, 
+    TZ_M2_QZBDS, TZ_S_QZGZ, TZ_S_QSM, TZ_S_JZM, TZ_S_LBQZ, TZ_S_XHQZ, TZ_S_QZBDS, TZ_TJR, 
+    TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_XUNH_DEFN_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnTKey" >
+    delete from TZ_XUNH_DEFN_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnT" >
+    insert into TZ_XUNH_DEFN_T (TZ_JG_ID, TZ_XH_MC, TZ_XH_MS, 
+      TZ_EE_BZ, TZ_XH_QZBDS, TZ_ZDYXH_BZ, 
+      TZ_XHZD_Y, TZ_XHZD_W, TZ_XHZD_M1, 
+      TZ_XHZD_D, TZ_XHZD_H, TZ_XHZD_M2, 
+      TZ_XHZD_S, TZ_Y_QZGZ, TZ_Y_QSNF, 
+      TZ_Y_JZNF, TZ_Y_LBQZ, TZ_Y_XHQZ, 
+      TZ_Y_QZBDS, TZ_M1_QZGZ, TZ_M1_QSYF, 
+      TZ_M1_JZYF, TZ_M1_LBQZ, TZ_M1_XHQZ, 
+      TZ_M1_QZBDS, TZ_RZ_RY_BZ, TZ_D_QZGZ, 
+      TZ_D_QSRQ, TZ_D_JZRQ, TZ_D_LBQZ, 
+      TZ_D_XHQZ, TZ_D_ZDRQ, TZ_D_QZBDS, 
+      TZ_W_QZGZ, TZ_W_QSRQ, TZ_W_JZRQ, 
+      TZ_W_LBQZ, TZ_W_XHQZ, TZ_W_ZDRQ1, 
+      TZ_W_ZDZC, TZ_W_ZDRQ2, TZ_W_QZBDS, 
+      TZ_H_QZGZ, TZ_H_QSXS, TZ_H_JZXS, 
+      TZ_H_LBQZ, TZ_H_XHQZ, TZ_H_QZBDS, 
+      TZ_M2_QZGZ, TZ_M2_QSFZ, TZ_M2_JZFZ, 
+      TZ_M2_LBQZ, TZ_M2_XHQZ, TZ_M2_QZBDS, 
+      TZ_S_QZGZ, TZ_S_QSM, TZ_S_JZM, 
+      TZ_S_LBQZ, TZ_S_XHQZ, TZ_S_QZBDS, 
+      TZ_TJR, TZ_TJSJ, TZ_ZHXGR, 
+      TZ_ZHXGSJ)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzXhMc,jdbcType=VARCHAR}, #{tzXhMs,jdbcType=VARCHAR}, 
+      #{tzEeBz,jdbcType=VARCHAR}, #{tzXhQzbds,jdbcType=VARCHAR}, #{tzZdyxhBz,jdbcType=VARCHAR}, 
+      #{tzXhzdY,jdbcType=VARCHAR}, #{tzXhzdW,jdbcType=VARCHAR}, #{tzXhzdM1,jdbcType=VARCHAR}, 
+      #{tzXhzdD,jdbcType=VARCHAR}, #{tzXhzdH,jdbcType=VARCHAR}, #{tzXhzdM2,jdbcType=VARCHAR}, 
+      #{tzXhzdS,jdbcType=VARCHAR}, #{tzYQzgz,jdbcType=VARCHAR}, #{tzYQsnf,jdbcType=INTEGER}, 
+      #{tzYJznf,jdbcType=INTEGER}, #{tzYLbqz,jdbcType=VARCHAR}, #{tzYXhqz,jdbcType=VARCHAR}, 
+      #{tzYQzbds,jdbcType=VARCHAR}, #{tzM1Qzgz,jdbcType=VARCHAR}, #{tzM1Qsyf,jdbcType=INTEGER}, 
+      #{tzM1Jzyf,jdbcType=INTEGER}, #{tzM1Lbqz,jdbcType=VARCHAR}, #{tzM1Xhqz,jdbcType=VARCHAR}, 
+      #{tzM1Qzbds,jdbcType=VARCHAR}, #{tzRzRyBz,jdbcType=VARCHAR}, #{tzDQzgz,jdbcType=VARCHAR}, 
+      #{tzDQsrq,jdbcType=INTEGER}, #{tzDJzrq,jdbcType=INTEGER}, #{tzDLbqz,jdbcType=VARCHAR}, 
+      #{tzDXhqz,jdbcType=VARCHAR}, #{tzDZdrq,jdbcType=INTEGER}, #{tzDQzbds,jdbcType=VARCHAR}, 
+      #{tzWQzgz,jdbcType=VARCHAR}, #{tzWQsrq,jdbcType=INTEGER}, #{tzWJzrq,jdbcType=INTEGER}, 
+      #{tzWLbqz,jdbcType=VARCHAR}, #{tzWXhqz,jdbcType=VARCHAR}, #{tzWZdrq1,jdbcType=INTEGER}, 
+      #{tzWZdzc,jdbcType=INTEGER}, #{tzWZdrq2,jdbcType=INTEGER}, #{tzWQzbds,jdbcType=VARCHAR}, 
+      #{tzHQzgz,jdbcType=VARCHAR}, #{tzHQsxs,jdbcType=INTEGER}, #{tzHJzxs,jdbcType=INTEGER}, 
+      #{tzHLbqz,jdbcType=VARCHAR}, #{tzHXhqz,jdbcType=VARCHAR}, #{tzHQzbds,jdbcType=VARCHAR}, 
+      #{tzM2Qzgz,jdbcType=VARCHAR}, #{tzM2Qsfz,jdbcType=INTEGER}, #{tzM2Jzfz,jdbcType=INTEGER}, 
+      #{tzM2Lbqz,jdbcType=VARCHAR}, #{tzM2Xhqz,jdbcType=VARCHAR}, #{tzM2Qzbds,jdbcType=VARCHAR}, 
+      #{tzSQzgz,jdbcType=VARCHAR}, #{tzSQsm,jdbcType=INTEGER}, #{tzSJzm,jdbcType=INTEGER}, 
+      #{tzSLbqz,jdbcType=VARCHAR}, #{tzSXhqz,jdbcType=VARCHAR}, #{tzSQzbds,jdbcType=VARCHAR}, 
+      #{tzTjr,jdbcType=VARCHAR}, #{tzTjsj,jdbcType=TIMESTAMP}, #{tzZhxgr,jdbcType=VARCHAR}, 
+      #{tzZhxgsj,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnT" >
+    insert into TZ_XUNH_DEFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzXhMc != null" >
+        TZ_XH_MC,
+      </if>
+      <if test="tzXhMs != null" >
+        TZ_XH_MS,
+      </if>
+      <if test="tzEeBz != null" >
+        TZ_EE_BZ,
+      </if>
+      <if test="tzXhQzbds != null" >
+        TZ_XH_QZBDS,
+      </if>
+      <if test="tzZdyxhBz != null" >
+        TZ_ZDYXH_BZ,
+      </if>
+      <if test="tzXhzdY != null" >
+        TZ_XHZD_Y,
+      </if>
+      <if test="tzXhzdW != null" >
+        TZ_XHZD_W,
+      </if>
+      <if test="tzXhzdM1 != null" >
+        TZ_XHZD_M1,
+      </if>
+      <if test="tzXhzdD != null" >
+        TZ_XHZD_D,
+      </if>
+      <if test="tzXhzdH != null" >
+        TZ_XHZD_H,
+      </if>
+      <if test="tzXhzdM2 != null" >
+        TZ_XHZD_M2,
+      </if>
+      <if test="tzXhzdS != null" >
+        TZ_XHZD_S,
+      </if>
+      <if test="tzYQzgz != null" >
+        TZ_Y_QZGZ,
+      </if>
+      <if test="tzYQsnf != null" >
+        TZ_Y_QSNF,
+      </if>
+      <if test="tzYJznf != null" >
+        TZ_Y_JZNF,
+      </if>
+      <if test="tzYLbqz != null" >
+        TZ_Y_LBQZ,
+      </if>
+      <if test="tzYXhqz != null" >
+        TZ_Y_XHQZ,
+      </if>
+      <if test="tzYQzbds != null" >
+        TZ_Y_QZBDS,
+      </if>
+      <if test="tzM1Qzgz != null" >
+        TZ_M1_QZGZ,
+      </if>
+      <if test="tzM1Qsyf != null" >
+        TZ_M1_QSYF,
+      </if>
+      <if test="tzM1Jzyf != null" >
+        TZ_M1_JZYF,
+      </if>
+      <if test="tzM1Lbqz != null" >
+        TZ_M1_LBQZ,
+      </if>
+      <if test="tzM1Xhqz != null" >
+        TZ_M1_XHQZ,
+      </if>
+      <if test="tzM1Qzbds != null" >
+        TZ_M1_QZBDS,
+      </if>
+      <if test="tzRzRyBz != null" >
+        TZ_RZ_RY_BZ,
+      </if>
+      <if test="tzDQzgz != null" >
+        TZ_D_QZGZ,
+      </if>
+      <if test="tzDQsrq != null" >
+        TZ_D_QSRQ,
+      </if>
+      <if test="tzDJzrq != null" >
+        TZ_D_JZRQ,
+      </if>
+      <if test="tzDLbqz != null" >
+        TZ_D_LBQZ,
+      </if>
+      <if test="tzDXhqz != null" >
+        TZ_D_XHQZ,
+      </if>
+      <if test="tzDZdrq != null" >
+        TZ_D_ZDRQ,
+      </if>
+      <if test="tzDQzbds != null" >
+        TZ_D_QZBDS,
+      </if>
+      <if test="tzWQzgz != null" >
+        TZ_W_QZGZ,
+      </if>
+      <if test="tzWQsrq != null" >
+        TZ_W_QSRQ,
+      </if>
+      <if test="tzWJzrq != null" >
+        TZ_W_JZRQ,
+      </if>
+      <if test="tzWLbqz != null" >
+        TZ_W_LBQZ,
+      </if>
+      <if test="tzWXhqz != null" >
+        TZ_W_XHQZ,
+      </if>
+      <if test="tzWZdrq1 != null" >
+        TZ_W_ZDRQ1,
+      </if>
+      <if test="tzWZdzc != null" >
+        TZ_W_ZDZC,
+      </if>
+      <if test="tzWZdrq2 != null" >
+        TZ_W_ZDRQ2,
+      </if>
+      <if test="tzWQzbds != null" >
+        TZ_W_QZBDS,
+      </if>
+      <if test="tzHQzgz != null" >
+        TZ_H_QZGZ,
+      </if>
+      <if test="tzHQsxs != null" >
+        TZ_H_QSXS,
+      </if>
+      <if test="tzHJzxs != null" >
+        TZ_H_JZXS,
+      </if>
+      <if test="tzHLbqz != null" >
+        TZ_H_LBQZ,
+      </if>
+      <if test="tzHXhqz != null" >
+        TZ_H_XHQZ,
+      </if>
+      <if test="tzHQzbds != null" >
+        TZ_H_QZBDS,
+      </if>
+      <if test="tzM2Qzgz != null" >
+        TZ_M2_QZGZ,
+      </if>
+      <if test="tzM2Qsfz != null" >
+        TZ_M2_QSFZ,
+      </if>
+      <if test="tzM2Jzfz != null" >
+        TZ_M2_JZFZ,
+      </if>
+      <if test="tzM2Lbqz != null" >
+        TZ_M2_LBQZ,
+      </if>
+      <if test="tzM2Xhqz != null" >
+        TZ_M2_XHQZ,
+      </if>
+      <if test="tzM2Qzbds != null" >
+        TZ_M2_QZBDS,
+      </if>
+      <if test="tzSQzgz != null" >
+        TZ_S_QZGZ,
+      </if>
+      <if test="tzSQsm != null" >
+        TZ_S_QSM,
+      </if>
+      <if test="tzSJzm != null" >
+        TZ_S_JZM,
+      </if>
+      <if test="tzSLbqz != null" >
+        TZ_S_LBQZ,
+      </if>
+      <if test="tzSXhqz != null" >
+        TZ_S_XHQZ,
+      </if>
+      <if test="tzSQzbds != null" >
+        TZ_S_QZBDS,
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR,
+      </if>
+      <if test="tzTjsj != null" >
+        TZ_TJSJ,
+      </if>
+      <if test="tzZhxgr != null" >
+        TZ_ZHXGR,
+      </if>
+      <if test="tzZhxgsj != null" >
+        TZ_ZHXGSJ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhMc != null" >
+        #{tzXhMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhMs != null" >
+        #{tzXhMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEeBz != null" >
+        #{tzEeBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhQzbds != null" >
+        #{tzXhQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdyxhBz != null" >
+        #{tzZdyxhBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdY != null" >
+        #{tzXhzdY,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdW != null" >
+        #{tzXhzdW,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdM1 != null" >
+        #{tzXhzdM1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdD != null" >
+        #{tzXhzdD,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdH != null" >
+        #{tzXhzdH,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdM2 != null" >
+        #{tzXhzdM2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdS != null" >
+        #{tzXhzdS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQzgz != null" >
+        #{tzYQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQsnf != null" >
+        #{tzYQsnf,jdbcType=INTEGER},
+      </if>
+      <if test="tzYJznf != null" >
+        #{tzYJznf,jdbcType=INTEGER},
+      </if>
+      <if test="tzYLbqz != null" >
+        #{tzYLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYXhqz != null" >
+        #{tzYXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQzbds != null" >
+        #{tzYQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qzgz != null" >
+        #{tzM1Qzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qsyf != null" >
+        #{tzM1Qsyf,jdbcType=INTEGER},
+      </if>
+      <if test="tzM1Jzyf != null" >
+        #{tzM1Jzyf,jdbcType=INTEGER},
+      </if>
+      <if test="tzM1Lbqz != null" >
+        #{tzM1Lbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Xhqz != null" >
+        #{tzM1Xhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qzbds != null" >
+        #{tzM1Qzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRzRyBz != null" >
+        #{tzRzRyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDQzgz != null" >
+        #{tzDQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDQsrq != null" >
+        #{tzDQsrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDJzrq != null" >
+        #{tzDJzrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDLbqz != null" >
+        #{tzDLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDXhqz != null" >
+        #{tzDXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDZdrq != null" >
+        #{tzDZdrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDQzbds != null" >
+        #{tzDQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWQzgz != null" >
+        #{tzWQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWQsrq != null" >
+        #{tzWQsrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzWJzrq != null" >
+        #{tzWJzrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzWLbqz != null" >
+        #{tzWLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWXhqz != null" >
+        #{tzWXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWZdrq1 != null" >
+        #{tzWZdrq1,jdbcType=INTEGER},
+      </if>
+      <if test="tzWZdzc != null" >
+        #{tzWZdzc,jdbcType=INTEGER},
+      </if>
+      <if test="tzWZdrq2 != null" >
+        #{tzWZdrq2,jdbcType=INTEGER},
+      </if>
+      <if test="tzWQzbds != null" >
+        #{tzWQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQzgz != null" >
+        #{tzHQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQsxs != null" >
+        #{tzHQsxs,jdbcType=INTEGER},
+      </if>
+      <if test="tzHJzxs != null" >
+        #{tzHJzxs,jdbcType=INTEGER},
+      </if>
+      <if test="tzHLbqz != null" >
+        #{tzHLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHXhqz != null" >
+        #{tzHXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQzbds != null" >
+        #{tzHQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qzgz != null" >
+        #{tzM2Qzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qsfz != null" >
+        #{tzM2Qsfz,jdbcType=INTEGER},
+      </if>
+      <if test="tzM2Jzfz != null" >
+        #{tzM2Jzfz,jdbcType=INTEGER},
+      </if>
+      <if test="tzM2Lbqz != null" >
+        #{tzM2Lbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Xhqz != null" >
+        #{tzM2Xhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qzbds != null" >
+        #{tzM2Qzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQzgz != null" >
+        #{tzSQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQsm != null" >
+        #{tzSQsm,jdbcType=INTEGER},
+      </if>
+      <if test="tzSJzm != null" >
+        #{tzSJzm,jdbcType=INTEGER},
+      </if>
+      <if test="tzSLbqz != null" >
+        #{tzSLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSXhqz != null" >
+        #{tzSXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQzbds != null" >
+        #{tzSQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjsj != null" >
+        #{tzTjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZhxgr != null" >
+        #{tzZhxgr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhxgsj != null" >
+        #{tzZhxgsj,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnT" >
+    update TZ_XUNH_DEFN_T
+    <set >
+      <if test="tzXhMs != null" >
+        TZ_XH_MS = #{tzXhMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEeBz != null" >
+        TZ_EE_BZ = #{tzEeBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhQzbds != null" >
+        TZ_XH_QZBDS = #{tzXhQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdyxhBz != null" >
+        TZ_ZDYXH_BZ = #{tzZdyxhBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdY != null" >
+        TZ_XHZD_Y = #{tzXhzdY,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdW != null" >
+        TZ_XHZD_W = #{tzXhzdW,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdM1 != null" >
+        TZ_XHZD_M1 = #{tzXhzdM1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdD != null" >
+        TZ_XHZD_D = #{tzXhzdD,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdH != null" >
+        TZ_XHZD_H = #{tzXhzdH,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdM2 != null" >
+        TZ_XHZD_M2 = #{tzXhzdM2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhzdS != null" >
+        TZ_XHZD_S = #{tzXhzdS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQzgz != null" >
+        TZ_Y_QZGZ = #{tzYQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQsnf != null" >
+        TZ_Y_QSNF = #{tzYQsnf,jdbcType=INTEGER},
+      </if>
+      <if test="tzYJznf != null" >
+        TZ_Y_JZNF = #{tzYJznf,jdbcType=INTEGER},
+      </if>
+      <if test="tzYLbqz != null" >
+        TZ_Y_LBQZ = #{tzYLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYXhqz != null" >
+        TZ_Y_XHQZ = #{tzYXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYQzbds != null" >
+        TZ_Y_QZBDS = #{tzYQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qzgz != null" >
+        TZ_M1_QZGZ = #{tzM1Qzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qsyf != null" >
+        TZ_M1_QSYF = #{tzM1Qsyf,jdbcType=INTEGER},
+      </if>
+      <if test="tzM1Jzyf != null" >
+        TZ_M1_JZYF = #{tzM1Jzyf,jdbcType=INTEGER},
+      </if>
+      <if test="tzM1Lbqz != null" >
+        TZ_M1_LBQZ = #{tzM1Lbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Xhqz != null" >
+        TZ_M1_XHQZ = #{tzM1Xhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM1Qzbds != null" >
+        TZ_M1_QZBDS = #{tzM1Qzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRzRyBz != null" >
+        TZ_RZ_RY_BZ = #{tzRzRyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDQzgz != null" >
+        TZ_D_QZGZ = #{tzDQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDQsrq != null" >
+        TZ_D_QSRQ = #{tzDQsrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDJzrq != null" >
+        TZ_D_JZRQ = #{tzDJzrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDLbqz != null" >
+        TZ_D_LBQZ = #{tzDLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDXhqz != null" >
+        TZ_D_XHQZ = #{tzDXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDZdrq != null" >
+        TZ_D_ZDRQ = #{tzDZdrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzDQzbds != null" >
+        TZ_D_QZBDS = #{tzDQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWQzgz != null" >
+        TZ_W_QZGZ = #{tzWQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWQsrq != null" >
+        TZ_W_QSRQ = #{tzWQsrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzWJzrq != null" >
+        TZ_W_JZRQ = #{tzWJzrq,jdbcType=INTEGER},
+      </if>
+      <if test="tzWLbqz != null" >
+        TZ_W_LBQZ = #{tzWLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWXhqz != null" >
+        TZ_W_XHQZ = #{tzWXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWZdrq1 != null" >
+        TZ_W_ZDRQ1 = #{tzWZdrq1,jdbcType=INTEGER},
+      </if>
+      <if test="tzWZdzc != null" >
+        TZ_W_ZDZC = #{tzWZdzc,jdbcType=INTEGER},
+      </if>
+      <if test="tzWZdrq2 != null" >
+        TZ_W_ZDRQ2 = #{tzWZdrq2,jdbcType=INTEGER},
+      </if>
+      <if test="tzWQzbds != null" >
+        TZ_W_QZBDS = #{tzWQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQzgz != null" >
+        TZ_H_QZGZ = #{tzHQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQsxs != null" >
+        TZ_H_QSXS = #{tzHQsxs,jdbcType=INTEGER},
+      </if>
+      <if test="tzHJzxs != null" >
+        TZ_H_JZXS = #{tzHJzxs,jdbcType=INTEGER},
+      </if>
+      <if test="tzHLbqz != null" >
+        TZ_H_LBQZ = #{tzHLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHXhqz != null" >
+        TZ_H_XHQZ = #{tzHXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHQzbds != null" >
+        TZ_H_QZBDS = #{tzHQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qzgz != null" >
+        TZ_M2_QZGZ = #{tzM2Qzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qsfz != null" >
+        TZ_M2_QSFZ = #{tzM2Qsfz,jdbcType=INTEGER},
+      </if>
+      <if test="tzM2Jzfz != null" >
+        TZ_M2_JZFZ = #{tzM2Jzfz,jdbcType=INTEGER},
+      </if>
+      <if test="tzM2Lbqz != null" >
+        TZ_M2_LBQZ = #{tzM2Lbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Xhqz != null" >
+        TZ_M2_XHQZ = #{tzM2Xhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzM2Qzbds != null" >
+        TZ_M2_QZBDS = #{tzM2Qzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQzgz != null" >
+        TZ_S_QZGZ = #{tzSQzgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQsm != null" >
+        TZ_S_QSM = #{tzSQsm,jdbcType=INTEGER},
+      </if>
+      <if test="tzSJzm != null" >
+        TZ_S_JZM = #{tzSJzm,jdbcType=INTEGER},
+      </if>
+      <if test="tzSLbqz != null" >
+        TZ_S_LBQZ = #{tzSLbqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSXhqz != null" >
+        TZ_S_XHQZ = #{tzSXhqz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSQzbds != null" >
+        TZ_S_QZBDS = #{tzSQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjr != null" >
+        TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjsj != null" >
+        TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZhxgr != null" >
+        TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhxgsj != null" >
+        TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzXunhDefnT" >
+    update TZ_XUNH_DEFN_T
+    set TZ_XH_MS = #{tzXhMs,jdbcType=VARCHAR},
+      TZ_EE_BZ = #{tzEeBz,jdbcType=VARCHAR},
+      TZ_XH_QZBDS = #{tzXhQzbds,jdbcType=VARCHAR},
+      TZ_ZDYXH_BZ = #{tzZdyxhBz,jdbcType=VARCHAR},
+      TZ_XHZD_Y = #{tzXhzdY,jdbcType=VARCHAR},
+      TZ_XHZD_W = #{tzXhzdW,jdbcType=VARCHAR},
+      TZ_XHZD_M1 = #{tzXhzdM1,jdbcType=VARCHAR},
+      TZ_XHZD_D = #{tzXhzdD,jdbcType=VARCHAR},
+      TZ_XHZD_H = #{tzXhzdH,jdbcType=VARCHAR},
+      TZ_XHZD_M2 = #{tzXhzdM2,jdbcType=VARCHAR},
+      TZ_XHZD_S = #{tzXhzdS,jdbcType=VARCHAR},
+      TZ_Y_QZGZ = #{tzYQzgz,jdbcType=VARCHAR},
+      TZ_Y_QSNF = #{tzYQsnf,jdbcType=INTEGER},
+      TZ_Y_JZNF = #{tzYJznf,jdbcType=INTEGER},
+      TZ_Y_LBQZ = #{tzYLbqz,jdbcType=VARCHAR},
+      TZ_Y_XHQZ = #{tzYXhqz,jdbcType=VARCHAR},
+      TZ_Y_QZBDS = #{tzYQzbds,jdbcType=VARCHAR},
+      TZ_M1_QZGZ = #{tzM1Qzgz,jdbcType=VARCHAR},
+      TZ_M1_QSYF = #{tzM1Qsyf,jdbcType=INTEGER},
+      TZ_M1_JZYF = #{tzM1Jzyf,jdbcType=INTEGER},
+      TZ_M1_LBQZ = #{tzM1Lbqz,jdbcType=VARCHAR},
+      TZ_M1_XHQZ = #{tzM1Xhqz,jdbcType=VARCHAR},
+      TZ_M1_QZBDS = #{tzM1Qzbds,jdbcType=VARCHAR},
+      TZ_RZ_RY_BZ = #{tzRzRyBz,jdbcType=VARCHAR},
+      TZ_D_QZGZ = #{tzDQzgz,jdbcType=VARCHAR},
+      TZ_D_QSRQ = #{tzDQsrq,jdbcType=INTEGER},
+      TZ_D_JZRQ = #{tzDJzrq,jdbcType=INTEGER},
+      TZ_D_LBQZ = #{tzDLbqz,jdbcType=VARCHAR},
+      TZ_D_XHQZ = #{tzDXhqz,jdbcType=VARCHAR},
+      TZ_D_ZDRQ = #{tzDZdrq,jdbcType=INTEGER},
+      TZ_D_QZBDS = #{tzDQzbds,jdbcType=VARCHAR},
+      TZ_W_QZGZ = #{tzWQzgz,jdbcType=VARCHAR},
+      TZ_W_QSRQ = #{tzWQsrq,jdbcType=INTEGER},
+      TZ_W_JZRQ = #{tzWJzrq,jdbcType=INTEGER},
+      TZ_W_LBQZ = #{tzWLbqz,jdbcType=VARCHAR},
+      TZ_W_XHQZ = #{tzWXhqz,jdbcType=VARCHAR},
+      TZ_W_ZDRQ1 = #{tzWZdrq1,jdbcType=INTEGER},
+      TZ_W_ZDZC = #{tzWZdzc,jdbcType=INTEGER},
+      TZ_W_ZDRQ2 = #{tzWZdrq2,jdbcType=INTEGER},
+      TZ_W_QZBDS = #{tzWQzbds,jdbcType=VARCHAR},
+      TZ_H_QZGZ = #{tzHQzgz,jdbcType=VARCHAR},
+      TZ_H_QSXS = #{tzHQsxs,jdbcType=INTEGER},
+      TZ_H_JZXS = #{tzHJzxs,jdbcType=INTEGER},
+      TZ_H_LBQZ = #{tzHLbqz,jdbcType=VARCHAR},
+      TZ_H_XHQZ = #{tzHXhqz,jdbcType=VARCHAR},
+      TZ_H_QZBDS = #{tzHQzbds,jdbcType=VARCHAR},
+      TZ_M2_QZGZ = #{tzM2Qzgz,jdbcType=VARCHAR},
+      TZ_M2_QSFZ = #{tzM2Qsfz,jdbcType=INTEGER},
+      TZ_M2_JZFZ = #{tzM2Jzfz,jdbcType=INTEGER},
+      TZ_M2_LBQZ = #{tzM2Lbqz,jdbcType=VARCHAR},
+      TZ_M2_XHQZ = #{tzM2Xhqz,jdbcType=VARCHAR},
+      TZ_M2_QZBDS = #{tzM2Qzbds,jdbcType=VARCHAR},
+      TZ_S_QZGZ = #{tzSQzgz,jdbcType=VARCHAR},
+      TZ_S_QSM = #{tzSQsm,jdbcType=INTEGER},
+      TZ_S_JZM = #{tzSJzm,jdbcType=INTEGER},
+      TZ_S_LBQZ = #{tzSLbqz,jdbcType=VARCHAR},
+      TZ_S_XHQZ = #{tzSXhqz,jdbcType=VARCHAR},
+      TZ_S_QZBDS = #{tzSQzbds,jdbcType=VARCHAR},
+      TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
+      TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
+      TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
+      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
+  </update>
+</mapper>

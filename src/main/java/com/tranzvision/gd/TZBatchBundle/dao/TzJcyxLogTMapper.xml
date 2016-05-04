@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZBatchBundle.dao.TzJcyxLogTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_JCSL_ID" property="tzJcslId" jdbcType="INTEGER" />
+    <id column="TZ_RZ_LSH" property="tzRzLsh" jdbcType="INTEGER" />
+    <result column="TZ_RZ_JB" property="tzRzJb" jdbcType="VARCHAR" />
+    <result column="TZ_RZ_DTTM" property="tzRzDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_RZ_NR" property="tzRzNr" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_JCSL_ID, TZ_RZ_LSH, TZ_RZ_JB, TZ_RZ_DTTM, TZ_RZ_NR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JCYX_LOG_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+      and TZ_RZ_LSH = #{tzRzLsh,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogTKey" >
+    delete from TZ_JCYX_LOG_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+      and TZ_RZ_LSH = #{tzRzLsh,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogT" >
+    insert into TZ_JCYX_LOG_T (TZ_JG_ID, TZ_JCSL_ID, TZ_RZ_LSH, 
+      TZ_RZ_JB, TZ_RZ_DTTM, TZ_RZ_NR
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzJcslId,jdbcType=INTEGER}, #{tzRzLsh,jdbcType=INTEGER}, 
+      #{tzRzJb,jdbcType=VARCHAR}, #{tzRzDttm,jdbcType=TIMESTAMP}, #{tzRzNr,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogT" >
+    insert into TZ_JCYX_LOG_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJcslId != null" >
+        TZ_JCSL_ID,
+      </if>
+      <if test="tzRzLsh != null" >
+        TZ_RZ_LSH,
+      </if>
+      <if test="tzRzJb != null" >
+        TZ_RZ_JB,
+      </if>
+      <if test="tzRzDttm != null" >
+        TZ_RZ_DTTM,
+      </if>
+      <if test="tzRzNr != null" >
+        TZ_RZ_NR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcslId != null" >
+        #{tzJcslId,jdbcType=INTEGER},
+      </if>
+      <if test="tzRzLsh != null" >
+        #{tzRzLsh,jdbcType=INTEGER},
+      </if>
+      <if test="tzRzJb != null" >
+        #{tzRzJb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRzDttm != null" >
+        #{tzRzDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRzNr != null" >
+        #{tzRzNr,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogT" >
+    update TZ_JCYX_LOG_T
+    <set >
+      <if test="tzRzJb != null" >
+        TZ_RZ_JB = #{tzRzJb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRzDttm != null" >
+        TZ_RZ_DTTM = #{tzRzDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRzNr != null" >
+        TZ_RZ_NR = #{tzRzNr,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+      and TZ_RZ_LSH = #{tzRzLsh,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcyxLogT" >
+    update TZ_JCYX_LOG_T
+    set TZ_RZ_JB = #{tzRzJb,jdbcType=VARCHAR},
+      TZ_RZ_DTTM = #{tzRzDttm,jdbcType=TIMESTAMP},
+      TZ_RZ_NR = #{tzRzNr,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+      and TZ_RZ_LSH = #{tzRzLsh,jdbcType=INTEGER}
+  </update>
+</mapper>

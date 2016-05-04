@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZBatchBundle.dao.TzJcShliTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZBatchBundle.model.TzJcShliT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_JCSL_ID" property="tzJcslId" jdbcType="INTEGER" />
+    <result column="TZ_YUNX_KZID" property="tzYunxKzid" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+    <result column="TZ_JC_MC" property="tzJcMc" jdbcType="VARCHAR" />
+    <result column="TZ_XH_QZBDS" property="tzXhQzbds" jdbcType="VARCHAR" />
+    <result column="TZ_JCFWQ_MC" property="tzJcfwqMc" jdbcType="VARCHAR" />
+    <result column="TZ_JOB_YXZT" property="tzJobYxzt" jdbcType="VARCHAR" />
+    <result column="TZ_ZJXTSJ" property="tzZjxtsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_QQCJ_DTTM" property="tzQqcjDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_JHZX_DTTM" property="tzJhzxDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_JCKS_DTTM" property="tzJcksDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_JCJS_DTTM" property="tzJcjsDttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_JCSL_ID, TZ_YUNX_KZID, TZ_DLZH_ID, TZ_JC_MC, TZ_XH_QZBDS, TZ_JCFWQ_MC, 
+    TZ_JOB_YXZT, TZ_ZJXTSJ, TZ_QQCJ_DTTM, TZ_JHZX_DTTM, TZ_JCKS_DTTM, TZ_JCJS_DTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_JC_SHLI_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliTKey" >
+    delete from TZ_JC_SHLI_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliT" >
+    insert into TZ_JC_SHLI_T (TZ_JG_ID, TZ_JCSL_ID, TZ_YUNX_KZID, 
+      TZ_DLZH_ID, TZ_JC_MC, TZ_XH_QZBDS, 
+      TZ_JCFWQ_MC, TZ_JOB_YXZT, TZ_ZJXTSJ, 
+      TZ_QQCJ_DTTM, TZ_JHZX_DTTM, TZ_JCKS_DTTM, 
+      TZ_JCJS_DTTM)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzJcslId,jdbcType=INTEGER}, #{tzYunxKzid,jdbcType=VARCHAR}, 
+      #{tzDlzhId,jdbcType=VARCHAR}, #{tzJcMc,jdbcType=VARCHAR}, #{tzXhQzbds,jdbcType=VARCHAR}, 
+      #{tzJcfwqMc,jdbcType=VARCHAR}, #{tzJobYxzt,jdbcType=VARCHAR}, #{tzZjxtsj,jdbcType=TIMESTAMP}, 
+      #{tzQqcjDttm,jdbcType=TIMESTAMP}, #{tzJhzxDttm,jdbcType=TIMESTAMP}, #{tzJcksDttm,jdbcType=TIMESTAMP}, 
+      #{tzJcjsDttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliT" >
+    insert into TZ_JC_SHLI_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJcslId != null" >
+        TZ_JCSL_ID,
+      </if>
+      <if test="tzYunxKzid != null" >
+        TZ_YUNX_KZID,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+      <if test="tzJcMc != null" >
+        TZ_JC_MC,
+      </if>
+      <if test="tzXhQzbds != null" >
+        TZ_XH_QZBDS,
+      </if>
+      <if test="tzJcfwqMc != null" >
+        TZ_JCFWQ_MC,
+      </if>
+      <if test="tzJobYxzt != null" >
+        TZ_JOB_YXZT,
+      </if>
+      <if test="tzZjxtsj != null" >
+        TZ_ZJXTSJ,
+      </if>
+      <if test="tzQqcjDttm != null" >
+        TZ_QQCJ_DTTM,
+      </if>
+      <if test="tzJhzxDttm != null" >
+        TZ_JHZX_DTTM,
+      </if>
+      <if test="tzJcksDttm != null" >
+        TZ_JCKS_DTTM,
+      </if>
+      <if test="tzJcjsDttm != null" >
+        TZ_JCJS_DTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcslId != null" >
+        #{tzJcslId,jdbcType=INTEGER},
+      </if>
+      <if test="tzYunxKzid != null" >
+        #{tzYunxKzid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcMc != null" >
+        #{tzJcMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhQzbds != null" >
+        #{tzXhQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcfwqMc != null" >
+        #{tzJcfwqMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJobYxzt != null" >
+        #{tzJobYxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZjxtsj != null" >
+        #{tzZjxtsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzQqcjDttm != null" >
+        #{tzQqcjDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJhzxDttm != null" >
+        #{tzJhzxDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJcksDttm != null" >
+        #{tzJcksDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJcjsDttm != null" >
+        #{tzJcjsDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliT" >
+    update TZ_JC_SHLI_T
+    <set >
+      <if test="tzYunxKzid != null" >
+        TZ_YUNX_KZID = #{tzYunxKzid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcMc != null" >
+        TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhQzbds != null" >
+        TZ_XH_QZBDS = #{tzXhQzbds,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcfwqMc != null" >
+        TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJobYxzt != null" >
+        TZ_JOB_YXZT = #{tzJobYxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZjxtsj != null" >
+        TZ_ZJXTSJ = #{tzZjxtsj,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzQqcjDttm != null" >
+        TZ_QQCJ_DTTM = #{tzQqcjDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJhzxDttm != null" >
+        TZ_JHZX_DTTM = #{tzJhzxDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJcksDttm != null" >
+        TZ_JCKS_DTTM = #{tzJcksDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzJcjsDttm != null" >
+        TZ_JCJS_DTTM = #{tzJcjsDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchBundle.model.TzJcShliT" >
+    update TZ_JC_SHLI_T
+    set TZ_YUNX_KZID = #{tzYunxKzid,jdbcType=VARCHAR},
+      TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR},
+      TZ_XH_QZBDS = #{tzXhQzbds,jdbcType=VARCHAR},
+      TZ_JCFWQ_MC = #{tzJcfwqMc,jdbcType=VARCHAR},
+      TZ_JOB_YXZT = #{tzJobYxzt,jdbcType=VARCHAR},
+      TZ_ZJXTSJ = #{tzZjxtsj,jdbcType=TIMESTAMP},
+      TZ_QQCJ_DTTM = #{tzQqcjDttm,jdbcType=TIMESTAMP},
+      TZ_JHZX_DTTM = #{tzJhzxDttm,jdbcType=TIMESTAMP},
+      TZ_JCKS_DTTM = #{tzJcksDttm,jdbcType=TIMESTAMP},
+      TZ_JCJS_DTTM = #{tzJcjsDttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
+  </update>
+</mapper>
