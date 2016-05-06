@@ -811,6 +811,7 @@ var SurveyBuild = {
             pageHtml += '                       <option value="BYYB" ' + (obj.syncType == "BYYB" ? "selected='selected'": "") + '>备用通讯地址邮编</option>';
             pageHtml += '                       <option value="WX" ' + (obj.syncType == "WX" ? "selected='selected'": "") + '>微信号	</option>';
             pageHtml += '                       <option value="SKY" ' + (obj.syncType == "SKY" ? "selected='selected'": "") + '>Sky账号</option>';
+            pageHtml += '                       <option value="ID" ' + (obj.syncType == "ID" ? "selected='selected'": "") + '>证件号码</option>';
             pageHtml += '					</select>';
             pageHtml += '				</td>';
             pageHtml += '				<td>';
