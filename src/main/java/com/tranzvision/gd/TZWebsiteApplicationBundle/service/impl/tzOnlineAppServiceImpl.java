@@ -2244,6 +2244,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	   String strSkype = "";
 	   String strSkypeHb = "";
 	   
+	   /*idcard*/
+ 
+	   String strIdCard = ""; 
+	   
 	   String strDxxxBh = "";
 	   String strXxxBhLike = "";
 	   
@@ -2521,6 +2525,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				   			}
 			   			}
 			   			break;
+			   		case "IDCARD":
+			   			/*证件号码同步*/
+			   			if("CertificateNum".equals(strComLmc)){
+			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'com_CerNum'";
+			   				strIdCard = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
+			   				
+			   			}else{
+			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+			   				strIdCard = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
+			   			}
+			   			break;
 			   }
 	   }
 
@@ -2640,6 +2655,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	   if(strSkypeHb.length()>70){
 		   strSkypeHb = strSkypeHb.substring(0, 70);
 	   }
+	   if(strIdCard.length()>20){
+		   strIdCard = strIdCard.substring(0, 20);
+	   }
 	   
 	   String sqlCount = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZSBM' AND TZ_LYDX_ID = ?";
 	   String strAppInsId = String.valueOf(numAppInsId);
@@ -2679,6 +2697,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		   psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
 		   psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
 	   }
+	   
+	   /*同步身份证信息*/
+	   if(!"".equals(strIdCard)&&strIdCard!=null){
+		   String sqlRegInfoCount = "SELECT COUNT(1) FROM PS_TZ_REG_USER_T WHERE OPRID = ?";
+		   
+		   int regInfocount = sqlQuery.queryForObject(sqlRegInfoCount, new Object[] { strAppOprId }, "Integer");
+		   if(regInfocount>0){
+			    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+			    psTzRegUserT.setOprid(strAppOprId);
+			    psTzRegUserT.setNationalId(strIdCard);
+			    psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+		   }
+	   } 
 	}
 	
 	private String createGuestUser(String strOrgId,String strName){
