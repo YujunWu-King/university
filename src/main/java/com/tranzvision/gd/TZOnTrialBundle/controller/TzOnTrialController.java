@@ -34,7 +34,7 @@ public class TzOnTrialController {
 		String contextPath = request.getContextPath();
 		String loginHtml = "";
 		try {
-			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_TRIAL_SUCCESS_HTML", true,contextPath,"试用申请成功，请等待管理员的审核，谢谢！");
+			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_TRIAL_SUCCESS_HTML", true,contextPath,"试用申请已提交");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			loginHtml = "申请试用访问失败，请于管理员联系";
