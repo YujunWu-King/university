@@ -280,7 +280,7 @@ a{
 .login-bg{
 	width:100%;
 	height:100%;
-	background:url(../../../images/tranzvision/trial_m_bg.png) no-repeat;
+	background:url(../../../images/tranzvision/trial_m_bg.jpg) no-repeat;
 	filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
 	position:absolute;
 	top:0;
