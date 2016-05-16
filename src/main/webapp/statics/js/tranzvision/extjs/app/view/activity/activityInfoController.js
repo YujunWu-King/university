@@ -79,7 +79,7 @@
 			}
 	
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 	},
 	onActivityEnsure: function(){
@@ -104,7 +104,7 @@
 					},"",true,this);
 			}
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 		
 	},
@@ -147,7 +147,7 @@
 			}
 	
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 	},
 	unpublishArt:function(){
@@ -189,7 +189,7 @@
 			}
 	
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 	},
 	upArt:function(){
@@ -222,7 +222,7 @@
 			}
 	
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 	},
 	viewArt:function(){
@@ -250,7 +250,7 @@
 			}
 	
 		}else{
-				Ext.Msg.alert("提示","请填写必填项");
+				Ext.Msg.alert("提示","必填项未填或者填写内容长度超过字数限制");
 		}
 	},
 	onActivityClose: function(){
