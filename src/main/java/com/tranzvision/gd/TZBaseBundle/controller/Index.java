@@ -29,7 +29,7 @@ public class Index {
 	/**
 	 * Cookie存储的系统语言信息
 	 */
-	private final static String cookieLang = "tzlang";
+	//private final static String cookieLang = "tzlang";
 	/**
 	 * Cookie存储的机构id
 	 */
@@ -54,7 +54,9 @@ public class Index {
 		// 获取当前提交的主题编号;
 		String tmpSubmitThemeID = request.getParameter("theme");
 		// 获取当前提交语言环境代码;
-		String tmpSubmitLanguageCd = request.getParameter("language");
+		//java高端产品后台暂时都是中文;
+		//String tmpSubmitLanguageCd = request.getParameter("language");
+		String tmpSubmitLanguageCd = "ZHS";
 		/* 如果没有指定language参数，则获取当前登录会话语言环境代码 */
 		if (tmpSubmitLanguageCd == null || "".equals(tmpSubmitLanguageCd)) {
 			tmpSubmitLanguageCd = gdKjComService.getLoginLanguage(request, response);
@@ -101,8 +103,10 @@ public class Index {
 			// 得到机构的cookie;
 			String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
 			// 得到语言;
-			tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-
+			//java高端产品后台暂时都是中文;
+			//tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+			tmpLanguageCd = "ZHS";
+			
 			if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 				// 查询机构是不是存在;
 				String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
@@ -123,9 +127,9 @@ public class Index {
 				if (languageCount == 0) {
 					tmpLanguageCd = gdObjectServiceImpl.getBaseLanguageCd();
 				}
-			} else {
-				tmpLanguageCd = gdObjectServiceImpl.getBaseLanguageCd();
-			}
+			} //else {
+				// tmpLanguageCd = gdObjectServiceImpl.getBaseLanguageCd();
+			//}
 
 			String tempDefaultPrefixCN = "当前会话已超时或者非法访问，重新登录请点击";
 			String tempDefaultPrefixEN = "The current session is timeout or the current access is invalid.<br>Please click";
