@@ -833,4 +833,166 @@ public class EmlSmsGetParamter {
 			return "";
 		}
 	}
+
+	// 试用申请获取申请机构;
+	public String getOrgName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_ORG_NAME from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String orgname = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (orgname == null) {
+					return "";
+				} else {
+					return orgname;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	// 试用申请获取联系人姓名;
+	public String getContactName(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_CONTACT_NAME from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String contactName = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (contactName == null) {
+					return "";
+				} else {
+					return contactName;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	// 试用申请获取联系电话;
+	public String getContactPhone(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_CONTACT_PHONE from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String contactPhone = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (contactPhone == null) {
+					return "";
+				} else {
+					return contactPhone;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	// 试用申请获取座机;
+	public String getTel(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_TEL from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String tel = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (tel == null) {
+					return "";
+				} else {
+					return tel;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	// 试用申请获取EMAIL;
+	public String getEmail(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_EMAIL from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String email = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (email == null) {
+					return "";
+				} else {
+					return email;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	// 试用申请获取机构网址;
+	public String getOrgWebsite(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			String sqbh = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
+			if (sqbh == null || "".equals(sqbh)) {
+				return "";
+			} else {
+				int seqNum = Integer.valueOf(sqbh);
+				String sqrSQL = "select TZ_ORG_WEBSITE from PS_TZ_ON_TRIAL_T where TZ_SEQ_NUM=?";
+				String orgWebsite = jdbcTemplate.queryForObject(sqrSQL, String.class, new Object[] { seqNum });
+				if (orgWebsite == null) {
+					return "";
+				} else {
+					return orgWebsite;
+				}
+			}
+
+		} catch (Exception e) {
+			return "";
+		}
+	}
 }

@@ -203,7 +203,7 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 				String[] emailList = sjrEmail.split(";");
 				for(int i = 0; i < emailList.length; i++){
 					if(emailList[i] != null && !"".equals(emailList[i])){
-						boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,"管理员", "管理员", "", "", emailList[i], "", "", "","", "", "");
+						boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,"管理员", "管理员", "", "", emailList[i], "", "", "","", "", String.valueOf(seqnum));
 						if (addAudCy == false) {
 							errMsg[0] = "1";
 							errMsg[1] = "申请试用发送邮件失败，请于管理员联系";
