@@ -12,7 +12,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 	checkRefApp:"",
     isDoubleLine: "Y",
     fixedContainer:"Y",//固定容器标识
-	linesNo:[1,2,3],
     children:{
 		"recommend_18": {
             "instanceId": "rec_title",
@@ -302,6 +301,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
     maxLines: 4,
 	defaultLines:1,
 	tjxMaxLinesXh: 1,
+	_init: function(d, previewmode) {
+		var linesNo = [];
+		for (var i = 1; i < this.maxLines; i++) {
+			linesNo.push(i);
+		}
+		this["linesNo"] = linesNo;
+	},
     _getHtml: function (data, previewmode) {
 		
         var c = "", children = data.children,len = children.length;
