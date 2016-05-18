@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.tranzvision.gd.TZOnTrialBundle.service.impl.TzOnTrialMobileServiceImpl;
-import com.tranzvision.gd.TZOnTrialBundle.service.impl.TzOnTrialServiceImpl;
+//import com.tranzvision.gd.TZOnTrialBundle.service.impl.TzOnTrialServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/")
 public class TzOnTrialMobileController {
-	@Autowired
-	private TzOnTrialServiceImpl tzOnTrialServiceImpl;
+	//@Autowired
+	//private TzOnTrialServiceImpl tzOnTrialServiceImpl;
 	
 	@Autowired
 	private TZGDObject tzGDObject;
@@ -26,6 +26,7 @@ public class TzOnTrialMobileController {
 	private TzOnTrialMobileServiceImpl tzOnTrialMobileServiceImpl;
 	
 	//申请试用表单
+	/*
 	@RequestMapping(value = "m/tranzvision", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String trial(HttpServletRequest request, HttpServletResponse response) {
@@ -33,6 +34,7 @@ public class TzOnTrialMobileController {
 		
 		return htmlStr;
 	}
+	*/
 	
 	//提交
 	@RequestMapping(value = "m/trialSubmit", produces = "text/html;charset=UTF-8")

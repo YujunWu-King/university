@@ -23,8 +23,24 @@ public class TzOnTrialController {
 	@RequestMapping(value = "tranzvision", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String trial(HttpServletRequest request, HttpServletResponse response) {
-		String htmlStr = tzOnTrialServiceImpl.tzApply();
-		
+		//试用申请页面html;
+		String htmlStr = "";
+		String userAgent = request.getHeader("User-Agent");
+		if(userAgent != null && !"".equals(userAgent)){
+			userAgent = userAgent.toUpperCase();
+		}
+		if(userAgent.contains("WINDOWS CE")
+				|| userAgent.contains("IPOD")
+				|| userAgent.contains("SYMBIAN")
+				|| userAgent.contains("IPHONE")
+				|| userAgent.contains("BLACKBERRY")
+				|| userAgent.contains("ANDROID")
+				|| userAgent.contains("WINDOWS PHONE")){
+			htmlStr = tzOnTrialServiceImpl.tzMApply();
+		}else{
+			htmlStr = tzOnTrialServiceImpl.tzApply();
+		}
+
 		return htmlStr;
 	}
 	
