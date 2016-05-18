@@ -182,6 +182,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 				String retval = shellComand.executeCommand(command);
+				System.out.println(" create PDF Logs:    " + retval);
 				if(retval.toUpperCase().trim().endsWith("DONE")){
 					return path + pdfFileName;
 				}else{
@@ -314,7 +315,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		} else {
 			comHtml = comMap.get(xxxLmc);
 		}
-		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
+//		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
 		int length = StringUtils.countMatches(comHtml, "%bind");
 		
 		String sql = "SELECT TZ_XXX_BH,TZ_XXX_NO,TZ_XXX_MC,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_IS_DOWNLOAD <> 'N' AND TZ_COM_LMC NOT IN ('Separator') ORDER BY TZ_LINE_ORDER";
@@ -375,7 +376,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		} else {
 			comHtml = comMap.get(xxxLmc);
 		}
-		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
+//		System.out.println(StringUtils.countMatches(comHtml, "%bind"));
 		int length = StringUtils.countMatches(comHtml, "%bind");
 		
 		
