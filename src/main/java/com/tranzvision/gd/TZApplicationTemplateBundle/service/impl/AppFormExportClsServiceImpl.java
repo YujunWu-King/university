@@ -182,7 +182,7 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 				
 				ExecuteShellComand shellComand = new ExecuteShellComand();
 				String retval = shellComand.executeCommand(command);
-				System.out.println(" create PDF Logs:    " + retval);
+//				System.out.println(" create PDF Logs:    " + retval);
 				if(retval.toUpperCase().trim().endsWith("DONE")){
 					return path + pdfFileName;
 				}else{
