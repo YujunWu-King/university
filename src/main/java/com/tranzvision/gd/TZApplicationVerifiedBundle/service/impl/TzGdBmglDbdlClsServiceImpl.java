@@ -229,7 +229,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						if (!tF.exists()) {
 							tF.mkdirs();
 						}
-						appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_报名表.pdf", appInsID);
+						appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_报名表.pdf", appInsID,"A");
 						
 						int file_count = 1;
 
@@ -277,7 +277,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 								
 
 								String tzReferrer = (String)tjxList.get(j).get("TZ_REFERRER_NAME");
-								appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID));
+								appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID),"B");
 								
 								// 将考生的推荐信材料复制;
 								String str_attachfilename2 = "", str_attachfile2 = "";
