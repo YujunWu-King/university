@@ -90,33 +90,192 @@
 	      		labelWidth: 100,
 	      		labelStyle: 'font-weight:bold'
   			}, 
-  			items: [
-  			    {
-  			    	xtype: 'fieldcontainer',
-  			    	items:[{
-  			    		xtype: 	'radio',
-						boxLabel  : '不限定，任意年份',
-                		name      : 'tzYQzgz',
-                		inputValue : '1'
-					},{
+  			items: [{
+					xtype: 	'radio',
+					boxLabel  : '不限定，任意年份',
+					name      : 'tzYQzgz',
+					inputValue : '1'
+				},{
+					layout: {
+						type: 'column'
+					},
+					items: [{
+						columnWidth:.2,
 						xtype: 	'radio',
 						boxLabel  : '指定年份范围',
-                		name      : 'tzYQzgz',
-                		inputValue : '2'
+						name      : 'tzYQzgz',
+						inputValue : '2'
 					},{
+						columnWidth:.3,
+			        	xtype: 'combobox',
+			        	labelWidth: 80,
+						fieldLabel:Ext.tzGetResourse("TZ_BATCH_XH_COM.TZ_BATCH_XHDFN_STD.tzYQsnf","起始年份"),
+						editable:false,
+						emptyText:'请选择',
+						queryMode: 'remote',
+						style:'margin-left:5px',
+						name: 'tzYQsnf',
+						valueField: 'TValue',
+						displayField: 'TSDesc',
+						store: new KitchenSink.view.common.store.appTransStore("TZ_Y_QSNF")
+			        },{
+						columnWidth:.3,
+			        	xtype: 'combobox',
+			        	labelWidth: 80,
+			        	fieldLabel:Ext.tzGetResourse("TZ_BATCH_XH_COM.TZ_BATCH_XHDFN_STD.tzYJznf","截止年份"),
+						editable:false,
+						emptyText:'请选择',
+						queryMode: 'remote',
+						style:'margin-left:5px',
+						name: 'tzYJznf',
+						valueField: 'TValue',
+						displayField: 'TSDesc',
+						store: new KitchenSink.view.common.store.appTransStore("TZ_Y_JZNF")
+			        }]	
+				},{
+					layout: {
+						type: 'column'
+					},
+					style:'margin-top:10px',
+					items: [{
+						columnWidth:.2,
 						xtype: 	'radio',
 						boxLabel  : '指定年份列表',
-                		name      : 'tzYQzgz',
-                		inputValue : '3'
-					},{
+						name      : 'tzYQzgz',
+						inputValue : '3'
+					},{	
+						columnWidth:.6,
+						xtype: 'textfield',
+						//style:'margin-left:5px',
+						name: 'tzYLbqz',
+						listeners: {
+							render: function(tzYLbqz){
+								tzYLbqz.inputEl.dom.placeholder="格式：YYYY,…  取值范围：1970-2099  例如：2001,2002";
+		                	}
+		                }
+					}]	
+				},{
+					layout: {
+						type: 'column'
+					},
+					style:'margin-top:10px',
+					items: [{
+						columnWidth:.2,
 						xtype: 	'radio',
 						boxLabel  : '指定年份循环间隔',
-                		name      : 'tzYQzgz',
-                		inputValue : '4'
-					}]
-  			    }
-  			]
-    	  }]
+						name      : 'tzYQzgz',
+						inputValue : '4'
+					},{	
+						columnWidth:.6,
+						xtype: 'textfield',
+						name: 'tzYXhqz',
+						listeners: {
+							render: function(tzYXhqz){
+		                		tzYXhqz.inputEl.dom.placeholder="格式：YYYY/N  取值范围：1970-2099  例如：2001/4";
+		                	}
+		                }
+					}]	
+				}]
+    	  	},{
+        		title: "月份",
+        		bodyPadding: 10,
+    		    layout: {
+    		      type: 'vbox',
+    		      align: 'stretch'
+    		    },
+    		    bodyStyle:'overflow-y:auto;overflow-x:hidden',
+      			fieldDefaults: {
+    	      		msgTarget: 'side',
+    	      		labelWidth: 100,
+    	      		labelStyle: 'font-weight:bold'
+      			}, 
+      			items: [{
+    					xtype: 	'radio',
+    					boxLabel  : '不限定，任意月份',
+    					name      : 'tzM1Qzgz',
+    					inputValue : '1'
+    				},{
+    					layout: {
+    						type: 'column'
+    					},
+    					items: [{
+    						columnWidth:.2,
+    						xtype: 	'radio',
+    						boxLabel  : '指定月份范围',
+    						name      : 'tzM1Qzgz',
+    						inputValue : '2'
+    					},{
+    						columnWidth:.3,
+    			        	xtype: 'combobox',
+    			        	labelWidth: 80,
+    						fieldLabel:Ext.tzGetResourse("TZ_BATCH_XH_COM.TZ_BATCH_XHDFN_STD.tzM1Qsyf","起始月份"),
+    						editable:false,
+    						emptyText:'请选择',
+    						queryMode: 'remote',
+    						style:'margin-left:5px',
+    						name: 'tzM1Qsyf',
+    						valueField: 'TValue',
+    						displayField: 'TSDesc',
+    						store: new KitchenSink.view.common.store.appTransStore("TZ_M1_QSYF")
+    			        },{
+    						columnWidth:.3,
+    			        	xtype: 'combobox',
+    			        	labelWidth: 80,
+    			        	fieldLabel:Ext.tzGetResourse("TZ_BATCH_XH_COM.TZ_BATCH_XHDFN_STD.tzM1Jzyf","截止月份"),
+    						editable:false,
+    						emptyText:'请选择',
+    						queryMode: 'remote',
+    						style:'margin-left:5px',
+    						name: 'tzM1Jzyf',
+    						valueField: 'TValue',
+    						displayField: 'TSDesc',
+    						store: new KitchenSink.view.common.store.appTransStore("TZ_M1_JZYF")
+    			        }]	
+    				},{
+    					layout: {
+    						type: 'column'
+    					},
+    					style:'margin-top:10px',
+    					items: [{
+    						columnWidth:.2,
+    						xtype: 	'radio',
+    						boxLabel  : '指定月份列表',
+    						name      : 'tzM1Qzgz',
+    						inputValue : '3'
+    					},{	
+    						columnWidth:.6,
+    						xtype: 'textfield',
+    						//style:'margin-left:5px',
+    						name: 'tzM1Lbqz',
+    						listeners: {
+    							render: function(tzYLbqz){
+    								tzYLbqz.inputEl.dom.placeholder="格式：N1,N2,…  取值范围：1-12  例如：1,2,3";
+    		                	}
+    		                }
+    					}]	
+    				},{
+    					layout: {
+    						type: 'column'
+    					},
+    					style:'margin-top:10px',
+    					items: [{
+    						columnWidth:.2,
+    						xtype: 	'radio',
+    						boxLabel  : '指定月份循环间隔',
+    						name      : 'tzM1Qzgz',
+    						inputValue : '4'
+    					},{	
+    						columnWidth:.6,
+    						xtype: 'textfield',
+    						name: 'tzM1Xhqz',
+    						listeners: {
+    							render: function(tzYXhqz){
+    		                		tzYXhqz.inputEl.dom.placeholder="格式：M/N  取值范围：1-12  例如：5/4";
+    		                	}
+    		                }
+    					}]	
+    				}]
+        	  	}]
         }]
 	}]
 });
