@@ -666,9 +666,10 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 	 * @param path		PDF文件存放路径
 	 * @param filename	文件名称
 	 * @param insid		实例编号
+	 * @param type 		类型("A":报名表，  "B": 推荐信)
 	 * @return			是否创建PDF成功
 	 */
-	public boolean generatePdf(String path,String filename,String insid){
+	public boolean generatePdf(String path,String filename,String insid,String type){
 		//报名表打包文件路径
 		String pdfPath = "";
 		String bmbPackRarDir = getSysHardCodeVal.getBmbPackRarDir();
@@ -688,6 +689,10 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 			filename = pdfPath + "/" + filename;
 		}
 		
+		if(StringUtils.equals("B", type)){
+			String sqlTjx = "SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ? LIMIT 1";
+			insid = sqlQuery.queryForObject(sqlTjx, new Object[] { insid }, "String");
+		}
 
 		String sqlOprid = "SELECT OPRID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
 
