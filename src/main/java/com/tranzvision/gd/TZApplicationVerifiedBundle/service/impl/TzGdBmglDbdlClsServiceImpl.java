@@ -272,6 +272,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 									TZ_TJX_APP_INS_ID = Long.parseLong( tjxList.get(j).get("TZ_TJX_APP_INS_ID").toString());
 								}catch(Exception e){
 									TZ_TJX_APP_INS_ID = 0L;
+									continue;
 								}
 								
 
