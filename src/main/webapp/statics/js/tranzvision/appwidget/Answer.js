@@ -1189,12 +1189,12 @@ var SurveyBuild = {
         var count = 0,imgPos;
         var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
-        if (picType.indexOf(fileSuffix) != -1) {
+        if (picType.toString().indexOf(fileSuffix) != -1) {
             type = "IMG"; //图片
             for (var i = 0; i < _children.length; i++) {
                 var _sysFilename = _children[i].sysFileName;
                 var _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
-                if (picType.indexOf(_fileSuffix) != -1) {
+                if (picType.toString().indexOf(_fileSuffix) != -1) {
                     if (sysFileName == _sysFilename) imgPos = count;
                     count++;
                     attHtml += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
@@ -1228,12 +1228,12 @@ var SurveyBuild = {
         var count = 0,imgPos;
         var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
-        if (picType.indexOf(fileSuffix) != -1){
+        if (picType.toString().indexOf(fileSuffix) != -1){
             type="IMG";//图片
             for (var i=0;i<_children.length;i++){
                 var _sysFilename = _children[i].sysFileName;
                 var _fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
-                if (picType.indexOf(_fileSuffix) != -1){
+                if (picType.toString().indexOf(_fileSuffix) != -1){
                     if(sysFileName == _sysFilename) imgPos=count;
                     count ++;
 					attHtml += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _sysFilename + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
@@ -1574,7 +1574,7 @@ var SurveyBuild = {
         var count = 0,imgPos;
         var attHtml = "";
         var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
-        if (picType.indexOf(fileSuffix) != -1) {
+        if (picType.toString().indexOf(fileSuffix) != -1) {
             type = "IMG"; //图片
             attHtml = "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + accessPath + sysFileName + "' title='" + SurveyBuild.specialCharReplace(child[cins].fileName) + "'>" + SurveyBuild.specialCharReplace(child[cins].fileName) + "</a></li>";
         } else {
