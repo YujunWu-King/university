@@ -403,6 +403,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			String userName = "";
 			String insid = jacksonUtil.getString("insid");
 			if(StringUtils.isNotBlank(insid) && StringUtils.length(insid) > 0){
+				String sqlTjx = "SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ? LIMIT 1";
+				insid = sqlQuery.queryForObject(sqlTjx, new Object[] { insid }, "String");
+				
 				String sqlOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
 				String refereesOprid = sqlQuery.queryForObject(sqlOprid, new Object[] { insid }, "String");
 				
