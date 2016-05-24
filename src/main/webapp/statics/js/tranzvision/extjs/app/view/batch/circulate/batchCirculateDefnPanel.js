@@ -418,7 +418,7 @@
         					columnWidth:.3,
         					xtype: 	'radio',
         					boxLabel  : '指定月份循环间隔',
-        					name      : 'tzM1Qzgz',
+        					name      : 'tzDQzgz',
         					inputValue : '4'
         				},{	
         					columnWidth:.6,
