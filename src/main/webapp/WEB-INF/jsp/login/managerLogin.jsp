@@ -206,7 +206,8 @@ body {
 
 	Ext
 			.onReady(function() {
-
+				 
+				
 				Ext.define('Altus.overrides.form.field.ComboBox',
 
 				{
@@ -684,7 +685,11 @@ body {
 														tzLoginParams.comParams.password = password;
 
 														tzLoginParams.comParams.yzm = yzm;
-
+														
+														//提交添加只读层;
+														
+														Ext.getBody().mask("数据提交中,请稍后......");
+									                  	
 														Ext.Ajax
 																.request({
 
@@ -717,13 +722,12 @@ body {
 																					.set(
 																							"orgId",
 																							orgId);
-
+																			
 																			window.location.href = "${contextPath}"
 																					+ responseText.indexUrl;
-
+																			
 																		} else {
-
-																			// Ext.Msg.alert("提示",responseText.error);
+																			Ext.getBody().unmask();
 
 																			Ext
 																					.getCmp(
@@ -757,7 +761,9 @@ body {
 																	}
 
 																});
-
+														
+													
+														
 													} else {
 
 														//Ext.Msg.alert("提示","登录信息未填写完整");		
