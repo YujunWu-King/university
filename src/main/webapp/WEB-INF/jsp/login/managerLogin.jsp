@@ -136,7 +136,7 @@ body {
 				tzLoginParams.comParams.password = password;
 
 				tzLoginParams.comParams.yzm = yzm;
-
+				Ext.getBody().mask("数据提交中,请稍后......");
 				Ext.Ajax
 						.request({
 
@@ -173,7 +173,7 @@ body {
 								} else {
 
 									//Ext.Msg.alert("提示",responseText.error);
-
+									Ext.getBody().unmask();
 									Ext.getCmp("yzmpic")
 											.setSrc(GenCaptchaUrl());
 

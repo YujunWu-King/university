@@ -154,7 +154,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                     }
                     isMainJZLoad = true;
                     if(isMainResourceLoad == true && isMainJZLoad == true){
-                    	Ext.getBody().unmask();
+                    	//Ext.getBody().unmask();
                     }
 
                     
@@ -353,7 +353,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                     //test;
                                     isMainResourceLoad = true;
                                     if(isMainResourceLoad == true && isMainJZLoad == true){
-                                    	Ext.getBody().unmask();
+                                    	//Ext.getBody().unmask();
                                     }
    
                                 }

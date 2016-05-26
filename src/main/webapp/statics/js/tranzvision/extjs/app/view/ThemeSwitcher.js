@@ -223,16 +223,19 @@ Ext.define('KitchenSink.view.ThemeSwitcher', function() {
 			            {
 			              boot.errorMessage(boot.getMessage('TZGD_FWINIT_00013'));
 			            }
+			            Ext.getBody().unmask();
 			          },
 			          failure: function(response, opts)
 			          {
 			            boot.errorMessage("获取数据失败");
+			            Ext.getBody().unmask();
 			          }
 			        });
 			    }
 			    catch(e)
 			    {
 			        boot.errorMessage(e.toString());
+			        Ext.getBody().unmask();
 			    }
 			    /*
 				items =  [
