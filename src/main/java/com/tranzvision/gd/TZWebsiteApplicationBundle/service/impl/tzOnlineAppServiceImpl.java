@@ -1642,6 +1642,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				}
 			}
 		}
+		
+		if(strValueS.length()>254){
+			strValueS = strValueS.substring(0, 254);
+		}
+		
 		//如果是推荐信title End
 		PsTzAppCcT psTzAppCcT = new PsTzAppCcT();
 		psTzAppCcT.setTzAppInsId(numAppInsId);
