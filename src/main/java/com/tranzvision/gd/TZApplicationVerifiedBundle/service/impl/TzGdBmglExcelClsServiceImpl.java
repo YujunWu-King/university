@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +24,15 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 原PS类：TZ_GD_BMGL_BMBSH_PKG:TZ_GD_BMGL_EXCEL_CLS
@@ -56,6 +61,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsprcsrqstMapper psprcsrqstMapper;
+	@Autowired
+	private TZGDObject tZGDObject;
 	
 	@Override
 	@SuppressWarnings("unchecked")
@@ -69,7 +76,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {{"TZ_STARTTIME_CHAR","DESC"}};
 
 			// json数据要的结果字段;
 			String[] resultFldArray = {"TZ_DR_TASK_DESC", "TZ_REALNAME", "TZ_STARTTIME_CHAR", "PROCESSINSTANCE", "DESCR", "TZ_FWQ_FWLJ" };
@@ -142,6 +149,12 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				}
 				
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				String downloadPath = getSysHardCodeVal.getDownloadPath();
+				String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "EXPORTBMBEXCEL";
+				String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+				
+				
 				/*生成运行控制ID*/
 				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
 			    String s_dt = dateFormate.format(new Date());
@@ -153,6 +166,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psTzBmbDceT.setTzExportTmpId(excelTpl);
 				psTzBmbDceT.setTzAudList(strAppInsIdList);
 				psTzBmbDceT.setTzExcelName(excelName);
+				psTzBmbDceT.setTzRelUrl(expDirPath);
+				psTzBmbDceT.setTzJdUrl(absexpDirPath);
 				psTzBmbDceTMapper.insert(psTzBmbDceT);
 				
 				processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
@@ -176,17 +191,34 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psTzExcelDattT.setTzFileName(excelName);
 				psTzExcelDattT.setTzCfLj("A");
 				psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
-				psTzExcelDattT.setTzFwqFwlj(""); /*运行AE时产生*/
+				psTzExcelDattT.setTzFwqFwlj(""); 
 				psTzExcelDattTMapper.insert(psTzExcelDattT);
-				
+
 				Psprcsrqst psprcsrqst = new Psprcsrqst();
 				psprcsrqst.setPrcsinstance(processinstance);
+				psprcsrqst.setRunId(runCntlId);
 				psprcsrqst.setOprid(oprid);
 				psprcsrqst.setRundttm(new Date());
 				psprcsrqst.setRunstatus("7");
 				psprcsrqstMapper.insert(psprcsrqst);
 				
-				this.tzGdDceAe(runCntlId, processinstance);
+				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
+				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
+				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
+				
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_GD_EXCEL_DB");
+				//指定调度作业的相关参数
+				EngineParameters schdProcessParameters = new EngineParameters();
+
+				schdProcessParameters.setBatchServer("");
+				schdProcessParameters.setCycleExpression("");
+				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setPlanExcuteDateTime(new Date());
+				schdProcessParameters.setRunControlId(runCntlId);
+				
+				//调度作业
+				tmpEngine.schedule(schdProcessParameters);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -204,7 +236,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 	}
 	
 	/***TZ_GD_DCE_AE***/
-	public void tzGdDceAe(String runcntlId,int processinstance){
+	public void tzGdDceAe(String runcntlId,int processinstance,String expDirPath,String absexpDirPath){
 		String sql = "SELECT TZ_AUD_LIST ,RUN_CNTL_ID ,TZ_APP_TPL_ID ,TZ_EXPORT_TMP_ID ,TZ_EXCEL_NAME FROM PS_TZ_BMB_DCE_T WHERE RUN_CNTL_ID= ?";
 		Map<String, Object> map = jdbcTemplate.queryForMap(sql,new Object[]{runcntlId});
 		if(map != null){
@@ -213,7 +245,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			String appFormModalID = (String)map.get("TZ_APP_TPL_ID");
 			String appInsIdList = (String)map.get("TZ_AUD_LIST");
 			
-			
+
 			/*将文件上传之前，先重命名该文件*/
 			Date dt = new Date();
 			//SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
@@ -253,7 +285,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			int colum = 0;
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String downloadPath = getSysHardCodeVal.getDownloadPath();
-			ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "EXPORTBMBEXCEL");
+			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 			List<String[]> dataCellKeys = new ArrayList<String[]>();
 			dataCellKeys.add(new String[] { "id"+ colum, "序号" });
 			
@@ -490,6 +522,20 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * 创建日期目录名
+	 * 
+	 * @return
+	 */
+	private String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
 
 }

@@ -9,6 +9,10 @@ public class PsTzBmbDceT {
 
     private String tzExcelName;
 
+    private String tzRelUrl;
+
+    private String tzJdUrl;
+
     private String tzAudList;
 
     public String getRunCntlId() {
@@ -41,6 +45,22 @@ public class PsTzBmbDceT {
 
     public void setTzExcelName(String tzExcelName) {
         this.tzExcelName = tzExcelName == null ? null : tzExcelName.trim();
+    }
+
+    public String getTzRelUrl() {
+        return tzRelUrl;
+    }
+
+    public void setTzRelUrl(String tzRelUrl) {
+        this.tzRelUrl = tzRelUrl == null ? null : tzRelUrl.trim();
+    }
+
+    public String getTzJdUrl() {
+        return tzJdUrl;
+    }
+
+    public void setTzJdUrl(String tzJdUrl) {
+        this.tzJdUrl = tzJdUrl == null ? null : tzJdUrl.trim();
     }
 
     public String getTzAudList() {

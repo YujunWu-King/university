@@ -3,12 +3,13 @@
 <mapper namespace="com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper" >
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
     <id column="PRCSINSTANCE" property="prcsinstance" jdbcType="INTEGER" />
+    <result column="RUN_ID" property="runId" jdbcType="VARCHAR" />
     <result column="RUNSTATUS" property="runstatus" jdbcType="VARCHAR" />
     <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
     <result column="RUNDTTM" property="rundttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    PRCSINSTANCE, RUNSTATUS, OPRID, RUNDTTM
+    PRCSINSTANCE, RUN_ID, RUNSTATUS, OPRID, RUNDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -21,16 +22,19 @@
     where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
-    insert into PSPRCSRQST (PRCSINSTANCE, RUNSTATUS, OPRID, 
-      RUNDTTM)
-    values (#{prcsinstance,jdbcType=INTEGER}, #{runstatus,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, 
-      #{rundttm,jdbcType=TIMESTAMP})
+    insert into PSPRCSRQST (PRCSINSTANCE, RUN_ID, RUNSTATUS, 
+      OPRID, RUNDTTM)
+    values (#{prcsinstance,jdbcType=INTEGER}, #{runId,jdbcType=VARCHAR}, #{runstatus,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR}, #{rundttm,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
     insert into PSPRCSRQST
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="prcsinstance != null" >
         PRCSINSTANCE,
+      </if>
+      <if test="runId != null" >
+        RUN_ID,
       </if>
       <if test="runstatus != null" >
         RUNSTATUS,
@@ -46,6 +50,9 @@
       <if test="prcsinstance != null" >
         #{prcsinstance,jdbcType=INTEGER},
       </if>
+      <if test="runId != null" >
+        #{runId,jdbcType=VARCHAR},
+      </if>
       <if test="runstatus != null" >
         #{runstatus,jdbcType=VARCHAR},
       </if>
@@ -60,6 +67,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
     update PSPRCSRQST
     <set >
+      <if test="runId != null" >
+        RUN_ID = #{runId,jdbcType=VARCHAR},
+      </if>
       <if test="runstatus != null" >
         RUNSTATUS = #{runstatus,jdbcType=VARCHAR},
       </if>
@@ -74,7 +84,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst" >
     update PSPRCSRQST
-    set RUNSTATUS = #{runstatus,jdbcType=VARCHAR},
+    set RUN_ID = #{runId,jdbcType=VARCHAR},
+      RUNSTATUS = #{runstatus,jdbcType=VARCHAR},
       OPRID = #{oprid,jdbcType=VARCHAR},
       RUNDTTM = #{rundttm,jdbcType=TIMESTAMP}
     where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}

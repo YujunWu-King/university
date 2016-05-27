@@ -5,6 +5,8 @@ import java.util.Date;
 public class Psprcsrqst {
     private Integer prcsinstance;
 
+    private String runId;
+
     private String runstatus;
 
     private String oprid;
@@ -17,6 +19,14 @@ public class Psprcsrqst {
 
     public void setPrcsinstance(Integer prcsinstance) {
         this.prcsinstance = prcsinstance;
+    }
+
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(String runId) {
+        this.runId = runId == null ? null : runId.trim();
     }
 
     public String getRunstatus() {

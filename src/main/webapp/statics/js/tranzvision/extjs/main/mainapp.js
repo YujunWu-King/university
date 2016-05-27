@@ -2704,7 +2704,6 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
 												/*var win = new tranzvision.view.window.ReloginWindow();
 												win.show();*/
 												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													alert(optional);
 													if(optional=="ok"){	
 														var org=Ext.tzOrgID.toLowerCase();
 														window.location.href=TzUniversityContextPath+"/login/"+org;

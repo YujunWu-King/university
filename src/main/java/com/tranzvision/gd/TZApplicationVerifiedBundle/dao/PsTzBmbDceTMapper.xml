@@ -6,12 +6,14 @@
     <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
     <result column="TZ_EXPORT_TMP_ID" property="tzExportTmpId" jdbcType="VARCHAR" />
     <result column="TZ_EXCEL_NAME" property="tzExcelName" jdbcType="VARCHAR" />
+    <result column="TZ_REL_URL" property="tzRelUrl" jdbcType="VARCHAR" />
+    <result column="TZ_JD_URL" property="tzJdUrl" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" extends="BaseResultMap" >
     <result column="TZ_AUD_LIST" property="tzAudList" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    RUN_CNTL_ID, TZ_APP_TPL_ID, TZ_EXPORT_TMP_ID, TZ_EXCEL_NAME
+    RUN_CNTL_ID, TZ_APP_TPL_ID, TZ_EXPORT_TMP_ID, TZ_EXCEL_NAME, TZ_REL_URL, TZ_JD_URL
   </sql>
   <sql id="Blob_Column_List" >
     TZ_AUD_LIST
@@ -30,9 +32,11 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
     insert into PS_TZ_BMB_DCE_T (RUN_CNTL_ID, TZ_APP_TPL_ID, TZ_EXPORT_TMP_ID, 
-      TZ_EXCEL_NAME, TZ_AUD_LIST)
+      TZ_EXCEL_NAME, TZ_REL_URL, TZ_JD_URL, 
+      TZ_AUD_LIST)
     values (#{runCntlId,jdbcType=VARCHAR}, #{tzAppTplId,jdbcType=VARCHAR}, #{tzExportTmpId,jdbcType=VARCHAR}, 
-      #{tzExcelName,jdbcType=VARCHAR}, #{tzAudList,jdbcType=LONGVARCHAR})
+      #{tzExcelName,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}, #{tzJdUrl,jdbcType=VARCHAR}, 
+      #{tzAudList,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT" >
     insert into PS_TZ_BMB_DCE_T
@@ -48,6 +52,12 @@
       </if>
       <if test="tzExcelName != null" >
         TZ_EXCEL_NAME,
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL,
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL,
       </if>
       <if test="tzAudList != null" >
         TZ_AUD_LIST,
@@ -66,6 +76,12 @@
       <if test="tzExcelName != null" >
         #{tzExcelName,jdbcType=VARCHAR},
       </if>
+      <if test="tzRelUrl != null" >
+        #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
       <if test="tzAudList != null" >
         #{tzAudList,jdbcType=LONGVARCHAR},
       </if>
@@ -83,6 +99,12 @@
       <if test="tzExcelName != null" >
         TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR},
       </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
       <if test="tzAudList != null" >
         TZ_AUD_LIST = #{tzAudList,jdbcType=LONGVARCHAR},
       </if>
@@ -94,6 +116,8 @@
     set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
       TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR},
       TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
       TZ_AUD_LIST = #{tzAudList,jdbcType=LONGVARCHAR}
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
@@ -101,7 +125,9 @@
     update PS_TZ_BMB_DCE_T
     set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
       TZ_EXPORT_TMP_ID = #{tzExportTmpId,jdbcType=VARCHAR},
-      TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR}
+      TZ_EXCEL_NAME = #{tzExcelName,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR}
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
 </mapper>
