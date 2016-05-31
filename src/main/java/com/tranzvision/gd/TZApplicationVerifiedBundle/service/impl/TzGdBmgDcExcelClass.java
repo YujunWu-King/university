@@ -329,53 +329,54 @@ public class TzGdBmgDcExcelClass {
 
 					}
 					dataList.add(mapData);
-					// dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count +
-					// 1, wwb);
-					boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
-					if (rst) {
-						String urlExcel = excelHandle.getExportExcelPath();
-						try {
-							jdbcTemplate.update(
-									"update  PS_TZ_EXCEL_DATT_T set TZ_FWQ_FWLJ = ? where PROCESSINSTANCE=?",
-									new Object[] { urlExcel, processinstance });
-						} catch (Exception e) {
+					
+				}
+				// dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count +
+				// 1, wwb);
+				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+				if (rst) {
+					String urlExcel = excelHandle.getExportExcelPath();
+					try {
+						jdbcTemplate.update(
+								"update  PS_TZ_EXCEL_DATT_T set TZ_FWQ_FWLJ = ? where PROCESSINSTANCE=?",
+								new Object[] { urlExcel, processinstance });
+					} catch (Exception e) {
 
-						}
-
-						try {
-							jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-									new Object[] { "9", processinstance });
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						/*
-						 * PsTzExcelDattT psTzExcelDattT =
-						 * psTzExcelDattTMapper.selectByPrimaryKey(
-						 * processinstance); if(psTzExcelDattT != null){
-						 * psTzExcelDattT.setTzFwqFwlj(urlExcel);
-						 * psTzExcelDattTMapper.updateByPrimaryKeySelective(
-						 * psTzExcelDattT); }
-						 * 
-						 * Psprcsrqst psprcsrqst =
-						 * psprcsrqstMapper.selectByPrimaryKey(processinstance);
-						 * if(psprcsrqst != null){ psprcsrqst.setRunstatus("9");
-						 * psprcsrqstMapper.updateByPrimaryKey(psprcsrqst); }
-						 */
-					} else {
-						try {
-							jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-									new Object[] { "10", processinstance });
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						/*
-						 * Psprcsrqst psprcsrqst =
-						 * psprcsrqstMapper.selectByPrimaryKey(processinstance);
-						 * if(psprcsrqst != null){
-						 * psprcsrqst.setRunstatus("10");
-						 * psprcsrqstMapper.updateByPrimaryKey(psprcsrqst); }
-						 */
 					}
+
+					try {
+						jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+								new Object[] { "9", processinstance });
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					/*
+					 * PsTzExcelDattT psTzExcelDattT =
+					 * psTzExcelDattTMapper.selectByPrimaryKey(
+					 * processinstance); if(psTzExcelDattT != null){
+					 * psTzExcelDattT.setTzFwqFwlj(urlExcel);
+					 * psTzExcelDattTMapper.updateByPrimaryKeySelective(
+					 * psTzExcelDattT); }
+					 * 
+					 * Psprcsrqst psprcsrqst =
+					 * psprcsrqstMapper.selectByPrimaryKey(processinstance);
+					 * if(psprcsrqst != null){ psprcsrqst.setRunstatus("9");
+					 * psprcsrqstMapper.updateByPrimaryKey(psprcsrqst); }
+					 */
+				} else {
+					try {
+						jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+								new Object[] { "10", processinstance });
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					/*
+					 * Psprcsrqst psprcsrqst =
+					 * psprcsrqstMapper.selectByPrimaryKey(processinstance);
+					 * if(psprcsrqst != null){
+					 * psprcsrqst.setRunstatus("10");
+					 * psprcsrqstMapper.updateByPrimaryKey(psprcsrqst); }
+					 */
 				}
 			}
 		} catch (Exception e) {
