@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,18 @@ public class TzOnTrialMobileServiceImpl {
 			
 			String tel = request.getParameter("TZ_CONTACT_TEL");
 			String website = request.getParameter("TZ_ORG_WEBSITE");
+			//来源;
+			String hmsr = request.getParameter("hmsr");
+			//如果没值，则读取cookie，看是不是从百度推广等渠道过来的;
+		    if(hmsr == null || "".equals(hmsr)){
+		    	Cookie[] cookies = request.getCookies();
+	            for(Cookie c :cookies ){
+	                String cookieName = c.getName();
+	                if("TZ_HMSR".equals(cookieName)){
+	                	hmsr = c.getValue();
+	                }
+	            }
+		    }
 
 			int seqnum = getSeqNum.getSeqNum("PS_TZ_ON_TRIAL_T", "TZ_SEQ_NUM");
 			PsTzOnTrialTWithBLOBs psTzOnTrialT = new PsTzOnTrialTWithBLOBs();
@@ -90,6 +103,7 @@ public class TzOnTrialMobileServiceImpl {
 			psTzOnTrialT.setTzTel(tel);
 			psTzOnTrialT.setTzEmail(email);
 			psTzOnTrialT.setTzOrgWebsite(website);
+			psTzOnTrialT.setTzHmsr(hmsr);
 			psTzOnTrialT.setRowAddTime(new Date());
 			psTzOnTrialTMapper.insert(psTzOnTrialT);
 

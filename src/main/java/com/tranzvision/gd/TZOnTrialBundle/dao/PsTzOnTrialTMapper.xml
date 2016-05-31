@@ -15,6 +15,7 @@
     <result column="TZ_START_TIME" property="tzStartTime" jdbcType="TIMESTAMP" />
     <result column="TZ_END_TIME" property="tzEndTime" jdbcType="TIMESTAMP" />
     <result column="TZ_SF_SALE" property="tzSfSale" jdbcType="VARCHAR" />
+    <result column="TZ_HMSR" property="tzHmsr" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_ORG_WEBSITE" property="tzOrgWebsite" jdbcType="LONGVARCHAR" />
@@ -22,7 +23,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_SEQ_NUM, TZ_ORG_NAME, TZ_CONTACT_NAME, TZ_CONTACT_PHONE, TZ_TEL, TZ_EMAIL, ROW_ADD_TIME, 
-    TZ_SH_RST, TZ_JG_ID, TZ_DLZH_ID, TZ_START_TIME, TZ_END_TIME, TZ_SF_SALE
+    TZ_SH_RST, TZ_JG_ID, TZ_DLZH_ID, TZ_START_TIME, TZ_END_TIME, TZ_SF_SALE, TZ_HMSR
   </sql>
   <sql id="Blob_Column_List" >
     TZ_ORG_WEBSITE, TZ_REMARK
@@ -44,14 +45,14 @@
       TZ_CONTACT_PHONE, TZ_TEL, TZ_EMAIL, 
       ROW_ADD_TIME, TZ_SH_RST, TZ_JG_ID, 
       TZ_DLZH_ID, TZ_START_TIME, TZ_END_TIME, 
-      TZ_SF_SALE, TZ_ORG_WEBSITE, TZ_REMARK
-      )
+      TZ_SF_SALE, TZ_HMSR, TZ_ORG_WEBSITE, 
+      TZ_REMARK)
     values (#{tzSeqNum,jdbcType=INTEGER}, #{tzOrgName,jdbcType=VARCHAR}, #{tzContactName,jdbcType=VARCHAR}, 
       #{tzContactPhone,jdbcType=VARCHAR}, #{tzTel,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
       #{rowAddTime,jdbcType=TIMESTAMP}, #{tzShRst,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzDlzhId,jdbcType=VARCHAR}, #{tzStartTime,jdbcType=TIMESTAMP}, #{tzEndTime,jdbcType=TIMESTAMP}, 
-      #{tzSfSale,jdbcType=VARCHAR}, #{tzOrgWebsite,jdbcType=LONGVARCHAR}, #{tzRemark,jdbcType=LONGVARCHAR}
-      )
+      #{tzSfSale,jdbcType=VARCHAR}, #{tzHmsr,jdbcType=VARCHAR}, #{tzOrgWebsite,jdbcType=LONGVARCHAR}, 
+      #{tzRemark,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs" >
     insert into PS_TZ_ON_TRIAL_T
@@ -94,6 +95,9 @@
       </if>
       <if test="tzSfSale != null" >
         TZ_SF_SALE,
+      </if>
+      <if test="tzHmsr != null" >
+        TZ_HMSR,
       </if>
       <if test="tzOrgWebsite != null" >
         TZ_ORG_WEBSITE,
@@ -142,6 +146,9 @@
       <if test="tzSfSale != null" >
         #{tzSfSale,jdbcType=VARCHAR},
       </if>
+      <if test="tzHmsr != null" >
+        #{tzHmsr,jdbcType=VARCHAR},
+      </if>
       <if test="tzOrgWebsite != null" >
         #{tzOrgWebsite,jdbcType=LONGVARCHAR},
       </if>
@@ -189,6 +196,9 @@
       <if test="tzSfSale != null" >
         TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR},
       </if>
+      <if test="tzHmsr != null" >
+        TZ_HMSR = #{tzHmsr,jdbcType=VARCHAR},
+      </if>
       <if test="tzOrgWebsite != null" >
         TZ_ORG_WEBSITE = #{tzOrgWebsite,jdbcType=LONGVARCHAR},
       </if>
@@ -212,6 +222,7 @@
       TZ_START_TIME = #{tzStartTime,jdbcType=TIMESTAMP},
       TZ_END_TIME = #{tzEndTime,jdbcType=TIMESTAMP},
       TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR},
+      TZ_HMSR = #{tzHmsr,jdbcType=VARCHAR},
       TZ_ORG_WEBSITE = #{tzOrgWebsite,jdbcType=LONGVARCHAR},
       TZ_REMARK = #{tzRemark,jdbcType=LONGVARCHAR}
     where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
@@ -229,7 +240,8 @@
       TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
       TZ_START_TIME = #{tzStartTime,jdbcType=TIMESTAMP},
       TZ_END_TIME = #{tzEndTime,jdbcType=TIMESTAMP},
-      TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR}
+      TZ_SF_SALE = #{tzSfSale,jdbcType=VARCHAR},
+      TZ_HMSR = #{tzHmsr,jdbcType=VARCHAR}
     where TZ_SEQ_NUM = #{tzSeqNum,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -3,6 +3,7 @@ package com.tranzvision.gd.TZOnTrialBundle.service.impl;
 import java.util.Date;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +166,22 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 			    	website = ((String)dataMap.get("TZ_ORG_WEBSITE")).trim();
 			    }
 			    
+			    //来源;
+			    String hmsr = "";
+			    if(dataMap.containsKey("hmsr")){ 
+			    	hmsr = ((String)dataMap.get("hmsr")).trim();
+			    }
+			    //如果没值，则读取cookie，看是不是从百度推广等渠道过来的;
+			    if(hmsr == null || "".equals(hmsr)){
+			    	Cookie[] cookies = request.getCookies();
+		            for(Cookie c :cookies ){
+		                String cookieName = c.getName();
+		                if("TZ_HMSR".equals(cookieName)){
+		                	hmsr = c.getValue();
+		                }
+		            }
+			    }
+			    
 			    int seqnum = getSeqNum.getSeqNum("PS_TZ_ON_TRIAL_T", "TZ_SEQ_NUM");
 			    PsTzOnTrialTWithBLOBs psTzOnTrialT = new PsTzOnTrialTWithBLOBs();
 			    psTzOnTrialT.setTzSeqNum(seqnum);
@@ -174,6 +191,7 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 			    psTzOnTrialT.setTzTel(tel);
 			    psTzOnTrialT.setTzEmail(email);
 			    psTzOnTrialT.setTzOrgWebsite(website);
+			    psTzOnTrialT.setTzHmsr(hmsr);
 			    psTzOnTrialT.setRowAddTime(new Date());
 			    psTzOnTrialTMapper.insert(psTzOnTrialT);
 			    
@@ -264,9 +282,13 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 	/*使用申请页面*/
 	public String tzApply(){
 		String contextPath = request.getContextPath();
+		String hmsr = request.getParameter("hmsr");
+		if(hmsr == null){
+			hmsr = "";
+		}
 		String loginHtml = "";
 		try {
-			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_ON_TRIAL_HTML", true,contextPath);
+			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_ON_TRIAL_HTML", true,contextPath,hmsr);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			loginHtml = "申请试用访问失败，请于管理员联系";
@@ -278,9 +300,13 @@ public class TzOnTrialServiceImpl extends FrameworkImpl {
 	/*使用申请页面*/
 	public String tzMApply(){
 		String contextPath = request.getContextPath();
+		String hmsr = request.getParameter("hmsr");
+		if(hmsr == null){
+			hmsr = "";
+		}
 		String loginHtml = "";
 		try {
-			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_ON_TRIAL_M_HTML", true,contextPath);
+			loginHtml = tzGDObject.getHTMLText("HTML.TZOnTrialBundle.TZ_ON_TRIAL_M_HTML", true,contextPath,hmsr);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			loginHtml = "申请试用访问失败，请于管理员联系";

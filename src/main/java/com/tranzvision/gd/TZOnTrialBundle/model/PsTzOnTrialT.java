@@ -29,6 +29,8 @@ public class PsTzOnTrialT {
 
     private String tzSfSale;
 
+    private String tzHmsr;
+
     public Integer getTzSeqNum() {
         return tzSeqNum;
     }
@@ -131,5 +133,13 @@ public class PsTzOnTrialT {
 
     public void setTzSfSale(String tzSfSale) {
         this.tzSfSale = tzSfSale == null ? null : tzSfSale.trim();
+    }
+
+    public String getTzHmsr() {
+        return tzHmsr;
+    }
+
+    public void setTzHmsr(String tzHmsr) {
+        this.tzHmsr = tzHmsr == null ? null : tzHmsr.trim();
     }
 }
