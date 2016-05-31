@@ -688,15 +688,15 @@ public class AppFormExportClsServiceImpl extends FrameworkImpl {
 		}else{
 			filename = pdfPath + "/" + filename;
 		}
-		
+		String bmbInsId = insid;
 		if(StringUtils.equals("B", type)){
 			String sqlTjx = "SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ? LIMIT 1";
-			insid = sqlQuery.queryForObject(sqlTjx, new Object[] { insid }, "String");
+			bmbInsId = sqlQuery.queryForObject(sqlTjx, new Object[] { insid }, "String");
 		}
 
 		String sqlOprid = "SELECT OPRID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
 
-		Map<String, Object> workMap = sqlQuery.queryForMap(sqlOprid, new Object[] { insid });
+		Map<String, Object> workMap = sqlQuery.queryForMap(sqlOprid, new Object[] { bmbInsId });
 		String oprid = workMap.get("OPRID") == null ? "" : String.valueOf(workMap.get("OPRID"));
 		String classid = workMap.get("TZ_CLASS_ID") == null ? "" : String.valueOf(workMap.get("TZ_CLASS_ID"));
 		
