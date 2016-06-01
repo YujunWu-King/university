@@ -2,12 +2,29 @@
   munuEditNameValidator:  function(value,field) {  
   var flag = false;  
   var actType = field.findParentByType("menuEdit").actType;
+  
+  var tzParamsJson = {
+		  "ComID":"TZ_AQ_MENU_COM",
+		  "PageID":"TZ_AQ_MENULIST_STD",
+		  "OperateType":"HTML",
+		  "comParams":{
+			  "menuId": value,
+			  "actType": actType
+		  }
+  }
+  
+ //参数
+ var tzParams = Ext.JSON.encode(tzParamsJson);
 
   Ext.Ajax.request({
      async: false,
      url: Ext.tzGetGeneralURL,
+     /*
      params: {
      	 "tzParams":'{"ComID":"TZ_AQ_MENU_COM","PageID":"TZ_AQ_MENULIST_STD","OperateType":"HTML","comParams":{"menuId":"'+ value +'","actType":"'+ actType +'"}}'
+     },*/
+     params: {
+    	 "tzParams":  tzParams
      },
      async:false,  
 		 success: function(response){
