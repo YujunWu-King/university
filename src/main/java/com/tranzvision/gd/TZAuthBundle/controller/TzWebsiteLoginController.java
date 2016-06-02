@@ -153,8 +153,8 @@ public class TzWebsiteLoginController {
 
 						int errorCode = 2;
 						String strErrorDesc = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,
-								"TZ_SITE_MESSAGE", "43", strLang, "您输入的用户名密码有误。",
-								"The account or password you entered is incorrect.");
+								"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00049", strLang, "登录失败，请确认用户名和密码是否正确。",
+								"Email address or password is incorrect .");
 						jsonMap.put("success", "false");
 						jsonMap.put("errorCode", errorCode);
 						jsonMap.put("errorDesc", strErrorDesc);

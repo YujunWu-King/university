@@ -149,7 +149,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				errorMsg.add("2");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
 						"TZGD_FWINIT_00049", language, "登录失败，请确认用户名和密码是否正确。",
-						"Email address or password is incorrect !"));
+						"Email address or password is incorrect ."));
 				return false;
 			}
 
