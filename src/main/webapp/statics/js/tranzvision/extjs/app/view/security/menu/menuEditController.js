@@ -125,6 +125,8 @@
 							 form.findField("menuId").setReadOnly(true);
                              form.findField("menuId").addCls('lanage_1');
                  view.actType = "update";
+                 
+                 view.commitChanges(view);
           	 }else{
           	 	  Ext.Msg.alert("提示","保存失败");
           	 }
@@ -263,6 +265,7 @@
 							 form.findField("operateNode").setValue("");
 							 form.findField("menuId").setReadOnly(true); 
 							 view.actType = "update";
+							 view.commitChanges(view);
 							 
 							 view.close();
           	 }else{
