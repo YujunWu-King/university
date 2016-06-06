@@ -58,13 +58,30 @@
 								}
 					}	
 		    },{
-		      xtype: 'textfield',
-		      fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.senderEmail","发送人"),
-					name: 'senderEmail',
-					ignoreChangesFlag: true,
-					readOnly:true,
-					allowBlank:false,
-					blankText:Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.sEmailBlankText","发送人地址不能为空")
+		    	//modity by caoy 2016-6-6
+		    	xtype: 'combobox',
+			    fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.senderEmail","发送人"),
+				emptyText:Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.sEmailEmptText","请选择发送人地址"),
+				allowBlank: false,
+				editable: false,
+				blankText:Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.sEmailBlankText","发送人地址不能为空"),
+			    valueField: 'tmpId',
+			    displayField: 'tmpName',
+			      //typeAhead: true,
+				mode:"remote",
+				name: 'senderEmail',
+				ignoreChangesFlag: true,
+				store: {
+			    	fields: ['tmpId', 'tmpName'],
+			    	data : this.semdData
+			    }
+//		      xtype: 'textfield',
+//		      fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.senderEmail","发送人"),
+//					name: 'senderEmail',
+//					ignoreChangesFlag: true,
+//					readOnly:true,
+//					allowBlank:false,
+//					blankText:Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.sEmailBlankText","发送人地址不能为空")
 		    },{
 					xtype:'textarea',
 					fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.AddresseeEmail","收件人"),
@@ -341,6 +358,16 @@
 		});
 		
 		this.modelData = tmps;
+		
+		//modity by caoy 2016-6-6 加载发件人信息 
+		tzParams = '{"ComID":"TZ_COMMON_EMAIL_COM","PageID":"TZ_COM_EMAIL_STD","OperateType":"QG","comParams":{"jgId": "'+ Ext.tzOrgID +'","tmpNames":["sender"]}}'; //["TZ_HDBM_DZMP_M","TZ_HDBM_GXH_M"]
+		//加载数据
+		Ext.tzLoadAsync(tzParams,function(responseData){
+			  tmps = responseData.formData.tmpNames;
+		});
+		this.semdData = tmps;
+		
+		
 
 		//发送的听众;
 		this.audienceId = config.audienceId; 
