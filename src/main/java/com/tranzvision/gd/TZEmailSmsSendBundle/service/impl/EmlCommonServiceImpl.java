@@ -245,12 +245,17 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 
 						// modity by caoy 2016-6-6 加载发件人信息
 						// 包含@说明是 自己的邮箱
-						if (bcAddresseeEmail != null && !"".equals(bcAddresseeEmail)) {
+						if (senderEmail != null && !"".equals(senderEmail)) {
 							if (senderEmail.indexOf("@") != -1) {
 								bl = createTaskServiceImpl.updateEmailSender(taskId, senderEmail, "");
 							} else {
 								bl = createTaskServiceImpl.updateEmailSender(taskId, senderEmail);
 							}
+						}
+						if (bl == false) {
+							map.replace("success", "更新邮件发送人失败");
+							strRet = jacksonUtil.Map2json(map);
+							return strRet;
 						}
 
 						// 更新任务关联的听众ID;
