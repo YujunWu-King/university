@@ -37,11 +37,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl")
 public class CreateTaskServiceImpl {
 	// 发送任务ID;
-	//private String taskId;
+	// private String taskId;
 	// 听众ID；
-	//private String audId;
+	// private String audId;
 	// 听众ID；
-	//private String jgId;
+	// private String jgId;
 	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
@@ -67,7 +67,6 @@ public class CreateTaskServiceImpl {
 	@Autowired
 	private PsTzDxmbshliTblMapper psTzDxmbshliTblMapper;
 
-
 	// 创建发送任务***参数：strJgId：机构ID；strTmpId:邮件或短信模板ID；taskType：发送类型，邮件MAL,短信SMS；sendtype:使用的发送手机或邮箱,A主要，B次要，C所有;
 	@SuppressWarnings("deprecation")
 	public String createTaskIns(String strJgId, String strTmpId, String taskType, String sendtype) {
@@ -85,7 +84,7 @@ public class CreateTaskServiceImpl {
 			psTzDxyjfsrwTbl.setTzTmplId(strTmpId);
 			psTzDxyjfsrwTbl.setTzJgId(strJgId);
 			psTzDxyjfsrwTbl.setTzSyyxLx(sendtype);
-			//jgId = strJgId;
+			// jgId = strJgId;
 			String emailZt = "";
 			String emailContent = "";
 			String smsConent = "";
@@ -100,30 +99,33 @@ public class CreateTaskServiceImpl {
 				psTzDxyjfsrwTbl.setTzWebmalFlag((String) eMap.get("TZ_WEBMAL_FLAG"));
 				psTzDxyjfsrwTbl.setTzDynamicFlag((String) eMap.get("TZ_DYNAMIC_FLAG"));
 				psTzDxyjfsrwTbl.setTzEmlIfPrt((String) eMap.get("TZ_EML_IF_PRT"));
-				
-				String serverHost = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-				emailContent = emailContent.replace("<img src=\"/", "<img src=\""+ serverHost +"/");
+
+				String serverHost = request.getScheme() + "://" + request.getServerName() + ":"
+						+ request.getServerPort();
+				emailContent = emailContent.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
 
 				String emailServSQL = "select TZ_EML_ADDR100,TZ_EML_ALIAS from PS_TZ_EMLS_DEF_TBL where TZ_EMLSERV_ID=?";
 				Map<String, Object> eMap2 = jdbcTemplate.queryForMap(emailServSQL, new Object[] { emlServId });
-				if( eMap2 != null){
+				if (eMap2 != null) {
 					psTzDxyjfsrwTbl.setTzEmailSender((String) eMap2.get("TZ_EML_ADDR100"));
 					psTzDxyjfsrwTbl.setTzSenderAlias((String) eMap2.get("TZ_EML_ALIAS"));
 				}
-				
+
 			} else {
 				String smsServId = "";
-				Map<String, Object> eMap3 = jdbcTemplate.queryForMap("select a.TZ_DYNAMIC_FLAG , a.TZ_SMS_SERV_ID,a.TZ_SMS_CONTENT, a.TZ_YMB_ID from PS_TZ_SMSTMPL_TBL a, PS_TZ_TMP_DEFN_TBL b where a.TZ_YMB_ID=b.TZ_YMB_ID and a.TZ_JG_ID=? and a.TZ_TMPL_ID=?", new Object[] { strJgId, strTmpId });
-			    if(eMap3 != null){
-			    	String dynimicFlg = (String)eMap3.get("TZ_DYNAMIC_FLAG");
-			    	smsServId = (String)eMap3.get("TZ_SMS_SERV_ID");
-			    	smsConent = (String)eMap3.get("TZ_SMS_CONTENT");
-			    	//String strYmbId = (String)eMap3.get("TZ_YMB_ID");
-			    	
-			    	psTzDxyjfsrwTbl.setTzSmsServId(smsServId);
-			    	psTzDxyjfsrwTbl.setTzDynamicFlag(dynimicFlg);
-			    	psTzDxyjfsrwTbl.setTzSysjLx(sendtype);
-			    }
+				Map<String, Object> eMap3 = jdbcTemplate.queryForMap(
+						"select a.TZ_DYNAMIC_FLAG , a.TZ_SMS_SERV_ID,a.TZ_SMS_CONTENT, a.TZ_YMB_ID from PS_TZ_SMSTMPL_TBL a, PS_TZ_TMP_DEFN_TBL b where a.TZ_YMB_ID=b.TZ_YMB_ID and a.TZ_JG_ID=? and a.TZ_TMPL_ID=?",
+						new Object[] { strJgId, strTmpId });
+				if (eMap3 != null) {
+					String dynimicFlg = (String) eMap3.get("TZ_DYNAMIC_FLAG");
+					smsServId = (String) eMap3.get("TZ_SMS_SERV_ID");
+					smsConent = (String) eMap3.get("TZ_SMS_CONTENT");
+					// String strYmbId = (String)eMap3.get("TZ_YMB_ID");
+
+					psTzDxyjfsrwTbl.setTzSmsServId(smsServId);
+					psTzDxyjfsrwTbl.setTzDynamicFlag(dynimicFlg);
+					psTzDxyjfsrwTbl.setTzSysjLx(sendtype);
+				}
 			}
 			psTzDxyjfsrwTbl.setTzRwtjDt(new Date());
 			psTzDxyjfsrwTbl.setTzRwksDt(new Date(1900, 1, 1));
@@ -133,14 +135,14 @@ public class CreateTaskServiceImpl {
 			psTzDxyjfsrwTbl.setRowAddedOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
 			int i = psTzDxyjfsrwTblMapper.insert(psTzDxyjfsrwTbl);
 			if (i > 0) {
-				
-				if("MAL".equals(taskType)){
+
+				if ("MAL".equals(taskType)) {
 					PsTzYjmbshliTbl psTzYjmbshliTbl = new PsTzYjmbshliTbl();
 					psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);
 					psTzYjmbshliTbl.setTzMalSubjuect(emailZt);
 					psTzYjmbshliTbl.setTzMalContent(emailContent);
 					psTzYjmbshliTblMapper.insert(psTzYjmbshliTbl);
-				}else{
+				} else {
 					PsTzDxmbshliTbl psTzDxmbshliTbl = new PsTzDxmbshliTbl();
 					psTzDxmbshliTbl.setTzEmlSmsTaskId(taskId);
 					psTzDxmbshliTbl.setTzSmsContent(smsConent);
@@ -156,7 +158,7 @@ public class CreateTaskServiceImpl {
 	}
 
 	// 创建听众
-	public String createAudience(String taskId,String strJgId,String strAudienceDesc, String strAudLy) {
+	public String createAudience(String taskId, String strJgId, String strAudienceDesc, String strAudLy) {
 		String audId = "";
 		try {
 			audId = String.valueOf(getSeqNum.getSeqNum("TZ_AUDIENCE_T", "TZ_AUDIENCE_ID"));
@@ -172,14 +174,14 @@ public class CreateTaskServiceImpl {
 			int i = psTzAudienceTMapper.insert(psTzAudienceT);
 			if (i <= 0) {
 				audId = "";
-			}else{
-				if(taskId != null && !"".equals(taskId)){
+			} else {
+				if (taskId != null && !"".equals(taskId)) {
 					PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = new PsTzDxyjfsrwTbl();
 					psTzDxyjfsrwTbl.setTzEmlSmsTaskId(taskId);
 					psTzDxyjfsrwTbl.setTzAudienceId(audId);
 					psTzDxyjfsrwTblMapper.updateByPrimaryKeySelective(psTzDxyjfsrwTbl);
 				}
-				
+
 			}
 		} catch (Exception e) {
 			audId = "";
@@ -188,8 +190,8 @@ public class CreateTaskServiceImpl {
 	}
 
 	// 添加听众成员;
-	public boolean addAudCy(String audId,String name, String ch, String mainPhone, String cyPhone, String mainEmail, String cyEmail,
-			String wxh, String oprId, String xsxxId, String hdId, String bmbId) {
+	public boolean addAudCy(String audId, String name, String ch, String mainPhone, String cyPhone, String mainEmail,
+			String cyEmail, String wxh, String oprId, String xsxxId, String hdId, String bmbId) {
 		boolean bl = false;
 		try {
 			String audCyId = String.valueOf(getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID"));
@@ -220,7 +222,7 @@ public class CreateTaskServiceImpl {
 	}
 
 	// 添加抄送EMAIL;
-	public boolean addCCAddr(String taskId,String mailCCAddr) {
+	public boolean addCCAddr(String taskId, String mailCCAddr) {
 		boolean bl = false;
 		try {
 			PsTzMalCcAddT psTzMalCcAddT = new PsTzMalCcAddT();
@@ -237,7 +239,7 @@ public class CreateTaskServiceImpl {
 	}
 
 	// 添加密送EMAIL;
-	public boolean addBCAddr(String taskId,String mailBCAddr) {
+	public boolean addBCAddr(String taskId, String mailBCAddr) {
 		boolean bl = false;
 		try {
 			PsTzMalBcAddT psTzMalBcAddT = new PsTzMalBcAddT();
@@ -248,63 +250,63 @@ public class CreateTaskServiceImpl {
 				bl = true;
 			}
 		} catch (Exception e) {
-			bl = false; 
+			bl = false;
 		}
 		return bl;
 	}
-	
-	//更新任务中的听众ID;
-	public void updateAudId(String taskId,String updateAudId){
+
+	// 更新任务中的听众ID;
+	public void updateAudId(String taskId, String updateAudId) {
 		PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = new PsTzDxyjfsrwTbl();
 		psTzDxyjfsrwTbl.setTzEmlSmsTaskId(taskId);
 		psTzDxyjfsrwTbl.setTzAudienceId(updateAudId);
-		
+
 		psTzDxyjfsrwTblMapper.updateByPrimaryKeySelective(psTzDxyjfsrwTbl);
 	}
-	
-	//更新主题;
-	public boolean updateEmailSendTitle(String taskId,String title){
+
+	// 更新主题;
+	public boolean updateEmailSendTitle(String taskId, String title) {
 		PsTzYjmbshliTbl psTzYjmbshliTbl = new PsTzYjmbshliTbl();
 		psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);
 		psTzYjmbshliTbl.setTzMalSubjuect(title);
 		int i = psTzYjmbshliTblMapper.updateByPrimaryKeySelective(psTzYjmbshliTbl);
-		if(i > 0 ){
+		if (i > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
-	//更新内容;
-	public boolean updateEmailSendContent(String taskId,String content){
+
+	// 更新内容;
+	public boolean updateEmailSendContent(String taskId, String content) {
 		String serverHost = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-		content = content.replace("<img src=\"/", "<img src=\""+ serverHost +"/");
+		content = content.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
 		PsTzYjmbshliTbl psTzYjmbshliTbl = new PsTzYjmbshliTbl();
 		psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);
 		psTzYjmbshliTbl.setTzMalContent(content);
 		int i = psTzYjmbshliTblMapper.updateByPrimaryKeySelective(psTzYjmbshliTbl);
-		if(i > 0 ){
+		if (i > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
-	//更新短信内容
-	public boolean updateSmsSendContent(String taskId,String content){
-	   PsTzDxmbshliTbl psTzDxmbshliTbl = new PsTzDxmbshliTbl();
-	   psTzDxmbshliTbl.setTzEmlSmsTaskId(taskId);
-	   psTzDxmbshliTbl.setTzSmsContent(content);
-	   int i = psTzDxmbshliTblMapper.updateByPrimaryKeySelective(psTzDxmbshliTbl);
-		if(i > 0 ){
+
+	// 更新短信内容
+	public boolean updateSmsSendContent(String taskId, String content) {
+		PsTzDxmbshliTbl psTzDxmbshliTbl = new PsTzDxmbshliTbl();
+		psTzDxmbshliTbl.setTzEmlSmsTaskId(taskId);
+		psTzDxmbshliTbl.setTzSmsContent(content);
+		int i = psTzDxmbshliTblMapper.updateByPrimaryKeySelective(psTzDxmbshliTbl);
+		if (i > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
-	//新增附件;
-	public boolean addAttach(String taskId,String attachName,String attachUrl){
+
+	// 新增附件;
+	public boolean addAttach(String taskId, String attachName, String attachUrl) {
 		PsTzRwFjianTbl psTzRwFjianTbl = new PsTzRwFjianTbl();
 		String fjId = String.valueOf(getSeqNum.getSeqNum("TZ_RW_FJIAN_TBL", "TZ_FJIAN_ID"));
 		psTzRwFjianTbl.setTzEmlSmsTaskId(taskId);
@@ -312,23 +314,44 @@ public class CreateTaskServiceImpl {
 		psTzRwFjianTbl.setTzFjianLj(attachUrl);
 		psTzRwFjianTbl.setTzFjianMc(attachName);
 		int i = psTzRwFjianTblMapper.insert(psTzRwFjianTbl);
-		if(i > 0 ){
+		if (i > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
-	
-	//修改发件人;
-	public boolean updateEmailSender(String taskId,String emailAddr, String emailAlias){
+
+	// 修改发件人;
+	public boolean updateEmailSender(String taskId, String emailAddr, String emailAlias) {
 		PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
-		if(psTzDxyjfsrwTbl != null){
+		if (psTzDxyjfsrwTbl != null) {
 			psTzDxyjfsrwTbl.setTzEmailSender(emailAddr);
 			psTzDxyjfsrwTbl.setTzSenderAlias(emailAlias);
 			int i = psTzDxyjfsrwTblMapper.updateByPrimaryKeySelective(psTzDxyjfsrwTbl);
-			if(i > 0 ){
+			if (i > 0) {
 				return true;
-			}else{
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	// 修改发件人
+	public boolean updateEmailSender(String taskId, String TZ_EMLSERV_ID) {
+		String sql = " select TZ_EML_ADDR100 from PS_TZ_EMLS_DEF_TBL where TZ_EMLSERV_ID=? ";
+		System.out.println("sql:" + sql);
+		Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { TZ_EMLSERV_ID });
+		String email = (String) map.get("TZ_EML_ADDR100");
+		System.out.println("email:" + email);
+		if (email != null && !email.equals("")) {
+			sql = "update PS_TZ_DXYJFSRW_TBL set TZ_EMLSERV_ID=?,TZ_EMAIL_SENDER=? WHERE TZ_EML_SMS_TASK_ID=?";
+			System.out.println("sql:" + sql);
+			int i = jdbcTemplate.update(sql, new Object[] { TZ_EMLSERV_ID, email, taskId });
+			System.out.println("i:" + i);
+			if (i > 0) {
+				return true;
+			} else {
 				return false;
 			}
 		}
