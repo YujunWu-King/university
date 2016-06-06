@@ -103,7 +103,7 @@ public class SqlQuery {
 		try {
 			return jdbcTemplate.queryForMap(sql);
 		} catch (IncorrectResultSizeDataAccessException ex) {
-			//ex.printStackTrace();
+			ex.printStackTrace();
 		} catch (DataAccessException e) {
 			e.printStackTrace();
 		}
