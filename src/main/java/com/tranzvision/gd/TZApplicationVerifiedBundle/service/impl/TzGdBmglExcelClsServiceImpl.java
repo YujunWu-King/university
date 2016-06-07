@@ -28,7 +28,6 @@ import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -199,7 +198,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psprcsrqst.setRunId(runCntlId);
 				psprcsrqst.setOprid(oprid);
 				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("7");
+				psprcsrqst.setRunstatus("5");
 				psprcsrqstMapper.insert(psprcsrqst);
 				
 				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
@@ -283,8 +282,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			}
 			*/
 			int colum = 0;
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String downloadPath = getSysHardCodeVal.getDownloadPath();
+			//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			//String downloadPath = getSysHardCodeVal.getDownloadPath();
 			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 			List<String[]> dataCellKeys = new ArrayList<String[]>();
 			dataCellKeys.add(new String[] { "id"+ colum, "序号" });

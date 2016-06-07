@@ -27,6 +27,10 @@ public class TzGdBmgDcExcelClass {
 		
 		try {
 
+			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+						new Object[] { "7", processinstance });
+
+			
 			String expDirPath = "", absexpDirPath = "";
 			String sql = "SELECT TZ_AUD_LIST ,RUN_CNTL_ID ,TZ_APP_TPL_ID ,TZ_EXPORT_TMP_ID ,TZ_EXCEL_NAME,TZ_REL_URL,TZ_JD_URL FROM PS_TZ_BMB_DCE_T WHERE RUN_CNTL_ID= ?";
 			Map<String, Object> map = null;
@@ -331,8 +335,7 @@ public class TzGdBmgDcExcelClass {
 					dataList.add(mapData);
 					
 				}
-				// dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count +
-				// 1, wwb);
+
 				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
 				if (rst) {
 					String urlExcel = excelHandle.getExportExcelPath();
