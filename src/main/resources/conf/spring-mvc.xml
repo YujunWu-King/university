@@ -20,7 +20,7 @@
 	</context:component-scan>
 	 -->
 	<mvc:annotation-driven />
-
+	<!-- spring mvc拦截了所有请求影响到静态资源文件的获取,配置resources完成获取静态资源  cache-period 设置缓存时间-->
 	<mvc:resources mapping="/statics/**" location="/statics/"
 		cache-period="31556926" />
 	<mvc:resources mapping="/**" location="/WEB-INF/html/" />
