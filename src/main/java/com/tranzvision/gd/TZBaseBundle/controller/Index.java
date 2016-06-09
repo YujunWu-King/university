@@ -165,6 +165,8 @@ public class Index {
 		 * registeServiceImpl.releasEnrollpage(content, "5",errMsg); return
 		 * errMsg[0] + "====>" + errMsg[1];
 		 */
+		
+		System.out.println("dispatcher---");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
@@ -220,6 +222,8 @@ public class Index {
 
 			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
+		
+		System.out.println("strParams:"+strParams);
 
 		// 操作类型;
 		String strOprType = "";
@@ -398,6 +402,8 @@ public class Index {
 					+ ",\"errdesc\": \"" + strErrorDesc + "\",\"timeout\": " + tmpTimeOutFlag
 					+ ",\"authorizedInfo\": {" + authorizedInfomation + "}}}";
 		}
+		
+		System.out.println("strRetContent:"+strRetContent);
 		return strRetContent;
 	}
 
