@@ -3,6 +3,7 @@
 log4j.rootLogger = DEBUG , stdout , D, E, BatchServerStart
 log4j.category.org.springframework.jdbc.core=TRACE
 
+
 ###?output to the console ###
 log4j.appender.stdout = org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.Target = System.out
