@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.enrollmentManagement.exportTemplate.exportTemplateInfoPanel', {
+﻿﻿Ext.define('KitchenSink.view.enrollmentManagement.exportTemplate.exportTemplateInfoPanel', {
     extend: 'Ext.panel.Panel',
     xtype: 'exportTemplateInfo',
 	controller: 'exportTemplate',
