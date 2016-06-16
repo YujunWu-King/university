@@ -43,7 +43,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 		mapRet.put("formData", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
-		// System.out.println("strParams=" + strParams);
+		// //System.out.println("strParams=" + strParams);
 
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -58,14 +58,14 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				if (tmpNames.size() == 1 && ((String) tmpNames.get(0)).equals("sender")) {
 					// 获取当前登录人自己的邮箱
 					String oprid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-					// System.out.println("oprid=" + oprid);
+					// //System.out.println("oprid=" + oprid);
 					String sql = "select TZ_EMAIL from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID = ? ";
 					Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { oprid });
 					String selfEmail = null;
 					Map<String, Object> jsonMap = null;
 					if (map != null) {
 						selfEmail = (String) map.get("TZ_EMAIL");
-						// System.out.println("selfEmail=" + selfEmail);
+						// //System.out.println("selfEmail=" + selfEmail);
 						if (selfEmail != null && !selfEmail.equals("")) {
 							jsonMap = new HashMap<>();
 							jsonMap.put("tmpId", map.get("TZ_EMAIL"));
@@ -75,11 +75,11 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 					}
 
 					sql = "select TZ_EMLSERV_ID,TZ_EML_ADDR100 from PS_TZ_EMLS_DEF_TBL where TZ_JG_ID=? ";
-					// System.out.println("sql=" + sql);
+					// //System.out.println("sql=" + sql);
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { jgId });
-					// System.out.println("jgId:"+jgId);
-					// System.out.println("list:"+list);
-					// System.out.println("list:"+list.size());
+					// //System.out.println("jgId:"+jgId);
+					// //System.out.println("list:"+list);
+					// //System.out.println("list:"+list.size());
 
 					if (list != null) {
 						for (int i = 0; i < list.size(); i++) {
@@ -95,7 +95,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				} else {
 					for (int i = 0; i < tmpNames.size(); i++) {
 						String tmpId = (String) tmpNames.get(i);
-						System.out.println("tmpId=" + tmpId);
+						////System.out.println("tmpId=" + tmpId);
 						String sql = "select TZ_TMPL_ID,TZ_TMPL_NAME from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? AND TZ_TMPL_ID=? AND TZ_USE_FLAG='Y'";
 						Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { jgId, tmpId });
 						Map<String, Object> jsonMap = new HashMap<>();
@@ -218,7 +218,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 						String tmpId = (String) dataMap.get("emailTmp");
 						// 发送人;
 						String senderEmail = (String) dataMap.get("senderEmail");
-						System.out.println("senderEmail:" + senderEmail);
+						////System.out.println("senderEmail:" + senderEmail);
 						// 抄送;
 						String ccAddresseeEmail = (String) dataMap.get("ccAddresseeEmail");
 						// 密送
@@ -238,7 +238,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 							return strRet;
 						}
 
-						System.out.println("taskId:" + taskId);
+						////System.out.println("taskId:" + taskId);
 						
 						
 						boolean bl = true;

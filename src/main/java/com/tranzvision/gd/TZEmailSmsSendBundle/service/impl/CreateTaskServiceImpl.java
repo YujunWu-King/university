@@ -340,15 +340,15 @@ public class CreateTaskServiceImpl {
 	// 修改发件人
 	public boolean updateEmailSender(String taskId, String TZ_EMLSERV_ID) {
 		String sql = " select TZ_EML_ADDR100 from PS_TZ_EMLS_DEF_TBL where TZ_EMLSERV_ID=? ";
-		System.out.println("sql:" + sql);
+		//System.out.println("sql:" + sql);
 		Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { TZ_EMLSERV_ID });
 		String email = (String) map.get("TZ_EML_ADDR100");
-		System.out.println("email:" + email);
+		//System.out.println("email:" + email);
 		if (email != null && !email.equals("")) {
 			sql = "update PS_TZ_DXYJFSRW_TBL set TZ_EMLSERV_ID=?,TZ_EMAIL_SENDER=? WHERE TZ_EML_SMS_TASK_ID=?";
-			System.out.println("sql:" + sql);
+			//System.out.println("sql:" + sql);
 			int i = jdbcTemplate.update(sql, new Object[] { TZ_EMLSERV_ID, email, taskId });
-			System.out.println("i:" + i);
+			//System.out.println("i:" + i);
 			if (i > 0) {
 				return true;
 			} else {
