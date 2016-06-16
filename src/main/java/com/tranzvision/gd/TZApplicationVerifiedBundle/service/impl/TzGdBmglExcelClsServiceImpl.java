@@ -155,9 +155,9 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				
 				
 				/*生成运行控制ID*/
-				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
+				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			    String s_dt = dateFormate.format(new Date());
-				String runCntlId = oprid + "_" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
+				String runCntlId = "BMBXLS" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
 				
 				PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
 				psTzBmbDceT.setRunCntlId(runCntlId);
