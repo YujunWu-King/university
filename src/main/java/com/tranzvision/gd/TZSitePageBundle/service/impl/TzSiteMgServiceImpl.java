@@ -1288,9 +1288,16 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String ctxPath = request.getContextPath();
 				strSaveContent = siteRepCssServiceImpl.repResetContextPath(strSaveContent);
 				strSaveContent = siteRepCssServiceImpl.repResetSkinsImgPath(strSaveContent, strSkinId);
-
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",
-						strSaveContent);
+				
+				//String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",strSaveContent);
+				String strSaveContentReplace = strSaveContent;
+				if(strSaveContentReplace.contains("\\")){
+					strSaveContentReplace = strSaveContentReplace.replace("\\", "\\\\");
+				}
+				if(strSaveContentReplace.contains("$")){
+					strSaveContentReplace = strSaveContentReplace.replace("$", "\\$");
+				}
+				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",strSaveContentReplace);
 
 				strSavedContent = siteRepCssServiceImpl.repTitle(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
@@ -1300,9 +1307,16 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				psTzSiteiDefnTWithBLOBs.setTzIndexSavecode(strSavedContent);
 
 				// 生成预览代码
-				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",
-						strPreviewContent);
-
+				//String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",strPreviewContent);
+				String strPreviewContentReplace = strPreviewContent;
+				if(strPreviewContentReplace.contains("\\")){
+					strPreviewContentReplace = strPreviewContentReplace.replace("\\", "\\\\");
+				}
+				if(strPreviewContentReplace.contains("$")){
+					strPreviewContentReplace = strPreviewContentReplace.replace("$", "\\$");
+				}
+				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",strPreviewContentReplace);
+				
 				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
 				strPreviewHtml = siteRepCssServiceImpl.repCss(strPreviewHtml, strSiteId);
 				strPreviewHtml = siteRepCssServiceImpl.repSkinsImgPath(strPreviewHtml, strSkinId);

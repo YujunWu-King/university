@@ -135,17 +135,23 @@
                                     name:'exportExcel',
                                     handler:'exportExcelOrDownload'
                                 },
-                                    {
+                                {
                                         text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.downloadExcel","查看导出结果并下载"),
                                         iconCls:"download",
                                         name:'downloadExcel',
                                         handler:'exportExcelOrDownload'
-                                    }]
+                                 }]
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.printApplicationForm","打印报名表"),
                                 iconCls:"print",
                                 handler:'printAppForm'
-                            }]
+                            },{
+                                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewEmailSendHis","查看邮件发送历史"),
+                                handler:'viewMailHistory'
+                            },{
+								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给选中人发送邮件"),
+								handler:'sendEmlSelPers'
+							}]
                         }
                     ]
                 },

@@ -43,7 +43,7 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_SEQ_NUM", "TZ_ORG_NAME", "TZ_CONTACT_NAME", "TZ_CONTACT_PHONE", "TZ_EMAIL",
-					"TZ_ORG_WEBSITE", "ROW_ADD_TIME", "TZ_SH_RST", "TZ_START_TIME", "TZ_END_TIME" };
+					"TZ_ORG_WEBSITE", "ROW_ADD_TIME", "TZ_SH_RST", "TZ_START_TIME", "TZ_END_TIME","TZ_HMSR" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -66,6 +66,7 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 					mapList.put("shRst", rowList[7]);
 					mapList.put("startTime", rowList[8]);
 					mapList.put("endTime", rowList[9]);
+					mapList.put("hmsr", rowList[10]);
 
 					listData.add(mapList);
 				}
@@ -151,6 +152,7 @@ public class TzOnTrialManagerServiceImpl extends FrameworkImpl {
 					mapData.put("contactEmail", psTzOnTrialT.getTzEmail());
 					mapData.put("orgName", psTzOnTrialT.getTzOrgName());
 					mapData.put("website", psTzOnTrialT.getTzOrgWebsite());
+					mapData.put("hmsr", psTzOnTrialT.getTzHmsr());
 
 					SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 					Date submitTime = psTzOnTrialT.getRowAddTime();

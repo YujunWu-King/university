@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportClsServiceImpl;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzBmbDceTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
@@ -39,7 +37,6 @@ import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
-import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
@@ -66,11 +63,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private SqlQuery jdbcTemplate;
-	@Autowired
 	private PsprcsrqstMapper psprcsrqstMapper;
-	@Autowired
-	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 	@Autowired
 	private TZGDObject tZGDObject;
 	
@@ -571,13 +564,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						&& fileName != null && !"".equals(fileName)){
 						lj = request.getServletContext().getRealPath(lj);
 						
-						String deleteFile = fileName.substring(0, fileName.lastIndexOf(".rar"));
+						String dfile = fileName.substring(0, fileName.lastIndexOf(".rar"));
+						String deleteFile = "";
 						
 						if(lj.lastIndexOf(File.separator) + 1 != lj.length()){
-							deleteFile = lj + File.separator + deleteFile;
+							deleteFile = lj + File.separator + dfile;
 							lj = lj + File.separator + fileName;
 						}else{
-							deleteFile = lj + deleteFile;
+							deleteFile = lj + dfile;
 							lj = lj + fileName;
 						}
 						File file = new File(lj);
@@ -585,8 +579,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 							file.delete();
 						}
 						
-						File deFile = new File(deleteFile);
-						deleteDir(deFile);
+						
+						if(dfile != null && !"".equals(dfile)){
+							File deFile = new File(deleteFile);
+							if(deFile.exists() && deFile.isDirectory()){
+								deleteDir(deFile);
+							}
+						}
+						
 					}
 				}
 				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);

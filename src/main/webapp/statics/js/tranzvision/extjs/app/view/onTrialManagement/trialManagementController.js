@@ -93,6 +93,7 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagementController', {
 					form.findField("contactEmail").setReadOnly(true);
 					form.findField("startTime").setReadOnly(true);
 					form.findField("endTime").setReadOnly(true);
+					form.findField("hmsr").setReadOnly(true);
 					
 					form.findField("orgName").addCls("lanage_1");
 					form.findField("website").addCls("lanage_1");
@@ -103,6 +104,7 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagementController', {
 					form.findField("contactEmail").addCls("lanage_1");
 					form.findField("startTime").addCls("lanage_1");
 					form.findField("endTime").addCls("lanage_1");
+					form.findField("hmsr").addCls("lanage_1");
 					panel.commitChanges(panel);
 				});
 				

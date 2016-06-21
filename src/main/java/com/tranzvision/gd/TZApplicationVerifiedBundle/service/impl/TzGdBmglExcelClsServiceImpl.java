@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -536,5 +537,40 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 		int day = cal.get(5);
 		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
+	
+	
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+ 		String strReturn = "{}";
+		if(actData == null || actData.length == 0 ){
+			return strReturn;
+		}
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		for(int i = 0; i<actData.length; i++){
+			String strComInfo = actData [i];
+			jacksonUtil.json2Map(strComInfo);
+			String AEId = jacksonUtil.getString("processInstance");
+			if(AEId != null && !"".equals(AEId)){
+				int processinstance = Integer.parseInt(AEId);
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(processinstance);
+				if(psTzExcelDattT != null){
+					String lj = psTzExcelDattT.getTzFwqFwlj();
+					if(lj != null && !"".equals(lj)){
+						lj = request.getServletContext().getRealPath(lj);
 
+						File file = new File(lj);
+						if(file.exists() && file.isFile()){
+							file.delete();
+						}
+					}
+				}
+				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);
+				psTzExcelDattTMapper.deleteByPrimaryKey(processinstance);
+				psprcsrqstMapper.deleteByPrimaryKey(processinstance);
+				
+			}
+		}
+		return strReturn;
+	}
+	
 }

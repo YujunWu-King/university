@@ -97,7 +97,11 @@ Ext.define('KitchenSink.view.onTrialManagement.trialInfo', {
 					 });
 				});
 			}
-		},{
+		}, {
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_INF_STD.hmsr","来源"),
+			name: 'hmsr'
+        },{
 			xtype: 'combobox',
         	fieldLabel: '审核结果',
         	editable:false,

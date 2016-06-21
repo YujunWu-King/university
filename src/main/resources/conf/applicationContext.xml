@@ -98,5 +98,8 @@
 		<!-- <property name="maxUploadSize" value="102400" /> -->
 
 	</bean>
+	
+	<!-- 邮件发送bean -->
+	<bean id="sendSmsOrMalServiceImpl" class="com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl" />
 
 </beans>

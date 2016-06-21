@@ -67,8 +67,9 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				}
 				
 				String sOprID = "";
-				String sAppInsID = "";
+				
 				if(bMultiType){
+					int sAppInsID = 0;
 					//群发邮件添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
@@ -76,14 +77,14 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
 				            sOprID = (String)map.get("oprID");
-				            sAppInsID = (String)map.get("appInsID");
+				            sAppInsID = (int)map.get("appInsID");
 				            if(sOprID != null && !"".equals(sOprID)
-				            		&& sAppInsID != null && !"".equals(sAppInsID)){
+				            		&& sAppInsID != 0){
 				            	/*为听众添加成员:姓名，称谓，报名人联系方式*/
 				                String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 				 
 				                String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail="",  wechat="";
-				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{sAppInsID});
+				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{String.valueOf(sAppInsID)});
 				                if(lxfsMap != null){
 				                	mainMobilePhone = (String)lxfsMap.get("TZ_ZY_SJ");
 				                	backupMobilePhone = (String)lxfsMap.get("TZ_CY_SJ");
@@ -96,7 +97,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				                	wechat = (String)lxfsMap.get("TZ_WEIXIN");
 				                	//skype = (String)lxfsMap.get("TZ_SKYPE");
 				                }
-				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", sAppInsID);
+				                createTaskServiceImpl.addAudCy(audID,strName, "", mainMobilePhone, backupMobilePhone, mainEmail, backupEmail, wechat, sOprID, "", "", String.valueOf(sAppInsID));
 
 				            }
 				            
@@ -105,6 +106,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 			        
 				}else{
 					//单发邮件添加听众;
+					String sAppInsID = "";
 			        sOprID = jacksonUtil.getString("oprID");
 			        sAppInsID = jacksonUtil.getString("appInsID");
 			        /*为听众添加成员:姓名，称谓，报名人联系方式*/
@@ -129,6 +131,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				}
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
