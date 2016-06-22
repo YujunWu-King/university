@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -176,7 +176,7 @@ public class JacksonUtil {
 			return null;
 		}
 		try {
-			if(jsonMap.containsKey(key)){
+			if (jsonMap.containsKey(key)) {
 				return String.valueOf(jsonMap.get(key));
 			}
 		} catch (NullPointerException ex) {
@@ -293,6 +293,24 @@ public class JacksonUtil {
 			return false;
 		}
 		return jsonMap.containsKey(key);
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String a = "{\"tplID\":\"100\",\"fileName\":\"aaa\",\"storDates\":[{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_1\",\"fieldName\":\"文字说明\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-1\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_name\",\"fieldName\":\"姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-2\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_company\",\"fieldName\":\"工作单位\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-3\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_post\",\"fieldName\":\"职务\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-4\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_phone\",\"fieldName\":\"联系电话\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-5\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_email\",\"fieldName\":\"电子邮件\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-6\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_relation\",\"fieldName\":\"申请人关系\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-7\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_language\",\"fieldName\":\"推荐信语音\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-8\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by1\",\"fieldName\":\"与考生关系\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-9\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by2\",\"fieldName\":\"备用字段二\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-10\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by3\",\"fieldName\":\"备用字段三\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-11\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by4\",\"fieldName\":\"备用字段四\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-12\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_by5\",\"fieldName\":\"备用字段五\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-13\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_2r_sex\",\"fieldName\":\"性别\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-14\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_8\",\"fieldName\":\"推荐人姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-15\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_6\",\"fieldName\":\"被推荐考生姓名\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-16\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_3\",\"fieldName\":\"您认识考生的方式、认识的时间和了解程度，对考生思想品德、道德修养方面的介绍：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-17\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_4\",\"fieldName\":\"对考生学术水平、科研能力、实践能力、研究成果、知识结构、外国语水平等的介绍：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-18\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_5\",\"fieldName\":\"考生的特长和弱点，该考生是否具有创新的潜力，有无继续培养的前途，对考生报考清华大学推荐免试研究生的意见：\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-19\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_INS_ID\",\"fieldName\":\"报名表实例编号\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-20\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_FORM_STA\",\"fieldName\":\"报名表提交状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-21\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_FORM_SP_STA\",\"fieldName\":\"初审状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-22\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_APP_SUB_DTTM\",\"fieldName\":\"提交时间\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-23\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_ZL_AUDIT_STATUS\",\"fieldName\":\"资料审核状态\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-24\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_SORT_ID\",\"fieldName\":\"颜色类别编号\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-25\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_COLOR_NAME\",\"fieldName\":\"颜色类别\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-26\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK\",\"fieldName\":\"备注\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-27\"}},{\"data\":{\"tplID\":\"100\",\"fieldID\":\"TZ_REMARK_SHORT\",\"fieldName\":\"短备注\",\"pdffield1\":\"\",\"pdffield2\":\"\",\"pdffield3\":\"\",\"id\":\"KitchenSink.view.template.bmb.myBmbPdfModel-28\"}}]}";
+		jacksonUtil.json2Map(a);
+		String tplID = jacksonUtil.getString("tplID");
+		String fileName = jacksonUtil.getString("fileName");
+		String storDates = jacksonUtil.getString("storDates");
+
+		System.out.println("tplID：" + tplID);
+		System.out.println("fileName：" + fileName);
+		System.out.println("storDates：" + storDates);
+		
+		//jacksonUtil.json2Map(storDates);
+		List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("storDates");
+		System.out.println("jsonArray：" + jsonArray.size());
 	}
 
 }
