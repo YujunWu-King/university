@@ -1,19 +1,30 @@
 package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 邮件短信发送；原：TZ_GD_COM_EMLSMS_APP:emlCommon
@@ -35,6 +46,14 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private GetSeqNum getSeqNum;
+	@Autowired
+	private PsprcsrqstMapper psprcsrqstMapper;
+	@Autowired
+	private PsTzEmlTaskAetMapper psTzEmlTaskAetMapper;
+	@Autowired
+	private TZGDObject tZGDObject;
 
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -57,12 +76,15 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 				// modity by caoy 2016-6-6 加载发件人信息
 				if (tmpNames.size() == 1 && ((String) tmpNames.get(0)).equals("sender")) {
 					// 获取当前登录人自己的邮箱
-					String oprid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-					// //System.out.println("oprid=" + oprid);
+
+					//String oprid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+					//自己的邮箱先不加载，都通过邮箱服务器配置;
+					Map<String, Object> jsonMap = null;
+					String selfEmail = null;
+					/*
+
 					String sql = "select TZ_EMAIL from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID = ? ";
 					Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { oprid });
-					String selfEmail = null;
-					Map<String, Object> jsonMap = null;
 					if (map != null) {
 						selfEmail = (String) map.get("TZ_EMAIL");
 						// //System.out.println("selfEmail=" + selfEmail);
@@ -72,10 +94,12 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 							jsonMap.put("tmpName", map.get("TZ_EMAIL"));
 							listData.add(jsonMap);
 						}
-					}
+					}*/
 
-					sql = "select TZ_EMLSERV_ID,TZ_EML_ADDR100 from PS_TZ_EMLS_DEF_TBL where TZ_JG_ID=? ";
-					// //System.out.println("sql=" + sql);
+
+					String sql = "select TZ_EMLSERV_ID,TZ_EML_ADDR100 from PS_TZ_EMLS_DEF_TBL where TZ_JG_ID=? ";
+					// System.out.println("sql=" + sql);
+
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { jgId });
 					// //System.out.println("jgId:"+jgId);
 					// //System.out.println("list:"+list);
@@ -218,7 +242,7 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 						String tmpId = (String) dataMap.get("emailTmp");
 						// 发送人;
 						String senderEmail = (String) dataMap.get("senderEmail");
-						////System.out.println("senderEmail:" + senderEmail);
+
 						// 抄送;
 						String ccAddresseeEmail = (String) dataMap.get("ccAddresseeEmail");
 						// 密送
@@ -301,7 +325,53 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 								return strRet;
 							}
 						}
-						sendSmsOrMalServiceImpl.send(taskId, "");
+						
+						//查询什么时候跑AE,未定义则默认大于等于5条时跑AE;
+						int aeCount = 5;
+						String aeCountString = jdbcTemplate.queryForObject(" select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_EMAIL_CALL_AE_COUNT'", "String");
+						if(aeCountString != null && !"".equals(aeCountString) && StringUtils.isNumeric(aeCountString)){
+							aeCount = Integer.valueOf(aeCountString);
+						}
+						
+						int AudCount = jdbcTemplate.queryForObject("select COUNT(TZ_AUDCY_ID) from PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID = ?", new Object[]{audienceId},"Integer" );
+						if(AudCount < aeCount){
+							sendSmsOrMalServiceImpl.send(taskId, "");
+						}else{
+
+							int processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+							//当前用户;
+							String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+							/*生成运行控制ID*/
+							SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+						    String s_dtm = datetimeFormate.format(new Date());
+							String runCntlId = "EMAIL" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
+							
+							Psprcsrqst psprcsrqst = new Psprcsrqst();
+							psprcsrqst.setPrcsinstance(processInstance);
+							psprcsrqst.setRunId(runCntlId);
+							psprcsrqst.setOprid(currentOprid);
+							psprcsrqst.setRundttm(new Date());
+							psprcsrqst.setRunstatus("5");
+							psprcsrqstMapper.insert(psprcsrqst);
+							
+							PsTzEmlTaskAet psTzEmlTaskAet = new PsTzEmlTaskAet();
+							psTzEmlTaskAet.setRunId(runCntlId);
+							psTzEmlTaskAet.setTzEmlSmsTaskId(taskId);
+							psTzEmlTaskAetMapper.insert(psTzEmlTaskAet);
+							
+							BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_SEND_EMAIL_AE");
+							//指定调度作业的相关参数
+							EngineParameters schdProcessParameters = new EngineParameters();
+
+							schdProcessParameters.setBatchServer("");
+							schdProcessParameters.setCycleExpression("");
+							schdProcessParameters.setLoginUserAccount("Admin");
+							schdProcessParameters.setPlanExcuteDateTime(new Date());
+							schdProcessParameters.setRunControlId(runCntlId);
+							
+							//调度作业
+							tmpEngine.schedule(schdProcessParameters);
+						}
 
 					} else {
 						map.replace("success", "参数有误");
