@@ -8,6 +8,7 @@
     <result column="TZ_APP_TPL_MS" property="tzAppTplMs" jdbcType="VARCHAR" />
     <result column="TZ_APP_TPL_YT" property="tzAppTplYt" jdbcType="VARCHAR" />
     <result column="TZ_USE_TYPE" property="tzUseType" jdbcType="VARCHAR" />
+    <result column="TZ_PDF_TYPE" property="tzPdfType" jdbcType="VARCHAR" />
     <result column="TZ_APP_LABEL_WZ" property="tzAppLabelWz" jdbcType="VARCHAR" />
     <result column="TZ_APP_TSXX_FS" property="tzAppTsxxFs" jdbcType="VARCHAR" />
     <result column="TZ_APP_TPL_LAN" property="tzAppTplLan" jdbcType="VARCHAR" />
@@ -42,7 +43,7 @@
     <result column="TZ_FOOTER" property="tzFooter" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
+    TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, TZ_PDF_TYPE, 
     TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, 
     TZ_ATT_A_URL, TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, TZ_APP_M_TPL_ID, TZ_EFFEXP_ZT, 
     TZ_CHN_MODAL_ID, TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
@@ -66,7 +67,7 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
     insert into PS_TZ_APPTPL_DY_T (TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, 
-      TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
+      TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, TZ_PDF_TYPE,
       TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, 
       TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, TZ_ATT_A_URL, 
       TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, 
@@ -79,7 +80,7 @@
       TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
       )
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAppTplMc,jdbcType=VARCHAR}, 
-      #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, 
+      #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, #{tzPdfType,jdbcType=VARCHAR}, 
       #{tzAppLabelWz,jdbcType=VARCHAR}, #{tzAppTsxxFs,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
       #{tzAttachfileName,jdbcType=VARCHAR}, #{tzAttsysfilename,jdbcType=VARCHAR}, #{tzAttAUrl,jdbcType=VARCHAR}, 
       #{tzAttPUrl,jdbcType=VARCHAR}, #{tzAppTzfs,jdbcType=VARCHAR}, #{tzAppTzurl,jdbcType=VARCHAR}, 
@@ -112,6 +113,9 @@
       </if>
       <if test="tzUseType != null" >
         TZ_USE_TYPE,
+      </if>
+      <if test="tzPdfType != null" >
+        TZ_PDF_TYPE,
       </if>
       <if test="tzAppLabelWz != null" >
         TZ_APP_LABEL_WZ,
@@ -223,6 +227,9 @@
       <if test="tzUseType != null" >
         #{tzUseType,jdbcType=VARCHAR},
       </if>
+      <if test="tzPdfType != null" >
+        #{tzPdfType,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppLabelWz != null" >
         #{tzAppLabelWz,jdbcType=VARCHAR},
       </if>
@@ -333,6 +340,9 @@
       <if test="tzUseType != null" >
         TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
       </if>
+      <if test="tzPdfType != null" >
+        TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppLabelWz != null" >
         TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
       </if>
@@ -433,6 +443,7 @@
       TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
       TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
       TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
+      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
       TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
       TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
       TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
@@ -472,6 +483,7 @@
       TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
       TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
       TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
+      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
       TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
       TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
       TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},

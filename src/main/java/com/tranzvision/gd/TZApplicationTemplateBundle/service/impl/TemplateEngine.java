@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,7 +95,7 @@ public class TemplateEngine {
 
 	@Autowired
 	private PsTzAppXxSyncTMapper psTzAppXxSyncTMapper;
-	
+
 	@Autowired
 	private PsTzTempFieldTMapper psTzTempFieldTMapper;
 
@@ -102,6 +103,8 @@ public class TemplateEngine {
 	private TZGDObject tzGdObject;
 
 	private String tid;
+
+	Logger logger = Logger.getLogger(this.getClass());
 
 	@Transactional
 	@SuppressWarnings("unchecked")
@@ -133,11 +136,19 @@ public class TemplateEngine {
 				psTzApptplDyT.setTzAppTplYt(tplUse);
 
 				// 模板类型（报名表、推荐信）
-				String tplUseType = infoData.get("tplUseType") == null ? "" : String.valueOf(infoData.get("tplUseType"));
+				String tplUseType = infoData.get("tplUseType") == null ? ""
+						: String.valueOf(infoData.get("tplUseType"));
 				psTzApptplDyT.setTzUseType(tplUseType);
+				
+				
+				//报名表打印类型 (原html转pdf；使用pdf 模板打印） add by caoy 2016-6-13
+				String tpPdfType = infoData.get("tpPdfType") == null ? ""
+						: String.valueOf(infoData.get("tpPdfType"));
+				psTzApptplDyT.setTzPdfType(tpPdfType);
 
 				// 标签位置
-				String labelPostion = infoData.get("labelPostion") == null ? "" : String.valueOf(infoData.get("labelPostion"));
+				String labelPostion = infoData.get("labelPostion") == null ? ""
+						: String.valueOf(infoData.get("labelPostion"));
 				psTzApptplDyT.setTzAppLabelWz(labelPostion);
 
 				// 提示信息方式
@@ -146,7 +157,7 @@ public class TemplateEngine {
 
 				// 语言
 				String lang = infoData.get("lang") == null ? "" : String.valueOf(infoData.get("lang"));
-				if(StringUtils.isEmpty(lang)){
+				if (StringUtils.isEmpty(lang)) {
 					lang = tzLoginServiceImpl.getSysLanaguageCD(request);
 				}
 				psTzApptplDyT.setTzAppTplLan(lang);
@@ -156,7 +167,8 @@ public class TemplateEngine {
 				psTzApptplDyT.setTzAttachfileName(filename);
 
 				// 系统文件名
-				String sysFileName = infoData.get("sysFileName") == null ? "" : String.valueOf(infoData.get("sysFileName"));
+				String sysFileName = infoData.get("sysFileName") == null ? ""
+						: String.valueOf(infoData.get("sysFileName"));
 				psTzApptplDyT.setTzAttsysfilename(sysFileName);
 
 				// 绝对路径
@@ -164,15 +176,18 @@ public class TemplateEngine {
 				psTzApptplDyT.setTzAttPUrl(path);
 
 				// 访问路径
-				String accessPath = infoData.get("accessPath") == null ? "" : String.valueOf(infoData.get("accessPath"));
+				String accessPath = infoData.get("accessPath") == null ? ""
+						: String.valueOf(infoData.get("accessPath"));
 				psTzApptplDyT.setTzAttAUrl(accessPath);
 
 				// 提交跳转方式
-				String targetType = infoData.get("targetType") == null ? "" : String.valueOf(infoData.get("targetType"));
+				String targetType = infoData.get("targetType") == null ? ""
+						: String.valueOf(infoData.get("targetType"));
 				psTzApptplDyT.setTzAppTzfs(targetType);
 
 				// Redirect Url
-				String redirectUrl = infoData.get("redirectUrl") == null ? "" : String.valueOf(infoData.get("redirectUrl"));
+				String redirectUrl = infoData.get("redirectUrl") == null ? ""
+						: String.valueOf(infoData.get("redirectUrl"));
 				psTzApptplDyT.setTzAppTzurl(redirectUrl);
 
 				// 报名表状态
@@ -180,27 +195,31 @@ public class TemplateEngine {
 				psTzApptplDyT.setTzEffexpZt(state);
 
 				// 报名表主模板ID
-				String mainTplId = infoData.get("mainTemplate") == null ? "" : String.valueOf(infoData.get("mainTemplate"));
+				String mainTplId = infoData.get("mainTemplate") == null ? ""
+						: String.valueOf(infoData.get("mainTemplate"));
 				psTzApptplDyT.setTzAppMTplId(mainTplId);
 
 				// 提交后是否发送邮件
-				String isSendMail = infoData.get("isSendMail") == null ? "" : String.valueOf(infoData.get("isSendMail"));
+				String isSendMail = infoData.get("isSendMail") == null ? ""
+						: String.valueOf(infoData.get("isSendMail"));
 				psTzApptplDyT.setTzIssendmail(isSendMail);
 
 				// 邮件模板
-				String mailTemplate = infoData.get("mailTemplate") == null ? "" : String.valueOf(infoData.get("mailTemplate"));
+				String mailTemplate = infoData.get("mailTemplate") == null ? ""
+						: String.valueOf(infoData.get("mailTemplate"));
 				psTzApptplDyT.setTzEmlModalId(mailTemplate);
-				
-				//Left Width
+
+				// Left Width
 				String leftWidth = infoData.get("leftWidth") == null ? "0" : String.valueOf(infoData.get("leftWidth"));
-				if(StringUtils.isBlank(leftWidth)){
+				if (StringUtils.isBlank(leftWidth)) {
 					leftWidth = "0";
 				}
 				psTzApptplDyT.setTzLeftWidth(Integer.parseInt(leftWidth));
-				
-				//Right Width
-				String rightWidth = infoData.get("rightWidth") == null ? "0" : String.valueOf(infoData.get("rightWidth"));
-				if(StringUtils.isBlank(rightWidth)){
+
+				// Right Width
+				String rightWidth = infoData.get("rightWidth") == null ? "0"
+						: String.valueOf(infoData.get("rightWidth"));
+				if (StringUtils.isBlank(rightWidth)) {
 					rightWidth = "0";
 				}
 				psTzApptplDyT.setTzRightWidth(Integer.parseInt(rightWidth));
@@ -267,21 +286,22 @@ public class TemplateEngine {
 						String itemId = item.get("itemId") == null ? "" : String.valueOf(item.get("itemId"));
 
 						// 是否多行容器
-						String isDoubleLine = item.get("isDoubleLine") == null ? "" : String.valueOf(item.get("isDoubleLine"));
+						String isDoubleLine = item.get("isDoubleLine") == null ? ""
+								: String.valueOf(item.get("isDoubleLine"));
 
 						// 是否单行
-						String isSingleLine = item.get("isSingleLine") == null ? "" : String.valueOf(item.get("isSingleLine"));
+						String isSingleLine = item.get("isSingleLine") == null ? ""
+								: String.valueOf(item.get("isSingleLine"));
 
 						// 页码
 						String pno = item.get("pageno") == null ? "0" : String.valueOf(item.get("pageno"));
-						if(StringUtils.isBlank(pno)){
+						if (StringUtils.isBlank(pno)) {
 							pno = "0";
 						}
 						int pageno = Integer.parseInt(pno);
 
 						this.savePerXXX(item);
 						this.saveTemplateField(item);
-
 
 						/*------ 多行容器（通用多行容器、固定多行容器） Begin ------*/
 						if (StringUtils.equals("Y", isDoubleLine)) {
@@ -293,12 +313,14 @@ public class TemplateEngine {
 									psTzRqXxxPzT.setTzAppTplId(tid);
 									psTzRqXxxPzT.setTzDXxxBh(itemId);
 									// 信息项编号
-									String childItemid = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
+									String childItemid = children.get("itemId") == null ? ""
+											: String.valueOf(children.get("itemId"));
 									psTzRqXxxPzT.setTzXxxBh(childItemid);
 
 									// 排序
-									String orderby = children.get("orderby") == null ? "0" : String.valueOf(children.get("orderby"));
-									if(StringUtils.isBlank(orderby)){
+									String orderby = children.get("orderby") == null ? "0"
+											: String.valueOf(children.get("orderby"));
+									if (StringUtils.isBlank(orderby)) {
 										orderby = "0";
 									}
 									psTzRqXxxPzT.setTzOrder(Integer.parseInt(orderby));
@@ -309,15 +331,18 @@ public class TemplateEngine {
 										this.savePerXXX(children);
 									}
 
-									String childPno = children.get("pageno") == null ? "0" : String.valueOf(children.get("pageno"));
-									if(StringUtils.isBlank(childPno)){
+									String childPno = children.get("pageno") == null ? "0"
+											: String.valueOf(children.get("pageno"));
+									if (StringUtils.isBlank(childPno)) {
 										childPno = "0";
 									}
 									int childPageno = Integer.parseInt(childPno);
-									
-									String isSingle = children.get("isSingleLine") == null ? "" : String.valueOf(children.get("isSingleLine"));
+
+									String isSingle = children.get("isSingleLine") == null ? ""
+											: String.valueOf(children.get("isSingleLine"));
 									if (StringUtils.equals("Y", isSingle)) {
-										ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children.get("children");
+										ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children
+												.get("children");
 
 										for (Object obj : childs) {
 											Map<String, Object> child = (Map<String, Object>) obj;
@@ -329,16 +354,18 @@ public class TemplateEngine {
 											psTzRqXxxPzT_.setTzDXxxBh(childItemid);
 
 											// 信息项编号
-											String tzXxxBh = child.get("itemId") == null ? "" : String.valueOf(child.get("itemId"));
+											String tzXxxBh = child.get("itemId") == null ? ""
+													: String.valueOf(child.get("itemId"));
 											psTzRqXxxPzT_.setTzXxxBh(tzXxxBh);
 
 											// 排序
-											String order_ = child.get("orderby") == null ? "0" : String.valueOf(child.get("orderby"));
-											if(StringUtils.isBlank(order_)){
+											String order_ = child.get("orderby") == null ? "0"
+													: String.valueOf(child.get("orderby"));
+											if (StringUtils.isBlank(order_)) {
 												order_ = "0";
 											}
 											psTzRqXxxPzT_.setTzOrder(Integer.parseInt(order_));
-											
+
 											int count_ = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT_);
 											if (count_ > 0) {
 												child.put("pageno", childPageno);
@@ -353,7 +380,8 @@ public class TemplateEngine {
 
 						/*------ 单行组合控件 Begin ------*/
 						if (StringUtils.equals("Y", isSingleLine)) {
-							ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item.get("children");
+							ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item
+									.get("children");
 							int i = 0;
 							for (Object obj : childrens) {
 								Map<String, Object> children = (Map<String, Object>) obj;
@@ -365,7 +393,8 @@ public class TemplateEngine {
 								psTzRqXxxPzT.setTzDXxxBh(itemId);
 
 								// 信息项编号
-								String itemId_ = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
+								String itemId_ = children.get("itemId") == null ? ""
+										: String.valueOf(children.get("itemId"));
 								psTzRqXxxPzT.setTzXxxBh(itemId_);
 
 								// 排序
@@ -387,7 +416,9 @@ public class TemplateEngine {
 				/* 检查主副报名表的差异 */
 				if (StringUtils.isNotBlank(mainTplId)) {
 					diffMsg = "";
-					List<?> resultlist = sqlQuery.queryForList( tzSQLObject.getSQLText("SQL.TZApplicationTemplateBundle.TZ_CHECK_ZF_TPL_SQL"), new Object[] { mainTplId, tid });
+					List<?> resultlist = sqlQuery.queryForList(
+							tzSQLObject.getSQLText("SQL.TZApplicationTemplateBundle.TZ_CHECK_ZF_TPL_SQL"),
+							new Object[] { mainTplId, tid });
 					for (Object obj : resultlist) {
 						Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -428,156 +459,160 @@ public class TemplateEngine {
 
 		String parItemId = item.get("itemId") == null ? "" : String.valueOf(item.get("itemId"));
 		String parOrderby = item.get("orderby") == null ? "0" : String.valueOf(item.get("orderby"));
-		if(StringUtils.isBlank(parOrderby)){
+		if (StringUtils.isBlank(parOrderby)) {
 			parOrderby = "0";
 		}
-		
-		//模板编号
+
+		// 模板编号
 		psTzTempFieldT.setTzAppTplId(this.tid);
-		//信息编号
+		// 信息编号
 		psTzTempFieldT.setTzXxxBh(parItemId);
-		//容器信息项编号
+		// 容器信息项编号
 		psTzTempFieldT.setTzDXxxBh("");
-		//信息项编号
+		// 信息项编号
 		psTzTempFieldT.setTzXxxNo(parItemId);
-		//行号
+		// 行号
 		psTzTempFieldT.setTzLineNum(0);
-		//行内序号
+		// 行内序号
 		psTzTempFieldT.setTzLineOrder(0);
-		//排序序号
+		// 排序序号
 		psTzTempFieldT.setTzOrder(Integer.parseInt(parOrderby));
 		psTzTempFieldTMapper.insert(psTzTempFieldT);
-		
+
 		String isDoubleLine = item.get("isDoubleLine") == null ? "" : String.valueOf(item.get("isDoubleLine"));
 		String isSingleLine = item.get("isSingleLine") == null ? "" : String.valueOf(item.get("isSingleLine"));
 		String fixedContainer = item.get("fixedContainer") == null ? "" : String.valueOf(item.get("fixedContainer"));
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
 
-		//是否多行容器
-		if(StringUtils.equals("Y", isDoubleLine)){
+		// 是否多行容器
+		if (StringUtils.equals("Y", isDoubleLine)) {
 			Map<String, Object> childrens = (Map<String, Object>) item.get("children");
-			for (int i = 0; i < Integer.parseInt(maxLines); i++) {  
-				if(StringUtils.equals("Y", fixedContainer)){
-					//固定多行容器
+			for (int i = 0; i < Integer.parseInt(maxLines); i++) {
+				if (StringUtils.equals("Y", fixedContainer)) {
+					// 固定多行容器
 					for (String key : childrens.keySet()) {
 						Map<String, Object> children = (Map<String, Object>) childrens.get(key);
 						String itemId = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
-						
+
 						PsTzTempFieldT psTzTempFieldTFixed = new PsTzTempFieldT();
-						//模板编号
+						// 模板编号
 						psTzTempFieldTFixed.setTzAppTplId(this.tid);
-						//信息项编号
-						if(i == 0){
-							psTzTempFieldTFixed.setTzXxxBh(parItemId + itemId); 
-						}else{
-							psTzTempFieldTFixed.setTzXxxBh(parItemId + itemId + "_" + i); 
+						// 信息项编号
+						if (i == 0) {
+							psTzTempFieldTFixed.setTzXxxBh(parItemId + itemId);
+						} else {
+							psTzTempFieldTFixed.setTzXxxBh(parItemId + itemId + "_" + i);
 						}
-						//信息项编号
+						// 信息项编号
 						psTzTempFieldTFixed.setTzXxxNo(itemId);
-						//多行容器编号
+						// 多行容器编号
 						psTzTempFieldTFixed.setTzDXxxBh(parItemId);
-						//行号
+						// 行号
 						psTzTempFieldTFixed.setTzLineNum(i + 1);
-						//行内编号
-						if(children.containsKey("orderby")){
-							String orderby = children.get("orderby") == null ? "0" : String.valueOf(children.get("orderby"));
-							if(StringUtils.isBlank(orderby)){
+						// 行内编号
+						if (children.containsKey("orderby")) {
+							String orderby = children.get("orderby") == null ? "0"
+									: String.valueOf(children.get("orderby"));
+							if (StringUtils.isBlank(orderby)) {
 								orderby = "0";
 							}
 							psTzTempFieldTFixed.setTzLineOrder(Integer.parseInt(orderby));
 						}
-						//排序序号
+						// 排序序号
 						psTzTempFieldTFixed.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTFixed);
 					}
-				}else{
-					//通用多行容器
+				} else {
+					// 通用多行容器
 					int order = 1;
 					for (String key : childrens.keySet()) {
 						Map<String, Object> children = (Map<String, Object>) childrens.get(key);
 						String itemId = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
-						String isSingle = children.get("isSingleLine") == null ? "" : String.valueOf(children.get("isSingleLine"));
-						
+						String isSingle = children.get("isSingleLine") == null ? ""
+								: String.valueOf(children.get("isSingleLine"));
+
 						PsTzTempFieldT psTzTempFieldTTY = new PsTzTempFieldT();
-						//模板编号
+						// 模板编号
 						psTzTempFieldTTY.setTzAppTplId(this.tid);
-						//信息项编号
-						if(i == 0){
+						// 信息项编号
+						if (i == 0) {
 							psTzTempFieldTTY.setTzXxxBh(parItemId + itemId);
-						}else{
+						} else {
 							psTzTempFieldTTY.setTzXxxBh(parItemId + itemId + "_" + i);
 						}
-						//信息项编号
+						// 信息项编号
 						psTzTempFieldTTY.setTzXxxNo(itemId);
-						//多行容器编号
+						// 多行容器编号
 						psTzTempFieldTTY.setTzDXxxBh(parItemId);
-						//行号
+						// 行号
 						psTzTempFieldTTY.setTzLineNum(i + 1);
-						//行内编号
+						// 行内编号
 						psTzTempFieldTTY.setTzLineOrder(order);
-						//排序序号
+						// 排序序号
 						psTzTempFieldTTY.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTTY);
-						
-						order ++;
-						if(StringUtils.equals("Y", isSingle)){
-							ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children.get("children");
+
+						order++;
+						if (StringUtils.equals("Y", isSingle)) {
+							ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children
+									.get("children");
 
 							for (Object obj : childs) {
 								Map<String, Object> child = (Map<String, Object>) obj;
-								String childItemId = child.get("itemId") == null ? "" : String.valueOf(child.get("itemId"));
+								String childItemId = child.get("itemId") == null ? ""
+										: String.valueOf(child.get("itemId"));
 								PsTzTempFieldT psTzTempFieldTSingle = new PsTzTempFieldT();
-								//模板编号
+								// 模板编号
 								psTzTempFieldTSingle.setTzAppTplId(this.tid);
-								//信息项编号
-								if(i == 0){
+								// 信息项编号
+								if (i == 0) {
 									psTzTempFieldTSingle.setTzXxxBh(parItemId + itemId + childItemId);
-								}else{
+								} else {
 									psTzTempFieldTSingle.setTzXxxBh(parItemId + itemId + childItemId + "_" + i);
 								}
-								//信息项编号
+								// 信息项编号
 								psTzTempFieldTSingle.setTzXxxNo(childItemId);
-								//多行容器编号
+								// 多行容器编号
 								psTzTempFieldTSingle.setTzDXxxBh(parItemId);
-								//行号
+								// 行号
 								psTzTempFieldTSingle.setTzLineNum(i + 1);
-								//行内编号
+								// 行内编号
 								psTzTempFieldTSingle.setTzLineOrder(order);
-								//排序序号
+								// 排序序号
 								psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
-								
+
 								psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
-								order ++;
+								order++;
 							}
 						}
 					}
 				}
-			} 
+			}
 		}
-		
-		//是否组合控件
-		if(StringUtils.equals("Y", isSingleLine)){
+
+		// 是否组合控件
+		if (StringUtils.equals("Y", isSingleLine)) {
 			ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item.get("children");
 			int i = 0;
 			for (Object obj : childrens) {
 				Map<String, Object> children = (Map<String, Object>) obj;
 				PsTzTempFieldT psTzTempFieldTSingle = new PsTzTempFieldT();
 				String itemId = children.get("itemId") == null ? "" : String.valueOf(children.get("itemId"));
-				//模板编号
+				// 模板编号
 				psTzTempFieldTSingle.setTzAppTplId(this.tid);
-				//信息项编号
+				// 信息项编号
 				psTzTempFieldTSingle.setTzXxxBh(parItemId + itemId);
-				//信息项编号
+				// 信息项编号
 				psTzTempFieldTSingle.setTzXxxNo(itemId);
-				//多行容器编号
+				// 多行容器编号
 				psTzTempFieldTSingle.setTzDXxxBh(parItemId);
-				//行号
+				// 行号
 				psTzTempFieldTSingle.setTzLineNum(0);
-				//行内编号
+				// 行内编号
 				psTzTempFieldTSingle.setTzLineOrder(i + 1);
-				//排序序号
+				// 排序序号
 				psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
-				
+
 				psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
 				i++;
 			}
@@ -600,7 +635,7 @@ public class TemplateEngine {
 
 		// 信息项文字说明
 		String itemName = item.get("itemName") == null ? "" : String.valueOf(item.get("itemName"));
-		if(itemName.length() > 60){
+		if (itemName.length() > 60) {
 			System.out.println(itemName);
 		}
 		psTzAppXxxPz.setTzXxxMc(itemName);
@@ -611,7 +646,7 @@ public class TemplateEngine {
 
 		// 排序序号
 		String orderby = item.get("orderby") == null ? "0" : String.valueOf(item.get("orderby"));
-		if(StringUtils.isBlank(orderby)){
+		if (StringUtils.isBlank(orderby)) {
 			orderby = "0";
 		}
 		psTzAppXxxPz.setTzOrder(Integer.parseInt(orderby));
@@ -670,14 +705,14 @@ public class TemplateEngine {
 
 		// 多选最少选择个数
 		String minSelect = item.get("minSelect") == null ? "0" : String.valueOf(item.get("minSelect"));
-		if("".equals(minSelect)){
+		if ("".equals(minSelect)) {
 			minSelect = "0";
 		}
 		psTzAppXxxPz.setTzXxxZsxzgs(Integer.parseInt(minSelect));
 
 		// 多选最多选择个数
 		String maxSelect = item.get("maxSelect") == null ? "0" : String.valueOf(item.get("maxSelect"));
-		if("".equals(maxSelect)){
+		if ("".equals(maxSelect)) {
 			maxSelect = "0";
 		}
 		psTzAppXxxPz.setTzXxxZdxzgs(Integer.parseInt(maxSelect));
@@ -688,7 +723,7 @@ public class TemplateEngine {
 
 		// 允许上传大小
 		String yxscdx = item.get("yxscdx") == null ? "0" : String.valueOf(item.get("yxscdx"));
-		if("".equals(yxscdx)){
+		if ("".equals(yxscdx)) {
 			yxscdx = "0";
 		}
 		psTzAppXxxPz.setTzXxxYxscdx(Integer.parseInt(yxscdx));
@@ -718,16 +753,16 @@ public class TemplateEngine {
 		psTzAppXxxPz.setTzXxxCharBz(isCheckStrLen);
 
 		// 最小长度
-		String minLen = item.get("minLen") == null ? "0" :  String.valueOf(item.get("minLen"));
-		
-		if("".equals(minLen)){
+		String minLen = item.get("minLen") == null ? "0" : String.valueOf(item.get("minLen"));
+
+		if ("".equals(minLen)) {
 			minLen = "0";
 		}
 		psTzAppXxxPz.setTzXxxMinlen(Integer.parseInt(minLen));
 
 		// 最大长度
 		String maxLen = item.get("maxLen") == null ? "0" : String.valueOf(item.get("maxLen"));
-		if("".equals(maxLen)){
+		if ("".equals(maxLen)) {
 			maxLen = "0";
 		}
 		psTzAppXxxPz.setTzXxxMaxlen(Integer.parseInt(maxLen));
@@ -738,21 +773,21 @@ public class TemplateEngine {
 
 		// 最小值
 		String min = item.get("min") == null ? "0" : String.valueOf(item.get("min"));
-		if("".equals(min)){
+		if ("".equals(min)) {
 			min = "0";
 		}
 		psTzAppXxxPz.setTzXxxMin(Long.parseLong(min));
 
 		// 最大值
 		String max = item.get("max") == null ? "0" : String.valueOf(item.get("max"));
-		if("".equals(max)){
+		if ("".equals(max)) {
 			max = "0";
 		}
 		psTzAppXxxPz.setTzXxxMax(Long.parseLong(max));
 
 		// 小数位数
 		String digits = item.get("digits") == null ? "0" : String.valueOf(item.get("digits"));
-		if("".equals(digits)){
+		if ("".equals(digits)) {
 			digits = "0";
 		}
 		psTzAppXxxPz.setTzXxxXsws(Integer.parseInt(digits));
@@ -767,14 +802,14 @@ public class TemplateEngine {
 
 		// 最小行记录数
 		String minLines = item.get("minLines") == null ? "0" : String.valueOf(item.get("minLines"));
-		if("".equals(minLines)){
+		if ("".equals(minLines)) {
 			minLines = "0";
 		}
 		psTzAppXxxPz.setTzXxxMinLine(Integer.parseInt(minLines));
 
 		// 最大行记录数
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
-		if("".equals(maxLines)){
+		if ("".equals(maxLines)) {
 			maxLines = "0";
 		}
 		psTzAppXxxPz.setTzXxxMaxLine(Integer.parseInt(maxLines));
@@ -787,21 +822,23 @@ public class TemplateEngine {
 		String isDownLoad = item.get("isDownLoad") == null ? "" : String.valueOf(item.get("isDownLoad"));
 		psTzAppXxxPz.setTzIsDownload(isDownLoad);
 
-		//TAB页签样式
+		// TAB页签样式
 		String tapStyle = item.get("tapStyle") == null ? "" : String.valueOf(item.get("tapStyle"));
 		psTzAppXxxPz.setTzTapstyle(tapStyle);
 
-		//推荐信是否禁止提交
+		// 推荐信是否禁止提交
 		String toCheck = item.get("toCheck") == null ? "" : String.valueOf(item.get("toCheck"));
 		psTzAppXxxPz.setTzTjxSub(toCheck);
 
-		//推荐信是否需要校验
-//		String toCheckRefApp = item.get("toCheckRefApp") == null ? "" : String.valueOf(item.get("toCheckRefApp"));
-//		psTzAppXxxPz.setTzRefCheck(toCheckRefApp);
+		// 推荐信是否需要校验
+		// String toCheckRefApp = item.get("toCheckRefApp") == null ? "" :
+		// String.valueOf(item.get("toCheckRefApp"));
+		// psTzAppXxxPz.setTzRefCheck(toCheckRefApp);
 
-		//推荐信是否校验校验Appclass
-//		String checkRefApp = item.get("checkRefApp") == null ? "" : String.valueOf(item.get("checkRefApp"));
-//		psTzAppXxxPz.setTzRefCheckApp(checkRefApp);
+		// 推荐信是否校验校验Appclass
+		// String checkRefApp = item.get("checkRefApp") == null ? "" :
+		// String.valueOf(item.get("checkRefApp"));
+		// psTzAppXxxPz.setTzRefCheckApp(checkRefApp);
 
 		// 是否显示在报名表审核
 		String isShow = item.get("isShow") == null ? "" : String.valueOf(item.get("isShow"));
@@ -811,9 +848,10 @@ public class TemplateEngine {
 		String isOnlineShow = item.get("isOnlineShow") == null ? "" : String.valueOf(item.get("isOnlineShow"));
 		psTzAppXxxPz.setTzIsOnlineshow(isOnlineShow);
 
-		 //是否只读
-//		String isReadOnly = item.get("isReadOnly") == null ? "" : String.valueOf(item.get("isReadOnly"));
-//		psTzAppXxxPz.setReadonly(isReadOnly);
+		// 是否只读
+		// String isReadOnly = item.get("isReadOnly") == null ? "" :
+		// String.valueOf(item.get("isReadOnly"));
+		// psTzAppXxxPz.setReadonly(isReadOnly);
 
 		/*------- 是否Option Begin -------*/
 		if (item.containsKey("option")) {
@@ -821,15 +859,15 @@ public class TemplateEngine {
 			Map<String, Object> options = (Map<String, Object>) item.get("option");
 			for (String keyi : options.keySet()) {
 				Map<String, Object> option = (Map<String, Object>) options.get(keyi);
-				
+
 				String code = option.get("code") == null ? "" : String.valueOf(option.get("code"));
-				
+
 				String sqlOpt = "SELECT 'Y' FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
-				String isSameOpt = sqlQuery.queryForObject(sqlOpt, new Object[] { this.tid, itemId,code }, "String");
+				String isSameOpt = sqlQuery.queryForObject(sqlOpt, new Object[] { this.tid, itemId, code }, "String");
 				if (StringUtils.equals("Y", isSameOpt)) {
 					continue;
 				}
-				
+
 				PsTzAppXxxKxzT psTzAppXxxKxzT = new PsTzAppXxxKxzT();
 				// 报名表模板编号
 				psTzAppXxxKxzT.setTzAppTplId(this.tid);
@@ -912,7 +950,7 @@ public class TemplateEngine {
 
 				// 同步顺序
 				String syncOrder = syncRule.get("syncOrder") == null ? "0" : String.valueOf(syncRule.get("syncOrder"));
-				if(StringUtils.isBlank(syncOrder)){
+				if (StringUtils.isBlank(syncOrder)) {
 					syncOrder = "0";
 				}
 				psTzAppXxSyncT.setTzSyncOrder(Integer.parseInt(syncOrder));
@@ -970,8 +1008,11 @@ public class TemplateEngine {
 
 		String sql = "SELECT TZ_APP_TPL_MC FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		String tplName = sqlQuery.queryForObject(sql, new Object[] { tplId }, "String");
+
+		////logger.info("tplName=" + tplName);
 		// 1、读取控件注册信息，显示报名表模板编辑页面左侧工具条;
 		String componentData = this.getComponentData(tplId);
+		//logger.info("componentData=" + componentData);
 
 		/*
 		 * 2、读取报名表模板配置信息，若有配置信息，则根据控件的JS类路径加载JS文件（存在则不再重复加载），把控件类存储到类管理器中，
@@ -1000,12 +1041,14 @@ public class TemplateEngine {
 
 		String contextUrl = request.getContextPath();
 		String tzGeneralURL = contextUrl + "/dispatcher";
-
+		////logger.info("tzGeneralURL=" + tzGeneralURL);
 		String sqlLang = "SELECT TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		String language = sqlQuery.queryForObject(sqlLang, new Object[] { tplId }, "String");
-
+		////logger.info("language=" + language);
 		String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",
 				language);
+		
+		////logger.info("msgSet=" + msgSet);
 		jacksonUtil.json2Map(msgSet);
 		if (jacksonUtil.containsKey(language)) {
 			Map<String, Object> msgLang = jacksonUtil.getMap(language);
@@ -1015,10 +1058,12 @@ public class TemplateEngine {
 		String tplHtml = "";
 		componentData = componentData.replace("\\", "\\\\");
 		componentData = componentData.replace("$", "\\$");
-//		componentData = componentData.replaceAll("\\$", "~");
+		// componentData = componentData.replaceAll("\\$", "~");
 		try {
-			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML", request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
-//			tplHtml = tplHtml.replaceAll("\\~", "\\$");
+			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML",
+					request.getContextPath(), tplName, tplId, componentData, tzGeneralURL, msgSet, contextUrl);
+			//logger.info("tplHtml=" + tplHtml);
+			// tplHtml = tplHtml.replaceAll("\\~", "\\$");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			tplHtml = "";

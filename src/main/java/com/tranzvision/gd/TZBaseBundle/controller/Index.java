@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,8 @@ public class Index {
 	private TzCookie tzCookie;
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
+	
+	Logger logger = Logger.getLogger(this.getClass());
 
 	@RequestMapping(value = "index")
 	public String index(HttpServletRequest request, HttpServletResponse response) {
@@ -166,7 +169,7 @@ public class Index {
 		 * errMsg[0] + "====>" + errMsg[1];
 		 */
 		
-		System.out.println("dispatcher---");
+		logger.info("dispatcher---");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
@@ -223,7 +226,7 @@ public class Index {
 			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
 		
-		System.out.println("strParams:"+strParams);
+		logger.info("strParams:"+strParams);
 
 		// 操作类型;
 		String strOprType = "";
@@ -354,6 +357,7 @@ public class Index {
 						sCommParams = "{}";
 					}
 				}
+				logger.info("sCommParams:"+sCommParams);
 				gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
 				strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
 						sCommParams, errMsgArr);
@@ -403,7 +407,7 @@ public class Index {
 					+ ",\"authorizedInfo\": {" + authorizedInfomation + "}}}";
 		}
 		
-		System.out.println("strRetContent:"+strRetContent);
+		logger.info("strRetContent:"+strRetContent);
 		return strRetContent;
 	}
 

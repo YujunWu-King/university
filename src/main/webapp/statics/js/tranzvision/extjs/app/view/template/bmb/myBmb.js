@@ -103,6 +103,11 @@ Ext.define('KitchenSink.view.template.bmb.myBmb', {
                             iconCls: 'print',
                             tooltip: '打印设置',
                             handler: 'onBmbPrintSet'
+                        },
+                        {
+                            iconCls: 'print',
+                            tooltip: 'PDF打印模板设置',
+                            handler: 'onPdfPrintSet'
                         }
                     ]
                 }],

@@ -189,6 +189,8 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapTplDef.put("lang", language);
 					mapTplDef.put("tplUse", "REG");
 					mapTplDef.put("tplUseType", "BMB");
+					// add by caoy @2016-6-13
+					mapTplDef.put("tpPdfType", "HPDF");
 					mapTplDef.put("labelPostion", "UP");
 					mapTplDef.put("showType", "POP");
 					mapTplDef.put("printTplName", "");
@@ -209,6 +211,8 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					psTzApptplDyT.setTzAppTplMs(name);
 					psTzApptplDyT.setTzAppTplYt("REG");
 					psTzApptplDyT.setTzUseType("BMB");
+					// add by caoy @2016-6-13
+					psTzApptplDyT.setTzPdfType("HPDF");
 					psTzApptplDyT.setTzAppLabelWz("UP");
 					psTzApptplDyT.setTzAppTsxxFs("POP");
 					psTzApptplDyT.setTzAppTplLan(language);

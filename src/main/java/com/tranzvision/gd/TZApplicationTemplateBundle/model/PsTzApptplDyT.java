@@ -14,8 +14,22 @@ public class PsTzApptplDyT {
     private String tzAppTplYt;
 
     private String tzUseType;
+    
+    /**
+     * add by caoy 2016-6-13
+     */
+    private String tzPdfType;
 
-    private String tzAppLabelWz;
+
+	public String getTzPdfType() {
+		return tzPdfType;
+	}
+
+	public void setTzPdfType(String tzPdfType) {
+		this.tzPdfType = tzPdfType;
+	}
+
+	private String tzAppLabelWz;
 
     private String tzAppTsxxFs;
 
