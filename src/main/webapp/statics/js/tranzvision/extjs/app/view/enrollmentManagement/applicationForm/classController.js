@@ -763,6 +763,72 @@
     onComRegClose: function(btn){
         //关闭窗口
         this.getView().close();
+    },
+    /*查看邮件发送历史*/
+    viewMailHistory: function(btn){
+        var grid=btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+            return;
+        }else if(checkLen >1){
+            Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.znxzytjl","只能选择一条记录"));
+            return;
+        }
+        var appInsID = selList[0].get("appInsID");
+
+        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzGetEmail","comParams":{"appInsID":"'+appInsID+'"}}';
+
+        Ext.tzLoad(tzParams,function(respData){
+            if(respData.email!=undefined){
+            Ext.tzSearchMailHistory(respData.email);
+            }else{
+                Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nxzdrymytjzyyx","您选中的人员没有添加邮箱"));
+                return;
+            }
+        });
+    },
+	/*给选中人发送邮件*/
+    sendEmlSelPers:function(btn) {
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if (checkLen == 0) {
+            Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt", "提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing", "您没有选中任何记录"));
+            return;
+        }
+
+        var personList = [];
+        for (var i = 0; i < checkLen; i++) {
+            var oprID = selList[i].get('oprID');
+            var appInsID = selList[i].get('appInsID');
+            personList.push({"oprID": oprID, "appInsID": appInsID});
+        };
+        var params = {
+            "ComID": "TZ_BMGL_BMBSH_COM",
+            "PageID": "TZ_BMGL_YJDX_STD",
+            "OperateType": "U",
+            "comParams": {"add": [
+                {"type": 'MULTI', "personList": personList}
+            ]}
+        };
+        Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+            Ext.tzSendEmail({
+                //发送的邮件模板;
+                "EmailTmpName": ["TZ_EML_N_001"],
+                //创建的需要发送的听众ID;
+                "audienceId": responseData,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N"
+            });
+        });
     }
 });
 

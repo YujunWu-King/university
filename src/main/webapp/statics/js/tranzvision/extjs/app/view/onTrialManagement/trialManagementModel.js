@@ -10,6 +10,7 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagementModel', {
         {name: 'submitTime'},
         {name: 'shRst'},
         {name: 'startTime'},
-        {name: 'endTime'}
+        {name: 'endTime'},
+        {name: 'hmsr'}
 	]
 });

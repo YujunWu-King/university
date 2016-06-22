@@ -24,13 +24,17 @@ public class TzGdBmgDcExcelClass {
 			
 			processinstance = 0;
 		}
-		
-		try {
 
+		try {
+			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+						new Object[] { "7", processinstance });
+			jdbcTemplate.execute("commit");
+			
 			String expDirPath = "", absexpDirPath = "";
 			String sql = "SELECT TZ_AUD_LIST ,RUN_CNTL_ID ,TZ_APP_TPL_ID ,TZ_EXPORT_TMP_ID ,TZ_EXCEL_NAME,TZ_REL_URL,TZ_JD_URL FROM PS_TZ_BMB_DCE_T WHERE RUN_CNTL_ID= ?";
 			Map<String, Object> map = null;
 			try {
+				
 				map = jdbcTemplate.queryForMap(sql, new Object[] { runCntlId });
 			} catch (Exception e) {
 				map = null;
@@ -98,6 +102,7 @@ public class TzGdBmgDcExcelClass {
 					appFormInfoView = "";
 				}
 
+				
 				for (int i = 0; i < row_count; i++) {
 					colum = 0;
 					Map<String, Object> mapData = new HashMap<String, Object>();
@@ -105,14 +110,24 @@ public class TzGdBmgDcExcelClass {
 
 					/* 根据模板配置取出每个报名表的数据 */
 					for (int j = 0; j < arrExcelTplField.size(); j++) {
-						
-						String sqlAppFormField = "SELECT A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,B.TZ_XXX_CCLX,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A ,PS_TZ_FORM_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND B.TZ_XXX_BH =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
+						//String sqlAppFormField = "SELECT A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,B.TZ_XXX_CCLX,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A ,PS_TZ_FORM_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND B.TZ_XXX_BH =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
+						String sqlAppFormField = "SELECT A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,B.TZ_XXX_CCLX,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND B.TZ_XXX_BH =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
 						List<Map<String, Object>> appFormFieldList = null;
 						try {
-							appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,
-									new Object[] { appFormModalID, excelTpl, arrExcelTplField.get(j)[0] });
+							appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,new Object[] { appFormModalID, excelTpl, arrExcelTplField.get(j)[0] });
 						} catch (Exception e) {
 							appFormFieldList = null;
+						}
+						
+						//不是报名表字段看看是不是工作表中的字段;
+						if(appFormFieldList == null || appFormFieldList.size() == 0){
+							sqlAppFormField = "select A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,'R' AS TZ_XXX_CCLX,'' AS TZ_COM_LMC,'' AS TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A,PS_TZ_FORM_DC_VW B  where B.FILED1 =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
+							try {
+								appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,new Object[] { excelTpl, arrExcelTplField.get(j)[0] });
+							} catch (Exception e) {
+								appFormFieldList = null;
+							}
+						
 						}
 
 						String strAppFormField = "", strCodeTable = "", strSaveType = "", strComClassName = "",
@@ -123,6 +138,7 @@ public class TzGdBmgDcExcelClass {
 						String strAppFormFieldValues = "";
 						if (appFormFieldList != null && list.size() > 0) {
 							for (int k = 0; k < appFormFieldList.size(); k++) {
+								
 								strAppFormField = (String) appFormFieldList.get(k).get("TZ_FORM_FLD_ID");
 								strCodeTable = (String) appFormFieldList.get(k).get("TZ_CODE_TABLE_ID");
 								strSaveType = (String) appFormFieldList.get(k).get("TZ_XXX_CCLX");
@@ -253,6 +269,7 @@ public class TzGdBmgDcExcelClass {
 									}
 								} else {
 									if (isRecordValue) {
+										
 										if (appFormInfoView != null && !"".equals(appFormInfoView)) {
 											String sql3 = "SELECT " + strAppFormField + " FROM " + appFormInfoView
 													+ " WHERE TZ_APP_INS_ID=?";
@@ -318,7 +335,6 @@ public class TzGdBmgDcExcelClass {
 										strAppFormFieldValues = strAppFormFieldValues + "," + strAppFormFieldValue;
 									}
 								}
-
 							}
 
 						}
@@ -329,10 +345,8 @@ public class TzGdBmgDcExcelClass {
 
 					}
 					dataList.add(mapData);
-					
 				}
-				// dealWithExcel.crExcel(arr_data, i + 1, i + 1, row_count +
-				// 1, wwb);
+
 				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
 				if (rst) {
 					String urlExcel = excelHandle.getExportExcelPath();
@@ -381,6 +395,7 @@ public class TzGdBmgDcExcelClass {
 			}
 		} catch (Exception e) {
 			try {
+				e.printStackTrace();
 				jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
 						new Object[] { "10", processinstance });
 			} catch (Exception e1) {

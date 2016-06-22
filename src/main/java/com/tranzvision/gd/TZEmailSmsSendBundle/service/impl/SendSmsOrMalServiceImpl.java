@@ -660,6 +660,8 @@ public class SendSmsOrMalServiceImpl {
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							successNum = successNum + 1;
 						} else {
+							String logEmailSendFalseMsg = mailer.getErrorInfo();
+							this.writeTaskLog(strTaskId, strRwSlId, "D", logEmailSendFalseMsg);
 							// 发送失败写邮件发送历史表，附件历史表
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
 									prcsinstanceId);

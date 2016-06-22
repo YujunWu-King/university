@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +29,6 @@ import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -156,9 +156,9 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				
 				
 				/*生成运行控制ID*/
-				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
+				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			    String s_dt = dateFormate.format(new Date());
-				String runCntlId = oprid + "_" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
+				String runCntlId = "BMBXLS" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
 				
 				PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
 				psTzBmbDceT.setRunCntlId(runCntlId);
@@ -199,7 +199,7 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psprcsrqst.setRunId(runCntlId);
 				psprcsrqst.setOprid(oprid);
 				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("7");
+				psprcsrqst.setRunstatus("5");
 				psprcsrqstMapper.insert(psprcsrqst);
 				
 				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
@@ -283,8 +283,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 			}
 			*/
 			int colum = 0;
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String downloadPath = getSysHardCodeVal.getDownloadPath();
+			//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			//String downloadPath = getSysHardCodeVal.getDownloadPath();
 			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 			List<String[]> dataCellKeys = new ArrayList<String[]>();
 			dataCellKeys.add(new String[] { "id"+ colum, "序号" });
@@ -537,5 +537,40 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 		int day = cal.get(5);
 		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
+	
+	
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+ 		String strReturn = "{}";
+		if(actData == null || actData.length == 0 ){
+			return strReturn;
+		}
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		for(int i = 0; i<actData.length; i++){
+			String strComInfo = actData [i];
+			jacksonUtil.json2Map(strComInfo);
+			String AEId = jacksonUtil.getString("processInstance");
+			if(AEId != null && !"".equals(AEId)){
+				int processinstance = Integer.parseInt(AEId);
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(processinstance);
+				if(psTzExcelDattT != null){
+					String lj = psTzExcelDattT.getTzFwqFwlj();
+					if(lj != null && !"".equals(lj)){
+						lj = request.getServletContext().getRealPath(lj);
 
+						File file = new File(lj);
+						if(file.exists() && file.isFile()){
+							file.delete();
+						}
+					}
+				}
+				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);
+				psTzExcelDattTMapper.deleteByPrimaryKey(processinstance);
+				psprcsrqstMapper.deleteByPrimaryKey(processinstance);
+				
+			}
+		}
+		return strReturn;
+	}
+	
 }

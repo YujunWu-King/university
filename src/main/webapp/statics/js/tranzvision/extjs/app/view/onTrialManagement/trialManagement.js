@@ -72,12 +72,17 @@ Ext.define('KitchenSink.view.onTrialManagement.trialManagement', {
                 text: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_MNG_STD.contactEmail","联系人邮箱"),
                 sortable: true,
                 dataIndex: 'contactEmail',
-                width: 180
+                width: 200
             },{
                 text: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_MNG_STD.orgName","机构名称"),
                 sortable: true,
                 dataIndex: 'orgName',
-                width: 180
+                width: 170
+            },{
+                text: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_MNG_STD.hmsr","来源"),
+                sortable: true,
+                dataIndex: 'hmsr',
+                width: 120
             },{
                 text: Ext.tzGetResourse("TZ_TRIAL_MNG_COM.TZ_TRIAL_MNG_STD.submitTime","申请提交时间"),
                 sortable: true,

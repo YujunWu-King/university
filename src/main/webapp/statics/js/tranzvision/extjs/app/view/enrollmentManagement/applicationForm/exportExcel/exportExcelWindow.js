@@ -194,13 +194,15 @@
                                 dockedItems: [{
                                     xtype: "toolbar",
                                     items: [
-                                        {text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.query", "查询"), iconCls: "query",handler:"queryExcel"}
+                                        {text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.query", "查询"), iconCls: "query",handler:"queryExcel"},'-',
+                                        {text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_EXP_EXCEL_STD.delete","删除"),  iconCls: "remove",handler:"excelDelete"}
                                     ]
                                 },{
                                     xtype:"toolbar",
                                     dock:"bottom",
                                     ui:"footer",
                                     items:['->',
+                                        {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_EXP_EXCEL_STD.save","保存"),iconCls:"save",handler:'exportExcelSave'},
                                         {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close", "关闭"),iconCls:"close",handler:'exportExcelWindowClose'}]
                                 }],
                                 selModel: {

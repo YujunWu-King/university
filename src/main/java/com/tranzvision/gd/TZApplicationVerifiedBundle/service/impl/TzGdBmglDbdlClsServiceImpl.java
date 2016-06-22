@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -22,10 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportClsServiceImpl;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzBmbDceTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzBmbDceT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
@@ -37,7 +37,6 @@ import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
-import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
@@ -54,6 +53,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
 	@Autowired
+	private PsTzBmbDceTMapper psTzBmbDceTMapper;
+	@Autowired
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private HttpServletRequest request;
@@ -62,11 +63,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private SqlQuery jdbcTemplate;
-	@Autowired
 	private PsprcsrqstMapper psprcsrqstMapper;
-	@Autowired
-	private AppFormExportClsServiceImpl appFormExportClsServiceImpl;
 	@Autowired
 	private TZGDObject tZGDObject;
 	
@@ -124,20 +121,6 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 		int processInstance = 0;
 		String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
-			/*
-			BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_DBDL_PROC_01");
-			//指定调度作业的相关参数
-			EngineParameters schdProcessParameters = new EngineParameters();
-
-			schdProcessParameters.setBatchServer("TZGDDEV01");
-			schdProcessParameters.setCycleExpression("");
-			schdProcessParameters.setLoginUserAccount("Admin");
-			schdProcessParameters.setPlanExcuteDateTime(new Date());
-			schdProcessParameters.setRunControlId("TZGD-TEST-20151228");
-			
-			//调度作业
-			tmpEngine.schedule(schdProcessParameters);
-			 */
 			
 			for (int num = 0; num < actData.length; num++) {
 				
@@ -146,17 +129,50 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 
 				// 保存数据;
-				String comParams = jacksonUtil.getString("strAppId");
+				String strAppInsIdList = jacksonUtil.getString("strAppId");
 
 				// 打包文件名称;
 				String fileName = jacksonUtil.getString("zldbName");
 				
 				// strComContent = fileName;
-				if (comParams != null && !"".equals(comParams)) {
-					if (comParams.lastIndexOf(";") + 1 == comParams.length()) {
-						comParams = comParams.substring(0, comParams.length() - 1);
+				if (strAppInsIdList != null && !"".equals(strAppInsIdList)) {
+					if (strAppInsIdList.lastIndexOf(";") + 1 == strAppInsIdList.length()) {
+						strAppInsIdList = strAppInsIdList.substring(0, strAppInsIdList.length() - 1);
 					}
-					String[] arrAppId = comParams.split(";");
+					
+					// 生产打包文件附件存放的路径;
+					SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
+					String s_dt = dateFormate.format(new Date());
+					int XUHAO = getSeqNum.getSeqNum("TZ_ZLDB_AE", "TZ_PACKAGE_ID");
+					String ID = "000000000" + String.valueOf(XUHAO);
+					ID = ID.substring(ID.length() - 9, ID.length());
+					ID = currentOprid+"_"+s_dt+"_"+ ID;
+
+					String fjlj = "";
+					//String packDir = "";
+					//String websiteDir = getSysHardCodeVal.getWebsiteFileUploadPath();
+					String websiteDir = getSysHardCodeVal.getBmbPackRarDir();
+					if (websiteDir.lastIndexOf("/") + 1 == websiteDir.length()) {
+						fjlj = websiteDir + ID;
+						//packDir = websiteDir;
+					} else {
+						fjlj = websiteDir + "/" + ID;
+						//packDir = websiteDir + "/";
+					}
+
+					/*生成运行控制ID*/
+					SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+				    String s_dtm = datetimeFormate.format(new Date());
+					String runCntlId = "BMBCLDB" + s_dtm + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
+					
+					PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
+					psTzBmbDceT.setRunCntlId(runCntlId);
+					psTzBmbDceT.setTzAudList(strAppInsIdList);
+					psTzBmbDceT.setTzJdUrl(request.getServletContext().getRealPath(fjlj));
+					psTzBmbDceT.setTzRelUrl(fjlj);
+					psTzBmbDceTMapper.insert(psTzBmbDceT);
+					
+					String[] appids = strAppInsIdList.split(";");
 
 					processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
 					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
@@ -167,30 +183,12 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					psTzExcelDrxxT.setTzDrTaskDesc(fileName);
 
 					psTzExcelDrxxT.setTzStartDtt(new Date());
-					psTzExcelDrxxT.setTzDrTotalNum(arrAppId.length);
+					psTzExcelDrxxT.setTzDrTotalNum(appids.length);
 					psTzExcelDrxxT.setOprid(currentOprid);
 					psTzExcelDrxxT.setTzIsViewAtt("Y");
 					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
 
-					// 生产打包文件附件存放的路径;
-					SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMdd");
-					String s_dt = dateFormate.format(new Date());
-					int XUHAO = getSeqNum.getSeqNum("TZ_ZLDB_AE", "TZ_PACKAGE_ID");
-					String ID = "000000000" + String.valueOf(XUHAO);
-					ID = ID.substring(ID.length() - 9, ID.length());
-					ID = currentOprid+"_"+s_dt+"_"+ ID;
-
-					String fjlj = "";
-					String packDir = "";
-					//String websiteDir = getSysHardCodeVal.getWebsiteFileUploadPath();
-					String websiteDir = getSysHardCodeVal.getBmbPackRarDir();
-					if (websiteDir.lastIndexOf("/") + 1 == websiteDir.length()) {
-						fjlj = websiteDir + ID;
-						packDir = websiteDir;
-					} else {
-						fjlj = websiteDir + "/" + ID;
-						packDir = websiteDir + "/";
-					}
+					
 
 					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
 					psTzExcelDattT.setProcessinstance(processInstance);
@@ -203,14 +201,15 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					
 					Psprcsrqst psprcsrqst = new Psprcsrqst();
 					psprcsrqst.setPrcsinstance(processInstance);
+					psprcsrqst.setRunId(runCntlId);
 					psprcsrqst.setOprid(currentOprid);
 					psprcsrqst.setRundttm(new Date());
-					psprcsrqst.setRunstatus("7");
+					psprcsrqst.setRunstatus("5");
 					psprcsrqstMapper.insert(psprcsrqst);
 
-					String[] appids = comParams.split(";");
+					/*
 					for (int i = 0; i < appids.length; i++) {
-						// 生产报名表xml文件;
+						// 生产报名表pdf文件;
 						String appInsID = appids[i];
 						String OPRID = jdbcTemplate.queryForObject(
 								"SELECT OPRID FROM PS_TZ_FORM_WRK_T A WHERE A.TZ_APP_INS_ID = ?",
@@ -362,6 +361,20 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						psTzExcelDattT2.setTzSysfileName( ID + ".rar");
 						psTzExcelDattTMapper.updateByPrimaryKey(psTzExcelDattT2);
 					}
+					*/
+					
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_DBDL_PROC_01");
+					//指定调度作业的相关参数
+					EngineParameters schdProcessParameters = new EngineParameters();
+
+					schdProcessParameters.setBatchServer("");
+					schdProcessParameters.setCycleExpression("");
+					schdProcessParameters.setLoginUserAccount("Admin");
+					schdProcessParameters.setPlanExcuteDateTime(new Date());
+					schdProcessParameters.setRunControlId(runCntlId);
+					
+					//调度作业
+					tmpEngine.schedule(schdProcessParameters);
 					
 				}
 
@@ -551,13 +564,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						&& fileName != null && !"".equals(fileName)){
 						lj = request.getServletContext().getRealPath(lj);
 						
-						String deleteFile = fileName.substring(0, fileName.lastIndexOf(".rar"));
+						String dfile = fileName.substring(0, fileName.lastIndexOf(".rar"));
+						String deleteFile = "";
 						
 						if(lj.lastIndexOf(File.separator) + 1 != lj.length()){
-							deleteFile = lj + File.separator + deleteFile;
+							deleteFile = lj + File.separator + dfile;
 							lj = lj + File.separator + fileName;
 						}else{
-							deleteFile = lj + deleteFile;
+							deleteFile = lj + dfile;
 							lj = lj + fileName;
 						}
 						File file = new File(lj);
@@ -565,8 +579,14 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 							file.delete();
 						}
 						
-						File deFile = new File(deleteFile);
-						deleteDir(deFile);
+						
+						if(dfile != null && !"".equals(dfile)){
+							File deFile = new File(deleteFile);
+							if(deFile.exists() && deFile.isDirectory()){
+								deleteDir(deFile);
+							}
+						}
+						
 					}
 				}
 				psTzExcelDrxxTMapper.deleteByPrimaryKey(processinstance);
