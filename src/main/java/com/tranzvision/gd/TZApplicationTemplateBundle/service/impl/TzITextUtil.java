@@ -1,8 +1,8 @@
 package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.*;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.*;
 import java.io.*;
 import java.util.*;
 

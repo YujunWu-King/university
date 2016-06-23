@@ -352,24 +352,28 @@
 			<artifactId>httpclient</artifactId>
 			<version>${httpclient.version}</version>
 		</dependency>
-		
+		<!--
 		<dependency>
    			<groupId>com.lowagie</groupId>
     		<artifactId>itext</artifactId>
     		<version>2.1.7</version>
 		</dependency>
 		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itext-asian</artifactId>
-			<version>5.2.0</version>
-		</dependency>
-		<!--  
-		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itextasian</artifactId>
 			<version>1.0</version>
 		</dependency>
 		-->
+		<dependency>
+   			<groupId>com.itextpdf</groupId>
+    		<artifactId>itextpdf</artifactId>
+    		<version>5.5.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-asian</artifactId>
+			<version>5.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
