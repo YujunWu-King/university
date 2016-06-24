@@ -381,6 +381,7 @@ public class PdfPrintbyModel {
 			// 非容器内，获取系统路径是失败的
 			if (rootpath == null) {
 				rootpath = path;
+				//rootpath = "D:/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/university";
 			}
 			bean.setRootpath(rootpath);
 			fieldName = rootpath + fieldName;
@@ -458,7 +459,7 @@ public class PdfPrintbyModel {
 	 * @return
 	 */
 	public String createPdf(String path, String TZ_APP_INS_ID, String type) {
-		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, path, null, type);
+		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, null, null, type);
 		boolean b = false;
 		if (bean.getRs() == 0) {
 
@@ -567,8 +568,8 @@ public class PdfPrintbyModel {
 		// TODO Auto-generated method stub
 		// 251
 		PdfPrintbyModel a = new PdfPrintbyModel();
-		System.out.println(a.pdfPrint("xxx",
-				"D:/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/university"));
+		System.out.println(a.createPdf("D:\\","252"
+				,"A"));
 	}
 
 }
