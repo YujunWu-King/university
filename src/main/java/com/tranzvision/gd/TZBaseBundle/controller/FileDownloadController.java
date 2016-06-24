@@ -30,15 +30,15 @@ public class FileDownloadController {
 	@RequestMapping(value = "DownPdfServlet", produces = "text/html;charset=UTF-8")
 	public @ResponseBody String orgDownloadFileHandler(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> allRequestParams) {
-		//System.out.println("PDF实例下载");
+		// System.out.println("PDF实例下载");
 		String instanceID = String.valueOf(allRequestParams.get("instanceID"));
 		String fileName = String.valueOf(allRequestParams.get("fileName"));
 
-		//System.out.println("instanceID：" + instanceID);
-		//System.out.println("fileName：" + fileName);
+		// System.out.println("instanceID：" + instanceID);
+		// System.out.println("fileName：" + fileName);
 
 		PdfPrintbyModel ppm = new PdfPrintbyModel();
-		DataBean bean = ppm.checkDateAndGetPdfData(instanceID, "", fileName);
+		DataBean bean = ppm.checkDateAndGetPdfData(instanceID, "", fileName, "A");
 		if (bean.getRs() == 0) {
 
 			try {
@@ -61,7 +61,7 @@ public class FileDownloadController {
 			response.setContentType("multipart/form-data");
 			// 2.设置文件头：最后一个参数是设置下载文件名
 			response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-			//response.reset();
+			// response.reset();
 			ServletOutputStream out;
 			try {
 
@@ -76,7 +76,7 @@ public class FileDownloadController {
 			}
 		}
 
-		//System.out.println("msg：" + bean.getMsg());
+		// System.out.println("msg：" + bean.getMsg());
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("success", bean.getRs() == 0 ? true : false);

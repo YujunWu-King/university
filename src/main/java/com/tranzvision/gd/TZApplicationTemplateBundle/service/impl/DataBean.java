@@ -14,6 +14,16 @@ public class DataBean {
 	private String pdfFieldsValues;
 	private String rootpath;
 
+	private String userName;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public String getRootpath() {
 		return rootpath;
 	}

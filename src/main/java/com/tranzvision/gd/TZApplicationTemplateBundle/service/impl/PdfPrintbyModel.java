@@ -11,6 +11,8 @@ import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Properties;
 import javax.servlet.ServletOutputStream;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -70,6 +72,33 @@ public class PdfPrintbyModel {
 			e.printStackTrace();
 		}
 		return templateID;
+	}
+
+	/**
+	 * 获取推荐信实例ID
+	 * 
+	 * @param TZ_APP_INS_ID
+	 * @param conn
+	 * @return
+	 */
+	private String getRecommendID(String TZ_APP_INS_ID, Connection conn) {
+		Statement stmt = null;
+		ResultSet rt = null;
+		String bmbInsId = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = '" + TZ_APP_INS_ID
+					+ "' LIMIT 1";
+			rt = stmt.executeQuery(sql);
+			if ((rt != null) && rt.next()) {
+				bmbInsId = rt.getString("TZ_APP_INS_ID");
+			}
+			rt.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return bmbInsId;
 	}
 
 	/**
@@ -264,11 +293,16 @@ public class PdfPrintbyModel {
 	 * 校验并获取中间参数
 	 * 
 	 * @param TZ_APP_INS_ID
+	 *            PDF文件存放路径
 	 * @param path
+	 *            存在的跟路径 可不填写
 	 * @param downloadFileName
+	 *            下载的文件名称 可以不填写，如不填写 则程序生成 为 班级名_报名人姓名.pdf
+	 * @param type
+	 *            类型("A":报名表， "B": 推荐信)
 	 * @return
 	 */
-	public DataBean checkDateAndGetPdfData(String TZ_APP_INS_ID, String path, String downloadFileName) {
+	public DataBean checkDateAndGetPdfData(String TZ_APP_INS_ID, String path, String downloadFileName, String type) {
 		DataBean bean = new DataBean();
 		// 连接符改为fieldName∨∨fieldValue∧∧fieldName∨∨fieldValue∧∧
 		// 思路 1.根据模板实例ID 获取模板ID
@@ -295,10 +329,18 @@ public class PdfPrintbyModel {
 		String orgid = ""; // 机构ID
 		String rootpath = "";
 		String fieldsV = "";
+
+		String bmbInsId = TZ_APP_INS_ID;
+
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
-			templateID = this.getTemplateID(TZ_APP_INS_ID, conn);
+
+			if (StringUtils.equals("B", type)) {
+				bmbInsId = this.getRecommendID(TZ_APP_INS_ID, conn);
+			}
+
+			templateID = this.getTemplateID(bmbInsId, conn);
 			if (templateID == null || templateID.equals("")) {
 				bean.setRs(-2);
 				return bean;
@@ -316,21 +358,23 @@ public class PdfPrintbyModel {
 			// 如果方法没有传下载文件名，那么需要自己拼装
 			if (downloadFileName == null || downloadFileName.equals("") || downloadFileName.equals("null")) {
 				// 报名的班级名称_报名人姓名.pdf
-				String userName = this.getUserName(TZ_APP_INS_ID, conn);
+				String userName = this.getUserName(bmbInsId, conn);
 				if (userName == null || userName.equals("")) {
 					bean.setRs(-10); // 报名人姓名不存在
 					return bean;
 				}
-				String className = this.getClassName(TZ_APP_INS_ID, conn);
+				bean.setUserName(userName);
+				String className = this.getClassName(bmbInsId, conn);
 				if (className == null || className.equals("")) {
 					bean.setRs(-11); // 报名的班级名称不存在
 					return bean;
 				}
-				//System.out.println("aaa="+className + "_" + userName + ".pdf");
+				// System.out.println("aaa="+className + "_" + userName +
+				// ".pdf");
 				bean.setDownloadFileName(className + "_" + userName + ".pdf");
 			} else {
 				bean.setDownloadFileName(downloadFileName);
-				//System.out.println("bb="+downloadFileName);
+				// System.out.println("bb="+downloadFileName);
 			}
 
 			rootpath = System.getProperty(webAppRootKey);
@@ -350,7 +394,7 @@ public class PdfPrintbyModel {
 				bean.setOrgid(orgid);
 			}
 
-			Hashtable<String, String> ht = this.getInstance(TZ_APP_INS_ID, conn);
+			Hashtable<String, String> ht = this.getInstance(bmbInsId, conn);
 
 			if (ht == null || ht.size() <= 0) {
 				bean.setRs(-9);
@@ -363,6 +407,7 @@ public class PdfPrintbyModel {
 			} else {
 				bean.setPdfFieldsValues(fieldsV);
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			bean.setRs(-7);
@@ -402,14 +447,61 @@ public class PdfPrintbyModel {
 	}
 
 	/**
-	 * 打印模版之指定位置
+	 * 打印PDF文件
+	 * 
+	 * @param path
+	 *            PDF文件存放路径
+	 * @param TZ_APP_INS_ID
+	 *            实例编号
+	 * @param type
+	 *            类型("A":报名表， "B": 推荐信)
+	 * @return
+	 */
+	public String createPdf(String path, String TZ_APP_INS_ID, String type) {
+		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, path, null, type);
+		boolean b = false;
+		if (bean.getRs() == 0) {
+			if (!StringUtils.endsWith(path, "/")) {
+				path = path + "/";
+			}
+
+			// 报名人姓名_报名表.pdf 或 报名表姓名_推荐信.pdf
+			if (StringUtils.equals("A", type)) {
+				path = path + bean.getUserName() + "_报名表.pdf";
+			} else {
+				path = path + bean.getUserName() + "_推荐信.pdf";
+			}
+			// 检测文件夹是否存在，如果不存在，创建文件夹
+			File dir = new File(path);
+			// //System.out.println(dir.getAbsolutePath());
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			System.out.println("path = " + path);
+			TzITextUtil t = new TzITextUtil();
+			b = t.setFieldsValue(bean.getTemplateFileName(), bean.getPdfFieldsValues(), path);
+			if (!b) {
+				bean.setRs(-6);
+			}
+		}
+		if (bean.getRs() == 0) {
+			return bean.getMsg() + "|||" + path;
+		} else {
+			return bean.getMsg();
+		}
+	}
+
+	/**
+	 * 打印报名表到指定位置
 	 * 
 	 * @param TZ_APP_INS_ID
 	 *            模版实例ID
+	 * @param path
+	 *            path为系统根路径 可传可不传（在容器里面调用不需要传，外部调用需要）
 	 * @return
 	 */
 	public String pdfPrint(String TZ_APP_INS_ID, String path) {
-		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, path, "a");
+		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, path, "a", "A");
 
 		boolean b = false;
 		String outputfile = null;
