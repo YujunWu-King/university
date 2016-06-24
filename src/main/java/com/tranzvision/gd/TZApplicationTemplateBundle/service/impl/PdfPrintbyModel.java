@@ -461,6 +461,14 @@ public class PdfPrintbyModel {
 		DataBean bean = this.checkDateAndGetPdfData(TZ_APP_INS_ID, path, null, type);
 		boolean b = false;
 		if (bean.getRs() == 0) {
+
+			// 检测文件夹是否存在，如果不存在，创建文件夹
+			File dir = new File(path);
+			// //System.out.println(dir.getAbsolutePath());
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+
 			if (!StringUtils.endsWith(path, "/")) {
 				path = path + "/";
 			}
@@ -470,12 +478,6 @@ public class PdfPrintbyModel {
 				path = path + bean.getUserName() + "_报名表.pdf";
 			} else {
 				path = path + bean.getUserName() + "_推荐信.pdf";
-			}
-			// 检测文件夹是否存在，如果不存在，创建文件夹
-			File dir = new File(path);
-			// //System.out.println(dir.getAbsolutePath());
-			if (!dir.exists()) {
-				dir.mkdirs();
 			}
 			System.out.println("path = " + path);
 			TzITextUtil t = new TzITextUtil();
