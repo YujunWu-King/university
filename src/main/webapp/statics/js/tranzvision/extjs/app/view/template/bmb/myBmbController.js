@@ -887,6 +887,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		store.commitChanges();
 		return tzParams;
 	},
+	onTplInfoClose:function(){
+        this.getView().close();
+    },
 	/* 保存（打印设置） */
 	onPrintSave : function(btn) {
 		// 获取窗口
