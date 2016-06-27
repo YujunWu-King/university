@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -69,8 +71,11 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 			String strForm = "";
 			String typeFlag = "";
 
-			// 模板PDF路径
+			String tpPdfStatus = "";
+			// 模板PDF文件名
 			String fileName = "";
+			// 模板PDF文件路径
+			String filePath = "";
 			Map<String, Object> mapData = null;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -105,66 +110,67 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 				} else if ("TPL".equals(typeFlag)) {
 					fileName = String.valueOf(mapData.get("fileName"));
 					tplID = String.valueOf(mapData.get("tplID"));
+					tpPdfStatus = String.valueOf(mapData.get("tpPdfStatus"));
+					filePath = String.valueOf(mapData.get("filePath"));
+
 				}
 			}
 
+			System.out.println("tpPdfStatus：" + tpPdfStatus);
 			// 删除模板字段原来对应报名表信息表
 			Object[] args = new Object[] { tplID };
 			Object[] insertargs = null;
 			sql = "DELETE FROM PS_TZ_APP_PDFFIELD_T WHERE TZ_APP_TPL_ID = ? ";
-			System.out.println("sql：" + sql);
+			// System.out.println("sql：" + sql);
 			jdbcTemplate.update(sql, args);
 
-			args = new Object[] { tplID, fileName };
-			sql = "INSERT INTO PS_TZ_APP_PDFFIELD_T (TZ_APP_TPL_ID,TZ_FIELD_PATH) VALUES (?,?)";
+			args = new Object[] { tplID, filePath, fileName, tpPdfStatus };
+			sql = "INSERT INTO PS_TZ_APP_PDFFIELD_T (TZ_APP_TPL_ID,TZ_FIELD_PATH,TZ_FIELD_NAME,TZ_FIELD_STATUS) VALUES (?,?,?,?)";
 			System.out.println("sql：" + sql);
 			jdbcTemplate.update(sql, args);
 
 			// 删除模板字段原来对应报名表信息表
 			args = new Object[] { tplID };
 			sql = "DELETE FROM PS_TZ_APP_PDFFIELDITEM_T WHERE TZ_APP_TPL_ID = ? ";
-			System.out.println("sql：" + sql);
+			// System.out.println("sql：" + sql);
 			jdbcTemplate.update(sql, args);
 
 			sql = "INSERT INTO PS_TZ_APP_PDFFIELDITEM_T (TZ_APP_PDFF_ID,TZ_APP_TPL_ID,TZ_XXX_BH,TZ_XXX_MC,TZ_APP_PDF_FIELD) VALUES (?,?,?,?,?)";
-			System.out.println("size：" + sqlparm.size());
+			// System.out.println("size：" + sqlparm.size());
 			String newTplId = "";
 			String pdffile = "";
 			for (int i = 0; i < sqlparm.size(); i++) {
-				newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
+
 				args = sqlparm.get(i);
-				if ((String) args[3] == null) {
+				if ((String) args[3] == null || ((String) args[3]).equals("")) {
 					pdffile = "";
 				} else {
+					newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
 					pdffile = (String) args[3];
+					insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2],
+							pdffile };
+					jdbcTemplate.update(sql, insertargs);
 				}
 
-				insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2], pdffile };
-				jdbcTemplate.update(sql, insertargs);
-				// if (args[4] != null && !((String) args[4]).equals("")) {
-				newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
-				// System.out.println("strForm：" + strForm);
-				if ((String) args[4] == null) {
+				if ((String) args[4] == null || ((String) args[4]).equals("")) {
 					pdffile = "";
 				} else {
+					newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
 					pdffile = (String) args[4];
+					insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2],
+							pdffile };
+					jdbcTemplate.update(sql, insertargs);
 				}
 
-				insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2], pdffile };
-				jdbcTemplate.update(sql, insertargs);
-				// }
-				// if (args[5] != null && !((String) args[5]).equals("")) {
-				newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
-
-				if ((String) args[5] == null) {
+				if ((String) args[5] == null || ((String) args[5]).equals("")) {
 					pdffile = "";
 				} else {
+					newTplId = "" + getSeqNum.getSeqNum("PS_TZ_APP_PDFFIELDITEM_T", "TZ_APP_PDFF_ID");
 					pdffile = (String) args[5];
+					insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2],
+							(String) pdffile };
+					jdbcTemplate.update(sql, insertargs);
 				}
-				insertargs = new Object[] { newTplId, (String) args[0], (String) args[1], (String) args[2],
-						(String) pdffile };
-				jdbcTemplate.update(sql, insertargs);
-				// }
 			}
 
 		} catch (Exception e) {
@@ -191,7 +197,9 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 				if (strtplID != null && !"".equals(strtplID)) {
 					String jgName = "";
 					String tplName = "";
+					String filePath = "";
 					String fileName = "";
+					String status = "";
 					String pageSql = "select a.TZ_JG_NAME,b.TZ_APP_TPL_MC from PS_TZ_JG_BASE_T a,PS_TZ_APPTPL_DY_T b where a.TZ_JG_ID = b.TZ_JG_ID and b.TZ_APP_TPL_ID= ?";
 					try {
 						// 加载模板ID 模板名称 以及 机构名称
@@ -202,17 +210,31 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 						}
 
 						// 加载模板PDF 文件路径
-						pageSql = "select TZ_FIELD_PATH from PS_TZ_APP_PDFFIELD_T  where TZ_APP_TPL_ID= ?";
+						pageSql = "select TZ_FIELD_PATH,TZ_FIELD_NAME,TZ_FIELD_STATUS from PS_TZ_APP_PDFFIELD_T  where TZ_APP_TPL_ID= ?";
 						map = jdbcTemplate.queryForMap(pageSql, new Object[] { strtplID });
 						if (map != null) {
-							fileName = map.get("TZ_FIELD_PATH") == null ? "" : String.valueOf(map.get("TZ_FIELD_PATH"));
+							filePath = map.get("TZ_FIELD_PATH") == null ? "" : String.valueOf(map.get("TZ_FIELD_PATH"));
+							fileName = map.get("TZ_FIELD_NAME") == null ? "" : String.valueOf(map.get("TZ_FIELD_NAME"));
+							status = map.get("TZ_FIELD_STATUS") == null ? ""
+									: String.valueOf(map.get("TZ_FIELD_STATUS"));
 						}
 
 						Map<String, Object> mapData = new HashMap<String, Object>();
 						mapData.put("jgName", jgName);
 						mapData.put("tplName", tplName);
 						mapData.put("tplID", strtplID);
+						mapData.put("filePath", filePath);
 						mapData.put("fileName", fileName);
+						mapData.put("downfileName", fileName);
+						mapData.put("tpPdfStatus", status);
+						if (status==null || status.trim().equals("")) {
+							mapData.put("tpPdfStatus", "A");
+						}
+						if (fileName == null || fileName.trim().equals("")) {
+							mapData.put("flag", "Y");
+						} else {
+							mapData.put("flag", "N");
+						}
 
 						returnJsonMap.put("formData", mapData);
 
@@ -382,13 +404,13 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strParams);
 				// 报名表导出模版编号;
 				String tplID = jacksonUtil.getString("tplID");
-				String fileName = jacksonUtil.getString("fileName");
+				String filePath = jacksonUtil.getString("filePath");
 				// String storDate = jacksonUtil.getString("storDate");
 				Resource resource = new ClassPathResource("conf/cookieSession.properties");
 				Properties cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
 				String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
 
-				fileName = System.getProperty(webAppRootKey) + fileName;
+				filePath = System.getProperty(webAppRootKey) + filePath;
 				// System.out.println("tplID：" + tplID);
 
 				// System.out.println("fileName：" + fileName);
@@ -412,7 +434,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 					}
 
 					// 解析加载PDF模板信息项
-					String[] fields = this.split(this.getPdfFileFields(fileName), ";");
+					String[] fields = this.split(this.getPdfFileFields(filePath), ";");
 					Map<String, Object> mapJson = null;
 					// 合并
 					if (fields != null && fields.length > 0) {
@@ -523,10 +545,100 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 		return fields;
 	}
 
-	/* 删除页面注册信息列表 */
+	/* 删除 */
 	@Override
+	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
-		return null;
+		// String strRet = "{}";
+		boolean success = false;
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String sql = "";
+		try {
+
+			int dataLength = actData.length;
+			String tplID = "";
+			String strForm = "";
+
+			Map<String, Object> mapData = null;
+			for (int num = 0; num < dataLength; num++) {
+				// 表单内容
+				strForm = actData[num];
+				System.out.println("strForm：" + strForm);
+				// 解析json
+				jacksonUtil.json2Map(strForm);
+				tplID = jacksonUtil.getString("TplID");
+			}
+
+			// 加载模板PDF 文件路径
+			sql = "select TZ_FIELD_PATH from PS_TZ_APP_PDFFIELD_T  where TZ_APP_TPL_ID= ?";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { tplID });
+			String filePath = "";
+			if (map != null) {
+				filePath = map.get("TZ_FIELD_PATH") == null ? "" : String.valueOf(map.get("TZ_FIELD_PATH"));
+			}
+			// 删除文件
+			this.DeleteFile(filePath);
+
+			// 删除模板字段原来对应报名表信息表
+			Object[] args = new Object[] { tplID };
+			sql = "DELETE FROM PS_TZ_APP_PDFFIELD_T WHERE TZ_APP_TPL_ID = ? ";
+			jdbcTemplate.update(sql, args);
+
+			// 删除模板字段原来对应报名表信息表
+			args = new Object[] { tplID };
+			sql = "DELETE FROM PS_TZ_APP_PDFFIELDITEM_T WHERE TZ_APP_TPL_ID = ? ";
+			jdbcTemplate.update(sql, args);
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			success = false;
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("success", success);
+		return jacksonUtil.Map2json(mapRet);
+
+	}
+
+	private boolean DeleteFile(String parentPath) {
+		String parentRealPath = this.getRealPath(parentPath);
+
+		File serverFile = new File(parentRealPath);
+
+		if (!serverFile.exists()) {
+			return true;
+		}
+
+		if (serverFile.isFile()) {
+			if (serverFile.delete()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 获取给定文件夹、文件的绝对路径；
+	 * 
+	 * @param path
+	 * @return
+	 */
+	private String getRealPath(String path) {
+		// 服务器路径
+		String webAppRootKey = "";
+		try {
+			Resource resource = new ClassPathResource("conf/cookieSession.properties");
+			Properties cookieSessioinProps = null;
+			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+			webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		return webAppRootKey + path;
 	}
 
 }

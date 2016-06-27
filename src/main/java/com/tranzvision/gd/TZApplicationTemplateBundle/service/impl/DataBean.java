@@ -11,6 +11,16 @@ public class DataBean {
 	private String templateFileName;
 	private String templateID;
 	private String downloadFileName;
+	private String filePath;
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
 	private String pdfFieldsValues;
 	private String rootpath;
 

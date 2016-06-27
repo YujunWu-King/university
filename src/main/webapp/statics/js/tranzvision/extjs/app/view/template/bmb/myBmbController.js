@@ -107,7 +107,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 //		var url = TzUniversityContextPath + "/DownPdfServlet?instanceID=259&fileName=你好.pdf";
 //		window.open(url, '_blank');
 //	},
-
+	
 	/* 复制报名表模板 */
 	onBmbTplCopy : function(view, rowIndex) {
 		var store = view.findParentByType("grid").store;
@@ -490,7 +490,19 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			// 加载数据
 			Ext.tzLoad(tzParams, function(responseData) {
 						var formData = responseData.formData;
+						var flag = formData.flag;
+						if (flag =="Y") {
+							Ext.getCmp("deletePdf").hide();
+                    		form.findField("pdfuploadfile").setVisible(true); 					
+						} else {
+							Ext.getCmp("deletePdf").show();
+                    		form.findField("pdfuploadfile").setVisible(false);  
+						}
 						form.setValues(formData);
+						if (flag =="N") {
+							var url = TzUniversityContextPath + "/DownPdfTServlet?templateID="+formData.tplID;
+							form.findField("downfileName").setValue("<a href='"+url+"' target='_blank'>"+formData.downfileName+"</a>");
+						}
 						var tzStoreParams = '{"tplID":"' + tplID + '"}';
 						grid.store.tzStoreParams = tzStoreParams;
 						grid.store.load();
@@ -570,6 +582,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		var form = this.getView().child('form').getForm();
 		var exportTplID = form.findField("tplID").getValue();
 		var fileName = form.findField("fileName").getValue();
+		var filePath = form.findField("filePath").getValue();
 		// Ext.Msg.alert("提示", fileName);
 		// return;
 
@@ -586,6 +599,10 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.MessageBox.alert('提示', '您没有上传pdf文档，无法加载PDF模板信息项。');
 			return;
 		}
+		if (filePath == "" || filePath.length < 1) {
+			Ext.MessageBox.alert('提示', '您没有上传pdf文档，无法加载PDF模板信息项。');
+			return;
+		}
 
 		var grid = btn.findParentByType("grid");
 		var store = grid.getStore();
@@ -593,7 +610,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.MessageBox.confirm('确认', '字段定义列表中已有数据，确定重新加载报名表模板字段吗？',
 					function(btnId) {
 						if (btnId == 'yes') {
-							this.loadFieldsStoreByPdf(exportTplID, fileName,
+							this.loadFieldsStoreByPdf(exportTplID, filePath,
 									store);
 						}
 					}, this);
@@ -604,12 +621,12 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		}
 	},
 	/* 加载PDF模板信息项 实际操作 */
-	loadFieldsStoreByPdf : function(exportTplID, fileName, store, btn) {
+	loadFieldsStoreByPdf : function(exportTplID, filePath, store, btn) {
 		var storDates = this.getGridInfoParams(store);
 		var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PDF_STD","OperateType":"loadAppFormPdf","comParams":{"tplID":"'
 				+ exportTplID
-				+ '","fileName":"'
-				+ fileName
+				+ '","filePath":"'
+				+ filePath
 				+ '","storDates":['
 				+ storDates + ']}}';
 		 //Ext.MessageBox.alert('tzParams', tzParams);
@@ -834,7 +851,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		// 更新操作参数
 		var comParams = "";
 
-		var exportTplID = form.findField("tplID").getValue();
+		//var exportTplID = form.findField("tplID").getValue();
 
 		// 修改json字符串
 		var editJson = '{"typeFlag":"TPL","data":'
@@ -870,6 +887,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		store.commitChanges();
 		return tzParams;
 	},
+	onTplInfoClose:function(){
+        this.getView().close();
+    },
 	/* 保存（打印设置） */
 	onPrintSave : function(btn) {
 		// 获取窗口

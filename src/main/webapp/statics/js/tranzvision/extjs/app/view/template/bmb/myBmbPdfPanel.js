@@ -40,6 +40,11 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
                     allowBlank:false,
                 },{
                     xtype: 'hidden',
+                    fieldLabel: '文件路径',
+                    name: 'filePath',
+                    allowBlank:false,
+                },{
+                    xtype: 'hidden',
                     fieldLabel: '报名表模板ID',
                     name: 'tplID',
                     allowBlank:false,
@@ -60,66 +65,114 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ]
                 },{
-        	        xtype: 'fileuploadfield',
-        	        fieldLabel: 'PDF打印模板',
-        	        name: 'pdfuploadfile',
-        	        buttonText: '上传PDF',
-        	            // msgTarget: 'side',
-        	        buttonOnly:true,
-        	        listeners:{
-        	        	change:function(file, value, eOpts ){
-        	        		if(value != ""){
-        	        			var form = file.findParentByType("form").getForm();
-        	        			// Ext.MessageBox.alert('提示', form);
-        						// 获取该类
-        						var panel = file.findParentByType("myBmbPdfPanel");
-        						
-        						if(panel.actType == "update"){
-        							var tplID =panel.child("form").getForm().findField("tplID").getValue();
-        								// 获取后缀
-        							var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
-        							if(fix.toLowerCase() == "pdf" ){
-        								form.submit({
-        									url: TzUniversityContextPath + '/UpPdfServlet?tplid='+tplID,
-        									waitMsg: 'PAD正在上传，请耐心等待....',
-        									success: function (form, action) {
-        										var message = action.result.msg;
-        										var path = message.accessPath;
-        										var sysFileName = message.sysFileName;
-        										if(path.charAt(path.length - 1) == '/'){
-        											path = path + sysFileName;
-        										}else{
-        											path = path + "/" + sysFileName;
-        										}
-        										panel.child("form").getForm().findField("fileName").setValue(path);
-        										// Ext.MessageBox.alert("错误",
-												// panel.child("form").getForm().findField("fileName").getValue());
-        										// var comSiteParams =
-												// panel.child("form").getForm().getValues();
-        										// 重置表单
-        										// form.reset();
-        									},
-        									failure: function (form, action) {
-        											// 重置表单
-        										form.reset();
-        										Ext.MessageBox.alert("错误", action.result.msg);
-        									}
-        								});
-        							}else{
-        								// 重置表单
-        								form.reset();
-        								Ext.MessageBox.alert("提示", "请上传pdf格式的文件。");
-        							}
-        						}else{
-        							// 重置表单
-        							form.reset();
-        							// Ext.MessageBox.alert('提示',
-									// panel.actType);
-        							Ext.MessageBox.alert("提示", "请先保存菜单类型。");
-        						}
-        					}
-        				}
-        			}
+                	layout: {
+                		type: 'column'
+                    },
+                    bodyStyle:'padding:0 0 10 0',
+                    items:[{
+                    		xtype: 'displayfield',
+                    		fieldLabel: 'PDF打印模板',
+                    		name: 'downfileName',
+                    		allowBlank:false,
+                    		afterLabelTextTpl: [
+                    	    	'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    	    ]
+                    },{
+                    		xtype: 'fileuploadfield',
+                        	name: 'pdfuploadfile',
+                        	buttonText: '上传PDF',
+                        	style:'margin-left:8px',
+                        	hideLabel: true,
+                        	// msgTarget: 'side',
+                        	buttonOnly:true,
+                        	listeners:{
+                        		change:function(file, value, eOpts ){
+            	        		if(value != ""){
+            	        			var form = file.findParentByType("form").getForm();
+            	        			// Ext.MessageBox.alert('提示', form);
+            						// 获取该类
+            						var panel = file.findParentByType("myBmbPdfPanel");
+            						
+            						if(panel.actType == "update"){
+            							var tplID =panel.child("form").getForm().findField("tplID").getValue();
+            								// 获取后缀
+            							var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
+            							if(fix.toLowerCase() == "pdf" ){
+            								form.submit({
+            									url: TzUniversityContextPath + '/UpPdfServlet?tplid='+tplID,
+            									waitMsg: 'PAD正在上传，请耐心等待....',
+            									success: function (form, action) {
+            										var message = action.result.msg;
+            										var path = message.accessPath;
+            										var filename = message.filename;
+            										var sysFileName = message.sysFileName;
+            										if(path.charAt(path.length - 1) == '/'){
+            											path = path + sysFileName;
+            										}else{
+            											path = path + "/" + sysFileName;
+            										}
+            										panel.child("form").getForm().findField("filePath").setValue(path);
+            										panel.child("form").getForm().findField("fileName").setValue(filename);
+            										//panel.child("form").getForm().findField("downfileName").setValue(filename);
+            										var url = TzUniversityContextPath + "/DownPdfTServlet?templateID="+tplID;
+            										panel.child("form").getForm().findField("downfileName").setValue("<a href='"+url+"' target='_blank'>"+filename+"</a>");
+            										
+            										Ext.getCmp("deletePdf").show();
+            										panel.child("form").getForm().findField("pdfuploadfile").setVisible(false); 
+            									},
+            									failure: function (form, action) {
+            											// 重置表单
+            										form.reset();
+            										Ext.MessageBox.alert("错误", action.result.msg);
+            									}
+            								});
+            							}else{
+            								// 重置表单
+            								form.reset();
+            								Ext.MessageBox.alert("提示", "请上传pdf格式的文件。");
+            							}
+            						}else{
+            							// 重置表单
+            							form.reset();
+            							Ext.MessageBox.alert("提示", "请先保存菜单类型。");
+            						}
+            					}
+            				}
+            	        	}
+            			},{
+            				style:'margin-left:8px',
+            				xtype: 'button',
+            				text: '删除PDF导出模板',
+            				id: 'deletePdf',
+            				name: 'deletePdf',
+            				listeners:{
+            					click:function(btn,value, eOpts){
+            						var form = btn.findParentByType("form").getForm();
+            						var tplID =form.findField("tplID").getValue();
+            						var comParams  = '"delete":[{"TplID":' + tplID + "}]";
+            						var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PDF_STD","OperateType":"U","comParams":{'
+            							+ comParams + '}}';
+            		                Ext.Ajax.request({
+            		                    url:Ext.tzGetGeneralURL(),
+            		                    async:false,
+            		                    params: {
+            		                        tzParams: tzParams
+            		                    },
+            		                    waitTitle : '请等待' ,
+            		                    waitMsg: '正在删除中',
+            		                    success: function(response){
+            		                    	//form.reset();
+            		                    	Ext.getCmp("deletePdf").hide();
+            		                    	form.findField("pdfuploadfile").setVisible(true); 
+            		                    	form.findField("downfileName").setValue("");
+            		                    	form.findField("filePath").setValue("");
+            		                    	form.findField("fileName").setValue("");
+            		                    }
+            		                });
+                        		}
+            	        	}
+            			}
+                    	]
                 }, {
                     xtype: 'combo',
                     fieldLabel: 'PDF打印模板状态',
