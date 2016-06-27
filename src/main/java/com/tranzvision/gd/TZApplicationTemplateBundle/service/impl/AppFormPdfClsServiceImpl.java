@@ -227,6 +227,9 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 						mapData.put("fileName", fileName);
 						mapData.put("downfileName", fileName);
 						mapData.put("tpPdfStatus", status);
+						if (status==null || status.trim().equals("")) {
+							mapData.put("tpPdfStatus", "A");
+						}
 						if (fileName == null || fileName.trim().equals("")) {
 							mapData.put("flag", "Y");
 						} else {
