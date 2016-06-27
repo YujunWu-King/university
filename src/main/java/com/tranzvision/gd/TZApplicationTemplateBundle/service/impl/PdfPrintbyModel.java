@@ -1,7 +1,10 @@
 package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -101,8 +104,111 @@ public class PdfPrintbyModel {
 		return bmbInsId;
 	}
 
+	public void addFile(String templateID, String path, String FileName) {
+		Connection conn = null;
+		Statement stmt = null;
+		try {
+			conn = this.getConnection();
+			stmt = conn.createStatement();
+			String sql = "insert into PS_TZ_APP_PDFFIELD_T  (TZ_APP_TPL_ID,TZ_FIELD_PATH,TZ_FIELD_NAME,TZ_FIELD_STATUS) values ";
+			sql = sql + "('" + templateID + "','" + path + "','" + FileName + "','A')";
+			stmt.execute(sql);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public DataBean getPdfTemplateURL(String templateID) {
+		DataBean bean = new DataBean();
+		// 连接符改为fieldName∨∨fieldValue∧∧fieldName∨∨fieldValue∧∧
+		// 思路 1.根据模板实例ID 获取模板ID
+		// 2.根据模板ID，获取PDF模板文件路径
+		// 3.根据模板ID，得到 PDF模板文件 的填充项目 和 模板项之间的关系
+		// 4.根据实例ID，获取该实例 模板项里面的具体内容
+		// 5.调用PDF程序，生产PDF文件
+
+		// 服务器路径
+		String webAppRootKey = "";
+		try {
+			Resource resource = new ClassPathResource("conf/cookieSession.properties");
+			Properties cookieSessioinProps = null;
+			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+			webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+		} catch (IOException e) {
+			e.printStackTrace();
+			bean.setRs(-1);
+			return bean;
+		}
+
+		String fieldName = ""; // pdf模版路径
+		String filePath = ""; // 文件名
+		String rootpath = "";
+		Connection conn = null;
+		try {
+			conn = this.getConnection();
+
+			String temp = this.getFIELD_PATH(templateID, conn);
+
+			if (temp == null || temp.equals("")) {
+				bean.setRs(-3);
+				return bean;
+			}
+
+			filePath = StringUtils.split(temp, "|||")[0];
+			fieldName = StringUtils.split(temp, "|||")[1];
+
+			bean.setDownloadFileName(fieldName);
+
+			bean.setFilePath(filePath);
+			rootpath = System.getProperty(webAppRootKey);
+			bean.setRootpath(rootpath);
+
+			bean.setTemplateFileName(rootpath + filePath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			bean.setRs(-7);
+			return bean;
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					bean.setRs(-7);
+					return bean;
+				}
+			}
+		}
+		bean.setRs(0);
+		return bean;
+	}
+
+	public byte[] downLoadPdfTemplate(String path) {
+
+		try {
+			InputStream fis = new BufferedInputStream(new FileInputStream(path));
+			byte[] buffer = new byte[fis.available()];
+
+			fis.read(buffer);
+			fis.close();
+			return buffer;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
-	 * 获取PDF模板路径
+	 * 获取PDF模板路径,以及文件的真是名
 	 * 
 	 * @param templateID
 	 * @param conn
@@ -114,10 +220,11 @@ public class PdfPrintbyModel {
 		String fieldName = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = "select TZ_FIELD_PATH from PS_TZ_APP_PDFFIELD_T where TZ_APP_TPL_ID='" + templateID + "'";
+			String sql = "select TZ_FIELD_PATH,TZ_FIELD_NAME from PS_TZ_APP_PDFFIELD_T where TZ_APP_TPL_ID='"
+					+ templateID + "' and TZ_FIELD_STATUS='A'";
 			rt = stmt.executeQuery(sql);
 			if ((rt != null) && rt.next()) {
-				fieldName = rt.getString("TZ_FIELD_PATH");
+				fieldName = rt.getString("TZ_FIELD_PATH") + "|||" + rt.getString("TZ_FIELD_NAME");
 			}
 			rt.close();
 			stmt.close();
@@ -355,6 +462,8 @@ public class PdfPrintbyModel {
 				return bean;
 			}
 
+			fieldName = StringUtils.split(fieldName, "|||")[0];
+
 			// 如果方法没有传下载文件名，那么需要自己拼装
 			if (downloadFileName == null || downloadFileName.equals("") || downloadFileName.equals("null")) {
 				// 报名的班级名称_报名人姓名.pdf
@@ -381,7 +490,8 @@ public class PdfPrintbyModel {
 			// 非容器内，获取系统路径是失败的
 			if (rootpath == null) {
 				rootpath = path;
-				//rootpath = "D:/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/university";
+				// rootpath =
+				// "D:/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/university";
 			}
 			bean.setRootpath(rootpath);
 			fieldName = rootpath + fieldName;
@@ -565,11 +675,14 @@ public class PdfPrintbyModel {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub22
 		// 251
-		PdfPrintbyModel a = new PdfPrintbyModel();
-		System.out.println(a.createPdf("D:\\","252"
-				,"A"));
+		// PdfPrintbyModel a = new PdfPrintbyModel();
+		// System.out.println(a.createPdf("D:\\", "252", "A"));
+
+		String a = "111|||222";
+		System.out.println(StringUtils.split(a, "|||")[0]);
+		System.out.println(StringUtils.split(a, "|||")[1]);
 	}
 
 }

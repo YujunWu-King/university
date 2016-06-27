@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyModel;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
@@ -122,6 +123,8 @@ public class FileUploadController {
 	private String doSaveFile(String orgid, String rootPath, String tplid, String language, String istmpfile,
 			MultipartFile file) {
 
+		String templateID = tplid;
+
 		// 过滤功能目录名称中的特殊字符
 		if (null != tplid && !"".equals(tplid) && !"null".equals(tplid)) {
 			tplid = "/template/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(tplid);
@@ -205,6 +208,10 @@ public class FileUploadController {
 						createTimes--;
 					}
 					if (createResult) {
+						PdfPrintbyModel ppm = new PdfPrintbyModel();
+
+						ppm.addFile(templateID, accessPath + sysFileName, filename);
+
 						Map<String, Object> mapFile = new HashMap<String, Object>();
 						mapFile.put("filename", filename);
 						mapFile.put("sysFileName", sysFileName);
