@@ -11,12 +11,17 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.AppFormExportCls;
+import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyModel;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -34,12 +39,34 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 		processinstance = jdbcTemplate.queryForObject(
 				"SELECT PRCSINSTANCE FROM PSPRCSRQST where RUN_ID = ? limit 0,1", new Object[] { runControlId },
 				"Integer");
+
 		
+		PdfPrintbyModel pdfPrintbyModel = new PdfPrintbyModel();
 		try {
 			//web根目录;
-			String webRoot = this.getClass().getClassLoader().getResource("/").getPath();
-			if(webRoot.lastIndexOf("/") + 1 != webRoot.length()){
+			//String webRoot = this.getClass().getClassLoader().getResource("/").getPath();
+			Resource resource = new ClassPathResource("conf/cookieSession.properties");
+			Properties cookieSessioinProps = null;
+			cookieSessioinProps = PropertiesLoaderUtils.loadProperties(resource);
+			String webAppRootKey = cookieSessioinProps.getProperty("webAppRootKey");
+			String webRoot = System.getProperty(webAppRootKey);
+			
+			//查看当前路径是以什么分割的;
+			String systemFileSeparatorType = "";
+			if("/".equals(File.separator)){
+				systemFileSeparatorType = "U";
+			}
+			if("\\".equals(File.separator)){
+				systemFileSeparatorType = "W";
+			}
+			
+			
+			if((webRoot.lastIndexOf("/") + 1 != webRoot.length()) && "U".equals(systemFileSeparatorType)){
 				webRoot = webRoot + "/";
+			}
+			
+			if((webRoot.lastIndexOf("\\") + 1 != webRoot.length()) && "W".equals(systemFileSeparatorType)){
+				webRoot = webRoot + "\\";
 			}
 
 			AppFormExportCls appFormExportCls = new AppFormExportCls();
@@ -74,12 +101,22 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 					return;
 				}
 				
-				ID = fjlj.split(File.separator)[fjlj.split(File.separator).length-1];
+				if("/".equals(File.separator)){
+					ID = fjlj.split("/")[fjlj.split("/").length-1];
+
+					if (fjlj.lastIndexOf("/") + 1 != fjlj.length()) {
+						fjlj = fjlj + "/";
+					}
+				}
+				if("\\".equals(File.separator)){
+					ID = fjlj.split("\\\\")[fjlj.split("\\\\").length-1];
+
+					if (fjlj.lastIndexOf("\\") + 1 != fjlj.length()) {
+						fjlj = fjlj + "\\";
+					}
+				}
 				packRelLj = relLj.substring(0, relLj.lastIndexOf("/"));
-				
-				if (fjlj.lastIndexOf(File.separator) + 1 != fjlj.length()) {
-					fjlj = fjlj + File.separator;
-				} 
+				 
 				packDir = fjlj + "..";
 				
 				 
@@ -98,6 +135,9 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 						new Object[] { Long.parseLong(appInsID) }, "String");
 				String relName = jdbcTemplate.queryForObject(
 						"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?", new Object[] { OPRID }, "String");
+				
+				String pdfType = jdbcTemplate.queryForObject(" select TZ_PDF_TYPE from PS_TZ_APP_INS_T a,PS_TZ_APPTPL_DY_T b where a.TZ_APP_TPL_ID=b.TZ_APP_TPL_ID and a.TZ_APP_INS_ID=?", new Object[]{Long.parseLong(appInsID)},"String");
+				
 				if (relName != null && !"".equals(relName)) {
 					relName = relName.replaceAll(" ", "_");
 				} else {
@@ -110,8 +150,22 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 				if (!tF.exists()) {
 					tF.mkdirs();
 				}
+				
+				//html转PDF；
 				// appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_报名表.pdf", appInsID,"A");
-				appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+				if("HPDF".equals(pdfType)){
+					if("/".equals(File.separator)){
+						appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+					}
+					
+					if("\\".equals(File.separator)){
+						appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+					}
+					
+				}
+				if("TPDF".equals(pdfType)){
+					pdfPrintbyModel.createPdf(tFile, appInsID, "A");
+				}
 
 				int file_count = 1;
 
@@ -129,30 +183,48 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 						if (str_attachfilename != null && !"".equals(str_attachfilename) && str_attachfile != null
 								&& !"".equals(str_attachfile) && sFile != null && !"".equals(sFile)) {
 							str_attachfile.replaceAll("/", "_");
+							str_attachfile.replaceAll("\\\\", "_");
 							//sFile = request.getServletContext().getRealPath(sFile);
-							sFile = webRoot + "../.." + sFile;
+							if("/".equals(File.separator)){
+								sFile = webRoot + "../.." + sFile;
+							}
+							if("\\".equals(File.separator)){
+								sFile = webRoot + "..\\.." + sFile.replaceAll("/", "\\\\");
+							}
+
 							File attFile = new File(sFile);
 							if(attFile.exists()){
-								System.out.println("========exist========>"+"."+sFile);
 								sFile = attFile.getAbsolutePath();
 							}else{
-								System.out.println("========not exist========>"+attFile.getAbsolutePath());
 								continue;
 							}
 							
-
-							if (sFile.lastIndexOf(File.separator) + 1 == sFile.length()) {
-								sFile = sFile + str_attachfilename;
-							} else {
-								sFile = sFile + File.separator + str_attachfilename;
+							if("/".equals(File.separator)){
+								if (sFile.lastIndexOf("/") + 1 == sFile.length()) {
+									sFile = sFile + str_attachfilename;
+								} else {
+									sFile = sFile + "/" + str_attachfilename;
+								}
+								this.fileChannelCopy(sFile, tFile + "/" + file_count + "_" + str_attachfile);
+								file_count++;
 							}
-							this.fileChannelCopy(sFile, tFile + File.separator + file_count + "_" + str_attachfile);
-							file_count++;
+							
+							if("\\".equals(File.separator)){
+								if (sFile.lastIndexOf("\\") + 1 == sFile.length()) {
+									sFile = sFile + str_attachfilename;
+								} else {
+									sFile = sFile +"\\" + str_attachfilename;
+								}
+								this.fileChannelCopy(sFile, tFile + "\\" + file_count + "_" + str_attachfile);
+								file_count++;
+							}
+							
+							
 						}
 					}
 				}
 
-				// 生产推荐信xml文件;
+				// 生产推荐信文件;
 				long TZ_TJX_APP_INS_ID = 0;
 				// String TJR_TZ_TJX_APP_INS_ID = "", TJR_TZ_APP_TPL_ID = "";
 				String tjxSql = "SELECT TZ_TJX_APP_INS_ID,B.TZ_APP_TPL_ID,TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL A, PS_TZ_APP_INS_T B WHERE A.TZ_APP_INS_ID =? AND TZ_MBA_TJX_YX='Y' AND A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U'";
@@ -168,9 +240,25 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 						}
 
 						String tzReferrer = (String) tjxList.get(j).get("TZ_REFERRER_NAME");
+						String tjxTmpId = (String) tjxList.get(j).get("TZ_APP_TPL_ID");
+						
+						String tjxPdfType = jdbcTemplate.queryForObject("select TZ_PDF_TYPE from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?", new Object[]{tjxTmpId},"String");
+						
 						// appFormExportClsServiceImpl.generatePdf(ID+ "/" +appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID),"B");
-						appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
-
+						if("HPDF".equals(tjxPdfType)){
+							if("/".equals(File.separator)){
+								appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+							}
+							
+							if("\\".equals(File.separator)){
+								appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+							}
+							
+						}
+						if("TPDF".equals(tjxPdfType)){
+							pdfPrintbyModel.createPdf(tFile, String.valueOf(TZ_TJX_APP_INS_ID), "B");
+						}
+						
 						// 将考生的推荐信材料复制;
 						String str_attachfilename2 = "", str_attachfile2 = "";
 						String sqlPackagetjx = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') ";
@@ -186,9 +274,17 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 										&& str_attachfile2 != null && !"".equals(str_attachfile2) && sFile != null
 										&& !"".equals(sFile)) {
 									str_attachfile2.replaceAll("/", "_");
+									str_attachfile2.replaceAll("\\\\", "_");
 
 									//sFile = request.getServletContext().getRealPath(sFile);
-									sFile = webRoot + "../.." + sFile;
+									//sFile = webRoot + "../.." + sFile;
+									if("/".equals(File.separator)){
+										sFile = webRoot + "../.." + sFile;
+									}
+									if("\\".equals(File.separator)){
+										sFile = webRoot + "..\\.." + sFile.replaceAll("/", "\\\\");
+									}
+									
 									File attFile2 = new File(sFile);
 									if (attFile2.exists()){
 										sFile = attFile2.getAbsolutePath();
@@ -196,14 +292,29 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 										continue;
 									}
 									
-									if (sFile.lastIndexOf(File.separator) + 1 == sFile.length()) {
-										sFile = sFile + str_attachfilename2;
-									} else {
-										sFile = sFile + File.separator + str_attachfilename2;
+									if("/".equals(File.separator)){
+										if (sFile.lastIndexOf("/") + 1 == sFile.length()) {
+											sFile = sFile + str_attachfilename2;
+										} else {
+											sFile = sFile + "/" + str_attachfilename2;
+										}
+										this.fileChannelCopy(sFile,
+												tFile + "/" + file_count + "_" + str_attachfile2);
+										file_count++;
 									}
-									this.fileChannelCopy(sFile,
-											tFile + File.separator + file_count + "_" + str_attachfile2);
-									file_count++;
+									
+									if("\\".equals(File.separator)){
+										if (sFile.lastIndexOf("\\") + 1 == sFile.length()) {
+											sFile = sFile + str_attachfilename2;
+										} else {
+											sFile = sFile + "\\" + str_attachfilename2;
+										}
+										this.fileChannelCopy(sFile,
+												tFile + "\\" + file_count + "_" + str_attachfile2);
+										file_count++;
+									}
+									
+									
 								}
 							}
 						}
@@ -222,8 +333,18 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 						if (str_attachfilename != null && !"".equals(str_attachfilename) && str_attachfile != null
 								&& !"".equals(str_attachfile) && accessPath != null && !"".equals(accessPath)) {
 							str_attachfile.replaceAll("/", "_");
+							str_attachfile.replaceAll("\\\\", "_");
 							//String sFile = request.getServletContext().getRealPath(accessPath);
-							String sFile = webRoot + "../.." + accessPath;
+							//String sFile = webRoot + "../.." + accessPath;
+							String sFile = "";
+							if("/".equals(File.separator)){
+								sFile = webRoot + "../.." + accessPath;
+							}
+							
+							if("\\".equals(File.separator)){
+								sFile = webRoot + "..\\.." + accessPath.replaceAll("/", "\\\\");
+							}
+							
 							File tjxFile = new File(sFile);
 							
 							if(tjxFile.exists()){
@@ -232,12 +353,24 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 								continue;
 							}
 							
-							if (sFile.lastIndexOf(File.separator) + 1 == sFile.length()) {
-								sFile = sFile + str_attachfilename;
-							} else {
-								sFile = sFile + File.separator + str_attachfilename;
+							if("/".equals(File.separator)){
+								if (sFile.lastIndexOf("/") + 1 == sFile.length()) {
+									sFile = sFile + str_attachfilename;
+								} else {
+									sFile = sFile + "/" + str_attachfilename;
+								}
+								this.fileChannelCopy(sFile, tFile + "/" + str_attachfile);
 							}
-							this.fileChannelCopy(sFile, tFile + File.separator + str_attachfile);
+							
+							if("\\".equals(File.separator)){
+								if (sFile.lastIndexOf("\\") + 1 == sFile.length()) {
+									sFile = sFile + str_attachfilename;
+								} else {
+									sFile = sFile + "\\" + str_attachfilename;
+								}
+								this.fileChannelCopy(sFile, tFile + "\\" + str_attachfile);
+							}
+							
 						}
 					}
 				}
@@ -252,11 +385,22 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 			//String packDir2 = request.getServletContext().getRealPath(packDir);
 			String packDir2 = packDir;
 			
-			if (packDir2.lastIndexOf(File.separator) == packDir2.length()) {
-				packDir2 = packDir2 + ID + ".rar";
-			} else {
-				packDir2 = packDir2 + File.separator + ID + ".rar";
+			if("/".equals(File.separator)){
+				if (packDir2.lastIndexOf("/") == packDir2.length()) {
+					packDir2 = packDir2 + ID + ".rar";
+				} else {
+					packDir2 = packDir2 + "/" + ID + ".rar";
+				}
 			}
+			
+			if("\\".equals(File.separator)){
+				if (packDir2.lastIndexOf("\\") == packDir2.length()) {
+					packDir2 = packDir2 + ID + ".rar";
+				} else {
+					packDir2 = packDir2 + "\\" + ID + ".rar";
+				}
+			}
+			
 
 			// 打包;
 			this.createZip(sourcePathArr, packDir2);
