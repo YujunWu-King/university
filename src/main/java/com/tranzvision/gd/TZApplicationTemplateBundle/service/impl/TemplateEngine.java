@@ -997,6 +997,14 @@ public class TemplateEngine {
 			// 信息项同步规则表
 			String syncSql = "DELETE FROM PS_TZ_APPXX_SYNC_T WHERE TZ_APP_TPL_ID = ?";
 			sqlQuery.update(syncSql, new Object[] { tid });
+			
+			// 报名明PDF打印模板配置表
+			syncSql = "DELETE FROM PS_TZ_APP_PDFFIELD_T WHERE TZ_APP_TPL_ID = ?";
+			sqlQuery.update(syncSql, new Object[] { tid });
+			
+			//报名明PDF打印模板配置表
+			syncSql = "DELETE FROM PS_TZ_APP_PDFFIELDITEM_T WHERE TZ_APP_TPL_ID = ?";
+			sqlQuery.update(syncSql, new Object[] { tid });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
