@@ -997,6 +997,14 @@ public class TemplateEngine {
 			// 信息项同步规则表
 			String syncSql = "DELETE FROM PS_TZ_APPXX_SYNC_T WHERE TZ_APP_TPL_ID = ?";
 			sqlQuery.update(syncSql, new Object[] { tid });
+			
+//			// 报名明PDF打印模板配置表
+//			syncSql = "DELETE FROM PS_TZ_APP_PDFFIELD_T WHERE TZ_APP_TPL_ID = ?";
+//			sqlQuery.update(syncSql, new Object[] { tid });
+//			
+//			//报名明PDF打印模板配置表
+//			syncSql = "DELETE FROM PS_TZ_APP_PDFFIELDITEM_T WHERE TZ_APP_TPL_ID = ?";
+//			sqlQuery.update(syncSql, new Object[] { tid });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1009,10 +1017,10 @@ public class TemplateEngine {
 		String sql = "SELECT TZ_APP_TPL_MC FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		String tplName = sqlQuery.queryForObject(sql, new Object[] { tplId }, "String");
 
-		////logger.info("tplName=" + tplName);
+		//////logger.info("tplName=" + tplName);
 		// 1、读取控件注册信息，显示报名表模板编辑页面左侧工具条;
 		String componentData = this.getComponentData(tplId);
-		//logger.info("componentData=" + componentData);
+		
 
 		/*
 		 * 2、读取报名表模板配置信息，若有配置信息，则根据控件的JS类路径加载JS文件（存在则不再重复加载），把控件类存储到类管理器中，
@@ -1041,14 +1049,14 @@ public class TemplateEngine {
 
 		String contextUrl = request.getContextPath();
 		String tzGeneralURL = contextUrl + "/dispatcher";
-		////logger.info("tzGeneralURL=" + tzGeneralURL);
+		//logger.info("tzGeneralURL=" + tzGeneralURL);
 		String sqlLang = "SELECT TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		String language = sqlQuery.queryForObject(sqlLang, new Object[] { tplId }, "String");
-		////logger.info("language=" + language);
+		//logger.info("language=" + language);
 		String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",
 				language);
 		
-		////logger.info("msgSet=" + msgSet);
+		//logger.info("msgSet=" + msgSet);
 		jacksonUtil.json2Map(msgSet);
 		if (jacksonUtil.containsKey(language)) {
 			Map<String, Object> msgLang = jacksonUtil.getMap(language);
@@ -1058,6 +1066,7 @@ public class TemplateEngine {
 		String tplHtml = "";
 		componentData = componentData.replace("\\", "\\\\");
 		componentData = componentData.replace("$", "\\$");
+		//logger.info("componentData=" + componentData);
 		// componentData = componentData.replaceAll("\\$", "~");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TEMPLATE_HTML",

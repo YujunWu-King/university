@@ -477,8 +477,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		cmp.actType = "update";
 
 		cmp.on('afterrender', function(panel) {
-
+			//Ext.MessageBox.alert('提示', panel);
 			var form = panel.child('form').getForm();
+			//Ext.MessageBox.alert('提示', panel.child('form').child('deletePdf'));
 			form.findField("jgName").setReadOnly(true);
 			form.findField("tplName").setReadOnly(true);
 			form.findField("jgName").addCls("lanage_1");
@@ -491,11 +492,19 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.tzLoad(tzParams, function(responseData) {
 						var formData = responseData.formData;
 						var flag = formData.flag;
+						var formButton =panel.child('form');
+						var btndeletePdf=formButton.down('button[name=deletePdf]');
 						if (flag =="Y") {
-							Ext.getCmp("deletePdf").hide();
-                    		form.findField("pdfuploadfile").setVisible(true); 					
+							
+							//panel.queryById("deletePdf").hide();
+							//form.findField("deletePdf").setVisible(false); 
+							btndeletePdf.hide();
+                    		form.findField("pdfuploadfile").setVisible(true); 				
 						} else {
-							Ext.getCmp("deletePdf").show();
+							//Ext.getCmp("deletePdf").show();
+							//panel.queryById("deletePdf").show();
+							//form.findField("deletePdf").setVisible(true); 
+							btndeletePdf.show();
                     		form.findField("pdfuploadfile").setVisible(false);  
 						}
 						form.setValues(formData);

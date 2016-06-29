@@ -13,6 +13,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
     title: 'PDF导出模板设置',
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
     actType: 'update',// 默认新增
+    //buttonShowType:true, //默认显示
     initComponent:function(){
         Ext.apply(this,{
             items: [{
@@ -78,10 +79,10 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
                     	    	'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     	    ]
                     },{
-                    		xtype: 'fileuploadfield',
-                        	name: 'pdfuploadfile',
-                        	buttonText: '上传PDF',
-                        	style:'margin-left:8px',
+                    	style:'margin-left:8px',	
+                    	xtype: 'fileuploadfield',
+                    	name: 'pdfuploadfile',
+                        buttonText: '上传PDF',
                         	hideLabel: true,
                         	// msgTarget: 'side',
                         	buttonOnly:true,
@@ -117,8 +118,11 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
             										var url = TzUniversityContextPath + "/DownPdfTServlet?templateID="+tplID;
             										panel.child("form").getForm().findField("downfileName").setValue("<a href='"+url+"' target='_blank'>"+filename+"</a>");
             										
-            										Ext.getCmp("deletePdf").show();
+            										//Ext.getCmp("deletePdf").show();
             										panel.child("form").getForm().findField("pdfuploadfile").setVisible(false); 
+            										var formButton = panel.child("form");
+                    								var btndeletePdf=formButton.down('button[name=deletePdf]');
+                    								btndeletePdf.show();
             									},
             									failure: function (form, action) {
             											// 重置表单
@@ -143,7 +147,6 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
             				style:'margin-left:8px',
             				xtype: 'button',
             				text: '删除PDF导出模板',
-            				id: 'deletePdf',
             				name: 'deletePdf',
             				listeners:{
             					click:function(btn,value, eOpts){
@@ -162,7 +165,10 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
             		                    waitMsg: '正在删除中',
             		                    success: function(response){
             		                    	//form.reset();
-            		                    	Ext.getCmp("deletePdf").hide();
+            		                    	//Ext.getCmp("deletePdf").hide();
+            		                    	var formButton = btn.findParentByType("form");
+            								var btndeletePdf=formButton.down('button[name=deletePdf]');
+            								btndeletePdf.hide();
             		                    	form.findField("pdfuploadfile").setVisible(true); 
             		                    	form.findField("downfileName").setValue("");
             		                    	form.findField("filePath").setValue("");
