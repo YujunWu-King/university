@@ -184,13 +184,17 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 								&& !"".equals(str_attachfile) && sFile != null && !"".equals(sFile)) {
 							str_attachfile.replaceAll("/", "_");
 							str_attachfile.replaceAll("\\\\", "_");
+							
 							//sFile = request.getServletContext().getRealPath(sFile);
+							sFile = webRoot + sFile;
+							/*
 							if("/".equals(File.separator)){
 								sFile = webRoot + "../.." + sFile;
 							}
 							if("\\".equals(File.separator)){
 								sFile = webRoot + "..\\.." + sFile.replaceAll("/", "\\\\");
 							}
+							*/
 
 							File attFile = new File(sFile);
 							if(attFile.exists()){
@@ -278,12 +282,14 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 
 									//sFile = request.getServletContext().getRealPath(sFile);
 									//sFile = webRoot + "../.." + sFile;
+									sFile = webRoot + sFile;
+									/*
 									if("/".equals(File.separator)){
 										sFile = webRoot + "../.." + sFile;
 									}
 									if("\\".equals(File.separator)){
 										sFile = webRoot + "..\\.." + sFile.replaceAll("/", "\\\\");
-									}
+									}*/
 									
 									File attFile2 = new File(sFile);
 									if (attFile2.exists()){
@@ -337,6 +343,8 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 							//String sFile = request.getServletContext().getRealPath(accessPath);
 							//String sFile = webRoot + "../.." + accessPath;
 							String sFile = "";
+							sFile = webRoot + accessPath;
+							/*
 							if("/".equals(File.separator)){
 								sFile = webRoot + "../.." + accessPath;
 							}
@@ -344,6 +352,7 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 							if("\\".equals(File.separator)){
 								sFile = webRoot + "..\\.." + accessPath.replaceAll("/", "\\\\");
 							}
+							*/
 							
 							File tjxFile = new File(sFile);
 							
