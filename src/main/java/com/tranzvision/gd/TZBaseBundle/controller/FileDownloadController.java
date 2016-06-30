@@ -40,10 +40,9 @@ public class FileDownloadController {
 		PdfPrintbyModel ppm = new PdfPrintbyModel();
 		DataBean bean = ppm.checkDateAndGetPdfData(instanceID, "", fileName, "A");
 		if (bean.getRs() == 0) {
-
 			try {
-
-				if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+				String userAgent = request.getHeader("User-Agent").toUpperCase();
+				if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
 					fileName = URLEncoder.encode(bean.getDownloadFileName(), "UTF-8");
 					if (fileName.length() > 150) {
 						// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
@@ -53,6 +52,7 @@ public class FileDownloadController {
 				} else {
 					fileName = new String(bean.getDownloadFileName().getBytes("UTF-8"), "ISO8859-1");
 				}
+				
 
 			} catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block
@@ -104,9 +104,9 @@ public class FileDownloadController {
 		DataBean bean = ppm.getPdfTemplateURL(templateID);
 		String fileName = "";
 		if (bean.getRs() == 0) {
-
 			try {
-				if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+				String userAgent = request.getHeader("User-Agent").toUpperCase();
+				if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
 					fileName = URLEncoder.encode(bean.getDownloadFileName(), "UTF-8");
 					if (fileName.length() > 150) {
 						// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312

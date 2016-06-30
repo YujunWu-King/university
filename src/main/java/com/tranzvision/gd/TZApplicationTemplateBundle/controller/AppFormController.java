@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -182,7 +184,7 @@ public class AppFormController {
 					// get absolute path of the application
 					ServletContext context = request.getServletContext();
 					String appPath = context.getRealPath("");
-					System.out.println("appPath = " + appPath);
+					//System.out.println("appPath = " + appPath);
 
 					// construct the complete absolute path of the file
 					String fullPath = appPath + url;
@@ -190,25 +192,47 @@ public class AppFormController {
 					FileInputStream inputStream = new FileInputStream(downloadFile);
 
 					// get MIME type of the file
-					String mimeType = context.getMimeType(fullPath);
-					if (mimeType == null) {
+					//String mimeType = context.getMimeType(fullPath);
+					//if (mimeType == null) {
 						// set to binary type if MIME mapping not found
-						mimeType = "application/octet-stream";
-					}
-					System.out.println("MIME type: " + mimeType);
+						//mimeType = "application/octet-stream";
+					//}
+					//System.out.println("MIME type: " + mimeType);
 
 					// set content attributes for the response
-					response.setContentType(mimeType + ";charset=UTF-8");
-					response.setContentLength((int) downloadFile.length());
+					//response.setContentType(mimeType + ";charset=UTF-8");
+					//response.setContentLength((int) downloadFile.length());
 
 					// set headers for the response
-					String headerKey = "Content-Disposition";
+					//String headerKey = "Content-Disposition";
 					// filename = new String(filename.getBytes(), "ISO8859-1");
 					// filename = new String(filename.getBytes(), "UTF-8");
 					filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
 
-					String headerValue = String.format("attachment; filename=\"%s\"", filename);
-					response.setHeader(headerKey, headerValue);
+					//String headerValue = String.format("attachment; filename=\"%s\"", filename);
+					//response.setHeader(headerKey, headerValue);
+					
+					String fileName = "";
+					try {
+
+						if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+							fileName = URLEncoder.encode(filename, "UTF-8");
+							if (fileName.length() > 150) {
+								// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
+								String guessCharset = "gb2312";
+								fileName = new String(filename.getBytes(guessCharset), "ISO8859-1");
+							}
+						} else {
+							fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+						}
+
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					response.setContentType("multipart/form-data");
+					// 2.设置文件头：最后一个参数是设置下载文件名
+					response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
 					// get output stream of the response
 					OutputStream outStream = response.getOutputStream();
@@ -271,7 +295,7 @@ public class AppFormController {
 			if (permission) {
 
 				// get absolute path of the application
-				ServletContext context = request.getServletContext();
+				//ServletContext context = request.getServletContext();
 				// String appPath = context.getRealPath("");
 
 				// construct the complete absolute path of the file
@@ -296,23 +320,48 @@ public class AppFormController {
 				File downloadFile = new File(fullPath);
 				FileInputStream inputStream = new FileInputStream(downloadFile);
 
+				/*
 				// get MIME type of the file
 				String mimeType = context.getMimeType(fullPath);
 				if (mimeType == null) {
 					// set to binary type if MIME mapping not found
 					mimeType = "application/octet-stream";
 				}
-				System.out.println("MIME type: " + mimeType);
+				//System.out.println("MIME type: " + mimeType);
 
 				// set content attributes for the response
 				response.setContentType(mimeType + ";charset=UTF-8");
 				response.setContentLength((int) downloadFile.length());
+*/
+				
+				
+				//filename = new String(filename.getBytes(), "ISO8859-1");
+				//以下方法在demo里文件名下载乱码？
+				//filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
+				String fileName = "";
+				try {
+					String userAgent = request.getHeader("User-Agent").toUpperCase();
+					if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
+						fileName = URLEncoder.encode(filename, "UTF-8");
+						if (fileName.length() > 150) {
+							// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
+							String guessCharset = "gb2312";
+							fileName = new String(filename.getBytes(guessCharset), "ISO8859-1");
+						}
+					} else {
+						fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+					}
+					
 
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				response.setContentType("multipart/form-data");
+				
+				
 				// set headers for the response
 				String headerKey = "Content-Disposition";
-				//filename = new String(filename.getBytes(), "ISO8859-1");
-				filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
-
 				String headerValue = String.format("attachment; filename=\"%s\"", filename);
 				response.setHeader(headerKey, headerValue);
 
