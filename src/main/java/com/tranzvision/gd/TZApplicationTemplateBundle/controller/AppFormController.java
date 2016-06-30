@@ -207,15 +207,15 @@ public class AppFormController {
 					//String headerKey = "Content-Disposition";
 					// filename = new String(filename.getBytes(), "ISO8859-1");
 					// filename = new String(filename.getBytes(), "UTF-8");
-					filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
+					//filename = fileManageServiceImpl.encodeChineseDownloadFileName(request, filename);
 
 					//String headerValue = String.format("attachment; filename=\"%s\"", filename);
 					//response.setHeader(headerKey, headerValue);
 					
 					String fileName = "";
 					try {
-
-						if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+						String userAgent = request.getHeader("User-Agent").toUpperCase();
+						if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
 							fileName = URLEncoder.encode(filename, "UTF-8");
 							if (fileName.length() > 150) {
 								// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
@@ -362,7 +362,7 @@ public class AppFormController {
 				
 				// set headers for the response
 				String headerKey = "Content-Disposition";
-				String headerValue = String.format("attachment; filename=\"%s\"", filename);
+				String headerValue = String.format("attachment; filename=\"%s\"", fileName);
 				response.setHeader(headerKey, headerValue);
 
 				// get output stream of the response

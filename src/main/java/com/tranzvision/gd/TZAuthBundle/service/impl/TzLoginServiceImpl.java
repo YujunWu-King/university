@@ -181,13 +181,25 @@ public class TzLoginServiceImpl implements TzLoginService {
 					psTzOnTrialT.setTzEndTime(endTime);
 					psTzOnTrialTMapper.updateByPrimaryKeySelective(psTzOnTrialT);
 				} else {
-					// 判断试用时间是不是失效;
-					Date currentDate = new Date();
-					if (currentDate.after(endTime)) {
-						errorMsg.add("3");
-						errorMsg.add("试用账号已经过期。");
-						return false;
+					//判断是不是已经购买了;
+					int count = 0;
+					try {
+						count = sqlQuery.queryForObject(
+								"select count(1) from PS_TZ_ON_TRIAL_T where TZ_JG_ID=? AND TZ_DLZH_ID=? and TZ_SF_SALE='Y' limit 0,1",
+								new Object[] { orgid, userName }, "Integer");
+					} catch (Exception e) {
+						count = 0;
 					}
+					if(count <= 0){
+						// 如果没有购买则判断试用时间是不是失效;
+						Date currentDate = new Date();
+						if (currentDate.after(endTime)) {
+							errorMsg.add("3");
+							errorMsg.add("试用账号已经过期。");
+							return false;
+						}
+					}
+					
 				}
 
 			}
