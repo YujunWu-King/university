@@ -3468,6 +3468,7 @@ var SurveyBuild = {
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">报名表打印类型：</span>';
         htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'tpPdfType\')">';
+        htmlSet += '		<option value="" ' + (data.hasOwnProperty("tpPdfType") && data.tpPdfType == "" ? " selected=\'selected\'": "") + '></option>';
         htmlSet += '		<option value="HPDF" ' + (data.hasOwnProperty("tpPdfType") && data.tpPdfType == "HPDF" ? " selected=\'selected\'": "") + '>原html转pdf</option>';
         htmlSet += '		<option value="TPDF" ' + (data.hasOwnProperty("tpPdfType") && data.tpPdfType == "TPDF" ? " selected=\'selected\'": "") + '>使用pdf模板打印</option>';
         htmlSet += '	</select>';
