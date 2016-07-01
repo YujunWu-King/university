@@ -316,6 +316,13 @@ public class PdfPrintbyModel {
 					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
+			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='" + TZ_APP_INS_ID
+					+ "' and TZ_IS_CHECKED='Y'";
+			rt = stmt.executeQuery(sql);
+			while ((rt != null) && rt.next()) {
+				TZ_APP_S_TEXT = rt.getString("TZ_XXXKXZ_MC");
+				ht.put(rt.getString("TZ_XXX_BH"), TZ_APP_S_TEXT);
+			}
 			rt.close();
 			stmt.close();
 		} catch (SQLException e) {
