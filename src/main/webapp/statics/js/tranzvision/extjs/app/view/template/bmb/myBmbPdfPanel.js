@@ -155,6 +155,11 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
             						var comParams  = '"delete":[{"TplID":' + tplID + "}]";
             						var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_PDF_STD","OperateType":"U","comParams":{'
             							+ comParams + '}}';
+            						
+            						var panel = btn.findParentByType("myBmbPdfPanel");
+            						var grid = panel.child("grid");
+            						var store = grid.getStore();
+
             		                Ext.Ajax.request({
             		                    url:Ext.tzGetGeneralURL(),
             		                    async:false,
@@ -169,6 +174,9 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
             		                    	var formButton = btn.findParentByType("form");
             								var btndeletePdf=formButton.down('button[name=deletePdf]');
             								btndeletePdf.hide();
+            								
+            								
+            								store.removeAll();
             		                    	form.findField("pdfuploadfile").setVisible(true); 
             		                    	form.findField("downfileName").setValue("");
             		                    	form.findField("filePath").setValue("");
