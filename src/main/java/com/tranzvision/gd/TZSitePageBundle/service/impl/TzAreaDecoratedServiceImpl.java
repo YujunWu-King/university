@@ -166,7 +166,6 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 					String strAreaAppCls = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaTypeId },
 							"String");
 					if (null != strAreaAppCls && !"".equals(strAreaAppCls)) {
-
 						Object appClsObj = ctx.getBean(strAreaAppCls);
 						if (appClsObj != null) {
 
@@ -176,7 +175,6 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 							FrameworkImpl tzFrameworkImplObj = (FrameworkImpl) appClsObj;
 
 							strRet = tzFrameworkImplObj.tzUpdate(paramAry, errMsg);
-
 							errMsg[0] = "0";
 
 							return strRet;

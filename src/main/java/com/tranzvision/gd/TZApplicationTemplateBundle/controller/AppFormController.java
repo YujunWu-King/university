@@ -214,26 +214,38 @@ public class AppFormController {
 					
 					String fileName = "";
 					try {
+						
 						String userAgent = request.getHeader("User-Agent").toUpperCase();
-						if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
+						if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0 || userAgent.indexOf("CHROME")>0) ) {
 							fileName = URLEncoder.encode(filename, "UTF-8");
+							/*
 							if (fileName.length() > 150) {
+								System.out.println("========length===========>"+fileName.length());
 								// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
 								String guessCharset = "gb2312";
 								fileName = new String(filename.getBytes(guessCharset), "ISO8859-1");
 							}
+							*/
 						} else {
-							fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+							if ( userAgent.indexOf("Firefox".toUpperCase())>0) {// Firefox
+								fileName = "=?UTF-8?B?"
+										+ (new String(org.apache.commons.codec.binary.Base64.encodeBase64(filename.getBytes("UTF-8"))))
+										+ "?=";
+							} else{
+								fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+							}
 						}
-
+						
 					} catch (UnsupportedEncodingException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					response.setContentType("multipart/form-data");
 					// 2.设置文件头：最后一个参数是设置下载文件名
-					response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-
+					//response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+					String headerKey = "Content-Disposition";
+					String headerValue = String.format("attachment; filename=\"%s\"", fileName);
+					response.setHeader(headerKey, headerValue);
 					// get output stream of the response
 					OutputStream outStream = response.getOutputStream();
 
@@ -341,15 +353,24 @@ public class AppFormController {
 				String fileName = "";
 				try {
 					String userAgent = request.getHeader("User-Agent").toUpperCase();
-					if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
+					if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0 || userAgent.indexOf("CHROME")>0) ) {
 						fileName = URLEncoder.encode(filename, "UTF-8");
+						/*
 						if (fileName.length() > 150) {
+							System.out.println("========length===========>"+fileName.length());
 							// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
 							String guessCharset = "gb2312";
 							fileName = new String(filename.getBytes(guessCharset), "ISO8859-1");
 						}
+						*/
 					} else {
-						fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+						if ( userAgent.indexOf("Firefox".toUpperCase())>0) {// Firefox
+							fileName = "=?UTF-8?B?"
+									+ (new String(org.apache.commons.codec.binary.Base64.encodeBase64(filename.getBytes("UTF-8"))))
+									+ "?=";
+						} else{
+							fileName = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+						}
 					}
 					
 
