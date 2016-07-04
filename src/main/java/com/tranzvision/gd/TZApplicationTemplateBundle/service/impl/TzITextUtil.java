@@ -37,11 +37,6 @@ public class TzITextUtil {
 					value = " ";
 				int type = s.getFieldType(name);
 
-				if ((type == 5) || (type == 6))
-					type = 1;
-				else {
-					type = 0;
-				}
 				str_return = str_return + name + "∨∨" + value + "∨∨" + type + "∧∧";
 			}
 		} catch (FileNotFoundException e) {
@@ -191,8 +186,8 @@ public class TzITextUtil {
 			ps.setFormFlattening(true);
 			ps.close();
 			out.write(bos.toByteArray());
-			//out.close();
-			//out.flush();
+			// out.close();
+			// out.flush();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			result = false;
