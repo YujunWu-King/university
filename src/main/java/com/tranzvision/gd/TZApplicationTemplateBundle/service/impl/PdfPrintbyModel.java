@@ -298,7 +298,7 @@ public class PdfPrintbyModel {
 	 * @param conn
 	 * @return
 	 */
-	private Hashtable<String, String> getInstance(String TZ_APP_INS_ID, Connection conn) {
+	private Hashtable<String, String> getInstance(String TZ_APP_INS_ID, Connection conn, String templateID) {
 		Hashtable<String, String> ht = new Hashtable<String, String>();
 		Statement stmt = null;
 		ResultSet rt = null;
@@ -308,6 +308,7 @@ public class PdfPrintbyModel {
 			String sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "'";
 			rt = stmt.executeQuery(sql);
+			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
 			while ((rt != null) && rt.next()) {
 				TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
 				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.equals("")) {
@@ -316,6 +317,16 @@ public class PdfPrintbyModel {
 					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
+
+			sql = "select TZ_XXX_BH,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='" + TZ_APP_INS_ID
+					+ "' and TZ_XXX_BH in (select TZ_XXX_BH from PS_TZ_APP_XXXPZ_T where TZ_APP_TPL_ID='" + templateID
+					+ "' and TZ_COM_LMC='Select')";
+			rt = stmt.executeQuery(sql);
+			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
+			while ((rt != null) && rt.next()) {
+				ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
+			}
+
 			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_KXX_QTZ from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "' and TZ_IS_CHECKED='Y'";
 			rt = stmt.executeQuery(sql);
@@ -518,7 +529,7 @@ public class PdfPrintbyModel {
 				bean.setOrgid(orgid);
 			}
 
-			Hashtable<String, String> ht = this.getInstance(bmbInsId, conn);
+			Hashtable<String, String> ht = this.getInstance(bmbInsId, conn,templateID);
 
 			if (ht == null || ht.size() <= 0) {
 				bean.setRs(-9);
