@@ -385,7 +385,8 @@ public class PdfPrintbyModel {
 	 * @param ht
 	 * @return 机构ID
 	 */
-	private String getPdfFieldsValue(String templateID, Connection conn, Hashtable<String, String> ht) {
+	private String getPdfFieldsValue(String templateID, Connection conn, Hashtable<String, String> ht,
+			String fileName) {
 		Statement stmt = null;
 		ResultSet rt = null;
 		String fieldsV = null;
@@ -407,6 +408,42 @@ public class PdfPrintbyModel {
 					fieldsValue.append("∧∧");
 				}
 			}
+
+			fieldsV = fieldsValue.toString();
+
+			// 模版里面多选框 超过3个的，需要自动载入其他的
+			// 2 复选框
+			// 4 文本
+			// 3 单选钮组
+
+			TzITextUtil ttu = new TzITextUtil();
+			String types = ttu.getFieldValueAndType(fileName);
+			String[] fieldsValueArray = (String[]) null;
+			String[] fieldValueArray = (String[]) null;
+			String str = null;
+
+			if (types != null && !types.equals("")) {
+				types = types.substring(0, types.length() - 2);
+				fieldsValueArray = types.split("∧∧");
+				for (int i = 0; i < fieldsValueArray.length; ++i) {
+					// str_return = str_return + name + "∨∨" + value + "∨∨" +
+					// type + "∧∧";
+					fieldValueArray = fieldsValueArray[i].split("∨∨");
+					if (fieldValueArray[2].equals("2")) {
+						if (fieldsV.indexOf(fieldValueArray[0]) == -1) {
+
+							str = this.getTZ_XXX_BH(fieldValueArray[0]);
+							if (ht.get(str) != null && !ht.get(str).equals("")) {
+								fieldsValue.append(fieldValueArray[0]);
+								fieldsValue.append("∨∨");
+								fieldsValue.append(ht.get(str));
+								fieldsValue.append("∧∧");
+							}
+						}
+					}
+				}
+			}
+
 			fieldsV = fieldsValue.toString();
 			if (fieldsV != null && !fieldsV.equals("")) {
 				fieldsV = fieldsV.substring(0, fieldsV.length() - 2);
@@ -418,6 +455,14 @@ public class PdfPrintbyModel {
 			e.printStackTrace();
 		}
 		return fieldsV;
+	}
+
+	private String getTZ_XXX_BH(String str) {
+		// 表单1[0].#subform[4].TZ_1124[0]
+		str = str.substring(0, str.length() - 1);
+		str = str.substring(str.lastIndexOf(".") + 1, str.length());
+		str = str.substring(0, str.lastIndexOf("["));
+		return str;
 	}
 
 	/**
@@ -529,13 +574,13 @@ public class PdfPrintbyModel {
 				bean.setOrgid(orgid);
 			}
 
-			Hashtable<String, String> ht = this.getInstance(bmbInsId, conn,templateID);
+			Hashtable<String, String> ht = this.getInstance(bmbInsId, conn, templateID);
 
 			if (ht == null || ht.size() <= 0) {
 				bean.setRs(-9);
 				return bean;
 			}
-			fieldsV = this.getPdfFieldsValue(templateID, conn, ht);
+			fieldsV = this.getPdfFieldsValue(templateID, conn, ht, fieldName);
 			if (fieldsV == null || fieldsV.equals("")) {
 				bean.setRs(-5);
 				return bean;
@@ -574,6 +619,7 @@ public class PdfPrintbyModel {
 	public void pdfPrintAndDownLoad(ServletOutputStream out, DataBean bean) {
 		if (bean.getRs() == 0) {
 			TzITextUtil t = new TzITextUtil();
+
 			boolean b = t.setFieldsValue(bean.getTemplateFileName(), bean.getPdfFieldsValues(), out);
 			if (!b) {
 				bean.setRs(-6);
