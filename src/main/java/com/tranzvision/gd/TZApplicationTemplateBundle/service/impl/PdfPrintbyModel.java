@@ -316,12 +316,18 @@ public class PdfPrintbyModel {
 					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
-			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='" + TZ_APP_INS_ID
-					+ "' and TZ_IS_CHECKED='Y'";
+			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_KXX_QTZ from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='"
+					+ TZ_APP_INS_ID + "' and TZ_IS_CHECKED='Y'";
 			rt = stmt.executeQuery(sql);
+			String TZ_KXX_QTZ = "";
 			while ((rt != null) && rt.next()) {
 				TZ_APP_S_TEXT = rt.getString("TZ_XXXKXZ_MC");
 				ht.put(rt.getString("TZ_XXX_BH"), TZ_APP_S_TEXT);
+				TZ_KXX_QTZ = rt.getString("TZ_KXX_QTZ");
+				// 多选按钮或单选按钮组的其他值 ID用 按钮按钮+_QTZ
+				if (TZ_KXX_QTZ != null && !TZ_KXX_QTZ.equals("")) {
+					ht.put(rt.getString("TZ_XXX_BH") + "_QTZ", TZ_KXX_QTZ);
+				}
 			}
 			rt.close();
 			stmt.close();
