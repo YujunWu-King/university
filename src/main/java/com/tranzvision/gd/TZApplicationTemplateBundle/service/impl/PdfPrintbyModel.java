@@ -302,6 +302,7 @@ public class PdfPrintbyModel {
 		Hashtable<String, String> ht = new Hashtable<String, String>();
 		Statement stmt = null;
 		ResultSet rt = null;
+		ResultSet rt2 = null;
 		try {
 			stmt = conn.createStatement();
 			String TZ_APP_S_TEXT = "";
@@ -317,15 +318,36 @@ public class PdfPrintbyModel {
 					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
+			rt.close();
 
-			sql = "select TZ_XXX_BH,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='" + TZ_APP_INS_ID
+			sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
+					+ TZ_APP_INS_ID
 					+ "' and TZ_XXX_BH in (select TZ_XXX_BH from PS_TZ_APP_XXXPZ_T where TZ_APP_TPL_ID='" + templateID
 					+ "' and TZ_COM_LMC='Select')";
 			rt = stmt.executeQuery(sql);
 			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
+			String TZ_APP_L_TEXT = null;
 			while ((rt != null) && rt.next()) {
-				ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
+				TZ_APP_L_TEXT = rt.getString("TZ_APP_L_TEXT");
+				if (TZ_APP_L_TEXT != null && !TZ_APP_L_TEXT.equals("")) {
+					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
+				} else {
+					// 如果没有 只能去 PS_TZ_APPXXX_KXZ_T 报名表模板信息项可选值定义表 报名表里面下拉列表的定义找了
+					TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
+					sql = "select TZ_XXXKXZ_MS from PS_TZ_APPXXX_KXZ_T where TZ_APP_TPL_ID='" + templateID
+							+ "' and TZ_XXX_BH='" + rt.getString("TZ_XXX_BH") + "' and TZ_XXXKXZ_MC='" + TZ_APP_S_TEXT
+							+ "'";
+					rt2 = stmt.executeQuery(sql);
+					if ((rt2 != null) && rt2.next()) {
+						ht.put(rt.getString("TZ_XXX_BH"), rt2.getString("TZ_XXXKXZ_MS"));
+					}
+				}
 			}
+
+			if (rt2 != null) {
+				rt2.close();
+			}
+			rt.close();
 
 			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_KXX_QTZ from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "' and TZ_IS_CHECKED='Y'";
@@ -395,16 +417,19 @@ public class PdfPrintbyModel {
 
 			stmt = conn.createStatement();
 			String TZ_APP_PDF_FIELD = "";
+			String TZ_XXX_BH = null;
 			String sql = "select TZ_XXX_BH,TZ_APP_PDF_FIELD from PS_TZ_APP_PDFFIELDITEM_T where TZ_APP_TPL_ID='"
 					+ templateID + "'";
 			rt = stmt.executeQuery(sql);
 			// fieldName∨∨fieldValue∧∧fieldName∨∨fieldValue∧∧*/
 			while ((rt != null) && rt.next()) {
 				TZ_APP_PDF_FIELD = rt.getString("TZ_APP_PDF_FIELD");
-				if (TZ_APP_PDF_FIELD != null && !TZ_APP_PDF_FIELD.equals("")) {
+				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
+				if (TZ_APP_PDF_FIELD != null && !TZ_APP_PDF_FIELD.equals("") && ht.get(TZ_XXX_BH) != null
+						&& !ht.get(TZ_XXX_BH).equals("")) {
 					fieldsValue.append(TZ_APP_PDF_FIELD);
 					fieldsValue.append("∨∨");
-					fieldsValue.append(ht.get(rt.getString("TZ_XXX_BH")));
+					fieldsValue.append(ht.get(TZ_XXX_BH));
 					fieldsValue.append("∧∧");
 				}
 			}

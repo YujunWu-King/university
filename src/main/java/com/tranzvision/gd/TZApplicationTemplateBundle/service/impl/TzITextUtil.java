@@ -235,18 +235,6 @@ public class TzITextUtil {
 					continue;
 				}
 				fields.setField(fieldValueArray[0], fieldValueArray[1]);
-				// if (fieldValueArray.length != 3)
-				// continue;
-				// int type = fields.getFieldType(fieldValueArray[0]);
-				// int lineLength = Integer.parseInt(fieldValueArray[2]);
-				// if ((lineLength > 0) && (type == 4) &&
-				// (Util.getLengthString(fieldValueArray[1]) > lineLength)) {
-				// String strTemp = Util.addBreak(fieldValueArray[1],
-				// lineLength); // 猜想加上换行
-				// fields.setField(fieldValueArray[0], strTemp);
-				// } else {
-				// fields.setField(fieldValueArray[0], fieldValueArray[1]);
-				// }
 			}
 			ps.setFormFlattening(true);
 			ps.close();
