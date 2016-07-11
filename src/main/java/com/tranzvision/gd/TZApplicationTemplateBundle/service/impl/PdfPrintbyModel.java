@@ -264,6 +264,34 @@ public class PdfPrintbyModel {
 	}
 
 	/**
+	 * 获取推荐人
+	 * 
+	 * @param TZ_APP_INS_ID
+	 * @param conn
+	 * @return 用户姓名
+	 */
+	private String getRecommendName(String TZ_APP_INS_ID, Connection conn) {
+		Statement stmt = null;
+		ResultSet rt = null;
+		String userName = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "select TZ_REFERRER_NAME from PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID ='" + TZ_APP_INS_ID
+					+ "'";
+			rt = stmt.executeQuery(sql);
+			if ((rt != null) && rt.next()) {
+				userName = rt.getString("TZ_REFERRER_NAME");
+			}
+			rt.close();
+			stmt.close();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return userName;
+	}
+
+	/**
 	 * 获取班级名称
 	 * 
 	 * @param TZ_APP_INS_ID
@@ -302,51 +330,59 @@ public class PdfPrintbyModel {
 		Hashtable<String, String> ht = new Hashtable<String, String>();
 		Statement stmt = null;
 		ResultSet rt = null;
-		ResultSet rt2 = null;
+		// ResultSet rt2 = null;
 		try {
 			stmt = conn.createStatement();
 			String TZ_APP_S_TEXT = "";
 			String sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "'";
+
+			String TZ_XXX_BH = null;
+
 			rt = stmt.executeQuery(sql);
 			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
 			while ((rt != null) && rt.next()) {
+				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
 				TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
-				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.equals("")) {
-					ht.put(rt.getString("TZ_XXX_BH"), TZ_APP_S_TEXT);
+				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.trim().equals("")) {
+					ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
 				} else {
-					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
+					ht.put(TZ_XXX_BH, rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
 			rt.close();
 
-			sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
-					+ TZ_APP_INS_ID
-					+ "' and TZ_XXX_BH in (select TZ_XXX_BH from PS_TZ_APP_XXXPZ_T where TZ_APP_TPL_ID='" + templateID
-					+ "' and TZ_COM_LMC='Select')";
-			rt = stmt.executeQuery(sql);
-			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
-			String TZ_APP_L_TEXT = null;
-			while ((rt != null) && rt.next()) {
-				TZ_APP_L_TEXT = rt.getString("TZ_APP_L_TEXT");
-				if (TZ_APP_L_TEXT != null && !TZ_APP_L_TEXT.equals("")) {
-					ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
-				} else {
-					// 如果没有 只能去 PS_TZ_APPXXX_KXZ_T 报名表模板信息项可选值定义表 报名表里面下拉列表的定义找了
-					TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
-					sql = "select TZ_XXXKXZ_MS from PS_TZ_APPXXX_KXZ_T where TZ_APP_TPL_ID='" + templateID
-							+ "' and TZ_XXX_BH='" + rt.getString("TZ_XXX_BH") + "' and TZ_XXXKXZ_MC='" + TZ_APP_S_TEXT
-							+ "'";
-					rt2 = stmt.executeQuery(sql);
-					if ((rt2 != null) && rt2.next()) {
-						ht.put(rt.getString("TZ_XXX_BH"), rt2.getString("TZ_XXXKXZ_MS"));
-					}
-				}
-			}
-
-			if (rt2 != null) {
-				rt2.close();
-			}
+			// sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from
+			// PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
+			// + TZ_APP_INS_ID
+			// + "' and TZ_XXX_BH in (select TZ_XXX_BH from PS_TZ_APP_XXXPZ_T
+			// where TZ_APP_TPL_ID='" + templateID
+			// + "' and TZ_COM_LMC='Select')";
+			// rt = stmt.executeQuery(sql);
+			// // 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
+			// String TZ_APP_L_TEXT = null;
+			// while ((rt != null) && rt.next()) {
+			// TZ_APP_L_TEXT = rt.getString("TZ_APP_L_TEXT");
+			// if (TZ_APP_L_TEXT != null && !TZ_APP_L_TEXT.equals("")) {
+			// ht.put(rt.getString("TZ_XXX_BH"), rt.getString("TZ_APP_L_TEXT"));
+			// } else {
+			// // 如果没有 只能去 PS_TZ_APPXXX_KXZ_T 报名表模板信息项可选值定义表 报名表里面下拉列表的定义找了
+			// TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
+			// sql = "select TZ_XXXKXZ_MS from PS_TZ_APPXXX_KXZ_T where
+			// TZ_APP_TPL_ID='" + templateID
+			// + "' and TZ_XXX_BH='" + rt.getString("TZ_XXX_BH") + "' and
+			// TZ_XXXKXZ_MC='" + TZ_APP_S_TEXT
+			// + "'";
+			// rt2 = stmt.executeQuery(sql);
+			// if ((rt2 != null) && rt2.next()) {
+			// ht.put(rt.getString("TZ_XXX_BH"), rt2.getString("TZ_XXXKXZ_MS"));
+			// }
+			// }
+			// }
+			//
+			// if (rt2 != null) {
+			// rt2.close();
+			// }
 			rt.close();
 
 			sql = "select TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_KXX_QTZ from PS_TZ_APP_DHCC_T  where TZ_APP_INS_ID='"
@@ -354,12 +390,13 @@ public class PdfPrintbyModel {
 			rt = stmt.executeQuery(sql);
 			String TZ_KXX_QTZ = "";
 			while ((rt != null) && rt.next()) {
+				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
 				TZ_APP_S_TEXT = rt.getString("TZ_XXXKXZ_MC");
-				ht.put(rt.getString("TZ_XXX_BH"), TZ_APP_S_TEXT);
+				ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
 				TZ_KXX_QTZ = rt.getString("TZ_KXX_QTZ");
 				// 多选按钮或单选按钮组的其他值 ID用 按钮按钮+_QTZ
-				if (TZ_KXX_QTZ != null && !TZ_KXX_QTZ.equals("")) {
-					ht.put(rt.getString("TZ_XXX_BH") + "_QTZ", TZ_KXX_QTZ);
+				if (TZ_KXX_QTZ != null && !TZ_KXX_QTZ.trim().equals("")) {
+					ht.put(TZ_XXX_BH + "_QTZ", TZ_KXX_QTZ);
 				}
 			}
 			rt.close();
@@ -422,11 +459,12 @@ public class PdfPrintbyModel {
 					+ templateID + "'";
 			rt = stmt.executeQuery(sql);
 			// fieldName∨∨fieldValue∧∧fieldName∨∨fieldValue∧∧*/
+
 			while ((rt != null) && rt.next()) {
 				TZ_APP_PDF_FIELD = rt.getString("TZ_APP_PDF_FIELD");
 				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
-				if (TZ_APP_PDF_FIELD != null && !TZ_APP_PDF_FIELD.equals("") && ht.get(TZ_XXX_BH) != null
-						&& !ht.get(TZ_XXX_BH).equals("")) {
+				if (TZ_APP_PDF_FIELD != null && !TZ_APP_PDF_FIELD.trim().equals("") && ht.get(TZ_XXX_BH) != null
+						&& !ht.get(TZ_XXX_BH).trim().equals("")) {
 					fieldsValue.append(TZ_APP_PDF_FIELD);
 					fieldsValue.append("∨∨");
 					fieldsValue.append(ht.get(TZ_XXX_BH));
@@ -458,7 +496,7 @@ public class PdfPrintbyModel {
 						if (fieldsV.indexOf(fieldValueArray[0]) == -1) {
 
 							str = this.getTZ_XXX_BH(fieldValueArray[0]);
-							if (ht.get(str) != null && !ht.get(str).equals("")) {
+							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
 								fieldsValue.append(fieldValueArray[0]);
 								fieldsValue.append("∨∨");
 								fieldsValue.append(ht.get(str));
@@ -533,12 +571,15 @@ public class PdfPrintbyModel {
 
 		String bmbInsId = TZ_APP_INS_ID;
 
+		String tempid = null;
+
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
 
+			// 如果是推荐信 需要把推荐实例ID 换成 报名表实例 ID
 			if (StringUtils.equals("B", type)) {
-				bmbInsId = this.getRecommendID(TZ_APP_INS_ID, conn);
+				tempid = this.getRecommendID(TZ_APP_INS_ID, conn);
 			}
 
 			templateID = this.getTemplateID(bmbInsId, conn);
@@ -561,13 +602,32 @@ public class PdfPrintbyModel {
 			// 如果方法没有传下载文件名，那么需要自己拼装
 			if (downloadFileName == null || downloadFileName.equals("") || downloadFileName.equals("null")) {
 				// 报名的班级名称_报名人姓名.pdf
-				String userName = this.getUserName(bmbInsId, conn);
+				String userName = null;
+				if (type.equals("A")) {
+					userName = this.getUserName(bmbInsId, conn);
+				} else {
+					userName = this.getUserName(tempid, conn);
+					String recommendName = this.getRecommendName(bmbInsId, conn);
+
+					if (recommendName == null || recommendName.equals("")) {
+						bean.setRs(-10); // 报名人姓名不存在
+						return bean;
+					} else {
+						bean.setRecommendName(recommendName);
+					}
+				}
 				if (userName == null || userName.equals("")) {
 					bean.setRs(-10); // 报名人姓名不存在
 					return bean;
 				}
+
 				bean.setUserName(userName);
-				String className = this.getClassName(bmbInsId, conn);
+				String className = null;
+				if (type.equals("A")) {
+					className = this.getClassName(bmbInsId, conn);
+				} else {
+					className = this.getClassName(tempid, conn);
+				}
 				if (className == null || className.equals("")) {
 					bean.setRs(-11); // 报名的班级名称不存在
 					return bean;
@@ -683,7 +743,7 @@ public class PdfPrintbyModel {
 			if (StringUtils.equals("A", type)) {
 				path = path + bean.getUserName() + "_报名表.pdf";
 			} else {
-				path = path + bean.getUserName() + "_推荐信.pdf";
+				path = path + bean.getUserName() + "_" + bean.getRecommendName() + "_推荐信.pdf";
 			}
 			System.out.println("path = " + path);
 			TzITextUtil t = new TzITextUtil();
@@ -772,12 +832,12 @@ public class PdfPrintbyModel {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub22
 		// 251
-		// PdfPrintbyModel a = new PdfPrintbyModel();
-		// System.out.println(a.createPdf("D:\\", "252", "A"));
+		PdfPrintbyModel a = new PdfPrintbyModel();
+		System.out.println(a.getTZ_XXX_BH("表单1[0].#subform[4].TZ_1124[0]"));
 
-		String a = "111|||222";
-		System.out.println(StringUtils.split(a, "|||")[0]);
-		System.out.println(StringUtils.split(a, "|||")[1]);
+//		String a = "111|||222";
+//		System.out.println(StringUtils.split(a, "|||")[0]);
+//		System.out.println(StringUtils.split(a, "|||")[1]);
 	}
 
 }

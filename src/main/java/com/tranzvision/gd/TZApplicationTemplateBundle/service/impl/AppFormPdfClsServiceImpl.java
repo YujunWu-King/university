@@ -80,7 +80,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				strForm = actData[num];
-				////System.out.println("strForm：" + strForm);
+				//// System.out.println("strForm：" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 				typeFlag = jacksonUtil.getString("typeFlag");
@@ -116,7 +116,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			//System.out.println("tpPdfStatus：" + tpPdfStatus);
+			// System.out.println("tpPdfStatus：" + tpPdfStatus);
 			// 删除模板字段原来对应报名表信息表
 			Object[] args = new Object[] { tplID };
 			Object[] insertargs = null;
@@ -126,7 +126,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 
 			args = new Object[] { tplID, filePath, fileName, tpPdfStatus };
 			sql = "INSERT INTO PS_TZ_APP_PDFFIELD_T (TZ_APP_TPL_ID,TZ_FIELD_PATH,TZ_FIELD_NAME,TZ_FIELD_STATUS) VALUES (?,?,?,?)";
-			//System.out.println("sql：" + sql);
+			// System.out.println("sql：" + sql);
 			jdbcTemplate.update(sql, args);
 
 			// 删除模板字段原来对应报名表信息表
@@ -227,7 +227,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 						mapData.put("fileName", fileName);
 						mapData.put("downfileName", fileName);
 						mapData.put("tpPdfStatus", status);
-						if (status==null || status.trim().equals("")) {
+						if (status == null || status.trim().equals("")) {
 							mapData.put("tpPdfStatus", "A");
 						}
 						if (fileName == null || fileName.trim().equals("")) {
@@ -416,6 +416,8 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 				// //System.out.println("fileName：" + fileName);
 				// //System.out.println("storDate：" + storDate);
 
+				String temp = null;
+
 				String[] strActData = null;
 				Map<String, Object> mapData = null;
 				List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("storDates");
@@ -430,7 +432,8 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 					strActData = new String[jsonArray.size()];
 					for (int num = 0; num < jsonArray.size(); num++) {
 						strActData[num] = jacksonUtil.Map2json(jsonArray.get(num));
-						// //System.out.println("strActData：" + strActData[num]);
+						// //System.out.println("strActData：" +
+						// strActData[num]);
 					}
 
 					// 解析加载PDF模板信息项
@@ -452,7 +455,9 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 
 							int index = 0;
 							for (int j = 0; j < fields.length; j++) {
-								if (fields[j].indexOf(fieldID) != -1) {
+								temp = this.getTZ_XXX_BH(fields[j]);
+								//
+								if (temp.equals(fieldID)) {
 									index = index + 1;
 									if (index == 1) {
 										mapJson.put("pdffield1", fields[j]);
@@ -481,6 +486,16 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 		}
 
 		return jacksonUtil.Map2json(mapRet);
+	}
+
+	private String getTZ_XXX_BH(String str) {
+		// 表单1[0].#subform[4].TZ_1124[0]
+
+		str = str.substring(str.lastIndexOf(".") + 1, str.length());
+		if (str.indexOf("[") != -1) {
+			str = str.substring(0, str.indexOf("["));
+		}
+		return str;
 	}
 
 	private String[] split(String str, String sep) {
@@ -563,7 +578,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				strForm = actData[num];
-				//System.out.println("strForm：" + strForm);
+				// System.out.println("strForm：" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 				tplID = jacksonUtil.getString("TplID");

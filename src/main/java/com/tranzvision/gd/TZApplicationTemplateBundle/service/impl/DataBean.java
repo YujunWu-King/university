@@ -12,6 +12,17 @@ public class DataBean {
 	private String templateID;
 	private String downloadFileName;
 	private String filePath;
+	
+	private String recommendName;
+	
+	
+	public String getRecommendName() {
+		return recommendName;
+	}
+
+	public void setRecommendName(String recommendName) {
+		this.recommendName = recommendName;
+	}
 
 	public String getFilePath() {
 		return filePath;
