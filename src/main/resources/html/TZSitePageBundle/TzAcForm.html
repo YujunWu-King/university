@@ -1,0 +1,121 @@
+{
+    "success": true,
+	"areaId":"%bind(:2)",
+    "items": {
+        "container": [
+            {
+                "xtype": "container",
+                "items": [
+                    {
+                        "xtype": "textfield",
+                        "fieldLabel": "区域名称",
+                        "name": "areaName",
+						"value":"%bind(:8)",
+						"listeners":{
+							change: function(thisField, newValue, oldValue, eOpts  ){
+								Ext.get("%bind(:9)").child("div").child("div").child("div").dom.innerHTML=newValue;
+								editPanel.getForm().findField('areaCode').setValue(Ext.get("%bind(:9)").dom.outerHTML);
+								var bodyCode = Ext.get("all").dom.outerHTML;
+								bodyCode="<body style=\"background:#fff\">" + bodyCode + "</body>";
+								bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+								editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+								/*var headCode = document.head.outerHTML;editPanel.getForm().findField('headCode').setValue(headCode);
+								var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+								editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+								var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+								editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+								var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+								editPanel.getForm().findField('decoratedpluginbar').setValue(decoratedpluginbar);*/
+								var pagetype = Ext.get("pagetype").getValue();
+								editPanel.getForm().findField('pagetype').setValue(pagetype);
+							}
+						}
+                    },
+					{
+                            "xtype": "combo",
+                            "fieldLabel": "区域类型",
+                            "id": "",
+                            "name": "combo",
+                            "readOnly": false,
+                            "store": "",
+                            "fields": [
+                                "value",
+                                "text"
+                            ],
+                            "data": %bind(:5),
+                            "displayField": "text",
+                            "valueField": "value",
+							"value":"%bind(:4)",
+							"readOnly":true	
+                        },
+						{
+                            "xtype": "combo",
+                            "fieldLabel": "对应栏目",
+                            "id": "_selectColu",
+                            "name": "combo",
+                            "readOnly": false,
+							"_areaType":"%bind(:4)",
+                            "store": "",
+                            "fields": [
+                                "value",
+                                "text"
+                            ],
+                            "data":%bind(:7),
+                            "displayField": "text",
+                            "valueField": "value",
+							"value":"%bind(:6)",
+							"listeners":{
+								select: function( combo, records, eOpts ){
+									/*Ext.get(Ext.query(".main_mid_activity")[0]).set({"area-colu":combo.value});
+									editPanel.getForm().findField('areaCode').setValue(Ext.get(Ext.query(".main_mid_activity")[0]).dom.outerHTML);
+									var bodyCode = Ext.get("all").dom.outerHTML;
+									bodyCode=bodyCode.replace(new RegExp(/(id=\"ext-element-[0-9]*\")/g), "");
+									editPanel.getForm().findField('bodyCode').setValue(bodyCode);
+									var headCode = document.head.outerHTML;
+									editPanel.getForm().findField('headCode').setValue(headCode);
+									var decoratedplugincss = Ext.get("decoratedplugincss").dom.outerHTML;
+									editPanel.getForm().findField('decoratedplugincss').setValue(decoratedplugincss);
+									var decoratedpluginjs = Ext.get("decoratedpluginjs").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginjs').setValue(decoratedpluginjs);
+									var decoratedpluginbar = Ext.get("sdkbar").dom.outerHTML;
+									editPanel.getForm().findField('decoratedpluginbar').setValue(sdkbar);*/
+									var pagetype = Ext.get("pagetype").getValue();
+									editPanel.getForm().findField('pagetype').setValue(pagetype);}}  
+                        },
+						{
+							 "xtype": "hiddenfield","name": "siteId","value":"%bind(:1)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaId","value":"%bind(:2)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaZone","value":"%bind(:3)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaType","value":"%bind(:4)"
+							},
+							{
+							 "xtype": "hiddenfield","name": "areaCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "headCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "bodyCode"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedplugincss"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginjs"
+							},
+							{
+							 "xtype": "hiddenfield","name": "decoratedpluginbar"
+							},{
+							 "xtype": "hiddenfield","name": "pagetype"
+							}
+				]
+			  }
+		  ]
+		}
+}
