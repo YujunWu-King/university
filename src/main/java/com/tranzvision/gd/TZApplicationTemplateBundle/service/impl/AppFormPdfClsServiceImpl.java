@@ -456,7 +456,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 							int index = 0;
 							for (int j = 0; j < fields.length; j++) {
 								temp = this.getTZ_XXX_BH(fields[j]);
-								//
+								//System.out.println(fields[j] + "---->" + temp + "<-----" + fieldID);
 								if (temp.equals(fieldID)) {
 									index = index + 1;
 									if (index == 1) {
@@ -464,7 +464,7 @@ public class AppFormPdfClsServiceImpl extends FrameworkImpl {
 									} else if (index == 2) {
 										mapJson.put("pdffield2", fields[j]);
 									} else if (index == 3) {
-										mapJson.put("pdffield2", fields[j]);
+										mapJson.put("pdffield3", fields[j]);
 									} else {
 										break;
 									}

@@ -11,8 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Vector;
+
 import javax.servlet.ServletOutputStream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -346,8 +349,11 @@ public class PdfPrintbyModel {
 				TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
 				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.trim().equals("")) {
 					ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
+					// System.out.println(TZ_XXX_BH + ":" + TZ_APP_S_TEXT);
 				} else {
 					ht.put(TZ_XXX_BH, rt.getString("TZ_APP_L_TEXT"));
+					// System.out.println(TZ_XXX_BH + ":" +
+					// rt.getString("TZ_APP_L_TEXT"));
 				}
 			}
 			rt.close();
@@ -393,10 +399,17 @@ public class PdfPrintbyModel {
 				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
 				TZ_APP_S_TEXT = rt.getString("TZ_XXXKXZ_MC");
 				ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
+
+				// 对于多选框的选择 因为多选框 会有多个相同的TZ_XXX_BH
+				ht.put(TZ_XXX_BH + "_" + TZ_APP_S_TEXT, TZ_APP_S_TEXT);
+
 				TZ_KXX_QTZ = rt.getString("TZ_KXX_QTZ");
+				// System.out.println(TZ_XXX_BH + ":" + TZ_APP_S_TEXT);
+
 				// 多选按钮或单选按钮组的其他值 ID用 按钮按钮+_QTZ
 				if (TZ_KXX_QTZ != null && !TZ_KXX_QTZ.trim().equals("")) {
 					ht.put(TZ_XXX_BH + "_QTZ", TZ_KXX_QTZ);
+					// System.out.println(TZ_XXX_BH + "_QTZ:" + TZ_KXX_QTZ);
 				}
 			}
 			rt.close();
@@ -450,11 +463,12 @@ public class PdfPrintbyModel {
 		ResultSet rt = null;
 		String fieldsV = null;
 		try {
-			StringBuffer fieldsValue = new StringBuffer();// 实例字符串
+			Hashtable<String, String> fieldsValue = new Hashtable<String, String>();// 实例字符串
 
 			stmt = conn.createStatement();
 			String TZ_APP_PDF_FIELD = "";
 			String TZ_XXX_BH = null;
+			StringBuffer tempTZ_XXX_BH = new StringBuffer();
 			String sql = "select TZ_XXX_BH,TZ_APP_PDF_FIELD from PS_TZ_APP_PDFFIELDITEM_T where TZ_APP_TPL_ID='"
 					+ templateID + "'";
 			rt = stmt.executeQuery(sql);
@@ -465,26 +479,36 @@ public class PdfPrintbyModel {
 				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
 				if (TZ_APP_PDF_FIELD != null && !TZ_APP_PDF_FIELD.trim().equals("") && ht.get(TZ_XXX_BH) != null
 						&& !ht.get(TZ_XXX_BH).trim().equals("")) {
-					fieldsValue.append(TZ_APP_PDF_FIELD);
-					fieldsValue.append("∨∨");
-					fieldsValue.append(ht.get(TZ_XXX_BH));
-					fieldsValue.append("∧∧");
+					fieldsValue.put(TZ_APP_PDF_FIELD, ht.get(TZ_XXX_BH));
+					// fieldsValue.append(TZ_APP_PDF_FIELD);
+					// fieldsValue.append("∨∨");
+					// fieldsValue.append(ht.get(TZ_XXX_BH));
+					// fieldsValue.append("∧∧");
+					tempTZ_XXX_BH.append(TZ_XXX_BH);
+					tempTZ_XXX_BH.append(",");
 				}
 			}
+			String strTZ_XXX_BH = tempTZ_XXX_BH.toString();
+			strTZ_XXX_BH = strTZ_XXX_BH.substring(0, strTZ_XXX_BH.length() - 1);
 
-			fieldsV = fieldsValue.toString();
+			// fieldsV = fieldsValue.toString();
 
 			// 模版里面多选框 超过3个的，需要自动载入其他的
 			// 2 复选框
 			// 4 文本
 			// 3 单选钮组
+			// 如果复选框 有其他 的文本框 需要做额外处理
 
 			TzITextUtil ttu = new TzITextUtil();
 			String types = ttu.getFieldValueAndType(fileName);
+
 			String[] fieldsValueArray = (String[]) null;
 			String[] fieldValueArray = (String[]) null;
 			String str = null;
-
+			boolean flag = false;
+			int num = 0;
+			String pdfname = null;
+			String type = null;
 			if (types != null && !types.equals("")) {
 				types = types.substring(0, types.length() - 2);
 				fieldsValueArray = types.split("∧∧");
@@ -492,25 +516,57 @@ public class PdfPrintbyModel {
 					// str_return = str_return + name + "∨∨" + value + "∨∨" +
 					// type + "∧∧";
 					fieldValueArray = fieldsValueArray[i].split("∨∨");
-					if (fieldValueArray[2].equals("2")) {
-						if (fieldsV.indexOf(fieldValueArray[0]) == -1) {
 
-							str = this.getTZ_XXX_BH(fieldValueArray[0]);
+					pdfname = fieldValueArray[0];
+					type = fieldValueArray[2];
+					//System.out.println("pdfName=" + pdfname + ",type=" + type);
+
+					// 2 复选框
+					// 4 文本
+					// 3 单选钮组
+					// 重新设置 复选框 如果有需要的复选框
+					if (type.equals("2")) {
+
+						str = this.getTZ_XXX_BH(pdfname);
+						num = Integer.parseInt(this.getCheckBoxNum(pdfname)) + 1;
+						flag = this.haveTZ_XXX_BH(str, strTZ_XXX_BH);
+
+						if (flag) {
+							str = str + "_" + num;
+							//System.out.println(str);
 							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
-								fieldsValue.append(fieldValueArray[0]);
-								fieldsValue.append("∨∨");
-								fieldsValue.append(ht.get(str));
-								fieldsValue.append("∧∧");
+								fieldsValue.put(pdfname, ht.get(str));
+							}
+						}
+					}
+					if (type.equals("4")) {
+						str = this.getTZ_XXX_BH(pdfname);
+						// str = str + "_QTZ";
+						//System.out.println(str);
+						if (str.endsWith("_QTZ")) {
+							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
+								fieldsValue.put(pdfname, ht.get(str));
 							}
 						}
 					}
 				}
 			}
+			StringBuffer tempfieldsV = new StringBuffer();
+			Enumeration<String> en2 = fieldsValue.keys();
+			String ttt = null;
+			while (en2.hasMoreElements()) {
+				ttt = en2.nextElement();
+				tempfieldsV.append(ttt);
+				tempfieldsV.append("∨∨");
+				tempfieldsV.append(fieldsValue.get(ttt));
+				tempfieldsV.append("∧∧");
+			}
 
-			fieldsV = fieldsValue.toString();
+			fieldsV = tempfieldsV.toString();
 			if (fieldsV != null && !fieldsV.equals("")) {
 				fieldsV = fieldsV.substring(0, fieldsV.length() - 2);
 			}
+
 			rt.close();
 			stmt.close();
 		} catch (SQLException e) {
@@ -518,6 +574,48 @@ public class PdfPrintbyModel {
 			e.printStackTrace();
 		}
 		return fieldsV;
+	}
+
+	private boolean haveTZ_XXX_BH(String str, String TZ_XXX_BH) {
+		String[] a = this.split(TZ_XXX_BH, ",");
+		for (int i = 0; i < a.length; i++) {
+			if (str.equals(a[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String getCheckBoxNum(String str) {
+		// 表单1[0].#subform[4].TZ_1124[0]
+		str = str.substring(str.lastIndexOf("[") + 1, str.length() - 1);
+		return str;
+	}
+
+	private String[] split(String str, String sep) {
+		int size = 0;
+		Vector<String> v = new Vector<String>();
+		int pos = -1;
+		while (!str.equals("")) {
+			pos = str.indexOf(sep);
+			if (pos != -1) {
+				v.add(str.substring(0, pos));
+				str = str.substring(pos + sep.length());
+				if (str.equalsIgnoreCase("")) {
+					v.add("");
+				}
+			} else {
+				v.add(str);
+				str = "";
+			}
+		}
+
+		size = v.size();
+		String[] array = new String[size];
+		for (int i = 0; i < size; i++) {
+			array[i] = v.elementAt(i).toString();
+		}
+		return array;
 	}
 
 	private String getTZ_XXX_BH(String str) {
@@ -833,11 +931,14 @@ public class PdfPrintbyModel {
 		// TODO Auto-generated method stub22
 		// 251
 		PdfPrintbyModel a = new PdfPrintbyModel();
-		System.out.println(a.getTZ_XXX_BH("表单1[0].#subform[4].TZ_1124[0]"));
-
-//		String a = "111|||222";
-//		System.out.println(StringUtils.split(a, "|||")[0]);
-//		System.out.println(StringUtils.split(a, "|||")[1]);
+		System.out.println(a.getCheckBoxNum("表单1[0].#subform[4].TZ_1124[1]"));
+		Hashtable<String, String> table = new Hashtable<String, String>();
+		for (int i = 0; i < 1000000; i++) {
+			table.put("key:" + i, "value:" + i);
+		}
+		// String a = "111|||222";
+		// System.out.println(StringUtils.split(a, "|||")[0]);
+		// System.out.println(StringUtils.split(a, "|||")[1]);
 	}
 
 }
