@@ -57,6 +57,9 @@ public class RegisteServiceImpl {
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = request.getContextPath() + imgPath + "/" + skinId;
 			
+			//注册加载报名项目js;
+			String prjJs = "";
+			
 			//获取要显示的字段;
 			String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{strLang,strJgid} );
@@ -104,6 +107,8 @@ public class RegisteServiceImpl {
 				    fieldsArr.add("TZ_SCH_CNAME");
 				    fieldsArr.add("TZ_LEN_PROID");
 				    fieldsArr.add("TZ_LEN_CITY");
+				    fieldsArr.add("TZ_MSSQH");
+				    
 				    if(fieldsArr.contains(regFieldId)){
 				    	//密码
 				    	if("TZ_PASSWORD".equals(regFieldId) || "TZ_REPASSWORD".equals(regFieldId)){
@@ -157,35 +162,47 @@ public class RegisteServiceImpl {
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
 				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
+				    	
+				    	//如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
+				    	if("TZ_MSSQH".equals(regFieldId)){
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_HIDE_FIELD_HTML", regFieldId,"CREATE");
+				    	}
+				    	
 				    }else{
 				    	//是否下拉框;
 				    	String fieldType = (String)map.get("TZ_FIELD_TYPE");
 				    	if("DROP".equals(fieldType)){
-				    		String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
-				    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strJgid,regFieldId});
-				    		
-				    		for(int j = 0; j<dropList.size(); j++ ){
-				    			String optId = (String)dropList.get(j).get("TZ_OPT_ID");
-				    			String optValue = (String)dropList.get(j).get("TZ_OPT_VALUE");
-				    			String optEngValue = (String)dropList.get(j).get("TZ_OPT_EN_VALUE");
-				    			if(optEngValue == null || "".equals(optEngValue)){
-				    				optEngValue = optValue;
-				    			}
-				    			String selectFlg = (String)dropList.get(j).get("TZ_SELECT_FLG");
-				    			if("ENG".equals(strLang)){
-				    				if("Y".equals(selectFlg) || "1".equals(selectFlg)){
-				    					combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optEngValue + "</option>";
-				    				}else{
-				    					combox = combox + "<option value =\"" + optId + "\">" + optEngValue + "</option>";
-				    				}
-				    			}else{
-				    				if("Y".equals(selectFlg) || "1".equals(selectFlg)){
-				    					combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optValue + "</option>";
-				    				}else{
-				    					combox = combox + "<option value =\"" + optId + "\">" + optValue + "</option>";
-				    				}
-				    			}
+				    		//如果是项目则动态加载;
+				    		if("TZ_PROJECT".equals(regFieldId)){
+				    			prjJs = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PRJ_SELECT_JS",strSiteId );
+				    		}else{
+				    			String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strJgid,regFieldId});
+					    		
+					    		for(int j = 0; j<dropList.size(); j++ ){
+					    			String optId = (String)dropList.get(j).get("TZ_OPT_ID");
+					    			String optValue = (String)dropList.get(j).get("TZ_OPT_VALUE");
+					    			String optEngValue = (String)dropList.get(j).get("TZ_OPT_EN_VALUE");
+					    			if(optEngValue == null || "".equals(optEngValue)){
+					    				optEngValue = optValue;
+					    			}
+					    			String selectFlg = (String)dropList.get(j).get("TZ_SELECT_FLG");
+					    			if("ENG".equals(strLang)){
+					    				if("Y".equals(selectFlg) || "1".equals(selectFlg)){
+					    					combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optEngValue + "</option>";
+					    				}else{
+					    					combox = combox + "<option value =\"" + optId + "\">" + optEngValue + "</option>";
+					    				}
+					    			}else{
+					    				if("Y".equals(selectFlg) || "1".equals(selectFlg)){
+					    					combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optValue + "</option>";
+					    				}else{
+					    					combox = combox + "<option value =\"" + optId + "\">" + optValue + "</option>";
+					    				}
+					    			}
+					    		}
 				    		}
+				    		
 				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOXR_HTML", isRequired, regFldYsmc, regFieldId,combox ,imgPath);
 				    	}else{
 				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "", "", regDefValue,imgPath);
@@ -242,10 +259,15 @@ public class RegisteServiceImpl {
 					
 			//登录页面链接;
 			String loginUrl = request.getContextPath() + "/user/login/" + strJgid.toLowerCase() +"/"+strSiteId;
+			
+			//explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+			if(prjJs.contains("$")){
+				prjJs = prjJs.replace("$", "\\$");
+			}
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs);
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs);
 			}
 			
 			//fields = tzGdObject.getHTMLText("HTML.test.test", "test111","test222");

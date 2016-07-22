@@ -1,0 +1,35 @@
+<div class="modal-backdrop fade in"></div>
+ <div aria-hidden="false" style="display: block;" class="modal fade in" tabindex="-1" role="dialog">   
+  <div class="modal-dialog">       
+   <div class="modal-content">
+   
+    <div class="modal-header">
+   		<span class="close" data-dismiss="modal" aria-hidden="true">×</span>   
+    	<h4 class="modal-title">%bind(:4)</h4>
+    </div>
+    <div class="modal-body">
+    	<div class="index-bm-notapproved">
+        	<table border="0" cellpadding="0" cellspacing="0" >
+            	<tbody>
+                	%bind(:1)
+                </tbody>
+            </table>
+        </div>
+        <br>
+       <table border="0">
+ 		<tbody>
+ 			<tr>
+    			<td width="15px;"></td>
+                <td width="70px;">
+                	<a href="javaScript: void(0);" onclick="addSelectPrj();"><div class="bt_blue1">%bind(:2)</div></a>
+                </td>
+                <td width="70px;"  >
+                	<a href="javaScript: void(0);" onclick="cancleSelectPrj();"><div class="bt_blue1">%bind(:3)</div></a>
+                </td>
+			</tr>
+		</tbody>
+		</table>
+    </div>   
+   </div>   
+  </div>
+ </div>

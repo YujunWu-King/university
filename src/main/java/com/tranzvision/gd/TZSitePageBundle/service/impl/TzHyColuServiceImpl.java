@@ -141,30 +141,70 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 
 			// 前台登录用户的oprid
 			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+			
+			//查看当前用户有没有设置范围;
+			//如果没有设置范围，且没有报报名表则显示全部的;
+			//注册是否开通了项目字段开外网显示;
+			//其他的显示并集;
+			String jgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request); 
+			String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
+			int haveBmCount = 0;
+			int selectShowCount = 0;
+			if("Y".equals(isPrjShowWW)){
+				String haveBmCountSql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCurBmbCountByOprid");
+				//有没有报名已经开放班级;
+				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[]{oprid},"Integer");
+				//有没有选择查看的范围;
+				selectShowCount = sqlQuery.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=?", new Object[]{oprid}, "Integer");
+			}
 
 			switch (strType) {
 			case "0":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
-				strOrderBy = "asc";
-				// numTotalRow = sqlQuery.queryForObject(sql, new Object[] {
-				// strSiteId, strColuId, strDateNow }, "int");
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+				if(haveBmCount == 0 && selectShowCount==0){
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
+					strOrderBy = "asc";
+					// numTotalRow = sqlQuery.queryForObject(sql, new Object[] {
+					// strSiteId, strColuId, strDateNow }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+				}else{
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGTAndProject");
+					strOrderBy = "asc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,oprid,oprid }, "int");
+				}
 				break;
 			case "1":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByOprid");
-				strOrderBy = "asc";
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, oprid }, "int");
+				if(haveBmCount == 0 && selectShowCount==0){
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByOprid");
+					strOrderBy = "asc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, oprid }, "int");
+				}else{
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByOpridAndProject");
+					strOrderBy = "asc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, oprid,oprid,oprid }, "int");
+				}
 				break;
 			case "2":
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeLT");
-				strOrderBy = "desc";
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+				if(haveBmCount == 0 && selectShowCount==0){
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeLT");
+					strOrderBy = "desc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+				}else{
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeLTAndByProject");
+					strOrderBy = "desc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow,oprid,oprid }, "int");
+				}
 				break;
 			default:
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
-				strOrderBy = "asc";
-				//numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
-				numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+				if(haveBmCount == 0 && selectShowCount==0){
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
+					strOrderBy = "asc";
+					//numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+				}else{
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGTAndProject");
+					strOrderBy = "asc";
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,oprid,oprid }, "int");
+				}
 				break;
 			}
 
@@ -255,46 +295,94 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			String strSQLName = "";
 			switch (strType) {
 			case "0":
-				if ("desc".equals(strOrderBy)) {
-					strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
-				} else {
-					strSQLName = "TzGetSiteHDListByDateTimeGT";
+				if(haveBmCount == 0 && selectShowCount==0){
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeGT";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
+					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+				}else{
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeGTDescAndByProject";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeGTAndByPorject";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
+					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
 				}
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
-				// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
-				// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
-				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
 				break;
 			case "1":
-				if ("desc".equals(strOrderBy)) {
-					strSQLName = "TzGetSiteHDListByOpridDesc";
-				} else {
-					strSQLName = "TzGetSiteHDListByOprid";
+				if(haveBmCount == 0 && selectShowCount==0){
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByOpridDesc";
+					} else {
+						strSQLName = "TzGetSiteHDListByOprid";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId, oprid, numMinRow, numPageRow });
+				}else{
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByOpridDescAndByProject";
+					} else {
+						strSQLName = "TzGetSiteHDListByOpridAndByProject";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId, oprid,oprid,oprid, numMinRow, numPageRow });
 				}
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
-				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, oprid, numMinRow, numPageRow });
 				break;
 			case "2":
-				if ("desc".equals(strOrderBy)) {
-					strSQLName = "TzGetSiteHDListByDateTimeLTDesc";
-				} else {
-					strSQLName = "TzGetSiteHDListByDateTimeLT";
+				if(haveBmCount == 0 && selectShowCount==0){
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeLTDesc";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeLT";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+				}else{
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeLTDescAndByProject";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeLTAndByProject";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId, strDateNow,oprid,oprid, numMinRow, numPageRow });
 				}
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
-				listSiteActivities = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 				break;
 			default:
-				if ("desc".equals(strOrderBy)) {
-					strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
-				} else {
-					strSQLName = "TzGetSiteHDListByDateTimeGT";
+				if(haveBmCount == 0 && selectShowCount==0){
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeGTDesc";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeGT";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					//listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+					listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+				}else{
+					if ("desc".equals(strOrderBy)) {
+						strSQLName = "TzGetSiteHDListByDateTimeGTDescAndByProject";
+					} else {
+						strSQLName = "TzGetSiteHDListByDateTimeGTAndByPorject";
+					}
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
+					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
+					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
+					listSiteActivities = sqlQuery.queryForList(sql,
+							new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
 				}
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
-				//listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
-				listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
 				break;
 			}
 

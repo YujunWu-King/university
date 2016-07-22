@@ -80,19 +80,68 @@ Ext.define('Ext.panel.EditWinPanel', {
 			var comParams = '"update":[{"typeFlag":"save","data":'+Ext.JSON.encode(editPanel.getForm().getValues())+'}]';
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_AREA_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			
-				
 			/*如果页面页面代码为空，则表示没有改变过表单值，无需提交*/
 			if (! editPanel.getForm().findField('bodyCode').getValue())
 			{
-				Ext.Msg.show({
-											title: '提示信息',
-											msg: '没有要提交的数据！',
-											buttons: Ext.Msg.OK,
-											icon: Ext.Msg.WARNING,
-											buttonText: {
-												ok: "确定"
-											}
-										});
+				//查看是不是报名中心;
+				var areaType = editPanel.getForm().findField('areaType').getValue();
+				var bmbClassShow = editPanel.getForm().findField('bmbClassShow');
+				if(areaType=="AC" && bmbClassShow != null){
+					var tzParamsGz = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_CLSGZ_STD","OperateType":"SHOWGZ","comParams":'+Ext.JSON.encode(editPanel.getForm().getValues())+'}';
+					
+					Ext.Ajax.request({
+						url: urlBegin,
+						params: {
+							tzParams:tzParamsGz
+						},
+						method : 'POST',    
+						 success: function(response){
+							var obj = Ext.util.JSON.decode(response.responseText);
+							if(obj.comContent.success==true){
+								Ext.toast({
+									html: '已保存！',
+									closable: false,
+									align: 't',
+									style: "background-color:white",
+									slideInDuration: 400,
+									minWidth: 400
+								});
+							}else{
+								Ext.Msg.show({
+													title: '提示信息',
+													msg: '保存失败',
+													buttons: Ext.Msg.OK,
+													icon: Ext.Msg.WARNING,
+													buttonText: {
+														ok: "关闭"
+													}
+												});
+								
+							}
+						},
+						failure: function() {
+							Ext.Msg.show({
+								title: '提示信息',
+								msg: "保存失败！",
+								buttons: Ext.Msg.OK,
+								icon: Ext.Msg.WARNING,
+								buttonText: {
+									ok: "关闭"
+								}
+							});
+						}
+					});
+				}else{
+					Ext.Msg.show({
+						title: '提示信息',
+						msg: '没有要提交的数据！',
+						buttons: Ext.Msg.OK,
+						icon: Ext.Msg.WARNING,
+						buttonText: {
+							ok: "确定"
+						}
+					});
+				}
 				return;
 			}
 			

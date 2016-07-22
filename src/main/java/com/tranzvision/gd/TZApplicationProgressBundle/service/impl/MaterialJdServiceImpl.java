@@ -3,10 +3,16 @@ package com.tranzvision.gd.TZApplicationProgressBundle.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsShowPrjNewsTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsShowPrjNewsTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -25,24 +31,46 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 	private MessageTextServiceImpl messageTextServiceImpl;
 	@Autowired
 	private TZGDObject tzGDObject;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private PsShowPrjNewsTMapper psShowPrjNewsTMapper;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String infoScheduleHtml = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+		String str_jg_id = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
-			String instanceIdStr = jacksonUtil.getString("instanceId");
-			
+			String instanceIdStr = "";
+			if(jacksonUtil.containsKey("instanceId")){
+				instanceIdStr = jacksonUtil.getString("instanceId");
+			}
+
 			int instanceId = 0;
-			if(StringUtils.isNumeric(instanceIdStr)){
+			if(!"".equals(instanceIdStr) && StringUtils.isNumeric(instanceIdStr)){
 				instanceId = Integer.parseInt(instanceIdStr);
 			}
 
-			String classId = jacksonUtil.getString("bmClassId");
-			String language = jacksonUtil.getString("language");
-			String viewType = jacksonUtil.getString("viewType");
+			String classId = "";
+			if(jacksonUtil.containsKey("bmClassId")){
+				classId = jacksonUtil.getString("bmClassId");
+			}
+			
+			String language = "";
+			if(jacksonUtil.containsKey("language")){
+				language = jacksonUtil.getString("language");
+			}
+			
+			String viewType = "";
+			if(jacksonUtil.containsKey("viewType")){
+				viewType = jacksonUtil.getString("viewType");
+			}
+			
 			if(language == null || "".equals(language)){
 				language = "ZHS";
 			}
@@ -205,6 +233,87 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			        
 			        TZ_OPEN_WINDOW_TABLE_TH =  tzGDObject.getHTMLText(
     						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH", zldj, shjg, btgYy);
+				}else if("CLASS".equals(viewType)){
+					String selectMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "200", language, "选择", "选择");
+					String classNameMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "201", language, "班级名称", "班级名称");
+					String desMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "202", language, "说明", "说明");
+					
+					String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,TZ_CLASS_DESC from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
+					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+					if (classList != null && classList.size() > 0) {
+						for (int i = 0; i < classList.size(); i++) {
+							classId = (String) classList.get(i).get("TZ_CLASS_ID");
+							String className = (String) classList.get(i).get("TZ_CLASS_NAME");
+							String classDesc = (String) classList.get(i).get("TZ_CLASS_DESC");
+							if(className == null){
+								className = "";
+							}
+							if(classDesc == null){
+								classDesc = "";
+							}
+							
+							TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
+	        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR3",classId, className, classDesc);
+						}
+					}
+					//新增申请班级;
+					TZ_OPEN_WINDOW_TABLE_TH = tzGDObject.getHTMLText(
+							"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH2",selectMsg, classNameMsg, desMsg);
+				}else if("SELECTPROJECT".equals(viewType)){
+					String siteid = "";
+					if(jacksonUtil.containsKey("siteid")){
+						siteid = jacksonUtil.getString("siteid");
+					}
+					language = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID = ?", new Object[]{siteid},"String");
+					String projMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "206", language, "选择查看新闻及活动的项目范围", "选择查看新闻及活动的项目范围");
+					
+					String sql = "SELECT TZ_PRJ_ID,TZ_PRJ_NAME FROM PS_TZ_PRJ_INF_T where TZ_IS_OPEN='Y' AND TZ_JG_ID=?";
+					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+					if (classList != null && classList.size() > 0) {
+						for (int i = 0; i < classList.size(); i++) {
+							String prjId = (String) classList.get(i).get("TZ_PRJ_ID");
+							String prjName = (String) classList.get(i).get("TZ_PRJ_NAME");
+							
+							if(prjName == null){
+								prjName = "";
+							}
+
+							//查询是否已经选择;
+							int isPrjSelect = jdbcTemplate.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=? and TZ_PRJ_ID=?", new Object[]{oprid,prjId},"Integer");
+							String checked = "";
+							if(isPrjSelect > 0){
+								checked = "checked=\"checked\"";
+							}
+							TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR + tzGDObject.getHTMLText(
+	        						"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TR4",prjId,prjName,checked);
+						}
+					}
+					//新增申请班级;
+					TZ_OPEN_WINDOW_TABLE_TH = tzGDObject.getHTMLText(
+							"HTML.TZApplicationProgressBundle.TZ_OPEN_WINDOW_TABLE_TH3", projMsg);
+				}else if("ADDSELECTPROJECT".equals(viewType)){
+					String selectPrjs = "";
+					if(jacksonUtil.containsKey("selectPrjs")){
+						selectPrjs = jacksonUtil.getString("selectPrjs");
+						if("".equals(selectPrjs)){
+							jdbcTemplate.update("delete from PS_SHOW_PRJ_NEWS_T where OPRID=?",new Object[]{oprid});
+						}else{
+							jdbcTemplate.update("delete from PS_SHOW_PRJ_NEWS_T where OPRID=?",new Object[]{oprid});
+							String[] selectPrjsArr = selectPrjs.split(";");
+							int kk = 0;
+							for(kk =0; kk < selectPrjsArr.length; kk++ ){
+								String tzPrjId = selectPrjsArr[kk];
+								if(tzPrjId != null && !"".equals(tzPrjId)){
+									PsShowPrjNewsTKey psShowPrjNewsT = new PsShowPrjNewsTKey();
+									psShowPrjNewsT.setOprid(oprid);
+									psShowPrjNewsT.setTzPrjId(tzPrjId);
+									psShowPrjNewsTMapper.insert(psShowPrjNewsT);
+								}
+							}
+						}
+						return "SUCCESS";
+					}
+					
 				}
 			}
 			
@@ -214,8 +323,24 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 			if(TZ_GD_ZLSQ_TR.contains("$")){
 				TZ_GD_ZLSQ_TR = TZ_GD_ZLSQ_TR.replace("$", "\\$");
 			}
-			infoScheduleHtml =  tzGDObject.getHTMLText(
-					"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR);
+			if("CLASS".equals(viewType)){
+				String addMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "203", language, "确定", "确定");
+				String cancleMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "204", language, "取消", "取消");
+				String classTableMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "205", language, "选择申请班级", "选择申请班级");
+				String noSelect = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "209", language, "请选择要报名的班级", "请选择要报名的班级");
+				
+				infoScheduleHtml =  tzGDObject.getHTMLText(
+						"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML2",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR,addMsg,cancleMsg,classTableMsg,noSelect,language);
+			}else if("SELECTPROJECT".equals(viewType)){
+				String addMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "203", language, "确定", "确定");
+				String cancleMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "204", language, "取消", "取消");
+				infoScheduleHtml =  tzGDObject.getHTMLText(
+						"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML3",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR,addMsg,cancleMsg,"");
+			}else{
+				infoScheduleHtml =  tzGDObject.getHTMLText(
+						"HTML.TZApplicationProgressBundle.TZ_GD_MATERIAL_SQJD_HTML",TZ_OPEN_WINDOW_TABLE_TH + TZ_GD_ZLSQ_TR);
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			infoScheduleHtml = "无法获取数据";

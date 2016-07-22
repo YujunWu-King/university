@@ -43,6 +43,8 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 		String applicationCenterHtml = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
@@ -57,6 +59,13 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			if (strSiteId == null || "".equals(strSiteId)) {
 				strSiteId = request.getParameter("siteId");
 			}
+			
+			//查询报名中心显示规则 ,A: 为显示所有开放的班级，B:只显示报名人已经报名的班级； 无值当 A 处理;
+			String bmClassShow = jdbcTemplate.queryForObject("select TZ_BM_CLASS_SHOW from PS_SITE_BMCLASS_SZ_T where TZ_SITEI_ID=?", new Object[]{strSiteId},"String");
+			if(bmClassShow == null || "".equals(bmClassShow)){
+				bmClassShow = "A";
+			}
+			
 			// if (strSiteId == null || "".equals(strSiteId)) {
 			// oprate = request.getParameter("oprate");
 			// }
@@ -111,16 +120,55 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			// 打印;
 			String print = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "110", language, "打印",
 					"print");
+			
+			//只显示报名班级，无申请时显示的信息;
+			String noBmClassDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "207", language, "当前账号下不存在有效申请",
+								"当前账号下不存在有效申请");
+			
+			//开始新申请;
+			String addNewSqBtDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "208", language, "开始新申请",
+								"开始新申请");
 
 			// 是否开通了申请班级;
-			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
-			int totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_jg_id }, "Integer");
+			//是否只显示已经报名的班级;
+			String totalSQL = "";
+			int totalNum = 0;
+			if("B".equals(bmClassShow)){
+				totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() and  TZ_CLASS_ID in (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+				totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_jg_id,oprid }, "Integer");
+			}else{
+				totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
+				totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_jg_id }, "Integer");
+			}
+
 			// 没开通;
 			if (totalNum == 0) {
-				applicationCenterHtml = tzGDObject.getHTMLText(
-						"HTML.TZApplicationCenterBundle.TZ_N_APPLICATION_CENTER_HTML2", ApplicationCenter,
-						DearCandidate, noOpenProject);
-				return applicationCenterHtml;
+				if("B".equals(bmClassShow)){
+					//如果只显示报名的报名班级,当没有报名时，需要判断有没有开通的班级来控制“开始新申请”按钮是否显示;
+					String sfKtBjSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
+					int ktBjTotalNum = jdbcTemplate.queryForObject(sfKtBjSQL, new Object[] { str_jg_id }, "Integer");
+					if(ktBjTotalNum == 0){
+						applicationCenterHtml = tzGDObject.getHTMLText(
+								"HTML.TZApplicationCenterBundle.TZ_N_APPLICATION_CENTER_HTML2", ApplicationCenter,
+								DearCandidate, noOpenProject);
+						return applicationCenterHtml;
+					}else{
+						//有开通的班级就要显示“开始新申请”按钮;
+						String addClass = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_ADD_BM_CLASS_TABLE",addNewSqBtDesc,language, "CLASS");
+						applicationCenterHtml = tzGDObject.getHTMLText(
+								"HTML.TZApplicationCenterBundle.TZ_N_APPLICATION_CENTER_HTML3", ApplicationCenter,
+								DearCandidate, noBmClassDesc,addClass);
+						
+						
+						return applicationCenterHtml;
+					}
+					
+				}else{
+					applicationCenterHtml = tzGDObject.getHTMLText(
+							"HTML.TZApplicationCenterBundle.TZ_N_APPLICATION_CENTER_HTML2", ApplicationCenter,
+							DearCandidate, noOpenProject);
+					return applicationCenterHtml;
+				}
 			}
 
 			// 通用链接;
@@ -144,13 +192,22 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 			// 班级使用的报名表模板;
 			String TZ_APP_MODAL_ID = "";
 
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
 			String applyNumSQL = "select count(distinct b.TZ_CLASS_ID) APPLY_NUM from PS_TZ_APP_INS_T a,PS_TZ_FORM_WRK_T b where a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and b.TZ_CLASS_ID in (select c.TZ_CLASS_ID from PS_TZ_CLASS_INF_T c where c.TZ_JG_ID=? and c.TZ_IS_APP_OPEN='Y' and c.TZ_APP_START_DT IS NOT NULL AND c.TZ_APP_START_TM IS NOT NULL AND c.TZ_APP_END_DT IS NOT NULL AND c.TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(c.TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(c.TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(c.TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(c.TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()) and b.OPRID=?";
 			applyNum = jdbcTemplate.queryForObject(applyNumSQL, new Object[] { str_jg_id, oprid }, "Integer");
 
 			// 循环开通的班级;
-			String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d') TZ_APP_START_DT,DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d') TZ_APP_END_DT,TZ_CLASS_DESC,TZ_APP_MODAL_ID from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
-			List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+			//是否只显示已经报名的班级;
+			String sql = "";
+			List<Map<String, Object>> classList;
+			if("B".equals(bmClassShow)){
+				sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d') TZ_APP_START_DT,DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d') TZ_APP_END_DT,TZ_CLASS_DESC,TZ_APP_MODAL_ID from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() and  TZ_CLASS_ID in (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?) ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
+				classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id, oprid });
+			}else{
+				sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d') TZ_APP_START_DT,DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d') TZ_APP_END_DT,TZ_CLASS_DESC,TZ_APP_MODAL_ID from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
+				classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+			}
+			
 			if (classList != null && classList.size() > 0) {
 				for (int i = 0; i < classList.size(); i++) {
 					classId = (String) classList.get(i).get("TZ_CLASS_ID");
@@ -533,8 +590,12 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					}
 				}
 			}
-
-			TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV", TZ_SQLC_TABLE, ApplicationCenter);
+			if("B".equals(bmClassShow)){
+				String addClass = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_ADD_BM_CLASS_TABLE",addNewSqBtDesc,language, "CLASS");
+				TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV_BUTTON", TZ_SQLC_TABLE, ApplicationCenter,addClass);
+			}else{
+				TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV", TZ_SQLC_TABLE, ApplicationCenter);
+			}
 			applicationCenterHtml = TZ_SQLC_TABAL_TOTAL_DIV;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -18,6 +18,8 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiAreaTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiAreaTWithBLOBs;
+import com.tranzvision.gd.TZSitePageBundle.dao.PsSiteBmClassSzTMapper;
+import com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -28,6 +30,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-16
  */
+
 @Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzAcDecoratedServiceImpl")
 public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 
@@ -48,6 +51,9 @@ public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzSiteMgServiceImpl tzSiteMgServiceImpl;
+	
+	@Autowired
+	private PsSiteBmClassSzTMapper psSiteBmClassSzTMapper;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -126,8 +132,20 @@ public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 			}
 			String strColusJson = jacksonUtil.List2json(listJsonColus);
 			
+			// 班级显示设置;
+			String check1 = "false";
+			String check2 = "false";
+			String bmbClassShow = sqlQuery.queryForObject(" select TZ_BM_CLASS_SHOW from PS_SITE_BMCLASS_SZ_T where TZ_SITEI_ID=?", new Object[]{strSiteId},"String");
+			if("A".equals(bmbClassShow)){
+				check1 = "true";
+			}
+			
+			if("B".equals(bmbClassShow)){
+				check2 = "true";
+			}
+			
 			strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzAcForm", strSiteId, strAreaId, strAreaZone,
-					strAreaType, strAreaJson, strColuId, strColusJson, strColuName, strEleId);
+					strAreaType, strAreaJson, strColuId, strColusJson, strColuName, strEleId,check1,check2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -174,6 +192,24 @@ public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 				String strPageType = jacksonUtil.getString("pagetype");
 
 				String strOperate = jacksonUtil.getString("oprate");
+				
+				//保存报名中心的显示设置;
+				try{
+					sqlQuery.update("delete from PS_SITE_BMCLASS_SZ_T where TZ_SITEI_ID=?",new Object[]{strSiteId});
+					if(jacksonUtil.containsKey("bmbClassShow")){
+						String bmbClassShow = jacksonUtil.getString("bmbClassShow"); 
+						if(bmbClassShow != null && !"".equals(bmbClassShow)){
+							PsSiteBmClassSzT psSiteBmClassSzT = new PsSiteBmClassSzT();
+							psSiteBmClassSzT.setTzSiteiId(strSiteId);
+							psSiteBmClassSzT.setTzBmClassShow(bmbClassShow);
+							psSiteBmClassSzTMapper.insert(psSiteBmClassSzT);
+						}
+					}
+						
+				}catch(Exception e1){
+						
+				}
+				
 
 				if (null == strOperate || "".equals(strOperate)) {
 					strOperate = "D";
@@ -238,5 +274,37 @@ public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-
+	
+	
+	@Override
+	public String tzOther(String oprType, String strParams, String[] errorMsg) {
+		// TODO Auto-generated method stub
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try{
+			jacksonUtil.json2Map(strParams);
+			String strSiteId = jacksonUtil.getString("siteId");
+			if(strSiteId != null && !"".equals(strSiteId)){
+				sqlQuery.update("delete from PS_SITE_BMCLASS_SZ_T where TZ_SITEI_ID=?",new Object[]{strSiteId});
+				if(jacksonUtil.containsKey("bmbClassShow")){
+					String bmbClassShow = jacksonUtil.getString("bmbClassShow"); 
+					if(bmbClassShow != null && !"".equals(bmbClassShow)){
+						PsSiteBmClassSzT psSiteBmClassSzT = new PsSiteBmClassSzT();
+						psSiteBmClassSzT.setTzSiteiId(strSiteId);
+						psSiteBmClassSzT.setTzBmClassShow(bmbClassShow);
+						psSiteBmClassSzTMapper.insert(psSiteBmClassSzT);
+					}
+				}
+				mapRet.put("success", true);
+			}else{
+				mapRet.put("success", false);
+			}
+			
+		}catch(Exception e){
+			mapRet.put("success", false);
+		}
+		strRet = jacksonUtil.Map2json(mapRet);
+		return strRet;
+	}
 }

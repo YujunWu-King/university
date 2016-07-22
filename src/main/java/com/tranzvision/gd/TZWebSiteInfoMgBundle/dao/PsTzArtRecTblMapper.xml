@@ -19,6 +19,7 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_PROJECT_LIMIT" property="tzProjectLimit" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_ART_TITLE_STYLE" property="tzArtTitleStyle" jdbcType="LONGVARCHAR" />
@@ -28,7 +29,7 @@
   <sql id="Base_Column_List" >
     TZ_ART_ID, TZ_ART_TITLE, TZ_ART_NAME, TZ_ART_TYPE1, TZ_START_DATE, TZ_START_TIME, 
     TZ_END_DATE, TZ_END_TIME, TZ_ATTACHSYSFILENA, TZ_IMAGE_TITLE, TZ_IMAGE_DESC, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT
   </sql>
   <sql id="Blob_Column_List" >
     TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL
@@ -51,15 +52,17 @@
       TZ_END_DATE, TZ_END_TIME, TZ_ATTACHSYSFILENA, 
       TZ_IMAGE_TITLE, TZ_IMAGE_DESC, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_ART_TITLE_STYLE, 
-      TZ_ART_CONENT, TZ_OUT_ART_URL)
+      SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT, 
+      TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL
+      )
     values (#{tzArtId,jdbcType=VARCHAR}, #{tzArtTitle,jdbcType=VARCHAR}, #{tzArtName,jdbcType=VARCHAR}, 
       #{tzArtType1,jdbcType=VARCHAR}, #{tzStartDate,jdbcType=DATE}, #{tzStartTime,jdbcType=TIME}, 
       #{tzEndDate,jdbcType=DATE}, #{tzEndTime,jdbcType=TIME}, #{tzAttachsysfilena,jdbcType=VARCHAR}, 
       #{tzImageTitle,jdbcType=VARCHAR}, #{tzImageDesc,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, 
-      #{tzArtConent,jdbcType=LONGVARCHAR}, #{tzOutArtUrl,jdbcType=LONGVARCHAR})
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzProjectLimit,jdbcType=VARCHAR}, 
+      #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, #{tzArtConent,jdbcType=LONGVARCHAR}, #{tzOutArtUrl,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" >
     insert into PS_TZ_ART_REC_TBL
@@ -114,6 +117,9 @@
       </if>
       <if test="syncdttm != null" >
         SYNCDTTM,
+      </if>
+      <if test="tzProjectLimit != null" >
+        TZ_PROJECT_LIMIT,
       </if>
       <if test="tzArtTitleStyle != null" >
         TZ_ART_TITLE_STYLE,
@@ -177,6 +183,9 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzProjectLimit != null" >
+        #{tzProjectLimit,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtTitleStyle != null" >
         #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
@@ -239,6 +248,9 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzProjectLimit != null" >
+        TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtTitleStyle != null" >
         TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
@@ -269,6 +281,7 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR},
       TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       TZ_ART_CONENT = #{tzArtConent,jdbcType=LONGVARCHAR},
       TZ_OUT_ART_URL = #{tzOutArtUrl,jdbcType=LONGVARCHAR}
@@ -291,7 +304,8 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR}
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </update>
 </mapper>

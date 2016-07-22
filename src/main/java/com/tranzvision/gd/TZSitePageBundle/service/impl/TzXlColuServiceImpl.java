@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -43,12 +44,16 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		String strRet = "";
-
+		//当前登录的用户;
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -115,11 +120,32 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 			int numTotalRow = 0;
 			int numTotalPage = 0;
-
+			
+			//查看当前用户有没有设置范围;
+			//如果没有设置范围，且没有报报名表则显示全部的;
+			//其他的显示并集;
+			String jgId = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
+			String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
+			int haveBmCount = 0;
+			int selectShowCount = 0;
+			
+			if("Y".equals(isPrjShowWW)){
+				String haveBmCountSql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCurBmbCountByOprid");
+				//有没有报名已经开放班级;
+				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[]{oprid},"Integer");
+				//有没有选择查看的范围;
+				selectShowCount = sqlQuery.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=?", new Object[]{oprid}, "Integer");
+			}
+			
 			// 取得总条数
 			try {
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCountOfSiteColu");
-				numTotalRow = Integer.parseInt(sqlQuery.queryForObject(sql, new Object[] {strSiteId, strColuId}, "String"));
+				if(haveBmCount == 0 && selectShowCount==0){
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCountOfSiteColu");
+					numTotalRow = Integer.parseInt(sqlQuery.queryForObject(sql, new Object[] {strSiteId, strColuId}, "String"));
+				}else{
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCountOfSiteColuByProject");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] {strSiteId, strColuId,oprid,oprid}, "Integer");
+				}
 			} catch (Exception ep) {
 				numTotalRow = 0;
 			}
@@ -206,10 +232,16 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			//int numMaxRow = numNowPage * numPageRow;
 			//int numMinRow = (numNowPage - 1) * numPageRow + 1;
 			int numMinRow = (numNowPage - 1) * numPageRow;
-
-			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsList");
-			List<Map<String, Object>> listSiteArts = sqlQuery.queryForList(sql,
-					new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+			List<Map<String, Object>> listSiteArts;
+			if(haveBmCount == 0 && selectShowCount==0){
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsList");
+				listSiteArts = sqlQuery.queryForList(sql,
+						new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+			}else{
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsListByProject");
+				listSiteArts = sqlQuery.queryForList(sql,
+						new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
+			}
 
 			String strResultContent = "";
 			String dispatcherUrl = request.getContextPath() + "/dispatcher";

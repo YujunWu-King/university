@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZWebSiteUtilBundle.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +20,10 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsShowPrjNewsTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsShowPrjNewsTKey;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
@@ -71,6 +74,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	private PsTzDzyxYzmTblMapper psTzDzyxYzmTblMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private PsShowPrjNewsTMapper psShowPrjNewsTMapper;
 
 	// 原：WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_GetNowField
 	@Override
@@ -344,6 +349,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				if (dataMap.containsKey("TZ_SCH_CNAME")) {
 					strTZ_SCH_CNAME = ((String) dataMap.get("TZ_SCH_CNAME")).trim();
 				}
+				
 
 				// 专业;
 				String strTZ_SPECIALTY = "";
@@ -356,6 +362,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				if (dataMap.containsKey("TZ_HIGHEST_EDU")) {
 					strTZ_HIGHEST_EDU = ((String) dataMap.get("TZ_HIGHEST_EDU")).trim();
 				}
+				
+				//项目;
+				String strTZ_PRJ_ID = "";
+				if (dataMap.containsKey("TZ_PROJECT")) {
+					strTZ_PRJ_ID = ((String) dataMap.get("TZ_PROJECT")).trim();
+				}
+				
+				String strTZ_MSSQH = "";
+				if (dataMap.containsKey("TZ_MSSQH")) {
+					strTZ_MSSQH = ((String) dataMap.get("TZ_MSSQH")).trim();
+				}
+				
 
 				// 预留字段1;
 				String strTZ_COMMENT1 = "";
@@ -629,6 +647,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setTzSchCname(strTZ_SCH_CNAME);
 				psTzRegUserT.setTzSpecialty(strTZ_SPECIALTY);
 				psTzRegUserT.setTzHighestEdu(strTZ_HIGHEST_EDU);
+				psTzRegUserT.setTzPrjId(strTZ_PRJ_ID);
 				psTzRegUserT.setTzComment1(strTZ_COMMENT1);
 				psTzRegUserT.setTzComment2(strTZ_COMMENT2);
 				psTzRegUserT.setTzComment3(strTZ_COMMENT3);
@@ -643,7 +662,25 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setRowAddedOprid(oprId);
 				psTzRegUserT.setRowLastmantDttm(new Date());
 				psTzRegUserT.setRowLastmantOprid(oprId);
+				
+				//是否生产面试申请号;
+				if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){
+					Calendar a = Calendar.getInstance();
+					String year = String.valueOf(a.get(Calendar.YEAR));//得到年
+					String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNumOracle("TZ_REG_USER_T", "TZ_MSSQH"+year));
+					String mssqh = year + sjNum.substring(sjNum.length()-4,sjNum.length());
+					psTzRegUserT.setTzMssqh(mssqh);
+				}
+				
 				psTzRegUserTMapper.insert(psTzRegUserT);
+				
+				//如果选择了项目，则插入新闻活动历史表;
+				if(strTZ_PRJ_ID != null && !"".equals(strTZ_PRJ_ID)){
+					PsShowPrjNewsTKey psShowPrjNewsTKey = new PsShowPrjNewsTKey();
+					psShowPrjNewsTKey.setOprid(oprId);
+					psShowPrjNewsTKey.setTzPrjId(strTZ_PRJ_ID);
+					psShowPrjNewsTMapper.insert(psShowPrjNewsTKey);
+				}
 
 				// 添加角色;
 				String roleSQL = " SELECT ROLENAME FROM PS_TZ_JG_ROLE_T WHERE TZ_JG_ID=? AND TZ_ROLE_TYPE='C'";

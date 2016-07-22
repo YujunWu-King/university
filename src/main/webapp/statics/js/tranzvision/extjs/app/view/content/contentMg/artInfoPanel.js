@@ -106,6 +106,59 @@
             zIndex: 900,
 						name: 'contentInfo'
         },{
+			xtype: 'fieldset',
+			layout: {
+	            type: 'vbox',
+	            align: 'stretch'
+	        },
+			title: '发布对象',
+			items: [{
+				items:[{
+			       xtype: 'radio',
+			       boxLabel: '无限制',
+			       name: 'limit',
+			       inputValue : 'A'
+			    },{
+			    	xtype: 'radio',
+			    	boxLabel: '项目',
+					name: 'limit',
+					inputValue : 'B'
+				}, {
+                    xtype: 'tagfield',
+                    //fieldLabel:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.tag","标签"),
+                    name: 'projects',
+                    store:new KitchenSink.view.common.store.comboxStore({
+                        recname:'PS_TZ_PRJ_INF_T',
+                        condition:{
+                        	TZ_JG_ID:{
+                                value:Ext.tzOrgID,
+                                operator:'01',
+                                type:'01'
+                            },
+                            TZ_IS_OPEN:{
+                                value:"Y",
+                                operator:'01',
+                                type:'01'
+                            }
+                        },
+                        result:'TZ_PRJ_ID,TZ_PRJ_NAME'
+                    }),
+                    valueField: 'TZ_PRJ_ID',
+                    displayField: 'TZ_PRJ_NAME',
+                    filterPickList:true,
+                    createNewOnEnter: false,
+                    createNewOnBlur: false,
+                    queryMode: 'local',
+                    listeners:{
+                        'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                        {
+                            var me = this;
+                            me.inputEl.dom.value = "";
+                        }
+                    }
+                }]
+			}]
+        },{
            xtype: 'textfield',
             fieldLabel: '发布者',
             maxLength :100,

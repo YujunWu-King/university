@@ -222,6 +222,7 @@ public class TzAreaDecoratedServiceImpl extends FrameworkImpl {
 			//String strAreaZone = jacksonUtil.getString("areaZone");
 
 			String strAreaType = jacksonUtil.getString("areaType");
+
 			
 			if((null==strOrgId || "".equals(strOrgId)) && (null==strSiteId || "".equals(strSiteId))){
 				strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);

@@ -19,7 +19,8 @@ select
 	a.TZ_XWS, 
 	a.TZ_XSMS, 
 	c.TZ_ART_PUB_STATE,
-	b.TZ_ART_TYPE1 
+	b.TZ_ART_TYPE1,
+	b.TZ_PROJECT_LIMIT
 from 
 	PS_TZ_ART_HD_TBL a,
 	PS_TZ_ART_REC_TBL b,

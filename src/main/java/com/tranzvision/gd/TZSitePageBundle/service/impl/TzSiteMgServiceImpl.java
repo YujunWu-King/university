@@ -55,6 +55,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author SHIHUA
  * @since 2015-12-11
  */
+
 @Service("com.tranzvision.gd.TZSitePageBundle.service.impl.TzSiteMgServiceImpl")
 public class TzSiteMgServiceImpl extends FrameworkImpl {
 

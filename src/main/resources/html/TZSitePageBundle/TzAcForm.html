@@ -82,7 +82,22 @@
 									var pagetype = Ext.get("pagetype").getValue();
 									editPanel.getForm().findField('pagetype').setValue(pagetype);}}  
                         },
-						{
+                        {
+                        	"xtype":"radiogroup", 
+                        	"name":"radiogroup", 
+                        	"fieldLabel":"显示设置", 
+                        	items: [{
+						       "boxLabel": "显示所有开放的班级",
+						       "name": "bmbClassShow",
+						       "inputValue" : "A",
+						       checked: %bind(:10)
+						    },{
+						    	"boxLabel": "只显示报名人已经报名的班级",
+								"name": "bmbClassShow",
+								"inputValue" : "B",
+								checked: %bind(:11)
+							}]
+						},{
 							 "xtype": "hiddenfield","name": "siteId","value":"%bind(:1)"
 							},
 							{

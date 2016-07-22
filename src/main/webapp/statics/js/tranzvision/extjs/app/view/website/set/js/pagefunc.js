@@ -124,7 +124,6 @@ $(".autoload").each(function(index,element){
 				},
 				dataType:'json',
 				success:function(response){
-				
 							if (response !="false"){
 									var tips="暂无相关信息！";
 								
@@ -548,8 +547,7 @@ function getPerInfCard(){
 					tzParams:tzParams
 				},
 				dataType:'json',
-				success:function(response){		
-					
+				success:function(response){	
 					$('#perInfoCard').prop('innerHTML', response.comContent);
                     //原始高度;
                     var tz_flds_h = 158;

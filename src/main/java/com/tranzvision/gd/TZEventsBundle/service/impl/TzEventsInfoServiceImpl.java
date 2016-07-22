@@ -30,6 +30,7 @@ import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPicTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPrjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
@@ -38,6 +39,7 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFileTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicTKey;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTpjT;
@@ -125,6 +127,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzGetSetSessionValue tzGetSetSessionValue;
+	
+	@Autowired
+	private PsTzArtPrjTMapper psTzArtPrjTMapper;
 
 	private String sessSiteId = "siteId";
 
@@ -165,7 +170,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					errorMsg[0] = "1";
 					errorMsg[1] = "未配置活动站点";
 					strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-							"", "", "", "", "", "", "", "", "", "");
+							"", "", "", "", "", "", "", "", "", "", "", "");
 					return strRet;
 				}
 			}
@@ -178,7 +183,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					errorMsg[0] = "1";
 					errorMsg[1] = "未配置活动栏目";
 					strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-							"", "", "", "", "", "", "", "", "", "");
+							"", "", "", "", "", "", "", "", "", "", "", "");
 					return strRet;
 				}
 			}
@@ -199,7 +204,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if (null == activityId || "".equals(activityId)) {
 
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", enabledApply, "",
-						"", "", "", "0", "", "", "", siteId, coluId, saveImageAccessUrl, saveAttachAccessUrl, "");
+						"", "", "", "0", "", "", "", siteId, coluId, saveImageAccessUrl, saveAttachAccessUrl, "", "", "");
 				return strRet;
 			}
 
@@ -211,7 +216,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				errorMsg[0] = "1";
 				errorMsg[1] = "活动数据不存在。";
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-						"", "", "", "", "", "", "", "", "");
+						"", "", "", "", "", "", "", "", "", "", "");
 				return strRet;
 			}
 
@@ -319,19 +324,41 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if (null != applyEndTime) {
 				strApplyEndTime = timeSimpleDateFormat.format(applyEndTime);
 			}
-
-			strRet = this.genEventJsonString(activityId, activityName, strActivityStartDate, strActivityStartTime,
-					strActivityEndDate, strActivityEndTime, activityPlace, activityCity, externalLink, contentInfo,
-					titleImageTitle, titleImageDesc, titleImageUrl, enabledApply, strApplyStartDate, strApplyStartTime,
-					strApplyEndDate, strApplyEndTime, applyNum, showModel, publishStatus, publishUrl, siteId, coluId,
-					saveImageAccessUrl, saveAttachAccessUrl, artType);
+			
+			String limit = (String)mapEventInfo.get("TZ_PROJECT_LIMIT");
+			if(limit == null){
+				limit = "";
+			}
+			
+			ArrayList<String> projects = new ArrayList<>();
+			List<Map<String, Object>> prjList = sqlQuery.queryForList("select TZ_PRJ_ID from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{activityId});
+			if(prjList != null){
+				for(int h = 0; h < prjList.size(); h++){
+					String projectId = (String)prjList.get(h).get("TZ_PRJ_ID");
+					projects.add(projectId);
+				}
+			}
+			
+			if(projects != null && projects.size()>0){
+				strRet = this.genEventJsonString(activityId, activityName, strActivityStartDate, strActivityStartTime,
+						strActivityEndDate, strActivityEndTime, activityPlace, activityCity, externalLink, contentInfo,
+						titleImageTitle, titleImageDesc, titleImageUrl, enabledApply, strApplyStartDate, strApplyStartTime,
+						strApplyEndDate, strApplyEndTime, applyNum, showModel, publishStatus, publishUrl, siteId, coluId,
+						saveImageAccessUrl, saveAttachAccessUrl, artType,limit,projects);
+			}else{
+				strRet = this.genEventJsonString(activityId, activityName, strActivityStartDate, strActivityStartTime,
+						strActivityEndDate, strActivityEndTime, activityPlace, activityCity, externalLink, contentInfo,
+						titleImageTitle, titleImageDesc, titleImageUrl, enabledApply, strApplyStartDate, strApplyStartTime,
+						strApplyEndDate, strApplyEndTime, applyNum, showModel, publishStatus, publishUrl, siteId, coluId,
+						saveImageAccessUrl, saveAttachAccessUrl, artType,limit,"");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = "查询失败！" + e.getMessage();
 			strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-					"", "", "", "", "", "", "", "");
+					"", "", "", "", "", "", "", "", "", "");
 		}
 
 		return strRet;
@@ -375,7 +402,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String titleImageUrl, String enabledApply, String strApplyStartDate, String strApplyStartTime,
 			String strApplyEndDate, String strApplyEndTime, String applyNum, String showModel, String publishStatus,
 			String publishUrl, String siteId, String coluId, String saveImageAccessUrl, String saveAttachAccessUrl,
-			String artType) {
+			String artType,String limit, Object projects) {
 		String strRet = "";
 
 		if ("".equals(strApplyStartTime)) {
@@ -414,6 +441,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		mapJson.put("saveImageAccessUrl", saveImageAccessUrl);
 		mapJson.put("saveAttachAccessUrl", saveAttachAccessUrl);
 		mapJson.put("artType", artType);
+		mapJson.put("limit", limit);
+		mapJson.put("projects", projects);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
@@ -1093,6 +1122,17 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				String[] imgAry = titleImageUrl.split("/");
 				sysFileName = imgAry[imgAry.length - 1];
 			}
+			// 查看范围;
+			String limit = "";
+			if(mapParams.containsKey("limit")){
+				limit = (String) mapParams.get("limit");
+			}
+			// 限定的项目;
+			ArrayList<String> projects = new ArrayList<>();
+			if (mapParams.get("projects") != null && !"".equals(mapParams.get("projects"))) {
+				projects = (ArrayList<String>) mapParams.get("projects");
+			}
+			
 			// 是否启用在线报名
 			String enabledApply = mapParams.get("enabledApply") == null ? "N"
 					: String.valueOf(mapParams.get("enabledApply"));
@@ -1167,6 +1207,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			psTzArtRecTblWithBLOBs.setTzArtName(activityName);
 			psTzArtRecTblWithBLOBs.setTzArtType1(artType);
 			psTzArtRecTblWithBLOBs.setTzOutArtUrl(externalLink);
+			psTzArtRecTblWithBLOBs.setTzProjectLimit(limit);
 			psTzArtRecTblWithBLOBs.setTzImageTitle(titleImageTitle);
 			psTzArtRecTblWithBLOBs.setTzImageDesc(titleImageDesc);
 			psTzArtRecTblWithBLOBs.setTzAttachsysfilena(sysFileName);
@@ -1292,6 +1333,18 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 			} else {
 				return strRet;
+			}
+			
+			//删除限定的项目;
+			sqlQuery.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{activityId});
+			if (projects != null && projects.size() > 0) {
+				for (int k = 0; k < projects.size(); k++) {
+					String prjId = (String)projects.get(k);
+					PsTzArtPrjTKey psTzArtPrjTKey = new PsTzArtPrjTKey();
+					psTzArtPrjTKey.setTzArtId(activityId);
+					psTzArtPrjTKey.setTzPrjId(prjId);
+					psTzArtPrjTMapper.insert(psTzArtPrjTKey);
+				}
 			}
 
 			if (boolRst) {

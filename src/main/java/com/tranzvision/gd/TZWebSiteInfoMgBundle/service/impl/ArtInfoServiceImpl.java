@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPicTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPrjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
@@ -29,6 +30,7 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFileTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicTKey;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTpjT;
@@ -84,6 +86,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 	private PsTzArtPicTMapper psTzArtPicTMapper;
 	@Autowired
 	private PsTzArtFileTMapper psTzArtFileTMapper;
+	@Autowired
+	private PsTzArtPrjTMapper psTzArtPrjTMapper;
 
 	/* 查询表单信息 */
 	@Override
@@ -114,6 +118,8 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 		map.put("saveImageAccessUrl", "");
 		map.put("saveAttachAccessUrl", "");
 		map.put("artNewsDT", "");
+		map.put("limit", "");
+		map.put("projects", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -220,27 +226,43 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 					artUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+siteId+"&columnId="+coluId+"&artId="+strArtId;
 				}
 				
-				map.put("artId", strArtId);
-				map.put("artTitle", psTzArtRecTbl.getTzArtTitle());
-				map.put("artType", psTzArtRecTbl.getTzArtType1());
-				map.put("externalLink", psTzArtRecTbl.getTzOutArtUrl());
-				map.put("contentInfo", psTzArtRecTbl.getTzArtConent());
-				map.put("artFbz", psTzLmNrGlT.getTzFbz());
-				map.put("artFbBm", psTzLmNrGlT.getTzBltDept());
-				map.put("startDate", startDate);
-				map.put("startTime", startTime);
-				map.put("endDate", endDate);
-				map.put("endTime", endTime);
-				map.put("titleImageTitle", psTzArtRecTbl.getTzImageTitle());
-				map.put("titleImageDesc", psTzArtRecTbl.getTzImageDesc());
-				map.put("titleImageUrl", titleImageUrl);
-				map.put("publishStatus", psTzLmNrGlT.getTzArtPubState());
-				map.put("publishUrl", artUrl);
-				map.put("siteId", siteId);
-				map.put("coluId", coluId);
-				map.put("saveImageAccessUrl", saveImageAccessUrl);
-				map.put("saveAttachAccessUrl", saveAttachAccessUrl);
-				map.put("artNewsDT", artNewsDT);
+				map.replace("artId", strArtId);
+				map.replace("artTitle", psTzArtRecTbl.getTzArtTitle());
+				map.replace("artType", psTzArtRecTbl.getTzArtType1());
+				map.replace("externalLink", psTzArtRecTbl.getTzOutArtUrl());
+				map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
+				map.replace("artFbz", psTzLmNrGlT.getTzFbz());
+				map.replace("artFbBm", psTzLmNrGlT.getTzBltDept());
+				map.replace("startDate", startDate);
+				map.replace("startTime", startTime);
+				map.replace("endDate", endDate);
+				map.replace("endTime", endTime);
+				map.replace("titleImageTitle", psTzArtRecTbl.getTzImageTitle());
+				map.replace("titleImageDesc", psTzArtRecTbl.getTzImageDesc());
+				map.replace("titleImageUrl", titleImageUrl);
+				map.replace("publishStatus", psTzLmNrGlT.getTzArtPubState());
+				map.replace("publishUrl", artUrl);
+				map.replace("siteId", siteId);
+				map.replace("coluId", coluId);
+				map.replace("saveImageAccessUrl", saveImageAccessUrl);
+				map.replace("saveAttachAccessUrl", saveAttachAccessUrl);
+				map.replace("artNewsDT", artNewsDT);
+				String limit = psTzArtRecTbl.getTzProjectLimit();
+				if(limit==null){
+					limit = "";
+				}
+				map.replace("limit",limit );
+				
+				List<Map<String, Object>> prjList = jdbcTemplate.queryForList("select TZ_PRJ_ID from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtId});
+				if(prjList != null){
+					ArrayList<String> projects = new ArrayList<>();
+					for(int h = 0; h < prjList.size(); h++){
+						String projectId = (String)prjList.get(h).get("TZ_PRJ_ID");
+						projects.add(projectId);
+					}
+					map.replace("projects",projects);
+				}
+				
 				returnJsonMap.put("formData", map);
 			} else {
 				errMsg[0] = "1";
@@ -308,6 +330,17 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						String artFbBm = (String) dataMap.get("artFbBm");
 						// 发布时间;
 						String artNewsDT = (String) dataMap.get("artNewsDT");
+						// 查看范围;
+						String limit = "";
+						if(dataMap.containsKey("limit")){
+							limit = (String) dataMap.get("limit");
+						}
+						// 限定的项目;
+						ArrayList<String> projects = new ArrayList<>();
+						if (dataMap.get("projects") != null && !"".equals(dataMap.get("projects"))) {
+							projects = (ArrayList<String>) dataMap.get("projects");
+						}
+						
 						Date fbdt = null;
 						SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						if (artNewsDT != null && !"".equals(artNewsDT)) {
@@ -345,6 +378,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 						PsTzArtRecTbl.setTzArtName(artTitle);
+						PsTzArtRecTbl.setTzProjectLimit(limit);
 						PsTzArtRecTbl.setTzArtType1(artType);
 						PsTzArtRecTbl.setTzOutArtUrl(outArtUrl);
 						PsTzArtRecTbl.setTzImageTitle(titleImageTitle);
@@ -395,6 +429,18 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzLastmantDttm(new Date());
 						psTzLmNrGlT.setTzLastmantOprid(oprid);
 						psTzLmNrGlTMapper.insert(psTzLmNrGlT);
+						
+						//删除限定的项目;
+						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{artId});
+						if (projects != null && projects.size() > 0) {
+							for (int k = 0; k < projects.size(); k++) {
+								String prjId = (String)projects.get(k);
+								PsTzArtPrjTKey psTzArtPrjTKey = new PsTzArtPrjTKey();
+								psTzArtPrjTKey.setTzArtId(artId);
+								psTzArtPrjTKey.setTzPrjId(prjId);
+								psTzArtPrjTMapper.insert(psTzArtPrjTKey);
+							}
+						}
 						
 						this.instanceArtId = artId;
 						this.instanceColuId = coluId;
@@ -490,6 +536,17 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						String artFbBm = (String) dataMap.get("artFbBm");
 						// 发布时间;
 						String artNewsDT = (String) dataMap.get("artNewsDT");
+						// 查看范围;
+						String limit = "";
+						if(dataMap.containsKey("limit")){
+							limit = (String) dataMap.get("limit");
+						}
+						// 限定的项目;
+						ArrayList<String> projects = new ArrayList<>();
+						if (dataMap.get("projects") != null && !"".equals(dataMap.get("projects"))) {
+							projects = (ArrayList<String>) dataMap.get("projects");
+						}
+						
 						Date fbdt = null;
 						SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						if (artNewsDT != null && !"".equals(artNewsDT)) {
@@ -554,6 +611,7 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 						PsTzArtRecTbl.setTzArtName(artTitle);
+						PsTzArtRecTbl.setTzProjectLimit(limit);
 						PsTzArtRecTbl.setTzArtType1(artType);
 						PsTzArtRecTbl.setTzOutArtUrl(outArtUrl);
 						PsTzArtRecTbl.setTzImageTitle(titleImageTitle);
@@ -609,6 +667,18 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						if(fbdt == null){
 							String updateFbDtSQL = "update PS_TZ_LM_NR_GL_T set TZ_ART_NEWS_DT=null where TZ_ART_ID=? ";
 							jdbcTemplate.update(updateFbDtSQL,new Object[]{artId});
+						}
+						
+						//删除限定的项目;
+						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{artId});
+						if (projects != null && projects.size() > 0) {
+							for (int k = 0; k < projects.size(); k++) {
+								String prjId = (String)projects.get(k);
+								PsTzArtPrjTKey psTzArtPrjTKey = new PsTzArtPrjTKey();
+								psTzArtPrjTKey.setTzArtId(artId);
+								psTzArtPrjTKey.setTzPrjId(prjId);
+								psTzArtPrjTMapper.insert(psTzArtPrjTKey);
+							}
 						}
 					} else {
 						errMsg[0] = "1";

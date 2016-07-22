@@ -21,7 +21,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 原PS：TZ_SITE_DECORATED_APP:TZ_PI_DECORATED_CLS
- * 
+ * 申请首页个人信息编辑器
  * @author SHIHUA
  * @since 2015-12-17
  */
@@ -98,6 +98,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 				m_curOrgID = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 				m_curOPRID = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			}
+		
 			if (!m_curOrgID.equals(orgId)) {
 				// 如果当前用户登录的机构与请求的机构不一致，则返回空
 				return "";
@@ -209,6 +210,16 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 									str_Skype, String.valueOf(td_long));
 
 					break;
+				case "TZ_PROJECT":	
+					
+					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld2",
+							"查看新闻及活动范围设置：<a href=\"javaScript: void(0);\" onclick=\"selectNewsProject("+siteId+");\" ><img src=\""+ctxPath+"/statics/images/tranzvision/sz.png\" width=\"25px;\" height=\"25px;\"></a>");
+
+					strResult_fld_aleft = strResult_fld_aleft
+							+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFldAleft2",
+									"查看新闻及活动范围设置：<a href=\"javaScript: void(0);\" onclick=\"selectNewsProject("+siteId+");\" ><img src=\""+ctxPath+"/statics/images/tranzvision/sz.png\" width=\"25px;\" height=\"25px;\"></a>");
+					
+					break;
 
 				default:
 
@@ -286,11 +297,12 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 			strRet = "\"" + strRet + "\"";
 
+
 		} catch (Exception e) {
 			e.printStackTrace();
 
 		}
-
+		
 		return strRet;
 	}
 

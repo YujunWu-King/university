@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPrjTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey" >
+    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <id column="TZ_PRJ_ID" property="tzPrjId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey" >
+    delete from PS_TZ_ART_PRJ_T
+    where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
+      and TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey" >
+    insert into PS_TZ_ART_PRJ_T (TZ_ART_ID, TZ_PRJ_ID)
+    values (#{tzArtId,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPrjTKey" >
+    insert into PS_TZ_ART_PRJ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzPrjId != null" >
+        TZ_PRJ_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPrjId != null" >
+        #{tzPrjId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

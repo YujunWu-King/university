@@ -17,6 +17,32 @@
 
 		$("#letf_menu").height(922);
     });
+     
+   //报名人选择可以报名的班级;
+     function viewClass(language,viewType){
+    	 var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
+
+    	 $.ajax({
+ 					type:"POST",
+ 					url: urlBegin,
+ 					data:{
+ 						tzParams:tzParams
+ 					},
+ 					success:function(response){
+ 						$("div#showWindDiv").html(response);
+ 						$("div#showWindDiv").show();
+ 	
+ 						$("span.close").click(function(){
+ 							$("div#showWindDiv").hide();
+ 						});
+ 					
+ 					},
+	 		    	failure: function () {
+	 				  		
+	 		    	}    
+ 			});
+     }
+
 
    function viewJd(classId, instanceId,language,viewType){
         var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"bmClassId":"' + classId + '","instanceId":"' + instanceId+ '","viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
@@ -38,7 +64,7 @@
 		    	failure: function () {
 				  		
 		    	}    
-				});
+			});
     	}
 
 </script>

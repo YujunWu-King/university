@@ -1,0 +1,159 @@
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+<title></title>
+<link href="%bind(:3)" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+	TzUniversityContextPath = "%bind(:7)";
+</script>
+<script type="text/javascript" src="%bind(:7)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:7)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+
+
+<script type="text/javascript">
+
+     var urlBegin="%bind(:2)";
+     $(document).ready(function(){	
+
+		$("#letf_menu").height(922);
+    });
+     
+   //报名人选择可以报名的班级;
+     function viewClass(language,viewType){
+    	 var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
+
+    	 $.ajax({
+ 					type:"POST",
+ 					url: urlBegin,
+ 					data:{
+ 						tzParams:tzParams
+ 					},
+ 					success:function(response){
+ 						$("div#showWindDiv").html(response);
+ 						$("div#showWindDiv").show();
+ 	
+ 						$("span.close").click(function(){
+ 							$("div#showWindDiv").hide();
+ 						});
+ 					
+ 					},
+	 		    	failure: function () {
+	 				  		
+	 		    	}    
+ 			});
+     }
+
+
+   function viewJd(classId, instanceId,language,viewType){
+        var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"bmClassId":"' + classId + '","instanceId":"' + instanceId+ '","viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
+        $.ajax({
+					type:"POST",
+					url: urlBegin,
+					data:{
+						tzParams:tzParams
+					},
+					success:function(response){
+						$("div#showWindDiv").html(response);
+						$("div#showWindDiv").show();
+	
+						$("span.close").click(function(){
+							$("div#showWindDiv").hide();
+						});
+					
+					},
+		    	failure: function () {
+				  		
+		    	}    
+			});
+    	}
+
+</script>
+
+</head>
+<body style="background:#fff">
+	
+<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
+		
+<!---  网站标题头 begin--->
+		
+<!---  网站标题头 end--->
+</div>	
+
+		
+
+        </div>
+	<!-- top end -->
+	<!-- content start -->
+<div id="main" class="main">
+ <div  id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="">
+	
+    <div>
+
+            </div>
+
+<!--左侧菜单 begin-->
+
+ <!--左侧菜单 end-->
+</div>
+	<!-- left nav end --><!-- left end -->
+	  <!-- main start -->
+
+	<div class="main_inner">
+            <div class="main_inner_title">
+                    <div class="main_inner_title_text_wide">
+                            %bind(:4)
+                     </div>
+              </div>
+			 <div id="content1">
+                    <div class="index-bmclass-noprocess">
+                    	<div class="o-application">
+							%bind(:1)
+						</div>
+					</div>
+					%bind(:8)
+			</div>
+	</div>
+    
+  <!-- main end -->
+</div>
+
+ <div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="">
+         
+<!---替换结尾footer--begin--->
+
+<!---替换结尾footer--end--->
+		</div>
+	
+
+
+	<div id="showWindDiv">
+ 
+	</div>
+
+
+<script type="text/javascript">
+     $(document).ready(function(){
+        LoadHeader("%bind(:5)","%bind(:6)","");
+		LoadMenu("%bind(:5)","%bind(:6)","");
+		LoadFooter("%bind(:5)","%bind(:6)","");
+		LoadWelcome("%bind(:5)","%bind(:6)","");
+
+		$(".active").parent().parent().parent().next("table").find(".index_bd").hide();
+		$(".o-application table tr.index_hd td:first-child").click(function(){
+                    
+                     $(this).toggleClass("active").parent().parent().parent().next("table").find(".index_bd").slideToggle();
+                     if($(this).hasClass("active")){
+                     		 $(this).find("i").removeClass("application_shrink");
+										  	 $(this).find("i").addClass("application_expand");
+                         
+                     }else{
+                         $(this).find("i").removeClass("application_expand");
+												 $(this).find("i").addClass("application_shrink");
+                     }
+               });
+
+	
+	});
+</script>
+</body>
+</html>

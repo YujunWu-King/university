@@ -601,6 +601,9 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 		String strSiteId = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
 
 		String viewHtml = registeServiceImpl.userRegister(orgid, strSiteId);
+		if(viewHtml.contains("$")){
+			viewHtml = viewHtml.replace("$", "\\$");
+		}
 		try {
 			viewHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_USER_REG_PREVIEW_HTML",viewHtml,
 					request.getContextPath(), strSiteId);

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSitePageBundle.dao.PsSiteBmClassSzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <result column="TZ_BM_CLASS_SHOW" property="tzBmClassShow" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_BM_CLASS_SHOW
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_SITE_BMCLASS_SZ_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_SITE_BMCLASS_SZ_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT" >
+    insert into PS_SITE_BMCLASS_SZ_T (TZ_SITEI_ID, TZ_BM_CLASS_SHOW)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzBmClassShow,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT" >
+    insert into PS_SITE_BMCLASS_SZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzBmClassShow != null" >
+        TZ_BM_CLASS_SHOW,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBmClassShow != null" >
+        #{tzBmClassShow,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT" >
+    update PS_SITE_BMCLASS_SZ_T
+    <set >
+      <if test="tzBmClassShow != null" >
+        TZ_BM_CLASS_SHOW = #{tzBmClassShow,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSitePageBundle.model.PsSiteBmClassSzT" >
+    update PS_SITE_BMCLASS_SZ_T
+    set TZ_BM_CLASS_SHOW = #{tzBmClassShow,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </update>
+</mapper>

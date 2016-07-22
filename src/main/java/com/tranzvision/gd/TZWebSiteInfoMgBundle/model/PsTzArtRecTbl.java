@@ -37,6 +37,8 @@ public class PsTzArtRecTbl {
 
     private Date syncdttm;
 
+    private String tzProjectLimit;
+
     public String getTzArtId() {
         return tzArtId;
     }
@@ -171,5 +173,13 @@ public class PsTzArtRecTbl {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzProjectLimit() {
+        return tzProjectLimit;
+    }
+
+    public void setTzProjectLimit(String tzProjectLimit) {
+        this.tzProjectLimit = tzProjectLimit == null ? null : tzProjectLimit.trim();
     }
 }
