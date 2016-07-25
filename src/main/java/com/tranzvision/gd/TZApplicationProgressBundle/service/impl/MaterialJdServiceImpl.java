@@ -238,8 +238,8 @@ public class MaterialJdServiceImpl extends FrameworkImpl {
 					String classNameMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "201", language, "班级名称", "班级名称");
 					String desMsg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_SITE_MESSAGE", "202", language, "说明", "说明");
 					
-					String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,TZ_CLASS_DESC from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
-					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+					String sql = "SELECT TZ_CLASS_ID,TZ_CLASS_NAME,TZ_CLASS_DESC from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() and TZ_CLASS_ID not in (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?) ORDER BY TZ_APP_START_DT,TZ_APP_END_DT ASC";
+					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id,oprid });
 					if (classList != null && classList.size() > 0) {
 						for (int i = 0; i < classList.size(); i++) {
 							classId = (String) classList.get(i).get("TZ_CLASS_ID");

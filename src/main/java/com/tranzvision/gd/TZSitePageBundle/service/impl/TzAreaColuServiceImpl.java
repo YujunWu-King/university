@@ -74,19 +74,19 @@ public class TzAreaColuServiceImpl extends FrameworkImpl {
 			String strMenuId = "";
 			String sql;
 			if (null != strAreaId && !"".equals(strAreaId)) {
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetMenuidByAreaid");
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetMenuidByAreaid2");
 				strMenuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strSiteId, strAreaId }, "String");
 			} else {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatype");
 				strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
 
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetMenuidByAreaid");
+				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetMenuidByAreaid2");
 				strMenuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strSiteId, strAreaId }, "String");
 			}
-
+			
 			tzGetSetSessionValue.setTzSiteGloMenuId(strMenuId);
 
-			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteiTempPCcode");
+			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteiTempPCcode2");
 			// String strResultConten = sqlQuery.queryForObject(sql, new
 			// Object[] { strSiteId, strMenuId }, "String");
 			Map<String, Object> mapSiteiCode = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strMenuId });
@@ -104,7 +104,8 @@ public class TzAreaColuServiceImpl extends FrameworkImpl {
 			String strLang = mapData.get("TZ_SITE_LANG") == null ? "" : String.valueOf(mapData.get("TZ_SITE_LANG"));
 			String strSkinId = mapData.get("TZ_SKIN_ID") == null ? "" : String.valueOf(mapData.get("TZ_SKIN_ID"));
 
-			sql = "select TZ_MENU_NAME from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_ID=? and TZ_MENU_STATE='Y'";
+			//sql = "select TZ_MENU_NAME from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_ID=? and TZ_MENU_STATE='Y'";
+			sql = "select TZ_MENU_NAME from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID=? and TZ_MENU_ID=?";
 			String strMenuName = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
 
 			strResultContent = siteRepCssServiceImpl.repContextPath(strResultContent);

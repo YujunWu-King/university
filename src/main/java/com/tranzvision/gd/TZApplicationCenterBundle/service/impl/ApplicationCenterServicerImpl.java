@@ -591,8 +591,14 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 				}
 			}
 			if("B".equals(bmClassShow)){
-				String addClass = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_ADD_BM_CLASS_TABLE",addNewSqBtDesc,language, "CLASS");
-				TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV_BUTTON", TZ_SQLC_TABLE, ApplicationCenter,addClass);
+				//查看是否所有的班级都被申请过了,如果是则不显示新增
+				int noAddBmbCount = jdbcTemplate.queryForObject("SELECT count(1) from  PS_TZ_CLASS_INF_T where TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() and  TZ_CLASS_ID not in (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)", new Object[]{str_jg_id, oprid},"Integer");
+				if(noAddBmbCount > 0){
+					String addClass = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_ADD_BM_CLASS_TABLE",addNewSqBtDesc,language, "CLASS");
+					TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV_BUTTON", TZ_SQLC_TABLE, ApplicationCenter,addClass);
+				}else{
+					TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV", TZ_SQLC_TABLE, ApplicationCenter);
+				}
 			}else{
 				TZ_SQLC_TABAL_TOTAL_DIV = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_BM_YES_LC_DIV", TZ_SQLC_TABLE, ApplicationCenter);
 			}
