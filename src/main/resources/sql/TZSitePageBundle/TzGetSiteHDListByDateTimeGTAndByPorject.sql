@@ -22,6 +22,7 @@ where
 	and PT2.TZ_ART_PUB_STATE = 'Y' 
 	and PT1.TZ_SITEI_ID = ? 
 	and PT1.TZ_COLU_ID = ? 
+	and concat(PT4.TZ_END_DT,' ', PT4.TZ_END_TM) >= ?
 	and (PT3.TZ_PROJECT_LIMIT<>'B' 
 		OR (PT3.TZ_PROJECT_LIMIT = 'B' AND EXISTS 
 			(

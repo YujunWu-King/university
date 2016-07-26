@@ -165,11 +165,11 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					strOrderBy = "asc";
 					// numTotalRow = sqlQuery.queryForObject(sql, new Object[] {
 					// strSiteId, strColuId, strDateNow }, "int");
-					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,strDateNow }, "int");
 				}else{
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGTAndProject");
 					strOrderBy = "asc";
-					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,oprid,oprid }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,strDateNow,oprid,oprid }, "int");
 				}
 				break;
 			case "1":
@@ -199,11 +199,11 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGT");
 					strOrderBy = "asc";
 					//numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, strDateNow }, "int");
-					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId ,strDateNow}, "int");
 				}else{
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteHDCountNumByDateTimeGTAndProject");
 					strOrderBy = "asc";
-					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,oprid,oprid }, "int");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId,strDateNow,oprid,oprid }, "int");
 				}
 				break;
 			}
@@ -305,7 +305,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
 					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 					listSiteActivities = sqlQuery.queryForList(sql,
-							new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+							new Object[] { strSiteId, strColuId,strDateNow, numMinRow, numPageRow });
 				}else{
 					if ("desc".equals(strOrderBy)) {
 						strSQLName = "TzGetSiteHDListByDateTimeGTDescAndByProject";
@@ -316,7 +316,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
 					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 					listSiteActivities = sqlQuery.queryForList(sql,
-							new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
+							new Object[] { strSiteId, strColuId,strDateNow,oprid,oprid, numMinRow, numPageRow });
 				}
 				break;
 			case "1":
@@ -370,7 +370,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					}
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle." + strSQLName);
 					//listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
-					listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+					listSiteActivities = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId,strDateNow, numMinRow, numPageRow });
 				}else{
 					if ("desc".equals(strOrderBy)) {
 						strSQLName = "TzGetSiteHDListByDateTimeGTDescAndByProject";
@@ -381,7 +381,7 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 					// listSiteActivities = sqlQuery.queryForList(sql, new Object[]
 					// { strSiteId, strColuId, strDateNow, numMinRow, numPageRow });
 					listSiteActivities = sqlQuery.queryForList(sql,
-							new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
+							new Object[] { strSiteId, strColuId,strDateNow,oprid,oprid, numMinRow, numPageRow });
 				}
 				break;
 			}

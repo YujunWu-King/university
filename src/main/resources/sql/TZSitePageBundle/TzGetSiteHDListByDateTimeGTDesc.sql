@@ -22,6 +22,7 @@ where
 	and PT2.TZ_ART_PUB_STATE = 'Y' 
 	and PT1.TZ_SITEI_ID = ? 
 	and PT1.TZ_COLU_ID = ? 
+	and concat(PT4.TZ_END_DT,' ', PT4.TZ_END_TM) >= ?
 order by 
 	PT2.TZ_MAX_ZD_SEQ desc, 
 	PT4.TZ_START_DT desc 
