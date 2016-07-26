@@ -211,7 +211,8 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 
 				// 获取要显示的字段;
 				String fields = "";
-				String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+				//面试申请号和项目是不需要显示修改的;
+				String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { language, jgId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
@@ -575,6 +576,10 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					String regFieldId = (String) list.get(i).get("TZ_REG_FIELD_ID");
+					//面试申请号和项目不需要显示;
+					if("TZ_MSSQH".equals(regFieldId) || "TZ_PROJECT".equals(regFieldId)){
+						continue;
+					}
 					if (regFieldId != null && !"".equals(regFieldId) && !"TZ_EMAIL".equals(regFieldId)
 							&& !"TZ_MOBILE".equals(regFieldId) && !"TZ_PASSWORD".equals(regFieldId)
 							&& !"TZ_REPASSWORD".equals(regFieldId)) {
@@ -697,7 +702,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			ArrayList<String> updateList = new ArrayList<>();
 			String updateRegSql = "";
 			// 注册字段;
-			String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+			String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strLang, strJgid });
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
