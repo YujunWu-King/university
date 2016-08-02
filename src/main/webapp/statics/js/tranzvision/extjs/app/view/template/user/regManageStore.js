@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.template.user.regManageStore', {
 	comID: 'TZ_USER_REG_COM',
 	pageID: 'TZ_REGGL_STD',
 	pageSize: 100,
-	autoLoad: true,
+	autoLoad: false,
 	tzStoreParams: '',
 	proxy: Ext.tzListProxy()
 });

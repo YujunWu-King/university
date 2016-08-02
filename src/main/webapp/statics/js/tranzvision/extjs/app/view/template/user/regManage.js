@@ -20,6 +20,11 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 function(responseData) {
                     var formData = responseData.formData;
                     form.setValues(formData);
+                    
+                    var grid = panel.child("grid");
+        			//注册项数据
+        			var store = grid.getStore();
+        			store.load();
                 });
         }
     },
