@@ -116,7 +116,8 @@ public class Patchca {
 	 * 设置验证码的随机文字内容
 	 */
 	public void setCharacters() {
-		wf.setCharacters("23456789abcdefghigkmnpqrstuvwxyzABCDEFGHGKLMNPQRSTUVWXYZ");
+		//wf.setCharacters("23456789abcdefghigkmnpqrstuvwxyzABCDEFGHGKLMNPQRSTUVWXYZ");
+		wf.setCharacters("3478acdefhikmnpqrtuvwxyABCDEFHKLMNPQRTUVWXY");
 	}
 
 	/**
