@@ -510,7 +510,7 @@
 				
 				//var tzStoreParams = '{"activityId":"'+actId+'"}';
 				
-				var tzStoreParams = '{"cfgSrhId":"TZ_GD_BMRGL_COM.TZ_GD_BMRGL_STD.TZ_NAUDLIST_G_V","condition":{"TZ_ART_ID-operator": "01","TZ_ART_ID-value": "'+ actId+'"}}';
+				var tzStoreParams = '{"cfgSrhId":"TZ_GD_BMRGL_COM.TZ_GD_BMRGL_STD.TZ_NAUDLIST_G_V","condition":{"TZ_ART_ID-operator": "01","TZ_ART_ID-value": "'+ actId+'","TZ_NREG_STAT-operator":"10","TZ_NREG_STAT-value":["1","4"]}}';
 				gridPanel.store.tzStoreParams=tzStoreParams;
 				gridPanel.store.reload();
 				
