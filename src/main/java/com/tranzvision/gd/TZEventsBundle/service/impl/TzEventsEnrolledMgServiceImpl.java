@@ -89,7 +89,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {{"TZ_REG_TIME","DESC"}};
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CYR_NAME", "TZ_ZY_SJ", "TZ_ZY_EMAIL", "TZ_NREG_STAT", "TZ_ZXBM_LY",
