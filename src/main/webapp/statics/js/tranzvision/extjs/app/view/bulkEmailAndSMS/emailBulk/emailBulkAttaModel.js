@@ -1,0 +1,9 @@
+Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkAttaModel',{
+    extend:'Ext.data.Model',
+    fields:[
+        {name:'emlQfId'},
+        {name:'attaID'},
+        {name:'attaName'},
+        {name:'attaUrl'}
+    ]
+});

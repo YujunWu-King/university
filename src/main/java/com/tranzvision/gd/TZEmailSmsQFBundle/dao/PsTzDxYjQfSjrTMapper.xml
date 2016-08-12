@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxYjQfSjrTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT" >
+    <id column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <id column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_MLSM_QFPC_ID, TZ_AUDCY_ID, TZ_EMAIL, TZ_PHONE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DXYJQFSJR_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrTKey" >
+    delete from PS_TZ_DXYJQFSJR_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT" >
+    insert into PS_TZ_DXYJQFSJR_T (TZ_MLSM_QFPC_ID, TZ_AUDCY_ID, TZ_EMAIL, 
+      TZ_PHONE)
+    values (#{tzMlsmQfpcId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{tzPhone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT" >
+    insert into PS_TZ_DXYJQFSJR_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        #{tzPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT" >
+    update PS_TZ_DXYJQFSJR_T
+    <set >
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT" >
+    update PS_TZ_DXYJQFSJR_T
+    set TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

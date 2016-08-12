@@ -22,18 +22,27 @@
     <result column="TZ_EMAIL_SENDER" property="tzEmailSender" jdbcType="VARCHAR" />
     <result column="TZ_SENDER_ALIAS" property="tzSenderAlias" jdbcType="VARCHAR" />
     <result column="TZ_EML_IF_PRT" property="tzEmlIfPrt" jdbcType="VARCHAR" />
+    <result column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl" extends="BaseResultMap" >
+    <result column="TZ_MAL_CONTENT" property="tzMalContent" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_EML_SMS_TASK_ID, TZ_TASK_LX, TZ_BATCH_BZ, TZ_TMPL_ID, TZ_EMLSERV_ID, TZ_SMS_SERV_ID, 
     TZ_WEBMAL_FLAG, TZ_DYNAMIC_FLAG, TZ_RWTJ_DT, TZ_RWKS_DT, TZ_RWJS_DT, TZ_RWZX_DT, 
     TZ_RWZX_ZT, TZ_AUDIENCE_ID, TZ_SYYX_LX, TZ_SYSJ_LX, TZ_JG_ID, TZ_EMAIL_SENDER, TZ_SENDER_ALIAS, 
-    TZ_EML_IF_PRT, ROW_ADDED_OPRID, ROW_ADDED_DTTM
+    TZ_EML_IF_PRT, TZ_MLSM_QFPC_ID, ROW_ADDED_OPRID, ROW_ADDED_DTTM
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <sql id="Blob_Column_List" >
+    TZ_MAL_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from PS_TZ_DXYJFSRW_TBL
     where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
   </select>
@@ -48,16 +57,18 @@
       TZ_RWKS_DT, TZ_RWJS_DT, TZ_RWZX_DT, 
       TZ_RWZX_ZT, TZ_AUDIENCE_ID, TZ_SYYX_LX, 
       TZ_SYSJ_LX, TZ_JG_ID, TZ_EMAIL_SENDER, 
-      TZ_SENDER_ALIAS, TZ_EML_IF_PRT, ROW_ADDED_OPRID, 
-      ROW_ADDED_DTTM)
+      TZ_SENDER_ALIAS, TZ_EML_IF_PRT, TZ_MLSM_QFPC_ID, 
+      ROW_ADDED_OPRID, ROW_ADDED_DTTM, TZ_MAL_CONTENT
+      )
     values (#{tzEmlSmsTaskId,jdbcType=VARCHAR}, #{tzTaskLx,jdbcType=VARCHAR}, #{tzBatchBz,jdbcType=VARCHAR}, 
       #{tzTmplId,jdbcType=VARCHAR}, #{tzEmlservId,jdbcType=VARCHAR}, #{tzSmsServId,jdbcType=VARCHAR}, 
       #{tzWebmalFlag,jdbcType=VARCHAR}, #{tzDynamicFlag,jdbcType=VARCHAR}, #{tzRwtjDt,jdbcType=TIMESTAMP}, 
       #{tzRwksDt,jdbcType=TIMESTAMP}, #{tzRwjsDt,jdbcType=TIMESTAMP}, #{tzRwzxDt,jdbcType=TIMESTAMP}, 
       #{tzRwzxZt,jdbcType=VARCHAR}, #{tzAudienceId,jdbcType=VARCHAR}, #{tzSyyxLx,jdbcType=VARCHAR}, 
       #{tzSysjLx,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzEmailSender,jdbcType=VARCHAR}, 
-      #{tzSenderAlias,jdbcType=VARCHAR}, #{tzEmlIfPrt,jdbcType=VARCHAR}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP})
+      #{tzSenderAlias,jdbcType=VARCHAR}, #{tzEmlIfPrt,jdbcType=VARCHAR}, #{tzMlsmQfpcId,jdbcType=VARCHAR}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{tzMalContent,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl" >
     insert into PS_TZ_DXYJFSRW_TBL
@@ -122,11 +133,17 @@
       <if test="tzEmlIfPrt != null" >
         TZ_EML_IF_PRT,
       </if>
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
       <if test="rowAddedOprid != null" >
         ROW_ADDED_OPRID,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
+      </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -190,11 +207,17 @@
       <if test="tzEmlIfPrt != null" >
         #{tzEmlIfPrt,jdbcType=VARCHAR},
       </if>
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedOprid != null" >
         #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzMalContent != null" >
+        #{tzMalContent,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -258,13 +281,46 @@
       <if test="tzEmlIfPrt != null" >
         TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
       </if>
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedOprid != null" >
         ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl" >
+    update PS_TZ_DXYJFSRW_TBL
+    set TZ_TASK_LX = #{tzTaskLx,jdbcType=VARCHAR},
+      TZ_BATCH_BZ = #{tzBatchBz,jdbcType=VARCHAR},
+      TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR},
+      TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      TZ_SMS_SERV_ID = #{tzSmsServId,jdbcType=VARCHAR},
+      TZ_WEBMAL_FLAG = #{tzWebmalFlag,jdbcType=VARCHAR},
+      TZ_DYNAMIC_FLAG = #{tzDynamicFlag,jdbcType=VARCHAR},
+      TZ_RWTJ_DT = #{tzRwtjDt,jdbcType=TIMESTAMP},
+      TZ_RWKS_DT = #{tzRwksDt,jdbcType=TIMESTAMP},
+      TZ_RWJS_DT = #{tzRwjsDt,jdbcType=TIMESTAMP},
+      TZ_RWZX_DT = #{tzRwzxDt,jdbcType=TIMESTAMP},
+      TZ_RWZX_ZT = #{tzRwzxZt,jdbcType=VARCHAR},
+      TZ_AUDIENCE_ID = #{tzAudienceId,jdbcType=VARCHAR},
+      TZ_SYYX_LX = #{tzSyyxLx,jdbcType=VARCHAR},
+      TZ_SYSJ_LX = #{tzSysjLx,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_EMAIL_SENDER = #{tzEmailSender,jdbcType=VARCHAR},
+      TZ_SENDER_ALIAS = #{tzSenderAlias,jdbcType=VARCHAR},
+      TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
+      TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR}
     where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl" >
@@ -288,6 +344,7 @@
       TZ_EMAIL_SENDER = #{tzEmailSender,jdbcType=VARCHAR},
       TZ_SENDER_ALIAS = #{tzSenderAlias,jdbcType=VARCHAR},
       TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
+      TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP}
     where TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}

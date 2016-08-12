@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjQfDyTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyT" >
+    <id column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <result column="TZ_MLSM_QFPC_DESC" property="tzMlsmQfpcDesc" jdbcType="VARCHAR" />
+    <result column="TZ_QF_TYPE" property="tzQfType" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL_SENDER" property="tzEmailSender" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_MODEL" property="tzSendModel" jdbcType="VARCHAR" />
+    <result column="TZ_TMPL_ID" property="tzTmplId" jdbcType="VARCHAR" />
+    <result column="TZ_MAL_SUBJUECT" property="tzMalSubjuect" jdbcType="VARCHAR" />
+    <result column="TZ_DXQM" property="tzDxqm" jdbcType="VARCHAR" />
+    <result column="TZ_TSFS_FLAG" property="tzTsfsFlag" jdbcType="VARCHAR" />
+    <result column="TZ_TSFS_ADDR" property="tzTsfsAddr" jdbcType="VARCHAR" />
+    <result column="TZ_EDM_FLAG" property="tzEdmFlag" jdbcType="VARCHAR" />
+    <result column="TZ_QXDY_FLAG" property="tzQxdyFlag" jdbcType="VARCHAR" />
+    <result column="TZ_QYPFCL_FLAG" property="tzQypfclFlag" jdbcType="VARCHAR" />
+    <result column="TZ_XSFSSL" property="tzXsfssl" jdbcType="INTEGER" />
+    <result column="TZ_DSFS_FLAG" property="tzDsfsFlag" jdbcType="VARCHAR" />
+    <result column="TZ_DSFS_DATE" property="tzDsfsDate" jdbcType="DATE" />
+    <result column="TZ_DSFS_TIME" property="tzDsfsTime" jdbcType="TIME" />
+    <result column="TZ_QZTS_FLAG" property="tzQztsFlag" jdbcType="VARCHAR" />
+    <result column="TZ_OFF_SEND" property="tzOffSend" jdbcType="VARCHAR" />
+    <result column="TZ_ZF_FLAG" property="tzZfFlag" jdbcType="VARCHAR" />
+    <result column="TZ_AUTO_CREATE" property="tzAutoCreate" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_MAL_CONTENT" property="tzMalContent" jdbcType="LONGVARCHAR" />
+    <result column="TZ_SMS_CONTENT" property="tzSmsContent" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MAIL_CC" property="tzMailCc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_MLSM_QFPC_ID, TZ_MLSM_QFPC_DESC, TZ_QF_TYPE, OPRID, TZ_JG_ID, TZ_EMAIL_SENDER, 
+    TZ_SEND_MODEL, TZ_TMPL_ID, TZ_MAL_SUBJUECT, TZ_DXQM, TZ_TSFS_FLAG, TZ_TSFS_ADDR, 
+    TZ_EDM_FLAG, TZ_QXDY_FLAG, TZ_QYPFCL_FLAG, TZ_XSFSSL, TZ_DSFS_FLAG, TZ_DSFS_DATE, 
+    TZ_DSFS_TIME, TZ_QZTS_FLAG, TZ_OFF_SEND, TZ_ZF_FLAG, TZ_AUTO_CREATE, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MAL_CONTENT, TZ_SMS_CONTENT, TZ_MAIL_CC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_DXYJQF_DY_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DXYJQF_DY_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs" >
+    insert into PS_TZ_DXYJQF_DY_T (TZ_MLSM_QFPC_ID, TZ_MLSM_QFPC_DESC, TZ_QF_TYPE, 
+      OPRID, TZ_JG_ID, TZ_EMAIL_SENDER, 
+      TZ_SEND_MODEL, TZ_TMPL_ID, TZ_MAL_SUBJUECT, 
+      TZ_DXQM, TZ_TSFS_FLAG, TZ_TSFS_ADDR, 
+      TZ_EDM_FLAG, TZ_QXDY_FLAG, TZ_QYPFCL_FLAG, 
+      TZ_XSFSSL, TZ_DSFS_FLAG, TZ_DSFS_DATE, 
+      TZ_DSFS_TIME, TZ_QZTS_FLAG, TZ_OFF_SEND, 
+      TZ_ZF_FLAG, TZ_AUTO_CREATE, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      TZ_MAL_CONTENT, TZ_SMS_CONTENT, TZ_MAIL_CC
+      )
+    values (#{tzMlsmQfpcId,jdbcType=VARCHAR}, #{tzMlsmQfpcDesc,jdbcType=VARCHAR}, #{tzQfType,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzEmailSender,jdbcType=VARCHAR}, 
+      #{tzSendModel,jdbcType=VARCHAR}, #{tzTmplId,jdbcType=VARCHAR}, #{tzMalSubjuect,jdbcType=VARCHAR}, 
+      #{tzDxqm,jdbcType=VARCHAR}, #{tzTsfsFlag,jdbcType=VARCHAR}, #{tzTsfsAddr,jdbcType=VARCHAR}, 
+      #{tzEdmFlag,jdbcType=VARCHAR}, #{tzQxdyFlag,jdbcType=VARCHAR}, #{tzQypfclFlag,jdbcType=VARCHAR}, 
+      #{tzXsfssl,jdbcType=INTEGER}, #{tzDsfsFlag,jdbcType=VARCHAR}, #{tzDsfsDate,jdbcType=DATE}, 
+      #{tzDsfsTime,jdbcType=TIME}, #{tzQztsFlag,jdbcType=VARCHAR}, #{tzOffSend,jdbcType=VARCHAR}, 
+      #{tzZfFlag,jdbcType=VARCHAR}, #{tzAutoCreate,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{tzMalContent,jdbcType=LONGVARCHAR}, #{tzSmsContent,jdbcType=LONGVARCHAR}, #{tzMailCc,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs" >
+    insert into PS_TZ_DXYJQF_DY_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzMlsmQfpcDesc != null" >
+        TZ_MLSM_QFPC_DESC,
+      </if>
+      <if test="tzQfType != null" >
+        TZ_QF_TYPE,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzEmailSender != null" >
+        TZ_EMAIL_SENDER,
+      </if>
+      <if test="tzSendModel != null" >
+        TZ_SEND_MODEL,
+      </if>
+      <if test="tzTmplId != null" >
+        TZ_TMPL_ID,
+      </if>
+      <if test="tzMalSubjuect != null" >
+        TZ_MAL_SUBJUECT,
+      </if>
+      <if test="tzDxqm != null" >
+        TZ_DXQM,
+      </if>
+      <if test="tzTsfsFlag != null" >
+        TZ_TSFS_FLAG,
+      </if>
+      <if test="tzTsfsAddr != null" >
+        TZ_TSFS_ADDR,
+      </if>
+      <if test="tzEdmFlag != null" >
+        TZ_EDM_FLAG,
+      </if>
+      <if test="tzQxdyFlag != null" >
+        TZ_QXDY_FLAG,
+      </if>
+      <if test="tzQypfclFlag != null" >
+        TZ_QYPFCL_FLAG,
+      </if>
+      <if test="tzXsfssl != null" >
+        TZ_XSFSSL,
+      </if>
+      <if test="tzDsfsFlag != null" >
+        TZ_DSFS_FLAG,
+      </if>
+      <if test="tzDsfsDate != null" >
+        TZ_DSFS_DATE,
+      </if>
+      <if test="tzDsfsTime != null" >
+        TZ_DSFS_TIME,
+      </if>
+      <if test="tzQztsFlag != null" >
+        TZ_QZTS_FLAG,
+      </if>
+      <if test="tzOffSend != null" >
+        TZ_OFF_SEND,
+      </if>
+      <if test="tzZfFlag != null" >
+        TZ_ZF_FLAG,
+      </if>
+      <if test="tzAutoCreate != null" >
+        TZ_AUTO_CREATE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT,
+      </if>
+      <if test="tzSmsContent != null" >
+        TZ_SMS_CONTENT,
+      </if>
+      <if test="tzMailCc != null" >
+        TZ_MAIL_CC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmQfpcDesc != null" >
+        #{tzMlsmQfpcDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQfType != null" >
+        #{tzQfType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmailSender != null" >
+        #{tzEmailSender,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendModel != null" >
+        #{tzSendModel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplId != null" >
+        #{tzTmplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalSubjuect != null" >
+        #{tzMalSubjuect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDxqm != null" >
+        #{tzDxqm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTsfsFlag != null" >
+        #{tzTsfsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTsfsAddr != null" >
+        #{tzTsfsAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEdmFlag != null" >
+        #{tzEdmFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQxdyFlag != null" >
+        #{tzQxdyFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQypfclFlag != null" >
+        #{tzQypfclFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsfssl != null" >
+        #{tzXsfssl,jdbcType=INTEGER},
+      </if>
+      <if test="tzDsfsFlag != null" >
+        #{tzDsfsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsfsDate != null" >
+        #{tzDsfsDate,jdbcType=DATE},
+      </if>
+      <if test="tzDsfsTime != null" >
+        #{tzDsfsTime,jdbcType=TIME},
+      </if>
+      <if test="tzQztsFlag != null" >
+        #{tzQztsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOffSend != null" >
+        #{tzOffSend,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZfFlag != null" >
+        #{tzZfFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAutoCreate != null" >
+        #{tzAutoCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalContent != null" >
+        #{tzMalContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzSmsContent != null" >
+        #{tzSmsContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMailCc != null" >
+        #{tzMailCc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs" >
+    update PS_TZ_DXYJQF_DY_T
+    <set >
+      <if test="tzMlsmQfpcDesc != null" >
+        TZ_MLSM_QFPC_DESC = #{tzMlsmQfpcDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQfType != null" >
+        TZ_QF_TYPE = #{tzQfType,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmailSender != null" >
+        TZ_EMAIL_SENDER = #{tzEmailSender,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendModel != null" >
+        TZ_SEND_MODEL = #{tzSendModel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplId != null" >
+        TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalSubjuect != null" >
+        TZ_MAL_SUBJUECT = #{tzMalSubjuect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDxqm != null" >
+        TZ_DXQM = #{tzDxqm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTsfsFlag != null" >
+        TZ_TSFS_FLAG = #{tzTsfsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTsfsAddr != null" >
+        TZ_TSFS_ADDR = #{tzTsfsAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEdmFlag != null" >
+        TZ_EDM_FLAG = #{tzEdmFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQxdyFlag != null" >
+        TZ_QXDY_FLAG = #{tzQxdyFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQypfclFlag != null" >
+        TZ_QYPFCL_FLAG = #{tzQypfclFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsfssl != null" >
+        TZ_XSFSSL = #{tzXsfssl,jdbcType=INTEGER},
+      </if>
+      <if test="tzDsfsFlag != null" >
+        TZ_DSFS_FLAG = #{tzDsfsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDsfsDate != null" >
+        TZ_DSFS_DATE = #{tzDsfsDate,jdbcType=DATE},
+      </if>
+      <if test="tzDsfsTime != null" >
+        TZ_DSFS_TIME = #{tzDsfsTime,jdbcType=TIME},
+      </if>
+      <if test="tzQztsFlag != null" >
+        TZ_QZTS_FLAG = #{tzQztsFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOffSend != null" >
+        TZ_OFF_SEND = #{tzOffSend,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZfFlag != null" >
+        TZ_ZF_FLAG = #{tzZfFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAutoCreate != null" >
+        TZ_AUTO_CREATE = #{tzAutoCreate,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzSmsContent != null" >
+        TZ_SMS_CONTENT = #{tzSmsContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMailCc != null" >
+        TZ_MAIL_CC = #{tzMailCc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs" >
+    update PS_TZ_DXYJQF_DY_T
+    set TZ_MLSM_QFPC_DESC = #{tzMlsmQfpcDesc,jdbcType=VARCHAR},
+      TZ_QF_TYPE = #{tzQfType,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_EMAIL_SENDER = #{tzEmailSender,jdbcType=VARCHAR},
+      TZ_SEND_MODEL = #{tzSendModel,jdbcType=VARCHAR},
+      TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR},
+      TZ_MAL_SUBJUECT = #{tzMalSubjuect,jdbcType=VARCHAR},
+      TZ_DXQM = #{tzDxqm,jdbcType=VARCHAR},
+      TZ_TSFS_FLAG = #{tzTsfsFlag,jdbcType=VARCHAR},
+      TZ_TSFS_ADDR = #{tzTsfsAddr,jdbcType=VARCHAR},
+      TZ_EDM_FLAG = #{tzEdmFlag,jdbcType=VARCHAR},
+      TZ_QXDY_FLAG = #{tzQxdyFlag,jdbcType=VARCHAR},
+      TZ_QYPFCL_FLAG = #{tzQypfclFlag,jdbcType=VARCHAR},
+      TZ_XSFSSL = #{tzXsfssl,jdbcType=INTEGER},
+      TZ_DSFS_FLAG = #{tzDsfsFlag,jdbcType=VARCHAR},
+      TZ_DSFS_DATE = #{tzDsfsDate,jdbcType=DATE},
+      TZ_DSFS_TIME = #{tzDsfsTime,jdbcType=TIME},
+      TZ_QZTS_FLAG = #{tzQztsFlag,jdbcType=VARCHAR},
+      TZ_OFF_SEND = #{tzOffSend,jdbcType=VARCHAR},
+      TZ_ZF_FLAG = #{tzZfFlag,jdbcType=VARCHAR},
+      TZ_AUTO_CREATE = #{tzAutoCreate,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR},
+      TZ_SMS_CONTENT = #{tzSmsContent,jdbcType=LONGVARCHAR},
+      TZ_MAIL_CC = #{tzMailCc,jdbcType=LONGVARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyT" >
+    update PS_TZ_DXYJQF_DY_T
+    set TZ_MLSM_QFPC_DESC = #{tzMlsmQfpcDesc,jdbcType=VARCHAR},
+      TZ_QF_TYPE = #{tzQfType,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_EMAIL_SENDER = #{tzEmailSender,jdbcType=VARCHAR},
+      TZ_SEND_MODEL = #{tzSendModel,jdbcType=VARCHAR},
+      TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR},
+      TZ_MAL_SUBJUECT = #{tzMalSubjuect,jdbcType=VARCHAR},
+      TZ_DXQM = #{tzDxqm,jdbcType=VARCHAR},
+      TZ_TSFS_FLAG = #{tzTsfsFlag,jdbcType=VARCHAR},
+      TZ_TSFS_ADDR = #{tzTsfsAddr,jdbcType=VARCHAR},
+      TZ_EDM_FLAG = #{tzEdmFlag,jdbcType=VARCHAR},
+      TZ_QXDY_FLAG = #{tzQxdyFlag,jdbcType=VARCHAR},
+      TZ_QYPFCL_FLAG = #{tzQypfclFlag,jdbcType=VARCHAR},
+      TZ_XSFSSL = #{tzXsfssl,jdbcType=INTEGER},
+      TZ_DSFS_FLAG = #{tzDsfsFlag,jdbcType=VARCHAR},
+      TZ_DSFS_DATE = #{tzDsfsDate,jdbcType=DATE},
+      TZ_DSFS_TIME = #{tzDsfsTime,jdbcType=TIME},
+      TZ_QZTS_FLAG = #{tzQztsFlag,jdbcType=VARCHAR},
+      TZ_OFF_SEND = #{tzOffSend,jdbcType=VARCHAR},
+      TZ_ZF_FLAG = #{tzZfFlag,jdbcType=VARCHAR},
+      TZ_AUTO_CREATE = #{tzAutoCreate,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+  </update>
+</mapper>

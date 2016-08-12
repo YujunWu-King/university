@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzMlsmDrnrTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    <id column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <id column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR1" property="tzXxxNr1" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR2" property="tzXxxNr2" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR3" property="tzXxxNr3" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR4" property="tzXxxNr4" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR5" property="tzXxxNr5" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR6" property="tzXxxNr6" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR7" property="tzXxxNr7" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR8" property="tzXxxNr8" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR9" property="tzXxxNr9" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR10" property="tzXxxNr10" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR11" property="tzXxxNr11" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR12" property="tzXxxNr12" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR13" property="tzXxxNr13" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR14" property="tzXxxNr14" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR15" property="tzXxxNr15" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR16" property="tzXxxNr16" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR17" property="tzXxxNr17" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR18" property="tzXxxNr18" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_NR19" property="tzXxxNr19" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" extends="BaseResultMap" >
+    <result column="TZ_MLSM_CONTENT" property="tzMlsmContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_MLSM_QFPC_ID, TZ_AUDCY_ID, TZ_XXX_NR1, TZ_XXX_NR2, TZ_XXX_NR3, TZ_XXX_NR4, TZ_XXX_NR5, 
+    TZ_XXX_NR6, TZ_XXX_NR7, TZ_XXX_NR8, TZ_XXX_NR9, TZ_XXX_NR10, TZ_XXX_NR11, TZ_XXX_NR12, 
+    TZ_XXX_NR13, TZ_XXX_NR14, TZ_XXX_NR15, TZ_XXX_NR16, TZ_XXX_NR17, TZ_XXX_NR18, TZ_XXX_NR19
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MLSM_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MLSM_DRNR_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrTKey" >
+    delete from PS_TZ_MLSM_DRNR_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    insert into PS_TZ_MLSM_DRNR_T (TZ_MLSM_QFPC_ID, TZ_AUDCY_ID, TZ_XXX_NR1, 
+      TZ_XXX_NR2, TZ_XXX_NR3, TZ_XXX_NR4, 
+      TZ_XXX_NR5, TZ_XXX_NR6, TZ_XXX_NR7, 
+      TZ_XXX_NR8, TZ_XXX_NR9, TZ_XXX_NR10, 
+      TZ_XXX_NR11, TZ_XXX_NR12, TZ_XXX_NR13, 
+      TZ_XXX_NR14, TZ_XXX_NR15, TZ_XXX_NR16, 
+      TZ_XXX_NR17, TZ_XXX_NR18, TZ_XXX_NR19, 
+      TZ_MLSM_CONTENT)
+    values (#{tzMlsmQfpcId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR}, #{tzXxxNr1,jdbcType=VARCHAR}, 
+      #{tzXxxNr2,jdbcType=VARCHAR}, #{tzXxxNr3,jdbcType=VARCHAR}, #{tzXxxNr4,jdbcType=VARCHAR}, 
+      #{tzXxxNr5,jdbcType=VARCHAR}, #{tzXxxNr6,jdbcType=VARCHAR}, #{tzXxxNr7,jdbcType=VARCHAR}, 
+      #{tzXxxNr8,jdbcType=VARCHAR}, #{tzXxxNr9,jdbcType=VARCHAR}, #{tzXxxNr10,jdbcType=VARCHAR}, 
+      #{tzXxxNr11,jdbcType=VARCHAR}, #{tzXxxNr12,jdbcType=VARCHAR}, #{tzXxxNr13,jdbcType=VARCHAR}, 
+      #{tzXxxNr14,jdbcType=VARCHAR}, #{tzXxxNr15,jdbcType=VARCHAR}, #{tzXxxNr16,jdbcType=VARCHAR}, 
+      #{tzXxxNr17,jdbcType=VARCHAR}, #{tzXxxNr18,jdbcType=VARCHAR}, #{tzXxxNr19,jdbcType=VARCHAR}, 
+      #{tzMlsmContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    insert into PS_TZ_MLSM_DRNR_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
+      <if test="tzXxxNr1 != null" >
+        TZ_XXX_NR1,
+      </if>
+      <if test="tzXxxNr2 != null" >
+        TZ_XXX_NR2,
+      </if>
+      <if test="tzXxxNr3 != null" >
+        TZ_XXX_NR3,
+      </if>
+      <if test="tzXxxNr4 != null" >
+        TZ_XXX_NR4,
+      </if>
+      <if test="tzXxxNr5 != null" >
+        TZ_XXX_NR5,
+      </if>
+      <if test="tzXxxNr6 != null" >
+        TZ_XXX_NR6,
+      </if>
+      <if test="tzXxxNr7 != null" >
+        TZ_XXX_NR7,
+      </if>
+      <if test="tzXxxNr8 != null" >
+        TZ_XXX_NR8,
+      </if>
+      <if test="tzXxxNr9 != null" >
+        TZ_XXX_NR9,
+      </if>
+      <if test="tzXxxNr10 != null" >
+        TZ_XXX_NR10,
+      </if>
+      <if test="tzXxxNr11 != null" >
+        TZ_XXX_NR11,
+      </if>
+      <if test="tzXxxNr12 != null" >
+        TZ_XXX_NR12,
+      </if>
+      <if test="tzXxxNr13 != null" >
+        TZ_XXX_NR13,
+      </if>
+      <if test="tzXxxNr14 != null" >
+        TZ_XXX_NR14,
+      </if>
+      <if test="tzXxxNr15 != null" >
+        TZ_XXX_NR15,
+      </if>
+      <if test="tzXxxNr16 != null" >
+        TZ_XXX_NR16,
+      </if>
+      <if test="tzXxxNr17 != null" >
+        TZ_XXX_NR17,
+      </if>
+      <if test="tzXxxNr18 != null" >
+        TZ_XXX_NR18,
+      </if>
+      <if test="tzXxxNr19 != null" >
+        TZ_XXX_NR19,
+      </if>
+      <if test="tzMlsmContent != null" >
+        TZ_MLSM_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr1 != null" >
+        #{tzXxxNr1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr2 != null" >
+        #{tzXxxNr2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr3 != null" >
+        #{tzXxxNr3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr4 != null" >
+        #{tzXxxNr4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr5 != null" >
+        #{tzXxxNr5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr6 != null" >
+        #{tzXxxNr6,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr7 != null" >
+        #{tzXxxNr7,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr8 != null" >
+        #{tzXxxNr8,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr9 != null" >
+        #{tzXxxNr9,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr10 != null" >
+        #{tzXxxNr10,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr11 != null" >
+        #{tzXxxNr11,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr12 != null" >
+        #{tzXxxNr12,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr13 != null" >
+        #{tzXxxNr13,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr14 != null" >
+        #{tzXxxNr14,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr15 != null" >
+        #{tzXxxNr15,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr16 != null" >
+        #{tzXxxNr16,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr17 != null" >
+        #{tzXxxNr17,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr18 != null" >
+        #{tzXxxNr18,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr19 != null" >
+        #{tzXxxNr19,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmContent != null" >
+        #{tzMlsmContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    update PS_TZ_MLSM_DRNR_T
+    <set >
+      <if test="tzXxxNr1 != null" >
+        TZ_XXX_NR1 = #{tzXxxNr1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr2 != null" >
+        TZ_XXX_NR2 = #{tzXxxNr2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr3 != null" >
+        TZ_XXX_NR3 = #{tzXxxNr3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr4 != null" >
+        TZ_XXX_NR4 = #{tzXxxNr4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr5 != null" >
+        TZ_XXX_NR5 = #{tzXxxNr5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr6 != null" >
+        TZ_XXX_NR6 = #{tzXxxNr6,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr7 != null" >
+        TZ_XXX_NR7 = #{tzXxxNr7,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr8 != null" >
+        TZ_XXX_NR8 = #{tzXxxNr8,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr9 != null" >
+        TZ_XXX_NR9 = #{tzXxxNr9,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr10 != null" >
+        TZ_XXX_NR10 = #{tzXxxNr10,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr11 != null" >
+        TZ_XXX_NR11 = #{tzXxxNr11,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr12 != null" >
+        TZ_XXX_NR12 = #{tzXxxNr12,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr13 != null" >
+        TZ_XXX_NR13 = #{tzXxxNr13,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr14 != null" >
+        TZ_XXX_NR14 = #{tzXxxNr14,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr15 != null" >
+        TZ_XXX_NR15 = #{tzXxxNr15,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr16 != null" >
+        TZ_XXX_NR16 = #{tzXxxNr16,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr17 != null" >
+        TZ_XXX_NR17 = #{tzXxxNr17,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr18 != null" >
+        TZ_XXX_NR18 = #{tzXxxNr18,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxNr19 != null" >
+        TZ_XXX_NR19 = #{tzXxxNr19,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmContent != null" >
+        TZ_MLSM_CONTENT = #{tzMlsmContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    update PS_TZ_MLSM_DRNR_T
+    set TZ_XXX_NR1 = #{tzXxxNr1,jdbcType=VARCHAR},
+      TZ_XXX_NR2 = #{tzXxxNr2,jdbcType=VARCHAR},
+      TZ_XXX_NR3 = #{tzXxxNr3,jdbcType=VARCHAR},
+      TZ_XXX_NR4 = #{tzXxxNr4,jdbcType=VARCHAR},
+      TZ_XXX_NR5 = #{tzXxxNr5,jdbcType=VARCHAR},
+      TZ_XXX_NR6 = #{tzXxxNr6,jdbcType=VARCHAR},
+      TZ_XXX_NR7 = #{tzXxxNr7,jdbcType=VARCHAR},
+      TZ_XXX_NR8 = #{tzXxxNr8,jdbcType=VARCHAR},
+      TZ_XXX_NR9 = #{tzXxxNr9,jdbcType=VARCHAR},
+      TZ_XXX_NR10 = #{tzXxxNr10,jdbcType=VARCHAR},
+      TZ_XXX_NR11 = #{tzXxxNr11,jdbcType=VARCHAR},
+      TZ_XXX_NR12 = #{tzXxxNr12,jdbcType=VARCHAR},
+      TZ_XXX_NR13 = #{tzXxxNr13,jdbcType=VARCHAR},
+      TZ_XXX_NR14 = #{tzXxxNr14,jdbcType=VARCHAR},
+      TZ_XXX_NR15 = #{tzXxxNr15,jdbcType=VARCHAR},
+      TZ_XXX_NR16 = #{tzXxxNr16,jdbcType=VARCHAR},
+      TZ_XXX_NR17 = #{tzXxxNr17,jdbcType=VARCHAR},
+      TZ_XXX_NR18 = #{tzXxxNr18,jdbcType=VARCHAR},
+      TZ_XXX_NR19 = #{tzXxxNr19,jdbcType=VARCHAR},
+      TZ_MLSM_CONTENT = #{tzMlsmContent,jdbcType=LONGVARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT" >
+    update PS_TZ_MLSM_DRNR_T
+    set TZ_XXX_NR1 = #{tzXxxNr1,jdbcType=VARCHAR},
+      TZ_XXX_NR2 = #{tzXxxNr2,jdbcType=VARCHAR},
+      TZ_XXX_NR3 = #{tzXxxNr3,jdbcType=VARCHAR},
+      TZ_XXX_NR4 = #{tzXxxNr4,jdbcType=VARCHAR},
+      TZ_XXX_NR5 = #{tzXxxNr5,jdbcType=VARCHAR},
+      TZ_XXX_NR6 = #{tzXxxNr6,jdbcType=VARCHAR},
+      TZ_XXX_NR7 = #{tzXxxNr7,jdbcType=VARCHAR},
+      TZ_XXX_NR8 = #{tzXxxNr8,jdbcType=VARCHAR},
+      TZ_XXX_NR9 = #{tzXxxNr9,jdbcType=VARCHAR},
+      TZ_XXX_NR10 = #{tzXxxNr10,jdbcType=VARCHAR},
+      TZ_XXX_NR11 = #{tzXxxNr11,jdbcType=VARCHAR},
+      TZ_XXX_NR12 = #{tzXxxNr12,jdbcType=VARCHAR},
+      TZ_XXX_NR13 = #{tzXxxNr13,jdbcType=VARCHAR},
+      TZ_XXX_NR14 = #{tzXxxNr14,jdbcType=VARCHAR},
+      TZ_XXX_NR15 = #{tzXxxNr15,jdbcType=VARCHAR},
+      TZ_XXX_NR16 = #{tzXxxNr16,jdbcType=VARCHAR},
+      TZ_XXX_NR17 = #{tzXxxNr17,jdbcType=VARCHAR},
+      TZ_XXX_NR18 = #{tzXxxNr18,jdbcType=VARCHAR},
+      TZ_XXX_NR19 = #{tzXxxNr19,jdbcType=VARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+  </update>
+</mapper>

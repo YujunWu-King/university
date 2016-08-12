@@ -43,9 +43,13 @@ public class PsTzDxyjfsrwTbl {
 
     private String tzEmlIfPrt;
 
+    private String tzMlsmQfpcId;
+
     private String rowAddedOprid;
 
     private Date rowAddedDttm;
+
+    private String tzMalContent;
 
     public String getTzEmlSmsTaskId() {
         return tzEmlSmsTaskId;
@@ -207,6 +211,14 @@ public class PsTzDxyjfsrwTbl {
         this.tzEmlIfPrt = tzEmlIfPrt == null ? null : tzEmlIfPrt.trim();
     }
 
+    public String getTzMlsmQfpcId() {
+        return tzMlsmQfpcId;
+    }
+
+    public void setTzMlsmQfpcId(String tzMlsmQfpcId) {
+        this.tzMlsmQfpcId = tzMlsmQfpcId == null ? null : tzMlsmQfpcId.trim();
+    }
+
     public String getRowAddedOprid() {
         return rowAddedOprid;
     }
@@ -221,5 +233,13 @@ public class PsTzDxyjfsrwTbl {
 
     public void setRowAddedDttm(Date rowAddedDttm) {
         this.rowAddedDttm = rowAddedDttm;
+    }
+
+    public String getTzMalContent() {
+        return tzMalContent;
+    }
+
+    public void setTzMalContent(String tzMalContent) {
+        this.tzMalContent = tzMalContent == null ? null : tzMalContent.trim();
     }
 }

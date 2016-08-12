@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzLinkParTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzLinkParTbl" >
+    <id column="TZ_LINKPRA_ID" property="tzLinkpraId" jdbcType="VARCHAR" />
+    <result column="TZ_LINK_TYPE" property="tzLinkType" jdbcType="VARCHAR" />
+    <result column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <result column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
+    <result column="TZ_REDT_URL" property="tzRedtUrl" jdbcType="VARCHAR" />
+    <result column="TZ_ADD_DTTM" property="tzAddDttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_LINKPRA_ID, TZ_LINK_TYPE, TZ_MLSM_QFPC_ID, TZ_EML_SMS_TASK_ID, TZ_REDT_URL, TZ_ADD_DTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_LINKPAR_TBL
+    where TZ_LINKPRA_ID = #{tzLinkpraId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_LINKPAR_TBL
+    where TZ_LINKPRA_ID = #{tzLinkpraId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzLinkParTbl" >
+    insert into PS_TZ_LINKPAR_TBL (TZ_LINKPRA_ID, TZ_LINK_TYPE, TZ_MLSM_QFPC_ID, 
+      TZ_EML_SMS_TASK_ID, TZ_REDT_URL, TZ_ADD_DTTM
+      )
+    values (#{tzLinkpraId,jdbcType=VARCHAR}, #{tzLinkType,jdbcType=VARCHAR}, #{tzMlsmQfpcId,jdbcType=VARCHAR}, 
+      #{tzEmlSmsTaskId,jdbcType=VARCHAR}, #{tzRedtUrl,jdbcType=VARCHAR}, #{tzAddDttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzLinkParTbl" >
+    insert into PS_TZ_LINKPAR_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLinkpraId != null" >
+        TZ_LINKPRA_ID,
+      </if>
+      <if test="tzLinkType != null" >
+        TZ_LINK_TYPE,
+      </if>
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID,
+      </if>
+      <if test="tzRedtUrl != null" >
+        TZ_REDT_URL,
+      </if>
+      <if test="tzAddDttm != null" >
+        TZ_ADD_DTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLinkpraId != null" >
+        #{tzLinkpraId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLinkType != null" >
+        #{tzLinkType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRedtUrl != null" >
+        #{tzRedtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddDttm != null" >
+        #{tzAddDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzLinkParTbl" >
+    update PS_TZ_LINKPAR_TBL
+    <set >
+      <if test="tzLinkType != null" >
+        TZ_LINK_TYPE = #{tzLinkType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRedtUrl != null" >
+        TZ_REDT_URL = #{tzRedtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddDttm != null" >
+        TZ_ADD_DTTM = #{tzAddDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_LINKPRA_ID = #{tzLinkpraId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzLinkParTbl" >
+    update PS_TZ_LINKPAR_TBL
+    set TZ_LINK_TYPE = #{tzLinkType,jdbcType=VARCHAR},
+      TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      TZ_REDT_URL = #{tzRedtUrl,jdbcType=VARCHAR},
+      TZ_ADD_DTTM = #{tzAddDttm,jdbcType=TIMESTAMP}
+    where TZ_LINKPRA_ID = #{tzLinkpraId,jdbcType=VARCHAR}
+  </update>
+</mapper>

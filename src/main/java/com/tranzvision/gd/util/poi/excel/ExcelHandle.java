@@ -799,7 +799,8 @@ public class ExcelHandle {
 						continue;
 					}
 
-					String cellKey = excelFirstRowKeys.get(cellnum);
+					//String cellKey = excelFirstRowKeys.get(cellnum);
+					String cellKey = String.valueOf(cellnum);
 					if (null != dataListCellKeys && dataListCellKeys.size() > 0 && firstRowKeys) {
 						cellKey = excelFirstRowKeys.get(cellnum);
 						if (!dataListCellKeys.contains(cellKey)) {
