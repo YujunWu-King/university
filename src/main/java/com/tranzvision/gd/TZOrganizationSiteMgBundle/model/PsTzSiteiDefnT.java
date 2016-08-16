@@ -51,6 +51,10 @@ public class PsTzSiteiDefnT {
 
     private String tzLastmantOprid;
 
+    private String tzSiteiPath;
+
+    private String tzSiteiType;
+
     public String getTzSiteiId() {
         return tzSiteiId;
     }
@@ -241,5 +245,21 @@ public class PsTzSiteiDefnT {
 
     public void setTzLastmantOprid(String tzLastmantOprid) {
         this.tzLastmantOprid = tzLastmantOprid == null ? null : tzLastmantOprid.trim();
+    }
+
+    public String getTzSiteiPath() {
+        return tzSiteiPath;
+    }
+
+    public void setTzSiteiPath(String tzSiteiPath) {
+        this.tzSiteiPath = tzSiteiPath == null ? null : tzSiteiPath.trim();
+    }
+
+    public String getTzSiteiType() {
+        return tzSiteiType;
+    }
+
+    public void setTzSiteiType(String tzSiteiType) {
+        this.tzSiteiType = tzSiteiType == null ? null : tzSiteiType.trim();
     }
 }

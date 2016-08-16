@@ -1,133 +1,175 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiColuTMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT" >
-    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
-    <id column="TZ_COLU_ID" property="tzColuId" jdbcType="VARCHAR" />
-    <result column="TZ_COLU_NAME" property="tzColuName" jdbcType="VARCHAR" />
-    <result column="TZ_COLU_TYPE" property="tzColuType" jdbcType="VARCHAR" />
-    <result column="TZ_TEMP_ID" property="tzTempId" jdbcType="VARCHAR" />
-    <result column="TZ_CONT_TYPE" property="tzContType" jdbcType="VARCHAR" />
-    <result column="TZ_CONT_TEMP" property="tzContTemp" jdbcType="VARCHAR" />
-    <result column="TZ_MENU_TYPE_ID" property="tzMenuTypeId" jdbcType="VARCHAR" />
-    <result column="TZ_COLU_STATE" property="tzColuState" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiColuTMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
+    <id column="TZ_SITEI_ID" jdbcType="VARCHAR" property="tzSiteiId" />
+    <id column="TZ_COLU_ID" jdbcType="VARCHAR" property="tzColuId" />
+    <result column="TZ_COLU_NAME" jdbcType="VARCHAR" property="tzColuName" />
+    <result column="TZ_COLU_TYPE" jdbcType="VARCHAR" property="tzColuType" />
+    <result column="TZ_TEMP_ID" jdbcType="VARCHAR" property="tzTempId" />
+    <result column="TZ_CONT_TYPE" jdbcType="VARCHAR" property="tzContType" />
+    <result column="TZ_CONT_TEMP" jdbcType="VARCHAR" property="tzContTemp" />
+    <result column="TZ_MENU_TYPE_ID" jdbcType="VARCHAR" property="tzMenuTypeId" />
+    <result column="TZ_COLU_STATE" jdbcType="VARCHAR" property="tzColuState" />
+    <result column="TZ_F_COLU_ID" jdbcType="VARCHAR" property="tzFColuId" />
+    <result column="TZ_COLU_PATH" jdbcType="VARCHAR" property="tzColuPath" />
+    <result column="TZ_OUT_URL" jdbcType="VARCHAR" property="tzOutUrl" />
+    <result column="TZ_ART_TYPE_ID" jdbcType="VARCHAR" property="tzArtTypeId" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     TZ_SITEI_ID, TZ_COLU_ID, TZ_COLU_NAME, TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, TZ_CONT_TEMP, 
-    TZ_MENU_TYPE_ID, TZ_COLU_STATE
+    TZ_MENU_TYPE_ID, TZ_COLU_STATE, TZ_F_COLU_ID, TZ_COLU_PATH, TZ_OUT_URL, TZ_ART_TYPE_ID
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey" >
+  <select id="selectByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from PS_TZ_SITEI_COLU_T
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey" >
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey">
     delete from PS_TZ_SITEI_COLU_T
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
     insert into PS_TZ_SITEI_COLU_T (TZ_SITEI_ID, TZ_COLU_ID, TZ_COLU_NAME, 
       TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, 
-      TZ_CONT_TEMP, TZ_MENU_TYPE_ID, TZ_COLU_STATE
-      )
+      TZ_CONT_TEMP, TZ_MENU_TYPE_ID, TZ_COLU_STATE, 
+      TZ_F_COLU_ID, TZ_COLU_PATH, TZ_OUT_URL, 
+      TZ_ART_TYPE_ID)
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzColuName,jdbcType=VARCHAR}, 
       #{tzColuType,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzContType,jdbcType=VARCHAR}, 
-      #{tzContTemp,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, #{tzColuState,jdbcType=VARCHAR}
-      )
+      #{tzContTemp,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, #{tzColuState,jdbcType=VARCHAR}, 
+      #{tzFColuId,jdbcType=VARCHAR}, #{tzColuPath,jdbcType=VARCHAR}, #{tzOutUrl,jdbcType=VARCHAR}, 
+      #{tzArtTypeId,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
     insert into PS_TZ_SITEI_COLU_T
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="tzSiteiId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzSiteiId != null">
         TZ_SITEI_ID,
       </if>
-      <if test="tzColuId != null" >
+      <if test="tzColuId != null">
         TZ_COLU_ID,
       </if>
-      <if test="tzColuName != null" >
+      <if test="tzColuName != null">
         TZ_COLU_NAME,
       </if>
-      <if test="tzColuType != null" >
+      <if test="tzColuType != null">
         TZ_COLU_TYPE,
       </if>
-      <if test="tzTempId != null" >
+      <if test="tzTempId != null">
         TZ_TEMP_ID,
       </if>
-      <if test="tzContType != null" >
+      <if test="tzContType != null">
         TZ_CONT_TYPE,
       </if>
-      <if test="tzContTemp != null" >
+      <if test="tzContTemp != null">
         TZ_CONT_TEMP,
       </if>
-      <if test="tzMenuTypeId != null" >
+      <if test="tzMenuTypeId != null">
         TZ_MENU_TYPE_ID,
       </if>
-      <if test="tzColuState != null" >
+      <if test="tzColuState != null">
         TZ_COLU_STATE,
       </if>
+      <if test="tzFColuId != null">
+        TZ_F_COLU_ID,
+      </if>
+      <if test="tzColuPath != null">
+        TZ_COLU_PATH,
+      </if>
+      <if test="tzOutUrl != null">
+        TZ_OUT_URL,
+      </if>
+      <if test="tzArtTypeId != null">
+        TZ_ART_TYPE_ID,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="tzSiteiId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzSiteiId != null">
         #{tzSiteiId,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuId != null" >
+      <if test="tzColuId != null">
         #{tzColuId,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuName != null" >
+      <if test="tzColuName != null">
         #{tzColuName,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuType != null" >
+      <if test="tzColuType != null">
         #{tzColuType,jdbcType=VARCHAR},
       </if>
-      <if test="tzTempId != null" >
+      <if test="tzTempId != null">
         #{tzTempId,jdbcType=VARCHAR},
       </if>
-      <if test="tzContType != null" >
+      <if test="tzContType != null">
         #{tzContType,jdbcType=VARCHAR},
       </if>
-      <if test="tzContTemp != null" >
+      <if test="tzContTemp != null">
         #{tzContTemp,jdbcType=VARCHAR},
       </if>
-      <if test="tzMenuTypeId != null" >
+      <if test="tzMenuTypeId != null">
         #{tzMenuTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuState != null" >
+      <if test="tzColuState != null">
         #{tzColuState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFColuId != null">
+        #{tzFColuId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuPath != null">
+        #{tzColuPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOutUrl != null">
+        #{tzOutUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtTypeId != null">
+        #{tzArtTypeId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
     update PS_TZ_SITEI_COLU_T
-    <set >
-      <if test="tzColuName != null" >
+    <set>
+      <if test="tzColuName != null">
         TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuType != null" >
+      <if test="tzColuType != null">
         TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
       </if>
-      <if test="tzTempId != null" >
+      <if test="tzTempId != null">
         TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
       </if>
-      <if test="tzContType != null" >
+      <if test="tzContType != null">
         TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
       </if>
-      <if test="tzContTemp != null" >
+      <if test="tzContTemp != null">
         TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
       </if>
-      <if test="tzMenuTypeId != null" >
+      <if test="tzMenuTypeId != null">
         TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="tzColuState != null" >
+      <if test="tzColuState != null">
         TZ_COLU_STATE = #{tzColuState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFColuId != null">
+        TZ_F_COLU_ID = #{tzFColuId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColuPath != null">
+        TZ_COLU_PATH = #{tzColuPath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOutUrl != null">
+        TZ_OUT_URL = #{tzOutUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtTypeId != null">
+        TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR},
       </if>
     </set>
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT" >
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
     update PS_TZ_SITEI_COLU_T
     set TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
       TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
@@ -135,7 +177,11 @@
       TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
       TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
       TZ_MENU_TYPE_ID = #{tzMenuTypeId,jdbcType=VARCHAR},
-      TZ_COLU_STATE = #{tzColuState,jdbcType=VARCHAR}
+      TZ_COLU_STATE = #{tzColuState,jdbcType=VARCHAR},
+      TZ_F_COLU_ID = #{tzFColuId,jdbcType=VARCHAR},
+      TZ_COLU_PATH = #{tzColuPath,jdbcType=VARCHAR},
+      TZ_OUT_URL = #{tzOutUrl,jdbcType=VARCHAR},
+      TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>

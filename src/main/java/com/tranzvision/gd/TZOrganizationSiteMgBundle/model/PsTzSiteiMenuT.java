@@ -31,6 +31,20 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     private String tzLastmantOprid;
 
+    private String tzFMenuId;
+
+    private String tzColuPath;
+
+    private String tzMenuType;
+
+    private String tzDMenuId;
+
+    private String tzTempId;
+
+    private Integer tzMenuLevel;
+
+    private String tzPageName;
+
     private String tzMenuUrl;
 
     public String getTzMenuName() {
@@ -143,6 +157,62 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     public void setTzLastmantOprid(String tzLastmantOprid) {
         this.tzLastmantOprid = tzLastmantOprid == null ? null : tzLastmantOprid.trim();
+    }
+
+    public String getTzFMenuId() {
+        return tzFMenuId;
+    }
+
+    public void setTzFMenuId(String tzFMenuId) {
+        this.tzFMenuId = tzFMenuId == null ? null : tzFMenuId.trim();
+    }
+
+    public String getTzColuPath() {
+        return tzColuPath;
+    }
+
+    public void setTzColuPath(String tzColuPath) {
+        this.tzColuPath = tzColuPath == null ? null : tzColuPath.trim();
+    }
+
+    public String getTzMenuType() {
+        return tzMenuType;
+    }
+
+    public void setTzMenuType(String tzMenuType) {
+        this.tzMenuType = tzMenuType == null ? null : tzMenuType.trim();
+    }
+
+    public String getTzDMenuId() {
+        return tzDMenuId;
+    }
+
+    public void setTzDMenuId(String tzDMenuId) {
+        this.tzDMenuId = tzDMenuId == null ? null : tzDMenuId.trim();
+    }
+
+    public String getTzTempId() {
+        return tzTempId;
+    }
+
+    public void setTzTempId(String tzTempId) {
+        this.tzTempId = tzTempId == null ? null : tzTempId.trim();
+    }
+
+    public Integer getTzMenuLevel() {
+        return tzMenuLevel;
+    }
+
+    public void setTzMenuLevel(Integer tzMenuLevel) {
+        this.tzMenuLevel = tzMenuLevel;
+    }
+
+    public String getTzPageName() {
+        return tzPageName;
+    }
+
+    public void setTzPageName(String tzPageName) {
+        this.tzPageName = tzPageName == null ? null : tzPageName.trim();
     }
 
     public String getTzMenuUrl() {

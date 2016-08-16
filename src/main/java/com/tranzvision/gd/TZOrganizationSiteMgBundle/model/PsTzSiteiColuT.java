@@ -15,6 +15,14 @@ public class PsTzSiteiColuT extends PsTzSiteiColuTKey {
 
     private String tzColuState;
 
+    private String tzFColuId;
+
+    private String tzColuPath;
+
+    private String tzOutUrl;
+
+    private String tzArtTypeId;
+
     public String getTzColuName() {
         return tzColuName;
     }
@@ -69,5 +77,37 @@ public class PsTzSiteiColuT extends PsTzSiteiColuTKey {
 
     public void setTzColuState(String tzColuState) {
         this.tzColuState = tzColuState == null ? null : tzColuState.trim();
+    }
+
+    public String getTzFColuId() {
+        return tzFColuId;
+    }
+
+    public void setTzFColuId(String tzFColuId) {
+        this.tzFColuId = tzFColuId == null ? null : tzFColuId.trim();
+    }
+
+    public String getTzColuPath() {
+        return tzColuPath;
+    }
+
+    public void setTzColuPath(String tzColuPath) {
+        this.tzColuPath = tzColuPath == null ? null : tzColuPath.trim();
+    }
+
+    public String getTzOutUrl() {
+        return tzOutUrl;
+    }
+
+    public void setTzOutUrl(String tzOutUrl) {
+        this.tzOutUrl = tzOutUrl == null ? null : tzOutUrl.trim();
+    }
+
+    public String getTzArtTypeId() {
+        return tzArtTypeId;
+    }
+
+    public void setTzArtTypeId(String tzArtTypeId) {
+        this.tzArtTypeId = tzArtTypeId == null ? null : tzArtTypeId.trim();
     }
 }
