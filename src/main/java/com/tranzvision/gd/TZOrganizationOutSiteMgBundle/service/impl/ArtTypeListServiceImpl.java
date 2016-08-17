@@ -18,8 +18,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author zhangbb
  * @version 创建时间：2016年8月16日 下午16:28:30 类说明 内容类型管理
  */
-@Service("com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl.artTypeListServiceImpl")
-public class artTypeListServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl.ArtTypeListServiceImpl")
+public class ArtTypeListServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
