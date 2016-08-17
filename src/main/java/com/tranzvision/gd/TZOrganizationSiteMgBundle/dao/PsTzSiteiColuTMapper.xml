@@ -15,10 +15,12 @@
     <result column="TZ_COLU_PATH" jdbcType="VARCHAR" property="tzColuPath" />
     <result column="TZ_OUT_URL" jdbcType="VARCHAR" property="tzOutUrl" />
     <result column="TZ_ART_TYPE_ID" jdbcType="VARCHAR" property="tzArtTypeId" />
+    <result column="TZ_COLU_LEVEL" jdbcType="INTEGER" property="tzColuLevel" />
   </resultMap>
   <sql id="Base_Column_List">
     TZ_SITEI_ID, TZ_COLU_ID, TZ_COLU_NAME, TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, TZ_CONT_TEMP, 
-    TZ_MENU_TYPE_ID, TZ_COLU_STATE, TZ_F_COLU_ID, TZ_COLU_PATH, TZ_OUT_URL, TZ_ART_TYPE_ID
+    TZ_MENU_TYPE_ID, TZ_COLU_STATE, TZ_F_COLU_ID, TZ_COLU_PATH, TZ_OUT_URL, TZ_ART_TYPE_ID, 
+    TZ_COLU_LEVEL
   </sql>
   <select id="selectByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey" resultMap="BaseResultMap">
     select 
@@ -37,12 +39,12 @@
       TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, 
       TZ_CONT_TEMP, TZ_MENU_TYPE_ID, TZ_COLU_STATE, 
       TZ_F_COLU_ID, TZ_COLU_PATH, TZ_OUT_URL, 
-      TZ_ART_TYPE_ID)
+      TZ_ART_TYPE_ID, TZ_COLU_LEVEL)
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzColuName,jdbcType=VARCHAR}, 
       #{tzColuType,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzContType,jdbcType=VARCHAR}, 
       #{tzContTemp,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, #{tzColuState,jdbcType=VARCHAR}, 
       #{tzFColuId,jdbcType=VARCHAR}, #{tzColuPath,jdbcType=VARCHAR}, #{tzOutUrl,jdbcType=VARCHAR}, 
-      #{tzArtTypeId,jdbcType=VARCHAR})
+      #{tzArtTypeId,jdbcType=VARCHAR}, #{tzColuLevel,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
     insert into PS_TZ_SITEI_COLU_T
@@ -86,6 +88,9 @@
       <if test="tzArtTypeId != null">
         TZ_ART_TYPE_ID,
       </if>
+      <if test="tzColuLevel != null">
+        TZ_COLU_LEVEL,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="tzSiteiId != null">
@@ -127,6 +132,9 @@
       <if test="tzArtTypeId != null">
         #{tzArtTypeId,jdbcType=VARCHAR},
       </if>
+      <if test="tzColuLevel != null">
+        #{tzColuLevel,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT">
@@ -165,6 +173,9 @@
       <if test="tzArtTypeId != null">
         TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR},
       </if>
+      <if test="tzColuLevel != null">
+        TZ_COLU_LEVEL = #{tzColuLevel,jdbcType=INTEGER},
+      </if>
     </set>
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
@@ -181,7 +192,8 @@
       TZ_F_COLU_ID = #{tzFColuId,jdbcType=VARCHAR},
       TZ_COLU_PATH = #{tzColuPath,jdbcType=VARCHAR},
       TZ_OUT_URL = #{tzOutUrl,jdbcType=VARCHAR},
-      TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
+      TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR},
+      TZ_COLU_LEVEL = #{tzColuLevel,jdbcType=INTEGER}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>

@@ -23,6 +23,8 @@ public class PsTzSiteiColuT extends PsTzSiteiColuTKey {
 
     private String tzArtTypeId;
 
+    private Integer tzColuLevel;
+
     public String getTzColuName() {
         return tzColuName;
     }
@@ -109,5 +111,13 @@ public class PsTzSiteiColuT extends PsTzSiteiColuTKey {
 
     public void setTzArtTypeId(String tzArtTypeId) {
         this.tzArtTypeId = tzArtTypeId == null ? null : tzArtTypeId.trim();
+    }
+
+    public Integer getTzColuLevel() {
+        return tzColuLevel;
+    }
+
+    public void setTzColuLevel(Integer tzColuLevel) {
+        this.tzColuLevel = tzColuLevel;
     }
 }
