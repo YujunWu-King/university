@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzContFldefTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT" >
+    <id column="TZ_ART_TYPE_ID" property="tzArtTypeId" jdbcType="VARCHAR" />
+    <id column="TZ_FIELD_VALUE" property="tzFieldValue" jdbcType="VARCHAR" />
+    <result column="TZ_FIELD_DESC" property="tzFieldDesc" jdbcType="VARCHAR" />
+    <result column="TZ_SEQ" property="tzSeq" jdbcType="INTEGER" />
+    <result column="IS_ENABLED_FLG" property="isEnabledFlg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ART_TYPE_ID, TZ_FIELD_VALUE, TZ_FIELD_DESC, TZ_SEQ, IS_ENABLED_FLG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CONT_FLDEF_T
+    where TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
+      and TZ_FIELD_VALUE = #{tzFieldValue,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey" >
+    delete from PS_TZ_CONT_FLDEF_T
+    where TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
+      and TZ_FIELD_VALUE = #{tzFieldValue,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT" >
+    insert into PS_TZ_CONT_FLDEF_T (TZ_ART_TYPE_ID, TZ_FIELD_VALUE, TZ_FIELD_DESC, 
+      TZ_SEQ, IS_ENABLED_FLG)
+    values (#{tzArtTypeId,jdbcType=VARCHAR}, #{tzFieldValue,jdbcType=VARCHAR}, #{tzFieldDesc,jdbcType=VARCHAR}, 
+      #{tzSeq,jdbcType=INTEGER}, #{isEnabledFlg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT" >
+    insert into PS_TZ_CONT_FLDEF_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzArtTypeId != null" >
+        TZ_ART_TYPE_ID,
+      </if>
+      <if test="tzFieldValue != null" >
+        TZ_FIELD_VALUE,
+      </if>
+      <if test="tzFieldDesc != null" >
+        TZ_FIELD_DESC,
+      </if>
+      <if test="tzSeq != null" >
+        TZ_SEQ,
+      </if>
+      <if test="isEnabledFlg != null" >
+        IS_ENABLED_FLG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzArtTypeId != null" >
+        #{tzArtTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFieldValue != null" >
+        #{tzFieldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFieldDesc != null" >
+        #{tzFieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeq != null" >
+        #{tzSeq,jdbcType=INTEGER},
+      </if>
+      <if test="isEnabledFlg != null" >
+        #{isEnabledFlg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT" >
+    update PS_TZ_CONT_FLDEF_T
+    <set >
+      <if test="tzFieldDesc != null" >
+        TZ_FIELD_DESC = #{tzFieldDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeq != null" >
+        TZ_SEQ = #{tzSeq,jdbcType=INTEGER},
+      </if>
+      <if test="isEnabledFlg != null" >
+        IS_ENABLED_FLG = #{isEnabledFlg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
+      and TZ_FIELD_VALUE = #{tzFieldValue,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT" >
+    update PS_TZ_CONT_FLDEF_T
+    set TZ_FIELD_DESC = #{tzFieldDesc,jdbcType=VARCHAR},
+      TZ_SEQ = #{tzSeq,jdbcType=INTEGER},
+      IS_ENABLED_FLG = #{isEnabledFlg,jdbcType=VARCHAR}
+    where TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
+      and TZ_FIELD_VALUE = #{tzFieldValue,jdbcType=VARCHAR}
+  </update>
+</mapper>
