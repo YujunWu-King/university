@@ -33,8 +33,6 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     private String tzFMenuId;
 
-    private String tzColuPath;
-
     private String tzMenuType;
 
     private String tzDMenuId;
@@ -44,6 +42,8 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
     private Integer tzMenuLevel;
 
     private String tzPageName;
+
+    private String tzMenuPath;
 
     private String tzMenuUrl;
 
@@ -167,14 +167,6 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
         this.tzFMenuId = tzFMenuId == null ? null : tzFMenuId.trim();
     }
 
-    public String getTzColuPath() {
-        return tzColuPath;
-    }
-
-    public void setTzColuPath(String tzColuPath) {
-        this.tzColuPath = tzColuPath == null ? null : tzColuPath.trim();
-    }
-
     public String getTzMenuType() {
         return tzMenuType;
     }
@@ -213,6 +205,14 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     public void setTzPageName(String tzPageName) {
         this.tzPageName = tzPageName == null ? null : tzPageName.trim();
+    }
+
+    public String getTzMenuPath() {
+        return tzMenuPath;
+    }
+
+    public void setTzMenuPath(String tzMenuPath) {
+        this.tzMenuPath = tzMenuPath == null ? null : tzMenuPath.trim();
     }
 
     public String getTzMenuUrl() {
