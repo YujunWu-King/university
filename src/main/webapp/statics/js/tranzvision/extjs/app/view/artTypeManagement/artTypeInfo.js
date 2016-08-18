@@ -30,7 +30,7 @@ Ext.define('KitchenSink.view.artTypeManagement.artTypeInfo', {
 
                 fieldDefaults: {
                     msgTarget: 'side',
-                    labelWidth: 200,
+                    labelWidth: 100,
                     labelStyle: 'font-weight:bold'
                 },
                 items: [{
