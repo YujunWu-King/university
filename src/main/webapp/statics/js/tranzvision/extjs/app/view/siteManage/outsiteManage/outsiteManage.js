@@ -36,8 +36,7 @@
 		xtype:"toolbar",
 		items:[
 			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addOutSite'},"-",
-			{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSite'},"-",
-			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSite'}
+			{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSite'}
 		]
 	}],
     initComponent: function () {   
@@ -67,8 +66,7 @@
 					  {iconCls: 'edit',tooltip: '栏目管理',handler:'editSiteColuById'},
 					  {iconCls: 'edit',tooltip: '模板管理',handler:'editSiteInfo'},
 					  {iconCls: 'edit',tooltip: '内容管理',handler:'editSiteInfo'},
-					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteInfo'},
-					  {iconCls: 'remove',tooltip: '删除',handler:'deleteList'}
+					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteInfo'}
 			   ]
             }],
 			store: store,

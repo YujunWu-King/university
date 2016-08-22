@@ -10,13 +10,23 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 			var form = bt.findParentByType("form").getForm();
 			var coluId = form.findField("coluId").getValue();
 			var rootNode = form.findField("rootNode").getValue();
+			
 			if (coluId == rootNode) {
 				Ext.Msg.alert("提示", "不可插入根节点的同级节点");
 			} else {
+				form.findField("coluPath").setReadOnly(false);
+				form.findField("coluPath").removeCls('lanage_1'); 
+				
+				form.findField("coluTempletId").hide();
+				form.findField("coluTempletName").hide();
+				form.findField("contentTypeId").hide();
+				form.findField("contentTypeName").hide();
+				form.findField("coluUrl").hide();
 				form.findField("coluId").setValue('');
 				form.findField("coluName").setValue('');
 				form.findField("coluPath").setValue('');
 				form.findField("coluState").setValue('');
+				form.findField("coluType").setValue('');
 				form.findField("coluTempletId").setValue('');
 				form.findField("contentTypeId").setValue('');
 				form.findField("coluTempletName").setValue('');
@@ -38,14 +48,24 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	inserChildColuItem : function(bt, eOpts) {
 		var actType = bt.findParentByType("coluEdit").actType;
 		if (actType == "update") {
+			
 			var form = bt.findParentByType("form").getForm();
 			var coluId = form.findField("coluId").getValue();
 			var rootNode = form.findField("rootNode").getValue();
-
+			form.findField("coluPath").setReadOnly(false);
+			form.findField("coluPath").removeCls('lanage_1'); 
+			
+			form.findField("coluTempletId").hide();
+			form.findField("coluTempletName").hide();
+			form.findField("contentTypeId").hide();
+			form.findField("contentTypeName").hide();
+			form.findField("coluUrl").hide();
+			
 			form.findField("coluId").setValue('');
 			form.findField("coluName").setValue('');
 			form.findField("coluPath").setValue('');
 			form.findField("coluState").setValue('');
+			form.findField("coluType").setValue('');
 			form.findField("coluTempletId").setValue('');
 			form.findField("contentTypeId").setValue('');
 			form.findField("coluTempletName").setValue('');
@@ -96,30 +116,38 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 								contentTypeName : operateNode.data.contentTypeName
 							});
 							form.findField("coluId").setReadOnly(true);
+							form.findField("coluPath").setReadOnly(true);
+							form.findField("coluId").addCls('lanage_1');
+							form.findField("coluPath").addCls('lanage_1');
 							panel.actType = "update";
 						} else {
 							var tzParams = this.getOrgMenuInfoDeleteParams(form);
 							Ext.tzSubmit(tzParams,function(responseData) {
-								if (rootNode == menuId) {
+								if (rootNode == coluId) {
 									panel.close();
 								} else {
-									var thisNode = treepanelStore.getNodeById(menuId);
+									var thisNode = treepanelStore.getNodeById(coluId);
 									var pNode = thisNode.parentNode;
 									treepanel.getSelectionModel().select(pNode);
 									form.setValues({
-										menuId : pNode.data.id,
-										menuName : pNode.data.text,
-										menuYxState : pNode.data.menuYxState,
-										comId : pNode.data.comId,
-										bigImgId : pNode.data.bigImgId,
-										smallImgId : pNode.data.smallImgId,
-										helpId : pNode.data.helpId,
+										coluId : pNode.data.id,
+										coluName : pNode.data.text,
+										coluPath : pNode.data.coluPath,
+										coluState : pNode.data.coluState,
+										coluTempletId : pNode.data.coluTempletId,
+										contentTypeId : pNode.data.contentTypeId,
+										coluUrl : pNode.data.coluUrl,
 										NodeType : "",
 										operateNode : "",
 										rootNode : rootNode,
-										comName : pNode.data.comName
+										siteId : siteId,
+										coluTempletName : pNode.data.coluTempletName,
+										contentTypeName : pNode.data.contentTypeName
 									});
-									form.findField("menuId").setReadOnly(true);
+									form.findField("coluId").setReadOnly(true);
+									form.findField("coluPath").setReadOnly(true);
+									form.findField("coluId").addCls('lanage_1');
+									form.findField("coluPath").addCls('lanage_1');
 									panel.actType = "update";
 									pNode.removeChild(thisNode);
 									if (pNode.hasChildNodes() == false) {
@@ -165,7 +193,29 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        var coluUrl = form.findField("coluUrl").getValue();
 	        var NodeType = form.findField("NodeType").getValue();
 	        var rootNode = form.findField("rootNode").getValue();
-           
+	        
+	        //校验判断
+	        if (coluType =="C") {
+	        	if (coluUrl == null || coluUrl == undefined || coluUrl == "") { 
+	        		Ext.Msg.alert("提示", "栏目类型为跳转时外部链接必须填写");
+	        		return;
+	        	} else {
+	        		var fdStart = coluUrl.toLowerCase().indexOf("http");
+	        		if (fdStart != 0){
+	        			Ext.Msg.alert("提示", "外部链接格式错误，必须以http开头");
+	        			return;
+	        		}
+	        	}
+	        }
+	        
+	        if (coluPath != null && coluPath != undefined && coluPath != "") { 
+	        	var fdStart = coluPath.toLowerCase().indexOf("/");
+        		if (fdStart != 0){
+        			Ext.Msg.alert("提示", "栏目路径格式错误，必须以/开头");
+        			return;
+        		}
+	        }
+          
 	        var operateNodeId = form.findField("operateNode").getValue();
 	        var operateNode = treepanelStore.getNodeById(operateNodeId);
 					 
@@ -394,7 +444,93 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
         //提交参数
        	var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWLMGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
-    }
+    },
+    
+    //放大镜 查询 站点模版
+    pmtSearchTemplet: function(btn){
+		var form = this.getView().child("form").getForm();
+		var comSiteParams = form.getValues();
+		var siteId = comSiteParams['siteId'];
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_SITEI_TEMP_T',
+			searchDesc: '搜索模版',
+			maxRow:20,
+			condition:{
+				presetFields:{
+					TZ_SITEI_ID:{
+						value:siteId,
+						type: '01'	
+					}
+				},
+				srhConFields:{
+					TZ_TEMP_ID:{
+						desc:'模版ID',
+						operator:'07',
+						type:'01'	
+					},
+					TZ_TEMP_NAME:{
+						desc:'模版名称',
+						operator:'07',
+						type:'01'		
+					}
+				}	
+			},
+			srhresult:{
+				TZ_TEMP_ID: '模版ID',
+				TZ_TEMP_NAME: '模版名称'	
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("coluTempletId").setValue(selection[0].data.TZ_TEMP_ID);
+				form.findField("coluTempletName").setValue(selection[0].data.TZ_TEMP_NAME);
+			}
+		});	
+	},
+	clearPmtSearchTemplet: function(btn){
+		var form = this.getView().child("form").getForm();
+		form.findField("coluTempletId").setValue("");
+		form.findField("coluTempletName").setValue("");
+		
+	},
+	
+	//放大镜 查询 内容类型
+	pmtSearchCtype: function(btn){
+		var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_ART_TYPE_T',
+			searchDesc: '搜索内容类型',
+			maxRow:20,
+			condition:{
+				srhConFields:{
+					TZ_ART_TYPE_ID:{
+						desc:'内容类型ID',
+						operator:'07',
+						type:'01'	
+					},
+					TZ_ART_TYPE_NAME:{
+						desc:'内容类型名称',
+						operator:'07',
+						type:'01'		
+					}
+				}	
+			},
+			srhresult:{
+				TZ_ART_TYPE_ID: '内容类型ID',
+				TZ_ART_TYPE_NAME: '内容类型名称'	
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("contentTypeId").setValue(selection[0].data.TZ_ART_TYPE_ID);
+				form.findField("contentTypeName").setValue(selection[0].data.TZ_ART_TYPE_NAME);
+			}
+		});	
+	},
+	clearPmtSearchCtype: function(btn){
+		var form = this.getView().child("form").getForm();
+		form.findField("contentTypeId").setValue("");
+		form.findField("contentTypeName").setValue("");
+		
+	}
     
     
     

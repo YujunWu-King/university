@@ -1,15 +1,10 @@
 ﻿Ext.define('KitchenSink.view.siteManage.outsiteManage.outsiteController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.outsiteBasicB', 
-//	requires: [
-//       'KitchenSink.view.siteManage.siteManage.siteTemplateInfo'
-//    ],
+
     //添加外部站点模板集合；
     addOutSite: function(btn) {
-//    	if(this.getView().actType == "add"){
-//			Ext.MessageBox.alert("提示","请先保存站点基本信息后，再新增站点集合。");
-//			return;
-//		}
+
 		
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WWZDGL_COM"]["TZ_GD_WWZDDY_STD"];
@@ -120,12 +115,22 @@
 			return;
 		};
 		
+		
 		fileName = form.findField("sitePath").getValue();
 
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有填写站点路径，无法保存。');
 			return;
 		};
+		
+		if (fileName != null && fileName != undefined && fileName != "") { 
+        	var fdStart = fileName.toLowerCase().indexOf("/");
+    		if (fdStart != 0){
+    			Ext.Msg.alert("提示", "站点路径格式错误，必须以/开头");
+    			return;
+    		}
+        }
+		
 		
 		//新增
 		if(actType == "add"){
@@ -153,6 +158,9 @@
 			if(actType == "add" && btn != "but_ensure"){
 				var siteId = responseData.siteId;
 				form.findField('siteId').setValue(siteId);
+				var contentPanel;
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+				contentPanel.child("outsiteManage").store.reload();
 			}
 		},"",true,this);
     },
@@ -366,7 +374,27 @@
        if (cmp.floating) {
            cmp.show();
        }
-   }
+   },
+   
+   closeComRegInfos: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	
+	ensureComRegInfos:function(btn) {
+		this.saveComRegInfos(btn);
+		this.closeComRegInfos(btn);
+	},
+	
+	//保存数据
+	saveComRegInfos: function(btn){
+		//组件注册信息列表
+		var grid = btn.findParentByType("grid");
+		//组件注册信息数据
+		var store = grid.getStore();
+		store.reload();
+	}
     /*,
     //删除选中的数据
 	deleteSite: function(){

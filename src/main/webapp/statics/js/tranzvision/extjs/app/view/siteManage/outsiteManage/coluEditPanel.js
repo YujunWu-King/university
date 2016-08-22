@@ -51,6 +51,23 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 						contentTypeName : record.data.contentTypeName
 					});
 					form.findField("coluId").setReadOnly(true);
+					form.findField("coluId").addCls('lanage_1'); 
+					form.findField("coluPath").setReadOnly(true);
+					form.findField("coluPath").addCls('lanage_1'); 
+					// 如果是跳转类型，那么 模版和类型按钮隐藏
+					if (record.data.coluType == "C") {
+						form.findField("coluTempletId").hide();
+						form.findField("coluTempletName").hide();
+						form.findField("contentTypeId").hide();
+						form.findField("contentTypeName").hide();
+						form.findField("coluUrl").show();
+					} else {
+						form.findField("coluTempletId").show();
+						form.findField("coluTempletName").show();
+						form.findField("contentTypeId").show();
+						form.findField("contentTypeName").show();
+						form.findField("coluUrl").hide();
+					}
 					view.findParentByType("coluEdit").actType = "update";
 				}
 			}
@@ -109,9 +126,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 			},{
 				xtype : 'textfield',
 				fieldLabel : '栏目路径',
-				name : 'coluPath',
-				beforeLabelTextTpl : [ '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>' ],
-				allowBlank : false
+				name : 'coluPath'
+				//beforeLabelTextTpl : [ '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>' ],
+				//allowBlank : false
 			},{
 				xtype : 'combobox',
 				fieldLabel : '有效状态',
@@ -127,13 +144,32 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 				xtype : 'combobox',
 				fieldLabel : '栏目类型',
 				forceSelection : true,
+				allowBlank : false,
 				valueField : 'TValue',
 				displayField : 'TSDesc',
 				//allowBlank : false,
-				store : new KitchenSink.view.common.store.appTransStore("TZ_YXX"),
+				store : new KitchenSink.view.common.store.appTransStore("TZ_ZDLM_LX"),
 				typeAhead : true,
 				queryMode : 'local',
-				name : 'coluType'
+				name : 'coluType',
+				listeners : {
+					select : function(combo,record,index){	
+						form= combo.findParentByType("form").getForm();
+						if (combo.getValue() == "C") {
+							form.findField("coluTempletId").hide();
+							form.findField("coluTempletName").hide();
+							form.findField("contentTypeId").hide();
+							form.findField("contentTypeName").hide();
+							form.findField("coluUrl").show();
+						} else {
+							form.findField("coluTempletId").show();
+							form.findField("coluTempletName").show();
+							form.findField("contentTypeId").show();
+							form.findField("contentTypeName").show();
+							form.findField("coluUrl").hide();
+						}
+					}
+				}
 			},{
 				layout : {
 					type : 'column'
@@ -147,11 +183,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 					triggers : {
 						clear : {
 							cls : 'x-form-clear-trigger',
-							handler : 'clearPmtSearchCom'
+							handler : 'clearPmtSearchTemplet'
 						},
 						search : {
 							cls : 'x-form-search-trigger',
-							handler : "pmtSearchCom"
+							handler : "pmtSearchTemplet"
 						}
 					}
 				},{
@@ -174,11 +210,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 					triggers : {
 						clear : {
 							cls : 'x-form-clear-trigger',
-							handler : 'clearPmtSearchCom'
+							handler : 'clearPmtSearchCtype'
 						},
 						search : {
 							cls : 'x-form-search-trigger',
-							handler : "pmtSearchCom"
+							handler : "pmtSearchCtype"
 						}
 					}
 				},{
@@ -241,6 +277,23 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 			});
 			form.findField("coluId").setReadOnly(true);
 			form.findField("coluId").addCls('lanage_1'); 
+			form.findField("coluPath").setReadOnly(true);
+			form.findField("coluPath").addCls('lanage_1');
+			
+			// 如果是跳转类型，那么 模版和类型按钮隐藏
+			if (rootNode.data.coluType == "C") {
+				form.findField("coluTempletId").hide();
+				form.findField("coluTempletName").hide();
+				form.findField("contentTypeId").hide();
+				form.findField("contentTypeName").hide();
+				form.findField("coluUrl").show();
+			} else {
+				form.findField("coluTempletId").show();
+				form.findField("coluTempletName").show();
+				form.findField("contentTypeId").show();
+				form.findField("contentTypeName").show();
+				form.findField("coluUrl").hide();
+			}
 		}
 	},
 	buttons : [{
