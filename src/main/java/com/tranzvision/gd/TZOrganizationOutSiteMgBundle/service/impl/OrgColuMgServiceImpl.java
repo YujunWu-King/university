@@ -1,10 +1,14 @@
 package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,9 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private HttpServletRequest request;
 
 	@Autowired
 	private PsTzSiteiColuTMapper psTzSiteiColuTMapper;
@@ -320,13 +327,16 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
-			Date dateNow = new Date();
+			//Date dateNow = new Date();
 			int dataLength = actData.length;
 			String sql = "";
 			String TZ_F_COLU_ID = "";
 			String TZ_COLU_LEVEL = "";
+			String TZ_COLU_PATH = "";
 			PsTzSiteiColuT psTzSiteiColuT = null;
 			Map<String, Object> ThisNodeMap = null;
+			String parentRealPath = "";
+			File dir = null;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				String strForm = actData[num];
@@ -381,11 +391,16 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					}
 
 					// 找到该节点的父节点以及级别
-					sql = "select ifnull(TZ_F_COLU_ID,\"\") TZ_F_COLU_ID,TZ_COLU_LEVEL from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=?";
+					sql = "select ifnull(TZ_F_COLU_ID,\"\") TZ_F_COLU_ID,TZ_COLU_LEVEL,TZ_COLU_PATH from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=?";
 					ThisNodeMap = sqlQuery.queryForMap(sql, new Object[] { siteId, operateNode });
 
 					TZ_F_COLU_ID = (ThisNodeMap.get("TZ_F_COLU_ID").toString());
 					TZ_COLU_LEVEL = (ThisNodeMap.get("TZ_COLU_LEVEL").toString());
+					TZ_COLU_PATH = (ThisNodeMap.get("TZ_COLU_PATH").toString());
+					
+					if (!TZ_COLU_PATH.startsWith("/")) {
+						TZ_COLU_PATH = "/" + TZ_COLU_PATH;
+					}
 
 					// boolean boolRst = false;
 					switch (NodeType) {
@@ -404,6 +419,15 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzArtTypeId(contentTypeId);
 						psTzSiteiColuT.setTzOutUrl(coluUrl);
 						psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
+						//增加菜单,同级的菜单
+//						if (!coluPath.startsWith("/")) {
+//							coluPath = "/" + coluPath;
+//						}
+//						parentRealPath = request.getServletContext().getRealPath(sitePath);
+//						dir = new File(parentRealPath);
+//						if (!dir.exists()) {
+//							dir.mkdirs();
+//						}
 						break;
 					// 添加子节点;
 					case "N":
@@ -424,10 +448,10 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					// 修改当前结点
 					default:
 						psTzSiteiColuT = new PsTzSiteiColuT();
-						psTzSiteiColuT.setTzSiteiId(operateNode);
-						psTzSiteiColuT.setTzColuId(coluId);
+						psTzSiteiColuT.setTzSiteiId(siteId);
+						psTzSiteiColuT.setTzColuId(operateNode);
 						psTzSiteiColuT.setTzColuName(coluName);
-						psTzSiteiColuT.setTzColuPath(coluPath);
+						//psTzSiteiColuT.setTzColuPath(coluPath);  栏目path不能修改
 						psTzSiteiColuT.setTzColuState(coluState);
 						// psTzSiteiColuT.setTzColuLevel(new
 						// Integer(TZ_COLU_LEVEL));
