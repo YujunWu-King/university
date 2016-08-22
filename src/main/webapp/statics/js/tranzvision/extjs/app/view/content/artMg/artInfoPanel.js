@@ -1,7 +1,7 @@
 ﻿Ext.define('KitchenSink.view.content.artMg.artInfoPanel', {
     extend: 'Ext.panel.Panel',
     xtype: 'artInfo', 
-	controller: 'artController',
+	controller: 'artInfoController',
 	requires: [
 	    'Ext.data.*',
         'Ext.grid.*',
@@ -10,11 +10,10 @@
         'Ext.ux.ProgressBarPager',
         'Ext.ux.DataView.DragSelector',
         'Ext.ux.DataView.LabelEditor' ,
-	    'KitchenSink.view.content.artMg.artController'
-		/*,
+	    'KitchenSink.view.content.artMg.artInfoController',
 		'KitchenSink.view.content.artMg.artAttachmentModel',
         'KitchenSink.view.content.artMg.artAttachmentStore',
-        'KitchenSink.view.content.artMg.artPicStore'*/
+        'KitchenSink.view.content.artMg.artPicStore'
 	],
 	title: '内容详情', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -258,7 +257,7 @@
 									name: 'titleImageDesc'
         				}]
 							}]
-        	  }/*,{
+        	  },{
 				    		xtype : 'panel',
 				    		title:'图片墙',
 				    		autoHeight:true,
@@ -321,8 +320,8 @@
 							    	}
 						    	}
 							}]
-				    },*/
-				/*{
+				    },
+				{
 	        	  	title: "附件集",
 								items: [{
 		        	  	xtype: 'grid',
@@ -387,7 +386,7 @@
 					   				]
 									}]
 								}]	
-        	  }*/]
+        	  }]
         },{
            xtype: 'textfield',
            fieldLabel: '状态',

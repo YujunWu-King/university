@@ -49,32 +49,36 @@
         }
 
         dataPanel.setTitle(title);
-		console.log(dataPanel.columnId);
-		/*
-        dataView.store.chanelID=chanelID;
-        dataView.store.tzStoreParams='{"chanelID":"'+chanelID+'"}';
 		
+		/*
+        dataGrid.store.chanelID=chanelID;
+        dataGrid.store.tzStoreParams='{"chanelID":"'+chanelID+'"}';
         dataView.store.load();
+		*/
 		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_ART_MG_COM.TZ_CONTENT_STD.TZ_GD_CONTENT_V',
+			cfgSrhId: 'TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V',
 			condition:
 			{
-				"TZ_COLU_ID": columId
+				"TZ_COLU_ID": columnId
 			},
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
 				store.load();
 			}
-		});	*/
+		});	
     },
 	//查询
     cfgSearch: function(btn){
     	//var columId = btn.findParentByType('toolbar').child('combobox').getValue();
 		var panel = btn.findParentByType("panel");
 		var columnId = panel.columnId;
+		if(columnId == "" || columnId == undefined){
+			Ext.MessageBox.alert('提示', '请先选择栏目。');
+			return;
+		}
 		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_ART_MG_COM.TZ_CONTENT_STD.TZ_GD_CONTENT_V',
+			cfgSrhId: 'TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V',
 			condition:
 			{
 				"TZ_COLU_ID": columnId
@@ -106,12 +110,11 @@
 	    //栏目;
 	    var panel = btn.findParentByType("panel");
 		var columnId = panel.columnId;
+		console.log("栏目：" + columnId);
 	    if(columnId == "" || columnId == undefined){
 			Ext.MessageBox.alert('提示', '请先选择栏目。');
 			return;
 		}
-		
-		 
 		  
 		var contentPanel,cmp, className, ViewClass, clsProto;
 		var themeName = Ext.themeName;	
@@ -150,7 +153,7 @@
 				var cmpForm = panel.child("form").getForm();
 				
 				//参数
-				var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_INFO_STD","OperateType":"QF","comParams":{"artId":"","coluId":"'+lm+'"}}';
+				var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_INFO_STD","OperateType":"QF","comParams":{"artId":"","coluId":"'+columnId+'"}}';
 				
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
