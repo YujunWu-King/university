@@ -1,0 +1,27 @@
+select
+	ifnull(B.TZ_TEMP_NAME,"") TZ_TEMP_NAME,
+	ifnull(C.TZ_ART_TYPE_NAME,"") TZ_ART_TYPE_NAME,
+	A.TZ_COLU_ID,
+	A.TZ_COLU_NAME,
+	A.TZ_COLU_STATE,
+	A.TZ_COLU_PATH,
+	ifnull(A.TZ_COLU_TYPE,"") TZ_COLU_TYPE,
+	ifnull(A.TZ_TEMP_ID,"") TZ_TEMP_ID,
+	ifnull(A.TZ_ART_TYPE_ID,"") TZ_ART_TYPE_ID,
+	ifnull(A.TZ_OUT_URL,"") TZ_OUT_URL,
+	A.TZ_COLU_LEVEL,
+	ifnull(A.TZ_F_COLU_ID,"") TZ_F_COLU_ID
+from 
+	PS_TZ_SITEI_COLU_T A
+	left join
+		PS_TZ_SITEI_TEMP_T B 
+	on  (
+		A.TZ_SITEI_ID=B.TZ_SITEI_ID
+		and A.TZ_TEMP_ID=B.TZ_TEMP_ID
+	)
+	left join
+			PS_TZ_ART_TYPE_T C
+	on (
+		C.TZ_ART_TYPE_ID = A.TZ_ART_TYPE_ID
+	) 
+where ?=A.TZ_SITEI_ID;

@@ -1,15 +1,12 @@
 package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -64,13 +60,13 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			System.out.println("orgId:" + orgId);
+			//System.out.println("orgId:" + orgId);
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ?";
 			int total = jdbcTemplate.queryForObject(totalSQL, new Object[] { orgId }, "Integer");
 			String sql = "";
 			List<Map<String, Object>> list = null;
-			System.out.println("total:" + total);
-			System.out.println("numLimit:" + numLimit);
+			//System.out.println("total:" + total);
+			//System.out.println("numLimit:" + numLimit);
 			if (numLimit > 0) {
 				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
 				list = jdbcTemplate.queryForList(sql, new Object[] { orgId, numStart, numLimit });
@@ -78,9 +74,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC";
 				list = jdbcTemplate.queryForList(sql, new Object[] { orgId });
 			}
-			System.out.println("sql:" + sql);
+			//System.out.println("sql:" + sql);
 			if (list != null) {
-				System.out.println("list:" + list.size());
+				//System.out.println("list:" + list.size());
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));

@@ -131,7 +131,7 @@
         var orgId = selList[0].get("orgId");
         this.editfuncMenu(orgId);
     },
-		editFuncMenuById: function(view, rowIndex){
+	editFuncMenuById: function(view, rowIndex){
 		 var store = view.findParentByType("grid").store;
 		 var selRec = store.getAt(rowIndex);
 		 //菜单机构
