@@ -60,13 +60,13 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			//System.out.println("orgId:" + orgId);
+			// System.out.println("orgId:" + orgId);
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ?";
 			int total = jdbcTemplate.queryForObject(totalSQL, new Object[] { orgId }, "Integer");
 			String sql = "";
 			List<Map<String, Object>> list = null;
-			//System.out.println("total:" + total);
-			//System.out.println("numLimit:" + numLimit);
+			// System.out.println("total:" + total);
+			// System.out.println("numLimit:" + numLimit);
 			if (numLimit > 0) {
 				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
 				list = jdbcTemplate.queryForList(sql, new Object[] { orgId, numStart, numLimit });
@@ -74,9 +74,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE in ('A','B') and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC";
 				list = jdbcTemplate.queryForList(sql, new Object[] { orgId });
 			}
-			//System.out.println("sql:" + sql);
+			// System.out.println("sql:" + sql);
 			if (list != null) {
-				//System.out.println("list:" + list.size());
+				// System.out.println("list:" + list.size());
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));
@@ -176,7 +176,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 			PsTzSiteiColuT psTzSiteiColuT = null;
 			PsTzSiteiMenuT psTzSiteiMenuT = null;
 			String coluId = "";
-			String tzColuPath = "";
+			// String tzColuPath = "";
 			String tzMenuId = "";
 			// System.out.println("orgId:"+orgId);
 			for (num = 0; num < actData.length; num++) {
@@ -194,7 +194,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 				attPrefix = jacksonUtil.getString("attPrefix");
 				viewPrefix = jacksonUtil.getString("viewPrefix");
 
-				tzColuPath = sitePath;
+				// tzColuPath = sitePath;
 
 				sql = "SELECT 'Y' FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_PATH = ?";
 
@@ -203,6 +203,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					errMsg[0] = "1";
 					errMsg[1] = "站点路径已经存在";
 				} else {
+					if (!sitePath.startsWith("/")) {
+						sitePath = "/" + sitePath;
+					}
 					siteId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_DEFN_T", "TZ_SITEI_ID"));
 					psTzSiteiDefnT = new PsTzSiteiDefnTWithBLOBs();
 					psTzSiteiDefnT.setTzSiteiId(siteId);
@@ -225,9 +228,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 						returnJsonMap.replace("siteId", siteId);
 						// 生成路径
 						try {
-							if (!sitePath.startsWith("/")) {
-								sitePath = "/" + sitePath;
-							}
+
 							parentRealPath = request.getServletContext().getRealPath(sitePath);
 							dir = new File(parentRealPath);
 							if (!dir.exists()) {
@@ -247,10 +248,10 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiColuT.setTzSiteiId(siteId);
 					psTzSiteiColuT.setTzColuId(coluId);
 					psTzSiteiColuT.setTzColuName(siteName);
-					psTzSiteiColuT.setTzColuPath(tzColuPath);
+					psTzSiteiColuT.setTzColuPath(sitePath + "/colu");
 					psTzSiteiColuT.setTzColuState("Y");
 					psTzSiteiColuT.setTzColuLevel(new Integer(0));
-					// psTzSiteiColuT.setTzColuType(tzColuType);
+					psTzSiteiColuT.setTzColuType("A");
 					psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
 
 					psTzSiteiMenuT = new PsTzSiteiMenuT();
@@ -258,7 +259,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiMenuT.setTzSiteiId(siteId);
 					psTzSiteiMenuT.setTzMenuId(tzMenuId);
 					psTzSiteiMenuT.setTzMenuName(siteName);
-					psTzSiteiMenuT.setTzMenuPath(tzColuPath);
+					psTzSiteiMenuT.setTzMenuPath(sitePath + "/menu");
 					psTzSiteiMenuT.setTzMenuState("Y");
 					psTzSiteiMenuT.setTzIsDel("N"); // 不允许删除
 					psTzSiteiMenuT.setTzIsEditor("N"); // 不允许编辑

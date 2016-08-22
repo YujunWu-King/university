@@ -21,6 +21,14 @@ public class PsTzLmNrGlT extends PsTzLmNrGlTKey {
 
     private Date tzLastmantDttm;
 
+    private String tzOrginArtChnl;
+
+    private String tzOrginArtId;
+
+    private String tzOrginRefChnl;
+
+    private String tzOrginRefartId;
+
     public Date getTzArtNewsDt() {
         return tzArtNewsDt;
     }
@@ -91,5 +99,37 @@ public class PsTzLmNrGlT extends PsTzLmNrGlTKey {
 
     public void setTzLastmantDttm(Date tzLastmantDttm) {
         this.tzLastmantDttm = tzLastmantDttm;
+    }
+
+    public String getTzOrginArtChnl() {
+        return tzOrginArtChnl;
+    }
+
+    public void setTzOrginArtChnl(String tzOrginArtChnl) {
+        this.tzOrginArtChnl = tzOrginArtChnl == null ? null : tzOrginArtChnl.trim();
+    }
+
+    public String getTzOrginArtId() {
+        return tzOrginArtId;
+    }
+
+    public void setTzOrginArtId(String tzOrginArtId) {
+        this.tzOrginArtId = tzOrginArtId == null ? null : tzOrginArtId.trim();
+    }
+
+    public String getTzOrginRefChnl() {
+        return tzOrginRefChnl;
+    }
+
+    public void setTzOrginRefChnl(String tzOrginRefChnl) {
+        this.tzOrginRefChnl = tzOrginRefChnl == null ? null : tzOrginRefChnl.trim();
+    }
+
+    public String getTzOrginRefartId() {
+        return tzOrginRefartId;
+    }
+
+    public void setTzOrginRefartId(String tzOrginRefartId) {
+        this.tzOrginRefartId = tzOrginRefartId == null ? null : tzOrginRefartId.trim();
     }
 }
