@@ -130,17 +130,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				// 获取登录的机构;
 				String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
-				// 获取机构对应的站点；
-				String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
-				String siteId = jdbcTemplate.queryForObject(siteSQL, new Object[] { strJgid }, "String");
-				if (siteId == null || "".equals(siteId)) {
-					errMsg[0] = "1";
-					errMsg[1] = "请选择添加内容的站点！";
-					returnJsonMap.put("formData", map);
-					strRet = jacksonUtil.Map2json(returnJsonMap);
-					return strRet;
-				}
-
 				if (!jacksonUtil.containsKey("coluId")) {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择添加内容的栏目！";
@@ -150,6 +139,26 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 
 				String coluId = jacksonUtil.getString("coluId");
+				
+				if("".equals(coluId) || (coluId == null)){
+					errMsg[0] = "1";
+					errMsg[1] = "请选择添加内容的栏目！";
+					returnJsonMap.put("formData", map);
+					strRet = jacksonUtil.Map2json(returnJsonMap);
+					return strRet;
+				}
+				
+				// 获取机构对应的站点；
+				String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
+				String siteId = jdbcTemplate.queryForObject(siteSQL, new Object[] { coluId }, "String");
+				if (siteId == null || "".equals(siteId)) {
+					errMsg[0] = "1";
+					errMsg[1] = "请选择添加内容的站点！";
+					returnJsonMap.put("formData", map);
+					strRet = jacksonUtil.Map2json(returnJsonMap);
+					return strRet;
+				}
+
 
 				if ("".equals(strArtId)) {
 					String imageSQL = "select TZ_IMG_STOR,TZ_ATTS_STOR from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";

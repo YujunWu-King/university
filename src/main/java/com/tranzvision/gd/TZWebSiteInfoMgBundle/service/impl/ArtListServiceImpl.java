@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzArtTypeTMapper;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzContFldefTMapper;
@@ -30,6 +31,9 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 
 	@Autowired
+	private FliterForm fliterForm;
+	
+	@Autowired
 	private HttpServletRequest request;
 	
 	@Autowired
@@ -46,75 +50,54 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	
 	/* 查询类型类型列表 */
 	@Override
-	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
+	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
-		String strRet = "";
-		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("total", 0);
-		ArrayList<Map<String, Object>> arraylist = new ArrayList<Map<String, Object>>();
-		returnJsonMap.put("root", arraylist);
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		jacksonUtil.json2Map(comParams);
-		String artTypeId = jacksonUtil.getString("artTypeId");
 		try {
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_CONT_FLDEF_T where TZ_ART_TYPE_ID = ?";
-			int total = jdbcTemplate.queryForObject(totalSQL, new Object[] { artTypeId }, "Integer");
-			String sql = "";
-			List<Map<String, Object>> list = null;
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] { { "TZ_MAX_ZD_SEQ", "DESC" }, { "TZ_ART_NEWS_DT", "DESC" } };
 
-			sql = "SELECT TZ_FIELD_VALUE,TZ_FIELD_DESC,TZ_SEQ,IS_ENABLED_FLG FROM PS_TZ_CONT_FLDEF_T where TZ_ART_TYPE_ID = ? ORDER BY TZ_SEQ ASC";
-			list = jdbcTemplate.queryForList(sql, new Object[] { artTypeId });
-			Map<String, Object> jsonMap;
-			if (list != null && total > 0 ) {
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_SITE_ID", "TZ_COLU_ID", "TZ_ART_ID", "TZ_ART_TITLE", "TZ_ART_NEWS_DT",
+					"TZ_REALNAME", "TZ_ART_PUB_STATE", "TZ_MAX_ZD_SEQ", "TZ_PAGE_REFCODE" };
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr,strParams, numLimit, numStart, errorMsg);
+
+			if (obj != null && obj.length > 0) {
+
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
 				for (int i = 0; i < list.size(); i++) {
-					boolean used = false;
-					if ("Y".equals(list.get(i).get("IS_ENABLED_FLG"))) {
-						used = true;
-					}
-					jsonMap = new HashMap<String, Object>();
-					jsonMap.put("fieldValue", list.get(i).get("TZ_FIELD_VALUE"));
-					jsonMap.put("fieldDescr", list.get(i).get("TZ_FIELD_DESC"));
-					jsonMap.put("seq", list.get(i).get("TZ_SEQ"));
-					jsonMap.put("isused", used);
-					arraylist.add(jsonMap);
+					String[] rowList = list.get(i);
+
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("siteId", rowList[0]);
+					mapList.put("columnId", rowList[1]);
+					mapList.put("articleId", rowList[2]);
+					mapList.put("articleTitle", rowList[3]);
+					mapList.put("releaseTime", rowList[4]);
+					mapList.put("lastUpdate", rowList[5]);
+					mapList.put("releaseOrUndo", rowList[6]);
+					mapList.put("topOrUndo", rowList[7]);
+					mapList.put("classId", rowList[8]);
+
+					listData.add(mapList);
 				}
-				returnJsonMap.replace("total", total);
-				returnJsonMap.replace("root", arraylist);
-				strRet = jacksonUtil.Map2json(returnJsonMap);
-			}else{
-				total = 9;
-				for (int i = 0; i < 9; i++) {
-					if(i<4){
-						jsonMap = new HashMap<String, Object>();
-						jsonMap.put("fieldValue", "TZ_TXT" + String.valueOf(i + 1));
-						jsonMap.put("fieldDescr", "描述字段" + String.valueOf(i + 1 ));
-						jsonMap.put("seq", String.valueOf(i + 1));
-						jsonMap.put("isused", false);
-						arraylist.add(jsonMap);
-					}else if(i<7){
-						jsonMap = new HashMap<String, Object>();
-						jsonMap.put("fieldValue", "TZ_LONG" + String.valueOf(i + 1));
-						jsonMap.put("fieldDescr", "描述字段" + String.valueOf(i + 1));
-						jsonMap.put("seq", String.valueOf(i + 1));
-						jsonMap.put("isused", false);
-						arraylist.add(jsonMap);
-					}else{
-						jsonMap = new HashMap<String, Object>();
-						jsonMap.put("fieldValue", "TZ_DATE" + String.valueOf(i + 1));
-						jsonMap.put("fieldDescr", "描述字段" + String.valueOf(i + 1));
-						jsonMap.put("seq", String.valueOf(i + 1));
-						jsonMap.put("isused", false);
-						arraylist.add(jsonMap);
-					}
-				}
+
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+
 			}
 		} catch (Exception e) {
-			errorMsg[0] = "1";
-			errorMsg[1] = e.toString();
+			e.printStackTrace();
 		}
-		strRet = jacksonUtil.Map2json(returnJsonMap);
-		return strRet;
+
+		return jacksonUtil.Map2json(mapRet);
 	}
 	
 	/* 获取内容栏目树类型定义*/
@@ -185,10 +168,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 				//sql = "select if(count(1)=0,'Y','N') from PSTREENODE where TREE_NAME = ? and PARENT_NODE_NAME=?";
 
 				Map<String, Object> mapNodeJson = new HashMap<String, Object>();
-				mapNodeJson.put("id", "MBA_CHNL_0001");
-				mapNodeJson.put("nodeId", "MBA_CHNL_0001");
+				mapNodeJson.put("id", "146");
+				mapNodeJson.put("nodeId", "146");
 				mapNodeJson.put("expanded", "true");
-				mapNodeJson.put("text", "学前教育");
+				mapNodeJson.put("text", "新闻");
 				mapNodeJson.put("leaf", "true");
 
 				/*	
@@ -209,10 +192,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 				listRet.add(mapNodeJson);
 				
 				mapNodeJson = new HashMap<String, Object>();
-				mapNodeJson.put("id", "MBA_CHNL_0002");
-				mapNodeJson.put("nodeId", "MBA_CHNL_0002");
+				mapNodeJson.put("id", "147");
+				mapNodeJson.put("nodeId", "147");
 				mapNodeJson.put("expanded", "true");
-				mapNodeJson.put("text", "学习手册");
+				mapNodeJson.put("text", "活动");
 				mapNodeJson.put("leaf", "true");
 				listRet.add(mapNodeJson);
 
