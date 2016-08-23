@@ -19,6 +19,7 @@ import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * @author zhangbb
@@ -28,10 +29,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class ArtListServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private SqlQuery jdbcTemplate;
+	private SqlQuery sqlQuery;
 
 	@Autowired
 	private FliterForm fliterForm;
+	
+	@Autowired
+	private TZGDObject tzSQLObject;
 	
 	@Autowired
 	private HttpServletRequest request;
@@ -107,30 +111,128 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			// 获取登录的机构;
+			String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			jacksonUtil.json2Map(strParams);
-			if (jacksonUtil.containsKey("siteid")) {
 
-				// 机构编号（菜单树节点编号）
-				String siteId = jacksonUtil.getString("siteId");
-				// 查询类型
-				String typeFlag = jacksonUtil.getString("typeFlag");
+			// 查询类型
+			String typeFlag = jacksonUtil.getString("typeFlag");
 
-				String sql;
-				Map<String, Object> mapRet = new HashMap<String, Object>();
-				if ("TREE".equals(typeFlag)) {
+			String sql;
+			Map<String, Object> mapRet = new HashMap<String, Object>();
+			if ("SITE".equals(typeFlag)) {
+				//站点;
 
-					List<?> listChildren = this.getChannelList("MBA");
+				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+				mapRet.put("TransList", arraylist);
+				String getSiteSQL = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
 
+				List<Map<String, Object>> list = sqlQuery.queryForList(getSiteSQL, new Object[] { strJgid });
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						Map<String, Object> jsonMap = new HashMap<>();
+						jsonMap.put("TValue", list.get(i).get("TZ_SITEI_ID"));
+						jsonMap.put("TSDesc", list.get(i).get("TZ_SITEI_NAME"));
+						jsonMap.put("TLDesc", list.get(i).get("TZ_SITEI_DESCR"));
+
+						arraylist.add(jsonMap);
+					}
+					mapRet.replace("TransList", arraylist);
+				}
+				strRet = jacksonUtil.Map2json(mapRet);
+			}else if ("TREE".equals(typeFlag)) {
+				// 站点编号
+				String siteId = jacksonUtil.getString("siteid");
+				// 一次性获取一整颗树的所有数据放入List
+				sql = tzSQLObject.getSQLText("SQL.TZOutSiteMgBundle.TzSelectOutSiteColuList");
+
+				List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { siteId });
+
+				if (null == listData || listData.size() <= 0) {
+					/*
+					errMsg[0] = "1";
+					errMsg[1] = "树不存在";
+					*/
 					Map<String, Object> mapRootJson = new HashMap<String, Object>();
-
-					mapRootJson.put("id", "MBA");
-					mapRootJson.put("nodeId", "MBA");
+					mapRootJson.put("id", "NAN");
+					mapRootJson.put("nodeId", "NAN");
+					mapRootJson.put("siteId", "");
+					mapRootJson.put("text", "");
+					mapRootJson.put("NodeType", "");
+					mapRootJson.put("operateNode", "");
+					mapRootJson.put("rootNode", "");
 					mapRootJson.put("expanded", "true");
-					mapRootJson.put("text", "MBA");
-					mapRootJson.put("leaf", "false");
-					mapRootJson.put("children", listChildren);
-				
+					mapRootJson.put("children", "{}");
 					mapRet.put("root", mapRootJson);
+				}else{
+
+					// 遍历List 得到树形结构
+					int flag = -1;
+					String TZ_COLU_LEVEL = "";
+					Map<String, Object> mapData = null;
+	
+					// 循环得到 根节点
+					for (Object objData : listData) {
+						mapData = (Map<String, Object>) objData;
+						TZ_COLU_LEVEL = String.valueOf(mapData.get("TZ_COLU_LEVEL"));
+						if (TZ_COLU_LEVEL.equals("0")) {
+							flag = 0;
+							break;
+						}
+					}
+	
+					if (flag == 0) {
+						String coluId = String.valueOf(mapData.get("TZ_COLU_ID"));
+	
+						List<Map<String, Object>> listChildren = this.getMenuList(coluId, listData);
+	
+						Map<String, Object> mapRootJson = new HashMap<String, Object>();
+	
+						// text : root.text,
+						// //nodeId : root.nodeId,
+						// id : root.coluId,
+						// coluState : root.coluState,
+						// coluPath : root.coluPath,
+						// coluTempletId : root.coluTempletId,
+						// contentTypeId : root.contentTypeId,
+						// coluTempletName : root.coluTempletName,
+						// contentTypeName : root.contentTypeName,
+						// NodeType : root.NodeType,
+						// operateNode : root.operateNode,
+						// rootNode : config.coluId,
+						// expanded : root.expanded,
+						// children : me.getChartNavItems(items)
+						System.out.println("id=" + coluId);
+	
+						mapRootJson.put("id", coluId);
+						mapRootJson.put("nodeId", coluId);
+						mapRootJson.put("siteId", siteId);
+						mapRootJson.put("coluUrl", mapData.get("TZ_OUT_URL").toString());
+						mapRootJson.put("text", mapData.get("TZ_COLU_NAME").toString());
+						mapRootJson.put("coluState", mapData.get("TZ_COLU_STATE").toString());
+						mapRootJson.put("coluType", mapData.get("TZ_COLU_TYPE").toString());
+						mapRootJson.put("coluPath", mapData.get("TZ_COLU_PATH").toString());
+						mapRootJson.put("coluTempletId", mapData.get("TZ_TEMP_ID").toString());
+						mapRootJson.put("contentTypeId", mapData.get("TZ_ART_TYPE_ID").toString());
+						mapRootJson.put("coluTempletName", mapData.get("TZ_TEMP_NAME").toString());
+						mapRootJson.put("contentTypeName", mapData.get("TZ_ART_TYPE_NAME").toString());
+	
+						if (listData.size() > 1) {
+							mapRootJson.put("leaf", false); // 有子节点
+						} else {
+							mapRootJson.put("leaf", true); // 没有子节点
+						}
+						mapRootJson.put("NodeType", "");
+						mapRootJson.put("operateNode", "");
+						mapRootJson.put("rootNode", "");
+						mapRootJson.put("expanded", "true");
+						mapRootJson.put("children", listChildren);
+						mapRet.put("root", mapRootJson);
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "根节点不存在";
+						return strRet;
+					}
 				}
 
 				strRet = jacksonUtil.Map2json(mapRet);
@@ -149,6 +251,33 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 	
+
+	/**
+	 * 判断该节点是否存在子节点
+	 * 
+	 * @param fcoluId
+	 * @param listData
+	 * @return false 不存在 true 存在
+	 */
+	private boolean isLeaf(String fcoluId, List<?> listData) {
+		// boolean isLeaf = false;
+		try {
+			Map<String, Object> mapNode = null;
+			String TZ_F_COLU_ID = "";
+			for (Object objNode : listData) {
+				mapNode = (Map<String, Object>) objNode;
+				TZ_F_COLU_ID = mapNode.get("TZ_F_COLU_ID").toString();
+				if (TZ_F_COLU_ID.equals(fcoluId)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+	
 	/**
 	 * 获取菜单的下级菜单列表
 	 * 
@@ -158,51 +287,56 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	 * @return List<Map<String, Object>>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getChannelList(String strChannelID) {
+	public List<Map<String, Object>> getMenuList(String FcoluId, List<Map<String, Object>> listData) {
 
 		List<Map<String, Object>> listRet = new ArrayList<Map<String, Object>>();
 
 		try {
+			Map<String, Object> mapNode = null;
+			String TZ_F_COLU_ID = "";
+			boolean isLeaf = false;
+			Map<String, Object> mapNodeJson = null;
+			String coluId = "";
+			for (Object objNode : listData) {
+				mapNode = (Map<String, Object>) objNode;
+				TZ_F_COLU_ID = mapNode.get("TZ_F_COLU_ID").toString();
 
-				// 判断该菜单是否是叶子菜单
-				//sql = "select if(count(1)=0,'Y','N') from PSTREENODE where TREE_NAME = ? and PARENT_NODE_NAME=?";
+				if (TZ_F_COLU_ID.equals(FcoluId)) {
 
-				Map<String, Object> mapNodeJson = new HashMap<String, Object>();
-				mapNodeJson.put("id", "146");
-				mapNodeJson.put("nodeId", "146");
-				mapNodeJson.put("expanded", "true");
-				mapNodeJson.put("text", "新闻");
-				mapNodeJson.put("leaf", "true");
+					coluId = String.valueOf(mapNode.get("TZ_COLU_ID"));
+					mapNodeJson = new HashMap<String, Object>();
+					mapNodeJson.put("id", coluId);
+					mapNodeJson.put("nodeId", coluId);
+					mapNodeJson.put("text", mapNode.get("TZ_COLU_NAME").toString());
+					mapNodeJson.put("coluState", mapNode.get("TZ_COLU_STATE").toString());
+					mapNodeJson.put("coluPath", mapNode.get("TZ_COLU_PATH").toString());
+					mapNodeJson.put("coluTempletId", mapNode.get("TZ_TEMP_ID").toString());
+					mapNodeJson.put("contentTypeId", mapNode.get("TZ_ART_TYPE_ID").toString());
+					mapNodeJson.put("coluTempletName", mapNode.get("TZ_TEMP_NAME").toString());
+					mapNodeJson.put("contentTypeName", mapNode.get("TZ_ART_TYPE_NAME").toString());
+					mapNodeJson.put("coluUrl", mapNode.get("TZ_OUT_URL").toString());
+					mapNodeJson.put("coluType", mapNode.get("TZ_COLU_TYPE").toString());
 
-				/*	
-				if ("Y".equals(isLeaf)) {
+					mapNodeJson.put("NodeType", "");
+					mapNodeJson.put("operateNode", "");
+					mapNodeJson.put("rootNode", "");
 
-					mapNodeJson.put("leaf", true);
+					isLeaf = this.isLeaf(coluId, listData);
+					if (isLeaf) {
+						mapNodeJson.put("leaf", false);
+						mapNodeJson.put("expanded", true);
+						mapNodeJson.put("children", this.getMenuList(coluId, listData));
+					} else {
+						mapNodeJson.put("leaf", true);
+					}
 
-				} else {
-
-					List<Map<String, Object>> listChildren = this.getChannelList(strChannelID);
-
-					mapNodeJson.put("leaf", false);
-					mapNodeJson.put("expanded", true);
-					mapNodeJson.put("children", listChildren);
-
+					listRet.add(mapNodeJson);
 				}
-				*/
-				listRet.add(mapNodeJson);
-				
-				mapNodeJson = new HashMap<String, Object>();
-				mapNodeJson.put("id", "147");
-				mapNodeJson.put("nodeId", "147");
-				mapNodeJson.put("expanded", "true");
-				mapNodeJson.put("text", "活动");
-				mapNodeJson.put("leaf", "true");
-				listRet.add(mapNodeJson);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return listRet;
 	}
 }
