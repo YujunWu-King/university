@@ -50,11 +50,10 @@
 
         dataPanel.setTitle(title);
 		
+        dataGrid.store.columnId=columnId;
+        dataGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V","condition":{"TZ_COLU_ID-operator":"01","TZ_COLU_ID-value":"'+columnId+'"}}';
+        dataGrid.store.load();
 		/*
-        dataGrid.store.chanelID=chanelID;
-        dataGrid.store.tzStoreParams='{"chanelID":"'+chanelID+'"}';
-        dataView.store.load();
-		*/
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V',
 			condition:
@@ -67,6 +66,7 @@
 				store.load();
 			}
 		});	
+		*/
     },
 	//查询
     cfgSearch: function(btn){
@@ -92,7 +92,9 @@
 	},
 	//添加内容;
     addArt: function(btn) {
-    	var contentGrid = this.getView();
+    	//var contentGrid = this.getView();
+		var refs = this.getReferences()
+		dataGrid = refs.artListGrid;
     	//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ART_MG_COM"]["TZ_ART_INFO_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
@@ -110,7 +112,7 @@
 	    //栏目;
 	    var panel = btn.findParentByType("panel");
 		var columnId = panel.columnId;
-		console.log("栏目：" + columnId);
+
 	    if(columnId == "" || columnId == undefined){
 			Ext.MessageBox.alert('提示', '请先选择栏目。');
 			return;
@@ -167,7 +169,7 @@
     	
     	cmp.on('close',function(panel){
             try{
-                contentGrid.store.reload();
+                dataGrid.store.reload();
             }catch (e){
                 /*do nothing*/
             }
@@ -185,7 +187,9 @@
     //删除选中的内容
     deleteSelList:function(btn){
        //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
+	   var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+	   var selList = dataGrid.getSelectionModel().getSelection();
 	   //选中行长度
 	   var checkLen = selList.length;
 	   if(checkLen == 0){
@@ -194,14 +198,16 @@
 	   }else{
 			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
 				if(btnId == 'yes'){					   
-				   var userStore = this.getView().store;
+				   var userStore = dataGrid.store;
 				   userStore.remove(selList);
 				}
 			},this);
 	   }
     },
     saveContentList:function(btn){
-        var store = this.getView().store;
+		var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+		var store = dataGrid.getStore();
         if(store.getRemovedRecords().length>0){
             var tzParams = this.submitContentParams("D","保存成功");
         };
@@ -212,7 +218,9 @@
     //发布选中的内容
     releaseSelList:function(btn){
        //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
+	   var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+	   var selList = dataGrid.getSelectionModel().getSelection();
 	   //选中行长度
 	   var checkLen = selList.length;
 	   if(checkLen == 0){
@@ -232,7 +240,9 @@
     //撤销发布选中的内容
     UndoSelList:function(btn){
        //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
+	   var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+	   var selList = dataGrid.getSelectionModel().getSelection();
 	   //选中行长度
 	   var checkLen = selList.length;
 	   if(checkLen == 0){
@@ -251,44 +261,41 @@
     },
     //编辑内容
 	editSelArt:function(){
-		var contentGrid = this.getView();
+	
+		var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
 		 //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
-	   //选中行长度
-	   var checkLen = selList.length;
-	   if(checkLen == 0){
+	    var selList = dataGrid.getSelectionModel().getSelection();
+	    //选中行长度
+	    var checkLen = selList.length;
+	    if(checkLen == 0){
 			Ext.Msg.alert("提示","请选择一条要修改的记录");   
 			return;
-	   }else if(checkLen >1){
+	    }else if(checkLen >1){
 		   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
 		   return;
-	   }
-		 var articleId= selList[0].get("articleId");
-	   var coluId= selList[0].get("columnId");
-	   //显示活动信息编辑页面
-	   this.editArticleByID(contentGrid,articleId,coluId);
+	    }
+		var articleId= selList[0].get("articleId");
+	    var coluId= selList[0].get("columnId");
+	    //显示活动信息编辑页面
+	    this.editArticleByID(dataGrid,articleId,coluId);
 	},
 	//编辑内容
 	editArt:function(view, rowIndex){
 		var contentGrid = view.findParentByType("grid");
-		 var store = view.findParentByType("grid").store;
-		 var selRec = store.getAt(rowIndex);
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
 		 //内容ID
-	   var articleId = selRec.get("articleId");
-	   
-	   var coluId = view.findParentByType("grid").down("combobox").getValue();
-		  if(coluId == "" || coluId == undefined){
-				Ext.MessageBox.alert('提示', '请先选择栏目。');
-				return;
-			}
-			
-	   //显示活动信息编辑页面
-	   this.editArticleByID(contentGrid,articleId,coluId);
+	    var articleId = selRec.get("articleId");
+	    //栏目;
+		var columnId =selRec.get("columnId");
+	    //显示活动信息编辑页面
+	    this.editArticleByID(contentGrid,articleId,columnId);
 	   
 	},
 	editArticleByID: function(contentGrid,articleId,coluId){
 			//是否有访问权限
-			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CONTENT_MG_COM"]["TZ_CONTENT_INF_STD"];
+			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ART_MG_COM"]["TZ_ART_INFO_STD"];
 			if( pageResSet == "" || pageResSet == undefined){
 				Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 				return;
@@ -296,7 +303,7 @@
 			//该功能对应的JS类
 			var className = pageResSet["jsClassName"];
 			if(className == "" || className == undefined){
-				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CONTENT_INF_STD，请检查配置。');
+				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ART_INFO_STD，请检查配置。');
 				return;
 			}
 
@@ -346,7 +353,7 @@
 				var attachGrid = panel.down('grid[name=attachmentGrid]');
 				
 				//参数
-				var tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_CONTENT_INF_STD","OperateType":"QF","comParams":{"artId":"'+articleId+'","coluId":"'+coluId+'"}}';
+				var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_INFO_STD","OperateType":"QF","comParams":{"artId":"'+articleId+'","coluId":"'+coluId+'"}}';
 				
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
@@ -416,16 +423,16 @@
 		if(record.get("releaseOrUndo") == "Y"){
 			record.set("releaseOrUndo", "N");
 			msg = "撤销发布成功";
-    }else{
+		}else{
 				record.set("releaseOrUndo", "Y");
 				msg = "发布成功";
       
-    }
-    var tzParams = this.submitContentParams("P",msg);
+		}
+		var tzParams = this.submitContentParams("P",msg);
         //record.commit();
-  },
-  //置顶或者取消置顶
-  topOrUndo:function(view,t,rowIndex){
+	},
+	//置顶或者取消置顶
+	topOrUndo:function(view,t,rowIndex){
   	var msg;
 		var record = view.findParentByType("grid").store.getAt(rowIndex);
 		if(record.get("topOrUndo") != "0"){
@@ -439,10 +446,12 @@
         //record.commit();
 	},
     //获取修改记录
-  submitContentParams: function(clickTyp,msg){
+	submitContentParams: function(clickTyp,msg){
 		var comParams = "";
 		var editJson = "";
-		var store = this.getView().getStore();
+		var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+		var store = dataGrid.getStore();
 		//修改记录
 		var mfRecs = store.getModifiedRecords(); 
 		for(var i=0;i<mfRecs.length;i++){
@@ -481,87 +490,11 @@
 		}
 		//提交参数
 		var tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_CONTENT_STD","OperateType":"U","comParams":{'+comParams+'}}';
-    Ext.tzSubmit(tzParams,function(){
+		Ext.tzSubmit(tzParams,function(){
 			store.reload();		   
 		},msg,true,this);
 	},
-	//设置栏目，Mabc
-	setChannel:function(){
-
-		//栏目;
-		  var lm = this.getView().down("combobox").getValue();
-		  if(lm == "" || lm == undefined){
-				Ext.MessageBox.alert('提示', '请先选择栏目。');
-				return;
-			}
-		this.editColumnSkinByID(lm);
-	},
-	editColumnSkinByID: function(lm_id){
-		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CONTENT_MG_COM"]["TZ_GD_ZDLM_STD"];
-		if( pageResSet == "" || pageResSet == undefined){
-			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-			return;
-		}
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_ZDLM_STD，请检查配置。');
-			return;
-		}
-		
-		var win = this.lookupReference('channelWindow');
-        
-        if (!win) {
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-		    //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-		
-		//操作类型设置为更新
-		win.actType = "update";
-		//站点模板基本信息
-		//var comSiteParams = this.getView().child("form").getForm().getValues();
-		//站点模板id
-		//var siteId = comSiteParams["siteId"];
-		//模板集合表单信息;
-		var form = win.child('form').getForm();
-		
-		//加载栏目模板
-		/*
-		var lm_mbStore = new KitchenSink.view.common.store.comboxStore({
-			recname: 'TZ_GD_SITECHL_V',
-			condition:{
-				TZ_JG_ID:{
-					value:Ext.tzOrgID,
-					operator:"01",
-					type:"01"
-				},
-				TZ_TEMP_STATE:{
-					value:'Y',
-					operator:"01",
-					type:"01"
-				}
-			},
-			result:'TZ_TEMP_ID,TZ_TEMP_NAME'
-		});
-		form.findField("lm_mb").setStore(lm_mbStore);
-		form.findField("lm_nrmb").setStore(lm_mbStore);
-		*/
-		//参数
-		var tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_GD_ZDLM_STD","OperateType":"QF","comParams":{"templateId":"'+lm_id+'"}}';
-		//加载数据
-		Ext.tzLoad(tzParams,function(responseData){
-			//皮肤设置数据
-			var formData = responseData.formData;
-			form.setValues(formData);
-			//form.setValues({siteId:siteId});
-		});
-        win.show();
-	},
-	onComRegClose: function(btn){
+	onPageClose: function(btn){
 		//关闭窗口
 		this.getView().close();
 	}

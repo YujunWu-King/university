@@ -19,10 +19,10 @@
     actType: 'update',
     initComponent: function() {
 		me = this;
-		var treeStore = new KitchenSink.view.content.artMg.artTreeStore({siteId: me.siteId});
-		var gridStore = new KitchenSink.view.content.artMg.artStore('1','1');
+		var treeStore = new KitchenSink.view.content.artMg.artTreeStore({siteid: me.siteid});
+		var gridStore = new KitchenSink.view.content.artMg.artStore('NONE');
 		this.items = [
-            {
+            {	
                 //columnWidth: 0.3,
                 //margin: "10 5 0 0",
                 title: '内容发布树',
@@ -38,7 +38,55 @@
 				store: treeStore,
 	        	listeners : {  
 	            	itemclick: "treeItemClick"
-	            } 
+	            },
+				dockedItems: [
+				{
+						xtype: 'combobox',
+						dock: 'top',
+						margin: "2 0 0 0",
+						fieldLabel: '站点',
+						name:'mySites',
+						labelWidth:40,
+						labelStyle: 'font-weight:bold',
+						style:'background:white;background-image:none',
+						queryMode: 'remote',
+						width:300,
+						editable:false,
+						valueField: 'TValue',
+						displayField: 'TSDesc',
+						listeners: {
+							afterrender: function(tvType){
+								var siteid = this.siteid;
+								var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_LIST_STD","OperateType":"QF","comParams":{"typeFlag":"SITE"}}';
+								Ext.tzLoad(tzParams,function(responseData){
+									var store = new Ext.data.Store({
+										fields: ['TValue', 'TSDesc', 'TLDesc'],
+										data:responseData.TransList
+									});
+									
+									tvType.setStore(store);
+									if(siteid==undefined){
+										if(store.getCount() > 0){
+											tvType.setValue(store.getAt(0).get("TValue"));
+										}
+									}
+								});
+							},
+							change:function(tvType,newValue,oldValue,eOpts){
+								var treeStore = new KitchenSink.view.content.artMg.artTreeStore({siteid: newValue});
+								tvType.findParentByType("treepanel").setStore(treeStore);
+								var gridStore = new KitchenSink.view.content.artMg.artStore('NONE');
+								var refs = me.getReferences(),
+									dataPanel = refs.artListGridPanel,
+									dataGrid = refs.artListGrid;
+								dataPanel.columnId = "";
+								dataPanel.setTitle("内容发布");
+								dataGrid.setStore(gridStore);
+								dataGrid.store.load();
+								dataGrid.child("pagingtoolbar").setStore(gridStore);
+							}
+						}
+				}]
 			}, 
 			{
 				xtype: 'panel',
@@ -51,7 +99,7 @@
                     align: 'stretch'
                 },
                 border: false,
-                bodyPadding: 10,
+                //bodyPadding: 10,
                 //height: 400,
                 bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 
@@ -91,6 +139,13 @@
 					{
 						xtype: 'grid',
 						reference: 'artListGrid',
+						selModel: {
+							type: 'checkboxmodel'
+						},
+						multiSelect: true,
+						viewConfig: {
+							enableTextSelection: true
+						},
 						columns: [{
 							text: '站点编号',
 							hidden: true,
@@ -233,20 +288,19 @@
     buttons: [{
 			text: '保存',
 			iconCls:"save",
-			handler: 'onFormSave'
+			handler: 'saveContentList'
 		}, {
 			text: '确定',
 			iconCls:"ensure",
-			handler: 'onFormEnsure'
+			handler: 'saveContentList'
 		}, {
 			text: '关闭',
 			iconCls:"close",
-			handler: 'onFormClose'
+			handler: 'onPageClose'
 		}],
-		constructor: function (config) {
-			//机构主菜单ID;
-			//this.menuId = config.menuId;
-
+		constructor: function (siteid) {
+			//站点信息;
+			this.siteid = siteid; 
 			this.callParent();
 		}
 });
