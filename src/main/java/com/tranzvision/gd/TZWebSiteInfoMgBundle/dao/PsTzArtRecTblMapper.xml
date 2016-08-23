@@ -1,40 +1,57 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl" >
-    <id column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
-    <result column="TZ_ART_TITLE" property="tzArtTitle" jdbcType="VARCHAR" />
-    <result column="TZ_ART_NAME" property="tzArtName" jdbcType="VARCHAR" />
-    <result column="TZ_ART_TYPE1" property="tzArtType1" jdbcType="VARCHAR" />
-    <result column="TZ_START_DATE" property="tzStartDate" jdbcType="DATE" />
-    <result column="TZ_START_TIME" property="tzStartTime" jdbcType="TIME" />
-    <result column="TZ_END_DATE" property="tzEndDate" jdbcType="DATE" />
-    <result column="TZ_END_TIME" property="tzEndTime" jdbcType="TIME" />
-    <result column="TZ_ATTACHSYSFILENA" property="tzAttachsysfilena" jdbcType="VARCHAR" />
-    <result column="TZ_IMAGE_TITLE" property="tzImageTitle" jdbcType="VARCHAR" />
-    <result column="TZ_IMAGE_DESC" property="tzImageDesc" jdbcType="VARCHAR" />
-    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
-    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
-    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
-    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
-    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
-    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
-    <result column="TZ_PROJECT_LIMIT" property="tzProjectLimit" jdbcType="VARCHAR" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper">
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl">
+    <id column="TZ_ART_ID" jdbcType="VARCHAR" property="tzArtId" />
+    <result column="TZ_ART_TITLE" jdbcType="VARCHAR" property="tzArtTitle" />
+    <result column="TZ_ART_NAME" jdbcType="VARCHAR" property="tzArtName" />
+    <result column="TZ_ART_TYPE1" jdbcType="VARCHAR" property="tzArtType1" />
+    <result column="TZ_START_DATE" jdbcType="DATE" property="tzStartDate" />
+    <result column="TZ_START_TIME" jdbcType="TIME" property="tzStartTime" />
+    <result column="TZ_END_DATE" jdbcType="DATE" property="tzEndDate" />
+    <result column="TZ_END_TIME" jdbcType="TIME" property="tzEndTime" />
+    <result column="TZ_ATTACHSYSFILENA" jdbcType="VARCHAR" property="tzAttachsysfilena" />
+    <result column="TZ_IMAGE_TITLE" jdbcType="VARCHAR" property="tzImageTitle" />
+    <result column="TZ_IMAGE_DESC" jdbcType="VARCHAR" property="tzImageDesc" />
+    <result column="ROW_ADDED_DTTM" jdbcType="TIMESTAMP" property="rowAddedDttm" />
+    <result column="ROW_ADDED_OPRID" jdbcType="VARCHAR" property="rowAddedOprid" />
+    <result column="ROW_LASTMANT_DTTM" jdbcType="TIMESTAMP" property="rowLastmantDttm" />
+    <result column="ROW_LASTMANT_OPRID" jdbcType="VARCHAR" property="rowLastmantOprid" />
+    <result column="SYNCID" jdbcType="INTEGER" property="syncid" />
+    <result column="SYNCDTTM" jdbcType="TIMESTAMP" property="syncdttm" />
+    <result column="TZ_PROJECT_LIMIT" jdbcType="VARCHAR" property="tzProjectLimit" />
+    <result column="TZ_METAKEYS" jdbcType="VARCHAR" property="tzMetakeys" />
+    <result column="TZ_METADESC" jdbcType="VARCHAR" property="tzMetadesc" />
+    <result column="TZ_ART_SHORTTITLE" jdbcType="VARCHAR" property="tzArtShorttitle" />
+    <result column="TZ_TXT1" jdbcType="VARCHAR" property="tzTxt1" />
+    <result column="TZ_TXT2" jdbcType="VARCHAR" property="tzTxt2" />
+    <result column="TZ_TXT3" jdbcType="VARCHAR" property="tzTxt3" />
+    <result column="TZ_TXT4" jdbcType="VARCHAR" property="tzTxt4" />
+    <result column="TZ_DATE1" jdbcType="DATE" property="tzDate1" />
+    <result column="TZ_DATE2" jdbcType="DATE" property="tzDate2" />
+    <result column="TZ_SUBHEAD" jdbcType="VARCHAR" property="tzSubhead" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" extends="BaseResultMap" >
-    <result column="TZ_ART_TITLE_STYLE" property="tzArtTitleStyle" jdbcType="LONGVARCHAR" />
-    <result column="TZ_ART_CONENT" property="tzArtConent" jdbcType="LONGVARCHAR" />
-    <result column="TZ_OUT_ART_URL" property="tzOutArtUrl" jdbcType="LONGVARCHAR" />
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
+    <result column="TZ_ART_TITLE_STYLE" jdbcType="LONGVARCHAR" property="tzArtTitleStyle" />
+    <result column="TZ_ART_CONENT" jdbcType="LONGVARCHAR" property="tzArtConent" />
+    <result column="TZ_OUT_ART_URL" jdbcType="LONGVARCHAR" property="tzOutArtUrl" />
+    <result column="TZ_LONG1" jdbcType="LONGVARCHAR" property="tzLong1" />
+    <result column="TZ_LONG2" jdbcType="LONGVARCHAR" property="tzLong2" />
+    <result column="TZ_LONG3" jdbcType="LONGVARCHAR" property="tzLong3" />
+    <result column="TZ_ABOUT" jdbcType="LONGVARCHAR" property="tzAbout" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     TZ_ART_ID, TZ_ART_TITLE, TZ_ART_NAME, TZ_ART_TYPE1, TZ_START_DATE, TZ_START_TIME, 
     TZ_END_DATE, TZ_END_TIME, TZ_ATTACHSYSFILENA, TZ_IMAGE_TITLE, TZ_IMAGE_DESC, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT, 
+    TZ_METAKEYS, TZ_METADESC, TZ_ART_SHORTTITLE, TZ_TXT1, TZ_TXT2, TZ_TXT3, TZ_TXT4, 
+    TZ_DATE1, TZ_DATE2, TZ_SUBHEAD
   </sql>
-  <sql id="Blob_Column_List" >
-    TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL
+  <sql id="Blob_Column_List">
+    TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL, TZ_LONG1, TZ_LONG2, TZ_LONG3, 
+    TZ_ABOUT
   </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -42,228 +59,362 @@
     from PS_TZ_ART_REC_TBL
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from PS_TZ_ART_REC_TBL
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     insert into PS_TZ_ART_REC_TBL (TZ_ART_ID, TZ_ART_TITLE, TZ_ART_NAME, 
       TZ_ART_TYPE1, TZ_START_DATE, TZ_START_TIME, 
       TZ_END_DATE, TZ_END_TIME, TZ_ATTACHSYSFILENA, 
       TZ_IMAGE_TITLE, TZ_IMAGE_DESC, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
       SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT, 
-      TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL
-      )
+      TZ_METAKEYS, TZ_METADESC, TZ_ART_SHORTTITLE, 
+      TZ_TXT1, TZ_TXT2, TZ_TXT3, 
+      TZ_TXT4, TZ_DATE1, TZ_DATE2, 
+      TZ_SUBHEAD, TZ_ART_TITLE_STYLE, TZ_ART_CONENT, 
+      TZ_OUT_ART_URL, TZ_LONG1, TZ_LONG2, 
+      TZ_LONG3, TZ_ABOUT)
     values (#{tzArtId,jdbcType=VARCHAR}, #{tzArtTitle,jdbcType=VARCHAR}, #{tzArtName,jdbcType=VARCHAR}, 
       #{tzArtType1,jdbcType=VARCHAR}, #{tzStartDate,jdbcType=DATE}, #{tzStartTime,jdbcType=TIME}, 
       #{tzEndDate,jdbcType=DATE}, #{tzEndTime,jdbcType=TIME}, #{tzAttachsysfilena,jdbcType=VARCHAR}, 
       #{tzImageTitle,jdbcType=VARCHAR}, #{tzImageDesc,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
       #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzProjectLimit,jdbcType=VARCHAR}, 
-      #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, #{tzArtConent,jdbcType=LONGVARCHAR}, #{tzOutArtUrl,jdbcType=LONGVARCHAR}
-      )
+      #{tzMetakeys,jdbcType=VARCHAR}, #{tzMetadesc,jdbcType=VARCHAR}, #{tzArtShorttitle,jdbcType=VARCHAR}, 
+      #{tzTxt1,jdbcType=VARCHAR}, #{tzTxt2,jdbcType=VARCHAR}, #{tzTxt3,jdbcType=VARCHAR}, 
+      #{tzTxt4,jdbcType=VARCHAR}, #{tzDate1,jdbcType=DATE}, #{tzDate2,jdbcType=DATE}, 
+      #{tzSubhead,jdbcType=VARCHAR}, #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, #{tzArtConent,jdbcType=LONGVARCHAR}, 
+      #{tzOutArtUrl,jdbcType=LONGVARCHAR}, #{tzLong1,jdbcType=LONGVARCHAR}, #{tzLong2,jdbcType=LONGVARCHAR}, 
+      #{tzLong3,jdbcType=LONGVARCHAR}, #{tzAbout,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     insert into PS_TZ_ART_REC_TBL
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="tzArtId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzArtId != null">
         TZ_ART_ID,
       </if>
-      <if test="tzArtTitle != null" >
+      <if test="tzArtTitle != null">
         TZ_ART_TITLE,
       </if>
-      <if test="tzArtName != null" >
+      <if test="tzArtName != null">
         TZ_ART_NAME,
       </if>
-      <if test="tzArtType1 != null" >
+      <if test="tzArtType1 != null">
         TZ_ART_TYPE1,
       </if>
-      <if test="tzStartDate != null" >
+      <if test="tzStartDate != null">
         TZ_START_DATE,
       </if>
-      <if test="tzStartTime != null" >
+      <if test="tzStartTime != null">
         TZ_START_TIME,
       </if>
-      <if test="tzEndDate != null" >
+      <if test="tzEndDate != null">
         TZ_END_DATE,
       </if>
-      <if test="tzEndTime != null" >
+      <if test="tzEndTime != null">
         TZ_END_TIME,
       </if>
-      <if test="tzAttachsysfilena != null" >
+      <if test="tzAttachsysfilena != null">
         TZ_ATTACHSYSFILENA,
       </if>
-      <if test="tzImageTitle != null" >
+      <if test="tzImageTitle != null">
         TZ_IMAGE_TITLE,
       </if>
-      <if test="tzImageDesc != null" >
+      <if test="tzImageDesc != null">
         TZ_IMAGE_DESC,
       </if>
-      <if test="rowAddedDttm != null" >
+      <if test="rowAddedDttm != null">
         ROW_ADDED_DTTM,
       </if>
-      <if test="rowAddedOprid != null" >
+      <if test="rowAddedOprid != null">
         ROW_ADDED_OPRID,
       </if>
-      <if test="rowLastmantDttm != null" >
+      <if test="rowLastmantDttm != null">
         ROW_LASTMANT_DTTM,
       </if>
-      <if test="rowLastmantOprid != null" >
+      <if test="rowLastmantOprid != null">
         ROW_LASTMANT_OPRID,
       </if>
-      <if test="syncid != null" >
+      <if test="syncid != null">
         SYNCID,
       </if>
-      <if test="syncdttm != null" >
+      <if test="syncdttm != null">
         SYNCDTTM,
       </if>
-      <if test="tzProjectLimit != null" >
+      <if test="tzProjectLimit != null">
         TZ_PROJECT_LIMIT,
       </if>
-      <if test="tzArtTitleStyle != null" >
+      <if test="tzMetakeys != null">
+        TZ_METAKEYS,
+      </if>
+      <if test="tzMetadesc != null">
+        TZ_METADESC,
+      </if>
+      <if test="tzArtShorttitle != null">
+        TZ_ART_SHORTTITLE,
+      </if>
+      <if test="tzTxt1 != null">
+        TZ_TXT1,
+      </if>
+      <if test="tzTxt2 != null">
+        TZ_TXT2,
+      </if>
+      <if test="tzTxt3 != null">
+        TZ_TXT3,
+      </if>
+      <if test="tzTxt4 != null">
+        TZ_TXT4,
+      </if>
+      <if test="tzDate1 != null">
+        TZ_DATE1,
+      </if>
+      <if test="tzDate2 != null">
+        TZ_DATE2,
+      </if>
+      <if test="tzSubhead != null">
+        TZ_SUBHEAD,
+      </if>
+      <if test="tzArtTitleStyle != null">
         TZ_ART_TITLE_STYLE,
       </if>
-      <if test="tzArtConent != null" >
+      <if test="tzArtConent != null">
         TZ_ART_CONENT,
       </if>
-      <if test="tzOutArtUrl != null" >
+      <if test="tzOutArtUrl != null">
         TZ_OUT_ART_URL,
       </if>
+      <if test="tzLong1 != null">
+        TZ_LONG1,
+      </if>
+      <if test="tzLong2 != null">
+        TZ_LONG2,
+      </if>
+      <if test="tzLong3 != null">
+        TZ_LONG3,
+      </if>
+      <if test="tzAbout != null">
+        TZ_ABOUT,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="tzArtId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzArtId != null">
         #{tzArtId,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtTitle != null" >
+      <if test="tzArtTitle != null">
         #{tzArtTitle,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtName != null" >
+      <if test="tzArtName != null">
         #{tzArtName,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtType1 != null" >
+      <if test="tzArtType1 != null">
         #{tzArtType1,jdbcType=VARCHAR},
       </if>
-      <if test="tzStartDate != null" >
+      <if test="tzStartDate != null">
         #{tzStartDate,jdbcType=DATE},
       </if>
-      <if test="tzStartTime != null" >
+      <if test="tzStartTime != null">
         #{tzStartTime,jdbcType=TIME},
       </if>
-      <if test="tzEndDate != null" >
+      <if test="tzEndDate != null">
         #{tzEndDate,jdbcType=DATE},
       </if>
-      <if test="tzEndTime != null" >
+      <if test="tzEndTime != null">
         #{tzEndTime,jdbcType=TIME},
       </if>
-      <if test="tzAttachsysfilena != null" >
+      <if test="tzAttachsysfilena != null">
         #{tzAttachsysfilena,jdbcType=VARCHAR},
       </if>
-      <if test="tzImageTitle != null" >
+      <if test="tzImageTitle != null">
         #{tzImageTitle,jdbcType=VARCHAR},
       </if>
-      <if test="tzImageDesc != null" >
+      <if test="tzImageDesc != null">
         #{tzImageDesc,jdbcType=VARCHAR},
       </if>
-      <if test="rowAddedDttm != null" >
+      <if test="rowAddedDttm != null">
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowAddedOprid != null" >
+      <if test="rowAddedOprid != null">
         #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
-      <if test="rowLastmantDttm != null" >
+      <if test="rowLastmantDttm != null">
         #{rowLastmantDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowLastmantOprid != null" >
+      <if test="rowLastmantOprid != null">
         #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null" >
+      <if test="syncid != null">
         #{syncid,jdbcType=INTEGER},
       </if>
-      <if test="syncdttm != null" >
+      <if test="syncdttm != null">
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="tzProjectLimit != null" >
+      <if test="tzProjectLimit != null">
         #{tzProjectLimit,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtTitleStyle != null" >
+      <if test="tzMetakeys != null">
+        #{tzMetakeys,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMetadesc != null">
+        #{tzMetadesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtShorttitle != null">
+        #{tzArtShorttitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt1 != null">
+        #{tzTxt1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt2 != null">
+        #{tzTxt2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt3 != null">
+        #{tzTxt3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt4 != null">
+        #{tzTxt4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDate1 != null">
+        #{tzDate1,jdbcType=DATE},
+      </if>
+      <if test="tzDate2 != null">
+        #{tzDate2,jdbcType=DATE},
+      </if>
+      <if test="tzSubhead != null">
+        #{tzSubhead,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtTitleStyle != null">
         #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
-      <if test="tzArtConent != null" >
+      <if test="tzArtConent != null">
         #{tzArtConent,jdbcType=LONGVARCHAR},
       </if>
-      <if test="tzOutArtUrl != null" >
+      <if test="tzOutArtUrl != null">
         #{tzOutArtUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong1 != null">
+        #{tzLong1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong2 != null">
+        #{tzLong2,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong3 != null">
+        #{tzLong3,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzAbout != null">
+        #{tzAbout,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     update PS_TZ_ART_REC_TBL
-    <set >
-      <if test="tzArtTitle != null" >
+    <set>
+      <if test="tzArtTitle != null">
         TZ_ART_TITLE = #{tzArtTitle,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtName != null" >
+      <if test="tzArtName != null">
         TZ_ART_NAME = #{tzArtName,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtType1 != null" >
+      <if test="tzArtType1 != null">
         TZ_ART_TYPE1 = #{tzArtType1,jdbcType=VARCHAR},
       </if>
-      <if test="tzStartDate != null" >
+      <if test="tzStartDate != null">
         TZ_START_DATE = #{tzStartDate,jdbcType=DATE},
       </if>
-      <if test="tzStartTime != null" >
+      <if test="tzStartTime != null">
         TZ_START_TIME = #{tzStartTime,jdbcType=TIME},
       </if>
-      <if test="tzEndDate != null" >
+      <if test="tzEndDate != null">
         TZ_END_DATE = #{tzEndDate,jdbcType=DATE},
       </if>
-      <if test="tzEndTime != null" >
+      <if test="tzEndTime != null">
         TZ_END_TIME = #{tzEndTime,jdbcType=TIME},
       </if>
-      <if test="tzAttachsysfilena != null" >
+      <if test="tzAttachsysfilena != null">
         TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
       </if>
-      <if test="tzImageTitle != null" >
+      <if test="tzImageTitle != null">
         TZ_IMAGE_TITLE = #{tzImageTitle,jdbcType=VARCHAR},
       </if>
-      <if test="tzImageDesc != null" >
+      <if test="tzImageDesc != null">
         TZ_IMAGE_DESC = #{tzImageDesc,jdbcType=VARCHAR},
       </if>
-      <if test="rowAddedDttm != null" >
+      <if test="rowAddedDttm != null">
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowAddedOprid != null" >
+      <if test="rowAddedOprid != null">
         ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
-      <if test="rowLastmantDttm != null" >
+      <if test="rowLastmantDttm != null">
         ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowLastmantOprid != null" >
+      <if test="rowLastmantOprid != null">
         ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null" >
+      <if test="syncid != null">
         SYNCID = #{syncid,jdbcType=INTEGER},
       </if>
-      <if test="syncdttm != null" >
+      <if test="syncdttm != null">
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="tzProjectLimit != null" >
+      <if test="tzProjectLimit != null">
         TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR},
       </if>
-      <if test="tzArtTitleStyle != null" >
+      <if test="tzMetakeys != null">
+        TZ_METAKEYS = #{tzMetakeys,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMetadesc != null">
+        TZ_METADESC = #{tzMetadesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtShorttitle != null">
+        TZ_ART_SHORTTITLE = #{tzArtShorttitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt1 != null">
+        TZ_TXT1 = #{tzTxt1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt2 != null">
+        TZ_TXT2 = #{tzTxt2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt3 != null">
+        TZ_TXT3 = #{tzTxt3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxt4 != null">
+        TZ_TXT4 = #{tzTxt4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDate1 != null">
+        TZ_DATE1 = #{tzDate1,jdbcType=DATE},
+      </if>
+      <if test="tzDate2 != null">
+        TZ_DATE2 = #{tzDate2,jdbcType=DATE},
+      </if>
+      <if test="tzSubhead != null">
+        TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtTitleStyle != null">
         TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
-      <if test="tzArtConent != null" >
+      <if test="tzArtConent != null">
         TZ_ART_CONENT = #{tzArtConent,jdbcType=LONGVARCHAR},
       </if>
-      <if test="tzOutArtUrl != null" >
+      <if test="tzOutArtUrl != null">
         TZ_OUT_ART_URL = #{tzOutArtUrl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong1 != null">
+        TZ_LONG1 = #{tzLong1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong2 != null">
+        TZ_LONG2 = #{tzLong2,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzLong3 != null">
+        TZ_LONG3 = #{tzLong3,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzAbout != null">
+        TZ_ABOUT = #{tzAbout,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     update PS_TZ_ART_REC_TBL
     set TZ_ART_TITLE = #{tzArtTitle,jdbcType=VARCHAR},
       TZ_ART_NAME = #{tzArtName,jdbcType=VARCHAR},
@@ -282,12 +433,26 @@
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR},
+      TZ_METAKEYS = #{tzMetakeys,jdbcType=VARCHAR},
+      TZ_METADESC = #{tzMetadesc,jdbcType=VARCHAR},
+      TZ_ART_SHORTTITLE = #{tzArtShorttitle,jdbcType=VARCHAR},
+      TZ_TXT1 = #{tzTxt1,jdbcType=VARCHAR},
+      TZ_TXT2 = #{tzTxt2,jdbcType=VARCHAR},
+      TZ_TXT3 = #{tzTxt3,jdbcType=VARCHAR},
+      TZ_TXT4 = #{tzTxt4,jdbcType=VARCHAR},
+      TZ_DATE1 = #{tzDate1,jdbcType=DATE},
+      TZ_DATE2 = #{tzDate2,jdbcType=DATE},
+      TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR},
       TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       TZ_ART_CONENT = #{tzArtConent,jdbcType=LONGVARCHAR},
-      TZ_OUT_ART_URL = #{tzOutArtUrl,jdbcType=LONGVARCHAR}
+      TZ_OUT_ART_URL = #{tzOutArtUrl,jdbcType=LONGVARCHAR},
+      TZ_LONG1 = #{tzLong1,jdbcType=LONGVARCHAR},
+      TZ_LONG2 = #{tzLong2,jdbcType=LONGVARCHAR},
+      TZ_LONG3 = #{tzLong3,jdbcType=LONGVARCHAR},
+      TZ_ABOUT = #{tzAbout,jdbcType=LONGVARCHAR}
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl" >
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTbl">
     update PS_TZ_ART_REC_TBL
     set TZ_ART_TITLE = #{tzArtTitle,jdbcType=VARCHAR},
       TZ_ART_NAME = #{tzArtName,jdbcType=VARCHAR},
@@ -305,7 +470,17 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR}
+      TZ_PROJECT_LIMIT = #{tzProjectLimit,jdbcType=VARCHAR},
+      TZ_METAKEYS = #{tzMetakeys,jdbcType=VARCHAR},
+      TZ_METADESC = #{tzMetadesc,jdbcType=VARCHAR},
+      TZ_ART_SHORTTITLE = #{tzArtShorttitle,jdbcType=VARCHAR},
+      TZ_TXT1 = #{tzTxt1,jdbcType=VARCHAR},
+      TZ_TXT2 = #{tzTxt2,jdbcType=VARCHAR},
+      TZ_TXT3 = #{tzTxt3,jdbcType=VARCHAR},
+      TZ_TXT4 = #{tzTxt4,jdbcType=VARCHAR},
+      TZ_DATE1 = #{tzDate1,jdbcType=DATE},
+      TZ_DATE2 = #{tzDate2,jdbcType=DATE},
+      TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR}
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </update>
 </mapper>

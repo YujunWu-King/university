@@ -39,6 +39,26 @@ public class PsTzArtRecTbl {
 
     private String tzProjectLimit;
 
+    private String tzMetakeys;
+
+    private String tzMetadesc;
+
+    private String tzArtShorttitle;
+
+    private String tzTxt1;
+
+    private String tzTxt2;
+
+    private String tzTxt3;
+
+    private String tzTxt4;
+
+    private Date tzDate1;
+
+    private Date tzDate2;
+
+    private String tzSubhead;
+
     public String getTzArtId() {
         return tzArtId;
     }
@@ -181,5 +201,85 @@ public class PsTzArtRecTbl {
 
     public void setTzProjectLimit(String tzProjectLimit) {
         this.tzProjectLimit = tzProjectLimit == null ? null : tzProjectLimit.trim();
+    }
+
+    public String getTzMetakeys() {
+        return tzMetakeys;
+    }
+
+    public void setTzMetakeys(String tzMetakeys) {
+        this.tzMetakeys = tzMetakeys == null ? null : tzMetakeys.trim();
+    }
+
+    public String getTzMetadesc() {
+        return tzMetadesc;
+    }
+
+    public void setTzMetadesc(String tzMetadesc) {
+        this.tzMetadesc = tzMetadesc == null ? null : tzMetadesc.trim();
+    }
+
+    public String getTzArtShorttitle() {
+        return tzArtShorttitle;
+    }
+
+    public void setTzArtShorttitle(String tzArtShorttitle) {
+        this.tzArtShorttitle = tzArtShorttitle == null ? null : tzArtShorttitle.trim();
+    }
+
+    public String getTzTxt1() {
+        return tzTxt1;
+    }
+
+    public void setTzTxt1(String tzTxt1) {
+        this.tzTxt1 = tzTxt1 == null ? null : tzTxt1.trim();
+    }
+
+    public String getTzTxt2() {
+        return tzTxt2;
+    }
+
+    public void setTzTxt2(String tzTxt2) {
+        this.tzTxt2 = tzTxt2 == null ? null : tzTxt2.trim();
+    }
+
+    public String getTzTxt3() {
+        return tzTxt3;
+    }
+
+    public void setTzTxt3(String tzTxt3) {
+        this.tzTxt3 = tzTxt3 == null ? null : tzTxt3.trim();
+    }
+
+    public String getTzTxt4() {
+        return tzTxt4;
+    }
+
+    public void setTzTxt4(String tzTxt4) {
+        this.tzTxt4 = tzTxt4 == null ? null : tzTxt4.trim();
+    }
+
+    public Date getTzDate1() {
+        return tzDate1;
+    }
+
+    public void setTzDate1(Date tzDate1) {
+        this.tzDate1 = tzDate1;
+    }
+
+    public Date getTzDate2() {
+        return tzDate2;
+    }
+
+    public void setTzDate2(Date tzDate2) {
+        this.tzDate2 = tzDate2;
+    }
+
+    public String getTzSubhead() {
+        return tzSubhead;
+    }
+
+    public void setTzSubhead(String tzSubhead) {
+        this.tzSubhead = tzSubhead == null ? null : tzSubhead.trim();
     }
 }
