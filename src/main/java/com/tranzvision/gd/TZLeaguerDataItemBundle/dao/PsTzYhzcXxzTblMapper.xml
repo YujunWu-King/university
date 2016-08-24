@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzYhzcXxzTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <id column="TZ_REG_FIELD_ID" property="tzRegFieldId" jdbcType="VARCHAR" />
+    <id column="TZ_OPT_ID" property="tzOptId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_OPT_VALUE" property="tzOptValue" jdbcType="VARCHAR" />
+    <result column="TZ_SELECT_FLG" property="tzSelectFlg" jdbcType="VARCHAR" />
+    <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_OPT_ID, TZ_JG_ID, TZ_OPT_VALUE, TZ_SELECT_FLG, TZ_ORDER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_YHZC_XXZ_TBL
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTblKey" >
+    delete from PS_TZ_YHZC_XXZ_TBL
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl" >
+    insert into PS_TZ_YHZC_XXZ_TBL (TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_OPT_ID, 
+      TZ_JG_ID, TZ_OPT_VALUE, TZ_SELECT_FLG, 
+      TZ_ORDER)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzRegFieldId,jdbcType=VARCHAR}, #{tzOptId,jdbcType=VARCHAR}, 
+      #{tzJgId,jdbcType=VARCHAR}, #{tzOptValue,jdbcType=VARCHAR}, #{tzSelectFlg,jdbcType=VARCHAR}, 
+      #{tzOrder,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl" >
+    insert into PS_TZ_YHZC_XXZ_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzRegFieldId != null" >
+        TZ_REG_FIELD_ID,
+      </if>
+      <if test="tzOptId != null" >
+        TZ_OPT_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzOptValue != null" >
+        TZ_OPT_VALUE,
+      </if>
+      <if test="tzSelectFlg != null" >
+        TZ_SELECT_FLG,
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegFieldId != null" >
+        #{tzRegFieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptId != null" >
+        #{tzOptId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptValue != null" >
+        #{tzOptValue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSelectFlg != null" >
+        #{tzSelectFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        #{tzOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl" >
+    update PS_TZ_YHZC_XXZ_TBL
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptValue != null" >
+        TZ_OPT_VALUE = #{tzOptValue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSelectFlg != null" >
+        TZ_SELECT_FLG = #{tzSelectFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl" >
+    update PS_TZ_YHZC_XXZ_TBL
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_OPT_VALUE = #{tzOptValue,jdbcType=VARCHAR},
+      TZ_SELECT_FLG = #{tzSelectFlg,jdbcType=VARCHAR},
+      TZ_ORDER = #{tzOrder,jdbcType=INTEGER}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzYhzcXxzEngMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <id column="TZ_REG_FIELD_ID" property="tzRegFieldId" jdbcType="VARCHAR" />
+    <id column="TZ_OPT_ID" property="tzOptId" jdbcType="VARCHAR" />
+    <id column="LANGUAGE_CD" property="languageCd" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_OPT_VALUE" property="tzOptValue" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_OPT_ID, LANGUAGE_CD, TZ_JG_ID, TZ_OPT_VALUE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEngKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_YHZC_XXZ_ENG
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEngKey" >
+    delete from PS_TZ_YHZC_XXZ_ENG
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng" >
+    insert into PS_TZ_YHZC_XXZ_ENG (TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_OPT_ID, 
+      LANGUAGE_CD, TZ_JG_ID, TZ_OPT_VALUE
+      )
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzRegFieldId,jdbcType=VARCHAR}, #{tzOptId,jdbcType=VARCHAR}, 
+      #{languageCd,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzOptValue,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng" >
+    insert into PS_TZ_YHZC_XXZ_ENG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzRegFieldId != null" >
+        TZ_REG_FIELD_ID,
+      </if>
+      <if test="tzOptId != null" >
+        TZ_OPT_ID,
+      </if>
+      <if test="languageCd != null" >
+        LANGUAGE_CD,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzOptValue != null" >
+        TZ_OPT_VALUE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRegFieldId != null" >
+        #{tzRegFieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptId != null" >
+        #{tzOptId,jdbcType=VARCHAR},
+      </if>
+      <if test="languageCd != null" >
+        #{languageCd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptValue != null" >
+        #{tzOptValue,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng" >
+    update PS_TZ_YHZC_XXZ_ENG
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOptValue != null" >
+        TZ_OPT_VALUE = #{tzOptValue,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEng" >
+    update PS_TZ_YHZC_XXZ_ENG
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_OPT_VALUE = #{tzOptValue,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
+      and TZ_OPT_ID = #{tzOptId,jdbcType=VARCHAR}
+      and LANGUAGE_CD = #{languageCd,jdbcType=VARCHAR}
+  </update>
+</mapper>
