@@ -13,27 +13,6 @@
     title: '站点基本信息', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	actType:'',
-	listeners: {
-		beforerender: function(panel) {
-			var form = panel.child('form').getForm();
-			var lanIntroduce = panel.child('form').getComponent("languageIntroduce");
-			var tzParams = '{"ComID":"TZ_SITESTEM_COM","PageID":"TZ_SITESTEM_STD","OperateType":"QF","comParams":{}}';
-			Ext.tzLoad(tzParams,function(formData) {
-				if (!formData.siteId){
-					panel.actType='add';
-					form.findField('orgId').setValue(Ext.tzOrgID);
-					form.findField('siteId').setValue("NEXT");
-					lanIntroduce.setHidden(true);
-				} else {
-					panel.actType='update';
-					form.setValues(formData);
-					form.findField('siteLanguage').setReadOnly(true);
-					form.findField('siteLanguage').addCls("lanage_1");
-					lanIntroduce.setHidden(false);
-				}
-			});
-		}
-	},
     items: [{
         xtype: 'form',
         reference: 'siteSimpTmpForm',

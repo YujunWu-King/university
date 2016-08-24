@@ -69,11 +69,15 @@ public class TzMenuTypeServiceImpl extends FrameworkImpl {
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteMenuImgsFromCDPF");
 					Map<String, Object> mapMenuImgs = sqlQuery.queryForMap(sql,
 							new Object[] { strSiteId, strMenuTypeId, strSiteId });
-
-					String strMenuTypeImg = mapMenuImgs.get("TZ_TYPE_IMG") == null ? ""
-							: String.valueOf(mapMenuImgs.get("TZ_TYPE_IMG"));
-					String strMenuNowImg = mapMenuImgs.get("TZ_NOW_IMG") == null ? ""
-							: String.valueOf(mapMenuImgs.get("TZ_NOW_IMG"));
+					String strMenuTypeImg = "";
+					String strMenuNowImg = "";
+					if(mapMenuImgs != null){
+						strMenuTypeImg = mapMenuImgs.get("TZ_TYPE_IMG") == null ? ""
+								: String.valueOf(mapMenuImgs.get("TZ_TYPE_IMG"));
+						strMenuNowImg = mapMenuImgs.get("TZ_NOW_IMG") == null ? ""
+								: String.valueOf(mapMenuImgs.get("TZ_NOW_IMG"));
+					}
+					
 
 					// 此处要找到替代方法
 					String todoCheck;

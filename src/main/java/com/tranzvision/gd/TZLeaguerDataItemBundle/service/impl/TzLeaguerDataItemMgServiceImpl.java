@@ -88,6 +88,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String platformOrgID = getSysHardCodeVal.getPlatformOrgID();
 			Date dateNow = new Date();
 			int dataLength = actData.length;
 			String languageCd = "ENG";
@@ -109,6 +110,18 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 						String updActivate = "";
 						String comma = "";
+						String siteId = "";
+						if(mapFormData.containsKey("siteId")){
+							siteId = (String)mapFormData.get("siteId");
+						}
+						if(siteId == null){
+							siteId = "";
+						}
+						if("".equals(siteId) && !platformOrgID.equals(orgid)){
+							errMsg[0] = "1";
+							errMsg[1] = "站点信息不存在，保存数据失败";
+							return strRet;
+						}
 						if (mapFormData.containsKey("activate")) {
 
 							Object objActivate = mapFormData.get("activate");
@@ -126,14 +139,37 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							}
 
 						}
+						
+						String enrollDir = (String)mapFormData.get("enrollDir");
+						if(enrollDir == null){
+							enrollDir = "";
+						}
 
-						sql = "select 'Y' from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
-						String recExists = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
+						//sql = "select 'Y' from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
+						sql = "select 'Y' from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
+						String recExists = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 
 						if ("Y".equals(recExists)) {
+							
+							//网站首页个人头像
+							String tzIsShowPhoto = "N";
+							if(mapFormData.containsKey("photo")){
+								tzIsShowPhoto = "Y";
+							}
+							
+							//账户管理个人信息头像
+							String tzIsShowPhoto2 = "N";
+							if(mapFormData.containsKey("photo2")){
+								tzIsShowPhoto2 = "Y";
+							}
+							
 							PsTzUserregMbT psTzUserregMbT = new PsTzUserregMbT();
+							psTzUserregMbT.setTzSiteiId(siteId);
 							psTzUserregMbT.setTzJgId(orgid);
 							psTzUserregMbT.setTzActivateType(updActivate);
+							psTzUserregMbT.setTzEnrollDir(enrollDir);
+							psTzUserregMbT.setTzIsShowPhoto(tzIsShowPhoto); //网站首页头像
+							psTzUserregMbT.setTzIsShowPhoto2(tzIsShowPhoto2); //账户管理头像
 							psTzUserregMbT.setRowLastmantDttm(dateNow);
 							psTzUserregMbT.setRowLastmantOprid(oprid);
 							psTzUserregMbTMapper.updateByPrimaryKeySelective(psTzUserregMbT);
@@ -148,6 +184,19 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					for (Object objGrid : listGridData) {
 
 						Map<String, Object> mapGridRow = (Map<String, Object>) objGrid;
+						
+						String siteId = "";
+						if(mapGridRow.containsKey("siteId")){
+							siteId = (String)mapGridRow.get("siteId");
+						}
+						if(siteId == null){
+							siteId = "";
+						}
+						if("".equals(siteId) && !platformOrgID.equals(orgid)){
+							errMsg[0] = "1";
+							errMsg[1] = "站点信息不存在，保存数据失败";
+							return strRet;
+						}
 
 						String regId = "";
 						if (mapGridRow.containsKey("regId")) {
@@ -160,10 +209,12 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							return "{\"success\":false}";
 						}
 
-						sql = "select 'Y' from PS_TZ_REG_FIELD_T where TZ_JG_ID=? and TZ_REG_FIELD_ID=?";
-						String recExists = sqlQuery.queryForObject(sql, new Object[] { orgid, regId }, "String");
+						//sql = "select 'Y' from PS_TZ_REG_FIELD_T where TZ_JG_ID=? and TZ_REG_FIELD_ID=?";
+						sql = "select 'Y' from PS_TZ_REG_FIELD_T where TZ_SITEI_ID=? and TZ_REG_FIELD_ID=?";
+						String recExists = sqlQuery.queryForObject(sql, new Object[] { siteId, regId }, "String");
 						if ("Y".equals(recExists)) {
 							PsTzRegFieldT psTzRegFieldT = new PsTzRegFieldT();
+							psTzRegFieldT.setTzSiteiId(siteId);
 							psTzRegFieldT.setTzJgId(orgid);
 							psTzRegFieldT.setTzRegFieldId(regId);
 
@@ -222,12 +273,13 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 										: String.valueOf(mapGridRow.get("regEnName"));
 
 								if (!"".equals(regId)) {
-									sql = "select 'Y' from PS_TZ_REGFIELD_ENG where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and LANGUAGE_CD=?";
-									recExists = sqlQuery.queryForObject(sql, new Object[] { orgid, regId, languageCd },
+									//sql = "select 'Y' from PS_TZ_REGFIELD_ENG where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and LANGUAGE_CD=?";
+									sql = "select 'Y' from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID=? and TZ_REG_FIELD_ID=? and LANGUAGE_CD=?";
+									recExists = sqlQuery.queryForObject(sql, new Object[] { siteId, regId, languageCd },
 											"String");
 
 									PsTzRegfieldEng psTzRegfieldEng = new PsTzRegfieldEng();
-
+									psTzRegfieldEng.setTzSiteiId(siteId);
 									psTzRegfieldEng.setTzJgId(orgid);
 									psTzRegfieldEng.setTzRegFieldId(regId);
 									psTzRegfieldEng.setLanguageCd(languageCd);
@@ -270,22 +322,39 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
+			jacksonUtil.json2Map(strParams);
+			String siteId = jacksonUtil.getString("siteId");
+			
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String platformOrgID = getSysHardCodeVal.getPlatformOrgID();
 			String languageCd = "ENG";
+			
+			if(siteId == null && platformOrgID.equals(orgid)){
+				siteId = "";
+			}
+			
+			if((siteId == null || "".equals(siteId)) && !platformOrgID.equals(orgid)){
+				errMsg[0] = "1";
+				errMsg[1] = "站点信息不存在";
+				return strRet;
+			}
 
-			String sql = "select count(1) from PS_TZ_USERREG_MB_T where TZ_JG_ID = ?";
-
-			int numCount = sqlQuery.queryForObject(sql, new Object[] { orgid }, "int");
+			//String sql = "select count(1) from PS_TZ_USERREG_MB_T where TZ_JG_ID = ?";
+			String sql = "select count(1) from PS_TZ_USERREG_MB_T where TZ_SITEI_ID = ?";
+			int numCount = sqlQuery.queryForObject(sql, new Object[] { siteId }, "int");
 
 			if (numCount < 1) {
 				// 初始化 用户注册信息模板表
 				PsTzUserregMbT psTzUserregMbT = new PsTzUserregMbT();
+				psTzUserregMbT.setTzSiteiId(siteId);
 				psTzUserregMbT.setTzJgId(orgid);
 				psTzUserregMbT.setTzFabuState("N");
+				psTzUserregMbT.setTzEnrollDir(orgid.toLowerCase());
 				psTzUserregMbT.setTzRegMbHtml("");
 				psTzUserregMbT.setRowAddedDttm(dateNow);
 				psTzUserregMbT.setRowAddedOprid(oprid);
@@ -294,7 +363,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				psTzUserregMbTMapper.insert(psTzUserregMbT);
 
 				// 初始化 用户注册项信息字段存储表
-				sql = "select TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
+				sql = "select TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID='' AND TZ_JG_ID = ? order by TZ_ORDER";
 
 				List<?> listData = sqlQuery.queryForList(sql, new Object[] { platformOrgID });
 
@@ -306,8 +375,9 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							: String.valueOf(mapData.get("TZ_REG_FIELD_ID"));
 
 					PsTzRegFieldT psTzRegFieldT = new PsTzRegFieldT();
-					psTzRegFieldT.setTzJgId(orgid);
+					psTzRegFieldT.setTzSiteiId(siteId);
 					psTzRegFieldT.setTzRegFieldId(fieldId);
+					psTzRegFieldT.setTzJgId(orgid);
 					psTzRegFieldT.setTzRedFldYsmc(mapData.get("TZ_RED_FLD_YSMC") == null ? ""
 							: String.valueOf(mapData.get("TZ_RED_FLD_YSMC")));
 					psTzRegFieldT.setTzRegFieldName(mapData.get("TZ_REG_FIELD_NAME") == null ? ""
@@ -332,14 +402,15 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					psTzRegFieldTMapper.insert(psTzRegFieldT);
 
 					// 处理英文名称部分 - 开始
-					sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and LANGUAGE_CD = ?  and TZ_REG_FIELD_ID = ?";
+					sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID='' AND TZ_JG_ID = ? and LANGUAGE_CD = ?  and TZ_REG_FIELD_ID = ?";
 					String fieldEnName = sqlQuery.queryForObject(sql,
 							new Object[] { platformOrgID, languageCd, fieldId }, "String");
 
 					if (null != fieldEnName && !"".equals(fieldEnName)) {
 						PsTzRegfieldEng psTzRegfieldEng = new PsTzRegfieldEng();
-						psTzRegfieldEng.setTzJgId(orgid);
+						psTzRegfieldEng.setTzSiteiId(siteId);
 						psTzRegfieldEng.setTzRegFieldId(fieldId);
+						psTzRegfieldEng.setTzJgId(orgid);
 						psTzRegfieldEng.setLanguageCd(languageCd);
 						psTzRegfieldEng.setTzRegFieldName(fieldEnName);
 						psTzRegfieldEngMapper.insert(psTzRegfieldEng);
@@ -348,7 +419,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				}
 
 				// 初始化 用户注册信息字段选项值表
-				sql = "select TZ_REG_FIELD_ID,TZ_OPT_ID,TZ_OPT_VALUE,TZ_SELECT_FLG,TZ_ORDER from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID = ? order by TZ_ORDER";
+				sql = "select TZ_REG_FIELD_ID,TZ_OPT_ID,TZ_OPT_VALUE,TZ_SELECT_FLG,TZ_ORDER from PS_TZ_YHZC_XXZ_TBL where TZ_SITEI_ID='' AND TZ_JG_ID = ? order by TZ_ORDER";
 				List<?> listDataLng = sqlQuery.queryForList(sql, new Object[] { platformOrgID });
 				for (Object obj : listDataLng) {
 
@@ -359,9 +430,10 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					String optId = mapData.get("TZ_OPT_ID") == null ? "" : String.valueOf(mapData.get("TZ_OPT_ID"));
 
 					PsTzYhzcXxzTbl psTzYhzcXxzTbl = new PsTzYhzcXxzTbl();
-					psTzYhzcXxzTbl.setTzJgId(orgid);
+					psTzYhzcXxzTbl.setTzSiteiId(siteId);
 					psTzYhzcXxzTbl.setTzRegFieldId(fieldId);
 					psTzYhzcXxzTbl.setTzOptId(optId);
+					psTzYhzcXxzTbl.setTzJgId(orgid);
 					psTzYhzcXxzTbl.setTzOptValue(
 							mapData.get("TZ_OPT_VALUE") == null ? "" : String.valueOf(mapData.get("TZ_OPT_VALUE")));
 					psTzYhzcXxzTbl.setTzSelectFlg(
@@ -373,17 +445,17 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 					// 处理英文描述部分 - 开始
 
-					sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_ENG where TZ_JG_ID = ? and LANGUAGE_CD = ? and TZ_REG_FIELD_ID = ? and TZ_OPT_ID = ?";
+					sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_ENG where TZ_SITEI_ID='' AND TZ_JG_ID = ? and LANGUAGE_CD = ? and TZ_REG_FIELD_ID = ? and TZ_OPT_ID = ?";
 					String optEnValue = sqlQuery.queryForObject(sql,
 							new Object[] { platformOrgID, languageCd, fieldId, optId }, "String");
 					if (null != optEnValue && !"".equals(optEnValue)) {
 
 						PsTzYhzcXxzEng psTzYhzcXxzEng = new PsTzYhzcXxzEng();
-
-						psTzYhzcXxzEng.setTzJgId(orgid);
+						psTzYhzcXxzEng.setTzSiteiId(siteId);
 						psTzYhzcXxzEng.setTzRegFieldId(fieldId);
 						psTzYhzcXxzEng.setTzOptId(optId);
 						psTzYhzcXxzEng.setLanguageCd(languageCd);
+						psTzYhzcXxzEng.setTzJgId(orgid);
 						psTzYhzcXxzEng.setTzOptValue(optEnValue);
 
 						psTzYhzcXxzEngMapper.insert(psTzYhzcXxzEng);
@@ -394,29 +466,53 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 
 			}
 
-			sql = "select TZ_FABU_STATE,TZ_ACTIVATE_TYPE from PS_TZ_USERREG_MB_T where TZ_JG_ID = ?";
-			Map<String, Object> mapUserRegMb = sqlQuery.queryForMap(sql, new Object[] { orgid });
+			//sql = "select TZ_FABU_STATE,TZ_ACTIVATE_TYPE from PS_TZ_USERREG_MB_T where TZ_JG_ID = ?";
+			sql = "select TZ_FABU_STATE,TZ_ACTIVATE_TYPE,TZ_ENROLL_DIR,TZ_IS_SHOW_PHOTO,TZ_IS_SHOW_PHOTO_2 from PS_TZ_USERREG_MB_T where TZ_SITEI_ID = ?";
+			Map<String, Object> mapUserRegMb = sqlQuery.queryForMap(sql, new Object[] { siteId });
 			String strState = String.valueOf(mapUserRegMb.get("TZ_FABU_STATE"));
 			if ("Y".equals(strState)) {
 				strState = "已发布";
 			} else {
 				strState = "未发布";
 			}
+			
+			//网站首页个人头像显示
+			String isShowPhoto = String.valueOf(mapUserRegMb.get("TZ_IS_SHOW_PHOTO"));
+			String showPhoto = "";
+			if("Y".equals(isShowPhoto)){
+				showPhoto = "on";
+			}else{
+				showPhoto = "";
+			}
+			
+			//账户管理个人头像显示
+			String isShowPhoto2 = String.valueOf(mapUserRegMb.get("TZ_IS_SHOW_PHOTO_2"));
+			String showPhoto2 = "";
+			if("Y".equals(isShowPhoto2)){
+				showPhoto2="on";
+			}else{
+				showPhoto2="";
+			}
 
+			String enrollDir = mapUserRegMb.get("TZ_ENROLL_DIR") == null ? "" : (String)mapUserRegMb.get("TZ_ENROLL_DIR");
+			
 			String activateType = mapUserRegMb.get("TZ_ACTIVATE_TYPE") == null ? ""
 					: String.valueOf(mapUserRegMb.get("TZ_ACTIVATE_TYPE"));
 
 			String[] listActivateType = activateType.split(",");
 
 			Map<String, Object> mapRetFormData = new HashMap<String, Object>();
-			mapRetFormData.put("id", orgid);
+			mapRetFormData.put("siteId", siteId);
 			mapRetFormData.put("name", orgid);
 			mapRetFormData.put("state", strState);
+			mapRetFormData.put("enrollDir", enrollDir);
 			mapRetFormData.put("activate", listActivateType);
+			mapRetFormData.put("photo", showPhoto);
+			mapRetFormData.put("photo2", showPhoto2);
 
-			sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
-
-			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { orgid });
+			//sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
+			sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
+			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { siteId });
 
 			ArrayList<Map<String, Object>> listRetJson = new ArrayList<Map<String, Object>>();
 
@@ -457,9 +553,10 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				if ("Y".equals(isShowWzsy)) {
 					showWzsy = true;
 				}
-
-				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
-				String regEnName = sqlQuery.queryForObject(sql, new Object[] { orgid, regId, languageCd }, "String");
+				
+				//sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
+				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
+				String regEnName = sqlQuery.queryForObject(sql, new Object[] { siteId, regId, languageCd }, "String");
 
 				Map<String, Object> mapRetJson = new HashMap<String, Object>();
 				mapRetJson.put("regId", regId);
@@ -483,7 +580,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			mapRet.put("formData", mapRetFormData);
 			mapRet.put("listData", listRetJson);
 
-			JacksonUtil jacksonUtil = new JacksonUtil();
+			
 			strRet = jacksonUtil.Map2json(mapRet);
 
 		} catch (Exception e) {
@@ -502,15 +599,31 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
-
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-
+			jacksonUtil.json2Map(strParams);
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String platformOrgID = getSysHardCodeVal.getPlatformOrgID();
 			String languageCd = "ENG";
+			
+			String siteId = "";
+			if(jacksonUtil.containsKey("siteId")){
+				siteId = jacksonUtil.getString("siteId");
+			}
+			if(siteId == null){
+				siteId = "";
+			}
+			if("".equals(siteId) &&  !platformOrgID.equals(orgid)){
+				errorMsg[0] = "1";
+				errorMsg[1] = "站点信息不存在";
+				return jacksonUtil.Map2json(mapRet);
+			}
 
-			String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
+			//String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
+			String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
 
-			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { orgid });
+			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { siteId });
 
 			ArrayList<Map<String, Object>> listRetJson = new ArrayList<Map<String, Object>>();
 
@@ -552,10 +665,12 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					ShowWzsy = true;
 				}
 
-				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
-				String regEnName = sqlQuery.queryForObject(sql, new Object[] { orgid, regId, languageCd }, "String");
+				//sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
+				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
+				String regEnName = sqlQuery.queryForObject(sql, new Object[] { siteId, regId, languageCd }, "String");
 
 				Map<String, Object> mapRetJson = new HashMap<String, Object>();
+				mapRetJson.put("siteId", siteId);
 				mapRetJson.put("regId", regId);
 				mapRetJson.put("regName", regName);
 				mapRetJson.put("order", order);
@@ -583,7 +698,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			errorMsg[1] = "数据异常，请重试！";
 		}
 
-		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		return jacksonUtil.Map2json(mapRet);
 
 	}

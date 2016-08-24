@@ -187,7 +187,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				// 账号绑定;
 				// 根据siteid得到机构id,根据机构id得到注册项是否可以绑定手机或邮箱;
 				String TZ_ACTIVATE_TYPE = "";
-				String activateTypeSQL = "select TZ_ACTIVATE_TYPE from PS_TZ_USERREG_MB_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_JG_ID=b.TZ_JG_ID and b.TZ_SITEI_ID=?";
+				String activateTypeSQL = "select TZ_ACTIVATE_TYPE from PS_TZ_USERREG_MB_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID and b.TZ_SITEI_ID=?";
 				TZ_ACTIVATE_TYPE = jdbcTemplate.queryForObject(activateTypeSQL, new Object[] { siteId }, "String");
 				// 是否要显示邮箱;
 				String isShowBindEmail = "", isShowBindPhone = "";
@@ -212,8 +212,9 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				// 获取要显示的字段;
 				String fields = "";
 				//面试申请号和项目是不需要显示修改的;
-				String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { language, jgId });
+				//String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+				String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { language, siteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						Map<String, Object> map = list.get(i);
@@ -331,9 +332,10 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 							// 是否下拉框;
 							String fieldType = (String) map.get("TZ_FIELD_TYPE");
 							if ("DROP".equals(fieldType)) {
-								String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+								//String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+								String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_SITEI_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 								List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,
-										new Object[] { language, jgId, regFieldId });
+										new Object[] { language, siteId, regFieldId });
 
 								for (int j = 0; j < dropList.size(); j++) {
 									String optId = (String) dropList.get(j).get("TZ_OPT_ID");
@@ -403,8 +405,9 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				}
 
 				// 判断是否需要显示头像，如果为Y则显示，否则不显示;
-				String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID =?";
-				String strIsShowPhoto = jdbcTemplate.queryForObject(strIsShowPhotoSQL, new Object[] { jgId }, "String");
+				//String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID =?";
+				String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID =?";
+				String strIsShowPhoto = jdbcTemplate.queryForObject(strIsShowPhotoSQL, new Object[] { siteId }, "String");
 				if ("Y".equals(strIsShowPhoto)) {
 					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_HTML", saveActivate_url,
 							phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd, str_userInfo, SaveRemind,
@@ -554,14 +557,14 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			// 站点ID;
 			String siteId = jacksonUtil.getString("siteId");
 			// 获取机构id;
-			String strJgid = "";
+			//String strJgid = "";
 			String skinId = "";
 
 			PsTzSiteiDefnT psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
 			if (psTzSiteiDefnT == null) {
 				return "";
 			}
-			strJgid = psTzSiteiDefnT.getTzJgId();
+			//strJgid = psTzSiteiDefnT.getTzJgId();
 			skinId = psTzSiteiDefnT.getTzSkinId();
 			// 通用链接;
 			String contextPath = request.getContextPath();
@@ -569,8 +572,9 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = contextPath + imgPath + "/" + skinId;
 
-			String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strJgid });
+			//String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+			String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 
 			ArrayList<String> arryField = new ArrayList<>();
 			if (list != null && list.size() > 0) {
@@ -690,7 +694,14 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("lang")) {
 				strLang = jacksonUtil.getString("lang");
 			}
-
+			
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			//得到用户注册的siteid;
+			String siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+			if(siteId == null || "".equals(siteId)){
+				return "当前登录人员没有对应的注册站点id";
+			}
+			
 			// 页面文字双语化
 			String strBlankTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "26",
 					"不能为空", "cannot be blank");
@@ -702,8 +713,9 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 			ArrayList<String> updateList = new ArrayList<>();
 			String updateRegSql = "";
 			// 注册字段;
-			String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strLang, strJgid });
+			//String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+			String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strLang, siteId });
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					String field = "";
@@ -764,7 +776,7 @@ public class UserManagementServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
 			if (!"".equals(updateRegSql)) {
 				updateRegSql = updateRegSql + " where OPRID = ?";
 				Object[] obj = new Object[updateList.size() + 1];

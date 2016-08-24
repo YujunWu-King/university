@@ -146,8 +146,9 @@ public class TzHyColuServiceImpl extends FrameworkImpl {
 			//如果没有设置范围，且没有报报名表则显示全部的;
 			//注册是否开通了项目字段开外网显示;
 			//其他的显示并集;
-			String jgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request); 
-			String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
+			//String jgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request); 
+			//String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
+			String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{strSiteId},"String");
 			int haveBmCount = 0;
 			int selectShowCount = 0;
 			if("Y".equals(isPrjShowWW)){

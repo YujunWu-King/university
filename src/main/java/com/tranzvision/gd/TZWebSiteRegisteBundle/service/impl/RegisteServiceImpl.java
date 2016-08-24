@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzUserregMbTMapper;
+import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
@@ -42,6 +44,8 @@ public class RegisteServiceImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
+	@Autowired
+	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	
 	//生成用户注册页源代码，PS类：TZ_GD_USERMG_PKG:TZ_GD_USER_REG;
 	public String userRegister(String strJgid, String strSiteId){
@@ -61,8 +65,9 @@ public class RegisteServiceImpl {
 			String prjJs = "";
 			
 			//获取要显示的字段;
-			String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{strLang,strJgid} );
+			//String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+			String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{strLang,strSiteId} );
 			if(list!= null && list.size()>0){
 				for(int i=0; i < list.size(); i++){
 					Map<String, Object> map = list.get(i);
@@ -176,7 +181,8 @@ public class RegisteServiceImpl {
 				    		if("TZ_PROJECT".equals(regFieldId)){
 				    			prjJs = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PRJ_SELECT_JS",strSiteId );
 				    		}else{
-				    			String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+				    			//String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+				    			String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_SITEI_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strJgid,regFieldId});
 					    		
 					    		for(int j = 0; j<dropList.size(); j++ ){
@@ -216,8 +222,9 @@ public class RegisteServiceImpl {
 			boolean phoneBl = false;
 			
 			String strActHtml = "";
-			String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
-			String strActType = jdbcTemplate.queryForObject(regMbSQL, new Object[]{strJgid},"String");
+			//String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
+			String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?";
+			String strActType = jdbcTemplate.queryForObject(regMbSQL, new Object[]{strSiteId},"String");
 			if(strActType != null && !"".equals(strActType)){
 				if(strActType.indexOf("MOBILE")>=0 && strActType.indexOf("EMAIL")>=0){
 					if("ENG".equals(strLang)){
@@ -265,9 +272,9 @@ public class RegisteServiceImpl {
 				prjJs = prjJs.replace("$", "\\$");
 			}
 			if("ENG".equals(strLang)){
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_EN_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs,strSiteId);
 			}else{
-				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs);
+				fields = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_REG_HTML", fields, strJgid, strActHtml,imgPath,request.getContextPath(),loginUrl,emialYzDisplay,phoneYzDisplay,prjJs,strSiteId);
 			}
 			
 			//fields = tzGdObject.getHTMLText("HTML.test.test", "test111","test222");
@@ -275,7 +282,6 @@ public class RegisteServiceImpl {
 			e.printStackTrace();
 			fields = "";
 		}
-
 		return fields;
 	}
 	
@@ -419,11 +425,16 @@ public class RegisteServiceImpl {
 		        psTzSiteiDefnT.setTzEnrollPubcode(strReleasContent);
 		        int success = psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnT);
 		        if(success > 0){
+		        	PsTzUserregMbT psTzUserregMbT = psTzUserregMbTMapper.selectByPrimaryKey(strSiteId);
+		        	String enrollDir = psTzUserregMbT.getTzEnrollDir();
 		        	String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 		        	dir = request.getServletContext().getRealPath(dir);
-		        	if(jgid != null && !"".equals(jgid)){
+		        	if(enrollDir == null || "".equals(enrollDir)){
 		        		dir = dir + File.separator + jgid.toLowerCase();
-					}
+		        	}else{
+		        		dir = dir + enrollDir;
+		        	}
+		        	
 		        	boolean bl = this.staticFile(strReleasContent, dir, "enroll.html", errMsg);
 		        	return bl;  
 		        }else{

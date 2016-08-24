@@ -11,11 +11,20 @@ Ext.define('KitchenSink.view.template.user.regManage', {
     ],
     title: '用户注册项管理',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    constructor: function (config = "") {
+    	if(config == ""){
+    		this.siteId = "";
+    	}else{
+   		 	this.siteId = config.siteId;
+    	}
+		this.callParent();
+	},
     listeners: {
         afterrender: function(panel) {
+        	var siteId = this.siteId;
             var form = panel.child('form').getForm();
 
-            var tzParams = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QF","comParams":{}}';
+            var tzParams = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QF","comParams":{"siteId": "' + siteId + '"}}';
             Ext.tzLoad(tzParams,
                 function(responseData) {
                     var formData = responseData.formData;
@@ -24,6 +33,8 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                     var grid = panel.child("grid");
         			//注册项数据
         			var store = grid.getStore();
+        			var tzStoreParams = '{"siteId":"'+siteId+'"}';
+        			store.tzStoreParams = tzStoreParams;
         			store.load();
                 });
         }
@@ -46,7 +57,21 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 labelStyle: 'font-weight:bold'
             },
 
-            items: [
+            items: [   
+                {
+                	xtype: 'textfield',
+                	fieldLabel: '站点id',
+                    name: 'siteId',
+                    readOnly:true,
+                    cls:'lanage_1'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: '机构名称',
+                    name: 'name',
+                    readOnly:true,
+                    cls:'lanage_1'
+                },
                 {
                     xtype: 'checkboxgroup',
                     fieldLabel: '注册方式',
@@ -57,13 +82,20 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                         {boxLabel:'邮件',name:'activate',inputValue:'EMAIL'},
                         {boxLabel:'短信',name:'activate',inputValue:'MOBILE'}
                     ]
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: '机构名称',
-                    name: 'name',
-                    readOnly:true,
-                    cls:'lanage_1'
+                }, {
+                    xtype: 'checkboxfield',
+                    name: 'photo',
+                    boxLabel:'<span style="font-weight:bold;">显示首页个人头像</span>',
+                    hideLabel:true
+                },{
+                    xtype:'checkboxfield',
+                    name:'photo2',
+                    hideLabel:true,
+                    boxLabel: '<span style="font-weight:bold;">显示个人信息头像</span>'
+               },{
+                	xtype: 'textfield',
+                    fieldLabel: '注册页面静态话路径',
+                    name: 'enrollDir',
                 }
             ]
         },
@@ -118,6 +150,12 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 }
             },
             columns: [
+				{
+				    text: '站点ID',
+				    dataIndex: 'siteId',
+				    width: 60,
+				    hidden: true
+				},     
                 {
                     text: '顺序',
                     dataIndex: 'order',

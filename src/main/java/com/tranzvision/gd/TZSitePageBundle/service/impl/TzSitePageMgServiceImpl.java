@@ -5,13 +5,9 @@ package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -28,20 +24,24 @@ public class TzSitePageMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery sqlQuery;
 
-	@Autowired
-	private HttpServletRequest request;
-
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-
 	@Override
 	public String tzGetJsonData(String strParams) {
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String siteId = "";
+		if(jacksonUtil.containsKey("siteId")){
+			siteId = jacksonUtil.getString("siteId");
+		}
+		if(siteId == null){
+			siteId = "";
+		}
+		
+		//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
-		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String sql = "select TZ_SITEI_ID,TZ_SITEM_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 
-		String sql = "select TZ_SITEI_ID,TZ_SITEM_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
-
-		Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { orgid });
+		Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { siteId });
 
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 
@@ -53,7 +53,6 @@ public class TzSitePageMgServiceImpl extends FrameworkImpl {
 			mapRet.put("siteMid", "");
 		}
 
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 	}
 

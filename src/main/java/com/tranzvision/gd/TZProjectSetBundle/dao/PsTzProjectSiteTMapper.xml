@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZProjectSetBundle.dao.PsTzProjectSiteTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzProjectSiteTKey" >
+    <id column="TZ_PRJ_ID" property="tzPrjId" jdbcType="VARCHAR" />
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzProjectSiteTKey" >
+    delete from PS_TZ_PROJECT_SITE_T
+    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
+      and TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzProjectSiteTKey" >
+    insert into PS_TZ_PROJECT_SITE_T (TZ_PRJ_ID, TZ_SITEI_ID)
+    values (#{tzPrjId,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzProjectSiteTKey" >
+    insert into PS_TZ_PROJECT_SITE_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
+        TZ_PRJ_ID,
+      </if>
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
+        #{tzPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

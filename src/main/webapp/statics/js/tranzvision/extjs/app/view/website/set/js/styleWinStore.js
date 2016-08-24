@@ -17,7 +17,8 @@ Ext.define('KitchenSink.view.website.set.js.styleWinStore', {
 				}
 			}	
 	*/
-	autoLoad: true,
+	//autoLoad: true,
+	autoLoad: false,
 	pageSize: 10,
 	comID: 'TZ_SITEI_SETED_COM',
 	pageID: 'TZ_STYLE_XZ_STD',

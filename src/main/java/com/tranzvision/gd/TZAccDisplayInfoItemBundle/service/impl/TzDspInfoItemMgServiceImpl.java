@@ -34,6 +34,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 /**
  * 用户显示信息项配置组件实现类，原PS：TZ_SITE_PERSON_PKG:TZ_SITE_MNG_CLS
  * 
+ * 注意： 用于信息显示已经不用和会员数据项结合了。请查看：com.tranzvision.gd.TZLeaguerDataItemBundle.service.impl.TzLeaguerDataItemMgServiceImpl
  * @author SHIHUA
  * @since 2015-12-08
  */
