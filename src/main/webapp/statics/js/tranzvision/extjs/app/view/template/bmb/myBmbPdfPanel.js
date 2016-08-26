@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.template.bmb.myBmbPdfPanel', {
     title: 'PDF导出模板设置',
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
     actType: 'update',// 默认新增
-    //buttonShowType:true, //默认显示
+
     initComponent:function(){
         Ext.apply(this,{
             items: [{

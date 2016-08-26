@@ -1,11 +1,9 @@
 ﻿Ext.define('KitchenSink.view.siteManage.outsiteManage.outsiteController', {
-    extend: 'Ext.app.ViewController',
-    alias: 'controller.outsiteBasicB', 
+	extend: 'Ext.app.ViewController',
+	alias: 'controller.outsiteBasicB', 
 
-    //添加外部站点模板集合；
-    addOutSite: function(btn) {
-
-		
+    //添加外部站点；
+	addOutSite: function(btn) {
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WWZDGL_COM"]["TZ_GD_WWZDDY_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
@@ -14,7 +12,6 @@
 		}
 		//该功能对应的JS类
 		var className = pageResSet["jsClassName"];
-		//Ext.MessageBox.alert('提示', className);
 		if(className == "" || className == undefined){
 			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_WWZDDY_STD，请检查配置。');
 			return;
@@ -26,7 +23,6 @@
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
    		contentPanel.body.addCls('kitchensink-example');
 
-        //className = 'KitchenSink.view.template.sitetemplate.template.sitetemplate';
    		if(!Ext.ClassManager.isCreated(className)){
 			Ext.syncRequire(className);
 		}
@@ -36,7 +32,6 @@
         clsProto = ViewClass.prototype;
         if (clsProto.themes) {
             clsProto.themeInfo = clsProto.themes[themeName];
-
             if (themeName === 'gray') {
                 clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
             } else if (themeName !== 'neptune' && themeName !== 'classic') {
@@ -45,13 +40,10 @@
                 }
                 clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
             }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
             if (!clsProto.themeInfo) {
                 Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
                     themeName + '\'. Is this intentional?');
             }
-            // </debug>
         }
         cmp = new ViewClass();
         //操作类型设置为更新
@@ -62,9 +54,7 @@
 			form.reset();
 		});
         tab = contentPanel.add(cmp);     
-		
         contentPanel.setActiveTab(tab);
-
         Ext.resumeLayouts(true);
         if (cmp.floating) {
             cmp.show();
@@ -77,47 +67,38 @@
 		var form = this.getView().child("form").getForm();
 		//组件信息标志
 		var actType = this.getView().actType;
-		//站点模板基本信息
+		//站点信息
 		var comSiteParams = form.getValues();
-		//站点模板id
+		//站点id
 		var siteId = comSiteParams["siteId"];
 
 		//更新操作参数
 		var comParams = "";
 		var siteForm = "";
 		siteForm = form.getValues();
-
 		var fileName = form.findField("enabled").getValue();
-
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有选择启用状态，无法保存。');
 			return;
 		};
-		
 		fileName = form.findField("siteLanguage").getValue();
-
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有选择站点语言，无法保存。');
 			return;
 		};
-		
 		fileName = form.findField("siteName").getValue();
-
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有填写站点名称，无法保存。');
 			return;
 		};
 		
 		fileName = form.findField("siteType").getValue();
-
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有选择站点类型，无法保存。');
 			return;
 		};
 		
-		
 		fileName = form.findField("sitePath").getValue();
-
 		if (fileName == "" || fileName.length < 1) {
 			Ext.MessageBox.alert('提示', '您没有填写站点路径，无法保存。');
 			return;
@@ -172,8 +153,8 @@
 		this.getView().close();
 	},
     
-    //编辑数据
-    editSite: function() {
+    //编辑站点
+	editSelectField: function() {
 		//选中行
 	   	var selList = this.getView().getSelectionModel().getSelection();
 	   	//选中行长度
@@ -192,12 +173,14 @@
     },
     
 	//编辑站点（列表）
-    editSiteInfo: function(view, rowIndex){
+    editField: function(view, rowIndex){
     	var store = view.findParentByType("grid").store;
 	 	var selRec = store.getAt(rowIndex);
    	 	var siteId = selRec.get("siteId");
      	this.editSiteIntoByID(siteId);
     },
+    
+    //编辑站点
     editSiteIntoByID:function(siteId){
     	//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WWZDGL_COM"]["TZ_GD_WWZDDY_STD"];
@@ -214,11 +197,9 @@
 		
 		var contentPanel,cmp, className, ViewClass, clsProto;
 		var themeName = Ext.themeName;
-		
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
    		contentPanel.body.addCls('kitchensink-example');
 
-        //className = 'KitchenSink.view.template.sitetemplate.siteTemplateInfo';
    		if(!Ext.ClassManager.isCreated(className)){
 			Ext.syncRequire(className);
 		}
@@ -238,13 +219,10 @@
                 }
                 clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
             }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
             if (!clsProto.themeInfo) {
                 Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
                     themeName + '\'. Is this intentional?');
             }
-            // </debug>
         }
 
         cmp = new ViewClass();
@@ -276,7 +254,6 @@
 			form.findField("viewPrefix").setReadOnly(true);
 			form.findField("viewPrefix").addCls("lanage_1");
 			
-			//var grid = tabpanel.getActiveTab();
 			//参数
 			var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWZDDY_STD","OperateType":"QF","comParams":{"siteId":"'+siteId+'"}}';
 			//加载数据
@@ -288,15 +265,13 @@
 		});
 		
         tab = contentPanel.add(cmp);     
-		
         contentPanel.setActiveTab(tab);
-
         Ext.resumeLayouts(true);
-
         if (cmp.floating) {
             cmp.show();
         }
     },
+    
     // 站点栏目管理
     editSiteColuById: function(view, rowIndex){
     	var store = view.findParentByType("grid").store;
@@ -315,15 +290,11 @@
 	        return;
 	     }
 	      //该功能对应的JS类
-		//Ext.MessageBox.alert('提示', siteId);
 	    className = pageResSet["jsClassName"];
-	      //Ext.MessageBox.alert('提示', className);
 	    if(className == "" || className == undefined){
 	         Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_WWLMGL_STD，请检查配置。');
 	         return;
        }
-       //className = 'KitchenSink.view.security.menu.menuEditPanel';
-
        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
        contentPanel.body.addCls('kitchensink-example');
 
@@ -345,13 +316,10 @@
                }
                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
            }
-           // <debug warn>
-           // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
            if (!clsProto.themeInfo) {
                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
                    themeName + '\'. Is this intentional?');
            }
-           // </debug>
        }
        
        cmp = new ViewClass({ siteId:siteId });
@@ -366,11 +334,8 @@
        });
 
        tab = contentPanel.add(cmp);
-
        contentPanel.setActiveTab(tab);
-
        Ext.resumeLayouts(true);
-
        if (cmp.floating) {
            cmp.show();
        }
@@ -382,19 +347,99 @@
 		grid.close();
 	},
 	
-	ensureComRegInfos:function(btn) {
-		this.saveComRegInfos(btn);
-		this.closeComRegInfos(btn);
+	editSiteTempById: function(view, rowIndex){
+    	var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		var siteId = selRec.get("siteId");
+		var siteName = selRec.get("sitetemplateName");
+		this.editSiteTemp(siteId,siteName);
 	},
 	
-	//保存数据
-	saveComRegInfos: function(btn){
-		//组件注册信息列表
-		var grid = btn.findParentByType("grid");
-		//组件注册信息数据
-		var store = grid.getStore();
-		store.reload();
-	}
+	editSiteTemp: function(siteId,siteName) {
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WWZDGL_COM"]["TZ_GD_WWMBGL_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_WWMBGL_STD，请检查配置。');
+			return;
+		}
+    	
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+   		contentPanel.body.addCls('kitchensink-example');
+
+   		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}
+		
+        ViewClass = Ext.ClassManager.get(className);
+
+        clsProto = ViewClass.prototype;
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+        }
+        cmp = new ViewClass();
+        
+        cmp.actType = "update";
+        
+		cmp.on('afterrender', function(panel) {
+			var form = panel.child('form').getForm();
+			form.findField("siteId").setValue(siteId);
+			form.findField("siteName").setValue(siteName);
+
+			var grid = panel.child('grid');
+			var tzStoreParams = '{"siteId":"' + siteId + '"}';
+			grid.store.tzStoreParams = tzStoreParams;
+			grid.store.load();
+			
+//			var form = panel.child('form').getForm();
+//
+//			var grid = panel.child('grid');
+//			//参数
+//			var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWZDDY_STD","OperateType":"QF","comParams":{"siteId":"'+siteId+'"}}';
+//			//加载数据
+//			Ext.tzLoad(tzParams,function(responseData){
+//				//组件注册信息数据
+//				var formData = responseData.formData;
+//				form.setValues(formData);
+//				var tzStoreParams = '{"siteId":"' + siteId + '"}';
+//				grid.store.tzStoreParams = tzStoreParams;
+//				grid.store.load();					
+//			});
+		});
+		
+		tab = contentPanel.add(cmp);
+
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+		
+		if (cmp.floating) {
+			cmp.show();
+		}
+    },
+	
+	
+	
     /*,
     //删除选中的数据
 	deleteSite: function(){

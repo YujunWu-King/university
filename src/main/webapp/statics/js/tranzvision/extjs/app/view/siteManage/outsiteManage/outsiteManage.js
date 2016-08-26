@@ -29,14 +29,12 @@
 		dock:"bottom",
 		ui:"footer",
 		items:['->',
-            {minWidth:80,text:"保存",iconCls:"save",handler:"saveComRegInfos"},
-            {minWidth:80,text:'确定',iconCls:"ensure",handler: 'ensureComRegInfos'},
             {minWidth:80,text:'关闭',iconCls:"close",handler: 'closeComRegInfos'}]
 	},{
 		xtype:"toolbar",
 		items:[
 			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addOutSite'},"-",
-			{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSite'}
+			{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSelectField'}
 		]
 	}],
     initComponent: function () {   
@@ -62,9 +60,9 @@
                sortable: false,
                width:60,
 			   xtype: 'actioncolumn',
-			   items:[{iconCls: 'edit',tooltip: '编辑',handler:'editSiteInfo'},
+			   items:[{iconCls: 'edit',tooltip: '编辑',handler:'editField'},
 					  {iconCls: 'edit',tooltip: '栏目管理',handler:'editSiteColuById'},
-					  {iconCls: 'edit',tooltip: '模板管理',handler:'editSiteInfo'},
+					  {iconCls: 'edit',tooltip: '模板管理',handler:'editSiteTempById'},
 					  {iconCls: 'edit',tooltip: '内容管理',handler:'editSiteInfo'},
 					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteInfo'}
 			   ]
