@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZLeaguerDataItemBundle.model;
 import java.util.Date;
 
 public class PsTzUserregMbT {
+    private String tzSiteiId;
+
     private String tzJgId;
 
     private String tzFabuState;
@@ -12,6 +14,8 @@ public class PsTzUserregMbT {
     private String tzIsShowPhoto;
 
     private String tzIsShowPhoto2;
+
+    private String tzEnrollDir;
 
     private Date rowAddedDttm;
 
@@ -26,6 +30,14 @@ public class PsTzUserregMbT {
     private Date syncdttm;
 
     private String tzRegMbHtml;
+
+    public String getTzSiteiId() {
+        return tzSiteiId;
+    }
+
+    public void setTzSiteiId(String tzSiteiId) {
+        this.tzSiteiId = tzSiteiId == null ? null : tzSiteiId.trim();
+    }
 
     public String getTzJgId() {
         return tzJgId;
@@ -65,6 +77,14 @@ public class PsTzUserregMbT {
 
     public void setTzIsShowPhoto2(String tzIsShowPhoto2) {
         this.tzIsShowPhoto2 = tzIsShowPhoto2 == null ? null : tzIsShowPhoto2.trim();
+    }
+
+    public String getTzEnrollDir() {
+        return tzEnrollDir;
+    }
+
+    public void setTzEnrollDir(String tzEnrollDir) {
+        this.tzEnrollDir = tzEnrollDir == null ? null : tzEnrollDir.trim();
     }
 
     public Date getRowAddedDttm() {

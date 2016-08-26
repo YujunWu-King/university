@@ -34,6 +34,7 @@
     <result column="TZ_COMMENT8" property="tzComment8" jdbcType="VARCHAR" />
     <result column="TZ_COMMENT9" property="tzComment9" jdbcType="VARCHAR" />
     <result column="TZ_COMMENT10" property="tzComment10" jdbcType="VARCHAR" />
+    <result column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -46,7 +47,7 @@
     TZ_COMP_INDUSTRY, TZ_DEPTMENT, TZ_ZHIWU, TZ_COUNTRY, TZ_LEN_PROID, TZ_LEN_CITY, TZ_TIMEZONE, 
     NATIONAL_ID_TYPE, NATIONAL_ID, BIRTHDATE, TZ_SCH_CNAME, TZ_SPECIALTY, TZ_HIGHEST_EDU, 
     TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
-    TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, ROW_ADDED_DTTM, 
+    TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, ROW_ADDED_DTTM, 
     ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -70,9 +71,10 @@
       TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, 
       TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
       TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, 
-      TZ_COMMENT9, TZ_COMMENT10, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM)
+      TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
     values (#{oprid,jdbcType=VARCHAR}, #{tzRealname,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
       #{tzSkype,jdbcType=VARCHAR}, #{tzFirstName,jdbcType=VARCHAR}, #{tzLastName,jdbcType=VARCHAR}, 
       #{tzCompanyName,jdbcType=VARCHAR}, #{tzCompIndustry,jdbcType=VARCHAR}, #{tzDeptment,jdbcType=VARCHAR}, 
@@ -83,9 +85,10 @@
       #{tzMssqh,jdbcType=VARCHAR}, #{tzComment1,jdbcType=VARCHAR}, #{tzComment2,jdbcType=VARCHAR}, 
       #{tzComment3,jdbcType=VARCHAR}, #{tzComment4,jdbcType=VARCHAR}, #{tzComment5,jdbcType=VARCHAR}, 
       #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, #{tzComment8,jdbcType=VARCHAR}, 
-      #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+      #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT" >
     insert into PS_TZ_REG_USER_T
@@ -185,6 +188,9 @@
       </if>
       <if test="tzComment10 != null" >
         TZ_COMMENT10,
+      </if>
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -302,6 +308,9 @@
       <if test="tzComment10 != null" >
         #{tzComment10,jdbcType=VARCHAR},
       </if>
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -418,6 +427,9 @@
       <if test="tzComment10 != null" >
         TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
       </if>
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -472,6 +484,7 @@
       TZ_COMMENT8 = #{tzComment8,jdbcType=VARCHAR},
       TZ_COMMENT9 = #{tzComment9,jdbcType=VARCHAR},
       TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
+      TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

@@ -2,11 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzUserregMbTMapper" >
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
-    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_FABU_STATE" property="tzFabuState" jdbcType="VARCHAR" />
     <result column="TZ_ACTIVATE_TYPE" property="tzActivateType" jdbcType="VARCHAR" />
     <result column="TZ_IS_SHOW_PHOTO" property="tzIsShowPhoto" jdbcType="VARCHAR" />
     <result column="TZ_IS_SHOW_PHOTO_2" property="tzIsShowPhoto2" jdbcType="VARCHAR" />
+    <result column="TZ_ENROLL_DIR" property="tzEnrollDir" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -18,8 +20,9 @@
     <result column="TZ_REG_MB_HTML" property="tzRegMbHtml" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_JG_ID, TZ_FABU_STATE, TZ_ACTIVATE_TYPE, TZ_IS_SHOW_PHOTO, TZ_IS_SHOW_PHOTO_2, 
-    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_SITEI_ID, TZ_JG_ID, TZ_FABU_STATE, TZ_ACTIVATE_TYPE, TZ_IS_SHOW_PHOTO, TZ_IS_SHOW_PHOTO_2, 
+    TZ_ENROLL_DIR, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
   </sql>
   <sql id="Blob_Column_List" >
     TZ_REG_MB_HTML
@@ -30,27 +33,30 @@
     ,
     <include refid="Blob_Column_List" />
     from PS_TZ_USERREG_MB_T
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from PS_TZ_USERREG_MB_T
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
-    insert into PS_TZ_USERREG_MB_T (TZ_JG_ID, TZ_FABU_STATE, TZ_ACTIVATE_TYPE, 
-      TZ_IS_SHOW_PHOTO, TZ_IS_SHOW_PHOTO_2, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_REG_MB_HTML
-      )
-    values (#{tzJgId,jdbcType=VARCHAR}, #{tzFabuState,jdbcType=VARCHAR}, #{tzActivateType,jdbcType=VARCHAR}, 
-      #{tzIsShowPhoto,jdbcType=VARCHAR}, #{tzIsShowPhoto2,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzRegMbHtml,jdbcType=LONGVARCHAR}
-      )
+    insert into PS_TZ_USERREG_MB_T (TZ_SITEI_ID, TZ_JG_ID, TZ_FABU_STATE, 
+      TZ_ACTIVATE_TYPE, TZ_IS_SHOW_PHOTO, TZ_IS_SHOW_PHOTO_2, 
+      TZ_ENROLL_DIR, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM, TZ_REG_MB_HTML)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzFabuState,jdbcType=VARCHAR}, 
+      #{tzActivateType,jdbcType=VARCHAR}, #{tzIsShowPhoto,jdbcType=VARCHAR}, #{tzIsShowPhoto2,jdbcType=VARCHAR}, 
+      #{tzEnrollDir,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzRegMbHtml,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
     insert into PS_TZ_USERREG_MB_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
       <if test="tzJgId != null" >
         TZ_JG_ID,
       </if>
@@ -65,6 +71,9 @@
       </if>
       <if test="tzIsShowPhoto2 != null" >
         TZ_IS_SHOW_PHOTO_2,
+      </if>
+      <if test="tzEnrollDir != null" >
+        TZ_ENROLL_DIR,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -89,6 +98,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
       <if test="tzJgId != null" >
         #{tzJgId,jdbcType=VARCHAR},
       </if>
@@ -103,6 +115,9 @@
       </if>
       <if test="tzIsShowPhoto2 != null" >
         #{tzIsShowPhoto2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnrollDir != null" >
+        #{tzEnrollDir,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -130,6 +145,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
     update PS_TZ_USERREG_MB_T
     <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
       <if test="tzFabuState != null" >
         TZ_FABU_STATE = #{tzFabuState,jdbcType=VARCHAR},
       </if>
@@ -141,6 +159,9 @@
       </if>
       <if test="tzIsShowPhoto2 != null" >
         TZ_IS_SHOW_PHOTO_2 = #{tzIsShowPhoto2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnrollDir != null" >
+        TZ_ENROLL_DIR = #{tzEnrollDir,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -164,14 +185,16 @@
         TZ_REG_MB_HTML = #{tzRegMbHtml,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
     update PS_TZ_USERREG_MB_T
-    set TZ_FABU_STATE = #{tzFabuState,jdbcType=VARCHAR},
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_FABU_STATE = #{tzFabuState,jdbcType=VARCHAR},
       TZ_ACTIVATE_TYPE = #{tzActivateType,jdbcType=VARCHAR},
       TZ_IS_SHOW_PHOTO = #{tzIsShowPhoto,jdbcType=VARCHAR},
       TZ_IS_SHOW_PHOTO_2 = #{tzIsShowPhoto2,jdbcType=VARCHAR},
+      TZ_ENROLL_DIR = #{tzEnrollDir,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
@@ -179,20 +202,22 @@
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_REG_MB_HTML = #{tzRegMbHtml,jdbcType=LONGVARCHAR}
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT" >
     update PS_TZ_USERREG_MB_T
-    set TZ_FABU_STATE = #{tzFabuState,jdbcType=VARCHAR},
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_FABU_STATE = #{tzFabuState,jdbcType=VARCHAR},
       TZ_ACTIVATE_TYPE = #{tzActivateType,jdbcType=VARCHAR},
       TZ_IS_SHOW_PHOTO = #{tzIsShowPhoto,jdbcType=VARCHAR},
       TZ_IS_SHOW_PHOTO_2 = #{tzIsShowPhoto2,jdbcType=VARCHAR},
+      TZ_ENROLL_DIR = #{tzEnrollDir,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </update>
 </mapper>

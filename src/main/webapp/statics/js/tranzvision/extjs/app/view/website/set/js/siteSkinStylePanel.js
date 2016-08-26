@@ -8,9 +8,14 @@ Ext.define('KitchenSink.view.website.set.js.siteSkinStylePanel',{
      layout: 'fit',
      resizable: true,
 	 autoScroll: true,
+	 constructor: function (config) {
+		 this.siteId = config.siteId;
+		 this.callParent();
+	 },
 	 listeners: {
 		beforerender: function(panel) {
-			var tzParams = '{"ComID":"TZ_SITESTEM_COM","PageID":"TZ_SITESTEM_STD","OperateType":"QF","comParams":{}}';
+			var siteId = this.siteId;
+			var tzParams = '{"ComID":"TZ_WEBSIT_SET_COM","PageID":"TZ_SITESTEM_STD","OperateType":"QF","comParams":{"siteId":"'+siteId+'"}}';
 			Ext.tzLoad(tzParams,function(formData) {
 				if (!formData.siteId){
 					panel.close();
@@ -26,9 +31,9 @@ Ext.define('KitchenSink.view.website.set.js.siteSkinStylePanel',{
 						fn:function(e) {  
 							if (e=="ok")
 							{
-								Ext.tzSetCompResourses("TZ_SITESTEM_COM");
+								//Ext.tzSetCompResourses("TZ_SITESTEM_COM");
 								//是否有访问权限
-								var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_SITESTEM_COM"]["TZ_SITESTEM_STD"];
+								var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WEBSIT_SET_COM"]["TZ_SITESTEM_STD"];
 								if( pageResSet == "" || pageResSet == undefined){
 									Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 									return;
@@ -74,12 +79,27 @@ Ext.define('KitchenSink.view.website.set.js.siteSkinStylePanel',{
 						
 								if (cmp.floating) {
 									cmp.show();
-								}	
+								}
+								
+								cmp.actType='add';
+								var form = cmp.child('form').getForm();
+								var lanIntroduce = cmp.child('form').getComponent("languageIntroduce");
+								form.findField('orgId').setValue(Ext.tzOrgID);
+								form.findField('siteId').setValue("NEXT");
+								lanIntroduce.setHidden(true);
 							} 
 						} 
 					});	
 				}
 			});
+		},
+		afterrender: function(panel) {
+			var siteId = this.siteId;
+			//风格;
+			var tzStoreParams = '{"siteId":"'+siteId+'"}';
+			var dataview = panel.child("dataview");
+			dataview.store.tzStoreParams = tzStoreParams;
+			dataview.store.load();
 		}
 	 },
 	 items:[{
@@ -147,8 +167,9 @@ Ext.define('KitchenSink.view.website.set.js.siteSkinStylePanel',{
 	 }],
 	 buttons: [
 		{ text: '关闭',iconCls:"close",handler: function(){
-			this.up("panel").close();
-	 }}
+				this.up("panel").close();
+			}
+		}
 	]
 });
 

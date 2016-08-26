@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZLeaguerDataItemBundle.model;
 
 public class PsTzRegFieldT extends PsTzRegFieldTKey {
+    private String tzJgId;
+
     private String tzRedFldYsmc;
 
     private String tzRegFieldName;
@@ -20,6 +22,14 @@ public class PsTzRegFieldT extends PsTzRegFieldTKey {
     private String tzYxbgSrklx;
 
     private String tzIsShowwzsy;
+
+    public String getTzJgId() {
+        return tzJgId;
+    }
+
+    public void setTzJgId(String tzJgId) {
+        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
+    }
 
     public String getTzRedFldYsmc() {
         return tzRedFldYsmc;

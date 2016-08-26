@@ -57,27 +57,28 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		try {
+			//多站点将不根据当前登录机构查询，而是根据传入的站点id查询；
+			//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			jacksonUtil.json2Map(strParams);
+			if(jacksonUtil.containsKey("siteId")){
+				String siteId = jacksonUtil.getString("siteId");
+				String sql = "select TZ_SITEI_ID,TZ_JG_ID,TZ_SITE_LANG,TZ_SITEI_NAME,TZ_SITEM_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ENABLE='Y' and TZ_SITEI_ID=?";
 
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { siteId });
 
-			String sql = "select TZ_SITEI_ID,TZ_SITE_LANG,TZ_SITEI_NAME,TZ_SITEM_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
+				if (null != mapData) {
 
-			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { orgid });
-
-			if (null != mapData) {
-
-				Map<String, Object> mapRet = new HashMap<String, Object>();
-				mapRet.put("orgId", orgid);
-				mapRet.put("siteId", String.valueOf(mapData.get("TZ_SITEI_ID")));
-				mapRet.put("siteLanguage", String.valueOf(mapData.get("TZ_SITE_LANG")));
-				mapRet.put("siteName", String.valueOf(mapData.get("TZ_SITEI_NAME")));
-				mapRet.put("siteMid", String.valueOf(mapData.get("TZ_SITEM_ID")));
-				
-				JacksonUtil jacksonUtil = new JacksonUtil();
-				strRet = jacksonUtil.Map2json(mapRet);
-
+					Map<String, Object> mapRet = new HashMap<String, Object>();
+					mapRet.put("orgId", String.valueOf(mapData.get("TZ_JG_ID")));
+					mapRet.put("siteId", String.valueOf(mapData.get("TZ_SITEI_ID")));
+					mapRet.put("siteLanguage", String.valueOf(mapData.get("TZ_SITE_LANG")));
+					mapRet.put("siteName", String.valueOf(mapData.get("TZ_SITEI_NAME")));
+					mapRet.put("siteMid", String.valueOf(mapData.get("TZ_SITEM_ID")));
+					
+					strRet = jacksonUtil.Map2json(mapRet);
+				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -142,6 +143,7 @@ public class TzSiteInfoMgServiceImpl extends FrameworkImpl {
 					psTzSiteiDefnTWithBLOBs.setTzSiteiDescr(siteName);
 					psTzSiteiDefnTWithBLOBs.setTzSiteiEnable("Y");
 					psTzSiteiDefnTWithBLOBs.setTzSiteLang(siteLanguage);
+					psTzSiteiDefnTWithBLOBs.setTzSiteiType("C");
 					psTzSiteiDefnTWithBLOBs.setTzAddedDttm(datenow);
 					psTzSiteiDefnTWithBLOBs.setTzAddedOprid(oprid);
 					psTzSiteiDefnTWithBLOBs.setTzLastmantDttm(datenow);

@@ -87,9 +87,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			// 得到要验证的验证字段
 			if ("GETNOWFIELD".equals(oprType)) {
-				String strJgid = jacksonUtil.getString("strJgid");
-				String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strJgid });
+				//String strJgid = jacksonUtil.getString("strJgid");
+				String strSiteId = jacksonUtil.getString("siteId");
+				//String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+				String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strSiteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						returnMap.put((String) list.get(i).get("TZ_REG_FIELD_ID"), list.get(i).get("TZ_IS_REQUIRED"));
@@ -209,11 +211,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strResult = "\"failure\"";
 		String strJumUrl = "";
 		String strOrgId = "";
+		String strSiteId = "";
 		String strLang = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
 			strOrgId = jacksonUtil.getString("orgid");
+			strSiteId = jacksonUtil.getString("siteId");
 			strLang = jacksonUtil.getString("lang");
 			if (strOrgId == null || "".equals(strOrgId)) {
 				errMsg[0] = "100";
@@ -455,8 +459,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				// 校验机构会员数据项--不能为空;
 				String strTemV = "";
-				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strOrgId });
+				//String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strSiteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						String regFieldId = (String) list.get(i).get("TZ_REG_FIELD_ID");
@@ -618,6 +623,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				// 通过所有校验，保存用户注册信息;
 				PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
 				psTzRegUserT.setOprid(oprId);
+				psTzRegUserT.setTzSiteiId(strSiteId);
 				psTzRegUserT.setTzRealname(strTZ_REALNAME);
 				psTzRegUserT.setTzGender(strTZ_GENDER);
 				psTzRegUserT.setTzSkype(strTZ_SKYPE);
@@ -1003,7 +1009,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strTokenSign = jacksonUtil.getString("tokensign");
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
-			System.out.println("==========================>" + strTokenSign + "=====>" + strOrgid + "=====>" + strLang);
+
 			String sql = "SELECT TZ_SITEI_ID ,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
 			if (map != null) {
@@ -1179,9 +1185,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 			// 激活方式;
 			String strTabType = "";
-			String activeteTypqSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
+			//String activeteTypqSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
+			String activeteTypqSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?";
 			try {
-				strTabType = jdbcTemplate.queryForObject(activeteTypqSQL, new Object[] { strOrgid }, "String");
+				strTabType = jdbcTemplate.queryForObject(activeteTypqSQL, new Object[] { strSiteId }, "String");
 			} catch (Exception e) {
 
 			}

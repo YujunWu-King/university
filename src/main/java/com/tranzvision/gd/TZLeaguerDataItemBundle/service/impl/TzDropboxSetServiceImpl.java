@@ -23,6 +23,7 @@ import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzEngKey;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTbl;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzYhzcXxzTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -48,6 +49,10 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzYhzcXxzEngMapper psTzYhzcXxzEngMapper;
+	
+
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	/**
 	 * 根据传入参数判断参数是否合法，若不合法，直接返回空;若合法，查询满足条件的数据，并返回json报文
@@ -63,11 +68,12 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {
-
+			String platformOrgID = getSysHardCodeVal.getPlatformOrgID();
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String languageCd = "ENG";
 			
 			jacksonUtil.json2Map(strParams);
+			String siteId = jacksonUtil.getString("siteId");
 			String regId = jacksonUtil.getString("regId");
 
 			if (null == regId || "".equals(regId)) {
@@ -75,10 +81,20 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 				errorMsg[1] = "参数-注册项ID为空！";
 				return jacksonUtil.Map2json(mapRet);
 			}
+			
+			if(siteId == null){
+				siteId = "";
+			}
+			if("".equals(siteId) && !platformOrgID.equals(orgid)){
+				errorMsg[0] = "1";
+				errorMsg[1] = "站点不存在";
+				return jacksonUtil.Map2json(mapRet);
+			}
 
-			String sql = "select TZ_OPT_ID,TZ_OPT_VALUE,TZ_SELECT_FLG,TZ_ORDER from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? order by TZ_ORDER";
+			//String sql = "select TZ_OPT_ID,TZ_OPT_VALUE,TZ_SELECT_FLG,TZ_ORDER from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? order by TZ_ORDER";
+			String sql = "select TZ_OPT_ID,TZ_OPT_VALUE,TZ_SELECT_FLG,TZ_ORDER from PS_TZ_YHZC_XXZ_TBL where TZ_SITEI_ID = ? and TZ_REG_FIELD_ID = ? order by TZ_ORDER";
 
-			List<?> listYhzcXxz = sqlQuery.queryForList(sql, new Object[] { orgid, regId });
+			List<?> listYhzcXxz = sqlQuery.queryForList(sql, new Object[] { siteId, regId });
 
 			ArrayList<Map<String, Object>> listRetJson = new ArrayList<Map<String, Object>>();
 
@@ -98,11 +114,13 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 					selected = true;
 				}
 
-				sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_ENG where TZ_JG_ID = ? and LANGUAGE_CD = ? and TZ_REG_FIELD_ID = ? and TZ_OPT_ID = ?";
+				//sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_ENG where TZ_JG_ID = ? and LANGUAGE_CD = ? and TZ_REG_FIELD_ID = ? and TZ_OPT_ID = ?";
+				sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_ENG where TZ_SITEI_ID = ? and LANGUAGE_CD = ? and TZ_REG_FIELD_ID = ? and TZ_OPT_ID = ?";
 				String strOptEnDesc = sqlQuery.queryForObject(sql,
-						new Object[] { orgid, languageCd, regId, strOptValue }, "String");
+						new Object[] { siteId, languageCd, regId, strOptValue }, "String");
 
 				Map<String, Object> mapRetJson = new HashMap<String, Object>();
+				mapRetJson.put("siteId", siteId);
 				mapRetJson.put("order", numOrder);
 				mapRetJson.put("optId", strOptValue);
 				mapRetJson.put("optName", strOptDesc);
@@ -145,7 +163,8 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-
+				
+				String siteId = jacksonUtil.getString("siteId");
 				String regId = jacksonUtil.getString("regId");
 				
 				Map<String,Object> mapData = jacksonUtil.getMap("data");
@@ -175,10 +194,12 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 					}
 				}
 				
-				String sql = "select 'Y' from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=?";
-				String recExists = sqlQuery.queryForObject(sql, new Object[]{orgid,regId,optId}, "String");
+				//String sql = "select 'Y' from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=?";
+				String sql = "select 'Y' from PS_TZ_YHZC_XXZ_TBL where TZ_SITEI_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=?";
+				String recExists = sqlQuery.queryForObject(sql, new Object[]{siteId,regId,optId}, "String");
 				
 				PsTzYhzcXxzTbl psTzYhzcXxzTbl = new PsTzYhzcXxzTbl(); 
+				psTzYhzcXxzTbl.setTzSiteiId(siteId);
 				psTzYhzcXxzTbl.setTzJgId(orgid);
 				psTzYhzcXxzTbl.setTzRegFieldId(regId);
 				psTzYhzcXxzTbl.setTzOptId(optId);
@@ -193,10 +214,12 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 				}
 				
 				//处理英文描述部分 - 开始
-				sql = "select 'Y' from PS_TZ_YHZC_XXZ_ENG where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=? and LANGUAGE_CD=?";
-				recExists = sqlQuery.queryForObject(sql, new Object[]{orgid,regId,optId,languageCd}, "String");
+				//sql = "select 'Y' from PS_TZ_YHZC_XXZ_ENG where TZ_JG_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=? and LANGUAGE_CD=?";
+				sql = "select 'Y' from PS_TZ_YHZC_XXZ_ENG where TZ_SITEI_ID=? and TZ_REG_FIELD_ID=? and TZ_OPT_ID=? and LANGUAGE_CD=?";
+				recExists = sqlQuery.queryForObject(sql, new Object[]{siteId,regId,optId,languageCd}, "String");
 				
 				PsTzYhzcXxzEng psTzYhzcXxzEng = new PsTzYhzcXxzEng();
+				psTzYhzcXxzEng.setTzSiteiId(siteId);
 				psTzYhzcXxzEng.setTzJgId(orgid);
 				psTzYhzcXxzEng.setTzRegFieldId(regId);
 				psTzYhzcXxzEng.setTzOptId(optId);
@@ -235,13 +258,15 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String languageCd = "ENG";
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 提交信息
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
+				// 站点ID;
+				String siteId = jacksonUtil.getString("siteId");;
 				// 注册项ID;
 				String regId = jacksonUtil.getString("regId");
 				
@@ -249,12 +274,13 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 				
 				//int order = mapData.get("order")==null?0:Integer.parseInt(String.valueOf(mapData.get("order")));
 				String optId = String.valueOf(mapData.get("optId"));
-				String optName = String.valueOf(mapData.get("optName"));
+				//String optName = String.valueOf(mapData.get("optName"));
 				
-				if(!"".equals(optId) && null!=optId && !"".equals(optName) && null!=optName){
+				if(!"".equals(optId) && null!=optId){
 					
 					PsTzYhzcXxzTblKey psTzYhzcXxzTblKey = new PsTzYhzcXxzTblKey();
-					psTzYhzcXxzTblKey.setTzJgId(orgid);
+					//psTzYhzcXxzTblKey.setTzJgId(orgid);
+					psTzYhzcXxzTblKey.setTzSiteiId(siteId);
 					psTzYhzcXxzTblKey.setTzOptId(optId);
 					psTzYhzcXxzTblKey.setTzRegFieldId(regId);
 					
@@ -262,7 +288,8 @@ public class TzDropboxSetServiceImpl extends FrameworkImpl {
 					
 					//删除双语表里面的数据 - 开始
 					PsTzYhzcXxzEngKey psTzYhzcXxzEngKey = new PsTzYhzcXxzEngKey();
-					psTzYhzcXxzEngKey.setTzJgId(orgid);
+					psTzYhzcXxzEngKey.setTzSiteiId(siteId);
+					//psTzYhzcXxzEngKey.setTzJgId(orgid);
 					psTzYhzcXxzEngKey.setTzOptId(optId);
 					psTzYhzcXxzEngKey.setTzRegFieldId(regId);
 					psTzYhzcXxzEngKey.setLanguageCd(languageCd);

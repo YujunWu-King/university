@@ -1,11 +1,21 @@
 package com.tranzvision.gd.TZLeaguerDataItemBundle.model;
 
 public class PsTzYhzcXxzTbl extends PsTzYhzcXxzTblKey {
+    private String tzJgId;
+
     private String tzOptValue;
 
     private String tzSelectFlg;
 
     private Integer tzOrder;
+
+    public String getTzJgId() {
+        return tzJgId;
+    }
+
+    public void setTzJgId(String tzJgId) {
+        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
+    }
 
     public String getTzOptValue() {
         return tzOptValue;

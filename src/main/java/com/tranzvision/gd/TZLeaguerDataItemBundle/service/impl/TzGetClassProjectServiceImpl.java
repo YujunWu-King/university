@@ -43,8 +43,8 @@ public class TzGetClassProjectServiceImpl extends FrameworkImpl {
 			if(str_jg_id != null){
 				//显示所有已经开通的项目;
 				//String sql = "  SELECT DISTINCT B.TZ_PRJ_ID,B.TZ_PRJ_NAME from  PS_TZ_CLASS_INF_T A ,PS_TZ_PRJ_INF_T B where A.TZ_PRJ_ID = B.TZ_PRJ_ID AND A.TZ_JG_ID=? and A.TZ_IS_APP_OPEN='Y' and A.TZ_APP_START_DT IS NOT NULL AND A.TZ_APP_START_TM IS NOT NULL AND A.TZ_APP_END_DT IS NOT NULL AND A.TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(A.TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(A.TZ_APP_END_DT,'%Y/%m/%d'),' ', DATE_FORMAT(A.TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() ORDER BY A.TZ_APP_START_DT,A.TZ_APP_END_DT ASC;";
-				String sql = "select TZ_PRJ_ID,TZ_PRJ_NAME from PS_TZ_PRJ_INF_T where TZ_IS_OPEN='Y' and TZ_JG_ID=?";
-				List<Map<String, Object>> prjList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id });
+				String sql = "select TZ_PRJ_ID,TZ_PRJ_NAME from PS_TZ_PRJ_INF_T where TZ_IS_OPEN='Y' and TZ_JG_ID=? and TZ_PRJ_ID in (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T where TZ_SITEI_ID=?)";
+				List<Map<String, Object>> prjList = jdbcTemplate.queryForList(sql, new Object[] { str_jg_id,siteid });
 				if(prjList != null && prjList.size()>0){
 					for(int i = 0; i<prjList.size();i++){
 						String prjId = (String)prjList.get(i).get("TZ_PRJ_ID");

@@ -36,6 +36,12 @@ Ext.define('KitchenSink.view.template.user.dropBoxSetWindow', {
                 labelStyle: 'font-weight:bold'
             },
             items: [{
+                //xtype: 'hiddenfield',
+            	xtype: 'textfield',
+                fieldLabel: "siteId",
+                name: 'siteId',
+                allowBlank: false
+            },{
                 xtype: 'hiddenfield',
                 fieldLabel: "注册项ID",
                 name: 'regId',
@@ -92,6 +98,10 @@ Ext.define('KitchenSink.view.template.user.dropBoxSetWindow', {
                 }
             },
             columns: [{
+            	text: '站点Id',
+                sortable: false,
+                dataIndex: 'siteId'
+            },{
                 xtype: 'hiddenfield',
                 text: '排序',
                 sortable: false,

@@ -1,10 +1,15 @@
 Ext.define('KitchenSink.view.website.set.js.siteHomeSet',{
 	//extend: 'Ext.window.Window',
-	extend: 'Ext.panel.Panel',
+	extend: 'Ext.panel.Panel', 
+	constructor: function (config) {
+		 this.siteId = config.siteId;
+		 this.callParent();
+	 },
 
 	listeners: {
 		beforerender: function(panel) {
-			var tzParams = '{"ComID":"TZ_SITEHOME_SET_COM","PageID":"TZ_SITEHOME_STD","OperateType":"EJSON","comParams":{}}';
+			var siteId = this.siteId;
+			var tzParams = '{"ComID":"TZ_SITEHOME_SET_COM","PageID":"TZ_SITEHOME_STD","OperateType":"EJSON","comParams":{"siteId":"'+siteId+'"}}';
 			Ext.tzLoad(tzParams,function(resp) {
 				panel.close();
 				if (!resp.siteId || resp.siteId==""){

@@ -190,7 +190,7 @@ function submitEnroll() {
 		
 		var signupsContent =$("#signupForm").serializeJson();
 
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+',"siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
 		$.ajax({
 			type: "post",
 			async :false,
@@ -237,7 +237,7 @@ var jsonValue;
 $(document).ready(function(){
 	document.getElementById('signupForm').reset();
 	create_yzm();
-	var fieldParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"GETNOWFIELD","comParams":{"strJgid":"'+strJgid+'"}}';
+	var fieldParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"GETNOWFIELD","comParams":{"strJgid":"'+strJgid+'","siteId":"'+strSiteId+'"}}';
 	//加载页面字段
 	$.ajax({
 		type:"post",
@@ -309,7 +309,7 @@ $(document).ready(function(){
 							   $('#status_' + fieldId).attr("value", 1);
 							   $('#' + fieldId + 'Style').removeClass("alert_display_none");
 							}else{
-								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 								$.ajax({
 									type: "get",
 									async :false,
@@ -346,7 +346,7 @@ $(document).ready(function(){
 							  	$('#status_' + fieldId).attr("value", 1);
 							  	$('#' + fieldId + 'Style').removeClass("alert_display_none");
 							}else{
-								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 								$.ajax({
 									type: "get",
 									async :false,
@@ -867,7 +867,7 @@ $(document).ready(function(){
 		
 		var signupsContent =$("#signupForm").serializeJson();
 
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+',"siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
 		$.ajax({
 			type: "post",
 			async :false,
@@ -942,7 +942,7 @@ function check_yzm(val){
 	var email = $("#TZ_EMAIL").val();
 	var mobile = $("#TZ_MOBILE").val();
 	if(val !=''){
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"CODEVALIDATOR","comParams":{"yzm":"'+val+'","yzfs":"'+yzfs+'","TZ_EMAIL":"'+email+'","TZ_MOBILE":"'+mobile+'","strJgid":"'+strJgid+'"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"CODEVALIDATOR","comParams":{"yzm":"'+val+'","yzfs":"'+yzfs+'","TZ_EMAIL":"'+email+'","TZ_MOBILE":"'+mobile+'","siteId":"'+strSiteId+'","strJgid":"'+strJgid+'"}}';
 		$.ajax({
 			type: "get",
 			async :false,
@@ -988,7 +988,7 @@ function check_yzmEmail(val){
         }
 
 	if(val !=''){
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 		$.ajax({
 			type: "get",
 			async :false,
@@ -1038,7 +1038,7 @@ function send_yzm(){
 			return;
 		}
 	}
-	var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+mobile+'","orgid":"'+strJgid+'","lang":"'+$("#lang").val()+'",	"sen":"2"}}';
+	var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+mobile+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'",	"sen":"2"}}';
 	$.ajax({
 		type:"post",
 		dataType:"json",

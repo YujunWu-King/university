@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzRegFieldTMapper" >
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
-    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
     <id column="TZ_REG_FIELD_ID" property="tzRegFieldId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_RED_FLD_YSMC" property="tzRedFldYsmc" jdbcType="VARCHAR" />
     <result column="TZ_REG_FIELD_NAME" property="tzRegFieldName" jdbcType="VARCHAR" />
     <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
@@ -16,41 +17,45 @@
     <result column="TZ_IS_SHOWWZSY" property="tzIsShowwzsy" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_JG_ID, TZ_REG_FIELD_ID, TZ_RED_FLD_YSMC, TZ_REG_FIELD_NAME, TZ_ORDER, TZ_ENABLE, 
-    TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, TZ_FIELD_TYPE, TZ_DEF_VAL, TZ_YXBG_SRKLX, TZ_IS_SHOWWZSY
+    TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_JG_ID, TZ_RED_FLD_YSMC, TZ_REG_FIELD_NAME, TZ_ORDER, 
+    TZ_ENABLE, TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, TZ_FIELD_TYPE, TZ_DEF_VAL, TZ_YXBG_SRKLX, 
+    TZ_IS_SHOWWZSY
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldTKey" >
     select 
     <include refid="Base_Column_List" />
     from PS_TZ_REG_FIELD_T
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldTKey" >
     delete from PS_TZ_REG_FIELD_T
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
-    insert into PS_TZ_REG_FIELD_T (TZ_JG_ID, TZ_REG_FIELD_ID, TZ_RED_FLD_YSMC, 
-      TZ_REG_FIELD_NAME, TZ_ORDER, TZ_ENABLE, 
-      TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, TZ_FIELD_TYPE, 
-      TZ_DEF_VAL, TZ_YXBG_SRKLX, TZ_IS_SHOWWZSY
-      )
-    values (#{tzJgId,jdbcType=VARCHAR}, #{tzRegFieldId,jdbcType=VARCHAR}, #{tzRedFldYsmc,jdbcType=VARCHAR}, 
-      #{tzRegFieldName,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, #{tzEnable,jdbcType=VARCHAR}, 
-      #{tzIsRequired,jdbcType=VARCHAR}, #{tzSysfieldFlag,jdbcType=VARCHAR}, #{tzFieldType,jdbcType=VARCHAR}, 
-      #{tzDefVal,jdbcType=VARCHAR}, #{tzYxbgSrklx,jdbcType=VARCHAR}, #{tzIsShowwzsy,jdbcType=VARCHAR}
-      )
+    insert into PS_TZ_REG_FIELD_T (TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_JG_ID, 
+      TZ_RED_FLD_YSMC, TZ_REG_FIELD_NAME, TZ_ORDER, 
+      TZ_ENABLE, TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, 
+      TZ_FIELD_TYPE, TZ_DEF_VAL, TZ_YXBG_SRKLX, 
+      TZ_IS_SHOWWZSY)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzRegFieldId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzRedFldYsmc,jdbcType=VARCHAR}, #{tzRegFieldName,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, 
+      #{tzEnable,jdbcType=VARCHAR}, #{tzIsRequired,jdbcType=VARCHAR}, #{tzSysfieldFlag,jdbcType=VARCHAR}, 
+      #{tzFieldType,jdbcType=VARCHAR}, #{tzDefVal,jdbcType=VARCHAR}, #{tzYxbgSrklx,jdbcType=VARCHAR}, 
+      #{tzIsShowwzsy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
     insert into PS_TZ_REG_FIELD_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="tzJgId != null" >
-        TZ_JG_ID,
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
       </if>
       <if test="tzRegFieldId != null" >
         TZ_REG_FIELD_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
       </if>
       <if test="tzRedFldYsmc != null" >
         TZ_RED_FLD_YSMC,
@@ -84,11 +89,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="tzJgId != null" >
-        #{tzJgId,jdbcType=VARCHAR},
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
       </if>
       <if test="tzRegFieldId != null" >
         #{tzRegFieldId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
       </if>
       <if test="tzRedFldYsmc != null" >
         #{tzRedFldYsmc,jdbcType=VARCHAR},
@@ -125,6 +133,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
     update PS_TZ_REG_FIELD_T
     <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
       <if test="tzRedFldYsmc != null" >
         TZ_RED_FLD_YSMC = #{tzRedFldYsmc,jdbcType=VARCHAR},
       </if>
@@ -156,12 +167,13 @@
         TZ_IS_SHOWWZSY = #{tzIsShowwzsy,jdbcType=VARCHAR},
       </if>
     </set>
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
     update PS_TZ_REG_FIELD_T
-    set TZ_RED_FLD_YSMC = #{tzRedFldYsmc,jdbcType=VARCHAR},
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_RED_FLD_YSMC = #{tzRedFldYsmc,jdbcType=VARCHAR},
       TZ_REG_FIELD_NAME = #{tzRegFieldName,jdbcType=VARCHAR},
       TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
       TZ_ENABLE = #{tzEnable,jdbcType=VARCHAR},
@@ -171,7 +183,7 @@
       TZ_DEF_VAL = #{tzDefVal,jdbcType=VARCHAR},
       TZ_YXBG_SRKLX = #{tzYxbgSrklx,jdbcType=VARCHAR},
       TZ_IS_SHOWWZSY = #{tzIsShowwzsy,jdbcType=VARCHAR}
-    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
   </update>
 </mapper>

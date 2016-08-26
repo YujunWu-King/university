@@ -132,11 +132,12 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					// 处理头像部分 - 结束
 
 			// 处理信息项部分 - 开始
-			sql = "select count(1) from PS_TZ_REG_FIELD_T where TZ_JG_ID =? and TZ_ENABLE = 'Y' and TZ_IS_SHOWWZSY = 'Y' order by TZ_ORDER";
-			int tz_fld_num = sqlQuery.queryForObject(sql, new Object[] { m_curOrgID }, "int");
+			//sql = "select count(1) from PS_TZ_REG_FIELD_T where TZ_JG_ID =? and TZ_ENABLE = 'Y' and TZ_IS_SHOWWZSY = 'Y' order by TZ_ORDER";
+			sql = "select count(1) from PS_TZ_REG_FIELD_T where TZ_SITEI_ID =? and TZ_ENABLE = 'Y' and TZ_IS_SHOWWZSY = 'Y' order by TZ_ORDER";
+			int tz_fld_num = sqlQuery.queryForObject(sql, new Object[] { siteId }, "int");
 
 			sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetUserInfoFieldsList");
-			List<Map<String, Object>> listFields = sqlQuery.queryForList(sql, new Object[] { m_curOrgID });
+			List<Map<String, Object>> listFields = sqlQuery.queryForList(sql, new Object[] { siteId });
 
 			String strResult_fld = "";
 			String strResult_fld_aleft = ""; // 样式为左对齐对应的html
@@ -231,9 +232,10 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 
 						str_TZ_REG_FIELD_ID_value = str_TZ_REG_FIELD_ID_value == null ? "" : str_TZ_REG_FIELD_ID_value;
 
-						sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID =? and TZ_REG_FIELD_ID =? and TZ_OPT_ID =?";
+						//sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_TBL where TZ_JG_ID =? and TZ_REG_FIELD_ID =? and TZ_OPT_ID =?";
+						sql = "select TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_TBL where TZ_SITEI_ID =? and TZ_REG_FIELD_ID =? and TZ_OPT_ID =?";
 						String str_TZ_REG_FIELD_ID_opt = sqlQuery.queryForObject(sql,
-								new Object[] { m_curOrgID, str_TZ_REG_FIELD_ID, str_TZ_REG_FIELD_ID_value }, "String");
+								new Object[] { siteId, str_TZ_REG_FIELD_ID, str_TZ_REG_FIELD_ID_value }, "String");
 
 						str_TZ_REG_FIELD_ID_opt = str_TZ_REG_FIELD_ID_opt == null ? "" : str_TZ_REG_FIELD_ID_opt;
 
@@ -242,7 +244,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 							// 如果在英文环境下 ， 取英文字段（如果英文为空，用中文）;
 							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetUserDropListOptInEng");
 							String str_TZ_REG_FIELD_ID_optEN = sqlQuery.queryForObject(sql, new Object[] { strLangID,
-									m_curOrgID, str_TZ_REG_FIELD_ID, str_TZ_REG_FIELD_ID_value }, "String");
+									siteId, str_TZ_REG_FIELD_ID, str_TZ_REG_FIELD_ID_value }, "String");
 							if (null != str_TZ_REG_FIELD_ID_optEN && !"".equals(str_TZ_REG_FIELD_ID_optEN)) {
 								str_TZ_REG_FIELD_ID_opt = str_TZ_REG_FIELD_ID_optEN;
 							}
@@ -279,8 +281,9 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 			}
 			// 处理信息项部分 - 结束
 
-			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
-			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { m_curOrgID }, "String");
+			//sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
+			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
+			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 			if ("Y".equals(isShowPhoto)) {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoCard", strResultHeadImg, strResult_fld,
 						String.valueOf(tz_fld_num));

@@ -87,6 +87,34 @@
     		displayField: 'TSDesc',
 			store:new KitchenSink.view.common.store.appTransStore("TZ_XMGL_ISOPEN"),
 			allowBlank: false
+        }, {
+            xtype: 'tagfield',
+            fieldLabel:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.projectSite","所属站点"),
+            name: 'sites',
+            store:new KitchenSink.view.common.store.comboxStore({
+                recname:'PS_TZ_WEBSIT_SET_VW',
+                condition:{
+                	TZ_JG_ID:{
+                        value:Ext.tzOrgID,
+                        operator:'01',
+                        type:'01'
+                    }
+                },
+                result:'TZ_SITEI_ID,TZ_SITEI_NAME'
+            }),
+            valueField: 'TZ_SITEI_ID',
+            displayField: 'TZ_SITEI_NAME',
+            filterPickList:true,
+            createNewOnEnter: false,
+            createNewOnBlur: false,
+            queryMode: 'local',
+            listeners:{
+                'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                {
+                    var me = this;
+                    me.inputEl.dom.value = "";
+                }
+            }
         },{
 			layout: {
 				type: 'column'

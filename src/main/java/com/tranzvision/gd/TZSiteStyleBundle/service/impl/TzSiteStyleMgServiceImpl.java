@@ -8,14 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.Framework;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -38,12 +35,6 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 	private SqlQuery sqlQuery;
 
 	@Autowired
-	private HttpServletRequest request;
-
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-
-	@Autowired
 	private TZGDObject tzSQLObject;
 
 	@SuppressWarnings("unchecked")
@@ -54,15 +45,25 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
-
+		
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
-
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
-			String sql = tzSQLObject.getSQLText("SQL.TZSiteStyleBundle.TzSelectSiteInfo");
-			Map<String, Object> mapSiteInfo = sqlQuery.queryForMap(sql, new Object[] { orgid });
+			//多站点，不是根据有效的站点查询，而是直接传入;
+			//String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			jacksonUtil.json2Map(strParams);
+			String siteId = "";
+			if(jacksonUtil.containsKey("siteId")){
+				siteId = jacksonUtil.getString("siteId");
+			}
+			if(siteId == null ||  "".equals(siteId)){
+				return jacksonUtil.Map2json(mapRet);
+			}
+			
+			//String sql = tzSQLObject.getSQLText("SQL.TZSiteStyleBundle.TzSelectSiteInfo");
+			String sql = "select TZ_SITEI_ID,TZ_SITEM_ID,TZ_SKIN_ID,TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ENABLE='Y' and TZ_SITEI_ID=?";
+			Map<String, Object> mapSiteInfo = sqlQuery.queryForMap(sql, new Object[] { siteId });
 
 			String strSiteMid = "";
 			String strSkinType = "";
@@ -141,7 +142,6 @@ public class TzSiteStyleMgServiceImpl extends FrameworkImpl {
 			errorMsg[1]="未配置站点模板数据！";
 		}
 
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}

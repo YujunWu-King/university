@@ -1,7 +1,8 @@
 //报名人选择班级;
 //报名人选择可以报名的班级;
-function viewClass(language,viewType){
-	 var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
+function viewClass(siteId,language,viewType){
+	 //var siteId = TZ_GD_LOGIN_SITEI_ID;
+	 var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"' + viewType+ '","siteId":"' + siteId+ '","language":"' + language+ '","oprate":"R"}}';
 
 	 $.ajax({
  					type:"POST",

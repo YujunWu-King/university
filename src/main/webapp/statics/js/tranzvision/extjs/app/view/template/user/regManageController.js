@@ -5,6 +5,8 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
     onUserRegSave: function(btn) {
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
+			var siteId = form.findField("siteId").getValue();
+			
 			var grid = this.getView().child("grid");
 			//var grid = btn.findParentByType("panel").child("grid");
 			//注册项数据
@@ -35,7 +37,7 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 
 			Ext.tzSubmit(tzParams,
 				function (responseData) {
-					var tzParams1 = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QF","comParams":{}}';
+					var tzParams1 = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QF","comParams":{"siteId": "' + siteId + '"}}';
 
 					Ext.tzLoad(tzParams1,
 						function (responseData) {
@@ -45,7 +47,10 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 							//页面注册信息列表数据
 							//var listData = responseData.listData;
 							//grid.store.loadData(listData);
-							grid.store.load();
+							var store = grid.getStore();
+		        			var tzStoreParams = '{"siteId":"'+siteId+'"}';
+		        			store.tzStoreParams = tzStoreParams;
+							store.load();
 						}
 					);
 				}
@@ -115,6 +120,7 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 	/*设置注册项为下拉框的下拉框选项值*/
 	onReSetDropVal: function(view,t,rowIndex) {
 		var store = view.findParentByType("grid").store;
+		var siteId = store.getAt(rowIndex).get("siteId");
 		var regId = store.getAt(rowIndex).get("regId");
 		var regFieldType = store.getAt(rowIndex).get("regFieldType");
 		var isSysField = store.getAt(rowIndex).get("isSysField");
@@ -146,13 +152,14 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 			win = new ViewClass();
 			this.getView().add(win);
 		}
-		var tzStoreParams = "{\"regId\":\"" + regId + "\"}";
+		var tzStoreParams = "{\"regId\":\"" + regId + "\",\"siteId\":\"" + siteId +"\"}";
 		/*下拉框值Grid.store*/
 		var vinStroe = win.child('grid').store;
 
 		var form = win.child("form").getForm();
 		form.reset();
 		form.setValues({
+			"siteId": siteId,
 			"regId": regId
 		});
 
@@ -197,6 +204,7 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 	/*保存下拉框选项值页面*/
 	getItmeOptionsParams: function(win) {
 		var regId = win.child("form").getForm().findField("regId").getValue();
+		var siteId = win.child("form").getForm().findField("siteId").getValue();
 		//更新操作参数
 		var comParams = "";
 
@@ -210,9 +218,9 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 		var mfRecs = store.getModifiedRecords();
 		for (var i = 0; i < mfRecs.length; i++) {
 			if (editJson == "") {
-				editJson = '{"regId":"' + regId + '","data":' + Ext.JSON.encode(mfRecs[i].data) + '}';
+				editJson = '{"siteId":"' + siteId + '","regId":"' + regId + '","data":' + Ext.JSON.encode(mfRecs[i].data) + '}';
 			} else {
-				editJson = editJson + ',{"regId":"' + regId + '","data":' + Ext.JSON.encode(mfRecs[i].data) + '}';
+				editJson = editJson + ',{"siteId":"' + siteId + '","regId":"' + regId + '","data":' + Ext.JSON.encode(mfRecs[i].data) + '}';
 			}
 		}
 		if (editJson != "") {
@@ -229,9 +237,9 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 		var removeRecs = store.getRemovedRecords();
 		for (var i = 0; i < removeRecs.length; i++) {
 			if (removeJson == "") {
-				removeJson = '{"regId":"' + regId + '","data":' + Ext.JSON.encode(removeRecs[i].data) + '}';
+				removeJson = '{"siteId":"' + siteId + '","regId":"' + regId + '","data":' + Ext.JSON.encode(removeRecs[i].data) + '}';
 			} else {
-				removeJson = removeJson + ',{"regId":"' + regId + '","data":' + Ext.JSON.encode(removeRecs[i].data) + '}';
+				removeJson = removeJson + ',{"siteId":"' + siteId + '","regId":"' + regId + '","data":' + Ext.JSON.encode(removeRecs[i].data) + '}';
 			}
 		}
 		if (removeJson != "") {

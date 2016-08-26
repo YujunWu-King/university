@@ -67,6 +67,8 @@ public class PsTzRegUserT {
 
     private String tzComment10;
 
+    private String tzSiteiId;
+
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -333,6 +335,14 @@ public class PsTzRegUserT {
 
     public void setTzComment10(String tzComment10) {
         this.tzComment10 = tzComment10 == null ? null : tzComment10.trim();
+    }
+
+    public String getTzSiteiId() {
+        return tzSiteiId;
+    }
+
+    public void setTzSiteiId(String tzSiteiId) {
+        this.tzSiteiId = tzSiteiId == null ? null : tzSiteiId.trim();
     }
 
     public Date getRowAddedDttm() {

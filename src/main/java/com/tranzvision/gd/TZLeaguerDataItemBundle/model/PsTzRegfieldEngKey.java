@@ -1,18 +1,18 @@
 package com.tranzvision.gd.TZLeaguerDataItemBundle.model;
 
 public class PsTzRegfieldEngKey {
-    private String tzJgId;
+    private String tzSiteiId;
 
     private String tzRegFieldId;
 
     private String languageCd;
 
-    public String getTzJgId() {
-        return tzJgId;
+    public String getTzSiteiId() {
+        return tzSiteiId;
     }
 
-    public void setTzJgId(String tzJgId) {
-        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
+    public void setTzSiteiId(String tzSiteiId) {
+        this.tzSiteiId = tzSiteiId == null ? null : tzSiteiId.trim();
     }
 
     public String getTzRegFieldId() {
