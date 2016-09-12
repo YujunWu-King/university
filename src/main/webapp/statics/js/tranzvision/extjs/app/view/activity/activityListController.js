@@ -123,8 +123,9 @@
 				var cmpForm = panel.child("form").getForm();
 
 				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
-				  var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
+				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
 				//加载数据
+				/*
 				Ext.tzLoad(tzParams,function(responseData){
 						var formData = responseData.formData;
 						cmpForm.findField("siteId").setValue(formData.siteId);
@@ -132,7 +133,7 @@
 						cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
 						cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
 				});
-				
+				*/
 				var applyItemGrid = this.lookupReference('applyItemGrid');
 				var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
     			activityId: "",

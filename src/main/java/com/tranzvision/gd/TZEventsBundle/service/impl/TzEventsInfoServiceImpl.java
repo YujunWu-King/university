@@ -888,6 +888,67 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				strRet = jacksonUtil.Map2json(mapRet);
 
 				break;
+				
+			case "SITE":
+				// 获取站点
+				String jgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				sql = "select TZ_SITEI_ID,TZ_SITEI_NAME from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ENABLE='Y' AND TZ_JG_ID=? ";
+				//sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTpjsList");
+				List<Map<String, Object>> listSites = sqlQuery.queryForList(sql, new Object[] { jgId });
+
+				for (Map<String, Object> mapSite : listSites) {
+
+					total++;
+
+					String siteId = mapSite.get("TZ_SITEI_ID") == null ? ""
+							: String.valueOf(mapSite.get("TZ_SITEI_ID"));
+
+					String siteName = mapSite.get("TZ_SITEI_NAME") == null ? "0"
+							: String.valueOf(mapSite.get("TZ_SITEI_NAME"));
+
+					Map<String, Object> mapJson = new HashMap<String, Object>();
+					mapJson.put("siteId", siteId);
+					mapJson.put("siteName", siteName);
+
+					listJson.add(mapJson);
+
+				}
+
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+				break;
+			case "COLU":
+				// 获取站点
+				String siteId = "27";
+				sql = "select TZ_COLU_ID,TZ_COLU_NAME from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_CONT_TYPE='A'";
+				//sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTpjsList");
+				List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { siteId });
+
+				for (Map<String, Object> listColu : listColus) {
+
+					total++;
+
+					String coluId = listColu.get("TZ_COLU_ID") == null ? ""
+							: String.valueOf(listColu.get("TZ_COLU_ID"));
+
+					String coluName = listColu.get("TZ_COLU_NAME") == null ? "0"
+							: String.valueOf(listColu.get("TZ_COLU_NAME"));
+
+					Map<String, Object> mapJson = new HashMap<String, Object>();
+					mapJson.put("coluId", coluId);
+					mapJson.put("coluName", coluName);
+
+					listJson.add(mapJson);
+
+				}
+
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+				break;
 
 			}
 

@@ -45,7 +45,8 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 			//jacksonUtil.json2Map(strParams);
 			//String tokenCode = jacksonUtil.getString("TZ_TOKEN_CODE");
 			String tokenCode = request.getParameter("TZ_TOKEN_CODE");
-			
+			String siteid = request.getParameter("siteid"); 
+			RegEmailSuccess = RegEmailSuccess + "&siteid=" + siteid; 
 			String strTokenFLg = "";
 			PsTzDzyxYzmTbl psTzDzyxYzmTbl = psTzDzyxYzmTblMapper.selectByPrimaryKey(tokenCode);
 			if(psTzDzyxYzmTbl != null){
@@ -54,6 +55,8 @@ public class SureEmailServiceImpl extends FrameworkImpl{
 				dlzhId = psTzDzyxYzmTbl.getTzDlzhId();
 				tzJgId = psTzDzyxYzmTbl.getTzJgId();
 			
+				//根据账号得到注册人员的注册的siteid;
+				
 				if("Y".equals(strTokenFLg)){
 					cntlogAddtiem = psTzDzyxYzmTbl.getTzYzmYxq();
 					if(cntlogAddtiem.before(curDate)){

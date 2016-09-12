@@ -11,7 +11,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
     ],
     title: '用户注册项管理',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-    constructor: function (config = "") {
+    constructor: function (config) {
     	if(config == ""){
     		this.siteId = "";
     	}else{

@@ -157,6 +157,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		String strDlzhid = "";
 		String strLang = "";
 	    String strUserName = "";
+	    String siteid = "";
 
 		String strResult = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();   
@@ -170,6 +171,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				strOrgid = jacksonUtil.getString("orgid").trim();
 				strLang =  jacksonUtil.getString("lang").trim();
 		      	strDlzhid =  jacksonUtil.getString("dlzhid").trim();
+		      	siteid =  jacksonUtil.getString("siteid").trim();
 		      	
 		      	// 生成邮件发送令牌;
 		      	String strSeq = "00000000" + String.valueOf(getSeqNum.getSeqNum("TZ_GD_REGCODE", "TZ_GD_EMAIL"));

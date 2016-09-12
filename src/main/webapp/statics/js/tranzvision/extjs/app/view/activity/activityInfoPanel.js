@@ -18,11 +18,28 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         'KitchenSink.view.activity.applyItemStore',
         'KitchenSink.view.activity.activityImageStore',
         'KitchenSink.view.activity.applyItemOptionsStore',
-        'KitchenSink.view.activity.picStore'
+        'KitchenSink.view.activity.picStore',
+        'KitchenSink.view.activity.SiteModel',
+        'KitchenSink.view.activity.SiteStore',
+        'KitchenSink.view.activity.ColuModel',
+        'KitchenSink.view.activity.ColuStore'
 	],
   title: '活动信息', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	actType: 'add',//默认新增
+	initComponent:function(){
+
+	   var siteStore=new KitchenSink.view.activity.SiteStore();//从数据库加载到local
+	   siteStore.load({
+	       callback: function(records, options, success) {
+
+	       }
+	   });
+	   
+	   var coluStore = new KitchenSink.view.activity.ColuStore(); 
+	   
+	   
+	 Ext.apply(this,{
     items: [{
         xtype: 'form',
         reference: 'activityForm',
@@ -152,6 +169,59 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
             xtype: 'textfield',
             fieldLabel: '外部引用链接',
 						name: 'externalLink'
+        }, {
+            xtype: 'tagfield',
+            fieldLabel:'站点',
+            name: 'siteids',
+            store: siteStore,
+            valueField: 'siteId',
+            displayField: 'siteName',
+            filterPickList:true,
+            createNewOnEnter: true,
+            createNewOnBlur: true,
+            queryMode: 'local',
+            listeners:{
+                'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                {
+                    var me = this;
+                    me.inputEl.dom.value = "";
+                    alert("select");
+                },
+                "change": function( cbox , newValue, oldValue){
+                	console.log(cbox);
+                	console.log(newValue);
+                	console.log(oldValue);
+                	console.log("begin");
+                	for(var i=0;i<newValue.length;i++){
+                		console.log(newValue[i]);
+                	}
+                	console.log("end");
+                	
+                	coluStore.load({
+             	       callback: function(records, options, success) {
+
+             	       }
+             	   });
+                }
+            }
+        }, {
+            xtype: 'tagfield',
+            fieldLabel:'栏目',
+            name: 'colus',
+            store: coluStore,
+            valueField: 'coluId',
+            displayField: 'coluName',
+            filterPickList:true,
+            createNewOnEnter: true,
+            createNewOnBlur: true,
+            queryMode: 'local',
+            listeners:{
+                'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                {
+                    var me = this;
+                    me.inputEl.dom.value = "";
+                }
+            }
         },{
 			xtype: 'fieldset',
 			layout: {
@@ -796,7 +866,10 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            fieldLabel: '页面访问URL',
 					 name: 'publishUrl'
         }]
-    }],
+    }]
+	});
+	 this.callParent();
+	},
     buttons: [{
 			text: '发布',
 			iconCls:"publish",

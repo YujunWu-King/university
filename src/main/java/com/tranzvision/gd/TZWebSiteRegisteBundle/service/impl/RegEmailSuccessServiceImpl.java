@@ -43,8 +43,10 @@ public class RegEmailSuccessServiceImpl extends FrameworkImpl {
 			String FLAGE =request.getParameter("FLAGE");
 			String strJgid = request.getParameter("strJgid");
 			String strErrorFlg = request.getParameter("errorFlg");
+			String siteid =  request.getParameter("siteid");
 			
-			Map<String, Object> map = jdbcTemplate.queryForMap("select TZ_SITEI_ID, TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",new Object[]{strJgid});
+			// Map<String, Object> map = jdbcTemplate.queryForMap("select TZ_SITEI_ID, TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",new Object[]{strJgid});
+			Map<String, Object> map = jdbcTemplate.queryForMap("select TZ_SITEI_ID, TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",new Object[]{siteid});
 			String siteId = "",skinId = "";
 			if(map != null){
 				siteId = (String)map.get("TZ_SITEI_ID");

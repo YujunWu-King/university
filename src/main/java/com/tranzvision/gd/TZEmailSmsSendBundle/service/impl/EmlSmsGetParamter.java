@@ -48,9 +48,13 @@ public class EmlSmsGetParamter {
 			if (strOprId != null && !"".equals(strOprId)) {
 				String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 				String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class, new Object[] { strOprId });
-
-				String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
-				String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { strOrgid });
+				
+				String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_REG_USER_T WHERE OPRID=?", String.class, new Object[] { strOprId });
+				
+				String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+				String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { siteId });
+				//String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+				//String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { strOrgid });
 
 				String tokenCodeSQL = "SELECT TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE='REG' AND TZ_EFF_FLAG='Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 				String strTokenSign = jdbcTemplate.queryForObject(tokenCodeSQL, String.class,
@@ -62,7 +66,7 @@ public class EmlSmsGetParamter {
 							+ request.getContextPath();
 					String strActUrl = serv + "/dispatcher";
 					strActUrl = strActUrl + "?classid=enrollCls&tokensign=" + strTokenSign + "&orgid=" + strOrgid
-							+ "&lang=" + strLang + "&sen=2";
+							+ "&lang=" + strLang+ "&siteid=" + siteId + "&sen=2";
 					return strActUrl;
 				} else {
 					return "";
@@ -111,9 +115,13 @@ public class EmlSmsGetParamter {
 			if (strOprId != null && !"".equals(strOprId)) {
 				String jgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 				String strOrgid = jdbcTemplate.queryForObject(jgSQL, String.class, new Object[] { strOprId });
-
-				String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
-				String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { strOrgid });
+				
+				String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_REG_USER_T WHERE OPRID=?", String.class, new Object[] { strOprId });
+				
+				String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+				String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { siteId });
+				//String langSQL = "SELECT TZ_SITE_LANG FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+				//String strLang = jdbcTemplate.queryForObject(langSQL, String.class, new Object[] { strOrgid });
 
 				String tokenCodeSQL = "SELECT TZ_TOKEN_CODE FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE='EDIT' AND TZ_EFF_FLAG='Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 				String strTokenSign = jdbcTemplate.queryForObject(tokenCodeSQL, String.class,
@@ -125,7 +133,7 @@ public class EmlSmsGetParamter {
 							+ request.getContextPath();
 					String strActUrl = serv + "/dispatcher";
 					strActUrl = strActUrl + "?classid=enrollCls&tokensign=" + strTokenSign + "&orgid=" + strOrgid
-							+ "&lang=" + strLang + "&sen=5";
+							+ "&lang=" + strLang + "&siteid=" + siteId + "&sen=5";
 					return strActUrl;
 				} else {
 					return "";
