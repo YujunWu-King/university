@@ -2,20 +2,14 @@ package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdLng;
-import com.tranzvision.gd.TZMenuMgBundle.model.PsTzAqCdjdTbl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiColuTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -61,66 +55,15 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("siteId")) {
 
-				// 栏目编号
-				// String coluId = jacksonUtil.getString("coluId");
-
 				// 站点编号
 				String siteId = jacksonUtil.getString("siteId");
 
 				// 查询类型
 				String typeFlag = jacksonUtil.getString("typeFlag");
 
-				// String strNodeId = request.getParameter("nodeId");
-				// if (null != strNodeId && !"".equals(strNodeId.trim())) {
-				// menuId = strNodeId;
-				// typeFlag = "NODE";
-				// }
-
 				String sql;
 				Map<String, Object> mapRet = new HashMap<String, Object>();
-				if ("FORM".equals(typeFlag)) {
-
-					// sql =
-					// tzSQLObject.getSQLText("SQL.TZMenuMgBundle.TzSelectNodeInfoMultiLang");
-					//
-					// Map<String, Object> mapNode = sqlQuery.queryForMap(sql,
-					// new Object[] { targetLanguage, baseLanguage, menuTree,
-					// menuId });
-					//
-					// if (null == mapNode) {
-					// return strRet;
-					// }
-					//
-					// String comId = mapNode.get("TZ_COM_ID").toString();
-					//
-					// sql = "select TZ_COM_MC from PS_TZ_AQ_COMZC_TBL where
-					// TZ_COM_ID=?";
-					// String comName = sqlQuery.queryForObject(sql, new
-					// Object[] { comId }, "String");
-					//
-					// Map<String, Object> mapNodeJson = new HashMap<String,
-					// Object>();
-					//
-					// mapNodeJson.put("menuId", menuId);
-					// mapNodeJson.put("menuName",
-					// mapNode.get("TZ_MENU_MC").toString());
-					// mapNodeJson.put("menuYxState",
-					// mapNode.get("TZ_YXX").toString());
-					// mapNodeJson.put("comId", comId);
-					// mapNodeJson.put("bigImgId",
-					// mapNode.get("TZ_MENU_LIMG").toString());
-					// mapNodeJson.put("smallImgId",
-					// mapNode.get("TZ_MENU_SIMG").toString());
-					// mapNodeJson.put("helpId",
-					// mapNode.get("TZ_MENU_NRID").toString());
-					// mapNodeJson.put("NodeType", "");
-					// mapNodeJson.put("operateNode", "");
-					// mapNodeJson.put("rootNode", menuId);
-					// mapNodeJson.put("comName", comName);
-					//
-					// mapRet.put("formData", mapNodeJson);
-
-				} else if ("TREE".equals(typeFlag)) {
+				if ("TREE".equals(typeFlag)) {
 
 					// 一次性获取一整颗树的所有数据放入List
 					sql = tzSQLObject.getSQLText("SQL.TZOutSiteMgBundle.TzSelectOutSiteColuList");

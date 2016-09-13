@@ -64,7 +64,7 @@
 					  {iconCls: 'edit',tooltip: '栏目管理',handler:'editSiteColuById'},
 					  {iconCls: 'edit',tooltip: '模板管理',handler:'editSiteTempById'},
 					  {iconCls: 'edit',tooltip: '内容管理',handler:'editSiteInfo'},
-					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteInfo'}
+					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteMenuById'}
 			   ]
             }],
 			store: store,

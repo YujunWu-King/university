@@ -17,7 +17,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 	initComponent : function() {
 		me = this;
 		this.items = [{
-			title : '栏目菜单树',
+			title : '站点栏目树',
 			region : 'west',
 			xtype : 'treepanel',
 			width : 300,

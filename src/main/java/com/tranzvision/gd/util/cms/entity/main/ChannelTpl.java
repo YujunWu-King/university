@@ -6,6 +6,17 @@ import java.io.Serializable;
 public class ChannelTpl implements Serializable {
 	private String chnlid;
 	private String tplid;
+	private String siteId;
+	
+	
+	
+	public String getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(String siteId) {
+		this.siteId = siteId;
+	}
 
 	public String getChnlid() {
 		return chnlid;

@@ -170,8 +170,8 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 			File dir = null;
 			String sql = "";
 			String isHas = "";
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request); // 登陆用户的用户ID
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request); // 登陆用户的机构ID
 			PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = null;
 			PsTzSiteiColuT psTzSiteiColuT = null;
 			PsTzSiteiMenuT psTzSiteiMenuT = null;
@@ -262,6 +262,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiMenuT.setTzMenuPath(sitePath + "/menu");
 					psTzSiteiMenuT.setTzMenuState("Y");
 					psTzSiteiMenuT.setTzIsDel("N"); // 不允许删除
+					psTzSiteiMenuT.setTzMenuXh(new Integer(1)); // 循序为1
 					psTzSiteiMenuT.setTzIsEditor("N"); // 不允许编辑
 					psTzSiteiMenuT.setTzMenuType("B"); // BOOK
 					psTzSiteiMenuT.setTzMenuLevel(new Integer(0));
