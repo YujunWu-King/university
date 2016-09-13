@@ -133,7 +133,7 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			if("Y".equals(isPrjShowWW)){
 				String haveBmCountSql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCurBmbCountByOprid");
 				//有没有报名已经开放班级;
-				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[]{oprid},"Integer");
+				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[]{oprid,strSiteId},"Integer");
 				//有没有选择查看的范围;
 				selectShowCount = sqlQuery.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=?", new Object[]{oprid}, "Integer");
 			}

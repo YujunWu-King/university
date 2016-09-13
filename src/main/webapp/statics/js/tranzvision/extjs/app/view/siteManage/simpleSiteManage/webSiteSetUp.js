@@ -15,6 +15,11 @@
 	/*store: {
         type: 'comStore'
     },*/
+	listeners: {
+		afterrender: function(p){
+						
+		}
+    },
     columnLines: true,
     selModel: {
         type: 'checkboxmodel'
@@ -44,7 +49,82 @@
     initComponent: function () { 
 	    //招生网站设置
 	    var store = new KitchenSink.view.siteManage.simpleSiteManage.webSiteSetUpStore();
-        Ext.apply(this, {
+	    store.load({
+            callback: function(records, options, success) {
+            	var item = "siteid";
+    			var svalue = location.search.match(new RegExp("[\?\&]" + item + "=([^\&]*)(\&?)","i"));
+    			if(svalue != null && svalue != ""){
+    				var siteId = svalue ? svalue[1] : svalue;
+    				
+    				Ext.tzSetCompResourses("TZ_USER_REG_COM");
+    				//是否有访问权限
+    				var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_USER_REG_COM"]["TZ_REGGL_STD"];
+    				if( pageResSet == "" || pageResSet == undefined){
+    					Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+    					return;
+    				}
+    				//该功能对应的JS类
+    				var className = pageResSet["jsClassName"];
+    				if(className == "" || className == undefined){
+    					Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_REGGL_STD，请检查配置。');
+    					return;
+    				}
+    				
+    				var contentPanel,cmp, className, ViewClass, clsProto;
+    				var themeName = Ext.themeName;
+    				
+    				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+    				contentPanel.body.addCls('kitchensink-example');
+
+    				//className = 'KitchenSink.view.security.com.comInfoPanel';
+    				if(!Ext.ClassManager.isCreated(className)){
+    					Ext.syncRequire(className);
+    				}	
+    				ViewClass = Ext.ClassManager.get(className);
+
+    				clsProto = ViewClass.prototype;
+
+    				if (clsProto.themes) {
+    					clsProto.themeInfo = clsProto.themes[themeName];
+
+    					if (themeName === 'gray') {
+    						clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+    					} else if (themeName !== 'neptune' && themeName !== 'classic') {
+    						if (themeName === 'crisp-touch') {
+    							clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+    						}
+    						clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+    					}
+    					// <debug warn>
+    					// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+    					if (!clsProto.themeInfo) {
+    						Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+    							themeName + '\'. Is this intentional?');
+    					}
+    					// </debug>
+    				}
+    				
+    				var config = {
+    						"siteId": siteId
+    				}
+    				cmp = new ViewClass(config);
+    				
+    				//cmp.on('afterrender',function(panel){
+
+    				//});
+    				
+    				tab = contentPanel.add(cmp);     
+    				
+    				contentPanel.setActiveTab(tab);
+
+    				Ext.resumeLayouts(true);
+    				if (cmp.floating) {
+    					cmp.show();
+    				}
+    			}
+            }
+        });
+	    Ext.apply(this, {
             columns: [{ 
                 text: '站点ID',
                 dataIndex: 'siteId',
@@ -63,9 +143,9 @@
                xtype: 'actioncolumn',
 			   items:[
 				  {iconCls: 'edit',tooltip: '站点基本信息',handler: 'editSelWebSiteInfo'},
-				  {iconCls: 'edit',tooltip: '用户显示信息项配置',handler: 'editWebSiteReg'},
-			   	  {iconCls: 'edit',tooltip: '站点风格选择',handler: 'editSelWebSiteStyle'},
-			   	  {iconCls: 'edit',tooltip: '站点页面设置',handler: 'editWebSitePage'}
+				  {iconCls: 'view',tooltip: '用户显示信息项配置',handler: 'editWebSiteReg'},
+			   	  {iconCls: 'preview',tooltip: '站点风格选择',handler: 'editSelWebSiteStyle'},
+			   	  {iconCls: 'publish',tooltip: '站点页面设置',handler: 'editWebSitePage'}
 			   ]
             }],
 			store: store,

@@ -9,3 +9,4 @@
   A.TZ_APP_END_TM IS NOT NULL AND 
   str_to_date(concat(DATE_FORMAT(A.TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() 
   AND str_to_date(concat(DATE_FORMAT(A.TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()
+  AND A.TZ_PRJ_ID IN (SELECT C.TZ_PRJ_ID FROM PS_TZ_PRJ_INF_T C,PS_TZ_PROJECT_SITE_T D WHERE C.TZ_PRJ_ID=D.TZ_PRJ_ID AND D.TZ_SITEI_ID=? )

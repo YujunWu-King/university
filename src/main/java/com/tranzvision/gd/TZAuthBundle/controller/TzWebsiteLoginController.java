@@ -103,16 +103,18 @@ public class TzWebsiteLoginController {
 		String strPassWord = mapData.get("passWord") == null ? "" : String.valueOf(mapData.get("passWord"));
 		String strYzmCode = mapData.get("yzmCode") == null ? "" : String.valueOf(mapData.get("yzmCode"));
 		String strLang = mapData.get("lang") == null ? "" : String.valueOf(mapData.get("lang"));
-
+		String strSiteId = mapData.get("siteid") == null ? "" : String.valueOf(mapData.get("siteid"));
+		
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
 		try {
 
 			if (null != strOrgId && !"".equals(strOrgId)) {
 				strOrgId = strOrgId.toUpperCase();
-				String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetSiteidByOrgid");
+				String sql="";
+				//String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetSiteidByOrgid");
 
-				String strSiteId = sqlQuery.queryForObject(sql, new Object[] { strOrgId }, "String");
+				//String strSiteId = sqlQuery.queryForObject(sql, new Object[] { strOrgId }, "String");
 
 				if (!"".equals(strUserName)) {
 					strUserName = strUserName.toLowerCase();

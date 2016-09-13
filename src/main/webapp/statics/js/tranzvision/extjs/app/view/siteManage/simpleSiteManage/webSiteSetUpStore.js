@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.siteManage.simpleSiteManage.webSiteSetUpStore', {
     extend: 'Ext.data.Store',
     alias: 'store.webSiteSetUpStore',
     model: 'KitchenSink.view.siteManage.simpleSiteManage.webSiteSetUpMode',
-	autoLoad: true,
+	autoLoad: false,
 	pageSize: 10,
 	comID: 'TZ_WEBSIT_SET_COM',
 	pageID: 'TZ_WEBSIT_SET_STD',

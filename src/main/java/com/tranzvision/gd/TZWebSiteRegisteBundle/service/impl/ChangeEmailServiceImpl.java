@@ -191,17 +191,27 @@ public class ChangeEmailServiceImpl extends FrameworkImpl {
 			psTzDzyxYzmTblMapper.insert(psTzDzyxYzmTbl);
 
 			// 得到注册用户姓名;
-			String relenameSQL = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=? limit 0,1";
-			String strUserName = jdbcTemplate.queryForObject(relenameSQL, new Object[] { oprid }, "String");
+			String strUserName = "";
+			String siteid = "";
+			String relenameSQL = "SELECT TZ_REALNAME,TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID=? limit 0,1";
+			Map<String, Object> userMap = jdbcTemplate.queryForMap(relenameSQL, new Object[] { oprid });
+			//String strUserName = jdbcTemplate.queryForObject(relenameSQL, new Object[] { oprid }, "String");
+			if(userMap != null){
+				strUserName = (String)userMap.get("TZ_REALNAME");
+				siteid = (String)userMap.get("TZ_SITEI_ID");
+			}
 			if (strUserName == null) {
 				strUserName = "";
+			}
+			if (siteid == null) {
+				siteid = "";
 			}
 			// 确认修改邮箱 ;
 			//com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.SureEmailServiceImpl;
 			String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
 			+ request.getContextPath();
 			String sureEmail = serv + "/dispatcher";
-			sureEmail  = sureEmail+"?classid=sureemail&TZ_TOKEN_CODE="+strYZM;
+			sureEmail  = sureEmail+"?classid=sureemail&siteid="+siteid+"&TZ_TOKEN_CODE="+strYZM;
 
 			// 给当前填写的邮箱发送激活邮件---开始;
 			// 发送内容;

@@ -639,6 +639,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strPhone = "";		   
 		String strOrgid = "";
 		String strLang = "";
+		String siteid = "";
 		String strResult = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
@@ -648,7 +649,8 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 					&& jacksonUtil.containsKey("lang")
 					&& jacksonUtil.containsKey("pwd")
 					&& jacksonUtil.containsKey("repwd")
-					&& jacksonUtil.containsKey("checkCode"))
+					&& jacksonUtil.containsKey("checkCode") 
+					&& jacksonUtil.containsKey("siteid"))
 				
 				strPhone = jacksonUtil.getString("phone").trim();
 				strOrgid = jacksonUtil.getString("orgid").trim();
@@ -656,6 +658,8 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		      	strCheckCode = jacksonUtil.getString("checkCode").trim();
 		      	strPwd = jacksonUtil.getString("pwd").trim();
 		      	strRePwd = jacksonUtil.getString("repwd").trim();
+		      	strRePwd = jacksonUtil.getString("repwd").trim();
+		      	siteid = jacksonUtil.getString("siteid").trim();
 		      	
 	      		//是否存在有效验证码
 		      	String sql = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE = ? AND TZ_JG_ID = ? AND TZ_RYLX = 'ZCYH' and TZ_SJBD_BZ='Y'";
@@ -704,16 +708,16 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			    	psoprdefn.setOperpswd(password);
 			    	psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 			    	//把验证码失效;
-			    	String yzmSQL = "UPDATE PS_TZ_SHJI_YZM_TBL SET TZ_EFF_FLAG='N' WHERE TZ_JG_ID=:1 AND TZ_MOBILE_PHONE=:2";
+			    	String yzmSQL = "UPDATE PS_TZ_SHJI_YZM_TBL SET TZ_EFF_FLAG='N' WHERE TZ_JG_ID=? AND TZ_MOBILE_PHONE=?";
 			    	jdbcTemplate.update(yzmSQL,new Object[]{strOrgid,strPhone});
 			    	
 			    	Map<String, Object> returnMap = new HashMap<>();
 			    	returnMap.put("result", "success");
 		      		
 			    	//修改登录链接
-				    String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE = 'Y' limit 0,1";
-				    String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[]{strOrgid},"String");
-					String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() +"/"+strSiteId;
+				    //String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE = 'Y' limit 0,1";
+				    //String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[]{strOrgid},"String");
+					String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() +"/"+siteid;
 			    	returnMap.put("jumpurl", strJumUrl);
 			    	strResult = jacksonUtil.Map2json(returnMap);
 			    	return strResult;	 
@@ -738,6 +742,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strPhone = "";
 		String strYzm = "";
 		String strResult = "";
+		String siteid = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -745,12 +750,15 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			strLang = jacksonUtil.getString("lang");
 			strPhone = jacksonUtil.getString("phone").trim();
 			strYzm = jacksonUtil.getString("yzm").trim();
+			siteid = jacksonUtil.getString("siteid").trim();
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "123", "请重置新密码", "Please Enter New Password.");
 			
-			String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
-			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[]{strOrgid});
+			//String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+			//Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[]{strOrgid});
+			String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[]{siteid});
 			strSiteId = (String)siteMap.get("TZ_SITEI_ID");	
 			String skinId = (String)siteMap.get("TZ_SKIN_ID");
 			String contextPath = request.getContextPath();
@@ -768,9 +776,9 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			if(count> 0){
 				//有效；
 				if("ENG".equals(strLang)){
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
 				}else{
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl );
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
 				}
 				
 				str_content = objRep.repTitle(str_content, strSiteId);

@@ -423,14 +423,16 @@ function SetImgCode(){
 }
 
 function Login(){
-
+	
     var userName = encodeURI($("#userName").val());
 
 	var password = encodeURI($("#password").val());
 
 	var yzm = encodeURI($("#yzm").val());
+	
+	var siteid = encodeURI($("#siteid").val());
 
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","lang":"'+$("#lang").val()+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
 		type:"POST",
 		url: TzUniversityContextPath + "/user/login/dologin",
@@ -510,7 +512,21 @@ function Logout(){
 
 /*跳转到注册页*/
 function goToRegister(){
-	window.location.href= TzUniversityContextPath + "/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/enroll.html";
+	var url = urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","sen":"8"}}';
+	
+	$.ajax({
+		type:"POST",
+		url:url,
+		/*data:{
+			tzParams:tzParams
+		},*/
+		dataType:'json',
+		success:function(response){	
+			//console.log(response.url);
+			window.location.href= response.url;
+		}   
+	});
+	//window.location.href= TzUniversityContextPath + "/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/enroll.html";
 }
 
 /*忘记密码*/

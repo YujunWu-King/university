@@ -24,7 +24,7 @@ $(document).ready(function(){
 		var yzmFlg=$("#status_yzm").val();
 
 		if(passwordFlg =='0' && yzmFlg=='0'){
-	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","sen":"5"}}';
+	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
 	        var tzParams2 = {};
 	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
 	        tzParams2.PageID = "TZ_SITE_SMS_STD";
@@ -37,7 +37,8 @@ $(document).ready(function(){
 	        tzParams2.comParams.lang = "%bind(:3)";
 	        tzParams2.comParams.sen = "5";
 	        tzParams2.comParams.orgid = "%bind(:4)";
-	
+	        tzParams2.comParams.siteid = "%bind(:10)";
+	        
 	        var tzParams = "";
 	        if(JSON && JSON.stringify)
 	        {

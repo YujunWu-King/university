@@ -703,13 +703,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 
 				if ("M".equals(strActivateType)) {
-					String siteId = jdbcTemplate.queryForObject(
-							"select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",
-							new Object[] { strOrgId }, "String");
-					strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + siteId;
+					//String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",new Object[] { strOrgId }, "String");
+					strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
 				} else {
 					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
-							+ "\",\"lang\":\"" + strLang + "\",\"dlzhid\":\"" + oprId + "\",\"sen\":\"2\"}";
+							+ "\",\"lang\":\"" + strLang+ "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprId + "\",\"sen\":\"2\"}";
 					String strEmailSendResult = registeMalServiceImpl.tzQuery(strEmailSendParas, errMsg);
 					if (!"0".equals(errMsg[0])) {
 						strResult = strEmailSendResult;
@@ -798,6 +796,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			if (map != null) {
 				strOprid = (String) map.get("TZ_DLZH_ID");
 				strJgId = (String) map.get("TZ_JG_ID");
+				
 				if (strCheckCode != null && !"".equals(strCheckCode)) {
 					String strCheckeCodeParas = "{\"checkCode\":\"" + strCheckCode + "\",\"lang\":\"" + strLang
 							+ "\",\"jgid\":\"" + strJgId + "\",\"sen\":\"3\"}";
@@ -848,8 +847,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				Map<String, Object> returnMap = new HashMap<>();
 				returnMap.put("result", "success");
 				// 修改登录链接
-				String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? limit 0,1";
-				String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[] { strJgId }, "String");
+				//String siteIdSQL = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? limit 0,1";
+				//String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[] { strJgId }, "String");
+				String siteIdSQL = "select TZ_SITEI_ID from PS_TZ_REG_USER_T WHERE OPRID=?";
+				String strSiteId = jdbcTemplate.queryForObject(siteIdSQL, new Object[] { strOprid }, "String");
 				String strJumUrl = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() + "/" + strSiteId;
 				returnMap.put("jumpurl", strJumUrl);
 				strResult = jacksonUtil.Map2json(returnMap);
@@ -939,7 +940,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			if ("7".equals(strSen)) {
 				return this.createPageForEmailChangeDone(strParams);
 			}
-
+			
+			if("8".contentEquals(strSen)){
+				return this.getEnrollUrl(strParams);
+			}
 			String strMessage = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "119",
 					"链接错误，请确认您输入的URL地址无误！", "Url is invalid, please makesure the url is valid!");
 			return strMessage;
@@ -1000,6 +1004,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strOrgid = "";
 		String strSiteId = "";
 		String strLang = "";
+		String siteid = "";
 		Date dtYxq = null;
 		String strYxzt = "";
 		String strResult = "获取数据失败，请联系管理员";
@@ -1009,9 +1014,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strTokenSign = jacksonUtil.getString("tokensign");
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
+			siteid = jacksonUtil.getString("siteid");
 
-			String sql = "SELECT TZ_SITEI_ID ,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
+			//String sql = "SELECT TZ_SITEI_ID ,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			//Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
+			String sql = "SELECT TZ_SITEI_ID ,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteid });
 			if (map != null) {
 				strSiteId = (String) map.get("TZ_SITEI_ID");
 				String skinId = (String) map.get("TZ_SKIN_ID");
@@ -1118,8 +1126,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					"激活账号链接已失效，请重新发送激活账号邮件！",
 					"Activate the account link is invalid, please re send the activation account mail!");
 			String strTipHtml3 = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP2_HMTL", message);
-			System.out.println("=========================>" + strSiteId + "====>" + strLang + "====>" + strOrgid
-					+ "====>" + strTipHtml3);
+
 			return this.createPageForEmlActByParameter(strSiteId, strLang, strOrgid, strTipHtml3);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1197,10 +1204,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			if (strTabType.contains("MOBILE") && strTabType.contains("EMAIL")) {
 				if ("ENG".equals(strLang)) {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML",
-							strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl);
+							strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", strBeginUrl,
-							strOrgid, strLang, contextPath, imgPath, loginUrl);
+							strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
 				}
 			} else {
 
@@ -1213,8 +1220,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 								strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl);
 					}
 				} else {
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", strBeginUrl,
-							strOrgid, contextPath, imgPath, loginUrl);
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
 				}
 			}
 			str_content = objRep.repTitle(str_content, strSiteId);
@@ -1239,6 +1245,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
+			strSiteId = jacksonUtil.getString("siteid");
 			strTokenSign = jacksonUtil.getString("tokensign");
 			strTokenSign2 = strTokenSign;
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
@@ -1248,9 +1255,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "123",
 					"请重置新密码", "Please Enter New Password.");
 
-			String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
-			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[] { strOrgid });
-			strSiteId = (String) siteMap.get("TZ_SITEI_ID");
+			//String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
+			//Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[] { strOrgid });
+			//strSiteId = (String) siteMap.get("TZ_SITEI_ID");
+			String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteidSQL, new Object[] { strSiteId });
 			String skinId = (String) siteMap.get("TZ_SKIN_ID");
 			String contextPath = request.getContextPath();
 			String strBeginUrl = contextPath + "/dispatcher";
@@ -1453,6 +1462,33 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 			return strResult;
 		}
+	}
+	
+	public String getEnrollUrl(String strParams){
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String siteid = "";
+		String url = "";
+		try {
+			jacksonUtil.json2Map(strParams);
+			siteid = jacksonUtil.getString("siteid");
+			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
+			url = url.replaceAll("\\\\", "/");
+			if(!"".equals(url)){
+				if((url.lastIndexOf("/") + 1) == url.length()){
+					url = request.getContextPath() + url + "enroll.html";
+				}else{
+					url = request.getContextPath() + url + "/enroll.html";
+				}
+			}else{
+				url = request.getContextPath() + "/enroll.html";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("url", url);
+		return jacksonUtil.Map2json(map);
 	}
 
 	public String createPageForEmlAct(String strParams) {

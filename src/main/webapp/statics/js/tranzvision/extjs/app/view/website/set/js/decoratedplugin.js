@@ -2407,14 +2407,16 @@ Ext.getCmp("gridPanel").reconfigure(store);
 						if (Ext.get(pel2).getAttribute("id") == "registe-area")
 						{
 							
-							window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							//window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editEnrollFieldComponentID);
+							window.open(TzUniversityContextPath + "/index?siteid="+Ext.get("siteid").getValue()+"#"+ Ext.get("jgid").getValue() + "_A00000201");
 							return;
 						}
 
                         /*个人信息显示区域 编辑部分--------------待做*/
                         if(Ext.get(pel2).getAttribute("id") == "perInfo"){
-                            window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
-                            return;
+                            //window.open(TzUniversityContextPath + "/index#"+ Ext.get("jgid").getValue() + editPersonInfoComponentID);
+                        	window.open(TzUniversityContextPath + "/index?siteid="+Ext.get("siteid").getValue()+"#"+ Ext.get("jgid").getValue() + "_A00000201");
+                        	return;
                         }
 
 						if (Ext.get(pel2).getAttribute("id") == "letf_menu") {
