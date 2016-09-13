@@ -61,12 +61,12 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					// 如果是BOOK类型隐藏menuPageName隐藏是否默认页面，显示路径
 					// A:PAGE  B:BOOK
 					if (record.data.menuType == "B") {
-						form.findField("menuPageName").hide();
+						//form.findField("menuPageName").hide();
 						form.findField("isDefault").hide();
 						form.findField("menuPath").show();
 						form.findField("defaultPage").show();
 					} else {
-						form.findField("menuPageName").show();
+						//form.findField("menuPageName").show();
 						form.findField("isDefault").show();
 						form.findField("menuPath").hide();
 						form.findField("defaultPage").hide();
@@ -186,33 +186,18 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 							form= combo.findParentByType("form").getForm();
 							// 如果是BOOK类型隐藏menuPageName隐藏是否默认页面，显示路径
 							if (combo.getValue() == "B") {
-								form.findField("menuPageName").hide();
+								//form.findField("menuPageName").hide();
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
 								form.findField("defaultPage").show();		
 							} else {
-								form.findField("menuPageName").show();
+								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
 							}
 						}
 					}
-				},{
-					xtype : 'textfield',
-					fieldLabel : '菜单路径',
-					name : 'menuPath'
-						//beforeLabelTextTpl : [ '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>' ],
-						//allowBlank : false
-				},{
-					xtype: 'checkboxfield',
-					fieldLabel  : '是否默认首页',
-					name : 'isDefault',
-					inputValue: 'Y'
-				},{
-					xtype: 'displayfield',
-					fieldLabel  : '默认首页',
-					name : 'defaultPage'
 				},{
 					layout : {
 						type : 'column'
@@ -245,6 +230,21 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					fieldLabel : '页面名称',
 					name : 'menuPageName',
 					//allowBlank : false
+				},{
+					xtype : 'textfield',
+					fieldLabel : '菜单路径',
+					name : 'menuPath'
+						//beforeLabelTextTpl : [ '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>' ],
+						//allowBlank : false
+				},{
+					xtype: 'checkboxfield',
+					fieldLabel  : '是否默认首页',
+					name : 'isDefault',
+					inputValue: 'Y'
+				},{
+					xtype: 'displayfield',
+					fieldLabel  : '默认首页',
+					name : 'defaultPage'
 				},{
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 					xtype : 'textfield',
@@ -352,12 +352,12 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 			
 			// 如果是BOOK类型隐藏menuPageName隐藏是否默认页面，显示路径
 			if (rootNode.data.menuType == "B") {
-				form.findField("menuPageName").hide();
+				//form.findField("menuPageName").hide();
 				form.findField("isDefault").hide();
 				form.findField("menuPath").show();
 				form.findField("defaultPage").show();
 			} else {
-				form.findField("menuPageName").show();
+				//form.findField("menuPageName").show();
 				form.findField("isDefault").show();
 				form.findField("menuPath").hide();
 				form.findField("defaultPage").hide();

@@ -22,7 +22,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 				
 				
 				form.findField("menuPath").hide();
-				form.findField("menuPageName").hide();
+				//form.findField("menuPageName").hide();
 				form.findField("isDefault").hide();
 				form.findField("defaultPage").hide();
 
@@ -69,7 +69,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 
 			
 				form.findField("menuPath").hide();
-				form.findField("menuPageName").hide();
+				//form.findField("menuPageName").hide();
 				form.findField("isDefault").hide();
 				form.findField("defaultPage").hide();
 				
@@ -139,12 +139,12 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 							});
 							
 							if (operateNode.data.menuType == "B") {
-								form.findField("menuPageName").hide();
+								//form.findField("menuPageName").hide();
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
 								form.findField("defaultPage").show();
 							} else {
-								form.findField("menuPageName").show();
+								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
@@ -191,12 +191,12 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 									});
 									
 									if (pNode.data.menuType == "B") {
-										form.findField("menuPageName").hide();
+										//form.findField("menuPageName").hide();
 										form.findField("isDefault").hide();
 										form.findField("menuPath").show();
 										form.findField("defaultPage").show();
 									} else {
-										form.findField("menuPageName").show();
+										//form.findField("menuPageName").show();
 										form.findField("isDefault").show();
 										form.findField("menuPath").hide();
 										form.findField("defaultPage").hide();
