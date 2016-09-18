@@ -754,7 +754,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 						if ("0".equals(type.substring(0, 1))) {
 							type = type.substring(1);
 						}
-
+						String originValue = value;
 						switch (Integer.parseInt(type)) {
 						case 1:
 							value = "'" + value + "'";
@@ -772,7 +772,104 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							break;
 						}
 
-						sqlWhere = sqlWhere + key + "=" + value;
+						//修改开始  by caoy @2016-9-18 增加对于操作符号
+						// sqlWhere = sqlWhere + key + "=" + value;
+						// 操作符;
+						if (keyContent.containsKey("operate")) {
+							operate = (String) keyContent.get("operate");
+						} else {
+							operate = "00";
+						}
+						if ("0".equals(operate.substring(0, 1))) {
+							operate = operate.substring(1);
+						}
+
+						switch (Integer.parseInt(operate)) {
+						case 1:
+							// 等于;
+							operate = "=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 2:
+							// 不等于;
+							operate = "<>";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 3:
+							// 大于;
+							operate = ">";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 4:
+							// 大于等于;
+							operate = ">=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 5:
+							// 小于;
+							operate = "<";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 6:
+							// 小于等于;
+							operate = "<=";
+							sqlWhere = sqlWhere + key + operate + value;
+							break;
+						case 7:
+							// 包含;
+							value = "'%" + originValue + "%'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 8:
+							// 开始于…;
+							value = "'" + originValue + "%'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 9:
+							// 结束于…;
+							value = "'%" + originValue + "'";
+							sqlWhere = sqlWhere + key + " LIKE " + value;
+							break;
+						case 10:
+							// in ()
+							originValue = originValue.replaceAll(" ", "");
+							originValue = originValue.trim();
+							String[] inArr = originValue.split(",");
+
+							int inArrLen = inArr.length;
+							if (inArrLen > 0) {
+								value = "";
+								if ("1".equals(type)) {
+									for (int ii = 0; ii < inArrLen; ii++) {
+										originValue = originValue + ",'" + inArr[ii] + "'";
+									}
+
+								} else {
+									for (int ii = 0; ii < inArrLen; ii++) {
+										originValue = originValue + "," + inArr[ii];
+									}
+								}
+								originValue = value.substring(1);
+								originValue = "(" + originValue + ")";
+							}
+
+							sqlWhere = sqlWhere + key + " IN " + originValue;
+							break;
+						case 11:
+							// 为空;
+							sqlWhere = sqlWhere + key + " IS NULL";
+							break;
+						case 12:
+							// 不为空;
+							sqlWhere = sqlWhere + key + " IS NOT NULL";
+							break;
+
+						default:
+							sqlWhere = sqlWhere + key + "=" + value;
+							break;
+						}
+						// 修改结束 by caoy @2016-9-18 增加对于操作符号
+
 					}
 				} catch (Exception e) {
 
