@@ -29,6 +29,7 @@ public class FreeMarkertUtils {
 		}
 		return null;
 	}
+
 	public static void processTemplate(String tplSource, String tplName,
 			Map<String, Object> root, StringWriter out) {
 				try {

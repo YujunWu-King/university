@@ -2,14 +2,19 @@ package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzAsschnlTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiTempTMapper;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzAsschnlTKey;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTKey;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiTempTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -30,6 +35,9 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzSiteiTempTMapper psTzSiteiTempTMapper;
+
+	@Autowired
+	private PsTzAsschnlTMapper psTzAsschnlTMapper;
 
 	/* 查询列表 */
 	@Override
@@ -64,7 +72,7 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 			// System.out.println("sql:" + sql);
 			if (list != null) {
 				// System.out.println("list:" + list.size());
-				Map<String, Object> jsonMap= null;
+				Map<String, Object> jsonMap = null;
 				for (int i = 0; i < list.size(); i++) {
 					jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));
@@ -75,7 +83,7 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 				}
 				returnJsonMap.replace("total", total);
 				returnJsonMap.replace("root", arraylist);
-				//strRet = jacksonUtil.Map2json(returnJsonMap);
+				// strRet = jacksonUtil.Map2json(returnJsonMap);
 			}
 		} catch (Exception e) {
 			errorMsg[0] = "1";
@@ -87,6 +95,7 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 	/* 添加站点模板集合设置 */
 	@Override
+	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
@@ -121,6 +130,23 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 				int i = psTzSiteiTempTMapper.insert(psTzSiteiTempTWithBLOBs);
 				if (i > 0) {
+					// 建立 模版（单独的）->栏目 的对应关系
+					// 解析 channelId='TZ_ACEM_CHNL_2073'
+					List<String> list = new ArrayList<String>();
+					this.getColuId(templatePCCode, list);
+					if (list.size() > 0) {
+						// 下面语句为 排重
+						List<String> listWithoutDup = new ArrayList<String>(new HashSet<String>(list));
+						PsTzAsschnlTKey psTzAsschnlTKey = null;
+						for (String tmpstr : listWithoutDup) {
+							psTzAsschnlTKey = new PsTzAsschnlTKey();
+							psTzAsschnlTKey.setTzColuId(tmpstr);
+							psTzAsschnlTKey.setTzSiteiId(siteId);
+							psTzAsschnlTKey.setTzTempId(templateId);
+							psTzAsschnlTMapper.insert(psTzAsschnlTKey);
+						}
+					}
+
 					returnJsonMap.replace("templateId", templateId);
 				} else {
 					errMsg[0] = "1";
@@ -135,8 +161,51 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 
+	/**
+	 * 解析模版 得到模版所包含的 栏目
+	 * 
+	 * @param templatePCCode
+	 * @param list
+	 */
+	private void getColuId(String templatePCCode, List<String> list) {
+		int index = templatePCCode.indexOf("channelId");
+		String tempstr = "";
+		String[] tmp = null;
+		;
+		if (index != -1) {
+			templatePCCode = templatePCCode.substring(index + 9).trim();
+			index = templatePCCode.indexOf("=");
+			templatePCCode = templatePCCode.substring(index + 1).trim();
+			if (templatePCCode.startsWith("'")) { // channelId =
+													// 'TZ_ACEM_CHNL_67,TZ_ACEM_CHNL_70'这种形式
+				index = templatePCCode.indexOf("'", 1);
+				tempstr = templatePCCode.substring(1, index);
+
+				tmp = StringUtils.split(tempstr, ",");
+				for (int i = 0; i < tmp.length; i++) {
+					list.add(tmp[i]);
+				}
+				getColuId(templatePCCode.substring(index), list);
+			} else if (templatePCCode.startsWith("\"")) { // channelId
+															// ="TZ_ACEM_CHNL_67,TZ_ACEM_CHNL_70"
+															// 这种形式
+				index = templatePCCode.indexOf("\"", 1);
+				tempstr = templatePCCode.substring(1, index);
+
+				tmp = StringUtils.split(tempstr, ",");
+				for (int i = 0; i < tmp.length; i++) {
+					list.add(tmp[i]);
+				}
+				getColuId(templatePCCode.substring(index), list);
+			} else { // channelId = channel.id 这种形式过滤掉
+				getColuId(templatePCCode.substring(index), list);
+			}
+		}
+	}
+
 	/* 修改站点模板集合设置 */
 	@Override
+	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
@@ -171,6 +240,25 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 				int i = psTzSiteiTempTMapper.updateByPrimaryKeyWithBLOBs(psTzSiteiTempTWithBLOBs);
 				if (i > 0) {
+
+					// 建立 模版（单独的）->栏目 的对应关系
+					// 解析 channelId='TZ_ACEM_CHNL_2073'
+					List<String> list = new ArrayList<String>();
+					this.getColuId(templatePCCode, list);
+					if (list.size() > 0) {
+						String deleteSQL = "DELETE from PS_TZ_ASSCHNL_T where TZ_TEMP_ID=?";
+						jdbcTemplate.update(deleteSQL, new Object[] { templateId });
+						// 下面语句为 排重
+						List<String> listWithoutDup = new ArrayList<String>(new HashSet<String>(list));
+						PsTzAsschnlTKey psTzAsschnlTKey = null;
+						for (String tmpstr : listWithoutDup) {
+							psTzAsschnlTKey = new PsTzAsschnlTKey();
+							psTzAsschnlTKey.setTzColuId(tmpstr);
+							psTzAsschnlTKey.setTzSiteiId(siteId);
+							psTzAsschnlTKey.setTzTempId(templateId);
+							psTzAsschnlTMapper.insert(psTzAsschnlTKey);
+						}
+					}
 					returnJsonMap.replace("templateId", templateId);
 				} else {
 					errMsg[0] = "1";
@@ -236,6 +324,7 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 	/* 删除站点模板 */
 	@Override
+	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "";
@@ -257,6 +346,10 @@ public class OrgTempMgServiceImpl extends FrameworkImpl {
 
 					// 删除机构站点模板信息;
 					String deleteSQL = "DELETE from PS_TZ_SITEI_TEMP_T where TZ_TEMP_ID=?";
+					jdbcTemplate.update(deleteSQL, new Object[] { templateId });
+
+					// 删除 模板栏目关联表
+					deleteSQL = "DELETE from PS_TZ_ASSCHNL_T where TZ_TEMP_ID=?";
 					jdbcTemplate.update(deleteSQL, new Object[] { templateId });
 				}
 			}

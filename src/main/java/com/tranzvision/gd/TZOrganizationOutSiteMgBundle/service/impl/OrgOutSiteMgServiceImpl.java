@@ -77,8 +77,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 			// System.out.println("sql:" + sql);
 			if (list != null) {
 				// System.out.println("list:" + list.size());
+				Map<String, Object> jsonMap = null;
 				for (int i = 0; i < list.size(); i++) {
-					Map<String, Object> jsonMap = new HashMap<String, Object>();
+					jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));
 					jsonMap.put("sitetemplateName", list.get(i).get("TZ_SITEI_NAME"));
 					jsonMap.put("explanation", list.get(i).get("TZ_SITEI_DESCR"));
@@ -170,8 +171,8 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 			File dir = null;
 			String sql = "";
 			String isHas = "";
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request); // 登陆用户的用户ID
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request); // 登陆用户的机构ID
 			PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = null;
 			PsTzSiteiColuT psTzSiteiColuT = null;
 			PsTzSiteiMenuT psTzSiteiMenuT = null;
@@ -262,6 +263,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiMenuT.setTzMenuPath(sitePath + "/menu");
 					psTzSiteiMenuT.setTzMenuState("Y");
 					psTzSiteiMenuT.setTzIsDel("N"); // 不允许删除
+					psTzSiteiMenuT.setTzMenuXh(new Integer(1)); // 循序为1
 					psTzSiteiMenuT.setTzIsEditor("N"); // 不允许编辑
 					psTzSiteiMenuT.setTzMenuType("B"); // BOOK
 					psTzSiteiMenuT.setTzMenuLevel(new Integer(0));

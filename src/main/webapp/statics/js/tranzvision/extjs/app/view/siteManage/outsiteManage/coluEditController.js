@@ -95,8 +95,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 		var rootNode = form.findField("rootNode").getValue();
 		var operateNodeId = form.findField("operateNode").getValue();
 		var operateNode = treepanelStore.getNodeById(operateNodeId);
-
-		Ext.Msg.confirm("确认","是否确认删除当前节点及其子节点",
+		
+		if (coluId == rootNode) {
+			Ext.Msg.alert("提示", "不可删除根节点");
+		} else {
+			Ext.Msg.confirm("确认","是否确认删除当前节点及其子节点",
 				function(confm) {
 					if (confm == 'yes') {
 						if (actType == "add") {
@@ -157,7 +160,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 							}, "",true, this);
 						}
 					}
-		}, this);
+			}, this)
+		};
 	},
 	
 	//构造删除节点 提交到后台的JSON

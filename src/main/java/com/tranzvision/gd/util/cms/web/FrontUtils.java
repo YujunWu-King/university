@@ -4,10 +4,8 @@ import static com.tranzvision.gd.util.cms.web.Constants.TPL_SUFFIX;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import com.tranzvision.gd.util.cms.entity.main.CmsChannel;
 import com.tranzvision.gd.util.cms.web.freemarker.DirectiveUtils;
-
 import freemarker.core.Environment;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateException;
@@ -23,48 +21,47 @@ import freemarker.template.TemplateScalarModel;
  * 
  */
 public class FrontUtils {
-	
+
 	/**
 	 * 传入参数，列表样式。
 	 */
 	public static final String PARAM_STYLE_LIST = "styleList";
-	
+
 	/**
 	 * 站点编号
 	 */
 	public static final String SITE_ID = "siteId";
-	
+
 	/**
 	 * 栏目对象
 	 */
 	public static final String CHANNEL = "channel";
-	
+
 	/**
 	 * 栏目对象
 	 */
 	public static final String TYPE = "type";
-	
-	
+
 	/**
 	 * 页码
 	 */
 	public static final String PAGE_NO = "pageNo";
-	
+
 	/**
 	 * 专题页编号
 	 */
 	public static final String SPE_ID = "speId";
-	
+
 	/**
 	 * 分区编号
 	 */
 	public static final String DIV_ID = "divId";
-	
+
 	/**
 	 * 菜单对象
 	 */
 	public static final String MENU = "menu";
-	
+
 	/**
 	 * 页面没有找到
 	 */
@@ -101,7 +98,7 @@ public class FrontUtils {
 	 * 站点
 	 */
 	public static final String SITE = "site";
-	
+
 	/**
 	 * 内容编号
 	 */
@@ -111,8 +108,6 @@ public class FrontUtils {
 	 * 用户
 	 */
 	public static final String USER = "user";
-
-
 
 	/**
 	 * 页面完整地址
@@ -131,7 +126,6 @@ public class FrontUtils {
 	 */
 	public static final String HREF_LATTER = "hrefLatter";
 
-
 	/**
 	 * 总条数
 	 */
@@ -139,7 +133,7 @@ public class FrontUtils {
 	/**
 	 * 起始条数
 	 */
-	public static final String FIRST = "first";	
+	public static final String FIRST = "first";
 	/**
 	 * 传入参数，系统预定义翻页。
 	 */
@@ -164,15 +158,24 @@ public class FrontUtils {
 	 * @param urlLatter
 	 * @param map
 	 */
-	public static void frontPageData(int pageNo, String href,
-			String hrefFormer, String hrefLatter, Map<String, Object> map) {
+	public static void frontPageData(int pageNo, String href, String hrefFormer, String hrefLatter,
+			Map<String, Object> map) {
 		map.put(PAGE_NO, pageNo);
 		map.put(HREF, href);
 		map.put(HREF_FORMER, hrefFormer);
 		map.put(HREF_LATTER, hrefLatter);
 	}
 
-	
+	/*
+	 * public static void includePagination(Map<String, TemplateModel> params,
+	 * Environment env) throws TemplateException, IOException { String sysPage =
+	 * DirectiveUtils.getString(PARAM_SYS_PAGE, params); if
+	 * (!StringUtils.isBlank(sysPage)) { CmsTemplate tpl = new
+	 * TemplateMngImpl().findTplById(sysPage); Template template =
+	 * FreeMarkertUtils.getStyleTpl(tpl.getContent(), tpl.getSiteId() +
+	 * tpl.getId()); env.include(template); } else { // 没有包含分页 } }
+	 */
+
 	/**
 	 * 获得模板路径。不对模板文件进行本地化处理。
 	 * 
@@ -188,8 +191,6 @@ public class FrontUtils {
 		return solution + "/" + dir + "/" + name + TPL_SUFFIX;
 	}
 
-	
-	
 	/**
 	 * 标签中获得站点编号
 	 * 
@@ -199,28 +200,27 @@ public class FrontUtils {
 	 */
 	public static String getSiteID(Environment env) throws TemplateException {
 		TemplateModel siteId = env.getGlobalVariable(SITE_ID);
-		if(siteId == null) return null;
+		if (siteId == null)
+			return null;
 		if (siteId instanceof TemplateScalarModel) {
 			return ((TemplateScalarModel) siteId).getAsString();
 		} else {
-			throw new TemplateModelException("'" + SITE_ID
-					+ "' not found in DataModel.");
+			throw new TemplateModelException("'" + SITE_ID + "' not found in DataModel.");
 		}
 	}
-	
-	public static String getParamChnlId(Environment env) throws TemplateException{
+
+	public static String getParamChnlId(Environment env) throws TemplateException {
 		TemplateModel model = env.getGlobalVariable(CHANNEL);
 		if (model instanceof AdapterTemplateModel) {
-			CmsChannel channel = (CmsChannel) ((AdapterTemplateModel) model)
-			.getAdaptedObject(CmsChannel.class);
-			if(channel == null) return null;
+			CmsChannel channel = (CmsChannel) ((AdapterTemplateModel) model).getAdaptedObject(CmsChannel.class);
+			if (channel == null)
+				return null;
 			return channel.getId();
 		} else {
-			throw new TemplateModelException("'" + CHANNEL
-					+ "' not found in DataModel");
+			throw new TemplateModelException("'" + CHANNEL + "' not found in DataModel");
 		}
 	}
-	
+
 	/**
 	 * 获取当前是不是初始化操作
 	 * 
@@ -230,15 +230,15 @@ public class FrontUtils {
 	 */
 	public static String getType(Environment env) throws TemplateException {
 		TemplateModel type = env.getGlobalVariable(TYPE);
-		if(type == null) return null;
+		if (type == null)
+			return null;
 		if (type instanceof TemplateScalarModel) {
 			return ((TemplateScalarModel) type).getAsString();
 		} else {
-			throw new TemplateModelException("'" + TYPE
-					+ "' not found in DataModel.");
+			throw new TemplateModelException("'" + TYPE + "' not found in DataModel.");
 		}
-	}	
-	
+	}
+
 	/**
 	 * 标签中获得页码
 	 * 
@@ -248,17 +248,16 @@ public class FrontUtils {
 	 */
 	public static int getPageNo(Environment env) throws TemplateException {
 		TemplateModel pageNo = env.getGlobalVariable(PAGE_NO);
-		if(pageNo == null) return 1;
+		if (pageNo == null)
+			return 1;
 		if (pageNo instanceof TemplateNumberModel) {
 			return ((TemplateNumberModel) pageNo).getAsNumber().intValue();
 		} else {
-			throw new TemplateModelException("'" + PAGE_NO
-					+ "' not found in DataModel.");
+			throw new TemplateModelException("'" + PAGE_NO + "' not found in DataModel.");
 		}
 	}
 
-	public static int getFirst(Map<String, TemplateModel> params)
-			throws TemplateException {
+	public static int getFirst(Map<String, TemplateModel> params) throws TemplateException {
 		Integer first = DirectiveUtils.getInt(FIRST, params);
 		if (first == null || first <= 0) {
 			return 0;
@@ -266,7 +265,26 @@ public class FrontUtils {
 			return first - 1;
 		}
 	}
-	
+
+	/**
+	 * 标签中包含用户预定义列表样式模板
+	 * 
+	 * @param listStyle
+	 * @param env
+	 * @throws IOException
+	 * @throws TemplateException
+	 */
+	// public static void includeTpl(String listStyle, Environment env) throws
+	// IOException, TemplateException {
+	//
+	// CmsTemplate tpl = new TemplateMngImpl().findTplById(listStyle);
+	//
+	// Template template = FreeMarkertUtils.getStyleTpl(tpl.getContent(),
+	// tpl.getSiteId()+tpl.getId());
+	//
+	// env.include(template);
+	// }
+
 	/**
 	 * 标签参数中获得条数。
 	 * 
@@ -274,8 +292,7 @@ public class FrontUtils {
 	 * @return 如果不存在，或者小于等于0，或者大于100则返回100；否则返回条数。
 	 * @throws TemplateException
 	 */
-	public static int getCount(Map<String, TemplateModel> params)
-			throws TemplateException {
+	public static int getCount(Map<String, TemplateModel> params) throws TemplateException {
 		Integer count = DirectiveUtils.getInt(COUNT, params);
 		if (count == null || count <= 0 || count >= 100) {
 			return 100;
@@ -284,41 +301,35 @@ public class FrontUtils {
 		}
 	}
 
-
-
-
 	public static String getSpeId(Environment env) throws TemplateModelException {
 		TemplateModel speid = env.getGlobalVariable(SPE_ID);
-		if(speid == null) return null;
+		if (speid == null)
+			return null;
 		if (speid instanceof TemplateScalarModel) {
 			return ((TemplateScalarModel) speid).getAsString();
 		} else {
-			throw new TemplateModelException("'" + SPE_ID
-					+ "' not found in DataModel.");
+			throw new TemplateModelException("'" + SPE_ID + "' not found in DataModel.");
 		}
 	}
-
-
-
 
 	public static String getDivId(Environment env) throws TemplateModelException {
 		TemplateModel divid = env.getGlobalVariable(DIV_ID);
-		if(divid == null) return null;
+		if (divid == null)
+			return null;
 		if (divid instanceof TemplateScalarModel) {
 			return ((TemplateScalarModel) divid).getAsString();
 		} else {
-			throw new TemplateModelException("'" + DIV_ID
-					+ "' not found in DataModel.");
+			throw new TemplateModelException("'" + DIV_ID + "' not found in DataModel.");
 		}
 	}
-	
-	/*清除内容中的HTML标签*/
-	public static String replaceHtml(String html){ 
-        String regEx="<.+?>"; //表示标签 
-        Pattern p=Pattern.compile(regEx); 
-        Matcher m=p.matcher(html); 
-        String s=m.replaceAll(""); 
-        return s; 
-    }
+
+	/* 清除内容中的HTML标签 */
+	public static String replaceHtml(String html) {
+		String regEx = "<.+?>"; // 表示标签
+		Pattern p = Pattern.compile(regEx);
+		Matcher m = p.matcher(html);
+		String s = m.replaceAll("");
+		return s;
+	}
 
 }
