@@ -77,8 +77,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 			// System.out.println("sql:" + sql);
 			if (list != null) {
 				// System.out.println("list:" + list.size());
+				Map<String, Object> jsonMap = null;
 				for (int i = 0; i < list.size(); i++) {
-					Map<String, Object> jsonMap = new HashMap<String, Object>();
+					jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));
 					jsonMap.put("sitetemplateName", list.get(i).get("TZ_SITEI_NAME"));
 					jsonMap.put("explanation", list.get(i).get("TZ_SITEI_DESCR"));

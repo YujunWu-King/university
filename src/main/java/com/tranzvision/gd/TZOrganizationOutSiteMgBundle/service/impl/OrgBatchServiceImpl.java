@@ -62,7 +62,8 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 				sb.append("LEFT JOIN PS_TZ_SITEI_DEFN_T B ");
 				sb.append("ON (A.TZ_BATCH_OBJECT_ID=B.TZ_SITEI_ID AND A.TZ_BATCH_RELEASE_TYPE='A')");
 				sb.append("LEFT JOIN PS_TZ_SITEI_COLU_T C ");
-				sb.append("ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM LIMIT ?,?");
+				sb.append(
+						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM LIMIT ?,?");
 
 				list = jdbcTemplate.queryForList(sb.toString(), new Object[] { orgId, numStart, numLimit });
 			} else {
@@ -73,14 +74,16 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 				sb.append("LEFT JOIN PS_TZ_SITEI_DEFN_T B ");
 				sb.append("ON (A.TZ_BATCH_OBJECT_ID=B.TZ_SITEI_ID AND A.TZ_BATCH_RELEASE_TYPE='A')");
 				sb.append("LEFT JOIN PS_TZ_SITEI_COLU_T C ");
-				sb.append("ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM");
+				sb.append(
+						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM");
 				list = jdbcTemplate.queryForList(sql);
 			}
 			// System.out.println("sql:" + sql);
 			if (list != null) {
 				// System.out.println("list:" + list.size());
+				Map<String, Object> jsonMap = null;
 				for (int i = 0; i < list.size(); i++) {
-					Map<String, Object> jsonMap = new HashMap<String, Object>();
+					jsonMap = new HashMap<String, Object>();
 					jsonMap.put("siteId", list.get(i).get("TZ_SITEI_ID"));
 					jsonMap.put("sitetemplateName", list.get(i).get("TZ_SITEI_NAME"));
 					jsonMap.put("explanation", list.get(i).get("TZ_SITEI_DESCR"));

@@ -19,6 +19,7 @@
     <result column="TZ_ORGIN_REF_CHNL" jdbcType="VARCHAR" property="tzOrginRefChnl" />
     <result column="TZ_ORGIN_REFART_ID" jdbcType="VARCHAR" property="tzOrginRefartId" />
     <result column="TZ_STATIC_NAME" jdbcType="VARCHAR" property="tzStaticName" />
+    <result column="TZ_STATIC_AOTO_NAME" jdbcType="VARCHAR" property="tzStaticAotoName" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs">
     <result column="TZ_ART_URL" jdbcType="LONGVARCHAR" property="tzArtUrl" />
@@ -30,7 +31,8 @@
   <sql id="Base_Column_List">
     TZ_SITE_ID, TZ_COLU_ID, TZ_ART_ID, TZ_ART_NEWS_DT, TZ_ART_PUB_STATE, TZ_STATIC_ART_URL, 
     TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM, 
-    TZ_ORGIN_ART_CHNL, TZ_ORGIN_ART_ID, TZ_ORGIN_REF_CHNL, TZ_ORGIN_REFART_ID, TZ_STATIC_NAME
+    TZ_ORGIN_ART_CHNL, TZ_ORGIN_ART_ID, TZ_ORGIN_REF_CHNL, TZ_ORGIN_REFART_ID, TZ_STATIC_NAME, 
+    TZ_STATIC_AOTO_NAME
   </sql>
   <sql id="Blob_Column_List">
     TZ_ART_URL, TZ_ART_HTML, TZ_ART_SJ_HTML, TZ_ART_CONENT_SCR, TZ_ART_SJ_CONT_SCR
@@ -57,17 +59,17 @@
       TZ_ART_SEQ, TZ_MAX_ZD_SEQ, TZ_FBZ, 
       TZ_BLT_DEPT, TZ_LASTMANT_OPRID, TZ_LASTMANT_DTTM, 
       TZ_ORGIN_ART_CHNL, TZ_ORGIN_ART_ID, TZ_ORGIN_REF_CHNL, 
-      TZ_ORGIN_REFART_ID, TZ_STATIC_NAME, TZ_ART_URL, 
-      TZ_ART_HTML, TZ_ART_SJ_HTML, TZ_ART_CONENT_SCR, 
-      TZ_ART_SJ_CONT_SCR)
+      TZ_ORGIN_REFART_ID, TZ_STATIC_NAME, TZ_STATIC_AOTO_NAME, 
+      TZ_ART_URL, TZ_ART_HTML, TZ_ART_SJ_HTML, 
+      TZ_ART_CONENT_SCR, TZ_ART_SJ_CONT_SCR)
     values (#{tzSiteId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzArtId,jdbcType=VARCHAR}, 
       #{tzArtNewsDt,jdbcType=TIMESTAMP}, #{tzArtPubState,jdbcType=VARCHAR}, #{tzStaticArtUrl,jdbcType=VARCHAR}, 
       #{tzArtSeq,jdbcType=INTEGER}, #{tzMaxZdSeq,jdbcType=INTEGER}, #{tzFbz,jdbcType=VARCHAR}, 
       #{tzBltDept,jdbcType=VARCHAR}, #{tzLastmantOprid,jdbcType=VARCHAR}, #{tzLastmantDttm,jdbcType=TIMESTAMP}, 
       #{tzOrginArtChnl,jdbcType=VARCHAR}, #{tzOrginArtId,jdbcType=VARCHAR}, #{tzOrginRefChnl,jdbcType=VARCHAR}, 
-      #{tzOrginRefartId,jdbcType=VARCHAR}, #{tzStaticName,jdbcType=VARCHAR}, #{tzArtUrl,jdbcType=LONGVARCHAR}, 
-      #{tzArtHtml,jdbcType=LONGVARCHAR}, #{tzArtSjHtml,jdbcType=LONGVARCHAR}, #{tzArtConentScr,jdbcType=LONGVARCHAR}, 
-      #{tzArtSjContScr,jdbcType=LONGVARCHAR})
+      #{tzOrginRefartId,jdbcType=VARCHAR}, #{tzStaticName,jdbcType=VARCHAR}, #{tzStaticAotoName,jdbcType=VARCHAR}, 
+      #{tzArtUrl,jdbcType=LONGVARCHAR}, #{tzArtHtml,jdbcType=LONGVARCHAR}, #{tzArtSjHtml,jdbcType=LONGVARCHAR}, 
+      #{tzArtConentScr,jdbcType=LONGVARCHAR}, #{tzArtSjContScr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs">
     insert into PS_TZ_LM_NR_GL_T
@@ -122,6 +124,9 @@
       </if>
       <if test="tzStaticName != null">
         TZ_STATIC_NAME,
+      </if>
+      <if test="tzStaticAotoName != null">
+        TZ_STATIC_AOTO_NAME,
       </if>
       <if test="tzArtUrl != null">
         TZ_ART_URL,
@@ -191,6 +196,9 @@
       <if test="tzStaticName != null">
         #{tzStaticName,jdbcType=VARCHAR},
       </if>
+      <if test="tzStaticAotoName != null">
+        #{tzStaticAotoName,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtUrl != null">
         #{tzArtUrl,jdbcType=LONGVARCHAR},
       </if>
@@ -253,6 +261,9 @@
       <if test="tzStaticName != null">
         TZ_STATIC_NAME = #{tzStaticName,jdbcType=VARCHAR},
       </if>
+      <if test="tzStaticAotoName != null">
+        TZ_STATIC_AOTO_NAME = #{tzStaticAotoName,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtUrl != null">
         TZ_ART_URL = #{tzArtUrl,jdbcType=LONGVARCHAR},
       </if>
@@ -289,6 +300,7 @@
       TZ_ORGIN_REF_CHNL = #{tzOrginRefChnl,jdbcType=VARCHAR},
       TZ_ORGIN_REFART_ID = #{tzOrginRefartId,jdbcType=VARCHAR},
       TZ_STATIC_NAME = #{tzStaticName,jdbcType=VARCHAR},
+      TZ_STATIC_AOTO_NAME = #{tzStaticAotoName,jdbcType=VARCHAR},
       TZ_ART_URL = #{tzArtUrl,jdbcType=LONGVARCHAR},
       TZ_ART_HTML = #{tzArtHtml,jdbcType=LONGVARCHAR},
       TZ_ART_SJ_HTML = #{tzArtSjHtml,jdbcType=LONGVARCHAR},
@@ -313,7 +325,8 @@
       TZ_ORGIN_ART_ID = #{tzOrginArtId,jdbcType=VARCHAR},
       TZ_ORGIN_REF_CHNL = #{tzOrginRefChnl,jdbcType=VARCHAR},
       TZ_ORGIN_REFART_ID = #{tzOrginRefartId,jdbcType=VARCHAR},
-      TZ_STATIC_NAME = #{tzStaticName,jdbcType=VARCHAR}
+      TZ_STATIC_NAME = #{tzStaticName,jdbcType=VARCHAR},
+      TZ_STATIC_AOTO_NAME = #{tzStaticAotoName,jdbcType=VARCHAR}
     where TZ_SITE_ID = #{tzSiteId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
       and TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
