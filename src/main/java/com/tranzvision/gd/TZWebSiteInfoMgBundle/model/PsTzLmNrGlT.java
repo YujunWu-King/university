@@ -29,6 +29,8 @@ public class PsTzLmNrGlT extends PsTzLmNrGlTKey {
 
     private String tzOrginRefartId;
 
+    private String tzStaticName;
+
     public Date getTzArtNewsDt() {
         return tzArtNewsDt;
     }
@@ -131,5 +133,13 @@ public class PsTzLmNrGlT extends PsTzLmNrGlTKey {
 
     public void setTzOrginRefartId(String tzOrginRefartId) {
         this.tzOrginRefartId = tzOrginRefartId == null ? null : tzOrginRefartId.trim();
+    }
+
+    public String getTzStaticName() {
+        return tzStaticName;
+    }
+
+    public void setTzStaticName(String tzStaticName) {
+        this.tzStaticName = tzStaticName == null ? null : tzStaticName.trim();
     }
 }

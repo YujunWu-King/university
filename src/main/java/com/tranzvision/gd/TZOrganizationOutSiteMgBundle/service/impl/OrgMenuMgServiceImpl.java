@@ -12,10 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMenuTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cms.CmsBean;
+import com.tranzvision.gd.util.cms.CmsUtils;
+import com.tranzvision.gd.util.cms.entity.main.CmsMenu;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -44,6 +48,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+
+	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;
 
 	/* 查询列表 */
 	@Override
@@ -659,6 +666,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	 * 删除节点
 	 */
 	@Override
+	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
@@ -740,7 +748,77 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				}
 			}
 		}
+	}
 
+	/**
+	 * 其他相关函数
+	 * 
+	 * @param actData
+	 * @param errMsg
+	 * @return String
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional
+	public String tzOther(String oprType, String strParams, String[] errMsg) {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		boolean success = false;
+		try {
+			// 生成一级菜单
+			CmsUtils cu = new CmsUtils();
+			if ("mainMenu".equals(oprType)) {
+				jacksonUtil.json2Map(strParams);
+				String siteId = jacksonUtil.getString("siteId");
+				CmsBean cm = cu.menuBook(siteId, "");
+				// 写文件
+				if (cm != null && cm.getHtmlName() != null && !cm.getHtmlName().equals("")) {
+					try {
+						// 生成文件
+						success = fileManageServiceImpl.CreateFile(cm.getPath(), cm.getHtmlName(),
+								cm.getHtml().getBytes());
+					} catch (Exception e) {
+						success = false;
+						errMsg[0] = "1";
+						errMsg[1] = "站点目录生成失败";
+					}
+				}
+
+			} else if ("otherMenu".equals(oprType)) { // 生成其他菜单或页面
+				jacksonUtil.json2Map(strParams);
+				String siteId = jacksonUtil.getString("siteId");
+				String menuId = jacksonUtil.getString("menuId");
+				String menuType = jacksonUtil.getString("menuType");
+
+				CmsBean cm = null;
+				// A:PAGE B:BOOK
+				if (menuType.endsWith("B")) {
+					cm = cu.menuBook(siteId, menuId);
+				} else if (menuType.endsWith("A")) {
+					cm = cu.menuPage(siteId, menuId);
+				}
+				// 写文件 不是所有的BOOK 都有文件名，某些次级BOOK不需要生成 菜单文件
+				if (cm != null && cm.getHtmlName() != null && !cm.getHtmlName().equals("")) {
+					try {
+						// 生成文件
+						success = fileManageServiceImpl.CreateFile(cm.getPath(), cm.getHtmlName(),
+								cm.getHtml().getBytes());
+					} catch (Exception e) {
+						success = false;
+						errMsg[0] = "1";
+						errMsg[1] = "站点目录生成失败";
+					}
+				}
+			}
+		} catch (Exception e) {
+			success = false;
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		mapRet.put("success", success);
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 }

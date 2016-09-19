@@ -14,6 +14,8 @@ public class CmsMenu extends BaseMenu {
 	private String pageName; // PAGE名称
 
 	private String defaultId; // 默认下级Page的菜单ID
+	
+	
 
 	public String getLevel() {
 		return level;

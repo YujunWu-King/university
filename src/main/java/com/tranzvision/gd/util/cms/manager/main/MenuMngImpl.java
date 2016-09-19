@@ -272,7 +272,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		menu.setStyle("");
 
 		menu.setLevel((String) map.get("TZ_MENU_LEVEL"));
-
+		
 		menu.setPageName((String) map.get("TZ_PAGE_NAME"));
 
 		menu.setDefaultId((String) map.get("TZ_D_MENU_ID"));

@@ -3,6 +3,12 @@ package com.tranzvision.gd.util.cms;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.ART_ID;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.CHANNEL;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.SITE_ID;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +109,7 @@ public class CmsUtils {
 	 * @param id
 	 * @return
 	 */
-	public String menuPage(String siteId, String id) {
+	public CmsBean menuPage(String siteId, String id) {
 		if (StringUtils.isBlank(siteId)) {
 			return null;
 		}
@@ -124,20 +130,25 @@ public class CmsUtils {
 		root.put("text_cut", new TextCutDirective());
 		root.put("ContentImage", new ArticleImageDirective());
 		root.put("ContentAtts", new ArticleAttachmentDirective());
-		root.put("CmsArticleList", new ContentListDirective());  //1.文章列表标签（无分页）
-		root.put("CmsContentPage", new ArticlePageDirective());  //2.文章分页列表标签
+		root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
+		root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
 		root.put("menu", menu);
 		root.put(SITE_ID, siteId);
 
 		String tplSource = tpl.getPcContent();
-		
+
 		if (StringUtils.isBlank(tplSource)) {
 			return null;
 		}
 		String tplName = tpl.getId();
 		StringWriter out = new StringWriter();
 		FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
-		return out.toString();
+
+		CmsBean bean = new CmsBean();
+		bean.setHtml(out.toString());
+		bean.setPath(menu.getStaticpath());
+		bean.setHtmlName(menu.getPageName());
+		return bean;
 	}
 
 	/**
@@ -148,7 +159,7 @@ public class CmsUtils {
 	 *            如果不传，说明是跟节点
 	 * @return
 	 */
-	public String menuBook(String siteId, String id) {
+	public CmsBean menuBook(String siteId, String id) {
 
 		if (StringUtils.isBlank(siteId)) {
 			return null;
@@ -178,8 +189,16 @@ public class CmsUtils {
 
 		StringWriter out = new StringWriter();
 		FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+		CmsBean bean = new CmsBean();
+		bean.setHtml(out.toString());
+		bean.setPath(menu.getStaticpath());
+		bean.setHtmlName(menu.getPageName());
 
-		return out.toString();
+		return bean;
 	}
+
+
+
+
 
 }
