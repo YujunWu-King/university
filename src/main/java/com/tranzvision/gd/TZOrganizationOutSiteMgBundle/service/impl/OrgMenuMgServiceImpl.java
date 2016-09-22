@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,9 +19,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMenuTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cms.CmsBean;
 import com.tranzvision.gd.util.cms.CmsUtils;
-import com.tranzvision.gd.util.cms.entity.main.CmsMenu;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -51,6 +53,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FileManageServiceImpl fileManageServiceImpl;
+
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	/* 查询列表 */
 	@Override
@@ -474,7 +479,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						mapData = (Map<String, Object>) objData;
 						if (String.valueOf(mapData.get("TZ_MENU_LEVEL")).equals("0")) {
 							rootNode = mapData;
-						} else if (String.valueOf(mapData.get("TZ_MENU_ID")).equals(operateNode)) {
+						}
+
+						if (String.valueOf(mapData.get("TZ_MENU_ID")).equals(operateNode)) {
 							thisNode = mapData;
 						}
 					}
@@ -776,8 +783,17 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				if (cm != null && cm.getHtmlName() != null && !cm.getHtmlName().equals("")) {
 					try {
 						// 生成文件
-						success = fileManageServiceImpl.CreateFile(cm.getPath(), cm.getHtmlName(),
-								cm.getHtml().getBytes());
+						// success =
+						// fileManageServiceImpl.UpdateFile(cm.getPath(),
+						// cm.getHtmlName(),
+						// cm.getHtml().getBytes());
+
+						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+						dir = request.getServletContext().getRealPath(dir);
+						dir = dir + File.separator + cm.getPath();
+
+						success = this.staticFile(cm.getHtml(), dir, cm.getHtmlName(), errMsg);
+
 					} catch (Exception e) {
 						success = false;
 						errMsg[0] = "1";
@@ -796,14 +812,25 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				if (menuType.endsWith("B")) {
 					cm = cu.menuBook(siteId, menuId);
 				} else if (menuType.endsWith("A")) {
-					cm = cu.menuPage(siteId, menuId);
+					System.out.println("PAGE Creeate,menuId=" + menuId);
+					String contentPath = request.getContextPath();
+					cm = cu.menuPage(siteId, menuId, contentPath);
 				}
 				// 写文件 不是所有的BOOK 都有文件名，某些次级BOOK不需要生成 菜单文件
 				if (cm != null && cm.getHtmlName() != null && !cm.getHtmlName().equals("")) {
 					try {
 						// 生成文件
-						success = fileManageServiceImpl.CreateFile(cm.getPath(), cm.getHtmlName(),
-								cm.getHtml().getBytes());
+						// success =
+						// fileManageServiceImpl.UpdateFile(cm.getPath(),
+						// cm.getHtmlName(),
+						// cm.getHtml().getBytes());
+						
+						
+						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+						dir = request.getServletContext().getRealPath(dir);
+						dir = dir + File.separator + cm.getPath();
+
+						success = this.staticFile(cm.getHtml(), dir, cm.getHtmlName(), errMsg);
 					} catch (Exception e) {
 						success = false;
 						errMsg[0] = "1";
@@ -819,6 +846,38 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		}
 		mapRet.put("success", success);
 		return jacksonUtil.Map2json(mapRet);
+	}
+
+	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
+		try {
+			System.out.println(dir);
+			File fileDir = new File(dir);
+			if (!fileDir.exists()) {
+				fileDir.mkdirs();
+			}
+
+			String filePath = "";
+			if ((dir.lastIndexOf(File.separator) + 1) != dir.length()) {
+				filePath = dir + File.separator + fileName;
+			} else {
+				filePath = dir + fileName;
+			}
+
+			File file = new File(filePath);
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(strReleasContent);
+			bw.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "3";
+			errMsg[1] = "静态化文件时异常！";
+			return false;
+		}
 	}
 
 }

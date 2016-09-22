@@ -158,6 +158,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.tempController', {
 	},
 	onFormEnsure: function(){
 		this.onFormSave("but_ensure");
+		//onFormClose();
 		this.getView().close();
 	},
 	onFormClose: function(){
@@ -243,7 +244,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.tempController', {
 	},
 	//确定
 	ensureTempList:function(obj) {
-		var grid = this.getView().child("grid");
+		var view = this.getView();
+		var grid = view.child("grid");
 		//Ext.MessageBox.alert('提示', grid);
 		var store = grid.getStore();
 		//删除json字符串
@@ -267,7 +269,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.tempController', {
 		var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWMBDY_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
 		Ext.tzSubmit(tzParams,function(){
-			comView.close();	   
+			view.close();
 		},"",true,this);
 	}
 });

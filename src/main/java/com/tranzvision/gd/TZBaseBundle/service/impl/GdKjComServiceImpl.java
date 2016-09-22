@@ -772,18 +772,18 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							break;
 						}
 
-						//修改开始  by caoy @2016-9-18 增加对于操作符号
+						// 修改开始 by caoy @2016-9-18 增加对于操作符号
 						// sqlWhere = sqlWhere + key + "=" + value;
 						// 操作符;
-						if (keyContent.containsKey("operate")) {
-							operate = (String) keyContent.get("operate");
+						if (keyContent.containsKey("operator")) {
+							operate = (String) keyContent.get("operator");
 						} else {
 							operate = "00";
 						}
 						if ("0".equals(operate.substring(0, 1))) {
 							operate = operate.substring(1);
 						}
-
+						//System.out.println("operate:"+operate);
 						switch (Integer.parseInt(operate)) {
 						case 1:
 							// 等于;
@@ -832,6 +832,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							break;
 						case 10:
 							// in ()
+							//System.out.println("originValue:"+originValue);
 							originValue = originValue.replaceAll(" ", "");
 							originValue = originValue.trim();
 							String[] inArr = originValue.split(",");
@@ -841,19 +842,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 								value = "";
 								if ("1".equals(type)) {
 									for (int ii = 0; ii < inArrLen; ii++) {
-										originValue = originValue + ",'" + inArr[ii] + "'";
+										value = value + ",'" + inArr[ii] + "'";
 									}
 
 								} else {
 									for (int ii = 0; ii < inArrLen; ii++) {
-										originValue = originValue + "," + inArr[ii];
+										value = value + "," + inArr[ii];
 									}
 								}
-								originValue = value.substring(1);
-								originValue = "(" + originValue + ")";
+								value = value.substring(1);
+								value = "(" + value + ")";
 							}
 
-							sqlWhere = sqlWhere + key + " IN " + originValue;
+							sqlWhere = sqlWhere + key + " IN " + value;
 							break;
 						case 11:
 							// 为空;
@@ -987,28 +988,31 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 							sqlWhere = sqlWhere + key + " LIKE " + value;
 							break;
 						case 10:
+							//in 
 							originValue = originValue.replaceAll(" ", "");
 							originValue = originValue.trim();
 							String[] inArr = originValue.split(",");
 
 							int inArrLen = inArr.length;
 							if (inArrLen > 0) {
+								//有BUG caoy 修改
 								value = "";
 								if ("1".equals(type)) {
 									for (int ii = 0; ii < inArrLen; ii++) {
-										originValue = originValue + ",'" + inArr[ii] + "'";
+										value = value + ",'" + inArr[ii] + "'";
 									}
 
 								} else {
 									for (int ii = 0; ii < inArrLen; ii++) {
-										originValue = originValue + "," + inArr[ii];
+										value = value + "," + inArr[ii];
 									}
 								}
-								originValue = value.substring(1);
-								originValue = "(" + originValue + ")";
+								value = value.substring(1);
+								value = "(" + value + ")";
 							}
 
-							sqlWhere = sqlWhere + key + " IN " + originValue;
+							sqlWhere = sqlWhere + key + " IN " + value;
+							//修改结束
 							break;
 						case 11:
 							// 为空;
@@ -1029,7 +1033,7 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 
 				}
 			}
-
+			//System.out.println("sqlWhere:" + sqlWhere);
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
 			try {
 				total = (int) jdbcTemplate.queryForObject(totalSQL, "Integer");

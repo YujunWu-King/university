@@ -533,9 +533,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 		var form = this.getView().child("form").getForm();
 		form.findField("contentTypeId").setValue("");
 		form.findField("contentTypeName").setValue("");
-		
+
 	}
-    
-    
-    
+
+
+
 });

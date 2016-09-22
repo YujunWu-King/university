@@ -363,20 +363,24 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        		}
 	        		 // 保存当前节点;
 	        		if(NodeType == ""){
-	        			//修改父节点的defaultPage
 	        			var thisNode = treepanelStore.getNodeById(menuId);
-	        			var pNode = thisNode.parentNode;
-	        			//Ext.Msg.alert("提示",responseData.defaultPage);
-	        			pNode.set('defaultPage', responseData.defaultPage);
+	        			//修改父节点的defaultPage
+	        			if (rootNode ==menuId) {
+	        				//跟节点不需要操作
+	        			} else {
+	        				var pNode = thisNode.parentNode;
+	        				//Ext.Msg.alert("提示",responseData.defaultPage);
+	        				pNode.set('defaultPage', responseData.defaultPage);
 	        			
-	        			//如果是选择默认页面，那么父节点下的其他节点 就需要修改成非默认
-	        			//Ext.Msg.alert("提示", isDefault);
-	        			if (isDefault ==true) {
-	        				childnodes = pNode.childNodes; 
-	        	             for(var i=0;i<childnodes.length;i++){  //从节点中取出子节点依次遍历
-	        	                 childnode = childnodes[i];
-	        	                 childnode.set('isDefault', false);
-	        	             }
+	        				//如果是选择默认页面，那么父节点下的其他节点 就需要修改成非默认
+	        				//Ext.Msg.alert("提示", isDefault);
+	        				if (isDefault ==true) {
+	        					childnodes = pNode.childNodes; 
+	        					for(var i=0;i<childnodes.length;i++){  //从节点中取出子节点依次遍历
+	        						childnode = childnodes[i];
+	        						childnode.set('isDefault', false);
+	        					}
+	        				}
 	        			}
 	        			
 	        			
@@ -616,7 +620,72 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 		form.findField("menuTempletId").setValue("");
 		form.findField("menuTempletName").setValue("");
 		
+	},
+	/* 生成一级菜单 */
+	cerateTopMenu : function(bt) {
+		var actType = bt.findParentByType("menuEdit").actType;
+		if (actType == "update") {
+			var view = this.getView();
+			var form = view.child("form").getForm();
+			var siteId = form.findField("siteId").getValue();
+			
+			var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWCDGL_STD","OperateType":"mainMenu","comParams":{"siteId":"'
+				+ siteId+ '"}}';
+
+			Ext.Ajax.request({
+                url:Ext.tzGetGeneralURL(),
+                async:false,
+                params: {
+                    tzParams: tzParams
+                },
+                waitTitle : '请等待' ,
+                waitMsg: '正在生成中',
+                success: function(response){
+                	Ext.Msg.alert("提示", "生成一级菜单成功。");
+					return;
+                },
+                false: function(response){
+                	Ext.Msg.alert("提示", "生成一级菜单失败。");
+					return;
+                }
+            });
+		} else {
+			Ext.Msg.alert("提示", "请先保存当前节点");
+		}
+	},
+	//生成本级菜单
+	createThisMenu : function(bt) {
+		var actType = bt.findParentByType("menuEdit").actType;
+		if (actType == "update") {
+			var view = this.getView();
+			var form = view.child("form").getForm();
+			var siteId = form.findField("siteId").getValue();
+			var menuId = form.findField("menuId").getValue();
+			var menuType = form.findField("menuType").getValue();
+			
+			var tzParams = '{"ComID":"TZ_GD_WWZDGL_COM","PageID":"TZ_GD_WWCDGL_STD","OperateType":"otherMenu","comParams":{"siteId":"'
+				+ siteId+ '","menuId":"'+menuId+'","menuType":"'+menuType+'"}}';
+
+			Ext.Ajax.request({
+                url:Ext.tzGetGeneralURL(),
+                async:false,
+                params: {
+                    tzParams: tzParams
+                },
+                waitTitle : '请等待' ,
+                waitMsg: '正在生成中',
+                success: function(response){
+                	Ext.Msg.alert("提示", "生成本级菜单成功。");
+					return;
+                },
+                false: function(response){
+                	Ext.Msg.alert("提示", "生成本级菜单失败。");
+					return;
+                }
+            });
+		} else {
+			Ext.Msg.alert("提示", "请先保存当前节点");
+		}
 	}
-	
     
 });

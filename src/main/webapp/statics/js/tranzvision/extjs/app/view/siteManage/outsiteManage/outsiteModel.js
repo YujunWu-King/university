@@ -6,5 +6,5 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.outsiteModel', {//վ��
         {name: 'mobile'},
         {name: 'email'},
         {name: 'birthday', type: 'date'}
-	]
+    ]
 });

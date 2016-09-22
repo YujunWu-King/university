@@ -39,17 +39,22 @@ Ext.define('KitchenSink.view.siteManage.outsiteBatch.batchReleaseController', {
         var tzParams = '{"ComID":"TZ_GD_WWZDPLFB_COM","PageID":"TZ_GD_PLFB_STD","OperateType":"batchRelease","comParams":{"batchType":"'
             + batchType+ '","objectId":"'+objectId+'"}}';
 
-        var grid = btn.findParentByType("grid");
+        var grid = this.getView().child("grid");
         var store = grid.getStore();
 
         Ext.tzSubmit(tzParams,function(responseData){
-            store.reload();
+        	 //Ext.Msg.alert("提示",responseData.success);
+        	if(responseData.success==true){
+        		store.reload();
+        	}else{
+        	 	  Ext.Msg.alert("提示",responseData.msg);
+        	}
         },"",true,this);
     },
 
     //刷行
     onBatchreshfresh: function(btn) {
-        var grid = btn.findParentByType("grid");
+        var grid = this.getView().child("grid");
         var store = grid.getStore();
         store.reload();
     },
@@ -130,8 +135,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteBatch.batchReleaseController', {
                 }
             },
             srhresult:{
-                TZ_TEMP_ID: '栏目ID',
-                TZ_TEMP_NAME: '栏目名称'
+            	TZ_COLU_ID: '栏目ID',
+            	TZ_COLU_NAME: '栏目名称'
             },
             multiselect: false,
             callback: function(selection){

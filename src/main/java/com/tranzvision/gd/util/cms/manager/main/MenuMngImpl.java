@@ -27,14 +27,14 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 	public MenuMngImpl(String siteId) {
 		StringBuffer sql = new StringBuffer(
-				"select TZ_MENU_ID,TZ_SITE_ID,TZ_MENU_NAME,TZ_MENU_TYPE,TZ_MENU_LEVEL,TZ_MENU_XH,");
+				"select TZ_MENU_ID,TZ_SITEI_ID,TZ_MENU_NAME,TZ_MENU_TYPE,TZ_MENU_LEVEL,TZ_MENU_XH,");
 		sql.append("ifnull(TZ_F_MENU_ID,\"\") TZ_F_MENU_ID,");
 		sql.append("ifnull(TZ_D_MENU_ID,\"\") TZ_D_MENU_ID,");
 		sql.append("ifnull(TZ_MENU_PATH,\"\") TZ_MENU_PATH,");
 		sql.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
 		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME");
 		sql.append(" from PS_TZ_SITEI_MENU_T");
-		sql.append("where TZ_SITEI_ID=? ");
+		sql.append(" where TZ_SITEI_ID=? ");
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
@@ -43,6 +43,11 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			this.list = null;
 			e.printStackTrace();
 		}
+		// System.out.println("listSize:" + list.size());
+	}
+
+	public MenuMngImpl(List<Map<String, Object>> menu) {
+		this.list = menu;
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 	@Override
 	public CmsMenu findMenu(String id, String siteId) {
 		String menuId = null;
-		if (list != null) {
+		if (list != null && id != null && !id.equals("")) {
 			Map<String, Object> mapNode = null;
 			for (Object objNode : list) {
 				mapNode = (Map<String, Object>) objNode;
@@ -123,104 +128,127 @@ public class MenuMngImpl extends Manager implements MenuMng {
 	}
 
 	/**
-	 * 得到BOOK菜单的链接地址
+	 * 链接地址
 	 * 
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private String getBookURL(Map<String, Object> map) {
-		String url = null;
-		String TZ_D_MENU_ID = map.get("TZ_D_MENU_ID").toString();
-		String thisPath = map.get("TZ_MENU_PATH").toString();
-		String TZ_MENU_LEVEL = null;
-		String rootPath = null;
-		String menuId = null;
-		String menuType = null;
-		String pageName = null;
-		if (list != null && TZ_D_MENU_ID != null && !TZ_D_MENU_ID.equals("")) {
-			Map<String, Object> mapNode = null;
-			for (Object objNode : list) {
-				mapNode = (Map<String, Object>) objNode;
-				TZ_MENU_LEVEL = mapNode.get("TZ_MENU_LEVEL").toString();
-
-				if (TZ_MENU_LEVEL.equals("0")) {
-					rootPath = mapNode.get("TZ_MENU_PATH").toString();
-				}
-
-				menuId = mapNode.get("TZ_MENU_ID").toString();
-				menuType = mapNode.get("TZ_MENU_TYPE").toString();
-				if (menuId.equals(TZ_D_MENU_ID) && menuType.equals("A")) {
-					pageName = mapNode.get("TZ_PAGE_NAME").toString();
-				}
-			}
-
-			if (pageName != null && !pageName.equals("")) {
-				return rootPath + thisPath + "/" + pageName;
-			}
-		}
-		return url;
-	}
-
-	/**
-	 * 得到PAGE菜单的链接地址
-	 * 
-	 * @param map
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private String getPageURL(Map<String, Object> map) {
-		String url = null;
-		String TZ_F_MENU_ID = map.get("TZ_F_MENU_ID").toString();
-		String thisPath = null;
-		String TZ_MENU_LEVEL = null;
-		String rootPath = null;
-		String menuId = null;
-		String menuType = null;
-		String pageName = map.get("TZ_PAGE_NAME").toString();
-		if (list != null && TZ_F_MENU_ID != null && !TZ_F_MENU_ID.equals("")) {
-			Map<String, Object> mapNode = null;
-			for (Object objNode : list) {
-				mapNode = (Map<String, Object>) objNode;
-				TZ_MENU_LEVEL = mapNode.get("TZ_MENU_LEVEL").toString();
-
-				if (TZ_MENU_LEVEL.equals("0")) {
-					rootPath = mapNode.get("TZ_MENU_PATH").toString();
-				}
-
-				menuId = mapNode.get("TZ_F_MENU_ID").toString();
-				if (menuId.equals(TZ_F_MENU_ID)) {
-					thisPath = mapNode.get("TZ_MENU_PATH").toString();
-				}
-			}
-
-			if (thisPath != null && !thisPath.equals("")) {
-				return rootPath + thisPath + "/" + pageName;
-			}
-		}
-		return url;
-	}
-
-	/**
-	 * 得到上级BOOK的 path
-	 * 
+	 * @param path
+	 * @param menuType
+	 *            // A:PAGE B:BOOK
 	 * @param menuId
+	 * @param strFileName
 	 * @return
 	 */
-	private String getFPath(String FmenuId) {
+	private String getURL(String path, String menuType, String menuId, String strFileName) {
+		String url = null;
+		String pageNme = null;
+
+		// System.out.println("menuType：" + menuType);
+		if (menuType.equals("A")) {
+			pageNme = strFileName;
+		} else {
+			// 如果是BOOK 需要找到他默认页面的 页面名称
+			// System.out.println("menuId：" + menuId);
+
+			Map<String, Object> mapNode = null;
+			String TZ_MENU_ID = null;
+			String TZ_MENU_TYPE = null;
+			for (Object objNode : list) {
+				mapNode = (Map<String, Object>) objNode;
+
+				TZ_MENU_ID = mapNode.get("TZ_MENU_ID").toString();
+				TZ_MENU_TYPE = mapNode.get("TZ_MENU_TYPE").toString();
+				if (TZ_MENU_ID.equals(menuId) && TZ_MENU_TYPE.equals("A")) {
+					pageNme = mapNode.get("TZ_PAGE_NAME").toString();
+				}
+			}
+		}
+
+		// System.out.println("pageNme：" + pageNme);
+		if (pageNme != null && !pageNme.equals("")) {
+			if (!pageNme.toLowerCase().endsWith(".html")) {
+				pageNme = pageNme + ".html";
+			}
+			url = path + "/" + pageNme;
+		}
+		System.out.println("url：" + url);
+		return url;
+	}
+
+	/**
+	 * 得到path
+	 * 
+	 * @param FmenuId
+	 * @param menuType
+	 *            A:PAGE B:BOOK
+	 * @return
+	 */
+	private String getPath(String menuId, String menuType, String menuPath) {
+		// 根路径
+		String strBasePath = "";
+		// 本级栏目路径
+		String strMenuPath = "";
+
+		if (menuType.equals("B")) {
+			strMenuPath = menuPath;
+		}
+
+		int flag = -1;
+
 		String TZ_MENU_ID = null;
+		String TZ_MENU_LEVEL = null;
+		String TZ_MENU_TYPE = null;
 		Map<String, Object> mapNode = null;
 		for (Object objNode : list) {
 			mapNode = (Map<String, Object>) objNode;
-			TZ_MENU_ID = mapNode.get("TZ_MENU_ID").toString();
-			if (TZ_MENU_ID.equals(FmenuId)) {
-				return mapNode.get("TZ_MENU_PATH").toString();
+			TZ_MENU_LEVEL = mapNode.get("TZ_MENU_LEVEL").toString();
+			// 获取根目录
+			if (TZ_MENU_LEVEL.equals("0")) {
+				strBasePath = mapNode.get("TZ_MENU_PATH").toString();
+				TZ_MENU_ID = mapNode.get("TZ_MENU_ID").toString();
+				// 根目录
+				if (TZ_MENU_ID.equals(menuId)) {
+					flag = 1;
+				}
+			}
+
+			// 如果是PAGE 需要获取上级BOOK的路径
+			if (menuType.equals("A")) {
+				TZ_MENU_ID = mapNode.get("TZ_MENU_ID").toString();
+				TZ_MENU_TYPE = mapNode.get("TZ_MENU_TYPE").toString();
+				if (TZ_MENU_ID.equals(menuId) && TZ_MENU_TYPE.equals("B")) {
+					strMenuPath = mapNode.get("TZ_MENU_PATH").toString();
+				}
 			}
 		}
-		return "";
+
+		// 静态化路径
+		String strFilePath = "";
+		if (strBasePath != null && !"".equals(strBasePath)) {
+			if (!strBasePath.startsWith("/")) {
+				strBasePath = "/" + strBasePath;
+			}
+			if (strBasePath.endsWith("/")) {
+				strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
+			}
+		}
+		if (strMenuPath != null && !"".equals(strMenuPath)) {
+			if (!strMenuPath.startsWith("/")) {
+				strMenuPath = "/" + strMenuPath;
+			}
+			if (strMenuPath.endsWith("/")) {
+				strMenuPath = strMenuPath.substring(0, strMenuPath.length() - 1);
+			}
+		}
+		if (flag == 1) {
+			// 根目录 不需要再加了
+			strFilePath = strBasePath;
+		} else {
+			strFilePath = strBasePath + strMenuPath;
+		}
+
+		System.out.println("strFilePath：" + strFilePath);
+		return strFilePath;
 	}
 
-	@SuppressWarnings("unused")
 	private CmsMenu transMenu(Map<String, Object> map) throws IOException {
 		CmsMenu menu = new CmsMenu();
 		// 菜单ID
@@ -237,9 +265,9 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// 如果是BOOK 显示BOOK 的path
 		// 如果是PAGE 显示他上级BOOK的 path
 		if (menu.getType().equals("A")) {
-			menu.setStaticpath(getFPath((String) map.get("TZ_F_MENU_ID")));
+			menu.setStaticpath(getPath(map.get("TZ_F_MENU_ID").toString(), "A", ""));
 		} else {
-			menu.setStaticpath((String) map.get("TZ_MENU_PATH"));
+			menu.setStaticpath(getPath(menu.getId(), "B", map.get("TZ_MENU_PATH").toString()));
 		}
 
 		// 菜单名称
@@ -248,17 +276,22 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		menu.setShow("0"); // 默认显示
 
 		// 序号
-		menu.setPriority(new Integer((String) map.get("TZ_MENU_XH")));
+		menu.setPriority(new Integer(map.get("TZ_MENU_XH").toString()));
 		// 菜单模板ID
 		menu.setTmpId((String) map.get("TZ_TEMP_ID"));
 		// 专题页编号
 		menu.setSpeId("");
 
+		menu.setPageName((String) map.get("TZ_PAGE_NAME"));
+		menu.setDefaultId((String) map.get("TZ_D_MENU_ID"));
+
 		// 静态页面URL 这个需要增加 A:PAGE B:BOOK
+		// private String getURL(String path, String menuType, String menuId,
+		// String strFileName)
 		if (menu.getType().equals("A")) {
-			menu.setStaticUrl(getPageURL(map));
+			menu.setStaticUrl(getURL(menu.getStaticpath(), "A", "", menu.getPageName()));
 		} else {
-			menu.setStaticUrl(getBookURL(map));
+			menu.setStaticUrl(getURL(menu.getStaticpath(), "B", menu.getDefaultId(), ""));
 		}
 		// 打开方式 0 不弹出 1弹出
 		menu.setTarget("0"); // 默认不弹出
@@ -271,11 +304,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// 菜单样式
 		menu.setStyle("");
 
-		menu.setLevel((String) map.get("TZ_MENU_LEVEL"));
-		
-		menu.setPageName((String) map.get("TZ_PAGE_NAME"));
-
-		menu.setDefaultId((String) map.get("TZ_D_MENU_ID"));
+		menu.setLevel(map.get("TZ_MENU_LEVEL").toString());
 
 		return menu;
 	}

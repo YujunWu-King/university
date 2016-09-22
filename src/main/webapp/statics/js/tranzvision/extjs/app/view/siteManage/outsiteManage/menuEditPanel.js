@@ -371,6 +371,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 		}
 	},
 	buttons : [{
+		text : '生成一级菜单',
+		iconCls : "save",
+		handler : 'cerateTopMenu'
+	}, {
+		text : '生成本级菜单',
+		iconCls : "save",
+		handler : 'createThisMenu'
+	}, {
 		text : '保存',
 		iconCls : "save",
 		handler : 'onFormSave'

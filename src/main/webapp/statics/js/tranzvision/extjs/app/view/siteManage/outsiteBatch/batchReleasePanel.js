@@ -18,6 +18,19 @@ Ext.define('KitchenSink.view.siteManage.outsiteBatch.batchReleasePanel', {
     title: 'CMS批量发布',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     //actType: 'add',//默认新增
+    /*dockedItems:[{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',
+            {minWidth:80,text:'关闭',iconCls:"close",handler: 'closebatch'}]
+    },{
+        xtype:"toolbar",
+        items:[
+            {text:"新增",tooltip:"发布",iconCls:"save",handler:'onBatchSave'},"-",
+            {text:"编辑",tooltip:"刷新",iconCls: 'refresh',handler:'onBatchreshfresh'}
+        ]
+    }],*/
     initComponent: function () {
         var store = new KitchenSink.view.siteManage.outsiteBatch.batchReleaseStore();
         Ext.apply(this, {
@@ -123,19 +136,19 @@ Ext.define('KitchenSink.view.siteManage.outsiteBatch.batchReleasePanel', {
                     style: 'margin-left:5px',
                     hidden: true,
                     name: 'coluName'
-                }, {
-                    buttons: [{
-                        text: '发布',
-                        iconCls: "save",
-                        handler: 'onBatchSave'
-                    }, {
-                        text: '刷新',
-                        iconCls: "refresh",
-                        handler: 'onBatchreshfresh'
-                    }]
                 }]
             }]
         }, {
+            buttons: [{
+                text: '发布',
+                iconCls: "save",
+                handler: 'onBatchSave'
+            }, {
+                text: '刷新',
+                iconCls: "refresh",
+                handler: 'onBatchreshfresh'
+            }]
+        },{
             xtype: 'grid',
             title: '发布结果列表',
             frame: true,
@@ -152,7 +165,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteBatch.batchReleasePanel', {
             }, {
                 text: '发布类型',
                 dataIndex: 'batchType',
-                width: 60,
+                width: 240,
                 renderer: function (value, metadata, record) {
                     if (value == "A") {
                         return "按站点发布";
