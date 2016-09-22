@@ -84,7 +84,7 @@
 				"TZ_COLU_ID": columnId
 			},
 			callback: function(seachCfg){
-				var store = btn.findParentByType("grid").store;
+				var store = panel.child("grid").store;
 				store.tzStoreParams = seachCfg;
 				store.load();
 			}
@@ -152,7 +152,7 @@
 		cmp = new ViewClass();
 
     	cmp.on('afterrender',function(panel){
-				var cmpForm = panel.child("form").getForm();
+				var form = panel.child("form").getForm();
 				
 				//参数
 				var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_INFO_STD","OperateType":"QF","comParams":{"artId":"","coluId":"'+columnId+'"}}';
@@ -160,10 +160,101 @@
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
 						var formData = responseData.formData;
-						cmpForm.findField("siteId").setValue(formData.siteId);
-						cmpForm.findField("coluId").setValue(formData.coluId);
-						cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
-						cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
+						form.findField("siteId").setValue(formData.siteId);
+						form.findField("coluId").setValue(formData.coluId);
+						form.findField("siteType").setValue(formData.siteType);
+						form.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
+						form.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
+						
+						/*控制自定义字段的隐藏显示*/
+						var tztxt1Enabled = formData.tztxt1Enabled;
+						var tztxt1Label = formData.tztxt1Label;
+						if(tztxt1Enabled=="Y"){
+							form.findField("tztxt1").show();
+							form.findField("tztxt1").setFieldLabel(tztxt1Label);
+						}else{
+							form.findField("tztxt1").hide();
+						}
+						
+						var tztxt2Enabled = formData.tztxt2Enabled;
+						var tztxt2Label = formData.tztxt2Label;
+						if(tztxt2Enabled=="Y"){
+							form.findField("tztxt2").show();
+							form.findField("tztxt2").setFieldLabel(tztxt2Label);
+						}else{
+							form.findField("tztxt2").hide();
+						}
+						
+						var tztxt3Enabled = formData.tztxt3Enabled;
+						var tztxt3Label = formData.tztxt3Label;
+						if(tztxt3Enabled=="Y"){
+							form.findField("tztxt3").show();
+							form.findField("tztxt3").setFieldLabel(tztxt3Label);
+						}else{
+							form.findField("tztxt3").hide();
+						}
+						
+						var tztxt4Enabled = formData.tztxt4Enabled;
+						var tztxt4Label = formData.tztxt4Label;
+						if(tztxt4Enabled=="Y"){
+							form.findField("tztxt4").show();
+							form.findField("tztxt4").setFieldLabel(tztxt4Label);
+						}else{
+							form.findField("tztxt4").hide();
+						}
+						
+						var tzlong1Enabled = formData.tzlong1Enabled;
+						var tzlong1Label = formData.tzlong1Label;
+						if(tzlong1Enabled=="Y"){
+							form.findField("tzlong1").show();
+							form.findField("tzlong1").setFieldLabel(tzlong1Label);
+						}else{
+							form.findField("tzlong1").hide();
+						}
+						
+						var tzlong2Enabled = formData.tzlong2Enabled;
+						var tzlong2Label = formData.tzlong2Label;
+						if(tzlong2Enabled=="Y"){
+							form.findField("tzlong2").show();
+							form.findField("tzlong2").setFieldLabel(tzlong2Label);
+						}else{
+							form.findField("tzlong2").hide();
+						}
+						
+						var tzlong3Enabled = formData.tzlong3Enabled;
+						var tzlong3Label = formData.tzlong3Label;
+						if(tzlong3Enabled=="Y"){
+							form.findField("tzlong3").show();
+							form.findField("tzlong3").setFieldLabel(tzlong3Label);
+						}else{
+							form.findField("tzlong3").hide();
+						}
+						
+						var tzdate1Enabled = formData.tzdate1Enabled;
+						var tzdate1Label = formData.tzdate1Label;
+						if(tzdate1Enabled=="Y"){
+							form.findField("tzdate1").show();
+							form.findField("tzdate1").setFieldLabel(tzdate1Label);
+						}else{
+							form.findField("tzdate1").hide();
+						}
+						
+						var tzdate2Enabled = formData.tzdate2Enabled;
+						var tzdate2Label = formData.tzdate2Label;
+						if(tzdate2Enabled=="Y"){
+							form.findField("tzdate2").show();
+							form.findField("tzdate2").setFieldLabel(tzdate2Label);
+						}else{
+							form.findField("tzdate2").hide();
+						}
+						
+						//发布对象
+						var siteType = form.findField("siteType").getValue();
+					
+						if(siteType=="A" || siteType == "B"){
+							var pubAud = panel.down('fieldset[name=pubAud]');
+							pubAud.setHidden(true);
+						}
 				});
 			});
     	
@@ -232,7 +323,7 @@
 					for(var i = 0;i < selList.length;i++){
 				   		selList[i].set("releaseOrUndo","Y");
 				  }
-				  var tzParams = this.submitContentParams("P","发布成功");
+				  var tzParams = this.publishContentParams("P","发布成功");
 				}
 			},this);
 	   }
@@ -373,19 +464,106 @@
 					if (publishStatus == "N"){
 						form.findField("publishStatusDesc").setValue("未发布");
 					}
+					/*控制自定义字段的隐藏显示*/
+					var tztxt1Enabled = formData.tztxt1Enabled;
+					var tztxt1Label = formData.tztxt1Label;
+					if(tztxt1Enabled=="Y"){
+						form.findField("tztxt1").show();
+						form.findField("tztxt1").setFieldLabel(tztxt1Label);
+					}else{
+						form.findField("tztxt1").hide();
+					}
 					
+					var tztxt2Enabled = formData.tztxt2Enabled;
+					var tztxt2Label = formData.tztxt2Label;
+					if(tztxt2Enabled=="Y"){
+						form.findField("tztxt2").show();
+						form.findField("tztxt2").setFieldLabel(tztxt2Label);
+					}else{
+						form.findField("tztxt2").hide();
+					}
 					
-					  panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	
-						//附件集
-						var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"FJ"}';
-						attachGrid.store.tzStoreParams = tzStoreParams;
-						attachGrid.store.load();			
+					var tztxt3Enabled = formData.tztxt3Enabled;
+					var tztxt3Label = formData.tztxt3Label;
+					if(tztxt3Enabled=="Y"){
+						form.findField("tztxt3").show();
+						form.findField("tztxt3").setFieldLabel(tztxt3Label);
+					}else{
+						form.findField("tztxt3").hide();
+					}
+					
+					var tztxt4Enabled = formData.tztxt4Enabled;
+					var tztxt4Label = formData.tztxt4Label;
+					if(tztxt4Enabled=="Y"){
+						form.findField("tztxt4").show();
+						form.findField("tztxt4").setFieldLabel(tztxt4Label);
+					}else{
+						form.findField("tztxt4").hide();
+					}
+					
+					var tzlong1Enabled = formData.tzlong1Enabled;
+					var tzlong1Label = formData.tzlong1Label;
+					if(tzlong1Enabled=="Y"){
+						form.findField("tzlong1").show();
+						form.findField("tzlong1").setFieldLabel(tzlong1Label);
+					}else{
+						form.findField("tzlong1").hide();
+					}
+					
+					var tzlong2Enabled = formData.tzlong2Enabled;
+					var tzlong2Label = formData.tzlong2Label;
+					if(tzlong2Enabled=="Y"){
+						form.findField("tzlong2").show();
+						form.findField("tzlong2").setFieldLabel(tzlong2Label);
+					}else{
+						form.findField("tzlong2").hide();
+					}
+					
+					var tzlong3Enabled = formData.tzlong3Enabled;
+					var tzlong3Label = formData.tzlong3Label;
+					if(tzlong3Enabled=="Y"){
+						form.findField("tzlong3").show();
+						form.findField("tzlong3").setFieldLabel(tzlong3Label);
+					}else{
+						form.findField("tzlong3").hide();
+					}
+					
+					var tzdate1Enabled = formData.tzdate1Enabled;
+					var tzdate1Label = formData.tzdate1Label;
+					if(tzdate1Enabled=="Y"){
+						form.findField("tzdate1").show();
+						form.findField("tzdate1").setFieldLabel(tzdate1Label);
+					}else{
+						form.findField("tzdate1").hide();
+					}
+					
+					var tzdate2Enabled = formData.tzdate2Enabled;
+					var tzdate2Label = formData.tzdate2Label;
+					if(tzdate2Enabled=="Y"){
+						form.findField("tzdate2").show();
+						form.findField("tzdate2").setFieldLabel(tzdate2Label);
+					}else{
+						form.findField("tzdate2").hide();
+					}
+					//发布对象
+					var siteType = form.findField("siteType").getValue();
+				
+					if(siteType=="A" || siteType == "B"){
+						var pubAud = panel.down('fieldset[name=pubAud]');
+						pubAud.setHidden(true);
+					}
+					
+					panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	
+					//附件集
+					var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"FJ"}';
+					attachGrid.store.tzStoreParams = tzStoreParams;
+					attachGrid.store.load();			
 
-						//图片集;
-						var picDataView = panel.down('dataview[name=picView]');
-						var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"TPJ"}';
-						picDataView.store.tzStoreParams = tzStoreParams;
-						picDataView.store.load();					
+					//图片集;
+					var picDataView = panel.down('dataview[name=picView]');
+					var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"TPJ"}';
+					picDataView.store.tzStoreParams = tzStoreParams;
+					picDataView.store.load();					
 				});
 				
 			});
@@ -489,7 +667,56 @@
 			}
 		}
 		//提交参数
-		var tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_CONTENT_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		Ext.tzSubmit(tzParams,function(){
+			store.reload();		   
+		},msg,true,this);
+	},
+	//获取修改记录
+	publishContentParams: function(clickTyp,msg){
+		var comParams = "";
+		var editJson = "";
+		var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+		var store = dataGrid.getStore();
+		//选中的记录
+		var mfRecs = dataGrid.getSelectionModel().getSelection();
+		for(var i=0;i<mfRecs.length;i++){
+			if(editJson == ""){
+				//editJson = Ext.JSON.encode(mfRecs[i].data);
+				editJson = '{"ClickTyp":"'+clickTyp+'","data":'+ Ext.JSON.encode(mfRecs[i].data)+'}';
+			}else{
+				//editJson = editJson + ','+Ext.JSON.encode(mfRecs[i].data);
+				editJson = editJson + ',{"ClickTyp":"'+clickTyp+'","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+			}
+		}
+		if(editJson != ""){
+			if(comParams == ""){
+				comParams = '"update":[' + editJson + "]";
+			}else{
+				comParams = comParams + ',"update":[' + editJson + "]";
+			}
+		}
+		//删除json字符串
+		var removeJson = "";
+		//删除记录
+		var removeRecs = store.getRemovedRecords();
+		for(var i=0;i<removeRecs.length;i++){
+			if(removeJson == ""){
+				removeJson = Ext.JSON.encode(removeRecs[i].data);
+			}else{
+				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+			}
+		}
+		if(removeJson != ""){
+			if(comParams == ""){
+				comParams = '"delete":[' + removeJson + "]";
+			}else{
+				comParams = comParams + ',"delete":[' + removeJson + "]";
+			}
+		}
+		//提交参数
+		var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		Ext.tzSubmit(tzParams,function(){
 			store.reload();		   
 		},msg,true,this);

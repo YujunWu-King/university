@@ -309,7 +309,7 @@
 		//结束报名信息项;
 		
 		//提交参数
-		var tzParams = '{"ComID":"TZ_CONTENT_MG_COM","PageID":"TZ_CONTENT_INF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
 	},
 	onPicEditClose: function(btn){

@@ -116,9 +116,11 @@
 						{text:"新增",tooltip:"新增数据",iconCls: 'add',handler:'addArt'},"-",
 						{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSelArt'},"-",
 						{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelList'},'-',
+						{text:"复制",tooltip:"复制",iconCls:"copy",handler:'copySelList'},'-',
 						{text:"发布",tooltip:"发布选中内容",iconCls:"publish",handler:'releaseSelList'},'-',
-						{text:"撤销发布",tooltip:"撤销发布选中内容",iconCls:"revoke",handler:'UndoSelList'},'->',
-                        {xtype:'splitbutton',
+						{text:"撤销发布",tooltip:"撤销发布选中内容",iconCls:"revoke",handler:'UndoSelList'}
+                        /*
+						{xtype:'splitbutton',
                          text:'更多操作',
                          iconCls:'list',
                          glyph: 61,
@@ -127,14 +129,10 @@
                                 {
                                     text:'复制',
                                     iconCls:"switch ",
-                                    handler:'changeLanguage'
-                                },{
-                                    text:'引用',
-                                    iconCls:"sync",
-                                    handler:'synchrLanguage'
+                                    handler:'copy'
                                 }
                          ]
-                        }
+                        }*/
                     ]},
 					{
 						xtype: 'grid',

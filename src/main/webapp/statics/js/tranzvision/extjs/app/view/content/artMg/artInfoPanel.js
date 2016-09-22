@@ -56,7 +56,11 @@
 			hidden: true
         },{
             xtype: 'textfield',
-            fieldLabel: '文章标题',
+			name: 'siteType',
+			hidden: true
+        },{
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artTitle","文章标题"),
 			name: 'artTitle',
 			maxLength : 254,
             afterLabelTextTpl: [
@@ -64,8 +68,81 @@
             ],
             allowBlank: false
         },{
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artShortTitle","简短标题"),
+			name: 'artShortTitle',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artSubHead","副标题"),
+			name: 'artSubHead',
+			maxLength : 254
+        },{
+            xtype: 'textarea',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artAbout","文章简介"),
+			name: 'artAbout',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artMetaDesc","Meta描述"),
+			name: 'artMetaDesc',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artMetaKeys","Meta关键字"),
+			name: 'artMetaKeys',
+			maxLength : 254
+        },{
+			xtype:'component',
+			hideLabel: true,
+			style:'color:#ff0000',
+			margin: '0 0 10 105',
+			html:'注意：关键字请用"，"分隔'
+		},{
+            xtype: 'textfield',
+            fieldLabel: '预留字段1',
+			name: 'tztxt1',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: '预留字段2',
+			name: 'tztxt2',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: '预留字段3',
+			name: 'tztxt3',
+			maxLength : 254
+        },{
+            xtype: 'textfield',
+            fieldLabel: '预留字段4',
+			name: 'tztxt4',
+			maxLength : 254
+        },{
+            xtype: 'textarea',
+            fieldLabel: '预留字段5',
+			name: 'tzlong1'
+        },{
+            xtype: 'textarea',
+            fieldLabel: '预留字段6',
+			name: 'tzlong2'
+        },{
+            xtype: 'textarea',
+            fieldLabel: '预留字段7',
+			name: 'tzlong3'
+        },{
+            xtype: 'datefield',
+			format: 'Y-m-d',
+            fieldLabel: '预留字段8',
+			name: 'tzdate1'
+        },{
+            xtype: 'datefield',
+			format: 'Y-m-d',
+            fieldLabel: '预留字段9',
+			name: 'tzdate2'
+        },{
         	xtype: 'combobox',
-        	fieldLabel: '文章类型',
+        	fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artType","文章类型"),
         	valueField: 'TValue',
             displayField: 'TSDesc',
             store: new KitchenSink.view.common.store.appTransStore("TZ_ART_TYPE"),
@@ -73,7 +150,7 @@
             value: 'A',
     			// displayField: 'transDesc',
     			// valueField: 'trans',
-    			 name: 'artType',
+			name: 'artType',
             afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
@@ -91,29 +168,30 @@
 			}
         },{
             xtype: 'textfield',
-            fieldLabel: '外部引用链接',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.externalLink","外部引用链接"),
 			name: 'externalLink'
         },{
             xtype: 'ueditor',
-            fieldLabel: '内容',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.contentInfo","内容"),
             zIndex: 900,
-						name: 'contentInfo'
+			name: 'contentInfo'
         },{
 			xtype: 'fieldset',
 			layout: {
 	            type: 'vbox',
 	            align: 'stretch'
 	        },
-			title: '发布对象',
+			name:"pubAud",
+			title: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.pubAud","发布对象"),
 			items: [{
 				items:[{
 			       xtype: 'radio',
-			       boxLabel: '无限制',
+			       boxLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.limit","无限制"),
 			       name: 'limit',
 			       inputValue : 'A'
 			    },{
 			    	xtype: 'radio',
-			    	boxLabel: '项目',
+			    	boxLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.project","项目"),
 					name: 'limit',
 					inputValue : 'B'
 				}, {
@@ -153,17 +231,17 @@
 			}]
         },{
            xtype: 'textfield',
-            fieldLabel: '发布者',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artFbz","发布者"),
             maxLength :100,
-						name: 'artFbz'
+			name: 'artFbz'
         },{
             xtype: 'textfield',
-            fieldLabel: '发布者部门',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artFbBm","发布者部门"),
             maxLength :200,
-						name: 'artFbBm'
+			name: 'artFbBm'
         },{
             xtype: 'textfield',
-            fieldLabel: '发布时间',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artNewsDT","发布时间"),
 			name: 'artNewsDT',
 			validateOnChange: false,
 			validateOnBlur: true,
@@ -187,6 +265,13 @@
 			margin: '0 0 10 105',
 			html:'发布时间由系统自动产生，可修改，时间格式示例：2015-01-01 10:10'
 		},{
+            xtype: 'textfield',
+			fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.staticName","静态化文件名"),
+			name: 'staticName'
+        },{
+            xtype: 'hiddenfield',
+			name: 'autoStaticName'
+        },{
             xtype: 'hiddenfield',
 			name: 'titleImageUrl'
         },{
@@ -249,12 +334,12 @@
             			xtype: 'textfield',
             			fieldLabel: '标题',
             			maxLength :100,
-									name: 'titleImageTitle'
+						name: 'titleImageTitle'
         				},{
             			xtype: 'textarea',
             			fieldLabel: '说明',
             			maxLength :254,
-									name: 'titleImageDesc'
+						name: 'titleImageDesc'
         				}]
 							}]
         	  },{
