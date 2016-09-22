@@ -108,7 +108,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("coluState", mapData.get("TZ_COLU_STATE").toString());
 						mapRootJson.put("coluType", mapData.get("TZ_COLU_TYPE").toString());
 						mapRootJson.put("coluPath", mapData.get("TZ_COLU_PATH").toString());
-						mapRootJson.put("coluTempletId", mapData.get("TZ_TEMP_ID").toString());
+						mapRootJson.put("coluTempletId", mapData.get("TZ_CONT_TEMP").toString());
 						mapRootJson.put("contentTypeId", mapData.get("TZ_ART_TYPE_ID").toString());
 						mapRootJson.put("coluTempletName", mapData.get("TZ_TEMP_NAME").toString());
 						mapRootJson.put("contentTypeName", mapData.get("TZ_ART_TYPE_NAME").toString());
@@ -206,7 +206,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("text", mapNode.get("TZ_COLU_NAME").toString());
 					mapNodeJson.put("coluState", mapNode.get("TZ_COLU_STATE").toString());
 					mapNodeJson.put("coluPath", mapNode.get("TZ_COLU_PATH").toString());
-					mapNodeJson.put("coluTempletId", mapNode.get("TZ_TEMP_ID").toString());
+					mapNodeJson.put("coluTempletId", mapNode.get("TZ_CONT_TEMP").toString());
 					mapNodeJson.put("contentTypeId", mapNode.get("TZ_ART_TYPE_ID").toString());
 					mapNodeJson.put("coluTempletName", mapNode.get("TZ_TEMP_NAME").toString());
 					mapNodeJson.put("contentTypeName", mapNode.get("TZ_ART_TYPE_NAME").toString());
@@ -361,7 +361,9 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL));
 						psTzSiteiColuT.setTzColuType(coluType);
 						psTzSiteiColuT.setTzFColuId(TZ_F_COLU_ID);
+
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
+						// psTzSiteiColuT.setTzContTemp(coluTempletId);
 						psTzSiteiColuT.setTzArtTypeId(contentTypeId);
 						psTzSiteiColuT.setTzOutUrl(coluUrl);
 						psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
@@ -390,6 +392,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuType(coluType);
 						psTzSiteiColuT.setTzFColuId(operateNode);
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
+						// psTzSiteiColuT.setTzContTemp(coluTempletId);
 						psTzSiteiColuT.setTzArtTypeId(contentTypeId);
 						psTzSiteiColuT.setTzOutUrl(coluUrl);
 						psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
@@ -419,6 +422,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuType(coluType);
 						// psTzSiteiColuT.setTzFColuId(TZ_F_COLU_ID);
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
+						// psTzSiteiColuT.setTzContTemp(coluTempletId);
 						psTzSiteiColuT.setTzArtTypeId(contentTypeId);
 						psTzSiteiColuT.setTzOutUrl(coluUrl);
 						psTzSiteiColuTMapper.updateByPrimaryKeySelective(psTzSiteiColuT);

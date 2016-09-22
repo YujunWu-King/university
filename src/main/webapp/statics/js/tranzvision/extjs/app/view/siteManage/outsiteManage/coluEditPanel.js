@@ -177,7 +177,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 				items : [{
 					columnWidth : .55,
 					xtype : 'textfield',
-					fieldLabel : '栏目模板',
+					fieldLabel : '内容模板',
 					name : 'coluTempletId',
 					editable : false,
 					triggers : {
