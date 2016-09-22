@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzArtTypeTMapper;
@@ -16,7 +17,12 @@ import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzContFldefTMapper
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzArtTypeT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey;
+import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -29,7 +35,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 public class ArtListServiceImpl extends FrameworkImpl {
 
 	@Autowired
-	private SqlQuery sqlQuery;
+	private SqlQuery jdbcTemplate;
 
 	@Autowired
 	private FliterForm fliterForm;
@@ -47,10 +53,13 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	@Autowired
-	private PsTzArtTypeTMapper psTzArtTypeTMapper;
-	
+	private PsTzLmNrGlTMapper psTzLmNrGlTMapper;
 	@Autowired
-	private PsTzContFldefTMapper PsTzContFldefTMapper;
+	private ArtContentHtml artContentHtml;
+	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 	
 	/* 查询类型类型列表 */
 	@Override
@@ -127,7 +136,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 				mapRet.put("TransList", arraylist);
 				String getSiteSQL = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ENABLE='Y' and TZ_JG_ID=?";
 
-				List<Map<String, Object>> list = sqlQuery.queryForList(getSiteSQL, new Object[] { strJgid });
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(getSiteSQL, new Object[] { strJgid });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						Map<String, Object> jsonMap = new HashMap<>();
@@ -146,7 +155,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 				// 一次性获取一整颗树的所有数据放入List
 				sql = tzSQLObject.getSQLText("SQL.TZOutSiteMgBundle.TzSelectOutSiteColuList");
 
-				List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { siteId });
+				List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 
 				if (null == listData || listData.size() <= 0) {
 					/*
@@ -338,5 +347,242 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 		return listRet;
+	}
+	
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+		// 返回值;
+		String strRet = "";
+
+		// 若参数为空，直接返回;
+		if (actData == null || actData.length == 0) {
+			return strRet;
+		}
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
+				// 提交信息
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+
+				String siteId = jacksonUtil.getString("siteId");
+				String columnId = jacksonUtil.getString("columnId");
+				String articleId = jacksonUtil.getString("articleId");
+				String maxZdSeqSQL = "SELECT TZ_MAX_ZD_SEQ FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
+				int maxZdSEQ = 0;
+				try {
+					maxZdSEQ = jdbcTemplate.queryForObject(maxZdSeqSQL, new Object[] { siteId, columnId, articleId },
+							"Integer");
+				} catch (Exception e) {
+					maxZdSEQ = 0;
+				}
+
+				String deleteSQL = "DELETE from PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
+				int success = jdbcTemplate.update(deleteSQL, new Object[] { siteId, columnId, articleId });
+				if (success > 0 && maxZdSEQ > 0) {
+					String updateMaxZdSeqSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
+					jdbcTemplate.update(updateMaxZdSeqSQL, new Object[] { siteId, columnId, maxZdSEQ });
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+
+		return strRet;
+	}
+
+	/* 新增站点内容文章信息 */
+	@Override
+	public String tzUpdate(String[] actData, String[] errMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+
+				// 点击事件类型：T置顶； P发布；
+				String clickTyp = jacksonUtil.getString("ClickTyp");
+				// 提交的数据;
+				Map<String, Object> dataMap = jacksonUtil.getMap("data");
+				String siteId = (String) dataMap.get("siteId");
+				String columnId = (String) dataMap.get("columnId");
+				String articleId = (String) dataMap.get("articleId");
+
+				if (siteId != null && !"".equals(siteId) && columnId != null && !"".equals(columnId)
+						&& articleId != null && !"".equals(articleId)) {
+					if ("T".equals(clickTyp)) {
+						String topOrUndo = (String) dataMap.get("topOrUndo");
+						String maxSQL = "" ,updateSQL = "";
+						int maxZdSeq = 0;
+						
+						if("TOP".equals(topOrUndo)){
+							maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
+							try{
+								maxZdSeq = jdbcTemplate.queryForObject(maxSQL, new Object[]{siteId,columnId,articleId},"Integer");
+							}catch(Exception e){
+								maxZdSeq = 0;
+							}
+							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+							psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
+							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
+							psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq + 1);
+							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+							psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+						}else{
+							if("0".equals(topOrUndo)){
+								maxSQL = "SELECT TZ_MAX_ZD_SEQ FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?"; 
+								try{
+									maxZdSeq = jdbcTemplate.queryForObject(maxSQL, new Object[]{siteId,columnId,articleId},"Integer");
+								}catch(Exception e){
+									maxZdSeq = 0;
+								}
+								
+								if(maxZdSeq > 0){
+									updateSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
+									jdbcTemplate.update(updateSQL,new Object[]{siteId,columnId,maxZdSeq});
+									
+									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+									psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+									psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
+									psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
+									psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(0);
+									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+									psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+								}
+							}
+						}
+					}
+
+					if ("P".equals(clickTyp)) {
+						String releaseOrUndo = (String) dataMap.get("releaseOrUndo");
+						
+						/*获取站点类型*/
+						String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+						String strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType,  new Object[] { siteId }, "String");
+						//获取静态路径地址
+						String strBasePath = "";
+						String getBasePathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_LEVEL = '0' LIMIT 1";
+						strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[]{siteId},"String");
+						String strColuPath = "";
+						String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
+						strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[]{siteId,columnId},"String");
+						
+						String strFileName = "";
+						String strFilePath = "";
+						String strFilePathAccess = "";
+						
+						if(strBasePath != null && !"".equals(strBasePath)){
+							if (!strBasePath.startsWith("/")) {
+								strBasePath = "/" + strBasePath;
+							}
+							if (strBasePath.endsWith("/")) {
+								strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
+							}
+						}
+						
+						if(strColuPath != null && !"".equals(strColuPath)){
+							if (!strColuPath.startsWith("/")) {
+								strColuPath = "/" + strColuPath;
+							}
+							if (strColuPath.endsWith("/")) {
+								strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
+							}
+						}
+						strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath + strColuPath;
+						strFilePathAccess = strBasePath + strColuPath;
+								
+						String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
+						
+						PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
+						psTzLmNrGlTKey.setTzSiteId(siteId);
+						psTzLmNrGlTKey.setTzColuId(columnId);
+						psTzLmNrGlTKey.setTzArtId(articleId);
+						PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
+						if (psTzLmNrGlT != null) {
+							Date artNewsDt = psTzLmNrGlT.getTzArtNewsDt();
+							String strStaticName = psTzLmNrGlT.getTzStaticName();
+							String strAutoStaticName = psTzLmNrGlT.getTzStaticAotoName();
+							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+							psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
+							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
+							psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
+							//解析的模板内容;
+							String contentHtml = artContentHtml.getContentHtml(siteId, columnId, articleId);
+							
+							psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
+							if ("Y".equals(releaseOrUndo)) {
+								// 如果发布但没有发布时间，则赋值当前时间为发布时间;
+								if (artNewsDt == null) {
+									psTzLmNrGlTWithBLOBs.setTzArtNewsDt(new Date());
+								}
+								psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
+								//发布时，判断是否是外网网站，如果是，则静态化
+								//如果是外网站点和手机站点，则静态话
+								if("A".equals(strSiteType) || "B".equals(strSiteType)){
+									//静态化
+									if(strStaticName!=null && !"".equals(strStaticName)){
+										strFileName = strStaticName + ".html";
+									}else{
+										if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
+											strFileName = strAutoStaticName + ".html";
+										}else{
+											strAutoStaticName = String.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+											psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+										}
+										strFileName = strAutoStaticName + ".html";
+									}
+									//System.out.println("文件路径：" + strFilePath);
+									//fileManageServiceImpl.UpdateFile(strFilePath, strFileName,contentHtml.getBytes());
+									artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
+									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
+									String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+
+								}
+							} else {
+								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+								//删除静态化文件
+								if(strStaticName!=null && !"".equals(strStaticName)){
+									
+									fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
+								}
+								if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
+									
+									fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+								}
+								artContentHtml.staticSiteInfoByChannel(siteId, columnId);
+							}
+							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+							int success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+							if (success <= 0){
+								errMsg[0] = "1";
+								errMsg[1] = "保存数据出错，未找到对应的数据";
+							}
+						}
+					}
+				}else{
+		        	errMsg[0] = "1";
+					errMsg[1] = "保存数据出错，未找到对应的数据";
+		        }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return strRet;
 	}
 }
