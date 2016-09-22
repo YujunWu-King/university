@@ -267,7 +267,8 @@ public class ClassApplicationServiceImpl extends FrameworkImpl {
 							+ "?tzParams={\"ComID\":\"TZ_ONLINE_REG_COM\",\"PageID\":\"TZ_PRINT_ADMIN_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"appInsID\":\""
 							+ TZ_APP_INS_ID + "\"}}";
 					*/
-					String applyFormPrint = request.getContextPath() + "/admission/expform/" + TZ_APP_INS_ID;
+					
+					String applyFormPrint = request.getContextPath() + "/PrintPdfServlet?instanceID=" + TZ_APP_INS_ID;
 
 					// 递交资料模型实例是否存在;
 					int djzlTotalNum = jdbcTemplate.queryForObject(
