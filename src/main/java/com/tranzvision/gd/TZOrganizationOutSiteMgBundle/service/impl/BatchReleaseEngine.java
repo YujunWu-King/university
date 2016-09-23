@@ -98,7 +98,8 @@ public class BatchReleaseEngine extends Thread {
 		sql.append("ifnull(TZ_D_MENU_ID,\"\") TZ_D_MENU_ID,");
 		sql.append("ifnull(TZ_MENU_PATH,\"\") TZ_MENU_PATH,");
 		sql.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
-		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME");
+		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME,");
+		sql.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE");
 		sql.append(" from PS_TZ_SITEI_MENU_T");
 		sql.append(" where TZ_SITEI_ID=? ");
 		try {
@@ -150,7 +151,7 @@ public class BatchReleaseEngine extends Thread {
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
+			
 			String sql = "SELECT TZ_SITEI_ID,TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID = ?  LIMIT 1";
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { ColuId }, String.class);
 			String siteId = map.get("TZ_SITEI_ID").toString();
@@ -186,7 +187,8 @@ public class BatchReleaseEngine extends Thread {
 				sb.append("ifnull(TZ_D_MENU_ID,\"\") TZ_D_MENU_ID,");
 				sb.append("ifnull(TZ_MENU_PATH,\"\") TZ_MENU_PATH,");
 				sb.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
-				sb.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME");
+				sb.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME,");
+				sb.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE");
 				sb.append(" from PS_TZ_SITEI_MENU_T");
 				sb.append(" where TZ_SITEI_ID=? ");
 				List<Map<String, Object>> menu = jdbcTemplate.queryForList(sb.toString(), new Object[] { siteId });

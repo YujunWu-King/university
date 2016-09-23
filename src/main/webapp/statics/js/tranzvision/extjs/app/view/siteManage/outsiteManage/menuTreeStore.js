@@ -25,6 +25,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuTreeStore',{
 				isDefault : root.isDefault,
 				defaultPage : root.defaultPage,
 				menuXH : root.menuXH,
+				menuStyle : root.menuStyle,
 				NodeType : root.NodeType,
 				operateNode : root.operateNode,
 				rootNode : root.id,

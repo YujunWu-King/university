@@ -25,6 +25,7 @@
     <result column="TZ_MENU_LEVEL" jdbcType="INTEGER" property="tzMenuLevel" />
     <result column="TZ_PAGE_NAME" jdbcType="VARCHAR" property="tzPageName" />
     <result column="TZ_MENU_PATH" jdbcType="VARCHAR" property="tzMenuPath" />
+    <result column="TZ_MENU_STYLE" jdbcType="VARCHAR" property="tzMenuStyle" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT">
     <result column="TZ_MENU_URL" jdbcType="LONGVARCHAR" property="tzMenuUrl" />
@@ -33,7 +34,8 @@
     TZ_SITEI_ID, TZ_MENU_ID, TZ_MENU_NAME, TZ_MENU_COLUMN, TZ_MENU_STATE, TZ_MENU_TYPE_ID, 
     TZ_MENU_OPURL_TYPE, TZ_IS_DEL, TZ_IS_EDITOR, TZ_MENU_XH, TZ_TYPE_IMG, TZ_NOW_IMG, 
     TZ_ADDED_DTTM, TZ_ADDED_OPRID, TZ_LASTMANT_DTTM, TZ_LASTMANT_OPRID, TZ_F_MENU_ID, 
-    TZ_MENU_TYPE, TZ_D_MENU_ID, TZ_TEMP_ID, TZ_MENU_LEVEL, TZ_PAGE_NAME, TZ_MENU_PATH
+    TZ_MENU_TYPE, TZ_D_MENU_ID, TZ_TEMP_ID, TZ_MENU_LEVEL, TZ_PAGE_NAME, TZ_MENU_PATH, 
+    TZ_MENU_STYLE
   </sql>
   <sql id="Blob_Column_List">
     TZ_MENU_URL
@@ -60,8 +62,8 @@
       TZ_ADDED_DTTM, TZ_ADDED_OPRID, TZ_LASTMANT_DTTM, 
       TZ_LASTMANT_OPRID, TZ_F_MENU_ID, TZ_MENU_TYPE, 
       TZ_D_MENU_ID, TZ_TEMP_ID, TZ_MENU_LEVEL, 
-      TZ_PAGE_NAME, TZ_MENU_PATH, TZ_MENU_URL
-      )
+      TZ_PAGE_NAME, TZ_MENU_PATH, TZ_MENU_STYLE, 
+      TZ_MENU_URL)
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzMenuId,jdbcType=VARCHAR}, #{tzMenuName,jdbcType=VARCHAR}, 
       #{tzMenuColumn,jdbcType=VARCHAR}, #{tzMenuState,jdbcType=VARCHAR}, #{tzMenuTypeId,jdbcType=VARCHAR}, 
       #{tzMenuOpurlType,jdbcType=VARCHAR}, #{tzIsDel,jdbcType=VARCHAR}, #{tzIsEditor,jdbcType=VARCHAR}, 
@@ -69,8 +71,8 @@
       #{tzAddedDttm,jdbcType=TIMESTAMP}, #{tzAddedOprid,jdbcType=VARCHAR}, #{tzLastmantDttm,jdbcType=TIMESTAMP}, 
       #{tzLastmantOprid,jdbcType=VARCHAR}, #{tzFMenuId,jdbcType=VARCHAR}, #{tzMenuType,jdbcType=VARCHAR}, 
       #{tzDMenuId,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzMenuLevel,jdbcType=INTEGER}, 
-      #{tzPageName,jdbcType=VARCHAR}, #{tzMenuPath,jdbcType=VARCHAR}, #{tzMenuUrl,jdbcType=LONGVARCHAR}
-      )
+      #{tzPageName,jdbcType=VARCHAR}, #{tzMenuPath,jdbcType=VARCHAR}, #{tzMenuStyle,jdbcType=VARCHAR}, 
+      #{tzMenuUrl,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT">
     insert into PS_TZ_SITEI_MENU_T
@@ -143,6 +145,9 @@
       </if>
       <if test="tzMenuPath != null">
         TZ_MENU_PATH,
+      </if>
+      <if test="tzMenuStyle != null">
+        TZ_MENU_STYLE,
       </if>
       <if test="tzMenuUrl != null">
         TZ_MENU_URL,
@@ -218,6 +223,9 @@
       <if test="tzMenuPath != null">
         #{tzMenuPath,jdbcType=VARCHAR},
       </if>
+      <if test="tzMenuStyle != null">
+        #{tzMenuStyle,jdbcType=VARCHAR},
+      </if>
       <if test="tzMenuUrl != null">
         #{tzMenuUrl,jdbcType=LONGVARCHAR},
       </if>
@@ -289,6 +297,9 @@
       <if test="tzMenuPath != null">
         TZ_MENU_PATH = #{tzMenuPath,jdbcType=VARCHAR},
       </if>
+      <if test="tzMenuStyle != null">
+        TZ_MENU_STYLE = #{tzMenuStyle,jdbcType=VARCHAR},
+      </if>
       <if test="tzMenuUrl != null">
         TZ_MENU_URL = #{tzMenuUrl,jdbcType=LONGVARCHAR},
       </if>
@@ -319,6 +330,7 @@
       TZ_MENU_LEVEL = #{tzMenuLevel,jdbcType=INTEGER},
       TZ_PAGE_NAME = #{tzPageName,jdbcType=VARCHAR},
       TZ_MENU_PATH = #{tzMenuPath,jdbcType=VARCHAR},
+      TZ_MENU_STYLE = #{tzMenuStyle,jdbcType=VARCHAR},
       TZ_MENU_URL = #{tzMenuUrl,jdbcType=LONGVARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
@@ -345,7 +357,8 @@
       TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
       TZ_MENU_LEVEL = #{tzMenuLevel,jdbcType=INTEGER},
       TZ_PAGE_NAME = #{tzPageName,jdbcType=VARCHAR},
-      TZ_MENU_PATH = #{tzMenuPath,jdbcType=VARCHAR}
+      TZ_MENU_PATH = #{tzMenuPath,jdbcType=VARCHAR},
+      TZ_MENU_STYLE = #{tzMenuStyle,jdbcType=VARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_MENU_ID = #{tzMenuId,jdbcType=VARCHAR}
   </update>

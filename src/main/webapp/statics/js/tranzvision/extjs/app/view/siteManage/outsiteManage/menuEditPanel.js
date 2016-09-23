@@ -45,6 +45,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						menuPageName : record.data.menuPageName,
 						menuType : record.data.menuType,
 						menuXH : record.data.menuXH,
+						menuStyle : record.data.menuStyle,
 						isDefault : record.data.isDefault,
 						defaultPage : record.data.defaultPage,
 						NodeType : record.data.NodeType,
@@ -65,11 +66,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						form.findField("isDefault").hide();
 						form.findField("menuPath").show();
 						form.findField("defaultPage").show();
+						form.findField("menuStyle").show();
 					} else {
 						//form.findField("menuPageName").show();
 						form.findField("isDefault").show();
 						form.findField("menuPath").hide();
 						form.findField("defaultPage").hide();
+						form.findField("menuStyle").hide();
 					}
 					view.findParentByType("menuEdit").actType = "update";
 					
@@ -189,15 +192,35 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 								//form.findField("menuPageName").hide();
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
-								form.findField("defaultPage").show();		
+								form.findField("defaultPage").show();	
+								form.findField("menuStyle").show();
 							} else {
 								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
+								form.findField("menuStyle").hide();
 							}
 						}
 					}
+				},{
+					xtype : 'textfield',
+					fieldLabel : '页面名称',
+					name : 'menuPageName',
+					//allowBlank : false
+				},{
+					xtype : 'textfield',
+					fieldLabel : '菜单样式',
+					name : 'menuStyle'
+				},{
+					xtype : 'textfield',
+					fieldLabel : '菜单路径',
+					name : 'menuPath'
+				},{
+					xtype: 'checkboxfield',
+					fieldLabel  : '是否默认首页',
+					name : 'isDefault',
+					inputValue: 'Y'
 				},{
 					layout : {
 						type : 'column'
@@ -219,32 +242,17 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 							}
 						}
 					},{
-						columnWidth : .45,
+						columnWidth : .25,
 						xtype : 'displayfield',
 						hideLabel : true,
 						style : 'margin-left:5px',
 						name : 'menuTempletName'
+					},{
+						//columnWidth : .20,
+						xtype: 'displayfield',
+						fieldLabel  : '默认首页',
+						name : 'defaultPage'
 					}]
-				},{
-					xtype : 'textfield',
-					fieldLabel : '页面名称',
-					name : 'menuPageName',
-					//allowBlank : false
-				},{
-					xtype : 'textfield',
-					fieldLabel : '菜单路径',
-					name : 'menuPath'
-						//beforeLabelTextTpl : [ '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>' ],
-						//allowBlank : false
-				},{
-					xtype: 'checkboxfield',
-					fieldLabel  : '是否默认首页',
-					name : 'isDefault',
-					inputValue: 'Y'
-				},{
-					xtype: 'displayfield',
-					fieldLabel  : '默认首页',
-					name : 'defaultPage'
 				},{
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 					xtype : 'textfield',
@@ -335,6 +343,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				menuType : rootNode.data.menuType,
 				isDefault : rootNode.data.isDefault,
 				menuXH : rootNode.data.menuXH,
+				menuStyle : rootNode.data.menuStyle,
 				defaultPage : rootNode.data.defaultPage,
 				NodeType : rootNode.data.NodeType,
 				operateNode : rootNode.data.operateNode,
@@ -356,11 +365,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				form.findField("isDefault").hide();
 				form.findField("menuPath").show();
 				form.findField("defaultPage").show();
+				form.findField("menuStyle").show();
 			} else {
 				//form.findField("menuPageName").show();
 				form.findField("isDefault").show();
 				form.findField("menuPath").hide();
 				form.findField("defaultPage").hide();
+				form.findField("menuStyle").hide();
 			}
 			
 			/*var grid = panel.child("grid");

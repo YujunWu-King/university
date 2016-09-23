@@ -11,7 +11,8 @@ select
 	A.TZ_MENU_LEVEL,
 	A.TZ_MENU_XH,
 	ifnull(A.TZ_F_MENU_ID,"") TZ_F_MENU_ID,
-	ifnull(C.TZ_MENU_NAME,"") TZ_DEFAULT_PAGE
+	ifnull(C.TZ_MENU_NAME,"") TZ_DEFAULT_PAGE,
+	ifnull(A.TZ_MENU_STYLE,"") TZ_MENU_STYLE
 from 
 	PS_TZ_SITEI_MENU_T A
 	left join

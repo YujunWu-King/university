@@ -37,6 +37,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 				form.findField("isDefault").setValue('');
 				form.findField("menuXH").setValue('');
 				form.findField("defaultPage").setValue('');
+				form.findField("menuStyle").setValue('');
 				
 
 				form.findField("NodeType").setValue("Y");
@@ -85,6 +86,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 				form.findField("menuPageName").setValue('');
 				form.findField("isDefault").setValue('');
 				form.findField("defaultPage").setValue('');
+				form.findField("menuStyle").setValue('');
 
 				form.findField("NodeType").setValue("N");
 				form.findField("operateNode").setValue(menuId);
@@ -129,6 +131,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 								menuTempletId : operateNode.data.menuTempletId,
 								menuPageName : operateNode.data.menuPageName,
 								menuXH : operateNode.data.menuXH,
+								menuStyle : operateNode.data.menuStyle,
 								isDefault : operateNode.data.isDefault,
 								defaultPage : operateNode.data.defaultPage,
 								NodeType : "",
@@ -143,11 +146,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
 								form.findField("defaultPage").show();
+								form.findField("menuStyle").show();
 							} else {
 								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
+								form.findField("menuStyle").hide();
 							}
 							form.findField("menuId").setReadOnly(true);
 							form.findField("menuPath").setReadOnly(true);
@@ -182,6 +187,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 										menuPageName : pNode.data.menuPageName,
 										isDefault : pNode.data.isDefault,
 										menuXH : pNode.data.menuXH,
+										menuStyle : pNode.data.menuStyle,
 										defaultPage : defaultPage,
 										NodeType : "",
 										operateNode : "",
@@ -195,11 +201,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 										form.findField("isDefault").hide();
 										form.findField("menuPath").show();
 										form.findField("defaultPage").show();
+										form.findField("menuStyle").show();
 									} else {
 										//form.findField("menuPageName").show();
 										form.findField("isDefault").show();
 										form.findField("menuPath").hide();
 										form.findField("defaultPage").hide();
+										form.findField("menuStyle").hide();
 									}
 									form.findField("menuId").setReadOnly(true);
 									form.findField("menuPath").setReadOnly(true);
@@ -252,6 +260,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        var isDefault = form.findField("isDefault").getValue();
 	        var defaultPage = form.findField("defaultPage").getValue();
 	        var menuXH = form.findField("menuXH").getValue();
+	        var menuStyle = form.findField("menuStyle").getValue();
 	        
 	        var NodeType = form.findField("NodeType").getValue();
 	        var rootNode = form.findField("rootNode").getValue();
@@ -313,6 +322,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				menuType : menuType,
 	        				defaultPage : defaultPage,
 	        				menuXH : menuXH,
+	        				menuStyle : menuStyle,
 	        				isDefault : isDefault,
 	        				NodeType: "",
 	        				operateNode: "",
@@ -321,6 +331,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			});
 	        			brotherNode = treepanelStore.getNodeById( responseData.newMenuID );
 	        			treepanel.getSelectionModel().select(brotherNode);
+	        			form.findField("menuId").setValue(responseData.newMenuID);
 	        		}
 							 
 	        		// 添加子节点;
@@ -346,6 +357,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				menuPageName : menuPageName,
 	        				menuType : menuType,
 	        				menuXH : menuXH,
+	        				menuStyle : menuStyle,
 	        				isDefault : isDefault,
 	        				defaultPage : defaultPage,
 	        				NodeType: "",
@@ -359,6 +371,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			childNode = treepanelStore.getNodeById( responseData.newMenuID );
 					        
 	        			treepanel.getSelectionModel().select(childNode);
+	        			form.findField("menuId").setValue(responseData.newMenuID);
 		
 	        		}
 	        		 // 保存当前节点;
@@ -396,6 +409,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			thisNode.set('isDefault', isDefault);
 	        			thisNode.set('defaultPage',defaultPage);
 	        			thisNode.set('menuXH',menuXH);
+	        			thisNode.set('menuStyle',menuStyle);
 	        			
 	        			
 	        			
@@ -405,6 +419,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			thisNode.set('rootNode', rootNode);
 	        			
 	        		}
+	        		
+	        		
 	        		form.findField("NodeType").setValue("");
 	        		form.findField("operateNode").setValue("");
 	        		form.findField("menuId").setReadOnly(true);
@@ -449,6 +465,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        var NodeType = form.findField("NodeType").getValue();
 	        var rootNode = form.findField("rootNode").getValue();
 	        var menuXH = form.findField("menuXH").getValue();
+	        var menuStyle = form.findField("menuStyle").getValue();
 	        
 	        var operateNodeId = form.findField("operateNode").getValue();
 	        var operateNode = treepanelStore.getNodeById(operateNodeId);
@@ -475,6 +492,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				menuType : menuType,
 	        				isDefault : isDefault,
 	        				menuXH : menuXH,
+	        				menuStyle : menuStyle,
 	        				defaultPage : defaultPage,
 	        				NodeType: "",
 	        				operateNode: "",
@@ -499,6 +517,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				menuPageName : menuPageName,
 	        				menuType : menuType,
 	        				menuXH : menuXH,
+	        				menuStyle : menuStyle,
 	        				isDefault : isDefault,
 	        				defaultPage : defaultPage,
 	        				NodeType: "",
@@ -528,6 +547,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			thisNode.set('menuType', menuType);
 	        			thisNode.set('isDefault', isDefault);
 	        			thisNode.set('menuXH', menuXH);
+	        			thisNode.set('menuStyle', menuStyle);
 	        			thisNode.set('defaultPage', defaultPage);
 	        			thisNode.set('NodeType', "");
 	        			thisNode.set('operateNode', "");

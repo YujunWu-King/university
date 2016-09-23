@@ -184,6 +184,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("menuTempletName", mapData.get("TZ_TEMP_NAME").toString());
 						mapRootJson.put("menuPageName", mapData.get("TZ_PAGE_NAME").toString());
 						mapRootJson.put("defaultPage", mapData.get("TZ_DEFAULT_PAGE").toString());
+						mapRootJson.put("menuStyle", mapData.get("TZ_MENU_STYLE").toString());
 						mapRootJson.put("isDefault", "");
 
 						if (listData.size() > 1) {
@@ -262,6 +263,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("menuTempletName", mapNode.get("TZ_TEMP_NAME").toString());
 					mapNodeJson.put("menuPageName", mapNode.get("TZ_PAGE_NAME").toString());
 					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
+					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
 
 					// 查询默认主页 A:PAGE B:BOOK
 					if (menuType.equals("A")) {
@@ -385,6 +387,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			String NodeType = "";
 			String operateNode = "";
 			String menuXH = "";
+			String menuStyle = "";
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			Map<String, Object> mapData = null;
@@ -433,9 +436,14 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					menuTempletId = infoData.get("menuTempletId").toString();
 					// 循序
 					menuXH = infoData.get("menuXH").toString();
+
 					// 页面内容;
 					if (infoData.containsKey("menuPageName")) {
 						menuPageName = infoData.get("menuPageName").toString();
+					}
+
+					if (infoData.containsKey("menuStyle")) {
+						menuStyle = infoData.get("menuStyle").toString();
 					}
 					// 是否默认页面;
 					if (infoData.containsKey("isDefault")) {
@@ -486,6 +494,11 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						}
 					}
 
+					// System.out.println("rootNode=" + rootNode);
+					// System.out.println("thisNode=" + thisNode);
+					// System.out.println("operateNode=" + operateNode);
+					// System.out.println("menuId=" + menuId);
+
 					if (rootNode.get("TZ_MENU_ID").toString().equals(thisNode.get("TZ_MENU_ID").toString())) {
 						// 当前结点就是跟节点,没有父节点
 						pNode = null;
@@ -516,6 +529,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
+						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
 
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
@@ -568,6 +582,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
+						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
 
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
@@ -611,7 +626,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						// psTzSiteiMenuT.setTzMenuPath(menuPath); path不能修改
 						psTzSiteiMenuT.setTzMenuState(menuState);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
-
+						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
+						
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzLastmantOprid(oprid);
@@ -824,8 +840,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						// fileManageServiceImpl.UpdateFile(cm.getPath(),
 						// cm.getHtmlName(),
 						// cm.getHtml().getBytes());
-						
-						
+
 						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 						dir = request.getServletContext().getRealPath(dir);
 						dir = dir + File.separator + cm.getPath();
