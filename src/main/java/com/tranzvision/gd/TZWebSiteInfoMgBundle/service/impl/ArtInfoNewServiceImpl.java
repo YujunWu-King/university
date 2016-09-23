@@ -1156,7 +1156,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
 				}
 			}
-			strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath + strColuPath;
+			
+			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+			dir = request.getServletContext().getRealPath(dir);
+			strFilePath = dir + strBasePath + strColuPath;
 			strFilePathAccess = strBasePath + strColuPath;
 			
 			
@@ -1167,6 +1170,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{ "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD"},"String");
 			String publishUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+this.instanceSiteId+"&columnId="+this.instanceColuId+"&artId="+this.instanceArtId;
 			//解析的模板内容;
+			System.out.println(siteId + "--" + coluId + "--" + artId);
 			String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
 			
 			//contentHtml = "测试文章静态11";
@@ -1202,10 +1206,17 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						strFileName = strAutoStaticName + ".html";
 					}
 					
-					artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
-					artContentHtml.staticSiteInfoByChannel(siteId, coluId);
 					publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
 					psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+					
+					System.out.println("路劲"+strFilePath);
+					boolean b = artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
+					artContentHtml.staticSiteInfoByChannel(siteId, coluId);
+				}else{
+					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 				}
 			}else{
 				if("N".equals(this.ins_isPublish)){
@@ -1218,12 +1229,14 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						
 						fileManageServiceImpl.DeleteFile(strFilePath, strOriginStaticName + ".html");
 					}
+					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 					artContentHtml.staticSiteInfoByChannel(siteId, coluId);
+				}else{
+					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 				}
 			}
-			psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
-			psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-			
 			returnJsonMap.replace("artId", this.instanceArtId);
 			returnJsonMap.replace("siteId", this.instanceSiteId);
 			returnJsonMap.replace("publishUrl", publishUrl);
