@@ -6,35 +6,90 @@
         var panel=btn.findParentByType("panel");
         panel.close();
     },
-
-    treePanelBeforeRender:function(thisTree){
-		/*
-        var chanelID = thisTree.findParentByType("panel").chanelID;
-
-        if(chanelID) {
-
-            var store = thisTree.findParentByType("panel").down("dataview").getStore(),
-                record = store.getNodeById(chanelID);
-
-            thisTree.getSelectionModel().select(record);
-
-            var chanelName = record.data.text;
-            var title = chanelName;
-            var node = record.parentNode;
-
-            if(node!=undefined){
-                title = node.data.text + " - " + title;
-            }
-            var panel = thisTree.findParentByType("panel").lookupReference("knowledgeBaseGridPanel");
-
-            panel.setTitle(title);
-            panel.down("searchfield").onClearClick();
-
-            store.chanelID = chanelID;
-            store.tzStoreParams = '{"chanelID":"' + chanelID + '"}';
-        }*/
-    },
-
+	
+	copySelList:function(btn){
+		//选中行
+	   var refs = this.getReferences(),
+			dataGrid = refs.artListGrid;
+	   var selList = dataGrid.getSelectionModel().getSelection();
+	   //选中行长度
+	   var checkLen = selList.length;
+	   if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要复制的记录");   
+			return;
+	   }else{
+			//是否有访问权限
+			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ART_MG_COM"]["TZ_CHAN_SEL_STD"];
+			if( pageResSet == "" || pageResSet == undefined){
+				Ext.MessageBox.alert('提示', '您没有权限');
+				return;
+			}
+			//该功能对应的JS类
+			var className = pageResSet["jsClassName"];
+			if(className == "" || className == undefined){
+				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CHAN_SEL_STD，请检查配置。');
+				return;
+			}
+			var win = this.lookupReference('channelTreeWindow');
+			if (!win) {
+				Ext.syncRequire(className);
+				ViewClass = Ext.ClassManager.get(className);
+				//新建类
+				win = new ViewClass();
+				this.getView().add(win);
+			}
+			//操作类型设置为新增
+			win.actType = "update";
+			//console.log(selList);
+			win.artRecs = selList;
+			//模板信息表单
+			win.show();
+		}
+	},
+	
+	onShooseChannelEnsure:function(btn){
+		var msg = "复制成功";
+		var panel = btn.findParentByType("panel");
+		console.log(panel.artRecs);
+		var channelId = panel.channelId;
+		if(channelId == "" || channelId == undefined){
+			Ext.MessageBox.alert('提示', '请先选择栏目。');
+			return;
+		}else{
+			//复制信息
+			var copyJson = "";
+			var comParams = "";
+			//删除记录
+			var artRecs = panel.artRecs;
+			for(var i=0;i<artRecs.length;i++){
+				if(copyJson == ""){
+					copyJson = Ext.JSON.encode(artRecs[i].data);
+					copyJson = '{"channelId":"'+channelId+'","data":'+Ext.JSON.encode(artRecs[i].data)+'}';
+				}else{
+					//copyJson = copyJson + ','+Ext.JSON.encode(artRecs[i].data);
+					copyJson = copyJson + ',{"channelId":"'+channelId+'","data":'+Ext.JSON.encode(artRecs[i].data)+'}';
+				}
+			}
+			if(copyJson != ""){
+				if(comParams == ""){
+					comParams = '"copy":[' + copyJson + "]";
+					
+				}else{
+					comParams = comParams + ',"copy":[' + copyJson + "]";
+				}
+			}
+			//提交参数
+			var tzParams = '{"ComID":"TZ_ART_MG_COM","PageID":"TZ_ART_LIST_STD","OperateType":"copy","comParams":{'+comParams+'}}';
+			Ext.tzSubmit(tzParams,function(){
+				//store.reload();		   
+			},msg,true,this);
+		}
+		this.getView().close();
+	},
+	
+	onShooseChannelClose:function(btn){
+		this.getView().close();
+	},
     treeItemClick: function( view , record, item, index, e, eOpts ){
         var refs = this.getReferences(),
 		dataPanel = refs.artListGridPanel,
@@ -49,24 +104,13 @@
         }
 
         dataPanel.setTitle(title);
-		
         dataGrid.store.columnId=columnId;
         dataGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V","condition":{"TZ_COLU_ID-operator":"01","TZ_COLU_ID-value":"'+columnId+'"}}';
         dataGrid.store.load();
-		/*
-		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_ART_MG_COM.TZ_ART_LIST_STD.TZ_GD_CONTENT_V',
-			condition:
-			{
-				"TZ_COLU_ID": columnId
-			},
-			callback: function(seachCfg){
-				var store = btn.findParentByType("grid").store;
-				store.tzStoreParams = seachCfg;
-				store.load();
-			}
-		});	
-		*/
+    },
+	channelTreeItemClick: function( view , record, item, index, e, eOpts ){
+		var panel = view.findParentByType("panel").findParentByType("panel");
+		panel.channelId = record.data.id;
     },
 	//查询
     cfgSearch: function(btn){
