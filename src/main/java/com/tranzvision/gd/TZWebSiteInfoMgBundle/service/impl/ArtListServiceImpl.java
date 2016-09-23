@@ -17,8 +17,17 @@ import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.dao.PsTzContFldefTMapper
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzArtTypeT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPicTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtPrjTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -53,7 +62,23 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	@Autowired
+	private PsTzArtRecTblMapper psTzArtRecTblMapper;
+	@Autowired
 	private PsTzLmNrGlTMapper psTzLmNrGlTMapper;
+	@Autowired
+	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
+	@Autowired
+	private PsTzArtTitimgTMapper psTzArtTitimgTMapper;
+	@Autowired
+	private PsTzArtFjjTMapper psTzArtFjjTMapper;
+	@Autowired
+	private PsTzArtTpjTMapper psTzArtTpjTMapper;
+	@Autowired
+	private PsTzArtPicTMapper psTzArtPicTMapper;
+	@Autowired
+	private PsTzArtFileTMapper psTzArtFileTMapper;
+	@Autowired
+	private PsTzArtPrjTMapper psTzArtPrjTMapper;
 	@Autowired
 	private ArtContentHtml artContentHtml;
 	@Autowired
@@ -584,5 +609,123 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return strRet;
+	}
+	
+	/* 新增站点内容文章信息 */
+	@Override
+	public String tzOther(String oprType,String strParams, String[] errMsg) {
+		String strRet = "{}";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		System.out.println("操作类型"+oprType);
+		System.out.println(strParams);
+		
+		try {
+			int num = 0;
+			// 发布的站点;
+			String siteId = "";
+			// 发布的栏目
+			String coluId = "";
+			// 发布的内容id;
+			String artId = "";
+			//站点类型
+			String strSiteType = "";
+			
+			jacksonUtil.json2Map(strParams);
+
+			// 点击事件类型：T置顶； P发布；
+			ArrayList<Map<String, Object>> copyData = (ArrayList<Map<String, Object>>) jacksonUtil.getList("copy");
+			for(int i = 0;i<copyData.size();i++){
+				   
+				   Map<String, Object> mapCopyData = copyData.get(i);
+				   String strChannelIdCopyTo = (String) mapCopyData.get("channelId");
+				   String strChannelIdCopyFrom = "";
+				   String strArtIdCopyFrom = "";
+				   String strSiteIdCopyFrom = "";
+				   System.out.println(strChannelIdCopyTo);
+				   Map<String, Object> artInfoCopyFrom = (Map<String, Object>) mapCopyData.get("data");
+				   if(artInfoCopyFrom.containsKey("articleId") && artInfoCopyFrom.containsKey("columnId")
+						   && artInfoCopyFrom.containsKey("siteId")){
+					   strArtIdCopyFrom = (String) artInfoCopyFrom.get("articleId");
+					   strChannelIdCopyFrom = (String) artInfoCopyFrom.get("columnId");
+					   strSiteIdCopyFrom = (String) artInfoCopyFrom.get("siteId");
+					   if(strArtIdCopyFrom!=null && !"".equals(strArtIdCopyFrom)
+							 && strChannelIdCopyFrom!=null && !"".equals(strChannelIdCopyFrom)
+							 && strSiteIdCopyFrom!=null && !"".equals(strSiteIdCopyFrom)){
+						   /*复制内容*/
+					   }else{
+						   
+					   }
+				   }else{
+					   
+				   }
+				   System.out.println(artInfoCopyFrom.get("articleId"));
+				   System.out.println(artInfoCopyFrom.get("siteId"));
+				   System.out.println(artInfoCopyFrom.get("columnId"));
+			}
+			// 提交的数据;
+			
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+			
+		return strRet;
+	}
+	/**/
+	private boolean copyArtToOtherChannel(String strArtIdCopyFrom,String strChannelIdCopyFrom,String strSiteIdCopyFrom,String strChannelIdCopyTo){
+		boolean b_retrun = true;
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		/*得到复制到的栏目对应的站点编号*/
+		// 获取机构对应的站点；
+		String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
+		String strSiteIdCopyTo = jdbcTemplate.queryForObject(siteSQL, new Object[] { strChannelIdCopyTo }, "String");
+		
+		// 文章表;
+		PsTzArtRecTblWithBLOBs psTzArtRecTblFrom = psTzArtRecTblMapper.selectByPrimaryKey(strArtIdCopyFrom);
+		// 内容站点关联表;
+		PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
+		psTzLmNrGlTKey.setTzSiteId(strSiteIdCopyFrom);
+		psTzLmNrGlTKey.setTzColuId(strChannelIdCopyFrom);
+		psTzLmNrGlTKey.setTzArtId(strArtIdCopyFrom);
+		PsTzLmNrGlTWithBLOBs psTzLmNrGlTFrom = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
+		if(psTzArtRecTblFrom!=null && psTzLmNrGlTFrom !=null){
+			/*复制文章信息表*/
+			// 内容表;
+			String strArtIdCopyTo = String.valueOf(getSeqNum.getSeqNum("TZ_ART_REC_TBL", "TZ_ART_ID"));
+			PsTzArtRecTblWithBLOBs PsTzArtRecTbl = new PsTzArtRecTblWithBLOBs();
+			PsTzArtRecTbl.setTzArtId(strArtIdCopyTo);
+			PsTzArtRecTbl.setTzArtTitle(psTzArtRecTblFrom.getTzArtTitle());
+			PsTzArtRecTbl.setTzArtShorttitle(psTzArtRecTblFrom.getTzArtShorttitle());
+			PsTzArtRecTbl.setTzSubhead(psTzArtRecTblFrom.getTzSubhead());
+			PsTzArtRecTbl.setTzAbout(psTzArtRecTblFrom.getTzAbout());
+			PsTzArtRecTbl.setTzMetadesc(psTzArtRecTblFrom.getTzMetadesc());
+			PsTzArtRecTbl.setTzMetakeys(psTzArtRecTblFrom.getTzMetakeys());
+			PsTzArtRecTbl.setTzTxt1(psTzArtRecTblFrom.getTzTxt1());
+			PsTzArtRecTbl.setTzTxt2(psTzArtRecTblFrom.getTzTxt2());
+			PsTzArtRecTbl.setTzTxt3(psTzArtRecTblFrom.getTzTxt3());
+			PsTzArtRecTbl.setTzTxt4(psTzArtRecTblFrom.getTzTxt4());
+			PsTzArtRecTbl.setTzLong1(psTzArtRecTblFrom.getTzLong1());
+			PsTzArtRecTbl.setTzLong2(psTzArtRecTblFrom.getTzLong2());
+			PsTzArtRecTbl.setTzLong3(psTzArtRecTblFrom.getTzLong3());
+			PsTzArtRecTbl.setTzDate1(psTzArtRecTblFrom.getTzDate1());
+			PsTzArtRecTbl.setTzDate2(psTzArtRecTblFrom.getTzDate2());
+			PsTzArtRecTbl.setTzArtTitleStyle(psTzArtRecTblFrom.getTzArtTitleStyle());
+			PsTzArtRecTbl.setTzArtConent(psTzArtRecTblFrom.getTzArtConent());
+			PsTzArtRecTbl.setTzArtName(psTzArtRecTblFrom.getTzArtName());
+			PsTzArtRecTbl.setTzProjectLimit(psTzArtRecTblFrom.getTzProjectLimit());
+			PsTzArtRecTbl.setTzArtType1(psTzArtRecTblFrom.getTzArtType1());
+			PsTzArtRecTbl.setTzOutArtUrl(psTzArtRecTblFrom.getTzOutArtUrl());
+			PsTzArtRecTbl.setTzImageTitle(psTzArtRecTblFrom.getTzImageTitle());
+			PsTzArtRecTbl.setTzImageDesc(psTzArtRecTblFrom.getTzImageDesc());
+			PsTzArtRecTbl.setTzAttachsysfilena(psTzArtRecTblFrom.getTzAttachsysfilena());
+			PsTzArtRecTbl.setRowAddedDttm(new Date());
+			PsTzArtRecTbl.setRowAddedOprid(oprid);
+			PsTzArtRecTbl.setRowLastmantDttm(new Date());
+			PsTzArtRecTbl.setRowLastmantOprid(oprid);
+			psTzArtRecTblMapper.updateByPrimaryKeySelective(PsTzArtRecTbl);
+		}
+		return b_retrun;
 	}
 }

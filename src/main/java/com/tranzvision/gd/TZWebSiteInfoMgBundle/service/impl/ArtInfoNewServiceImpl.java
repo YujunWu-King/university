@@ -703,7 +703,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
-
+	
 	/* 新增站点内容文章信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
