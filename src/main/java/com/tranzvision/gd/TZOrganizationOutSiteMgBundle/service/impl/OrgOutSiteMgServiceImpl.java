@@ -19,6 +19,7 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -47,6 +48,9 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 	private PsTzSiteiColuTMapper psTzSiteiColuTMapper;
 	@Autowired
 	private PsTzSiteiMenuTMapper psTzSiteiMenuTMapper;
+
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	/* 查询列表 */
 	@Override
@@ -230,7 +234,10 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 						// 生成路径
 						try {
 
-							parentRealPath = request.getServletContext().getRealPath(sitePath);
+							parentRealPath = getSysHardCodeVal.getWebsiteEnrollPath();
+							parentRealPath = request.getServletContext().getRealPath(parentRealPath);
+							parentRealPath = dir + File.separator + sitePath;
+
 							dir = new File(parentRealPath);
 							if (!dir.exists()) {
 								dir.mkdirs();
