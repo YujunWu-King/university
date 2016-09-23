@@ -1,10 +1,15 @@
 package com.tranzvision.gd.TZWebSiteInfoMgBundle.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +23,7 @@ import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzArtTypeT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefT;
 import com.tranzvision.gd.TZOrganizationOutSiteMgBundle.model.PsTzContFldefTKey;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFileTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
@@ -236,7 +242,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						// rootNode : config.coluId,
 						// expanded : root.expanded,
 						// children : me.getChartNavItems(items)
-						System.out.println("id=" + coluId);
+						//System.out.println("id=" + coluId);
 	
 						mapRootJson.put("id", coluId);
 						mapRootJson.put("nodeId", coluId);
@@ -524,7 +530,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
 							}
 						}
-						strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath + strColuPath;
+						
+						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+						dir = request.getServletContext().getRealPath(dir);
+						strFilePath = dir + strBasePath + strColuPath;
 						strFilePathAccess = strBasePath + strColuPath;
 								
 						String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
@@ -545,7 +554,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
 							//解析的模板内容;
 							String contentHtml = artContentHtml.getContentHtml(siteId, columnId, articleId);
-							
+							int success = 0;
 							psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
 							if ("Y".equals(releaseOrUndo)) {
 								// 如果发布但没有发布时间，则赋值当前时间为发布时间;
@@ -571,10 +580,16 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									//System.out.println("文件路径：" + strFilePath);
 									//fileManageServiceImpl.UpdateFile(strFilePath, strFileName,contentHtml.getBytes());
 									artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
-									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
+									
 									String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
-
+									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
+								}else{
+									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 								}
 							} else {
 								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
@@ -587,11 +602,11 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									
 									fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
 								}
+								psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+								psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+								success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 								artContentHtml.staticSiteInfoByChannel(siteId, columnId);
 							}
-							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
-							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-							int success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 							if (success <= 0){
 								errMsg[0] = "1";
 								errMsg[1] = "保存数据出错，未找到对应的数据";
@@ -677,6 +692,15 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	private boolean copyArtToOtherChannel(String strArtIdCopyFrom,String strChannelIdCopyFrom,String strSiteIdCopyFrom,String strChannelIdCopyTo){
 		boolean b_retrun = true;
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		/*网站上传文件的路径*/
+		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+		
+		// 站点表;
+		PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteIdCopyFrom);
+		String imagePath = psTzSiteiDefnT.getTzImgStor();
+		String attrPath = psTzSiteiDefnT.getTzAttsStor();
+		
 		/*得到复制到的栏目对应的站点编号*/
 		// 获取机构对应的站点；
 		String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
@@ -690,9 +714,18 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		psTzLmNrGlTKey.setTzColuId(strChannelIdCopyFrom);
 		psTzLmNrGlTKey.setTzArtId(strArtIdCopyFrom);
 		PsTzLmNrGlTWithBLOBs psTzLmNrGlTFrom = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
-		if(psTzArtRecTblFrom!=null && psTzLmNrGlTFrom !=null){
+		if(psTzArtRecTblFrom!=null && psTzLmNrGlTFrom !=null 
+				&& !"".equals(strChannelIdCopyTo) && !"".equals(strSiteIdCopyTo)){
 			/*复制文章信息表*/
 			// 内容表;
+			String titleImageSysfilenaFrom = psTzArtRecTblFrom.getTzAttachsysfilena();
+			if(titleImageSysfilenaFrom!=null && !"".equals(titleImageSysfilenaFrom)){
+				String titleImageSysfileSuffix = titleImageSysfilenaFrom.substring(titleImageSysfilenaFrom.lastIndexOf(".") + 1);
+				String titleImageSysfilenaNew = (new StringBuilder(String.valueOf(getNowTime())))
+						.append(".").append(titleImageSysfileSuffix).toString();
+				
+			}
+			
 			String strArtIdCopyTo = String.valueOf(getSeqNum.getSeqNum("TZ_ART_REC_TBL", "TZ_ART_ID"));
 			PsTzArtRecTblWithBLOBs PsTzArtRecTbl = new PsTzArtRecTblWithBLOBs();
 			PsTzArtRecTbl.setTzArtId(strArtIdCopyTo);
@@ -724,8 +757,58 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			PsTzArtRecTbl.setRowAddedOprid(oprid);
 			PsTzArtRecTbl.setRowLastmantDttm(new Date());
 			PsTzArtRecTbl.setRowLastmantOprid(oprid);
-			psTzArtRecTblMapper.updateByPrimaryKeySelective(PsTzArtRecTbl);
+			psTzArtRecTblMapper.insertSelective(PsTzArtRecTbl);
+			
+			// 内容站点关联表;
+			PsTzLmNrGlTWithBLOBs psTzLmNrGlT = new PsTzLmNrGlTWithBLOBs();
+			psTzLmNrGlT.setTzSiteId(strSiteIdCopyTo);
+			psTzLmNrGlT.setTzColuId(strChannelIdCopyTo);
+			psTzLmNrGlT.setTzArtId(strArtIdCopyTo);
+			psTzLmNrGlT.setTzFbz(psTzLmNrGlTFrom.getTzFbz());
+			psTzLmNrGlT.setTzBltDept(psTzLmNrGlTFrom.getTzBltDept());
+			psTzLmNrGlT.setTzArtPubState("N");
+			psTzLmNrGlT.setTzStaticArtUrl("");
+			psTzLmNrGlT.setTzArtSeq(Integer.parseInt(strArtIdCopyTo));
+			psTzLmNrGlT.setTzLastmantDttm(new Date());
+			psTzLmNrGlT.setTzLastmantOprid(oprid);
+			psTzLmNrGlT.setTzOrginArtChnl(strChannelIdCopyFrom);
+			psTzLmNrGlT.setTzOrginArtId(strArtIdCopyFrom);
+			//psTzLmNrGlT.setTzArtNewsDt(psTzLmNrGlTFrom.getTzArtNewsDt());
+			psTzLmNrGlT.setTzStaticName("");
+			psTzLmNrGlTMapper.insertSelective(psTzLmNrGlT);
+			
+			//图片集
+			jdbcTemplate.update("delete from PS_TZ_ART_PIC_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			
+			//图片集
+			jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			
+			//图片集
+			jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
 		}
 		return b_retrun;
+	}
+	
+	protected String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
+	}
+
+	protected String getNowTime() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		int hour = cal.get(10);
+		int minute = cal.get(12);
+		int second = cal.get(13);
+		int mi = cal.get(14);
+		long num = cal.getTimeInMillis();
+		int rand = (int) (Math.random() * 899999 + 100000);
+		return (new StringBuilder()).append(year).append(month).append(day).append(hour).append(minute).append(second)
+				.append(mi).append(num).append("_").append(rand).toString();
 	}
 }
