@@ -6,7 +6,7 @@ select
 	A.TZ_COLU_STATE,
 	A.TZ_COLU_PATH,
 	ifnull(A.TZ_COLU_TYPE,"") TZ_COLU_TYPE,
-	ifnull(A.TZ_TEMP_ID,"") TZ_TEMP_ID,
+	ifnull(A.TZ_CONT_TEMP,"") TZ_CONT_TEMP,
 	ifnull(A.TZ_ART_TYPE_ID,"") TZ_ART_TYPE_ID,
 	ifnull(A.TZ_OUT_URL,"") TZ_OUT_URL,
 	A.TZ_COLU_LEVEL,
@@ -17,7 +17,7 @@ from
 		PS_TZ_SITEI_TEMP_T B 
 	on  (
 		A.TZ_SITEI_ID=B.TZ_SITEI_ID
-		and A.TZ_TEMP_ID=B.TZ_TEMP_ID
+		and A.TZ_CONT_TEMP=B.TZ_TEMP_ID
 	)
 	left join
 			PS_TZ_ART_TYPE_T C

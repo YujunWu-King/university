@@ -139,10 +139,11 @@
 			if(actType == "add" && btn != "but_ensure"){
 				var siteId = responseData.siteId;
 				form.findField('siteId').setValue(siteId);
-				var contentPanel;
-				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
-				contentPanel.child("outsiteManage").store.reload();
 			}
+			var contentPanel;
+			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+			contentPanel.child("outsiteManage").store.reload();
+			
 		},"",true,this);
     },
     onFormEnsure: function(btn){
