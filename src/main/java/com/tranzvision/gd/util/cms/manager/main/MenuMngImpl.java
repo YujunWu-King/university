@@ -145,6 +145,12 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// System.out.println("menuType：" + menuType);
 		if (menuType.equals("A")) {
 			pageNme = strFileName;
+			// 如果是http开头的 说明是外部连接 直接返回
+			if (strFileName != null && !strFileName.equals("")) {
+				if (strFileName.toLowerCase().startsWith("http")) {
+					return strFileName;
+				}
+			}
 		} else {
 			// 如果是BOOK 需要找到他默认页面的 页面名称
 			// System.out.println("menuId：" + menuId);
@@ -170,7 +176,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			}
 			url = path + "/" + pageNme;
 		}
-		System.out.println("url：" + url);
+		System.out.println("url:" + url);
 		return url;
 	}
 
@@ -246,7 +252,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			strFilePath = strBasePath + strMenuPath;
 		}
 
-		System.out.println("strFilePath：" + strFilePath);
+		System.out.println("strFilePath:" + strFilePath);
 		return strFilePath;
 	}
 

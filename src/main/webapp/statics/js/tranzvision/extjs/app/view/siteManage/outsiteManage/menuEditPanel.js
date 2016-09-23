@@ -66,13 +66,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						form.findField("isDefault").hide();
 						form.findField("menuPath").show();
 						form.findField("defaultPage").show();
-						form.findField("menuStyle").show();
+						//form.findField("menuStyle").show();
 					} else {
 						//form.findField("menuPageName").show();
 						form.findField("isDefault").show();
 						form.findField("menuPath").hide();
 						form.findField("defaultPage").hide();
-						form.findField("menuStyle").hide();
+						//form.findField("menuStyle").hide();
 					}
 					view.findParentByType("menuEdit").actType = "update";
 					
@@ -365,13 +365,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				form.findField("isDefault").hide();
 				form.findField("menuPath").show();
 				form.findField("defaultPage").show();
-				form.findField("menuStyle").show();
+				//form.findField("menuStyle").show();
 			} else {
 				//form.findField("menuPageName").show();
 				form.findField("isDefault").show();
 				form.findField("menuPath").hide();
 				form.findField("defaultPage").hide();
-				form.findField("menuStyle").hide();
+				//form.findField("menuStyle").hide();
 			}
 			
 			/*var grid = panel.child("grid");

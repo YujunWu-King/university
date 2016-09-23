@@ -146,13 +146,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
 								form.findField("defaultPage").show();
-								form.findField("menuStyle").show();
+								//form.findField("menuStyle").show();
 							} else {
 								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
-								form.findField("menuStyle").hide();
+								//form.findField("menuStyle").hide();
 							}
 							form.findField("menuId").setReadOnly(true);
 							form.findField("menuPath").setReadOnly(true);
@@ -201,13 +201,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 										form.findField("isDefault").hide();
 										form.findField("menuPath").show();
 										form.findField("defaultPage").show();
-										form.findField("menuStyle").show();
+										//form.findField("menuStyle").show();
 									} else {
 										//form.findField("menuPageName").show();
 										form.findField("isDefault").show();
 										form.findField("menuPath").hide();
 										form.findField("defaultPage").hide();
-										form.findField("menuStyle").hide();
+										//form.findField("menuStyle").hide();
 									}
 									form.findField("menuId").setReadOnly(true);
 									form.findField("menuPath").setReadOnly(true);

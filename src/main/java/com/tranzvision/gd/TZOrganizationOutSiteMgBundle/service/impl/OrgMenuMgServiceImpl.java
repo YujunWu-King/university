@@ -2,7 +2,9 @@ package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -511,7 +513,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-
+					System.out.println("menuStyle=" + menuStyle);
+					
 					// boolean boolRst = false;
 					switch (NodeType) {
 					// 添加同级节点;
@@ -627,7 +630,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzMenuState(menuState);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
-						
+
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzLastmantOprid(oprid);
@@ -808,6 +811,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						dir = request.getServletContext().getRealPath(dir);
 						dir = dir + File.separator + cm.getPath();
 
+						System.out.println("path:" + cm.getPath());
+						System.out.println("html:" + cm.getHtml());
+						System.out.println("dir:" + dir);
+						System.out.println("name:" + cm.getHtmlName());
 						success = this.staticFile(cm.getHtml(), dir, cm.getHtmlName(), errMsg);
 
 					} catch (Exception e) {
@@ -865,7 +872,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {
-			System.out.println(dir);
+			// System.out.println(dir);
 			File fileDir = new File(dir);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
@@ -881,11 +888,14 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			File file = new File(filePath);
 			if (!file.exists()) {
 				file.createNewFile();
+			} else {
+				file.delete();
 			}
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(strReleasContent);
-			bw.close();
+			OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file.getAbsoluteFile(), true),
+					"UTF-8");
+			osw.write(strReleasContent);
+			osw.close();
+			System.out.println("Creatt " + fileName + " OK!");
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

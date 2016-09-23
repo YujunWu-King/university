@@ -117,7 +117,7 @@ public class CmsUtils {
 		if (menu == null) {
 			return null;
 		}
-		System.out.println("menu:"+menu.getName());
+		System.out.println("menu:" + menu.getName());
 		// 得到模版信息
 		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
 		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
@@ -154,7 +154,7 @@ public class CmsUtils {
 			root.put("scriptsAndcss", jsAndCss);
 
 			String tplSource = tpl.getPcContent();
-			System.out.println("tplSource:"+tplSource);
+			System.out.println("tplSource:" + tplSource);
 			if (StringUtils.isBlank(tplSource)) {
 				return null;
 			}
@@ -306,16 +306,17 @@ public class CmsUtils {
 		MenuMng menuMng = new MenuMngImpl(siteId);
 		// 根据ID得到菜单信息
 		CmsMenu menu = menuMng.findMenu(id, siteId);
-		
+
 		if (menu == null) {
 			menu = menuMng.findRootMenu(siteId);
 		}
 		if (menu == null) {
 			return null;
 		}
-		System.out.println("menu:"+menu.getName());
+		System.out.println("menuPage:" + menu.getPageName());
 		// 得到模版信息
 		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
+		System.out.println("tpl:" + tpl);
 		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
 			Map<String, Object> root = new HashMap<String, Object>();
 			root.put("CmsMenuList", new MenuListDirective());
@@ -323,7 +324,7 @@ public class CmsUtils {
 			root.put(SITE_ID, siteId);
 
 			String tplSource = tpl.getPcContent();
-			System.out.println("tplSource:"+tplSource);
+			System.out.println("tplSource:" + tplSource);
 			if (StringUtils.isBlank(tplSource)) {
 				return null;
 			}
