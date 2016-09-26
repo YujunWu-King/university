@@ -157,7 +157,7 @@ public class ArtContentHtml {
      *            如果目标文件存在，是否覆盖 
      * @return 如果复制成功返回true，否则返回false 
      */  
-    public static boolean copyFile(String srcFileName, String destFileName,  
+    public boolean copyFile(String srcFileName, String destFileName,  
             boolean overlay) {  
         File srcFile = new File(srcFileName);  
   
