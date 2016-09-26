@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZWebSiteInfoMgBundle.service.impl;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +34,13 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtRecTblMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFileTKey;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtPicTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTpjT;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -634,8 +641,6 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		System.out.println("操作类型"+oprType);
-		System.out.println(strParams);
 		
 		try {
 			int num = 0;
@@ -670,11 +675,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 							 && strChannelIdCopyFrom!=null && !"".equals(strChannelIdCopyFrom)
 							 && strSiteIdCopyFrom!=null && !"".equals(strSiteIdCopyFrom)){
 						   /*复制内容*/
-					   }else{
-						   
+						   this.copyArtToOtherChannel(strArtIdCopyFrom,strChannelIdCopyFrom,strSiteIdCopyFrom,strChannelIdCopyTo);
 					   }
-				   }else{
-					   
 				   }
 				   System.out.println(artInfoCopyFrom.get("articleId"));
 				   System.out.println(artInfoCopyFrom.get("siteId"));
@@ -692,19 +694,21 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	private boolean copyArtToOtherChannel(String strArtIdCopyFrom,String strChannelIdCopyFrom,String strSiteIdCopyFrom,String strChannelIdCopyTo){
 		boolean b_retrun = true;
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		
 		/*网站上传文件的路径*/
-		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
-		
-		// 站点表;
-		PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteIdCopyFrom);
-		String imagePath = psTzSiteiDefnT.getTzImgStor();
-		String attrPath = psTzSiteiDefnT.getTzAttsStor();
+		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();	
+		/*网站上传文件的真实路径*/
+		String realDir = request.getServletContext().getRealPath(rootPath);
 		
 		/*得到复制到的栏目对应的站点编号*/
 		// 获取机构对应的站点；
 		String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
-		String strSiteIdCopyTo = jdbcTemplate.queryForObject(siteSQL, new Object[] { strChannelIdCopyTo }, "String");
+		String strSiteIdCopyTo = jdbcTemplate.queryForObject(siteSQL, new Object[] { strChannelIdCopyTo }, "String");	
+		// 站点表;
+		PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteIdCopyTo);
+		String imagePath = psTzSiteiDefnT.getTzImgStor();
+		String attrPath = psTzSiteiDefnT.getTzAttsStor();
 		
 		// 文章表;
 		PsTzArtRecTblWithBLOBs psTzArtRecTblFrom = psTzArtRecTblMapper.selectByPrimaryKey(strArtIdCopyFrom);
@@ -716,13 +720,66 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		PsTzLmNrGlTWithBLOBs psTzLmNrGlTFrom = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
 		if(psTzArtRecTblFrom!=null && psTzLmNrGlTFrom !=null 
 				&& !"".equals(strChannelIdCopyTo) && !"".equals(strSiteIdCopyTo)){
+			String copyToPath = "/" + orgid.toLowerCase() + "/" + strSiteIdCopyTo + "/" + this.getDateNow();
+			String imagePathP = realDir + copyToPath + "/" + imagePath;
+			String imagePathA = rootPath + copyToPath + "/" + imagePath;
+			String attrPathP = realDir + copyToPath + "/" + attrPath;
+			String attrPathA = rootPath + copyToPath + "/" + attrPath;
+			
+			if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length() ||
+					(attrPathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+				imagePathP = imagePathP + "/";
+			}
+			if ((attrPathP.lastIndexOf("\\") + 1) != attrPathP.length() ||
+					(attrPathP.lastIndexOf("/") + 1) != attrPathP.length()) {
+				attrPathP = attrPathP + "/";
+			}
+			
 			/*复制文章信息表*/
 			// 内容表;
+			String titleImageSysfilenaNew = "";
 			String titleImageSysfilenaFrom = psTzArtRecTblFrom.getTzAttachsysfilena();
 			if(titleImageSysfilenaFrom!=null && !"".equals(titleImageSysfilenaFrom)){
 				String titleImageSysfileSuffix = titleImageSysfilenaFrom.substring(titleImageSysfilenaFrom.lastIndexOf(".") + 1);
-				String titleImageSysfilenaNew = (new StringBuilder(String.valueOf(getNowTime())))
+				titleImageSysfilenaNew = (new StringBuilder(String.valueOf(getNowTime())))
 						.append(".").append(titleImageSysfileSuffix).toString();
+				PsTzArtTitimgT psTzArtTitimgT = new PsTzArtTitimgT();
+				psTzArtTitimgT = psTzArtTitimgTMapper.selectByPrimaryKey(titleImageSysfilenaFrom);
+				if(psTzArtTitimgT!=null){
+					String attPurl = psTzArtTitimgT.getTzAttPUrl();
+					String slAttachsysnam =  psTzArtTitimgT.getTzSlAttachsysnam();
+					String ysAttachsysnam =  psTzArtTitimgT.getTzYsAttachsysnam();
+					String slAttachsysnamNew = "MINI_" + titleImageSysfilenaNew;
+					String ysAttachsysnamNew = "NEW_" + titleImageSysfilenaNew;
+					/*复制文件*/
+					boolean bCopyTitleImg;
+					bCopyTitleImg = artContentHtml.copyFile(attPurl + titleImageSysfilenaFrom, imagePathP  + titleImageSysfilenaNew, false);
+					/*缩略图*/
+					if(slAttachsysnam!=null && !"".equals(slAttachsysnam)){
+						bCopyTitleImg = artContentHtml.copyFile(attPurl + slAttachsysnam, imagePathP + slAttachsysnamNew, false);
+						if(!bCopyTitleImg){
+							slAttachsysnamNew = titleImageSysfilenaNew;
+						}
+					}
+					/*压缩图*/
+					if(ysAttachsysnam!=null && !"".equals(ysAttachsysnam)){
+						bCopyTitleImg = artContentHtml.copyFile(attPurl + ysAttachsysnam, imagePathP + ysAttachsysnamNew, false);
+						if(!bCopyTitleImg){
+							ysAttachsysnamNew = titleImageSysfilenaNew;
+						}
+					}
+					//System.out.println(attPurl);
+					//System.out.println(imagePathP + File.separator + titleImageSysfilenaNew);
+					/*复制标题图信息*/
+					PsTzArtTitimgT psTzArtTitimgTNew = new PsTzArtTitimgT();
+					psTzArtTitimgTNew.setTzAttachsysfilena(titleImageSysfilenaNew);
+					psTzArtTitimgTNew.setTzAttachfileName(psTzArtTitimgT.getTzAttachfileName());
+					psTzArtTitimgTNew.setTzAttPUrl(imagePathP);
+					psTzArtTitimgTNew.setTzAttAUrl(imagePathA);
+					psTzArtTitimgTNew.setTzSlAttachsysnam(slAttachsysnamNew);
+					psTzArtTitimgTNew.setTzYsAttachsysnam(ysAttachsysnamNew);
+					psTzArtTitimgTMapper.insertSelective(psTzArtTitimgTNew);
+				}
 				
 			}
 			
@@ -752,7 +809,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			PsTzArtRecTbl.setTzOutArtUrl(psTzArtRecTblFrom.getTzOutArtUrl());
 			PsTzArtRecTbl.setTzImageTitle(psTzArtRecTblFrom.getTzImageTitle());
 			PsTzArtRecTbl.setTzImageDesc(psTzArtRecTblFrom.getTzImageDesc());
-			PsTzArtRecTbl.setTzAttachsysfilena(psTzArtRecTblFrom.getTzAttachsysfilena());
+			PsTzArtRecTbl.setTzAttachsysfilena(titleImageSysfilenaNew);
 			PsTzArtRecTbl.setRowAddedDttm(new Date());
 			PsTzArtRecTbl.setRowAddedOprid(oprid);
 			PsTzArtRecTbl.setRowLastmantDttm(new Date());
@@ -779,12 +836,114 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			
 			//图片集
 			jdbcTemplate.update("delete from PS_TZ_ART_PIC_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			String sqlGetPicInfo = "SELECT a.TZ_ATTACHSYSFILENA,a.TZ_PRIORITY,a.TZ_IMG_DESCR,a.TZ_IMG_TRS_URL,b.TZ_ATTACHFILE_NAME,b.TZ_ATT_P_URL,"
+					+ " b.TZ_YS_ATTACHSYSNAM,b.TZ_SL_ATTACHSYSNAM"
+					+ " from PS_TZ_ART_PIC_T a, PS_TZ_ART_TPJ_T b where a.TZ_ART_ID=? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
+			List<Map<String, Object>> tpjAllList = jdbcTemplate.queryForList(sqlGetPicInfo,new Object[]{strArtIdCopyFrom});
+			if(tpjAllList != null && tpjAllList.size()>0){
+				for(int i = 0;i <tpjAllList.size();i++ ){
+					String sysTpjSysFname = (String) tpjAllList.get(i).get("TZ_ATTACHSYSFILENA");
+					String sysTpjFname = (String) tpjAllList.get(i).get("TZ_ATTACHFILE_NAME");
+					int numPriority =  Integer.parseInt(String.valueOf((tpjAllList.get(i).get("TZ_PRIORITY"))));
+					String strImgDescr = (String) tpjAllList.get(i).get("TZ_IMG_DESCR");
+					String strImgTrsUrl = (String) tpjAllList.get(i).get("TZ_IMG_TRS_URL");
+					String strAttPurl = (String) tpjAllList.get(i).get("TZ_ATT_P_URL");
+					String sysTpjSuffix = sysTpjSysFname.substring(sysTpjSysFname.lastIndexOf(".") + 1);
+					String sysTpjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime())))
+							.append(".").append(sysTpjSuffix).toString();
+					
+					String slTpjSysnam = (String) tpjAllList.get(i).get("TZ_SL_ATTACHSYSNAM");
+					String ysTpjSysnam = (String) tpjAllList.get(i).get("TZ_YS_ATTACHSYSNAM");
+					/*将文件复制到新的目录*/
+					String slTpjSysnamNew = "MINI_" + sysTpjSysFnameNew;
+					String ysTpjSysnamNew = "NEW_" + sysTpjSysFnameNew;
+					
+					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length() ||
+							(strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
+						strAttPurl = strAttPurl + "/";
+					}
+					/*复制图片*/
+					boolean bCopyTpjImg = false;
+					boolean bCopyTpjImg2 = false;
+					bCopyTpjImg = artContentHtml.copyFile(strAttPurl + sysTpjSysFname, imagePathP + sysTpjSysFnameNew, false);
+					/*缩略图*/
+					if(slTpjSysnam!=null && !"".equals(slTpjSysnam)){
+						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + slTpjSysnam, imagePathP+ slTpjSysnamNew, false);
+						if(!bCopyTpjImg2){
+							slTpjSysnamNew = sysTpjSysFnameNew;
+						}
+					}
+					/*压缩图*/
+					if(ysTpjSysnam!=null && !"".equals(ysTpjSysnam)){
+						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + ysTpjSysnam, imagePathP + ysTpjSysnamNew, false);
+						if(!bCopyTpjImg2){
+							ysTpjSysnamNew = sysTpjSysFnameNew;
+						}
+					}
+					/*插入图片集信息*/
+					if(bCopyTpjImg){
+						PsTzArtPicT psTzArtPicT = new PsTzArtPicT();
+						psTzArtPicT.setTzArtId(strArtIdCopyTo);
+						psTzArtPicT.setTzAttachsysfilena(sysTpjSysFnameNew);
+						psTzArtPicT.setTzPriority(numPriority);
+						psTzArtPicT.setTzImgDescr(strImgDescr);
+						psTzArtPicT.setTzImgTrsUrl(strImgTrsUrl);
+						psTzArtPicTMapper.insert(psTzArtPicT);
+						
+						PsTzArtTpjT psTzArtTpjT = new PsTzArtTpjT();
+						psTzArtTpjT.setTzAttachsysfilena(sysTpjSysFnameNew);
+						psTzArtTpjT.setTzAttachfileName(sysTpjFname);
+						psTzArtTpjT.setTzAttPUrl(imagePathP);
+						psTzArtTpjT.setTzAttAUrl(imagePathA);
+						psTzArtTpjT.setTzSlAttachsysnam(slTpjSysnamNew);
+						psTzArtTpjT.setTzYsAttachsysnam(ysTpjSysnamNew);
+						psTzArtTpjTMapper.insert(psTzArtTpjT);
+					}
+				}
+			}
 			
-			//图片集
-			jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			//附件集
+			jdbcTemplate.update("delete from PS_TZ_ART_FILE_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			String sqlGetAttrInfo = "SELECT a.TZ_ATTACHSYSFILENA,b.TZ_ATTACHFILE_NAME,b.TZ_ATT_P_URL,b.TZ_ATT_A_URL"
+					+ " from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID= ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
 			
-			//图片集
-			jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+			List<Map<String, Object>> fjjAllList = jdbcTemplate.queryForList(sqlGetAttrInfo,new Object[]{strArtIdCopyFrom});
+			if(fjjAllList != null && fjjAllList.size()>0){
+				for(int i = 0;i <fjjAllList.size();i++ ){
+					String sysFjjSysFname = (String) fjjAllList.get(i).get("TZ_ATTACHSYSFILENA");
+					String sysFjjFname = (String) fjjAllList.get(i).get("TZ_ATTACHFILE_NAME");
+					String strAttPurl = (String) fjjAllList.get(i).get("TZ_ATT_P_URL");
+					String sysFjjSuffix = sysFjjSysFname.substring(sysFjjSysFname.lastIndexOf(".") + 1);
+					String sysFjjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime())))
+							.append(".").append(sysFjjSuffix).toString();
+					
+					/*复制附件*/
+					boolean bCopyFjj = false;
+					
+					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length() ||
+							(strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
+						strAttPurl = strAttPurl + "/";
+					}
+					bCopyFjj = artContentHtml.copyFile(strAttPurl + sysFjjSysFname, attrPathP + sysFjjSysFnameNew, false);
+					/*插入附件集信息*/
+					if(bCopyFjj){
+						
+						PsTzArtFileTKey psTzArtFileTKey = new PsTzArtFileTKey();
+						psTzArtFileTKey.setTzArtId(strArtIdCopyTo);
+						psTzArtFileTKey.setTzAttachsysfilena(sysFjjSysFnameNew);
+						psTzArtFileTMapper.insert(psTzArtFileTKey);
+						
+						PsTzArtFjjT psTzArtFjjT = new PsTzArtFjjT();
+						psTzArtFjjT.setTzAttachsysfilena(sysFjjSysFnameNew);
+						psTzArtFjjT.setTzAttachfileName(sysFjjFname);
+						psTzArtFjjT.setTzAttPUrl(attrPathP);
+						psTzArtFjjT.setTzAttAUrl(attrPathA);
+						psTzArtFjjTMapper.insert(psTzArtFjjT);
+					}else{
+						
+					}
+				}
+			}
 		}
 		return b_retrun;
 	}
