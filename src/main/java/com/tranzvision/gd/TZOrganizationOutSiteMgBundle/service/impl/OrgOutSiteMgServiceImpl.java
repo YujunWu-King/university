@@ -256,7 +256,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiColuT.setTzSiteiId(siteId);
 					psTzSiteiColuT.setTzColuId(coluId);
 					psTzSiteiColuT.setTzColuName(siteName);
-					psTzSiteiColuT.setTzColuPath(sitePath + "/colu");
+					psTzSiteiColuT.setTzColuPath(sitePath);
 					psTzSiteiColuT.setTzColuState("Y");
 					psTzSiteiColuT.setTzColuLevel(new Integer(0));
 					psTzSiteiColuT.setTzColuType("A");
@@ -267,7 +267,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiMenuT.setTzSiteiId(siteId);
 					psTzSiteiMenuT.setTzMenuId(tzMenuId);
 					psTzSiteiMenuT.setTzMenuName(siteName);
-					psTzSiteiMenuT.setTzMenuPath(sitePath + "/menu");
+					psTzSiteiMenuT.setTzMenuPath(sitePath);
 					psTzSiteiMenuT.setTzMenuState("Y");
 					psTzSiteiMenuT.setTzIsDel("N"); // 不允许删除
 					psTzSiteiMenuT.setTzMenuXh(new Integer(1)); // 循序为1

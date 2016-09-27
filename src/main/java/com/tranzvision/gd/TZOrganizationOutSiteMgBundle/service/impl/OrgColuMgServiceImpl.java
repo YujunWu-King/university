@@ -334,18 +334,14 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 
 					TZ_F_COLU_ID = (ThisNodeMap.get("TZ_F_COLU_ID").toString());
 					TZ_COLU_LEVEL = (ThisNodeMap.get("TZ_COLU_LEVEL").toString());
-					// TZ_COLU_PATH =
-					// (ThisNodeMap.get("TZ_COLU_PATH").toString());
-
-					// if (!TZ_COLU_PATH.startsWith("/")) {
-					// TZ_COLU_PATH = "/" + TZ_COLU_PATH;
-					// }
 
 					// 找到跟目录路径
 					sql = "select TZ_COLU_PATH from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_LEVEL=?";
 					ThisNodeMap = sqlQuery.queryForMap(sql, new Object[] { siteId, 0 });
 
 					TZ_COLU_PATH = (ThisNodeMap.get("TZ_COLU_PATH").toString());
+					
+					
 
 					// boolean boolRst = false;
 					switch (NodeType) {

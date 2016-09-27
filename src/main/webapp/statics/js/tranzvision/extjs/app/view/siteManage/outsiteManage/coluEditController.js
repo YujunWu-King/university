@@ -251,6 +251,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			});
 	        			brotherNode = treepanelStore.getNodeById( responseData.newColuID );
 	        			treepanel.getSelectionModel().select(brotherNode);
+	        			form.findField("coluId").setValue(responseData.newColuID);
 	        		}
 							 
 	        		// 添加子节点;
@@ -278,6 +279,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			childNode = treepanelStore.getNodeById( responseData.newColuID );
 					        
 	        			treepanel.getSelectionModel().select(childNode);
+	        			form.findField("coluId").setValue(responseData.newColuID);
 		
 	        		}
 	        		 // 保存当前节点;

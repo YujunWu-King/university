@@ -301,7 +301,14 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			menu.setStaticUrl(getURL(menu.getStaticpath(), "B", menu.getDefaultId(), ""));
 		}
 		// 打开方式 0 不弹出 1弹出
-		menu.setTarget("0"); // 默认不弹出
+		// 如果是http开头的连接，默认 弹出
+		if (menu.getStaticUrl() != null && !menu.getStaticUrl().equals("")
+				&& menu.getStaticUrl().toLowerCase().startsWith("http")) {
+			menu.setTarget("1");
+		} else {
+			menu.setTarget("0"); // 默认不弹出
+		}
+
 		// 是否默认 0 非默认 1默认
 		// menu.setDef("0");
 		// 描述
