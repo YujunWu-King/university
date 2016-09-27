@@ -18,6 +18,7 @@ public interface MenuMng {
 	 * @return
 	 */
 	public List<CmsMenu> findList(String siteId, String id);
+	
 
 	/**
 	 * 获取当前菜单对象

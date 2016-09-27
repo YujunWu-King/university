@@ -1,9 +1,7 @@
 package com.tranzvision.gd.TZOrganizationOutSiteMgBundle.service.impl;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -514,7 +512,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						}
 					}
 					System.out.println("menuStyle=" + menuStyle);
-					
+
 					// boolean boolRst = false;
 					switch (NodeType) {
 					// 添加同级节点;
@@ -872,7 +870,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {
-			// System.out.println(dir);
+			System.out.println("dir:" + dir);
 			File fileDir = new File(dir);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
@@ -884,7 +882,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			} else {
 				filePath = dir + fileName;
 			}
-
+			System.out.println("filePath:" + filePath);
 			File file = new File(filePath);
 			if (!file.exists()) {
 				file.createNewFile();

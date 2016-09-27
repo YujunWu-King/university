@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.cms.entity.main.CmsContent;
 import com.tranzvision.gd.util.cms.entity.main.CmsMenu;
 
 /**
@@ -24,6 +25,10 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 	// 站点完整菜单List
 	private List<Map<String, Object>> list;
+	
+	public MenuMngImpl() {
+		
+	}
 
 	public MenuMngImpl(String siteId) {
 		StringBuffer sql = new StringBuffer(
@@ -44,7 +49,6 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			this.list = null;
 			e.printStackTrace();
 		}
-		// System.out.println("listSize:" + list.size());
 	}
 
 	public MenuMngImpl(List<Map<String, Object>> menu) {
@@ -107,7 +111,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		}
 		return null;
 	}
-
+	
 	public CmsMenu findRootMenu(String siteId) {
 		if (list != null) {
 			String TZ_MENU_LEVEL = null;

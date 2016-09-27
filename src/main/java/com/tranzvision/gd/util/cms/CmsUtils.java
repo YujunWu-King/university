@@ -15,6 +15,7 @@ import com.tranzvision.gd.util.cms.action.directive.ArticleImageDirective;
 import com.tranzvision.gd.util.cms.action.directive.ArticlePageDirective;
 import com.tranzvision.gd.util.cms.action.directive.ContentDirective;
 import com.tranzvision.gd.util.cms.action.directive.ContentListDirective;
+import com.tranzvision.gd.util.cms.action.directive.MenuDirective;
 import com.tranzvision.gd.util.cms.action.directive.MenuListDirective;
 import com.tranzvision.gd.util.cms.action.directive.TextCutDirective;
 import com.tranzvision.gd.util.cms.entity.main.CmsChannel;
@@ -137,6 +138,7 @@ public class CmsUtils {
 			root.put("ContentAtts", new ArticleAttachmentDirective());
 			root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
 			root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
+			root.put("CmsMenu", new MenuDirective());
 			root.put("menu", menu);
 			root.put(SITE_ID, siteId);
 			root.put("TzUniversityContextPath", contentPath);
@@ -213,6 +215,7 @@ public class CmsUtils {
 			root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
 			root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
 			root.put("menu", menu);
+			root.put("CmsMenu", new MenuDirective());
 			root.put(SITE_ID, siteId);
 			root.put("TzUniversityContextPath", contentPath);
 

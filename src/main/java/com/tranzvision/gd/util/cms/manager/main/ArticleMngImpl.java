@@ -1,8 +1,5 @@
 package com.tranzvision.gd.util.cms.manager.main;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,22 +21,42 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 
 	@Override
 	public CmsContent findArticleById(String id, String chnlid) {
+		// System.out.println("id:" + id);
+		// System.out.println("chnlid:" + chnlid);
 		CmsContent art = null;
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
-					+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT," + " A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
-					+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
-					+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
-					+ " B.TZ_ART_URL,B.TZ_STATIC_ART_URL,B.TZ_ART_SEQ,"
-					+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID," + " B.TZ_LASTMANT_DTTM "
-					+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B," + " PS_TZ_SITEI_COLU_T E"
-					+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID" + " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
-					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID " + " AND A.TZ_ART_ID = ? AND B.TZ_COLU_ID = ?";
+			String sql = "";
+			Map<String, Object> map = null;
+			if (id != null && !id.equals("")) {
+				sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+						+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT," + " A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
+						+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
+						+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
+						+ " B.TZ_ART_URL,B.TZ_STATIC_ART_URL,B.TZ_ART_SEQ,"
+						+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID," + " B.TZ_LASTMANT_DTTM "
+						+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B," + " PS_TZ_SITEI_COLU_T E"
+						+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID" + " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
+						+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID " + " AND A.TZ_ART_ID = ? AND B.TZ_COLU_ID = ?";
+				map = jdbcTemplate.queryForMap(sql, new Object[] { id, chnlid });
+			} else {
+				sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+						+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT," + " A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
+						+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
+						+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
+						+ " B.TZ_ART_URL,B.TZ_STATIC_ART_URL,B.TZ_ART_SEQ,"
+						+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID," + " B.TZ_LASTMANT_DTTM "
+						+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B," + " PS_TZ_SITEI_COLU_T E"
+						+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID" + " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
+						+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID "
+						+ " AND B.TZ_COLU_ID = ? order by B.TZ_ART_NEWS_DT desc limit 0,1";
+				map = jdbcTemplate.queryForMap(sql, new Object[] { chnlid });
+			}
 
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { id, chnlid });
+			// Map<String, Object> map = jdbcTemplate.queryForMap(sql, new
+			// Object[] { id, chnlid });
 			if (map != null) {
 				art = new CmsContent();
 				art.setSiteId((String) map.get("TZ_SITE_ID"));
@@ -92,25 +109,27 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				}
 
 				// 活动信息;
-				art.setOpenActApp("N");
-				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
-						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? LIMIT 0,1";
+				if (id != null && !id.equals("")) {
+					art.setOpenActApp("N");
+					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
+							+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? LIMIT 0,1";
 
-				try {
-					Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL, new Object[] { id });
-					if (hdMap != null) {
-						art.setStartDate((Date) hdMap.get("TZ_START_DT"));
-						art.setStartTime((Date) hdMap.get("TZ_START_TM"));
-						art.setEndDate((Date) hdMap.get("TZ_END_DT"));
-						art.setEndTime((Date) hdMap.get("TZ_END_TM"));
-						String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
-						if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
-							isOpenHdBm = "N";
+					try {
+						Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL, new Object[] { id });
+						if (hdMap != null) {
+							art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+							art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+							art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+							String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
+							if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
+								isOpenHdBm = "N";
+							}
+							art.setOpenActApp(isOpenHdBm);
 						}
-						art.setOpenActApp(isOpenHdBm);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 
 			}
@@ -125,17 +144,20 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 	public List<ArticleImage> findArticleImagesById(String id) {
 
 		List<ArticleImage> rsList = new ArrayList<ArticleImage>();
-
+		//System.out.println("id:" + id);
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 			String sql = "SELECT A.TZ_ART_ID,A.TZ_ATTACHSYSFILENA,A.TZ_PRIORITY,A.TZ_IMG_DESCR,A.TZ_IMG_TRS_URL,B.TZ_ATTACHFILE_NAME,B.TZ_ATT_P_URL,B.TZ_ATT_A_URL,B.TZ_YS_ATTACHSYSNAM,B.TZ_SL_ATTACHSYSNAM FROM PS_TZ_ART_PIC_T A,PS_TZ_ART_TPJ_T B WHERE A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA AND A.TZ_ART_ID = ? ORDER BY A.TZ_PRIORITY";
 			try {
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { id });
+				//System.out.println("size" + list.size());
+				ArticleImage aimg = null;
+				Map<String, Object> map = null;
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
-						ArticleImage aimg = new ArticleImage();
-						Map<String, Object> map = list.get(i);
+						aimg = new ArticleImage();
+						map = list.get(i);
 						aimg.setId((String) map.get("TZ_ATTACHSYSFILENA"));
 						aimg.setArtId((String) map.get("TZ_ART_ID"));
 						aimg.setPriority((long) map.get("TZ_PRIORITY"));
@@ -360,8 +382,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		int last = p.getFirstResult() + p.getPageSize();
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-		
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { channelIds, first, last });
+
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(),
+				new Object[] { channelIds, first, last });
 		Map<String, Object> map = null;
 		CmsContent art = null;
 		for (Object objData : list) {
@@ -402,8 +425,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						+ " C.TZ_YS_ATTACHSYSNAM,C.TZ_SL_ATTACHSYSNAM" + " from PS_TZ_ART_TITIMG_T C "
 						+ " where TZ_ATTACHSYSFILENA=?";
 				try {
-					Map<String, Object> titleMap = jdbcTemplate.queryForMap(titleSQL,
-							new Object[] { titleSysFileId });
+					Map<String, Object> titleMap = jdbcTemplate.queryForMap(titleSQL, new Object[] { titleSysFileId });
 					if (titleMap != null) {
 						art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
 						art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
