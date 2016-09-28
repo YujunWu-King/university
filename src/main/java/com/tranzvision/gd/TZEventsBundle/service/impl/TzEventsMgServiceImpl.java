@@ -6,6 +6,7 @@ package com.tranzvision.gd.TZEventsBundle.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +16,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTKey;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -49,6 +54,15 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private ArtContentHtml artContentHtml;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private FileManageServiceImpl fileManageServiceImpl;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,7 +82,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_ART_ID", "TZ_NACT_NAME", "TZ_NACT_ADDR", "TZ_START_DT", "TZ_END_DT",
-					"TZ_APPF_DT", "TZ_APPE_DT", "TZ_APPLY_NUM", "TZ_SITE_ID", "TZ_COLU_ID", "TZ_ART_PUB_STATE",
+					"TZ_APPF_DT", "TZ_APPE_DT", "TZ_APPLY_NUM", "TZ_ART_PUB_STATE",
 					"TZ_MAX_ZD_SEQ" };
 
 			// 可配置搜索通用函数;
@@ -90,10 +104,8 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 					mapList.put("applyStartDate", rowList[5]);
 					mapList.put("applyEndDate", rowList[6]);
 					mapList.put("applyNum", rowList[7]);
-					mapList.put("siteId", rowList[8]);
-					mapList.put("columnId", rowList[9]);
-					mapList.put("releaseOrUndo", rowList[10]);
-					mapList.put("topOrUndo", rowList[11]);
+					mapList.put("releaseOrUndo", rowList[8]);
+					mapList.put("topOrUndo", rowList[9]);
 
 					listData.add(mapList);
 				}
@@ -137,106 +149,253 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 					String strClickTyp = jacksonUtil.getString("ClickTyp");
 					Map<String, Object> mapParams = jacksonUtil.getMap("data");
 
-					String tzSiteId = String.valueOf(mapParams.getOrDefault("siteId", ""));
-					String tzColuId = String.valueOf(mapParams.getOrDefault("columnId", ""));
+					//String tzSiteId = String.valueOf(mapParams.getOrDefault("siteId", ""));
+					//String tzColuId = String.valueOf(mapParams.getOrDefault("columnId", ""));
 					String tzArtId = String.valueOf(mapParams.getOrDefault("activityId", ""));
-
-					if (!"".equals(tzSiteId) && !"".equals(tzColuId) && !"".equals(tzArtId)) {
-
-						if ("T".equals(strClickTyp)) {
-							// 置顶处理
-							String topFlag = String.valueOf(mapParams.getOrDefault("topOrUndo", ""));
-
-							if ("TOP".equals(topFlag.toUpperCase())) {
-								sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID<>?";
-								String maxSeq = sqlQuery.queryForObject(sql,
-										new Object[] { tzSiteId, tzColuId, tzArtId }, "String");
-								
-								int tzMaxZdSeq = 0;
-								if(null!=maxSeq){
-									try{
-										tzMaxZdSeq = Integer.parseInt(maxSeq);
-									}catch(Exception e){
-										tzMaxZdSeq = 0;
+					sql = "SELECT TZ_SITE_ID,TZ_COLU_ID FROM PS_TZ_LM_NR_GL_T where TZ_ART_ID=?";
+					
+					List<Map<String, Object>> list = sqlQuery.queryForList(sql,new Object[]{tzArtId});
+					if (list != null && list.size() > 0){ 
+						
+						sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_ART_ID<>?";
+						String maxSeq = sqlQuery.queryForObject(sql,
+								new Object[] { tzArtId }, "String");
+						
+						int i = 0;
+						for(i =0; i < list.size();i++){
+							String tzSiteId = (String)list.get(i).get("TZ_SITE_ID");
+							String tzColuId = (String)list.get(i).get("TZ_COLU_ID");
+							if (!"".equals(tzSiteId) && !"".equals(tzColuId) && !"".equals(tzArtId)) {
+		
+								if ("T".equals(strClickTyp)) {
+									// 置顶处理
+									String topFlag = String.valueOf(mapParams.getOrDefault("topOrUndo", ""));
+		
+									if ("TOP".equals(topFlag.toUpperCase())) {
+										
+										int tzMaxZdSeq = 0;
+										if(null!=maxSeq){
+											try{
+												tzMaxZdSeq = Integer.parseInt(maxSeq);
+											}catch(Exception e){
+												tzMaxZdSeq = 0;
+											}
+										}
+										
+										PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+										psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
+										psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
+										psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
+										psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(tzMaxZdSeq + 1);
+										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
+										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+										psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+		
+									} else if ("0".equals(topFlag)) {
+										PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+										psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
+										psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
+										psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
+										psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(0);
+										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
+										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+										psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+										/*
+										sql = "select TZ_MAX_ZD_SEQ from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
+										int tzMaxZdSeq = sqlQuery.queryForObject(sql,
+												new Object[] { tzSiteId, tzColuId, tzArtId }, "int");
+		
+										if (tzMaxZdSeq > 0) {
+		
+											sql = "update PS_TZ_LM_NR_GL_T set TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_MAX_ZD_SEQ>?";
+											sqlQuery.update(sql, new Object[] { tzSiteId, tzColuId, tzMaxZdSeq });
+		
+											
+		
+										}
+										*/
+		
 									}
-								}
-								
-								PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
-								psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
-								psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
-								psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
-								psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(tzMaxZdSeq + 1);
-								psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
-								psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-								psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-
-							} else if ("0".equals(topFlag)) {
-
-								sql = "select TZ_MAX_ZD_SEQ from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
-								int tzMaxZdSeq = sqlQuery.queryForObject(sql,
-										new Object[] { tzSiteId, tzColuId, tzArtId }, "int");
-
-								if (tzMaxZdSeq > 0) {
-
-									sql = "update PS_TZ_LM_NR_GL_T set TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_MAX_ZD_SEQ>?";
-									sqlQuery.update(sql, new Object[] { tzSiteId, tzColuId, tzMaxZdSeq });
-
-									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
-									psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
-									psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
-									psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
-									psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(0);
+		
+								} else if ("P".equals(strClickTyp)) {
+									// 发布处理
+									String tzArtPubState = String.valueOf(mapParams.getOrDefault("releaseOrUndo", ""));
+									
+									PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
+									psTzLmNrGlTKey.setTzSiteId(tzSiteId);
+									psTzLmNrGlTKey.setTzColuId(tzColuId);
+									psTzLmNrGlTKey.setTzArtId(tzArtId);
+									
+									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
+									
+									psTzLmNrGlTWithBLOBs.setTzArtPubState(tzArtPubState);
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-									psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+		
+									String tzArtHtml = artContentHtml.getContentHtml(tzSiteId, tzColuId, tzArtId);
+									psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
+		
+									if ("Y".equals(tzArtPubState)) {
+										psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+									} else {
+										psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+									}
+		
+									sql = "select TZ_ART_NEWS_DT from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
+									Date tzArtNewsDt = sqlQuery.queryForObject(sql,
+											new Object[] { tzSiteId, tzColuId, tzArtId }, "Date");
+									if ("Y".equals(tzArtPubState) && tzArtNewsDt == null) {
+										tzArtNewsDt = new Date();
+										psTzLmNrGlTWithBLOBs.setTzArtNewsDt(tzArtNewsDt);
+									}
+									
+									
+									String strAutoStaticName = psTzLmNrGlTWithBLOBs.getTzStaticAotoName();
 
+									String rootparth = "http://" + request.getServerName() + ":"
+											+ request.getServerPort() + request.getContextPath();
+									String strFileName = "";
+									String strFilePath = "";
+									String strFilePathAccess = "";
+
+									/* 获取站点类型 */
+									String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+									String strSiteType = sqlQuery.queryForObject(sqlGetSiteType,
+											new Object[] { tzSiteId }, "String");
+									
+									if ("C".equals(strSiteType)) {
+										// 招生站点;
+										strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + "/envents/"
+												+ tzSiteId;
+										strFilePathAccess = "/envents/" + tzSiteId;
+
+										if ("Y".equals(tzArtPubState)) {
+
+											// 静态化
+											if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
+												strAutoStaticName = String.valueOf(
+														getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+											}
+										
+											strFileName = strAutoStaticName + ".html";
+											strFilePath = request.getServletContext().getRealPath(strFilePath);
+											artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
+											
+											String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+											psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+											psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
+
+										} else {
+											if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+												fileManageServiceImpl.DeleteFile(strFilePath,
+														strAutoStaticName + ".html");
+											}
+
+											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+											psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
+											psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
+										}
+									} else {
+										// 获取静态路径地址
+										String strBasePath = "";
+										String getBasePathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_LEVEL = '0' LIMIT 1";
+										strBasePath = sqlQuery.queryForObject(getBasePathSql,
+												new Object[] { tzSiteId }, "String");
+										String strColuPath = "";
+										String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
+										strColuPath = sqlQuery.queryForObject(getColuPathSql,
+												new Object[] { tzSiteId, tzColuId }, "String");
+										// String getAutoStaticNameSql =
+										// "SELECT TZ_STATIC_AOTO_NAME FROM
+										// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
+										// = ? AND TZ_COLU_ID = ? AND
+										// TZ_ART_ID = ? LIMIT 1";
+										// String strAutoStaticName =
+										// sqlQuery.queryForObject(getAutoStaticNameSql,new
+										// Object[] { siteId, coluId,
+										// activityId }, "String");
+										// String getOriginStaticNameSql =
+										// "SELECT TZ_STATIC_NAME FROM
+										// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
+										// = ? AND TZ_COLU_ID = ? AND
+										// TZ_ART_ID = ? LIMIT 1";
+										// String strOriginStaticName =
+										// sqlQuery.queryForObject(getOriginStaticNameSql,new
+										// Object[] { siteId, coluId,
+										// activityId }, "String");
+
+										if (strBasePath != null && !"".equals(strBasePath)) {
+											if (!strBasePath.startsWith("/")) {
+												strBasePath = "/" + strBasePath;
+											}
+											if (strBasePath.endsWith("/")) {
+												strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
+											}
+										}
+
+										if (strColuPath != null && !"".equals(strColuPath)) {
+											if (!strColuPath.startsWith("/")) {
+												strColuPath = "/" + strColuPath;
+											}
+											if (strColuPath.endsWith("/")) {
+												strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
+											}
+										}
+
+										strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath
+												+ strColuPath;
+										strFilePathAccess = strBasePath + strColuPath;
+
+										if ("Y".equals(tzArtPubState)) {
+											// 如果是外网站点，则静态话
+											if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+												// 静态化
+												if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
+													strAutoStaticName = String.valueOf(getSeqNum
+															.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+												}
+												
+												strFileName = strAutoStaticName + ".html";
+												artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
+												artContentHtml.staticSiteInfoByChannel(tzSiteId, tzColuId);
+												String publishUrl = rootparth + strFilePathAccess + "/"
+														+ strFileName;
+												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+												psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+												psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
+
+											}
+										} else {
+											artContentHtml.staticSiteInfoByChannel(tzSiteId, tzColuId);
+											if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+												fileManageServiceImpl.DeleteFile(strFilePath,
+														strAutoStaticName + ".html");
+											}
+
+											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+											psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
+											psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
+										}
+
+									}
+		
+									int rst = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+		
+									if (rst > 0) {
+		
+									} else {
+										errorMsg[0] = "1";
+										errorMsg[1] = "更新数据时发生错误！";
+									}
+		
 								}
-
-							}
-
-						} else if ("P".equals(strClickTyp)) {
-							// 发布处理
-							String tzArtPubState = String.valueOf(mapParams.getOrDefault("releaseOrUndo", ""));
-
-							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
-							psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
-							psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
-							psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
-							psTzLmNrGlTWithBLOBs.setTzArtPubState(tzArtPubState);
-							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
-							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-
-							String tzArtHtml = artContentHtml.getContentHtml(tzSiteId, tzColuId, tzArtId);
-							psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
-
-							if ("Y".equals(tzArtPubState)) {
-								psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
-							} else {
-								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
-							}
-
-							sql = "select TZ_ART_NEWS_DT from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
-							Date tzArtNewsDt = sqlQuery.queryForObject(sql,
-									new Object[] { tzSiteId, tzColuId, tzArtId }, "Date");
-							if ("Y".equals(tzArtPubState) && tzArtNewsDt == null) {
-								tzArtNewsDt = new Date();
-								psTzLmNrGlTWithBLOBs.setTzArtNewsDt(tzArtNewsDt);
-							}
-
-							int rst = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-
-							if (rst > 0) {
-
+		
 							} else {
 								errorMsg[0] = "1";
-								errorMsg[1] = "更新数据时发生错误！";
+								errorMsg[1] = "更新数据时发现参数有误！";
 							}
-
 						}
-
-					} else {
-						errorMsg[0] = "1";
-						errorMsg[1] = "更新数据时发现参数有误！";
 					}
 
 				}
