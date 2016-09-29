@@ -61,7 +61,7 @@
     		var store = new KitchenSink.view.activity.activityListStore();    										
     		 
         Ext.apply(this, {
-            columns: [{ 
+            columns: [/*{ 
                 text: '站点ID',
                 dataIndex: 'siteId',
                 hidden: true
@@ -69,7 +69,7 @@
                 text: '栏目ID',
                 dataIndex: 'columnId',
                 hidden: true
-            },{ 
+            },*/{ 
                 text: '活动ID',
                 dataIndex: 'activityId',
                 hidden: true

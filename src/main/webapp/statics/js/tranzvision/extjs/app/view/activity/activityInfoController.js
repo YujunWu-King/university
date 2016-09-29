@@ -59,6 +59,10 @@
 			//获取组件注册信息参数
 			var tzParams = this.getActivityInfoParams();
 			var comView = this.getView();
+			
+			//预览发布列表
+			var viewArtGrid =comView.down('grid[name=viewArtGrid]');
+			
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
@@ -68,8 +72,15 @@
 					if(actType=="add"){
 						comView.actType = "update";
 						form.findField("activityId").setValue(responseData.activityId);
-						comView.commitChanges(comView);
+						
 					}
+					
+					 //预览发布列表;
+					var tzStoreParams = '{"activityId":"'+responseData.activityId+'","gridTyp":"VIEWART"}';
+					viewArtGrid.store.tzStoreParams = tzStoreParams;
+					viewArtGrid.store.load();		
+					
+					comView.commitChanges(comView);
 					
 					for(var i=0;i<msArrInfoPanelArr.length;i++){
 						msArrInfoPanelArr[i].store.load();
@@ -115,6 +126,10 @@
 			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
 			var comView = this.getView();
+			
+			//预览发布列表
+			var viewArtGrid =comView.down('grid[name=viewArtGrid]');
+			
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
@@ -126,18 +141,24 @@
 				  form.findField("publishClick").setValue("");
 					Ext.tzSubmit(tzParams,function(responseData){
 					
-						if(actType=="add"){
-							comView.actType = "update";	
+					  if(actType=="add"){
+						comView.actType = "update";	
 					  	form.findField("activityId").setValue(responseData.activityId);
 					  }
 				  	
-				  	if(responseData.activityId != ""){
-				  		form.findField("publishStatusDesc").setValue("已发布");
-				  		var viewUrl = responseData.publishUrl;
-				  		form.findField("publishUrl").setValue(viewUrl);
-				  	}
-				  	
-				  	comView.commitChanges(comView);
+					  /*	
+					  	if(responseData.activityId != ""){
+					  		form.findField("publishStatusDesc").setValue("已发布");
+					  		var viewUrl = responseData.publishUrl;
+					  		form.findField("publishUrl").setValue(viewUrl);
+					  	}
+					  */
+					  //预览发布列表;
+						var tzStoreParams = '{"activityId":"'+responseData.activityId+'","gridTyp":"VIEWART"}';
+						viewArtGrid.store.tzStoreParams = tzStoreParams;
+						viewArtGrid.store.load();		
+						
+				  	  comView.commitChanges(comView);
 					
 						for(var i=0;i<msArrInfoPanelArr.length;i++){
 							msArrInfoPanelArr[i].store.load();
@@ -157,6 +178,10 @@
 			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
 			var comView = this.getView();
+			
+			//预览发布列表
+			var viewArtGrid =comView.down('grid[name=viewArtGrid]');
+			
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
@@ -169,16 +194,22 @@
 				  form.findField("publishClick").setValue("");
 					Ext.tzSubmit(tzParams,function(responseData){
 					
-						if(actType=="add"){
+					  if(actType=="add"){
 							comView.actType = "update";	
-					  	form.findField("activityId").setValue(responseData.activityId);
+					  	    form.findField("activityId").setValue(responseData.activityId);
 					  }
 					  
+					  /*
 					  if(responseData.activityId != ""){
 				  		form.findField("publishStatusDesc").setValue("未发布");
 				  		form.findField("publishUrl").setValue("");
-				  	}
-				  	
+				  	  }
+				  	*/
+					//预览发布列表;
+						var tzStoreParams = '{"activityId":"'+responseData.activityId+'","gridTyp":"VIEWART"}';
+						viewArtGrid.store.tzStoreParams = tzStoreParams;
+						viewArtGrid.store.load();	
+						
 				  	comView.commitChanges(comView);
 					
 						for(var i=0;i<msArrInfoPanelArr.length;i++){
@@ -199,6 +230,10 @@
 			var msArrInfoPanelArr=Ext.ComponentQuery.query("grid[reference=activityListGridPanal]");
 			//获取内容信息参数
 			var comView = this.getView();
+			
+			//预览发布列表
+			var viewArtGrid =comView.down('grid[name=viewArtGrid]');
+			
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
@@ -211,9 +246,17 @@
 					
 						if(actType=="add"){
 							comView.actType = "update";	
-					  	form.findField("activityId").setValue(responseData.activityId);
-					  	comView.commitChanges(comView);
-					  }
+							form.findField("activityId").setValue(responseData.activityId);
+					  	
+						}
+						
+						//预览发布列表;
+						var tzStoreParams = '{"activityId":"'+responseData.activityId+'","gridTyp":"VIEWART"}';
+						viewArtGrid.store.tzStoreParams = tzStoreParams;
+						viewArtGrid.store.load();	
+						
+						comView.commitChanges(comView);
+						
 					  
 						for(var i=0;i<msArrInfoPanelArr.length;i++){
 							msArrInfoPanelArr[i].store.load();
@@ -232,20 +275,44 @@
 			//获取内容信息参数
 			var tzParams = this.getActivityInfoParams();
 			var comView = this.getView();
+			
+			//预览发布列表
+			var viewArtGrid =comView.down('grid[name=viewArtGrid]');
+			
 			var actType = comView.actType;
 			var activityId = form.findField("activityId").getValue();
 			if(actType=="update" && (activityId=="" || typeof(activityId) == "undefined" )){
 					Ext.Msg.alert("提示","保存出错");
 			}else{
-					Ext.tzSubmit(tzParams,function(responseData){
+				Ext.tzSubmit(tzParams,function(responseData){
 					
 					if(actType=="add"){
 						comView.actType = "update";	
-				  	form.findField("activityId").setValue(responseData.activityId);
-				  	comView.commitChanges(comView);
-				  }
+						form.findField("activityId").setValue(responseData.activityId);
+						
+					}
+					
+					//预览发布列表;
+					var tzStoreParams = '{"activityId":"'+responseData.activityId+'","gridTyp":"VIEWART"}';
+					viewArtGrid.store.tzStoreParams = tzStoreParams;
+					viewArtGrid.store.load();	
+					
+					comView.commitChanges(comView);
+					
+					var viewUrl = responseData.viewUrl;
+					if(!isNaN(viewUrl)){
+						if(viewUrl > 1){
+							Ext.Msg.alert("提示","活动对应多个栏目,请在上方列表中选择对应栏目预览");
+						}
+						
+						if(viewUrl == 0){
+							Ext.Msg.alert("提示","未选择栏目");
+						}
+					}else{
+						window.open(viewUrl);
+					}
+					
 				  
-				  window.open(responseData.viewUrl);
 			},"",true,this);
 			}
 	
@@ -767,5 +834,11 @@
 				}												  
 			},this);   
 	   }
-	}
+	},
+	viewArtContent:  function(view, rowIndex){
+		var store = view.findParentByType("grid").store;
+		
+		var previewUrl = store.getAt(rowIndex).data.previewUrl;
+		window.open(previewUrl);
+    }
 });

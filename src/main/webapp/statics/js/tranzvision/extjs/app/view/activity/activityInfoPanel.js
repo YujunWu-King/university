@@ -15,6 +15,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         'Ext.ux.Ueditor',
 	    'KitchenSink.view.activity.activityInfoController',
         'KitchenSink.view.activity.attachmentStore',
+        'KitchenSink.view.activity.viewArtModel',
+        'KitchenSink.view.activity.viewArtStore',
         'KitchenSink.view.activity.applyItemStore',
         'KitchenSink.view.activity.activityImageStore',
         'KitchenSink.view.activity.applyItemOptionsStore',
@@ -60,7 +62,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            xtype: 'textfield',
 						name: 'activityId',
 						hidden: true
-        },{
+        }/*,{
            xtype: 'textfield',
 						name: 'siteId',
 						hidden: true
@@ -76,7 +78,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            xtype: 'textfield',
 						name: 'saveAttachAccessUrl',
 						hidden: true
-        },{
+        }*/,{
             xtype: 'textfield',
             fieldLabel: '活动名称',
 						name: 'activityName',
@@ -169,6 +171,11 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
             xtype: 'textfield',
             fieldLabel: '外部引用链接',
 						name: 'externalLink'
+        },{
+        	xtype: 'textfield',
+        	fieldLabel: '栏目隐藏',
+        	name: 'columsHide',
+        	hidden: true
         }, {
             xtype: 'tagfield',
             fieldLabel:'站点',
@@ -185,9 +192,9 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
                 {
                     var me = this;
                     me.inputEl.dom.value = "";
-                    alert("select");
                 },
                 "change": function( cbox , newValue, oldValue){
+                	/*
                 	console.log(cbox);
                 	console.log(newValue);
                 	console.log(oldValue);
@@ -196,14 +203,54 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
                 		console.log(newValue[i]);
                 	}
                 	console.log("end");
+                	*/
                 	
+                	var tzStoreParamsJson = {
+                			"gridTyp":"COLU",
+                			"sites": newValue
+                	};
+                	
+                	coluStore.tzStoreParams = Ext.JSON.encode(tzStoreParamsJson);
                 	coluStore.load({
              	       callback: function(records, options, success) {
-
+             	    	 
+             	    	 //查看现有站点有没有对应的选择的栏目值; 
+             	    	 var form = cbox.findParentByType("form");
+             	    	 var columsHide = form.getForm().findField("columsHide").getValue();
+             	    	 if(columsHide != ""){
+             	    		var columsHideList = columsHide.split(",");	
+             	    		form.getForm().findField("columsHide").setValue("");
+             	    		form.getForm().findField("colus").setValue(columsHideList);
+             	    		var panel = cbox.findParentByType("activityInfo");
+             	    		panel.commitChanges(panel);
+             	    	 }else{
+             	    		var colu = form.down("tagfield[name=colus]");
+                	    	var coluValues = colu.getValue();
+   	           	    	  	for (var i=0;i<coluValues.length;i++)
+   		             	    {
+   	           	    	  		var cValue = coluValues[i];
+   	           	    	  		var bl = false;
+   	           	    	  		for (var j=0;j<records.length;j++)
+   	 	             	      	{	
+   	           	    	  			var remValue = records[j].data.coluId;
+   	           	    	  			if(cValue == remValue ){
+   	           	    	  				bl = true;
+   	           	    	  				break;
+   	           	    	  			}
+   	 	             	      	}
+   	           	    	  		if(bl == false){
+   	           	    	  			colu.removeValue ( cValue );
+   	           	    	  		}
+   		             	    }
+             	    	 }
              	       }
              	   });
                 }
-            }
+            },
+            afterLabelTextTpl: [
+                                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                 ],
+            allowBlank: false
         }, {
             xtype: 'tagfield',
             fieldLabel:'栏目',
@@ -221,9 +268,14 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
                     var me = this;
                     me.inputEl.dom.value = "";
                 }
-            }
+            },
+            afterLabelTextTpl: [
+                                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                ],
+           allowBlank: false
         },{
 			xtype: 'fieldset',
+			name: 'fbSet',
 			layout: {
 	            type: 'vbox',
 	            align: 'stretch'
@@ -451,7 +503,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         	  {
 	        	  	title: "附件集",
 								items: [{
-		        	  	xtype: 'grid',
+									xtype: 'grid',
 									height: 315, 
 									frame: true,
 									columnLines: true,
@@ -463,8 +515,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										type: 'attachmentStore'
 									},
 									selModel: {
-       	 						type: 'checkboxmodel'
-   				 				},
+										type: 'checkboxmodel'
+   				 					},
 									//dockedItems: [{
 	                //	xtype: 'toolbar',
 	                //	items:[
@@ -494,13 +546,12 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 												}
 											}
     								}]
-    							},"-", 
-                	{iconCls: 'remove',text: '删除',tooltip:"删除选中的数据",handler: 'deleteArtAttenments'}],
+    							},"-", {iconCls: 'remove',text: '删除',tooltip:"删除选中的数据",handler: 'deleteArtAttenments'}],
 									columns: [{ 
 										text: '附件ID',
 										dataIndex: 'attachmentID',
 										sortable: false,
-						      	hidden: true
+										hidden: true
 									},{ 
 										text: '附件url',
 										dataIndex: 'attachmentUrl',
@@ -518,9 +569,9 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										}
 									},{
 										menuDisabled: true,
-		               	sortable: false,
-					   			 	width:60,
-		               	xtype: 'actioncolumn',
+										sortable: false,
+					   			 		width:60,
+					   			 		xtype: 'actioncolumn',
 					  			 	items:[
 							  			{iconCls: 'remove',tooltip: '删除', handler: 'deleteArtAttenment'}
 					   				]
@@ -623,14 +674,14 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 							//		{text:"删除",tooltip:"删除选中的数据",iconCls:"remove"}
 							//]}
 							,{
-	        	  	xtype: 'grid',
+								xtype: 'grid',
 								height: 360, 
 								frame: true,
 								//id: 'applyItemGrid',
 								name: 'applyItemGrid',
 								dockedItems: [{
-                	xtype: 'toolbar',
-                	items: [{iconCls: 'add',text: '新增', tooltip:"新增信息项",handler: 'addApplyItem'
+									xtype: 'toolbar',
+									items: [{iconCls: 'add',text: '新增', tooltip:"新增信息项",handler: 'addApplyItem'
                     //handler: function() {
                 		//	cellEditing.cancelEdit();
 
@@ -843,6 +894,69 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         	  	]
         	  }]
         },{
+			xtype: 'grid',
+			height: 180, 
+			frame: true,
+			columnLines: false,
+			//id: 'attachmentGrid',
+			name: 'viewArtGrid',
+			reference: 'viewArtGrid',
+			style:"margin:10px",
+			store: {
+				type: 'viewArtStore'
+			},
+			columns: [{ 
+				text: '站点id',
+				dataIndex: 'siteId',
+				sortable: false,
+				hidden: true
+			},{ 
+				text: '栏目id',
+				dataIndex: 'coluId',
+				sortable: false,
+				hidden: true
+			},{ 
+				text: '活动id',
+				dataIndex: 'artId',
+				sortable: false,
+				hidden: true
+			},{ 
+				text: '发布站点-栏目',
+				dataIndex: 'coluName',
+				width: 250,
+				sortable: false,
+				hidden: false
+			},{ 
+				text: '发布状态',
+				dataIndex: 'publicState',
+				width: 120,
+				sortable: false,
+				hidden: false
+			},{ 
+				text: '预览url',
+				dataIndex: 'previewUrl',
+				sortable: false,
+				hidden: true
+			},{
+				text: '活动发布访问链接',
+				dataIndex: 'publicUrl',
+				sortable: false,
+				minWidth: 200,
+				flex: 1,
+				renderer: function(v){
+						return '<a href="'+v+'" target="_blank">'+v+'</a>';
+				}
+			},{
+				menuDisabled: true,
+				sortable: false,
+			 	width:60,
+			 	xtype: 'actioncolumn',
+			 	items:[
+			 	       {iconCls: 'view',tooltip: '预览', handler: 'viewArtContent'}
+				]
+			}]
+				
+        },{
            xtype: 'textfield',
            fieldLabel: '状态',
 					 name: 'publishStatus',
@@ -857,7 +971,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            fieldLabel: '是否点击置顶按钮',
 					 name: 'upArtClick',
 					 hidden: true
-        },{
+        }/*,{
            xtype: 'displayfield',
            fieldLabel: '状态',
 					 name: 'publishStatusDesc'
@@ -865,7 +979,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
            xtype: 'displayfield', 
            fieldLabel: '页面访问URL',
 					 name: 'publishUrl'
-        }]
+        }*/]
     }]
 	});
 	 this.callParent();
@@ -933,7 +1047,7 @@ function addAttach(file, value, attachmentType){
 		
 		var upUrl = "";
 		if(attachmentType=="ATTACHMENT"){ 
-			upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
+			//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveAttachAccessUrl").getValue();
 			if(upUrl==""){
 				//Ext.Msg.alert("错误","未定义上传附件的路径，请与管理员联系");
 				//return;
@@ -949,7 +1063,7 @@ function addAttach(file, value, attachmentType){
 				upUrl = TzUniversityContextPath + '/UpdServlet?filePath=activity';
 			}
 		}else{
-			upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
+			//upUrl = file.findParentByType("activityInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
 			if(upUrl==""){
 				//Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
 				//return;

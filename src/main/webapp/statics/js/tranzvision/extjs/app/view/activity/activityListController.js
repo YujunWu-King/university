@@ -107,6 +107,10 @@
       cmp = new ViewClass();
 			
     cmp.on('afterrender',function(panel){
+    	
+    	/*隐藏发布对象*/
+		var fbSet = panel.down('fieldset[name=fbSet]');
+		fbSet.hide();
 				//附件列表
 				/*
 				var attachmentGrid = this.lookupReference('attachmentGrid');
@@ -194,23 +198,23 @@
 	   }
 	   //活动ID
 	   var activityId= selList[0].get("activityId");
-	   var siteId= selList[0].get("siteId");
-	   var columnId= selList[0].get("columnId");
+	   //var siteId= selList[0].get("siteId");
+	   //var columnId= selList[0].get("columnId");
 	 
 	   //显示活动信息编辑页面
-	   this.editActivityIdByID(activityId,siteId,columnId);
+	   this.editActivityIdByID(activityId);
     },
 		editSelActivityInfo: function(view, rowIndex){
 		 var store = view.findParentByType("grid").store;
 		 var selRec = store.getAt(rowIndex);
 		 //活动ID
 	   var activityId = selRec.get("activityId");
-	   var siteId = selRec.get("siteId");
-	   var columnId = selRec.get("columnId");
+	   //var siteId = selRec.get("siteId");
+	   //var columnId = selRec.get("columnId");
 	   //显示活动信息编辑页面
-	   this.editActivityIdByID(activityId,siteId,columnId);
+	   this.editActivityIdByID(activityId);
 		},
-		editActivityIdByID: function(activityId,siteId,columnId){
+		editActivityIdByID: function(activityId){
 			//是否有访问权限
 			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_HD_MANAGER_COM"]["TZ_HD_INFO_STD"];
 			if( pageResSet == "" || pageResSet == undefined){
@@ -263,6 +267,9 @@
 			cmp.actType = "update";
 			
 			cmp.on('afterrender',function(panel){
+				/*隐藏发布对象*/
+				var fbSet = panel.down('fieldset[name=fbSet]');
+				fbSet.hide();
 				//活动表单信息;
 				var form = panel.child('form').getForm();
 				//form.findField("activityId").setReadOnly(true);
@@ -274,8 +281,12 @@
 			  //var grid = Ext.getCmp('applyItemGrid');
 				var grid =panel.down('grid[name=applyItemGrid]');
 				
+				//预览发布列表
+				var viewArtGrid =panel.down('grid[name=viewArtGrid]');
+				
 				//参数
-				var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"'+activityId+'","siteId":"'+siteId+'","coluId":"'+columnId+'"}}';
+				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"'+activityId+'","siteId":"'+siteId+'","coluId":"'+columnId+'"}}';
+				var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"'+activityId+'"}}';
 				
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
@@ -283,18 +294,20 @@
 					var formData = responseData.formData;
 					form.setValues(formData);
 					
+					/*
 					var publishStatus = form.findField("publishStatus").getValue();
 					var siteId = form.findField("siteId").getValue();
 					var coluId = form.findField("coluId").getValue();
 					if (publishStatus == "Y"){
 						form.findField("publishStatusDesc").setValue("已发布");
 						var viewUrl = formData.publishUrl;
-				  	form.findField("publishUrl").setValue(viewUrl);
+				  		form.findField("publishUrl").setValue(viewUrl);
 					}
 					
 					if (publishStatus == "N"){
 						form.findField("publishStatusDesc").setValue("未发布");
 					}
+					*/
 						//Ext.getCmp( "titileImage").setSrc(Ext.getCmp( "titleImageUrl").getValue());	
 						var titleImageUrl = panel.down('hiddenfield[name=titleImageUrl]').getValue();
 						if(titleImageUrl!=""){
@@ -313,7 +326,12 @@
 						var picDataView = panel.down('dataview[name=picView]');
 						var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"TPJ"}';
 						picDataView.store.tzStoreParams = tzStoreParams;
-						picDataView.store.load();					
+						picDataView.store.load();	
+						
+						//预览发布列表;
+						var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"VIEWART"}';
+						viewArtGrid.store.tzStoreParams = tzStoreParams;
+						viewArtGrid.store.load();		
 				});
 				
 			});
