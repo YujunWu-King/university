@@ -331,8 +331,10 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					// 找到该节点的父节点以及级别
 					sql = "select ifnull(TZ_F_COLU_ID,\"\") TZ_F_COLU_ID,TZ_COLU_LEVEL from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=?";
 					ThisNodeMap = sqlQuery.queryForMap(sql, new Object[] { siteId, operateNode });
-
-					TZ_F_COLU_ID = (ThisNodeMap.get("TZ_F_COLU_ID").toString());
+					
+					if (ThisNodeMap.get("TZ_F_COLU_ID") !=null) {
+						TZ_F_COLU_ID = (ThisNodeMap.get("TZ_F_COLU_ID").toString());
+					}
 					TZ_COLU_LEVEL = (ThisNodeMap.get("TZ_COLU_LEVEL").toString());
 
 					// 找到跟目录路径

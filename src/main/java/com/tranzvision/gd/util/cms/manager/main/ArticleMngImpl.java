@@ -32,6 +32,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			Map<String, Object> map = null;
 			if (id != null && !id.equals("")) {
 				sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+						+ " A.TZ_ABOUT,A.TZ_METAKEYS,A.TZ_METADESC, A.TZ_ART_SHORTTITLE,A.TZ_SUBHEAD,"
+						+ " A.TZ_TXT1,A.TZ_TXT2,A.TZ_TXT3, A.TZ_TXT4,A.TZ_LONG1,"
+						+ " A.TZ_LONG2,A.TZ_LONG3,A.TZ_DATE1, A.TZ_DATE2,"
 						+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT," + " A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
 						+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
 						+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
@@ -43,6 +46,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				map = jdbcTemplate.queryForMap(sql, new Object[] { id, chnlid });
 			} else {
 				sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+						+ " A.TZ_ABOUT,A.TZ_METAKEYS,A.TZ_METADESC, A.TZ_ART_SHORTTITLE,A.TZ_SUBHEAD,"
+						+ " A.TZ_TXT1,A.TZ_TXT2,A.TZ_TXT3, A.TZ_TXT4,A.TZ_LONG1,"
+						+ " A.TZ_LONG2,A.TZ_LONG3,A.TZ_DATE1, A.TZ_DATE2,"
 						+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT," + " A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
 						+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
 						+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
@@ -86,6 +92,65 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
 					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
 				}
+				
+				
+				if (map.get("TZ_ABOUT") != null) {
+					art.setAbout((String) (map.get("TZ_ABOUT")));
+				}
+				
+				if (map.get("TZ_METAKEYS") != null) {
+					art.setMetakeys((String) (map.get("TZ_METAKEYS")));
+				}
+				
+				if (map.get("TZ_METADESC") != null) {
+					art.setMetadesc((String) (map.get("TZ_METADESC")));
+				}
+				
+				if (map.get("TZ_ART_SHORTTITLE") != null) {
+					art.setArt_shorttitle((String) (map.get("TZ_ART_SHORTTITLE")));
+				}
+				
+				if (map.get("TZ_SUBHEAD") != null) {
+					art.setSubhead((String) (map.get("TZ_SUBHEAD")));
+				}
+				
+				if (map.get("TZ_TXT1") != null) {
+					art.setTxt1((String) (map.get("TZ_TXT1")));
+				}
+				
+				if (map.get("TZ_TXT2") != null) {
+					art.setTxt2((String) (map.get("TZ_TXT2")));
+				}
+				
+				if (map.get("TZ_TXT3") != null) {
+					art.setTxt3((String) (map.get("TZ_TXT3")));
+				}
+				
+				if (map.get("TZ_TXT4") != null) {
+					art.setTxt4((String) (map.get("TZ_TXT4")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong1((String) (map.get("TZ_LONG1")));
+				}
+				
+				if (map.get("TZ_LONG2") != null) {
+					art.setLong2((String) (map.get("TZ_LONG2")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong3((String) (map.get("TZ_LONG3")));
+				}
+				
+				if (map.get("TZ_DATE1") != null) {
+					art.setDate1((Date) (map.get("TZ_DATE1")));
+				}
+				
+				if (map.get("TZ_DATE2") != null) {
+					art.setDate2((Date) (map.get("TZ_DATE2")));
+				}
+				
+				
 
 				String titleSysFileId = (String) map.get("TZ_ATTACHSYSFILENA");
 				// 标题图;
@@ -112,20 +177,24 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				if (id != null && !id.equals("")) {
 					art.setOpenActApp("N");
 					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
-							+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? LIMIT 0,1";
+							+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
 
 					try {
-						Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL, new Object[] { id });
-						if (hdMap != null) {
-							art.setStartDate((Date) hdMap.get("TZ_START_DT"));
-							art.setStartTime((Date) hdMap.get("TZ_START_TM"));
-							art.setEndDate((Date) hdMap.get("TZ_END_DT"));
-							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
-							String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
-							if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
-								isOpenHdBm = "N";
+						List<Map<String, Object>> list = jdbcTemplate.queryForList(hdSQL, new Object[] { id });
+						Map<String, Object> hdMap = null;
+						if (list != null && list.size() > 0) {
+							for (int i = 0; i < list.size(); i++) {
+								hdMap = list.get(i);
+								art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+								art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+								art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+								art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+								String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
+								if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
+									isOpenHdBm = "N";
+								}
+								art.setOpenActApp(isOpenHdBm);
 							}
-							art.setOpenActApp(isOpenHdBm);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -144,14 +213,14 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 	public List<ArticleImage> findArticleImagesById(String id) {
 
 		List<ArticleImage> rsList = new ArrayList<ArticleImage>();
-		//System.out.println("id:" + id);
+		// System.out.println("id:" + id);
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 			String sql = "SELECT A.TZ_ART_ID,A.TZ_ATTACHSYSFILENA,A.TZ_PRIORITY,A.TZ_IMG_DESCR,A.TZ_IMG_TRS_URL,B.TZ_ATTACHFILE_NAME,B.TZ_ATT_P_URL,B.TZ_ATT_A_URL,B.TZ_YS_ATTACHSYSNAM,B.TZ_SL_ATTACHSYSNAM FROM PS_TZ_ART_PIC_T A,PS_TZ_ART_TPJ_T B WHERE A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA AND A.TZ_ART_ID = ? ORDER BY A.TZ_PRIORITY";
 			try {
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { id });
-				//System.out.println("size" + list.size());
+				// System.out.println("size" + list.size());
 				ArticleImage aimg = null;
 				Map<String, Object> map = null;
 				if (list != null && list.size() > 0) {
@@ -253,6 +322,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
 			String sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+					+ " A.TZ_ABOUT,A.TZ_METAKEYS,A.TZ_METADESC, A.TZ_ART_SHORTTITLE,A.TZ_SUBHEAD,"
+					+ " A.TZ_TXT1,A.TZ_TXT2,A.TZ_TXT3, A.TZ_TXT4,A.TZ_LONG1,"
+					+ " A.TZ_LONG2,A.TZ_LONG3,A.TZ_DATE1, A.TZ_DATE2,"
 					+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT, A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
 					+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
 					+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
@@ -260,10 +332,15 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID, B.TZ_LASTMANT_DTTM "
 					+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B, PS_TZ_SITEI_COLU_T E"
 					+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID  AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y'"
-					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (?) " + appendOrder(orderBy)
-					+ " LIMIT ?,?";
+					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (" + channelIds + ") "
+					+ appendOrder(orderBy) + " LIMIT ?,?";
 
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { channelIds, first, count });
+			System.out.println("sql:" + sql);
+			System.out.println("first:" + first);
+			System.out.println("count:" + count);
+
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { first, count });
+			System.out.println("size:" + list.size());
 			Map<String, Object> map = null;
 
 			for (Object objData : list) {
@@ -296,6 +373,62 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
 					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
 				}
+				
+				if (map.get("TZ_ABOUT") != null) {
+					art.setAbout((String) (map.get("TZ_ABOUT")));
+				}
+				
+				if (map.get("TZ_METAKEYS") != null) {
+					art.setMetakeys((String) (map.get("TZ_METAKEYS")));
+				}
+				
+				if (map.get("TZ_METADESC") != null) {
+					art.setMetadesc((String) (map.get("TZ_METADESC")));
+				}
+				
+				if (map.get("TZ_ART_SHORTTITLE") != null) {
+					art.setArt_shorttitle((String) (map.get("TZ_ART_SHORTTITLE")));
+				}
+				
+				if (map.get("TZ_SUBHEAD") != null) {
+					art.setSubhead((String) (map.get("TZ_SUBHEAD")));
+				}
+				
+				if (map.get("TZ_TXT1") != null) {
+					art.setTxt1((String) (map.get("TZ_TXT1")));
+				}
+				
+				if (map.get("TZ_TXT2") != null) {
+					art.setTxt2((String) (map.get("TZ_TXT2")));
+				}
+				
+				if (map.get("TZ_TXT3") != null) {
+					art.setTxt3((String) (map.get("TZ_TXT3")));
+				}
+				
+				if (map.get("TZ_TXT4") != null) {
+					art.setTxt4((String) (map.get("TZ_TXT4")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong1((String) (map.get("TZ_LONG1")));
+				}
+				
+				if (map.get("TZ_LONG2") != null) {
+					art.setLong2((String) (map.get("TZ_LONG2")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong3((String) (map.get("TZ_LONG3")));
+				}
+				
+				if (map.get("TZ_DATE1") != null) {
+					art.setDate1((Date) (map.get("TZ_DATE1")));
+				}
+				
+				if (map.get("TZ_DATE2") != null) {
+					art.setDate2((Date) (map.get("TZ_DATE2")));
+				}
 
 				String titleSysFileId = (String) map.get("TZ_ATTACHSYSFILENA");
 				// 标题图;
@@ -319,29 +452,30 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				}
 
 				// 活动信息;
-				// art.setOpenActApp("N");
-				// String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,
-				// D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
-				// + " from PS_TZ_ART_HD_TBL D where TZ_ART_ID in (?) LIMIT
-				// 0,1";
-				//
-				// try {
-				// Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL,
-				// new Object[] { ids });
-				// if (hdMap != null) {
-				// art.setStartDate((Date) hdMap.get("TZ_START_DT"));
-				// art.setStartTime((Date) hdMap.get("TZ_START_TM"));
-				// art.setEndDate((Date) hdMap.get("TZ_END_DT"));
-				// art.setEndTime((Date) hdMap.get("TZ_END_TM"));
-				// String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
-				// if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
-				// isOpenHdBm = "N";
-				// }
-				// art.setOpenActApp(isOpenHdBm);
-				// }
-				// } catch (Exception e) {
-				// e.printStackTrace();
-				// }
+				art.setOpenActApp("N");
+				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
+						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
+
+				try {
+					List<Map<String, Object>> listxx = jdbcTemplate.queryForList(hdSQL, new Object[] { art.getId() });
+					Map<String, Object> hdMap = null;
+					if (listxx != null && listxx.size() > 0) {
+						for (int i = 0; i < listxx.size(); i++) {
+							hdMap = listxx.get(i);
+							art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+							art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+							art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+							String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
+							if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
+								isOpenHdBm = "N";
+							}
+							art.setOpenActApp(isOpenHdBm);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				rsList.add(art);
 			}
 		} catch (Exception e) {
@@ -354,6 +488,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 	public Pagination getPageByChannelIdsForTag(String channelIds, int orderBy, int pageNo, int count, String filters) {
 		Finder f = Finder.create();
 		String sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+				+ " A.TZ_ABOUT,A.TZ_METAKEYS,A.TZ_METADESC, A.TZ_ART_SHORTTITLE,A.TZ_SUBHEAD,"
+				+ " A.TZ_TXT1,A.TZ_TXT2,A.TZ_TXT3, A.TZ_TXT4,A.TZ_LONG1,"
+				+ " A.TZ_LONG2,A.TZ_LONG3,A.TZ_DATE1, A.TZ_DATE2,"
 				+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT, A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
 				+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
 				+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
@@ -361,7 +498,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID, B.TZ_LASTMANT_DTTM "
 				+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B, PS_TZ_SITEI_COLU_T E"
 				+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID  AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y'"
-				+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (?) " + appendOrder(orderBy) + " LIMIT ?,?";
+				+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (" + channelIds + ") " + appendOrder(orderBy)
+				+ " LIMIT ?,?";
+		System.out.println("sql:" + sql);
 
 		f.append(sql);
 
@@ -383,8 +522,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(),
-				new Object[] { channelIds, first, last });
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, last });
 		Map<String, Object> map = null;
 		CmsContent art = null;
 		for (Object objData : list) {
@@ -418,6 +556,62 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
 			}
 
+			if (map.get("TZ_ABOUT") != null) {
+				art.setAbout((String) (map.get("TZ_ABOUT")));
+			}
+			
+			if (map.get("TZ_METAKEYS") != null) {
+				art.setMetakeys((String) (map.get("TZ_METAKEYS")));
+			}
+			
+			if (map.get("TZ_METADESC") != null) {
+				art.setMetadesc((String) (map.get("TZ_METADESC")));
+			}
+			
+			if (map.get("TZ_ART_SHORTTITLE") != null) {
+				art.setArt_shorttitle((String) (map.get("TZ_ART_SHORTTITLE")));
+			}
+			
+			if (map.get("TZ_SUBHEAD") != null) {
+				art.setSubhead((String) (map.get("TZ_SUBHEAD")));
+			}
+			
+			if (map.get("TZ_TXT1") != null) {
+				art.setTxt1((String) (map.get("TZ_TXT1")));
+			}
+			
+			if (map.get("TZ_TXT2") != null) {
+				art.setTxt2((String) (map.get("TZ_TXT2")));
+			}
+			
+			if (map.get("TZ_TXT3") != null) {
+				art.setTxt3((String) (map.get("TZ_TXT3")));
+			}
+			
+			if (map.get("TZ_TXT4") != null) {
+				art.setTxt4((String) (map.get("TZ_TXT4")));
+			}
+			
+			if (map.get("TZ_LONG1") != null) {
+				art.setLong1((String) (map.get("TZ_LONG1")));
+			}
+			
+			if (map.get("TZ_LONG2") != null) {
+				art.setLong2((String) (map.get("TZ_LONG2")));
+			}
+			
+			if (map.get("TZ_LONG1") != null) {
+				art.setLong3((String) (map.get("TZ_LONG3")));
+			}
+			
+			if (map.get("TZ_DATE1") != null) {
+				art.setDate1((Date) (map.get("TZ_DATE1")));
+			}
+			
+			if (map.get("TZ_DATE2") != null) {
+				art.setDate2((Date) (map.get("TZ_DATE2")));
+			}
+			
 			String titleSysFileId = (String) map.get("TZ_ATTACHSYSFILENA");
 			// 标题图;
 			if (titleSysFileId != null && !"".equals(titleSysFileId)) {
@@ -437,6 +631,32 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				}
 
 			}
+
+			// 活动信息;
+			art.setOpenActApp("N");
+			String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
+					+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
+
+			try {
+				List<Map<String, Object>> listxx = jdbcTemplate.queryForList(hdSQL, new Object[] { art.getId() });
+				Map<String, Object> hdMap = null;
+				if (listxx != null && listxx.size() > 0) {
+					for (int i = 0; i < listxx.size(); i++) {
+						hdMap = listxx.get(i);
+						art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+						art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+						art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+						art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+						String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
+						if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
+							isOpenHdBm = "N";
+						}
+						art.setOpenActApp(isOpenHdBm);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			rsList.add(art);
 		}
 		p.setList(rsList);
@@ -448,7 +668,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-			totalCount = jdbcTemplate.queryForObject(f.getRowCountHql(), new Object[] { channelIds }, Integer.class);
+			totalCount = jdbcTemplate.queryForObject(f.getRowCountHql(), Integer.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -523,6 +743,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
 			String sql = "SELECT A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,"
+					+ " A.TZ_ABOUT,A.TZ_METAKEYS,A.TZ_METADESC, A.TZ_ART_SHORTTITLE,A.TZ_SUBHEAD,"
+					+ " A.TZ_TXT1,A.TZ_TXT2,A.TZ_TXT3, A.TZ_TXT4,A.TZ_LONG1,"
+					+ " A.TZ_LONG2,A.TZ_LONG3,A.TZ_DATE1, A.TZ_DATE2,"
 					+ " A.TZ_ART_NAME,A.TZ_ART_TYPE1,A.TZ_ART_CONENT, A.TZ_OUT_ART_URL,A.TZ_ATTACHSYSFILENA,"
 					+ " A.TZ_IMAGE_TITLE,A.TZ_IMAGE_DESC, A.TZ_ATTACHSYSFILENA,B.TZ_SITE_ID, B.TZ_COLU_ID,"
 					+ " E.TZ_COLU_NAME,B.TZ_ART_NEWS_DT,B.TZ_ART_PUB_STATE,"
@@ -530,9 +753,14 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID, B.TZ_LASTMANT_DTTM "
 					+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B, PS_TZ_SITEI_COLU_T E"
 					+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID  AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y'"
-					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND A.TZ_ART_ID in (?) " + appendOrder(orderBy);
+					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND A.TZ_ART_ID in (" + ids + ") " + appendOrder(orderBy);
 
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { ids });
+			System.out.println("sql:" + sql);
+			System.out.println("ids:" + ids);
+
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
+
+			System.out.println("size:" + list.size());
 			Map<String, Object> map = null;
 
 			for (Object objData : list) {
@@ -565,6 +793,62 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
 					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
 				}
+				
+				if (map.get("TZ_ABOUT") != null) {
+					art.setAbout((String) (map.get("TZ_ABOUT")));
+				}
+				
+				if (map.get("TZ_METAKEYS") != null) {
+					art.setMetakeys((String) (map.get("TZ_METAKEYS")));
+				}
+				
+				if (map.get("TZ_METADESC") != null) {
+					art.setMetadesc((String) (map.get("TZ_METADESC")));
+				}
+				
+				if (map.get("TZ_ART_SHORTTITLE") != null) {
+					art.setArt_shorttitle((String) (map.get("TZ_ART_SHORTTITLE")));
+				}
+				
+				if (map.get("TZ_SUBHEAD") != null) {
+					art.setSubhead((String) (map.get("TZ_SUBHEAD")));
+				}
+				
+				if (map.get("TZ_TXT1") != null) {
+					art.setTxt1((String) (map.get("TZ_TXT1")));
+				}
+				
+				if (map.get("TZ_TXT2") != null) {
+					art.setTxt2((String) (map.get("TZ_TXT2")));
+				}
+				
+				if (map.get("TZ_TXT3") != null) {
+					art.setTxt3((String) (map.get("TZ_TXT3")));
+				}
+				
+				if (map.get("TZ_TXT4") != null) {
+					art.setTxt4((String) (map.get("TZ_TXT4")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong1((String) (map.get("TZ_LONG1")));
+				}
+				
+				if (map.get("TZ_LONG2") != null) {
+					art.setLong2((String) (map.get("TZ_LONG2")));
+				}
+				
+				if (map.get("TZ_LONG1") != null) {
+					art.setLong3((String) (map.get("TZ_LONG3")));
+				}
+				
+				if (map.get("TZ_DATE1") != null) {
+					art.setDate1((Date) (map.get("TZ_DATE1")));
+				}
+				
+				if (map.get("TZ_DATE2") != null) {
+					art.setDate2((Date) (map.get("TZ_DATE2")));
+				}
 
 				String titleSysFileId = (String) map.get("TZ_ATTACHSYSFILENA");
 				// 标题图;
@@ -589,21 +873,25 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 
 				// 活动信息;
 				art.setOpenActApp("N");
-				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM, D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
-						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID in (?) LIMIT 0,1";
+				String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM," + " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM "
+						+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
 
 				try {
-					Map<String, Object> hdMap = jdbcTemplate.queryForMap(hdSQL, new Object[] { ids });
-					if (hdMap != null) {
-						art.setStartDate((Date) hdMap.get("TZ_START_DT"));
-						art.setStartTime((Date) hdMap.get("TZ_START_TM"));
-						art.setEndDate((Date) hdMap.get("TZ_END_DT"));
-						art.setEndTime((Date) hdMap.get("TZ_END_TM"));
-						String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
-						if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
-							isOpenHdBm = "N";
+					List<Map<String, Object>> listxx = jdbcTemplate.queryForList(hdSQL, new Object[] { art.getId() });
+					Map<String, Object> hdMap = null;
+					if (listxx != null && listxx.size() > 0) {
+						for (int i = 0; i < listxx.size(); i++) {
+							hdMap = listxx.get(i);
+							art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+							art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+							art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+							String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
+							if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
+								isOpenHdBm = "N";
+							}
+							art.setOpenActApp(isOpenHdBm);
 						}
-						art.setOpenActApp(isOpenHdBm);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

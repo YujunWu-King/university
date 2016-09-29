@@ -53,6 +53,8 @@ public abstract class AbstractContentDirective extends AbstractTplChnlinit imple
 			articleMng = new ArticleMngImpl();
 		}
 		int orderBy = getOrderBy(params);
+		
+		System.out.println("orderBy:" + orderBy);
 		int count = FrontUtils.getCount(params);
 
 		String channelIds = getChannelIds(params);
@@ -71,6 +73,7 @@ public abstract class AbstractContentDirective extends AbstractTplChnlinit imple
 
 		String filters = getFilters(params);
 		
+		//System.out.println("orderBy:" + orderBy);
 		if (isPage()) {  //分页
 			// String speid = FrontUtils.getSpeId(env);
 			// String divid = FrontUtils.getDivId(env);

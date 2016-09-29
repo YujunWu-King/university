@@ -320,7 +320,9 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// 菜单简称
 		menu.setShortname("");
 		// 菜单样式
-		menu.setStyle(map.get("TZ_MENU_STYLE").toString());
+		if (map.get("TZ_MENU_STYLE")!=null) {
+			menu.setStyle(map.get("TZ_MENU_STYLE").toString());
+		}
 
 		menu.setLevel(map.get("TZ_MENU_LEVEL").toString());
 
