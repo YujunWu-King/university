@@ -94,14 +94,14 @@ public class ArtTypeInfoServiceImpl extends FrameworkImpl {
 						arraylist.add(jsonMap);
 					}else if(i<7){
 						jsonMap = new HashMap<String, Object>();
-						jsonMap.put("fieldValue", "TZ_LONG" + String.valueOf(i + 1));
+						jsonMap.put("fieldValue", "TZ_LONG" + String.valueOf(i - 3 ));
 						jsonMap.put("fieldDescr", "描述字段" + String.valueOf(i + 1));
 						jsonMap.put("seq", String.valueOf(i + 1));
 						jsonMap.put("isused", false);
 						arraylist.add(jsonMap);
 					}else{
 						jsonMap = new HashMap<String, Object>();
-						jsonMap.put("fieldValue", "TZ_DATE" + String.valueOf(i + 1));
+						jsonMap.put("fieldValue", "TZ_DATE" + String.valueOf(i - 6));
 						jsonMap.put("fieldDescr", "描述字段" + String.valueOf(i + 1));
 						jsonMap.put("seq", String.valueOf(i + 1));
 						jsonMap.put("isused", false);
