@@ -53,18 +53,18 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class ArtInfoNewServiceImpl extends FrameworkImpl {
 	/* 站点id,栏目id,内容id,是否发布 */
 	private String instanceArtId;
-	
+
 	private String instanceSiteId;
-	
+
 	private String instanceColuId;
-	
+
 	private String ins_isPublish;
-	
+
 	private String ins_staticName;
-	
+
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	
+
 	@Autowired
 	private FileManageServiceImpl fileManageServiceImpl;
 	@Autowired
@@ -97,6 +97,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 	private PsTzArtPrjTMapper psTzArtPrjTMapper;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+
 	/* 查询表单信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -164,7 +165,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("projects", "");
 		map.put("staticName", "");
 		map.put("autoStaticName", "");
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -184,15 +185,15 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 
 				String coluId = jacksonUtil.getString("coluId");
-				
-				if("".equals(coluId) || (coluId == null)){
+
+				if ("".equals(coluId) || (coluId == null)) {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择添加内容的栏目！";
 					returnJsonMap.put("formData", map);
 					strRet = jacksonUtil.Map2json(returnJsonMap);
 					return strRet;
 				}
-				
+
 				// 获取机构对应的站点；
 				String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
 				String siteId = jdbcTemplate.queryForObject(siteSQL, new Object[] { coluId }, "String");
@@ -203,72 +204,73 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					strRet = jacksonUtil.Map2json(returnJsonMap);
 					return strRet;
 				}
-				
-				//获取内容模板字段是否启用
+
+				// 获取内容模板字段是否启用
 				String artTypeItemSQL = "SELECT B.TZ_FIELD_VALUE,B.TZ_FIELD_DESC FROM PS_TZ_SITEI_COLU_T A,PS_TZ_CONT_FLDEF_T B "
 						+ "WHERE A.TZ_COLU_ID = ? AND A.TZ_ART_TYPE_ID = B.TZ_ART_TYPE_ID AND IS_ENABLED_FLG = 'Y'";
-				List<Map<String, Object>> artTypeItemlist = jdbcTemplate.queryForList(artTypeItemSQL, new Object[] { coluId });
+				List<Map<String, Object>> artTypeItemlist = jdbcTemplate.queryForList(artTypeItemSQL,
+						new Object[] { coluId });
 				if (artTypeItemlist != null && artTypeItemlist.size() > 0) {
 					for (int i = 0; i < artTypeItemlist.size(); i++) {
 						String itemValue = String.valueOf(artTypeItemlist.get(i).get("TZ_FIELD_VALUE"));
 						String itemLabel = String.valueOf(artTypeItemlist.get(i).get("TZ_FIELD_DESC"));
-						switch (itemValue){ 
-						case "TZ_TXT1" :  
+						switch (itemValue) {
+						case "TZ_TXT1":
 							map.replace("tztxt1Enabled", "Y");
 							map.replace("tztxt1Label", itemLabel);
-						break; 
+							break;
 
-						case "TZ_TXT2" :  
+						case "TZ_TXT2":
 							map.replace("tztxt2Enabled", "Y");
 							map.replace("tztxt2Label", itemLabel);
-						break; 
-						
-						case "TZ_TXT3" :  
+							break;
+
+						case "TZ_TXT3":
 							map.replace("tztxt3Enabled", "Y");
 							map.replace("tztxt3Label", itemLabel);
-						break; 
-						
-						case "TZ_TXT4" :  
+							break;
+
+						case "TZ_TXT4":
 							map.replace("tztxt4Enabled", "Y");
 							map.replace("tztxt4Label", itemLabel);
-						break; 
-						
-						case "TZ_LONG1" :  
+							break;
+
+						case "TZ_LONG1":
 							map.replace("tzlong1Enabled", "Y");
 							map.replace("tzlong1Label", itemLabel);
-						break; 
-						
-						case "TZ_LONG2" :  
+							break;
+
+						case "TZ_LONG2":
 							map.replace("tzlong2Enabled", "Y");
 							map.replace("tzlong2Label", itemLabel);
-						break; 
-						
-						case "TZ_LONG3" :  
+							break;
+
+						case "TZ_LONG3":
 							map.replace("tzlong3Enabled", "Y");
 							map.replace("tzlong3Label", itemLabel);
-						break; 
-						
-						case "TZ_DATE1" :  
+							break;
+
+						case "TZ_DATE1":
 							map.replace("tzdate1Enabled", "Y");
 							map.replace("tzdate1Label", itemLabel);
-						break;
-						
-						case "TZ_DATE2" :  
+							break;
+
+						case "TZ_DATE2":
 							map.replace("tzdate2Enabled", "Y");
 							map.replace("tzdate2Label", itemLabel);
-						break; 
+							break;
 
-						default : 
-						break; 
-						} 
+						default:
+							break;
+						}
 					}
 				}
-				
-				/*获取站点类型*/
+
+				/* 获取站点类型 */
 				String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-				
-				String strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType,  new Object[] { siteId }, "String");
-				
+
+				String strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType, new Object[] { siteId }, "String");
+
 				map.replace("siteType", strSiteType);
 
 				if ("".equals(strArtId)) {
@@ -278,7 +280,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					map.replace("coluId", coluId);
 					map.replace("saveImageAccessUrl", imagePathMap.get("TZ_IMG_STOR"));
 					map.replace("saveAttachAccessUrl", imagePathMap.get("TZ_ATTS_STOR"));
-					
+
 					returnJsonMap.put("formData", map);
 					strRet = jacksonUtil.Map2json(returnJsonMap);
 					return strRet;
@@ -292,7 +294,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				if (attachSysFile != null && !"".equals(attachSysFile)) {
 					String arraurlSQL = "select TZ_ATT_A_URL from PS_TZ_ART_TITIMG_T where TZ_ATTACHSYSFILENA=?";
 					acessUrl = jdbcTemplate.queryForObject(arraurlSQL, new Object[] { attachSysFile }, "String");
-					
+
 					if (acessUrl != null && !"".equals(acessUrl)) {
 						if ((acessUrl.lastIndexOf("/") + 1) != acessUrl.length()) {
 							titleImageUrl = acessUrl + "/" + attachSysFile;
@@ -316,7 +318,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
 				SimpleDateFormat timeFormate = new SimpleDateFormat("HH:mm");
-				String startDate = "", startTime = "", endDate = "", endTime = "", artNewsDT = "",artYlDt1 = "",artYlDt2 = "";
+				String startDate = "", startTime = "", endDate = "", endTime = "", artNewsDT = "", artYlDt1 = "",
+						artYlDt2 = "";
 				try {
 					startDate = dateFormate.format(psTzArtRecTbl.getTzStartDate());
 				} catch (Exception e) {
@@ -337,32 +340,34 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					artNewsDT = datetimeFormate.format(psTzLmNrGlT.getTzArtNewsDt());
 				} catch (Exception e) {
 				}
-				
-				
+
 				try {
 					artYlDt1 = dateFormate.format(psTzArtRecTbl.getTzDate1());
 				} catch (Exception e) {
 				}
-				
+
 				try {
 					artYlDt2 = dateFormate.format(psTzArtRecTbl.getTzDate2());
 				} catch (Exception e) {
 				}
-				
+
 				String artStaticUrl = "";
 				artStaticUrl = psTzLmNrGlT.getTzStaticArtUrl();
 				String artUrl = "";
-				String publicState =  psTzLmNrGlT.getTzArtPubState();
-				if("Y".equals(publicState)){
-					String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
+				String publicState = psTzLmNrGlT.getTzArtPubState();
+				if ("Y".equals(publicState)) {
+					String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+							+ request.getContextPath();
 					String classIdSQL = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
-					String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{ "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD"},"String");
-					artUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+siteId+"&columnId="+coluId+"&artId="+strArtId;
-					if("A".equals(strSiteType) || "B".equals(strSiteType)){
+					String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+							new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD" }, "String");
+					artUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+							+ siteId + "&columnId=" + coluId + "&artId=" + strArtId;
+					if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
 						artUrl = artStaticUrl;
 					}
 				}
-				
+
 				map.replace("artId", strArtId);
 				map.replace("artTitle", psTzArtRecTbl.getTzArtTitle());
 				map.replace("artShortTitle", psTzArtRecTbl.getTzArtShorttitle());
@@ -401,21 +406,22 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				map.replace("staticName", psTzLmNrGlT.getTzStaticName());
 				map.replace("autoStaticName", psTzLmNrGlT.getTzStaticAotoName());
 				String limit = psTzArtRecTbl.getTzProjectLimit();
-				if(limit==null){
+				if (limit == null) {
 					limit = "";
 				}
-				map.replace("limit",limit );
-				
-				List<Map<String, Object>> prjList = jdbcTemplate.queryForList("select TZ_PRJ_ID from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{strArtId});
-				if(prjList != null){
+				map.replace("limit", limit);
+
+				List<Map<String, Object>> prjList = jdbcTemplate.queryForList(
+						"select TZ_PRJ_ID from PS_TZ_ART_PRJ_T where TZ_ART_ID=?", new Object[] { strArtId });
+				if (prjList != null) {
 					ArrayList<String> projects = new ArrayList<>();
-					for(int h = 0; h < prjList.size(); h++){
-						String projectId = (String)prjList.get(h).get("TZ_PRJ_ID");
+					for (int h = 0; h < prjList.size(); h++) {
+						String projectId = (String) prjList.get(h).get("TZ_PRJ_ID");
 						projects.add(projectId);
 					}
-					map.replace("projects",projects);
+					map.replace("projects", projects);
 				}
-				
+
 				returnJsonMap.put("formData", map);
 			} else {
 				errMsg[0] = "1";
@@ -441,7 +447,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("publishUrl", "");
 		returnJsonMap.put("viewUrl", "");
 
-		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -452,7 +457,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String coluId = "";
 
 			String artId = "";
-			
+
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
 				String strForm = actData[num];
@@ -471,35 +476,37 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					coluId = (String) dataMap.get("coluId");
 
 					if (siteId != null && !"".equals(siteId) && coluId != null && !"".equals(coluId)) {
-						//静态化名称 
-						String strStaticName = dataMap.get("staticName") == null ? "" : String.valueOf(dataMap.get("staticName"));
+						// 静态化名称
+						String strStaticName = dataMap.get("staticName") == null ? ""
+								: String.valueOf(dataMap.get("staticName"));
 						this.ins_staticName = strStaticName;
-						/*查看名称是否已经存在*/
-						if(strStaticName != null && !"".equals(strStaticName)){
+						/* 查看名称是否已经存在 */
+						if (strStaticName != null && !"".equals(strStaticName)) {
 							String sqlGetStaticNameCount = "SELECT COUNT(1) FROM PS_TZ_LM_NR_GL_T "
-								+ "WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND UPPER(TZ_STATIC_NAME) = UPPER(?)";
-							int staticNameCount = jdbcTemplate.queryForObject(sqlGetStaticNameCount, new Object[]{siteId,coluId,strStaticName},"Integer");
-							if(staticNameCount>0){
+									+ "WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND UPPER(TZ_STATIC_NAME) = UPPER(?)";
+							int staticNameCount = jdbcTemplate.queryForObject(sqlGetStaticNameCount,
+									new Object[] { siteId, coluId, strStaticName }, "Integer");
+							if (staticNameCount > 0) {
 								errMsg[0] = "1";
 								errMsg[1] = "静态化文件名" + strStaticName + "已经存在，请更换静态化文件名";
 								strRet = jacksonUtil.Map2json(returnJsonMap);
 								return strRet;
 							}
 						}
-						
+
 						// 标题;
 						String artTitle = (String) dataMap.get("artTitle");
-						//简短标题
+						// 简短标题
 						String artShortTitle = (String) dataMap.get("artShortTitle");
-						//副标题
+						// 副标题
 						String artSubHead = (String) dataMap.get("artSubHead");
-						//文章简介
+						// 文章简介
 						String artAbout = (String) dataMap.get("artAbout");
-						//meta描述
+						// meta描述
 						String artMetaDesc = (String) dataMap.get("artMetaDesc");
-						//meta关键字
+						// meta关键字
 						String artMetaKeys = (String) dataMap.get("artMetaKeys");
-						//预留字段4个txt;3个long类型，2个日期类型
+						// 预留字段4个txt;3个long类型，2个日期类型
 						String tztxt1 = (String) dataMap.get("tztxt1");
 						String tztxt2 = (String) dataMap.get("tztxt2");
 						String tztxt3 = (String) dataMap.get("tztxt3");
@@ -521,10 +528,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artFbBm = (String) dataMap.get("artFbBm");
 						// 发布时间;
 						String artNewsDT = (String) dataMap.get("artNewsDT");
-						
+
 						// 查看范围;
 						String limit = "";
-						if(dataMap.containsKey("limit")){
+						if (dataMap.containsKey("limit")) {
 							limit = (String) dataMap.get("limit");
 						}
 						// 限定的项目;
@@ -532,7 +539,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						if (dataMap.get("projects") != null && !"".equals(dataMap.get("projects"))) {
 							projects = (ArrayList<String>) dataMap.get("projects");
 						}
-						
+
 						Date fbdt = null;
 						SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						if (artNewsDT != null && !"".equals(artNewsDT)) {
@@ -542,10 +549,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 								fbdt = null;
 							}
 						}
-						
+
 						Date yldt1 = null;
 						Date yldt2 = null;
-						
+
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						if (tzdate1 != null && !"".equals(tzdate1)) {
 							try {
@@ -629,46 +636,46 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							// 如果发布，且发布时间未填写则当前时间为发布时间;
 							if ("Y".equals(publishStatus)) {
 								this.ins_isPublish = "Y";
-								if(fbdt == null){
+								if (fbdt == null) {
 									fbdt = new Date();
 									psTzLmNrGlT.setTzArtNewsDt(fbdt);
 								}
-														
-							}else{
+
+							} else {
 								this.ins_isPublish = "N";
 							}
-						}else{
+						} else {
 							this.ins_isPublish = "";
 						}
 						// 置顶
 						int maxSEQ = 0;
 						if ("Y".equals(upArtClick)) {
 							String maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
-							try{
+							try {
 								maxSEQ = jdbcTemplate.queryForObject(maxSQL, new Object[] { siteId, coluId, artId },
 										"Integer");
-							}catch(Exception e){
+							} catch (Exception e) {
 								maxSEQ = 0;
 							}
 							psTzLmNrGlT.setTzMaxZdSeq(maxSEQ + 1);
 						}
-						
+
 						psTzLmNrGlT.setTzLastmantDttm(new Date());
 						psTzLmNrGlT.setTzLastmantOprid(oprid);
 						psTzLmNrGlTMapper.insert(psTzLmNrGlT);
-						
-						//删除限定的项目;
-						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{artId});
+
+						// 删除限定的项目;
+						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?", new Object[] { artId });
 						if (projects != null && projects.size() > 0) {
 							for (int k = 0; k < projects.size(); k++) {
-								String prjId = (String)projects.get(k);
+								String prjId = (String) projects.get(k);
 								PsTzArtPrjTKey psTzArtPrjTKey = new PsTzArtPrjTKey();
 								psTzArtPrjTKey.setTzArtId(artId);
 								psTzArtPrjTKey.setTzPrjId(prjId);
 								psTzArtPrjTMapper.insert(psTzArtPrjTKey);
 							}
 						}
-						
+
 						this.instanceArtId = artId;
 						this.instanceColuId = coluId;
 						this.instanceSiteId = siteId;
@@ -681,15 +688,19 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 
 			}
-			
-			String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
+
+			String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
 			String classIdSQL = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
-			String viewUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{"TZ_ART_VIEW_COM", "TZ_ART_PREVIEW_STD"},"String");
-			String viewUrl = rootparth + "/dispatcher?classid="+viewUrlClassId+"&operatetype=HTML&siteId="+siteId+"&columnId="+coluId+"&artId="+artId+"&oprate=R";
-			
-			String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{ "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD"},"String");
-			String publishUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+siteId+"&columnId="+coluId+"&artId="+artId;
-			
+			String viewUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+					new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_PREVIEW_STD" }, "String");
+			String viewUrl = rootparth + "/dispatcher?classid=" + viewUrlClassId + "&operatetype=HTML&siteId=" + siteId
+					+ "&columnId=" + coluId + "&artId=" + artId + "&oprate=R";
+
+			String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+					new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD" }, "String");
+			String publishUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+					+ siteId + "&columnId=" + coluId + "&artId=" + artId;
 
 			returnJsonMap.replace("artId", artId);
 			returnJsonMap.replace("siteId", siteId);
@@ -703,7 +714,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
-	
+
 	/* 新增站点内容文章信息 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
@@ -724,13 +735,13 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String coluId = "";
 			// 发布的内容id;
 			String artId = "";
-			//站点类型
+			// 站点类型
 			String strSiteType = "";
-			
+
 			String strStaticName = "";
-			//静态化名称自动编号
+			// 静态化名称自动编号
 			String strAutoStaticName = "";
-			
+
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
 				String strForm = actData[num];
@@ -757,36 +768,38 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 					if (siteId != null && !"".equals(siteId) && coluId != null && !"".equals(coluId) && artId != null
 							&& !"".equals(artId)) {
-						
-						//静态化名称 
-						strStaticName = dataMap.get("staticName") == null ? "" : String.valueOf(dataMap.get("staticName"));
+
+						// 静态化名称
+						strStaticName = dataMap.get("staticName") == null ? ""
+								: String.valueOf(dataMap.get("staticName"));
 						ins_staticName = strStaticName;
-						/*查看名称是否已经存在*/
-						if(strStaticName != null && !"".equals(strStaticName)){
+						/* 查看名称是否已经存在 */
+						if (strStaticName != null && !"".equals(strStaticName)) {
 							String sqlGetStaticNameCount = "SELECT COUNT(1) FROM PS_TZ_LM_NR_GL_T "
-								+ "WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID <> ? AND UPPER(TZ_STATIC_NAME) = UPPER(?)";
-							int staticNameCount = jdbcTemplate.queryForObject(sqlGetStaticNameCount, new Object[]{siteId,coluId,artId,strStaticName},"Integer");
-							if(staticNameCount>0){
+									+ "WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID <> ? AND UPPER(TZ_STATIC_NAME) = UPPER(?)";
+							int staticNameCount = jdbcTemplate.queryForObject(sqlGetStaticNameCount,
+									new Object[] { siteId, coluId, artId, strStaticName }, "Integer");
+							if (staticNameCount > 0) {
 								errMsg[0] = "1";
 								errMsg[1] = "静态化文件名" + strStaticName + "已经存在，请更换静态化文件名";
 								strRet = jacksonUtil.Map2json(returnJsonMap);
 								return strRet;
 							}
 						}
-						
+
 						// 标题;
 						String artTitle = (String) dataMap.get("artTitle");
-						//简短标题
+						// 简短标题
 						String artShortTitle = (String) dataMap.get("artShortTitle");
-						//副标题
+						// 副标题
 						String artSubHead = (String) dataMap.get("artSubHead");
-						//文章简介
+						// 文章简介
 						String artAbout = (String) dataMap.get("artAbout");
-						//meta描述
+						// meta描述
 						String artMetaDesc = (String) dataMap.get("artMetaDesc");
-						//meta关键字
+						// meta关键字
 						String artMetaKeys = (String) dataMap.get("artMetaKeys");
-						//预留字段4个txt;3个long类型，2个日期类型
+						// 预留字段4个txt;3个long类型，2个日期类型
 						String tztxt1 = (String) dataMap.get("tztxt1");
 						String tztxt2 = (String) dataMap.get("tztxt2");
 						String tztxt3 = (String) dataMap.get("tztxt3");
@@ -808,10 +821,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artFbBm = (String) dataMap.get("artFbBm");
 						// 发布时间;
 						String artNewsDT = (String) dataMap.get("artNewsDT");
-						
+
 						// 查看范围;
 						String limit = "";
-						if(dataMap.containsKey("limit")){
+						if (dataMap.containsKey("limit")) {
 							limit = (String) dataMap.get("limit");
 						}
 						// 限定的项目;
@@ -819,7 +832,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						if (dataMap.get("projects") != null && !"".equals(dataMap.get("projects"))) {
 							projects = (ArrayList<String>) dataMap.get("projects");
 						}
-						
+
 						Date fbdt = null;
 						SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 						if (artNewsDT != null && !"".equals(artNewsDT)) {
@@ -829,10 +842,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 								fbdt = null;
 							}
 						}
-						
+
 						Date yldt1 = null;
 						Date yldt2 = null;
-						
+
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 						if (tzdate1 != null && !"".equals(tzdate1)) {
 							try {
@@ -860,31 +873,34 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							String arr[] = titleImageUrl.split("/");
 							sysFileName = arr[arr.length - 1];
 						}
-						//查询图片是否发生改变;
+						// 查询图片是否发生改变;
 						String imgtitleUrlSQL = "SELECT TZ_ATTACHSYSFILENA FROM PS_TZ_ART_REC_TBL WHERE TZ_ART_ID=? ";
-						String originTitlFileName = jdbcTemplate.queryForObject(imgtitleUrlSQL, new Object[]{artId},"String");
-						if(originTitlFileName != null &&  ! "".equals(originTitlFileName)
-								&& !originTitlFileName.equals(sysFileName)){
-							//删除原上传的图片;
+						String originTitlFileName = jdbcTemplate.queryForObject(imgtitleUrlSQL, new Object[] { artId },
+								"String");
+						if (originTitlFileName != null && !"".equals(originTitlFileName)
+								&& !originTitlFileName.equals(sysFileName)) {
+							// 删除原上传的图片;
 							String imageTitleDirSQL = "SELECT TZ_ATT_P_URL FROM PS_TZ_ART_TITIMG_T WHERE TZ_ATTACHSYSFILENA=?";
-							String imageTitleDir = jdbcTemplate.queryForObject(imageTitleDirSQL, new Object[]{originTitlFileName},"String");
-							if(imageTitleDir != null && !"".equals(imageTitleDir.trim()) && originTitlFileName != null && !"".equals(originTitlFileName.trim())){
-								if((imageTitleDir.lastIndexOf(File.separator) + 1) != imageTitleDir.length()){
+							String imageTitleDir = jdbcTemplate.queryForObject(imageTitleDirSQL,
+									new Object[] { originTitlFileName }, "String");
+							if (imageTitleDir != null && !"".equals(imageTitleDir.trim()) && originTitlFileName != null
+									&& !"".equals(originTitlFileName.trim())) {
+								if ((imageTitleDir.lastIndexOf(File.separator) + 1) != imageTitleDir.length()) {
 									imageTitleDir = imageTitleDir + File.separator;
 								}
-								//删除图片;
+								// 删除图片;
 								File file = new File(imageTitleDir + originTitlFileName);
-								if(file.exists() && file.isFile()){
-									  file.delete();  
+								if (file.exists() && file.isFile()) {
+									file.delete();
 								}
-								//删除压缩图片;
+								// 删除压缩图片;
 								file = new File(imageTitleDir + "MINI_" + originTitlFileName);
-								if(file.exists() && file.isFile()){
-									  file.delete();  
+								if (file.exists() && file.isFile()) {
+									file.delete();
 								}
 								file = new File(imageTitleDir + "NEW_" + originTitlFileName);
-								if(file.exists() && file.isFile()){
-									  file.delete();  
+								if (file.exists() && file.isFile()) {
+									file.delete();
 								}
 							}
 							psTzArtTitimgTMapper.deleteByPrimaryKey(originTitlFileName);
@@ -895,7 +911,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String publishClick = (String) dataMap.get("publishClick");
 						// 是否点击了置顶;
 						String upArtClick = (String) dataMap.get("upArtClick");
-						
+
 						// 内容表;
 						PsTzArtRecTblWithBLOBs PsTzArtRecTbl = new PsTzArtRecTblWithBLOBs();
 						PsTzArtRecTbl.setTzArtId(artId);
@@ -935,30 +951,30 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzFbz(artFbz);
 						psTzLmNrGlT.setTzBltDept(artFbBm);
 						psTzLmNrGlT.setTzArtNewsDt(fbdt);
-						
+
 						if ("Y".equals(publishClick)) {
 							psTzLmNrGlT.setTzArtPubState(publishStatus);
 							// 如果发布，且发布时间未填写则当前时间为发布时间;
 							if ("Y".equals(publishStatus)) {
 								this.ins_isPublish = "Y";
-								if(fbdt == null){
+								if (fbdt == null) {
 									fbdt = new Date();
 									psTzLmNrGlT.setTzArtNewsDt(fbdt);
 								}
-							}else{
+							} else {
 								this.ins_isPublish = "N";
 							}
-						}else{
+						} else {
 							this.ins_isPublish = "";
 						}
 						// 置顶
 						int maxSEQ = 0;
 						if ("Y".equals(upArtClick)) {
 							String maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
-							try{
+							try {
 								maxSEQ = jdbcTemplate.queryForObject(maxSQL, new Object[] { siteId, coluId, artId },
 										"Integer");
-							}catch(Exception e){
+							} catch (Exception e) {
 								e.printStackTrace();
 								maxSEQ = 0;
 							}
@@ -967,20 +983,20 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 						psTzLmNrGlT.setTzLastmantDttm(new Date());
 						psTzLmNrGlT.setTzLastmantOprid(oprid);
-						//null未设置的不更新;
+						// null未设置的不更新;
 						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlT);
-						
-						//如果发布时间未空，则更新;
-						if(fbdt == null){
+
+						// 如果发布时间未空，则更新;
+						if (fbdt == null) {
 							String updateFbDtSQL = "update PS_TZ_LM_NR_GL_T set TZ_ART_NEWS_DT=null where TZ_ART_ID=? ";
-							jdbcTemplate.update(updateFbDtSQL,new Object[]{artId});
+							jdbcTemplate.update(updateFbDtSQL, new Object[] { artId });
 						}
-						
-						//删除限定的项目;
-						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?",new Object[]{artId});
+
+						// 删除限定的项目;
+						jdbcTemplate.update("delete from PS_TZ_ART_PRJ_T where TZ_ART_ID=?", new Object[] { artId });
 						if (projects != null && projects.size() > 0) {
 							for (int k = 0; k < projects.size(); k++) {
-								String prjId = (String)projects.get(k);
+								String prjId = (String) projects.get(k);
 								PsTzArtPrjTKey psTzArtPrjTKey = new PsTzArtPrjTKey();
 								psTzArtPrjTKey.setTzArtId(artId);
 								psTzArtPrjTKey.setTzPrjId(prjId);
@@ -998,98 +1014,101 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				if ("ARTTPJ".equals(typeFlag)) {
 					int tpjNum = 0;
 					ArrayList<String> tpjList = new ArrayList<>();
-					if(jacksonUtil.containsKey("data0")){
+					if (jacksonUtil.containsKey("data0")) {
 						String deleteAll = jacksonUtil.getString("data0");
-						if("deleteAll".equals(deleteAll)){
+						if ("deleteAll".equals(deleteAll)) {
 							tpjList.add("");
 						}
-					}else{ 
+					} else {
 						boolean BOOL = true;
-						while (BOOL){
-							try{
+						while (BOOL) {
+							try {
 								tpjNum++;
-								String infoData ="data" + tpjNum;
+								String infoData = "data" + tpjNum;
 								Map<String, Object> dataMap = jacksonUtil.getMap(infoData);
-								if(dataMap == null){
+								if (dataMap == null) {
 									BOOL = false;
-								}else{
-									//系统文件名;
-							        String sysFileName = (String) dataMap.get("sysFileName");
-							        //序号;
-							        int index = (int) dataMap.get("index");
-							        // 路径;
-							        //String src = (String) dataMap.get("src");
-							        // 描述;
-							        String caption = (String) dataMap.get("caption");
-							        // 跳转URL;
-							        String picURL = (String) dataMap.get("picURL");
-							        
-							        PsTzArtPicT psTzArtPicT = new PsTzArtPicT();
-						        	psTzArtPicT.setTzArtId(this.instanceArtId);
-						        	psTzArtPicT.setTzAttachsysfilena(sysFileName);
-						        	psTzArtPicT.setTzPriority(index);
-						        	psTzArtPicT.setTzImgDescr(caption);
-						        	psTzArtPicT.setTzImgTrsUrl(picURL);
-							        
-							        String isExistImgSQL = "SELECT COUNT(1) FROM PS_TZ_ART_PIC_T where TZ_ART_ID=? and TZ_ATTACHSYSFILENA=?";
-							        int isExistImgCount = jdbcTemplate.queryForObject(isExistImgSQL, new Object[]{this.instanceArtId,sysFileName},"Integer");
-							        int insertOrUpdateSuccess = 0;
-							        if(isExistImgCount > 0){
-							        	insertOrUpdateSuccess = psTzArtPicTMapper.updateByPrimaryKeyWithBLOBs(psTzArtPicT);
-							        }else{
-							        	insertOrUpdateSuccess = psTzArtPicTMapper.insert(psTzArtPicT);
-							        }
-							        
-							        if(insertOrUpdateSuccess > 0){
-							        	tpjList.add(sysFileName);
-							        }
-							        
+								} else {
+									// 系统文件名;
+									String sysFileName = (String) dataMap.get("sysFileName");
+									// 序号;
+									int index = (int) dataMap.get("index");
+									// 路径;
+									// String src = (String) dataMap.get("src");
+									// 描述;
+									String caption = (String) dataMap.get("caption");
+									// 跳转URL;
+									String picURL = (String) dataMap.get("picURL");
+
+									PsTzArtPicT psTzArtPicT = new PsTzArtPicT();
+									psTzArtPicT.setTzArtId(this.instanceArtId);
+									psTzArtPicT.setTzAttachsysfilena(sysFileName);
+									psTzArtPicT.setTzPriority(index);
+									psTzArtPicT.setTzImgDescr(caption);
+									psTzArtPicT.setTzImgTrsUrl(picURL);
+
+									String isExistImgSQL = "SELECT COUNT(1) FROM PS_TZ_ART_PIC_T where TZ_ART_ID=? and TZ_ATTACHSYSFILENA=?";
+									int isExistImgCount = jdbcTemplate.queryForObject(isExistImgSQL,
+											new Object[] { this.instanceArtId, sysFileName }, "Integer");
+									int insertOrUpdateSuccess = 0;
+									if (isExistImgCount > 0) {
+										insertOrUpdateSuccess = psTzArtPicTMapper
+												.updateByPrimaryKeyWithBLOBs(psTzArtPicT);
+									} else {
+										insertOrUpdateSuccess = psTzArtPicTMapper.insert(psTzArtPicT);
+									}
+
+									if (insertOrUpdateSuccess > 0) {
+										tpjList.add(sysFileName);
+									}
+
 								}
-							}catch(Exception e){
+							} catch (Exception e) {
 								BOOL = false;
 							}
 						}
 					}
-					
-					if(tpjList != null && tpjList.size()>0){
-						//删除图片;
+
+					if (tpjList != null && tpjList.size() > 0) {
+						// 删除图片;
 						String tpjSQL = "SELECT a.TZ_ATTACHSYSFILENA from PS_TZ_ART_PIC_T a, PS_TZ_ART_TPJ_T b where a.TZ_ART_ID=? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
-						List<Map<String, Object>> tpjAllList = jdbcTemplate.queryForList(tpjSQL,new Object[]{this.instanceArtId});
-						if(tpjAllList != null && tpjAllList.size()>0){
-							for(int i = 0;i <tpjAllList.size();i++ ){
+						List<Map<String, Object>> tpjAllList = jdbcTemplate.queryForList(tpjSQL,
+								new Object[] { this.instanceArtId });
+						if (tpjAllList != null && tpjAllList.size() > 0) {
+							for (int i = 0; i < tpjAllList.size(); i++) {
 								String sysFname = (String) tpjAllList.get(i).get("TZ_ATTACHSYSFILENA");
-								if(!tpjList.contains(sysFname)){
-									
+								if (!tpjList.contains(sysFname)) {
+
 									PsTzArtPicTKey psTzArtPicTKey = new PsTzArtPicTKey();
 									psTzArtPicTKey.setTzArtId(this.instanceArtId);
 									psTzArtPicTKey.setTzAttachsysfilena(sysFname);
 									psTzArtPicTMapper.deleteByPrimaryKey(psTzArtPicTKey);
-									
-									//删除图片集;
+
+									// 删除图片集;
 									PsTzArtTpjT psTzArtTpjT = psTzArtTpjTMapper.selectByPrimaryKey(sysFname);
-									if(psTzArtTpjT != null){
+									if (psTzArtTpjT != null) {
 										String imageDir = psTzArtTpjT.getTzAttPUrl();
-										if((imageDir.lastIndexOf(File.separator) + 1) != imageDir.length()){
+										if ((imageDir.lastIndexOf(File.separator) + 1) != imageDir.length()) {
 											imageDir = imageDir + File.separator;
 										}
-										//删除图片;
+										// 删除图片;
 										File file = new File(imageDir + sysFname);
-										if(file.exists() && file.isFile()){
-											  file.delete();  
+										if (file.exists() && file.isFile()) {
+											file.delete();
 										}
-										//删除压缩图片;
+										// 删除压缩图片;
 										file = new File(imageDir + "MINI_" + sysFname);
-										if(file.exists() && file.isFile()){
-											  file.delete();  
+										if (file.exists() && file.isFile()) {
+											file.delete();
 										}
 										file = new File(imageDir + "NEW_" + sysFname);
-										if(file.exists() && file.isFile()){
-											  file.delete();  
+										if (file.exists() && file.isFile()) {
+											file.delete();
 										}
-										
+
 										psTzArtTpjTMapper.deleteByPrimaryKey(sysFname);
 									}
-									
+
 								}
 							}
 						}
@@ -1112,34 +1131,37 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 
 			}
-			
+
 			// 发布的站点;
 			siteId = this.instanceSiteId;
 			// 发布的栏目
 			coluId = this.instanceColuId;
 			// 发布的内容id;
 			artId = this.instanceArtId;
-			
-			/*获取站点类型*/
+
+			/* 获取站点类型 */
 			String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-			strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType,  new Object[] { this.instanceSiteId }, "String");
-			//获取静态路径地址
+			strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType, new Object[] { this.instanceSiteId }, "String");
+			// 获取静态路径地址
 			String strBasePath = "";
 			String getBasePathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_LEVEL = '0' LIMIT 1";
-			strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[]{this.instanceSiteId},"String");
+			strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[] { this.instanceSiteId }, "String");
 			String strColuPath = "";
 			String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
-			strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[]{this.instanceSiteId,this.instanceColuId},"String");
+			strColuPath = jdbcTemplate.queryForObject(getColuPathSql,
+					new Object[] { this.instanceSiteId, this.instanceColuId }, "String");
 			String getAutoStaticNameSql = "SELECT TZ_STATIC_AOTO_NAME FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID = ? LIMIT 1";
-			strAutoStaticName =  jdbcTemplate.queryForObject(getAutoStaticNameSql, new Object[]{this.instanceSiteId,this.instanceColuId,this.instanceArtId},"String");
+			strAutoStaticName = jdbcTemplate.queryForObject(getAutoStaticNameSql,
+					new Object[] { this.instanceSiteId, this.instanceColuId, this.instanceArtId }, "String");
 			String getOriginStaticNameSql = "SELECT TZ_STATIC_NAME FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID = ? LIMIT 1";
-			String strOriginStaticName =  jdbcTemplate.queryForObject(getOriginStaticNameSql, new Object[]{this.instanceSiteId,this.instanceColuId,this.instanceArtId},"String");
-			
+			String strOriginStaticName = jdbcTemplate.queryForObject(getOriginStaticNameSql,
+					new Object[] { this.instanceSiteId, this.instanceColuId, this.instanceArtId }, "String");
+
 			String strFileName = "";
 			String strFilePath = "";
 			String strFilePathAccess = "";
-			
-			if(strBasePath != null && !"".equals(strBasePath)){
+
+			if (strBasePath != null && !"".equals(strBasePath)) {
 				if (!strBasePath.startsWith("/")) {
 					strBasePath = "/" + strBasePath;
 				}
@@ -1147,8 +1169,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
 				}
 			}
-			
-			if(strColuPath != null && !"".equals(strColuPath)){
+
+			if (strColuPath != null && !"".equals(strColuPath)) {
 				if (!strColuPath.startsWith("/")) {
 					strColuPath = "/" + strColuPath;
 				}
@@ -1156,83 +1178,89 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
 				}
 			}
-			
+
 			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 			dir = request.getServletContext().getRealPath(dir);
 			strFilePath = dir + strBasePath + strColuPath;
 			strFilePathAccess = strBasePath + strColuPath;
-			
-			
-			String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
+
+			String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
 			String classIdSQL = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
-			String viewUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{"TZ_ART_VIEW_COM", "TZ_ART_PREVIEW_STD"},"String");
-			String viewUrl = rootparth + "/dispatcher?classid="+viewUrlClassId+"&operatetype=HTML&siteId="+this.instanceSiteId+"&columnId="+this.instanceColuId+"&artId="+this.instanceArtId+"&oprate=R";
-			String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL, new Object[]{ "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD"},"String");
-			String publishUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+this.instanceSiteId+"&columnId="+this.instanceColuId+"&artId="+this.instanceArtId;
-			//解析的模板内容;
+			String viewUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+					new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_PREVIEW_STD" }, "String");
+			String viewUrl = rootparth + "/dispatcher?classid=" + viewUrlClassId + "&operatetype=HTML&siteId="
+					+ this.instanceSiteId + "&columnId=" + this.instanceColuId + "&artId=" + this.instanceArtId
+					+ "&oprate=R";
+			String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+					new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD" }, "String");
+			String publishUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+					+ this.instanceSiteId + "&columnId=" + this.instanceColuId + "&artId=" + this.instanceArtId;
+			// 解析的模板内容;
 			System.out.println(siteId + "--" + coluId + "--" + artId);
 			String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
-			
-			//contentHtml = "测试文章静态11";
-			
+
+			// contentHtml = "测试文章静态11";
+
 			PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 			psTzLmNrGlTWithBLOBs.setTzSiteId(this.instanceSiteId);
 			psTzLmNrGlTWithBLOBs.setTzColuId(this.instanceColuId);
 			psTzLmNrGlTWithBLOBs.setTzArtId(this.instanceArtId);
 			psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
-			if("Y".equals(this.ins_isPublish)){
+			if ("Y".equals(this.ins_isPublish)) {
 				psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
-				
-				//如果是外网站点，则静态话
-				if("A".equals(strSiteType) || "B".equals(strSiteType)){
-					//静态化
-					if(ins_staticName!=null && !"".equals(ins_staticName)){
+
+				// 如果是外网站点，则静态话
+				if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+					// 静态化
+					if (ins_staticName != null && !"".equals(ins_staticName)) {
 						strFileName = ins_staticName + ".html";
-						if(!strOriginStaticName.equals(ins_staticName)){
-							if(strOriginStaticName!=null && !"".equals(strOriginStaticName)){
+						if (!strOriginStaticName.equals(ins_staticName)) {
+							if (strOriginStaticName != null && !"".equals(strOriginStaticName)) {
 								fileManageServiceImpl.DeleteFile(strFilePath, strOriginStaticName + ".html");
 							}
 						}
-						if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
+						if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 							fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
 						}
-					}else{
-						
-						if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
-						}else{
-							strAutoStaticName = String.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+					} else {
+
+						if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+						} else {
+							strAutoStaticName = String
+									.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
 							psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 						}
 						strFileName = strAutoStaticName + ".html";
 					}
-					
-					publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+					// 修改 bu caoy 地址没有加系统变量
+					publishUrl = strFilePathAccess + "/" + strFileName;
 					psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-					
-					System.out.println("路劲"+strFilePath);
-					boolean b = artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
+
+					System.out.println("路劲" + strFilePath);
+					boolean b = artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
 					artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-				}else{
+				} else {
 					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 				}
-			}else{
-				if("N".equals(this.ins_isPublish)){
+			} else {
+				if ("N".equals(this.ins_isPublish)) {
 					psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
-					if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
-						
+					if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+
 						fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
 					}
-					if(strOriginStaticName!=null && !"".equals(strOriginStaticName)){
-						
+					if (strOriginStaticName != null && !"".equals(strOriginStaticName)) {
+
 						fileManageServiceImpl.DeleteFile(strFilePath, strOriginStaticName + ".html");
 					}
 					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 					artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-				}else{
+				} else {
 					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 				}
@@ -1241,7 +1269,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			returnJsonMap.replace("siteId", this.instanceSiteId);
 			returnJsonMap.replace("publishUrl", publishUrl);
 			returnJsonMap.replace("viewUrl", viewUrl);
-			//System.out.println("执行update方法");
+			// System.out.println("执行update方法");
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
@@ -1268,32 +1296,34 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
 						String accessPath = (String) dataMap.get("accessPath");
-						//根据相对路径得到物理路径;
+						// 根据相对路径得到物理路径;
 						String path = request.getServletContext().getRealPath(accessPath);
 						String sysFileName1 = (String) dataMap.get("sysFileName");
-						
-						/*压缩图片 */
+
+						/* 压缩图片 */
 						String separator = File.separator;
-						
+
 						String flg = "";
-						if((path.lastIndexOf(separator) + 1) == path.length()){
-							flg = resizeImageUtil.resize(path + sysFileName1, path,  "MINI_" + sysFileName1, 100);
-						}else{
-							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "MINI_" + sysFileName1, 100);
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName1, path, "MINI_" + sysFileName1, 100);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "MINI_" + sysFileName1,
+									100);
 						}
-						if("Y".equals(flg)){
-							minSysFile = "MINI_" + sysFileName1 ;
-						}else{
+						if ("Y".equals(flg)) {
+							minSysFile = "MINI_" + sysFileName1;
+						} else {
 							minSysFile = sysFileName1;
 						}
-						if((path.lastIndexOf(separator) + 1) == path.length()){
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
 							flg = resizeImageUtil.resize(path + sysFileName1, path, "NEW_" + sysFileName1, 1000);
-						}else{
-							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "NEW_" + sysFileName1, 1000);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "NEW_" + sysFileName1,
+									1000);
 						}
-						if("Y".equals(flg)){
-							newSysFile = "NEW_" + sysFileName1 ;
-						}else{
+						if ("Y".equals(flg)) {
+							newSysFile = "NEW_" + sysFileName1;
+						} else {
 							newSysFile = sysFileName1;
 						}
 
@@ -1313,7 +1343,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
 						String accessPath = (String) dataMap.get("accessPath");
-						//根据相对路径得到物理路径;
+						// 根据相对路径得到物理路径;
 						String path = request.getServletContext().getRealPath(accessPath);
 						PsTzArtFjjT psTzArtFjjT = new PsTzArtFjjT();
 						psTzArtFjjT.setTzAttachsysfilena((String) dataMap.get("sysFileName"));
@@ -1325,36 +1355,38 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 
 				if ("TPJ".equals(attachmentType)) {
-					//int order = jacksonUtil.getInt("order");
+					// int order = jacksonUtil.getInt("order");
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					if (dataMap != null) {
 						String accessPath = (String) dataMap.get("accessPath");
-						//根据相对路径得到物理路径;
+						// 根据相对路径得到物理路径;
 						String path = request.getServletContext().getRealPath(accessPath);
 						String sysFileName = (String) dataMap.get("sysFileName");
 
-						/*压缩图片 */
+						/* 压缩图片 */
 						String separator = File.separator;
 						String flg = "";
-						if((path.lastIndexOf(separator) + 1) == path.length()){
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
 							flg = resizeImageUtil.resize(path + sysFileName, path, "MINI_" + sysFileName, 100);
-						}else{
-							flg = resizeImageUtil.resize(path + separator + sysFileName, path, "MINI_" + sysFileName, 100);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName, path, "MINI_" + sysFileName,
+									100);
 						}
-						if("Y".equals(flg)){
-							minSysFile = "MINI_" + sysFileName ;
-						}else{
+						if ("Y".equals(flg)) {
+							minSysFile = "MINI_" + sysFileName;
+						} else {
 							minSysFile = sysFileName;
 						}
-						
-						if((path.lastIndexOf(separator) + 1) == path.length()){
-							flg = resizeImageUtil.resize(path + sysFileName, path,  "NEW_" + sysFileName, 1000);
-						}else{
-							flg = resizeImageUtil.resize(path + separator + sysFileName, path,  "NEW_" + sysFileName, 1000);
+
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName, path, "NEW_" + sysFileName, 1000);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName, path, "NEW_" + sysFileName,
+									1000);
 						}
-						if("Y".equals(flg)){
-							newSysFile = "NEW_" + sysFileName ;
-						}else{
+						if ("Y".equals(flg)) {
+							newSysFile = "NEW_" + sysFileName;
+						} else {
 							newSysFile = sysFileName;
 						}
 
@@ -1401,62 +1433,62 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-			if(jacksonUtil.containsKey("artId") && jacksonUtil.containsKey("gridTyp")){
+			if (jacksonUtil.containsKey("artId") && jacksonUtil.containsKey("gridTyp")) {
 				String artId = jacksonUtil.getString("artId");
 				String gridTyp = jacksonUtil.getString("gridTyp");
 				String path = request.getContextPath();
 				int total = 0;
-				//附件集
-				if("FJ".equals(gridTyp)){
+				// 附件集
+				if ("FJ".equals(gridTyp)) {
 					String fjjSQL = "select a.TZ_ATTACHSYSFILENA,b.TZ_ATTACHFILE_NAME,b.TZ_ATT_A_URL from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID = ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
-					List<Map<String, Object>> list = jdbcTemplate.queryForList(fjjSQL,new Object[]{artId});
-					if(list != null){
-						for(int i = 0; i<list.size();i++){
+					List<Map<String, Object>> list = jdbcTemplate.queryForList(fjjSQL, new Object[] { artId });
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
 							total = total + 1;
 							Map<String, Object> fjmapList = new HashMap<String, Object>();
 							String sysName = (String) list.get(i).get("TZ_ATTACHSYSFILENA");
 							String name = (String) list.get(i).get("TZ_ATTACHFILE_NAME");
 							String url = (String) list.get(i).get("TZ_ATT_A_URL");
-							if((url.lastIndexOf("/")+1) != url.length()){
+							if ((url.lastIndexOf("/") + 1) != url.length()) {
 								url = url + "/";
 							}
 							String attachmentName = name + "|" + path + url + sysName;
-							String attachmentUrl =  url + sysName;
-							fjmapList.put("attachmentID",sysName );
+							String attachmentUrl = url + sysName;
+							fjmapList.put("attachmentID", sysName);
 							fjmapList.put("attachmentName", attachmentName);
 							fjmapList.put("attachmentUrl", attachmentUrl);
-							
+
 							listData.add(fjmapList);
 						}
 						mapRet.replace("total", total);
 						mapRet.replace("root", listData);
 					}
-					
+
 				}
-				
-				//图片集
-				if("TPJ".equals(gridTyp)){
+
+				// 图片集
+				if ("TPJ".equals(gridTyp)) {
 					String tpqSQL = "SELECT a.TZ_ATTACHSYSFILENA,a.TZ_PRIORITY,b.TZ_ATT_A_URL,a.TZ_IMG_DESCR,a.TZ_IMG_TRS_URL,b.TZ_SL_ATTACHSYSNAM from PS_TZ_ART_PIC_T a,PS_TZ_ART_TPJ_T b where a.TZ_ART_ID=? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA order by a.TZ_PRIORITY ASC";
-					List<Map<String, Object>> list = jdbcTemplate.queryForList(tpqSQL,new Object[]{artId});
-					if(list != null){
-						for(int i = 0; i<list.size();i++){
+					List<Map<String, Object>> list = jdbcTemplate.queryForList(tpqSQL, new Object[] { artId });
+					if (list != null) {
+						for (int i = 0; i < list.size(); i++) {
 							total = total + 1;
 							String url = (String) list.get(i).get("TZ_ATT_A_URL");
-							if((url.lastIndexOf("/")+1) != url.length()){
+							if ((url.lastIndexOf("/") + 1) != url.length()) {
 								url = url + "/";
 							}
-							
+
 							Map<String, Object> tpjmapList = new HashMap<String, Object>();
-							tpjmapList.put("sysFileName",(String) list.get(i).get("TZ_ATTACHSYSFILENA") );
-							tpjmapList.put("index",(long) list.get(i).get("TZ_PRIORITY") );
-							tpjmapList.put("src",url+ (String) list.get(i).get("TZ_ATTACHSYSFILENA"));
-							tpjmapList.put("caption",(String) list.get(i).get("TZ_IMG_DESCR") );
-							tpjmapList.put("picURL",(String) list.get(i).get("TZ_IMG_TRS_URL"));
-							tpjmapList.put("sltUrl",path + url+ (String) list.get(i).get("TZ_SL_ATTACHSYSNAM"));
-							
+							tpjmapList.put("sysFileName", (String) list.get(i).get("TZ_ATTACHSYSFILENA"));
+							tpjmapList.put("index", (long) list.get(i).get("TZ_PRIORITY"));
+							tpjmapList.put("src", url + (String) list.get(i).get("TZ_ATTACHSYSFILENA"));
+							tpjmapList.put("caption", (String) list.get(i).get("TZ_IMG_DESCR"));
+							tpjmapList.put("picURL", (String) list.get(i).get("TZ_IMG_TRS_URL"));
+							tpjmapList.put("sltUrl", path + url + (String) list.get(i).get("TZ_SL_ATTACHSYSNAM"));
+
 							listData.add(tpjmapList);
 						}
-						
+
 						mapRet.replace("total", total);
 						mapRet.replace("root", listData);
 					}
@@ -1469,7 +1501,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 		return jacksonUtil.Map2json(mapRet);
 	}
-	
+
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -1486,37 +1518,37 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				// 提交信息
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
-				
+
 				String typeFlag = jacksonUtil.getString("typeFlag");
 				String artId = jacksonUtil.getString("artId");
 				Map<String, Object> data = jacksonUtil.getMap("data");
-				if("ARTATTACHINFO".equals(typeFlag) && !"".equals(artId) && data != null ){
-					//附件系统文件名;
+				if ("ARTATTACHINFO".equals(typeFlag) && !"".equals(artId) && data != null) {
+					// 附件系统文件名;
 					String attachmentID = (String) data.get("attachmentID");
-					if(attachmentID != null && !"".equals(attachmentID)){
+					if (attachmentID != null && !"".equals(attachmentID)) {
 						PsTzArtFileTKey psTzArtFileTKey = new PsTzArtFileTKey();
 						psTzArtFileTKey.setTzArtId(artId);
 						psTzArtFileTKey.setTzAttachsysfilena(attachmentID);
 						psTzArtFileTMapper.deleteByPrimaryKey(psTzArtFileTKey);
-						
-						//删除附件;
+
+						// 删除附件;
 						PsTzArtFjjT psTzArtFjjT = psTzArtFjjTMapper.selectByPrimaryKey(attachmentID);
-						if(psTzArtFjjT != null){
+						if (psTzArtFjjT != null) {
 							String fjDir = psTzArtFjjT.getTzAttPUrl();
-							if((fjDir.lastIndexOf(File.separator) + 1) != fjDir.length()){
+							if ((fjDir.lastIndexOf(File.separator) + 1) != fjDir.length()) {
 								fjDir = fjDir + File.separator;
 							}
-							//删除附件;
+							// 删除附件;
 							File file = new File(fjDir + attachmentID);
-							if(file.exists() && file.isFile()){
-								  file.delete();  
+							if (file.exists() && file.isFile()) {
+								file.delete();
 							}
-							
+
 							psTzArtFjjTMapper.deleteByPrimaryKey(attachmentID);
 						}
 					}
 				}
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

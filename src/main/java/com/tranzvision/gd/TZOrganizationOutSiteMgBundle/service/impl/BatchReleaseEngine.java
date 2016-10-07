@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cms.CmsBean;
 import com.tranzvision.gd.util.cms.CmsUtils;
 
@@ -25,14 +23,17 @@ public class BatchReleaseEngine extends Thread {
 	private String rootparth;
 	private String contentPath;
 
+	private String dir;
+
 	public BatchReleaseEngine(String batchType, String objectId, String opr, String id, String rootparth,
-			String contentPath) {
+			String contentPath, String dir) {
 		this.batchType = batchType;
 		this.objectId = objectId;
 		this.opr = opr;
 		this.id = id;
 		this.rootparth = rootparth;
 		this.contentPath = contentPath;
+		this.dir = dir;
 	}
 
 	public void run() {
@@ -62,21 +63,33 @@ public class BatchReleaseEngine extends Thread {
 			sb.append("','C') ");
 			System.out.println(sb.toString());
 			jdbcTemplate.update(sb.toString());
-
+			boolean flag = false;
 			// A:按站点发布 B:按栏目发布
 			if (batchType.equals("A")) {
-				this.releaseSite(objectId);
+				flag = this.releaseSite(objectId);
 			} else if (batchType.equals("B")) {
-				this.releaseColu(objectId);
+				flag = this.releaseColu(objectId);
 			}
-			sb = new StringBuffer();
-			sb.append("UPDATE PS_TZ_BATCH_RELEASE_T ");
-			sb.append("SET END_DTTM = now(),TZ_BATCH_RELEASE_STATE='Y' ");
-			sb.append("WHERE TZ_BATCH_RELEASE_ID='");
-			sb.append(this.id);
-			sb.append("'");
-			System.out.println(sb.toString());
-			jdbcTemplate.update(sb.toString());
+
+			if (flag) {
+				sb = new StringBuffer();
+				sb.append("UPDATE PS_TZ_BATCH_RELEASE_T ");
+				sb.append("SET END_DTTM = now(),TZ_BATCH_RELEASE_STATE='Y' ");
+				sb.append("WHERE TZ_BATCH_RELEASE_ID='");
+				sb.append(this.id);
+				sb.append("'");
+				System.out.println(sb.toString());
+				jdbcTemplate.update(sb.toString());
+			} else {
+				sb = new StringBuffer();
+				sb.append("UPDATE PS_TZ_BATCH_RELEASE_T ");
+				sb.append("SET END_DTTM = now(),TZ_BATCH_RELEASE_STATE='N' ");
+				sb.append("WHERE TZ_BATCH_RELEASE_ID='");
+				sb.append(this.id);
+				sb.append("'");
+				System.out.println(sb.toString());
+				jdbcTemplate.update(sb.toString());
+			}
 			System.out.println("End Thread");
 
 		} catch (Exception e) {
@@ -110,7 +123,7 @@ public class BatchReleaseEngine extends Thread {
 			// 首先发布 所有栏目下面的文章
 			sql = new StringBuffer("select TZ_COLU_ID,TZ_ART_ID");
 			sql.append(" from PS_TZ_LM_NR_GL_T");
-			sql.append(" where TZ_SITEI_ID=? AND TZ_ART_PUB_STATE='Y'");
+			sql.append(" where TZ_SITE_ID=? AND TZ_ART_PUB_STATE='Y'");
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql.toString(), new Object[] { siteId });
 
 			if (list != null) {
@@ -120,8 +133,12 @@ public class BatchReleaseEngine extends Thread {
 				Map<String, Object> mapNode = null;
 				for (Object objNode : list) {
 					mapNode = (Map<String, Object>) objNode;
-					this.content(siteId, strBasePath, mapNode.get("TZ_COLU_ID").toString(),
+					rs = this.content(siteId, strBasePath, mapNode.get("TZ_COLU_ID").toString(),
 							mapNode.get("TZ_ART_ID").toString());
+					System.out.println("CREATE Content:" + mapNode.get("TZ_ART_ID").toString() + ",result:" + rs);
+					if (!rs) {
+						return rs;
+					}
 				}
 			}
 
@@ -129,13 +146,18 @@ public class BatchReleaseEngine extends Thread {
 				Map<String, Object> mapNode = null;
 				for (Object objNode : menu) {
 					mapNode = (Map<String, Object>) objNode;
-					this.menu(mapNode.get("TZ_MENU_ID").toString(), mapNode.get("TZ_MENU_TYPE").toString(), siteId,
+					rs = this.menu(mapNode.get("TZ_MENU_ID").toString(), mapNode.get("TZ_MENU_TYPE").toString(), siteId,
 							menu);
+					System.out.println("CREATE Menu:" + mapNode.get("TZ_MENU_ID").toString() + ",result:" + rs);
+					if (!rs) {
+						return rs;
+					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			rs = false;
 		}
 		return rs;
 	}
@@ -151,16 +173,16 @@ public class BatchReleaseEngine extends Thread {
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-			
+			// System.out.println("ColuId:" + ColuId);
 			String sql = "SELECT TZ_SITEI_ID,TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID = ?  LIMIT 1";
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { ColuId }, String.class);
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { ColuId });
 			String siteId = map.get("TZ_SITEI_ID").toString();
 			String strColuPath = map.get("TZ_COLU_PATH").toString();
 
 			StringBuffer sb = new StringBuffer("select TZ_ART_ID");
 			sb.append(" from PS_TZ_LM_NR_GL_T");
-			sb.append(" where TZ_COLU_ID=? AND TZ_SITEI_ID=? AND TZ_ART_PUB_STATE='Y'");
-			List<Map<String, Object>> colu = jdbcTemplate.queryForList(sb.toString(), new Object[] { siteId });
+			sb.append(" where TZ_COLU_ID=? AND TZ_SITE_ID=? AND TZ_ART_PUB_STATE='Y'");
+			List<Map<String, Object>> colu = jdbcTemplate.queryForList(sb.toString(), new Object[] { ColuId, siteId });
 
 			if (colu != null) {
 				// 获取静态路径地址
@@ -169,7 +191,11 @@ public class BatchReleaseEngine extends Thread {
 				Map<String, Object> mapNode = null;
 				for (Object objNode : colu) {
 					mapNode = (Map<String, Object>) objNode;
-					this.content(siteId, strBasePath, strColuPath, ColuId, mapNode.get("TZ_ART_ID").toString());
+					rs = this.content(siteId, strBasePath, strColuPath, ColuId, mapNode.get("TZ_ART_ID").toString());
+					System.out.println("CREATE Content:" + mapNode.get("TZ_ART_ID").toString() + ",result:" + rs);
+					if (!rs) {
+						return rs;
+					}
 				}
 			}
 
@@ -196,13 +222,18 @@ public class BatchReleaseEngine extends Thread {
 				Map<String, Object> mapNode = null;
 				for (Object objNode : thisMenu) {
 					mapNode = (Map<String, Object>) objNode;
-					this.menu(mapNode.get("TZ_MENU_ID").toString(), mapNode.get("TZ_MENU_TYPE").toString(), siteId,
+					rs = this.menu(mapNode.get("TZ_MENU_ID").toString(), mapNode.get("TZ_MENU_TYPE").toString(), siteId,
 							menu);
+					System.out.println("CREATE Menu:" + mapNode.get("TZ_MENU_ID").toString() + ",result:" + rs);
+					if (!rs) {
+						return rs;
+					}
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 		return rs;
 	}
@@ -235,9 +266,10 @@ public class BatchReleaseEngine extends Thread {
 				String strFilePath = bean.getPath();
 				if (menuHtml != null && !menuHtml.equals("") && strFileName != null && !strFileName.equals("")
 						&& strFilePath != null && !strFilePath.equals("")) {
-					System.out.println("strFileName:" + strFileName);
-					System.out.println("strFilePath:" + strFilePath);
-					GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+					// System.out.println("strFileName:" + strFileName);
+					// System.out.println("strFilePath:" + strFilePath);
+					// GetSpringBeanUtil getSpringBeanUtil = new
+					// GetSpringBeanUtil();
 					// FileManageServiceImpl fileManageServiceImpl =
 					// (FileManageServiceImpl) getSpringBeanUtil
 					// .getAutowiredSpringBean("FileManage");
@@ -245,20 +277,17 @@ public class BatchReleaseEngine extends Thread {
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, menuHtml.getBytes());
 
-					GetSysHardCodeVal getSysHardCodeVal = (GetSysHardCodeVal) getSpringBeanUtil
-							.getAutowiredSpringBean("GetSysHardCodeVal");
-					// 更新文件
-
-					String dir = getSysHardCodeVal.getWebsiteEnrollPath();
-					HttpServletRequest request = (HttpServletRequest) getSpringBeanUtil
-							.getAutowiredSpringBean("Request");
-					dir = request.getServletContext().getRealPath(dir);
-					dir = dir + File.separator + strFilePath;
-					br = this.staticFile(menuHtml, dir, strFileName);
+					String ndir = this.dir + File.separator + strFilePath;
+					br = this.staticFile(menuHtml, ndir, strFileName);
+				} else {
+					return true;
 				}
+			} else {
+				return true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 		return br;
 	}
@@ -283,8 +312,7 @@ public class BatchReleaseEngine extends Thread {
 			strColuPath = jdbcTemplate.queryForObject(sql, new Object[] { siteId, coluId }, String.class);
 
 			sql = "SELECT ifnull(TZ_STATIC_AOTO_NAME,\"\") TZ_STATIC_AOTO_NAME,ifnull(TZ_STATIC_NAME,\"\") TZ_STATIC_NAME FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID = ? LIMIT 1";
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteId, coluId, artId },
-					String.class);
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteId, coluId, artId });
 
 			// 自动命名文章名
 			String strAutoStaticName = map.get("TZ_STATIC_AOTO_NAME").toString();
@@ -313,9 +341,9 @@ public class BatchReleaseEngine extends Thread {
 			strFilePath = strBasePath + strColuPath;
 
 			// 静态化
-			System.out.println("strFilePath:" + strFilePath);
-			System.out.println("strOriginStaticName:" + strOriginStaticName);
-			System.out.println("strAutoStaticName:" + strAutoStaticName);
+			// System.out.println("strFilePath:" + strFilePath);
+			// System.out.println("strOriginStaticName:" + strOriginStaticName);
+			// System.out.println("strAutoStaticName:" + strAutoStaticName);
 
 			if (strOriginStaticName == null || !strOriginStaticName.endsWith("")) {
 				strFileName = strOriginStaticName;
@@ -328,23 +356,18 @@ public class BatchReleaseEngine extends Thread {
 					strFileName = strFileName + ".html";
 				}
 
-				System.out.println("strFileName:" + strFileName);
+				// System.out.println("strFileName:" + strFileName);
 
 				ArtContentHtml artContentHtml = (ArtContentHtml) getSpringBeanUtil.getAutowiredSpringBean("ArtContent");
 				// 解析的模板内容;
-				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
+				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId, contentPath);
 				if (contentHtml != null && !contentHtml.equals("")) {
 					// 更新文件
-					GetSysHardCodeVal getSysHardCodeVal = (GetSysHardCodeVal) getSpringBeanUtil
-							.getAutowiredSpringBean("GetSysHardCodeVal");
+
 					// 更新文件
 
-					String dir = getSysHardCodeVal.getWebsiteEnrollPath();
-					HttpServletRequest request = (HttpServletRequest) getSpringBeanUtil
-							.getAutowiredSpringBean("Request");
-					dir = request.getServletContext().getRealPath(dir);
-					dir = dir + File.separator + strFilePath;
-					br = this.staticFile(contentHtml, dir, strFileName);
+					String ndir = this.dir + File.separator + strFilePath;
+					br = this.staticFile(contentHtml, ndir, strFileName);
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
@@ -359,6 +382,7 @@ public class BatchReleaseEngine extends Thread {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 		return br;
 	}
@@ -380,8 +404,7 @@ public class BatchReleaseEngine extends Thread {
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
 			String sql = "SELECT ifnull(TZ_STATIC_AOTO_NAME,\"\") TZ_STATIC_AOTO_NAME,ifnull(TZ_STATIC_NAME,\"\") TZ_STATIC_NAME FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID = ? AND TZ_COLU_ID = ? AND TZ_ART_ID = ? LIMIT 1";
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteId, coluId, artId },
-					String.class);
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { siteId, coluId, artId });
 
 			// 自动命名文章名
 			String strAutoStaticName = map.get("TZ_STATIC_AOTO_NAME").toString();
@@ -410,9 +433,9 @@ public class BatchReleaseEngine extends Thread {
 			strFilePath = strBasePath + strColuPath;
 
 			// 静态化
-			System.out.println("strFilePath:" + strFilePath);
-			System.out.println("strOriginStaticName:" + strOriginStaticName);
-			System.out.println("strAutoStaticName:" + strAutoStaticName);
+			/// System.out.println("strFilePath:" + strFilePath);
+			// System.out.println("strOriginStaticName:" + strOriginStaticName);
+			// System.out.println("strAutoStaticName:" + strAutoStaticName);
 
 			if (strOriginStaticName == null || !strOriginStaticName.endsWith("")) {
 				strFileName = strOriginStaticName;
@@ -425,22 +448,16 @@ public class BatchReleaseEngine extends Thread {
 					strFileName = strFileName + ".html";
 				}
 
-				System.out.println("strFileName:" + strFileName);
+				// System.out.println("strFileName:" + strFileName);
 
 				ArtContentHtml artContentHtml = (ArtContentHtml) getSpringBeanUtil.getAutowiredSpringBean("ArtContent");
 				// 解析的模板内容;
-				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
+				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId, contentPath);
 				if (contentHtml != null && !contentHtml.equals("")) {
-					GetSysHardCodeVal getSysHardCodeVal = (GetSysHardCodeVal) getSpringBeanUtil
-							.getAutowiredSpringBean("GetSysHardCodeVal");
-					// 更新文件
 
-					String dir = getSysHardCodeVal.getWebsiteEnrollPath();
-					HttpServletRequest request = (HttpServletRequest) getSpringBeanUtil
-							.getAutowiredSpringBean("Request");
-					dir = request.getServletContext().getRealPath(dir);
-					dir = dir + File.separator + strFilePath;
-					br = this.staticFile(contentHtml, dir, strFileName);
+					// 更新文件
+					String ndir = this.dir + File.separator + strFilePath;
+					br = this.staticFile(contentHtml, ndir, strFileName);
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
@@ -455,13 +472,14 @@ public class BatchReleaseEngine extends Thread {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 		return br;
 	}
 
 	private boolean staticFile(String strReleasContent, String dir, String fileName) {
 		try {
-			System.out.println(dir);
+			// System.out.println(dir);
 			File fileDir = new File(dir);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();

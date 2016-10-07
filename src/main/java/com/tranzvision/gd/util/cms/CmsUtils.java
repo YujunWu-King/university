@@ -17,6 +17,7 @@ import com.tranzvision.gd.util.cms.action.directive.ContentDirective;
 import com.tranzvision.gd.util.cms.action.directive.ContentListDirective;
 import com.tranzvision.gd.util.cms.action.directive.MenuDirective;
 import com.tranzvision.gd.util.cms.action.directive.MenuListDirective;
+import com.tranzvision.gd.util.cms.action.directive.MenuListRecallDirective;
 import com.tranzvision.gd.util.cms.action.directive.TextCutDirective;
 import com.tranzvision.gd.util.cms.entity.main.CmsChannel;
 import com.tranzvision.gd.util.cms.entity.main.CmsMenu;
@@ -70,6 +71,8 @@ public class CmsUtils {
 		root.put(CHANNEL, channel);
 		root.put(ART_ID, id);
 		root.put(SITE_ID, siteId);
+		String path = channelMng.getSitePath(siteId);
+		root.put("CONTEXTPATH", path);
 		root.put("TzUniversityContextPath", contentPath);
 
 		String strRandom = String.valueOf(10 * Math.random());
@@ -120,55 +123,65 @@ public class CmsUtils {
 		}
 		System.out.println("menu:" + menu.getName());
 		// 得到模版信息
-		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
-		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
-			String jgId = "";
-			try {
-				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-				String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-				jgId = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, String.class);
-			} catch (Exception e) {
-				jgId = "";
-			}
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("CmsContent", new ContentDirective());
-			root.put("text_cut", new TextCutDirective());
-			root.put("ContentImage", new ArticleImageDirective());
-			root.put("ContentAtts", new ArticleAttachmentDirective());
-			root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
-			root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
-			root.put("CmsMenu", new MenuDirective());
-			root.put("menu", menu);
-			root.put(SITE_ID, siteId);
-			root.put("TzUniversityContextPath", contentPath);
+		if (menu.getTmpId() != null && !menu.getTmpId().equals("")) {
+			CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
+			if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
+				String jgId = "";
+				try {
+					GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+					JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+					String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					jgId = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, String.class);
+				} catch (Exception e) {
+					jgId = "";
+				}
+				Map<String, Object> root = new HashMap<String, Object>();
+				root.put("CmsContent", new ContentDirective());
+				root.put("text_cut", new TextCutDirective());
+				root.put("ContentImage", new ArticleImageDirective());
+				root.put("MenuListRecall", new MenuListRecallDirective());
+				root.put("ContentAtts", new ArticleAttachmentDirective());
+				root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
+				root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
+				root.put("CmsMenu", new MenuDirective());
+				root.put("menu", menu);
+				String path = menuMng.getSitePath(siteId);
+				root.put("CONTEXTPATH", path);
+				root.put(SITE_ID, siteId);
+				root.put("TzUniversityContextPath", contentPath);
 
-			String strRandom = String.valueOf(10 * Math.random());
-			String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
-					+ siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
-					+ "\" rel=\"stylesheet\" type=\"text/css\" />" + "<script type=\"text/javascript\" src=\""
-					+ contentPath + "/statics/js/lib/jquery/jquery.min.js\"></script>"
-					+ "<script type=\"text/javascript\" src=\"" + contentPath
-					+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
-					+ "<script type=\"text/javascript\" src=\"" + contentPath
-					+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
+				//System.out.println("path:" + path);
+				//System.out.println("contentPath:" + contentPath);
 
-			root.put("scriptsAndcss", jsAndCss);
+				String strRandom = String.valueOf(10 * Math.random());
+				String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase()
+						+ "/" + siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
+						+ "\" rel=\"stylesheet\" type=\"text/css\" />" + "<script type=\"text/javascript\" src=\""
+						+ contentPath + "/statics/js/lib/jquery/jquery.min.js\"></script>"
+						+ "<script type=\"text/javascript\" src=\"" + contentPath
+						+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
+						+ "<script type=\"text/javascript\" src=\"" + contentPath
+						+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
 
-			String tplSource = tpl.getPcContent();
-			System.out.println("tplSource:" + tplSource);
-			if (StringUtils.isBlank(tplSource)) {
+				root.put("scriptsAndcss", jsAndCss);
+
+				String tplSource = tpl.getPcContent();
+				// System.out.println("tplSource:" + tplSource);
+				if (StringUtils.isBlank(tplSource)) {
+					return null;
+				}
+				String tplName = tpl.getId();
+				StringWriter out = new StringWriter();
+				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+
+				CmsBean bean = new CmsBean();
+				bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+				return bean;
+			} else {
 				return null;
 			}
-			String tplName = tpl.getId();
-			StringWriter out = new StringWriter();
-			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
-
-			CmsBean bean = new CmsBean();
-			bean.setHtml(out.toString());
-			bean.setPath(menu.getStaticpath());
-			bean.setHtmlName(menu.getPageName());
-			return bean;
 		} else {
 			return null;
 		}
@@ -195,61 +208,67 @@ public class CmsUtils {
 			return null;
 		}
 		// 得到模版信息
-		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
+		if (menu.getTmpId() != null && !menu.getTmpId().equals("")) {
+			CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
 
-		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
-			String jgId = "";
-			try {
-				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-				String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-				jgId = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, String.class);
-			} catch (Exception e) {
-				jgId = "";
-			}
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("CmsContent", new ContentDirective());
-			root.put("text_cut", new TextCutDirective());
-			root.put("ContentImage", new ArticleImageDirective());
-			root.put("ContentAtts", new ArticleAttachmentDirective());
-			root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
-			root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
-			root.put("menu", menu);
-			root.put("CmsMenu", new MenuDirective());
-			root.put(SITE_ID, siteId);
-			root.put("TzUniversityContextPath", contentPath);
+			if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
+				String jgId = "";
+				try {
+					GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+					JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+					String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					jgId = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, String.class);
+				} catch (Exception e) {
+					jgId = "";
+				}
+				Map<String, Object> root = new HashMap<String, Object>();
+				root.put("CmsContent", new ContentDirective());
+				root.put("text_cut", new TextCutDirective());
+				root.put("ContentImage", new ArticleImageDirective());
+				root.put("MenuListRecall", new MenuListRecallDirective());
+				root.put("ContentAtts", new ArticleAttachmentDirective());
+				root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
+				root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
+				root.put("menu", menu);
+				root.put("CmsMenu", new MenuDirective());
+				String path = menuMng.getSitePath(siteId);
+				root.put("CONTEXTPATH", path);
+				root.put(SITE_ID, siteId);
+				root.put("TzUniversityContextPath", contentPath);
 
-			String strRandom = String.valueOf(10 * Math.random());
-			String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
-					+ siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
-					+ "\" rel=\"stylesheet\" type=\"text/css\" />" + "<script type=\"text/javascript\" src=\""
-					+ contentPath + "/statics/js/lib/jquery/jquery.min.js\"></script>"
-					+ "<script type=\"text/javascript\" src=\"" + contentPath
-					+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
-					+ "<script type=\"text/javascript\" src=\"" + contentPath
-					+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
+				String strRandom = String.valueOf(10 * Math.random());
+				String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase()
+						+ "/" + siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
+						+ "\" rel=\"stylesheet\" type=\"text/css\" />" + "<script type=\"text/javascript\" src=\""
+						+ contentPath + "/statics/js/lib/jquery/jquery.min.js\"></script>"
+						+ "<script type=\"text/javascript\" src=\"" + contentPath
+						+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
+						+ "<script type=\"text/javascript\" src=\"" + contentPath
+						+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
 
-			root.put("scriptsAndcss", jsAndCss);
+				root.put("scriptsAndcss", jsAndCss);
 
-			String tplSource = tpl.getPcContent();
+				String tplSource = tpl.getPcContent();
 
-			if (StringUtils.isBlank(tplSource)) {
+				if (StringUtils.isBlank(tplSource)) {
+					return null;
+				}
+				String tplName = tpl.getId();
+				StringWriter out = new StringWriter();
+				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+
+				CmsBean bean = new CmsBean();
+				bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+				return bean;
+
+			} else {
 				return null;
 			}
-			String tplName = tpl.getId();
-			StringWriter out = new StringWriter();
-			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
-
-			CmsBean bean = new CmsBean();
-			bean.setHtml(out.toString());
-			bean.setPath(menu.getStaticpath());
-			bean.setHtmlName(menu.getPageName());
-			return bean;
-
 		} else {
 			return null;
 		}
-
 	}
 
 	/**
@@ -275,29 +294,42 @@ public class CmsUtils {
 			return null;
 		}
 		// 得到模版信息
-		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
-		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("CmsMenuList", new MenuListDirective());
-			root.put("menu", menu);
-			root.put(SITE_ID, siteId);
+		if (menu.getTmpId() != null && !menu.getTmpId().equals("")) {
+			CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
+			if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
+				Map<String, Object> root = new HashMap<String, Object>();
+				root.put("CmsMenuList", new MenuListDirective());
+				root.put("menu", menu);
+				root.put(SITE_ID, siteId);
+				root.put("CmsMenu", new MenuDirective());
 
-			String tplSource = tpl.getPcContent();
-			if (StringUtils.isBlank(tplSource)) {
-				return null;
+				String tplSource = tpl.getPcContent();
+				if (StringUtils.isBlank(tplSource)) {
+					return null;
+				}
+				String tplName = tpl.getId();
+
+				StringWriter out = new StringWriter();
+				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				CmsBean bean = new CmsBean();
+				bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+
+				return bean;
+			} else {
+				CmsBean bean = new CmsBean();
+				//bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+				return bean;
 			}
-			String tplName = tpl.getId();
-
-			StringWriter out = new StringWriter();
-			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+		} else {
 			CmsBean bean = new CmsBean();
-			bean.setHtml(out.toString());
+			//bean.setHtml(out.toString());
 			bean.setPath(menu.getStaticpath());
 			bean.setHtmlName(menu.getPageName());
-
 			return bean;
-		} else {
-			return null;
 		}
 	}
 
@@ -318,31 +350,44 @@ public class CmsUtils {
 		}
 		System.out.println("menuPage:" + menu.getPageName());
 		// 得到模版信息
-		CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
-		System.out.println("tpl:" + tpl);
-		if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("CmsMenuList", new MenuListDirective());
-			root.put("menu", menu);
-			root.put(SITE_ID, siteId);
+		if (menu.getTmpId() != null && !menu.getTmpId().equals("")) {
+			CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
+			//System.out.println("tpl:" + tpl);
+			if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
+				Map<String, Object> root = new HashMap<String, Object>();
+				root.put("CmsMenuList", new MenuListDirective());
+				root.put("menu", menu);
+				root.put(SITE_ID, siteId);
+				root.put("CmsMenu", new MenuDirective());
 
-			String tplSource = tpl.getPcContent();
-			System.out.println("tplSource:" + tplSource);
-			if (StringUtils.isBlank(tplSource)) {
-				return null;
+				String tplSource = tpl.getPcContent();
+				//System.out.println("tplSource:" + tplSource);
+				if (StringUtils.isBlank(tplSource)) {
+					return null;
+				}
+				String tplName = tpl.getId();
+
+				StringWriter out = new StringWriter();
+				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				CmsBean bean = new CmsBean();
+				bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+
+				return bean;
+			} else {
+				CmsBean bean = new CmsBean();
+				//bean.setHtml(out.toString());
+				bean.setPath(menu.getStaticpath());
+				bean.setHtmlName(menu.getPageName());
+				return bean;
 			}
-			String tplName = tpl.getId();
-
-			StringWriter out = new StringWriter();
-			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+		} else {
 			CmsBean bean = new CmsBean();
-			bean.setHtml(out.toString());
+			//bean.setHtml(out.toString());
 			bean.setPath(menu.getStaticpath());
 			bean.setHtmlName(menu.getPageName());
-
 			return bean;
-		} else {
-			return null;
 		}
 	}
 

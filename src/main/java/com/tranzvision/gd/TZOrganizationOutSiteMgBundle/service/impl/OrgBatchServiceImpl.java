@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cms.CmsBean;
 import com.tranzvision.gd.util.cms.CmsUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -36,6 +37,10 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
+	
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
 
 	/* 查询列表 */
 	@Override
@@ -66,7 +71,7 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 				sb.append("ON (A.TZ_BATCH_OBJECT_ID=B.TZ_SITEI_ID AND A.TZ_BATCH_RELEASE_TYPE='A') ");
 				sb.append("LEFT JOIN PS_TZ_SITEI_COLU_T C ");
 				sb.append(
-						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM LIMIT ?,? ");
+						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM DESC LIMIT ?,? ");
 
 				list = jdbcTemplate.queryForList(sb.toString(), new Object[] { numStart, numLimit });
 			} else {
@@ -78,7 +83,7 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 				sb.append("ON (A.TZ_BATCH_OBJECT_ID=B.TZ_SITEI_ID AND A.TZ_BATCH_RELEASE_TYPE='A') ");
 				sb.append("LEFT JOIN PS_TZ_SITEI_COLU_T C  ");
 				sb.append(
-						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM");
+						"ON (A.TZ_BATCH_OBJECT_ID=C.TZ_COLU_ID AND A.TZ_BATCH_RELEASE_TYPE='B') ORDER BY A.BATCH_DTTM DESC");
 				list = jdbcTemplate.queryForList(sb.toString());
 			}
 			// System.out.println("sql:" + sb.toString());
@@ -99,7 +104,9 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 					jsonMap.put("opr", list.get(i).get("BATCH_OPRID"));
 					// System.out.println("endDate:" +
 					// detailDate(list.get(i).get("END_DTTM").toString()));
-					jsonMap.put("endDate", detailDate(list.get(i).get("END_DTTM").toString()));
+					if (list.get(i).get("END_DTTM")!=null) {
+						jsonMap.put("endDate", detailDate(list.get(i).get("END_DTTM").toString()));
+					}
 					jsonMap.put("batchStatus", list.get(i).get("TZ_BATCH_RELEASE_STATE"));
 					arraylist.add(jsonMap);
 				}
@@ -162,9 +169,15 @@ public class OrgBatchServiceImpl extends FrameworkImpl {
 					String contentPath = request.getContextPath();
 					String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
 							+ request.getContextPath();
+					
+					
+					String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+					
+					dir = request.getServletContext().getRealPath(dir);
+					
 					System.out.println("Begin Thread");
 
-					new BatchReleaseEngine(batchType, objectId, oprid, id, rootparth, contentPath).start();
+					new BatchReleaseEngine(batchType, objectId, oprid, id, rootparth, contentPath,dir).start();
 					success = true;
 				}
 

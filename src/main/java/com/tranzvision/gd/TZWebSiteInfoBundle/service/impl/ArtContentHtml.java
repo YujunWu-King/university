@@ -41,6 +41,15 @@ public class ArtContentHtml {
 		return html;
 	}
 	
+	/*得到解析后的内容*/
+	public String getContentHtml(String siteid,String columnId ,String artId,String contentPath){
+		//String contentPath = request.getContextPath();
+		String html = "";
+		CmsUtils cmsUtils = new CmsUtils();
+		html = cmsUtils.content(siteid, columnId, artId,contentPath);
+		return html;
+	}
+	
 	/*静态化栏目*/
 	
 	public boolean staticSiteInfoByChannel(String siteid,String columnId){

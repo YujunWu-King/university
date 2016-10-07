@@ -339,12 +339,12 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (" + channelIds + ") "
 					+ appendOrder(orderBy) + " LIMIT ?,?";
 
-			System.out.println("sql:" + sql);
-			System.out.println("first:" + first);
-			System.out.println("count:" + count);
+			//System.out.println("sql:" + sql);
+			//System.out.println("first:" + first);
+			//System.out.println("count:" + count);
 
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { first, count });
-			System.out.println("size:" + list.size());
+			//System.out.println("size:" + list.size());
 			Map<String, Object> map = null;
 
 			for (Object objData : list) {
@@ -508,7 +508,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID  AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y'"
 				+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (" + channelIds + ") " + appendOrder(orderBy)
 				+ " LIMIT ?,?";
-		System.out.println("sql:" + sql);
+		//System.out.println("sql:" + sql);
 
 		f.append(sql);
 
@@ -716,11 +716,11 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 
 		case 0:
 			// 发布时间降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc ");
+			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		case 1:
 			// 发布时间升序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT  ");
+			orderStr.append(" order by B.TZ_ART_NEWS_DT,B.TZ_MAX_ZD_SEQ desc ");
 			return orderStr.toString();
 		case 2:
 			// orderStr.append(" order by bean.tz_art_news_dt asc ");
@@ -733,15 +733,15 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			return "";
 		case 4:
 			// 发生时间升序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM  ");
+			orderStr.append(" order by A.ROW_LASTMANT_DTTM,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		case 5:
 			// 发生时间降序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM desc ");
+			orderStr.append(" order by A.ROW_LASTMANT_DTTM desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		default:
 			// 发布时间降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc ");
+			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		}
 	}
@@ -767,12 +767,12 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID  AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y'"
 					+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND A.TZ_ART_ID in (" + ids + ") " + appendOrder(orderBy);
 
-			System.out.println("sql:" + sql);
-			System.out.println("ids:" + ids);
+			//System.out.println("sql:" + sql);
+			//System.out.println("ids:" + ids);
 
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
 
-			System.out.println("size:" + list.size());
+			//System.out.println("size:" + list.size());
 			Map<String, Object> map = null;
 
 			for (Object objData : list) {

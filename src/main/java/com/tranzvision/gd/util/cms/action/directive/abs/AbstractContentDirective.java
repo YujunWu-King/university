@@ -54,7 +54,7 @@ public abstract class AbstractContentDirective extends AbstractTplChnlinit imple
 		}
 		int orderBy = getOrderBy(params);
 		
-		System.out.println("orderBy:" + orderBy);
+		//System.out.println("orderBy:" + orderBy);
 		int count = FrontUtils.getCount(params);
 
 		String channelIds = getChannelIds(params);

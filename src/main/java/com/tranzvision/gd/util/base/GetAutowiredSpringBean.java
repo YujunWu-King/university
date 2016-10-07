@@ -44,12 +44,6 @@ public class GetAutowiredSpringBean {
 	@Autowired
 	private ApplicationContext ctx;
 
-	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
-
-	@Autowired
-	private HttpServletRequest request;
-
 	private Map<String, Object> springBeanMap;
 
 	public void init() {
@@ -57,9 +51,7 @@ public class GetAutowiredSpringBean {
 		springBeanMap.put("GetCookieSessionProps", getCookieSessionProps);
 		springBeanMap.put("TzCookie", tzCookie);
 		springBeanMap.put("SqlQuery", sqlQuery);
-		springBeanMap.put("GetSysHardCodeVal", getSysHardCodeVal);
 		springBeanMap.put("ArtContent", artContentHtml);
-		springBeanMap.put("Request", request);
 	}
 
 	/**

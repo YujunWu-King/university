@@ -1,5 +1,6 @@
 package com.tranzvision.gd.util.cms.manager.main;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +39,32 @@ public class ChannelMngImpl extends Manager implements ChannelMng {
 			e.printStackTrace();
 		}
 		return channel;
+	}
+	
+	public String getSitePath(String siteId) {
+		String sql = "select TZ_SITEI_PATH from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? ";
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			List<Map<String, Object>> pathList = jdbcTemplate.queryForList(sql.toString(), new Object[] { siteId });
+			if (pathList != null && pathList.size() == 1) {
+				Map<String, Object> mapNode = pathList.get(0);
+				if (mapNode.get("TZ_SITEI_PATH") != null) {
+					String path = mapNode.get("TZ_SITEI_PATH").toString();
+					if (!path.equals("/")) {
+						if (!path.endsWith("/")) {
+							path = path + "/";
+						}
+					}
+					return path;
+				} else {
+					return "";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	@Override

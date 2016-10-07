@@ -25,9 +25,9 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 	// 站点完整菜单List
 	private List<Map<String, Object>> list;
-	
+
 	public MenuMngImpl() {
-		
+
 	}
 
 	public MenuMngImpl(String siteId) {
@@ -53,6 +53,59 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 	public MenuMngImpl(List<Map<String, Object>> menu) {
 		this.list = menu;
+	}
+
+	public List<CmsMenu> findRecallList(String siteId, String id) {
+		List<CmsMenu> rsList = new ArrayList<CmsMenu>();
+		if (list != null) {
+			findRecall(id, siteId, rsList);
+
+			// 对rsList排序
+			if (rsList != null && rsList.size() > 0) {
+				Collections.sort(rsList, new Comparator<CmsMenu>() {
+					public int compare(CmsMenu arg0, CmsMenu arg1) {
+						return arg0.getLevel().compareTo(arg1.getLevel());
+					}
+				});
+			}
+		}
+		return rsList;
+	}
+
+	public void findRecall(String id, String siteId, List<CmsMenu> rsList) {
+		CmsMenu cm = findMenu(id, siteId);
+		rsList.add(cm);
+		if (cm.getLevel().equals("1")) {
+			return;
+		} else {
+			findRecall(cm.getParentId(), siteId, rsList);
+		}
+	}
+
+	public String getSitePath(String siteId) {
+		String sql = "select TZ_SITEI_PATH from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? ";
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			List<Map<String, Object>> pathList = jdbcTemplate.queryForList(sql.toString(), new Object[] { siteId });
+			if (pathList != null && pathList.size() == 1) {
+				Map<String, Object> mapNode = pathList.get(0);
+				if (mapNode.get("TZ_SITEI_PATH") != null) {
+					String path = mapNode.get("TZ_SITEI_PATH").toString();
+					if (!path.equals("/")) {
+						if (!path.endsWith("/")) {
+							path = path + "/";
+						}
+					}
+					return path;
+				} else {
+					return "";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	@Override
@@ -111,7 +164,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		}
 		return null;
 	}
-	
+
 	public CmsMenu findRootMenu(String siteId) {
 		if (list != null) {
 			String TZ_MENU_LEVEL = null;
@@ -180,7 +233,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			}
 			url = path + "/" + pageNme;
 		}
-		System.out.println("url:" + url);
+		//System.out.println("url:" + url);
 		return url;
 	}
 
@@ -256,7 +309,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			strFilePath = strBasePath + strMenuPath;
 		}
 
-		System.out.println("strFilePath:" + strFilePath);
+		//System.out.println("strFilePath:" + strFilePath);
 		return strFilePath;
 	}
 
@@ -267,7 +320,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// 站点ID
 		menu.setSiteId((String) map.get("TZ_SITE_ID"));
 		// 父级菜单ID
-		menu.setParentId((String) map.get("TZ_PARMENU_ID"));
+		menu.setParentId((String) map.get("TZ_F_MENU_ID"));
 
 		// 菜单类型 PS版本是 0 PAGE 1 BOOK
 		menu.setType((String) map.get("TZ_MENU_TYPE"));
@@ -320,7 +373,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		// 菜单简称
 		menu.setShortname("");
 		// 菜单样式
-		if (map.get("TZ_MENU_STYLE")!=null) {
+		if (map.get("TZ_MENU_STYLE") != null) {
 			menu.setStyle(map.get("TZ_MENU_STYLE").toString());
 		}
 

@@ -592,6 +592,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
 								}else{
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());

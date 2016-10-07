@@ -19,6 +19,22 @@ public interface MenuMng {
 	 */
 	public List<CmsMenu> findList(String siteId, String id);
 	
+	
+	/**
+	 * 找到站点路径
+	 * @param siteId
+	 * @return
+	 */
+	public String getSitePath(String siteId);
+
+	/**
+	 * 有子菜单 查询所有 的夫菜单
+	 * 
+	 * @param siteId
+	 * @param id
+	 * @return
+	 */
+	public List<CmsMenu> findRecallList(String siteId, String id);
 
 	/**
 	 * 获取当前菜单对象
@@ -28,7 +44,7 @@ public interface MenuMng {
 	 * @return
 	 */
 	public CmsMenu findMenu(String id, String siteId);
-	
+
 	/**
 	 * 获取ROOT菜单对象
 	 * 

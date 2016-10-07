@@ -102,7 +102,7 @@
                 //bodyPadding: 10,
                 //height: 400,
                 bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-
+                autoScroll : true,
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelWidth:120,

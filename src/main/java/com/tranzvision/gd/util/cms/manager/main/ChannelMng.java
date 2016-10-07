@@ -20,6 +20,13 @@ public interface ChannelMng {
 //	public CmsTemplate findChnlTpl(String chnlId);
 	
 	/**
+	 * 找到站点路径
+	 * @param siteId
+	 * @return
+	 */
+	public String getSitePath(String siteId);
+	
+	/**
 	 * 获取栏目的内容模板
 	 * 若是单页栏目，获取栏目模板
 	 * @param chnlId

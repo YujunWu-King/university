@@ -61,10 +61,10 @@
                width:60,
 			   xtype: 'actioncolumn',
 			   items:[{iconCls: 'edit',tooltip: '编辑',handler:'editField'},
-					  {iconCls: 'edit',tooltip: '栏目管理',handler:'editSiteColuById'},
-					  {iconCls: 'edit',tooltip: '模板管理',handler:'editSiteTempById'},
-					  {iconCls: 'edit',tooltip: '内容管理',handler:'editSiteInfo'},
-					  {iconCls: 'edit',tooltip: '菜单配置',handler:'editSiteMenuById'}
+					  {iconCls: 'save',tooltip: '栏目管理',handler:'editSiteColuById'},
+					  {iconCls: 'copy',tooltip: '模板管理',handler:'editSiteTempById'},
+					  {iconCls: 'query',tooltip: '内容管理',handler:'editContent'},
+					  {iconCls: 'publish',tooltip: '菜单配置',handler:'editSiteMenuById'}
 			   ]
             }],
 			store: store,
