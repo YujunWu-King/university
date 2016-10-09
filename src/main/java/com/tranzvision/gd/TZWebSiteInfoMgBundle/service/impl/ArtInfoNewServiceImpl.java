@@ -511,9 +511,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String tztxt2 = (String) dataMap.get("tztxt2");
 						String tztxt3 = (String) dataMap.get("tztxt3");
 						String tztxt4 = (String) dataMap.get("tztxt4");
-						String tzlong1 = (String) dataMap.get("tztxt1");
-						String tzlong2 = (String) dataMap.get("tztxt2");
-						String tzlong3 = (String) dataMap.get("tztxt3");
+						String tzlong1 = (String) dataMap.get("tzlong1");
+						String tzlong2 = (String) dataMap.get("tzlong2");
+						String tzlong3 = (String) dataMap.get("tzlong3");
 						String tzdate1 = (String) dataMap.get("tzdate1");
 						String tzdate2 = (String) dataMap.get("tzdate2");
 						// 文章类型;
@@ -804,9 +804,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String tztxt2 = (String) dataMap.get("tztxt2");
 						String tztxt3 = (String) dataMap.get("tztxt3");
 						String tztxt4 = (String) dataMap.get("tztxt4");
-						String tzlong1 = (String) dataMap.get("tztxt1");
-						String tzlong2 = (String) dataMap.get("tztxt2");
-						String tzlong3 = (String) dataMap.get("tztxt3");
+						String tzlong1 = (String) dataMap.get("tzlong1");
+						String tzlong2 = (String) dataMap.get("tzlong2");
+						String tzlong3 = (String) dataMap.get("tzlong3");
 						String tzdate1 = (String) dataMap.get("tzdate1");
 						String tzdate2 = (String) dataMap.get("tzdate2");
 						// 文章类型;
