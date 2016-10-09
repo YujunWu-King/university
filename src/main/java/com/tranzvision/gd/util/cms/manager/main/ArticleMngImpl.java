@@ -42,7 +42,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID," + " B.TZ_LASTMANT_DTTM "
 						+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B," + " PS_TZ_SITEI_COLU_T E"
 						+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID"
-						+ " AND B.TZ_SITE_ID = E.TZ_SITEI_ID AND B.TZ_ART_PUB_STATE='Y' "
+						+ " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
 						+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID " + " AND A.TZ_ART_ID = ? AND B.TZ_COLU_ID = ?";
 				map = jdbcTemplate.queryForMap(sql, new Object[] { id, chnlid });
 			} else {
