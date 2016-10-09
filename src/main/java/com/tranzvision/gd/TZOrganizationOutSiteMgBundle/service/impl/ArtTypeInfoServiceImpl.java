@@ -47,6 +47,7 @@ public class ArtTypeInfoServiceImpl extends FrameworkImpl {
 	/* 查询类型类型列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
+		System.out.println("不生效吗");
 		// 返回值;
 		String strRet = "";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
