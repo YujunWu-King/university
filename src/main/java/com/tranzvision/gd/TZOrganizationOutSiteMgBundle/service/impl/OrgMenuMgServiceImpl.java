@@ -835,7 +835,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				} else if (menuType.endsWith("A")) {
 					System.out.println("PAGE Creeate,menuId=" + menuId);
 					String contentPath = request.getContextPath();
-					cm = cu.menuPage(siteId, menuId, contentPath);
+					cm = cu.menuPage(siteId, menuId, contentPath, "1");
 				}
 				// 写文件 不是所有的BOOK 都有文件名，某些次级BOOK不需要生成 菜单文件
 				if (cm != null && cm.getHtmlName() != null && !cm.getHtmlName().equals("")) {

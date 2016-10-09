@@ -93,7 +93,7 @@ public class ArtContentHtml {
 			CmsUtils cu = new CmsUtils();
 			CmsBean bean = null;
 			if (menuType.equals("A")) {
-				bean = cu.menuPage(siteId, menuId, contentPath, menuList);
+				bean = cu.menuPage(siteId, menuId, contentPath, menuList,"1");
 			} else {
 				bean = cu.menuBook(siteId, menuId, menuList);
 			}

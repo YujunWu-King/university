@@ -358,6 +358,12 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuState(coluState);
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL));
 						psTzSiteiColuT.setTzColuType(coluType);
+						
+						if (coluType.equals("D")) {
+							psTzSiteiColuT.setTzContType("A");
+						} else {
+							psTzSiteiColuT.setTzContType("");
+						}
 						psTzSiteiColuT.setTzFColuId(TZ_F_COLU_ID);
 
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
@@ -388,6 +394,11 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuState(coluState);
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL) + 1);
 						psTzSiteiColuT.setTzColuType(coluType);
+						if (coluType.equals("D")) {
+							psTzSiteiColuT.setTzContType("A");
+						} else {
+							psTzSiteiColuT.setTzContType("");
+						}
 						psTzSiteiColuT.setTzFColuId(operateNode);
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
 						// psTzSiteiColuT.setTzContTemp(coluTempletId);
@@ -418,6 +429,11 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						// psTzSiteiColuT.setTzColuLevel(new
 						// Integer(TZ_COLU_LEVEL));
 						psTzSiteiColuT.setTzColuType(coluType);
+						if (coluType.equals("D")) {
+							psTzSiteiColuT.setTzContType("A");
+						} else {
+							psTzSiteiColuT.setTzContType("");
+						}
 						// psTzSiteiColuT.setTzFColuId(TZ_F_COLU_ID);
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
 						// psTzSiteiColuT.setTzContTemp(coluTempletId);

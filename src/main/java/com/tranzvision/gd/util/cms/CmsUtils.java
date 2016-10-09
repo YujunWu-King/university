@@ -1,5 +1,6 @@
 package com.tranzvision.gd.util.cms;
 
+import static com.tranzvision.gd.util.cms.web.FrontUtils.PAGE_NO;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.ART_ID;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.CHANNEL;
 import static com.tranzvision.gd.util.cms.web.FrontUtils.SITE_ID;
@@ -108,7 +109,7 @@ public class CmsUtils {
 	 * @param id
 	 * @return
 	 */
-	public CmsBean menuPage(String siteId, String id, String contentPath) {
+	public CmsBean menuPage(String siteId, String id, String contentPath, String pageNo) {
 		if (StringUtils.isBlank(siteId)) {
 			return null;
 		}
@@ -148,10 +149,12 @@ public class CmsUtils {
 				String path = menuMng.getSitePath(siteId);
 				root.put("CONTEXTPATH", path);
 				root.put(SITE_ID, siteId);
+				root.put(PAGE_NO, Integer.parseInt(pageNo));
+				System.out.println("PAGE_NO:" + pageNo);
 				root.put("TzUniversityContextPath", contentPath);
 
-				//System.out.println("path:" + path);
-				//System.out.println("contentPath:" + contentPath);
+				// System.out.println("path:" + path);
+				// System.out.println("contentPath:" + contentPath);
 
 				String strRandom = String.valueOf(10 * Math.random());
 				String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase()
@@ -194,7 +197,8 @@ public class CmsUtils {
 	 * @param id
 	 * @return
 	 */
-	public CmsBean menuPage(String siteId, String id, String contentPath, List<Map<String, Object>> menuList) {
+	public CmsBean menuPage(String siteId, String id, String contentPath, List<Map<String, Object>> menuList,
+			String pageNo) {
 		if (StringUtils.isBlank(siteId)) {
 			return null;
 		}
@@ -235,6 +239,7 @@ public class CmsUtils {
 				root.put("CONTEXTPATH", path);
 				root.put(SITE_ID, siteId);
 				root.put("TzUniversityContextPath", contentPath);
+				root.put(PAGE_NO, Integer.parseInt(pageNo));
 
 				String strRandom = String.valueOf(10 * Math.random());
 				String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase()
@@ -319,14 +324,14 @@ public class CmsUtils {
 				return bean;
 			} else {
 				CmsBean bean = new CmsBean();
-				//bean.setHtml(out.toString());
+				// bean.setHtml(out.toString());
 				bean.setPath(menu.getStaticpath());
 				bean.setHtmlName(menu.getPageName());
 				return bean;
 			}
 		} else {
 			CmsBean bean = new CmsBean();
-			//bean.setHtml(out.toString());
+			// bean.setHtml(out.toString());
 			bean.setPath(menu.getStaticpath());
 			bean.setHtmlName(menu.getPageName());
 			return bean;
@@ -352,7 +357,7 @@ public class CmsUtils {
 		// 得到模版信息
 		if (menu.getTmpId() != null && !menu.getTmpId().equals("")) {
 			CmsTemplate tpl = menuMng.findTplById(menu.getTmpId());
-			//System.out.println("tpl:" + tpl);
+			// System.out.println("tpl:" + tpl);
 			if (tpl != null && menu.getPageName() != null && !menu.getPageName().equals("")) {
 				Map<String, Object> root = new HashMap<String, Object>();
 				root.put("CmsMenuList", new MenuListDirective());
@@ -361,7 +366,7 @@ public class CmsUtils {
 				root.put("CmsMenu", new MenuDirective());
 
 				String tplSource = tpl.getPcContent();
-				//System.out.println("tplSource:" + tplSource);
+				// System.out.println("tplSource:" + tplSource);
 				if (StringUtils.isBlank(tplSource)) {
 					return null;
 				}
@@ -377,14 +382,14 @@ public class CmsUtils {
 				return bean;
 			} else {
 				CmsBean bean = new CmsBean();
-				//bean.setHtml(out.toString());
+				// bean.setHtml(out.toString());
 				bean.setPath(menu.getStaticpath());
 				bean.setHtmlName(menu.getPageName());
 				return bean;
 			}
 		} else {
 			CmsBean bean = new CmsBean();
-			//bean.setHtml(out.toString());
+			// bean.setHtml(out.toString());
 			bean.setPath(menu.getStaticpath());
 			bean.setHtmlName(menu.getPageName());
 			return bean;

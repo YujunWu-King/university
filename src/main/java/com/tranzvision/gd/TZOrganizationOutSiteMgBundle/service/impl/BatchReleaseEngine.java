@@ -255,7 +255,7 @@ public class BatchReleaseEngine extends Thread {
 			CmsUtils cu = new CmsUtils();
 			CmsBean bean = null;
 			if (menuType.equals("A")) {
-				bean = cu.menuPage(siteId, menuId, contentPath, menuList);
+				bean = cu.menuPage(siteId, menuId, contentPath, menuList,"1");
 			} else {
 				bean = cu.menuBook(siteId, menuId, menuList);
 			}
@@ -371,11 +371,11 @@ public class BatchReleaseEngine extends Thread {
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
-
-					// 更新PS_TZ_LM_NR_GL_T 栏目文章对应表
+					String staticPath = strFilePath+ "/" + strFileName;
+					// 更新PS_TZ_LM_NR_GL_T 栏目文章	对应表
 					if (br) {
-						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
-						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml, siteId, coluId, artId });
+						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=?,TZ_STATIC_ART_URL=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
+						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml,staticPath, siteId, coluId, artId });
 					}
 				}
 			}
@@ -461,11 +461,11 @@ public class BatchReleaseEngine extends Thread {
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
-
+					String staticPath = strFilePath+ "/" + strFileName;
 					// 更新PS_TZ_LM_NR_GL_T 栏目文章对应表
 					if (br) {
-						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
-						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml, siteId, coluId, artId });
+						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=?,TZ_STATIC_ART_URL=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
+						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml,staticPath, siteId, coluId, artId });
 					}
 				}
 			}

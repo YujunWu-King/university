@@ -1,4 +1,5 @@
 package com.tranzvision.gd.util.cms.entity.main;
+
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -12,8 +13,7 @@ public class CmsContent extends BaseArticle {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private String metakeys;
 	private String metadesc;
 	private String art_shorttitle;
@@ -29,146 +29,136 @@ public class CmsContent extends BaseArticle {
 	private Date date2;
 	private Date date3;
 
-	
+	private String hd_city;
+	private String hd_address;
+
+	public String getHd_city() {
+		return hd_city;
+	}
+
+	public void setHd_city(String hd_city) {
+		this.hd_city = hd_city;
+	}
+
+	public String getHd_address() {
+		return hd_address;
+	}
+
+	public void setHd_address(String hd_address) {
+		this.hd_address = hd_address;
+	}
+
 	public String getMetakeys() {
 		return metakeys;
 	}
-
 
 	public void setMetakeys(String metakeys) {
 		this.metakeys = metakeys;
 	}
 
-
 	public String getMetadesc() {
 		return metadesc;
 	}
-
 
 	public void setMetadesc(String metadesc) {
 		this.metadesc = metadesc;
 	}
 
-
 	public String getArt_shorttitle() {
 		return art_shorttitle;
 	}
-
 
 	public void setArt_shorttitle(String art_shorttitle) {
 		this.art_shorttitle = art_shorttitle;
 	}
 
-
 	public String getSubhead() {
 		return subhead;
 	}
-
 
 	public void setSubhead(String subhead) {
 		this.subhead = subhead;
 	}
 
-
 	public String getTxt1() {
 		return txt1;
 	}
-
 
 	public void setTxt1(String txt1) {
 		this.txt1 = txt1;
 	}
 
-
 	public String getTxt2() {
 		return txt2;
 	}
-
 
 	public void setTxt2(String txt2) {
 		this.txt2 = txt2;
 	}
 
-
 	public String getTxt3() {
 		return txt3;
 	}
-
 
 	public void setTxt3(String txt3) {
 		this.txt3 = txt3;
 	}
 
-
 	public String getTxt4() {
 		return txt4;
 	}
-
 
 	public void setTxt4(String txt4) {
 		this.txt4 = txt4;
 	}
 
-
 	public String getLong1() {
 		return long1;
 	}
-
 
 	public void setLong1(String long1) {
 		this.long1 = long1;
 	}
 
-
 	public String getLong2() {
 		return long2;
 	}
-
 
 	public void setLong2(String long2) {
 		this.long2 = long2;
 	}
 
-
 	public String getLong3() {
 		return long3;
 	}
-
 
 	public void setLong3(String long3) {
 		this.long3 = long3;
 	}
 
-
 	public Date getDate1() {
 		return date1;
 	}
-
 
 	public void setDate1(Date date1) {
 		this.date1 = date1;
 	}
 
-
 	public Date getDate2() {
 		return date2;
 	}
-
 
 	public void setDate2(Date date2) {
 		this.date2 = date2;
 	}
 
-
 	public Date getDate3() {
 		return date3;
 	}
 
-
 	public void setDate3(Date date3) {
 		this.date3 = date3;
 	}
-
 
 	/**
 	 * 发布时间
@@ -199,20 +189,16 @@ public class CmsContent extends BaseArticle {
 	 * @return
 	 */
 	/*
-	public String rDate(String format) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-		if (StringUtils.equals(format, "1")) {
-
-		}
-		if (StringUtils.equals(format, "2")) {
-
-		}
-		if (StringUtils.equals(format, "3")) {
-
-		}
-		return formatter.format(this.getOccurtime());
-	}
-	*/
+	 * public String rDate(String format) { SimpleDateFormat formatter = new
+	 * SimpleDateFormat("yyyy-MM-dd");
+	 * 
+	 * if (StringUtils.equals(format, "1")) {
+	 * 
+	 * } if (StringUtils.equals(format, "2")) {
+	 * 
+	 * } if (StringUtils.equals(format, "3")) {
+	 * 
+	 * } return formatter.format(this.getOccurtime()); }
+	 */
 
 }
