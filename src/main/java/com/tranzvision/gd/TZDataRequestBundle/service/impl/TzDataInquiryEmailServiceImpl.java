@@ -18,8 +18,13 @@ import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-@Service("com.tranzvision.gd.TZDataRequestBundle.service.impl.TzDataRequestEmailServiceImpl")
-public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
+/** 
+* @author  caoy
+* @version 创建时间：2016年10月10日 下午10:49:33 
+* 类说明 
+*/
+@Service("com.tranzvision.gd.TZDataRequestBundle.service.impl.TzDataInquiryEmailServiceImpl")
+public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	
@@ -56,8 +61,7 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		String name = request.getParameter("name");
 		if(name==null || "".equals(name)){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "1",
-					language, "姓名不能为空", "姓名不能为空");
+			msg = "姓名不能为空";
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
@@ -65,17 +69,15 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		String email = request.getParameter("email");
 		if(email==null || "".equals(email)){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "2",
-					language, "Email不能为空", "Email不能为空");
+			msg = "Email不能为空";
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
 		
-		String location = request.getParameter("location");
-		if(location==null || "".equals(location)){
+		String Company  = request.getParameter("company");
+		if(Company ==null || "".equals(Company)){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "3",
-					language, "地址不能为空", "地址不能为空");
+			msg = "公司不能为空";
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
@@ -83,17 +85,15 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		String phone = request.getParameter("phone");
 		if(phone==null || "".equals(phone)){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "4",
-					language, "电话不能为空", "电话不能为空");
+			msg ="电话不能为空";
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
 		
-		String code = request.getParameter("code");
-		if(code==null || "".equals(code)){
+		String message = request.getParameter("message");
+		if(message==null || "".equals(message)){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "5",
-					language, "验证码不能为空", "验证码不能为空");
+			msg = "message不能为空";
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
@@ -123,11 +123,13 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		
 		// 给当前填写的邮箱发送资料索取邮件---开始;
 		// 发送内容;
-		String content = "亲爱的管理员，以下用户填写了资料索取，信息如下：<br>" 
+		String content = "亲爱的管理员，你收到了一个调查，信息如下：<br>" 
 				+ "Name:"+ name + "<br>"
 				+ "Email:"+ email + "<br>"
-				+ "Current Location:"+ location + "<br>"
-				+ "Telephone:"+ phone ;
+				+ "Company :"+ Company + "<br>"
+				+ "Telephone:"+ phone + "<br>"
+				+ "Message :"+ message  + "<br>"
+				+" 请及时处理。";
 
 		// 发送邮件;
 		String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_N_001", "MAL", "A");
@@ -180,7 +182,7 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		}
 
 		// 修改主题;
-		boolean bl = createTaskServiceImpl.updateEmailSendTitle(taskId,"资料索取");
+		boolean bl = createTaskServiceImpl.updateEmailSendTitle(taskId,"Inquiry");
 		if (bl == false) {
 			map.replace("success", "1");
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7",
@@ -215,10 +217,12 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		psTzDataRequestT.setId(getSeqNum.getSeqNum("TZ_DATA_REQUEST_T", "ID"));
 		psTzDataRequestT.setTzName(name);
 		psTzDataRequestT.setTzEmail(email);
-		psTzDataRequestT.setTzCurLocation(location);
+		psTzDataRequestT.setTzCompany(Company);
+		psTzDataRequestT.setTzMessage(message);
 		psTzDataRequestT.setTzPhone(phone);
 		psTzDataRequestTMapper.insert(psTzDataRequestT);
 
 		return jacksonUtil.Map2json(map);
 	}
 }
+

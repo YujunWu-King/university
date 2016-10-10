@@ -7,9 +7,11 @@
     <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
     <result column="TZ_CUR_LOCATION" property="tzCurLocation" jdbcType="VARCHAR" />
     <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
+    <result column="TZ_COMPANY" property="tzCompany" jdbcType="VARCHAR" />
+    <result column="TZ_MESSAGE" property="tzMessage" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, TZ_NAME, TZ_EMAIL, TZ_CUR_LOCATION, TZ_PHONE
+    ID, TZ_NAME, TZ_EMAIL, TZ_CUR_LOCATION, TZ_PHONE, TZ_COMPANY, TZ_MESSAGE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,9 +25,11 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZDataRequestBundle.model.PsTzDataRequestT" >
     insert into PS_TZ_DATA_REQUEST_T (ID, TZ_NAME, TZ_EMAIL, 
-      TZ_CUR_LOCATION, TZ_PHONE)
+      TZ_CUR_LOCATION, TZ_PHONE, TZ_COMPANY, 
+      TZ_MESSAGE)
     values (#{id,jdbcType=INTEGER}, #{tzName,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
-      #{tzCurLocation,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR})
+      #{tzCurLocation,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR}, #{tzCompany,jdbcType=VARCHAR}, 
+      #{tzMessage,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDataRequestBundle.model.PsTzDataRequestT" >
     insert into PS_TZ_DATA_REQUEST_T
@@ -45,6 +49,12 @@
       <if test="tzPhone != null" >
         TZ_PHONE,
       </if>
+      <if test="tzCompany != null" >
+        TZ_COMPANY,
+      </if>
+      <if test="tzMessage != null" >
+        TZ_MESSAGE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -61,6 +71,12 @@
       </if>
       <if test="tzPhone != null" >
         #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCompany != null" >
+        #{tzCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMessage != null" >
+        #{tzMessage,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -79,6 +95,12 @@
       <if test="tzPhone != null" >
         TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
       </if>
+      <if test="tzCompany != null" >
+        TZ_COMPANY = #{tzCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMessage != null" >
+        TZ_MESSAGE = #{tzMessage,jdbcType=VARCHAR},
+      </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -87,7 +109,9 @@
     set TZ_NAME = #{tzName,jdbcType=VARCHAR},
       TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
       TZ_CUR_LOCATION = #{tzCurLocation,jdbcType=VARCHAR},
-      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR}
+      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      TZ_COMPANY = #{tzCompany,jdbcType=VARCHAR},
+      TZ_MESSAGE = #{tzMessage,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

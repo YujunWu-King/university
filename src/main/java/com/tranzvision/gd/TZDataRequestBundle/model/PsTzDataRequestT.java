@@ -11,6 +11,10 @@ public class PsTzDataRequestT {
 
     private String tzPhone;
 
+    private String tzCompany;
+
+    private String tzMessage;
+
     public Integer getId() {
         return id;
     }
@@ -49,5 +53,21 @@ public class PsTzDataRequestT {
 
     public void setTzPhone(String tzPhone) {
         this.tzPhone = tzPhone == null ? null : tzPhone.trim();
+    }
+
+    public String getTzCompany() {
+        return tzCompany;
+    }
+
+    public void setTzCompany(String tzCompany) {
+        this.tzCompany = tzCompany == null ? null : tzCompany.trim();
+    }
+
+    public String getTzMessage() {
+        return tzMessage;
+    }
+
+    public void setTzMessage(String tzMessage) {
+        this.tzMessage = tzMessage == null ? null : tzMessage.trim();
     }
 }
