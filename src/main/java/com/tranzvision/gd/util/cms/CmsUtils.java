@@ -110,10 +110,14 @@ public class CmsUtils {
 	 * @return
 	 */
 	public CmsBean menuPage(String siteId, String id, String contentPath, String pageNo) {
+		System.out.println("PAGE Creeate Star");
+		long l = System.currentTimeMillis();
 		if (StringUtils.isBlank(siteId)) {
 			return null;
 		}
 		MenuMng menuMng = new MenuMngImpl(siteId);
+
+		System.out.println("time:" + (System.currentTimeMillis() - l));
 		// 根据ID得到菜单信息
 		CmsMenu menu = menuMng.findMenu(id, siteId);
 		if (menu == null) {
