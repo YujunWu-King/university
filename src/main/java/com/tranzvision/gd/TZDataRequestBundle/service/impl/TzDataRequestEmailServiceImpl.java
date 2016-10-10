@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZDataRequestBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZDataRequestBundle.service.impl.TzDataRequestEmailServiceImpl")
 public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
@@ -37,6 +39,9 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private SqlQuery sqlQuery;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -95,6 +100,7 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 			return jacksonUtil.Map2json(map);
 		}
 		
+		
 		// 校验验证码
 		/*
 		Patchca patchca = new Patchca();
@@ -107,9 +113,23 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		}
 		*/
 		
+		//收件人email
+		String sjr = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZLSQ_SJR_EMAIL'","String");
+		if(sjr == null || "".equals(sjr)){
+			map.replace("success", "1");
+			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "8",
+							language, "收件人未配置", "收件人未配置");
+			map.replace("msg", msg);
+			return jacksonUtil.Map2json(map);
+		}
+		
 		// 给当前填写的邮箱发送资料索取邮件---开始;
 		// 发送内容;
-		String content = "资料索取--内容（待定）";
+		String content = "亲爱的管理员，以下用户填写了资料索取，信息如下：<br>" 
+				+ "Name:"+ name + "<br>"
+				+ "Email:"+ email + "<br>"
+				+ "Current Location:"+ location + "<br>"
+				+ "Telephone:"+ phone ;
 
 		// 发送邮件;
 		String taskId = createTaskServiceImpl.createTaskIns(strJgid, "TZ_EML_N_001", "MAL", "A");
@@ -134,18 +154,35 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		}
 
 		// 为听众添加听众成员;
-		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,name, name, "", "", email, "", "", "",
-							"", "", "");
-		if (addAudCy == false) {
+		int sendNum = 0;
+		String[] arr = sjr.split(";");
+		for(int i = 0; i < arr.length; i++){
+			String sjrEmail = arr[i];
+			if(sjrEmail != null && !"".equals(sjrEmail)){
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,"管理员", "管理员", "", "", sjrEmail, "", "", "",
+						"", "", "");
+				if (addAudCy == false) {
+					map.replace("success", "1");
+					msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7",
+							language, "发送失败", "发送失败");
+					map.replace("msg", msg);
+					return jacksonUtil.Map2json(map);
+				}else{
+					sendNum ++;
+				}
+			}
+		}
+		
+		if(sendNum==0){
 			map.replace("success", "1");
-			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7",
-					language, "发送失败", "发送失败");
+			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "9",
+					language, "收件人为空", "收件人为空");
 			map.replace("msg", msg);
 			return jacksonUtil.Map2json(map);
 		}
 
 		// 修改主题;
-		boolean bl = createTaskServiceImpl.updateEmailSendTitle(taskId,"资料索取-主题（待定）");
+		boolean bl = createTaskServiceImpl.updateEmailSendTitle(taskId,"资料索取");
 		if (bl == false) {
 			map.replace("success", "1");
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7",
