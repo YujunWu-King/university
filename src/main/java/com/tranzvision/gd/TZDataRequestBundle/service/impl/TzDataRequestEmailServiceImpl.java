@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZDataRequestBundle.dao.PsTzDataRequestTMapper;
+import com.tranzvision.gd.TZDataRequestBundle.model.PsTzDataRequestT;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 
 @Service("com.tranzvision.gd.TZDataRequestBundle.service.impl.TzDataRequestEmailServiceImpl")
 public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
@@ -28,6 +31,12 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private MessageTextServiceImpl messageTextServiceImpl;
+	
+	@Autowired
+	private PsTzDataRequestTMapper psTzDataRequestTMapper;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -166,6 +175,14 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		}
 
 		sendSmsOrMalServiceImpl.send(taskId, "");
+		
+		PsTzDataRequestT psTzDataRequestT = new PsTzDataRequestT();
+		psTzDataRequestT.setId(getSeqNum.getSeqNum("TZ_DATA_REQUEST_T", "ID"));
+		psTzDataRequestT.setTzName(name);
+		psTzDataRequestT.setTzEmail(email);
+		psTzDataRequestT.setTzCurLocation(location);
+		psTzDataRequestT.setTzPhone(phone);
+		psTzDataRequestTMapper.insert(psTzDataRequestT);
 
 		return jacksonUtil.Map2json(map);
 	}
