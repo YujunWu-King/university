@@ -144,7 +144,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					art.setLong2((String) (map.get("TZ_LONG2")));
 				}
 
-				if (map.get("TZ_LONG1") != null) {
+				if (map.get("TZ_LONG3") != null) {
 					art.setLong3((String) (map.get("TZ_LONG3")));
 				}
 
@@ -181,27 +181,35 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				if (id != null && !id.equals("")) {
 					art.setOpenActApp("N");
 					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
-							+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM,D.TZ_NACT_ADDR,D.TZ_HD_CS  "
+							+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM,D.TZ_NACT_ADDR,D.TZ_HD_CS,D.TZ_XWS  "
 							+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
 
 					try {
 						List<Map<String, Object>> list = jdbcTemplate.queryForList(hdSQL, new Object[] { id });
 						Map<String, Object> hdMap = null;
-						if (list != null && list.size() > 0) {
-							for (int i = 0; i < list.size(); i++) {
-								hdMap = list.get(i);
-								art.setStartDate((Date) hdMap.get("TZ_START_DT"));
-								art.setStartTime((Date) hdMap.get("TZ_START_TM"));
-								art.setEndDate((Date) hdMap.get("TZ_END_DT"));
-								art.setEndTime((Date) hdMap.get("TZ_END_TM"));
-								art.setHd_city((String) hdMap.get("TZ_HD_CS"));
-								art.setHd_address((String) hdMap.get("TZ_NACT_ADDR"));
+						if (list != null && list.size() == 1) {
+							hdMap = list.get(0);
+							art.setStartDate((Date) hdMap.get("TZ_START_DT"));
+							art.setStartTime((Date) hdMap.get("TZ_START_TM"));
+							art.setEndDate((Date) hdMap.get("TZ_END_DT"));
+							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
+							art.setHd_city((String) hdMap.get("TZ_HD_CS"));
+							art.setHd_address((String) hdMap.get("TZ_NACT_ADDR"));
+							art.setHd_totalNumber(((Long) hdMap.get("TZ_XWS")).intValue());
+
+							if (hdMap.get("TZ_QY_ZXBM") != null) {
 								String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
 								if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
 									isOpenHdBm = "N";
 								}
 								art.setOpenActApp(isOpenHdBm);
+							} else {
+								art.setOpenActApp("N");
 							}
+							hdSQL = "select count(*) from PS_TZ_NAUDLIST_T where TZ_ART_ID=? ";
+							int active = jdbcTemplate.queryForObject(hdSQL, new Object[] { id }, Integer.class);
+							art.setHd_activeNumber(active);
+							art.setHd_watingNumber(art.getHd_totalNumber() - active);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -429,7 +437,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					art.setLong2((String) (map.get("TZ_LONG2")));
 				}
 
-				if (map.get("TZ_LONG1") != null) {
+				if (map.get("TZ_LONG3") != null) {
 					art.setLong3((String) (map.get("TZ_LONG3")));
 				}
 
@@ -515,7 +523,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID  AND B.TZ_COLU_ID in (" + channelIds + ") " + appendOrder(orderBy)
 				+ " LIMIT ?,?";
 		System.out.println("sql:" + sql);
-		
+
 		f.append(sql);
 		System.out.println("sql:" + f.getRowCountHql());
 		return find(f, pageNo, count, channelIds);
@@ -537,7 +545,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		System.out.println("first:" + first);
 		System.out.println("last:" + last);
-		
+
 		System.out.println("size:" + p.getPageSize());
 		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, last });
 		Map<String, Object> map = null;
@@ -621,7 +629,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setLong2((String) (map.get("TZ_LONG2")));
 			}
 
-			if (map.get("TZ_LONG1") != null) {
+			if (map.get("TZ_LONG3") != null) {
 				art.setLong3((String) (map.get("TZ_LONG3")));
 			}
 
@@ -866,7 +874,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					art.setLong2((String) (map.get("TZ_LONG2")));
 				}
 
-				if (map.get("TZ_LONG1") != null) {
+				if (map.get("TZ_LONG3") != null) {
 					art.setLong3((String) (map.get("TZ_LONG3")));
 				}
 

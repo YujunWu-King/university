@@ -29,8 +29,37 @@ public class CmsContent extends BaseArticle {
 	private Date date2;
 	private Date date3;
 
-	private String hd_city;
-	private String hd_address;
+	private String hd_city; // 活动城市
+	private String hd_address; // 活动地点
+
+	private int hd_totalNumber; // 活动总数
+	private int hd_activeNumber; // 活动报名人数
+
+	private int hd_watingNumber; // 可报名人数
+
+	public int getHd_totalNumber() {
+		return hd_totalNumber;
+	}
+
+	public void setHd_totalNumber(int hd_totalNumber) {
+		this.hd_totalNumber = hd_totalNumber;
+	}
+
+	public int getHd_activeNumber() {
+		return hd_activeNumber;
+	}
+
+	public void setHd_activeNumber(int hd_activeNumber) {
+		this.hd_activeNumber = hd_activeNumber;
+	}
+
+	public int getHd_watingNumber() {
+		return hd_watingNumber;
+	}
+
+	public void setHd_watingNumber(int hd_watingNumber) {
+		this.hd_watingNumber = hd_watingNumber;
+	}
 
 	public String getHd_city() {
 		return hd_city;
