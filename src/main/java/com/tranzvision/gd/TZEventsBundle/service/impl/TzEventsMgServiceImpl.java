@@ -281,7 +281,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 											strFilePath = request.getServletContext().getRealPath(strFilePath);
 											artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 											
-											String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+											String publishUrl = strFilePathAccess + "/" + strFileName;
 											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 											psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 											psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
@@ -357,9 +357,10 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 												}
 												
 												strFileName = strAutoStaticName + ".html";
+												strFilePath = request.getServletContext().getRealPath(strFilePath);
 												artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 												artContentHtml.staticSiteInfoByChannel(tzSiteId, tzColuId);
-												String publishUrl = rootparth + strFilePathAccess + "/"
+												String publishUrl = strFilePathAccess + "/"
 														+ strFileName;
 												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 												psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);

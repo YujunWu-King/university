@@ -950,7 +950,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 												strFilePath = request.getServletContext().getRealPath(strFilePath);
 												artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 												
-												String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+												String publishUrl = strFilePathAccess + "/" + strFileName;
 												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 												psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 												psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
@@ -1026,9 +1026,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 													}
 													
 													strFileName = strAutoStaticName + ".html";
+													strFilePath = request.getServletContext().getRealPath(strFilePath);
 													artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 													artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-													String publishUrl = rootparth + strFilePathAccess + "/"
+													String publishUrl = strFilePathAccess + "/"
 															+ strFileName;
 													psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 													psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
@@ -1068,10 +1069,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						if (siteId == null || "".equals(siteId) || coluId == null || "".equals(coluId)) {
 							continue;
 						}
-
+						
 						// 生成页面代码
 						String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
-
+						
 						// 更新文章内容关联表
 						PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
 						psTzLmNrGlTKey.setTzSiteId(siteId);
@@ -1134,7 +1135,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 									strFilePath = request.getServletContext().getRealPath(strFilePath);
 									artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 									
-									String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+									String publishUrl = strFilePathAccess + "/" + strFileName;
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 									psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 									psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
@@ -1210,9 +1211,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 										}
 										
 										strFileName = strAutoStaticName + ".html";
+										strFilePath = request.getServletContext().getRealPath(strFilePath);
 										artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
 										artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-										String publishUrl = rootparth + strFilePathAccess + "/"
+										String publishUrl = strFilePathAccess + "/"
 												+ strFileName;
 										psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 										psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
@@ -1588,6 +1590,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				strRet = jacksonUtil.Map2json(mapRet);
 				break;
 			case "VIEWART":
+				String rootparth = "http://" + request.getServerName() + ":"
+						+ request.getServerPort() + request.getContextPath();
+				
 				// 获取预览和发布url信息
 				sql = "select TZ_SITE_ID,TZ_COLU_ID,TZ_ART_ID,TZ_ART_PUB_STATE,TZ_STATIC_ART_URL from PS_TZ_LM_NR_GL_T where TZ_ART_ID=?";
 				List<Map<String, Object>> listArtView = sqlQuery.queryForList(sql, new Object[] { activityId });
@@ -1631,13 +1636,16 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					}
 
 					mapJson.put("previewUrl", previewUrl);
+					if( publicUrl != null && !"".equals(publicUrl)){
+						publicUrl = rootparth + publicUrl; 
+					}
 					mapJson.put("publicUrl", publicUrl);
-
+					total ++;
 					listJson.add(mapJson);
 				}
 
-				sql = "select count(1) from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID = ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
-				total = sqlQuery.queryForObject(sql, new Object[] { activityId }, "int");
+				//sql = "select count(1) from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID = ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
+				//total = sqlQuery.queryForObject(sql, new Object[] { activityId }, "int");
 
 				mapRet.replace("total", total);
 				mapRet.replace("root", listJson);
