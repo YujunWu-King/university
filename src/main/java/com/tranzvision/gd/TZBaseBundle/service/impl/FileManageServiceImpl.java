@@ -178,6 +178,7 @@ public class FileManageServiceImpl implements FileManageService {
 	public boolean DeleteFile(String parentPath, String fileName) {
 		// String parentRealPath =
 		// request.getServletContext().getRealPath(parentPath);
+		//System.out.println("parentPath:"+parentPath);
 		String parentRealPath = this.getRealPath(parentPath);
 
 		File dir = new File(parentRealPath);
