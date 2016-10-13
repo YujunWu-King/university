@@ -15,6 +15,8 @@ public class PsTzDataRequestT {
 
     private String tzMessage;
 
+    private String tzRequestType;
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public class PsTzDataRequestT {
 
     public void setTzMessage(String tzMessage) {
         this.tzMessage = tzMessage == null ? null : tzMessage.trim();
+    }
+
+    public String getTzRequestType() {
+        return tzRequestType;
+    }
+
+    public void setTzRequestType(String tzRequestType) {
+        this.tzRequestType = tzRequestType == null ? null : tzRequestType.trim();
     }
 }

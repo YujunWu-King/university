@@ -9,9 +9,10 @@
     <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
     <result column="TZ_COMPANY" property="tzCompany" jdbcType="VARCHAR" />
     <result column="TZ_MESSAGE" property="tzMessage" jdbcType="VARCHAR" />
+    <result column="TZ_REQUEST_TYPE" property="tzRequestType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, TZ_NAME, TZ_EMAIL, TZ_CUR_LOCATION, TZ_PHONE, TZ_COMPANY, TZ_MESSAGE
+    ID, TZ_NAME, TZ_EMAIL, TZ_CUR_LOCATION, TZ_PHONE, TZ_COMPANY, TZ_MESSAGE, TZ_REQUEST_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +27,10 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZDataRequestBundle.model.PsTzDataRequestT" >
     insert into PS_TZ_DATA_REQUEST_T (ID, TZ_NAME, TZ_EMAIL, 
       TZ_CUR_LOCATION, TZ_PHONE, TZ_COMPANY, 
-      TZ_MESSAGE)
+      TZ_MESSAGE, TZ_REQUEST_TYPE)
     values (#{id,jdbcType=INTEGER}, #{tzName,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
       #{tzCurLocation,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR}, #{tzCompany,jdbcType=VARCHAR}, 
-      #{tzMessage,jdbcType=VARCHAR})
+      #{tzMessage,jdbcType=VARCHAR}, #{tzRequestType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDataRequestBundle.model.PsTzDataRequestT" >
     insert into PS_TZ_DATA_REQUEST_T
@@ -55,6 +56,9 @@
       <if test="tzMessage != null" >
         TZ_MESSAGE,
       </if>
+      <if test="tzRequestType != null" >
+        TZ_REQUEST_TYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -77,6 +81,9 @@
       </if>
       <if test="tzMessage != null" >
         #{tzMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRequestType != null" >
+        #{tzRequestType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -101,6 +108,9 @@
       <if test="tzMessage != null" >
         TZ_MESSAGE = #{tzMessage,jdbcType=VARCHAR},
       </if>
+      <if test="tzRequestType != null" >
+        TZ_REQUEST_TYPE = #{tzRequestType,jdbcType=VARCHAR},
+      </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -111,7 +121,8 @@
       TZ_CUR_LOCATION = #{tzCurLocation,jdbcType=VARCHAR},
       TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
       TZ_COMPANY = #{tzCompany,jdbcType=VARCHAR},
-      TZ_MESSAGE = #{tzMessage,jdbcType=VARCHAR}
+      TZ_MESSAGE = #{tzMessage,jdbcType=VARCHAR},
+      TZ_REQUEST_TYPE = #{tzRequestType,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
