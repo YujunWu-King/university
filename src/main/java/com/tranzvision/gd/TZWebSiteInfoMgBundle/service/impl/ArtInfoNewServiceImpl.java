@@ -630,6 +630,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzFbz(artFbz);
 						psTzLmNrGlT.setTzBltDept(artFbBm);
 						psTzLmNrGlT.setTzArtNewsDt(fbdt);
+						psTzLmNrGlT.setTzStaticName(this.ins_staticName);
 						psTzLmNrGlT.setTzStaticName(strStaticName);
 						if ("Y".equals(publishClick)) {
 							psTzLmNrGlT.setTzArtPubState(publishStatus);
@@ -708,6 +709,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			returnJsonMap.replace("viewUrl", viewUrl);
 			System.out.println("执行add方法");
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -749,7 +751,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 				// 类型标志
 				String typeFlag = jacksonUtil.getString("typeFlag");
-
+				// 基本信息
 				if ("ACTINFO".equals(typeFlag)) {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 
@@ -1010,7 +1012,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						return strRet;
 					}
 				}
-
+				// 图片集
 				if ("ARTTPJ".equals(typeFlag)) {
 					int tpjNum = 0;
 					ArrayList<String> tpjList = new ArrayList<>();
@@ -1114,7 +1116,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						}
 					}
 				}
-
+				// 附件
 				if ("ARTATTACHINFO".equals(typeFlag)) {
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					// 附件系统文件名;
@@ -1180,8 +1182,11 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			}
 
 			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+			String strFilePathdelete = dir; // 用于删除文件
 			dir = request.getServletContext().getRealPath(dir);
 			strFilePath = dir + strBasePath + strColuPath;
+			strFilePathdelete = strFilePathdelete + strBasePath + strColuPath;
+
 			strFilePathAccess = strBasePath + strColuPath;
 
 			String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
@@ -1212,19 +1217,29 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 				// 如果是外网站点，则静态话
 				if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
-					// 静态化
+					// 静态化 如果前台传过来 文件名称
 					if (ins_staticName != null && !"".equals(ins_staticName)) {
-						strFileName = ins_staticName + ".html";
+
+						if (!ins_staticName.toLowerCase().endsWith(".html")) {
+							strFileName = ins_staticName + ".html";
+						} else {
+							strFileName = ins_staticName;
+						}
+						// strFileName = ins_staticName + ".html";
+
 						if (!strOriginStaticName.equals(ins_staticName)) {
 							if (strOriginStaticName != null && !"".equals(strOriginStaticName)) {
-								fileManageServiceImpl.DeleteFile(strFilePath, strOriginStaticName + ".html");
+								if (!strOriginStaticName.toLowerCase().endsWith(".html")) {
+									strOriginStaticName = strOriginStaticName + ".html";
+								}
+								fileManageServiceImpl.DeleteFile(strFilePathdelete, strOriginStaticName);
 							}
 						}
 						if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-							fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+							fileManageServiceImpl.DeleteFile(strFilePathdelete, strAutoStaticName + ".html");
 						}
 					} else {
-
+						// 如果前台没有传过来 文件名称
 						if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 						} else {
 							strAutoStaticName = String
@@ -1232,6 +1247,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 						}
 						strFileName = strAutoStaticName + ".html";
+
 					}
 					// 修改 bu caoy 地址没有加系统变量
 					publishUrl = strFilePathAccess + "/" + strFileName;
@@ -1251,11 +1267,13 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
 					if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 
-						fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+						fileManageServiceImpl.DeleteFile(strFilePathdelete, strAutoStaticName + ".html");
 					}
 					if (strOriginStaticName != null && !"".equals(strOriginStaticName)) {
-
-						fileManageServiceImpl.DeleteFile(strFilePath, strOriginStaticName + ".html");
+						if (!strOriginStaticName.toLowerCase().endsWith(".html")) {
+							strOriginStaticName = strOriginStaticName + ".html";
+						}
+						fileManageServiceImpl.DeleteFile(strFilePathdelete, strOriginStaticName);
 					}
 					psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 					psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
@@ -1271,6 +1289,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			returnJsonMap.replace("viewUrl", viewUrl);
 			// System.out.println("执行update方法");
 		} catch (Exception e) {
+			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}

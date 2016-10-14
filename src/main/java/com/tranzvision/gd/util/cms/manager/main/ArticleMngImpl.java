@@ -89,11 +89,12 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 				art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 				if (map.get("TZ_ART_SEQ") != null) {
-					art.setOrder((int) map.get("TZ_ART_SEQ"));
+					//art.setOrder((int) map.get("TZ_ART_SEQ"));
+					art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 				}
 
-				if (map.get("TZ_ART_SEQ") != null) {
-					art.setOrder((int) map.get("TZ_ART_SEQ"));
+				if (map.get("TZ_MAX_ZD_SEQ") != null) {
+					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
 				}
 
 				if (map.get("TZ_STATIC_ART_URL") != null) {
@@ -383,7 +384,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 				art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 				if (map.get("TZ_ART_SEQ") != null) {
-					art.setOrder((int) map.get("TZ_ART_SEQ"));
+					art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 				}
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
 					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
@@ -575,7 +576,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 			art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 			if (map.get("TZ_ART_SEQ") != null) {
-				art.setOrder((int) map.get("TZ_ART_SEQ"));
+				//art.setOrder((int) map.get("TZ_ART_SEQ"));
+				art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 			}
 			if (map.get("TZ_MAX_ZD_SEQ") != null) {
 				art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));
@@ -820,7 +822,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 				art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 				if (map.get("TZ_ART_SEQ") != null) {
-					art.setOrder((int) map.get("TZ_ART_SEQ"));
+					//art.setOrder((int) map.get("TZ_ART_SEQ"));
+					art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 				}
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
 					art.setMaxOrder((long) (map.get("TZ_MAX_ZD_SEQ")));

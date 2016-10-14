@@ -255,7 +255,7 @@ public class BatchReleaseEngine extends Thread {
 			CmsUtils cu = new CmsUtils();
 			CmsBean bean = null;
 			if (menuType.equals("A")) {
-				bean = cu.menuPage(siteId, menuId, contentPath, menuList,"1");
+				bean = cu.menuPage(siteId, menuId, contentPath, menuList, "1");
 			} else {
 				bean = cu.menuBook(siteId, menuId, menuList);
 			}
@@ -345,7 +345,7 @@ public class BatchReleaseEngine extends Thread {
 			// System.out.println("strOriginStaticName:" + strOriginStaticName);
 			// System.out.println("strAutoStaticName:" + strAutoStaticName);
 
-			if (strOriginStaticName == null || !strOriginStaticName.endsWith("")) {
+			if (strOriginStaticName != null && !strOriginStaticName.equals("")) {
 				strFileName = strOriginStaticName;
 			} else {
 				strFileName = strAutoStaticName;
@@ -371,11 +371,12 @@ public class BatchReleaseEngine extends Thread {
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
-					String staticPath = strFilePath+ "/" + strFileName;
-					// 更新PS_TZ_LM_NR_GL_T 栏目文章	对应表
+					String staticPath = strFilePath + "/" + strFileName;
+					// 更新PS_TZ_LM_NR_GL_T 栏目文章 对应表
 					if (br) {
 						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=?,TZ_STATIC_ART_URL=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
-						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml,staticPath, siteId, coluId, artId });
+						jdbcTemplate.update(sql,
+								new Object[] { contentHtml, contentHtml, staticPath, siteId, coluId, artId });
 					}
 				}
 			}
@@ -434,20 +435,22 @@ public class BatchReleaseEngine extends Thread {
 
 			// 静态化
 			/// System.out.println("strFilePath:" + strFilePath);
-			// System.out.println("strOriginStaticName:" + strOriginStaticName);
-			// System.out.println("strAutoStaticName:" + strAutoStaticName);
+			System.out.println("strOriginStaticName:" + strOriginStaticName);
+			System.out.println("strAutoStaticName:" + strAutoStaticName);
 
-			if (strOriginStaticName == null || !strOriginStaticName.endsWith("")) {
+			if (strOriginStaticName != null && !strOriginStaticName.equals("")) {
 				strFileName = strOriginStaticName;
 			} else {
 				strFileName = strAutoStaticName;
 			}
 
 			if (strFileName != null && !strFileName.equals("")) {
+				System.out.println("strFileName:" + strFileName);
 				if (!strFileName.toLowerCase().endsWith(".html")) {
 					strFileName = strFileName + ".html";
 				}
 
+				System.out.println("strFileName:" + strFileName);
 				// System.out.println("strFileName:" + strFileName);
 
 				ArtContentHtml artContentHtml = (ArtContentHtml) getSpringBeanUtil.getAutowiredSpringBean("ArtContent");
@@ -461,11 +464,12 @@ public class BatchReleaseEngine extends Thread {
 
 					// br = fileManageServiceImpl.UpdateFile(strFilePath,
 					// strFileName, contentHtml.getBytes());
-					String staticPath = strFilePath+ "/" + strFileName;
+					String staticPath = strFilePath + "/" + strFileName;
 					// 更新PS_TZ_LM_NR_GL_T 栏目文章对应表
 					if (br) {
 						sql = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_ART_CONENT_SCR=?,TZ_ART_HTML=?,TZ_STATIC_ART_URL=? WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
-						jdbcTemplate.update(sql, new Object[] { contentHtml, contentHtml,staticPath, siteId, coluId, artId });
+						jdbcTemplate.update(sql,
+								new Object[] { contentHtml, contentHtml, staticPath, siteId, coluId, artId });
 					}
 				}
 			}
