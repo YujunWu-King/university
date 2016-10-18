@@ -61,19 +61,19 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FliterForm fliterForm;
-	
+
 	@Autowired
 	private TZGDObject tzSQLObject;
-	
+
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private GetSeqNum getSeqNum;
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	
+
 	@Autowired
 	private PsTzArtRecTblMapper psTzArtRecTblMapper;
 	@Autowired
@@ -95,10 +95,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private ArtContentHtml artContentHtml;
 	@Autowired
-	private FileManageServiceImpl fileManageServiceImpl;	
+	private FileManageServiceImpl fileManageServiceImpl;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-	
+
 	/* 查询类型类型列表 */
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -117,7 +117,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					"TZ_REALNAME", "TZ_ART_PUB_STATE", "TZ_MAX_ZD_SEQ", "TZ_PAGE_REFCODE" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr,strParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
 			if (obj != null && obj.length > 0) {
 
@@ -150,8 +150,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 		return jacksonUtil.Map2json(mapRet);
 	}
-	
-	/* 获取内容栏目树类型定义*/
+
+	/* 获取内容栏目树类型定义 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -168,7 +168,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			String sql;
 			Map<String, Object> mapRet = new HashMap<String, Object>();
 			if ("SITE".equals(typeFlag)) {
-				//站点;
+				// 站点;
 
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				mapRet.put("TransList", arraylist);
@@ -187,7 +187,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					mapRet.replace("TransList", arraylist);
 				}
 				strRet = jacksonUtil.Map2json(mapRet);
-			}else if ("TREE".equals(typeFlag)) {
+			} else if ("TREE".equals(typeFlag)) {
 				// 站点编号
 				String siteId = jacksonUtil.getString("siteid");
 				// 一次性获取一整颗树的所有数据放入List
@@ -197,9 +197,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 				if (null == listData || listData.size() <= 0) {
 					/*
-					errMsg[0] = "1";
-					errMsg[1] = "树不存在";
-					*/
+					 * errMsg[0] = "1"; errMsg[1] = "树不存在";
+					 */
 					Map<String, Object> mapRootJson = new HashMap<String, Object>();
 					mapRootJson.put("id", "NAN");
 					mapRootJson.put("nodeId", "NAN");
@@ -211,13 +210,13 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					mapRootJson.put("expanded", "true");
 					mapRootJson.put("children", "{}");
 					mapRet.put("root", mapRootJson);
-				}else{
+				} else {
 
 					// 遍历List 得到树形结构
 					int flag = -1;
 					String TZ_COLU_LEVEL = "";
 					Map<String, Object> mapData = null;
-	
+
 					// 循环得到 根节点
 					for (Object objData : listData) {
 						mapData = (Map<String, Object>) objData;
@@ -227,14 +226,14 @@ public class ArtListServiceImpl extends FrameworkImpl {
 							break;
 						}
 					}
-	
+
 					if (flag == 0) {
 						String coluId = String.valueOf(mapData.get("TZ_COLU_ID"));
-	
+
 						List<Map<String, Object>> listChildren = this.getMenuList(coluId, listData);
-	
+
 						Map<String, Object> mapRootJson = new HashMap<String, Object>();
-	
+
 						// text : root.text,
 						// //nodeId : root.nodeId,
 						// id : root.coluId,
@@ -249,8 +248,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						// rootNode : config.coluId,
 						// expanded : root.expanded,
 						// children : me.getChartNavItems(items)
-						//System.out.println("id=" + coluId);
-	
+						// System.out.println("id=" + coluId);
+
 						mapRootJson.put("id", coluId);
 						mapRootJson.put("nodeId", coluId);
 						mapRootJson.put("siteId", siteId);
@@ -263,7 +262,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						mapRootJson.put("contentTypeId", mapData.get("TZ_ART_TYPE_ID").toString());
 						mapRootJson.put("coluTempletName", mapData.get("TZ_TEMP_NAME").toString());
 						mapRootJson.put("contentTypeName", mapData.get("TZ_ART_TYPE_NAME").toString());
-	
+
 						if (listData.size() > 1) {
 							mapRootJson.put("leaf", false); // 有子节点
 						} else {
@@ -297,7 +296,6 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
 
 	/**
 	 * 判断该节点是否存在子节点
@@ -324,7 +322,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		return false;
 
 	}
-	
+
 	/**
 	 * 获取菜单的下级菜单列表
 	 * 
@@ -386,7 +384,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		}
 		return listRet;
 	}
-	
+
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -439,7 +437,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			
+
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -458,14 +456,15 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						&& articleId != null && !"".equals(articleId)) {
 					if ("T".equals(clickTyp)) {
 						String topOrUndo = (String) dataMap.get("topOrUndo");
-						String maxSQL = "" ,updateSQL = "";
+						String maxSQL = "", updateSQL = "";
 						int maxZdSeq = 0;
-						
-						if("TOP".equals(topOrUndo)){
+
+						if ("TOP".equals(topOrUndo)) {
 							maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
-							try{
-								maxZdSeq = jdbcTemplate.queryForObject(maxSQL, new Object[]{siteId,columnId,articleId},"Integer");
-							}catch(Exception e){
+							try {
+								maxZdSeq = jdbcTemplate.queryForObject(maxSQL,
+										new Object[] { siteId, columnId, articleId }, "Integer");
+							} catch (Exception e) {
 								maxZdSeq = 0;
 							}
 							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
@@ -476,19 +475,20 @@ public class ArtListServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 							psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-						}else{
-							if("0".equals(topOrUndo)){
-								maxSQL = "SELECT TZ_MAX_ZD_SEQ FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?"; 
-								try{
-									maxZdSeq = jdbcTemplate.queryForObject(maxSQL, new Object[]{siteId,columnId,articleId},"Integer");
-								}catch(Exception e){
+						} else {
+							if ("0".equals(topOrUndo)) {
+								maxSQL = "SELECT TZ_MAX_ZD_SEQ FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
+								try {
+									maxZdSeq = jdbcTemplate.queryForObject(maxSQL,
+											new Object[] { siteId, columnId, articleId }, "Integer");
+								} catch (Exception e) {
 									maxZdSeq = 0;
 								}
-								
-								if(maxZdSeq > 0){
+
+								if (maxZdSeq > 0) {
 									updateSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
-									jdbcTemplate.update(updateSQL,new Object[]{siteId,columnId,maxZdSeq});
-									
+									jdbcTemplate.update(updateSQL, new Object[] { siteId, columnId, maxZdSeq });
+
 									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 									psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
 									psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
@@ -504,23 +504,25 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 					if ("P".equals(clickTyp)) {
 						String releaseOrUndo = (String) dataMap.get("releaseOrUndo");
-						
-						/*获取站点类型*/
+
+						/* 获取站点类型 */
 						String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-						String strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType,  new Object[] { siteId }, "String");
-						//获取静态路径地址
+						String strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType, new Object[] { siteId },
+								"String");
+						// 获取静态路径地址
 						String strBasePath = "";
 						String getBasePathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_LEVEL = '0' LIMIT 1";
-						strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[]{siteId},"String");
+						strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[] { siteId }, "String");
 						String strColuPath = "";
 						String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
-						strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[]{siteId,columnId},"String");
-						
+						strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[] { siteId, columnId },
+								"String");
+
 						String strFileName = "";
 						String strFilePath = "";
 						String strFilePathAccess = "";
-						
-						if(strBasePath != null && !"".equals(strBasePath)){
+
+						if (strBasePath != null && !"".equals(strBasePath)) {
 							if (!strBasePath.startsWith("/")) {
 								strBasePath = "/" + strBasePath;
 							}
@@ -528,8 +530,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
 							}
 						}
-						
-						if(strColuPath != null && !"".equals(strColuPath)){
+
+						if (strColuPath != null && !"".equals(strColuPath)) {
 							if (!strColuPath.startsWith("/")) {
 								strColuPath = "/" + strColuPath;
 							}
@@ -537,14 +539,15 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
 							}
 						}
-						
+
 						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 						dir = request.getServletContext().getRealPath(dir);
 						strFilePath = dir + strBasePath + strColuPath;
 						strFilePathAccess = strBasePath + strColuPath;
-								
-						String rootparth = "http://"+ request.getServerName()+":"+request.getServerPort()+ request.getContextPath();
-						
+
+						String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+								+ request.getContextPath();
+
 						PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
 						psTzLmNrGlTKey.setTzSiteId(siteId);
 						psTzLmNrGlTKey.setTzColuId(columnId);
@@ -559,7 +562,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
 							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
 							psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
-							//解析的模板内容;
+							// 解析的模板内容;
 							String contentHtml = artContentHtml.getContentHtml(siteId, columnId, articleId);
 							int success = 0;
 							psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
@@ -569,45 +572,48 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzArtNewsDt(new Date());
 								}
 								psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
-								//发布时，判断是否是外网网站，如果是，则静态化
-								//如果是外网站点和手机站点，则静态话
-								if("A".equals(strSiteType) || "B".equals(strSiteType)){
-									//静态化
-									if(strStaticName!=null && !"".equals(strStaticName)){
+								// 发布时，判断是否是外网网站，如果是，则静态化
+								// 如果是外网站点和手机站点，则静态话
+								if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+									// 静态化
+									if (strStaticName != null && !"".equals(strStaticName)) {
 										strFileName = strStaticName + ".html";
-									}else{
-										if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
+									} else {
+										if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 											strFileName = strAutoStaticName + ".html";
-										}else{
-											strAutoStaticName = String.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+										} else {
+											strAutoStaticName = String
+													.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
 											psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
 										}
 										strFileName = strAutoStaticName + ".html";
 									}
-									//System.out.println("文件路径：" + strFilePath);
-									//fileManageServiceImpl.UpdateFile(strFilePath, strFileName,contentHtml.getBytes());
-									artContentHtml.staticFile(contentHtml,strFilePath, strFileName);
-									
+									// System.out.println("文件路径：" +
+									// strFilePath);
+									// fileManageServiceImpl.UpdateFile(strFilePath,
+									// strFileName,contentHtml.getBytes());
+									artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
+
 									String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
-								}else{
+								} else {
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 								}
 							} else {
 								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
-								//删除静态化文件
-								if(strStaticName!=null && !"".equals(strStaticName)){
-									
+								// 删除静态化文件
+								if (strStaticName != null && !"".equals(strStaticName)) {
+
 									fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
 								}
-								if(strAutoStaticName!=null && !"".equals(strAutoStaticName)){
-									
+								if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+
 									fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
 								}
 								psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
@@ -615,16 +621,16 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 								artContentHtml.staticSiteInfoByChannel(siteId, columnId);
 							}
-							if (success <= 0){
+							if (success <= 0) {
 								errMsg[0] = "1";
 								errMsg[1] = "保存数据出错，未找到对应的数据";
 							}
 						}
 					}
-				}else{
-		        	errMsg[0] = "1";
+				} else {
+					errMsg[0] = "1";
 					errMsg[1] = "保存数据出错，未找到对应的数据";
-		        }
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -633,16 +639,16 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
+
 	/* 新增站点内容文章信息 */
 	@Override
-	public String tzOther(String oprType,String strParams, String[] errMsg) {
+	public String tzOther(String oprType, String strParams, String[] errMsg) {
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+
 		try {
 			int num = 0;
 			// 发布的站点;
@@ -651,66 +657,69 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			String coluId = "";
 			// 发布的内容id;
 			String artId = "";
-			//站点类型
+			// 站点类型
 			String strSiteType = "";
-			
+
 			jacksonUtil.json2Map(strParams);
 
 			// 点击事件类型：T置顶； P发布；
 			ArrayList<Map<String, Object>> copyData = (ArrayList<Map<String, Object>>) jacksonUtil.getList("copy");
-			for(int i = 0;i<copyData.size();i++){
-				   
-				   Map<String, Object> mapCopyData = copyData.get(i);
-				   String strChannelIdCopyTo = (String) mapCopyData.get("channelId");
-				   String strChannelIdCopyFrom = "";
-				   String strArtIdCopyFrom = "";
-				   String strSiteIdCopyFrom = "";
-				   System.out.println(strChannelIdCopyTo);
-				   Map<String, Object> artInfoCopyFrom = (Map<String, Object>) mapCopyData.get("data");
-				   if(artInfoCopyFrom.containsKey("articleId") && artInfoCopyFrom.containsKey("columnId")
-						   && artInfoCopyFrom.containsKey("siteId")){
-					   strArtIdCopyFrom = (String) artInfoCopyFrom.get("articleId");
-					   strChannelIdCopyFrom = (String) artInfoCopyFrom.get("columnId");
-					   strSiteIdCopyFrom = (String) artInfoCopyFrom.get("siteId");
-					   if(strArtIdCopyFrom!=null && !"".equals(strArtIdCopyFrom)
-							 && strChannelIdCopyFrom!=null && !"".equals(strChannelIdCopyFrom)
-							 && strSiteIdCopyFrom!=null && !"".equals(strSiteIdCopyFrom)){
-						   /*复制内容*/
-						   this.copyArtToOtherChannel(strArtIdCopyFrom,strChannelIdCopyFrom,strSiteIdCopyFrom,strChannelIdCopyTo);
-					   }
-				   }
-				   System.out.println(artInfoCopyFrom.get("articleId"));
-				   System.out.println(artInfoCopyFrom.get("siteId"));
-				   System.out.println(artInfoCopyFrom.get("columnId"));
+			for (int i = 0; i < copyData.size(); i++) {
+
+				Map<String, Object> mapCopyData = copyData.get(i);
+				String strChannelIdCopyTo = (String) mapCopyData.get("channelId");
+				String strChannelIdCopyFrom = "";
+				String strArtIdCopyFrom = "";
+				String strSiteIdCopyFrom = "";
+				System.out.println(strChannelIdCopyTo);
+				Map<String, Object> artInfoCopyFrom = (Map<String, Object>) mapCopyData.get("data");
+				if (artInfoCopyFrom.containsKey("articleId") && artInfoCopyFrom.containsKey("columnId")
+						&& artInfoCopyFrom.containsKey("siteId")) {
+					strArtIdCopyFrom = (String) artInfoCopyFrom.get("articleId");
+					strChannelIdCopyFrom = (String) artInfoCopyFrom.get("columnId");
+					strSiteIdCopyFrom = (String) artInfoCopyFrom.get("siteId");
+					if (strArtIdCopyFrom != null && !"".equals(strArtIdCopyFrom) && strChannelIdCopyFrom != null
+							&& !"".equals(strChannelIdCopyFrom) && strSiteIdCopyFrom != null
+							&& !"".equals(strSiteIdCopyFrom)) {
+						/* 复制内容 */
+						this.copyArtToOtherChannel(strArtIdCopyFrom, strChannelIdCopyFrom, strSiteIdCopyFrom,
+								strChannelIdCopyTo);
+					}
+				}
+				System.out.println(artInfoCopyFrom.get("articleId"));
+				System.out.println(artInfoCopyFrom.get("siteId"));
+				System.out.println(artInfoCopyFrom.get("columnId"));
 			}
 			// 提交的数据;
-			
-		}catch (Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			
+
 		return strRet;
 	}
+
 	/**/
-	private boolean copyArtToOtherChannel(String strArtIdCopyFrom,String strChannelIdCopyFrom,String strSiteIdCopyFrom,String strChannelIdCopyTo){
+	private boolean copyArtToOtherChannel(String strArtIdCopyFrom, String strChannelIdCopyFrom,
+			String strSiteIdCopyFrom, String strChannelIdCopyTo) {
 		boolean b_retrun = true;
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		
-		/*网站上传文件的路径*/
-		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();	
-		/*网站上传文件的真实路径*/
+
+		/* 网站上传文件的路径 */
+		String rootPath = getSysHardCodeVal.getWebsiteFileUploadPath();
+		/* 网站上传文件的真实路径 */
 		String realDir = request.getServletContext().getRealPath(rootPath);
-		
-		/*得到复制到的栏目对应的站点编号*/
+
+		/* 得到复制到的栏目对应的站点编号 */
 		// 获取机构对应的站点；
 		String siteSQL = " SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
-		String strSiteIdCopyTo = jdbcTemplate.queryForObject(siteSQL, new Object[] { strChannelIdCopyTo }, "String");	
+		String strSiteIdCopyTo = jdbcTemplate.queryForObject(siteSQL, new Object[] { strChannelIdCopyTo }, "String");
 		// 站点表;
 		PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteIdCopyTo);
 		String imagePath = psTzSiteiDefnT.getTzImgStor();
 		String attrPath = psTzSiteiDefnT.getTzAttsStor();
-		
+
 		// 文章表;
 		PsTzArtRecTblWithBLOBs psTzArtRecTblFrom = psTzArtRecTblMapper.selectByPrimaryKey(strArtIdCopyFrom);
 		// 内容站点关联表;
@@ -719,59 +728,77 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		psTzLmNrGlTKey.setTzColuId(strChannelIdCopyFrom);
 		psTzLmNrGlTKey.setTzArtId(strArtIdCopyFrom);
 		PsTzLmNrGlTWithBLOBs psTzLmNrGlTFrom = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
-		if(psTzArtRecTblFrom!=null && psTzLmNrGlTFrom !=null 
-				&& !"".equals(strChannelIdCopyTo) && !"".equals(strSiteIdCopyTo)){
+		if (psTzArtRecTblFrom != null && psTzLmNrGlTFrom != null && !"".equals(strChannelIdCopyTo)
+				&& !"".equals(strSiteIdCopyTo)) {
 			String copyToPath = "/" + orgid.toLowerCase() + "/" + strSiteIdCopyTo + "/" + this.getDateNow();
 			String imagePathP = realDir + copyToPath + "/" + imagePath;
 			String imagePathA = rootPath + copyToPath + "/" + imagePath;
 			String attrPathP = realDir + copyToPath + "/" + attrPath;
 			String attrPathA = rootPath + copyToPath + "/" + attrPath;
-			
-			if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length() ||
-					(attrPathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+
+			if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+					|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
 				imagePathP = imagePathP + "/";
 			}
-			if ((attrPathP.lastIndexOf("\\") + 1) != attrPathP.length() ||
-					(attrPathP.lastIndexOf("/") + 1) != attrPathP.length()) {
+
+			// 修改 By caoy
+			if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+					|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+				imagePathA = imagePathA + "/";
+			}
+
+			if ((attrPathP.lastIndexOf("\\") + 1) != attrPathP.length()
+					|| (attrPathP.lastIndexOf("/") + 1) != attrPathP.length()) {
 				attrPathP = attrPathP + "/";
 			}
-			
-			/*复制文章信息表*/
+
+			// 修改 By caoy
+			if ((attrPathA.lastIndexOf("\\") + 1) != attrPathA.length()
+					|| (attrPathA.lastIndexOf("/") + 1) != attrPathA.length()) {
+				attrPathA = attrPathA + "/";
+			}
+
+			/* 复制文章信息表 */
 			// 内容表;
 			String titleImageSysfilenaNew = "";
 			String titleImageSysfilenaFrom = psTzArtRecTblFrom.getTzAttachsysfilena();
-			if(titleImageSysfilenaFrom!=null && !"".equals(titleImageSysfilenaFrom)){
-				String titleImageSysfileSuffix = titleImageSysfilenaFrom.substring(titleImageSysfilenaFrom.lastIndexOf(".") + 1);
-				titleImageSysfilenaNew = (new StringBuilder(String.valueOf(getNowTime())))
-						.append(".").append(titleImageSysfileSuffix).toString();
+			if (titleImageSysfilenaFrom != null && !"".equals(titleImageSysfilenaFrom)) {
+				String titleImageSysfileSuffix = titleImageSysfilenaFrom
+						.substring(titleImageSysfilenaFrom.lastIndexOf(".") + 1);
+				titleImageSysfilenaNew = (new StringBuilder(String.valueOf(getNowTime()))).append(".")
+						.append(titleImageSysfileSuffix).toString();
 				PsTzArtTitimgT psTzArtTitimgT = new PsTzArtTitimgT();
 				psTzArtTitimgT = psTzArtTitimgTMapper.selectByPrimaryKey(titleImageSysfilenaFrom);
-				if(psTzArtTitimgT!=null){
+				if (psTzArtTitimgT != null) {
 					String attPurl = psTzArtTitimgT.getTzAttPUrl();
-					String slAttachsysnam =  psTzArtTitimgT.getTzSlAttachsysnam();
-					String ysAttachsysnam =  psTzArtTitimgT.getTzYsAttachsysnam();
+					String slAttachsysnam = psTzArtTitimgT.getTzSlAttachsysnam();
+					String ysAttachsysnam = psTzArtTitimgT.getTzYsAttachsysnam();
 					String slAttachsysnamNew = "MINI_" + titleImageSysfilenaNew;
 					String ysAttachsysnamNew = "NEW_" + titleImageSysfilenaNew;
-					/*复制文件*/
+					/* 复制文件 */
 					boolean bCopyTitleImg;
-					bCopyTitleImg = artContentHtml.copyFile(attPurl + titleImageSysfilenaFrom, imagePathP  + titleImageSysfilenaNew, false);
-					/*缩略图*/
-					if(slAttachsysnam!=null && !"".equals(slAttachsysnam)){
-						bCopyTitleImg = artContentHtml.copyFile(attPurl + slAttachsysnam, imagePathP + slAttachsysnamNew, false);
-						if(!bCopyTitleImg){
+					bCopyTitleImg = artContentHtml.copyFile(attPurl + titleImageSysfilenaFrom,
+							imagePathP + titleImageSysfilenaNew, false);
+					/* 缩略图 */
+					if (slAttachsysnam != null && !"".equals(slAttachsysnam)) {
+						bCopyTitleImg = artContentHtml.copyFile(attPurl + slAttachsysnam,
+								imagePathP + slAttachsysnamNew, false);
+						if (!bCopyTitleImg) {
 							slAttachsysnamNew = titleImageSysfilenaNew;
 						}
 					}
-					/*压缩图*/
-					if(ysAttachsysnam!=null && !"".equals(ysAttachsysnam)){
-						bCopyTitleImg = artContentHtml.copyFile(attPurl + ysAttachsysnam, imagePathP + ysAttachsysnamNew, false);
-						if(!bCopyTitleImg){
+					/* 压缩图 */
+					if (ysAttachsysnam != null && !"".equals(ysAttachsysnam)) {
+						bCopyTitleImg = artContentHtml.copyFile(attPurl + ysAttachsysnam,
+								imagePathP + ysAttachsysnamNew, false);
+						if (!bCopyTitleImg) {
 							ysAttachsysnamNew = titleImageSysfilenaNew;
 						}
 					}
-					//System.out.println(attPurl);
-					//System.out.println(imagePathP + File.separator + titleImageSysfilenaNew);
-					/*复制标题图信息*/
+					// System.out.println(attPurl);
+					// System.out.println(imagePathP + File.separator +
+					// titleImageSysfilenaNew);
+					/* 复制标题图信息 */
 					PsTzArtTitimgT psTzArtTitimgTNew = new PsTzArtTitimgT();
 					psTzArtTitimgTNew.setTzAttachsysfilena(titleImageSysfilenaNew);
 					psTzArtTitimgTNew.setTzAttachfileName(psTzArtTitimgT.getTzAttachfileName());
@@ -781,9 +808,9 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					psTzArtTitimgTNew.setTzYsAttachsysnam(ysAttachsysnamNew);
 					psTzArtTitimgTMapper.insertSelective(psTzArtTitimgTNew);
 				}
-				
+
 			}
-			
+
 			String strArtIdCopyTo = String.valueOf(getSeqNum.getSeqNum("TZ_ART_REC_TBL", "TZ_ART_ID"));
 			PsTzArtRecTblWithBLOBs PsTzArtRecTbl = new PsTzArtRecTblWithBLOBs();
 			PsTzArtRecTbl.setTzArtId(strArtIdCopyTo);
@@ -816,7 +843,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			PsTzArtRecTbl.setRowLastmantDttm(new Date());
 			PsTzArtRecTbl.setRowLastmantOprid(oprid);
 			psTzArtRecTblMapper.insertSelective(PsTzArtRecTbl);
-			
+
 			// 内容站点关联表;
 			PsTzLmNrGlTWithBLOBs psTzLmNrGlT = new PsTzLmNrGlTWithBLOBs();
 			psTzLmNrGlT.setTzSiteId(strSiteIdCopyTo);
@@ -831,58 +858,62 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			psTzLmNrGlT.setTzLastmantOprid(oprid);
 			psTzLmNrGlT.setTzOrginArtChnl(strChannelIdCopyFrom);
 			psTzLmNrGlT.setTzOrginArtId(strArtIdCopyFrom);
-			//psTzLmNrGlT.setTzArtNewsDt(psTzLmNrGlTFrom.getTzArtNewsDt());
+			// psTzLmNrGlT.setTzArtNewsDt(psTzLmNrGlTFrom.getTzArtNewsDt());
 			psTzLmNrGlT.setTzStaticName("");
 			psTzLmNrGlTMapper.insertSelective(psTzLmNrGlT);
-			
-			//图片集
-			jdbcTemplate.update("delete from PS_TZ_ART_PIC_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+
+			// 图片集
+			jdbcTemplate.update("delete from PS_TZ_ART_PIC_T where TZ_ART_ID=?", new Object[] { strArtIdCopyTo });
 			String sqlGetPicInfo = "SELECT a.TZ_ATTACHSYSFILENA,a.TZ_PRIORITY,a.TZ_IMG_DESCR,a.TZ_IMG_TRS_URL,b.TZ_ATTACHFILE_NAME,b.TZ_ATT_P_URL,"
 					+ " b.TZ_YS_ATTACHSYSNAM,b.TZ_SL_ATTACHSYSNAM"
 					+ " from PS_TZ_ART_PIC_T a, PS_TZ_ART_TPJ_T b where a.TZ_ART_ID=? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
-			List<Map<String, Object>> tpjAllList = jdbcTemplate.queryForList(sqlGetPicInfo,new Object[]{strArtIdCopyFrom});
-			if(tpjAllList != null && tpjAllList.size()>0){
-				for(int i = 0;i <tpjAllList.size();i++ ){
+			List<Map<String, Object>> tpjAllList = jdbcTemplate.queryForList(sqlGetPicInfo,
+					new Object[] { strArtIdCopyFrom });
+			if (tpjAllList != null && tpjAllList.size() > 0) {
+				for (int i = 0; i < tpjAllList.size(); i++) {
 					String sysTpjSysFname = (String) tpjAllList.get(i).get("TZ_ATTACHSYSFILENA");
 					String sysTpjFname = (String) tpjAllList.get(i).get("TZ_ATTACHFILE_NAME");
-					int numPriority =  Integer.parseInt(String.valueOf((tpjAllList.get(i).get("TZ_PRIORITY"))));
+					int numPriority = Integer.parseInt(String.valueOf((tpjAllList.get(i).get("TZ_PRIORITY"))));
 					String strImgDescr = (String) tpjAllList.get(i).get("TZ_IMG_DESCR");
 					String strImgTrsUrl = (String) tpjAllList.get(i).get("TZ_IMG_TRS_URL");
 					String strAttPurl = (String) tpjAllList.get(i).get("TZ_ATT_P_URL");
 					String sysTpjSuffix = sysTpjSysFname.substring(sysTpjSysFname.lastIndexOf(".") + 1);
-					String sysTpjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime())))
-							.append(".").append(sysTpjSuffix).toString();
-					
+					String sysTpjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime()))).append(".")
+							.append(sysTpjSuffix).toString();
+
 					String slTpjSysnam = (String) tpjAllList.get(i).get("TZ_SL_ATTACHSYSNAM");
 					String ysTpjSysnam = (String) tpjAllList.get(i).get("TZ_YS_ATTACHSYSNAM");
-					/*将文件复制到新的目录*/
+					/* 将文件复制到新的目录 */
 					String slTpjSysnamNew = "MINI_" + sysTpjSysFnameNew;
 					String ysTpjSysnamNew = "NEW_" + sysTpjSysFnameNew;
-					
-					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length() ||
-							(strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
+
+					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length()
+							|| (strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
 						strAttPurl = strAttPurl + "/";
 					}
-					/*复制图片*/
+					/* 复制图片 */
 					boolean bCopyTpjImg = false;
 					boolean bCopyTpjImg2 = false;
-					bCopyTpjImg = artContentHtml.copyFile(strAttPurl + sysTpjSysFname, imagePathP + sysTpjSysFnameNew, false);
-					/*缩略图*/
-					if(slTpjSysnam!=null && !"".equals(slTpjSysnam)){
-						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + slTpjSysnam, imagePathP+ slTpjSysnamNew, false);
-						if(!bCopyTpjImg2){
+					bCopyTpjImg = artContentHtml.copyFile(strAttPurl + sysTpjSysFname, imagePathP + sysTpjSysFnameNew,
+							false);
+					/* 缩略图 */
+					if (slTpjSysnam != null && !"".equals(slTpjSysnam)) {
+						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + slTpjSysnam, imagePathP + slTpjSysnamNew,
+								false);
+						if (!bCopyTpjImg2) {
 							slTpjSysnamNew = sysTpjSysFnameNew;
 						}
 					}
-					/*压缩图*/
-					if(ysTpjSysnam!=null && !"".equals(ysTpjSysnam)){
-						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + ysTpjSysnam, imagePathP + ysTpjSysnamNew, false);
-						if(!bCopyTpjImg2){
+					/* 压缩图 */
+					if (ysTpjSysnam != null && !"".equals(ysTpjSysnam)) {
+						bCopyTpjImg2 = artContentHtml.copyFile(strAttPurl + ysTpjSysnam, imagePathP + ysTpjSysnamNew,
+								false);
+						if (!bCopyTpjImg2) {
 							ysTpjSysnamNew = sysTpjSysFnameNew;
 						}
 					}
-					/*插入图片集信息*/
-					if(bCopyTpjImg){
+					/* 插入图片集信息 */
+					if (bCopyTpjImg) {
 						PsTzArtPicT psTzArtPicT = new PsTzArtPicT();
 						psTzArtPicT.setTzArtId(strArtIdCopyTo);
 						psTzArtPicT.setTzAttachsysfilena(sysTpjSysFnameNew);
@@ -890,7 +921,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						psTzArtPicT.setTzImgDescr(strImgDescr);
 						psTzArtPicT.setTzImgTrsUrl(strImgTrsUrl);
 						psTzArtPicTMapper.insert(psTzArtPicT);
-						
+
 						PsTzArtTpjT psTzArtTpjT = new PsTzArtTpjT();
 						psTzArtTpjT.setTzAttachsysfilena(sysTpjSysFnameNew);
 						psTzArtTpjT.setTzAttachfileName(sysTpjFname);
@@ -902,53 +933,55 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-			
-			//附件集
-			jdbcTemplate.update("delete from PS_TZ_ART_FILE_T where TZ_ART_ID=?",new Object[]{strArtIdCopyTo});
+
+			// 附件集
+			jdbcTemplate.update("delete from PS_TZ_ART_FILE_T where TZ_ART_ID=?", new Object[] { strArtIdCopyTo });
 			String sqlGetAttrInfo = "SELECT a.TZ_ATTACHSYSFILENA,b.TZ_ATTACHFILE_NAME,b.TZ_ATT_P_URL,b.TZ_ATT_A_URL"
 					+ " from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID= ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";
-			
-			List<Map<String, Object>> fjjAllList = jdbcTemplate.queryForList(sqlGetAttrInfo,new Object[]{strArtIdCopyFrom});
-			if(fjjAllList != null && fjjAllList.size()>0){
-				for(int i = 0;i <fjjAllList.size();i++ ){
+
+			List<Map<String, Object>> fjjAllList = jdbcTemplate.queryForList(sqlGetAttrInfo,
+					new Object[] { strArtIdCopyFrom });
+			if (fjjAllList != null && fjjAllList.size() > 0) {
+				for (int i = 0; i < fjjAllList.size(); i++) {
 					String sysFjjSysFname = (String) fjjAllList.get(i).get("TZ_ATTACHSYSFILENA");
 					String sysFjjFname = (String) fjjAllList.get(i).get("TZ_ATTACHFILE_NAME");
 					String strAttPurl = (String) fjjAllList.get(i).get("TZ_ATT_P_URL");
 					String sysFjjSuffix = sysFjjSysFname.substring(sysFjjSysFname.lastIndexOf(".") + 1);
-					String sysFjjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime())))
-							.append(".").append(sysFjjSuffix).toString();
-					
-					/*复制附件*/
+					String sysFjjSysFnameNew = (new StringBuilder(String.valueOf(getNowTime()))).append(".")
+							.append(sysFjjSuffix).toString();
+
+					/* 复制附件 */
 					boolean bCopyFjj = false;
-					
-					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length() ||
-							(strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
+
+					if ((strAttPurl.lastIndexOf("\\") + 1) != strAttPurl.length()
+							|| (strAttPurl.lastIndexOf("/") + 1) != strAttPurl.length()) {
 						strAttPurl = strAttPurl + "/";
 					}
-					bCopyFjj = artContentHtml.copyFile(strAttPurl + sysFjjSysFname, attrPathP + sysFjjSysFnameNew, false);
-					/*插入附件集信息*/
-					if(bCopyFjj){
-						
+					bCopyFjj = artContentHtml.copyFile(strAttPurl + sysFjjSysFname, attrPathP + sysFjjSysFnameNew,
+							false);
+					/* 插入附件集信息 */
+					if (bCopyFjj) {
+
 						PsTzArtFileTKey psTzArtFileTKey = new PsTzArtFileTKey();
 						psTzArtFileTKey.setTzArtId(strArtIdCopyTo);
 						psTzArtFileTKey.setTzAttachsysfilena(sysFjjSysFnameNew);
 						psTzArtFileTMapper.insert(psTzArtFileTKey);
-						
+
 						PsTzArtFjjT psTzArtFjjT = new PsTzArtFjjT();
 						psTzArtFjjT.setTzAttachsysfilena(sysFjjSysFnameNew);
 						psTzArtFjjT.setTzAttachfileName(sysFjjFname);
 						psTzArtFjjT.setTzAttPUrl(attrPathP);
 						psTzArtFjjT.setTzAttAUrl(attrPathA);
 						psTzArtFjjTMapper.insert(psTzArtFjjT);
-					}else{
-						
+					} else {
+
 					}
 				}
 			}
 		}
 		return b_retrun;
 	}
-	
+
 	protected String getDateNow() {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(1);

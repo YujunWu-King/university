@@ -168,8 +168,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+							
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+							
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
@@ -461,8 +475,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+							
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+							
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
@@ -653,8 +681,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					Map<String, Object> titleMap = jdbcTemplate.queryForMap(titleSQL, new Object[] { titleSysFileId });
 					if (titleMap != null) {
 						art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-						art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-						art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+						String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+						String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+						
+						if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+								|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+							imagePathP = imagePathP + "/";
+						}
+
+						// 修改 By caoy
+						if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+								|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+							imagePathA = imagePathA + "/";
+						}
+						
+						art.setImagePurl(imagePathP);
+						art.setImageAurl(imagePathA);
 						art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 						art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 					}
@@ -900,8 +942,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+							
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+							
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
