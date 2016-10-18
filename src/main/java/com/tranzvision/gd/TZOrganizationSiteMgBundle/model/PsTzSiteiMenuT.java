@@ -47,6 +47,8 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     private String tzMenuStyle;
 
+    private String tzMenuShow;
+
     private String tzMenuUrl;
 
     public String getTzMenuName() {
@@ -223,6 +225,14 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     public void setTzMenuStyle(String tzMenuStyle) {
         this.tzMenuStyle = tzMenuStyle == null ? null : tzMenuStyle.trim();
+    }
+
+    public String getTzMenuShow() {
+        return tzMenuShow;
+    }
+
+    public void setTzMenuShow(String tzMenuShow) {
+        this.tzMenuShow = tzMenuShow == null ? null : tzMenuShow.trim();
     }
 
     public String getTzMenuUrl() {
