@@ -28,6 +28,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuTreeStore',{
 				menuStyle : root.menuStyle,
 				NodeType : root.NodeType,
 				operateNode : root.operateNode,
+				menuShow:root.menuShow,
 				rootNode : root.id,
 				expanded : root.expanded,
 				children : me.getChartNavItems(items)

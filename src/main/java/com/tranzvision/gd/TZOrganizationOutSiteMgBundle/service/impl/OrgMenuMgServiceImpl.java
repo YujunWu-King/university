@@ -82,10 +82,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 			if (numLimit > 0) {
 
-				sql = "SELECT A.TZ_MENU_ID,A.TZ_MENU_NAME,B.TZ_ZHZ_DMS TZ_MENU_TYPE,A.TZ_MENU_XH FROM PS_TZ_SITEI_MENU_T A left join (SELECT TZ_ZHZ_ID, TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_ZDCD_LX' AND TZ_EFF_STATUS='A') B on A.TZ_MENU_TYPE = B.TZ_ZHZ_ID WHERE  A.TZ_F_MENU_ID = ? limit ?,?";
+				sql = "SELECT A.TZ_MENU_ID,A.TZ_MENU_NAME,B.TZ_ZHZ_DMS TZ_MENU_TYPE,A.TZ_MENU_XH,A.TZ_MENU_SHOW TZ_MENU_SHOW FROM PS_TZ_SITEI_MENU_T A left join (SELECT TZ_ZHZ_ID, TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_ZDCD_LX' AND TZ_EFF_STATUS='A') B on A.TZ_MENU_TYPE = B.TZ_ZHZ_ID WHERE  A.TZ_F_MENU_ID = ? limit ?,?";
 				list = sqlQuery.queryForList(sql, new Object[] { menuId, numStart, numLimit });
 			} else {
-				sql = "SELECT A.TZ_MENU_ID,A.TZ_MENU_NAME,B.TZ_ZHZ_DMS TZ_MENU_TYPE,A.TZ_MENU_XH FROM PS_TZ_SITEI_MENU_T A left join (SELECT TZ_ZHZ_ID, TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_ZDCD_LX' AND TZ_EFF_STATUS='A') B on A.TZ_MENU_TYPE = B.TZ_ZHZ_ID WHERE  A.TZ_F_MENU_ID = ?";
+				sql = "SELECT A.TZ_MENU_ID,A.TZ_MENU_NAME,B.TZ_ZHZ_DMS TZ_MENU_TYPE,A.TZ_MENU_XH,A.TZ_MENU_SHOW TZ_MENU_SHOW FROM PS_TZ_SITEI_MENU_T A left join (SELECT TZ_ZHZ_ID, TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_ZDCD_LX' AND TZ_EFF_STATUS='A') B on A.TZ_MENU_TYPE = B.TZ_ZHZ_ID WHERE  A.TZ_F_MENU_ID = ?";
 				list = sqlQuery.queryForList(sql, new Object[] { menuId });
 			}
 			// System.out.println("sql:" + sql);
@@ -98,11 +98,13 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					jsonMap.put("menuName", list.get(i).get("TZ_MENU_NAME"));
 					jsonMap.put("menuType", list.get(i).get("TZ_MENU_TYPE"));
 					jsonMap.put("menuXH", list.get(i).get("TZ_MENU_XH"));
+					jsonMap.put("menuShow", list.get(i).get("TZ_MENU_SHOW"));
 					arraylist.add(jsonMap);
 				}
 				returnJsonMap.replace("total", total);
 				returnJsonMap.replace("root", arraylist);
 			}
+			
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
@@ -111,6 +113,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 
+	
 	/**
 	 * 获取栏目节点信息
 	 * 
@@ -165,7 +168,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 					if (flag == 0) {
 						String menuId = String.valueOf(mapData.get("TZ_MENU_ID"));
-
+						
 						List<Map<String, Object>> listChildren = this.getMenuList(menuId, listData);
 
 						Map<String, Object> mapRootJson = new HashMap<String, Object>();
@@ -185,6 +188,11 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("menuPageName", mapData.get("TZ_PAGE_NAME").toString());
 						mapRootJson.put("defaultPage", mapData.get("TZ_DEFAULT_PAGE").toString());
 						mapRootJson.put("menuStyle", mapData.get("TZ_MENU_STYLE").toString());
+
+						if(mapData.get("TZ_MENU_SHOW").equals("Y"))
+							mapRootJson.put("menuShow", true);
+						else
+							mapRootJson.put("menuShow", false);
 						mapRootJson.put("isDefault", "");
 
 						if (listData.size() > 1) {
@@ -246,9 +254,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			for (Object objNode : listData) {
 				mapNode = (Map<String, Object>) objNode;
 				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
-
+					
 				if (TZ_F_MENU_ID.equals(FmenuId)) {
-
+					
 					menuId = String.valueOf(mapNode.get("TZ_MENU_ID"));
 					menuType = mapNode.get("TZ_MENU_TYPE").toString();
 					mapNodeJson = new HashMap<String, Object>();
@@ -264,7 +272,12 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("menuPageName", mapNode.get("TZ_PAGE_NAME").toString());
 					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
 					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
-
+					
+					if(mapNode.get("TZ_MENU_SHOW").equals("Y"))
+						mapNodeJson.put("menuShow", true);
+					else
+						mapNodeJson.put("menuShow", false);
+			
 					// 查询默认主页 A:PAGE B:BOOK
 					if (menuType.equals("A")) {
 						isDefault = this.isDefault(menuId, listData);
@@ -274,7 +287,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							mapNodeJson.put("isDefault", "N");
 						}
 					}
-
+						
 					mapNodeJson.put("NodeType", "");
 					mapNodeJson.put("operateNode", "");
 					mapNodeJson.put("rootNode", "");
@@ -298,6 +311,82 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		return listRet;
 	}
 
+	
+	public void getChildList(String FmenuId, List<Map<String, Object>> listData,List<Map<String, Object>>rs) {
+
+		if (rs == null) {
+			rs = new ArrayList<Map<String, Object>>();
+		}
+
+		try {
+			Map<String, Object> mapNode = null;
+			String TZ_F_MENU_ID = "";
+			boolean isLeaf = false;
+			boolean isDefault = false;
+			Map<String, Object> mapNodeJson = null;
+			String menuId = "";
+			String menuType = "";
+			for (Object objNode : listData) {
+				mapNode = (Map<String, Object>) objNode;
+				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
+					
+				if (TZ_F_MENU_ID.equals(FmenuId)) {
+					
+					menuId = String.valueOf(mapNode.get("TZ_MENU_ID"));
+					menuType = mapNode.get("TZ_MENU_TYPE").toString();
+					mapNodeJson = new HashMap<String, Object>();
+					mapNodeJson.put("id", menuId);
+					mapNodeJson.put("nodeId", menuId);
+					mapNodeJson.put("text", mapNode.get("TZ_MENU_NAME").toString());
+					mapNodeJson.put("menuState", mapNode.get("TZ_MENU_STATE").toString());
+					mapNodeJson.put("menuType", menuType);
+					mapNodeJson.put("menuXH", mapNode.get("TZ_MENU_XH").toString());
+					mapNodeJson.put("menuPath", mapNode.get("TZ_MENU_PATH").toString());
+					mapNodeJson.put("menuTempletId", mapNode.get("TZ_TEMP_ID").toString());
+					mapNodeJson.put("menuTempletName", mapNode.get("TZ_TEMP_NAME").toString());
+					mapNodeJson.put("menuPageName", mapNode.get("TZ_PAGE_NAME").toString());
+					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
+					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
+					
+					if(mapNode.get("TZ_MENU_SHOW").equals("Y"))
+						mapNodeJson.put("menuShow", true);
+					else
+						mapNodeJson.put("menuShow", false);
+			
+					// 查询默认主页 A:PAGE B:BOOK
+					if (menuType.equals("A")) {
+						isDefault = this.isDefault(menuId, listData);
+						if (isDefault) {
+							mapNodeJson.put("isDefault", "Y");
+						} else {
+							mapNodeJson.put("isDefault", "N");
+						}
+					}
+						
+					mapNodeJson.put("NodeType", "");
+					mapNodeJson.put("operateNode", "");
+					mapNodeJson.put("rootNode", "");
+
+					isLeaf = this.isLeaf(menuId, listData);
+					if (isLeaf) {
+						mapNodeJson.put("leaf", false);
+						mapNodeJson.put("expanded", true);
+						rs.add(mapNodeJson);
+						this.getChildList(menuId, listData,rs);
+					} else {
+						mapNodeJson.put("leaf", true);
+						rs.add(mapNodeJson);
+					}
+
+					
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * 判断该节点是否存在子节点
 	 * 
@@ -347,7 +436,21 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		}
 		return false;
 	}
-
+	public List<Map<String,Object>> colseMenuShow(List<Map<String,Object>> sonList,List<Map<String,Object>> listData){
+		for(int i=0;i<sonList.size();i++)
+		{
+			sonList.get(i).replace("TZ_MENU_SHOW", "N");
+			System.out.println("menuId:"+sonList.get(i).get("id"));
+			//sqlQuery.execute("update  PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N' where TZ_MENU_ID='"+sonList.get(i).get("id")+"'");
+			String sql = "update  PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N' where TZ_MENU_ID =?";
+			sqlQuery.update(sql,new Object[] { sonList.get(i).get("id")});
+			List<Map<String, Object>> tempList=this.getMenuList(sonList.get(i).get("id").toString(),listData);
+			if(tempList!=null)
+			colseMenuShow(tempList,listData);
+		}
+		return sonList;
+	}
+	
 	/**
 	 * 功能说明：插入节点信息
 	 * 
@@ -358,6 +461,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
+
 
 		String strRet = "{}";
 		// 若参数为空，直接返回;
@@ -388,16 +492,18 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			String operateNode = "";
 			String menuXH = "";
 			String menuStyle = "";
+			String menuShow="";
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			Map<String, Object> mapData = null;
 
 			// 父节点 操作节点的父节点
 			Map<String, Object> pNode = null;
-
+			
 			// 自己节点，操作节点
 			Map<String, Object> thisNode = null;
-
+			//子节点
+			List<Map<String,Object>>sonList=null;
 			// 根节点
 			Map<String, Object> rootNode = null;
 
@@ -436,7 +542,6 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					menuTempletId = infoData.get("menuTempletId").toString();
 					// 循序
 					menuXH = infoData.get("menuXH").toString();
-
 					// 页面内容;
 					if (infoData.containsKey("menuPageName")) {
 						menuPageName = infoData.get("menuPageName").toString();
@@ -452,6 +557,14 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						isDefault = "N";
 					}
 
+					if(infoData.containsKey("menuShow"))
+					{
+						menuShow= infoData.get("menuShow").toString();
+						//System.out.println(infoData.get("menuShow").toString());
+					}
+					else
+						menuShow="N";
+					//System.out.println("--------add--------menuShow----"+menuShow);
 					System.out.println("isDefault:" + isDefault);
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 					NodeType = infoData.get("NodeType").toString();
@@ -511,8 +624,11 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-					System.out.println("menuStyle=" + menuStyle);
+					//System.out.println("menuStyle=" + menuStyle);
+					//通过上的操作得到 当前节点父亲节点为pNode,当前节点为thisNode
+	
 
+					
 					// boolean boolRst = false;
 					switch (NodeType) {
 					// 添加同级节点;
@@ -531,7 +647,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
-
+						psTzSiteiMenuT.setTzMenuShow(menuShow);
+						
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
 
@@ -584,7 +701,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
-
+						psTzSiteiMenuT.setTzMenuShow(menuShow);
+						
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
 
@@ -628,7 +746,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzMenuState(menuState);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
-
+						psTzSiteiMenuT.setTzMenuShow(menuShow);
+						
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzLastmantOprid(oprid);
@@ -666,7 +785,19 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 								defaultPage = menuName;
 							}
 						}
-
+						//获取子节点集合
+						sonList=getMenuList(thisNode.get("TZ_MENU_ID").toString(),listData);
+						//if(sonList!=null)
+						//System.out.println("sonListSize:"+sonList.size());
+						//System.out.println("TZ_MENU_ID:"+thisNode.get("TZ_MENU_ID").toString());
+						//System.out.println("TZ_MENU_SHOW:"+thisNode.get("TZ_MENU_SHOW"));
+						//System.out.println("====show==="+menuShow);
+						if(sonList!=null&&menuShow.equals("N"))
+						{
+								this.colseMenuShow(sonList, listData);
+						}
+						//this.getChildList(thisNode.get("TZ_MENU_ID").toString(), listData, sonList);
+						//System.out.println(sonList.size());
 						break;
 					}
 
@@ -794,6 +925,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			CmsUtils cu = new CmsUtils();
 			if ("mainMenu".equals(oprType)) {
 				jacksonUtil.json2Map(strParams);
+	
 				String siteId = jacksonUtil.getString("siteId");
 				CmsBean cm = cu.menuBook(siteId, "");
 				// 写文件

@@ -51,6 +51,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						NodeType : record.data.NodeType,
 						operateNode : record.data.operateNode,
 						rootNode : record.data.rootNode,
+						menuShow : record.data.menuShow,
 						siteId : me.siteId
 					});
 					form.findField("menuId").setReadOnly(true);
@@ -59,6 +60,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					form.findField("menuPath").addCls('lanage_1'); 
 					form.findField("menuType").setReadOnly(true);
 					form.findField("menuType").addCls('lanage_1'); 
+					
 					// 如果是BOOK类型隐藏menuPageName隐藏是否默认页面，显示路径
 					// A:PAGE  B:BOOK
 					if (record.data.menuType == "B") {
@@ -66,12 +68,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						form.findField("isDefault").hide();
 						form.findField("menuPath").show();
 						form.findField("defaultPage").show();
+					
 						//form.findField("menuStyle").show();
 					} else {
 						//form.findField("menuPageName").show();
 						form.findField("isDefault").show();
 						form.findField("menuPath").hide();
 						form.findField("defaultPage").hide();
+					
 						//form.findField("menuStyle").hide();
 					}
 					view.findParentByType("menuEdit").actType = "update";
@@ -222,6 +226,12 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					name : 'isDefault',
 					inputValue: 'Y'
 				},{
+					xtype: 'checkboxfield',
+					fieldLabel  : '是否显示',
+					inputValue: 'Y',
+					name : 'menuShow'
+				}
+				,{
 					layout : {
 						type : 'column'
 					},
@@ -253,7 +263,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						fieldLabel  : '默认首页',
 						name : 'defaultPage'
 					}]
-				},{
+				}
+				,{
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 					xtype : 'textfield',
 					name : 'NodeType',
@@ -349,6 +360,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				operateNode : rootNode.data.operateNode,
 				rootNode : rootNode.data.rootNode,
 				siteId : me.siteId,
+				menuShow:rootNode.data.mennuShow,
 				menuTempletName : rootNode.data.menuTempletName
 			});
 			form.findField("menuId").setReadOnly(true);
