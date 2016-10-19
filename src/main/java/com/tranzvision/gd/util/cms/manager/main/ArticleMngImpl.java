@@ -170,14 +170,12 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
 							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
 
-							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
-									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+							if (!imagePathP.trim().endsWith("/")) {
 								imagePathP = imagePathP + "/";
 							}
 
 							// 修改 By caoy
-							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
-									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+							if (!imagePathA.trim().endsWith("/")) {
 								imagePathA = imagePathA + "/";
 							}
 
@@ -264,14 +262,12 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						String imagePathP = (String) map.get("TZ_ATT_P_URL");
 						String imagePathA = (String) map.get("TZ_ATT_A_URL");
 
-						if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
-								|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+						if (!imagePathP.trim().endsWith("/")) {
 							imagePathP = imagePathP + "/";
 						}
 
 						// 修改 By caoy
-						if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
-								|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+						if (!imagePathA.trim().endsWith("/")) {
 							imagePathA = imagePathA + "/";
 						}
 
