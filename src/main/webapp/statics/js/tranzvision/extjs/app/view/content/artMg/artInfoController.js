@@ -66,6 +66,9 @@
 			var artId = form.findField("artId").getValue();
 			var siteId = form.findField("siteId").getValue();
 			var columnId = form.findField("coluId").getValue();
+			
+			var editType=form.findField("type").getValue();
+			
 			fbDt = form.findField("artNewsDT").getValue();
 			
 			if(actType=="update" && (artId=="" || typeof(artId) == "undefined" )){
@@ -208,6 +211,10 @@
 		var actType = this.getView().actType;
 		//活动ID;
 		var artId = form.findField("artId").getValue();
+		
+		//编辑类型
+		var editType=form.findField("type").getValue();
+		
 		//更新操作参数
 		var comParams = "";
 		//新增

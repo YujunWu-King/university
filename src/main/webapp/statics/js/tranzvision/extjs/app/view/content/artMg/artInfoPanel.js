@@ -171,10 +171,47 @@
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.externalLink","外部引用链接"),
 			name: 'externalLink'
         },{
+        	xtype:'radiogroup',
+        	fieldLabel:'内容编辑类型',
+        	items: [{
+        		name: 'type',
+        		inputValue: '0',
+        		boxLabel: 'html编辑',
+        		checked: true,
+        		listeners:{
+        			"change":function(el,checked){
+        				if(checked){
+        					el.findParentByType("form").getForm().findField('contentInfo1').hide();
+        					el.findParentByType("form").getForm().findField('contentInfo').show();
+        				}
+        			}
+        		}
+        		},{
+        		name: 'type',
+        		inputValue: '1',
+        		boxLabel: '文本框编辑',
+        			listeners:{
+            			"change":function(el,checked){
+            				if(checked){
+            					el.findParentByType("form").getForm().findField('contentInfo1').show();
+            					el.findParentByType("form").getForm().findField('contentInfo').hide();
+            				}
+            			}
+            		}
+        		}]
+        },{
             xtype: 'ueditor',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.contentInfo","内容"),
             zIndex: 900,
-			name: 'contentInfo'
+            name: 'contentInfo'
+            
+        },{
+         	xtype: 'textarea',
+        	hidden:true,
+        	fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.contentInfo1","内容"),
+        	name: 'contentInfo1',
+        	height:200
+        	
         },{
 			xtype: 'fieldset',
 			layout: {
@@ -230,7 +267,7 @@
                 }]
 			}]
         },{
-           xtype: 'textfield',
+        	xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artFbz","发布者"),
             maxLength :100,
 			name: 'artFbz'
@@ -371,7 +408,7 @@
 						    	tpl:[
 						    		'<tpl for=".">',
 						    		'<div class="thumb-wrap" id="{index}">',
-							        	'<div style="width:160px;height:113px;background:url({sltUrl});background-size:100%">',
+							        	'<div style="width:160px;height:113px;background:url({sltUrl}) no-repeat;background-size:cover">',
 								        	'<img src="'+TzUniversityContextPath+'/statics/images/tranzvision/bj.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_Editor({index})"/>',
 								        	'<img src="'+TzUniversityContextPath+'/statics/images/tranzvision/jh.png" class="picEider" onMouseOver="getMouser(this)" onMouseOut="outMouser(this)" onclick="clickMouser_D({index})"/>',
 							        	'</div>',

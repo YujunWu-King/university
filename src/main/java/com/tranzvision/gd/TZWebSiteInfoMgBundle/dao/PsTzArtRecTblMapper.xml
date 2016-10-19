@@ -30,6 +30,7 @@
     <result column="TZ_DATE1" jdbcType="DATE" property="tzDate1" />
     <result column="TZ_DATE2" jdbcType="DATE" property="tzDate2" />
     <result column="TZ_SUBHEAD" jdbcType="VARCHAR" property="tzSubhead" />
+    <result column="TZ_ART_EDITTYPE" jdbcType="VARCHAR" property="tzArtEdittype" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     <result column="TZ_ART_TITLE_STYLE" jdbcType="LONGVARCHAR" property="tzArtTitleStyle" />
@@ -45,7 +46,7 @@
     TZ_END_DATE, TZ_END_TIME, TZ_ATTACHSYSFILENA, TZ_IMAGE_TITLE, TZ_IMAGE_DESC, ROW_ADDED_DTTM, 
     ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_PROJECT_LIMIT, 
     TZ_METAKEYS, TZ_METADESC, TZ_ART_SHORTTITLE, TZ_TXT1, TZ_TXT2, TZ_TXT3, TZ_TXT4, 
-    TZ_DATE1, TZ_DATE2, TZ_SUBHEAD
+    TZ_DATE1, TZ_DATE2, TZ_SUBHEAD, TZ_ART_EDITTYPE
   </sql>
   <sql id="Blob_Column_List">
     TZ_ART_TITLE_STYLE, TZ_ART_CONENT, TZ_OUT_ART_URL, TZ_LONG1, TZ_LONG2, TZ_LONG3, 
@@ -73,9 +74,10 @@
       TZ_METAKEYS, TZ_METADESC, TZ_ART_SHORTTITLE, 
       TZ_TXT1, TZ_TXT2, TZ_TXT3, 
       TZ_TXT4, TZ_DATE1, TZ_DATE2, 
-      TZ_SUBHEAD, TZ_ART_TITLE_STYLE, TZ_ART_CONENT, 
-      TZ_OUT_ART_URL, TZ_LONG1, TZ_LONG2, 
-      TZ_LONG3, TZ_ABOUT)
+      TZ_SUBHEAD, TZ_ART_EDITTYPE, TZ_ART_TITLE_STYLE, 
+      TZ_ART_CONENT, TZ_OUT_ART_URL, TZ_LONG1, 
+      TZ_LONG2, TZ_LONG3, TZ_ABOUT
+      )
     values (#{tzArtId,jdbcType=VARCHAR}, #{tzArtTitle,jdbcType=VARCHAR}, #{tzArtName,jdbcType=VARCHAR}, 
       #{tzArtType1,jdbcType=VARCHAR}, #{tzStartDate,jdbcType=DATE}, #{tzStartTime,jdbcType=TIME}, 
       #{tzEndDate,jdbcType=DATE}, #{tzEndTime,jdbcType=TIME}, #{tzAttachsysfilena,jdbcType=VARCHAR}, 
@@ -85,9 +87,10 @@
       #{tzMetakeys,jdbcType=VARCHAR}, #{tzMetadesc,jdbcType=VARCHAR}, #{tzArtShorttitle,jdbcType=VARCHAR}, 
       #{tzTxt1,jdbcType=VARCHAR}, #{tzTxt2,jdbcType=VARCHAR}, #{tzTxt3,jdbcType=VARCHAR}, 
       #{tzTxt4,jdbcType=VARCHAR}, #{tzDate1,jdbcType=DATE}, #{tzDate2,jdbcType=DATE}, 
-      #{tzSubhead,jdbcType=VARCHAR}, #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, #{tzArtConent,jdbcType=LONGVARCHAR}, 
-      #{tzOutArtUrl,jdbcType=LONGVARCHAR}, #{tzLong1,jdbcType=LONGVARCHAR}, #{tzLong2,jdbcType=LONGVARCHAR}, 
-      #{tzLong3,jdbcType=LONGVARCHAR}, #{tzAbout,jdbcType=LONGVARCHAR})
+      #{tzSubhead,jdbcType=VARCHAR}, #{tzArtEdittype,jdbcType=VARCHAR}, #{tzArtTitleStyle,jdbcType=LONGVARCHAR}, 
+      #{tzArtConent,jdbcType=LONGVARCHAR}, #{tzOutArtUrl,jdbcType=LONGVARCHAR}, #{tzLong1,jdbcType=LONGVARCHAR}, 
+      #{tzLong2,jdbcType=LONGVARCHAR}, #{tzLong3,jdbcType=LONGVARCHAR}, #{tzAbout,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs">
     insert into PS_TZ_ART_REC_TBL
@@ -175,6 +178,9 @@
       </if>
       <if test="tzSubhead != null">
         TZ_SUBHEAD,
+      </if>
+      <if test="tzArtEdittype != null">
+        TZ_ART_EDITTYPE,
       </if>
       <if test="tzArtTitleStyle != null">
         TZ_ART_TITLE_STYLE,
@@ -283,6 +289,9 @@
       <if test="tzSubhead != null">
         #{tzSubhead,jdbcType=VARCHAR},
       </if>
+      <if test="tzArtEdittype != null">
+        #{tzArtEdittype,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtTitleStyle != null">
         #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
@@ -390,6 +399,9 @@
       <if test="tzSubhead != null">
         TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR},
       </if>
+      <if test="tzArtEdittype != null">
+        TZ_ART_EDITTYPE = #{tzArtEdittype,jdbcType=VARCHAR},
+      </if>
       <if test="tzArtTitleStyle != null">
         TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       </if>
@@ -443,6 +455,7 @@
       TZ_DATE1 = #{tzDate1,jdbcType=DATE},
       TZ_DATE2 = #{tzDate2,jdbcType=DATE},
       TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR},
+      TZ_ART_EDITTYPE = #{tzArtEdittype,jdbcType=VARCHAR},
       TZ_ART_TITLE_STYLE = #{tzArtTitleStyle,jdbcType=LONGVARCHAR},
       TZ_ART_CONENT = #{tzArtConent,jdbcType=LONGVARCHAR},
       TZ_OUT_ART_URL = #{tzOutArtUrl,jdbcType=LONGVARCHAR},
@@ -480,7 +493,8 @@
       TZ_TXT4 = #{tzTxt4,jdbcType=VARCHAR},
       TZ_DATE1 = #{tzDate1,jdbcType=DATE},
       TZ_DATE2 = #{tzDate2,jdbcType=DATE},
-      TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR}
+      TZ_SUBHEAD = #{tzSubhead,jdbcType=VARCHAR},
+      TZ_ART_EDITTYPE = #{tzArtEdittype,jdbcType=VARCHAR}
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
   </update>
 </mapper>
