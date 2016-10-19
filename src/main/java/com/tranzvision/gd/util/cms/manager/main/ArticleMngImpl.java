@@ -41,8 +41,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						+ " B.TZ_ART_URL,B.TZ_STATIC_ART_URL,B.TZ_ART_SEQ,"
 						+ " B.TZ_MAX_ZD_SEQ,B.TZ_FBZ,B.TZ_BLT_DEPT,B.TZ_LASTMANT_OPRID," + " B.TZ_LASTMANT_DTTM "
 						+ " FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B," + " PS_TZ_SITEI_COLU_T E"
-						+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID"
-						+ " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
+						+ " WHERE A.TZ_ART_ID = B.TZ_ART_ID" + " AND B.TZ_SITE_ID = E.TZ_SITEI_ID "
 						+ " AND B.TZ_COLU_ID = E.TZ_COLU_ID " + " AND A.TZ_ART_ID = ? AND B.TZ_COLU_ID = ?";
 				map = jdbcTemplate.queryForMap(sql, new Object[] { id, chnlid });
 			} else {
@@ -89,7 +88,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 				art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 				if (map.get("TZ_ART_SEQ") != null) {
-					//art.setOrder((int) map.get("TZ_ART_SEQ"));
+					// art.setOrder((int) map.get("TZ_ART_SEQ"));
 					art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 				}
 
@@ -168,8 +167,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
@@ -247,8 +260,23 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 						aimg.setArtId((String) map.get("TZ_ART_ID"));
 						aimg.setPriority((long) map.get("TZ_PRIORITY"));
 						aimg.setDesc((String) map.get("TZ_IMG_DESCR"));
-						aimg.setPurl((String) map.get("TZ_ATT_P_URL"));
-						aimg.setUrl((String) map.get("TZ_ATT_A_URL"));
+
+						String imagePathP = (String) map.get("TZ_ATT_P_URL");
+						String imagePathA = (String) map.get("TZ_ATT_A_URL");
+
+						if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+								|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+							imagePathP = imagePathP + "/";
+						}
+
+						// 修改 By caoy
+						if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+								|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+							imagePathA = imagePathA + "/";
+						}
+
+						aimg.setPurl(imagePathP);
+						aimg.setUrl(imagePathA);
 						aimg.setLink((String) map.get("TZ_IMG_TRS_URL"));
 						aimg.setTitle((String) map.get("TZ_ATTACHFILE_NAME"));
 
@@ -461,8 +489,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
@@ -576,7 +618,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 			art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 			art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 			if (map.get("TZ_ART_SEQ") != null) {
-				//art.setOrder((int) map.get("TZ_ART_SEQ"));
+				// art.setOrder((int) map.get("TZ_ART_SEQ"));
 				art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 			}
 			if (map.get("TZ_MAX_ZD_SEQ") != null) {
@@ -653,8 +695,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 					Map<String, Object> titleMap = jdbcTemplate.queryForMap(titleSQL, new Object[] { titleSysFileId });
 					if (titleMap != null) {
 						art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-						art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-						art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+						String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+						String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+
+						if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+								|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+							imagePathP = imagePathP + "/";
+						}
+
+						// 修改 By caoy
+						if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+								|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+							imagePathA = imagePathA + "/";
+						}
+
+						art.setImagePurl(imagePathP);
+						art.setImageAurl(imagePathA);
 						art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 						art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 					}
@@ -822,7 +878,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				art.setModifier((String) map.get("TZ_LASTMANT_OPRID"));
 				art.setUpdated((Date) map.get("TZ_LASTMANT_DTTM"));
 				if (map.get("TZ_ART_SEQ") != null) {
-					//art.setOrder((int) map.get("TZ_ART_SEQ"));
+					// art.setOrder((int) map.get("TZ_ART_SEQ"));
 					art.setOrder(((Long) map.get("TZ_ART_SEQ")).intValue());
 				}
 				if (map.get("TZ_MAX_ZD_SEQ") != null) {
@@ -900,8 +956,22 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 								new Object[] { titleSysFileId });
 						if (titleMap != null) {
 							art.setImageName((String) titleMap.get("TZ_ATTACHFILE_NAME"));
-							art.setImagePurl((String) titleMap.get("TZ_ATT_P_URL"));
-							art.setImageAurl((String) titleMap.get("TZ_ATT_A_URL"));
+							String imagePathP = (String) titleMap.get("TZ_ATT_P_URL");
+							String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+
+							if ((imagePathP.lastIndexOf("\\") + 1) != imagePathP.length()
+									|| (imagePathP.lastIndexOf("/") + 1) != imagePathP.length()) {
+								imagePathP = imagePathP + "/";
+							}
+
+							// 修改 By caoy
+							if ((imagePathA.lastIndexOf("\\") + 1) != imagePathA.length()
+									|| (imagePathA.lastIndexOf("/") + 1) != imagePathA.length()) {
+								imagePathA = imagePathA + "/";
+							}
+
+							art.setImagePurl(imagePathP);
+							art.setImageAurl(imagePathA);
 							art.setYsName((String) titleMap.get("TZ_YS_ATTACHSYSNAM"));
 							art.setSlName((String) titleMap.get("TZ_SL_ATTACHSYSNAM"));
 						}
