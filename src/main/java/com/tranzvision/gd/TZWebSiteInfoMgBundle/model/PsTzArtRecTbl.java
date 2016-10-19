@@ -59,6 +59,8 @@ public class PsTzArtRecTbl {
 
     private String tzSubhead;
 
+    private String tzArtEdittype;
+
     public String getTzArtId() {
         return tzArtId;
     }
@@ -281,5 +283,13 @@ public class PsTzArtRecTbl {
 
     public void setTzSubhead(String tzSubhead) {
         this.tzSubhead = tzSubhead == null ? null : tzSubhead.trim();
+    }
+
+    public String getTzArtEdittype() {
+        return tzArtEdittype;
+    }
+
+    public void setTzArtEdittype(String tzArtEdittype) {
+        this.tzArtEdittype = tzArtEdittype == null ? null : tzArtEdittype.trim();
     }
 }
