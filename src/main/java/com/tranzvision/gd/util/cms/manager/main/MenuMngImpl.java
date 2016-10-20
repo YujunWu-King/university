@@ -38,7 +38,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		sql.append("ifnull(TZ_MENU_PATH,\"\") TZ_MENU_PATH,");
 		sql.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
 		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME,");
-		sql.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE");
+		sql.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE,");
 		sql.append("ifnull(TZ_MENU_SHOW,\"\") TZ_MENU_SHOW");
 		sql.append(" from PS_TZ_SITEI_MENU_T");
 		sql.append(" where TZ_SITEI_ID=?");
