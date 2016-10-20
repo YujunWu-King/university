@@ -95,8 +95,12 @@ public class CmsUtils {
 		String tplName = tpl.getId();
 
 		StringWriter out = new StringWriter();
-		FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
-
+		try {
+			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		String contents = out.toString();
 
 		return contents;
@@ -120,9 +124,10 @@ public class CmsUtils {
 		System.out.println("time:" + (System.currentTimeMillis() - l));
 		// 根据ID得到菜单信息
 		CmsMenu menu = menuMng.findMenu(id, siteId);
-		if (menu == null) {
-			menu = menuMng.findRootMenu(siteId);
-		}
+		
+//		if (menu == null) {
+//			menu = menuMng.findRootMenu(siteId);
+//		}
 		if (menu == null) {
 			return null;
 		}
@@ -179,7 +184,12 @@ public class CmsUtils {
 				}
 				String tplName = tpl.getId();
 				StringWriter out = new StringWriter();
-				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				try {
+					FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				} catch(Exception e) {
+					e.printStackTrace();
+					return null;
+				}
 
 				CmsBean bean = new CmsBean();
 				bean.setHtml(out.toString());
@@ -209,9 +219,9 @@ public class CmsUtils {
 		MenuMng menuMng = new MenuMngImpl(menuList);
 		// 根据ID得到菜单信息
 		CmsMenu menu = menuMng.findMenu(id, siteId);
-		if (menu == null) {
-			menu = menuMng.findRootMenu(siteId);
-		}
+//		if (menu == null) {
+//			menu = menuMng.findRootMenu(siteId);
+//		}
 		if (menu == null) {
 			return null;
 		}
@@ -264,7 +274,12 @@ public class CmsUtils {
 				}
 				String tplName = tpl.getId();
 				StringWriter out = new StringWriter();
-				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				try {
+					FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				} catch(Exception e) {
+					e.printStackTrace();
+					return null;
+				}
 
 				CmsBean bean = new CmsBean();
 				bean.setHtml(out.toString());
@@ -319,7 +334,12 @@ public class CmsUtils {
 				String tplName = tpl.getId();
 
 				StringWriter out = new StringWriter();
-				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				try {
+					FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				} catch(Exception e) {
+					e.printStackTrace();
+					return null;
+				}
 				CmsBean bean = new CmsBean();
 				bean.setHtml(out.toString());
 				bean.setPath(menu.getStaticpath());
@@ -377,7 +397,12 @@ public class CmsUtils {
 				String tplName = tpl.getId();
 
 				StringWriter out = new StringWriter();
-				FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				try {
+					FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+				} catch(Exception e) {
+					e.printStackTrace();
+					return null;
+				}
 				CmsBean bean = new CmsBean();
 				bean.setHtml(out.toString());
 				bean.setPath(menu.getStaticpath());

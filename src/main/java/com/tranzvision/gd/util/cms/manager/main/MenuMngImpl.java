@@ -39,9 +39,9 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		sql.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
 		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME,");
 		sql.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE");
+		sql.append("ifnull(TZ_MENU_SHOW,\"\") TZ_MENU_SHOW");
 		sql.append(" from PS_TZ_SITEI_MENU_T");
 		sql.append(" where TZ_SITEI_ID=?");
-		sql.append(" and TZ_MENU_SHOW='Y'");
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
@@ -119,11 +119,13 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			}
 
 			String TZ_F_MENU_ID = null;
+			String TZ_MENU_SHOW = null;
 			Map<String, Object> mapNode = null;
 			for (Object objNode : list) {
 				mapNode = (Map<String, Object>) objNode;
 				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
-				if (TZ_F_MENU_ID.equals(id)) {
+				TZ_MENU_SHOW  = mapNode.get("TZ_MENU_SHOW").toString();
+				if (TZ_F_MENU_ID.equals(id) && TZ_MENU_SHOW.equals("Y")) {
 					try {
 						rsList.add(transMenu(mapNode));
 					} catch (IOException e) {
