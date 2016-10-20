@@ -175,8 +175,9 @@
         	fieldLabel:'内容编辑类型',
         	items: [{
         		name: 'type',
-        		inputValue: '0',
+        		inputValue: 'A',
         		boxLabel: 'html编辑',
+        		
         		checked: true,
         		listeners:{
         			"change":function(el,checked){
@@ -188,8 +189,9 @@
         		}
         		},{
         		name: 'type',
-        		inputValue: '1',
+        		inputValue: 'B',
         		boxLabel: '文本框编辑',
+                
         			listeners:{
             			"change":function(el,checked){
             				if(checked){
@@ -554,6 +556,7 @@
 			text: '保存',
 			iconCls:"save",
 			handler: 'onArtSave'
+			
 		}, {
 			text: '确定',
 			iconCls:"ensure",

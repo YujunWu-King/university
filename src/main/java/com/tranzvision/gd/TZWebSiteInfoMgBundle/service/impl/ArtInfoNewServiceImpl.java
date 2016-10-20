@@ -146,6 +146,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		
 		map.put("contentInfo1","");
 		
+		
+		map.put("type", "");
+		
+		
 		map.put("artFbz", "");
 		map.put("artFbBm", "");
 		map.put("startDate", "");
@@ -389,6 +393,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				map.replace("tzdate2", artYlDt2);
 				map.replace("artType", psTzArtRecTbl.getTzArtType1());
 				map.replace("externalLink", psTzArtRecTbl.getTzOutArtUrl());
+				
+				map.replace("type", psTzArtRecTbl.getTzArtEdittype());
+				
+				
 				map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
 				
 				map.replace("contentInfo1", psTzArtRecTbl.getTzArtConent());
@@ -532,7 +540,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						
 						String artContent = "";
 						// 文章内容;
-						if("0".equals(editType)){
+						if("A".equals(editType)){
 							artContent = (String) dataMap.get("contentInfo");
 						}else{
 							artContent = (String) dataMap.get("contentInfo1");
@@ -625,6 +633,11 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzDate2(yldt2);
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
+						
+						
+						//增加内容编辑类型
+						PsTzArtRecTbl.setTzArtEdittype(editType);
+						
 						
 						PsTzArtRecTbl.setTzArtName(artTitle);
 						PsTzArtRecTbl.setTzProjectLimit(limit);
@@ -834,9 +847,11 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						
 						//编辑方式
 						String editType=(String)dataMap.get("type");
+						
+						
 						String artContent = "";
 						// 文章内容;
-						if("0".equals(editType)){
+						if("A".equals(editType)){
 							artContent = (String) dataMap.get("contentInfo");
 						}else{
 							artContent = (String) dataMap.get("contentInfo1");
@@ -959,6 +974,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzDate2(yldt2);
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
+						
+						PsTzArtRecTbl.setTzArtEdittype(editType);
 						
 						PsTzArtRecTbl.setTzArtName(artTitle);
 						PsTzArtRecTbl.setTzProjectLimit(limit);
