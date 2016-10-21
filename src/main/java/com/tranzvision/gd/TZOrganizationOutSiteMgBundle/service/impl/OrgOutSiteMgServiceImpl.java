@@ -275,6 +275,7 @@ public class OrgOutSiteMgServiceImpl extends FrameworkImpl {
 					psTzSiteiMenuT.setTzMenuType("B"); // BOOK
 					psTzSiteiMenuT.setTzMenuLevel(new Integer(0));
 					psTzSiteiMenuT.setTzAddedOprid(oprid);
+					psTzSiteiMenuT.setTzMenuShow("Y");
 					psTzSiteiMenuT.setTzAddedDttm(new Date());
 					psTzSiteiMenuT.setTzLastmantOprid(oprid);
 					psTzSiteiMenuT.setTzLastmantDttm(new Date());

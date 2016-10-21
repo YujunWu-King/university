@@ -4,7 +4,7 @@
 	onArtSave: function(){
 		//内容表单
 		var form = this.getView().child("form").getForm();
-
+		
 		if (form.isValid()) {
 			//获取内容信息参数
 			var tzParams = this.getArtInfoParams();
@@ -27,6 +27,7 @@
 		}else{
 				Ext.Msg.alert("提示","信息填写不完整或填写有误");
 		}
+		
 	},
 	onArtEnsure: function(){
 		//内容表单

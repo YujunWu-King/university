@@ -952,6 +952,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						errMsg[0] = "1";
 						errMsg[1] = "站点目录生成失败";
 					}
+				} else {
+					success = false;
+					errMsg[0] = "1";
+					errMsg[1] = "站点目录生成失败";
 				}
 
 			} else if ("otherMenu".equals(oprType)) { // 生成其他菜单或页面
@@ -965,7 +969,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				if (menuType.endsWith("B")) {
 					cm = cu.menuBook(siteId, menuId);
 				} else if (menuType.endsWith("A")) {
-					System.out.println("PAGE Creeate,menuId=" + menuId);
+					System.out.println("PAGE Creeate,menuId=" + menuId+",siteid="+siteId);
 					String contentPath = request.getContextPath();
 					cm = cu.menuPage(siteId, menuId, contentPath, "1");
 				}
@@ -988,6 +992,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						errMsg[0] = "1";
 						errMsg[1] = "站点目录生成失败";
 					}
+				} else {
+					success = false;
+					errMsg[0] = "1";
+					errMsg[1] = "站点目录生成失败";
 				}
 			}
 		} catch (Exception e) {
