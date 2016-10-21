@@ -281,6 +281,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 			String coluUrl = "";
 			String NodeType = "";
 			String operateNode = "";
+			
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				strForm = actData[num];
@@ -318,7 +319,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 
 					// 插入同级节点或子节点是在哪个节点上操作的;
 					operateNode = infoData.get("operateNode").toString();
-
+			
 					if ((coluName == null || "".equals(coluName)) || (coluState == null || "".equals(coluState))) {
 						return "";
 					}
