@@ -26,7 +26,7 @@ public class InternalSiteInfoSearch {
 		{
 			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
 			//根据关键字查询活动标题，名称和ID,链接url
-			String sql = "SELECT A.TZ_ART_ID  activityId,A.TZ_ART_TITLE activityTitle,A.TZ_ART_NAME activityName,B.TZ_STATIC_ART_URL activityUrl  FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B WHERE  A.TZ_ART_ID = B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_HTML !='<!DOCTYPE html>' AND B.TZ_STATIC_ART_URL IS NOT NULL AND (UPPER(A.TZ_ART_NAME) LIKE '%"+keyWords+"%'"+" OR UPPER(A.TZ_ART_CONENT) LIKE '%"+keyWords+"%') ";
+			String sql = "SELECT A.TZ_ART_ID  activityId,A.TZ_ART_TITLE activityTitle,A.TZ_ART_NAME activityName,B.TZ_STATIC_ART_URL activityUrl  FROM PS_TZ_ART_REC_TBL A,PS_TZ_LM_NR_GL_T B WHERE  A.TZ_ART_ID = B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_HTML !='<!DOCTYPE html>' AND B.TZ_STATIC_ART_URL IS NOT NULL AND B.TZ_STATIC_ART_URL!='' AND  B.TZ_ART_PUB_STATE='Y' AND(UPPER(A.TZ_ART_NAME) LIKE '%"+keyWords+"%'"+" OR UPPER(A.TZ_ART_CONENT) LIKE '%"+keyWords+"%') ";
 			//System.out.println(sql);
 			list=sqlQuery.queryForList(sql,new Object[]{siteId});
 			JacksonUtil jacksonUtil=new JacksonUtil();
