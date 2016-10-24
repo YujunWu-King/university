@@ -4,7 +4,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 	controller : 'menuEdit',
 	requires : ['Ext.data.*',
 	            'Ext.util.*',
-	            'Ext.tab.*',
 	            'KitchenSink.view.siteManage.outsiteManage.menuEditController',
 	            'KitchenSink.view.siteManage.outsiteManage.menuTreeStore',
 	            'KitchenSink.view.siteManage.outsiteManage.menuStore',
@@ -88,10 +87,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				}
 			}
 		},{
-			
-			
-			
-			xtype: 'panel',
+			/*xtype: 'panel',
             region: 'center', 
             frame: true,
             title: '菜单',
@@ -110,11 +106,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
                 msgTarget: 'side',
                 labelWidth:120,
                 labelStyle: 'font-weight:bold'
-            },
-            
-            //items: [{
-            
-            	region : 'center',
+            },*/
+			//items: [{ 
+				region : 'center',
 				frame : true,
 				xtype : 'form',
 				reference : 'menuEditForm',
@@ -130,8 +124,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					labelWidth : 120,
 					labelStyle : 'font-weight:bold'
 				},
-				
-				
 				items : [{
 					xtype : "toolbar",
 					items : [{
@@ -296,6 +288,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					xtype : 'textfield',
 					name : 'rootNode',
 					hidden : true
+<<<<<<< HEAD
 				},
 				
 				
@@ -384,6 +377,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				
 				
 				
+=======
+				}],
+>>>>>>> d2d10ecc9a7f5041ab9d8a60e6bf9b4db9962362
 				listeners : {
 					afterrender : function(thisForm) {
 					}
@@ -669,5 +665,8 @@ function addAttach(file, value, attachmentType){
 				Ext.MessageBox.alert("错误", action.result.msg);
 			}
 		});
+		
+		
+		
 	}
 }

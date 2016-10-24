@@ -831,6 +831,8 @@ public class ArtListServiceImpl extends FrameworkImpl {
 			PsTzArtRecTbl.setTzDate2(psTzArtRecTblFrom.getTzDate2());
 			PsTzArtRecTbl.setTzArtTitleStyle(psTzArtRecTblFrom.getTzArtTitleStyle());
 			PsTzArtRecTbl.setTzArtConent(psTzArtRecTblFrom.getTzArtConent());
+			
+			PsTzArtRecTbl.setTzArtEdittype(psTzArtRecTblFrom.getTzArtEdittype());
 			PsTzArtRecTbl.setTzArtName(psTzArtRecTblFrom.getTzArtName());
 			PsTzArtRecTbl.setTzProjectLimit(psTzArtRecTblFrom.getTzProjectLimit());
 			PsTzArtRecTbl.setTzArtType1(psTzArtRecTblFrom.getTzArtType1());

@@ -143,13 +143,11 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("artType", "");
 		map.put("externalLink", "");
 		map.put("contentInfo", "");
-		
-		map.put("contentInfo1","");
-		
-		
+
+		map.put("contentInfo1", "");
+
 		map.put("type", "");
-		
-		
+
 		map.put("artFbz", "");
 		map.put("artFbBm", "");
 		map.put("startDate", "");
@@ -393,14 +391,18 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				map.replace("tzdate2", artYlDt2);
 				map.replace("artType", psTzArtRecTbl.getTzArtType1());
 				map.replace("externalLink", psTzArtRecTbl.getTzOutArtUrl());
-				
+
 				map.replace("type", psTzArtRecTbl.getTzArtEdittype());
-				
-				
-				map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
-				
-				map.replace("contentInfo1", psTzArtRecTbl.getTzArtConent());
-				
+
+				// A html编辑 B文本框编辑 modity by caoy
+				if (psTzArtRecTbl.getTzArtEdittype().equals("A")) {
+
+					map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
+				} else {
+
+					map.replace("contentInfo1", psTzArtRecTbl.getTzArtConent());
+				}
+
 				map.replace("artFbz", psTzLmNrGlT.getTzFbz());
 				map.replace("artFbBm", psTzLmNrGlT.getTzBltDept());
 				map.replace("startDate", startDate);
@@ -510,7 +512,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 						// 标题;
 						String artTitle = (String) dataMap.get("artTitle");
-						
+
 						// 简短标题
 						String artShortTitle = (String) dataMap.get("artShortTitle");
 						// 副标题
@@ -535,17 +537,17 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artType = (String) dataMap.get("artType");
 						// 外部URL;
 						String outArtUrl = (String) dataMap.get("externalLink");
-						//编辑类型
-						String editType=(String)dataMap.get("type");
-						
+						// 编辑类型
+						String editType = (String) dataMap.get("type");
+
 						String artContent = "";
 						// 文章内容;
-						if("A".equals(editType)){
+						if ("A".equals(editType)) {
 							artContent = (String) dataMap.get("contentInfo");
-						}else{
+						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
-						
+
 						// 发布者;
 						String artFbz = (String) dataMap.get("artFbz");
 						// 发布部门;
@@ -633,12 +635,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzDate2(yldt2);
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
-						
-						
-						//增加内容编辑类型
+
+						// 增加内容编辑类型
 						PsTzArtRecTbl.setTzArtEdittype(editType);
-						
-						
+
 						PsTzArtRecTbl.setTzArtName(artTitle);
 						PsTzArtRecTbl.setTzProjectLimit(limit);
 						PsTzArtRecTbl.setTzArtType1(artType);
@@ -844,19 +844,18 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artType = (String) dataMap.get("artType");
 						// 外部URL;
 						String outArtUrl = (String) dataMap.get("externalLink");
-						
-						//编辑方式
-						String editType=(String)dataMap.get("type");
-						
-						
+
+						// 编辑方式
+						String editType = (String) dataMap.get("type");
+
 						String artContent = "";
 						// 文章内容;
-						if("A".equals(editType)){
+						if ("A".equals(editType)) {
 							artContent = (String) dataMap.get("contentInfo");
-						}else{
+						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
-						
+
 						// 发布者;
 						String artFbz = (String) dataMap.get("artFbz");
 						// 发布部门;
@@ -974,9 +973,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzDate2(yldt2);
 						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
-						
+
 						PsTzArtRecTbl.setTzArtEdittype(editType);
-						
+
 						PsTzArtRecTbl.setTzArtName(artTitle);
 						PsTzArtRecTbl.setTzProjectLimit(limit);
 						PsTzArtRecTbl.setTzArtType1(artType);

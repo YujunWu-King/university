@@ -369,7 +369,7 @@ public class CmsUtils {
 		}
 		MenuMng menuMng = new MenuMngImpl(siteId);
 		// 根据ID得到菜单信息
-		CmsMenu menu = menuMng.findMenu(id, siteId);
+		CmsMenu menu=menuMng.findMenu(id, siteId);
 
 		if (menu == null) {
 			menu = menuMng.findRootMenu(siteId);
