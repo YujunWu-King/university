@@ -123,9 +123,11 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
+		
 		// 返回值;
 		String strRet = "{}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("siteId")) {

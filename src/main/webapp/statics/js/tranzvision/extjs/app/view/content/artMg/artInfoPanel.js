@@ -607,6 +607,7 @@ function addAttach(file, value, attachmentType){
 			}
 		}else{
 			upUrl = file.findParentByType("artInfo").child("form").getForm().findField("saveImageAccessUrl").getValue();
+			//alert(upUrl);
 			if(upUrl==""){
 				Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
 				return;
