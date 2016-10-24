@@ -191,7 +191,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("defaultPage", mapData.get("TZ_DEFAULT_PAGE").toString());
 						mapRootJson.put("menuStyle", mapData.get("TZ_MENU_STYLE").toString());
 
-						if(mapData.get("TZ_MENU_SHOW").equals("Y"))
+						if(mapData.get("TZ_MENU_SHOW").toString().equals("Y"))
 							mapRootJson.put("menuShow", true);
 						else
 							mapRootJson.put("menuShow", false);
@@ -314,80 +314,6 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	}
 
 	
-	public void getChildList(String FmenuId, List<Map<String, Object>> listData,List<Map<String, Object>>rs) {
-
-		if (rs == null) {
-			rs = new ArrayList<Map<String, Object>>();
-		}
-
-		try {
-			Map<String, Object> mapNode = null;
-			String TZ_F_MENU_ID = "";
-			boolean isLeaf = false;
-			boolean isDefault = false;
-			Map<String, Object> mapNodeJson = null;
-			String menuId = "";
-			String menuType = "";
-			for (Object objNode : listData) {
-				mapNode = (Map<String, Object>) objNode;
-				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
-					
-				if (TZ_F_MENU_ID.equals(FmenuId)) {
-					
-					menuId = String.valueOf(mapNode.get("TZ_MENU_ID"));
-					menuType = mapNode.get("TZ_MENU_TYPE").toString();
-					mapNodeJson = new HashMap<String, Object>();
-					mapNodeJson.put("id", menuId);
-					mapNodeJson.put("nodeId", menuId);
-					mapNodeJson.put("text", mapNode.get("TZ_MENU_NAME").toString());
-					mapNodeJson.put("menuState", mapNode.get("TZ_MENU_STATE").toString());
-					mapNodeJson.put("menuType", menuType);
-					mapNodeJson.put("menuXH", mapNode.get("TZ_MENU_XH").toString());
-					mapNodeJson.put("menuPath", mapNode.get("TZ_MENU_PATH").toString());
-					mapNodeJson.put("menuTempletId", mapNode.get("TZ_TEMP_ID").toString());
-					mapNodeJson.put("menuTempletName", mapNode.get("TZ_TEMP_NAME").toString());
-					mapNodeJson.put("menuPageName", mapNode.get("TZ_PAGE_NAME").toString());
-					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
-					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
-					
-					if(mapNode.get("TZ_MENU_SHOW").equals("Y"))
-						mapNodeJson.put("menuShow", true);
-					else
-						mapNodeJson.put("menuShow", false);
-			
-					// 查询默认主页 A:PAGE B:BOOK
-					if (menuType.equals("A")) {
-						isDefault = this.isDefault(menuId, listData);
-						if (isDefault) {
-							mapNodeJson.put("isDefault", "Y");
-						} else {
-							mapNodeJson.put("isDefault", "N");
-						}
-					}
-						
-					mapNodeJson.put("NodeType", "");
-					mapNodeJson.put("operateNode", "");
-					mapNodeJson.put("rootNode", "");
-
-					isLeaf = this.isLeaf(menuId, listData);
-					if (isLeaf) {
-						mapNodeJson.put("leaf", false);
-						mapNodeJson.put("expanded", true);
-						rs.add(mapNodeJson);
-						this.getChildList(menuId, listData,rs);
-					} else {
-						mapNodeJson.put("leaf", true);
-						rs.add(mapNodeJson);
-					}
-
-					
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * 判断该节点是否存在子节点
