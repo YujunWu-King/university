@@ -192,9 +192,10 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				// 活动信息;
 				if (id != null && !id.equals("")) {
 					art.setOpenActApp("N");
+					//Date dateNow = new Date();
 					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
 							+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM,D.TZ_NACT_ADDR,D.TZ_HD_CS,D.TZ_XWS  "
-							+ " from PS_TZ_ART_HD_TBL D where TZ_ART_ID=? ";
+							+ " from PS_TZ_ART_HD_TBL D where D.TZ_ART_ID=? ";
 
 					try {
 						List<Map<String, Object>> list = jdbcTemplate.queryForList(hdSQL, new Object[] { id });
@@ -218,10 +219,13 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 							} else {
 								art.setOpenActApp("N");
 							}
-							hdSQL = "select count(*) from PS_TZ_NAUDLIST_T where TZ_ART_ID=? ";
-							int active = jdbcTemplate.queryForObject(hdSQL, new Object[] { id }, Integer.class);
-							art.setHd_activeNumber(active);
-							art.setHd_watingNumber(art.getHd_totalNumber() - active);
+							// hdSQL = "select count(*) from PS_TZ_NAUDLIST_T
+							// where TZ_ART_ID=? ";
+							// int active = jdbcTemplate.queryForObject(hdSQL,
+							// new Object[] { id }, Integer.class);
+							// art.setHd_activeNumber(active);
+							// art.setHd_watingNumber(art.getHd_totalNumber() -
+							// active);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

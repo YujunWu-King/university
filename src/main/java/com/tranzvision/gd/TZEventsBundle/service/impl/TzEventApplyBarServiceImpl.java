@@ -6,11 +6,13 @@ package com.tranzvision.gd.TZEventsBundle.service.impl;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +21,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cms.CmsUtils;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -153,9 +157,9 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapParams = new HashMap<String, Object>();
 
 					String strBaseUrl = request.getContextPath() + "/dispatcher?tzParams=";
-
+					// 报名按钮
 					String btnHtml = "";
-
+					System.out.println("regFlag:" + regFlag);
 					if ("Y".equals(regFlag)) {
 
 						mapComParams.put("APPLYID", strApplyId);
@@ -168,7 +172,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 						String strUrlParams = jacksonUtil.Map2json(mapParams);
 
-						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
+						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_CANCEL_BTN", strUrl,
 								cancelText);
@@ -183,14 +187,15 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						mapParams.put("comParams", mapComParams);
 
 						String strUrlParams = jacksonUtil.Map2json(mapParams);
-						
-						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
+
+						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_APPLY_BTN", strUrl,
 								onlineApplyText);
 
 					}
-
+					System.out.println("btnHtml:" + btnHtml);
+					System.out.println("tzXSMS:" + tzXSMS);
 					String strHtml = "";
 					switch (tzXSMS) {
 					case "1":
@@ -218,7 +223,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 							String strUrlParams = jacksonUtil.Map2json(mapParams);
 
-							String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams,"UTF-8");
+							String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
 							String strYBMurl = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_A",
 									strUrl, String.valueOf(numYBM));
@@ -236,7 +241,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						}
 						break;
 					}
-
+					System.out.println("strHtml:" + strHtml);
 					strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_HEAD", strHtml,
 							timeOut, serverError, "", request.getContextPath());
 
@@ -251,9 +256,77 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("strRet:" + strRet);
 		return strRet;
 
+	}
+
+	public String tzOther(String oprType, String strParams, String[] errMsg) {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String strApplyId = jacksonUtil.getString("APPLYID");
+		try {
+			// 显示报名条
+			System.out.println("strApplyId:" + strApplyId);
+			System.out.println("oprType:" + oprType);
+			if ("eventBarShow".equals(oprType)) {
+				if (null != strApplyId && !"".equals(strApplyId)) {
+					Date dateNow = new Date();
+
+					// 已报名人数
+					String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
+					int numYBM = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+
+					// 等待人数
+					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventWaitingNum");
+					int numWait = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+
+					// 获取活动显示模式
+					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
+					Map<String, Object> mapData = sqlQuery.queryForMap(sql,
+							new Object[] { strApplyId, dateNow, dateNow });
+
+					// 是否有效记录
+					String validTD = "";
+					// 显示模式 CMS不需要 全部显示
+					// String tzXSMS = "";
+					// 是否启用在线报名
+					String strQy_zxbm = "";
+					// 活动席位数
+					int numActXW = 0;
+					// 若席位数为0，则代表不限制席位数，前台显示为“-”
+					String strActXW = "-";
+
+					if (mapData != null) {
+
+						validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
+						// tzXSMS = mapData.get("TZ_XSMS") == null ? "" :
+						// String.valueOf(mapData.get("TZ_XSMS"));
+						strQy_zxbm = mapData.get("TZ_QY_ZXBM") == null ? "" : String.valueOf(mapData.get("TZ_QY_ZXBM"));
+						numActXW = mapData.get("TZ_XWS") == null ? 0
+								: Integer.parseInt(String.valueOf(mapData.get("TZ_XWS")));
+						if (numActXW > 0) {
+							strActXW = String.valueOf(numActXW);
+						}
+					}
+
+					// 只有启用在线报名并且在有效报名时间内才显示在线报名条
+					if ("Y".equals(strQy_zxbm) && "Y".equals(validTD)) {
+
+						mapRet.put("ActXW", strActXW);
+						mapRet.put("ActYBM", String.valueOf(numYBM));
+						mapRet.put("ActWait", String.valueOf(numWait));
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("strRet:" + jacksonUtil.Map2json(mapRet));
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 	/**

@@ -142,11 +142,11 @@ body, button, input, select, textarea {
 .apply-signin li strong {
 	float: left;
 	margin-left: -120px;
-	width: 150px;
+	width:150px;
 	text-align: right;
 	margin-right: 20px;
-	height: 53px;
-	line-height:53px;
+	height: 28px;
+	line-height:28px;
 }
 
 .apply-btn {
@@ -157,7 +157,8 @@ body, button, input, select, textarea {
 
 .apply-btn .btn {
 	width: 80px;
-	height: 25px;
+	height: 40px;
+	line-height:40px;
 	border-radius: 2px;
 	cursor: pointer;
 	color: #FFF;
@@ -233,9 +234,9 @@ body, button, input, select, textarea {
 		<div class="apply-popbody">
 			<form class="apply-signin" name="applyRegForm" method="post">
 				<h4>%bind(:8)</h4>
-				<ol id="items">
+				<div id="items">
 				%bind(:1)
-				</ol>
+				</div>
 				<div class="apply-btn">
 					<input class="btn apply-back" type="button" name="submit"
 						value="%bind(:10)" onclick="parent.tz_close_float_iframe_apply();" />

@@ -4,7 +4,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 	controller : 'menuEdit',
 	requires : ['Ext.data.*',
 	            'Ext.util.*',
-	            'Ext.tab.*',
 	            'KitchenSink.view.siteManage.outsiteManage.menuEditController',
 	            'KitchenSink.view.siteManage.outsiteManage.menuTreeStore',
 	            'KitchenSink.view.siteManage.outsiteManage.menuStore',
@@ -88,10 +87,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				}
 			}
 		},{
-			
-			
-			
-			xtype: 'panel',
+			/*xtype: 'panel',
             region: 'center', 
             frame: true,
             title: '菜单',
@@ -110,11 +106,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
                 msgTarget: 'side',
                 labelWidth:120,
                 labelStyle: 'font-weight:bold'
-            },
-            
-            //items: [{
-            
-            	region : 'center',
+            },*/
+			//items: [{ 
+				region : 'center',
 				frame : true,
 				xtype : 'form',
 				reference : 'menuEditForm',
@@ -130,8 +124,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					labelWidth : 120,
 					labelStyle : 'font-weight:bold'
 				},
-				
-				
 				items : [{
 					xtype : "toolbar",
 					items : [{
@@ -287,93 +279,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					xtype : 'textfield',
 					name : 'rootNode',
 					hidden : true
-				},
-				
-				
-				{
-		        	  xtype: 'tabpanel',
-		        	  //frame: true,
-		        	  items:[{
-		        	  	title: "标题图",
-		        	  	layout: {
-		            		type: 'column',
-		        			},
-		        	  	items:[{
-								    columnWidth:.2,
-								    bodyStyle:'padding:10px',  
-									  layout: {
-									  	type: 'vbox',
-		           			 	align: 'stretch'
-									  },
-										items: [{
-		            			xtype: "image",  
-											src: ""	,
-											name: "titileImage"
-											//id: "titileImage"
-		        				},{
-		            			layout: {
-									  		type: 'column'
-									  	},
-									  	bodyStyle:'padding:10px 0 0 0',
-									  	xtype: 'form',  
-											items: [{
-												columnWidth:.65,
-		            				xtype: "fileuploadfield",  
-												buttonText: '上传',
-												//name: 'picUpload',
-												name: 'websitefile'
-													/*buttonOnly:true,
-												listeners:{
-													change:function(file, value, eOpts){
-														addAttach(file, value, "IMG");
-													}
-												}	*/
-		        					},{
-		        						columnWidth:.35,
-		            				xtype: 'button',
-		            				text: '删除'/*,
-												listeners:{
-													click:function(bt, value, eOpts){
-														deleteImage(bt, value, eOpts);
-													}
-												}*/
-		        					}]
-		        				}]
-									},{
-										columnWidth:.8,
-										bodyStyle:'padding:10px 10px 10px 30px',  
-									  layout: {
-									  	type: 'vbox',
-		           			 	align: 'stretch'
-									  },
-										items: [{
-		            			xtype: 'textfield',
-		            			fieldLabel: '标题',
-		            			maxLength :100,
-								name: 'titleImageTitle'
-		        				},{
-		            			xtype: 'textarea',
-		            			fieldLabel: '说明',
-		            			maxLength :254,
-								name: 'titleImageDesc'
-		        				}]
-									}]
-		        	  }]
-					/*xtype : 'textfield',
-					fieldLabel  : '测试',
-					name : 'rootNode'*/
-					
-				}
-				
-				
-				
-				],
-            	
-            //}],
-				
-				
-				
-				
+				}],
 				listeners : {
 					afterrender : function(thisForm) {
 					}
