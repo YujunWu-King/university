@@ -288,7 +288,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					xtype : 'textfield',
 					name : 'rootNode',
 					hidden : true
-<<<<<<< HEAD
 				},
 				
 				
@@ -371,15 +370,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				
 				
 				],
-            	
-            //}],
-				
-				
-				
-				
-=======
 				}],
->>>>>>> d2d10ecc9a7f5041ab9d8a60e6bf9b4db9962362
 				listeners : {
 					afterrender : function(thisForm) {
 					}
