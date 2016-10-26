@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
+import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -113,13 +114,13 @@ public class TzDataRequestEmailServiceImpl extends FrameworkImpl {
 		}
 
 		// 校验验证码
-		/*
-		 * Patchca patchca = new Patchca(); if (!patchca.verifyToken(request,
-		 * code)) { map.replace("success", "1"); msg =
-		 * messageTextServiceImpl.getMessageTextWithLanguageCd(
-		 * "TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确", "验证码不正确空");
-		 * map.replace("msg", msg); return jacksonUtil.Map2json(map); }
-		 */
+		
+		 Patchca patchca = new Patchca(); if (!patchca.verifyToken(request,
+		 code)) { map.replace("success", "1"); msg =
+		 messageTextServiceImpl.getMessageTextWithLanguageCd(
+		 "TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确", "验证码不正确空");
+		 map.replace("msg", msg); return jacksonUtil.Map2json(map); }
+		 
 
 		// 收件人email
 		String sjr = sqlQuery.queryForObject(
