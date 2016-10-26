@@ -811,7 +811,7 @@ public class PdfPrintbyModel {
 	}
 
 	/**
-	 * 打印PDF文件
+	 * 打印PDF文件  修改 by caoy
 	 * 
 	 * @param path
 	 *            PDF文件存放路径
