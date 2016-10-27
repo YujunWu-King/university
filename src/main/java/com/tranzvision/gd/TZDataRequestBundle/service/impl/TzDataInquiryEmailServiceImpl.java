@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZDataRequestBundle.dao.PsTzDataRequestTMapper;
@@ -15,6 +17,7 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
+import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -112,13 +115,16 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 		}
 
 		// 校验验证码
-		/*
-		 * Patchca patchca = new Patchca(); if (!patchca.verifyToken(request,
-		 * code)) { map.replace("success", "1"); msg =
-		 * messageTextServiceImpl.getMessageTextWithLanguageCd(
-		 * "TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确", "验证码不正确空");
-		 * map.replace("msg", msg); return jacksonUtil.Map2json(map); }
-		 */
+			String code=request.getParameter("code");
+		  Patchca patchca = new Patchca(); 
+		  if (!patchca.verifyToken(request,code)) 
+		  { 
+			  map.replace("success", "1"); 
+			  msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确", "验证码不正确空");
+			  map.replace("msg", msg); 
+			  return jacksonUtil.Map2json(map);
+		  }
+		 
 
 		// 收件人email
 		String sjr = sqlQuery.queryForObject(
