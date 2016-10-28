@@ -317,12 +317,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				psTzLmNrGlTKey.setTzArtId(strArtId);
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
 				
-				//artSeq：从PS_TZ_LM_NR_GL_T表中读取"排序"放入map中,空置则换成0
-				String sql="SELECT TZ_ART_SEQ FROM PS_TZ_LM_NR_GL_T  WHERE TZ_SITE_ID=? AND TZ_ART_ID=? AND TZ_COLU_ID=?";
-				Object objSEQ=jdbcTemplate.queryForObject(sql, new Object[]{siteId,strArtId,coluId,}, "String");
-				int artSeq=0;
-				if(objSEQ!=null)
-					artSeq=Integer.valueOf(objSEQ.toString());
+				//排序字段
+				int artSeq=psTzLmNrGlT.getTzArtSeq();
 				map.replace("artSeq",artSeq);
 				
 				//System.out.println("-------------query:seq----------- "+map.get("artSeq"));
