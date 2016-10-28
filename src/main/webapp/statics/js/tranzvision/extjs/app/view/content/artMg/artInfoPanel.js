@@ -92,7 +92,15 @@
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artMetaKeys","Meta关键字"),
 			name: 'artMetaKeys',
 			maxLength : 254
-        },{
+        },
+        {
+            xtype: 'numberfield',
+            fieldLabel: "排序",
+			name: 'artSeq',
+			allowDecimals: false,
+			maxLength : 254
+        },
+        {
 			xtype:'component',
 			hideLabel: true,
 			style:'color:#ff0000',
