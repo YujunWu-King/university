@@ -314,10 +314,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				psTzLmNrGlTKey.setTzColuId(coluId);
 				psTzLmNrGlTKey.setTzArtId(strArtId);
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
-
 				// 站点表;
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
-				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();
+				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();		
 				String saveAttachAccessUrl = psTzSiteiDefnT.getTzAttsStor();
 
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -606,6 +605,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							String arr[] = titleImageUrl.split("/");
 							sysFileName = arr[arr.length - 1];
 						}
+						
+						
 						// 发布状态;
 						String publishStatus = (String) dataMap.get("publishStatus");
 						// 是否点击发布或撤销发布按钮;
