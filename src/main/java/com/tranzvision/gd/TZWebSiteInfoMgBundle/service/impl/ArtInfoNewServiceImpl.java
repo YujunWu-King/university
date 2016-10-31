@@ -915,6 +915,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							String arr[] = titleImageUrl.split("/");
 							sysFileName = arr[arr.length - 1];
 						}
+						
 						// 查询图片是否发生改变;
 						String imgtitleUrlSQL = "SELECT TZ_ATTACHSYSFILENA FROM PS_TZ_ART_REC_TBL WHERE TZ_ART_ID=? ";
 						String originTitlFileName = jdbcTemplate.queryForObject(imgtitleUrlSQL, new Object[] { artId },
