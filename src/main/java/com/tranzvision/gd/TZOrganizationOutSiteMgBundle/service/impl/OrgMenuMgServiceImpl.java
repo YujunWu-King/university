@@ -135,7 +135,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					jsonMap.put("menuType", list.get(i).get("TZ_MENU_TYPE"));
 					jsonMap.put("menuXH", list.get(i).get("TZ_MENU_XH"));
 					jsonMap.put("menuShow", list.get(i).get("TZ_MENU_SHOW"));
-					if(list.get(i).get("TZ_MENU_SHOW").toString().equals("Y"))
+					if (list.get(i).get("TZ_MENU_SHOW").toString().equals("Y"))
 						jsonMap.put("menuShow", true);
 					else
 						jsonMap.put("menuShow", false);
@@ -438,7 +438,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-		
+
 		return strRet;
 	}
 
@@ -449,9 +449,11 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		if (attachSysFile != null && !"".equals(attachSysFile)) {
 			String arraurlSQL = "select TZ_ATT_A_URL from PS_TZ_ART_TITIMG_T where TZ_ATTACHSYSFILENA=?";
 			acessUrl = jdbcTemplate.queryForObject(arraurlSQL, new Object[] { attachSysFile }, "String");
-			/*System.out.println("---------------");
-			System.out.println(acessUrl);*/
-			
+			/*
+			 * System.out.println("---------------");
+			 * System.out.println(acessUrl);
+			 */
+
 			if (acessUrl != null && !"".equals(acessUrl)) {
 				if ((acessUrl.lastIndexOf("/") + 1) != acessUrl.length()) {
 					titleImageUrl = acessUrl + "/" + attachSysFile;
@@ -513,13 +515,13 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("titleImageDesc", mapNode.get("TZ_IMAGE_DESC").toString());
 					mapNodeJson.put("titleImageUrl", mapNode.get("TZ_ATTACHSYSFILENA").toString());
 					mapNodeJson.put("saveImageAccessUrl", saveImageAccessUrl);
-					/*System.out.println("[[[[[[[[[[[[[[[[[[");
-					System.out.println(mapNode.get("TZ_ATTACHSYSFILENA").toString());*/
+					/*
+					 * System.out.println("[[[[[[[[[[[[[[[[[[");
+					 * System.out.println(mapNode.get("TZ_ATTACHSYSFILENA").
+					 * toString());
+					 */
 					mapNodeJson.put("titleImageUrl",
-								this.getTitleImageUrl(mapNode.get("TZ_ATTACHSYSFILENA").toString()));
-					
-					
-
+							this.getTitleImageUrl(mapNode.get("TZ_ATTACHSYSFILENA").toString()));
 
 					if (mapNode.get("TZ_MENU_SHOW").equals("Y"))
 
@@ -545,8 +547,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					if (isLeaf) {
 						mapNodeJson.put("leaf", false);
 						mapNodeJson.put("expanded", true);
-						mapNodeJson.put("children",
-								this.getMenuList(menuId, listData, saveImageAccessUrl));
+						mapNodeJson.put("children", this.getMenuList(menuId, listData, saveImageAccessUrl));
 					} else {
 						mapNodeJson.put("leaf", true);
 					}
@@ -844,7 +845,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						String arr[] = titleImageUrl.split("/");
 						sysFileName = arr[arr.length - 1];
 					}
-					
+
 					//
 					switch (NodeType) {
 
@@ -1028,8 +1029,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							}
 						}
 						// 获取子节点集合
-						sonList = getMenuList(thisNode.get("TZ_MENU_ID").toString(), listData, saveImageAccessUrl
-								);
+						sonList = getMenuList(thisNode.get("TZ_MENU_ID").toString(), listData, saveImageAccessUrl);
 						// if(sonList!=null)
 						// System.out.println("sonListSize:"+sonList.size());
 						// System.out.println("TZ_MENU_ID:"+thisNode.get("TZ_MENU_ID").toString());
