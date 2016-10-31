@@ -49,6 +49,12 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     private String tzMenuShow;
 
+    private String tzAttachsysfilena;
+
+    private String tzImageTitle;
+
+    private String tzImageDesc;
+
     private String tzMenuUrl;
 
     public String getTzMenuName() {
@@ -233,6 +239,30 @@ public class PsTzSiteiMenuT extends PsTzSiteiMenuTKey {
 
     public void setTzMenuShow(String tzMenuShow) {
         this.tzMenuShow = tzMenuShow == null ? null : tzMenuShow.trim();
+    }
+
+    public String getTzAttachsysfilena() {
+        return tzAttachsysfilena;
+    }
+
+    public void setTzAttachsysfilena(String tzAttachsysfilena) {
+        this.tzAttachsysfilena = tzAttachsysfilena == null ? null : tzAttachsysfilena.trim();
+    }
+
+    public String getTzImageTitle() {
+        return tzImageTitle;
+    }
+
+    public void setTzImageTitle(String tzImageTitle) {
+        this.tzImageTitle = tzImageTitle == null ? null : tzImageTitle.trim();
+    }
+
+    public String getTzImageDesc() {
+        return tzImageDesc;
+    }
+
+    public void setTzImageDesc(String tzImageDesc) {
+        this.tzImageDesc = tzImageDesc == null ? null : tzImageDesc.trim();
     }
 
     public String getTzMenuUrl() {

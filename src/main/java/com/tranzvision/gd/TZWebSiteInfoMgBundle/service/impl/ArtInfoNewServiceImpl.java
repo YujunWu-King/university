@@ -170,9 +170,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("projects", "");
 		map.put("staticName", "");
 		map.put("autoStaticName", "");
-		//排序 
-		map.put("artSeq", 0);
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
@@ -316,17 +314,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				psTzLmNrGlTKey.setTzColuId(coluId);
 				psTzLmNrGlTKey.setTzArtId(strArtId);
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
-				
-				//排序字段
-				int artSeq=psTzLmNrGlT.getTzArtSeq();
-				map.replace("artSeq",artSeq);
-				
-				//System.out.println("-------------query:seq----------- "+map.get("artSeq"));
-				returnJsonMap.put("formData", map);
-				
 				// 站点表;
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
-				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();
+				String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();		
 				String saveAttachAccessUrl = psTzSiteiDefnT.getTzAttsStor();
 
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -447,6 +437,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					map.replace("projects", projects);
 				}
 
+				returnJsonMap.put("formData", map);
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "参数不正确！";
@@ -527,11 +518,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artSubHead = (String) dataMap.get("artSubHead");
 						// 文章简介
 						String artAbout = (String) dataMap.get("artAbout");
-						//排序(可填，可不填，不填默认值为0)
-						int artSeq=0;
-						if(dataMap.get("artSeq")!=null&&!dataMap.get("artSeq").toString().equals(""))
-							artSeq=Integer.valueOf(dataMap.get("artSeq").toString());
-						//System.out.println("-----add------artSeq:"+artSeq);
 						// meta描述
 						String artMetaDesc = (String) dataMap.get("artMetaDesc");
 						// meta关键字
@@ -607,7 +593,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 								yldt2 = null;
 							}
 						}
-	
+
 						// 标题图标题;
 						String titleImageTitle = (String) dataMap.get("titleImageTitle");
 						// 标题图描述;
@@ -619,6 +605,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							String arr[] = titleImageUrl.split("/");
 							sysFileName = arr[arr.length - 1];
 						}
+						
+						
 						// 发布状态;
 						String publishStatus = (String) dataMap.get("publishStatus");
 						// 是否点击发布或撤销发布按钮;
@@ -675,9 +663,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzArtNewsDt(fbdt);
 						psTzLmNrGlT.setTzStaticName(this.ins_staticName);
 						psTzLmNrGlT.setTzStaticName(strStaticName);
-						//排序字段
-						psTzLmNrGlT.setTzArtSeq(artSeq);
-						
 						if ("Y".equals(publishClick)) {
 							psTzLmNrGlT.setTzArtPubState(publishStatus);
 							// 如果发布，且发布时间未填写则当前时间为发布时间;
@@ -842,11 +827,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						String artSubHead = (String) dataMap.get("artSubHead");
 						// 文章简介
 						String artAbout = (String) dataMap.get("artAbout");
-						//排序
-						int artSeq=0;
-						//System.out.println("-----------update:"+dataMap.get("artSeq")+"--------");
-						if(dataMap.get("artSeq")!=null&&dataMap.get("artSeq").toString()!="")
-							artSeq=Integer.valueOf(dataMap.get("artSeq").toString());
 						// meta描述
 						String artMetaDesc = (String) dataMap.get("artMetaDesc");
 						// meta关键字
@@ -935,6 +915,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							String arr[] = titleImageUrl.split("/");
 							sysFileName = arr[arr.length - 1];
 						}
+						
 						// 查询图片是否发生改变;
 						String imgtitleUrlSQL = "SELECT TZ_ATTACHSYSFILENA FROM PS_TZ_ART_REC_TBL WHERE TZ_ART_ID=? ";
 						String originTitlFileName = jdbcTemplate.queryForObject(imgtitleUrlSQL, new Object[] { artId },
@@ -1016,9 +997,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzFbz(artFbz);
 						psTzLmNrGlT.setTzBltDept(artFbBm);
 						psTzLmNrGlT.setTzArtNewsDt(fbdt);
-						//排序artSeq
-						psTzLmNrGlT.setTzArtSeq(artSeq);
-						//System.out.println("------update-----artSeq:"+artSeq);
+
 						if ("Y".equals(publishClick)) {
 							psTzLmNrGlT.setTzArtPubState(publishStatus);
 							// 如果发布，且发布时间未填写则当前时间为发布时间;
@@ -1052,6 +1031,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						psTzLmNrGlT.setTzLastmantOprid(oprid);
 						// null未设置的不更新;
 						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlT);
+
 						// 如果发布时间未空，则更新;
 						if (fbdt == null) {
 							String updateFbDtSQL = "update PS_TZ_LM_NR_GL_T set TZ_ART_NEWS_DT=null where TZ_ART_ID=? ";

@@ -55,8 +55,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	inserChildMenuItem : function(bt, eOpts) {
 		var actType = bt.findParentByType("menuEdit").actType;
 		if (actType == "update") {
-			
-			
+
 			var form = bt.findParentByType("form").getForm();
 			var menuType = form.findField("menuType").getValue();
 			
