@@ -519,12 +519,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 								this.getTitleImageUrl(mapNode.get("TZ_ATTACHSYSFILENA").toString()));
 					
 					
-<<<<<<< HEAD
-					if(mapNode.get("TZ_MENU_SHOW").toString().equals("Y"))
-=======
+
 
 					if (mapNode.get("TZ_MENU_SHOW").equals("Y"))
->>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
+
 						mapNodeJson.put("menuShow", true);
 					else
 						mapNodeJson.put("menuShow", false);
