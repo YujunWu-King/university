@@ -99,6 +99,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					jsonMap.put("menuType", list.get(i).get("TZ_MENU_TYPE"));
 					jsonMap.put("menuXH", list.get(i).get("TZ_MENU_XH"));
 					jsonMap.put("menuShow", list.get(i).get("TZ_MENU_SHOW"));
+					if(list.get(i).get("TZ_MENU_SHOW").toString().equals("Y"))
+						jsonMap.put("menuShow", true);
+					else
+						jsonMap.put("menuShow", false);
 					arraylist.add(jsonMap);
 				}
 				returnJsonMap.replace("total", total);
@@ -275,7 +279,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
 					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
 					
-					if(mapNode.get("TZ_MENU_SHOW").equals("Y"))
+					if(mapNode.get("TZ_MENU_SHOW").toString().equals("Y"))
 						mapNodeJson.put("menuShow", true);
 					else
 						mapNodeJson.put("menuShow", false);
