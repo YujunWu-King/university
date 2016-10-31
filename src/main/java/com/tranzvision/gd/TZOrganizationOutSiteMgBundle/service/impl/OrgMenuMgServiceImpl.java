@@ -16,9 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiMenuTMapper;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuT;
+import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiMenuTKey;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtFjjTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTitimgTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzArtTpjTMapper;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtFjjT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtRecTblWithBLOBs;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTitimgT;
+import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzArtTpjT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.ResizeImageUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cms.CmsBean;
 import com.tranzvision.gd.util.cms.CmsUtils;
@@ -35,7 +46,13 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
+	// 新增代码
+	@Autowired
+	private SqlQuery jdbcTemplate;
 
+	@Autowired
+	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
+	//
 	@Autowired
 	private TZGDObject tzSQLObject;
 
@@ -48,6 +65,10 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 
+	/*
+	 * @Autowired private PsTzSiteiMenuTKey psTzSiteiMenuTKey;
+	 */
+
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -56,6 +77,21 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+
+	// 新增代码
+	@Autowired
+	private ResizeImageUtil resizeImageUtil;
+
+	@Autowired
+	private PsTzArtTitimgTMapper psTzArtTitimgTMapper;
+
+	@Autowired
+	private PsTzArtFjjTMapper psTzArtFjjTMapper;
+
+	@Autowired
+	private PsTzArtTpjTMapper psTzArtTpjTMapper;
+
+	//
 
 	/* 查询列表 */
 	@Override
@@ -108,7 +144,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				returnJsonMap.replace("total", total);
 				returnJsonMap.replace("root", arraylist);
 			}
-			
+
 		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
@@ -117,7 +153,150 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 
-	
+	@Override
+	public String tzGetHtmlContent(String strParams) {
+		// 返回值;
+		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		String desc = "";
+		String minSysFile = "";
+		String newSysFile = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			if (jacksonUtil.containsKey("attachmentType") && jacksonUtil.containsKey("data")) {
+				String attachmentType = jacksonUtil.getString("attachmentType");
+
+				if ("IMG".equals(attachmentType)) {
+					Map<String, Object> dataMap = jacksonUtil.getMap("data");
+					if (dataMap != null) {
+						String accessPath = (String) dataMap.get("accessPath");
+						// 根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
+						String sysFileName1 = (String) dataMap.get("sysFileName");
+
+						/* 压缩图片 */
+						String separator = File.separator;
+
+						String flg = "";
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName1, path, "MINI_" + sysFileName1, 100);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "MINI_" + sysFileName1,
+									100);
+						}
+						if ("Y".equals(flg)) {
+							minSysFile = "MINI_" + sysFileName1;
+						} else {
+							minSysFile = sysFileName1;
+						}
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName1, path, "NEW_" + sysFileName1, 1000);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName1, path, "NEW_" + sysFileName1,
+									1000);
+						}
+						if ("Y".equals(flg)) {
+							newSysFile = "NEW_" + sysFileName1;
+						} else {
+							newSysFile = sysFileName1;
+						}
+
+						PsTzArtTitimgT psTzArtTitimgT = new PsTzArtTitimgT();
+						psTzArtTitimgT.setTzAttachsysfilena(sysFileName1);
+						psTzArtTitimgT.setTzAttachfileName((String) dataMap.get("filename"));
+						psTzArtTitimgT.setTzAttPUrl(path);
+						psTzArtTitimgT.setTzAttAUrl(accessPath);
+						psTzArtTitimgT.setTzYsAttachsysnam(newSysFile);
+						psTzArtTitimgT.setTzSlAttachsysnam(minSysFile);
+
+						psTzArtTitimgTMapper.insert(psTzArtTitimgT);
+					}
+				}
+
+				if ("ATTACHMENT".equals(attachmentType)) {
+					Map<String, Object> dataMap = jacksonUtil.getMap("data");
+					if (dataMap != null) {
+						String accessPath = (String) dataMap.get("accessPath");
+						// 根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
+						PsTzArtFjjT psTzArtFjjT = new PsTzArtFjjT();
+						psTzArtFjjT.setTzAttachsysfilena((String) dataMap.get("sysFileName"));
+						psTzArtFjjT.setTzAttachfileName((String) dataMap.get("filename"));
+						psTzArtFjjT.setTzAttPUrl(path);
+						psTzArtFjjT.setTzAttAUrl(accessPath);
+						psTzArtFjjTMapper.insert(psTzArtFjjT);
+					}
+				}
+
+				if ("TPJ".equals(attachmentType)) {
+					// int order = jacksonUtil.getInt("order");
+					Map<String, Object> dataMap = jacksonUtil.getMap("data");
+					if (dataMap != null) {
+						String accessPath = (String) dataMap.get("accessPath");
+						// 根据相对路径得到物理路径;
+						String path = request.getServletContext().getRealPath(accessPath);
+						String sysFileName = (String) dataMap.get("sysFileName");
+
+						/* 压缩图片 */
+						String separator = File.separator;
+						String flg = "";
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName, path, "MINI_" + sysFileName, 100);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName, path, "MINI_" + sysFileName,
+									100);
+						}
+						if ("Y".equals(flg)) {
+							minSysFile = "MINI_" + sysFileName;
+						} else {
+							minSysFile = sysFileName;
+						}
+
+						if ((path.lastIndexOf(separator) + 1) == path.length()) {
+							flg = resizeImageUtil.resize(path + sysFileName, path, "NEW_" + sysFileName, 1000);
+						} else {
+							flg = resizeImageUtil.resize(path + separator + sysFileName, path, "NEW_" + sysFileName,
+									1000);
+						}
+						if ("Y".equals(flg)) {
+							newSysFile = "NEW_" + sysFileName;
+						} else {
+							newSysFile = sysFileName;
+						}
+
+						PsTzArtTpjT psTzArtTpjT = new PsTzArtTpjT();
+						psTzArtTpjT.setTzAttachsysfilena(sysFileName);
+						psTzArtTpjT.setTzAttachfileName((String) dataMap.get("filename"));
+						psTzArtTpjT.setTzAttPUrl(path);
+						psTzArtTpjT.setTzAttAUrl(accessPath);
+						psTzArtTpjT.setTzYsAttachsysnam(newSysFile);
+						psTzArtTpjT.setTzSlAttachsysnam(minSysFile);
+
+						psTzArtTpjTMapper.insert(psTzArtTpjT);
+					}
+				}
+			} else {
+				desc = "参数不正确";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			desc = e.toString();
+		}
+
+		if (!"".equals(desc)) {
+			returnJsonMap.put("success", "1");
+			returnJsonMap.put("message", desc);
+			returnJsonMap.put("minPicSysFileName", minSysFile);
+		} else {
+			returnJsonMap.put("success", "0");
+			returnJsonMap.put("message", "");
+			returnJsonMap.put("minPicSysFileName", minSysFile);
+		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
+		return strRet;
+	}
+
 	/**
 	 * 获取栏目节点信息
 	 * 
@@ -127,15 +306,23 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
-		
+
 		// 返回值;
 		String strRet = "{}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+
+		// 新增代码
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		// Map<String, Object> map = new HashMap<>();
+
+		//
 		try {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("siteId")) {
+				// 新增代码
+				// String strArtId = jacksonUtil.getString("artId");
 
+				//
 				// 站点编号
 				String siteId = jacksonUtil.getString("siteId");
 
@@ -173,9 +360,21 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					}
 
 					if (flag == 0) {
+
+						//
+						String acessUrl = "";
+						// 标题图实际存放地址
+						String titleImageUrl = "";
+						String attachSysFile = mapData.get("TZ_ATTACHSYSFILENA").toString();
+						// 站点表;
+						PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
+						// 站点存放图片路径
+						String saveImageAccessUrl = psTzSiteiDefnT.getTzImgStor();
+
+						// System.out.println("-----------------------------");
 						String menuId = String.valueOf(mapData.get("TZ_MENU_ID"));
-						
-						List<Map<String, Object>> listChildren = this.getMenuList(menuId, listData);
+
+						List<Map<String, Object>> listChildren = this.getMenuList(menuId, listData, saveImageAccessUrl);
 
 						Map<String, Object> mapRootJson = new HashMap<String, Object>();
 
@@ -195,7 +394,14 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("defaultPage", mapData.get("TZ_DEFAULT_PAGE").toString());
 						mapRootJson.put("menuStyle", mapData.get("TZ_MENU_STYLE").toString());
 
-						if(mapData.get("TZ_MENU_SHOW").toString().equals("Y"))
+						// 新增加对于标题图的处理
+						mapRootJson.put("titleImageTitle", mapData.get("TZ_IMAGE_TITLE").toString());
+						mapRootJson.put("titleImageDesc", mapData.get("TZ_IMAGE_DESC").toString());
+						mapRootJson.put("titleImageUrl", attachSysFile);
+						mapRootJson.put("saveImageAccessUrl", saveImageAccessUrl);
+						mapRootJson.put("titleImageUrl", titleImageUrl);
+
+						if (mapData.get("TZ_MENU_SHOW").toString().equals("Y"))
 							mapRootJson.put("menuShow", true);
 						else
 							mapRootJson.put("menuShow", false);
@@ -232,7 +438,29 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		
 		return strRet;
+	}
+
+	private String getTitleImageUrl(String TZ_ATTACHSYSFILENA) {
+		String attachSysFile = TZ_ATTACHSYSFILENA;
+		String acessUrl = null;
+		String titleImageUrl = null;
+		if (attachSysFile != null && !"".equals(attachSysFile)) {
+			String arraurlSQL = "select TZ_ATT_A_URL from PS_TZ_ART_TITIMG_T where TZ_ATTACHSYSFILENA=?";
+			acessUrl = jdbcTemplate.queryForObject(arraurlSQL, new Object[] { attachSysFile }, "String");
+			/*System.out.println("---------------");
+			System.out.println(acessUrl);*/
+			
+			if (acessUrl != null && !"".equals(acessUrl)) {
+				if ((acessUrl.lastIndexOf("/") + 1) != acessUrl.length()) {
+					titleImageUrl = acessUrl + "/" + attachSysFile;
+				} else {
+					titleImageUrl = acessUrl + attachSysFile;
+				}
+			}
+		}
+		return titleImageUrl;
 	}
 
 	/**
@@ -245,7 +473,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	 * @return List<Map<String, Object>>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getMenuList(String FmenuId, List<Map<String, Object>> listData) {
+	public List<Map<String, Object>> getMenuList(String FmenuId, List<Map<String, Object>> listData,
+			String saveImageAccessUrl) {
 
 		List<Map<String, Object>> listRet = new ArrayList<Map<String, Object>>();
 
@@ -260,9 +489,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			for (Object objNode : listData) {
 				mapNode = (Map<String, Object>) objNode;
 				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
-					
+
 				if (TZ_F_MENU_ID.equals(FmenuId)) {
-					
+
 					menuId = String.valueOf(mapNode.get("TZ_MENU_ID"));
 					menuType = mapNode.get("TZ_MENU_TYPE").toString();
 					mapNodeJson = new HashMap<String, Object>();
@@ -278,12 +507,28 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("menuPageName", mapNode.get("TZ_PAGE_NAME").toString());
 					mapNodeJson.put("defaultPage", mapNode.get("TZ_DEFAULT_PAGE").toString());
 					mapNodeJson.put("menuStyle", mapNode.get("TZ_MENU_STYLE").toString());
+
+					// 新增加对于标题图的处理
+					mapNodeJson.put("titleImageTitle", mapNode.get("TZ_IMAGE_TITLE").toString());
+					mapNodeJson.put("titleImageDesc", mapNode.get("TZ_IMAGE_DESC").toString());
+					mapNodeJson.put("titleImageUrl", mapNode.get("TZ_ATTACHSYSFILENA").toString());
+					mapNodeJson.put("saveImageAccessUrl", saveImageAccessUrl);
+					/*System.out.println("[[[[[[[[[[[[[[[[[[");
+					System.out.println(mapNode.get("TZ_ATTACHSYSFILENA").toString());*/
+					mapNodeJson.put("titleImageUrl",
+								this.getTitleImageUrl(mapNode.get("TZ_ATTACHSYSFILENA").toString()));
 					
+					
+<<<<<<< HEAD
 					if(mapNode.get("TZ_MENU_SHOW").toString().equals("Y"))
+=======
+
+					if (mapNode.get("TZ_MENU_SHOW").equals("Y"))
+>>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
 						mapNodeJson.put("menuShow", true);
 					else
 						mapNodeJson.put("menuShow", false);
-			
+
 					// 查询默认主页 A:PAGE B:BOOK
 					if (menuType.equals("A")) {
 						isDefault = this.isDefault(menuId, listData);
@@ -293,7 +538,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							mapNodeJson.put("isDefault", "N");
 						}
 					}
-						
+
 					mapNodeJson.put("NodeType", "");
 					mapNodeJson.put("operateNode", "");
 					mapNodeJson.put("rootNode", "");
@@ -302,7 +547,8 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					if (isLeaf) {
 						mapNodeJson.put("leaf", false);
 						mapNodeJson.put("expanded", true);
-						mapNodeJson.put("children", this.getMenuList(menuId, listData));
+						mapNodeJson.put("children",
+								this.getMenuList(menuId, listData, saveImageAccessUrl));
 					} else {
 						mapNodeJson.put("leaf", true);
 					}
@@ -317,8 +563,6 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		return listRet;
 	}
 
-	
-	
 	/**
 	 * 判断该节点是否存在子节点
 	 * 
@@ -368,21 +612,24 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 		}
 		return false;
 	}
-	public List<Map<String,Object>> colseMenuShow(List<Map<String,Object>> sonList,List<Map<String,Object>> listData){
-		for(int i=0;i<sonList.size();i++)
-		{
+
+	public List<Map<String, Object>> colseMenuShow(List<Map<String, Object>> sonList,
+			List<Map<String, Object>> listData, String saveImageAccessUrl) {
+		for (int i = 0; i < sonList.size(); i++) {
 			sonList.get(i).replace("TZ_MENU_SHOW", "N");
-			System.out.println("menuId:"+sonList.get(i).get("id"));
-			//sqlQuery.execute("update  PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N' where TZ_MENU_ID='"+sonList.get(i).get("id")+"'");
+			System.out.println("menuId:" + sonList.get(i).get("id"));
+			// sqlQuery.execute("update PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N'
+			// where TZ_MENU_ID='"+sonList.get(i).get("id")+"'");
 			String sql = "update  PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N' where TZ_MENU_ID =?";
-			sqlQuery.update(sql,new Object[] { sonList.get(i).get("id")});
-			List<Map<String, Object>> tempList=this.getMenuList(sonList.get(i).get("id").toString(),listData);
-			if(tempList!=null)
-			colseMenuShow(tempList,listData);
+			sqlQuery.update(sql, new Object[] { sonList.get(i).get("id") });
+			List<Map<String, Object>> tempList = this.getMenuList(sonList.get(i).get("id").toString(), listData,
+					saveImageAccessUrl);
+			if (tempList != null)
+				colseMenuShow(tempList, listData, saveImageAccessUrl);
 		}
 		return sonList;
 	}
-	
+
 	/**
 	 * 功能说明：插入节点信息
 	 * 
@@ -393,7 +640,6 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
-
 
 		String strRet = "{}";
 		// 若参数为空，直接返回;
@@ -424,18 +670,25 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			String operateNode = "";
 			String menuXH = "";
 			String menuStyle = "";
-			String menuShow="";
+			String menuShow = "";
+			// 新增代码
+			String titleImageUrl = "";
+			String titleImageTitle = "";
+			String titleImageDesc = "";
+			String saveImageAccessUrl = "";
+			//
+
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			Map<String, Object> mapData = null;
 
 			// 父节点 操作节点的父节点
 			Map<String, Object> pNode = null;
-			
+
 			// 自己节点，操作节点
 			Map<String, Object> thisNode = null;
-			//子节点
-			List<Map<String,Object>>sonList=null;
+			// 子节点
+			List<Map<String, Object>> sonList = null;
 			// 根节点
 			Map<String, Object> rootNode = null;
 
@@ -482,6 +735,27 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					if (infoData.containsKey("menuStyle")) {
 						menuStyle = infoData.get("menuStyle").toString();
 					}
+
+					// 新增代码
+					/*
+					 * if (infoData.containsKey("attachsysfilena")) {
+					 * attachsysfilena =
+					 * infoData.get("attachsysfilena").toString(); }
+					 */
+					if (infoData.containsKey("titleImageTitle")) {
+						titleImageTitle = infoData.get("titleImageTitle").toString();
+					}
+					if (infoData.containsKey("titleImageDesc")) {
+						titleImageDesc = infoData.get("titleImageDesc").toString();
+					}
+					if (infoData.containsKey("titleImageUrl")) {
+						titleImageUrl = infoData.get("titleImageUrl").toString();
+					}
+					if (infoData.containsKey("saveImageAccessUrl")) {
+						saveImageAccessUrl = infoData.get("saveImageAccessUrl").toString();
+					}
+					//
+
 					// 是否默认页面;
 					if (infoData.containsKey("isDefault")) {
 						isDefault = infoData.get("isDefault").toString();
@@ -489,14 +763,12 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						isDefault = "N";
 					}
 
-					if(infoData.containsKey("menuShow"))
-					{
-						menuShow= infoData.get("menuShow").toString();
-						//System.out.println(infoData.get("menuShow").toString());
-					}
-					else
-						menuShow="N";
-					//System.out.println("--------add--------menuShow----"+menuShow);
+					if (infoData.containsKey("menuShow")) {
+						menuShow = infoData.get("menuShow").toString();
+						// System.out.println(infoData.get("menuShow").toString());
+					} else
+						menuShow = "N";
+					// System.out.println("--------add--------menuShow----"+menuShow);
 					System.out.println("isDefault:" + isDefault);
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 					NodeType = infoData.get("NodeType").toString();
@@ -556,13 +828,28 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-					//System.out.println("menuStyle=" + menuStyle);
-					//通过上的操作得到 当前节点父亲节点为pNode,当前节点为thisNode
-	
+					// System.out.println("menuStyle=" + menuStyle);
+					// 通过上的操作得到 当前节点父亲节点为pNode,当前节点为thisNode
 
-					
 					// boolean boolRst = false;
+
+					// 新增代码
+					// Map<String, Object> dataMap = jacksonUtil.getMap("data");
+					// 标题图标题;
+					titleImageTitle = (String) infoData.get("titleImageTitle");
+					// 标题图描述;
+					titleImageDesc = (String) infoData.get("titleImageDesc");
+					// 标题图URL;
+					titleImageUrl = (String) infoData.get("titleImageUrl");
+					String sysFileName = "";
+					if (titleImageUrl != null && !"".equals(titleImageUrl)) {
+						String arr[] = titleImageUrl.split("/");
+						sysFileName = arr[arr.length - 1];
+					}
+					
+					//
 					switch (NodeType) {
+
 					// 添加同级节点;
 					case "Y":
 						menuId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_MENU_T", "TZ_MENU_ID"));
@@ -579,8 +866,16 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
+
+						// 新增代码
+						// psTzSiteiMenuT.setTzAttachsysfilena(attachsysfilena);
+						psTzSiteiMenuT.setTzImageTitle(titleImageTitle);
+						psTzSiteiMenuT.setTzImageDesc(titleImageDesc);
+						psTzSiteiMenuT.setTzAttachsysfilena(sysFileName);
+						//
+
 						psTzSiteiMenuT.setTzMenuShow(menuShow);
-						
+
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
 
@@ -619,6 +914,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						break;
 					// 添加子节点;
 					case "N":
+
 						menuId = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_MENU_T", "TZ_MENU_ID"));
 						psTzSiteiMenuT = new PsTzSiteiMenuT();
 						psTzSiteiMenuT.setTzSiteiId(siteId);
@@ -633,8 +929,16 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
+
+						// 新增代码
+						// psTzSiteiMenuT.setTzAttachsysfilena(attachsysfilena);
+						psTzSiteiMenuT.setTzImageTitle(titleImageTitle);
+						psTzSiteiMenuT.setTzImageDesc(titleImageDesc);
+						psTzSiteiMenuT.setTzAttachsysfilena(sysFileName);
+						//
+
 						psTzSiteiMenuT.setTzMenuShow(menuShow);
-						
+
 						psTzSiteiMenuT.setTzIsDel("Y"); // 允许删除
 						psTzSiteiMenuT.setTzIsEditor("Y"); // 允许编辑
 
@@ -670,6 +974,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 
 					// 修改当前结点
 					default:
+
 						psTzSiteiMenuT = new PsTzSiteiMenuT();
 						psTzSiteiMenuT.setTzSiteiId(siteId);
 						psTzSiteiMenuT.setTzMenuId(operateNode);
@@ -678,8 +983,15 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuT.setTzMenuState(menuState);
 						psTzSiteiMenuT.setTzMenuXh(new Integer(menuXH));
 						psTzSiteiMenuT.setTzMenuStyle(menuStyle);
+
+						// 新增代码
+						// psTzSiteiMenuT.setTzAttachsysfilena(attachsysfilena);
+						psTzSiteiMenuT.setTzImageTitle(titleImageTitle);
+						psTzSiteiMenuT.setTzImageDesc(titleImageDesc);
+						psTzSiteiMenuT.setTzAttachsysfilena(sysFileName);
+						//
 						psTzSiteiMenuT.setTzMenuShow(menuShow);
-						
+
 						psTzSiteiMenuT.setTzTempId(menuTempletId);
 						psTzSiteiMenuT.setTzPageName(menuPageName);
 						psTzSiteiMenuT.setTzLastmantOprid(oprid);
@@ -717,19 +1029,20 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 								defaultPage = menuName;
 							}
 						}
-						//获取子节点集合
-						sonList=getMenuList(thisNode.get("TZ_MENU_ID").toString(),listData);
-						//if(sonList!=null)
-						//System.out.println("sonListSize:"+sonList.size());
-						//System.out.println("TZ_MENU_ID:"+thisNode.get("TZ_MENU_ID").toString());
-						//System.out.println("TZ_MENU_SHOW:"+thisNode.get("TZ_MENU_SHOW"));
-						//System.out.println("====show==="+menuShow);
-						if(sonList!=null&&menuShow.equals("N"))
-						{
-								this.colseMenuShow(sonList, listData);
+						// 获取子节点集合
+						sonList = getMenuList(thisNode.get("TZ_MENU_ID").toString(), listData, saveImageAccessUrl
+								);
+						// if(sonList!=null)
+						// System.out.println("sonListSize:"+sonList.size());
+						// System.out.println("TZ_MENU_ID:"+thisNode.get("TZ_MENU_ID").toString());
+						// System.out.println("TZ_MENU_SHOW:"+thisNode.get("TZ_MENU_SHOW"));
+						// System.out.println("====show==="+menuShow);
+						if (sonList != null && menuShow.equals("N")) {
+							this.colseMenuShow(sonList, listData, saveImageAccessUrl);
 						}
-						//this.getChildList(thisNode.get("TZ_MENU_ID").toString(), listData, sonList);
-						//System.out.println(sonList.size());
+						// this.getChildList(thisNode.get("TZ_MENU_ID").toString(),
+						// listData, sonList);
+						// System.out.println(sonList.size());
 						break;
 					}
 
@@ -857,7 +1170,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			CmsUtils cu = new CmsUtils();
 			if ("mainMenu".equals(oprType)) {
 				jacksonUtil.json2Map(strParams);
-	
+
 				String siteId = jacksonUtil.getString("siteId");
 				CmsBean cm = cu.menuBook(siteId, "");
 				// 写文件
@@ -901,7 +1214,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 				if (menuType.endsWith("B")) {
 					cm = cu.menuBook(siteId, menuId);
 				} else if (menuType.endsWith("A")) {
-					System.out.println("PAGE Creeate,menuId=" + menuId+",siteid="+siteId);
+					System.out.println("PAGE Creeate,menuId=" + menuId + ",siteid=" + siteId);
 					String contentPath = request.getContextPath();
 					cm = cu.menuPage(siteId, menuId, contentPath, "1");
 				}
