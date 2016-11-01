@@ -308,12 +308,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					// 跟节点;
 					xtype : 'textfield',
 					name : 'rootNode',
-<<<<<<< HEAD
 					hidden : true
-
-=======
-					hidden : true
->>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
 				},{ 
 		            xtype: 'hiddenfield',
 					name: 'titleImageUrl'
