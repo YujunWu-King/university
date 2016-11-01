@@ -387,13 +387,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 									}]
 		        	  }]
 				}
-				
-				
-<<<<<<< HEAD
+
 				],
-=======
-				],
->>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
+
 				listeners : {
 					afterrender : function(thisForm) {
 					}
@@ -694,8 +690,3 @@ function deleteImage( bt, e, eOpts){
 	//bt.findParentByType("form").findParentByType("form").down('textfield[name=saveImageAccessUrl]').setValue("");
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
