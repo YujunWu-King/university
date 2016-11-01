@@ -166,8 +166,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					name : 'siteId',
 					hidden : true
 				},{
-<<<<<<< HEAD
-=======
 		            xtype: 'textfield',
 					name: 'saveImageAccessUrl',
 					hidden: true
@@ -176,7 +174,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					name: 'saveAttachAccessUrl',
 					hidden: true
 		        },{
->>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
 					xtype : 'textfield',
 					fieldLabel : '菜单名称',
 					name : 'menuName',
@@ -253,11 +250,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					fieldLabel  : '是否显示',
 					inputValue: 'Y',
 					name : 'menuShow',
-<<<<<<< HEAD
 					checked:true
-=======
-					value:true
->>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
 				}
 				,{
 					layout : {
@@ -312,9 +305,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					xtype : 'textfield',
 					name : 'rootNode',
 					hidden : true
-<<<<<<< HEAD
-				}],
-=======
+
 				},{ 
 					
 		            xtype: 'hiddenfield',
@@ -397,7 +388,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				
 				
 				],
->>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
 				listeners : {
 					afterrender : function(thisForm) {
 					}
@@ -546,8 +536,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 		this.callParent();
 	}
 });
-<<<<<<< HEAD
-=======
 
 function addAttach(file, value, attachmentType){
 
@@ -700,5 +688,3 @@ function deleteImage( bt, e, eOpts){
 	//bt.findParentByType("form").findParentByType("form").down('textfield[name=saveImageAccessUrl]').setValue("");
 }
 
-
->>>>>>> f87b12f4fbdd4d82a65bfe664b280f8b40b18554
