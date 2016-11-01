@@ -72,6 +72,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					
 					view.findParentByType("menuEdit").down('image[name=titileImage]').setSrc(TzUniversityContextPath + view.findParentByType("menuEdit").down('hiddenfield[name=titleImageUrl]').getValue());
 					
+					view.findParentByType("menuEdit").down("button[handler='createThisMenu']").show();
 					// 如果是BOOK类型隐藏menuPageName隐藏是否默认页面，显示路径
 					// A:PAGE  B:BOOK
 					if (record.data.menuType == "B") {
@@ -79,14 +80,18 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						form.findField("isDefault").hide();
 						form.findField("menuPath").show();
 						form.findField("defaultPage").show();
-					
+						//隐藏生成本级菜单
+						if(form.findField("menuPageName").getValue()==""&&form.findField("menuTempletId").getValue()=="")
+							view.findParentByType("menuEdit").down("button[handler='createThisMenu']").hide();
 						//form.findField("menuStyle").show();
 					} else {
 						//form.findField("menuPageName").show();
 						form.findField("isDefault").show();
 						form.findField("menuPath").hide();
 						form.findField("defaultPage").hide();
-					
+						//隐藏生成本级菜单
+						if(form.findField("menuTempletId").getValue()=="")
+							view.findParentByType("menuEdit").down("button[handler='createThisMenu']").hide();
 						//form.findField("menuStyle").hide();
 					}
 					view.findParentByType("menuEdit").actType = "update";
@@ -249,8 +254,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					xtype: 'checkboxfield',
 					fieldLabel  : '是否显示',
 					inputValue: 'Y',
-					name : 'menuShow',
-					checked:true
+					name : 'menuShow'
 				}
 				,{
 					layout : {
@@ -304,10 +308,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 					// 跟节点;
 					xtype : 'textfield',
 					name : 'rootNode',
+<<<<<<< HEAD
 					hidden : true
 
+=======
+					hidden : true
+>>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
 				},{ 
-					
 		            xtype: 'hiddenfield',
 					name: 'titleImageUrl'
 		        },
@@ -387,7 +394,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				}
 				
 				
+<<<<<<< HEAD
 				],
+=======
+				],
+>>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
 				listeners : {
 					afterrender : function(thisForm) {
 					}
@@ -494,6 +505,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				form.findField("menuPath").show();
 				form.findField("defaultPage").show();
 				//form.findField("menuStyle").show();
+				
 			} else {
 				//form.findField("menuPageName").show();
 				form.findField("isDefault").show();
@@ -571,7 +583,6 @@ if(value != ""){
 			return;
 		}
 	}else{
-		
 		upUrl = file.findParentByType("menuEdit").child("form").getForm().findField("saveImageAccessUrl").getValue();
 		if(upUrl==""){
 			Ext.Msg.alert("错误","未定义上传图片的路径，请与管理员联系");
@@ -688,3 +699,8 @@ function deleteImage( bt, e, eOpts){
 	//bt.findParentByType("form").findParentByType("form").down('textfield[name=saveImageAccessUrl]').setValue("");
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> a4f020e919a14f6ff4b5bb5a76f6c5cfda654bfa
