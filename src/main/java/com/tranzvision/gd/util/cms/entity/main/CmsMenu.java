@@ -14,8 +14,36 @@ public class CmsMenu extends BaseMenu {
 	private String pageName; // PAGE名称
 
 	private String defaultId; // 默认下级Page的菜单ID
-	
-	
+
+	private String titleUrl; // 标题图路径
+
+	private String title; // 标题图名称
+
+	private String titleDes; // 标题图描述
+
+	public String getTitleUrl() {
+		return titleUrl;
+	}
+
+	public void setTitleUrl(String titleUrl) {
+		this.titleUrl = titleUrl;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTitleDes() {
+		return titleDes;
+	}
+
+	public void setTitleDes(String titleDes) {
+		this.titleDes = titleDes;
+	}
 
 	public String getLevel() {
 		return level;
