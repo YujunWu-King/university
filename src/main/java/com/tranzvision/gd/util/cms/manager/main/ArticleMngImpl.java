@@ -192,7 +192,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				// 活动信息;
 				if (id != null && !id.equals("")) {
 					art.setOpenActApp("N");
-					//Date dateNow = new Date();
+					// Date dateNow = new Date();
 					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
 							+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM,D.TZ_NACT_ADDR,D.TZ_HD_CS,D.TZ_XWS  "
 							+ " from PS_TZ_ART_HD_TBL D where D.TZ_ART_ID=? ";
@@ -793,32 +793,31 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		switch (orderBy) {
 
 		case 0:
-			// 发布时间降序
+			// 发布时间和权重（置顶）降序
 			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		case 1:
-			// 发布时间升序
+			// 发布时间升序和权重（置顶）降序
 			orderStr.append(" order by B.TZ_ART_NEWS_DT,B.TZ_MAX_ZD_SEQ desc ");
 			return orderStr.toString();
 		case 2:
-			// orderStr.append(" order by bean.tz_art_news_dt asc ");
-			// return orderStr.toString();
-			return "";
+			// 序列的降序和权重（置顶）降序
+			orderStr.append(" order by B.TZ_ART_SEQ desc,B.TZ_MAX_ZD_SEQ desc ");
+			return orderStr.toString();
 		case 3:
-			// orderStr.append(" order by bean.tz_weight_seq
-			// desc,bean.tz_art_news_dt desc ");
-			// return orderStr.toString();
-			return "";
+			// 序列的升序和权重（置顶）降序
+			orderStr.append(" order by B.TZ_ART_SEQ ,B.TZ_MAX_ZD_SEQ desc ");
+			return orderStr.toString();
 		case 4:
-			// 发生时间升序
+			// 发生时间升序和权重（置顶）降序
 			orderStr.append(" order by A.ROW_LASTMANT_DTTM,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		case 5:
-			// 发生时间降序
+			// 发生时间降序和权重（置顶）降序
 			orderStr.append(" order by A.ROW_LASTMANT_DTTM desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		default:
-			// 发布时间降序
+			// 发布时间降序和权重（置顶）降序
 			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
 			return orderStr.toString();
 		}
