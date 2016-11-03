@@ -45,7 +45,11 @@ public class MenuDirective implements TemplateDirectiveModel {
 		MenuMng menuMng = new MenuMngImpl(siteId);
 		System.out.println("id："+id);
 		System.out.println("siteId："+siteId);
+		
+		System.out.println("aaaaaaaaaaaaaaa");
 		CmsMenu menu = menuMng.findMenu(id, siteId);
+		
+		System.out.println(menu.getTitleUrl());
 
 		Map<String, TemplateModel> paramWrap = new HashMap<String, TemplateModel>(
 				params);

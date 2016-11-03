@@ -143,13 +143,13 @@ public class MenuMngImpl extends Manager implements MenuMng {
 						imagePathA = imagePathA + "/";
 					}
 					titleSysFileUrl = imagePathA + titleSysFileId;
-					
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("titleSysFileUrl:"+titleSysFileUrl);
+		//System.out.println("titleSysFileUrl:" + titleSysFileUrl);
 		return titleSysFileUrl;
 	}
 
@@ -428,10 +428,12 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 		// 标题图地址
 		if (map.get("TZ_ATTACHSYSFILENA") != null) {
-			
+
 			String titleSysFileId = map.get("TZ_ATTACHSYSFILENA").toString();
-			System.out.println("titleSysFileId:"+titleSysFileId);
-			menu.setTitleUrl(this.getTitle(titleSysFileId));
+			// System.out.println("titleSysFileId:"+titleSysFileId);
+			if (titleSysFileId != null && !titleSysFileId.equals("")) {
+				menu.setTitleUrl(this.getTitle(titleSysFileId));
+			}
 		}
 		if (map.get("TZ_IMAGE_TITLE") != null) {
 			menu.setTitle(map.get("TZ_IMAGE_TITLE").toString());
