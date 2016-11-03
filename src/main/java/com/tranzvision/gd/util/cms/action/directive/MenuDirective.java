@@ -43,7 +43,8 @@ public class MenuDirective implements TemplateDirectiveModel {
 		String id = DirectiveUtils.getString(PARAM_ID, params);
 		String siteId = DirectiveUtils.getString(PARAM_SITE_ID, params);
 		MenuMng menuMng = new MenuMngImpl(siteId);
-
+		System.out.println("id："+id);
+		System.out.println("siteId："+siteId);
 		CmsMenu menu = menuMng.findMenu(id, siteId);
 
 		Map<String, TemplateModel> paramWrap = new HashMap<String, TemplateModel>(

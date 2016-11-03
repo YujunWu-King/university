@@ -154,7 +154,7 @@ public class CmsUtils {
 				root.put("CmsArticleList", new ContentListDirective()); // 1.文章列表标签（无分页）
 				root.put("CmsContentPage", new ArticlePageDirective()); // 2.文章分页列表标签
 				root.put("CmsMenu", new MenuDirective());
-				root.put("menu", menu);
+				//root.put("menu", menu);
 				String path = menuMng.getSitePath(siteId);
 				root.put("CONTEXTPATH", path);
 				root.put(SITE_ID, siteId);
@@ -218,6 +218,7 @@ public class CmsUtils {
 		}
 		MenuMng menuMng = new MenuMngImpl(menuList);
 		// 根据ID得到菜单信息
+		System.out.println("11223");
 		CmsMenu menu = menuMng.findMenu(id, siteId);
 //		if (menu == null) {
 //			menu = menuMng.findRootMenu(siteId);
