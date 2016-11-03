@@ -814,16 +814,17 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					// System.out.println("thisNode=" + thisNode);
 					// System.out.println("operateNode=" + operateNode);
 					// System.out.println("menuId=" + menuId);
-
-					if (rootNode.get("TZ_MENU_ID").toString().equals(thisNode.get("TZ_MENU_ID").toString())) {
-						// 当前结点就是跟节点,没有父节点
-						pNode = null;
-					} else {
-						for (Object objData : listData) {
-							mapData = (Map<String, Object>) objData;
-							if (String.valueOf(mapData.get("TZ_MENU_ID"))
-									.equals(thisNode.get("TZ_F_MENU_ID").toString())) {
-								pNode = mapData;
+					if (rootNode != null) {
+						if (rootNode.get("TZ_MENU_ID").toString().equals(thisNode.get("TZ_MENU_ID").toString())) {
+							// 当前结点就是跟节点,没有父节点
+							pNode = null;
+						} else {
+							for (Object objData : listData) {
+								mapData = (Map<String, Object>) objData;
+								if (String.valueOf(mapData.get("TZ_MENU_ID"))
+										.equals(thisNode.get("TZ_F_MENU_ID").toString())) {
+									pNode = mapData;
+								}
 							}
 						}
 					}
