@@ -128,6 +128,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 		var operateNodeId = form.findField("operateNode").getValue();
 		var operateNode = treepanelStore.getNodeById(operateNodeId);
 		var menuShow=form.findField("menuShow").getValue();
+		var titleImageUrl=form.findField("titleImageUrl").getValue();
+		
 		if (menuId == rootNode&&menuId != "") {
 			Ext.Msg.alert("提示", "不可删除根节点");
 		}else {
@@ -152,13 +154,15 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 								rootNode : rootNode,
 								siteId : siteId,
 								menuShow:operateNode.data.menuShow,
-								saveImageAccessUrl:operateNode.data.saveImageAccessUrl,
+								//saveImageAccessUrl:operateNode.data.saveImageAccessUrl,
 								titleImageUrl:operateNode.data.titleImageUrl,
 								titleImageTitle:operateNode.data.titleImageTitle,
 								titleImageDesc:operateNode.data.titleImageDesc,
 								
+								
 								menuTempletName : operateNode.data.menuTempletName
 							});
+							
 							
 							if (operateNode.data.menuType == "B") {
 								//form.findField("menuPageName").hide();
@@ -180,6 +184,8 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 							form.findField("menuType").setReadOnly(true);
 							form.findField("menuType").addCls('lanage_1');
 							panel.actType = "update";
+							
+							bt.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath+form.findField("titleImageUrl").getValue());
 						} else {
 							var tzParams = this.getOrgMenuInfoDeleteParams(form);
 							Ext.tzSubmit(tzParams,function(responseData) {
@@ -213,6 +219,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 										rootNode : rootNode,
 										siteId : siteId,
 										menuShow:menuShow,
+										
+										titleImageUrl:pNode.data.titleImageUrl,
+										titleImageTitle:pNode.data.titleImageTitle,
+										titleImageDesc:pNode.data.titleImageDesc,
+										
 										menuTempletName : pNode.data.menuTempletName
 									});
 									
@@ -235,6 +246,9 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 									form.findField("menuPath").addCls('lanage_1');
 									form.findField("menuType").setReadOnly(true);
 									form.findField("menuType").addCls('lanage_1');
+									
+									bt.findParentByType("tabpanel").down('image[name=titileImage]').setSrc(TzUniversityContextPath+form.findField("titleImageUrl").getValue());
+									
 									panel.actType = "update";
 									pNode.removeChild(thisNode);
 									if (pNode.hasChildNodes() == false) {

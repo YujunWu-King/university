@@ -610,6 +610,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzArtHtml("");
 									psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
 									psTzLmNrGlTWithBLOBs.setTzFbz("");
+									
+									
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 

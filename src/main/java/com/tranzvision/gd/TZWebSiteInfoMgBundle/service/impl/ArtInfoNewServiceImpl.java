@@ -397,6 +397,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				map.replace("type", psTzArtRecTbl.getTzArtEdittype());
 
 				// A html编辑 B文本框编辑 modity by caoy
+				if(psTzArtRecTbl.getTzArtEdittype()==null){
+					psTzArtRecTbl.setTzArtEdittype("A");
+				}
+				
 				if (psTzArtRecTbl.getTzArtEdittype().equals("A")) {
 
 					map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());

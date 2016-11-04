@@ -440,7 +440,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 			}
 		]}*/
 		];
-		//this.down('image[name=titileImage]').setSrc(TzUniversityContextPath + this.down('textfield[name=titleImageUrl]').getValue());
+		
 		this.callParent();
 	},
 	listeners : {
