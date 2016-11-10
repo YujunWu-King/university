@@ -75,6 +75,7 @@ public class CmsUtils {
 		String path = channelMng.getSitePath(siteId);
 		root.put("CONTEXTPATH", path);
 		root.put("TzUniversityContextPath", contentPath);
+		root.put("CmsMenu", new MenuDirective());
 
 		String strRandom = String.valueOf(10 * Math.random());
 		String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
