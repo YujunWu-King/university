@@ -209,7 +209,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 							art.setHd_city((String) hdMap.get("TZ_HD_CS"));
 							art.setHd_address((String) hdMap.get("TZ_NACT_ADDR"));
 							art.setHd_totalNumber(((Long) hdMap.get("TZ_XWS")).intValue());
-
+							
+							
 							if (hdMap.get("TZ_QY_ZXBM") != null) {
 								String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
 								if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
