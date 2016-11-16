@@ -591,7 +591,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		System.out.println("last:" + last);
 
 		System.out.println("size:" + p.getPageSize());
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, last });
+		
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, p.getPageSize() });
 		Map<String, Object> map = null;
 		CmsContent art = null;
 		for (Object objData : list) {
