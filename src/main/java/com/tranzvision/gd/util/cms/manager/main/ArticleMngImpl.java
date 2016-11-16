@@ -794,32 +794,32 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		switch (orderBy) {
 
 		case 0:
-			// 发布时间和权重（置顶）降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发布时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT desc ");
 			return orderStr.toString();
 		case 1:
-			// 发布时间升序和权重（置顶）降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT,B.TZ_MAX_ZD_SEQ desc ");
+			// 权重（置顶）降序和发布时间升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT ");
 			return orderStr.toString();
 		case 2:
-			// 序列的降序和权重（置顶）降序
-			orderStr.append(" order by B.TZ_ART_SEQ desc,B.TZ_MAX_ZD_SEQ desc ");
+			// 权重（置顶）降序和序列的降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_SEQ desc ");
 			return orderStr.toString();
 		case 3:
-			// 序列的升序和权重（置顶）降序
-			orderStr.append(" order by B.TZ_ART_SEQ ,B.TZ_MAX_ZD_SEQ desc ");
+			// 权重（置顶）降序和序列的升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_SEQ ");
 			return orderStr.toString();
 		case 4:
-			// 发生时间升序和权重（置顶）降序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发生时间升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,A.ROW_LASTMANT_DTTM ");
 			return orderStr.toString();
 		case 5:
-			// 发生时间降序和权重（置顶）降序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发生时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,A.ROW_LASTMANT_DTTM desc ");
 			return orderStr.toString();
 		default:
-			// 发布时间降序和权重（置顶）降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发布时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT desc ");
 			return orderStr.toString();
 		}
 	}
