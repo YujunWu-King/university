@@ -462,8 +462,10 @@
         
 		cmp.on('afterrender', function(panel) {
 			var form = panel.child('form').getForm();
-			form.findField("siteId").setValue(siteId);
-			form.findField("siteName").setValue(siteName);
+			//form.setValues({siteId:siteId},{siteName:siteName});
+			form.setValues({siteId:siteId,siteName:siteName});
+			//form.findField("siteId").setValue(siteId);
+			//form.findField("siteName").setValue(siteName);
 
 			var grid = panel.child('grid');
 			var tzStoreParams = '{"siteId":"' + siteId + '"}';

@@ -241,6 +241,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.tempController', {
 	},
 	closeTempList: function(obj){
 		this.getView().close();
+		//this.ensureTempList(obj);
 	},
 	//确定
 	ensureTempList:function(obj) {

@@ -116,8 +116,10 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 		Ext.MessageBox.prompt('复制模板', '请输入另存模板的名称:', this.showResultText, this);
 	},
 
-	/* 预览报名表模板 */
+	/* 预览报名表模板  modity by caoy  预览的时候增加站点的选择*/
 	onBmbTplPreview : function(gridViewObject, rowIndex) {
+		
+		//是否有访问权限
 		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
 		// 是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_FORM_STD"];
@@ -125,22 +127,79 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.MessageBox.alert('提示', '您没有预览报名表模板的权限');
 			return;
 		}
-
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_WWMBDY_STD，请检查配置。');
+			return;
+		}
+		var win = this.lookupReference('mySite');
+		var view = this.getView();
 		var tplid = gridViewObject.store.getAt(rowIndex).get("tplid");
+		//检查是否有招生站点，如果没有提示，如果有，把mySite页面的下拉框设值
+		var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"loadZSSite","comParams":""}';
+		
+		// 加载数据
+		Ext.tzLoad(tzParams, function(responseData) {
+			var fieldList = responseData.root;
+			
+			if (fieldList == null || fieldList.length == 0) {
+				Ext.Msg.alert("提示", "没有设置招生站点。");
+				return;
+			} else {
+				var store = new Ext.data.Store({
+					fields: ['siteId', 'siteName'],
+					data:fieldList
+				});
+				
+				if (!win) {
+					Ext.syncRequire(className);
+					ViewClass = Ext.ClassManager.get(className);
+					//新建类
+					win = new ViewClass();
+					view.add(win);
+				}
+				//操作类型设置为新增
+				//win.actType = "add";
+				//模板id
+				
+				//站点模板id
+				//模板信息表单
+				var form = win.child("form").getForm();
+				form.reset();
+				
+				form.findField("siteId").setStore(store);
+				if(store.getCount() > 0){
+					form.setValues({tplId:tplid,siteId:store.getAt(0).get("siteId")});
+				} else {
+					form.setValues({tplId:tplid});
+				}
+				
+				win.show();
+				}
+		});
+	},
+	
+	onFormEnsure: function(){
+		var view = this.getView(); 
+		var form = view.child("form").getForm();
+		var tplId = form.findField("tplId").getValue();
+		var siteId = form.findField("siteId").getValue();
+		view.close();
+		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+		// 是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_FORM_STD"];
+		if (pageResSet == "" || pageResSet == undefined) {
+			Ext.MessageBox.alert('提示', '您没有预览报名表模板的权限');
+			return;
+		}
 		var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"'
-				+ tplid + '"}}'
+				+ tplId + '","SiteID":"'+siteId+'"}}'
 		var url = Ext.tzGetGeneralURL() + tzParams;
 		window.open(url, '_blank');
-
-		/*
-		 * var tplname = gridViewObject.store.getAt(rowIndex).get("tplname");
-		 * var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		 * var tab = contentPanel.add({ title: tplname, loader: { url:
-		 * externalURL + '?mode=Y&TZ_QSTN_TPL_ID=' + tplid, contentType: 'html',
-		 * loadMask: true } }); var items = contentPanel.items.items;
-		 * items[items.length - 1].loader.load();
-		 * contentPanel.setActiveTab(tab);
-		 */
+	},
+	onFormClose: function(){
+		this.getView().close();
 	},
 
 	showResultText : function(id, text) {

@@ -314,7 +314,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 	 */
 	@Override
 	public String getLoginedManagerOprid(HttpServletRequest request) {
-		// 从Session中获取登录用户信息，返回oprid
+		// 从Session中获取登录用户信息，返回oprid  用户ID
 		TzSession tzSession = new TzSession(request);
 		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
 		if (null != psTzAqYhxxTbl) {
@@ -340,7 +340,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 	 */
 	@Override
 	public String getLoginedManagerDlzhid(HttpServletRequest request) {
-		// 从Session中获取登录用户信息，返回orgid
+		// 从Session中获取登录用户信息，返回orgid  机构登陆名
 		TzSession tzSession = new TzSession(request);
 		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
 		if (null != psTzAqYhxxTbl) {
@@ -366,7 +366,7 @@ public class TzLoginServiceImpl implements TzLoginService {
 	 */
 	@Override
 	public String getLoginedManagerOrgid(HttpServletRequest request) {
-		// 从Session中获取登录用户信息，返回orgid
+		// 从Session中获取登录用户信息，返回orgid 机构ID
 		TzSession tzSession = new TzSession(request);
 		PsTzAqYhxxTbl psTzAqYhxxTbl = (PsTzAqYhxxTbl) tzSession.getSession(managerSessionName);
 		if (null != psTzAqYhxxTbl) {

@@ -38,15 +38,15 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("root", arraylist);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T";
+			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C'";
 			int total = jdbcTemplate.queryForObject(totalSQL, "Integer");
 			String sql = "";
 			List<Map<String, Object>> list = null;
 			if(numLimit > 0){
-				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
+				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C' ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
 				list = jdbcTemplate.queryForList(sql,new Object[]{numStart,numLimit});
 			}else{
-				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T ORDER BY TZ_SITEI_ID ASC";
+				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C' ORDER BY TZ_SITEI_ID ASC";
 				list = jdbcTemplate.queryForList(sql);
 			}
 			if(list != null){
