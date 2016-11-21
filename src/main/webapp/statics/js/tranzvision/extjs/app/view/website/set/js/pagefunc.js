@@ -5,8 +5,8 @@ var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.T
 
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
-	  
-	  var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAGE","OperateType":"QF","comParams":{"classId":"'+classId+'"}}';
+	  var siteid=$("#siteid").val();
+	  var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAGE","OperateType":"QF","comParams":{"classId":"'+classId+'","siteid":"'+siteid+'"}}';
 
 		$.ajax({
 				type:"POST",
@@ -34,9 +34,9 @@ function checkHisApply(classId,languageCd){
 						}
 						 
 						if(confirmValue==true){
-							location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId;
+							location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
 						}else{
-							location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId;
+							location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
 						} 
 					}
 				}   

@@ -623,6 +623,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			String classId = jacksonUtil.getString("classId");
+			String siteid = jacksonUtil.getString("siteid");
 
 			// 根据班级编号查询机构;
 			String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -633,9 +634,12 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					new Object[] { classId, oprId }, "Integer");
 			if (isBmYet == 0) {
 				//有没有历史报名表;
-		        int isHaveHisApp = jdbcTemplate.queryForObject(
+		       /* int isHaveHisApp = jdbcTemplate.queryForObject(
 						"SELECT count(1) FROM PS_TZ_FORM_WRK_T A ,PS_TZ_CLASS_INF_T B WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.OPRID = ?  AND B.TZ_JG_ID = ?",
-						new Object[] {  oprId ,jgId}, "Integer");
+						new Object[] {  oprId ,jgId}, "Integer");*/
+				int isHaveHisApp = jdbcTemplate.queryForObject(
+						"select count(1) from PS_TZ_FORM_WRK_T c, PS_TZ_CLASS_INF_T d where c.TZ_CLASS_ID = d.TZ_CLASS_ID AND c.OPRID = ?  AND d.TZ_JG_ID = ? and d.TZ_PRJ_ID in (select a.TZ_PRJ_ID from PS_TZ_PRJ_INF_T a,PS_TZ_PROJECT_SITE_T b where a.TZ_PRJ_ID=b.TZ_PRJ_ID and b.TZ_SITEI_ID=?)",
+						new Object[] {  oprId ,jgId,siteid}, "Integer");
 		        if(isHaveHisApp > 0){
 		        	//查看是否有互斥班级;
 		        	boolean bool = classMutexServiceImpl.isClassMutex(classId);

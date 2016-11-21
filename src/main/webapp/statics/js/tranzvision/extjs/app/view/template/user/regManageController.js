@@ -111,9 +111,10 @@ Ext.define('KitchenSink.view.template.user.regManageController', {
 	/*预览注册项模板*/
 	onUserRegPreView: function(btn) {
 		var form = this.getView().child("form").getForm();
+		var siteId = form.findField("siteId").getValue();
 		var view = this.getView();
 		var grid = this.getView().child("grid");
-		var tzParams = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_VIEW_STD","OperateType":"HTML","comParams":{}}';
+		var tzParams = '{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_VIEW_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'"}}';
 		var tmpURL = Ext.tzGetGeneralURL() + "?tzParams=" + window.escape(tzParams);
 		window.open(tmpURL);
 	},
