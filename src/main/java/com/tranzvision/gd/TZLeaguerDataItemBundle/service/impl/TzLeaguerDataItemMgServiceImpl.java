@@ -708,12 +708,21 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzGetHtmlContent(String comParams) {
-
-		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+/*
+		
 
 		String sql = "select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? and TZ_SITEI_ENABLE='Y'";
 
 		String strSiteId = sqlQuery.queryForObject(sql, new Object[] { orgid }, "String");
+*/
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(comParams);
+		
+		String strSiteId = "";
+		if(jacksonUtil.containsKey("siteId")){
+			strSiteId = jacksonUtil.getString("siteId");
+		}
 
 		String viewHtml = registeServiceImpl.userRegister(orgid, strSiteId);
 		if(viewHtml.contains("$")){

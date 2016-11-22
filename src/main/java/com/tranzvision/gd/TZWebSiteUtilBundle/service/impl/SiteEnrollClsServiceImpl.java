@@ -716,7 +716,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					strJumUrl = strJumUrl
 							+ "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
-							+ strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId + "\",\"sen\":\"1\"}}";
+							+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId+ "\",\"orgid\":\"" + strOrgId + "\",\"sen\":\"1\"}}";
 				}
 
 				Map<String, Object> returnMap = new HashMap<>();
@@ -909,6 +909,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				strOrgid = jacksonUtil.getString("orgid");
 				strLang = jacksonUtil.getString("lang");
 				strSen = jacksonUtil.getString("sen");
+				strSiteid = jacksonUtil.getString("siteid");
 			}
 
 			// 注册提交后的激活邮箱页面
@@ -965,8 +966,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			strEmail = jacksonUtil.getString("email");
 			strOrgid = jacksonUtil.getString("orgid");
-			String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
-			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
+			strSiteId = jacksonUtil.getString("siteid");
+			String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strSiteId });
+			//String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			//Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
 			if (map != null) {
 				strSiteId = (String) map.get("TZ_SITEI_ID");
 				strLang = (String) map.get("TZ_SITE_LANG");
@@ -1382,15 +1386,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strTokenSign = jacksonUtil.getString("tokensign");
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
+			strSiteId = jacksonUtil.getString("siteid");
 
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 
 			if (strTokenSign != null && !"".equals(strTokenSign.trim()) && strOrgid != null && !"".equals(strOrgid)) {
 				strTokenSign = strTokenSign.trim();
-
+/*
 				String sql = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
-				Map<String, Object> siteMap = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });
+				Map<String, Object> siteMap = jdbcTemplate.queryForMap(sql, new Object[] { strOrgid });*/
+				String sql = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+				Map<String, Object> siteMap = jdbcTemplate.queryForMap(sql, new Object[] { strSiteId });
 				strSiteId = (String) siteMap.get("TZ_SITEI_ID");
 				String skinId = (String) siteMap.get("TZ_SKIN_ID");
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
