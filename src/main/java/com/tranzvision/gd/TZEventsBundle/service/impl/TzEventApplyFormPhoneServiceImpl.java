@@ -50,6 +50,8 @@ public class TzEventApplyFormPhoneServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	PsTzLxfsinfoTblMapper psTzLxfsinfoTblMapper;
+	
+	//final String filterPattern = "[<>{}\\[\\];\\&]";
 
 	/**
 	 * 显示在线报名注册页面
@@ -66,7 +68,11 @@ public class TzEventApplyFormPhoneServiceImpl extends FrameworkImpl {
 			String strApplyId = request.getParameter("APPLYID");
 			String MenuId = request.getParameter("MenuId");
 			String SiteId = request.getParameter("SiteId");
+			
+			
 			strApplyId = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(strApplyId);
+			MenuId = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(MenuId);
+			SiteId = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(SiteId);
 
 			// 当前登录人登录账号
 			String userDLZH = tzWebsiteLoginServiceImpl.getLoginedUserDlzhid(request);
