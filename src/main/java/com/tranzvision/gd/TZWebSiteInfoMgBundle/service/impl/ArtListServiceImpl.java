@@ -114,7 +114,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_SITE_ID", "TZ_COLU_ID", "TZ_ART_ID", "TZ_ART_TITLE", "TZ_ART_NEWS_DT",
-					"TZ_REALNAME", "TZ_ART_PUB_STATE", "TZ_MAX_ZD_SEQ", "TZ_PAGE_REFCODE" };
+					"TZ_REALNAME", "TZ_ART_PUB_STATE", "TZ_MAX_ZD_SEQ", "TZ_PAGE_REFCODE","TZ_ART_SEQ" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -136,6 +136,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					mapList.put("releaseOrUndo", rowList[6]);
 					mapList.put("topOrUndo", rowList[7]);
 					mapList.put("classId", rowList[8]);
+					mapList.put("artseq", rowList[9]);
 
 					listData.add(mapList);
 				}

@@ -3,6 +3,7 @@ Ext.define('KitchenSink.view.content.artMg.artModel', {
     fields: [
         {name: 'isEnable'},
         {name: 'articleTitle'},
+        {name: 'artseq'},
         {
             name: 'releaseTime',
             mapping: 'releaseTime',

@@ -94,19 +94,20 @@
 			maxLength : 254
         },
         {
+			xtype:'component',
+			hideLabel: true,
+			style:'color:#ff0000',
+			margin: '0 0 10 105',
+			html:'注意：关键字请用"，"分隔'
+		},
+        {
             xtype: 'numberfield',
             fieldLabel: "排序",
 			name: 'artSeq',
 			allowDecimals: false,
 			maxLength : 254
         },
-        {
-			xtype:'component',
-			hideLabel: true,
-			style:'color:#ff0000',
-			margin: '0 0 10 105',
-			html:'注意：关键字请用"，"分隔'
-		},{
+       {
             xtype: 'textfield',
             fieldLabel: '预留字段1',
 			name: 'tztxt1',
