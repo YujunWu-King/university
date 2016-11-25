@@ -252,7 +252,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 		if (actData.length == 0) {
 			return strRet;
 		}
-
+		String siteId = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
@@ -270,7 +270,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 			String strForm = "";
 			String synchronous = "";
 			Map<String, Object> infoData = null;
-			String siteId = "";
+
 			String coluId = "";
 			String coluName = "";
 			String coluPath = "";
@@ -281,7 +281,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 			String coluUrl = "";
 			String NodeType = "";
 			String operateNode = "";
-			
+
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				strForm = actData[num];
@@ -319,7 +319,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 
 					// 插入同级节点或子节点是在哪个节点上操作的;
 					operateNode = infoData.get("operateNode").toString();
-			
+
 					if ((coluName == null || "".equals(coluName)) || (coluState == null || "".equals(coluState))) {
 						return "";
 					}
@@ -332,8 +332,8 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					// 找到该节点的父节点以及级别
 					sql = "select ifnull(TZ_F_COLU_ID,\"\") TZ_F_COLU_ID,TZ_COLU_LEVEL from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=?";
 					ThisNodeMap = sqlQuery.queryForMap(sql, new Object[] { siteId, operateNode });
-					
-					if (ThisNodeMap.get("TZ_F_COLU_ID") !=null) {
+
+					if (ThisNodeMap != null && ThisNodeMap.get("TZ_F_COLU_ID") != null) {
 						TZ_F_COLU_ID = (ThisNodeMap.get("TZ_F_COLU_ID").toString());
 					}
 					TZ_COLU_LEVEL = (ThisNodeMap.get("TZ_COLU_LEVEL").toString());
@@ -342,9 +342,9 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					sql = "select TZ_COLU_PATH from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_LEVEL=?";
 					ThisNodeMap = sqlQuery.queryForMap(sql, new Object[] { siteId, 0 });
 
-					TZ_COLU_PATH = (ThisNodeMap.get("TZ_COLU_PATH").toString());
-					
-					
+					if (ThisNodeMap != null) {
+						TZ_COLU_PATH = (ThisNodeMap.get("TZ_COLU_PATH").toString());
+					}
 
 					// boolean boolRst = false;
 					switch (NodeType) {
@@ -359,7 +359,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuState(coluState);
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL));
 						psTzSiteiColuT.setTzColuType(coluType);
-						
+
 						if (coluType.equals("D")) {
 							psTzSiteiColuT.setTzContType("A");
 						} else {
@@ -453,7 +453,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
-			errMsg[1] = e.toString();
+			errMsg[1] = e.toString() + "siteId=" + siteId;
 		}
 		return strRet;
 	}

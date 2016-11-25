@@ -75,6 +75,7 @@ public class CmsUtils {
 		String path = channelMng.getSitePath(siteId);
 		root.put("CONTEXTPATH", path);
 		root.put("TzUniversityContextPath", contentPath);
+		root.put("CmsMenu", new MenuDirective());
 
 		String strRandom = String.valueOf(10 * Math.random());
 		String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
@@ -123,6 +124,7 @@ public class CmsUtils {
 
 		System.out.println("time:" + (System.currentTimeMillis() - l));
 		// 根据ID得到菜单信息
+		System.out.println("bbbbbbbbbb");
 		CmsMenu menu = menuMng.findMenu(id, siteId);
 		
 //		if (menu == null) {
@@ -218,6 +220,7 @@ public class CmsUtils {
 		}
 		MenuMng menuMng = new MenuMngImpl(menuList);
 		// 根据ID得到菜单信息
+		
 		CmsMenu menu = menuMng.findMenu(id, siteId);
 //		if (menu == null) {
 //			menu = menuMng.findRootMenu(siteId);

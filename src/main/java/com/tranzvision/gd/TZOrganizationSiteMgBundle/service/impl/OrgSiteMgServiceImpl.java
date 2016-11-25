@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -27,6 +30,12 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
 	
+	@Autowired
+	private HttpServletRequest request;
+
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	
 	/* 查询许可权列表 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -38,16 +47,17 @@ public class OrgSiteMgServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("root", arraylist);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T";
-			int total = jdbcTemplate.queryForObject(totalSQL, "Integer");
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C'  and TZ_JG_ID = ?";
+			int total = jdbcTemplate.queryForObject(totalSQL,new Object[] { orgId }, "Integer");
 			String sql = "";
 			List<Map<String, Object>> list = null;
 			if(numLimit > 0){
-				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
-				list = jdbcTemplate.queryForList(sql,new Object[]{numStart,numLimit});
+				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C' and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC LIMIT ?,?";
+				list = jdbcTemplate.queryForList(sql, new Object[]{orgId,numStart,numLimit});
 			}else{
-				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T ORDER BY TZ_SITEI_ID ASC";
-				list = jdbcTemplate.queryForList(sql);
+				sql = "SELECT TZ_SITEI_ID,TZ_SITEI_NAME,TZ_SITEI_DESCR FROM PS_TZ_SITEI_DEFN_T where TZ_SITEI_TYPE='C' and TZ_JG_ID = ? ORDER BY TZ_SITEI_ID ASC";
+				list = jdbcTemplate.queryForList(sql,new Object[] { orgId } );
 			}
 			if(list != null){
 				

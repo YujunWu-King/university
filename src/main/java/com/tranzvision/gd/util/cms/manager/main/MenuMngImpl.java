@@ -30,6 +30,32 @@ public class MenuMngImpl extends Manager implements MenuMng {
 
 	}
 
+	public String getSitePath(String siteId) {
+		String sql = "select TZ_SITEI_PATH from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? ";
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			List<Map<String, Object>> pathList = jdbcTemplate.queryForList(sql.toString(), new Object[] { siteId });
+			if (pathList != null && pathList.size() == 1) {
+				Map<String, Object> mapNode = pathList.get(0);
+				if (mapNode.get("TZ_SITEI_PATH") != null) {
+					String path = mapNode.get("TZ_SITEI_PATH").toString();
+					if (!path.equals("/")) {
+						if (!path.endsWith("/")) {
+							path = path + "/";
+						}
+					}
+					return path;
+				} else {
+					return "";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
 	public MenuMngImpl(String siteId) {
 		StringBuffer sql = new StringBuffer(
 				"select TZ_MENU_ID,TZ_SITEI_ID,TZ_MENU_NAME,TZ_MENU_TYPE,TZ_MENU_LEVEL,TZ_MENU_XH,");
@@ -39,7 +65,10 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		sql.append("ifnull(TZ_TEMP_ID,\"\") TZ_TEMP_ID,");
 		sql.append("ifnull(TZ_PAGE_NAME,\"\") TZ_PAGE_NAME,");
 		sql.append("ifnull(TZ_MENU_STYLE,\"\") TZ_MENU_STYLE,");
-		sql.append("ifnull(TZ_MENU_SHOW,\"\") TZ_MENU_SHOW");
+		sql.append("ifnull(TZ_MENU_SHOW,\"\") TZ_MENU_SHOW,");
+		sql.append("ifnull(TZ_ATTACHSYSFILENA,\"\") TZ_ATTACHSYSFILENA,");
+		sql.append("ifnull(TZ_IMAGE_TITLE,\"\") TZ_IMAGE_TITLE,");
+		sql.append("ifnull(TZ_IMAGE_DESC,\"\") TZ_IMAGE_DESC");
 		sql.append(" from PS_TZ_SITEI_MENU_T");
 		sql.append(" where TZ_SITEI_ID=?");
 		try {
@@ -73,7 +102,14 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		return rsList;
 	}
 
-	public void findRecall(String id, String siteId, List<CmsMenu> rsList) {
+	/**
+	 * 回溯递归 ，根据子找到所有上层父
+	 * 
+	 * @param id
+	 * @param siteId
+	 * @param rsList
+	 */
+	private void findRecall(String id, String siteId, List<CmsMenu> rsList) {
 		CmsMenu cm = findMenu(id, siteId);
 		rsList.add(cm);
 		if (cm.getLevel().equals("1")) {
@@ -83,30 +119,38 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		}
 	}
 
-	public String getSitePath(String siteId) {
-		String sql = "select TZ_SITEI_PATH from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=? ";
-		try {
-			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-			List<Map<String, Object>> pathList = jdbcTemplate.queryForList(sql.toString(), new Object[] { siteId });
-			if (pathList != null && pathList.size() == 1) {
-				Map<String, Object> mapNode = pathList.get(0);
-				if (mapNode.get("TZ_SITEI_PATH") != null) {
-					String path = mapNode.get("TZ_SITEI_PATH").toString();
-					if (!path.equals("/")) {
-						if (!path.endsWith("/")) {
-							path = path + "/";
-						}
+	/**
+	 * 找到菜单标题图路径
+	 * 
+	 * @param siteId
+	 * @return
+	 */
+	private String getTitle(String titleSysFileId) {
+		String titleSysFileUrl = null;
+		// 标题图;
+		if (titleSysFileId != null && !"".equals(titleSysFileId)) {
+			String titleSQL = "select C.TZ_ATTACHFILE_NAME," + " C.TZ_ATT_P_URL,C.TZ_ATT_A_URL,"
+					+ " C.TZ_YS_ATTACHSYSNAM,C.TZ_SL_ATTACHSYSNAM" + " from PS_TZ_ART_TITIMG_T C "
+					+ " where TZ_ATTACHSYSFILENA=?";
+			try {
+				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+				Map<String, Object> titleMap = jdbcTemplate.queryForMap(titleSQL, new Object[] { titleSysFileId });
+				if (titleMap != null) {
+
+					String imagePathA = (String) titleMap.get("TZ_ATT_A_URL");
+					if (!imagePathA.trim().endsWith("/")) {
+						imagePathA = imagePathA + "/";
 					}
-					return path;
-				} else {
-					return "";
+					titleSysFileUrl = imagePathA + titleSysFileId;
+
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return "";
+		//System.out.println("titleSysFileUrl:" + titleSysFileUrl);
+		return titleSysFileUrl;
 	}
 
 	@Override
@@ -124,7 +168,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			for (Object objNode : list) {
 				mapNode = (Map<String, Object>) objNode;
 				TZ_F_MENU_ID = mapNode.get("TZ_F_MENU_ID").toString();
-				TZ_MENU_SHOW  = mapNode.get("TZ_MENU_SHOW").toString();
+				TZ_MENU_SHOW = mapNode.get("TZ_MENU_SHOW").toString();
 				if (TZ_F_MENU_ID.equals(id) && TZ_MENU_SHOW.equals("Y")) {
 					try {
 						rsList.add(transMenu(mapNode));
@@ -236,7 +280,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			}
 			url = path + "/" + pageNme;
 		}
-		//System.out.println("url:" + url);
+		// System.out.println("url:" + url);
 		return url;
 	}
 
@@ -312,7 +356,7 @@ public class MenuMngImpl extends Manager implements MenuMng {
 			strFilePath = strBasePath + strMenuPath;
 		}
 
-		//System.out.println("strFilePath:" + strFilePath);
+		// System.out.println("strFilePath:" + strFilePath);
 		return strFilePath;
 	}
 
@@ -381,6 +425,22 @@ public class MenuMngImpl extends Manager implements MenuMng {
 		}
 
 		menu.setLevel(map.get("TZ_MENU_LEVEL").toString());
+
+		// 标题图地址
+		if (map.get("TZ_ATTACHSYSFILENA") != null) {
+
+			String titleSysFileId = map.get("TZ_ATTACHSYSFILENA").toString();
+			// System.out.println("titleSysFileId:"+titleSysFileId);
+			if (titleSysFileId != null && !titleSysFileId.equals("")) {
+				menu.setTitleUrl(this.getTitle(titleSysFileId));
+			}
+		}
+		if (map.get("TZ_IMAGE_TITLE") != null) {
+			menu.setTitle(map.get("TZ_IMAGE_TITLE").toString());
+		}
+		if (map.get("TZ_IMAGE_DESC") != null) {
+			menu.setTitleDes(map.get("TZ_IMAGE_DESC").toString());
+		}
 
 		return menu;
 	}

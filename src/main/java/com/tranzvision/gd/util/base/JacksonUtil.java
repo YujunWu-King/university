@@ -132,6 +132,8 @@ public class JacksonUtil {
 	public Map<String, Object> getMap(String key) {
 		if (jsonMap == null) {
 			return null;
+		} else if (jsonMap.get(key) == null || jsonMap.get(key).equals("")) {
+			return null;
 		}
 		try {
 			return (Map<String, Object>) jsonMap.get(key);
@@ -153,6 +155,8 @@ public class JacksonUtil {
 	public List<?> getList(String key) {
 		if (jsonMap == null) {
 			return null;
+		} else if (jsonMap.get(key) == null || jsonMap.get(key).equals("")) {
+			return null;
 		}
 		try {
 			return (List<?>) jsonMap.get(key);
@@ -173,6 +177,8 @@ public class JacksonUtil {
 	 */
 	public String getString(String key) {
 		if (jsonMap == null) {
+			return null;
+		} else if (jsonMap.get(key) == null) {
 			return null;
 		}
 		try {
@@ -307,8 +313,8 @@ public class JacksonUtil {
 		System.out.println("tplID：" + tplID);
 		System.out.println("fileName：" + fileName);
 		System.out.println("storDates：" + storDates);
-		
-		//jacksonUtil.json2Map(storDates);
+
+		// jacksonUtil.json2Map(storDates);
 		List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("storDates");
 		System.out.println("jsonArray：" + jsonArray.size());
 	}

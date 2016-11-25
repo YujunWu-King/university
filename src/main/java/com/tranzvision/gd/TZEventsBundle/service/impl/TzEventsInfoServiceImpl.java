@@ -610,6 +610,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzArtHtml("");
 									psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
 									psTzLmNrGlTWithBLOBs.setTzFbz("");
+									
+									
 									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 
@@ -1984,6 +1986,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			psTzArtRecTblWithBLOBs.setTzEndTime(applyEndDateTime);
 			psTzArtRecTblWithBLOBs.setRowLastmantDttm(dateNow);
 			psTzArtRecTblWithBLOBs.setRowLastmantOprid(oprid);
+			psTzArtRecTblWithBLOBs.setTzArtEdittype("A");
 
 			// 文章内容关联表
 			/*

@@ -177,6 +177,11 @@
 								return '<a target="_blank" href="' + url + '">' + v + '</a>';
 							}
 						},{
+							text: "序列",
+							dataIndex: 'artseq',
+							width: 70,
+							align: 'center',
+						},{
 							text: "发布时间",
 							dataIndex: 'releaseTime',
 							width: 165,

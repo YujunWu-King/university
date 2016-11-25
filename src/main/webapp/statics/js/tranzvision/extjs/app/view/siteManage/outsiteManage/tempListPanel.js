@@ -12,7 +12,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.tempListPanel', {//站点�
 	],
 	title: '站点模板管理',
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
-	actType: 'update',// 默认新增
+	actType: 'add',// 默认新增
 
 	initComponent:function(){
 		Ext.apply(this,{

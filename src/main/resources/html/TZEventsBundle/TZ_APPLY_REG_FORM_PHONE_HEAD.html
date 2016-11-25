@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ningbo Supply Chain Innovation Institute China</title> 
+<!-- For-Mobile-Apps-and-Meta-Tags -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="keywords" content="" />
+
+<link href="%bind(:9)/css/index.css" type="text/css" rel="stylesheet" media="all">
+<link href="%bind(:9)/css/public.css" type="text/css" rel="stylesheet" media="all">
+<link href="%bind(:9)/css/insidepagely.css" type="text/css" rel="stylesheet" media="all">
+
+<script src="%bind(:9)/js/jquery-1.11.1.min.js"></script>
+<!-- 轮播图 js-->
+<script src="%bind(:9)/js/swiper.min.js"></script>
+<script type="text/javascript" src="%bind(:8)/statics/js/tranzvision/func/captcha.js"></script>
+<script type="text/javascript">
+	var TzUniversityContextPath = "%bind(:8)";
+	function createCode(obj) {
+		$("#regCodeImg").attr("src",GenCaptchaUrl());
+	}
+</script>
+</head>
+<body> 
+    <div class="logo"><img src="%bind(:9)/images/logo.png"></div>
+    <div class="indexnav" id="top"></div>
+    [@CmsMenu id=menu.id siteid=menu.siteId]
+    [#if tag_bean??]
+    <img [#if tag_bean.titleUrl??&&tag_bean.titleUrl?trim?length>0] src="${tag_bean.titleUrl?trim}"[/#if]/>
+    [/#if]
+	[/@CmsMenu]
+    
+    <div class="Bread-crumbs">
+        <div class="BC-back left">
+            <a href="javascript :;" onClick="javascript :history.back(-1);return false;" target="_self">
+            <img src="%bind(:9)/images/back-arrow.png">
+            </a>
+        </div>
+        <div class="BC-info left">%bind(:10)</div>
+        <div class="clear"></div>
+    </div>
+    
+    <!--nav开始-->
+    <nav id="menu"></nav>
+    <!--nav结束-->
+    
+    <!--主体内容开始-->
+    <div class="box-Main">
+    	<!--子页面内容开始-->
+    	<div class="Inquiry">
+        	<div class="apply-title">%bind(:1)</div>
+        	<P style="font-size:0.85em;line-height:1.25em;color:#666;padding:10px 0;">%bind(:11)</P>
+            <div class="Inquiry-con">
+            	%bind(:2)
+                <div class="Inquirycon-list">
+                	<div class="input-btn"><a href="javascript:tz_apply_float_iframe_submit();">%bind(:3)</a></div>
+                </div>
+            </div>
+        </div> 
+        <!--子页面内容开始-->
+    </div>
+    <!--主体内容结束-->
+    
+    <script src="js/index.js"></script><!--radio按钮颜色-->
+    
+    <!--底部开始-->
+     <div class="bottom" id="bottom"> 
+    </div>
+
+    <!-- banner JS -->
+<script>
+    var swiper = new Swiper('.swiper-container', {
+    pagination: '.swiper-pagination',
+    nextButton: '.swiper-button-next',
+    prevButton: '.swiper-button-prev',
+    paginationClickable: true,
+    spaceBetween: 30,
+    centeredSlides: true,
+    autoplay: 2500,
+    autoplayDisableOnInteraction: false
+    });
+</script>
+    
+    <!--菜单js开始-->
+    <script type="text/javascript">
+          $(document).ready(function(){
+            $("#top").load("%bind(:9)/top.html");
+            $("#menu").load("%bind(:9)/mainMenu.html");
+            $("#bottom").load("%bind(:9)/bottom.html");
+            createCode();
+    		$("#TZ_CYR_NAME").focus();
+          });
+    </script> 
+    <script>
+      $(function(){
+        $(document).on("click", "#searchButton", function(){
+          var keyWords=$.trim($("#keyWords").val());
+          //alert(keyWords);
+          if(keyWords!=undefined&&keyWords!=null)
+          window.open("%bind(:9)/search.html?siteId=${siteId!}&keyWords="+keyWords); 
+        })
+        
+        $(document).on("click", ".navbar-toggle", function(){
+          $(".mask").fadeIn()
+          $("nav").animate({left:"0"})  
+        })
+        
+        $(document).on("click", "nav .close a", function(){
+          $(".mask").fadeOut()
+          $("nav").animate({left:"-90%"}) 
+        })
+      
+        $(document).on("click", "nav ul li h3 a.s", function(){
+          $(this).toggleClass("on")
+          $(this).parent().siblings("ol").slideToggle()
+        })
+      
+        $(document).on("click", "nav ul li ol li h4 a", function(){
+          if($(this).hasClass("on")){
+            $(this).removeClass("on")
+            $(this).find("span").html("+")
+            $(this).parent().siblings(".last_level").slideUp()
+          }else{
+            $(this).addClass("on")
+            $(this).find("span").html("-")
+            $(this).parent().siblings(".last_level").slideDown()
+            $(this).parent().parent().siblings().find("h4 a").removeClass("on")
+            $(this).parent().parent().siblings().find("h4 a span").html("+")
+            $(this).parent().parent().siblings().find(".last_level").slideUp()
+          } 
+        })
+
+      })
+    </script>
+    	<script type="text/javascript">
+		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
+		function cmbcgbyyValueReplace(str) {
+
+			var s = "";
+
+			if (str == undefined) {
+				return str;
+			}
+
+			if (str.length == 0)
+				return "";
+
+			s = $.trim(str.toString());
+
+			s = s.replace(/\\/g, "\\\\")
+
+			s = s.replace(/\"/g, "\\\"");
+
+			s = s.replace(/\'/g, "\\'");
+
+			s = s.replace(/\t/g, "\\t");
+
+			s = s.replace(/\f/g, "\\f");
+
+			s = s.replace(/\//g, "\\/");
+
+			s = s.replace(/\n/g, "\\n");
+
+			return s;
+
+		}
+
+		/*提交事件*/
+		function tz_apply_float_iframe_submit() {
+			var allParam = $("input");
+			var selectParem = $("select");
+
+			var applyURL = "%bind(:4)";
+			var strParam = "{";
+
+			for (i = 0; i < allParam.length; i++) {
+
+				if ($(allParam[i]).attr("type") == "hidden"
+						|| $(allParam[i]).attr("type") == "text") {
+					var inputValue = $.trim($(allParam[i]).val());
+
+					if ($(allParam[i]).attr("required") == "required"
+							&& inputValue == "") {
+						alert("%bind(:5)");
+						return;
+					} else {
+						strParam = strParam
+								+ "\""
+								+ cmbcgbyyValueReplace($(allParam[i])
+										.attr("id")) + "\":\""
+								+ cmbcgbyyValueReplace(inputValue) + "\",";
+					}
+				}
+			}
+
+			for (i = 0; i < selectParem.length; i++) {
+
+				var inputValue = $.trim($(selectParem[i]).val());
+
+				if ($(selectParem[i]).attr("required") == "required"
+						&& inputValue == "") {
+					alert("%bind(:5)");
+					return;
+				} else {
+					strParam = strParam
+							+ "\""
+							+ cmbcgbyyValueReplace($(selectParem[i]).attr("id"))
+							+ "\":\"" + cmbcgbyyValueReplace(inputValue)
+							+ "\",";
+				}
+			}
+
+			strParam = strParam.substr(0, strParam.length - 1);
+			strParam = strParam + "}";
+
+			strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
+					+ strParam + "}";
+
+			// strComParams = $.parseJSON(strComParams);
+			// console.log(strComParams);
+			strComParams = encodeURIComponent(strComParams);
+			$.ajax({
+				type : "POST",
+				url : applyURL + "?tzParams=" + strComParams,
+				// data: {"tzParams":strComParams},
+				dataType : "json",
+				success : function(data) {
+					var result = data.comContent.result;
+					var resultDesc = data.comContent.resultDesc;
+					var artid = data.comContent.artid;
+					var bmrid = data.comContent.bmrid;
+					
+					if (result == "1" || result == "2") {
+						alert(resultDesc);
+					} else {
+						
+						alert(resultDesc);
+						for (i = 0; i < allParam.length; i++) {
+							if ($(allParam[i]).attr("type") != "hidden") {
+								$(allParam[i]).val("");
+							}
+						}
+						createCode();
+			    		$("#TZ_CYR_NAME").focus();
+						//parent.changebmzt(artid, bmrid);
+						//parent.tz_close_float_iframe_apply();
+					}
+
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					if (textStatus == "timeout") {
+						alert("%bind(:6)");
+						return;
+					} else {
+						alert("%bind(:7)");
+						return;
+					}
+				}
+			});
+
+		}		
+	</script>
+    <div class="mask"></div>
+    <!--菜单js结束-->
+</body>
+</html>

@@ -778,6 +778,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					if ((menuName == null || "".equals(menuName)) || (menuState == null || "".equals(menuState))) {
 						return "";
 					}
+					System.out.println("operateNode=" + operateNode);
 
 					// 修改当前节点
 					if (operateNode == null || "".equals(operateNode)) {
@@ -811,19 +812,20 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					}
 
 					// System.out.println("rootNode=" + rootNode);
-					// System.out.println("thisNode=" + thisNode);
-					// System.out.println("operateNode=" + operateNode);
-					// System.out.println("menuId=" + menuId);
-
-					if (rootNode.get("TZ_MENU_ID").toString().equals(thisNode.get("TZ_MENU_ID").toString())) {
-						// 当前结点就是跟节点,没有父节点
-						pNode = null;
-					} else {
-						for (Object objData : listData) {
-							mapData = (Map<String, Object>) objData;
-							if (String.valueOf(mapData.get("TZ_MENU_ID"))
-									.equals(thisNode.get("TZ_F_MENU_ID").toString())) {
-								pNode = mapData;
+					System.out.println("operateNode=" + operateNode);
+					System.out.println("rootNode=" + rootNode);
+					System.out.println("thisNode=" + thisNode);
+					if (rootNode != null && thisNode != null) {
+						if (rootNode.get("TZ_MENU_ID").toString().equals(thisNode.get("TZ_MENU_ID").toString())) {
+							// 当前结点就是跟节点,没有父节点
+							pNode = null;
+						} else {
+							for (Object objData : listData) {
+								mapData = (Map<String, Object>) objData;
+								if (String.valueOf(mapData.get("TZ_MENU_ID"))
+										.equals(thisNode.get("TZ_F_MENU_ID").toString())) {
+									pNode = mapData;
+								}
 							}
 						}
 					}
@@ -907,7 +909,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 									new Object[] { menuId, thisNode.get("TZ_F_MENU_ID").toString(), siteId });
 							defaultPage = menuName;
 						} else {
-							defaultPage = pNode.get("TZ_DEFAULT_PAGE").toString();
+							if (pNode != null) {
+								defaultPage = pNode.get("TZ_DEFAULT_PAGE").toString();
+							}
 						}
 
 						break;
@@ -998,7 +1002,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiMenuTMapper.updateByPrimaryKeySelective(psTzSiteiMenuT);
 
 						// 对默认页面进行处理 A:PAGE B:BOOK 是否是默认页面 Y:是 N:不是
-						if (menuType.equals("A")) {
+						if (menuType.equals("A") && pNode != null) {
 
 							String TZ_D_MENU_ID = pNode.get("TZ_D_MENU_ID").toString();
 

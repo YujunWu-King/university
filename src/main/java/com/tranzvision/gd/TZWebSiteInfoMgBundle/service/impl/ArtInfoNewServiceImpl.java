@@ -397,6 +397,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				map.replace("type", psTzArtRecTbl.getTzArtEdittype());
 
 				// A html编辑 B文本框编辑 modity by caoy
+				if(psTzArtRecTbl.getTzArtEdittype()==null){
+					psTzArtRecTbl.setTzArtEdittype("A");
+				}
+				
 				if (psTzArtRecTbl.getTzArtEdittype().equals("A")) {
 
 					map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
@@ -1539,15 +1543,12 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							fjmapList.put("attachmentID", sysName);
 							fjmapList.put("attachmentName", attachmentName);
 							fjmapList.put("attachmentUrl", attachmentUrl);
-
 							listData.add(fjmapList);
 						}
 						mapRet.replace("total", total);
 						mapRet.replace("root", listData);
 					}
-
 				}
-
 				// 图片集
 				if ("TPJ".equals(gridTyp)) {
 					String tpqSQL = "SELECT a.TZ_ATTACHSYSFILENA,a.TZ_PRIORITY,b.TZ_ATT_A_URL,a.TZ_IMG_DESCR,a.TZ_IMG_TRS_URL,b.TZ_SL_ATTACHSYSNAM from PS_TZ_ART_PIC_T a,PS_TZ_ART_TPJ_T b where a.TZ_ART_ID=? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA order by a.TZ_PRIORITY ASC";
@@ -1559,7 +1560,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							if ((url.lastIndexOf("/") + 1) != url.length()) {
 								url = url + "/";
 							}
-
 							Map<String, Object> tpjmapList = new HashMap<String, Object>();
 							tpjmapList.put("sysFileName", (String) list.get(i).get("TZ_ATTACHSYSFILENA"));
 							tpjmapList.put("index", (long) list.get(i).get("TZ_PRIORITY"));
@@ -1567,10 +1567,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							tpjmapList.put("caption", (String) list.get(i).get("TZ_IMG_DESCR"));
 							tpjmapList.put("picURL", (String) list.get(i).get("TZ_IMG_TRS_URL"));
 							tpjmapList.put("sltUrl", path + url + (String) list.get(i).get("TZ_SL_ATTACHSYSNAM"));
-
 							listData.add(tpjmapList);
 						}
-
 						mapRet.replace("total", total);
 						mapRet.replace("root", listData);
 					}
@@ -1580,7 +1578,6 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return jacksonUtil.Map2json(mapRet);
 	}
 
@@ -1625,19 +1622,16 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							if (file.exists() && file.isFile()) {
 								file.delete();
 							}
-
 							psTzArtFjjTMapper.deleteByPrimaryKey(attachmentID);
 						}
 					}
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
-
 		return strRet;
 	}
 }

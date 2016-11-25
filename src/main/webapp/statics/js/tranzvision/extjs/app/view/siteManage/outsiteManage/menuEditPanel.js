@@ -222,13 +222,13 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 								form.findField("isDefault").hide();
 								form.findField("menuPath").show();
 								form.findField("defaultPage").show();	
-								form.findField("menuStyle").show();
+								//form.findField("menuStyle").show();
 							} else {
 								//form.findField("menuPageName").show();
 								form.findField("isDefault").show();
 								form.findField("menuPath").hide();
 								form.findField("defaultPage").hide();
-								form.findField("menuStyle").hide();
+								//form.findField("menuStyle").hide();
 							}
 						}
 					}
@@ -440,7 +440,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 			}
 		]}*/
 		];
-		//this.down('image[name=titileImage]').setSrc(TzUniversityContextPath + this.down('textfield[name=titleImageUrl]').getValue());
+		
 		this.callParent();
 	},
 	listeners : {

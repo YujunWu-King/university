@@ -107,7 +107,7 @@
             filterPickList:true,
             createNewOnEnter: false,
             createNewOnBlur: false,
-            queryMode: 'local',
+            queryMode: 'remote',
             listeners:{
                 'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
                 {

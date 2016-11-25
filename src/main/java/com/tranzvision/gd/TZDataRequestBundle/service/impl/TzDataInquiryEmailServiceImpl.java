@@ -48,6 +48,8 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery sqlQuery;
 
+	final String filterPattern = "[<>{}\\[\\];\\&]";
+
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -65,66 +67,88 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			map.replace("success", "1");
 			msg = "姓名不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
+
+		name = name.replaceAll(filterPattern, "");
 
 		String type = request.getParameter("type");
 		if (type == null || "".equals(type)) {
 			map.replace("success", "1");
 			msg = "type不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
+
+		type = type.replaceAll(filterPattern, "");
 
 		String email = request.getParameter("email");
 		if (email == null || "".equals(email)) {
 			map.replace("success", "1");
 			msg = "Email不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
+
+		email = email.replaceAll(filterPattern, "");
 
 		String Company = request.getParameter("company");
 		if (Company == null || "".equals(Company)) {
 			map.replace("success", "1");
 			msg = "公司不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
+
+		Company = Company.replaceAll(filterPattern, "");
 
 		String phone = request.getParameter("phone");
 		if (phone == null || "".equals(phone)) {
 			map.replace("success", "1");
 			msg = "电话不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
+
+		phone = phone.replaceAll(filterPattern, "");
 
 		String message = request.getParameter("message");
 		if (message == null || "".equals(message)) {
 			map.replace("success", "1");
 			msg = "message不能为空";
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
+		message = message.replaceAll(filterPattern, "");
+
 		// 校验验证码
-			String code=request.getParameter("code");
-		  Patchca patchca = new Patchca(); 
-		  if (!patchca.verifyToken(request,code)) 
-		  { 
-			  map.replace("success", "1"); 
-			  msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确", "验证码不正确空");
-			  map.replace("msg", msg); 
-			  return jacksonUtil.Map2json(map);
-		  }
-		 
+		String code = request.getParameter("code");
+
+		if (code == null || "".equals(code)) {
+			map.replace("success", "1");
+			msg = "code不能为空";
+			map.replace("msg", msg);
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
+			return jacksonUtil.Map2json(map);
+		}
+
+		code = code.replaceAll(filterPattern, "");
+		
+		Patchca patchca = new Patchca();
+		if (!patchca.verifyToken(request, code)) {
+			map.replace("success", "1");
+			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "6", language, "验证码不正确",
+					"验证码不正确空");
+			map.replace("msg", msg);
+			return jacksonUtil.Map2json(map);
+		}
 
 		// 收件人email
 		String sjr = sqlQuery.queryForObject(
@@ -134,7 +158,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "8", language, "收件人未配置",
 					"收件人未配置");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -155,7 +179,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language, "发送失败",
 					"发送失败");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -166,7 +190,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language, "发送失败",
 					"发送失败");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -183,7 +207,8 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 					msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language,
 							"发送失败", "发送失败");
 					map.replace("msg", msg);
-					//System.out.println("result:" + jacksonUtil.Map2json(map));
+					// System.out.println("result:" +
+					// jacksonUtil.Map2json(map));
 					return jacksonUtil.Map2json(map);
 				} else {
 					sendNum++;
@@ -196,7 +221,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "9", language, "收件人为空",
 					"收件人为空");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -207,7 +232,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language, "发送失败",
 					"发送失败");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -218,7 +243,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language, "发送失败",
 					"发送失败");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -228,7 +253,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 			msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_DATA_REQUEST_MSG", "7", language, "发送失败",
 					"发送失败");
 			map.replace("msg", msg);
-			//System.out.println("result:" + jacksonUtil.Map2json(map));
+			// System.out.println("result:" + jacksonUtil.Map2json(map));
 			return jacksonUtil.Map2json(map);
 		}
 
@@ -243,7 +268,7 @@ public class TzDataInquiryEmailServiceImpl extends FrameworkImpl {
 		psTzDataRequestT.setTzPhone(phone);
 		psTzDataRequestT.setTzRequestType(type);
 		psTzDataRequestTMapper.insert(psTzDataRequestT);
-		//System.out.println("result:" + jacksonUtil.Map2json(map));
+		// System.out.println("result:" + jacksonUtil.Map2json(map));
 		return jacksonUtil.Map2json(map);
 	}
 }

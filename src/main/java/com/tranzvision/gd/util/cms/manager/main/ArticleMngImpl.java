@@ -192,7 +192,7 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 				// 活动信息;
 				if (id != null && !id.equals("")) {
 					art.setOpenActApp("N");
-					//Date dateNow = new Date();
+					// Date dateNow = new Date();
 					String hdSQL = "SELECT D.TZ_START_DT,D.TZ_START_TM,"
 							+ " D.TZ_END_DT,D.TZ_END_TM,D.TZ_QY_ZXBM,D.TZ_NACT_ADDR,D.TZ_HD_CS,D.TZ_XWS  "
 							+ " from PS_TZ_ART_HD_TBL D where D.TZ_ART_ID=? ";
@@ -209,7 +209,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 							art.setHd_city((String) hdMap.get("TZ_HD_CS"));
 							art.setHd_address((String) hdMap.get("TZ_NACT_ADDR"));
 							art.setHd_totalNumber(((Long) hdMap.get("TZ_XWS")).intValue());
-
+							
+							
 							if (hdMap.get("TZ_QY_ZXBM") != null) {
 								String isOpenHdBm = (String) hdMap.get("TZ_QY_ZXBM");
 								if (isOpenHdBm == null || "".equals(isOpenHdBm)) {
@@ -590,7 +591,8 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		System.out.println("last:" + last);
 
 		System.out.println("size:" + p.getPageSize());
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, last });
+		
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, p.getPageSize() });
 		Map<String, Object> map = null;
 		CmsContent art = null;
 		for (Object objData : list) {
@@ -793,33 +795,32 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		switch (orderBy) {
 
 		case 0:
-			// 发布时间降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发布时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT desc ");
 			return orderStr.toString();
 		case 1:
-			// 发布时间升序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT,B.TZ_MAX_ZD_SEQ desc ");
+			// 权重（置顶）降序和发布时间升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT ");
 			return orderStr.toString();
 		case 2:
-			// orderStr.append(" order by bean.tz_art_news_dt asc ");
-			// return orderStr.toString();
-			return "";
+			// 权重（置顶）降序和序列的降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_SEQ desc ");
+			return orderStr.toString();
 		case 3:
-			// orderStr.append(" order by bean.tz_weight_seq
-			// desc,bean.tz_art_news_dt desc ");
-			// return orderStr.toString();
-			return "";
+			// 权重（置顶）降序和序列的升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_SEQ ");
+			return orderStr.toString();
 		case 4:
-			// 发生时间升序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发生时间升序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,A.ROW_LASTMANT_DTTM ");
 			return orderStr.toString();
 		case 5:
-			// 发生时间降序
-			orderStr.append(" order by A.ROW_LASTMANT_DTTM desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发生时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,A.ROW_LASTMANT_DTTM desc ");
 			return orderStr.toString();
 		default:
-			// 发布时间降序
-			orderStr.append(" order by B.TZ_ART_NEWS_DT desc,B.TZ_MAX_ZD_SEQ desc");
+			// 权重（置顶）降序和发布时间降序
+			orderStr.append(" order by B.TZ_MAX_ZD_SEQ desc,B.TZ_ART_NEWS_DT desc ");
 			return orderStr.toString();
 		}
 	}
