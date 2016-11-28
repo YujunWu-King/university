@@ -115,7 +115,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 								NodeType : "",
 								operateNode : "",
 								rootNode : rootNode,
-								siteId : siteId,
+								siteId : operateNode.data.siteId,
 								coluTempletName : operateNode.data.coluTempletName,
 								contentTypeName : operateNode.data.contentTypeName,
 								coluAbout : operateNode.data.coluAbout
@@ -145,7 +145,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 										NodeType : "",
 										operateNode : "",
 										rootNode : rootNode,
-										siteId : siteId,
+										siteId : pNode.data.siteId,
 										coluTempletName : pNode.data.coluTempletName,
 										contentTypeName : pNode.data.contentTypeName,
 										coluAbout : pNode.data.coluAbout
@@ -240,6 +240,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
@@ -265,6 +266,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
@@ -294,6 +296,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			thisNode.set('text', coluName);
 	        			thisNode.set('nodeId', coluId);
 	        			thisNode.set('id', coluId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('coluState', coluState);
 	        			thisNode.set('coluPath', coluPath);
 	        			thisNode.set('coluTempletId', coluTempletId);
@@ -364,6 +367,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
@@ -388,6 +392,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
@@ -416,6 +421,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			thisNode.set('text', coluName);
 	        			thisNode.set('nodeId', coluId);
 	        			thisNode.set('id', coluId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('coluState', coluState);
 	        			thisNode.set('coluPath', coluPath);
 	        			thisNode.set('coluTempletId', coluTempletId);

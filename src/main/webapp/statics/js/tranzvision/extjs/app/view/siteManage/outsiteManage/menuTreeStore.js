@@ -16,6 +16,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuTreeStore',{
 				text : root.text,
 				nodeId : root.nodeId,
 				id : root.id,
+				siteId : root.siteId,
 				menuState : root.menuState,
 				menuPath : root.menuPath,
 				menuTempletId : root.menuTempletId,

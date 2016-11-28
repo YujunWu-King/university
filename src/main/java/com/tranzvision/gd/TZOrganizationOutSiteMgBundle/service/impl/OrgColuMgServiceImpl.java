@@ -94,7 +94,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					if (flag == 0) {
 						String coluId = String.valueOf(mapData.get("TZ_COLU_ID"));
 
-						List<Map<String, Object>> listChildren = this.getMenuList(coluId, listData);
+						List<Map<String, Object>> listChildren = this.getMenuList(coluId, listData,siteId);
 
 						Map<String, Object> mapRootJson = new HashMap<String, Object>();
 
@@ -184,7 +184,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 	 * @return List<Map<String, Object>>
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getMenuList(String FcoluId, List<Map<String, Object>> listData) {
+	public List<Map<String, Object>> getMenuList(String FcoluId, List<Map<String, Object>> listData,String siteId) {
 
 		List<Map<String, Object>> listRet = new ArrayList<Map<String, Object>>();
 
@@ -204,6 +204,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson = new HashMap<String, Object>();
 					mapNodeJson.put("id", coluId);
 					mapNodeJson.put("nodeId", coluId);
+					mapNodeJson.put("siteId", siteId);
 					mapNodeJson.put("text", mapNode.get("TZ_COLU_NAME").toString());
 					mapNodeJson.put("coluState", mapNode.get("TZ_COLU_STATE").toString());
 					mapNodeJson.put("coluPath", mapNode.get("TZ_COLU_PATH").toString());
@@ -223,7 +224,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					if (isLeaf) {
 						mapNodeJson.put("leaf", false);
 						mapNodeJson.put("expanded", true);
-						mapNodeJson.put("children", this.getMenuList(coluId, listData));
+						mapNodeJson.put("children", this.getMenuList(coluId, listData,siteId));
 					} else {
 						mapNodeJson.put("leaf", true);
 					}
@@ -328,11 +329,18 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					if ((coluName == null || "".equals(coluName)) || (coluState == null || "".equals(coluState))) {
 						return "";
 					}
-
+					
+					
+					System.out.println("operateNode:"+operateNode);
 					// 修改当前节点
 					if (operateNode == null || "".equals(operateNode)) {
 						operateNode = infoData.get("coluId").toString();
 					}
+					
+					
+					System.out.println("siteId:"+siteId);
+					System.out.println("operateNode:"+operateNode);
+					
 
 					// 找到该节点的父节点以及级别
 					sql = "select ifnull(TZ_F_COLU_ID,\"\") TZ_F_COLU_ID,TZ_COLU_LEVEL from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=?";

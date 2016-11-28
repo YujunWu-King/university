@@ -374,7 +374,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 						// System.out.println("-----------------------------");
 						String menuId = String.valueOf(mapData.get("TZ_MENU_ID"));
 
-						List<Map<String, Object>> listChildren = this.getMenuList(menuId, listData, saveImageAccessUrl);
+						List<Map<String, Object>> listChildren = this.getMenuList(menuId, listData, saveImageAccessUrl,siteId);
 
 						Map<String, Object> mapRootJson = new HashMap<String, Object>();
 
@@ -476,7 +476,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getMenuList(String FmenuId, List<Map<String, Object>> listData,
-			String saveImageAccessUrl) {
+			String saveImageAccessUrl,String siteId) {
 
 		List<Map<String, Object>> listRet = new ArrayList<Map<String, Object>>();
 
@@ -498,6 +498,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					menuType = mapNode.get("TZ_MENU_TYPE").toString();
 					mapNodeJson = new HashMap<String, Object>();
 					mapNodeJson.put("id", menuId);
+					mapNodeJson.put("siteId", siteId);
 					mapNodeJson.put("nodeId", menuId);
 					mapNodeJson.put("text", mapNode.get("TZ_MENU_NAME").toString());
 					mapNodeJson.put("menuState", mapNode.get("TZ_MENU_STATE").toString());
@@ -547,7 +548,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 					if (isLeaf) {
 						mapNodeJson.put("leaf", false);
 						mapNodeJson.put("expanded", true);
-						mapNodeJson.put("children", this.getMenuList(menuId, listData, saveImageAccessUrl));
+						mapNodeJson.put("children", this.getMenuList(menuId, listData, saveImageAccessUrl,siteId));
 					} else {
 						mapNodeJson.put("leaf", true);
 					}
@@ -613,7 +614,7 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 	}
 
 	public List<Map<String, Object>> colseMenuShow(List<Map<String, Object>> sonList,
-			List<Map<String, Object>> listData, String saveImageAccessUrl) {
+			List<Map<String, Object>> listData, String saveImageAccessUrl,String siteId) {
 		for (int i = 0; i < sonList.size(); i++) {
 			sonList.get(i).replace("TZ_MENU_SHOW", "N");
 			System.out.println("menuId:" + sonList.get(i).get("id"));
@@ -622,9 +623,9 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 			String sql = "update  PS_TZ_SITEI_MENU_T set TZ_MENU_SHOW='N' where TZ_MENU_ID =?";
 			sqlQuery.update(sql, new Object[] { sonList.get(i).get("id") });
 			List<Map<String, Object>> tempList = this.getMenuList(sonList.get(i).get("id").toString(), listData,
-					saveImageAccessUrl);
+					saveImageAccessUrl,siteId);
 			if (tempList != null)
-				colseMenuShow(tempList, listData, saveImageAccessUrl);
+				colseMenuShow(tempList, listData, saveImageAccessUrl,siteId);
 		}
 		return sonList;
 	}
@@ -1033,14 +1034,14 @@ public class OrgMenuMgServiceImpl extends FrameworkImpl {
 							}
 						}
 						// 获取子节点集合
-						sonList = getMenuList(thisNode.get("TZ_MENU_ID").toString(), listData, saveImageAccessUrl);
+						sonList = getMenuList(thisNode.get("TZ_MENU_ID").toString(), listData, saveImageAccessUrl,siteId);
 						// if(sonList!=null)
 						// System.out.println("sonListSize:"+sonList.size());
 						// System.out.println("TZ_MENU_ID:"+thisNode.get("TZ_MENU_ID").toString());
 						// System.out.println("TZ_MENU_SHOW:"+thisNode.get("TZ_MENU_SHOW"));
 						// System.out.println("====show==="+menuShow);
 						if (sonList != null && menuShow.equals("N")) {
-							this.colseMenuShow(sonList, listData, saveImageAccessUrl);
+							this.colseMenuShow(sonList, listData, saveImageAccessUrl,siteId);
 						}
 						// this.getChildList(thisNode.get("TZ_MENU_ID").toString(),
 						// listData, sonList);

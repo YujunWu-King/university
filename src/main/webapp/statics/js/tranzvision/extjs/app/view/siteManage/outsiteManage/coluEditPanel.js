@@ -46,7 +46,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 						NodeType : record.data.NodeType,
 						operateNode : record.data.operateNode,
 						rootNode : record.data.rootNode,
-						siteId : me.siteId,
+						siteId : record.data.siteId,
 						coluTempletName : record.data.coluTempletName,
 						contentTypeName : record.data.contentTypeName,
 						coluAbout : record.data.coluAbout
@@ -277,7 +277,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 				coluType : rootNode.data.coluType,
 				operateNode : rootNode.data.operateNode,
 				rootNode : rootNode.data.rootNode,
-				siteId : me.siteId,
+				siteId : rootNode.data.siteId,
 				coluTempletName : rootNode.data.coluTempletName,
 				contentTypeName : rootNode.data.contentTypeName,
 				coluAbout : rootNode.data.coluAbout
