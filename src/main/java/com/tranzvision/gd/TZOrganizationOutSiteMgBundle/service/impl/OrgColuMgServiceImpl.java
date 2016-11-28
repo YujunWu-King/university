@@ -112,6 +112,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						mapRootJson.put("contentTypeId", mapData.get("TZ_ART_TYPE_ID").toString());
 						mapRootJson.put("coluTempletName", mapData.get("TZ_TEMP_NAME").toString());
 						mapRootJson.put("contentTypeName", mapData.get("TZ_ART_TYPE_NAME").toString());
+						mapRootJson.put("coluAbout", mapData.get("TZ_COLU_ABOUT").toString());
 
 						if (listData.size() > 1) {
 							mapRootJson.put("leaf", false); // 有子节点
@@ -212,6 +213,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					mapNodeJson.put("contentTypeName", mapNode.get("TZ_ART_TYPE_NAME").toString());
 					mapNodeJson.put("coluUrl", mapNode.get("TZ_OUT_URL").toString());
 					mapNodeJson.put("coluType", mapNode.get("TZ_COLU_TYPE").toString());
+					mapNodeJson.put("coluAbout", mapNode.get("TZ_COLU_ABOUT").toString());
 
 					mapNodeJson.put("NodeType", "");
 					mapNodeJson.put("operateNode", "");
@@ -279,6 +281,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 			String coluTempletId = "";
 			String contentTypeId = "";
 			String coluUrl = "";
+			String coluAbout = "";
 			String NodeType = "";
 			String operateNode = "";
 
@@ -310,8 +313,10 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 					coluType = infoData.get("coluType").toString();
 					// 栏目模板ID
 					coluTempletId = infoData.get("coluTempletId").toString();
-					// 内容类型ID;
+					// 栏目类型ID;
 					contentTypeId = infoData.get("contentTypeId").toString();
+					// 栏目说明
+					coluAbout = infoData.get("coluAbout").toString();
 					// URL;
 					coluUrl = infoData.get("coluUrl").toString();
 					// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
@@ -359,6 +364,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuState(coluState);
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL));
 						psTzSiteiColuT.setTzColuType(coluType);
+						psTzSiteiColuT.setTzColuAbout(coluAbout);
 
 						if (coluType.equals("D")) {
 							psTzSiteiColuT.setTzContType("A");
@@ -395,6 +401,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						psTzSiteiColuT.setTzColuState(coluState);
 						psTzSiteiColuT.setTzColuLevel(new Integer(TZ_COLU_LEVEL) + 1);
 						psTzSiteiColuT.setTzColuType(coluType);
+						psTzSiteiColuT.setTzColuAbout(coluAbout);
 						if (coluType.equals("D")) {
 							psTzSiteiColuT.setTzContType("A");
 						} else {
@@ -437,6 +444,7 @@ public class OrgColuMgServiceImpl extends FrameworkImpl {
 						}
 						// psTzSiteiColuT.setTzFColuId(TZ_F_COLU_ID);
 						psTzSiteiColuT.setTzContTemp(coluTempletId);
+						psTzSiteiColuT.setTzColuAbout(coluAbout);
 						// psTzSiteiColuT.setTzContTemp(coluTempletId);
 						psTzSiteiColuT.setTzArtTypeId(contentTypeId);
 						psTzSiteiColuT.setTzOutUrl(coluUrl);

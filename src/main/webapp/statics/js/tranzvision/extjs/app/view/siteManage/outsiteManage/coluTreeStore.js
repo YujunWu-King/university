@@ -25,6 +25,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluTreeStore',{
 				coluType : root.coluType,
 				coluUrl : root.coluUrl,
 				NodeType : root.NodeType,
+				coluAbout : root.coluAbout,
 				operateNode : root.operateNode,
 				rootNode : root.id,
 				expanded : root.expanded,
