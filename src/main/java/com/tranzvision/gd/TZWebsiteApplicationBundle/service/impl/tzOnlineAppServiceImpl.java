@@ -469,10 +469,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}
 		
 		//获得站点信息
-		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
+		
+		//sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
 		//站点编号
 		String strSiteId = "";
-		strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
+		//strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
+		strSiteId = request.getParameter("SITE_ID");
 		
 		String strMenuId = "";
 		
