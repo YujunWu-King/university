@@ -3,6 +3,9 @@ package com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.util.base.ObjectDoMethod;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -22,6 +26,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUtility")
 public class tzOnlineAppUtility {
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
@@ -224,6 +230,39 @@ public class tzOnlineAppUtility {
 		    			returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 		    			break;
 		    		}	
+				}
+		    }
+		}
+		
+		return returnMessage;
+	}
+	//英文字母校验
+	public String VerificationCodeValidator(Long numAppInsId,String strTplId,String strXxxBh,String strXxxMc,String strComMc,
+			int numPageNo,String strXxxRqgs,String strXxxXfmin,String strXxxXfmax,String strXxxZsxzgs,String strXxxZdxzgs,
+			String strXxxYxsclx,String strXxxYxscdx,String strXxxBtBz,String strXxxCharBz,int numXxxMinlen,int numXxxMaxlen,
+			String strXxxNumBz,int numXxxMin,int numXxxMax,String strXxxXsws,String strXxxGdgsjy,String strXxxDrqBz,
+			int numXxxMinLine,String strTjxSub,String strJygzTsxx){
+		String returnMessage = "";
+		
+		String strXxxValue = "";
+		
+		if("VerificationCode".equals(strComMc)){
+			//验证码格式校验
+			String getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+		    
+		    List<?> ListValues = sqlQuery.queryForList(getChildrenSql, 
+		    		new Object[] { numAppInsId,strTplId,strXxxBh });
+		    for (Object ObjValue : ListValues) {
+		    	@SuppressWarnings("unchecked")
+				Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
+		    	strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
+		    	if(!"".equals(strXxxValue)&&strXxxValue!=null){
+		    		// 校验验证码
+					Patchca patchca = new Patchca();
+					if (!patchca.verifyToken(request, strXxxValue)) {
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+		    			break;
+					}
 				}
 		    }
 		}
