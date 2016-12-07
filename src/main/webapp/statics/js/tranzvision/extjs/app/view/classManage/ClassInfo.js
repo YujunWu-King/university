@@ -293,7 +293,7 @@
                         },{
                             xtype: "container",
                             layout: "hbox",
-							hidden: true,
+							hidden: false,
                             items: [
                                 {
                                     fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.guest_apply","允许匿名报名"),
