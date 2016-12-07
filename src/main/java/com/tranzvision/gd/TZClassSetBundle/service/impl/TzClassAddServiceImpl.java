@@ -409,12 +409,23 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 					str_com_id = aryComPage[0];
 					str_page_id = aryComPage[1];
 				}
-
+				
+				String sqlGetSiteId = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B where A.TZ_CLASS_ID=? AND A.TZ_PRJ_ID = B.TZ_PRJ_ID LIMIT 1";
+				String strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { str_bj_id }, "String");
+				
 				String sql = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
 				String classId = sqlQuery.queryForObject(sql, new Object[] { str_com_id, str_page_id }, "String");
-				String guest_apply_url = request.getContextPath() + "/dispatcher?classid=" + classId + "&TZ_CLASS_ID="
-						+ str_bj_id;
-
+				
+				String strUrlSuffix;
+				strUrlSuffix = request.getServerName();
+				if(!"80".equals(request.getServerPort()))
+				{
+					strUrlSuffix = strUrlSuffix  + ":" + request.getServerPort();
+				}
+				
+				String guest_apply_url = strUrlSuffix + request.getContextPath() + "/dispatcher?classid=" + classId + "&TZ_CLASS_ID="
+						+ str_bj_id + "&SITE_ID=" + strSiteId;
+				
 				guest_apply_url = "&nbsp;<span style=\"font-size:12px;color:#FF0000;\">" + guest_apply_url + "</span>";
 
 				Map<String, Object> mapRet = new HashMap<String, Object>();
