@@ -207,6 +207,34 @@ var ValidationRules = {
 			}
 			return true;
 		}
+	},
+	/*字符长度校验验证规则*/
+	"VerificationCodeValidator" : {
+		_eventList : {
+		},
+		_Validator : function(id, msg, item){
+			var returnValue = true
+			var objVal = $.trim($("#" + id).val());
+			
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_YZM_STD","OperateType":"QF","comParams":{"checkCode":"'+objVal+'"}}';
+			$.ajax({
+				type: "get",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url: TzUniversityContextPath + "/dispatcher",
+				dataType: "json",
+				success: function(result){
+					if(result.comContent =="success"){
+						returnValue = true;
+					}else{
+						returnValue = msg;
+					}
+				}
+			});	
+			return returnValue;
+		}
 	}
 };
 
