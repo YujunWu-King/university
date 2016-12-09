@@ -721,6 +721,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
+				//处理HTML换行符号，是替换的\u2028; 
+				strInsData = strInsData.replace(" ", "");
 
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
 								strTzGeneralURL, strComRegInfo ,
