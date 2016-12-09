@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.ss.formula.functions.Replace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -374,7 +375,11 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-
+			
+			//处理HTML行分隔符，是替换的\u2028; 
+			if (contentInfo != null){
+				contentInfo = contentInfo.replace(" ", "");
+			}
 			strRet = this.genEventJsonString(activityId, activityName, strActivityStartDate, strActivityStartTime,
 					strActivityEndDate, strActivityEndTime, activityPlace, activityCity, externalLink, contentInfo,
 					titleImageTitle, titleImageDesc, titleImageUrl, enabledApply, strApplyStartDate, strApplyStartTime,
@@ -1875,6 +1880,11 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			// 文章内容
 			String contentInfo = mapParams.get("contentInfo") == null ? ""
 					: String.valueOf(mapParams.get("contentInfo"));
+			
+			//处理HTML行分隔符，是替换的\u2028; 
+			if(contentInfo != null){
+				contentInfo = contentInfo.replace(" ", "");
+			}
 			// 标题图的标题
 			String titleImageTitle = mapParams.get("titleImageTitle") == null ? ""
 					: String.valueOf(mapParams.get("titleImageTitle"));
