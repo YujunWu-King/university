@@ -1695,6 +1695,11 @@ var SurveyBuild = {
             }
         });
 		this._items[instancid]["linesNo"].push(lineno);
+	},
+	//验证码
+	changeImgCode : function(el){
+		var _captchaURL = TzUniversityContextPath + "/captcha";
+		var imgObj = $(el).find("img").attr("src",_captchaURL + "?" + Math.random());
 	}
 };
 var MsgSet = {};

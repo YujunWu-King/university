@@ -49,7 +49,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						menuXH : record.data.menuXH,
 						menuStyle : record.data.menuStyle,
 						isDefault : record.data.isDefault,
-						
+						siteId : record.data.siteId,
 						saveImageAccessUrl : record.data.saveImageAccessUrl,
 						titleImageTitle: record.data.titleImageTitle,
 						titleImageDesc: record.data.titleImageDesc,
@@ -59,9 +59,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 						NodeType : record.data.NodeType,
 						operateNode : record.data.operateNode,
 						rootNode : record.data.rootNode,
-						menuShow : record.data.menuShow,
-						siteId : me.siteId,
-						
+						menuShow : record.data.menuShow						
 					});
 					form.findField("menuId").setReadOnly(true);
 					form.findField("menuId").addCls('lanage_1'); 
@@ -466,7 +464,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				isDefault : rootNode.data.isDefault,
 				menuXH : rootNode.data.menuXH,
 				menuStyle : rootNode.data.menuStyle,
-				
+				siteId : rootNode.data.siteId,
 				saveImageAccessUrl : rootNode.data.saveImageAccessUrl,
 				titleImageTitle : rootNode.data.titleImageTitle,
 				titleImageDesc : rootNode.data.titleImageDesc,
@@ -477,7 +475,6 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditPanel',{
 				NodeType : rootNode.data.NodeType,
 				operateNode : rootNode.data.operateNode,
 				rootNode : rootNode.data.rootNode,
-				siteId : me.siteId,
 				menuShow:rootNode.data.menuShow,
 				menuTempletName : rootNode.data.menuTempletName
 			});

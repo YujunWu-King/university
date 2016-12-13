@@ -46,9 +46,10 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 						NodeType : record.data.NodeType,
 						operateNode : record.data.operateNode,
 						rootNode : record.data.rootNode,
-						siteId : me.siteId,
+						siteId : record.data.siteId,
 						coluTempletName : record.data.coluTempletName,
-						contentTypeName : record.data.contentTypeName
+						contentTypeName : record.data.contentTypeName,
+						coluAbout : record.data.coluAbout
 					});
 					form.findField("coluId").setReadOnly(true);
 					form.findField("coluId").addCls('lanage_1'); 
@@ -230,6 +231,11 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 				name : 'coluUrl',
 				//allowBlank : false
 			},{
+	            xtype: 'textarea',
+	            fieldLabel : '栏目说明',
+				name: 'coluAbout',
+				height: 95
+	        },{
 				// 插入同级节点还是子节点,Y:表示同级节点，'N'表示子节点;
 				xtype : 'textfield',
 				name : 'NodeType',
@@ -271,9 +277,10 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditPanel',{
 				coluType : rootNode.data.coluType,
 				operateNode : rootNode.data.operateNode,
 				rootNode : rootNode.data.rootNode,
-				siteId : me.siteId,
+				siteId : rootNode.data.siteId,
 				coluTempletName : rootNode.data.coluTempletName,
-				contentTypeName : rootNode.data.contentTypeName
+				contentTypeName : rootNode.data.contentTypeName,
+				coluAbout : rootNode.data.coluAbout
 			});
 			form.findField("coluId").setReadOnly(true);
 			form.findField("coluId").addCls('lanage_1'); 

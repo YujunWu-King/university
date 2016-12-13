@@ -14,6 +14,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluTreeStore',{
 		me.callParent([ Ext.apply({
 			root : {
 				text : root.text,
+				siteId : root.siteId,
 				nodeId : root.nodeId,
 				id : root.id,
 				coluState : root.coluState,
@@ -25,6 +26,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluTreeStore',{
 				coluType : root.coluType,
 				coluUrl : root.coluUrl,
 				NodeType : root.NodeType,
+				coluAbout : root.coluAbout,
 				operateNode : root.operateNode,
 				rootNode : root.id,
 				expanded : root.expanded,

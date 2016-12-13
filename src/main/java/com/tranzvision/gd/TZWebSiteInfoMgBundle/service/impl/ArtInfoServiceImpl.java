@@ -226,11 +226,19 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 					artUrl = rootparth + "/dispatcher?classid="+publishUrlClassId+"&operatetype=HTML&siteId="+siteId+"&columnId="+coluId+"&artId="+strArtId;
 				}
 				
+				//处理HTML行分隔符，是替换的\u2028; 
+				String contentInfo = psTzArtRecTbl.getTzArtConent();
+				if (contentInfo != null){
+					contentInfo = contentInfo.replace(" ", "");
+				}else{
+					contentInfo = "";
+				}
+				
 				map.replace("artId", strArtId);
 				map.replace("artTitle", psTzArtRecTbl.getTzArtTitle());
 				map.replace("artType", psTzArtRecTbl.getTzArtType1());
 				map.replace("externalLink", psTzArtRecTbl.getTzOutArtUrl());
-				map.replace("contentInfo", psTzArtRecTbl.getTzArtConent());
+				map.replace("contentInfo", contentInfo);
 				map.replace("artFbz", psTzLmNrGlT.getTzFbz());
 				map.replace("artFbBm", psTzLmNrGlT.getTzBltDept());
 				map.replace("startDate", startDate);
@@ -324,6 +332,12 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						String outArtUrl = (String) dataMap.get("externalLink");
 						// 文章内容;
 						String artContent = (String) dataMap.get("contentInfo");
+						if(artContent != null){
+							//处理HTML行分隔符，是替换的\u2028; 
+							artContent = artContent.replace(" ", "");
+						}else{
+							artContent = "";
+						}
 						// 发布者;
 						String artFbz = (String) dataMap.get("artFbz");
 						// 发布部门;
@@ -530,6 +544,11 @@ public class ArtInfoServiceImpl extends FrameworkImpl {
 						String outArtUrl = (String) dataMap.get("externalLink");
 						// 文章内容;
 						String artContent = (String) dataMap.get("contentInfo");
+						if(artContent!= null){
+							artContent = artContent.replace(" ", "");
+						}else{
+							artContent = "";
+						}
 						// 发布者;
 						String artFbz = (String) dataMap.get("artFbz");
 						// 发布部门;

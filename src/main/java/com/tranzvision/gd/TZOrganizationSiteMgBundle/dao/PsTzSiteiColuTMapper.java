@@ -14,5 +14,7 @@ public interface PsTzSiteiColuTMapper {
 
     int updateByPrimaryKeySelective(PsTzSiteiColuT record);
 
+    int updateByPrimaryKeyWithBLOBs(PsTzSiteiColuT record);
+
     int updateByPrimaryKey(PsTzSiteiColuT record);
 }

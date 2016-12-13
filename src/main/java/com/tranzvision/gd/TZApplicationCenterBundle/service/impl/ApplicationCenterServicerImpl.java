@@ -227,7 +227,7 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 					TZ_APP_MODAL_ID = (String) classList.get(i).get("TZ_APP_MODAL_ID");
 
 					// 报名表链接;
-					String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + classId;
+					String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + strSiteId;
 
 					// 查看该人员是否已经申请了该班级的报名表;
 					long TZ_APP_INS_ID = 0;

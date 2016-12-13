@@ -206,12 +206,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		String strIsGuest = "N";
 		//报名表提交后Url
 		String strAfterSubmitUrl = "";
+		//站点编号
+		String strSiteId = "";
  
 		//错误提示信息
 		String strMessageError = "";
 
 		if("appId".equals(strReferenceId)){
 			strClassId = request.getParameter("TZ_CLASS_ID");
+			strSiteId = request.getParameter("SITE_ID");
 		    strAppInsId = request.getParameter("TZ_APP_INS_ID");
 		    strRefLetterId = request.getParameter("TZ_REF_LETTER_ID");
 		    strManagerView = request.getParameter("TZ_MANAGER");
@@ -222,12 +225,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		    }
 		    
 		}else{
-			strClassId = String.valueOf(jacksonUtil.getString("TZ_CLASS_ID"));
-			strAppInsId = String.valueOf(jacksonUtil.getString("TZ_APP_INS_ID"));
-			strRefLetterId = String.valueOf(jacksonUtil.getString("TZ_REF_LETTER_ID"));
-			strManagerView = String.valueOf(jacksonUtil.getString("TZ_MANAGER"));
-			strCopyFrom = String.valueOf(jacksonUtil.getString("APPCOPY"));
-			strAttachedTplId = String.valueOf(jacksonUtil.getString("TZ_APP_TPL_ID"));
+			strClassId = jacksonUtil.getString("TZ_CLASS_ID");
+			strSiteId = jacksonUtil.getString("SITE_ID");
+			strAppInsId = jacksonUtil.getString("TZ_APP_INS_ID");
+			strRefLetterId = jacksonUtil.getString("TZ_REF_LETTER_ID");
+			strManagerView = jacksonUtil.getString("TZ_MANAGER");
+			strCopyFrom = jacksonUtil.getString("APPCOPY");
+			strAttachedTplId = jacksonUtil.getString("TZ_APP_TPL_ID");
 			if(strClassId==null){
 		    	strClassId = "";
 		    }
@@ -245,7 +249,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}else{
 			numAppInsId = Long.parseLong(strAppInsId);
 		}
-
 		if(numAppInsId > 0){
 			//如果存在报名表实例
 			PsTzAppInsT PsTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
@@ -287,7 +290,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
 				strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
 				strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
-				
 				//如果报名表模版类型为报名表
 				if("BMB".equals(strTplType)){
 					String sqlGetFormWorkInfo = "SELECT OPRID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID";
@@ -295,7 +297,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					if(MapFormWorkInfo!=null){
 						strAppOprId = String.valueOf(MapFormWorkInfo.get("OPRID"));
 						strClassId = String.valueOf(MapFormWorkInfo.get("TZ_CLASS_ID"));
-						if("TZ_GUEST".equals(strAppOprId)){
+						if("".equals(strSiteId) || strSiteId == null){
+							//如果没有传入siteId，则取班级对应的站点
+							String sqlGetSiteId = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B where A.TZ_CLASS_ID=? AND A.TZ_PRJ_ID = B.TZ_PRJ_ID LIMIT 1";
+							strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { strClassId }, "String");
+						}
+						
+						if("TZ_GUEST".equals(strAppOprId) || "".equals(strAppOprId)){
 							//如果是匿名报名
 							String sqlGetIsGuest = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 							strIsGuest = sqlQuery.queryForObject(sqlGetIsGuest, new Object[] { strClassId }, "String");
@@ -340,6 +348,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						Long numAppInsIdRefer = Long.parseLong(strAppInsIdRefer);
 						if(numAppInsIdRefer > 0){
 							//找到有效的被推荐人
+							//获取推荐信对应的报名表
+							if("".equals(strSiteId) || strSiteId == null){
+								//如果没有传入siteId，则取班级对应的站点
+								String sqlGetSiteId = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B,PS_TZ_FORM_WRK_T C"
+										+ " where A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_PRJ_ID = B.TZ_PRJ_ID AND C.TZ_APP_INS_ID = ? ORDER BY C.OPRID LIMIT 1";
+								strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { strAppInsIdRefer }, "String");
+							}
 						}else{
 							strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
 									"PARAERROR", strLanguage,"参数错误", "Parameter error.");
@@ -469,10 +484,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		}
 		
 		//获得站点信息
-		sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
+		
+		//sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
 		//站点编号
-		String strSiteId = "";
-		strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
+
+		//strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
+		//strSiteId = request.getParameter("SITE_ID");
 		
 		String strMenuId = "";
 		
@@ -704,6 +721,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
+				//处理HTML换行符号，是替换的\u2028; 
+				strInsData = strInsData.replace(" ", "");
 
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
 								strTzGeneralURL, strComRegInfo ,
@@ -837,14 +856,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						strAppInsState = psTzAppInsT.getTzAppFormSta();
 						strAppInsVersionDb = psTzAppInsT.getTzAppInsVersion();
 						
-						sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID";
+						sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID LIMIT 1";
 						strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strClassId }, "String");
 						if(!"".equals(strTplId) && strTplId!=null && !"".equals(strAppOprId) && strAppOprId!=null){
-							if(strAppOprId.equals(oprid)){
-								//自己操作自己的报名表
+							if(strAppOprId.equals(oprid) || "Y".equals(strGuestApply)){
+								//自己操作自己的报名表或者允许匿名报名
 							}else{
-								 sql = "SELECT 'Y' FROM PS_TZ_APPTPL_R_T A,PSROLEUSER B WHERE A.ROLENAME = B.ROLENAME AND A.TZ_JG_ID = ? AND A.TZ_APP_TPL_ID = ? AND B.ROLEUSER = ?";
-								 strIsAdmin = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId,strTplId,oprid }, "String");
+								 sql = "SELECT 'Y' FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+								 strIsAdmin = sqlQuery.queryForObject(sql, new Object[] { strClassId,oprid }, "String");
 								 if(!"Y".equals(strIsAdmin)){
 									//非法操作
 									errMsg[0] = "1";
@@ -861,7 +880,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					}else{
 						//没报名表实例编号
 						strAppOprId = oprid;
-						if(!"TZ_GUEST".equals(oprid)){
+						if(!"TZ_GUEST".equals(oprid)&&!"".equals(oprid)){
 							sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? AND TZ_CLASS_ID = ?";
 							strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid,strClassId }, "String");
 							if(strAppInsId == null || "".equals(strAppInsId)){
@@ -965,7 +984,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				String strFirstName = "";
 				String strLastName = "";
 				String strGuestOprId = "";
-				if("Y".equals(strGuestApply)&&"TZ_GUEST".equals(oprid)){
+				if("Y".equals(strGuestApply)&&"".equals(oprid)&&"".equals(strAppOprId)){
 					strIsGuest = "Y";
 					for (Entry<String, Object> entry:mapData.entrySet()){
 						Map<String, Object> mapJsonItems = (Map<String, Object>)entry.getValue();
@@ -1065,6 +1084,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					}
 					//创建用户
 					strGuestOprId = createGuestUser(strAppOrgId,strNAME);
+					strAppOprId = strGuestOprId;
 				}
 				
 				if("SAVE".equals(strOtype)){
@@ -2095,6 +2115,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							break;
 						case "refLetterValidator":
 							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
+									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
+									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
+							break;
+						case "VerificationCodeValidator":
+							strReturn = tzOnlineAppUtility.VerificationCodeValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
 									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
 									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
 									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>活动报名条</title>
+<link href="%bind(:1)css/index.css" rel="stylesheet" type="text/css" />
+<link href="%bind(:1)css/public.css" rel="stylesheet" type="text/css" />
+<link href="%bind(:1)css/insidepage.css" rel="stylesheet" type="text/css" />
+<link href="%bind(:1)css/style.css" rel="stylesheet" type="text/css" />
+<script src="%bind(:1)js/jquery-1.7.min.js"></script>
+
+<script type="text/javascript">
+
+	
+	function tz_apply_click_to_signin_action2(tz_apply_action_url) {
+		parent.tz_show_float_iframe_apply(tz_apply_action_url);
+
+	}
+</script>
+</head>
+<body>
+    <div class="enroll">
+       <a  href="javascript:void(0);" class="enroll-online left bgred" onclick="tz_apply_click_to_signin_action2('%bind(:2)')">
+            <img class="enroll-online-pic left" src="%bind(:1)images/Faculty-pen.png" />
+            <div class="enroll-online-text left"> %bind(:6)</div>
+        </a>
+        <div class="enroll-num left">%bind(:7):<span>%bind(:3)</span></div>
+        <div class="enroll-num left">%bind(:8):<span>%bind(:4)</span></div>
+        <div class="enroll-num left">%bind(:9):<span>%bind(:5)</span></div>
+        
+    </div>
+</body>
+</html>

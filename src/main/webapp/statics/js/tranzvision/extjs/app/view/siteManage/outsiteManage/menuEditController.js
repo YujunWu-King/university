@@ -152,7 +152,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 								NodeType : "",
 								operateNode : "",
 								rootNode : rootNode,
-								siteId : siteId,
+								siteId : operateNode.data.siteId,
 								menuShow:operateNode.data.menuShow,
 								//saveImageAccessUrl:operateNode.data.saveImageAccessUrl,
 								titleImageUrl:operateNode.data.titleImageUrl,
@@ -204,6 +204,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 									//Ext.Msg.alert("提示", defaultPage);
 									form.setValues({
 										menuId : pNode.data.id,
+										siteId : pNode.data.siteId,
 										menuName : pNode.data.text,
 										menuPath : pNode.data.menuPath,
 										menuState : pNode.data.menuState,
@@ -359,6 +360,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				text: menuName,
 	        				nodeId: responseData.newMenuID,
 	        				id: responseData.newMenuID,
+	        				siteId : siteId,
 	        				menuState : menuState,
 	        				menuPath : menuPath,
 	        				menuTempletId : menuTempletId,
@@ -399,6 +401,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				text: menuName,
 	        				nodeId: responseData.newMenuID,
 	        				id: responseData.newMenuID,
+	        				siteId : siteId,
 	        				menuState : menuState,
 	        				menuPath : menuPath,
 	        				menuTempletId : menuTempletId,
@@ -475,6 +478,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			thisNode.set('text', menuName);
 	        			thisNode.set('nodeId', menuId);
 	        			thisNode.set('id', menuId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('menuState', menuState);
 	        			thisNode.set('menuPath', menuPath);
 	        			thisNode.set('menuTempletId', menuTempletId);
@@ -573,6 +577,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				text: menuName,
 	        				nodeId: responseData.newMenuID,
 	        				id: responseData.newMenuID,
+	        				siteId : siteId,
 	        				menuState : menuState,
 	        				menuPath : menuPath,
 	        				menuTempletId : menuTempletId,
@@ -604,6 +609,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        				text: menuName,
 	        				nodeId: responseData.newMenuID,
 	        				id: responseData.newMenuID,
+	        				siteId : siteId,
 	        				menuState : menuState,
 	        				menuPath : menuPath,
 	        				menuTempletId : menuTempletId,
@@ -638,6 +644,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.menuEditController',{
 	        			thisNode.set('text', menuName);
 	        			thisNode.set('nodeId', menuId);
 	        			thisNode.set('id', menuId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('menuState', menuState);
 	        			thisNode.set('menuPath', menuPath);
 	        			thisNode.set('menuTempletId', menuTempletId);

@@ -10,7 +10,8 @@ select
 	ifnull(A.TZ_ART_TYPE_ID,"") TZ_ART_TYPE_ID,
 	ifnull(A.TZ_OUT_URL,"") TZ_OUT_URL,
 	A.TZ_COLU_LEVEL,
-	ifnull(A.TZ_F_COLU_ID,"") TZ_F_COLU_ID
+	ifnull(A.TZ_F_COLU_ID,"") TZ_F_COLU_ID,
+	ifnull(A.TZ_COLU_ABOUT,"") TZ_COLU_ABOUT
 from 
 	PS_TZ_SITEI_COLU_T A
 	left join

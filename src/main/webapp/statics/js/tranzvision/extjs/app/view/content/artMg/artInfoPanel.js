@@ -180,6 +180,10 @@
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.externalLink","外部引用链接"),
 			name: 'externalLink'
         },{
+            xtype: 'displayfield',
+            fieldLabel: '编辑说明',
+            name: 'coluAbout'
+         },{
         	xtype:'radiogroup',
         	fieldLabel:'内容编辑类型',
         	items: [{

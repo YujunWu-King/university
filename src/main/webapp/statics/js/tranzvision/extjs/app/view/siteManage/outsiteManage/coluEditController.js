@@ -32,7 +32,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 				form.findField("coluTempletName").setValue('');
 				form.findField("contentTypeName").setValue('');
 				form.findField("coluUrl").setValue('');
-
+				form.findField("coluAbout").setValue('');
 				form.findField("NodeType").setValue("Y");
 				form.findField("operateNode").setValue(coluId);
 				form.findField("rootNode").setValue(rootNode);
@@ -71,6 +71,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 			form.findField("coluTempletName").setValue('');
 			form.findField("contentTypeName").setValue('');
 			form.findField("coluUrl").setValue('');
+			form.findField("coluAbout").setValue('');
 
 			form.findField("NodeType").setValue("N");
 			form.findField("operateNode").setValue(coluId);
@@ -114,9 +115,10 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 								NodeType : "",
 								operateNode : "",
 								rootNode : rootNode,
-								siteId : siteId,
+								siteId : operateNode.data.siteId,
 								coluTempletName : operateNode.data.coluTempletName,
-								contentTypeName : operateNode.data.contentTypeName
+								contentTypeName : operateNode.data.contentTypeName,
+								coluAbout : operateNode.data.coluAbout
 							});
 							form.findField("coluId").setReadOnly(true);
 							form.findField("coluPath").setReadOnly(true);
@@ -143,9 +145,10 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 										NodeType : "",
 										operateNode : "",
 										rootNode : rootNode,
-										siteId : siteId,
+										siteId : pNode.data.siteId,
 										coluTempletName : pNode.data.coluTempletName,
-										contentTypeName : pNode.data.contentTypeName
+										contentTypeName : pNode.data.contentTypeName,
+										coluAbout : pNode.data.coluAbout
 									});
 									form.findField("coluId").setReadOnly(true);
 									form.findField("coluPath").setReadOnly(true);
@@ -197,6 +200,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        var coluUrl = form.findField("coluUrl").getValue();
 	        var NodeType = form.findField("NodeType").getValue();
 	        var rootNode = form.findField("rootNode").getValue();
+	        var coluAbout = form.findField("coluAbout").getValue();
 	        
 	        //校验判断
 	        if (coluType =="C") {
@@ -236,12 +240,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
 	        				contentTypeId : contentTypeId,
 	        				coluTempletName : coluTempletName,
 	        				contentTypeName : contentTypeName,
+	        				coluAbout : coluAbout,
 	        				coluUrl : coluUrl,
 	        				coluType : coluType,
 	        				NodeType: "",
@@ -260,12 +266,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
 	        				contentTypeId : contentTypeId,
 	        				coluTempletName : coluTempletName,
 	        				contentTypeName : contentTypeName,
+	        				coluAbout : coluAbout,
 	        				coluUrl : coluUrl,
 	        				coluType : coluType,
 	        				NodeType: "",
@@ -288,12 +296,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			thisNode.set('text', coluName);
 	        			thisNode.set('nodeId', coluId);
 	        			thisNode.set('id', coluId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('coluState', coluState);
 	        			thisNode.set('coluPath', coluPath);
 	        			thisNode.set('coluTempletId', coluTempletId);
 	        			thisNode.set('contentTypeId', contentTypeId);
 	        			thisNode.set('coluTempletName', coluTempletName);
 	        			thisNode.set('contentTypeName', contentTypeName);
+	        			thisNode.set('coluAbout', coluAbout);
 	        			thisNode.set('coluUrl', coluUrl);
 	        			thisNode.set('coluType', coluType);
 	        			thisNode.set('NodeType', "");
@@ -339,6 +349,7 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        var coluUrl = form.findField("coluUrl").getValue();
 	        var NodeType = form.findField("NodeType").getValue();
 	        var rootNode = form.findField("rootNode").getValue();
+	        var coluAbout = form.findField("coluAbout").getValue();
            
 	        var operateNodeId = form.findField("operateNode").getValue();
 	        var operateNode = treepanelStore.getNodeById(operateNodeId);
@@ -356,12 +367,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
 	        				contentTypeId : contentTypeId,
 	        				coluTempletName : coluTempletName,
 	        				contentTypeName : contentTypeName,
+	        				coluAbout : coluAbout,
 	        				coluUrl : coluUrl,
 	        				coluType : coluType,
 	        				NodeType: "",
@@ -379,12 +392,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        				text: coluName,
 	        				nodeId: responseData.newColuID,
 	        				id: responseData.newColuID,
+	        				siteId : siteId,
 	        				coluState : coluState,
 	        				coluPath : coluPath,
 	        				coluTempletId : coluTempletId,
 	        				contentTypeId : contentTypeId,
 	        				coluTempletName : coluTempletName,
 	        				contentTypeName : contentTypeName,
+	        				coluAbout : coluAbout,
 	        				coluUrl : coluUrl,
 	        				coluType : coluType,
 	        				NodeType: "",
@@ -406,12 +421,14 @@ Ext.define('KitchenSink.view.siteManage.outsiteManage.coluEditController',{
 	        			thisNode.set('text', coluName);
 	        			thisNode.set('nodeId', coluId);
 	        			thisNode.set('id', coluId);
+	        			thisNode.set('siteId', siteId);
 	        			thisNode.set('coluState', coluState);
 	        			thisNode.set('coluPath', coluPath);
 	        			thisNode.set('coluTempletId', coluTempletId);
 	        			thisNode.set('contentTypeId', contentTypeId);
 	        			thisNode.set('coluTempletName', coluTempletName);
 	        			thisNode.set('contentTypeName', contentTypeName);
+	        			thisNode.set('coluAbout', coluAbout);
 	        			thisNode.set('coluUrl', coluUrl);
 	        			thisNode.set('coluType', coluType);
 	        			thisNode.set('NodeType', "");

@@ -217,7 +217,14 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 						String classId = sqlQuery.queryForObject(sql, new Object[] { str_com_id, str_page_id },
 								"String");
 
-						guest_apply_url = request.getContextPath() + "/dispacher?classid=" + classId + "&TZ_CLASS_ID="
+						String strUrlSuffix;
+						strUrlSuffix = request.getServerName();
+						if(!"80".equals(request.getServerPort()))
+						{
+							strUrlSuffix = strUrlSuffix  + ":" + request.getServerPort();
+						}
+						
+						guest_apply_url = strUrlSuffix + request.getContextPath() + "/dispacher?classid=" + classId + "&TZ_CLASS_ID="
 								+ str_bj_id;
 						guest_apply_url = "&nbsp;<span style=\"font-size:12px;color:#FF0000\">" + guest_apply_url
 								+ "</sapn>";
