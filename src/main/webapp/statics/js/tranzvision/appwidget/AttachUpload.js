@@ -1,7 +1,9 @@
 /*====================================================================
 + 功能描述：附件上传控件，可控制上传附件的格式及附件大小(在线调查附件上传)++
-+ 开发人：李丹丹													++
++ 开发人：李丹丹
++ 修改人：曹阳													++
 + 开发日期：2015-11-18												++
++ 修改日期：2016-12-08
 =====================================================================*/
 SurveyBuild.extend("AttachUpload", "baseComponent", {
     itemName: "附件上传",
@@ -12,7 +14,7 @@ SurveyBuild.extend("AttachUpload", "baseComponent", {
 	isDownLoad:"Y",//允许打包下载
 	isOnlineShow:"N",//PDF在线阅读
 	"StorageType":"F",//存储类型-附件
-	children: [{"itemId":"attach_Upload","itemName":"附件上传","title":"附件上传","orderby":"","fileName":"","sysFileName":"","path":"","viewFileName":""}],
+	children: [{"itemId":"attach_Upload","itemName":"附件上传","title":"附件上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}],
 
     _getHtml: function(data, previewmode) {
         var c = "", val = data.value ? data.value: data.defaultval;

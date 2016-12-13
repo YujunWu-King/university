@@ -351,16 +351,22 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			}
 			
 			/*添加按钮*/
-			len = data.children.length;
-			c += '<div class="main_inner_content_info">';
-			if(len<data.maxLines){
-				
-				//c += '<div id="main_inner_content_info_save0"><div id="save1" class="bt_blue">' + MsgSet["SAVE"] + '</div><a href="#" class="alpha"></a></div>';
-				c += '<div style="display: inherit;float:right;padding-right:30px;" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');"><div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div></div>';
-			}else{
-				c += '<div style="display: none;float:right;padding-right:30px;" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');"><div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div></div>';
+			if(SurveyBuild._readonly!=true){
+				len = data.children.length;
+				c += '<div class="input-list-blank addNext">';
+				if(len<data.maxLines){
+					c += '<div class="input-list-suffix-blank right input-btn">'
+					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
+					c += '</div>';
+				}else{
+					c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
+					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+					c += '</div>';
+				}
+				c +='<div class="clear"></div>';
+				c += '</div>';
 			}
-			c += '</div>';
+			
         } else {
             c = '<div class="question-answer">' + (data.itemMs ? '<div class="edu_exper_itemMs" style="background-color:#d8d8d8;padding:2px 5px;margin-bottom:10px;">'+ data.itemMs +'</div>' : "");
             c += '<div class="DHContainer" style="border:1px solid #ddd;padding:10px 20px;">'
@@ -393,8 +399,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//手机
             c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_phone_no_1'+'" '+(data.children.recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             c += '<span class="edu_item_label" style="width:150px;" id="'+data.instanceId+'-rec_phone_no'+'">'+data.children.recommend_4["itemName"]+'：</span>';
-			c += '<b class="read-input" style="min-width:63px;width:63px">&nbsp;</b>';
-            c += ' <b class="read-input" style="min-width:180px;width:183px">&nbsp;</b>';
+			if(data.children.recommend_16["useby"] == "Y"){
+				c += '<b class="read-input" style="min-width:63px;width:63px">&nbsp;</b>';
+				c += ' <b class="read-input" style="min-width:180px;width:183px">&nbsp;</b>';
+			}else{
+				c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+			}
             c += '</div>';
 			//邮箱
             c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_email_1'+'" '+(data.children.recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
@@ -546,7 +556,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_16\')" value="'+child.recommend_16["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
 		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_16\')" value="'+child.recommend_16["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_phone_area" class="option-txt" disabled="disabled"></td>';
-		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
+		//list += '<td><input type="checkbox" checked="checked" value="1"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_16\')" '+(child.recommend_16["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//手机-开始
 		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_phone_no">';
@@ -554,6 +565,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'title\',\'recommend_4\')" value="'+child.recommend_4["title"]+'" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
         list += '<td><input type="text" value="rec_phone_no" class="option-txt" disabled="disabled"></td>';
 		list += '<td><input type="checkbox" disabled="disabled" checked="checked" value="1"></td>';
+		
         list += '</tr>';
 		//手机-结束
 		//邮箱-开始
@@ -759,9 +771,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				data.tjxMaxLinesXh = child[len-1].recommend_99["value"];
 			}else
 			{
-				_tjrXh = rownum;
 				child[i].recommend_99["value"] = parseInt(data.tjxMaxLinesXh) + 1;
 				data.tjxMaxLinesXh = child[i].recommend_99["value"];
+				_tjrXh = data.tjxMaxLinesXh;
 			}
 		}else
 		{
@@ -775,7 +787,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		var _qy_zhs="";
 		var _qy_eng="";
 		var _refAppInsId = "";
-		var _refLetterId = "";
+		var _refLetterId = "";  
 		var _refAppTplId = "";
 		var _refFileName = "";
 		var _refFileUrl = "";
@@ -831,33 +843,40 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if (_tjx_zt=="未发送"){
 			_tjx_zt=MsgSet["Unsent"];
 		}
+				if(isEdit == "Y"){
+			_zd="N";
+		}
+		//SurveyBuild._readonly = true;
 		
-		works += '<div id="main_inner_content_para'+i+'" class="main_inner_content_para" style="display: inherit;" >';
+		works += '<div id="main_inner_content_para'+i+'" class="main_inner_content_para">';
 		
-		works += '<div class="main_inner_content_title">';
-		//works += '<span class="reg_title_star">' + (data.isRequire == "Y" ?"*":"") + '</span>';
-		//works += '<span class="reg_title_star">*</span>';
-		works += '<span class="reg_title_grey_17px">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</span>';
-		if(rownum > data.defaultLines){
-			
-			if(deleteFlag == true)
-			{
-				works += '<div onclick="SurveyBuild.deleteTjx(this);" class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:block"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
-			}else
-			{
-				works += '<div onclick=SurveyBuild.deleteTjx(this,"'+data.title+'"); class="main_inner_content_del" id="tjx_delete_'+i+'" style="line-height:35px;display:none"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png">' + MsgSet["DEL"] + '</div>';
+		works += '<div class="mainright-title">';
+		works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
+		
+		works += '<div class="mainright-box pos-rela">';
+		if(SurveyBuild._readonly!=true){
+			if(rownum > data.defaultLines){
+				if(deleteFlag == true){
+					works += '<div class="btn-addcon">';
+					works += '	<a href="javascript:void(0);" onclick="SurveyBuild.deleteTjx(this);" id="tjx_delete_' + i + '">';
+					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
+					works += '	</a>';
+					works += '</div>';
+				}else{
+					works += '<div class="btn-addcon">';
+					works += '	<a href="javascript:void(0);" style="display:none" onclick="SurveyBuild.deleteTjx(this);" id="tjx_delete_' + i + '">';
+					works += '		<div class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
+					works += '	</a>';
+					works += '</div>';
+				}
 			}
 		}
-		//c += '<span class="reg_title_grey_17px">' + data.title + '_'+i+'：</span>';
 		
-		works += '</div>';
-		if(child[i].recommend_18["useby"] == "Y"){
-			works += '<div class="main_inner_content_top"><span class="reg_title_grey_17px" style="padding-left:15px;line-height:36px;font-size:15px;font-family: helvetica,arial,verdana,sans-serif;">' + MsgSet["None-blank"] + '</span></div>';
-			works += '<div class="main_inner_content" style="padding-top:20px">';
-		}else{
-			works += '<div class="main_inner_content_top"></div>';
-			works += '<div class="main_inner_content">';
+		var _readOnlyRadio = "N";
+		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
+			_readOnlyRadio = "Y";
 		}
+		
 		//称呼-开始
         if(SurveyBuild._readonly){
             //只读模式
@@ -878,17 +897,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
                     desc = child[i].recommend_18["option"][i101]["txt"];
                 }
             }
-            works += '<div class="main_inner_content_info_autoheight cLH" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
-            works += '  <div class="main_inner_connent_info_left">' + '<span class="reg_title_star">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
-            works += '	<div class="main_inner_content_info_right">' + desc + '</div>';
+            works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+            works += '  <div class="input-list-info-readonly left">' + '<span class="red">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + desc + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>'
         }else {
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
-            works += '<div class="main_inner_connent_info_left">' + '<span class="reg_title_star">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '  	<div class="main_inner_content_info_right_option_251px ' + ((_zd == "Y" || _zd == "Z") ? "bmbtjxtitle" : "") + '" style="margin-right:5px">';
-            works += '      	<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="chosen-select" id="' + data.itemId + child[i].recommend_18["itemId"] + '" style="width:251px;" title="' + child[i].recommend_18["title"] + '">';
+            works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+            works += '<div class="input-list-info left">' + '<span class="red">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
+            works += '<div class="input-list-text left input-edu-select">';
+            /*works += '  	<div class="main_inner_content_info_right_option_251px ' + ((_zd == "Y" || _zd == "Z") ? "bmbtjxtitle" : "") + '" style="margin-right:5px"></div>';*/
+            works += '      	<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="chosen-select" id="' + data.itemId + child[i].recommend_18["itemId"] + '" style="width:100%;" title="' + child[i].recommend_18["title"] + '">';
             works += '          	<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
             for (var i101 in child[i].recommend_18.option) {
 
@@ -908,35 +929,46 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
             }
             works += '			</select>';
             works += '		</div>';
-            works += '  	<div style="margin-top:0px;margin-left:254px">';
-            works += '      	<div id="' + data.itemId + child[i].recommend_18["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+            works += '<div class="input-list-suffix left">';
+            works += '   <div id="' + data.itemId + child[i].recommend_18["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
             works += '          	<div class="onShow"></div>';
-            works += '      	</div>';
-            works += '  	</div>';
-            works += '	</div>';
+            works += '   </div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>'
+			
+			if(child[i].recommend_18["useby"] == "Y"){
+			works += '<div class="input-list-blank">';
+			works += '<div class="input-list-info-blank left"><span class="red"></span></div>';
+			works += '<div class="input-list-wz left"><span class="blue">' + MsgSet["None-blank"] + '</span></div>';
+			works += '<div class="input-list-suffix left"></div>';
+			works += '<div class="clear"></div>';
+			works += '</div>';
+		}
         }
-		//称呼-结束
 		
+		//称呼-结束
+
 		//姓氏-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_readonly_right">' + child[i].recommend_1["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
+            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_1["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" title="'+ child[i].recommend_1["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_1["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_1["itemId"] +'" value="' + child[i].recommend_1["value"] + '">';
-            works += '<div style="margin-top: -40px; margin-left: 256px">';
+            works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
+            works += '<div class="input-list-text left"><input type="text" title="'+ child[i].recommend_1["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_1["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_1["itemId"] +'" value="' + child[i].recommend_1["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
             works += '	<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
             works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
             works += '</div>';
-            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//姓氏-结束
@@ -944,64 +976,67 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//名字-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_readonly_right">' + child[i].recommend_17["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
+            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_17["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
-            works += '<div class="main_inner_content_info_right">';
-            works += '<input type="text" title="'+ child[i].recommend_17["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_17["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_17["itemId"] +'" value="' + child[i].recommend_17["value"] + '">';
-            works += '<div style="margin-top: -40px; margin-left: 256px">';
+            works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
+            works += '<div class="input-list-text left"><input type="text" title="'+ child[i].recommend_17["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_17["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_17["itemId"] +'" value="' + child[i].recommend_17["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
             works += '	<div id="' + data.itemId + child[i].recommend_17["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
             works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
             works += '</div>';
-            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//姓名-结束
 		
 		//单位-开始
         if(SurveyBuild._readonly){
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_2["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_2["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_2["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_2["itemId"] +'" value="' + child[i].recommend_2["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
-            works += '		</div>';
+            works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
+            works += '<div class="input-list-text left"><input type="text" title="'+ child[i].recommend_2["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_2["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_2["itemId"] +'" value="' + child[i].recommend_2["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '	<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//单位-结束
 
 		//职务-开始
         if(SurveyBuild._readonly){
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_3["value"] +  '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_3["value"] +  '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_3["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_3["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_3["itemId"] +'" value="' + child[i].recommend_3["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_3["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
-            works += '		</div>';
+            works += '<div class="input-list" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
+            works += '<div class="input-list-text left"><input type="text" title="'+ child[i].recommend_3["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_3["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_3["itemId"] +'" value="' + child[i].recommend_3["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '	<div id="' + data.itemId + child[i].recommend_3["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//职务-结束
@@ -1009,27 +1044,34 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//手机-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">';
+            works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">';
             works += (child[i].recommend_16["value"] ? "(" : "") + child[i].recommend_16["value"] + (child[i].recommend_16["value"] ? ")&nbsp;" : "") + child[i].recommend_4["value"];
             works += '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            /*区号*/
-            works += '		<input type="text" placeholder="' + child[i].recommend_16["title"] + '" title="'+ child[i].recommend_16["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_16["itemId"] +'" class="input_63px" name="' + data.itemId + child[i].recommend_16["itemId"] +'" value="' + child[i].recommend_16["value"] + '">';
-            works += '		<input type="text" placeholder="' + child[i].recommend_4["title"] + '" title="'+ child[i].recommend_4["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_4["itemId"] +'" class="input_180px" name="' + data.itemId + child[i].recommend_4["itemId"] +'" value="' + child[i].recommend_4["value"] + '">';
-            works += '      <span>&nbsp;&nbsp;&nbsp;'+MsgSet["REF_PHONE_EG"]+'</span>';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
-            works += '		</div>';
+            works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
+            works += '<div class="input-list-text left">';
+			if(child[i].recommend_16["useby"] == "Y"){
+				works += '		<input type="text" style="width:30%" title="'+ child[i].recommend_16["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_16["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_16["itemId"] +'" value="' + child[i].recommend_16["value"] + '">';
+				works += '		<input type="text" style="width:68%" title="'+ child[i].recommend_4["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_4["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_4["itemId"] +'" value="' + child[i].recommend_4["value"] + '">';
+				works += '</div>';
+			}else{
+				works += '		<input type="text" title="'+ child[i].recommend_4["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_4["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_4["itemId"] +'" value="' + child[i].recommend_4["value"] + '">';
+				works += '</div>';
+			}
+            works += '<div class="input-list-suffix left">';
+			/*works += '      <span>&nbsp;&nbsp;&nbsp;'+MsgSet["REF_PHONE_EG"]+'</span>';*/
+            works += '	<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//手机-结束
@@ -1037,85 +1079,77 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//邮箱-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_5["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_5["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_5["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_5["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_5["itemId"] +'" value="' + child[i].recommend_5["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_5["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
-            works += '		</div>';
+            works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
+            works += '<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_5["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_5["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_5["itemId"] +'" value="' + child[i].recommend_5["value"] + '">';
+			works += '</div>';
+            works += '<div class="input-list-suffix left">';
+            works += '	<div id="' + data.itemId + child[i].recommend_5["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//邮箱-结束
 		
 		//性别-开始
-		works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-		works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_15["itemName"] +'：</div>';
-		works += '<div class="main_inner_content_info_right">';
-		
-		works += '<div class="tz_radio_div '+(child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "on_check" : "")+'">';
-        works += '<input class="tz_radio_checkbox input_251px" ' + (child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_M" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="M" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
-        //works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_M" style="margin:0 0;"></label>';
-		works += '</div><span style="margin-left:3px;">' + MsgSet["SEX_M"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-		
-		works += '<div class="tz_radio_div '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "on_check" : "")+'">';
-        works += '<input class="tz_radio_checkbox input_251px" ' + (child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_F" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="F" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
-        //works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_F" style="margin:0 0;"></label> ';
-		works += '</div><span style="margin-left:3px;">'+MsgSet["SEX_F"]+'</span>';
-        works += '<input type="hidden" style="width:10px;" id="' + data.itemId + child[i].recommend_15["itemId"] + '" value="' + child[i].recommend_15["value"] + '">';
+		works += '<div class="input-list" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+		works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_15["itemName"] +'：</div>';
+		works += '<div class="margart8 input-list-textwrap left">';
+		works += '	<ul>'; 
+		works += '	<li>'; 
+		works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_15["itemId"] + '_M">';
+        works += '<i><input type="radio"' + (child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checked='checked'": "")+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="M"></i>';
 
-        /*
-         if (child[i].recommend_15["value"]=="F"){
-             works += '<input class="main_inner_radio input_251px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_M" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="M">';
-             works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_M" style="margin:0 0;"></label> '+MsgSet["SEX_M"]+'&nbsp;&nbsp;&nbsp;&nbsp;';
-             works += '<input class="main_inner_radio input_251px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_15["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_F" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="F">';
-             works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_F" style="margin:0 0;"></label> '+MsgSet["SEX_F"];
-             works += '<input type="hidden" id="' + data.itemId + child[i].recommend_15["itemId"] + '" value="F">';
-         }else{
-             works += '<input class="main_inner_radio input_251px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_15["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_M" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="M">';
-             works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_M" style="margin:0 0;"></label> '+MsgSet["SEX_M"]+'&nbsp;&nbsp;&nbsp;&nbsp;';
-             works += '<input class="main_inner_radio input_251px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["itemName"] +'" id="' + data.itemId + child[i].recommend_15["itemId"] + '_F" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="F">';
-             works += '<label for="' + data.itemId + child[i].recommend_15["itemId"] + '_F" style="margin:0 0;"></label> '+MsgSet["SEX_F"];
-             works += '<input type="hidden" id="' + data.itemId + child[i].recommend_15["itemId"] + '" value="M">';
-         }
-        */
-		works += '		<div style="margin-top: -40px; margin-left: 256px">';
-		works += '			<div id="' + data.itemId + child[i].recommend_15["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-		works += '				<div class="onShow">&nbsp;</div>';
-		works += '			</div>';
-		works += '		</div>';
+		works += '</div><span style="margin-left:3px;">' + MsgSet["SEX_M"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+
+		works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_15["itemId"] + '_F">';
+        works += '<i><input type="radio" ' + (child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "") + ((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_15["title"] +'" name="' + data.itemId + child[i].recommend_15["itemId"] +'" value="F"></i>';
+		works += '</div><span style="margin-left:3px;">'+MsgSet["SEX_F"]+'</span>';
+		works += '	</li>';
+		works += '<div class="clear"></div></ul>';
+        works += '<input type="hidden" style="width:10px;" id="' + data.itemId + child[i].recommend_15["itemId"] + '" value="' + child[i].recommend_15["value"] + '">';
 		works += '</div>';
+		works += '<div class="input-list-suffix left">';
+		works += '	<div id="' + data.itemId + child[i].recommend_15["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+		works += '		<div class="onShow">&nbsp;</div>';
+		works += '	</div>';
+		works += '</div>';
+		works += '<div class="clear"></div>';
 		works += '</div>';
 		//性别-结束
 
 		//申请人关系-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_6["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_6["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_6["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_6["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_6["itemId"] +'" value="' + child[i].recommend_6["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_6["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
-            works += '		</div>';
+            works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_6["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_6["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_6["itemId"] +'" value="' + child[i].recommend_6["value"] + '"></div>';
+			works += '<div class="input-list-suffix left">';
+            works += '	<div id="' + data.itemId + child[i].recommend_6["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '		<div class="onShow">&nbsp;</div>';
             works += '	</div>';
+            works += '</div>';
+			works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//申请人关系-结束
@@ -1123,22 +1157,24 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段一-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_10["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_10["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_10["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_10["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_10["itemId"] +'" value="' + child[i].recommend_10["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_10["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
+            works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_10["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_10["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_10["itemId"] +'" value="' + child[i].recommend_10["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '		<div id="' + data.itemId + child[i].recommend_10["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '			<div class="onShow">&nbsp;</div>';
             works += '		</div>';
-            works += '	</div>';
+            works += '</div>';
+            works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//备用字段一-结束
@@ -1146,22 +1182,24 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段二-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_11["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_11["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_11["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_11["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_11["itemId"] +'" value="' + child[i].recommend_11["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_11["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
-            works += '			</div>';
+            works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_11["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_11["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_11["itemId"] +'" value="' + child[i].recommend_11["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '	<div id="' + data.itemId + child[i].recommend_11["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '			<div class="onShow">&nbsp;</div>';
             works += '		</div>';
             works += '	</div>';
+            works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//备用字段二-结束
@@ -1169,22 +1207,24 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段三-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_12["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_12["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_12["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_12["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_12["itemId"] +'" value="' + child[i].recommend_12["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_12["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
+            works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_12["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_12["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_12["itemId"] +'" value="' + child[i].recommend_12["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '		<div id="' + data.itemId + child[i].recommend_12["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '			<div class="onShow">&nbsp;</div>';
             works += '			</div>';
             works += '		</div>';
-            works += '	</div>';
+            works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//备用字段三-结束
@@ -1192,22 +1232,24 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段四-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_13["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_13["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_13["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_13["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_13["itemId"] +'" value="' + child[i].recommend_13["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_13["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
+            works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_13["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_13["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_13["itemId"] +'" value="' + child[i].recommend_13["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '		<div id="' + data.itemId + child[i].recommend_13["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '			<div class="onShow">&nbsp;</div>';
             works += '			</div>';
             works += '		</div>';
-            works += '	</div>';
+            works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//备用字段四-结束
@@ -1215,22 +1257,24 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段五-开始
         if(SurveyBuild._readonly){
             //只读模式
-            works += '<div class="main_inner_content_info_autoheight cLH" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_readonly_right">' + child[i].recommend_14["value"] + '</div>';
+            works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
+            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_14["value"] + '</div>';
+			works += '	<div class="input-list-suffix left"></div>';
+			works += '	<div class="clear"></div>';
             works += '</div>';
         }else{
             //编辑模式
-            works += '<div class="main_inner_content_info_autoheight" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
-            works += '	<div class="main_inner_content_info_right">';
-            works += '		<input type="text" title="'+ child[i].recommend_14["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_14["itemId"] +'" class="input_251px" name="' + data.itemId + child[i].recommend_14["itemId"] +'" value="' + child[i].recommend_14["value"] + '">';
-            works += '		<div style="margin-top: -40px; margin-left: 256px">';
-            works += '			<div id="' + data.itemId + child[i].recommend_14["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-            works += '				<div class="onShow">&nbsp;</div>';
+            works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            works += '	<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
+            works += '	<div class="input-list-text left">';
+            works += '		<input type="text" title="'+ child[i].recommend_14["title"] +'" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_14["itemId"] +'" class="inpu-list-text-enter" name="' + data.itemId + child[i].recommend_14["itemId"] +'" value="' + child[i].recommend_14["value"] + '"></div>';
+            works += '<div class="input-list-suffix left">';
+            works += '		<div id="' + data.itemId + child[i].recommend_14["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+            works += '			<div class="onShow">&nbsp;</div>';
             works += '			</div>';
             works += '		</div>';
-            works += '	</div>';
+            works += '<div class="clear"></div>';
             works += '</div>';
         }
 		//备用字段五结束
@@ -1252,43 +1296,40 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				child[i].recommend_7["option"]["ZHS"]["checked"]="Y";
 				child[i].recommend_7["option"]["ENG"]["checked"]="N"
 			}
-			works += '<div class="main_inner_content_info_autoheight">';
-			works += '<div class="main_inner_connent_info_left">'+ '<span class="reg_title_star">*</span>'+ child[i].recommend_7["itemName"] +'：</div>';
-			works += '<div class="main_inner_content_info_right">';
-				works += '<div class="tz_radio_div '+(child[i].recommend_7["option"]["ZHS"]["checked"] == "Y" ? "on_check" : "")+'">';
-				works += '<input class="tz_radio_checkbox input_411px"' + (child[i].recommend_7["option"]["ZHS"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["title"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_C" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="C" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
-				//works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_C" style="margin:0 0;"></label> ';
-				works += '</div><span style="margin-left:3px;">'+MsgSet["LANGUAGE_C"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-				
-				works += '<div class="tz_radio_div '+(child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "on_check" : "")+'">';
-				works += '<input class="tz_radio_checkbox input_411px"' + (child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["title"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_E" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="E" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
-				//works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_E" style="margin:0 0;"></label> ';
-				works += '</div><span style="margin-left:3px;">'+MsgSet["LANGUAGE_E"]+'</span>';
-			/*
-			if (child[i].recommend_7["value"]=="E"){
-				works += '<input class="main_inner_radio input_411px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["itemName"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_C" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="C">';
-				works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_C" style="margin:0 0;"></label> '+MsgSet["LANGUAGE_C"]+'&nbsp;&nbsp;&nbsp;&nbsp;';
-				works += '<input class="main_inner_radio input_411px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_7["itemName"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_E" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="E">';
-				works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_E" style="margin:0 0;"></label> '+MsgSet["LANGUAGE_E"];
-			}else{
-				works += '<input class="main_inner_radio input_411px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_7["itemName"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_C" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="C">';
-				works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_C" style="margin:0 0;"></label> '+MsgSet["LANGUAGE_C"]+'&nbsp;&nbsp;&nbsp;&nbsp;';
-				works += '<input class="main_inner_radio input_411px" type="radio" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["itemName"] +'" id="' + data.itemId + child[i].recommend_7["itemId"] + '_E" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="E">';
-				works += '<label for="' + data.itemId + child[i].recommend_7["itemId"] + '_E" style="margin:0 0;"></label> '+MsgSet["LANGUAGE_E"];
-			}*/
-			/*works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="' + child[i].recommend_7["value"] + '">';*/
+			works += '<div class="input-list">';
+			works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="margart8 input-list-textwrap left">';
+			works += '	<ul>'; 
+			works += '	<li>'; 
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_7["option"]["ZHS"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_7["itemId"] + '_C">';
+			works += '<i><input type="radio"' + (child[i].recommend_7["option"]["ZHS"]["checked"] == "Y" ? "checked='checked'": "") + ((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["title"] +'" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="C"></i>';
+
+			works += '</div><span style="margin-left:3px;">'+MsgSet["LANGUAGE_C"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+			
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_7["itemId"] + '_E">';
+			works += '<i><input type="radio"' + (child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "checked='checked'": "") + ((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_7["title"] +'" name="' + data.itemId + child[i].recommend_7["itemId"] +'" value="E"></i>';
+
+			works += '</div><span style="margin-left:3px;">'+MsgSet["LANGUAGE_E"]+'</span>';
+			works += '	</li>';
+			works += '<div class="clear"></div></ul>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="' + tjx_language + '">';
 			works += '<div style="margin-top: -40px; margin-left: 110px"><span id="' + data.itemId + child[i].recommend_7["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow"><div class="onShow"></div></span></div>';
 			works += '</div>';
+			works += '<div class="input-list-suffix left">';
+			works += '	<div id="' + data.itemId + child[i].recommend_7["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+			works += '		<div class="onShow">&nbsp;</div>';
+			works += '	</div>';
+			works += '</div>';
+			works += '<div class="clear"></div>';
 			works += '</div>';
 		}else if (_qy_zhs=="Y"&&_qy_eng!="Y")
 		{
 			child[i].recommend_7["option"]["ZHS"]["checked"] = "Y";
 			child[i].recommend_7["option"]["ENG"]["checked"] = "N";
-			works += '<div class="main_inner_content_info_autoheight" style="display:none">';
-			works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_7["itemName"] +'：</div>';
-			works += '<div class="main_inner_content_info_right">';
-			works += '<div>'+MsgSet["LANGUAGE_C"]+'</div>';
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			//works += '<div>'+MsgSet["LANGUAGE_C"]+'</div>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
 			works += '</div>';
 			works += '</div>';
@@ -1296,10 +1337,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		{
 			child[i].recommend_7["option"]["ZHS"]["checked"] = "N";
 			child[i].recommend_7["option"]["ENG"]["checked"] = "Y";
-			works += '<div class="main_inner_content_info_autoheight" style="display:none">';
-			works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_7["itemName"] +'：</div>';
-			works += '<div class="main_inner_content_info_right">';
-			works += '<div>'+MsgSet["LANGUAGE_E"]+'</div>';
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			//works += '<div>'+MsgSet["LANGUAGE_E"]+'</div>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="E">';
 			works += '</div>';
 			works += '</div>';
@@ -1309,47 +1350,44 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//推荐信类型-开始
 		if (data.itemLx=="L"){
 			
-			works += '<div class="main_inner_content_info_autoheight">';
-			works += '<div class="main_inner_connent_info_left">'+ child[i].recommend_8["itemName"] +'：</div>';
-			works += '<div class="main_inner_content_info_right">';
+			works += '<div class="input-list">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_8["itemName"] +'：</div>';
+			works += '<div class="margart8 input-list-textwrap left">';
 			
 			if(child[i].recommend_8["option"]["SEND"]["checked"] == "Y"){
 				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
 				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
 			}else if(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y")
 			{
 				child[i].recommend_8["option"]["SEND"]["checked"] = "N";
 				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+				child[i].recommend_8["value"] = "U";
 			}else{
 				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
 				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
 			}
-
-			works += '<div class="tz_radio_div '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "on_check" : "")+'">';
-			works += '<input class="tz_radio_checkbox input_411px" ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
+			works += '	<ul>'; 
+			works += '	<li>'; 
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
 			//works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_S" style="margin:0 0;"></label>';
 			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-			
-			works += '<div class="tz_radio_div '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "on_check" : "")+'">';
-			works += '<input class="tz_radio_checkbox input_411px" ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U" class="input_411px" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" style="width:20px;height:20px;" onclick="SurveyBuild.clickOnRadio(this);">';
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
 			//works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_U" style="margin:0 0;"></label>';
 			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
-	            	/*
-	             	if (child[i].recommend_8["value"]=="U"){
-	                 	works += '<input class="main_inner_radio input_411px" type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["itemName"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S">';
-	                 	works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_S" style="margin:0 0;"></label>'+MsgSet["Send_mail"]+'&nbsp;';
-	                 	works += '<input class="main_inner_radio input_411px" type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_8["itemName"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U" class="input_411px" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U">';
-	                 	works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_U" style="margin:0 0;"></label>'+MsgSet["Upload"];
-	             	}else{
-	                 	works += '<input class="main_inner_radio input_411px" type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' checked="checked" title="'+ child[i].recommend_8["itemName"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S">';
-	                 	works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_S" style="margin:0 0;"></label>'+MsgSet["Send_mail"]+'&nbsp;';
-	                 	works += '<input class="main_inner_radio input_411px" type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["itemName"] +'" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U">';
-	                 	works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_U" style="margin:0 0;"></label>'+MsgSet["Upload"];
-	             	}
-	            	*/
+			works += '	</li>';
+			works += '<div class="clear"></div></ul>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
-			works += '<div style="margin-top: -40px; margin-left: 110px"><span id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow"><div class="onShow"></div></span></div>';
 			works += '</div>';
+			works += '<div class="input-list-suffix left">';
+			works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+			works += '		<div class="onShow">&nbsp;</div>';
+			works += '	</div>';
+			works += '</div>';
+			works += '<div class="clear"></div>';
 			works += '</div>';
 		}else if(data.itemLx == "F"){
 			child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
@@ -1364,78 +1402,150 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//上传附件
 		if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
-			works += '<div class="main_inner_content_info_autoheight" id="Tjxfj_show_'+i+'">';
-			works += '	<div class="main_inner_connent_info_left">'+child[i].recommend_9["itemName"]+'：</div>';
-			works += '	<div class="main_inner_content_info_right">';
-			works += '		<div class="file_upload_button">';
-			works += '			<div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-//			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-			works += '			<div style="margin-top:-35px;margin-left:280px">';
-			works += '				<span id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
+		
+			works += '<div class="input-list-blank" style="display:block" id="Tjxfj_show_'+i+'">';
+			if(SurveyBuild._readonly!=true){
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-texttemplate left">';
+				works += '		<div class="filebtn">';
+				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+				works += '		</div>';
+			}else{
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-text left">';
+			}
+
+			works += '<div class="input-list-suffix left">';
+			/*
+			works += '		<div id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
 			works += '					<div class="onCorrect">&nbsp;</div>';
-			works += '				</span>';
-			works += '			</div>';
 			works += '		</div>';
-			works += '		<div id="'+data.itemId+i+'_AttList" class="main_inner_file_list">';
+			*/
+			works += '</div>';
+
+			/*附件显示 开始*/
+			if(SurveyBuild._readonly!=true){
+				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
+			}else{
+				works += '		<div id="'+data.itemId+i+'_AttList">';
+			}
 			if (child[i].recommend_9["viewFileName"]!="")
 			{
-				works += '		<ul><li>';
-				works += '			<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-				works += '			<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
-				works += '		</li></ul>';
+				if(SurveyBuild._readonly!=true){
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '	</div>';
+					
+					//works += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')>' + MsgSet["DEL"] + '</button></div>';
+					
+					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+					
+					works += '</div>';
+				}else{
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '</div>';
+					works += '</div>';
+				}
 			}
+			works += '	<div class="clear"></div>';
 			works += '		</div>';
+			
+			/*附件显示 结束*/
 			works += '	</div>';
 			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+			works += '	<div class="clear"></div>';
 			works += '</div>';
 		}else{
-			works += '<div class="main_inner_content_info_autoheight" style="display:none" id="Tjxfj_show_'+i+'">';
-			works += '	<div class="main_inner_connent_info_left">'+child[i].recommend_9["itemName"]+'：</div>';
-			works += '	<div class="main_inner_content_info_right">';
-			works += '		<div class="file_upload_button">';
-			works += '			<div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-//			works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="fileupload_input" type="file" name="websitefile" style="width:80px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-			works += '			<div style="margin-top:-35px;margin-left:280px">';
-			works += '				<span id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
+			works += '<div class="input-list-blank" style="display:none" id="Tjxfj_show_'+i+'">';
+			if(SurveyBuild._readonly!=true){
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-texttemplate left">';
+				works += '		<div class="filebtn">';
+				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+				works += '		</div>';
+			}else{
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-text left">';
+			}
+			works += '<div class="input-list-suffix left">';
+			/*
+			works += '		<div id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
 			works += '					<div class="onCorrect">&nbsp;</div>';
-			works += '				</span>';
-			works += '			</div>';
 			works += '		</div>';
-			works += '		<div id="'+data.itemId+i+'_AttList" class="main_inner_file_list">';
-			//works += '		<ul><li>';
-			//works += '			<a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+data.instanceId+'\") file-index="1">'+child[i].recommend_9["filename"]+'</a>';
-			//works += '			<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+data.instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
-			//works += '		</li></ul>';
+			*/
+			works += '</div>';
+
+			/*附件显示 开始*/
+			if(SurveyBuild._readonly!=true){
+				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
+			}else{
+				works += '		<div id="'+data.itemId+i+'_AttList">';
+			}
+			if (child[i].recommend_9["viewFileName"]!="")
+			{
+				if(SurveyBuild._readonly!=true){
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '	</div>';
+					
+					//works += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')>' + MsgSet["DEL"] + '</button></div>';
+					
+					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+					
+					works += '</div>';
+				}else{
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '	</div>';
+					works += '</div>';
+				}
+			}
+			works += '	<div class="clear"></div>';
 			works += '		</div>';
+			
+			/*附件显示 结束*/
 			works += '	</div>';
 			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+			works += '	<div class="clear"></div>';
 			works += '</div>';
 		}
 		//上传附件-结束
 		
 		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
-			works += '<div class="main_inner_content_info" style="margin: 0 auto;text-align:center;'+((_zd=="Z")?"display:none":"")+'">';
-			//发送邮件
-			works += '<div style="padding-left:266px;padding-top:5px;">';
-			works += '<div id="sendEmailS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-			works += '<div id="sendEmail_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			//重新发送
-			works += '<div id="reSendEmailS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-			works += '<div id="reSendEmail_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			//更换推荐人
-			works += '<div id="changeRecS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-			works += '<div id="changeRec_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			works += '</div>';
-			works += '</div>';
-			//推荐信状态
-			works += '<div class="main_inner_content_info_autoheight" style="text-align:center" id="Tjxzt_'+i+'">';
-			works += '<div id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="font_orange_16px">'+_tjx_zt+'</span>';
+			if(SurveyBuild._readonly!=true){
+				works += '<div class="input-list-blank" style="margin: 0 auto;'+((_zd=="Z" || _zd=="N")?"display:none":"")+'" id="Tjx_SendEmail_'+i+'">';
+				works += '<div class="input-list-info left"></div>';
+				works += '<div class="input-list-texttemplate" style="width:100%">';
+				//发送邮件
+				works += '<div id="sendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//重新发送
+				works += '<div id="reSendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//更换推荐人
+				works += '<div id="changeRecS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
 			
+				works += '<div class="input-list-suffix left"></div>';
+				works += '<div class="clear"></div>';
+				works += '</div>';
+				works += '</div>';
+			}
+			//推荐信状态
+
+			works += '<div class="input-list-blank" style="padding-left:6px;" id="Tjxzt_'+i+'">';
+			works += '<div class="input-list-info left"></div>';
+			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			/*推荐信链接*/
 			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
@@ -1459,29 +1569,37 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 			}	
 			works += '</div>';
-			
-			works += '</div>';
-			
+			works += '<div class="input-list-suffix left"></div>';
+			works += '<div class="clear"></div>';
+			works += '</div>';		
 		}else{
-			works += '<div class="main_inner_content_info" style="margin: 0 auto;text-align:center">';
-			works += '<div style="padding-left:266px;padding-top:5px;">';
-			//发送邮件
-			works += '<div id="sendEmailS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;display:none;">';
-			works += '<div id="sendEmail_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			//重新发送
-			works += '<div id="reSendEmailS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
-			works += '<div id="reSendEmail_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			//更换推荐人
-			works += '<div id="changeRecS_'+i+'" style="padding-left:20px;padding-right:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
-			works += '<div id="changeRec_'+i+'" class="bt_blue" style="width:175px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
-			works += '</div>';
-			works += '</div>';
-			works += '</div>';
+			if(SurveyBuild._readonly!=true){
+				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="Tjx_SendEmail_'+i+'">';
+				works += '<div class="input-list-info left" style="padding-left:6px;"></div>';
+				works += '<div class="input-list-texttemplate" style="width:100%">';
+			
+				//发送邮件
+				works += '<div id="sendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//重新发送
+				works += '<div id="reSendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//更换推荐人
+				works += '<div id="changeRecS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+			
+				works += '</div>';
+				works += '<div class="input-list-suffix left"></div>';
+				works += '<div class="clear"></div>';
+				works += '</div>';
+			}
 			//推荐信状态
-			works += '<div class="main_inner_content_info_autoheight" id="Tjxzt_'+i+'" style="text-align:center;display:none">';
-			works += '<div id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="font_orange_16px">'+_tjx_zt+'</span>';
+			works += '<div class="input-list-blank" id="Tjxzt_'+i+'" style="padding-left:6px;display:none">';
+			works += '<div class="input-list-info left"></div>';
+			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			//推荐信链接
 			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
@@ -1505,23 +1623,25 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 			}
 			works += '</div>';
+			works += '<div class="input-list-suffix left"></div>';
+			works += '<div class="clear"></div>';
 			works += '</div>';
 		}
 		/*保存推荐信信息*/
 		works += '<div style="display:none">';
 		works += '<div id="saveRec_'+i+'" class="bt_blue" style="width:125px">保存</div><a href="#" class="alpha"></a>';
 		works += '</div>';
-		
 
 		works += '<div><input type="hidden" id="yincang_tx" value="'+data.toSendE+'"></div>';
 		works += '<div><input type="hidden" id="max_tjx_ts" value="'+data.maxLines+'"></div>';
-				
-		works += '</div>';
 		
+		/*		
 		//footer
-		works += '<div class="main_inner_content_foot"></div>';
-		
+		//works += '<div class="main_inner_content_foot"></div>';
+		*/
 		works += '</div>';
+		works += '</div>';
+		
 		
         return works; 
     },
@@ -1583,13 +1703,15 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_yz="1";
 					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
+					var _result_area = /^[\d-+]+$/.test(rec_phone_area);
+					if(!_result_area){
+						_yz="2";
+						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
+						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
+					}
+				}else{
+					rec_phone_area="";
 				}
-				var _result_area = /^[\d-+]+$/.test(rec_phone_area);
-				if(!_result_area){
-                    _yz="2";
-					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
-					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
-                }
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
@@ -1716,7 +1838,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 									$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 									$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 									alert(MsgSet["SEND_SC"]);
-									$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='font_orange_16px'>"+MsgSet["SendEmail"]+"</span>");
+									$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
 									$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
 									$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
 									$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
@@ -1739,7 +1861,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 									//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).html());
 									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").hide();
 									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
-									$("#tjx_delete_"+(Number(m)-1)).hide();
+									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
+									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
+									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
+									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
+									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
+									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
+									$("#tjx_delete_"+(Number(mm)-1)).hide();
 									$("#app_save").click();
 								}else {
 									alert(result.comContent);
@@ -1769,6 +1897,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
 				var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
 				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
+				if (children[m-1].recommend_16["useby"]=="Y"&&rec_phone_area==""){
+				}else{
+					rec_phone_area="";
+				}
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
@@ -1864,11 +1996,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
 				if (children[m-1].recommend_16["useby"]=="Y"&&rec_phone_area==""){
 					_yz="1";
+					var _result_phone_area = /^[\d-+]+$/.test(rec_phone_area);
+					if(!_result_phone_area){
+						_yz="1";
+					}
 				}
-				var _result_phone_area = /^[\d-+]+$/.test(rec_phone_area);
-				if(!_result_phone_area){
-                    _yz="1";
-                }
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
@@ -1954,8 +2086,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				_file = SurveyBuild.specialCharReplace(_file);
 				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
 				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
+				
 				if (rec_type=="U")
 				{
+					console.log("_file"+_file);
+					console.log("_sysfile"+_sysfile);
+					console.log("_accessPath"+_accessPath);
+					console.log("rec_gname"+rec_gname);
+					
 					rec_language = "";
 					var _tz_tjx_valid = "N";
 					if(_yz==""){
@@ -2041,7 +2179,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
 							$("#changeRecS_"+(Number(mm)-1)).css("display","none");
-							$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='font_orange_16px'>"+MsgSet["Unsent"]+"</span>");
+							$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
 							//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
 							$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
 							$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
@@ -2065,6 +2203,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").show();
 							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
 							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen();
+							
+							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","N");
+							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","N");
+							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","N");
+							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","N");
+							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","N");
+							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","N");
+							
 							$("#tjx_delete_"+(Number(mm)-1)).show();
 							$("#app_save").click();
 						}else {
@@ -2074,72 +2220,84 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				});
 			});
 			$("#"+data.itemId + children[num-1].recommend_15["itemId"]+"_M").click(function(){
-				
-                var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+				var readOnly = $(this).attr("readonlyflag");
+			    if(readOnly!="Y"){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					children[lineno].recommend_15["option"]["MAN"]["checked"] = "Y";
+					children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "N";
 
-                children[lineno].recommend_15["option"]["MAN"]["checked"] = "Y";
-                children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "N";
-
-				var m = this.name;
-				var value=this.value;
-				$("#"+m).val(value);
-				
-				$("#"+m).focus();
-				$("#"+m).blur();
+					var child_M = $(this).find('input:radio');
+					var m = child_M.attr("name");
+					var value=child_M.val();
+					$("#"+m).val(value);
+					
+					$("#"+m).focus();
+					$("#"+m).blur();
+				}
 				
 			});
 			$("#"+data.itemId + children[num-1].recommend_15["itemId"]+"_F").click(function(){
-				
-                var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-                children[lineno].recommend_15["option"]["MAN"]["checked"] = "N";
-                children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "Y";
-				
-				var m = this.name;
-				var value=this.value;
-				$("#"+m).val(value);
-				$("#"+m).focus();
-				$("#"+m).blur();
+				var readOnly = $(this).attr("readonlyflag");
+			    if(readOnly!="Y"){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					children[lineno].recommend_15["option"]["MAN"]["checked"] = "N";
+					children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "Y";
+					var child_f = $(this).find('input:radio');
+
+					var m = child_f.attr("name");
+					var value=child_f.val();
+					$("#"+m).val(value);
+					$("#"+m).focus();
+					$("#"+m).blur();
+				}
 			});
 			$("#"+data.itemId + children[num-1].recommend_8["itemId"]+"_U").click(function(){
-			
-                var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-                children[lineno].recommend_8["option"]["SEND"]["checked"] = "N";
-                children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
-				
-				var m = this.name;
-				var value=this.value;
-				$("#"+m).val(value);
-				var n = $(this).attr("align");
+				var readOnly = $(this).attr("readonlyflag");
+			    if(readOnly!="Y"){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					children[lineno].recommend_8["option"]["SEND"]["checked"] = "N";
+					children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+					var child_U = $(this).find('input:radio');
+					var m = child_U.attr("name");
+					var value=child_U.val();
+					$("#"+m).val(value);
+					$("#"+m).val(value);
+					var n = child_U.attr("align");
 
-				$("#sendEmailS_"+n).css("display","none");
-				$("#Tjxzt_"+n).css("display","none");
-				$("#Tjxfj_show_"+n).css("display","block");
+					$("#Tjx_SendEmail_"+n).css("display","none");
+					$("#Tjxzt_"+n).css("display","none");
+					$("#Tjxfj_show_"+n).css("display","block");
+				}
 			});
 			$("#"+data.itemId + children[num-1].recommend_8["itemId"]+"_S").click(function(){
-				
-                var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-                children[lineno].recommend_8["option"]["SEND"]["checked"] = "Y";
-                children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "N";
-				
-				var m = this.name;
-				var value=this.value;
-				$("#"+m).val(value);
-				var n = $(this).attr("align");
+				var readOnly = $(this).attr("readonlyflag");
+			    if(readOnly!="Y"){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					children[lineno].recommend_8["option"]["SEND"]["checked"] = "Y";
+					children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+					var child_S = $(this).find('input:radio');
+					var m = child_S.attr("name");
+					var value=child_S.val();
+					
+					$("#"+m).val(value);
+					var n = child_S.attr("align");
 
-				var instanceId = $(this).closest(".dhcontainer").attr("data-instancid");
-				var data = SurveyBuild._items[instanceId];
-				var child = data.children[n];
-				var itemId = data.itemId;
-				children[lineno]["recommend_9"].filename = "";
-				children[lineno]["recommend_9"].sysFileName = "";
-				children[lineno]["recommend_9"].orderby = "";
-				children[lineno]["recommend_9"].viewFileName = "";
-				$("#"+data.itemId+n+"_AttList").html("");
-				
-				//SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')
-				$("#sendEmailS_"+n).css("display","block");
-				$("#Tjxzt_"+n).css("display","block");
-				$("#Tjxfj_show_"+n).css("display","none");
+					var instanceId = $(this).closest(".dhcontainer").attr("data-instancid");
+					var data = SurveyBuild._items[instanceId];
+					var child = data.children[n];
+					var itemId = data.itemId;
+					children[lineno]["recommend_9"].filename = "";
+					children[lineno]["recommend_9"].sysFileName = "";
+					children[lineno]["recommend_9"].orderby = "";
+					children[lineno]["recommend_9"].viewFileName = "";
+					$("#"+data.itemId+n+"_AttList").html("");
+					
+					//SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')
+					console.log("下标"+n);
+					$("#Tjx_SendEmail_"+n).css("display","block");
+					$("#Tjxzt_"+n).css("display","block");
+					$("#Tjxfj_show_"+n).css("display","none");
+				}
 			});
 			$("#"+data.itemId + children[num-1].recommend_7["itemId"]+"_C").click(function(){
 			
@@ -2147,19 +2305,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
                 children[lineno].recommend_7["option"]["ZHS"]["checked"] = "Y";
                 children[lineno].recommend_7["option"]["ENG"]["checked"] = "N";
 				
-				var m = this.name;
-				var value=this.value;
+				var child_C = $(this).find('input:radio');
+				var m = child_C.attr("name");
+				var value=child_C.val();
 				$("#"+m).val(value);
 			});
 			$("#"+data.itemId + children[num-1].recommend_7["itemId"]+"_E").click(function(){
-			
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-                children[lineno].recommend_7["option"]["ZHS"]["checked"] = "N";
-                children[lineno].recommend_7["option"]["ENG"]["checked"] = "Y";
-				
-				var m = this.name;
-				var value=this.value;
-				$("#"+m).val(value);
+				var readOnly = $(this).attr("readonlyflag");
+			    if(readOnly!="Y"){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					children[lineno].recommend_7["option"]["ZHS"]["checked"] = "N";
+					children[lineno].recommend_7["option"]["ENG"]["checked"] = "Y";
+					
+					var child_E = $(this).find('input:radio');
+					var m = child_E.attr("name");
+					var value=child_E.val();
+					$("#"+m).val(value);
+				}
 			});
 			
 			//上传按钮
@@ -2177,7 +2339,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 			$("#"+data.itemId + children[num-1].recommend_18["itemId"]).change(function(){
 				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-				
+				console.log("行序号"+lineno);
 				children[lineno].recommend_18.wzsm = $("#" + this.id)[0].options[$("#" + this.id)[0].selectedIndex].text;
 				
 			});

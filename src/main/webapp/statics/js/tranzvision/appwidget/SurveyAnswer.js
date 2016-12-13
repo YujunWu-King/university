@@ -499,11 +499,11 @@ var SurveyBuild = {
 				layer.load(2);//上传进度条
 				var $form = document.getElementById("main_list");
 				$form.encoding = "multipart/form-data";
-				$form.action = "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
+				$form.action = TzUniversityContextPath + "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString;
 				$("#main_list").ajaxSubmit({
 					dataType:'json',
 					type:'POST',
-					url:"/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
+					url:TzUniversityContextPath + "/UpdServlet?filePath=/linkfile/FileUpLoad/appFormAttachment/"+dateString,
 					success: function(obj) {
 						if(obj.success){
 							//清空file控件的Value

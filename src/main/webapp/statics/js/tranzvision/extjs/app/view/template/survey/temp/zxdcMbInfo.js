@@ -35,6 +35,12 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
             {text:"新增",iconCls:"add",handler:'addWjmb'},'-',
             {text:'删除',iconCls:"remove",handler:'deleteWjmb'},'->'
         ]
+    },{
+        xtype:"toolbar",
+        dock:"bottom",
+        ui:"footer",
+        items:['->',{minWidth:80,text:"保存",iconCls:"save",handler:"mbInfoSave"}
+        ]
     }],
     initComponent: function () {
         var store = new KitchenSink.view.template.survey.temp.zxdcMbListStore();
@@ -80,23 +86,18 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbInfo', {
                         {iconCls:'import',tooltip:'逻辑',handler:'onLogicalSet'}
                     ]
                 }],
-            buttons:[{
-                text: '保存',
-                handler:'mbInfoSave',
-                iconCls:'save' //页面保存按钮
-            }],
-            store:store,
-            bbar: {
-                xtype: 'pagingtoolbar',
-                pageSize: 10,
-                store: store,
-                displayInfo: true,
-                displayMsg: '显示{0}-{1}条，共{2}条',
-                beforePageText: '第',
-                afterPageText: '页/共{0}页',
-                emptyMsg: '没有数据显示',
-                plugins: new Ext.ux.ProgressBarPager()
-            }
+                store:store,
+                bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 10,
+                    store: store,
+                    displayInfo: true,
+                    displayMsg: '显示{0}-{1}条，共{2}条',
+                    beforePageText: '第',
+                    afterPageText: '页/共{0}页',
+                    emptyMsg: '没有数据显示',
+                    plugins: new Ext.ux.ProgressBarPager()
+                }
         });
 
         this.callParent();

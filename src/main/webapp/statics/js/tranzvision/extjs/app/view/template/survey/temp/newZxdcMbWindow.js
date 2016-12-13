@@ -52,6 +52,18 @@ Ext.define('KitchenSink.view.template.survey.temp.newZxdcMbWindow', {
                 store: new KitchenSink.view.common.store.appTransStore("TZ_EFFEXP_ZT"),
                 allowBlank: false,
                 value:'Y'
+            }, {
+                xtype: 'combobox',
+                fieldLabel: '语言',
+                editable: false,
+                emptyText: '请选择',
+                queryMode: 'remote',
+                name: 'TZ_APP_TPL_LAN',
+                valueField: 'TValue',
+                displayField: 'TSDesc',
+                store: new KitchenSink.view.common.store.appTransStore("TZ_APP_TPL_LAN"),
+                allowBlank: false,
+                value:'ZHS'
             },
             {  xtype: 'combobox',
                 fieldLabel: '类型',
@@ -103,9 +115,12 @@ Ext.define('KitchenSink.view.template.survey.temp.newZxdcMbWindow', {
                 grid.store.reload();
                 var tplId=data.id;
                 //新增模板， 点击确定后,跳转到模板编辑页面;
-                var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
+//                var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
+//                var newTab=window.open('about:blank');
+//                newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+                
                 var newTab=window.open('about:blank');
-                newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+               newTab.location.href= TzUniversityContextPath + "/admission/surveyform/" + tplId;
                 win.close();
             },"",true,win);
         }

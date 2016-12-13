@@ -119,7 +119,7 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
 				s += '<tr>';
 				s += '<th id="sq'+ i +'">'+ data["child"][i]["question"] +'</th>';
 				for (var j in data.option) {
-					s += '<td><img src="/survey/assets/img/read-radio.gif"></td>';	
+					s += '<td><img src="' + TzUniversityContextPath + '/statics/js/survey/assets/img/read-radio.gif"></td>';	
 				}
 				s += '</tr>';	
 			}

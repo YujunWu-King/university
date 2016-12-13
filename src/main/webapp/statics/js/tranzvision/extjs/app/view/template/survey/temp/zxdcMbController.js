@@ -175,14 +175,14 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
                         store.reload();
                        //如果创建成功，直接跳转到编辑页面
                        var tplId=data.id;
-                        var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
-                        var newTab=window.open('about:blank');
-                        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+                        //var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
+                        //var newTab=window.open('about:blank');
+                        //newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+                       var url = TzUniversityContextPath + "/admission/surveyform/" + tplId;
+               			window.open(url, '_blank');
                     },"",true,this);
             } else {
                 Ext.MessageBox.alert('提示', '新的模板名称不能为空！');
-                // Ext.MessageBox.prompt('复制模板', '请输入另存模板的名称:', this.showResultText, this);
-                //return;
             }
         }
         return;
@@ -247,7 +247,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_MBSZ_STD","OperateType":"QF","comParams":{"tplId":"'+tplId+'"}}';
         //加载数据
         Ext.tzLoad(tzParams,function(responseData){
-            var formData = responseData.formData;
+            var formData = Ext.util.JSON.decode(responseData.formData);
             form.setValues(formData);
         });
         win.show();
@@ -306,10 +306,11 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
     editWjmb:function(view,rowindex){
      	var selRec = view.getStore().getAt(rowindex);
       	var tplId = selRec.get("TZ_APP_TPL_ID");
-		
-		var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
-		var newTab=window.open('about:blank');
-	  	newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+//		var tzParams = '{"ComID":"TZ_ZXDC_MBGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_TPL_ID":' + tplId + '}}';
+//		var newTab=window.open('about:blank');
+//	  	newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        var url = TzUniversityContextPath + "/admission/surveyform/" + tplId;
+		window.open(url, '_blank');
     },
     /*问卷模板预览*/
     previewWjmb:function(view,rowIndex){
@@ -317,6 +318,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         var tplId = selRec.get("TZ_APP_TPL_ID");
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"TPL","SURVEY_ID":"' + tplId + '"}}';
         var newTab=window.open('about:blank');
+        //alert(tzParams);
         newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
     }, /*新增窗口保存*/
     onNewWjEnsure:function(btn){
@@ -350,6 +352,7 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
         }
     },
     onLogicalSet:function(view,rowindex){
+      
       var selRec = view.getStore().getAt(rowindex);
       var tplId = selRec.get("TZ_APP_TPL_ID");
 	/*
@@ -358,21 +361,21 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbController', {
 	  //newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
 	  newTab.location.href=Ext.tzGetGeneralURL()+'?classid=surveyTmpLogic&TZ_APP_TPL_ID='+tplId;
 	 */
-	 var logicUrl = Ext.tzGetGeneralURL()+'?classid=surveyTmpLogic&TZ_APP_TPL_ID='+tplId;
-	 $.layer({
-		type: 2,
-		title: false,
-		fix: true,
-		closeBtn: false,
-		shadeClose: false,
-		icon:2,
-		shade : [0.3 , '#000' , true],
-		border : [3 , 0.3 , '#000', true],
-		offset: ['30%',''],
-		area: ['1040px','600px'],
-		move : true,
-		iframe: {src: logicUrl}
-	});
+	 var logicUrl = Ext.tzGetGeneralURL()+'?classid=surveyTmpLogic&EXECUTE=MB&TZ_DC_WJ_ID='+tplId;
+			$.layer({
+				type: 2,
+				title: false,
+				fix: true,
+				closeBtn: false,
+				shadeClose: false,
+				icon:2,
+				shade : [0.3 , '#000' , true],
+				border : [3 , 0.3 , '#000', true],
+				offset: ['30%',''],
+				area: ['1040px','600px'],
+				move : true,
+				iframe: {src: logicUrl}
+			});
     }
 });
 

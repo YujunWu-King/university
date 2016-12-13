@@ -22,7 +22,5 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjWindow', {
             text: '关闭',
             iconCls: "close",
             handler: 'onNewClose'
-        }]
-
-
+     }]
 });

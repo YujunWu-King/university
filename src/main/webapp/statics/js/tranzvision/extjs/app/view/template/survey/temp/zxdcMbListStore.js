@@ -9,6 +9,4 @@ Ext.define('KitchenSink.view.template.survey.temp.zxdcMbListStore', {
    // tzStoreParams:  '{"cfgSrhId":"TZ_ZXDC_MBGL_COM.TZ_ZXDC_MBGL_STD.TZ_ZXDC_MB_VW"}',
     tzStoreParams: '{"cfgSrhId":"TZ_ZXDC_MBGL_COM.TZ_ZXDC_MBGL_STD.TZ_ZXDC_MB_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}',
     proxy: Ext.tzListProxy()
-
-
 })

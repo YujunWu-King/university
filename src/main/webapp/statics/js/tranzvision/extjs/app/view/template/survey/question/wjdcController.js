@@ -70,20 +70,22 @@
         //组件注册信息数据
         var store = grid.getStore();
         var win = this.lookupReference('myDcwjWindow');
-       // console.log(win);
+        // console.log(win);
         var activeTab = win.items.items[0].getActiveTab(),
             id = '';
         var wjbt = Ext.get(activeTab.id).select('input').elements[0].value,
             wjId = "";
+
         if (activeTab.itemId == "add") { //新增
             var form = activeTab.getForm();
+            var lan = form.findField('language').getValue();
         };
         if (activeTab.itemId == "predefine") { //从现有模板复制
             Ext.each(Ext.query(".tplitem"),
                 function(i) {
                     if (this.style.backgroundColor == "rgb(173, 216, 230)") {
                         wjId = this.getAttribute("data-id");  //这里获得的id实际上是模板id
-                      //  return false;
+                        //  return false;
                         console.log(wjId);
                     }
                 });
@@ -91,18 +93,34 @@
             wjId = "";
         }
         if (wjbt) {
-            var tzStoreParams = '{"add":[{"id":"' + wjId + '","name":"' + wjbt + '","type":"add"}]}';
+            //var tzStoreParams = '{"add":[{"id":"' + wjId + '","name":"' + wjbt + '","type":"add"}]}';
+            //张雪娥修改20160202
+            var comParams={};
+            comParams.id=wjId;
+            comParams.name=wjbt;
+            comParams.language=lan;
+            comParams.type="add";
+
+            var tzStoreParams = '{"add":['+Ext.JSON.encode(comParams)+']}';
+
+            //  var tzStoreParams = '{"add":[{"id":"' + wjId + '","name":"' + wjbt + '","language":"' + lan + '","type":"add"}]}';
+
+
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_XJWJ_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
             Ext.tzSubmit(tzParams,
                 function(data) {
-                  var id=data.id;
-                  store.reload();
-                  win.close();
-                 /*问卷保存成功，自动跳转到编辑页面*/
-                var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + id + '}}';
-                var newTab=window.open('about:blank');
-                newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
-            },"",true,this);
+                    var id=data.id;
+                    store.reload();
+                    win.close();
+                    /*问卷保存成功，自动跳转到编辑页面*/
+                    //var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + id + '}}';
+                    //var newTab=window.open('about:blank');
+                    //newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+                    //modity by caoy
+                    var url = TzUniversityContextPath
+					+ "/admission/wjform/" + id;
+                    window.open(url, '_blank');
+                },"",true,this);
         }
     },
     /*删除问卷调查 */
@@ -247,7 +265,6 @@
                 }else{
                     form.findField("TZ_DC_WJ_DLZT").setValue(false)  ;
                 }
-
                 if(formData.TZ_DC_WJ_NEEDPWD=='Y'){
                     form.findField("TZ_DC_WJ_NEEDPWD").setValue(true);
                 }else{
@@ -295,7 +312,7 @@
                     },
                     TZ_APP_TPL_MC:{
                         desc:'问卷模板名称',
-                        operator:'01',
+                        operator:'07',
                         type:'01'
                     }
                 }
@@ -326,10 +343,13 @@
         var dtgz=form.findField("dtgz");
         //数据采集规则
         var sjcjgz=form.findField("sjcjgz");
-       if(checked){ //如果选中，就隐藏掉,不显示
+        if(checked){ //如果选中，就隐藏掉,不显示
            dtgz.items.items[2].setHidden(true);
            sjcjgz.items.items[3].setHidden(true);
-           sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
+            if(sjcjgz.getValue().TZ_DC_WJ_IPGZ=="3")
+            {
+                sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
+            }
        } else{
             sjcjgz.setValue({TZ_DC_WJ_IPGZ:3});
             dtgz.items.items[2].setHidden(false);
@@ -342,7 +362,7 @@
         if(checked){
           pwd.setHidden(false);
         }else{
-        pwd.setHidden(true);
+         pwd.setHidden(true);
         }
     },
     /*列表上方的发布*/
@@ -434,9 +454,12 @@
     editWjdc:function(view,rowindex){
         var selRec = view.getStore().getAt(rowindex);
         var wjId = selRec.get("TZ_DC_WJ_ID");
-        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + wjId + '}}';
-        var newTab=window.open('about:blank');
-        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        //var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_EDIT_STD","OperateType":"HTML","comParams":{"ZXDC_WJ_ID":' + wjId + '}}';
+        //var newTab=window.open('about:blank');
+        //newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        //modity by caoy
+        var url = TzUniversityContextPath + "/admission/wjform/" + wjId;
+		window.open(url, '_blank');
     },
     getJDBBData:function(){
         Ext.tzSetCompResourses('TZ_ZXDC_JDBB_COM');/*组件之间的跳转，需要哪个组件就把它加载进来*/
@@ -491,8 +514,8 @@
             // </debug>
         }
 
-         var WJID = btn.findParentByType("grid").store.getAt(rowIndex).data.TZ_DC_WJ_ID;
-       console.log(WJID);
+        var WJID = btn.findParentByType("grid").store.getAt(rowIndex).data.TZ_DC_WJ_ID;
+        console.log(WJID);
         cmp = new ViewClass();
         console.log(cmp);
         cmp.on('afterrender',function(panel){
@@ -503,13 +526,21 @@
             Ext.tzLoad(tzParams,function(responseData){
                 var formData = responseData.formData;
 
-               form.setValues(formData);
-                tzParams = '{"ComID":"TZ_ZXDC_PSBB_COM","PageID":"TZ_ZXDC_PSBB_STD","OperateType":"TJWT","comParams":{"onlinedcId":"'+WJID+'"}}';
-                Ext.tzLoad(tzParams,function(responseData){
-                    console.log(responseData);
-                  PSBBQuestionListGrid.store.add(responseData['root']);
-                    PSBBQuestionListGrid.store.commitChanges();
+                form.setValues(formData);
+
+                var tzStoreParams ='{"onlinedcId":"'+WJID+'"}';
+
+                PSBBQuestionListGrid.store.tzStoreParams=tzStoreParams;
+                PSBBQuestionListGrid.store.load({
+                    scope: this,
+                    callback: function(records, operation, success) {
+                    }
                 });
+//                Ext.tzLoad(tzParams,function(responseData){
+//                    console.log(responseData);
+//                  PSBBQuestionListGrid.store.add(responseData['root']);
+//                    PSBBQuestionListGrid.store.commitChanges();
+//                });
             });
         });
         tab = contentPanel.add(cmp);
@@ -659,6 +690,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         return tzParams;
     },
     onLogicalSet:function(view,rowindex){
+
         var selRec = view.getStore().getAt(rowindex);
       	var tplId = selRec.get("TZ_DC_WJ_ID");
 		
@@ -685,6 +717,229 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + sureyId + '"}}';
         var newTab=window.open('about:blank');
         newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+    },
+    /*
+    修改人：刘智宏 2015/11/20
+    功能说明：根据传入的data导出Excel
+    参数：@obj ==> {
+                        "name":String,//dufault:export
+                        "data":[                    
+                                [String1,String1...],//row1
+                                [String1,String1...],//row2
+                                ...
+                            ]
+                    }
+            //在需要合并单元格时，除左上角传入相应对象，其余列均以null占位
+            //空的单元格均以空字符串''占位
+            eg:生成一个包含一个2X2的单元格excel
+            "data":[
+                        [{type:merge,data:string,row:2,col:2},null,string1],
+                        [null,null,string2],
+                    ]
+                返回值：无(undefined) 
+*************************************************
+2015/11/23修改：
+合并单元格左上角对象需包含type=merge属性
+允许传入自定义对象（包含EXTJS6中的cell对象属性）来替换data中的部分数据，自定义cell对象会直接使用传入的cell构建excel,
+如果没有传入任何对象数据或者对象数据包含type=merge，则会按照之前的逻辑构建excel
+    */
+    exportExcel:function(obj){
+        var title = obj.name||'export',
+            data =obj.data,
+            exporter = new tranzvision.extension.exporter.Excel(),
+            cols = data[0]?data[0].length:2;
+        exporter.setAuthor("tranzvision");
+        exporter.setCharset("utf-8");
+        exporter.setFileName(title+".xls");
+        exporter.setTitle(title);
+        exporter.setTitleStyle({
+            alignment:{Horizontal:"Center"}
+        });
+        //设置默认样式
+        var config = exporter.getConfig();
+        exporter.workbook = Ext.create('tranzvision.extension.exporter.file.excel.Workbook',{
+            title:              config.title,
+            author:             config.author,
+            windowHeight:       config.windowHeight,
+            windowWidth:        config.windowWidth,
+            protectStructure:   config.protectStructure,
+            protectWindows:     config.protectWindows
+        });
+        exporter.table = exporter.workbook.addWorksheet({
+            name: config.title
+        }).addTable();
+        exporter.workbook.addStyle(config.defaultStyle);
+        exporter.tableHeaderStyleId = exporter.workbook.addStyle({
+            name: 'Heading 1',
+            alignment: {
+                Horizontal: 'Center',
+                Vertical: 'Center'
+            },
+            borders: [{
+                Position: 'Top',
+                LineStyle: 'Continuous',
+                Weight: 1,
+                Color: '#4F81BD'
+            }],
+            font: {
+                FontName: 'Calibri',
+                Family: 'Swiss',
+                Size: 11,
+                Color: '#1F497D'
+            }
+        }).getId();
+        exporter.groupHeaderStyleId = exporter.workbook.addStyle(config.groupHeaderStyle).getId();
+        exporter.groupFooterStyleId = exporter.workbook.addStyle(config.groupFooterStyle).getId();
+        exporter.shortDateStyleId = exporter.workbook.addStyle({name:'Date',format:'Short Date'}).getId();
+        exporter.cellStyleId = exporter.workbook.addStyle({
+            borders:[{
+                Position: 'Left',
+                LineStyle: 'Continuous',
+                Weight: 1,
+                Color: '#000'
+            },{
+                Position: 'Right',
+                LineStyle: 'Continuous',
+                Weight: 1,
+                Color: '#000'
+            },{
+                Position: 'Top',
+                LineStyle: 'Continuous',
+                Weight: 1,
+                Color: '#000'
+              },{
+                Position: 'Bottom',
+                LineStyle: 'Continuous',
+                Weight: 1,
+                Color: '#000'
+            }],
+            alignment:{
+                WrapText:true,
+                Horizontal:'Center'
+            }
+        }).getId();
+        //生成excel标题行
+        var header = exporter.table.addRow({
+                        height: 20.25,
+                        autoFitHeight: 1,
+                        styleId: exporter.tableHeaderStyleId
+            });
+        header.addCell({
+                        value:title,
+                        mergeAcross:cols-1
+                    });
+        //遍历data生成excel
+        for(var x=0;x<data.length;x++){
+            var thisRow = exporter.table.addRow({
+                    height: 20.25,
+                    autoFitHeight: 1
+            });
+            for(var y=0;y<data[x].length;y++){
+                //O ==> 合并单元格后的显示列
+                //N ==> 合并单元格后的空出列
+                //S ==> 正常列（包括空的单元格）
+                var flag = typeof data[x][y]==='object'?(data[x][y]===null?'N':'O'):'S';
+                switch(flag){
+                    case 'S':
+                        thisRow.addCell({
+                            index:y+1,
+                            value:data[x][y],
+                            styleId:exporter.cellStyleId
+                        });
+                    break;
+                    case 'O':
+                        if(data[x][y].type === 'merge'){
+                            thisRow.addCell({
+                                index:y+1,
+                                value:data[x][y]['data'],
+                                mergeAcross:(data[x][y]['col']||1)-1,
+                                mergeDown:(data[x][y]['row']||1)-1,
+                                styleId:exporter.cellStyleId
+                            });
+                        }else{
+                            data[x][y].index = y+1;
+                            thisRow.addCell(data[x][y]);
+                        }
+                    break;
+                    case 'N':
+                    //不再新增cell，否则会与合并的单元格冲突
+                    default:
+                    break;
+                }
+            }
+        }
+        tranzvision.extension.exporter.File.saveAs(exporter.workbook.render(), exporter.getFileName(), exporter.getCharset());
+    },
+
+    //刘智宏-20151225添加，转换值加载优先控制逻辑
+    transValues:function(){
+        var transvalueCollection = {},
+            self = this;
+        return {
+            set:function(sets,callback){
+                if(sets instanceof Array || typeof sets === 'string'){  
+                    //可以传入一个数组或者单个字符串作为参数
+                    if(sets instanceof Array){
+                        var unload = [];
+                        //遍历查找还未加载的数据
+                        for(var x = sets.length-1;
+                            x>=0&&!transvalueCollection[sets[x]]||(transvalueCollection[sets[x]]&&transvalueCollection[sets[x]].isLoaded());
+                            x--){
+                            unload.push(sets[x]);
+                        }
+
+                        var finishCount = self.isAllFinished(unload);
+                        //加载未加载的数据
+                        if(unload.length>0){
+                            for(var x = unload.length-1;x>=0;x--){
+                                transvalueCollection[unload[x]] = new KitchenSink.view.common.store.appTransStore(unload[x]);
+                                transvalueCollection[unload[x]].load({
+                                    callback:function(){
+                                        finishCount(callback);
+                                    }
+                                });sets[x]
+                            }
+                        }else{
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }
+                    }else{
+                        if(transvalueCollection[sets]&&transvalueCollection[sets].isLoaded()){
+                            //当前store已经加载
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }else{
+                            var finishCount = self.isAllFinished(sets);
+                            transvalueCollection[sets] = new KitchenSink.view.common.store.appTransStore(sets);
+                            transvalueCollection[sets].load({
+                                callback:function(){
+                                    finishCount(callback);
+                                }
+                            });
+                        }
+                    }
+
+                }else{
+                    Ext.MessageBox.alert("传入参数有误");
+                }
+            },
+            get:function(name){
+                return transvalueCollection[name];
+            }
+        }
+    },
+    isAllFinished:function(sets){
+        var len = sets instanceof Array ? sets.length : 1;
+        return function(callback){
+            len--;
+            if(len===0){
+                if(callback instanceof Function){
+                    callback();
+                }
+            }
+        }
     },
     outputData:function(btn,rowIndex){
         /*
@@ -735,19 +990,23 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 
         var WJID = btn.findParentByType("grid").store.getAt(rowIndex).data.TZ_DC_WJ_ID;
         //console.log(WJID);
-        cmp = new ViewClass();
-        cmp.on('afterrender',function(panel){
-            var form = panel.child('form').getForm();
+        var transValue = this.transValues();
+        transValue.set(["TZ_DC_WC_STA","TZ_DC_SJDC_FILETYP","TZ_DC_WJ_FB"],function(){
+            cmp = new ViewClass(transValue);
+            cmp.on('afterrender',function(panel){
+                var form = panel.child('form').getForm();
 
-            var tzParams = '{"ComID":"TZ_ZXDC_DCBB_COM","PageID":"TZ_ZXDC_DCBB_STD",' +
-                '"OperateType":"QF","comParams":{"onlinedcId":"'+WJID+'"}}';
-            Ext.tzLoad(tzParams,function(respData){
-                //console.log(respData);
-                form.setValues(respData);
-                
+                var tzParams = '{"ComID":"TZ_ZXDC_DCBB_COM","PageID":"TZ_ZXDC_DCBB_STD",' +
+                    '"OperateType":"QF","comParams":{"onlinedcId":"'+WJID+'"}}';
+                Ext.tzLoad(tzParams,function(respData){
+                    //console.log(respData);
+                    form.setValues(respData);
+                    
+                });
             });
+            cmp.show();
         });
-        cmp.show();
+        
     },
      /*进度报表*/
     jinDuBB:function(grid, rowIndex, colIndex){
@@ -765,7 +1024,6 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
-
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
         contentPanel.body.addCls('kitchensink-example');
         contentPanel.body.addCls('kitchensink-example');
@@ -796,24 +1054,16 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             // </debug>
         }
 
-        cmp = new ViewClass();
-        //操作类型设置为查询
-        //cmp.actType = "query";
-
         var surveyResultGrid = grid;
         var onlinedcId = surveyResultGrid. store.getAt(rowIndex).data.TZ_DC_WJ_ID;
+        cmp = new ViewClass(onlinedcId=onlinedcId);
 
         cmp.on('afterrender',function(panel){
-
             var form = panel.child('form').getForm();
             var chart1 = panel.down('chart[name=chart1]');
             var chart2 = panel.down('chart[name=chart2]');
             var chart1store  = chart1.getStore();
             var chart2store  = chart2.getStore();
-
-//            form.findField("onlinedcId").setReadOnly(true);
-//            form.findField("onlinedcId").addCls("lanage_1");
-
             //参数
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"QF","comParams":{"onlinedcId":"' + onlinedcId + '"}}';
             //加载数据
@@ -821,54 +1071,18 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
                 var formData = responseData.formData;
                 form.setValues(formData);
             });
-//            var wcztStore = new KitchenSink.view.template.survey.report.JDBB.wcztStore({
-//                fields:['wczt','pepNum'],
-//                data:[]
-//            });
-//            var weekStore = new KitchenSink.view.template.survey.report.JDBB.weekStore({
-//                fields:['date','pepNum'],
-//                data:[]
-//            });
-            tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WCBL","comParams":{"onlinedcId":"' +onlinedcId + '"}}';;
+            tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WCBL","comParams":{"onlinedcId":"' +onlinedcId + '"}}';
             Ext.tzLoad(tzParams,function(responseData){
-//                alert(responseData['root']);
-                //winGridStore.reload();
-                chart1store.loadData(responseData);
+               chart1store.loadData(responseData);
             });
-            tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WEEK","comParams":{"onlinedcId":"' +onlinedcId + '"}}';;
-            Ext.tzLoad(tzParams,function(responseData){
-                //alert(responseData['root']);
-                //winGridStore.reload();
-                chart2store.loadData(responseData);
-            });
-//           console.log(weekStore)
-
-            /*  tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WCBL","comParams":{"onlinedcId":"' +onlinedcId + '"}}';
-             Ext.tzLoad(tzParams,function(responseData){
-
-             var chart = panel.down('chart[name=chart1]');
-             Params= '{"onlinedcId":"' + onlinedcId + '"}';
-             chart.store.tzStoreParams = Params;
-             chart.store.reload();
-             });
-
-             tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WEEK","comParams":{"onlinedcId":"' +onlinedcId + '"}}';
-             Ext.tzLoad(tzParams,function(responseData){
-
-             var chart = panel.down('chart[name=chart2]');
-             Params= '{"onlinedcId":"' + onlinedcId + '"}';
-             chart.store.tzStoreParams = Params;
-             chart.store.reload();
-             });*/
-
-
+            tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM ","PageID":"TZ_ZXDC_JDBB_STD","OperateType":"WEEK","comParams":{"onlinedcId":"' +onlinedcId + '"}}';
+        Ext.tzLoad(tzParams,function(responseData){
+            chart2store.loadData(responseData);
         });
+    });
         tab = contentPanel.add(cmp);
-
         contentPanel.setActiveTab(tab);
-
         Ext.resumeLayouts(true);
-
         if (cmp.floating) {
             cmp.show();
         }
@@ -1000,7 +1214,10 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams,function(response){
             /*修改页面ID值*/
             form.setValues({"TZ_DC_WJ_ID":response.wjId});
-            panel.parentGridStore.reload();
+			console.log(panel.parentGridStore);
+			if(panel.parentGridStore!=null&&panel.parentGridStore!=""){
+				panel.parentGridStore.reload();
+			}
         },"",true,this);
     },
     //问卷设置确定
@@ -1014,14 +1231,67 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
        Ext.tzSubmit(tzParams,function(response){
            form.setValues({"TZ_DC_WJ_ID":response.wjId});
-           panel.parentGridStore.reload();
+		   if(panel.parentGridStore!=""&&panel.parentGridStore!=null)
+		   {
+				panel.parentGridStore.reload();
+		   }
            panel.close();
-
        },"",true,this);
    },
  //调查详情关闭按钮
     onDetailFormClose:function(){
         this.getView().close();
+    },
+	//分享
+	onShareWjdc: function(view,rowindex){
+        var selRec = view.getStore().getAt(rowindex);
+      	var tplId = selRec.get("TZ_DC_WJ_ID");
+		var logicUrl = Ext.tzGetGeneralURL()+'?classid=tzSurveyShare&TZ_DC_WJ_ID='+tplId;		
+		 $.layer({
+			type: 2,
+			title: false,
+			fix: true,
+			closeBtn: false,
+			shadeClose: true,
+			icon:2,
+			shade : [0.3 , '#000' , true],
+			border : [3 , 0.3 , '#000', true],
+			offset: ['50%','50%'],
+			area: ['800px','400px'],
+			move : true,
+			iframe: {src: logicUrl}
+		});
+	},
+    //问卷调查页面 关闭
+    wjdcInfoClose:function(btn){
+        var grid=btn.findParentByType("grid");
+        grid.close();
+    },
+    //add by ldd 在线查看全部答案
+    onViewAllAnswer:function(view,rowIndex){
+        var selRec = view.getStore().getAt(rowIndex);
+        var wjId = selRec.get("TZ_DC_WJ_ID");
+
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_ANS_STD","OperateType":"HTML","comParams":{"SURVEY_ID":"' + wjId +'"}}';
+        var newTab=window.open('about:blank');
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+    },
+    generateWjdc:function(btn){
+
+        Ext.tzSetCompResourses("TZ_ZXDC_WJGL_COM");
+        var comParams={};
+        comParams.SurveyTempId="1";
+        comParams.ItemId="EDP_PRG_1";
+        comParams.ChannelId="A";
+        comParams.type="add";
+
+        var tzStoreParams = '{"add":['+Ext.JSON.encode(comParams)+']}';
+
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_GEN_STD","OperateType":"U","comParams":' + tzStoreParams + '}';
+        Ext.tzSubmit(tzParams,
+            function(data) {
+                console.log("问卷编号：" + data.id);
+            },"",true,this);
     }
 });
 

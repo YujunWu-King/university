@@ -10,7 +10,7 @@ SurveyBuild.extend("DateBox", "Completion", {
     _getHtml: function(data, previewmode) {
         var c = "";
         if (previewmode) {
-            //移动端
+            //PC端
             if(SurveyBuild.accessType == "P"){
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 c += '<div class="listcon">';
@@ -20,7 +20,6 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '  <div class="answer">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
                 c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:5px;left:-35px;cursor:pointer;">';
-                //c += '        <span style="margin-left: -25px;">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></span>" : "</span>");
                 c += '       <div style="margin-top:-31px;margin-left:225px">';
                 c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
                 c += '              <div class="onShow"></div>';
@@ -41,13 +40,12 @@ SurveyBuild.extend("DateBox", "Completion", {
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " style="line-height: 39px;font-size:1.285em;margin:0 0 0 4px" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';
                 c += '      <img id="' + data.itemId + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="cursor: pointer; position: absolute; right: 10px; top: 8px;">';
                 c += '  </div>';
-                //c += '     <span >'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "</span>");
                 c += '</div>';
             }
         } else {
             c += '<div class="question-answer">';
             c += '  <div class="format ">';
-            c += '      <b class="read-input"></b>;
+            c += '      <b class="read-input"></b>';
             c += '  </div>';
             c += '</div>';
         }
@@ -55,6 +53,7 @@ SurveyBuild.extend("DateBox", "Completion", {
     },
     _edit: function(data) {
         var e = '';
+		
 		e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label" >日期格式：</span>';
         e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'dateformate\')">';
@@ -71,12 +70,12 @@ SurveyBuild.extend("DateBox", "Completion", {
 
         e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label">年份最小值：</span>';
-        e += '	<input type="text" maxlength="4" class="medium minYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
+        e += '	<input type="text" class="medium datemin" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minYear\')" value="' + data.minYear + '"/>';
         e += '</div>';
 
         e += '<div class="edit_item_warp">';
         e += '	<span class="edit_item_label">年份最大值：</span>';
-        e += '	<input type="text" maxlength="4" class="medium maxYear" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
+        e += '	<input type="text" class="medium datemax" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxYear\')" value="' + data.maxYear + '"/>';
         e += '</div>';
 
         e += '<div class="edit_item_warp">';
@@ -148,24 +147,24 @@ SurveyBuild.extend("DateBox", "Completion", {
         var msg;
         var $edit_box = $("#question-edit");
         var $def = $("#defaultval");
-        var maxYear = data.maxYear;
-        var minYear = data.minYear;
+        var dateMax = data.maxYear;
+        var dateMin = data.minYear;
 
-        if (!maxYear) {
+        if (!dateMax) {
             msg = "年份最大值不能为空！";
-            var $targetObj = $edit_box.find(".maxYear");
+            var $targetObj = $edit_box.find(".datemax");
             SurveyBuild.fail($targetObj, msg);
             return false;
         }
-        if (!minYear) {
+        if (!dateMin) {
             msg = "年份最小值不能为空！";
-            var $targetObj = $edit_box.find(".minYear");
+            var $targetObj = $edit_box.find(".datemin");
             SurveyBuild.fail($targetObj, msg);
             return false;
         }
-        if (parseInt(maxYear) < parseInt(minYear)) {
+        if (parseInt(dateMax) < parseInt(dateMin)) {
             msg = "年份最大值要大于年份最小值！";
-            var $targetObj = $edit_box.find(".maxYear");
+            var $targetObj = $edit_box.find(".datemax");
             SurveyBuild.fail($targetObj, msg);
             return false;
         }

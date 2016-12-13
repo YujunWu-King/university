@@ -24,6 +24,12 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcModel', {
         {name:'TZ_DC_WJ_JSGZ'},
         {name:'TZ_DC_WJ_NM'},
         {name:'TZ_DC_WJ_PWD'},
-        {name:'TZ_DC_WJ_NEEDPWD'}
+        {name:'TZ_DC_WJ_NEEDPWD'},
+        {name:'TZ_DC_WJ_QYQD'},
+        {name:'TZ_DC_WJ_QDNR'},
+        {name:'TZ_DC_WJ_JGNR'},
+        {name:'TZ_DC_WJ_SFTZ'},
+        {name:'TZ_DC_WJ_TZDZ'},
+        {name:'TZ_DC_WJ_TLSJ'}
     ]
 });

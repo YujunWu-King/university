@@ -54,6 +54,19 @@ Ext.define('KitchenSink.view.template.survey.temp.myZxdcMbszWindow', {
                 allowBlank: false,
                 value:'Y'
             },
+            {
+                xtype: 'combobox',
+                fieldLabel: '语言',
+                editable: false,
+                emptyText: '请选择',
+                queryMode: 'remote',
+                name: 'TZ_APP_TPL_LAN',
+                valueField: 'TValue',
+                displayField: 'TSDesc',
+                store: new KitchenSink.view.common.store.appTransStore("TZ_APP_TPL_LAN"),
+                allowBlank: false,
+                readOnly:true
+            },
             {  xtype: 'combobox',
                 fieldLabel: '类型',
                 editable:false,

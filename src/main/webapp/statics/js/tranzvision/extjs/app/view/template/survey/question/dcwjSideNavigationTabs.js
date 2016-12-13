@@ -21,6 +21,7 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
         },
         items:'',
         initComponent: function(){
+          var lanStore=new KitchenSink.view.common.store.appTransStore("TZ_GD_LANGUAGE");
             Ext.apply(this,{
                 items : [
                     {
@@ -41,7 +42,21 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
                                     name: 'modelName',
                                     cls:'bmb_blank_text',
                                     allowBlank: false,
-                                    columnWidth:0.95
+                                    columnWidth:0.75
+                                },{
+                                    xtype: 'combo',
+                                    forceSelection: true,
+                                    valueField: 'TValue',
+                                    displayField: 'TSDesc',
+                                    name: 'language',
+                                    mode: "remote",
+                                    store: lanStore,
+                                    columnWidth: .25,
+                                    editable: false,
+                                    style: {
+                                        marginLeft: '25px'
+                                    },
+                                    value: 'ZHS'
                                 }]
                             },{
                                 html:'<br><div>空白调查<br>从零开始，您可以在每份问卷内，自定义创建多个问卷和选项，我们提供多种预设题型，帮助您快速完成在线问卷设计，提供各行业类型的丰富题库</div>'
@@ -63,22 +78,9 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
                                 allowBlank: false
                             },
                             {
-                                html:'<div class="predefinetpllist" style="overflow-y:auto;height:350px;">'+ this.getPredefinetpl() +"</div>"
+                                html:'<div class="predefinetpllist" style="overflow-y:auto;height:330px;">'+ this.getPredefinetpl() +"</div>"
                             }
-                        ]/*,
-                        html: (function(){
-                            var divTmp = document.createElement("div");
-                            var txt = Ext.create('Ext.form.field.Text', {
-                                fieldLabel: '调查标题',
-                                value:' ',
-                                labelStyle: 'font-weight:bold',
-                                cls:'bmb_predefine_text',
-                                name:'predefine',
-                                width:550,
-                                allowBlank: false
-                            }).render(divTmp)
-                            return divTmp.outerHTML;
-                        })() + '<div class="predefinetpllist" style="overflow-y:auto;height:350px;">'+ this.getPredefinetpl() +"</div>"*/
+                        ]
                     }
                 ]
             });
@@ -102,7 +104,7 @@ Ext.define('KitchenSink.view.template.survey.question.dcwjSideNavigationTabs',
                         var resText = responseData1.comContent;
                         var responseData = resText;
                         for(var i in responseData){
-                            predefinetpl += '<div class="tplitem" style="padding: 10px;cursor: pointer;border: 1px solid #eee;display: inline-table;margin: 5px;text-align:center;width:176px;" onclick="wjdc_pre(this)" data-id="'+responseData[i].tplid+'"><img src="' + TzUniversityContextPath + '/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png"><br><span class="tplname" title="' + responseData[i].tplname + '">' + Ext.String.ellipsis(responseData[i].tplname,16,true) + '</span></div>';
+                            predefinetpl += '<div class="tplitem" style="padding: 10px;cursor: pointer;border: 1px solid #eee;display: inline-table;margin: 5px;text-align:center;width:150px;" onclick="wjdc_pre(this)" data-id="'+responseData[i].tplid+'"><img src="/tranzvision/kitchensink/app/view/template/bmb/images/forms.png"><br><span class="tplname" title="' + responseData[i].tplname + '">' + Ext.String.ellipsis(responseData[i].tplname,16,true) + '</span></div>';
                         }
                         me.isLoaded = true;
                     }

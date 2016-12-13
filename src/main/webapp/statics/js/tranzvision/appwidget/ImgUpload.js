@@ -11,7 +11,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 	allowMultiAtta: "Y",//允许多附件上传
 	isDownLoad:"Y",//允许打包下载
 	"StorageType":"F",//存储类型-附件
-	children: [{"itemId":"Image_upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","path":"","viewFileName":""}],
+	children: [{"itemId":"Image_upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}],
 
     _getHtml: function(data, previewmode) {
         var c = "",t = "", val = data.value ? data.value: data.defaultval;
@@ -76,7 +76,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title + t;
 				c += '	</div>';
 				c += '	<div class="file-upload" style="margin-top:10px;">';
-				c += '		<span class="upload-icon"><img src="/onlineSurvey/images/m/addImg.png"></span><span class="upload-text">'+MsgSet["CHOOSE_PICTURE"]+'</span>';
+				c += '		<span class="upload-icon"><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/addImg.png"></span><span class="upload-text">'+MsgSet["CHOOSE_PICTURE"]+'</span>';
 				c += '		<label for="'+ data.itemId +'"></label>';
 				c += '		<input type="file" accept="image/*" id="'+ data.itemId +'" name="'+ data.itemId +'" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"/>';
 				c += '	</div>';
@@ -88,7 +88,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 				//显示已上传的图片
 				for(var i=0; i<children.length; i++){
 					if(children[i].sysFileName != ""){
-						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a><img src="/onlineSurvey/images/m/del.png" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</li>';
+						c += '<li><a onclick="SurveyBuild.viewImageSet(this,\''+data.instanceId+'\')" file-index="'+ children[i].orderby +'">'+ children[i].viewFileName +'</a><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/del.png" onclick="SurveyBuild.deleteFile(this,\''+data.instanceId+'\')" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</li>';
 					}
 				}
 				c += '		</ul>';

@@ -87,12 +87,12 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjDetailWindow', {
                 }, {
                     text: '参与调查人IP',
                     dataIndex: 'IPAddress',
-                    width: 150
+                    width: 170
                 },
                 {
                     text: '完成状态',
                     dataIndex: 'state',
-                    minWidth: 80,
+                    minWidth: 100,
                     renderer:function(v){
                         if(v==0){
                             return "已完成";
@@ -104,12 +104,12 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjDetailWindow', {
                 {
                     text: '开始时间',
                     dataIndex: 'ksSj',
-                    minWidth: 150
+                    minWidth: 170
                 },
                 {
                     text:'结束时间',
                     dataIndex:'jsSj',
-                    minWidth:150
+                    minWidth:170
                 }, {
                     menuDisabled: true,
                     sortable: false,
