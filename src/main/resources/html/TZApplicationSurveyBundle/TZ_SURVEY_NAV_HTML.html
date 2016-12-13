@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script>
+			var tzGeneralURL = "%bind(:1)?classid=surveyapp&SURVEY_WJ_ID=%bind(:2)&unique=%bind(:4)"; 
+			var surveyInsId = "%bind(:3)";
+			if(parseInt(surveyInsId) > 0) {
+				tzGeneralURL = tzGeneralURL + "&SURVEY_INS_ID=" + surveyInsId;
+			}
+		    var sUserAgent = navigator.userAgent,
+		            mobileAgents = ['Windows CE', 'iPod', 'Symbian', 'iPhone', 'BlackBerry', 'Android', 'Windows Phone'];
+
+		    if ((sUserAgent.match(/iPad/i))) {
+		        //location.href = 'http://www.ifeng.com/ipad/';
+		    }
+		    for (var i = 0, len = mobileAgents.length; i < len; i++) {
+		        if (sUserAgent.indexOf(mobileAgents[i]) !== -1) {
+		            location.href = tzGeneralURL + "&AC=M";
+		            break;
+		        }else{
+					location.href = tzGeneralURL + "&AC=P";
+				}
+		    }
+		</script>
+	</head>
+</html>

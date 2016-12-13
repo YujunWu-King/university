@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>%bind(:8)</title>
+		<link href="%bind(:13)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
+		<link href="%bind(:13)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="%bind(:13)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:13)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:13)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<script>
+			var passAuth = "%bind(:11)";				//是否密码安全
+			var tzGeneralURL = "%bind(:4)";
+			var beginURL = "%bind(:4)?classid=surveyapp&SURVEY_WJ_ID=%bind(:5)";
+			var surveyInsId = "%bind(:6)";
+			function begin(){
+				if(parseInt(surveyInsId) > 0) {
+					beginURL = beginURL + "&SURVEY_INS_ID=" + surveyInsId;
+				}
+				//是否密码安全
+				if(passAuth && passAuth === "Y"){
+					var is_password = getcookie("SURVEY_WJ_IS_PASSWORD");
+					var targetVal = surveyInsId + "_" + templId + "_Y";
+					if(is_password && is_password === targetVal){
+						//Cookie中保存的密码，验证通过
+						location.href = beginURL + "&AC=%bind(:7)&F=Y";
+					}else{
+						layer.prompt(
+							{
+						    	title: '输入问卷密码，并确认',
+						    	formType: 1,
+								closeBtn: false
+							},
+							function(pass){
+								var tzPassParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"EJSON","comParams":{"EType":"PASSWORD","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"' + surveyInsId + '","PASSWORD":"' + pass + '"}}';
+					            $.ajax({
+					                type: "POST",
+									url:tzGeneralURL,
+					                data: {
+										tzParams:tzPassParams
+					                },
+					                dataType: "JSON",
+					                success: function(f) {
+										if (f.state.errcode == "0") {
+											if(f.comContent.code && f.comContent.code == "0"){
+												layer.closeAll();
+												//新输入的密码，验证通过
+												location.href = beginURL + "&AC=%bind(:7)&F=Y";
+											}else{
+												alert(f.comContent.msg);
+											}
+
+										}else{
+											alert("系统错误！");
+										}
+					                }
+					            });
+							}
+						);
+					}
+				}else{
+					location.href = beginURL + "&AC=%bind(:7)&F=Y";
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="top">
+				%bind(:9)
+				<div class="clear"></div>
+			</div>
+			<div class="uploadlogo">
+				%bind(:1)
+			</div>
+
+			<div class="maincon" style="min-height:300px;">
+				%bind(:2)
+			</div>
+			<div style="float:right;"><a href="#" onclick="javascript:begin()"><div class="pagebtn1">%bind(:10) ></div></a></div>
+			<div class="fotter">
+				%bind(:3)
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function getcookie(name){
+			var name=unescape(name);
+			var start = document.cookie.indexOf(name);
+			var end = document.cookie.indexOf(";", start);
+			return start == -1 ? '' : unescape(document.cookie.substring(start + name.length + 1, (end > start ? end : document.cookie.length)));
+		}
+
+		var templId = "%bind(:12)";					//模板ＩＤ
+		//是否密码安全
+		if(passAuth && passAuth === "Y"){
+			var is_password = getcookie("SURVEY_WJ_IS_PASSWORD");
+			var targetVal = surveyInsId + "_" + templId + "_Y";
+			if(is_password && is_password === targetVal){
+				//Cookie中保存的密码，验证通过
+			}else{
+				layer.prompt(
+					{
+				    	title: '输入问卷密码，并确认',
+				    	formType: 1,
+						closeBtn: false
+					},
+					function(pass){
+						var tzPassParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"EJSON","comParams":{"EType":"PASSWORD","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"' + surveyInsId + '","PASSWORD":"' + pass + '"}}';
+			            $.ajax({
+			                type: "POST",
+							url:tzGeneralURL,
+			                data: {
+								tzParams:tzPassParams
+			                },
+			                dataType: "JSON",
+			                success: function(f) {
+								if (f.state.errcode == "0") {
+									if(f.comContent.code && f.comContent.code == "0"){
+										layer.closeAll();
+										//新输入的密码，验证通过
+									}else{
+										alert(f.comContent.msg);
+									}
+
+								}else{
+									alert("系统错误！");
+								}
+			                }
+			            });
+					}
+				);
+			}
+		}
+	</script>
+</html>

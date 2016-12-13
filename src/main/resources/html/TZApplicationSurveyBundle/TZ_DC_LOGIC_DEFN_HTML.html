@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<link rel="stylesheet" href="%bind(:8)/statics/js/survey/assets/libs/bootstrap/css/bootstrap.min.css">
+<!--<link rel="stylesheet" href="/survey/assets/libs/FortAwesome/css/font-awesome.min.css">-->
+<link rel="stylesheet" href="%bind(:8)/statics/js/survey/logic/css/Logical.css" type="text/css">
+<link rel="stylesheet" href="%bind(:8)/statics/js/survey/logic/css/dd.css" type="text/css">
+<!--<link rel="stylesheet" href="%bind(:8)/onlineReg/css/chosen.css" type="text/css">-->
+<script type="text/javascript" src="%bind(:8)/statics/js/survey/assets/libs/jquery/jquery-1.11.1.min.js"></script>
+<!--<script type="text/javascript" src="/onlineReg/js/chosen.jquery.js"></script>-->
+<script type="text/javascript" src="%bind(:8)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="%bind(:8)/statics/js/survey/assets/libs/json.js"></script>
+<script type="text/javascript" src="%bind(:8)/statics/js/survey/logic/js/Logical.js"></script>
+<script type="text/javascript" src="%bind(:8)/statics/js/survey/logic/js/jquery.dd.js"></script>
+ 
+<script type="text/javascript"> 
+	SurveyLogic.tzGeneralURL = "%bind(:1)";
+	SurveyLogic.SurveyID = "%bind(:2)";
+	var _optHtml="";
+	var surveyItems = %bind(:3);
+	if(surveyItems){
+		var itemsJsonData = surveyItems;
+		SurveyLogic["_items"] = itemsJsonData;
+	}
+
+	var surveyGlItems = %bind(:4);
+	if(surveyGlItems){
+		SurveyLogic["_glItems"] = surveyGlItems;
+	}
+  
+	var surveyLogic = %bind(:5);  
+	if(surveyLogic){
+		//var logicJsonData = $.parseJSON(surveyLogic);
+
+		var logicJsonData = surveyLogic;
+		SurveyLogic["_logic"] = logicJsonData;
+	}
+	
+	$(document).ready(function(){
+		//保存
+		$("#logic_save_btn").click(function(){
+			var surTmpId = SurveyLogic.SurveyID; //在线调查模板ID
+			var _a = SurveyLogic._logic;
+
+			var valid = SurveyLogic.validLogic(_a);
+			if(valid[0]){			
+				var tzSaveParams = '{"ComID":"%bind(:6)","PageID":"%bind(:7)","OperateType":"U","comParams":{"update":[{"SURVEY_ID":"'+ surTmpId + 	'","data":' + $.toJSON(_a) + '}]}}';
+
+				$.ajax({
+					type: "POST",
+					url:SurveyLogic.tzGeneralURL,
+					data: {
+						tzParams:tzSaveParams
+					},
+					dataType: "JSON",
+					success: function(f) {
+						if (f.state.errcode == "0") {
+							if(f.comContent.errorCode == "0"){
+								SurveyLogic.edit = false;
+								noteing("保存成功！",1);
+							}else{
+								alert(f.comContent.errorMsg);
+							}
+						} else {
+						
+						}
+					}
+				})
+			}else{
+				alert(valid[1]);
+			}              
+		});	
+		//返回
+		$("#logic_back_btn").click(function(){
+			if(SurveyLogic.edit){
+				if(confirm("更改操作尚未保存，您确定要退出吗？")){
+					closeThis();
+				}
+			}else{
+				closeThis();
+			}
+		});	
+	});
+</script>
+<title>逻辑设置</title>
+</head>
+<body>
+<div id="survey-build" style="overflow: hidden;">
+    <div id="logicBox" class="clearfix" style="position: relative;">
+    	<div class="ligicMuneBox">
+            <div id="logicMenu">
+                <a id="logic_save_btn" href="javascript:void(0);"><div class="save-btn">保存</div></a>
+                <a id="logic_back_btn" href="javascript:void(0);"><div class="back-btn">返回</div></a>
+            </div>
+            <div class="logicElement"><div class="indent guideLine" style="height:60px;"></div></div>
+        </div>
+        <div class="logicContentBox">
+            <div class="logicElement">
+                <div class="indent guideLine" id="logicContent">
+                   
+                </div>
+            </div>
+            <div class="logicElement">
+                <div class="logicElement">
+                    <div class="indent">
+                        <div class="logicInner">
+                            <div class="logicAdd"><a id="addDom" onClick="SurveyLogic.addNewLogic(this);">+ 点击添加一个新的逻辑</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+</div>
+<script type="text/javascript">
+SurveyLogic.init();
+</script>
+<script type="text/javascript">
+//简单的对象复制
+function cloneObj(obj)
+{
+	var newObj = null;
+    var type = Object.prototype.toString.call(obj);
+    if(type.indexOf("Object") > -1){
+        newObj = {};
+        for(var key in obj){
+            if(obj.hasOwnProperty(key)){
+                newObj[key] = cloneObj(obj[key]);
+            }
+        }
+    }else if(type.indexOf("Array") > 0){
+        newObj = [];
+        for(var i=0;i<obj.length;i++){
+           newObj[newObj.length] =  cloneObj(obj[i]);
+        }
+    }else{
+        newObj = obj;
+    }
+    return newObj;
+}
+
+//关闭
+function closeThis(){
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+}
+//提示
+function noteing(str,t)
+{
+	var nc='success';
+	if(t==2) nc='error';
+	else if(t==3) nc='info';
+	var n='<div class="noteing"><div class="alert alert-'+nc+'">'+str+'</div></div>';
+	$(n).appendTo("body").css({
+		"top":$(window).height()/2-30,
+		"left":$(window).width()/2-$(".noteing").width()/2
+	}).fadeIn("1000",function(){
+		setTimeout('$(".noteing").fadeOut(500,function(){$(this).remove();})',500);
+	}).on("click",function(){
+		$(this).remove();
+	});
+}
+</script>
+</body>
+</html>

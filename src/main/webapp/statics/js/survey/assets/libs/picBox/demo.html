@@ -1,0 +1,26 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>picbox修改点击弹出图片切换效果</title>
+
+<script type="text/javascript" src="jquery.min.js"></script>
+<script type="text/javascript" src="picbox.js"></script>
+<script type="text/javascript">
+function viewPic(obj){
+	$("#"+obj).children("a")[0].click();
+}
+</script>
+<link rel="stylesheet" href="picbox.css" type="text/css" />
+
+</head>
+<body>
+
+	<div onclick="viewPic('xxx')">点击这里</div>
+	<div id="xxx" style="display:none"><a href="example.jpg" rel="lightbox-group" title="图片信息1">点击这里</a> Picbox内查看照片。<a href="example2.jpg" rel="lightbox-group" title="图片信息2">点击这里</a>Picbox内查看照片。</p>
+	<div>
+
+
+</body>
+</html>

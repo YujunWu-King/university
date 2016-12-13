@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcdjBgtTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <id column="TZ_XXXKXZ_WTMC" property="tzXxxkxzWtmc" jdbcType="VARCHAR" />
+    <id column="TZ_XXXKXZ_XXMC" property="tzXxxkxzXxmc" jdbcType="VARCHAR" />
+    <result column="TZ_APP_S_TEXT" property="tzAppSText" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_XXX_BH, TZ_XXXKXZ_WTMC, TZ_XXXKXZ_XXMC, TZ_APP_S_TEXT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DCDJ_BGT_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_WTMC = #{tzXxxkxzWtmc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_XXMC = #{tzXxxkxzXxmc,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtTKey" >
+    delete from PS_TZ_DCDJ_BGT_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_WTMC = #{tzXxxkxzWtmc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_XXMC = #{tzXxxkxzXxmc,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtT" >
+    insert into PS_TZ_DCDJ_BGT_T (TZ_APP_INS_ID, TZ_XXX_BH, TZ_XXXKXZ_WTMC, 
+      TZ_XXXKXZ_XXMC, TZ_APP_S_TEXT)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxkxzWtmc,jdbcType=VARCHAR}, 
+      #{tzXxxkxzXxmc,jdbcType=VARCHAR}, #{tzAppSText,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtT" >
+    insert into PS_TZ_DCDJ_BGT_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzXxxkxzWtmc != null" >
+        TZ_XXXKXZ_WTMC,
+      </if>
+      <if test="tzXxxkxzXxmc != null" >
+        TZ_XXXKXZ_XXMC,
+      </if>
+      <if test="tzAppSText != null" >
+        TZ_APP_S_TEXT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxkxzWtmc != null" >
+        #{tzXxxkxzWtmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxkxzXxmc != null" >
+        #{tzXxxkxzXxmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppSText != null" >
+        #{tzAppSText,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtT" >
+    update PS_TZ_DCDJ_BGT_T
+    <set >
+      <if test="tzAppSText != null" >
+        TZ_APP_S_TEXT = #{tzAppSText,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_WTMC = #{tzXxxkxzWtmc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_XXMC = #{tzXxxkxzXxmc,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcdjBgtT" >
+    update PS_TZ_DCDJ_BGT_T
+    set TZ_APP_S_TEXT = #{tzAppSText,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_WTMC = #{tzXxxkxzWtmc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_XXMC = #{tzXxxkxzXxmc,jdbcType=VARCHAR}
+  </update>
+</mapper>

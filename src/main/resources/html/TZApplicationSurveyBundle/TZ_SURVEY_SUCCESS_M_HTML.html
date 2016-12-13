@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>%bind(:6)</title>
+		<link href="%bind(:8)/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
+		<link href="%bind(:8)/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
+		<script>
+			var jumpTime = %bind(:5);
+			if(parseInt(jumpTime) > 0) {
+				jumpTime = jumpTime * 1000;
+						setTimeout(function () {location.href = "%bind(:4)";},jumpTime);
+			}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="top">
+				%bind(:7)
+				<div class="clear"></div>
+			</div>
+			<div class="uploadlogo">
+				%bind(:1)
+			</div>
+
+			<div class="maincon">
+				%bind(:2)
+			</div>
+
+			<div class="fotter">
+				%bind(:3)
+			</div>
+		</div>
+	</body>
+</html>

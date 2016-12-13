@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjLjxsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjxsTKey" >
+    <id column="TZ_DC_LJTJ_ID" property="tzDcLjtjId" jdbcType="VARCHAR" />
+    <id column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjxsTKey" >
+    delete from PS_TZ_DC_WJ_LJXS_T
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+      and TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjxsTKey" >
+    insert into PS_TZ_DC_WJ_LJXS_T (TZ_DC_LJTJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH
+      )
+    values (#{tzDcLjtjId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjxsTKey" >
+    insert into PS_TZ_DC_WJ_LJXS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        TZ_DC_LJTJ_ID,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        #{tzDcLjtjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

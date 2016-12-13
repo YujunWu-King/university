@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>%bind(:8)</title>
+		<link href="%bind(:19)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
+		<link href="%bind(:19)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="%bind(:19)/statics/js/onlineSurvey/formvalidator/themes/Default/style/style.css" />
+		<link rel="stylesheet" href="%bind(:19)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" type="text/css">
+		<link rel="stylesheet" href="%bind(:19)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.css" type="text/css">
+        <link href="%bind(:19)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:19)";
+		</script>
+		
+		<script type="text/javascript" src="%bind(:19)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/js/common.js"></script>
+
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/js/Survey.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/js/jquery.form.js"></script> 
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/libs/json.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/js/SurveyAnswer.js"></script>
+
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/libs/jqueryui/js/jquery-ui-1.10.4.min.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/js/baseComponent.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/onlineSurvey/formvalidator/ValidationRules.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/onlineSurvey/formvalidator/formValidator.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.pack.js"></script>
+		<script type="text/javascript" src="%bind(:19)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.js"></script>
+		<script type="text/javascript">
+		<!-- - -->
+			SurveyBuild.accessType = "P";				//访问类型
+			var componentData = %bind(:3);				//组件列表
+			if(componentData){
+ 				SurveyBuild["_componentConfig"] = componentData;				
+				$.each(componentData,function(index,obj){
+					SurveyBuild["_componentIndex"].push(obj.className);
+				});
+			}
+			var data = %bind(:4);						//模板的data
+			var dataApp = %bind(:5);					//用户保存的data
+			SurveyBuild.maxPage = %bind(:6);			//最大页数
+			$.datepicker.setDefaults($.datepicker.regional['%bind(:7)']);	//日期双语化
+			SurveyBuild.appInsId = "%bind(:15)";			//实例ID
+			SurveyBuild._logic = %bind(:16);			//控制逻辑
+			SurveyBuild.tzGeneralURL = "%bind(:17)";		//统一接口
+            MsgSet = %bind(:18);//双语化集合
+	    	$.datepicker._gotoToday = function (id) {
+                $(id).datepicker('setDate', new Date()).datepicker('hide').blur();
+       		};
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#fancybox-main .fancybox-thumbs").fancybox({
+					prevEffect : "fade",
+					nextEffect : "fade",
+					padding : 10, //内边距
+					margin : 20, //外边距
+					autoSize : false,//是否自适应内容的宽高
+					autoResize : false,//是否自适应窗口变化
+					aspectRatio : true,//是否保持长宽比
+
+					closeBtn  : true, //是否显示关闭图标
+					arrows    : true, //是否显示两侧导航小箭头
+					loop : false,//是否循环播放
+					tpl : {
+						wrap	: '<div class="fancybox-wrap" tabIndex="-1"><div class="fancybox-skin"><div class="fancybox-outer"><div class="fancybox-inner"></div></div><div class="photoButton"><a class="small" title="缩小" onclick=setImageSize(this,"S")></a><a class="big" title="放大"  onclick=setImageSize(this,"B")></a></div></div></div>'
+					},
+					helpers : {
+						thumbs : {
+							width  : 50,
+							height : 50,
+							position : "bottom"
+						},
+						overlay : {
+							closeClick : true,
+							showEarly  : false // 立即打开 fancyBox 还是等内容加载完毕再打开
+						},
+						title : {
+							type : "outside" // title 的位置，可选 'float'、 'inside'、'outside' 或 'over'
+						}
+					},
+					afterLoad : function() {
+						this.title = (this.index + 1) + "/" + this.group.length + " " + this.title;
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="top">
+				<div class="top-left left">
+					<img src="%bind(:19)/statics/js/onlineSurvey/images/preview.png">&nbsp;&nbsp;
+					<span class="font333-blod"></span>&nbsp;&nbsp;
+					<span class="font666"></span>
+				</div>
+				<div class="clear"></div>
+			</div>
+
+			<div class="uploadlogo">%bind(:1)</div>
+
+			<div class="maincon">
+				<form method="post" name="main_list" id="main_list"></form>
+				<div class="maincon-page">
+					<a href="#" onclick="javascript:prePage()"><div class="pagebtn1">< %bind(:9)</div></a>
+					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2">%bind(:10) ></div></a>
+					<div class="clear"></div>
+				</div>
+				<div id="fancybox-main" style="display: none">
+        			<ul></ul>
+				</div>
+			</div>
+			<div class="fotter">%bind(:2)</div>
+		</div>
+		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
+	</body>
+	<script type="text/javascript">
+		if(dataApp){
+			$(".font333-blod").html("%bind(:11)");
+			$(".font666").html("%bind(:12)")
+		}else{
+			$(".font333-blod").html("%bind(:13)");
+			$(".font666").html("%bind(:14)")
+		}
+		/*加载formvalidator信息*/
+		try{
+			$.formValidator.initConfig({
+				formID:"main_list",		
+				debug:false,	
+				submitOnce:true,
+				onError:function(msg,obj,errorlist){
+					$("#errorlist").empty();
+					$.map(errorlist,function(msg){	
+						$("#errorlist").append("<li>" + msg + "</li>")	
+					});
+				},
+				submitAfterAjaxPrompt : '有数据正在异步验证，请稍等...'	
+			});
+		}catch(e){}
+
+		/*处理报名表数据*/
+		if(dataApp){
+			$.each(data.items,function(instanceId,obj){
+				var recApp = dataApp[instanceId];
+		
+				if(recApp){
+					if(recApp.classname  == "RadioBox" || recApp.classname  == "MultipleChoice" || recApp.classname  == "MultipleTextBox"){
+						/*单选框、复选框以及多行文本框处理方式*/
+						if( obj["option"] ){
+							$.each(obj["option"],function(i,optionInfo){	
+								if(recApp["option"][i]){
+									optionInfo["checked"] = recApp["option"][i]["checked"];
+									optionInfo["othervalue"] = recApp["option"][i]["othervalue"];
+								}
+							})
+						}
+					}else if(recApp.classname  == "GridSingleChoice" || recApp.classname  == "GridMultipleChoice" || recApp.classname  == "CourseAssessment"){
+						if( obj["child"] ){
+							$.each(obj["child"],function(i,childInfo){	
+								if(recApp["child"][i]){
+									childInfo["value"] = recApp["child"][i]["value"];
+								}
+							})
+						}
+					}else if(recApp.classname == "ImgUpload"|| recApp.classname == "AttachUpload"){
+						if( obj["children"] ){
+							$.each(recApp["children"],function(i,childInfo){
+								obj["children"][i] = recApp["children"][i];
+							})
+						}
+					}else{
+						/*leve0级别普通字段*/
+						if( recApp["value"]){
+							obj["value"] = recApp["value"];
+						}
+						if(recApp["othervalue"]){
+							obj["othervalue"] = recApp["othervalue"];
+						}
+						if(recApp["wzsm"]){
+							obj["wzsm"] = recApp["wzsm"];
+						}
+					}
+				}
+			})
+		}
+		SurveyBuild["_items"] = data.items;
+		SurveyBuild.is_edit_moda = false;
+
+		//上一页
+		function prePage(){
+			if(SurveyBuild.curPageNo > 1){
+				pageTo(SurveyBuild.curPageNo - 1);
+			}
+		}
+		//下一页
+		function nextPage(){
+			if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
+				pageTo(SurveyBuild.curPageNo + 1);
+			}
+		}
+		//页面跳转
+		function pageTo(pageno){
+			SurveyBuild.curPageNo = pageno;
+			if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
+				$(".pagebtn1").hide();
+			}else{
+				$(".pagebtn1").show();
+			}
+
+			if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
+				$(".pagebtn2").hide();
+			}else{
+				$(".pagebtn2").show();
+			}
+			SurveyBuild._load();
+			$("form input").prop("readonly", "readonly");
+			$("form textarea").prop("readonly", "readonly");
+			$("form input").prop("disabled", true);
+			$("form textarea").prop("disabled", true);
+			$("form select").off("change");
+			refreshTip();
+			$(".fileinput-button input").prop("disabled", true);
+			$(".img_del").hide();
+		}
+
+		//处理formvalidator的tips
+		var $flowtips = $("#flowtips");
+
+		function refreshTip(){
+			$("#main_list div[id*='Tip']").hover(function(){
+					$tipsMsgDiv = $(this).children("div");
+					var offsetXY = $tipsMsgDiv.offset();
+					var tipsMsg = $tipsMsgDiv.attr("tips");
+					if(tipsMsg!="" && $.trim(tipsMsg).length > 0){
+						$flowtips.html(tipsMsg).css({"left":offsetXY.left+20,"top":offsetXY.top+6}).show();
+					}
+				},function(){
+					$flowtips.hide();
+				}
+			);
+		}
+		pageTo(1)
+		//只有一页时，不显示翻页按钮
+		if(SurveyBuild.maxPage == 1){
+			$(".maincon-page").hide();
+		}
+
+		//图片缩放
+		function setImageSize(eml,t){
+			var $aBtn = $(eml);
+			var $boxInier = $aBtn.closest(".photoButton").prev(".fancybox-outer").children(".fancybox-inner");
+			var $boxWrap = $aBtn.closest(".fancybox-wrap");
+			var w = parseInt($boxInier.css("width"));
+			var h = parseInt($boxInier.css("height"));
+		
+			var width,height;
+			if(t == "S"){
+				width = w * 0.9;
+				height = h * 0.9;
+			} else if(t == "B"){
+				width = w * 1.1;
+				height = h * 1.1;
+			}
+			//浏览器窗口宽度
+			if (window.innerWidth){
+				winWidth = window.innerWidth;
+			}else if ((document.body) && (document.body.clientWidth)){
+				winWidth = document.body.clientWidth;
+			}
+			// 获取浏览器窗口高度
+			if (window.innerHeight){
+				winHeight = window.innerHeight;
+			}else if ((document.body) && (document.body.clientHeight)){
+				winHeight = document.body.clientHeight;
+			}
+			var $oBtn = $aBtn.siblings("a");
+			if (t == "B" && width >= winWidth){
+				$aBtn.removeClass("big");
+				$aBtn.addClass("big-enabledClick");
+			}else if(t == "S" && width <= 150){
+				$aBtn.removeClass("small");
+				$aBtn.addClass("small-enabledClick");
+			}else{
+				if ($oBtn.hasClass("small-enabledClick")){
+					$oBtn.removeClass("small-enabledClick");
+					$oBtn.addClass("small");	
+				}
+				if ($oBtn.hasClass("big-enabledClick")){
+					$oBtn.removeClass("big-enabledClick");
+					$oBtn.addClass("big");	
+				}
+				
+				var wrapWidth = width+20;
+				var wrapHeight = height+20;
+				var left = winWidth/2-wrapWidth/2-10;
+				var top = winHeight/2-wrapHeight/2;
+				if(top < 20){top = 20;}
+				$boxInier.css('width',width+'px');
+				$boxInier.css('height',height+'px');
+			
+				$boxWrap.css('width',wrapWidth+'px');
+				$boxWrap.css('left',left);
+				$boxWrap.css('top',top)
+			}
+		}
+	</script>
+</html>

@@ -1,0 +1,297 @@
+/** Custom Bootstrap Start **/
+
+body {
+	font: normal 100% Arial, Helvetica, sans-serif, '宋体',;
+	font-size: 14px;
+	color: #333;
+	margin: 0 auto;
+}
+/*** menubutton ***/
+#logicMenu {
+	position: absolute;
+	background: #d0d0d0;
+	padding: 10px 0 10px 10px;
+	left: 0px;
+	top: 5px;
+	right: 0px;
+	z-index: 2;
+	font-size:14px;
+	font-weight:bold;
+}
+a.menubutton {
+	position: relative;
+	background-color: #fefefe;
+	margin-right: 8px;
+	text-decoration: none;
+	font-weight: normal;
+	color: #555;
+	font-size: 14px;
+	display: inline-block;
+ *display: inline;
+ *zoom:1;
+	cursor: pointer;
+}
+a.menubutton b {
+	font-weight: normal;
+	/*border:1px solid #B8B8B8;*/
+	display: block;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 21px 0 12px;
+	border-radius: 2px 2px 2px 2px;
+	background: #eaeaea;
+}
+a.menubutton span.icon {
+	position: absolute;
+	right: 6px;
+	top: 12px;
+	background: url(../img/dropdown-sjx.png) no-repeat;
+	width: 12px;
+	height: 4px;
+}
+.save-btn, .back-btn {
+	float: left;
+	width: 93px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 3px;
+	text-align: center;
+	background: #e2e2e2;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	border: 0;
+}
+.save-btn {
+	background: #2194e6;
+	margin-right: 10px;
+}
+.back-btn {
+	background: #fa9e1e;
+}
+.save-btn:hover, .save-btn:visited, .save-btn:active {
+	color: #fff;
+	background: #1c7ec4;
+}
+.back-btn:hover, .back-btn:visited, .back-btn:active {
+	color: #fff;
+	background: #e1831b;
+}
+#report-custom a.menubutton b {
+	border-color: #666;
+}
+.BranchIconLarge {
+	background-position: -2px -20px;
+}
+#logicBox {
+	padding: 0px 10px;
+	margin: 0 auto;
+	width: 1000px;
+	background: #FAFAFA;
+	min-height: 600px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+#logicBox .guideLine {
+/*background: url("../images/flowguides.png") repeat-y scroll -170px 0;*/
+}
+#logicBox .guideBlock {
+	height: 50px;
+	left: -55px;
+	position: absolute;
+	top: 0;
+	width: 50px;
+}
+#logicBox .guideBlock div {
+	background: url(../img/flowguides.png);
+	height: 50px;
+	width: 50px;
+}
+.logicElement {
+	position: relative;
+}
+.logicElement .indent.ctrl {
+	margin-left: 100px;
+}
+.logicInner {
+	padding-top: 15px;
+	position: relative;
+}
+.logicView {
+	background-color: #d5e2f2;
+	border: 1px solid #e2e2e2;
+	padding: 8px 8px 0 8px;
+	border-radius: 3px;
+}
+.logicDesc .BranchIconLarge {
+	float: left;
+}
+.logicDesc .logicBtns {
+	float: left;
+	margin-left: 2px;
+	height: 25px;
+	line-height: 25px;
+}
+.logicDesc .logicBtns a {
+	text-decoration: underline;
+	margin-right: 15px;
+	color: #0c7bce;
+}
+.logicDesc .logicBtns a.logicNum {
+	font-size: 14px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.logicEdit {
+	margin: 8px -8px 0;
+	background: #fff;
+}
+.logicElement .expressionSet .expression {
+	/* border-top: 1px solid #e2e2e2;*/
+	line-height: 30px;
+	height: 30px;
+	padding: 5px 10px;
+	position: relative;
+}
+.logicElement .expressionSet h6 {
+	background: #58595B;
+	color: #FFFFFF;
+	margin: 0;
+	padding: 3px;
+}
+.logicElement .expressionSet h6 a {
+	color: #FFF;
+}
+.logicElement .expressionSet h6.andif .arrow {
+	background-image: url("../img/dropdownarrowwhite.gif");
+	display: inline-block;
+	height: 4px;
+	margin: 2px 10px;
+	width: 8px;
+}
+.logicElement .expression .selectors {
+	width: 998px;
+}
+.logicElement .expression .buttons {
+	position: absolute;
+	right: 10px;
+	display: inline-block;
+}
+.logicElement .expression .buttons i, .choose-item-button i {
+	margin-right: 0;
+	font-size: 10px;
+}
+.logicElement .expressionField {
+	margin-right: 8px;
+	line-height: 29px;
+}
+.logicResult {
+	background-color: #fff9dd;
+	padding: 10px;
+	position: relative;
+}
+.logicResult .types {
+	width: 130px;
+	float: left;
+}
+.logicResult .expressionContainer {
+	margin-left: 130px;
+	margin-bottom: 5px;
+	margin-top: 2px;
+	position: relative;
+}
+.logicResult .expressionContainer:last-child {
+	margin-bottom: 0;
+}
+.logicElement .logicResult .expression .buttons {
+	right: 0;
+	top: 3px;
+}
+.logicAdd {
+	padding: 8px 0;
+	margin-bottom: 20px;
+}
+.logicAdd a {
+	color: #2194e6;
+	text-decoration: underline;
+}
+.btn-jian {
+	width: 22px;
+	height: 21px;
+	background: url(../img/btn-jian.jpg) no-repeat;
+	border: 0;
+}
+.btn-add {
+	width: 22px;
+	height: 21px;
+	background: url(../img/btn-add.jpg) no-repeat;
+	border: 0;
+}
+.expressionSet select.mainQuestion {
+	width: 300px;
+}
+.expressionSet select.subQuestion {
+	width: 200px;
+}
+.expressionSet select.qOption {
+	width: 150px;
+}
+.expressionSet select.checkType {
+	width: 90px;
+}
+.logicResult select.controlQuestion {
+	width: 600px;
+}
+.logicResult select.ctrType {
+	width: 90px;
+}
+.menubutton_right {
+	position: relative;
+	margin-bottom: 5px;
+}
+.main_question_selector {
+	float: left;
+	display: block;
+	height: auto;
+	width: 350px;
+}
+.main_question_selector_right {
+	clear: right;
+	float: left;
+	width: 640px;
+	position: relative;
+}
+.ligicMuneBox {
+	position: fixed;
+	height: 60px;
+	top: 0px;
+	width: 1000px;
+	z-index: 2;
+}
+.logicContentBox {
+	margin-top: 60px;
+}
+select.chosen-select {
+	border-radius: 3px;
+	background-color: #FAFAFA;
+	font-size: 13px;
+}
+.chosen-select option {
+	background: #FFF;
+	max-width: 600px;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.noteing {
+	font-weight: 700;
+	text-align: center;
+	font-size: 14px;
+	font-weight: 700;
+	position: fixed;
+	display: none;
+	z-index: 1000000;
+	cursor: pointer;
+}
+.noteing .alert {
+	padding: 8px 20px;
+}

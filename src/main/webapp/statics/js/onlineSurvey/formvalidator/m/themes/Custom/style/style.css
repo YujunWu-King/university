@@ -1,0 +1,22 @@
+
+.onError {
+	background:url(../images/onError.gif) no-repeat;
+	background-position:0px 2px;
+	padding-left:20px;
+	font-size:16px;
+	display: inline-block;
+	color:#FF6C0B;
+}
+.onCorrect {
+	background:url() no-repeat;
+	background-position:0px 2px;
+	padding-left:20px;
+	font-size:16px;
+	display: inline-block;
+	color:#7A7A7A;
+}
+.onShow {
+	background:transparent none repeat scroll 0 2px;
+	font-size:16px;
+	padding-left:20px;
+}

@@ -1,0 +1,359 @@
+
+.container{
+	max-width: 640px;
+	margin:0 auto;
+	#background:#f7f7f7;
+	background:white;
+	white 
+}
+.top{
+	height:44px;
+	line-height:44px;
+	padding:0 10px;
+	color: #fff;
+	background:#2194e5;
+}
+.top-left{
+	font-size:1.142em;
+}
+/*下拉页码开始*/
+
+.select{
+	margin-top:7px;
+}
+
+.select dt{
+	display:inline-block;
+	background:#2194e5 url(../../images/m/sjx.png) no-repeat 60px center;
+	line-height:30px;
+	cursor:pointer;
+	width:82px;
+	text-align:left;
+	text-indent:15px;
+	border:0;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	position:relative;
+	z-index:99;
+	height: 30px;
+	color:#fff;
+}
+.select dt:hover,.select dt.cur{
+}
+.select dd{
+	position:absolute;
+	border-top: none;
+	background:#2194e5;
+	display:none;
+	z-index: 333;
+	font-size:14px;
+	width:82px;
+	overflow:hidden;
+	margin-top:6px;
+}
+.select dd ul{
+}
+.select dd ul li{
+	text-indent:15px;
+}
+.select dd ul li a{
+	line-height:30px;
+	display:block;
+	color:#fff;
+}
+.select dd ul li a:hover{
+	background:#3facf9;
+	color: #fff;
+}
+/*下拉页面结束*/
+.top-pagebtn a, .top-pagebtn a:hover, .top-pagebtn a:visited{
+	color:#fff;
+}
+.uploadlogo{
+	padding:10px;
+	margin: 10px 0;
+}
+.maincon{
+	padding:0 10px;
+}
+.listcon{
+	margin-bottom:30px;
+}
+.question{
+	font-size:1.142em;
+	line-height:22px;
+	word-break: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+.answer{
+	border:solid 2px #dcdcdc;
+	background: #fff;
+	border-radius: 3px;
+	margin:13px 0;
+	color:rgb(102,102,102);
+}
+.answer ul{
+}
+.answer ul li{
+	text-indent: 10px;
+	padding:12px 0;
+	border-bottom: 1px solid #dcdcdc;
+}
+.dropbox-answer{
+	background: #fff;
+	margin:13px 0;
+	color:#555;
+}
+.answer-onechoose{
+	border:solid 2px #dcdcdc;
+	background: #fff;
+	border-radius: 3px;
+	margin:15px 0;
+	color:#555;
+}
+.answer-onechoose ul{
+}
+.answer-onechoose ul li{
+	text-indent: 10px;
+	padding:12px 0;
+}
+.answer-manychoose{
+	border-bottom:1px solid #dcdcdc;
+}
+.h5-textquestion{
+	background-color: #fff;
+	border: solid 1px #dcdcdc;
+	margin:10px;
+}
+.textquestion{
+	width:95%;
+	font-size:1.285em;
+	color:#555;
+	display:block;
+	padding:8px;
+}
+.textcon{
+	padding:10px;
+	font-size:1.285em;
+	color:rgb(102,102,102);
+	line-height:24px;
+	width:93%;
+}
+.answer-textcon{
+	background: #fff;
+	margin:15px 0;
+	border:1px solid #dcdcdc;
+}
+.dropbox-con{
+	width:100%;
+	padding:10px;
+	font-size:14px;
+   color:rgb(102,102,102);
+	border:1px solid #dcdcdc;
+}
+.orange-circle{
+	width:8px;
+	height:8px;
+	border-radius:50%;
+	background:#faa537;
+	display:inline-block;
+	margin-right:10px;
+}
+.maincon-page{
+	text-align:center;
+	padding-bottom:40px;
+}
+.pagebtn1, .pagebtn2{
+	float:left;
+	width:90px;
+	height:34px;
+	line-height:34px;
+	border-radius:3px;
+	text-align:center;
+	background:#e2e2e2;
+	color:#777;
+	cursor:pointer;
+	display:inline-block;
+}
+.pagebtn1 a, .pagebtn1 a:hover, .pagebtn1 a:visited, .pagebtn1 a:active,
+.pagebtn2 a, .pagebtn2 a:hover, .pagebtn3 a:visited, .pagebtn4 a:active
+{
+	color:#777;
+	background:#ccc;
+}
+.pagebtn1{
+	margin-right:30px;
+}
+.pagebtn2:hover, .pagebtn1:hover{
+	color:#777;
+	background:#ccc;
+}
+.maincon-page a{
+	float:none;
+	
+	display:inline-block
+}
+.fotter{
+	text-align: center;
+	padding:40px 10px 10px 10px;
+	color:#555;
+}
+.submit{
+	text-align:center;
+}
+.submit img{
+	cursor:pointer;
+}
+.submit{
+	position:relative;
+	width:100%;
+	height:42px;
+	line-height:42px;
+	text-align:center;
+	border:0;
+	font-size:20px;
+	font-weight:bold;
+	background:#2194e6;
+	color:#fff;
+	border-radius:25px;
+	cursor:pointer;
+	display:none;
+}
+.sendbtn{
+	position:absolute;
+	margin-top:5px;
+	width:28px;
+	height:26px;
+}
+.sendbtn img{
+	width:100%;
+}
+.inputtext {
+  color:rgb(102,102,102);
+  font-size: 1.285em;
+  line-height: 39px;
+  margin: 0 0 0 4px;
+  width: 98%;
+}
+.othertext{ 
+	font-size: 1.285em;
+	line-height: 39px;
+	width: 98%;
+	margin: 8px 4px;
+	border: 1px solid rgb(220, 220, 220);
+}
+.listcon .file-upload {
+	position: relative;
+	width: 120px;
+	height: 34px;
+	line-height: 34px;
+	text-align: center;
+	border: 0;
+	font-size: 14px;
+	font-weight: bold;
+	background: #2194e6;
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+}
+.listcon .file-upload:hover {
+	opacity: 0.8;
+}
+.listcon .file-upload img {
+	width: 100%;
+}
+.file-upload .upload-text {
+	padding-left: 30px;
+}
+.file-upload .upload-icon {
+	width: 28px;
+	position: absolute;
+	margin-top: 5px;
+	left: 15px;
+}
+.file-upload label {
+	bottom: 0;
+	cursor: pointer;
+	display: block;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 10;
+}
+.file-upload input {
+	cursor: pointer;
+	direction: ltr;
+	width: 120px;
+	left: -1000px !important;
+	position: absolute;
+	opacity: 0;
+}
+.file-upload-list a {
+	margin-right: 20px;
+	color: #0088cc;
+	cursor: pointer;
+}
+.file-upload-list a:hover {
+	color: #0067b4;
+}
+.file-upload-list ul li {
+	position: relative;
+}
+.file-upload-list ul li img {
+	position: absolute;
+	right: 15px;
+	cursor: pointer;
+}
+.file-upload-list.noUpload{
+	display:none;
+}
+.answer ul li label{
+	display: inline-block;
+    margin-left: -20px;
+    width: 85%;
+	cursor: pointer;
+}
+.answer-manychoose ul li label{
+	display: inline-block;
+    margin-left: -20px;
+    width: 85%;
+	cursor: pointer;
+}
+.input-radio-btn input[type="radio"], .input-checkbox-btn input[type="checkbox"]{
+	opacity: 0;
+	cursor: pointer;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	display: block;
+    float: left;
+    height: 20px;
+    width: 20px;
+}
+.input-radio-btn{
+	display:inline-block;
+	width:100%;
+	height:20px;
+	line-height:20px;
+	background-image: url(../images/radio_off.png);
+    background-repeat: no-repeat;
+	cursor:pointer;
+}
+.input-radio-btn.checked{
+	background-image: url(../images/radio_on.png);
+}
+
+.input-checkbox-btn{
+	display:inline-block;
+	width:100%;
+	height:20px;
+	line-height:20px;
+	background-image: url(../images/checkbox_off.png);
+    background-repeat: no-repeat;
+	cursor:pointer;
+}
+.input-checkbox-btn.checked{
+	background-image: url(../images/checkbox_on.png);
+}

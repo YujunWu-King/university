@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/FortAwesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/css/home.css" />
+		<!--[if IE 7]>
+			<link rel="stylesheet" href="/survey/assets/libs/FortAwesome/css/font-awesome-ie7.min.css">
+		<![endif]-->
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/nivo-slider/nivo-slider.css" type="text/css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/nivo-slider/themes/default/default.css" type="text/css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" />
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/jquery/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/nivo-slider/jquery.nivo.slider.pack.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.pack.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/js/common.js"></script>
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui.min.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/css/reveal.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/timepicker-addon/jquery-ui-timepicker-addon.css" />
+		<link rel="stylesheet" href="%bind(:7)/statics/js/survey/assets/libs/kindeditor/themes/default/default.css" />
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/jqueryui/js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/libs/kindeditor/kindeditor-min.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/js/jquery.reveal.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/survey/assets/js/jquery.form.js"></script>
+		
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:8)";
+		</script>
+		<script type="text/javascript">
+			$(function(){
+				$(".global-nav>li.submenu").on({
+					mouseenter:function(){
+						$(this).find("ul").css("display","block");
+					},
+					mouseleave:function(){
+						$(this).find("ul").css("display","none");
+					}
+				})
+			});
+		</script>
+		 <style>
+			.comArea {
+			  background: #fff url("%bind(:7)/statics/js/survey/assets/libs/jqueryui/images/ui-bg_glass_65_ffffff_1x400.png") repeat-x scroll 50% 50%;
+			  border: 1px solid #aaa;
+			  border-top-left-radius: 4px;
+			  border-top-right-radius: 4px;
+			  padding: 5px 10px;
+			}
+		</style> 
+		<title>%bind(:1)</title>
+	</head>
+	<body>
+		<div id="survey-build">
+			<div id="build-box" class="clearfix">
+				<div id="build-save" class="save">
+					<div id="status">
+						<div style="left: 0px; top: 0px; display: none;" id="y">
+							<div id="statusText">
+								Add a New Field
+								...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp&nbsp;&nbsp;
+							</div>
+						</div>
+					</div>
+					<button id = "save" class="btn btn-danger btn-large bt" onclick="SurveyBuild.saveBuild()">
+						保存<span style="font-size: 12px;">(建议5分钟一次)</span>
+					</button>
+					<button id = "preview" class="btn btn-warning btn-large bt" style="display: inline-block;" onclick="SurveyBuild.preiewBiuld()">
+						预览
+					</button>
+				</div>
+				<div id="build-left">
+					<div id="tabs">
+						<ul>
+							<li>
+								<a id="href1" href="#question-type-box">新增控件</a>
+							</li>
+							<li>
+								<a id="href2" href="#question-edit-box">控件属性</a>
+							</li>
+						</ul>
+
+						<div id="question-type-box"></div>
+						<div id="question-edit-box">
+							<div id="question-edit"></div>
+						</div>
+					</div>
+				</div>
+				<div id="build-right">
+					<div id="question-wrap" class="clearfix">
+						<ul id="question-box">
+							<div id="question-new">
+								点击或拖动左侧题型来添加新问题，点击问题进行编辑								
+							</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="myModal" class="reveal-modal">
+			<h1></h1>
+			<p></p>
+			<a class="close-reveal-modal">&#215;</a>
+		</div>
+		<script type="text/javascript" src="%bind(:7)/statics/js/lib/json.js"></script>
+		 <script type="text/javascript" src="%bind(:7)/statics/js/tranzvision/appwidget/SurveyTemp.js"></script>
+		<!-- <script type="text/javascript" src="%bind(:7)/statics/js/tranzvision/appwidget/SurveyBuild_4.js"></script>-->
+		<script type="text/javascript" src="%bind(:7)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
+		<script type="text/javascript" src="%bind(:7)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
+		<script type="text/javascript">
+			SurveyBuild.tzGeneralURL = "%bind(:4)";
+			MsgSet = %bind(:5);
+			//生成左侧工具条列表 ;
+			var componentData =%bind(:3);
+			if(componentData){
+				var jsonData = componentData;
+ 				SurveyBuild["_componentConfig"] = componentData = jsonData["componentDfn"];
+
+				var typeStr = typeStr1 = typeStr2 = typeStr3 = typeStr4 = typeStr5 = "";
+
+				function _getLi(obj){
+					var retStr = "";
+					retStr += '<li data-classname="' + obj.className + '" class="move">';
+					retStr += '	<a href="javascript:void(0);" onclick="SurveyBuild.add(\'' + obj.className + '\')">';
+					retStr += '		<img src = "' + obj.iconPath + '"/>' + obj.componentName;
+					retStr += '	</a>';
+					retStr += '</li>';
+					return retStr;
+				}				
+				$.each(componentData,function(index,obj){
+					if(obj["displayArea"] == "A"){
+						typeStr1 += _getLi(obj);
+					}else if(obj["displayArea"] == "B"){
+						typeStr2 += _getLi(obj);
+					}else if(obj["displayArea"] == "C"){
+						typeStr3 += _getLi(obj);
+					}else if(obj["displayArea"] == "D"){
+						typeStr4 += _getLi(obj);
+					}else if(obj["displayArea"] == "F"){
+						typeStr5 += _getLi(obj);
+					}
+					SurveyBuild["_componentIndex"].push(obj.className);
+				});
+
+				typeStr += '<div class="comArea">';
+				typeStr += '	<ul class="inline">' + typeStr1 + typeStr2 + typeStr3 + typeStr4 + typeStr5 + '<ul>';
+				typeStr += '</div>';
+				
+				$("#question-type-box").html(typeStr);	
+				SurveyBuild["_data"] = jsonData["componentInstance"];
+			}
+
+			$(function(){
+				$("#question-new").css("display", "none");
+ 				$("#tabs").tabs();
+ 				//$("#question-type-box").accordion({heightStyle: "content"});
+				SurveyBuild.init("%bind(:2)");
+			});			
+			SurveyBuild._use = "%bind(:6)";
+		</script>
+        
+	</body>
+</html>

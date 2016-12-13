@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjGzgxTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT" >
+    <id column="TZ_DC_LJTJ_ID" property="tzDcLjtjId" jdbcType="VARCHAR" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <id column="TZ_XXXZWT_MC" property="tzXxxzwtMc" jdbcType="VARCHAR" />
+    <id column="TZ_XXXKXZ_MC" property="tzXxxkxzMc" jdbcType="VARCHAR" />
+    <result column="TZ_IS_SELECTED" property="tzIsSelected" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_DC_LJTJ_ID, TZ_XXX_BH, TZ_XXXZWT_MC, TZ_XXXKXZ_MC, TZ_IS_SELECTED, TZ_DC_WJ_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DC_WJ_GZGX_T
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXZWT_MC = #{tzXxxzwtMc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxTKey" >
+    delete from PS_TZ_DC_WJ_GZGX_T
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXZWT_MC = #{tzXxxzwtMc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT" >
+    insert into PS_TZ_DC_WJ_GZGX_T (TZ_DC_LJTJ_ID, TZ_XXX_BH, TZ_XXXZWT_MC, 
+      TZ_XXXKXZ_MC, TZ_IS_SELECTED, TZ_DC_WJ_ID
+      )
+    values (#{tzDcLjtjId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxzwtMc,jdbcType=VARCHAR}, 
+      #{tzXxxkxzMc,jdbcType=VARCHAR}, #{tzIsSelected,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT" >
+    insert into PS_TZ_DC_WJ_GZGX_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        TZ_DC_LJTJ_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzXxxzwtMc != null" >
+        TZ_XXXZWT_MC,
+      </if>
+      <if test="tzXxxkxzMc != null" >
+        TZ_XXXKXZ_MC,
+      </if>
+      <if test="tzIsSelected != null" >
+        TZ_IS_SELECTED,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        #{tzDcLjtjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxzwtMc != null" >
+        #{tzXxxzwtMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxkxzMc != null" >
+        #{tzXxxkxzMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsSelected != null" >
+        #{tzIsSelected,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT" >
+    update PS_TZ_DC_WJ_GZGX_T
+    <set >
+      <if test="tzIsSelected != null" >
+        TZ_IS_SELECTED = #{tzIsSelected,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXZWT_MC = #{tzXxxzwtMc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT" >
+    update PS_TZ_DC_WJ_GZGX_T
+    set TZ_IS_SELECTED = #{tzIsSelected,jdbcType=VARCHAR},
+      TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_XXXZWT_MC = #{tzXxxzwtMc,jdbcType=VARCHAR}
+      and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
+  </update>
+</mapper>

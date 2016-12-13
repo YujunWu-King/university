@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcMbLjgzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT" >
+    <id column="TZ_DC_LJTJ_ID" property="tzDcLjtjId" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <result column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <result column="TZ_LJ_LX" property="tzLjLx" jdbcType="VARCHAR" />
+    <result column="TZ_PAGE_NO" property="tzPageNo" jdbcType="INTEGER" />
+    <result column="TZ_LJTJ_XH" property="tzLjtjXh" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_DC_LJTJ_ID, TZ_APP_TPL_ID, TZ_XXX_BH, TZ_LJ_LX, TZ_PAGE_NO, TZ_LJTJ_XH
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DC_MB_LJGZ_T
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DC_MB_LJGZ_T
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT" >
+    insert into PS_TZ_DC_MB_LJGZ_T (TZ_DC_LJTJ_ID, TZ_APP_TPL_ID, TZ_XXX_BH, 
+      TZ_LJ_LX, TZ_PAGE_NO, TZ_LJTJ_XH
+      )
+    values (#{tzDcLjtjId,jdbcType=VARCHAR}, #{tzAppTplId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, 
+      #{tzLjLx,jdbcType=VARCHAR}, #{tzPageNo,jdbcType=INTEGER}, #{tzLjtjXh,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT" >
+    insert into PS_TZ_DC_MB_LJGZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        TZ_DC_LJTJ_ID,
+      </if>
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzLjLx != null" >
+        TZ_LJ_LX,
+      </if>
+      <if test="tzPageNo != null" >
+        TZ_PAGE_NO,
+      </if>
+      <if test="tzLjtjXh != null" >
+        TZ_LJTJ_XH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzDcLjtjId != null" >
+        #{tzDcLjtjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLjLx != null" >
+        #{tzLjLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageNo != null" >
+        #{tzPageNo,jdbcType=INTEGER},
+      </if>
+      <if test="tzLjtjXh != null" >
+        #{tzLjtjXh,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT" >
+    update PS_TZ_DC_MB_LJGZ_T
+    <set >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLjLx != null" >
+        TZ_LJ_LX = #{tzLjLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageNo != null" >
+        TZ_PAGE_NO = #{tzPageNo,jdbcType=INTEGER},
+      </if>
+      <if test="tzLjtjXh != null" >
+        TZ_LJTJ_XH = #{tzLjtjXh,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT" >
+    update PS_TZ_DC_MB_LJGZ_T
+    set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR},
+      TZ_LJ_LX = #{tzLjLx,jdbcType=VARCHAR},
+      TZ_PAGE_NO = #{tzPageNo,jdbcType=INTEGER},
+      TZ_LJTJ_XH = #{tzLjtjXh,jdbcType=INTEGER}
+    where TZ_DC_LJTJ_ID = #{tzDcLjtjId,jdbcType=VARCHAR}
+  </update>
+</mapper>

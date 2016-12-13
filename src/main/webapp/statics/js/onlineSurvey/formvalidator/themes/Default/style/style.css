@@ -1,0 +1,27 @@
+
+.onError {
+	background:url(../images/onError.gif) no-repeat;
+	background-position:0px 5px;
+	/*padding-left:30px;*/
+	width:18px;
+	font-size:18px;
+	display: inline-block;
+	color:#7A7A7A;
+}
+.onCorrect {
+	background:url() no-repeat;
+	background-position:0px 5px;
+	/*padding-left:30px;*/
+	width:18px;
+	font-size:12px;
+	/*float:left;*/
+	display: inline-block;
+	color:#7A7A7A;
+}
+.onShow {
+	background:transparent none repeat scroll 0 11px;
+	/*float:left;*/
+	display: inline-block;
+	font-size:18px;
+	width:18px;
+}

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcInsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WC_STA" property="tzDcWcSta" jdbcType="VARCHAR" />
+    <result column="TZ_APP_SUB_STA" property="tzAppSubSta" jdbcType="VARCHAR" />
+    <result column="TZ_DC_INS_FROM" property="tzDcInsFrom" jdbcType="VARCHAR" />
+    <result column="TZ_DC_INS_IP" property="tzDcInsIp" jdbcType="VARCHAR" />
+    <result column="TZ_DC_INS_MAC" property="tzDcInsMac" jdbcType="VARCHAR" />
+    <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
+    <result column="TZ_UNIQUE_NUM" property="tzUniqueNum" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" extends="BaseResultMap" >
+    <result column="TZ_APPINS_JSON_STR" property="tzAppinsJsonStr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_DC_WJ_ID, TZ_DC_WC_STA, TZ_APP_SUB_STA, TZ_DC_INS_FROM, TZ_DC_INS_IP, 
+    TZ_DC_INS_MAC, PERSON_ID, TZ_UNIQUE_NUM, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_APPINS_JSON_STR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_DC_INS_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from PS_TZ_DC_INS_T
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    insert into PS_TZ_DC_INS_T (TZ_APP_INS_ID, TZ_DC_WJ_ID, TZ_DC_WC_STA, 
+      TZ_APP_SUB_STA, TZ_DC_INS_FROM, TZ_DC_INS_IP, 
+      TZ_DC_INS_MAC, PERSON_ID, TZ_UNIQUE_NUM, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_APPINS_JSON_STR)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzDcWcSta,jdbcType=VARCHAR}, 
+      #{tzAppSubSta,jdbcType=VARCHAR}, #{tzDcInsFrom,jdbcType=VARCHAR}, #{tzDcInsIp,jdbcType=VARCHAR}, 
+      #{tzDcInsMac,jdbcType=VARCHAR}, #{personId,jdbcType=VARCHAR}, #{tzUniqueNum,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzAppinsJsonStr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    insert into PS_TZ_DC_INS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzDcWcSta != null" >
+        TZ_DC_WC_STA,
+      </if>
+      <if test="tzAppSubSta != null" >
+        TZ_APP_SUB_STA,
+      </if>
+      <if test="tzDcInsFrom != null" >
+        TZ_DC_INS_FROM,
+      </if>
+      <if test="tzDcInsIp != null" >
+        TZ_DC_INS_IP,
+      </if>
+      <if test="tzDcInsMac != null" >
+        TZ_DC_INS_MAC,
+      </if>
+      <if test="personId != null" >
+        PERSON_ID,
+      </if>
+      <if test="tzUniqueNum != null" >
+        TZ_UNIQUE_NUM,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzAppinsJsonStr != null" >
+        TZ_APPINS_JSON_STR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWcSta != null" >
+        #{tzDcWcSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppSubSta != null" >
+        #{tzAppSubSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsFrom != null" >
+        #{tzDcInsFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsIp != null" >
+        #{tzDcInsIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsMac != null" >
+        #{tzDcInsMac,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null" >
+        #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUniqueNum != null" >
+        #{tzUniqueNum,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAppinsJsonStr != null" >
+        #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    update PS_TZ_DC_INS_T
+    <set >
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWcSta != null" >
+        TZ_DC_WC_STA = #{tzDcWcSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppSubSta != null" >
+        TZ_APP_SUB_STA = #{tzAppSubSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsFrom != null" >
+        TZ_DC_INS_FROM = #{tzDcInsFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsIp != null" >
+        TZ_DC_INS_IP = #{tzDcInsIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcInsMac != null" >
+        TZ_DC_INS_MAC = #{tzDcInsMac,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null" >
+        PERSON_ID = #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUniqueNum != null" >
+        TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzAppinsJsonStr != null" >
+        TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    update PS_TZ_DC_INS_T
+    set TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      TZ_DC_WC_STA = #{tzDcWcSta,jdbcType=VARCHAR},
+      TZ_APP_SUB_STA = #{tzAppSubSta,jdbcType=VARCHAR},
+      TZ_DC_INS_FROM = #{tzDcInsFrom,jdbcType=VARCHAR},
+      TZ_DC_INS_IP = #{tzDcInsIp,jdbcType=VARCHAR},
+      TZ_DC_INS_MAC = #{tzDcInsMac,jdbcType=VARCHAR},
+      PERSON_ID = #{personId,jdbcType=VARCHAR},
+      TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcInsT" >
+    update PS_TZ_DC_INS_T
+    set TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      TZ_DC_WC_STA = #{tzDcWcSta,jdbcType=VARCHAR},
+      TZ_APP_SUB_STA = #{tzAppSubSta,jdbcType=VARCHAR},
+      TZ_DC_INS_FROM = #{tzDcInsFrom,jdbcType=VARCHAR},
+      TZ_DC_INS_IP = #{tzDcInsIp,jdbcType=VARCHAR},
+      TZ_DC_INS_MAC = #{tzDcInsMac,jdbcType=VARCHAR},
+      PERSON_ID = #{personId,jdbcType=VARCHAR},
+      TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

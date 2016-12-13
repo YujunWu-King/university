@@ -1,0 +1,359 @@
+
+.container{
+	width:1000px;
+	margin:0 auto;
+	background:#fff;
+}
+.top{
+	height:46px;
+	line-height:46px;
+	padding:0 20px;
+	background:#f2f2f2;
+	border-bottom:1px solid #d9d9d9;
+}
+.top-pagebtn{
+	width:82px;
+	height:30px;
+	line-height:30px;
+	margin-top:6px;
+	color:#fff;
+	text-align:center;
+	background:#fa9e1e;
+	display:inline-block;
+}
+.top-pagebtn a, .top-pagebtn a:hover, .top-pagebtn a:visited{
+	color:#fff;
+}
+/*下拉页码开始*/
+
+.select{
+	margin-top:7px;
+}
+
+.select dt{
+	display:inline-block;
+	background:#fa9e1e url(../images/sjx.png) no-repeat 60px center;
+	line-height:30px;
+	cursor:pointer;
+	width:82px;
+	text-align:left;
+	text-indent:15px;
+	border:0;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	position:relative;
+	z-index:99;
+	height: 30px;
+	color:#fff;
+}
+.select dt:hover,.select dt.cur{
+}
+.select dd{
+	position:absolute;
+	border-top: none;
+	background:#fa9e1e;
+	display:none;
+	z-index: 333;
+	font-size:14px;
+	width:82px;
+	overflow:hidden;
+}
+.select dd ul{
+}
+.select dd ul li{
+	text-indent:15px;
+}
+.select dd ul li a{
+	line-height:30px;
+	display:block;
+	color:#fff;
+}
+.select dd ul li a:hover{
+	background:#f9ba63;
+	color: #fff;
+}
+/*下拉页面结束*/
+.uploadlogo{
+	padding:20px;
+}
+.maincon{
+	padding:0 20px;
+}
+.listcon{
+	margin-bottom:25px;
+}
+.question{
+	font-size:16px;
+	line-height:22px;
+	word-break: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+.answer{
+	margin:15px 0;
+	color:#555;
+}
+.answer ul li{
+	line-height:28px;
+	 padding: 3px 0;
+}
+.underline{
+	background-color: transparent;
+	border: 0;
+	border-bottom: solid 1px #555555;
+	vertical-align:bottom;
+	font-size:14px;
+	color:#555;
+}
+.textcon{
+	width:940px;
+	padding:10px;
+	line-height:24px;
+	border:1px solid #dcdcdc;
+	font-size:14px;
+	color:#555;
+}
+.onechoose{
+  border: solid #ddd;
+  border-width: 1px 0px 0px 1px;
+  text-align:center
+}
+.onechoose tr{}
+
+.onechoose tr td{
+	border: solid #dedede;
+	padding: 10px;
+	border-width: 0px 1px 1px 0px;
+}
+.dropbox-con{
+	width:420px;
+	padding: 2px 10px;
+	font-size:14px;
+	border:1px solid #dcdcdc;
+	height:39px;
+	line-height:39px;
+}
+.dropbox-con option{
+	line-height:26px;
+}
+.maincon-page{
+	text-align:center;
+	padding-bottom:60px;
+}
+.pagebtn1, .pagebtn2{
+	float:left;
+	width:86px;
+	height:34px;
+	line-height:34px;
+	border-radius:3px;
+	text-align:center;
+	background:#e2e2e2;
+	color:#777;
+	cursor:pointer;
+	display:inline-block;
+}
+.pagebtn1 a:hover, .pagebtn1 a:visited, .pagebtn1 a:active,
+.pagebtn2 a:hover, .pagebtn3 a:visited, .pagebtn4 a:active
+{
+	color:#777;
+	background:#ef0000;
+}
+.pagebtn2:hover, .pagebtn1:hover{
+	color:#777;
+	background:#ccc;
+}
+.pagebtn1{
+	margin-right:20px;
+}
+.maincon-page a{
+	float:none;
+	
+	display:inline-block
+}
+.fotter{
+	padding:40px 20px 20px 20px;
+	color:#555;
+}
+.submit{
+	position:relative;
+	width:160px;
+	height:42px;
+	line-height:42px;
+	text-align:center;
+	border:0;
+	font-size:20px;
+	font-weight:bold;
+	background:#2194e6;
+	color:#fff;
+	border-radius:25px;
+	cursor:pointer;
+	display:none;
+}
+.sendbtn{
+	position:absolute;
+	margin-top:5px;
+	width:28px;
+	height:26px;
+}
+.sendbtn img{
+	cursor:pointer;
+	width:26px;
+	height:26px;
+}
+
+input[type="text"]:focus, .answer select:focus, textarea:focus{
+	border:1px solid #2194e6; 
+}
+input[type="text"]:hover, .answer select:hover, textarea:hover{
+	border:1px solid #2194e6; 
+}
+.blue_btn{
+	width: 86px;
+	height: 34px;
+	line-height: 34px;
+	border-radius: 3px;
+	text-align: center;
+	background: #2194E6;
+	font-size:16px;
+	font-weight:bold;
+	color: #FFF;
+	cursor: pointer;
+	display: inline-block;
+}
+.blue_btn:hover{
+	opacity:0.8;
+}
+.fileinput-button{
+	position:relative;
+	float:left
+}
+.fileinput-button label{
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: block;
+	z-index: 10;
+}
+.fileinput-button input{
+	position: absolute;
+	left: -1000px !important;
+	direction: ltr;
+	cursor: pointer;	
+}
+.file_list{
+	width: 857px;
+	margin-left: 105px;
+	min-height:28px;
+	background: #F5F5F5;
+	font:16px Yahei,"微软雅黑",Arial;
+}
+.file_list.nobackground{
+	background:none;
+}
+.file_list ul li{
+	border-bottom: 1px solid #fff;
+    height: 28px;
+    line-height: 28px;
+    padding: 3px 10px;
+}
+.file_list ul li a{
+	display: inline-block;
+	margin-right: 20px;
+	color:#0088cc;	
+	cursor:pointer;
+}
+.file_list ul li a:hover{
+	color:#0067b4;
+}
+.file_list ul li .img_del{
+	display:inline-block;
+	color: #d35036;
+	cursor:pointer;
+}
+.input-radio-btn label, .input-checkbox-btn label{
+	cursor:pointer;
+}
+.input-radio-btn input[type="radio"], .input-checkbox-btn input[type="checkbox"]{
+	opacity: 0;
+	cursor: pointer;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+	filter: alpha(opacity=0);
+	display: block;
+    float: left;
+    height: 20px;
+    width: 20px;
+}
+.input-radio-btn{
+	display:inline-block;
+	height:20px;
+	line-height:20px;
+	background-image: url(../images/radio_off.png);
+    background-repeat: no-repeat;
+	cursor:pointer;
+}
+.input-radio-btn.checked{
+	background-image: url(../images/radio_on.png);
+}
+
+.input-checkbox-btn{
+	display:inline-block;
+	height:20px;
+	line-height:20px;
+	background-image: url(../images/checkbox_off.png);
+    background-repeat: no-repeat;
+	cursor:pointer;
+}
+.input-checkbox-btn.checked{
+	background-image: url(../images/checkbox_on.png);
+}
+.input-date-text{
+	width:200px;
+	padding: 2px 10px;
+	font-size:14px;
+	height:25px;
+	border:1px solid #dcdcdc;
+	color: #555;
+}
+table.MultiTextBox{
+	margin-left:0px;
+}
+table.MultiTextBox td{
+	padding:5px 0px;
+	line-height: 24px;
+	height: 38px;
+}
+table.MultiTextBox td.Label{
+	max-width: 200px;
+	text-align: left;
+	font-size: 16px;
+}
+.MultiTextBox input{
+	padding: 9px 4px;
+	font-size: 14px;
+	width: 335px;
+	margin-left: 10px;
+}
+.input-text-comp{
+	width:350px;
+}
+.container-title{
+	height:25px;
+	line-height:25px;
+	overflow:hidden;
+	font-size:24px;
+	font-weight:bold;
+	text-align:center;
+}
+.container-content{
+	
+	background-color:#F2F2F2;
+	margin-top:20px;
+	margin-left:20px;
+	margin-bottom:20px;
+	
+  
+}

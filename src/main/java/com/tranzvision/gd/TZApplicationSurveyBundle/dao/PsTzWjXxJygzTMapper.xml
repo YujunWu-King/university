@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzWjXxJygzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzT" >
+    <id column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <id column="TZ_JYGZ_ID" property="tzJygzId" jdbcType="VARCHAR" />
+    <result column="TZ_QY_BZ" property="tzQyBz" jdbcType="VARCHAR" />
+    <result column="TZ_JYGZ_TSXX" property="tzJygzTsxx" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_DC_WJ_ID, TZ_XXX_BH, TZ_JYGZ_ID, TZ_QY_BZ, TZ_JYGZ_TSXX
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WJ_XX_JYGZ_T
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzTKey" >
+    delete from PS_TZ_WJ_XX_JYGZ_T
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzT" >
+    insert into PS_TZ_WJ_XX_JYGZ_T (TZ_DC_WJ_ID, TZ_XXX_BH, TZ_JYGZ_ID, 
+      TZ_QY_BZ, TZ_JYGZ_TSXX)
+    values (#{tzDcWjId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzJygzId,jdbcType=VARCHAR}, 
+      #{tzQyBz,jdbcType=VARCHAR}, #{tzJygzTsxx,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzT" >
+    insert into PS_TZ_WJ_XX_JYGZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzJygzId != null" >
+        TZ_JYGZ_ID,
+      </if>
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ,
+      </if>
+      <if test="tzJygzTsxx != null" >
+        TZ_JYGZ_TSXX,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJygzId != null" >
+        #{tzJygzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyBz != null" >
+        #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJygzTsxx != null" >
+        #{tzJygzTsxx,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzT" >
+    update PS_TZ_WJ_XX_JYGZ_T
+    <set >
+      <if test="tzQyBz != null" >
+        TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJygzTsxx != null" >
+        TZ_JYGZ_TSXX = #{tzJygzTsxx,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzWjXxJygzT" >
+    update PS_TZ_WJ_XX_JYGZ_T
+    set TZ_QY_BZ = #{tzQyBz,jdbcType=VARCHAR},
+      TZ_JYGZ_TSXX = #{tzJygzTsxx,jdbcType=VARCHAR}
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_JYGZ_ID = #{tzJygzId,jdbcType=VARCHAR}
+  </update>
+</mapper>

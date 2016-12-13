@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>%bind(:13)</title>
+		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
+		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
+        <link href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/themes/Custom/style/style.css" />
+		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/unitegallery/css/unite-gallery.css" type="text/css">
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:21)";
+		</script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/common.js"></script>
+
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/Survey.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/jquery.form.js"></script> 
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/json.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/SurveyAnswer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/unitegallery/js/unitegallery.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/unitegallery/js/ug-theme-tilesgrid.js"></script>
+
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/jqueryui/js/jquery-ui-1.10.4.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/baseComponent.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/ValidationRules.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/formValidator.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<style>
+			.noteing{font-weight:700;text-align:center;font-size:14px;font-weight:700;position:fixed;display:none;z-index:10000;cursor:pointer;}
+			.noteing .alert{padding:8px 20px;}
+			.alert{ padding: 8px 35px 8px 10px;text-shadow: none;-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);-moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);background-color: #f9edbe;border: 1px solid #f0c36d;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;color: #333333;}
+			.alert,.alert h4{color:#c09853;}
+			.alert h4{margin:0;}
+			.alert .close{position:relative;top:-2px;right:-21px;line-height:20px;}
+			.alert-success{ background-color: #dff0d8;border-color: #a3d48e;color: #468847;}
+			.alert-success h4{color:#468847;}
+			.alert-danger,.alert-error{background-color: #f2dede;border-color: #dd4b39;color: #dd4b39;}
+			.alert-danger h4,.alert-error h4{color:#b94a48;}
+			.alert-info{background-color: #d9edf7;border-color: #85c5e5;color: #3a87ad;}
+			.alert-info h4{color:#3a87ad;}
+			.alert-block{padding-top:14px;padding-bottom:14px;}
+			.alert-block>p,.alert-block>ul{margin-bottom:0;}
+			.alert-block p+p{margin-top:5px;}
+			.alert-danger,.alert-error{border-color: #d59595;color: #b94a48;}
+			.alert-success,.alert-danger,.alert-error,.alert-info{text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
+		</style>
+		<script type="text/javascript">
+			SurveyBuild.tzGeneralURL = "%bind(:3)";		//统一接口
+			SurveyBuild.accessType = "M";				//访问类型
+			var componentData = %bind(:4);				//组件列表
+			if(componentData){
+ 				SurveyBuild["_componentConfig"] = componentData;				
+				$.each(componentData,function(index,obj){
+					SurveyBuild["_componentIndex"].push(obj.className);
+				});
+			}
+			var templId = "%bind(:5)";					//模板ＩＤ
+			SurveyBuild.appInsId = "%bind(:6)";			//实例ID
+			var data = %bind(:7);						// 模板的data
+			var dataApp = %bind(:8);					//用户保存的data 
+			SurveyBuild.maxPage = %bind(:9);			//最大页数
+			var passAuth = "%bind(:10)";				//是否密码安全
+			SurveyBuild._logic = %bind(:11);			//控制逻辑
+			MsgSet = %bind(:12);						//双语化消息集合
+			SurveyBuild.subState = "%bind(:19)";		//问卷提交状态
+			$.datepicker.setDefaults($.datepicker.regional['%bind(:16)']);	//日期双语化
+	    	$.datepicker._gotoToday = function (id) {
+                $(id).datepicker('setDate', new Date()).datepicker('hide').blur();
+       		};
+		</script>
+		
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="top">
+				%bind(:14)
+				<div class="clear"></div>
+			</div>
+			<!-- 卷头 -->
+			<div class="uploadlogo">%bind(:1)</div>
+
+			<div class="maincon">
+				<form method="post" name="main_list" id="main_list"></form>
+				<div class="maincon-page">
+					<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
+					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
+					<div class="clear"></div>
+				</div>
+				<div id="unite_gallery_box" style="display: none"></div>
+				<div class="submit" style="display:none;" id="app_submit">
+					%bind(:15)&nbsp;&nbsp;
+					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
+				</div>
+			</div>
+			<!-- 卷尾 -->
+			<div class="fotter">%bind(:2)</div>
+			<input type="hidden" id="unique" name="unique" value="%bind(:20)">
+		</div>
+	</body>
+	<script type="text/javascript">
+
+		/*加载formvalidator信息*/
+		try{
+			$.formValidator.initConfig({
+				formID:"main_list",		
+				debug:false,	
+				submitOnce:true,
+				onError:function(msg,obj,errorlist){
+					$("#errorlist").empty();
+					$.map(errorlist,function(msg){	
+						$("#errorlist").append("<li>" + msg + "</li>")	
+					});
+				},
+				submitAfterAjaxPrompt : '有数据正在异步验证，请稍等...'	
+			});
+		}catch(e){}
+
+		/*处理报名表数据*/
+		if(dataApp){
+			$.each(data.items,function(instanceId,obj){
+				var recApp = dataApp[instanceId];
+		
+				if(recApp){
+					if(recApp.classname  == "RadioBox" || recApp.classname  == "MultipleChoice" || recApp.classname  == "MultipleTextBox"){
+						/*单选框、复选框以及多行文本框处理方式*/
+						if( obj["option"] ){
+							$.each(obj["option"],function(i,optionInfo){	
+								if(recApp["option"][i]){
+									optionInfo["checked"] = recApp["option"][i]["checked"];
+									optionInfo["othervalue"] = recApp["option"][i]["othervalue"];
+								}
+							})
+						}
+					}else if(recApp.classname  == "GridSingleChoice" || recApp.classname  == "GridMultipleChoice" || recApp.classname  == "CourseAssessment"){
+						if( obj["child"] ){
+							$.each(obj["child"],function(i,childInfo){	
+								if(recApp["child"][i]){
+									childInfo["value"] = recApp["child"][i]["value"];
+								}
+							})
+						}
+					}else if(recApp.classname == "ImgUpload" || recApp.classname == "AttachUpload"){
+						if( obj["children"] ){
+							$.each(recApp["children"],function(i,childInfo){
+								obj["children"][i] = recApp["children"][i];
+							})
+						}
+					}else{
+						/*leve0级别普通字段*/
+						if( recApp["value"]){
+							obj["value"] = recApp["value"];
+						}
+						if(recApp["othervalue"]){
+							obj["othervalue"] = recApp["othervalue"];
+						}
+						if(recApp["wzsm"]){
+							obj["wzsm"] = recApp["wzsm"];
+						}
+					}
+				}
+			})
+		}
+
+		/*加载页面信息*/
+		SurveyBuild["_items"] = data.items;
+		SurveyBuild.is_edit_moda = false;
+	</script>
+	<script type="text/javascript">
+		function elementPosition(obj) {
+			var curleft = 0,
+			curtop = 0;
+			if (obj.offsetParent) {
+				curleft = obj.offsetLeft;
+				curtop = obj.offsetTop;
+				while (obj = obj.offsetParent) {
+					curleft += obj.offsetLeft;
+					curtop += obj.offsetTop;
+				}
+			}
+			return {
+				x: curleft,
+				y: curtop
+			};
+		}
+		function ScrollToControl(id) {
+			var elem = document.getElementById(id);
+			var scrollPos = elementPosition(elem).y;
+			scrollPos = scrollPos - document.documentElement.scrollTop;
+			var remainder = scrollPos % 50;
+			var repeatTimes = (scrollPos - remainder) / 50;
+			ScrollSmoothly(scrollPos, repeatTimes);
+			window.scrollBy(0, remainder);
+		}
+		var repeatCount = 0;
+		var cTimeout;
+		var timeoutIntervals = new Array();
+		var timeoutIntervalSpeed;
+		function ScrollSmoothly(scrollPos, repeatTimes) {
+			if (repeatCount < repeatTimes) {
+				window.scrollBy(0, 50);
+			} else {
+				repeatCount = 0;
+				clearTimeout(cTimeout);
+				return;
+			}
+			repeatCount++;
+			cTimeout = setTimeout("ScrollSmoothly('" + scrollPos + "','" + repeatTimes + "')", 10);
+		}
+	</script>
+	<script type="text/javascript">
+
+		//获取参与者答题内容
+		function getData(){
+			var _a = SurveyBuild["_items"];
+			var _setValue = function(obj,id){
+				if($("#"+id).length >0 ){
+					obj["value"] =SurveyBuild._getAttrVal($("#"+id).get(0));
+				}
+				//单选、多选 其他值
+				if(obj.classname == "Check" || obj.classname == "Radio"){
+					var $other =  $("#main_list div[data-instancid='"+obj["instanceId"]+"'] .sur_other_box");
+					if($other.length>0 ){
+						obj.option[$other.attr('instanceId')]["othervalue"] = "";
+						obj.option[$other.attr('instanceId')]["othervalue"] = $other.siblings("input").val();
+					}
+				}
+			}
+			
+			$.each(_a,function(i,item){
+				_setValue(item,item.itemId);
+			});
+			return _a;
+		}
+		//提交
+		$("#app_submit").click(function(){
+			var isValid = $.formValidator.pageIsValid();
+		    //processing();
+			if(isValid){
+				 SaveSurvey("SUBMIT");
+			}else{
+				scrollTop();
+			}
+		});
+		/*保存在线调查*/
+		function SaveSurvey(cType){
+			if(SurveyBuild.subState == 'S'){
+				return false;
+			}
+			var appInsId = SurveyBuild.appInsId;
+
+			var _a = getData();
+			var _unique = $("#unique").val();
+			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","PAGE_ID":"2","unique":"'+ _unique +'","data":' + $.toJSON(_a) + '}]}}';
+            $.ajax({
+                type: "POST",
+				url:SurveyBuild.tzGeneralURL,
+                data: {
+					tzParams:tzSaveParams
+                },
+                dataType: "JSON",
+                success: function(f) {
+					if (f.state.errcode == "0") {
+						SurveyBuild.appInsId = f.comContent.insid;
+						SurveyBuild.subState = f.comContent.subState;
+						if (f.comContent.code == "0") {
+						 if (cType == "SUBMIT"){
+							noteing(MsgSet.SAVE_SUCCEED);
+							var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"M","SURVEY_WJ_ID":' + templId + '}}';
+							window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
+						 }else{
+							/*处理翻页数据加载*/
+							if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
+								$(".pagebtn1").hide();
+							}else{
+								$(".pagebtn1").show();
+							}
+
+							if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
+								$(".pagebtn2").hide();
+							}else{
+								$(".pagebtn2").show();
+							}
+							SurveyBuild._load();
+						 }
+							 noteing(MsgSet.SAVE_SUCCEED);
+						}else{
+							noteing(f.comContent.msg);
+						}
+					}else{
+						 noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
+					}
+                }
+            });
+		}
+		//页面滑动到顶端
+		function scrollTop(){
+			var targetId = $($("#main_list div[id*='Tip'].onError")[0]).attr("id");
+
+		    $('html, body').animate({
+		        scrollTop: $("#" + targetId).offset().top - 50
+		    }, 500);
+		    return false;
+		}
+		//上一页
+		function prePage(){
+			if(SurveyBuild.curPageNo > 1){
+				pageTo(SurveyBuild.curPageNo - 1);
+			}
+		}
+		//下一页
+		function nextPage(){
+			if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
+				pageTo(SurveyBuild.curPageNo + 1);
+			}
+		}
+		//页面跳转
+		function pageTo(pageno){
+			if(SurveyBuild.maxPage == 1){
+				//只有一页，禁止跳转
+				return false;
+			}
+			var isValid = $.formValidator.pageIsValid();
+			if(isValid){
+				SurveyBuild.curPageNo = pageno;
+				SaveSurvey("SAVE");
+				
+				/*张浪注释，该部分放在保存成功之后执行，SurveyBuild._load()中需要查询保存后的数据	
+				SaveSurvey("SAVE");
+				SurveyBuild.curPageNo = pageno;
+				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
+					$(".pagebtn1").hide();
+				}else{
+					$(".pagebtn1").show();
+				}
+
+				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
+					$(".pagebtn2").hide();
+				}else{
+					$(".pagebtn2").show();
+				}
+				SurveyBuild._load();
+				*/
+				refreshTip();
+			}else{
+				scrollTop();
+			}
+		}
+		//是否密码安全
+		if(passAuth && passAuth === "Y"){
+			var is_password = getcookie("SURVEY_WJ_IS_PASSWORD");
+			var targetVal = SurveyBuild.appInsId + "_" + templId + "_Y";
+			if(is_password && is_password === targetVal){
+				SurveyBuild._load();
+				refreshTip();
+			}else{
+				layer.prompt(
+					{
+				    	title: '输入问卷密码，并确认',
+				    	formType: 1,
+						closeBtn: false
+					},
+					function(pass){
+						var tzPassParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"EJSON","comParams":{"EType":"PASSWORD","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"' + SurveyBuild.appInsId + '","PASSWORD":"' + pass + '"}}';
+			            $.ajax({
+			                type: "POST",
+							url:SurveyBuild.tzGeneralURL,
+			                data: {
+								tzParams:tzPassParams
+			                },
+			                dataType: "JSON",
+			                success: function(f) {
+								if (f.state.errcode == "0") {
+									if(f.comContent.code && f.comContent.code == "0"){
+										layer.closeAll();
+										SurveyBuild._load();
+										refreshTip();
+									}else{
+										alert(f.comContent.msg);
+									}
+
+								}else{
+									alert("系统错误！");
+								}
+			                }
+			            });
+					}
+				);
+			}
+		}else{
+			SurveyBuild._load();
+			refreshTip();
+		}
+		
+		function refreshTip(){
+			//提交按钮是否每页都显示
+			//if(commitRule == "0"){
+				SurveyBuild.curPageNo == SurveyBuild.maxPage ? $(".submit").show():$(".submit").hide();
+			//}else{
+			//	$(".submit").show();
+			//}
+
+			if(SurveyBuild.maxPage > 1){
+				if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
+					$(".pagebtn2").show();
+				}else{
+					$(".pagebtn2").hide();
+				}
+				if(SurveyBuild.curPageNo > 1){
+						$(".pagebtn1").show();
+				}else{
+					$(".pagebtn1").hide();
+				}
+			}else{
+				$(".pagebtn1").hide();
+				$(".pagebtn2").hide();
+			}
+			/*已提交只读*/
+			if(SurveyBuild.subState == "S"){
+				$("form input").prop("readonly", "readonly");
+				$("form select").prop("readonly", "readonly");
+				$("form textarea").prop("readonly", "readonly");
+				$("form input").prop("disabled", true);
+				$("form select").prop("disabled", true);
+				$("form textarea").prop("disabled", true);
+				$(".fileinput-button input").prop("disabled", true);
+				$(".img_del").hide();
+				$(".submit").hide();
+			}
+		}
+	</script>
+</html>

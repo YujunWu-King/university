@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcBgtZwtTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtT" >
+    <id column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <id column="TZ_XXX_BH" property="tzXxxBh" jdbcType="VARCHAR" />
+    <id column="TZ_QU_CODE" property="tzQuCode" jdbcType="VARCHAR" />
+    <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
+    <result column="TZ_QU_NAME" property="tzQuName" jdbcType="VARCHAR" />
+    <result column="TZ_SHORT_NAME" property="tzShortName" jdbcType="VARCHAR" />
+    <result column="TZ_WEIGHT" property="tzWeight" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_TPL_ID, TZ_XXX_BH, TZ_QU_CODE, TZ_ORDER, TZ_QU_NAME, TZ_SHORT_NAME, TZ_WEIGHT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DC_BGT_ZWT_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_QU_CODE = #{tzQuCode,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtTKey" >
+    delete from PS_TZ_DC_BGT_ZWT_T
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_QU_CODE = #{tzQuCode,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtT" >
+    insert into PS_TZ_DC_BGT_ZWT_T (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_QU_CODE, 
+      TZ_ORDER, TZ_QU_NAME, TZ_SHORT_NAME, 
+      TZ_WEIGHT)
+    values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzQuCode,jdbcType=VARCHAR}, 
+      #{tzOrder,jdbcType=INTEGER}, #{tzQuName,jdbcType=VARCHAR}, #{tzShortName,jdbcType=VARCHAR}, 
+      #{tzWeight,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtT" >
+    insert into PS_TZ_DC_BGT_ZWT_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzXxxBh != null" >
+        TZ_XXX_BH,
+      </if>
+      <if test="tzQuCode != null" >
+        TZ_QU_CODE,
+      </if>
+      <if test="tzOrder != null" >
+        TZ_ORDER,
+      </if>
+      <if test="tzQuName != null" >
+        TZ_QU_NAME,
+      </if>
+      <if test="tzShortName != null" >
+        TZ_SHORT_NAME,
+      </if>
+      <if test="tzWeight != null" >
+        TZ_WEIGHT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXxxBh != null" >
+        #{tzXxxBh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQuCode != null" >
+        #{tzQuCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrder != null" >
+        #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzQuName != null" >
+        #{tzQuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShortName != null" >
+        #{tzShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeight != null" >
+        #{tzWeight,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtT" >
+    update PS_TZ_DC_BGT_ZWT_T
+    <set >
+      <if test="tzOrder != null" >
+        TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzQuName != null" >
+        TZ_QU_NAME = #{tzQuName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShortName != null" >
+        TZ_SHORT_NAME = #{tzShortName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWeight != null" >
+        TZ_WEIGHT = #{tzWeight,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_QU_CODE = #{tzQuCode,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcBgtZwtT" >
+    update PS_TZ_DC_BGT_ZWT_T
+    set TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      TZ_QU_NAME = #{tzQuName,jdbcType=VARCHAR},
+      TZ_SHORT_NAME = #{tzShortName,jdbcType=VARCHAR},
+      TZ_WEIGHT = #{tzWeight,jdbcType=DECIMAL}
+    where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
+      and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
+      and TZ_QU_CODE = #{tzQuCode,jdbcType=VARCHAR}
+  </update>
+</mapper>
