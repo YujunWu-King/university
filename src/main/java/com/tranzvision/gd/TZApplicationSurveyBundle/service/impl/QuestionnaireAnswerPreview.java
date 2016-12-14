@@ -111,11 +111,17 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 						try {
 							strRadioBoxHtml=strRadioBoxHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_MULCHOICE_HTML", TZ_XXXKXZ_MS,tempCount+"%",String.valueOf(countY));
 						} catch (TzSystemException e) {
-							strRadioBoxHtml="";
 							e.printStackTrace();
 						}
-						System.out.println("===单选题====strRadioBoxHtml:"+strRadioBoxHtml);
 					}
+					try {
+						strRadioBoxHtml=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML4",strRadioBoxHtml);
+						strDivHtml=strDivHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML3",TZ_XXX_QID,TZ_TITLE,strRadioBoxHtml);
+						System.out.println("===单选题====strRadioBoxHtml:"+strRadioBoxHtml);
+					} catch (TzSystemException e) {
+						e.printStackTrace();
+					}
+					strRadioBoxHtml="";
 					}
 				}
 				//单选量表题
