@@ -220,19 +220,20 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 					String TZ_DC_WJ_JSGZ=dataMap.get("TZ_DC_WJ_JSGZ").toString();
 					psTzDcWjDyTWithBLOBs.setTzDcWjJsgz(TZ_DC_WJ_JSGZ);
 				}
+
 				//问卷密码
-				String TZ_DC_WJ_PWD="N";
 				if(dataMap.containsKey("TZ_DC_WJ_PWD")&&dataMap.get("TZ_DC_WJ_PWD")!=null){
-					TZ_DC_WJ_PWD=dataMap.get("TZ_DC_WJ_PWD").toString();
-					//是否需要密码
-					String TZ_DC_WJ_NEEDPWD=dataMap.get("TZ_DC_WJ_NEEDPWD")==null?null:dataMap.get("TZ_DC_WJ_NEEDPWD").toString();
-					if(TZ_DC_WJ_NEEDPWD!=null&&TZ_DC_WJ_NEEDPWD.equals("on"))
-						TZ_DC_WJ_PWD="Y";
-					else
-						TZ_DC_WJ_PWD="N";
-					
+					String TZ_DC_WJ_PWD=dataMap.get("TZ_DC_WJ_PWD").toString();
+					psTzDcWjDyTWithBLOBs.setTzDcWjPwd(TZ_DC_WJ_PWD);
 				}
-				psTzDcWjDyTWithBLOBs.setTzDcWjPwd(TZ_DC_WJ_PWD);
+				//是否需要密码
+					String TZ_DC_WJ_NEEDPWD=dataMap.get("TZ_DC_WJ_NEEDPWD")==null?"N":dataMap.get("TZ_DC_WJ_NEEDPWD").toString();
+					if(TZ_DC_WJ_NEEDPWD!=null&&TZ_DC_WJ_NEEDPWD.equals("on"))
+						TZ_DC_WJ_NEEDPWD="Y";
+					else
+						TZ_DC_WJ_NEEDPWD="N";
+					
+				psTzDcWjDyTWithBLOBs.setTzDcWjNeedpwd(TZ_DC_WJ_NEEDPWD);
 				
 				//是否使用前倒页 字段缺失？
 				if(dataMap.containsKey("TZ_DC_WJ_QYQD")&&dataMap.get("TZ_DC_WJ_QYQD")!=null){
