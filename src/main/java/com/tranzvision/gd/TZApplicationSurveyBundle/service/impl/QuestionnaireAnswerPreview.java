@@ -569,14 +569,14 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 					final String attachUploadSQL="select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?";
 					List<Map<String,Object>>attachUploadDataList=new ArrayList<Map<String,Object>>();
 					attachUploadDataList=jdbcTemplate.queryForList(attachUploadSQL, new Object[]{surveyID});
+					String strAttach="";
+					String strAttach2="";
 					if(attachUploadDataList!=null){
 						for(int i=0;i<attachUploadDataList.size();i++){
 							Map<String,Object>attachUploadMap=new HashMap<String,Object>();
 							attachUploadMap=attachUploadDataList.get(i);
 							TZ_APP_INS_ID=attachUploadMap.get("TZ_APP_INS_ID")==null?null:attachUploadMap.get("TZ_APP_INS_ID").toString();
 							
-						    String strAttach="";
-						    String strAttach2="";
 						     
 							final String attachSQL="select ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_INDEX,ROW_ADDED_DTTM from PS_TZ_DC_WJATT_T WHERE TZ_APP_INS_ID =? and TZ_XXX_BH=?";
 							List<Map<String,Object>>attachDataList=new ArrayList<Map<String,Object>>();
@@ -621,20 +621,20 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 									strAttach="";
 								}
 							}
-							try {
-								strAttach2=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML4", strAttach2);
-							} catch (TzSystemException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							try {
-								strDivHtml=strDivHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML3", TZ_XXX_QID,TZ_TITLE,strAttach2);
-							} catch (TzSystemException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							strAttach2="";
 						}
+						try {
+							strAttach2=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML4", strAttach2);
+						} catch (TzSystemException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						try {
+							strDivHtml=strDivHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_DIV_HTML3", TZ_XXX_QID,TZ_TITLE,strAttach2);
+						} catch (TzSystemException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						strAttach2="";
 					}
 				}
 				
