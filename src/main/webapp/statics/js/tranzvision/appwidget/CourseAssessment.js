@@ -6,6 +6,7 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
     title: "课程评估",
     StorageType: "T",
     qCode: "",//题号
+	isAvg:"N",
     option: {},
     child: {},
     subHorizontal: 'N',//子问题横向排列
@@ -23,20 +24,21 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
                 }
             }
         }
+		/*
         if ($.isEmptyObject(this.child)) {
-            /*如果表格单选题无子问题，将初始化this.children*/
+            //如果表格单选题无子问题，将初始化this.children
             var n = "S" + ( + new Date());
-            for (var i = 1; i <= 3; ++i) {
+            for (var i = 1; i <= 1; ++i) {
                 this.child[n + i] = {
                     sqCode: i,
-                    question: "子问题" + i,
-                    shortDesc: '简称' + i,
+                    question: "",
+                    shortDesc: '',
                     orderby: i,
                     weight: 0,
                     value: []
                 }
             }
-        }
+        }*/
     },
     _getHtml: function(data, previewmode) {
         var c = "",e = "",s = "";
@@ -100,6 +102,9 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
                     c += '		</ul>';
                     c += '	</div>';
                 }
+				if ($.isEmptyObject(this.child)) {
+					c += MsgSet['NOKC'];
+				}
                 c += '	</div>';
                 c += '</div>';
             }
@@ -114,7 +119,7 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
                 s += '<tr>';
                 s += '<th id="sq' + i + '">' + data["child"][i]["question"] + '</th>';
                 for (var j in data.option) {
-                    s += '<td><img src="' + TzUniversityContextPath + '/statics/js/survey/assets/img/read-radio.gif"></td>';
+                    s += '<td><img src="/survey/assets/img/read-radio.gif"></td>';
                 }
                 s += '</tr>';
             }
@@ -143,10 +148,12 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
         //选项
         for (var i in data.option) {
             list += '<tr class="read-radio" data-id="' + data.instanceId + '-' + i + '">';
+            //选项编码
+            list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + data["option"][i]["code"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //评分选项
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="' + data["option"][i]["txt"] + '" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
             //分值
-            list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + data["option"][i]["code"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
+            list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'weight\')" value="' + data["option"][i]["weight"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //操作
             list += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
             list += '</tr>';
@@ -176,6 +183,7 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
         e += '		<table class="table table-bordered data-table">';
         e += '			<thead>';
         e += '				<tr>';
+        e += '					<th class="thw">编号</th>';
         e += '					<th class="alLeft">评分选项<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">批量编辑</button></th>';
         e += '					<th>分值</th>';
         e += '					<th width="45">操作</th>';
@@ -184,6 +192,17 @@ SurveyBuild.extend("CourseAssessment", "baseComponent", {
         e += '			<tbody class="ui-sortable">' + list + '</tbody>';
         e += '		</table>';
         e += '</fieldset>';
+		
+		//设置
+        e += '<div class="edit_jygz">';
+        e += '	<span class="title"><i class="icon-cog"></i> 设置</span>';
+        e += '  <div class="groupbox">';
+		e += '		<div class="edit_item_warp" style="margin-top:5px;">';
+		e += '			<input class="mbIE" onchange="SurveyBuild.saveAttr(this,\'isAvg\')" ' + (data.isAvg == "Y" ? "checked='checked'": "") + ' id="isAvg" type="checkbox">';
+		e += '			<label for="isAvg">是否计算平均分</label>';
+		e += '		</div>';
+		e += '	</div>';
+		e += '</div>';
 
         //校验规则
         e += '<div class="edit_jygz">';

@@ -38,25 +38,18 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     }
                 });
             }
-            c += '<div class="main_inner_content_info_autoheight_top">';
-            c += '	<div class="main_inner_content_info_right_top">';
-            c += '		<div class="main_inner_content_info_right_photo">';
-            c += '        <input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            c += '			<a id="photo' + data.itemId + '">';
-            c += '				<img width="125" height="158" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo">';
-            c += '			</a>';
+            c += '<div class="input-list">';
+            c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+            c += '  <div class="input-list-text left headshot">';
+            c += '		<div class="headshot-pic">';
+            c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+            c += '			<a id="photo' + data.itemId + '"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
             c += '		</div>';
-            c += '		<div style="background-image:none;" class="main_inner_content_info_right_text_2"><span class="reg_title_star">*</span>' + data.title;
-            c += '			<div style="margin-left:200px;margin-top:-35px">';
-            c += '				<div id="' + data.itemId + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onShow">';
-            c += '					<div class="onShow"></div>';
-            c += '				</div>';
-            c += '			</div>';
-            c += '		</div>';
-            c += '		<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
-            c += '		<div class="main_inner_content_info_right_text_2">' + data.suffix + '</div>';
             c += '	</div>';
+            c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+            c += '	<div class="clear"></div><br>';
             c += '</div>';
+            c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
         } else {
             c += '<div class="question-answer">';
             c += '	<div class="format">';

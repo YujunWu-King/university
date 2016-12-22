@@ -31,39 +31,28 @@ SurveyBuild.extend("mobilePhone","baseComponent",{
         if (previewmode) {
             if(SurveyBuild._readonly){
                 //只读模式
-
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_readonly_right" >';
-                c += (children[0]["value"] ? "(" : "") + children[0]["value"] +  (children[0]["value"] ? ")&nbsp;" : "") + children[1]["value"];
-                c += '  </div>';
-                c += '</div>'
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '  <div class="input-list-text left">' + (children[0]["value"] ? "(" : "") + children[0]["value"] +  (children[0]["value"] ? ")&nbsp;" : "") + children[1]["value"] + '</div>';
+                c += '	<div class="input-list-suffix left"></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
             }else{
                 //填写模式
                 var regular = "/^[\\d,-]+$/";
                 var regArea = "/^[\\+]?[\\d]+$/";
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
 
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                c += '    	<input type="text" class="inpu-list-text-enter" placeholder="' + children[0]["itemName"] + '" title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" data-regular = "' + regArea + '">';
                 c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">';
-                //c += '		<input type="text" ' + (data.isShow != "Y" ? "disabled=\"disabled\"": "") + ' placeholder="' + children[0]["itemName"] + '"' + (data.isShow != "Y"?"style='display:none;'":"") + ' title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" data-regular = "' + regArea + '">';
-                c += '		<input type="text" placeholder="' + children[0]["itemName"] + '" title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" data-regular = "' + regArea + '">';
-                c += '		<input type="text" title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '" value="' + children[1]["value"] + '" data-regular = "' + regular + '">';
-                if(data.suffix){
-                    c += '<span>&nbsp;&nbsp;' + data.suffix + '</span>';
-                }
-
-                c += '		<div style="margin-top: -42px; margin-left: 254px">';
-                c += '			<div id="' + data.itemId + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
-                c += '				<div class="onCorrect">&nbsp;</div>';
-                c += '			</div>';
-                c += '		</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '" value="' + children[1]["value"] + '" data-regular = "' + regular + '">';
                 c += '	</div>';
+                c += '	<div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                c += '	<div class="clear"></div>';
                 c += '</div>';
             }
         } else {

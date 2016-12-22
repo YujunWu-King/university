@@ -56,29 +56,29 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String language = "", tmpId = "", siteId = "", jgId = "", skinId = "";
 			Map<String, Object> map;
 			String languageSQL = "";
-			if (jacksonUtil.containsKey("TPLID")) {
-				tmpId = jacksonUtil.getString("TPLID");
-				languageSQL = "SELECT TZ_JG_ID,TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
-				map = jdbcTemplate.queryForMap(languageSQL, new Object[] { tmpId });
+			if (jacksonUtil.containsKey("siteId")) {
+				siteId = jacksonUtil.getString("siteId");
+				languageSQL = "select TZ_JG_ID,TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+				map = jdbcTemplate.queryForMap(languageSQL, new Object[] { siteId });
 				if (map != null) {
-					language = (String) map.get("TZ_APP_TPL_LAN");
+					language = (String) map.get("TZ_SITE_LANG");
 					jgId = (String) map.get("TZ_JG_ID");
-					String skinSQL = "select TZ_SITEI_ID,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1";
-					Map<String, Object> skinMap = jdbcTemplate.queryForMap(skinSQL, new Object[] { jgId });
-					if (skinMap != null) {
-						siteId = (String) skinMap.get("TZ_SITEI_ID");
-						skinId = (String) skinMap.get("TZ_SKIN_ID");
-					}
+					skinId = (String) map.get("TZ_SKIN_ID");
 				}
 			} else {
-				if (jacksonUtil.containsKey("siteId")) {
-					siteId = jacksonUtil.getString("siteId");
-					languageSQL = "select TZ_JG_ID,TZ_SITE_LANG,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-					map = jdbcTemplate.queryForMap(languageSQL, new Object[] { siteId });
+				if (jacksonUtil.containsKey("TPLID")) {
+					tmpId = jacksonUtil.getString("TPLID");
+					languageSQL = "SELECT TZ_JG_ID,TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
+					map = jdbcTemplate.queryForMap(languageSQL, new Object[] { tmpId });
 					if (map != null) {
-						language = (String) map.get("TZ_SITE_LANG");
+						language = (String) map.get("TZ_APP_TPL_LAN");
 						jgId = (String) map.get("TZ_JG_ID");
-						skinId = (String) map.get("TZ_SKIN_ID");
+						String skinSQL = "select TZ_SITEI_ID,TZ_SKIN_ID from PS_TZ_SITEI_DEFN_T where TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' LIMIT 0,1";
+						Map<String, Object> skinMap = jdbcTemplate.queryForMap(skinSQL, new Object[] { jgId });
+						if (skinMap != null) {
+							siteId = (String) skinMap.get("TZ_SITEI_ID");
+							skinId = (String) skinMap.get("TZ_SKIN_ID");
+						}
 					}
 				}
 			}

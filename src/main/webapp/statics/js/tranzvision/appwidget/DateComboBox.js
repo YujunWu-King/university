@@ -41,49 +41,47 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		if (previewmode) {
 			if(SurveyBuild._readonly){
 				//只读模式
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">';
 
-				c += '<div class="main_inner_content_info_autoheight cLH">';
-				c += '  <div class="main_inner_connent_info_left">';
-				c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-				c += '  </div>';
-				c += '  <div class="main_inner_content_info_right" >';
-				c += '		<span>' + children[0]["value"] + '</span>';
-				c += '		&nbsp;&nbsp;&nbsp;&nbsp;<span style="' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '">' + children[1]["value"] + '</span>';
-				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
-					c += '		<div class="tz_checkbox_div '+(data.todatebz == "Y" && children[2]["value"] == "Y" ? "on_check": "")+'" style="margin: 0px;position: relative;">';
-					c += '			<input class="tz_radio_checkbox" type="checkbox"  ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + ' style="width:20px;height:20px;' + (data.todatebz != "Y" ? "display:none;": "") + '"/>' ;
-					c += '      </div>';
-					c += '     <span style="position: relative;">'+ (data.todatebz == "Y" ? MsgSet["TODATE"]: "") +'</span>';
+				c += '<span style="width:49%">' + children[0]["value"] + '</span>';
+				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y" && children[2]["value"] == "Y"){
+					c += '<span style="">&nbsp;~&nbsp;' + MsgSet["TODATE"] + '</span>';
+				}else{
+					c += '&nbsp;~&nbsp;<span style="width: 49%;">' + children[1]["value"] + '</span>';
 				}
-				c += '	</div>';
-				c += '</div>'
+
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left"></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}else{
 				//填写模式
 				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
 				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-
-				c += '<div class="main_inner_content_info_autoheight">';
-				c += '	<div class="main_inner_connent_info_left">';
-				c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-				c += '	</div>';
-				c += '	<div class="main_inner_content_info_right">';
-				c += '		<input name="' + data["itemId"] + children[0]["itemId"] + '" type="text" class="input_120px" id="' + data["itemId"] + children[0]["itemId"] + '" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"/>';
-				c += '		<input ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" type="text" class="input_120px" id="' + data["itemId"] + children[1]["itemId"] + '" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '" />';
-
-				c += '		<img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:'+(data.todatebz == "Y" && children[2]["value"] == "Y" ? "-38px" : "-171px")+';cursor:pointer;">';
-				c += '		<img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-69px;cursor:pointer;'+(data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "")+'">';
+					
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" style="width:46%" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"><img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="width:46%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '"><img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" style="display:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "none;": "") + '" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
 				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
-					c += '		<div class="tz_checkbox_div' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? " on_check": "") + '" style="margin:0px;position:relative;left:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "-33px" : "-64px") + '">';
-					c += '			<input class="tz_radio_checkbox" type="checkbox"' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + 'id="' + data["itemId"] + children[2]["itemId"] + '" name="' + data["itemId"] + children[2]["itemId"] + '"   style="width:20px;height:20px;' + (data.todatebz != "Y" ? "display:none;": "") + '"/>' ;
-					c += '      </div>';
-					//c += '	<label for="' + data["itemId"] + children[2]["itemId"] + '" style="margin: 0px;position: relative; left:'+(data.todatebz == "Y" && children[2]["value"] == "Y" ? "-30px" : "-60px")+'"></label>';
-					c += '     <span style="position: relative; left:'+(data.todatebz == "Y" && children[2]["value"] == "Y" ? "-36px" : "-68px")+'">'+ (data.todatebz == "Y" ? MsgSet["TODATE"]: "") +'</span>';
+					c += '<div class="check-box' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? " checkedBox": "") + '"><i>';
+					c += '	<input type="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + 'id="' + data["itemId"] + children[2]["itemId"] + '" name="' + data["itemId"] + children[2]["itemId"] + '"/>';
+					c += '</i></div>';
+					c += (data.todatebz == "Y" ? MsgSet["TODATE"]: "");
+					c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
 				}
-				c += '		<div style="margin-top:-40px;margin-left:320px">';
-				c += '			<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow" ><div class="onShow"></div></div>';
-				c += '		</div>';
-				c += '	</div>';
-				c += '</div>'
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left">';
+				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
+				}else{
+					c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
+				}
+				c += '	  </div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}
 		} else {
 			c += '<div class="question-answer"><div class="format ">';
@@ -137,13 +135,16 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		return e;
 	},
 	_eventbind: function(data) {
+		$.fn.toggleCheckbox = function () {
+			this.prop('checked', !this.prop('checked'));
+		}
+		
 		var $dateInputStart = $("#" + data["itemId"] + data.children[0]["itemId"]);
 		var $dateInputEnd = $("#" + data["itemId"] + data.children[1]["itemId"]);
 		var $todayCheckbox = $("#" + data["itemId"] + data.children[2]["itemId"]);
 		
-		var $checkboxDev = $todayCheckbox.closest(".tz_checkbox_div");
-		var $toDateDesc = $checkboxDev.next("span");
-		
+		var $checkboxDev = $todayCheckbox.closest(".check-box");
+
 		var $dateImgStart = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
 		var $dateImgEnd = $("#" + data["itemId"] + data.children[1]["itemId"] + "_Btn");
 		
@@ -171,25 +172,23 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
                 $dateInputEnd.trigger("blur");
             }
 		});
-		$todayCheckbox.click(function() {
-			if ($(this).prop("checked")) {
-				$dateInputEnd.hide();
-				$dateImgEnd.hide();
-				$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
-				$dateImgStart.css("left","-38px");
-				$checkboxDev.css("left","-33px");
-				$toDateDesc.css("left","-38px");
-				$(this).closest(".tz_checkbox_div").addClass("on_check");
-			} else {
-				$dateInputEnd.show();
-				$dateImgEnd.show();
-				$dateInputEnd.removeAttr("disabled").unFormValidator(false);
-				$dateImgStart.css("left","-171px");
-				$checkboxDev.css("left","-64px");
-				$toDateDesc.css("left","-68px");
-				$(this).closest(".tz_checkbox_div").removeClass("on_check");
-			}
-		});
+		if(!SurveyBuild._readonly){
+			$checkboxDev.click(function(){
+			    $(this).find(':checkbox').toggleCheckbox();
+			    $(this).toggleClass('checkedBox');
+			    
+				if ($(this).find(':checkbox').prop("checked")) {
+					$dateInputEnd.hide();
+					$dateImgEnd.hide();
+					$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
+				} else {
+					$dateInputEnd.show();
+					$dateImgEnd.show();
+					$dateInputEnd.removeAttr("disabled").unFormValidator(false);
+				}
+			});
+		}
+
 		
 		$dateImgStart.click(function(e) {
             $dateInputStart.focus();

@@ -10,7 +10,7 @@ SurveyBuild.extend("bmrClass","baseComponent",{
     _getHtml : function(data,previewmode){
         var c = "", val = data.value,desc = "";
         if(previewmode){
-            //if(val.length < 1){
+        	if($("#ClassId").length > 0){
                 var classid = $("#ClassId").val();
                 var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"CLASSINFO","CLASSID":' + classid + '}}';
                 $.ajax({
@@ -30,19 +30,15 @@ SurveyBuild.extend("bmrClass","baseComponent",{
                         }
                     }
                 });
-            //}
-
-            c += '<div class="main_inner_content_info_autoheight" style="white-space:normal;">';
-            c += '	<div class="main_inner_connent_info_left"><span class="reg_title_star">*</span>' + data.title + '</div>';
-            c += '	<div class="main_inner_content_info_right">';
-            c += '		<div class="main_inner_content_info_right_option_251px" style="width:400px;">' + data.wzsm + '</div>';
-            c += '     <input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value="' + data.value + '">';
-            c += '		<div class="main_inner_content_info_edit">';
-            c += '			<a class="blue" target="' + (data.suffixUrl ? "_blank" : "") + '" href="' + (data.suffixUrl ? data.suffixUrl : "javascript:void(0);") + '">' + data.suffix + '</a>';
-            c += '		</div>';
-            c += '	</div>';
+            }
+            
+            c += '<div class="input-list">';
+            c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
+            c += '	<div class="input-list-text left">' + data.wzsm + '</div>';
+            c += '	<div class="input-list-suffix left"></div>';
+            c += '	<div class="clear"></div>';
             c += '</div>';
-
+            c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value="' + data.value + '">';
         }else{
             c += '<div class="question-answer">';
             c += '	<div class="format">';
@@ -74,13 +70,13 @@ SurveyBuild.extend("bmrClass","baseComponent",{
         return e;
     },
 	_eventbind: function(data) {
-		//自动换行后高度调整
-		var $Input = $("#" + data.itemId);	
-		var $classDiv = $Input.prev(".main_inner_content_info_right_option_251px");
-		var offHeight = $classDiv.get(0).offsetHeight;
-		var scrHeight = $classDiv.get(0).scrollHeight;
-		if(offHeight < scrHeight){
-			$Input.closest(".main_inner_content_info_autoheight").css("padding-bottom","53px");	
-		}
+//		//自动换行后高度调整
+//		var $Input = $("#" + data.itemId);	
+//		var $classDiv = $Input.prev(".inpu-list-text-enter");
+//		var offHeight = $classDiv.get(0).offsetHeight;
+//		var scrHeight = $classDiv.get(0).scrollHeight;
+//		if(offHeight < scrHeight){
+//			$Input.closest(".input-list").css("padding-bottom","53px");	
+//		}
 	}
 });

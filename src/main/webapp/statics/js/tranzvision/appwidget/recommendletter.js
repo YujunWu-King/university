@@ -1524,15 +1524,15 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div class="input-list-info left"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 				//发送邮件
-				works += '<div id="sendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//重新发送
-				works += '<div id="reSendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//更换推荐人
-				works += '<div id="changeRecS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 			
@@ -1579,15 +1579,15 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 			
 				//发送邮件
-				works += '<div id="sendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
+				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//重新发送
-				works += '<div id="reSendEmailS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				//更换推荐人
-				works += '<div id="changeRecS_'+i+'" style="padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 			

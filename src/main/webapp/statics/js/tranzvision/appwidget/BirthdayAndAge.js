@@ -36,31 +36,24 @@ SurveyBuild.extend("BirthdayAndAge", "baseComponent", {
 		if (previewmode) {
 			if(SurveyBuild._readonly){
 				//只读模式
-
-				c += '<div class="main_inner_content_info_autoheight cLH">';
-				c += '  <div class="main_inner_connent_info_left">';
-				c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-				c += '  </div>';
-				c += '  <div class="main_inner_content_info_right" >' + data.children[0]["value"] + "&nbsp;&nbsp;&nbsp;&nbsp;" + data.children[1]["value"] + '	</div>';
-				c += '</div>'
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">' + data.children[0]["value"] + "&nbsp;&nbsp;&nbsp;&nbsp;" + data.children[1]["value"] + '</div>';
+				c += '    <div class="input-list-suffix left"></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}else{
 				//填写模式
 				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
-				c += '<div class="main_inner_content_info_autoheight">';
-				c += '	<div class="main_inner_connent_info_left">';
-				c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-				c += '	</div>';
-				c += '	<div class="main_inner_content_info_right">';
-				c += '		<input id="' + data["itemId"] + data.children[0]["itemId"] + '" name="' + data["itemId"] + data.children[0]["itemId"] + '" type="text" value="' + data.children[0]["value"] + '"class="input_120px margin-right-0px" readonly="readonly" onclick="this.focus()" title="' + data.children[0]["itemName"] + '">&nbsp;';
-				c += '<input type="text" id="' + data["itemId"] + data.children[1]["itemId"] + '" value="' + data.children[1]["value"] + '" title="' + data.children[1]["itemName"] + '" class="input_120px"  readonly="readonly">';
-				c += '		<img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;left:-171px;cursor:pointer;">';
-				c += '		<div style="margin-top:-40px;margin-left:256px">';
-				c += '			<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-				c += '				<div class="onShow"></div>';
-				c += '			</div>';
-				c += '		</div>';
-				c += '	</div>';
-				c += '</div>'
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[0]["itemId"] + '" name="' + data["itemId"] + data.children[0]["itemId"] + '" value="' + data.children[0]["value"] + '" onclick="this.focus()" title="' + data.children[0]["itemName"] + '" style="width:46%"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" id="' + data["itemId"] + data.children[1]["itemId"] + '" value="' + data.children[1]["value"] + '" title="' + data.children[1]["itemName"] + '" style="width:46%">';
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow" ><div class="onShow"></div></div></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}
 		} else {
 			var format = "";

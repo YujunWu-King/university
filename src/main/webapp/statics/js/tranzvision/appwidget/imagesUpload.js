@@ -15,69 +15,78 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 	children: [{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}],
 
     _getHtml: function(data, previewmode) {
-        var c = "", val = data.value ? data.value: data.defaultval;
+        var c = "",msg = "", val = data.value ? data.value: data.defaultval;
 		var children = data.children;
         if (previewmode) {
+        	if(data.fileType != "" || data.fileSize != ""){
+        		var typeArr = data.fileType.split(",");
+        		var fileType = "";
+        		for(var i = 0; i < typeArr.length; i++){
+        			if (SurveyBuild.BMB_LANG == "ENG"){
+        				fileType = fileType + typeArr[i] + ",";
+        			} else {
+        				fileType = fileType + "." + typeArr[i] + "、";
+        			}	
+        		}
+        		if (fileType != ""){
+        			fileType = fileType.substring(0,fileType.length-1);
+        		}
 
-            c = '<div class="main_inner_content_info_autoheight">';
-            c += '<div class="main_inner_connent_info_left"><span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-			c += '<div class="main_inner_content_info_right" style="height:auto;position: relative;">';
-			c += '<div class="file_upload_button"><div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="'+data.itemId+'" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
-//			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="websitefile" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
-			c += '<div style="margin-left:426px;position: absolute;"><div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow"></div></div></div>';
-			c += '</div>';
+        		typeMsg = fileType != "" ? MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",fileType) : "";
+        		if (SurveyBuild.BMB_LANG == "ENG"){
+        			msg = data.fileSize != "" ? (typeMsg != "" ? typeMsg : "") + " " + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : typeMsg;
+        		}else{
+        			msg = data.fileSize != "" ? (typeMsg != "" ? typeMsg : "") + "，" + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : typeMsg;	
+        		}
+        	}
 
-			//多附件列表
-			if(data.allowMultiAtta == "Y"){
-				
-				c += '<div class="main_inner_file_list" id="'+data.itemId+'_AttList"><ul>';
-				for(var i=0; i<children.length; i++){
-					if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-						c += '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,"'+data.instanceId+'") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
-						c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
-					}
-				}
-				c += '</ul></div>';	
-				c += '</div>';
-			} else {
-				c += '<div class="main_inner_single_file_list"><ul>';
-				c += '<li><a class="main_inner_file_a" id="'+data.itemId+'_A" file-index="1" onclick=SurveyBuild.viewImageSet(this,"'+data.instanceId+'")>'+ (children[0].viewFileName != "" && children[0].sysFileName != ""? children[0].viewFileName: "") +'</a>';
-				c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'") style="display:'+(children[0].viewFileName != "" && children[0].sysFileName != "" ? "":"none")+'"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div></li>';
-				c += '</ul></div>';
-				c += '</div>';	
+        	c += '<div class="input-list-blank margart15">';
+        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';           
+        	c += '	<div class="input-list-texttemplate left" style="display:' + (SurveyBuild._readonly?'none':'block') + '">';
+        	/*c += '		<div>' + data.onShowMessage + '</div>';*/
+        	c += '		<div class="filebtn left">';
+        	c += '			<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+        	c += '			<input data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')" type="file" class="filebtn-orgtext" >';
+        	c += '		</div>';
+			c += '	<div class="file-list-suffix" style="display:' + (SurveyBuild._readonly?'none':'block') + '">' + (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</div>';
+			c += '		<div class="clear"></div>';
+        	c += '		<div>' + msg + '<div id="' + data.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
+        	c += '	</div>';
+        	c += '	<div class="input-list-info-blank left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><span class="red"></div>';                
+        	c += '	<div class="input-list-upload left">';
+
+        	c += '		<div class="input-list-upload-con" id="' + data.itemId + '_AttList" style="display:' + (children.length < 1 ? 'none':'black') + '">';
+        	if(data.allowMultiAtta == "Y"){
+        		for(var i=0; i<children.length; i++){
+        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
+        				c += '<div class="input-list-uploadcon-list">';
+        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">' + children[i].viewFileName + '</a></div>';
+        				c += '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+        				c += '	<div class="clear"></div>';
+        				c += '</div>';
+        			}
+        		}
+        	}else{
+        		for(var i=0; i<children.length; i++){
+        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
+        				c += '<div class="input-list-uploadcon-list">';
+        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">' + children[i].viewFileName + '</a></div>';
+						c += '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+        				c += '	<div class="clear"></div>';
+        				c += '</div>';
+        			}
+        		}
+        	}
+        	c += '		</div>';
+        	c += '	</div>';
+			/*
+        	c += '	<div class="input-list-suffix-blank left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><span class="red"></span></div>';
+        	c += '	<div class="input-list-upload left" style="width:63%;display:' + (SurveyBuild._readonly?'none':'block') + '">' + (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</div>';*/
+        	c += '	<div class="clear"></div>';
+        	c += '</div>';
+			if(data.onShowMessage!=""){
+				c += '<div style="margin-top:0px" class="input-list-blank"><div class="input-list-info-blank left"><span class="red"></span></div><div class="input-list-upload left">'+data.onShowMessage+'</div><div class="clear"></div></div>';
 			}
-			c += '</div>';
-			//后缀
-			c += '<div class="main_inner_content_suffix">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></div>" : "</div>");
-			
-			if(data.fileType != "" || data.fileSize != ""){
-				var strFileFormat = data.fileType;
-				var typeArr = strFileFormat.split(",");
-				var strFileType = "";
-				for(var i=0;i<typeArr.length;i++){
-					if (SurveyBuild.BMB_LANG == "ENG"){
-						strFileType = strFileType + typeArr[i] + ",";
-					} else {
-						strFileType = strFileType + "." + typeArr[i] + "、";
-					}	
-				}
-				if (strFileType != ""){
-					strFileType = strFileType.substring(0,strFileType.length-1);	
-				}
-				c += '<div class="main_inner_content_tips_3line" style="clear:left;padding-left:140px;height:auto; margin-bottom: 10px;"><p><span class="font_orange_16px">';
-				p = strFileType != "" ? MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",strFileType) : "";
-				if (SurveyBuild.BMB_LANG == "ENG"){
-					p2 = data.fileSize != "" ? (p != "" ? p : "") + " " + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : p;
-				}else{
-					p2 = data.fileSize != "" ? (p != "" ? p : "") + "，" + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : p;	
-				}
-				
-				c += p2;
-				c += '</span></p></div>';
-			}
-			
-
         } else {
             c += '<div class="question-answer"><button class="btn btn-small"><i class="icon-upload-alt"></i>图片上传</button><span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span></div>';
         }
@@ -91,7 +100,10 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
         e += '</div>';
 
         e += '<div class="edit_item_warp"><span class="edit_item_label">后缀链接：</span>  <input type="text" value="' + data.suffixUrl + '" onkeyup="SurveyBuild.saveAttr(this,\'suffixUrl\')" class="medium"></div>';
-
+        e += '<div class="edit_item_warp">';
+        e += '  <span class="edit_item_label">提示信息：</span>';
+        e += '  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'onShowMessage\')" value="' + data.onShowMessage + '"/>';
+        e += '</div>';
 
         e += '<div class="edit_paramSet mt10"><span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
 		e += '<div class="groupbox">';

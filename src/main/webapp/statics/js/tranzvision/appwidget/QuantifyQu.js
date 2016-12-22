@@ -6,6 +6,7 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
     title: "量表题",
     StorageType:"S",
     qCode:"Q1",
+	isAvg:"N",
     option: {},
     _init: function(d ,previewmode) {
         if ($.isEmptyObject(this.option)) {
@@ -49,9 +50,9 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
                 c += '	</div>';
                 c += '</div>';
             }else{
-                e += '<option style="height:30px;"  value="">'+MsgSet["PLEASE_CHOOSE"]+'</option>';
+                e += '<option style="height:30px;color:rgb(102,102,102);"  value="">'+MsgSet["PLEASE_CHOOSE"]+'</option>';
                 for (var i in data.option) {
-                    e += '<option ' + (data.value == data["option"][i]["code"]  || data["option"][i]["defaultval"] == "Y"? "selected='selected'": "") + ' value="' + data["option"][i]["code"] + '" style="height:30px;">' + data["option"][i]["txt"] + '</option>';
+                    e += '<option ' + (data.value == data["option"][i]["code"]  || data["option"][i]["defaultval"] == "Y"? "selected='selected'": "") + ' value="' + data["option"][i]["code"] + '" style="height:30px;color:rgb(102,102,102);">' + data["option"][i]["txt"] + '</option>';
                 }
 
                 c += '<div class="listcon">';
@@ -85,7 +86,7 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
             list += '<tr class="read-radio" data-id="' + data.instanceId + '-' + i + '">';
             //默认
             list += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'defaultval\')" class="defaultval" ' + (data["option"][i]["defaultval"] == "Y" ? "checked='checked'": "") + ' value="1"></td>';
-            //名称
+            //选项编码
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + data["option"][i]["code"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //描述
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="' + data["option"][i]["txt"] + '" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
@@ -101,16 +102,27 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
         e += '  <table class="table table-bordered data-table">';
         e += '      <thead>';
         e += '          <tr>';
-        e += '              <th class="thw">默认</th>';
-        e += '              <th>名称</th>';
-        e += '              <th class="alLeft">描述<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">批量编辑</button></th>';
-        e+='                <th>分值</th>';
-        e += '              <th width="45">操作</th>';
+        e += '                  <th class="thw">默认</th>';
+        e += '                  <th class="thw">编号</th>';
+        e += '                  <th class="alLeft">描述<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">批量编辑</button></th>';
+        e += '                  <th>分值</th>';
+        e += '                  <th width="45">操作</th>';
         e += '          </tr>';
         e += '      </thead>';
         e += '      <tbody class="ui-sortable">' + list + '</tbody>';
         e += '  </table>';
         e += '</fieldset>';
+
+		//设置
+        e += '<div class="edit_jygz">';
+        e += '	<span class="title"><i class="icon-cog"></i> 设置</span>';
+        e += '  <div class="groupbox">';
+		e += '		<div class="edit_item_warp" style="margin-top:5px;">';
+		e += '			<input class="mbIE" onchange="SurveyBuild.saveAttr(this,\'isAvg\')" ' + (data.isAvg == "Y" ? "checked='checked'": "") + ' id="isAvg" type="checkbox">';
+		e += '			<label for="isAvg">是否计算平均分</label>';
+		e += '		</div>';
+		e += '	</div>';
+		e += '</div>';
 
         //校验规则
         e += '<div class="edit_jygz">';

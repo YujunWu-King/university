@@ -12,11 +12,12 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 	minLen: "0",
 	maxLen: "300",
 	isShowLabel:"Y",
+	format:"L",
 	"StorageType":"L",
 
 	_getHtml: function(data, previewmode) {
 		var c = "";
-
+		
 		if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 
@@ -25,33 +26,28 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 				regular = SurveyBuild._preg[data.preg]["regExp"];
 			}
 
-			c += '<div>';
-			if(data.isShowLabel == "Y") {
-				c += '	<div class="main_inner_content_info_autoheight_title">';
-				c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*" : "") + '</span>' + data.title;
-				c += '      <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px;padding: 0px;background: transparent;display:inline-block;float: none;height: 18px;">';
-				c += '      	<div class="onShow"></div>';
-				c += '      </div>';
-				c += '		<span id="' + data.itemId + 'Size" style="font-weight:normal;"></span>';
+			data.boxSize = (data.boxSize?data.boxSize:"3");
+			data.format = (data.format?data.format:"U");
+			if(data.format == "L"){
+				c += '<div class="input-list-wrap">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+				c += '    	<div class="input-list-textinput left"><textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
+			}else{
+				c += '<div class="input-list-wrap">';
+				c += '	<div class="input-list-otherinfo">';
+				c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
+				c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
 				c += '	</div>';
-			}
-			
-			if(data.isShowLabel != "Y") {
-				c += '<div class="main_inner_content_info_autoheight_d height-lineHeight-36px" >';
-				c += '	<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"">';
-				c += '		<div class="onShow"></div>';
+				c += '	<div class="input-list-othertext">';
+				c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
+				c += '  <div class="input-list-suffix left" style="width: 100%;"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 				c += '	</div>';
-				c += '	<span id="' + data.itemId + 'Size"></span>';
+				c += '  <div class="clear"></div>';
 				c += '</div>';
 			}
 
-			c += '	<div class="main_inner_content_info_autoheight_real">';
-			c += '		<div class="main_inner_content_info_text_mid">';
-			c += '			<textarea  class="main_text_area" data-regular="' + regular + '" title="' + data.itemName + '" style="height: 140px; white-space: pre-wrap;" rows="' + data.rows + '" cols="'+ data.cols +'" id="' + data.itemId + '" name="' + data.itemId + '">' + data.value + '</textarea>';
-			c += '		</div>';
-			c += '		<div class="main_inner_content_info_text_foot"></div>';
-			c += '	</div>';
-			c += '</div>';
 		} else {
 			c =  '<div class="question-answer">';
 			c += '	<div class="format ' + (data["rows"] ? "rows" + data.rows: "4") + '">';
@@ -68,15 +64,34 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 		$.each(SurveyBuild._preg, function(reg, regObj) {
 			_fix += '<option value="' + reg + '"' + (data.preg == reg ? ' selected="selected"': "") + ">" + regObj["name"] + "</option>"
 		});
-
-		e = '<div class="edit_item_warp">';
-        e += '  <span class="edit_item_label">行：</span>';
-        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'rows\')" id="rows" value="' + data.rows + '"/>';
-        e += '</div>';
+		
 		e += '<div class="edit_item_warp">';
-        e += '  <span class="edit_item_label">列：</span>';
-        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'cols\')" id="cols" value="' + data.cols + '"/>';
-        e += '</div>';
+        e += '  <span class="edit_item_label">描述：</span>';
+        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="wzsm" value="' + data.wzsm + '"/>';
+        e += '</div>'; 
+		e += '<div class="edit_item_warp">';
+		e += '	<span class="edit_item_label" >Label位置：</span>';
+		e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'format\')">';
+		e += '		<option value="L" ' + (data.format == "L" ? "selected='selected'": "") + '>左</option>';
+		e += '		<option value="U" ' + (data.format == "U" ? "selected='selected'": "") + '>上</option>';
+		e += '	</select>';
+		e += '</div>';
+		e += '<div class="edit_item_warp">';
+		e += '	<span class="edit_item_label" >大小：</span>';
+		e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'boxSize\')">';
+		e += '		<option value="3" ' + (data.boxSize == "3" ? "selected='selected'": "") + '>大</option>';
+		e += '		<option value="2" ' + (data.boxSize == "2" ? "selected='selected'": "") + '>中</option>';
+		e += '		<option value="1" ' + (data.boxSize == "1" ? "selected='selected'": "") + '>小</option>';
+		e += '	</select>';
+		e += '</div>';
+//		e += '<div class="edit_item_warp">';
+//        e += '  <span class="edit_item_label">行：</span>';
+//        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'rows\')" id="rows" value="' + data.rows + '"/>';
+//        e += '</div>';
+//		e += '<div class="edit_item_warp">';
+//        e += '  <span class="edit_item_label">列：</span>';
+//        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'cols\')" id="cols" value="' + data.cols + '"/>';
+//        e += '</div>';
 
         e += '<div class="edit_item_warp">';
         e += '  <span class="edit_item_label">默认值：</span>';

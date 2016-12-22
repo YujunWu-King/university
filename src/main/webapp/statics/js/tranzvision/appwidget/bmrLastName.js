@@ -13,18 +13,14 @@ SurveyBuild.extend("bmrLastName", "baseComponent", {
             SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
             SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
 
-            c += '<div class="main_inner_content_info_autoheight">';
-            c += '	<div class="main_inner_connent_info_left"><span class="reg_title_star">*</span>' + data.title + '</div>';
-            c += '	<div class="main_inner_content_info_right">';
-            c += '		<div class="main_inner_content_info_option_text">' + data.value + '</div>';
-            c += '     <input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
-            c += '		<div class="main_inner_content_info_edit">';
-            c += '			<a class="blue" id="' + data.itemId + 'edit" target="_top" href="javascript:void(0);">' + MsgSet["EDIT"] + '</a>';
-            c += '			<a class="blue" target="' + (data.suffixUrl ? "_blank": "") + '" href="' + (data.suffixUrl ? data.suffixUrl: "javascript:void(0);") + '">' + data.suffix + '</a>';
-            c += '		</div>';
-            c += '	</div>';
+            c += '<div class="input-list">';
+            c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
+            
+            c += '	<div class="input-list-text left">' + data.value + '</div>';
+            c += '	<div class="input-list-suffix left" style="display:' + (SurveyBuild._readonly?'none':'') + '"><a id="' + data.itemId + 'edit" target="_top" href="javascript:void(0);" style="color: rgb(0, 112, 198); cursor: pointer;">' + MsgSet["EDIT"] + '</a><a class="blue" target="' + (data.suffixUrl ? "_blank": "") + '" href="' + (data.suffixUrl ? data.suffixUrl: "javascript:void(0);") + '">' + data.suffix + '</a></div>';
+            c += '	<div class="clear"></div>';
             c += '</div>';
-
+            c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
         } else {
             c += '<div class="question-answer">';
             c += '<div class="format">';

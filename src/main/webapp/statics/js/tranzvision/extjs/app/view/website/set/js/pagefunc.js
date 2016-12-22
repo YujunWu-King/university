@@ -66,6 +66,13 @@ function BindEnter(obj)
 			}
 }
 
+function backToHome(siteId,orgId){
+	var confirmValue = confirm("确认回到首页？");
+	if(confirmValue==true){
+		window.location = TzUniversityContextPath + "/site/index/" + orgId.toLowerCase() + "/" + siteId;
+	}
+}
+
 function JumpToColu(siteId,menuId,opentype){
 
 	if(opentype=="index"){

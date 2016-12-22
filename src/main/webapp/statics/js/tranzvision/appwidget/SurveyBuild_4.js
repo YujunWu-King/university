@@ -984,34 +984,81 @@ var SurveyBuild = {
         $.fancybox.close();
     },
     DynamicBindVal: function(){
-         var callBack = function(){
-
-	};
-	if(!SurveyBuild._DynamicBindHtml){
-		 $.ajax({
-			type: "post",
-			url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{}}',
-			dataType: "json",
-			async: false,
-			success: function(result){
-				var _items = result.comContent.root;
-				 if(result.state.errcode != "0"){
-				   alert(result.state.errdesc);
-				}else{
-				 var getRegFieldTypeDesc =function(regFieldType){
-					if(regFieldType ="INP"){
-						return "文本框";
-					}else if(regFieldType ="DROP"){
-						return "下拉框";
+		var callBack = function(){};
+		if(!SurveyBuild._DynamicBindHtml){
+			 /*判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html*/
+			var tz_app_id=SurveyBuild._tid;
+			$.ajax({
+				type: "post",
+				url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tz_app_id":"'+tz_app_id+'"}}',
+				dataType: "json",
+				async: false,
+				success: function(result){
+					var siteArr = result.comContent.root;
+					if(result.comContent.total == "1"){
+						var siteObj = siteArr[0];
+						var siteId = siteObj.siteId;
+						//弹出页面
+						SurveyBuild.DynamicBindValBySite(siteId);
 					}else{
-						return  	regFieldType;
+						//弹出选择框
+						var _DynamicSiteHtml;
+						var pageHtml = "";
+						 pageHtml += '<div class="modal-header">';
+						 pageHtml += '	<h4>选择站点</h4>';
+						 pageHtml += '</div>';
+						 pageHtml += '<div class="modal-line"></div>';
+
+						 pageHtml += '<div id="modal-question-advanced" class="modal-body">';
+						 pageHtml += '	<fieldset>';
+						 pageHtml += '		<table id="table-dynbindval" class="table table-hover table-bordered">';
+						 pageHtml += '			<tr><th width="70px">站点编号</th><th width="540px">站点名称</th><th>选择</th></tr>';
+					 $.each(siteArr, function(index, siteObj) {
+						pageHtml += '<tr reg-id="' + siteObj.siteId+ '">';
+						pageHtml += '<td>'+siteObj.siteId+'</td>' ;
+						pageHtml += '<td>'+siteObj.siteName+'</td>' ;
+						pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.DynamicBindValBySite(\''+siteObj.siteId + '\')">选择</button></td>';			
+						pageHtml  += '</tr> ';
+					 });
+						pageHtml += '		</table>';
+						pageHtml += '	<fieldset>';
+						pageHtml += '</div>';
+						_DynamicSiteHtml = pageHtml;
+						SurveyBuild.openMoadal(_DynamicSiteHtml,callBack);
 					}
 				}
-				 var pageHtml = "";
-       				 pageHtml += '<div class="modal-header">';
-       				 pageHtml += '	<h4>动态绑定值</h4>';
-     				 pageHtml += '</div>';
-				 pageHtml += '<div class="modal-line"></div>';
+			})	
+		}else{
+			this.openMoadal(SurveyBuild._DynamicBindHtml,callBack);
+		}
+    },  
+	DynamicBindValBySite: function(siteId){   
+		var callBack = function(){};
+		if(!SurveyBuild._DynamicBindHtml){
+			$.ajax({
+				type: "post",
+				url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{"siteId":"'+siteId+'"}}',
+				dataType: "json",
+				async: false,
+				success: function(result){
+					var _items = result.comContent.root;
+					 if(result.state.errcode != "0"){
+					   alert(result.state.errdesc);
+					}else{
+					 var getRegFieldTypeDesc =function(regFieldType){
+						if(regFieldType ="INP"){
+							return "文本框";
+						}else if(regFieldType ="DROP"){
+							return "下拉框";
+						}else{
+							return  	regFieldType;
+						}
+					}
+					 var pageHtml = "";
+						 pageHtml += '<div class="modal-header">';
+						 pageHtml += '	<h4>动态绑定值</h4>';
+						 pageHtml += '</div>';
+					 pageHtml += '<div class="modal-line"></div>';
 
        				 pageHtml += '<div id="modal-question-advanced" class="modal-body">';
       				 pageHtml += '	<fieldset>';
@@ -1037,7 +1084,7 @@ var SurveyBuild = {
 	}
 	this.openMoadal(SurveyBuild._DynamicBindHtml,callBack);
 
-       },  
+    },  
     //设置常用控件的启用标识
     saveCommonRulesBz: function(el, key) {
         this.saveAttr(el, key);
@@ -2399,7 +2446,13 @@ var SurveyBuild = {
     preiewBiuld: function(){
 	    SurveyBuild.saveBuild(true);
     },
+	preiewAppForm: function(siteId){
+	    var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '","SiteID":"' +siteId+ '"}}'
+        var url = SurveyBuild.tzGeneralURL + tzParams;
+        window.open(url, '_blank');
+    },
     saveBuild: function(isPreview) {
+		var callBack = function(){};
         if (!this.checkAttrVal()) {
             return
         }
@@ -2460,9 +2513,48 @@ var SurveyBuild = {
                         SurveyBuild.is_edit = false;
                         var e = $("#question-box>li.active").index() - 1;
                         if (isPreview) {
-                            var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '"}}'
-                            var url = SurveyBuild.tzGeneralURL + tzParams;
-                            window.open(url, '_blank');
+							 /*判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html*/
+							var tz_app_id=SurveyBuild._tid;
+							$.ajax({
+								type: "post",
+								url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tz_app_id":"'+tz_app_id+'"}}',
+								dataType: "json",
+								async: false,
+								success: function(result){
+									var siteArr = result.comContent.root;
+									if(result.comContent.total == "1"){
+										var siteObj = siteArr[0];
+										var siteId = siteObj.siteId;
+										//弹出页面
+										SurveyBuild.preiewAppForm(siteId);
+									}else{
+										//弹出选择框
+										var _DynamicSiteHtml;
+										var pageHtml = "";
+										 pageHtml += '<div class="modal-header">';
+										 pageHtml += '	<h4>选择站点</h4>';
+										 pageHtml += '</div>';
+										 pageHtml += '<div class="modal-line"></div>';
+
+										 pageHtml += '<div id="modal-question-advanced" class="modal-body">';
+										 pageHtml += '	<fieldset>';
+										 pageHtml += '		<table id="table-dynbindval" class="table table-hover table-bordered">';
+										 pageHtml += '			<tr><th width="70px">站点编号</th><th width="540px">站点名称</th><th>选择</th></tr>';
+									 $.each(siteArr, function(index, siteObj) {
+										pageHtml += '<tr reg-id="' + siteObj.siteId+ '">';
+										pageHtml += '<td>'+siteObj.siteId+'</td>' ;
+										pageHtml += '<td>'+siteObj.siteName+'</td>' ;
+										pageHtml += '<td><button class="btn btn-small" onclick="SurveyBuild.preiewAppForm(\''+siteObj.siteId + '\')">选择</button></td>';			
+										pageHtml  += '</tr> ';
+									 });
+										pageHtml += '		</table>';
+										pageHtml += '	<fieldset>';
+										pageHtml += '</div>';
+										_DynamicSiteHtml = pageHtml;
+										SurveyBuild.openMoadal(_DynamicSiteHtml,callBack);
+									}
+								}
+							})
                         }
                     } else {
                     	noteing("保存失败", 2)
@@ -3516,7 +3608,7 @@ var SurveyBuild = {
         htmlSet += '</legend></fieldset>';
         
     	if(!data.hasOwnProperty("leftWidth")){
-    		data.leftWidth = "310";
+    		data.leftWidth = "35";
     	}
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">Left Width：</span>';
@@ -3524,7 +3616,7 @@ var SurveyBuild = {
         htmlSet += '</legend></fieldset>';
 
     	if(!data.hasOwnProperty("rightWidth")){
-    		data.rightWidth = "390";
+    		data.rightWidth = "35";
     	}
         htmlSet += '<fieldset><legend>';
         htmlSet += '	<span class="edit_item_label">Right Width：</span>';

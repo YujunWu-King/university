@@ -1,0 +1,51 @@
+body {
+      font:normal 100% Arial, "Microsoft YaHei";
+	  font-size:14px;
+	  color:#333;
+	  margin:0 auto;
+}
+textarea{
+	font-family:Microsoft YaHei;
+}
+*{
+	margin:0 auto;
+	padding:0;
+}
+ul,li{
+	border:0;
+	list-style-type:none;
+}
+img{
+	border:0;
+}
+a,a:hover,a:visited,a:link {
+	text-decoration:none;
+}
+.clear{
+	clear:both;
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+.red{
+	color:#b1193b;
+}
+.red-star{
+	line-height:16px;
+	color:#b1193b;
+}
+.blue{
+	color:#0070c6;
+}
+.font333{
+	color:#333;
+}
+.font666{
+	color:#666;
+}
+.margart15{
+	margin-top:15px;
+}

@@ -6,6 +6,7 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
     title: "表格单选题",
     StorageType:"T",
     qCode:"",//题号
+	isAvg:"N",
     option: {},
 	child: {},
 	//oneChoice: 'N',//每列/行只能选择一个
@@ -151,10 +152,12 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
             //其他
             list += '<td><input type="checkbox" onchange="$(\'.other\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'other\');" class="other" ' + (data["option"][i]["other"] == "Y" ? "checked='checked'": "") + '  value="' + data["option"][i]["other"] + ' "></td>';
 			*/
-            //值
+            //选项编码
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + data["option"][i]["code"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //描述
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="' + data["option"][i]["txt"] + '" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+            //分值
+            list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'weight\')" value="' + data["option"][i]["weight"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //操作
             list += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
             list += '</tr>';
@@ -186,8 +189,9 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
         e += '				<tr>';
         //e += '					<th class="thw">默认</th>';
         //e += '					<th class="thw">其他</th>';
-        e += '					<th>值</th>';
+        e += '					<th class="thw">编号</th>';
         e += '					<th class="alLeft">答案<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">批量编辑</button></th>';
+		e += '                	<th>分值</th>';
         e += '					<th width="45">操作</th>';
         e += '				</tr>';
         e += '			</thead>';
@@ -201,6 +205,17 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
         e += '   <input type="text" class="medium" id="defaultval" onkeyup="SurveyBuild.saveAttr(this,\'defaultval\')" value="' + data.defaultval + '"/>';
         e += '</div>';
 		*/
+		//设置
+        e += '<div class="edit_jygz">';
+        e += '	<span class="title"><i class="icon-cog"></i> 设置</span>';
+        e += '  <div class="groupbox">';
+		e += '		<div class="edit_item_warp" style="margin-top:5px;">';
+		e += '			<input class="mbIE" onchange="SurveyBuild.saveAttr(this,\'isAvg\')" ' + (data.isAvg == "Y" ? "checked='checked'": "") + ' id="isAvg" type="checkbox">';
+		e += '			<label for="isAvg">是否计算平均分</label>';
+		e += '		</div>';
+		e += '	</div>';
+		e += '</div>';
+
         //校验规则
         e += '<div class="edit_jygz">';
         e += '	<span class="title"><i class="icon-cog"></i> 校验规则</span>';

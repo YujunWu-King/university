@@ -361,19 +361,89 @@ var SurveyBuild = {
 
             if (data["isDoubleLine"] == "Y" && data.children && data.children.length > 0 && data["fixedContainer"] != "Y") {
                 var _co = "";
-                for (var i = 0; i < data.children.length; i++) {
-                    _co += me._addOneRec(data.children, i);
-					if(i > 0){
+				/*张彬彬添加,如果设置有默认行数，则比较默认行数和现有行数作为显示行数 start*/
+				var _defaultLines = data.defaultLines;
+				if(_defaultLines>1){
+				}else{
+					_defaultLines = 1;
+				}
+				var dhShowLines = Math.max(data.children.length,_defaultLines);
+                for (var i = 0; i < dhShowLines; i++) {
+					if(i >= data.children.length){
+						/*添加之前需要Clone数据*/
+						var maxLines = data["maxLines"];
+						var isFixedCon = data.fixedContainer;    //是否为固定多行容器
+						var _children = data.children, _fc = cloneObj(_children[0]);
+
+						var suffix = data["linesNo"].shift();
+
+						//初始化多行容器的行信息data
+						$.each(_fc,function(ins, obj) {
+							_fc[ins]["value"] = "";
+
+							if (obj.isSingleLine == "Y") {
+								$.each(obj.children,function(i, ch) {
+									ch["value"] = "";
+									//ch["itemId"] += "_" + _children.length;
+									ch["itemId"] += "_" + suffix;
+									if(ch.hasOwnProperty("isHidden")){
+										ch["isHidden"] = "N";
+									}
+								});
+							}else{
+								//_fc[ins]["itemId"] += "_" + _children.length;
+								_fc[ins]["itemId"] += "_" + suffix;
+								if(obj.hasOwnProperty("isHidden")){
+									obj["isHidden"] = "N";
+								}
+								//附件上传,清空附件信息
+								if (_fc[ins]["classname"]=="AttachmentUpload" || _fc[ins]["classname"]=="imagesUpload"){
+									if(_fc[ins].hasOwnProperty("children")){
+										var _fileChildren = _fc[ins].children;
+										if (_fileChildren.length>1){
+											_fileChildren.splice(1,_fileChildren.length-1);
+										}
+										_fileChildren[0].fileName = "";
+										_fileChildren[0].sysFileName = "";
+										_fileChildren[0].orderby = "";
+										_fileChildren[0].accessPath = "";
+										_fileChildren[0].viewFileName = "";
+									}else{
+										_fc[ins]["filename"] = "";
+										_fc[ins]["sysFileName"] = "";
+										_fc[ins]["path"] = "";
+										_fc[ins]["accessPath"] = "";
+										_fc[ins]["value"] = "";
+									}
+								}
+							}
+							if (!isFixedCon || isFixedCon != "Y"){
+								_fc[ins] = new me.comClass[obj.classname](obj);
+							}
+							if(obj.hasOwnProperty("option")){
+								$.each(obj.option,function(ii, opt) {
+									_fc[ins]["option"][ii]["defaultval"] = "N";
+									_fc[ins]["option"][ii]["other"] = "N";
+									_fc[ins]["option"][ii]["checked"] = "N";
+								});
+							}
+						});
+						_children.push(_fc);
+					}
+					/*张彬彬添加,如果设置有默认行数，则比较默认行数和现有行数作为显示行数 结束*/
+                    _co += me._addOneRec(data.children, i ,_defaultLines);
+					
+					if(i > 0 && i < data.children.length){
 						this.ArrShift(data.children[i],d);
 					}
                 }
-                _c = $("<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_inner_content").prepend(_co).parents('.dhcontainer');
+                _c = $("<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_content_box").prepend(_co).parents('.dhcontainer');
             } else if (data["fixedContainer"] && data["fixedContainer"] == "Y") {
                 //固定多行控件
                 _c = "<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             } else {
                 //单行控件
-                _c = "<div class='page" + data.pageno + "' style='display:inline-block;' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
+                _c = "<div class='page" + data.pageno + "' style='display:block;' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             }
             $("#main_list").append(_c);
 
@@ -601,25 +671,14 @@ var SurveyBuild = {
         alert(a)
     },
     //多行容器添加行
-    _addOneRec: function(children, i) {
-        var _co = "",del = "",lsep = ""; //容器行信息、容器行删除按钮、行与行直接的间隔
+    _addOneRec: function(children, i ,j) {
+        var _co = "",del = ""; //容器行信息、容器行删除按钮,添加下一行
         //容器中行删除按钮源码
-        del += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
-        del += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
-        del += '</div>';
-
-        //容器中行与行直接的间隔
-        lsep += '<div class="main_inner_content_top"></div>';
-        lsep += '<div class="padding_div"></div>';
-        lsep += '<div class="main_inner_content_foot"></div>';
+        del += '<div class="btn-addcon"><a href="javascript:void(0);" onclick="SurveyBuild.deleteFun(this);"><div class="input-delbtn">删除&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div></a></div>';
 
         /*容器行信息 begin*/
-        _co += "<div class='main_inner_content_para'>";
+        _co += '<div class="mainright-box pos-rela" ' + (i > 0 ? 'style="margin-top:15px;"':'') + '>';
 
-        if (i > 0) {
-            //在第N行与N+1行直接添加间隔信息（首行除外）
-            _co += lsep;
-        }
         var lineno = 0;
         $.each(children[i],function(d, obj) {
             _co += obj._getHtml(obj, true);
@@ -634,17 +693,19 @@ var SurveyBuild = {
                 }
 				if(tarItemId && tarItemId.substr(-2,1) == "_"){
 					lineno = parseInt(tarItemId.substr(-1));
-					
 				}
             }
         });
         _co += "</div>";
         /*容器行信息 end*/
-
-        if (i > 0) {
+		var notDelLinesCount = 0;
+		if(j>0){
+			notDelLinesCount = j - 1;
+		}
+        if (i > notDelLinesCount) {
             //为除第一行之外的行添加删除功能
             //将删除按钮添加在行信息中，首个信息项的后面（该信息项必须包含main_inner_content_info_autoheight）
-            _co = $(_co).find(".main_inner_content_info_autoheight").eq(0).append(del).closest(".main_inner_content_para").get(0).outerHTML;
+            _co = $(_co).prepend(del).closest(".mainright-box").get(0).outerHTML;
         }
         return _co;
     },
@@ -655,7 +716,7 @@ var SurveyBuild = {
     },
     showDiv: function(btnEl, instanceId) {
         var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
-
+		var _defaultLines = this._items[instanceId]["defaultLines"];
         var maxLines = this._items[instanceId]["maxLines"], me = this;
         var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器
         var _children = this._items[instanceId]["children"], _fc = cloneObj(_children[0]);
@@ -716,7 +777,7 @@ var SurveyBuild = {
         _children.push(_fc);
         if (isFixedCon && isFixedCon == "Y"){
             //处理固定多行容器
-            $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length)).insertBefore($(btnEl).parents(".main_inner_content_info"));
+            $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length)).insertBefore($(btnEl).parents(".mainright-box"));
 
             /*行信息中的Select格式化*/
             var selectObj = $(this._items[instanceId]._getHtml(this._items[instanceId],true)).find("select");
@@ -729,20 +790,19 @@ var SurveyBuild = {
         } else {
             // $(this._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
 			//this.ArrShift(_children[_children.length - 1],dhid);
-            $(this._addOneRec(_children, _children.length - 1)).animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                $(SurveyBuild._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
+            $(this._addOneRec(_children, _children.length - 1, _defaultLines)).animate({height: 'hide',opacity: 'hide'},'slow',function() {
+                $(SurveyBuild._addOneRec(_children, _children.length - 1,_defaultLines)).insertBefore($(btnEl).parents(".addNext"));
             });
 
             /*行信息中的Select格式化*/
-            var selectObj = $(this._addOneRec(_children, _children.length - 1)).find("select");
+            var selectObj = $(this._addOneRec(_children, _children.length - 1, _defaultLines)).find("select");
             $.each(selectObj,function(i,sObj){
                 $("#" + $(sObj).attr("id")).chosen();
             });
         }
 		
 		/*新增一行动态效果*/
-		var $newRow = $(btnEl).parents(".main_inner_content_info").prev(".main_inner_content_para");
-
+		var $newRow = $(btnEl).parents(".addNext").prev(".mainright-box");
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 
         //行数等于最大行数时，隐藏“Add One +”按钮
@@ -840,7 +900,7 @@ var SurveyBuild = {
         if (isFixedCon && isFixedCon == "Y"){
             //处理固定多行容器
 			var objOneTjx = $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length));
-            objOneTjx.insertBefore($(btnEl).parents(".main_inner_content_info"));
+            objOneTjx.insertBefore($(btnEl).parents(".addNext"));
 			/*行信息中的Select格式化*/
             var selectObj = objOneTjx.find("select");
             $.each(selectObj,function(i,sObj){
@@ -858,7 +918,7 @@ var SurveyBuild = {
             // $(this._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
 			//this.ArrShift(_children[_children.length - 1],dhid);
             $(this._addOneRec(_children, _children.length - 1)).animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                $(SurveyBuild._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
+                $(SurveyBuild._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".addNext"));
             });
 
             /*行信息中的Select格式化*/
@@ -869,7 +929,7 @@ var SurveyBuild = {
         }
 		
 		/*新增一行动态效果*/
-		var $newRow = $(btnEl).parents(".main_inner_content_info").prev(".main_inner_content_para");
+		var $newRow = $(btnEl).parents(".addNext").prev(".main_inner_content_para");
 
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 
@@ -913,14 +973,14 @@ var SurveyBuild = {
     },
     deleteFun: function(el) {
         //if (confirm("是否删除该条信息？")) {
-        var index = $(el).closest(".main_inner_content_para").index();
+        var index = $(el).closest(".mainright-box").index();
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         if (index > 0) {
-            $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                    $(el).closest(".main_inner_content_para").remove();
+            $(el).closest(".mainright-box").animate({height: 'hide',opacity: 'hide'},'slow',function() {
+                    $(el).closest(".mainright-box").remove();
             });
-            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
-            $(el).closest(".dhcontainer").find(".addnextbtn").show();
+            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".mainright-box").eq(index - 1).offset().top},1000);
+            $(el).closest(".dhcontainer").find(".input-addbtn").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
         } else {
@@ -954,7 +1014,7 @@ var SurveyBuild = {
             $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
 			//console.log($(el).closest(".dhcontainer"));
 			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".dhcontainer").find(".addnextbtn").show();
+            $(el).closest(".dhcontainer").find(".input-addbtn").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
 			
@@ -974,11 +1034,11 @@ var SurveyBuild = {
             })
         }
         //delete SurveyBuild._items[instanceId]["children"][index];
-		//console.log($(el).closest(".main_inner_content_para").siblings(".main_inner_content_para"));
+		//console.log($(el).closest(".mainright-box").siblings(".mainright-box"));
         //}
 		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
 		$.each(paraObject,function(i,paraObj){
-			$(paraObj).find(".main_inner_content_title").find(".reg_title_grey_17px").html(MsgSet["REFFER"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
+			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["REFFER"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
 		})
 		
 		
@@ -997,7 +1057,7 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            index = $(el).closest(".main_inner_content_para").index();
+            index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var itemId = data.itemId;
@@ -1112,30 +1172,71 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div></li>';
+								        				c += '<div class="input-list-uploadcon-list">';
+								        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+								        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
+														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+								        				c += '	<div class="clear"></div>';
+								        				c += '</div>';
 													} else {
-														
-														c = '<li><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">&nbsp;' + MsgSet["DEL"] + '</div>'+(sysfileSuffix == "pdf" && isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='"+rstObj.index+"'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
+							        	   				c += '<div class="input-list-uploadcon-list">';
+							        	   				c += '	<div class="input-list-uploadcon-listl left">';
+							        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
+							        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
+							        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
+							        	   				}
+							        	   				c += '	</div>';
+							        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
+														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+							        	   				c += '	<div class="clear"></div>';
+							        	   				c += '</div>';
 													}
-													$("#"+itemId+"_AttList").children("ul").append(c);
+													$("#"+itemId+"_AttList").append(c);
 												}else{
+													/*
+													if (_children.length == 1 && _children[0].fileName == ""){
+														_children[0].fileName = rstObj.fileName;
+														_children[0].sysFileName = rstObj.sysFileName;
+														_children[0].orderby = rstObj.index;
+														_children[0].accessPath = obj.msg.accessPath;
+														_children[0].viewFileName = rstObj.viewFileName;
+													} else {
+														_fc = cloneObj(_children[0]);
+														_fc["itemId"] += "_"+rstObj.index;
+														_fc["itemName"] += "_"+rstObj.index;
+														_fc["fileName"] = rstObj.fileName;
+														_fc["sysFileName"] = rstObj.sysFileName;
+														_fc["orderby"] = rstObj.index;
+														_fc["accessPath"] = obj.msg.accessPath;
+														_fc["viewFileName"] = rstObj.viewFileName;
+														_children.push(_fc);
+													}*/
 													_children[0].fileName = rstObj.fileName;
 													_children[0].sysFileName = rstObj.sysFileName;
 													_children[0].orderby = rstObj.index;
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
-	
-													$("#"+itemId+"_A").text(rstObj.viewFileName);
-													var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-													if ($delEl.css("display") == "none"){
-														$delEl.css("display","");
+													if (className == "imagesUpload"){
+								        				c += '<div class="input-list-uploadcon-list">';
+								        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+								        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
+														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+								        				c += '	<div class="clear"></div>';
+								        				c += '</div>';
+													} else {
+							        	   				c += '<div class="input-list-uploadcon-list">';
+							        	   				c += '	<div class="input-list-uploadcon-listl left">';
+							        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
+							        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
+							        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
+							        	   				}
+							        	   				c += '	</div>';
+							        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
+														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+							        	   				c += '	<div class="clear"></div>';
+							        	   				c += '</div>';
 													}
-													var $list = $("#"+itemId+"_A").closest("li");
-													var $pdfReader = $("#"+itemId+"_A").closest("li").children(".main_inner_pdf_reader");
-													
-													if($pdfReader) $pdfReader.remove();
-													if(sysfileSuffix == "pdf" && isOnlineShow == "Y") $list.append("<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+instanceId+"\") file-index='1'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>");
-													
+													$("#"+itemId+"_AttList").html(c);
 												}
 												//提示隐藏
 												var $errorTip = $("#"+itemId+"Tip");
@@ -1174,11 +1275,11 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".main_inner_content_para").index();
+            var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var _children = data.children;
-        var index = $(el).parent("li").index();
+        var index = $(el).parents(".input-list-uploadcon-list").index();
         /*********************判断图片***START****************************/
         var type;
         var sysFileName = _children[index].sysFileName;
@@ -1263,13 +1364,13 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".main_inner_content_para").index();
+            var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var itemId = data.itemId;
 		var _children = data.children;
         var orderby = $(el).attr("file-index");
-		var index = $(el).parent("li").index();
+		var index = $(el).parents(".input-list-uploadcon-list").index();
 		var sysFileName = _children[index].sysFileName;
 		var accessPath = _children[index].accessPath;
 		//获取浏览器窗口宽度
@@ -1321,11 +1422,11 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".main_inner_content_para").index();
+            var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var _children = data.children;
-        var index = $(el).parent("li").index();
+        var index = $(el).parents(".input-list-uploadcon-list").index();
 
         var imgHtmls = "";
         for (var i = 0; i < _children.length; i++) {
@@ -1346,7 +1447,7 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".main_inner_content_para").index();
+            var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var itemId = data.itemId;
@@ -1357,7 +1458,7 @@ var SurveyBuild = {
 
         var multiFlag = data.allowMultiAtta;//是否允许多附件上传
 		var Require = data.isRequire;//必填
-        var liNum = $(el).parent("li").index();
+        var liNum = $(el).parents(".input-list-uploadcon-list").index();
         if (_children.length > 1){
             _children.splice(liNum, 1);
         } else {
@@ -1375,22 +1476,25 @@ var SurveyBuild = {
 			}
         }
         if(multiFlag == "Y"){
-            $(el).parent("li").remove();
-        } else {
-            $("#"+itemId+"_A").text("");
-            var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-            $delEl.css("display","none");
-			
-			var $pdfReader = $("#"+itemId+"_A").closest("li").children(".main_inner_pdf_reader");
-			if($pdfReader) $pdfReader.remove();
+        	$(el).parents(".input-list-uploadcon-list").remove();
+        }else{
+        	$(el).parents(".input-list-uploadcon-list").remove();
         }
+//        else {
+//            $("#"+itemId+"_A").text("");
+//            var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
+//            $delEl.css("display","none");
+//			
+//			var $pdfReader = $("#"+itemId+"_A").closest("li").children(".main_inner_pdf_reader");
+//			if($pdfReader) $pdfReader.remove();
+//        }
     },
 
     //教育经历扫描件上传
     eduImgUpload: function(el,cins){
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         var data = SurveyBuild._items[instanceId];
-        var index = $(el).closest(".main_inner_content_para").index();
+        var index = $(el).closest(".mainright-box").index();
         var child = data.children[index];
         try{
 
@@ -1528,10 +1632,13 @@ var SurveyBuild = {
 											child[cins]["accessPath"] = obj.msg.accessPath;
 											child[cins]["viewFileName"] = rstObj.viewFileName;
 											var c = "";
-											c = '<ul><li>';
-											c +='	<a class="main_inner_filelist_a" onclick=SurveyBuild.TjxdownLoad(this,\"'+cins+'\",'+indexJson+') file-index="'+index+'">'+rstObj.viewFileName+'</a>';
-											c +='	<div class="main_inner_file_del" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+indexJson+')><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
-											c +='</li></ul>';
+											c = '<div class="input-list-uploadcon-list">';
+											c += '  <div class="input-list-uploadcon-listl left">';
+											c +='	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,\"'+cins+'\",'+indexJson+') file-index="'+index+'">'+rstObj.viewFileName+'</a>';
+											c +='	</div>';
+											c +='	<div class="input-list-uploadcon-listr left" style="display: block;padding-top:8px;" onclick=SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+indexJson+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'"/></div>';
+											c +='</div>';
+											c +='	<div class="clear"></div>';
 											//$("#"+data.itemId+index+"_AttList").children("ul").append(c);
 											$("#"+data.itemId+index+"_AttList").html(c);
 										}else{
@@ -1621,9 +1728,19 @@ var SurveyBuild = {
 	},
 	//推荐信单选按钮
 	clickOnRadio : function(el){
+		/*
 		if ($(el).prop("checked")){
 			$(el).closest(".main_inner_content_info_right").children(".tz_radio_div").removeClass("on_check");
 			$(el).closest(".tz_radio_div").addClass("on_check");
+		}*/
+		
+		var _this = $(el),block = $(el).parent().parent();
+		var readOnly = $(el).attr("readonlyflag");
+		if(readOnly!="Y"){
+			block.find('input:radio').attr('checked', false);
+			block.find(".radio-btn").removeClass('checkedRadio');
+			_this.addClass('checkedRadio');
+			_this.find('input:radio').attr('checked', true);
 		}
 	},
     reFocus:function(id){

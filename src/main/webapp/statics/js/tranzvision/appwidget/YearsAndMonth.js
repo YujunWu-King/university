@@ -35,44 +35,38 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
         if (previewmode) {
             if(SurveyBuild._readonly){
                 //只读模式
-
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_readonly_right" >' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '</div>';
-                c += '</div>'
+                c += '<div class="input-list">';
+            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+            	c += '  <div class="input-list-text left">' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '</div>';
+            	
+            	c += '    <div class="input-list-suffix left"></div>';
+            	c += '    <div class="clear"></div>';
+            	c += '</div>';
             }else{
                 //填写模式
 
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">';
-                c += '		<div class="main_inner_content_info_right_l140px">';
-                c += '			<select name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" class="chosen-select width_125px" id="' + data["itemId"] + children[0]["itemId"] + '" title="' + children[0]["itemName"] + '">';
+            	c += '<div class="input-list">';
+            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+            	c += '     <div class="input-list-textdate left input-date-select">';
+                c += '			<select style="width:100%;" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" class="chosen-select" id="' + data["itemId"] + children[0]["itemId"] + '" title="' + children[0]["itemName"] + '">';
                 c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in children[0]["option"]) {
                     c += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
                 }
                 c += '			</select>';
-                c += '		</div>';
-                c += '		<div class="main_inner_content_info_right_r140px">';
-                c += '			<select title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="chosen-select width_125px" value="' + children[1]["value"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+            	c += '     </div>';
+            	c += '     <div class="input-list-textdate left input-date-select" style="margin:0 15px 0 0;">';
+            	
+                c += '			<select style="width:100%;" title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="chosen-select" value="' + children[1]["value"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
                 c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in children[1]["option"]) {
                     c += '<option ' + (children[1].value == children[1]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[1]["option"][i]["code"] + '">' + children[1]["option"][i]["code"] + '</option>';
                 }
                 c += '			</select>';
-                c += '		</div>';
-                c += '		<div style="margin-top:-40px;margin-left:256px;float:left;">';
-                c += '			<div id="' + data["itemId"] + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;">';
-                c += '				<div class="onShow"></div>';
-                c += '			</div>';
-                c += '		</div>';
-                c += '	</div>';
-                c += '</div>';
+            	c += '    </div>';
+            	c += '    <div class="input-list-suffix left"><div id="' + data.itemId + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+            	c += '    <div class="clear"></div>';
+            	c += '</div>';
             }
         } else {
             c += '<div class="question-answer">';
@@ -113,7 +107,7 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
         var $year = $("#" + data["itemId"] + data.children[0]["itemId"]);
         var $month = $("#" + data["itemId"] + data.children[1]["itemId"]);
 
-        $year.formValidator({tipID:data["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+        $year.formValidator({tipID:data["itemId"]+ data.children[0]["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
         $year.functionValidator({
             fun: function(val,elem) {
                 //执行高级设置中的自定义规则
@@ -140,7 +134,7 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
             }
         });
 
-        $month.formValidator({tipID:data["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+        $month.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
         $month.functionValidator({
             fun: function(val,elem) {
                 //执行高级设置中的自定规则

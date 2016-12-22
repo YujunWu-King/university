@@ -52,49 +52,37 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
         if (previewmode) {
            if(SurveyBuild._readonly){
                 //只读模式
-               var valDesc = "";
-               for (var i in children[0].option) {
-                   if(children[0]["value"] == children[0]["option"][i]["code"]){
-                       valDesc = children[0]["option"][i]["txt"];
-                   }
-               }
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right" >';
-                c += '      <span style="line-height:25px;">' + valDesc + '<br>' + children[1]["value"] + '</span>';
-                c += '  </div>';
-                c += '</div>'
+				var valDesc = "";
+				for (var i in children[0].option) {
+					if(children[0]["value"] == children[0]["option"][i]["code"]){
+						valDesc = children[0]["option"][i]["txt"];
+					}
+				}
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '	<div class="input-list-text left"><span style="line-height:24px">' + valDesc + '<br>' + children[1]["value"] + '</span></div>';
+                c += '	<div class="input-list-suffix left"></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-                var e = "";
-                for (var i in children[0].option) {
-                    e += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
+
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '    <div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                c += '			<select style="width:100%;" title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="chosen-select" value="' + children[0]["value"] + '" name="' + data["itemId"] + children[0]["itemId"] + '">';
+                c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+                for (var i in children[0]["option"]) {
+                    c += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
                 }
-                
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right">';
-                c += '      <div class="main_inner_content_info_right_l100px">';
-                c += '          <select title="' + children[0]["itemName"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="chosen-select input_100px" value="' + children[0]["value"] + '" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                c += 				e;
-                c += '          </select>';
-                c += '      </div>';
-
-                c += '      <div class="main_inner_content_info_right_r145px">';
-                c += '          <input type="text" name="' + data["itemId"] + children[1]["itemId"] + '" class="input_145px" id="' + data["itemId"] + children[1]["itemId"] + '" title="' + children[1]["itemName"] + '" value="' + children[1]["value"] + '">';
-                c += '      </div>';
-
-                c += '      <div style="margin-top:-40px;margin-left:256px;float:left;">';
-                c += '          <div id="' + data["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-                c += '              <div class="onShow">&nbsp;</div>';
-                c += '          </div>';
-                c += '      </div>';
-                c += '  </div>';
+                c += '			</select>';
+                c += '	</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0px 15px 0 0;">';
+                c += '    	<input type="text" class="inpu-list-text-enter" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" title="' + children[1]["itemName"] + '" value="' + children[1]["value"] + '">';
+                c += '    </div>';
+                c += '    <div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                c += '    <div class="clear"></div>';
                 c += '</div>';
             }
         } else {
@@ -116,6 +104,11 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
         e += '<div class="edit_item_warp" style="text-align:right;">';
         e += '  <a href="javascript:void(0);" onclick="SurveyBuild.DynamicBindVal()" class="">动态绑定值</a>';
         e += '</div>';
+		
+		e += '<div class="edit_item_warp">';
+		e += '  <span class="edit_item_label">关联项：</span>';
+		e += '  <input type="text" class="medium" id="linkItems" onkeyup="SurveyBuild.saveAttr(this,\'linkItems\')" value="' + data.linkItems + '"/>';
+		e += '</div>';
 
         e += '<div class="edit_jygz">';
 		e += '	<span class="title"><i class="icon-cog"></i> 校验规则</span>';
@@ -144,7 +137,6 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
 
         $cerType.change(function() {
             var cerCodeType = $(this).children('option:selected').val();
-
             /*身份证*/
             if(cerCodeType == "1"){
                 //return "身份证输入不合法！";
@@ -152,7 +144,30 @@ SurveyBuild.extend("CertificateNum", "baseComponent", {
             }else{
             	$cerCode.attr("data-regular","");
             }
+			
+			/*身份证下拉框关联项*/
+			if(data.linkItems){
+				var $linkitemsCerType = $("#" + data.linkItems + data.children[0]["itemId"]);
+				if($linkitemsCerType && $linkitemsCerType.length > 0){
+					$linkitemsCerType.val(cerCodeType);
+					$linkitemsCerType.chosen("destroy").chosen();
+					$linkitemsCerType.trigger("blur");
+				}
+			}
+			
         });
+		
+		/*身份证号码关联项*/
+		if(data.linkItems){
+			var $linkitemsCerCode = $("#" + data.linkItems + data.children[1]["itemId"]);
+			if($linkitemsCerCode && $linkitemsCerCode.length > 0){
+				$cerCode.change(function(e) {
+					$linkitemsCerCode.val($cerCode.val());
+					$linkitemsCerCode.trigger("change");
+					$linkitemsCerCode.trigger("blur");
+				});
+			}
+		}
 
         $cerCode.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
         $cerCode.functionValidator({

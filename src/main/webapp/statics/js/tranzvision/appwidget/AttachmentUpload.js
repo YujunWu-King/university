@@ -19,75 +19,87 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 		var children = data.children;
 		var _sysFilename,_fileSuffix;
         if (previewmode) {
-			
-			c = '<div class="main_inner_content_info_autoheight" id="upload_' + data.itemId + '">';
-            c += '<div class="main_inner_connent_info_left"><span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-			c += '<div class="main_inner_content_info_right" style="height:auto;position: relative;">';
-			c += '<div class="file_upload_button"><div class="bt_blue">'+MsgSet["UPLOAD_BTN_MSG"]+'</div>';
-			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="'+data.itemId+'" title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
-//			c += '<input data-instancid = "' + data.instanceId + '" id="'+data.itemId+'" name="websitefile" 	title="'+data.itemName+'" class="fileupload_input" type="file" style="width:80px;" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')">';
-			c += '<div style="margin-left:426px;position: absolute;"><div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow"></div></div></div>';
-			c += '</div>';
-			
-			
-			//多附件列表
-			if(data.allowMultiAtta == "Y"){
-				
-				c += '<div class="main_inner_file_list" id="'+data.itemId+'_AttList"><ul>';
-				for(var i=0; i<children.length; i++){
-					_sysFilename = children[i].sysFileName;
-					_fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
-					
-					if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-						c += '<li style="clear:both;"><a class="main_inner_filelist_a" onclick=SurveyBuild.downLoadFile(this,"'+data.instanceId+'") file-index="'+children[i].orderby+'">'+children[i].viewFileName+'</a>';
-						c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'")><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
-						c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='"+children[i].orderby+"'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
-					}
-				}
-				c += '</ul></div>';	
-				c += '</div>';
-			} else {
-				_sysFilename = children[0].sysFileName;
-				_fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
-					
-				c += '<div class="main_inner_single_file_list"><ul>';
-				c += '<li><a class="main_inner_file_a" id="'+data.itemId+'_A" file-index="1" onclick=SurveyBuild.downLoadFile(this,"'+data.instanceId+'")>'+ (children[0].viewFileName != "" && children[0].sysFileName != "" ? children[0].viewFileName: "") +'</a>';
-				c += '<div class="main_inner_file_del" onclick=SurveyBuild.deleteFile(this,"'+data.instanceId+'") style="display:'+(children[0].viewFileName != "" && children[0].sysFileName != "" ? "":"none")+'"><img width="15" height="15" src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="'+MsgSet["DEL"]+'">'+MsgSet["DEL"]+'</div>';
-				c += (_fileSuffix == "PDF" && data.isOnlineShow == "Y" ? "<div class='main_inner_pdf_reader' onclick=SurveyBuild.PDFpreview(this,\""+data.instanceId+"\") file-index='1'><img src='" + TzUniversityContextPath + "/statics/images/appeditor/preview.png' title='"+MsgSet["PDF_VIEW"]+"'/>&nbsp;</div>":"")+'</li>';
-				c += '</ul></div>';
-				c += '</div>';	
-			}
-			c += '</div>';
-			//后缀
-			c += '<div class="main_inner_content_suffix">'+(data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a></div>" : "</div>");
-			
-			if(data.fileType != "" || data.fileSize != ""){
-				var strFileFormat = data.fileType;
-				var typeArr = strFileFormat.split(",");
-				var strFileType = "";
-				for(var i=0;i<typeArr.length;i++){
-					if (SurveyBuild.BMB_LANG == "ENG"){
-						strFileType = strFileType + typeArr[i] + ",";
-					} else {
-						strFileType = strFileType + "." + typeArr[i] + "、";
-					}	
-				}
-				if (strFileType != ""){
-					strFileType = strFileType.substring(0,strFileType.length-1);	
-				}
-				c += '<div id="desc' + data.itemId + '" class="main_inner_content_tips_3line" style="clear:left;padding-left:140px;height:auto; margin-bottom: 10px;"><p><span class="font_orange_16px">';
-				p = strFileType != "" ? MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",strFileType) : "";
-				if (SurveyBuild.BMB_LANG == "ENG"){
-					p2 = data.fileSize != "" ? (p != "" ? p : "") + " " + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : p;
-				}else{
-					p2 = data.fileSize != "" ? (p != "" ? p : "") + "，" + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : p;
-				}
-				
-				c += p2;
-				c += '</span></p></div>';
-			}
-			
-			
+        	if(data.fileType != "" || data.fileSize != ""){
+        		var typeArr = data.fileType.split(",");
+        		var fileType = "";
+        		for(var i = 0; i < typeArr.length; i++){
+        			if (SurveyBuild.BMB_LANG == "ENG"){
+        				fileType = fileType + typeArr[i] + ",";
+        			} else {
+        				fileType = fileType + "." + typeArr[i] + "、";
+        			}	
+        		}
+        		if (fileType != ""){
+        			fileType = fileType.substring(0,fileType.length-1);
+        		}
+
+        		typeMsg = fileType != "" ? MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",fileType) : "";
+        		if (SurveyBuild.BMB_LANG == "ENG"){
+        			msg = data.fileSize != "" ? (typeMsg != "" ? typeMsg : "") + " " + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : typeMsg;
+        		}else{
+        			msg = data.fileSize != "" ? (typeMsg != "" ? typeMsg : "") + "，" + MsgSet["FILESIZE"].replace("【TZ_FILE_SIZE】",data.fileSize) : typeMsg;	
+        		}
+        	}
+        	        	
+        	c += '<div class="input-list-blank margart15" id="upload_' + data.itemId + '">';
+        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+        	c += '   	<div class="input-list-texttemplate left" style="display:' + (SurveyBuild._readonly?'none':'block') + '">';
+        	c += '		<div>' + data.onShowMessage + '</div>';
+        	c += '		<div class="filebtn left">';
+        	c += '			<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+        	c += '			<input type="file" class="filebtn-orgtext" data-instancid = "' + data.instanceId + '" id = "' + data.itemId + '" name = "' + data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.uploadAttachment(this,\'' + data.instanceId + '\')">';
+        	c += '		</div>';
+			/*c += '		<div class="file-list-suffix">'+ data.suffix +'</div>';*/
+			c += '	<div class="file-list-suffix" style="display:' + (SurveyBuild._readonly?'none':'block') + '">' + (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</div>';
+			c += '		<div class="clear"></div>';
+        	c += '		<div>' + msg + '<div id="' + data.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
+        	c += '	</div>';
+        	c += '	<div class="input-list-info-blank left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><span class="red"></div>';                
+        	c += '   	<div class="input-list-upload left">';
+        	c += '		<div class="input-list-upload-con" id="'+data.itemId+'_AttList" style="display:' + (children.length < 1 ? 'none':'black') + '">';
+        	if(data.allowMultiAtta == "Y"){
+    	   		for(var i = 0; i < children.length; i++){
+    	   			_sysFilename = children[i].sysFileName;
+    	   			_fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
+    	   			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
+    	   				c += '<div class="input-list-uploadcon-list">';
+    	   				c += '	<div class="input-list-uploadcon-listl left">';
+    	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + data.instanceId + '") file-index = "' + children[i].orderby + '">' + children[i].viewFileName + '</a>';
+    	   				if(_fileSuffix == "PDF" && data.isOnlineShow == "Y"){
+    	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + data.instanceId + '\')" file-index = "' + children[i].orderby + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
+    	   				}
+    	   				c +='	</div>';
+    	   				/*c += '	<div class="input-list-uploadcon-listr left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
+						c += '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+    	   				c += '	<div class="clear"></div>';
+    	   				c += '</div>';
+    	   			}
+    	   		}
+        	}else{
+        	   		for(var i = 0; i < children.length; i++){
+        	   			_sysFilename = children[i].sysFileName;
+        	   			_fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
+        	   			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
+        	   				c += '<div class="input-list-uploadcon-list">';
+        	   				c += '	<div class="input-list-uploadcon-listl left">';
+        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + data.instanceId + '") file-index = "' + children[i].orderby + '">' + children[i].viewFileName + '</a>';
+        	   				if(_fileSuffix == "PDF" && data.isOnlineShow == "Y"){
+        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + data.instanceId + '\')" file-index = "' + children[i].orderby + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
+        	   				}
+        	   				c +='	</div>';
+        	   				/*c += '	<div class="input-list-uploadcon-listr left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
+							c += '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+        	   				c += '	<div class="clear"></div>';
+        	   				c += '</div>';
+        	   			}
+        	   		}
+        	}
+
+        	c += '		</div>';
+        	c += '	</div>';
+        	c += '	<div class="input-list-suffix-blank left"></div>';
+        	c += '	<div class="clear"></div>';
+        	c += '</div>';
         } else {
 			 c += '<div class="question-answer"><button class="btn btn-small"><i class="icon-upload-alt"></i>附件上传</button><span class="suffix">' + (data["suffix"] ? data.suffix: "") + '</span></div>';
         }
