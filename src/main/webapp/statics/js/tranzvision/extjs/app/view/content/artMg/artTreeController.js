@@ -98,7 +98,16 @@
 		title = record.data.text;
 		
 		dataPanel.columnId = columnId;
-
+		//----------过滤 "活动内容"
+		var coluType=record.data.coluType;
+		var btn=dataPanel.down("toolbar").down("button[name='add']");
+		if(coluType!=undefined&&coluType=="D"){
+			btn.setDisabled(true);
+		}
+		else{
+			btn.setDisabled(false);
+		}
+		//--------------
         if(record.parentNode){
             title = record.parentNode.data.text + " - " + title;
         }

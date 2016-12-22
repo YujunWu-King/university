@@ -113,7 +113,7 @@
                     xtype:"toolbar",
                     items:[
                         {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'cfgSearch'},"-",
-						{text:"新增",tooltip:"新增数据",iconCls: 'add',handler:'addArt'},"-",
+						{text:"新增",tooltip:"新增数据",iconCls: 'add',handler:'addArt',name:'add'},"-",
 						{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSelArt'},"-",
 						{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelList'},'-',
 						{text:"复制",tooltip:"复制",iconCls:"copy",handler:'copySelList'},'-',
@@ -258,7 +258,6 @@
                 ]
             }
         ];
-
         this.callParent();
     },
     listeners : {
