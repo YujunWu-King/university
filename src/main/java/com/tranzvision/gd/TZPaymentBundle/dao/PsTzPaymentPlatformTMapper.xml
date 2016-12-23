@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZPaymentBundle.dao.PsTzPaymentPlatformTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentPlatformT" >
+    <id column="TZ_PLATFORM_ID" property="tzPlatformId" jdbcType="VARCHAR" />
+    <result column="TZ_PLATFORM_NAME" property="tzPlatformName" jdbcType="VARCHAR" />
+    <result column="TZ_PAYMENT_INTERFACE" property="tzPaymentInterface" jdbcType="VARCHAR" />
+    <result column="TZ_RETURN_URL" property="tzReturnUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DEAL_CLASS" property="tzDealClass" jdbcType="VARCHAR" />
+    <result column="TZ_WAIT_TIME" property="tzWaitTime" jdbcType="INTEGER" />
+    <result column="TZ_PLATFORM_DESCRIBE" property="tzPlatformDescribe" jdbcType="VARCHAR" />
+    <result column="TZ_PLATFORM_STATE" property="tzPlatformState" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_PLATFORM_ID, TZ_PLATFORM_NAME, TZ_PAYMENT_INTERFACE, TZ_RETURN_URL, TZ_DEAL_CLASS, 
+    TZ_WAIT_TIME, TZ_PLATFORM_DESCRIBE, TZ_PLATFORM_STATE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PAYMENT_PLATFORM_T
+    where TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_PAYMENT_PLATFORM_T
+    where TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentPlatformT" >
+    insert into PS_TZ_PAYMENT_PLATFORM_T (TZ_PLATFORM_ID, TZ_PLATFORM_NAME, TZ_PAYMENT_INTERFACE, 
+      TZ_RETURN_URL, TZ_DEAL_CLASS, TZ_WAIT_TIME, 
+      TZ_PLATFORM_DESCRIBE, TZ_PLATFORM_STATE, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+      )
+    values (#{tzPlatformId,jdbcType=VARCHAR}, #{tzPlatformName,jdbcType=VARCHAR}, #{tzPaymentInterface,jdbcType=VARCHAR}, 
+      #{tzReturnUrl,jdbcType=VARCHAR}, #{tzDealClass,jdbcType=VARCHAR}, #{tzWaitTime,jdbcType=INTEGER}, 
+      #{tzPlatformDescribe,jdbcType=VARCHAR}, #{tzPlatformState,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentPlatformT" >
+    insert into PS_TZ_PAYMENT_PLATFORM_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPlatformId != null" >
+        TZ_PLATFORM_ID,
+      </if>
+      <if test="tzPlatformName != null" >
+        TZ_PLATFORM_NAME,
+      </if>
+      <if test="tzPaymentInterface != null" >
+        TZ_PAYMENT_INTERFACE,
+      </if>
+      <if test="tzReturnUrl != null" >
+        TZ_RETURN_URL,
+      </if>
+      <if test="tzDealClass != null" >
+        TZ_DEAL_CLASS,
+      </if>
+      <if test="tzWaitTime != null" >
+        TZ_WAIT_TIME,
+      </if>
+      <if test="tzPlatformDescribe != null" >
+        TZ_PLATFORM_DESCRIBE,
+      </if>
+      <if test="tzPlatformState != null" >
+        TZ_PLATFORM_STATE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPlatformId != null" >
+        #{tzPlatformId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformName != null" >
+        #{tzPlatformName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPaymentInterface != null" >
+        #{tzPaymentInterface,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReturnUrl != null" >
+        #{tzReturnUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDealClass != null" >
+        #{tzDealClass,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWaitTime != null" >
+        #{tzWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="tzPlatformDescribe != null" >
+        #{tzPlatformDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformState != null" >
+        #{tzPlatformState,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentPlatformT" >
+    update PS_TZ_PAYMENT_PLATFORM_T
+    <set >
+      <if test="tzPlatformName != null" >
+        TZ_PLATFORM_NAME = #{tzPlatformName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPaymentInterface != null" >
+        TZ_PAYMENT_INTERFACE = #{tzPaymentInterface,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReturnUrl != null" >
+        TZ_RETURN_URL = #{tzReturnUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDealClass != null" >
+        TZ_DEAL_CLASS = #{tzDealClass,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWaitTime != null" >
+        TZ_WAIT_TIME = #{tzWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="tzPlatformDescribe != null" >
+        TZ_PLATFORM_DESCRIBE = #{tzPlatformDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformState != null" >
+        TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentPlatformT" >
+    update PS_TZ_PAYMENT_PLATFORM_T
+    set TZ_PLATFORM_NAME = #{tzPlatformName,jdbcType=VARCHAR},
+      TZ_PAYMENT_INTERFACE = #{tzPaymentInterface,jdbcType=VARCHAR},
+      TZ_RETURN_URL = #{tzReturnUrl,jdbcType=VARCHAR},
+      TZ_DEAL_CLASS = #{tzDealClass,jdbcType=VARCHAR},
+      TZ_WAIT_TIME = #{tzWaitTime,jdbcType=INTEGER},
+      TZ_PLATFORM_DESCRIBE = #{tzPlatformDescribe,jdbcType=VARCHAR},
+      TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR}
+  </update>
+</mapper>
