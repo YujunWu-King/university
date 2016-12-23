@@ -6,6 +6,8 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
     title: "单选题",
     StorageType:"D",
     qCode:"Q1",
+	format: "",
+	isAvg:"N",
     othervalue:"",
     option: {},
     _init: function(d, previewmode) {
@@ -31,9 +33,12 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
     },
     _getHtml: function(data, previewmode) {
         var c = "",e = "";
-
+		if(!data.hasOwnProperty("format")){
+			data["format"] = "";
+		}
         if (previewmode) {
             if(SurveyBuild.accessType == "P"){
+
                 for (var i in data.option) {
                     e += '<li>';
 					e += '	<div class="input-radio-btn '+ (data["option"][i]["checked"] == "Y" ? "checked" : "") +'">';
@@ -52,7 +57,7 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
                 c += '          <div class="onShow"></div>';
                 c += '      </div>';
                 c += '	</div>';
-                c += '	<div class="answer" id="' + data.itemId + '">';
+                c += '	<div class="answer' + data["format"] + '" id="' + data.itemId + '">';
                 c += '		<ul>' + e +  '</ul>';
                 c += '	</div>';
                 c += '</div>';
@@ -88,7 +93,7 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
                 }
                 e += '</li>';
             }
-            c = '<div class="question-answer"><ul class="format">' + e + '</ul></div>'
+            c = '<div class="question-answer"><ul class="format format' + (data["format"]?data["format"]:'1') + '">' + e + '</ul></div>'
         }
         return c;
     },
@@ -100,10 +105,12 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
             list += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'defaultval\')" class="defaultval" ' + (data["option"][i]["defaultval"] == "Y" ? "checked='checked'": "") + ' value="1"></td>';
             //其他
             list += '<td><input type="checkbox" onchange="$(\'.other\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'other\');" class="other" ' + (data["option"][i]["other"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["other"] + '"></td>';
-            //值
+            //选项编码
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + data["option"][i]["code"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //描述
             list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="' + data["option"][i]["txt"] + '" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
+            //分值
+            list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'weight\')" value="' + data["option"][i]["weight"] + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
             //操作
             list += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
             list += '</tr>';
@@ -116,8 +123,9 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
         e += '				<tr>';
         e += '					<th class="thw">默认</th>';
         e += '					<th class="thw">其他</th>';
-        e += '					<th>值</th>';
+        e += '					<th class="thw">编号</th>';
         e += '					<th class="alLeft">描述<button onclick="SurveyBuild.optionBatch(\'' + data.instanceId + '\')" class="btn btn-primary btn-mini pull-right">批量编辑</button></th>';
+        e += '                  <th>分值</th>';
         e += '					<th width="45">操作</th>';
         e += '				</tr>';
         e += '			</thead>';
@@ -125,6 +133,19 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
         e += '		</table>';
         e += '</fieldset>';
 
+        e += '<div class="question-type clearfix">';
+        e += '	<fieldset>';
+        e += '		<legend>选项排列</legend>';
+        e += '		<select onchange="SurveyBuild.saveAttr(this,\'format\')" data-id="' + data.instanceId + '">';
+        e += '			<option value="1" ' + (data.format == "" ? "selected='selected'": "") + '>竖排</option>';
+        e += '			<option value="2" ' + (data.format == "2" ? "selected='selected'": "") + '>垂直2列</option>';
+        e += '			<option value="3" ' + (data.format == "3" ? "selected='selected'": "") + '>垂直3列</option>';
+        e += '			<option value="4" ' + (data.format == "4" ? "selected='selected'": "") + '>垂直4列</option>';
+        e += '			<option value="5" ' + (data.format == "5" ? "selected='selected'": "") + '>垂直5列</option>';
+        e += '			<option value="6" ' + (data.format == "6" ? "selected='selected'": "") + '>垂直6列</option>';
+        e += '		</select>';
+        e += '	</fieldset>';
+        e += '</div>';
         /* 暂时注释 By WRL @2015-10-21
         //默认值
         e += '<div class="edit_item_warp">';
@@ -132,6 +153,17 @@ SurveyBuild.extend("RadioBox", "baseComponent", {
         e += '   <input type="text" class="medium" id="defaultval" onkeyup="SurveyBuild.saveAttr(this,\'defaultval\')" value="' + data.defaultval + '"/>';
         e += '</div>';
         */
+		//设置
+        e += '<div class="edit_jygz">';
+        e += '	<span class="title"><i class="icon-cog"></i> 设置</span>';
+        e += '  <div class="groupbox">';
+		e += '		<div class="edit_item_warp" style="margin-top:5px;">';
+		e += '			<input class="mbIE" onchange="SurveyBuild.saveAttr(this,\'isAvg\')" ' + (data.isAvg == "Y" ? "checked='checked'": "") + ' id="isAvg" type="checkbox">';
+		e += '			<label for="isAvg">是否计算平均分</label>';
+		e += '		</div>';
+		e += '	</div>';
+		e += '</div>';
+
         //校验规则
         e += '<div class="edit_jygz">';
         e += '	<span class="title"><i class="icon-cog"></i> 校验规则</span>';

@@ -13,12 +13,12 @@ SurveyBuild.extend("bmrMajor", "baseComponent", {
         if (previewmode) {
             if(SurveyBuild._readonly){
                 //只读模式
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">' + data.wzsm + '</div>';
-                c += '</div>'
+                c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left">' + data.wzsm + '</div>';
+				c += '  <div class="input-list-suffix left"></div>';
+				c += '  <div class="clear"></div>';
+				c += '</div>';
             }else {
                 //编辑模式
                 var classid = $("#ClassId").val();
@@ -37,27 +37,21 @@ SurveyBuild.extend("bmrMajor", "baseComponent", {
                         }
                     }
                 });
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">';
-                c += '  	<div class="main_inner_content_info_right_option_251px">';
-                c += '      	<select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:251px;" title="' + data.itemName + '">';
-                c += '          	<option value="">'+ MsgSet["PLEASE_SELECT"] +'</option>';
+ 
+                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in data.option) {
-                    c += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
                 }
-                c += '			</select>';
-                c += '		</div>';
-                c += '			<a class="blue" target="' + (data.suffixUrl ? "_blank" : "") + '" href="' + (data.suffixUrl ? data.suffixUrl : "javascript:void(0);") + '">' + data.suffix + '</a>';
-                c += '  	<div style="margin-top:-40px;margin-left:256px;float:left;">';
-                c += '      	<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-                c += '          	<div class="onShow"></div>';
-                c += '      	</div>';
-                c += '  	</div>';
-                c += '	</div>';
-                c += '</div>'
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left input-edu-select">';
+                c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
+                c +=                    e;
+                c += '          </select>';
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left">' + (data.suffix != "" ? data.suffix: '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
             }
         } else {
             c += '<div class="question-answer">';

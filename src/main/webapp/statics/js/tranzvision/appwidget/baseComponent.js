@@ -9,7 +9,8 @@ SurveyBuild.define("baseComponent",{
 	suffixUrl:"",//后缀链接
     defaultval:"",//默认值
     classname:"",//类名称、框架自动赋值
-    isRequire:"", //是否必填 
+    isRequire:"", //是否必填
+	isFirstLetterUpper:"", //是否首字母必填
     preg:"",//固定格式校验
     value:"",//值
     onShowMessage:"",//初始化时提示信息
@@ -23,6 +24,7 @@ SurveyBuild.define("baseComponent",{
     wzsm:"",
     "syncOrder": "",
     "syncSep": "",
+	linkItems:"",	//关联项
     _init : function(instanceId){},             //控件报文初始化
     _getHtml : function(data){return "";},      //定义控件
     _edit : function(data){return "";},         //控件属性编辑

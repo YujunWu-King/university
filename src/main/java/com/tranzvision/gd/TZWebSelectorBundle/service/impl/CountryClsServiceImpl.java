@@ -22,9 +22,9 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 /**
  * 国家选择器
  * 
- * @author tang 
+ * @author tang
  * 
- * PS: TZ_GD_COMMON_PKG:TZ_COUNTRY_CLS
+ *         PS: TZ_GD_COMMON_PKG:TZ_COUNTRY_CLS
  */
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.CountryClsServiceImpl")
 public class CountryClsServiceImpl extends FrameworkImpl {
@@ -44,39 +44,41 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
-		try{
+
+		try {
 			jacksonUtil.json2Map(strParams);
 			String strOType = jacksonUtil.getString("OType");
 			String strValue = jacksonUtil.getString("search-text");
-			if(strValue==null){
+			if (strValue == null) {
 				strValue = "";
-			}else{
+			} else {
 				strValue = strValue.trim();
 			}
-			
-			if(jacksonUtil.containsKey("LANGUAGE")){
+
+			if (jacksonUtil.containsKey("LANGUAGE")) {
 				language = jacksonUtil.getString("LANGUAGE");
 			}
-			if(language == null || "".equals(language)){
+			if (language == null || "".equals(language)) {
 				language = "ZHS";
 			}
 
-			//通过国家名称查询 BEGIN;
-			if("BYCOUNTRY".equals(strOType)){
+			// 通过国家名称查询 BEGIN;
+			if ("BYCOUNTRY".equals(strOType)) {
 
 				String sqlFindScholls = "";
-				List<Map<String,Object>> list ;
-				if("ENG".equals(language)){
+				List<Map<String, Object>> list;
+				if ("ENG".equals(language)) {
 					sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? AND (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
-					list = jdbcTemplate.queryForList(sqlFindScholls,new Object[]{language,"%"+ strValue.toUpperCase() + "%","%"+ strValue.toUpperCase() + "%"});
-				}else{
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language,
+							"%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
+				} else {
 					sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V WHERE (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
-					list = jdbcTemplate.queryForList(sqlFindScholls,new Object[]{"%"+ strValue.toUpperCase() + "%","%"+ strValue.toUpperCase() + "%"});
+					list = jdbcTemplate.queryForList(sqlFindScholls,
+							new Object[] { "%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
 				}
-				
-				if(list != null && list.size() > 0){
-					for(int i = 0; i < list.size(); i++){
+
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
 						Map<String, Object> returnMap = new HashMap<>();
 						returnMap.put("country", list.get(i).get("COUNTRY"));
 						returnMap.put("descr", list.get(i).get("DESCR"));
@@ -84,26 +86,26 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-			
-			//通过州名称查询 BEGIN;
-			if("BYSTATE".equals(strOType)){
-				
-				String strTvalueSQL =  "select TZ_ZHZ_ID from PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_CONTINENT' AND TZ_ZHZ_CMS=?";
-				String strTvalue = jdbcTemplate.queryForObject(strTvalueSQL, new Object[]{strValue},"String");
-				
-				if(strTvalue != null && !"".equals(strTvalue)){
+
+			// 通过州名称查询 BEGIN;
+			if ("BYSTATE".equals(strOType)) {
+
+				String strTvalueSQL = "select TZ_ZHZ_ID from PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_CONTINENT' AND TZ_ZHZ_CMS=?";
+				String strTvalue = jdbcTemplate.queryForObject(strTvalueSQL, new Object[] { strValue }, "String");
+
+				if (strTvalue != null && !"".equals(strTvalue)) {
 					String sqlFindScholls = "";
-					List<Map<String,Object>> list ;
-					if("ENG".equals(language)){
+					List<Map<String, Object>> list;
+					if ("ENG".equals(language)) {
 						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? AND TZ_CONTINENT= ? ORDER BY COUNTRY";
-						list = jdbcTemplate.queryForList(sqlFindScholls,new Object[]{language,strTvalue});
-					}else{
+						list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language, strTvalue });
+					} else {
 						sqlFindScholls = "SELECT COUNTRY, DESCR FROM PS_TZ_COUNTRY_V where TZ_CONTINENT=? order by COUNTRY";
-						list = jdbcTemplate.queryForList(sqlFindScholls,new Object[]{strTvalue});
+						list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strTvalue });
 					}
-					
-					if(list != null && list.size() > 0){
-						for(int i = 0; i < list.size(); i++){
+
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
 							Map<String, Object> returnMap = new HashMap<>();
 							returnMap.put("country", list.get(i).get("COUNTRY"));
 							returnMap.put("descr", list.get(i).get("DESCR"));
@@ -112,14 +114,14 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-			
+
 			try {
 				result = mapper.writeValueAsString(arraylist);
 			} catch (JsonProcessingException e1) {
 				e1.printStackTrace();
 			}
-		}catch(Exception e){
-			
+		} catch (Exception e) {
+
 		}
 		return result;
 	}
@@ -135,23 +137,8 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(strParams);
 		Map<String, Object> getMap;
 		// 是否是报名表;
-		if (jacksonUtil.containsKey("TPLID")) {
-			// 根据报名表模板查询language;
-			String TPLID = jacksonUtil.getString("TPLID");
-			String sql = "SELECT TZ_JG_ID,TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
-			getMap = jdbcTemplate.queryForMap(sql, new Object[] { TPLID });
-			if (getMap != null) {
-				language = (String) getMap.get("TZ_APP_TPL_LAN");
-				jgId = (String) getMap.get("TZ_JG_ID");
-				//根据机构id得到skinid;
-				String siteSQL = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
-				skinId = jdbcTemplate.queryForObject(siteSQL,new Object[]{jgId},"String");
-				
-			}
-
-		} else if (jacksonUtil.containsKey("siteId")) {
+		if (jacksonUtil.containsKey("siteId")) {
 			String siteId = jacksonUtil.getString("siteId");
-			
 			// 根据站点id查询;
 			String sql = "select TZ_SKIN_ID,TZ_SITE_LANG,TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			getMap = jdbcTemplate.queryForMap(sql, new Object[] { siteId });
@@ -159,6 +146,19 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 				language = (String) getMap.get("TZ_SITE_LANG");
 				jgId = (String) getMap.get("TZ_JG_ID");
 				skinId = (String) getMap.get("TZ_SKIN_ID");
+			}
+		} else if (jacksonUtil.containsKey("TPLID")) {
+			// 根据报名表模板查询language;
+			String TPLID = jacksonUtil.getString("TPLID");
+			String sql = "SELECT TZ_JG_ID,TZ_APP_TPL_LAN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
+			getMap = jdbcTemplate.queryForMap(sql, new Object[] { TPLID });
+			if (getMap != null) {
+				language = (String) getMap.get("TZ_APP_TPL_LAN");
+				jgId = (String) getMap.get("TZ_JG_ID");
+				// 根据机构id得到skinid;
+				String siteSQL = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+				skinId = jdbcTemplate.queryForObject(siteSQL, new Object[] { jgId }, "String");
+
 			}
 		} else {
 			language = "ZHS";
@@ -171,7 +171,7 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		if (jgId == null || "".equals(jgId)) {
 			jgId = "ADMIN";
 		}
-		
+
 		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
@@ -187,7 +187,8 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 		String tzGeneralURL = request.getContextPath() + "/dispatcher";
 		String nationalHtml = "";
 		try {
-			nationalHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_NATIONAL_SELECT", tzGeneralURL, title, query, chooseState, ok, language,request.getContextPath(),imgPath);
+			nationalHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_NATIONAL_SELECT", tzGeneralURL, title,
+					query, chooseState, ok, language, request.getContextPath(), imgPath);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

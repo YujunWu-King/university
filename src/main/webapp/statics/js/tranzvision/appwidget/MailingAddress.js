@@ -15,33 +15,37 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
         if (previewmode) {
             if(SurveyBuild._readonly){
                 //只读模式
-
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right" >';
-                c += '      <span style="' + (children[0]["value"] ? "line-height:25px;" : "") + '">' + children[0]["value"] + (children[0]["value"] ? "<br>" : "") + children[1]["value"] + '</span>';
-                c += '  </div>';
-                c += '</div>'
+                
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
+                c += '	<div class="input-list-suffix left"></div>';
+                c += '	<div class="clear"></div>';
+                c += '</div>';
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
 
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+                c += '<div class="input-list">';
+                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
                 c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">';
-                c += '		<input type="text" title="' + MsgSet["CITY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                c += '		<input type="text" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                c += '		<div style="margin-top:-40px;margin-left:256px">';
-                c += '			<div id="' + data["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
-                c += '              <div class="onCorrect">&nbsp;</div>';
-                c += '			</div>';
-                c += '		</div>';
+                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["ADDRESS"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
                 c += '	</div>';
+                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                c += '	<div class="clear"></div>';
                 c += '</div>';
+				//提示信息
+				if ($.trim(data.onShowMessage) != "") {
+					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+					c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+					c += '	<div class="input-list-suffix-blank left"></div>';
+					c += '	<div class="clear"></div>';
+					c += '</div>';
+				}
             }
         } else {
             c += '<div class="question-answer">';
@@ -53,6 +57,7 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
     },
     _edit: function(data) {
         var e = "";
+		e = '<div class="edit_item_warp"><span class="edit_item_label">提示信息：</span>  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'onShowMessage\')" value="' + data.onShowMessage + '"/></div>';
         e += '<div class="edit_item_warp">';
         e += '  <span class="edit_item_label">默认值：</span>';
         e += '  <input type="text" class="medium" id="defaultval" onkeyup="SurveyBuild.saveAttr(this,\'defaultval\')" value="' + data.defaultval + '"/>';
@@ -79,28 +84,33 @@ SurveyBuild.extend("MailingAddress", "baseComponent", {
     _eventbind: function(data) {
         var province = $("#" + data["itemId"] + data.children[0]["itemId"]);
         var address = $("#" + data["itemId"] + data.children[1]["itemId"]);
-
+        var $selectBtn = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
+        var siteId=$("#siteId").val();
+        
         var prov;
-        province.click(function(e) {
-            var _prov_id=data["itemId"] + data.children[0]["itemId"];
+		$.each([province,$selectBtn],function(i,el){
+			el.click(function(e) {
+	            var _prov_id=data["itemId"] + data.children[0]["itemId"];
 
-            var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-            var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + _prov_id + '"}}';
-            provinceUrl = provinceUrl + window.escape(params);
+	            var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
+	            var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + _prov_id+ '","siteId":"' + siteId + '"}}';
+	            provinceUrl = provinceUrl + window.escape(params);
 
-            prov = $.layer({
-                type: 2,
-                title: false,
-                fix: false,
-                closeBtn: false,
-                shadeClose: false,
-                shade : [0.3 , '#000' , true],
-                border : [3 , 0.3 , '#000', true],
-                offset: ['100px',''],
-                area: ['588px','400px'],
-                iframe: {src: provinceUrl}
-            });
-        });
+	            prov = $.layer({
+	                type: 2,
+	                title: false,
+	                fix: false,
+	                closeBtn: false,
+	                shadeClose: false,
+	                shade : [0.3 , '#000' , true],
+	                border : [3 , 0.3 , '#000', true],
+	                offset: ['100px',''],
+	                area: ['588px','400px'],
+	                iframe: {src: provinceUrl}
+	            });
+			});
+		});
+
         province.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
         address.formValidator({tipID:(data["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
 

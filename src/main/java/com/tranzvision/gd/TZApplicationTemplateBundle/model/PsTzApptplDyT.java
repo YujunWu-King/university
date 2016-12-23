@@ -14,22 +14,8 @@ public class PsTzApptplDyT {
     private String tzAppTplYt;
 
     private String tzUseType;
-    
-    /**
-     * add by caoy 2016-6-13
-     */
-    private String tzPdfType;
 
-
-	public String getTzPdfType() {
-		return tzPdfType;
-	}
-
-	public void setTzPdfType(String tzPdfType) {
-		this.tzPdfType = tzPdfType;
-	}
-
-	private String tzAppLabelWz;
+    private String tzAppLabelWz;
 
     private String tzAppTsxxFs;
 
@@ -78,6 +64,10 @@ public class PsTzApptplDyT {
     private Integer tzLeftWidth;
 
     private Integer tzRightWidth;
+
+    private String tzPdfType;
+
+    private String tzOnlySubmitBtn;
 
     public String getTzAppTplId() {
         return tzAppTplId;
@@ -325,5 +315,21 @@ public class PsTzApptplDyT {
 
     public void setTzRightWidth(Integer tzRightWidth) {
         this.tzRightWidth = tzRightWidth;
+    }
+
+    public String getTzPdfType() {
+        return tzPdfType;
+    }
+
+    public void setTzPdfType(String tzPdfType) {
+        this.tzPdfType = tzPdfType == null ? null : tzPdfType.trim();
+    }
+
+    public String getTzOnlySubmitBtn() {
+        return tzOnlySubmitBtn;
+    }
+
+    public void setTzOnlySubmitBtn(String tzOnlySubmitBtn) {
+        this.tzOnlySubmitBtn = tzOnlySubmitBtn == null ? null : tzOnlySubmitBtn.trim();
     }
 }

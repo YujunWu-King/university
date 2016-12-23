@@ -19,6 +19,7 @@
 
 		<script type="text/javascript" src="%bind(:7)/statics/js/lib/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="%bind(:7)/statics/js/lib/laydate/laydate.js"></script>
+		<link rel="stylesheet" href="%bind(:7)/statics/css/appeditor/css.css" />
 <!--张浪添加--START-->
 		<script type="text/javascript">
 			$(document).ready(function(){
@@ -317,7 +318,8 @@
 			var $ParamCon = $("#ParamCon",window.parent.document).val();
 			$("#"+$ParamCon,window.parent.document).val($value);
 			$("#"+$ParamCon,window.parent.document).focus();
-			$("#"+$ParamCon,window.parent.document).trigger("blur");
+			parent.$("#"+$ParamCon,window.parent.document).trigger("change");
+			parent.$("#"+$ParamCon,window.parent.document).trigger("blur");
 			closeThis();
 		}
 	

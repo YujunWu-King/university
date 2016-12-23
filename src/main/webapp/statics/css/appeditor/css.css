@@ -2543,7 +2543,7 @@ a.ora:hover
 .city_top3 {
     height: 48px;
     width: 815px;
-    background-image: url(images/selector_top_bg.png);
+    background-image: url(url("../../images/appeditor/selector_top_bg.png"));
     background-repeat: repeat-x;
     margin-right: 0;
     margin-left: 0;
@@ -3683,12 +3683,10 @@ a.ora:hover
 	display: none;
 }
 
-/*与通用样式style.css重复*/
-/*
 .bt_blue {
 	line-height: 35px;
 	color:#fff;
-	background-image: url(images/blue_bg_bt.png);
+	background-image: url("../../images/appeditor/blue_bg_bt.png");
 	background-repeat: repeat-x;
 	border: 1px solid #fff ;
 	border-radius:3px;
@@ -3697,6 +3695,8 @@ a.ora:hover
 	height: 35px;
 	width: 100%;
 }
+/*与通用样式style.css重复*/
+/*
 .bt_blue:hover{
 	filter:alpha(opacity=80); 
 	-moz-opacity:0.8; 
@@ -3726,6 +3726,7 @@ a.ora:hover
 	cursor:pointer;
 	}
 */
+
 .bt_113px {
 	height: 35px;
 	width: 113px;
@@ -3796,10 +3797,12 @@ cursor:pointer;
 	width: 300px;
 }
 .search_right {
+	cursor:pointer;
 	float: left;
 	height: 39px;
 	width: 40px;
 	margin:8px 0;
+	background: url("../../images/appeditor/blue_search_bt.png");
 }
 .main_inner_right_line_right2  input[type="button"] {
 	font-size: 16px;

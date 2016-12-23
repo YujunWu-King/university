@@ -9,6 +9,8 @@ function pageReadOnly()
 	$("form textarea").unbind();
 	$("form input").nextAll('img').unbind("click");
 	
+	$(".addNext").hide();
+	$(".btn-addcon").hide();
 	$(".main_inner_content_info").hide();
 	$(".main_inner_content_del").hide();
 	$(".main_inner_file_del").hide();
@@ -39,8 +41,7 @@ try{
 		},
 		submitAfterAjaxPrompt : '有数据正在异步验证，请稍等...'	
 	});
-}catch(e)
-{
+}catch(e){
 }
 
 //处理formvalidator的tips
@@ -150,10 +151,15 @@ if(dataApp){
 								//console.log("Radio");
 								//console.log(perXxx["option"]);
 								if( perXxx["option"] ){
-									$.each(perXxx["option"],function(ii,optionInfo){	
-										//console.log(optionInfo);
+									$.each(perXxx["option"],function(ii,optionInfo){
+										
 										if(recApp["children"][i][j]["option"][ii]){
 											optionInfo["checked"] = recApp["children"][i][j]["option"][ii]["checked"];
+											if(recApp["children"][i][j]["option"][ii]["othervalue"]!=undefined){
+												optionInfo["othervalue"] = recApp["children"][i][j]["option"][ii]["othervalue"];
+											}else{
+												optionInfo["othervalue"] = "";
+											}
 										}
 									})
 								}
@@ -223,6 +229,11 @@ if(dataApp){
 						//console.log(optionInfo);
 						if(recApp["option"][i]){
 							optionInfo["checked"] = recApp["option"][i]["checked"];
+							if(recApp["option"][i]["othervalue"]!=undefined ){
+								optionInfo["othervalue"] = recApp["option"][i]["othervalue"];
+							}else{
+								optionInfo["othervalue"] = "";
+							}
 						}
 					})
 				}
@@ -268,14 +279,14 @@ var config = {
 for (var selector in config) {
   $(selector).chosen(config[selector]);
 }
-
 //console.log($(".bmbtjxtitle"));
 $(".bmbtjxtitle").find(".chosen-container").unbind();
 
 
-$("#tabNav .tabNav_c").click();
-//console.log(appReadOnly);
+/*默认点击选中的Tab页签*/
+$(".menu-active").click();
 
+//console.log(appReadOnly);
 if(appReadOnly == "Y"){
 	pageReadOnly();
 }else{
@@ -287,17 +298,26 @@ if(appReadOnly == "Y"){
 
 layer.closeAll();
 //单选框、复选框、多选框，其他
-$(".sur_other_box").change(function(){
-	if($(this).attr("type") == "radio"){
-		if($(this).val() == $("input[name='"+$(this).attr("name")+"']:checked").val()){
-			$(this).next("input").show()
-		}else{
-			$(this).next("input").hide()
-		}
-	}else{					
-		$(this).prop("checked")?$(this).next("input").show():$(this).next("input").hide();
-	}
-});
-$(".sur_radio_box").change(function(){
-	$(this).closest("ul").find(".sur_other_box").next("input").hide();
-});
+
+/*
+	Custom checkbox and radio button - Jun 18, 2013
+	(c) 2013 @ElmahdiMahmoud 
+	license: http://www.opensource.org/licenses/mit-license.php
+*/   
+//$('input[type="radio"]').wrap('<div class="radio-btn"><i></i></div>');
+//$(".radio-btn").on('click', function () {
+//    var _this = $(this),block = _this.parent().parent();
+//    block.find('input:radio').attr('checked', false);
+//    block.find(".radio-btn").removeClass('checkedRadio');
+//    _this.addClass('checkedRadio');
+//    _this.find('input:radio').attr('checked', true);
+//});
+
+//$('input[type="checkbox"]').wrap('<div class="check-box"><i></i></div>');
+//$.fn.toggleCheckbox = function () {
+//    this.attr('checked', !this.attr('checked'));
+//}
+//$('.check-box').on('click', function () {
+//    $(this).find(':checkbox').toggleCheckbox();
+//    $(this).toggleClass('checkedBox');
+//});

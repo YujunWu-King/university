@@ -1,6 +1,6 @@
-$(function(){
-	$(".popo").popover({trigger:"hover"});//初始化帮助提示
-});
+//$(function(){
+//	$(".popo").popover({trigger:"hover"});//初始化帮助提示
+//});
 function loading(obj)
 {
 	obj.css("position","relative");

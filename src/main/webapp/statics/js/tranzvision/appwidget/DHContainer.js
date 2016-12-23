@@ -6,6 +6,7 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 	children: {},
 	minLines: 1,
 	maxLines: 4,
+	defaultLines:1,
 	_init: function(d, previewmode) {
 		var linesNo = [];
 		for (var i = 1; i < this.maxLines; i++) {
@@ -17,29 +18,23 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 		var c = "", children = data.children;
 		if (previewmode) {
 			c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '">';
-			c += '<div class="main_inner_content_title">';
-			c += '	<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>';
-			c += '	<span class="reg_title_grey_17px">' + data.title + '</span>';
-			c += '  <div style="float: right;width: 40px;">';
-			c += '		<div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-			c += '			<div class="onShow"></div>';
-			c += '		</div>';
-			c += '	</div>';
-			c += '</div>';
+			
+	    	c += '<div class="mainright-title">';
+	    	c += '	<span class="title-line"></span>' + data.title;
+	    	c += '</div>';
+	    	c += '<div class="workbg">' + data.wzsm + '</div>';
+	    	c += '<div class="main_content_box">';
 
-			c += '<div class="main_inner_content_top"></div>';
-			c += '<div class="main_inner_content">';
-			c += '	<div class="main_inner_content_info" style="' + (data.maxLines == "1" ? "display:none": "") + '">';
-			c += '		<div class="bmb_save">';
-			c += '			<div class="bt_blue" onclick="SurveyBuild.saveApp(this);">' + MsgSet["SAVE"] + '</div>';
-			c += '			<a href="javascript:;" class="alpha"></a>';
-			c += '		</div>';
-			c += '		<div class="main_inner_content_info_add addnextbtn" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');">';
-			c += '			<div class="bt_blue">' + MsgSet["ADD_ONE"] + '</div>';
-			c += '		</div>';
-			c += '	</div>';
-			c += '</div>';
-			c += '<div class="main_inner_content_foot"></div>';
+	        c += '	<div class="input-list-blank addNext">';
+	        c += '	    <div class="input-list-suffix-blank right input-btn" style="width:17%">';
+			/*
+	        c += '	    	<div onclick="SurveyBuild.saveApp(this);" class="input-savebtn">' + MsgSet["SAVE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-save.png" /></span></div>';
+			*/
+	        c += '			<div onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="input-addbtn">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+	        c += '		</div>';
+	        c += '		<div class="clear"></div>';
+	        c += '	</div>';	    	
+	    	c += '</div>';
 		} else {
 			c = '<ul class="DHContainer DHSort" data-dhbz="Y" style="min-height:150px;"></ul>';
 		}
@@ -47,7 +42,10 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 	},
 	_edit: function(data) {
 		var e = "";
-
+		e = '<div class="edit_item_warp">';
+        e += '  <span class="edit_item_label">描述：</span>';
+        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="rows" value="' + data.wzsm + '"/>';
+        e += '</div>';
 		//参数设置
 		e += '<div class="edit_jygz">';
 		e += '	    <span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
@@ -61,6 +59,11 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 		e += '          <div class="edit_item_warp mb10">';
 		e += '          	<span class="edit_item_label">最大行数：</span>';
 		e += '				<input type="text" maxlength="2" class="medium edit_attaType maxLines" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+		e += '          </div>';
+		
+		e += '          <div class="edit_item_warp mb10">';
+		e += '          	<span class="edit_item_label">默认行数：</span>';
+		e += '				<input type="text" maxlength="2" class="medium edit_attaType defaultLines" onkeyup="SurveyBuild.saveAttr(this,\'defaultLines\')" value="' + data.defaultLines + '"/>';
 		e += '          </div>';
 
 		e += '      </div>';

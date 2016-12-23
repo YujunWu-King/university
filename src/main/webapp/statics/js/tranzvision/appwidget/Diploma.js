@@ -39,37 +39,29 @@ SurveyBuild.extend("Diploma", "baseComponent", {
                         valDesc = data["option"][i]["txt"];
                     }
                 }
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right" >' + valDesc + '</div>';
-                c += '</div>'
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left">' + valDesc + '</div>';
+				c += '  <div class="input-list-suffix left"></div>';
+				c += '  <div class="clear"></div>';
+				c += '</div>';
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in data.option) {
-                    e += '<option ' + (data.value == data["option"][i]["code"]? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
                 }
-
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right">';
-                c += '      <div class="main_inner_content_info_right_option_251px">';
-                c += '          <select name="' + data.itemId + '" class="chosen-select" style="width:251px;" id="' + data.itemId + '" title="' + data.itemName + '">';
-                c +=                e;
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="input-list-text left input-edu-select">';
+                c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
+                c +=                    e;
                 c += '          </select>';
-                c += '      </div>' + data.suffix;
-                c += '      <div style="margin-top:-40px;margin-left:256px;float:left;">';
-                c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-                c += '              <div class="onShow"></div>';
-                c += '          </div>';
-                c += '      </div>';
-                c += '  </div>';
-                c += '</div>'
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
             }
         } else {
             for (var i in data.option) {

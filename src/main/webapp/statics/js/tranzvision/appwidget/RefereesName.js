@@ -26,14 +26,14 @@ SurveyBuild.extend("RefereesName", "baseComponent", {
                     }
                 }
             });
-
-            c += '<div class="main_inner_content_info_autoheight">';
-            c += '	<div class="main_inner_connent_info_left">' + data.title + '</div>';
-            c += '	<div class="main_inner_content_info_right">';
-            c += '		<div class="main_inner_content_info_option_text">' + data.value + '</div>';
-            c += '      <input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
-            c += '	</div>';
+            
+            c += '<div class="input-list">';
+            c += '	<div class="input-list-info left">' + data.title + '</div>';
+            c += '	<div class="input-list-text left">' + data.value + '</div>';
+            c += '	<div class="input-list-suffix left"></div>';
+            c += '	<div class="clear"></div>';
             c += '</div>';
+            c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
 
         } else {
             c += '<div class="question-answer">';

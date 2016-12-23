@@ -30,30 +30,22 @@ SurveyBuild.extend("autoComplete", "baseComponent", {
         if (previewmode) {
             if(SurveyBuild._readonly){
                 //只读模式
-
-                c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_readonly_right" >' + data.value + '</div>';
-                c += '</div>'
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left" title="' + data.itemName + '">' + data.value + '</div>';
+				c += '  <div class="input-list-suffix left"></div>';
+				c += '  <div class="clear"></div>';
+				c += '</div>';
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-
-                c += '<div class="main_inner_content_info_autoheight">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right">';
-                c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input_251px format" title="' + data.itemName + '">';
-                c += '      <div style="margin-top:-40px;margin-left:256px">';
-                c += '          <div id="' + data.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-                c += '              <div class="onShow"></div>';
-                c += '            </div>';
-                c += '      </div>';
-                c += '  </div>';
-                c += '</div>'
+               	
+    			c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left"><input  type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '"/></div>';
+				c += '  <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+				c += '  <div class="clear"></div>';
+				c += '</div>';
             }
         } else {
             c += '<div class="question-answer">';

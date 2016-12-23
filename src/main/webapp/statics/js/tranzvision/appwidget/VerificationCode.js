@@ -12,9 +12,11 @@ SurveyBuild.extend("VerificationCode", "baseComponent", {
 		if (previewmode) {
 			if (SurveyBuild._readonly) {
 				//只读模式
-				c += '<div class="main_inner_content_info_autoheight cLH">';
-				c += '	<div class="main_inner_connent_info_left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="main_inner_content_info_readonly_right">' + data.value + '</div>';
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left">' + data.value + '</div>';
+				c += '  <div class="input-list-suffix left"></div>';
+				c += '  <div class="clear"></div>';
 				c += '</div>';
 			} else {
 				//填写模式
@@ -24,14 +26,14 @@ SurveyBuild.extend("VerificationCode", "baseComponent", {
 					regular = SurveyBuild._preg[data.preg]["regExp"];
 				}
 
-				c += '<div class="main_inner_content_info_autoheight">';
-				c += '	<div class="main_inner_connent_info_left"><span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="main_inner_content_info_right" style="width:120px"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="input_120px" id="' + data.itemId + '" name="' + data.itemId + '" value="" title="' + data.itemName + '" data-regular="' + regular + '"/>';
+				c += '<div class="input-list">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '  <div class="input-list-text left"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
 				
-				c += '  <a id="changeImg" onclick="SurveyBuild.changeImgCode(this);" href="javascript:void(0)"><img id="yzmImg" src="'+ TzUniversityContextPath +'/captcha" width="113" height="34" style="padding-top:5px" class="img_num" /></a>'  + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "") + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+				c += '  <div class="input-list-suffix left"><a id="changeImg" onclick="SurveyBuild.changeImgCode(this);" href="javascript:void(0)"><img id="yzmImg" src="'+ TzUniversityContextPath +'/captcha" width="113" height="34" style="padding-top:5px" class="img_num" /></a>'  + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "") + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 				c += '  <div class="clear"></div>';
 				c += '</div>';
-				/*	
+
 				if ($.trim(data.onShowMessage) != "") {
 					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
 					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
@@ -39,7 +41,7 @@ SurveyBuild.extend("VerificationCode", "baseComponent", {
 					c += '	<div class="input-list-suffix-blank left"></div>';
 					c += '	<div class="clear"></div>';
 					c += '</div>';
-				}*/
+				}
 			}
 		} else {
 			c += '<div class="question-answer">';
