@@ -2,8 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tranzvision.gd.TZPaymentBundle.dao.PsTzPaymentInfoTMapper" >
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
-    <id column="TZ_PAYMENTID" property="tzPaymentid" jdbcType="VARCHAR" />
-    <result column="TZ_USERID" property="tzUserid" jdbcType="VARCHAR" />
+    <id column="TZ_PAY_ID" property="tzPayId" jdbcType="VARCHAR" />
+    <result column="TZ_PAYMENTID" property="tzPaymentid" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_PRJ_ID" property="tzPayPrjId" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_ROLE" property="tzPayRole" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_ACCOUNT_ID" property="tzAccountId" jdbcType="VARCHAR" />
+    <result column="TZ_PLATFORM_ID" property="tzPlatformId" jdbcType="VARCHAR" />
     <result column="TZ_ORDERID" property="tzOrderid" jdbcType="VARCHAR" />
     <result column="TZ_AMOUNT" property="tzAmount" jdbcType="DECIMAL" />
     <result column="TZ_CURRENCY" property="tzCurrency" jdbcType="CHAR" />
@@ -14,42 +20,68 @@
     <result column="TZ_RETURNAMOUNT" property="tzReturnamount" jdbcType="DECIMAL" />
     <result column="TZ_RETURNCURRENCY" property="tzReturncurrency" jdbcType="CHAR" />
     <result column="TZ_PAYMENTMODE" property="tzPaymentmode" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_TYPE" property="tzPayType" jdbcType="CHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_PAYMENTID, TZ_USERID, TZ_ORDERID, TZ_AMOUNT, TZ_CURRENCY, TZ_PAYMENTSTATUS, TZ_CREATIONDATETIME, 
+    TZ_PAY_ID, TZ_PAYMENTID, TZ_PAY_PRJ_ID, TZ_PAY_ROLE, OPRID, TZ_JG_ID, TZ_ACCOUNT_ID, 
+    TZ_PLATFORM_ID, TZ_ORDERID, TZ_AMOUNT, TZ_CURRENCY, TZ_PAYMENTSTATUS, TZ_CREATIONDATETIME, 
     TZ_RETURNDATETIME, TZ_PAYMENTCOMPANYORDERID, TZ_RETURNAMOUNT, TZ_RETURNCURRENCY, 
-    TZ_PAYMENTMODE
+    TZ_PAYMENTMODE, TZ_PAY_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from PS_TZ_PAYMENTINFO_T
-    where TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR}
+    where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from PS_TZ_PAYMENTINFO_T
-    where TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR}
+    where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
-    insert into PS_TZ_PAYMENTINFO_T (TZ_PAYMENTID, TZ_USERID, TZ_ORDERID, 
+    insert into PS_TZ_PAYMENTINFO_T (TZ_PAY_ID, TZ_PAYMENTID, TZ_PAY_PRJ_ID, 
+      TZ_PAY_ROLE, OPRID, TZ_JG_ID, 
+      TZ_ACCOUNT_ID, TZ_PLATFORM_ID, TZ_ORDERID, 
       TZ_AMOUNT, TZ_CURRENCY, TZ_PAYMENTSTATUS, 
       TZ_CREATIONDATETIME, TZ_RETURNDATETIME, 
       TZ_PAYMENTCOMPANYORDERID, TZ_RETURNAMOUNT, 
-      TZ_RETURNCURRENCY, TZ_PAYMENTMODE)
-    values (#{tzPaymentid,jdbcType=VARCHAR}, #{tzUserid,jdbcType=VARCHAR}, #{tzOrderid,jdbcType=VARCHAR}, 
+      TZ_RETURNCURRENCY, TZ_PAYMENTMODE, TZ_PAY_TYPE
+      )
+    values (#{tzPayId,jdbcType=VARCHAR}, #{tzPaymentid,jdbcType=VARCHAR}, #{tzPayPrjId,jdbcType=VARCHAR}, 
+      #{tzPayRole,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzAccountId,jdbcType=VARCHAR}, #{tzPlatformId,jdbcType=VARCHAR}, #{tzOrderid,jdbcType=VARCHAR}, 
       #{tzAmount,jdbcType=DECIMAL}, #{tzCurrency,jdbcType=CHAR}, #{tzPaymentstatus,jdbcType=CHAR}, 
       #{tzCreationdatetime,jdbcType=TIMESTAMP}, #{tzReturndatetime,jdbcType=TIMESTAMP}, 
       #{tzPaymentcompanyorderid,jdbcType=VARCHAR}, #{tzReturnamount,jdbcType=DECIMAL}, 
-      #{tzReturncurrency,jdbcType=CHAR}, #{tzPaymentmode,jdbcType=VARCHAR})
+      #{tzReturncurrency,jdbcType=CHAR}, #{tzPaymentmode,jdbcType=VARCHAR}, #{tzPayType,jdbcType=CHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
     insert into PS_TZ_PAYMENTINFO_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPayId != null" >
+        TZ_PAY_ID,
+      </if>
       <if test="tzPaymentid != null" >
         TZ_PAYMENTID,
       </if>
-      <if test="tzUserid != null" >
-        TZ_USERID,
+      <if test="tzPayPrjId != null" >
+        TZ_PAY_PRJ_ID,
+      </if>
+      <if test="tzPayRole != null" >
+        TZ_PAY_ROLE,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzAccountId != null" >
+        TZ_ACCOUNT_ID,
+      </if>
+      <if test="tzPlatformId != null" >
+        TZ_PLATFORM_ID,
       </if>
       <if test="tzOrderid != null" >
         TZ_ORDERID,
@@ -81,13 +113,34 @@
       <if test="tzPaymentmode != null" >
         TZ_PAYMENTMODE,
       </if>
+      <if test="tzPayType != null" >
+        TZ_PAY_TYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPayId != null" >
+        #{tzPayId,jdbcType=VARCHAR},
+      </if>
       <if test="tzPaymentid != null" >
         #{tzPaymentid,jdbcType=VARCHAR},
       </if>
-      <if test="tzUserid != null" >
-        #{tzUserid,jdbcType=VARCHAR},
+      <if test="tzPayPrjId != null" >
+        #{tzPayPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayRole != null" >
+        #{tzPayRole,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAccountId != null" >
+        #{tzAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformId != null" >
+        #{tzPlatformId,jdbcType=VARCHAR},
       </if>
       <if test="tzOrderid != null" >
         #{tzOrderid,jdbcType=VARCHAR},
@@ -119,13 +172,34 @@
       <if test="tzPaymentmode != null" >
         #{tzPaymentmode,jdbcType=VARCHAR},
       </if>
+      <if test="tzPayType != null" >
+        #{tzPayType,jdbcType=CHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
     update PS_TZ_PAYMENTINFO_T
     <set >
-      <if test="tzUserid != null" >
-        TZ_USERID = #{tzUserid,jdbcType=VARCHAR},
+      <if test="tzPaymentid != null" >
+        TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayPrjId != null" >
+        TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayRole != null" >
+        TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAccountId != null" >
+        TZ_ACCOUNT_ID = #{tzAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformId != null" >
+        TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR},
       </if>
       <if test="tzOrderid != null" >
         TZ_ORDERID = #{tzOrderid,jdbcType=VARCHAR},
@@ -157,12 +231,21 @@
       <if test="tzPaymentmode != null" >
         TZ_PAYMENTMODE = #{tzPaymentmode,jdbcType=VARCHAR},
       </if>
+      <if test="tzPayType != null" >
+        TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR},
+      </if>
     </set>
-    where TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR}
+    where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
     update PS_TZ_PAYMENTINFO_T
-    set TZ_USERID = #{tzUserid,jdbcType=VARCHAR},
+    set TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR},
+      TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR},
+      TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_ACCOUNT_ID = #{tzAccountId,jdbcType=VARCHAR},
+      TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR},
       TZ_ORDERID = #{tzOrderid,jdbcType=VARCHAR},
       TZ_AMOUNT = #{tzAmount,jdbcType=DECIMAL},
       TZ_CURRENCY = #{tzCurrency,jdbcType=CHAR},
@@ -172,7 +255,8 @@
       TZ_PAYMENTCOMPANYORDERID = #{tzPaymentcompanyorderid,jdbcType=VARCHAR},
       TZ_RETURNAMOUNT = #{tzReturnamount,jdbcType=DECIMAL},
       TZ_RETURNCURRENCY = #{tzReturncurrency,jdbcType=CHAR},
-      TZ_PAYMENTMODE = #{tzPaymentmode,jdbcType=VARCHAR}
-    where TZ_PAYMENTID = #{tzPaymentid,jdbcType=VARCHAR}
+      TZ_PAYMENTMODE = #{tzPaymentmode,jdbcType=VARCHAR},
+      TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR}
+    where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </update>
 </mapper>

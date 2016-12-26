@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZPaymentBundle.dao.PsPrjPayFeeTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeT" >
+    <id column="TZ_PAY_PRJ_ID" property="tzPayPrjId" jdbcType="VARCHAR" />
+    <id column="TZ_PAY_ROLE" property="tzPayRole" jdbcType="VARCHAR" />
+    <id column="TZ_PAY_CURRENCY" property="tzPayCurrency" jdbcType="CHAR" />
+    <result column="TZ_PAY_FEE" property="tzPayFee" jdbcType="DECIMAL" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_PAY_PRJ_ID, TZ_PAY_ROLE, TZ_PAY_CURRENCY, TZ_PAY_FEE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_PRJ_PAY_FEE_T
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+      and TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR}
+      and TZ_PAY_CURRENCY = #{tzPayCurrency,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeTKey" >
+    delete from PS_PRJ_PAY_FEE_T
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+      and TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR}
+      and TZ_PAY_CURRENCY = #{tzPayCurrency,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeT" >
+    insert into PS_PRJ_PAY_FEE_T (TZ_PAY_PRJ_ID, TZ_PAY_ROLE, TZ_PAY_CURRENCY, 
+      TZ_PAY_FEE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID)
+    values (#{tzPayPrjId,jdbcType=VARCHAR}, #{tzPayRole,jdbcType=VARCHAR}, #{tzPayCurrency,jdbcType=CHAR}, 
+      #{tzPayFee,jdbcType=DECIMAL}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeT" >
+    insert into PS_PRJ_PAY_FEE_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPayPrjId != null" >
+        TZ_PAY_PRJ_ID,
+      </if>
+      <if test="tzPayRole != null" >
+        TZ_PAY_ROLE,
+      </if>
+      <if test="tzPayCurrency != null" >
+        TZ_PAY_CURRENCY,
+      </if>
+      <if test="tzPayFee != null" >
+        TZ_PAY_FEE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPayPrjId != null" >
+        #{tzPayPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayRole != null" >
+        #{tzPayRole,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayCurrency != null" >
+        #{tzPayCurrency,jdbcType=CHAR},
+      </if>
+      <if test="tzPayFee != null" >
+        #{tzPayFee,jdbcType=DECIMAL},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeT" >
+    update PS_PRJ_PAY_FEE_T
+    <set >
+      <if test="tzPayFee != null" >
+        TZ_PAY_FEE = #{tzPayFee,jdbcType=DECIMAL},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+      and TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR}
+      and TZ_PAY_CURRENCY = #{tzPayCurrency,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayFeeT" >
+    update PS_PRJ_PAY_FEE_T
+    set TZ_PAY_FEE = #{tzPayFee,jdbcType=DECIMAL},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+      and TZ_PAY_ROLE = #{tzPayRole,jdbcType=VARCHAR}
+      and TZ_PAY_CURRENCY = #{tzPayCurrency,jdbcType=CHAR}
+  </update>
+</mapper>

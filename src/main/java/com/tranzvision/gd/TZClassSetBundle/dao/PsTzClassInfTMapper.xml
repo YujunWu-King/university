@@ -25,6 +25,7 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_IS_PAY" property="tzIsPay" jdbcType="CHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" extends="BaseResultMap" >
     <result column="TZ_CLASS_DESC" property="tzClassDesc" jdbcType="LONGVARCHAR" />
@@ -33,7 +34,7 @@
     TZ_CLASS_ID, TZ_JG_ID, TZ_PRJ_ID, TZ_CLASS_NAME, TZ_START_DT, TZ_END_DT, TZ_APP_START_DT, 
     TZ_APP_START_TM, TZ_APP_END_DT, TZ_APP_END_TM, TZ_IS_APP_OPEN, TZ_APP_MODAL_ID, TZ_IS_SUB_BATCH, 
     TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_IS_PAY
   </sql>
   <sql id="Blob_Column_List" >
     TZ_CLASS_DESC
@@ -58,8 +59,8 @@
       TZ_IS_SUB_BATCH, TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, 
       TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_CLASS_DESC
-      )
+      SYNCID, SYNCDTTM, TZ_IS_PAY, 
+      TZ_CLASS_DESC)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
       #{tzClassName,jdbcType=VARCHAR}, #{tzStartDt,jdbcType=DATE}, #{tzEndDt,jdbcType=DATE}, 
       #{tzAppStartDt,jdbcType=DATE}, #{tzAppStartTm,jdbcType=TIME}, #{tzAppEndDt,jdbcType=DATE}, 
@@ -67,8 +68,8 @@
       #{tzIsSubBatch,jdbcType=VARCHAR}, #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, 
       #{tzPsAppModalId,jdbcType=VARCHAR}, #{tzGuestApply,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzClassDesc,jdbcType=LONGVARCHAR}
-      )
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzIsPay,jdbcType=CHAR}, 
+      #{tzClassDesc,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
     insert into PS_TZ_CLASS_INF_T
@@ -141,6 +142,9 @@
       </if>
       <if test="syncdttm != null" >
         SYNCDTTM,
+      </if>
+      <if test="tzIsPay != null" >
+        TZ_IS_PAY,
       </if>
       <if test="tzClassDesc != null" >
         TZ_CLASS_DESC,
@@ -216,6 +220,9 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzIsPay != null" >
+        #{tzIsPay,jdbcType=CHAR},
+      </if>
       <if test="tzClassDesc != null" >
         #{tzClassDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -290,6 +297,9 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzIsPay != null" >
+        TZ_IS_PAY = #{tzIsPay,jdbcType=CHAR},
+      </if>
       <if test="tzClassDesc != null" >
         TZ_CLASS_DESC = #{tzClassDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -320,6 +330,7 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_IS_PAY = #{tzIsPay,jdbcType=CHAR},
       TZ_CLASS_DESC = #{tzClassDesc,jdbcType=LONGVARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
@@ -346,7 +357,8 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_IS_PAY = #{tzIsPay,jdbcType=CHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
 </mapper>

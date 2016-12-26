@@ -9,7 +9,7 @@
     <result column="TZ_DEAL_CLASS" property="tzDealClass" jdbcType="VARCHAR" />
     <result column="TZ_WAIT_TIME" property="tzWaitTime" jdbcType="INTEGER" />
     <result column="TZ_PLATFORM_DESCRIBE" property="tzPlatformDescribe" jdbcType="VARCHAR" />
-    <result column="TZ_PLATFORM_STATE" property="tzPlatformState" jdbcType="VARCHAR" />
+    <result column="TZ_PLATFORM_STATE" property="tzPlatformState" jdbcType="CHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -38,7 +38,7 @@
       )
     values (#{tzPlatformId,jdbcType=VARCHAR}, #{tzPlatformName,jdbcType=VARCHAR}, #{tzPaymentInterface,jdbcType=VARCHAR}, 
       #{tzReturnUrl,jdbcType=VARCHAR}, #{tzDealClass,jdbcType=VARCHAR}, #{tzWaitTime,jdbcType=INTEGER}, 
-      #{tzPlatformDescribe,jdbcType=VARCHAR}, #{tzPlatformState,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{tzPlatformDescribe,jdbcType=VARCHAR}, #{tzPlatformState,jdbcType=CHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}
       )
   </insert>
@@ -105,7 +105,7 @@
         #{tzPlatformDescribe,jdbcType=VARCHAR},
       </if>
       <if test="tzPlatformState != null" >
-        #{tzPlatformState,jdbcType=VARCHAR},
+        #{tzPlatformState,jdbcType=CHAR},
       </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -143,7 +143,7 @@
         TZ_PLATFORM_DESCRIBE = #{tzPlatformDescribe,jdbcType=VARCHAR},
       </if>
       <if test="tzPlatformState != null" >
-        TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=VARCHAR},
+        TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=CHAR},
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -168,7 +168,7 @@
       TZ_DEAL_CLASS = #{tzDealClass,jdbcType=VARCHAR},
       TZ_WAIT_TIME = #{tzWaitTime,jdbcType=INTEGER},
       TZ_PLATFORM_DESCRIBE = #{tzPlatformDescribe,jdbcType=VARCHAR},
-      TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=VARCHAR},
+      TZ_PLATFORM_STATE = #{tzPlatformState,jdbcType=CHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

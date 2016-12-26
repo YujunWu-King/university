@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZPaymentBundle.dao.PsPrjPayTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayT" >
+    <id column="TZ_PAY_PRJ_ID" property="tzPayPrjId" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_TYPE" property="tzPayType" jdbcType="CHAR" />
+    <result column="TZ_PRJ_ID" property="tzPrjId" jdbcType="VARCHAR" />
+    <result column="TZ_ACCOUNT_ID" property="tzAccountId" jdbcType="VARCHAR" />
+    <result column="TZ_PLATFORM_ID" property="tzPlatformId" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_CHOOSE1" property="tzPayChoose1" jdbcType="CHAR" />
+    <result column="TZ_PAY_CHOOSE2" property="tzPayChoose2" jdbcType="CHAR" />
+    <result column="TZ_PAY_CHOOSE3" property="tzPayChoose3" jdbcType="CHAR" />
+    <result column="TZ_PAY_CHOOSE4" property="tzPayChoose4" jdbcType="CHAR" />
+    <result column="TZ_PAY_CHOOSE5" property="tzPayChoose5" jdbcType="CHAR" />
+    <result column="TZ_PAY_SELECT1" property="tzPaySelect1" jdbcType="CHAR" />
+    <result column="TZ_PAY_SELECT2" property="tzPaySelect2" jdbcType="CHAR" />
+    <result column="TZ_PAY_SELECT3" property="tzPaySelect3" jdbcType="CHAR" />
+    <result column="TZ_PAY_SELECT4" property="tzPaySelect4" jdbcType="CHAR" />
+    <result column="TZ_PAY_SELECT5" property="tzPaySelect5" jdbcType="CHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_PAY_PRJ_ID, TZ_PAY_TYPE, TZ_PRJ_ID, TZ_ACCOUNT_ID, TZ_PLATFORM_ID, TZ_PAY_CHOOSE1, 
+    TZ_PAY_CHOOSE2, TZ_PAY_CHOOSE3, TZ_PAY_CHOOSE4, TZ_PAY_CHOOSE5, TZ_PAY_SELECT1, TZ_PAY_SELECT2, 
+    TZ_PAY_SELECT3, TZ_PAY_SELECT4, TZ_PAY_SELECT5, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_PRJ_PAY_T
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_PRJ_PAY_T
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayT" >
+    insert into PS_PRJ_PAY_T (TZ_PAY_PRJ_ID, TZ_PAY_TYPE, TZ_PRJ_ID, 
+      TZ_ACCOUNT_ID, TZ_PLATFORM_ID, TZ_PAY_CHOOSE1, 
+      TZ_PAY_CHOOSE2, TZ_PAY_CHOOSE3, TZ_PAY_CHOOSE4, 
+      TZ_PAY_CHOOSE5, TZ_PAY_SELECT1, TZ_PAY_SELECT2, 
+      TZ_PAY_SELECT3, TZ_PAY_SELECT4, TZ_PAY_SELECT5, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID)
+    values (#{tzPayPrjId,jdbcType=VARCHAR}, #{tzPayType,jdbcType=CHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
+      #{tzAccountId,jdbcType=VARCHAR}, #{tzPlatformId,jdbcType=VARCHAR}, #{tzPayChoose1,jdbcType=CHAR}, 
+      #{tzPayChoose2,jdbcType=CHAR}, #{tzPayChoose3,jdbcType=CHAR}, #{tzPayChoose4,jdbcType=CHAR}, 
+      #{tzPayChoose5,jdbcType=CHAR}, #{tzPaySelect1,jdbcType=CHAR}, #{tzPaySelect2,jdbcType=CHAR}, 
+      #{tzPaySelect3,jdbcType=CHAR}, #{tzPaySelect4,jdbcType=CHAR}, #{tzPaySelect5,jdbcType=CHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayT" >
+    insert into PS_PRJ_PAY_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPayPrjId != null" >
+        TZ_PAY_PRJ_ID,
+      </if>
+      <if test="tzPayType != null" >
+        TZ_PAY_TYPE,
+      </if>
+      <if test="tzPrjId != null" >
+        TZ_PRJ_ID,
+      </if>
+      <if test="tzAccountId != null" >
+        TZ_ACCOUNT_ID,
+      </if>
+      <if test="tzPlatformId != null" >
+        TZ_PLATFORM_ID,
+      </if>
+      <if test="tzPayChoose1 != null" >
+        TZ_PAY_CHOOSE1,
+      </if>
+      <if test="tzPayChoose2 != null" >
+        TZ_PAY_CHOOSE2,
+      </if>
+      <if test="tzPayChoose3 != null" >
+        TZ_PAY_CHOOSE3,
+      </if>
+      <if test="tzPayChoose4 != null" >
+        TZ_PAY_CHOOSE4,
+      </if>
+      <if test="tzPayChoose5 != null" >
+        TZ_PAY_CHOOSE5,
+      </if>
+      <if test="tzPaySelect1 != null" >
+        TZ_PAY_SELECT1,
+      </if>
+      <if test="tzPaySelect2 != null" >
+        TZ_PAY_SELECT2,
+      </if>
+      <if test="tzPaySelect3 != null" >
+        TZ_PAY_SELECT3,
+      </if>
+      <if test="tzPaySelect4 != null" >
+        TZ_PAY_SELECT4,
+      </if>
+      <if test="tzPaySelect5 != null" >
+        TZ_PAY_SELECT5,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPayPrjId != null" >
+        #{tzPayPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayType != null" >
+        #{tzPayType,jdbcType=CHAR},
+      </if>
+      <if test="tzPrjId != null" >
+        #{tzPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAccountId != null" >
+        #{tzAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformId != null" >
+        #{tzPlatformId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayChoose1 != null" >
+        #{tzPayChoose1,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose2 != null" >
+        #{tzPayChoose2,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose3 != null" >
+        #{tzPayChoose3,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose4 != null" >
+        #{tzPayChoose4,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose5 != null" >
+        #{tzPayChoose5,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect1 != null" >
+        #{tzPaySelect1,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect2 != null" >
+        #{tzPaySelect2,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect3 != null" >
+        #{tzPaySelect3,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect4 != null" >
+        #{tzPaySelect4,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect5 != null" >
+        #{tzPaySelect5,jdbcType=CHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayT" >
+    update PS_PRJ_PAY_T
+    <set >
+      <if test="tzPayType != null" >
+        TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR},
+      </if>
+      <if test="tzPrjId != null" >
+        TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAccountId != null" >
+        TZ_ACCOUNT_ID = #{tzAccountId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlatformId != null" >
+        TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayChoose1 != null" >
+        TZ_PAY_CHOOSE1 = #{tzPayChoose1,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose2 != null" >
+        TZ_PAY_CHOOSE2 = #{tzPayChoose2,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose3 != null" >
+        TZ_PAY_CHOOSE3 = #{tzPayChoose3,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose4 != null" >
+        TZ_PAY_CHOOSE4 = #{tzPayChoose4,jdbcType=CHAR},
+      </if>
+      <if test="tzPayChoose5 != null" >
+        TZ_PAY_CHOOSE5 = #{tzPayChoose5,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect1 != null" >
+        TZ_PAY_SELECT1 = #{tzPaySelect1,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect2 != null" >
+        TZ_PAY_SELECT2 = #{tzPaySelect2,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect3 != null" >
+        TZ_PAY_SELECT3 = #{tzPaySelect3,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect4 != null" >
+        TZ_PAY_SELECT4 = #{tzPaySelect4,jdbcType=CHAR},
+      </if>
+      <if test="tzPaySelect5 != null" >
+        TZ_PAY_SELECT5 = #{tzPaySelect5,jdbcType=CHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsPrjPayT" >
+    update PS_PRJ_PAY_T
+    set TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR},
+      TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR},
+      TZ_ACCOUNT_ID = #{tzAccountId,jdbcType=VARCHAR},
+      TZ_PLATFORM_ID = #{tzPlatformId,jdbcType=VARCHAR},
+      TZ_PAY_CHOOSE1 = #{tzPayChoose1,jdbcType=CHAR},
+      TZ_PAY_CHOOSE2 = #{tzPayChoose2,jdbcType=CHAR},
+      TZ_PAY_CHOOSE3 = #{tzPayChoose3,jdbcType=CHAR},
+      TZ_PAY_CHOOSE4 = #{tzPayChoose4,jdbcType=CHAR},
+      TZ_PAY_CHOOSE5 = #{tzPayChoose5,jdbcType=CHAR},
+      TZ_PAY_SELECT1 = #{tzPaySelect1,jdbcType=CHAR},
+      TZ_PAY_SELECT2 = #{tzPaySelect2,jdbcType=CHAR},
+      TZ_PAY_SELECT3 = #{tzPaySelect3,jdbcType=CHAR},
+      TZ_PAY_SELECT4 = #{tzPaySelect4,jdbcType=CHAR},
+      TZ_PAY_SELECT5 = #{tzPaySelect5,jdbcType=CHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_PAY_PRJ_ID = #{tzPayPrjId,jdbcType=VARCHAR}
+  </update>
+</mapper>
