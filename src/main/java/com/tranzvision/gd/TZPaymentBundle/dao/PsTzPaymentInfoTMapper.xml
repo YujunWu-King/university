@@ -21,12 +21,15 @@
     <result column="TZ_RETURNCURRENCY" property="tzReturncurrency" jdbcType="CHAR" />
     <result column="TZ_PAYMENTMODE" property="tzPaymentmode" jdbcType="VARCHAR" />
     <result column="TZ_PAY_TYPE" property="tzPayType" jdbcType="CHAR" />
+    <result column="TZ_PAY_OTHER1" property="tzPayOther1" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_OTHER2" property="tzPayOther2" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_OTHER3" property="tzPayOther3" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_PAY_ID, TZ_PAYMENTID, TZ_PAY_PRJ_ID, TZ_PAY_ROLE, OPRID, TZ_JG_ID, TZ_ACCOUNT_ID, 
     TZ_PLATFORM_ID, TZ_ORDERID, TZ_AMOUNT, TZ_CURRENCY, TZ_PAYMENTSTATUS, TZ_CREATIONDATETIME, 
     TZ_RETURNDATETIME, TZ_PAYMENTCOMPANYORDERID, TZ_RETURNAMOUNT, TZ_RETURNCURRENCY, 
-    TZ_PAYMENTMODE, TZ_PAY_TYPE
+    TZ_PAYMENTMODE, TZ_PAY_TYPE, TZ_PAY_OTHER1, TZ_PAY_OTHER2, TZ_PAY_OTHER3
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -45,7 +48,8 @@
       TZ_AMOUNT, TZ_CURRENCY, TZ_PAYMENTSTATUS, 
       TZ_CREATIONDATETIME, TZ_RETURNDATETIME, 
       TZ_PAYMENTCOMPANYORDERID, TZ_RETURNAMOUNT, 
-      TZ_RETURNCURRENCY, TZ_PAYMENTMODE, TZ_PAY_TYPE
+      TZ_RETURNCURRENCY, TZ_PAYMENTMODE, TZ_PAY_TYPE, 
+      TZ_PAY_OTHER1, TZ_PAY_OTHER2, TZ_PAY_OTHER3
       )
     values (#{tzPayId,jdbcType=VARCHAR}, #{tzPaymentid,jdbcType=VARCHAR}, #{tzPayPrjId,jdbcType=VARCHAR}, 
       #{tzPayRole,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
@@ -53,7 +57,8 @@
       #{tzAmount,jdbcType=DECIMAL}, #{tzCurrency,jdbcType=CHAR}, #{tzPaymentstatus,jdbcType=CHAR}, 
       #{tzCreationdatetime,jdbcType=TIMESTAMP}, #{tzReturndatetime,jdbcType=TIMESTAMP}, 
       #{tzPaymentcompanyorderid,jdbcType=VARCHAR}, #{tzReturnamount,jdbcType=DECIMAL}, 
-      #{tzReturncurrency,jdbcType=CHAR}, #{tzPaymentmode,jdbcType=VARCHAR}, #{tzPayType,jdbcType=CHAR}
+      #{tzReturncurrency,jdbcType=CHAR}, #{tzPaymentmode,jdbcType=VARCHAR}, #{tzPayType,jdbcType=CHAR}, 
+      #{tzPayOther1,jdbcType=VARCHAR}, #{tzPayOther2,jdbcType=VARCHAR}, #{tzPayOther3,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZPaymentBundle.model.PsTzPaymentInfoT" >
@@ -116,6 +121,15 @@
       <if test="tzPayType != null" >
         TZ_PAY_TYPE,
       </if>
+      <if test="tzPayOther1 != null" >
+        TZ_PAY_OTHER1,
+      </if>
+      <if test="tzPayOther2 != null" >
+        TZ_PAY_OTHER2,
+      </if>
+      <if test="tzPayOther3 != null" >
+        TZ_PAY_OTHER3,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzPayId != null" >
@@ -174,6 +188,15 @@
       </if>
       <if test="tzPayType != null" >
         #{tzPayType,jdbcType=CHAR},
+      </if>
+      <if test="tzPayOther1 != null" >
+        #{tzPayOther1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayOther2 != null" >
+        #{tzPayOther2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayOther3 != null" >
+        #{tzPayOther3,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -234,6 +257,15 @@
       <if test="tzPayType != null" >
         TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR},
       </if>
+      <if test="tzPayOther1 != null" >
+        TZ_PAY_OTHER1 = #{tzPayOther1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayOther2 != null" >
+        TZ_PAY_OTHER2 = #{tzPayOther2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayOther3 != null" >
+        TZ_PAY_OTHER3 = #{tzPayOther3,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </update>
@@ -256,7 +288,10 @@
       TZ_RETURNAMOUNT = #{tzReturnamount,jdbcType=DECIMAL},
       TZ_RETURNCURRENCY = #{tzReturncurrency,jdbcType=CHAR},
       TZ_PAYMENTMODE = #{tzPaymentmode,jdbcType=VARCHAR},
-      TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR}
+      TZ_PAY_TYPE = #{tzPayType,jdbcType=CHAR},
+      TZ_PAY_OTHER1 = #{tzPayOther1,jdbcType=VARCHAR},
+      TZ_PAY_OTHER2 = #{tzPayOther2,jdbcType=VARCHAR},
+      TZ_PAY_OTHER3 = #{tzPayOther3,jdbcType=VARCHAR}
     where TZ_PAY_ID = #{tzPayId,jdbcType=VARCHAR}
   </update>
 </mapper>

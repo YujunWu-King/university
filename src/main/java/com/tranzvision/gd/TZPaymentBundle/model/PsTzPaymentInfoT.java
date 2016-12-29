@@ -42,6 +42,12 @@ public class PsTzPaymentInfoT {
 
     private String tzPayType;
 
+    private String tzPayOther1;
+
+    private String tzPayOther2;
+
+    private String tzPayOther3;
+
     public String getTzPayId() {
         return tzPayId;
     }
@@ -192,5 +198,29 @@ public class PsTzPaymentInfoT {
 
     public void setTzPayType(String tzPayType) {
         this.tzPayType = tzPayType == null ? null : tzPayType.trim();
+    }
+
+    public String getTzPayOther1() {
+        return tzPayOther1;
+    }
+
+    public void setTzPayOther1(String tzPayOther1) {
+        this.tzPayOther1 = tzPayOther1 == null ? null : tzPayOther1.trim();
+    }
+
+    public String getTzPayOther2() {
+        return tzPayOther2;
+    }
+
+    public void setTzPayOther2(String tzPayOther2) {
+        this.tzPayOther2 = tzPayOther2 == null ? null : tzPayOther2.trim();
+    }
+
+    public String getTzPayOther3() {
+        return tzPayOther3;
+    }
+
+    public void setTzPayOther3(String tzPayOther3) {
+        this.tzPayOther3 = tzPayOther3 == null ? null : tzPayOther3.trim();
     }
 }
