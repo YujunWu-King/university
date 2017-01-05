@@ -1,10 +1,10 @@
-package com.tranzvision.gd.TZEmailSmsSendBundle.service.impl;
+package com.tranzvision.gd.TZEmailSmsQFBundle.service.impl;
 
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-public class EmailSendEngineCls extends BaseEngine {
+public class EmailQfSendEngineCls  extends BaseEngine {
 
 	@Override
 	public void OnExecute() throws Exception {
@@ -12,8 +12,8 @@ public class EmailSendEngineCls extends BaseEngine {
 		// jdbctmplate;
 		SqlQuery jdbcTemplate = (SqlQuery) getSpringBeanUtil.getAutowiredSpringBean("SqlQuery");
 		// 邮件发送service;
-		SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl = (SendSmsOrMalServiceImpl) getSpringBeanUtil
-				.getSpringBeanByID("sendSmsOrMalServiceImpl");
+		SendSmsOrMalQfServiceImpl sendSmsOrMalQfServiceImpl = (SendSmsOrMalQfServiceImpl) getSpringBeanUtil
+				.getSpringBeanByID("sendSmsOrMalQfServiceImpl");
 		// 运行id;
 		String runControlId = this.getRunControlID();
 		// 进程id;
@@ -31,15 +31,13 @@ public class EmailSendEngineCls extends BaseEngine {
 				"String");
 		// 发送邮件;
 		if (strTaskId != null && !"".equals(strTaskId)) {
-			sendSmsOrMalServiceImpl.send(strTaskId, String.valueOf(processinstance));
+			sendSmsOrMalQfServiceImpl.send(strTaskId, String.valueOf(processinstance));
 			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
 					new Object[] { "9", processinstance });
 		} else {
 			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
 					new Object[] { "10", processinstance });
 		}
-		
-		
 
 	}
 }
