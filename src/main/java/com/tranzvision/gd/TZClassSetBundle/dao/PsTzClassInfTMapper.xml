@@ -67,7 +67,7 @@
       #{tzIsSubBatch,jdbcType=VARCHAR}, #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, 
       #{tzPsAppModalId,jdbcType=VARCHAR}, #{tzGuestApply,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzIsPay,jdbcType=CHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP},
       #{tzClassDesc,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
@@ -215,9 +215,6 @@
       </if>
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="tzIsPay != null" >
-        #{tzIsPay,jdbcType=CHAR},
       </if>
       <if test="tzClassDesc != null" >
         #{tzClassDesc,jdbcType=LONGVARCHAR},
