@@ -63,11 +63,11 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgList',
                         dataIndex: 'smsQfDesc',
 						minWidth:160,
                         flex:1
-                    },{
+                    }/*,{
                         text:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_MGR_STD.dept","所属部门"),
                         dataIndex: 'dept',
                         width:150
-                    },{
+                    }*/,{
                         text:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_MGR_STD.crePer","创建人") ,
                         dataIndex: 'crePer',
                         width:110

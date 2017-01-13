@@ -154,7 +154,6 @@ public class TzImpExcClsServiceImpl extends FrameworkImpl {
 					String filedName = "";
 					if ("D".equals(set)) {
 						afterNrField = true;
-						;
 						filedName = "TZ_MLSM_CONTENT";
 					} else {
 						if (afterNrField == false) {

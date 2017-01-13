@@ -17,6 +17,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
                     t.findParentByType('form').child('tagfield[reference=recever]').disabled = false;
                     //t.findParentByType('form').child('toolbar').child('button[reference=addAudienceBtn]').disabled = false;
                     //t.findParentByType('form').child('toolbar').child('button[reference=addAudienceBtn]').removeCls('x-item-disabled x-btn-disabled');
+                    t.findParentByType('form').child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
+                    t.findParentByType('form').child('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
+                    
                     t.findParentByType('form').child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
                     t.findParentByType('form').down('combobox[reference=emlTmpId]').disabled = false;
                     t.findParentByType('form').down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
@@ -43,6 +46,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
                     t.findParentByType('form').child('tagfield[reference=recever]').disabled=true;
                     //t.findParentByType('form').child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
                     //t.findParentByType('form').child('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+                    t.findParentByType('form').child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+                    t.findParentByType('form').child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+                    
                     t.findParentByType('form').child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
                     t.findParentByType('form').down('combobox[reference=emlTmpId]').disabled=true;
                     t.findParentByType('form').down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
@@ -136,6 +142,71 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
         }
         */
     },
+    /*添加考生*/
+    addStruData: function(btn){
+		var className='KitchenSink.view.bulkEmailAndSMS.searchStu.searchStuWin';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}
+		ViewClass = Ext.ClassManager.get(className);
+		var config = {
+			taskType:"MAL"	
+			}
+		var win = new ViewClass(config);
+		this.getView().add(win);
+		win.show();	
+	},
+	/*搜索考生*/
+	searchStuList: function(btn){
+		/*
+		var stuWin = btn.findParentByType("searchStuWin");
+		var stuGrid = stuWin.child("grid");
+		var searchContent = stuGrid.down("textfield[reference=searchStuContent]").getValue();
+		var stuGridStore = stuGrid.getStore();
+		stuGridStore.tzStoreParams = Ext.JSON.encode({"queryID": "searchStu","taskType":"MAL","searchText":searchContent});
+		stuGridStore.reload();
+		*/
+		Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_EMLSMS_STU_COM.TZ_EMLSMS_STU_STD.TZ_QFKSXX_VW',
+			condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID
+				/*,"SETID":Ext.tzSetID*/
+            },    
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+	},/**
+     * 功能：添加考生
+     * 张浪  2016-08-22
+     */
+    selectStu: function(btn){
+    	
+    	var stuWin = btn.findParentByType("searchStuWin");
+		var stuGrid = stuWin.child("grid");
+		var selList = stuGrid.getSelectionModel().getSelection();
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择考生！");   
+			return;
+		}
+		var emlBkDetForm = btn.findParentByType('emailBulkDet').child('form');
+		var receverField = emlBkDetForm.child('tagfield[reference="recever"]');
+		var arrAddData = [];
+		
+		for(var i=0; i<selList.length; i++){
+			var email = selList[i].data.email;
+			var EmlReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			if (EmlReg.test(email)){
+				arrAddData.push(email);
+			}
+		}
+		if(arrAddData.length>0) receverField.addValue(arrAddData);
+		this.onWinClose(btn);
+	},
     /**
      * 功能：添加听众
      * 刘阳阳  2016-01-05
@@ -900,6 +971,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
         form.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
         //form.down('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
         //form.down('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+        form.down('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+		form.down('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+		
         form.down('toolbar').child('button[reference=clearAllBtn]').disabled=true;
         form.down('toolbar').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
         form.down('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
@@ -960,6 +1034,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
                 form.down('tagfield[reference=recever]').disabled=false;
                 form.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
                 form.down('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
+                
+                form.down('toolbar').child('button[reference=selectStuBtn]').disabled=false;
+            	form.down('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
             }
         }
         if(form.down('tagfield[reference=recever]').getValue!=""){
@@ -1250,5 +1327,123 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
 		this.getView().add(win);
 
 		win.show();
+	},
+	/***复制历史任务内容到当前任务***/
+	copyHistoryData: function(btn){
+		var className='KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryWin';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}
+		ViewClass = Ext.ClassManager.get(className);
+		var config = {
+			taskType:"MAL"	
+			}
+		var win = new ViewClass(config);
+		this.getView().add(win);
+		win.show();	
+	},
+	/*搜索历史任务*/
+	searchHistoryList: function(btn){
+		var histortWin = btn.findParentByType("copyFromHistoryWin");
+		var hisGrid = histortWin.child("grid");
+		var searchContent = hisGrid.down("textfield[reference=searchHistoryContent]").getValue();
+		var hisGridStore = hisGrid.getStore();
+		hisGridStore.tzStoreParams = Ext.JSON.encode({"queryID": "myHistoryRw","taskType":"MAL","searchText":searchContent});
+		hisGridStore.reload();
+	},
+	
+	onSelectHistory: function(btn){
+		var histortWin = btn.findParentByType("copyFromHistoryWin");
+		var hisGrid = histortWin.child("grid");
+		var selList = hisGrid.getSelectionModel().getSelection();
+		var checkLen = selList.length;
+		if(checkLen != 1){
+			Ext.Msg.alert("提示","请选择一条需要复制的历史任务记录！");   
+			return;
+		}
+		var qfRwId = selList[0].get("qfRwId");
+		
+		var emlPanel = this.getView();
+		var emlBkDetForm = emlPanel.child("form");
+		
+		var currEmlQfId = emlPanel.BulkTaskId;
+		
+		var receverStore = emlBkDetForm.down("tagfield[reference=recever]").getStore();
+        receverStore.tzStoreParams = '{"emlQfId": "'+qfRwId+'","queryID": "recever"}';
+		receverStore.load();
+		
+		var CCStore = emlBkDetForm.down('tagfield[reference=mailCC]').getStore();
+		CCStore.tzStoreParams='{"emlQfId": "'+qfRwId+'","queryID": "CC"}';
+		CCStore.load();
+		
+		var attaStore = emlBkDetForm.down("grid[reference=emlInfoItemGrid]").getStore();
+		attaStore.tzStoreParams = '{"emlQfId": "'+qfRwId+'","queryID": "atta"}';
+		attaStore.load();
+		
+		var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getHistoryRwInfo","comParams":{"emlQfId":"'+qfRwId+'","currEmlQfId":"'+currEmlQfId+'"}}';
+		Ext.tzLoad(tzParams,function(responseData){
+			emlBkDetForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
+			emlBkDetForm.down('radio[reference="sendModelExc"]').removeListener('change','excSend');
+			emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+
+			emlBkDetForm.getForm().setValues(responseData);
+			if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
+				emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
+				var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlQfId":"'+qfRwId+'","emlTmpId":"'+responseData['emlTmpId']+'"}}';
+				Ext.tzLoad(tzParams,function(resData){
+					var EmlItemGrid = emlBkDetForm.down("grid[reference=emlTmplItemGrid]");
+					var emlItemStore = EmlItemGrid.getStore();
+					
+					Ext.suspendLayouts();
+					emlItemStore.suspendEvents();
+					
+					emlItemStore.removeAll(true);
+					emlItemStore.add(resData['root']);
+					emlItemStore.commitChanges();
+					
+					emlItemStore.resumeEvents();
+					EmlItemGrid.reconfigure(emlItemStore);
+					Ext.resumeLayouts(true);
+
+					var userAgent = navigator.userAgent;
+					if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
+						var copyItemsDom = document.getElementsByName("itememlCopy");
+						for (var i = 0; i < copyItemsDom.length; i++) {
+							$(copyItemsDom[i]).zclip({
+								beforeCopy: function () {
+									var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
+									var itemFirstCharPositon = itemHtml.indexOf("[");
+									var itemLastCharPositon = itemHtml.indexOf("]");
+									var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
+									emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
+								},
+								copy: function () {
+									return emlBkDetForm.down('textfield[name=copyfield]').getValue();
+								}
+							});
+						}
+					}
+				});
+			};
+
+			if(responseData['recever'].length>0){
+				emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
+				var len = responseData['recever'].length;
+				for(var ind=0;ind<len;ind++){
+					var emailAddr = responseData['recever'][ind];
+					var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+					if (emailReg.test(emailAddr)){
+						emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
+						emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
+					}
+			   }
+			}
+
+			emlBkDetForm.down('radio[reference="sendModelNor"]').addListener('change','norSend');
+			emlBkDetForm.down('radio[reference="sendModelExc"]').addListener('change','excSend');
+			emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+			
+			histortWin.close();
+		});
 	}
 });

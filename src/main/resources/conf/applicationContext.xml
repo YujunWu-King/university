@@ -101,5 +101,8 @@
 	
 	<!-- 邮件发送bean -->
 	<bean id="sendSmsOrMalServiceImpl" class="com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl" />
+	
+	<!-- 邮件发送bean -->
+	<bean id="sendSmsOrMalQfServiceImpl" class="com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.SendSmsOrMalQfServiceImpl" />
 
 </beans>

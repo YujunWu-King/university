@@ -10,10 +10,11 @@
     <result column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
     <result column="TZ_FS_ZT" property="tzFsZt" jdbcType="VARCHAR" />
     <result column="TZ_JCSL_ID" property="tzJcslId" jdbcType="VARCHAR" />
+    <result column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_RWSL_ID, TZ_FS_EMAIL, TZ_JS_EMAIL, TZ_EM_ZHUTI, TZ_FS_DT, TZ_EML_SMS_TASK_ID, 
-    TZ_FS_ZT, TZ_JCSL_ID
+    TZ_FS_ZT, TZ_JCSL_ID, TZ_AUDCY_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -28,10 +29,12 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfslshiTbl" >
     insert into PS_TZ_YJFSLSHI_TBL (TZ_RWSL_ID, TZ_FS_EMAIL, TZ_JS_EMAIL, 
       TZ_EM_ZHUTI, TZ_FS_DT, TZ_EML_SMS_TASK_ID, 
-      TZ_FS_ZT, TZ_JCSL_ID)
+      TZ_FS_ZT, TZ_JCSL_ID, TZ_AUDCY_ID
+      )
     values (#{tzRwslId,jdbcType=VARCHAR}, #{tzFsEmail,jdbcType=VARCHAR}, #{tzJsEmail,jdbcType=VARCHAR}, 
       #{tzEmZhuti,jdbcType=VARCHAR}, #{tzFsDt,jdbcType=TIMESTAMP}, #{tzEmlSmsTaskId,jdbcType=VARCHAR}, 
-      #{tzFsZt,jdbcType=VARCHAR}, #{tzJcslId,jdbcType=VARCHAR})
+      #{tzFsZt,jdbcType=VARCHAR}, #{tzJcslId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfslshiTbl" >
     insert into PS_TZ_YJFSLSHI_TBL
@@ -60,6 +63,9 @@
       <if test="tzJcslId != null" >
         TZ_JCSL_ID,
       </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzRwslId != null" >
@@ -85,6 +91,9 @@
       </if>
       <if test="tzJcslId != null" >
         #{tzJcslId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -112,6 +121,9 @@
       <if test="tzJcslId != null" >
         TZ_JCSL_ID = #{tzJcslId,jdbcType=VARCHAR},
       </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
   </update>
@@ -123,7 +135,8 @@
       TZ_FS_DT = #{tzFsDt,jdbcType=TIMESTAMP},
       TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
       TZ_FS_ZT = #{tzFsZt,jdbcType=VARCHAR},
-      TZ_JCSL_ID = #{tzJcslId,jdbcType=VARCHAR}
+      TZ_JCSL_ID = #{tzJcslId,jdbcType=VARCHAR},
+      TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
     where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
   </update>
 </mapper>
