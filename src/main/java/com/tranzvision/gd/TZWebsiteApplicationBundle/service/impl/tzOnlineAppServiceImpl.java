@@ -81,7 +81,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @since 2016-1-29
  */
 @Service("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl")
-public class tzOnlineAppServiceImpl extends FrameworkImpl{
+public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
@@ -109,7 +109,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	@Autowired
 	private TZGDObject tzGdObject;
 	@Autowired
-	private PsTzAppInsTMapper psTzAppInsTMapper; 
+	private PsTzAppInsTMapper psTzAppInsTMapper;
 	@Autowired
 	private PsTzFormWrkTMapper psTzFormWrkTMapper;
 	@Autowired
@@ -148,90 +148,90 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
 	@Autowired
 	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
-	
+
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetHtmlContent(String comParams) {
-		
+
 		// 返回值;
 		String str_appform_main_html = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		//组件注册引用编号
+		// 组件注册引用编号
 		String strReferenceId = request.getParameter("classid");
-		
+
 		String contextUrl = request.getContextPath();
 		String strTzGeneralURL = contextUrl + "/dispatcher";
 
-	    //当前登陆人
+		// 当前登陆人
 		String oprid = "";
 		oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		//报名表机构编号
+		// 报名表机构编号
 		String strAppOrgId = "";
-		//班级编号
+		// 班级编号
 		String strClassId = "";
-		//报名表实例编号
+		// 报名表实例编号
 		String strAppInsId = "";
-		//被推荐人报名表实例编号
+		// 被推荐人报名表实例编号
 		String strAppInsIdRefer = "";
-		//报名表实例编号
+		// 报名表实例编号
 		Long numAppInsId = 0L;
-		//班级编号
+		// 班级编号
 		String strRefLetterId = "";
-		//管理员查看
+		// 管理员查看
 		String strManagerView = "";
-		//从历史报名表复制
+		// 从历史报名表复制
 		String strCopyFrom = "";
-		//历史报名表使用模版编号
+		// 历史报名表使用模版编号
 		String strAttachedTplId = "";
-		
-		//是否后台管理员人员查看
+
+		// 是否后台管理员人员查看
 		String strIsAdmin = "";
-		//当前人员填写的报名表的版本号
+		// 当前人员填写的报名表的版本号
 		String strAppInsVersion = "";
-		//报名表是否只读标记
+		// 报名表是否只读标记
 		String strAppFormReadOnly = "";
-		//报名人Oprid
+		// 报名人Oprid
 		String strAppOprId = "";
-		//报名表状态
+		// 报名表状态
 		String strAppInsState = "";
-		//报名表使用模版编号
+		// 报名表使用模版编号
 		String strTplId = "";
-		//报名表模板类型
+		// 报名表模板类型
 		String strTplType = "";
-		//报名表模版语言
+		// 报名表模版语言
 		String strLanguage = "";
-		//报名表模版Json数据
+		// 报名表模版Json数据
 		String strTplData = "";
-		//报名表实例数据
+		// 报名表实例数据
 		String strInsData = "";
-		//是否匿名报名
+		// 是否匿名报名
 		String strIsGuest = "N";
-		//报名表提交后Url
+		// 报名表提交后Url
 		String strAfterSubmitUrl = "";
-		//站点编号
+		// 站点编号
 		String strSiteId = "";
- 
-		//错误提示信息
+
+		// 错误提示信息
 		String strMessageError = "";
-		//是否可编辑(管理员审核查看报名表时传递的参数)
+		// 是否可编辑(管理员审核查看报名表时传递的参数)
 		String strIsEdit = "N";
-		
-		if("appId".equals(strReferenceId)){
+
+		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
 			strSiteId = request.getParameter("SITE_ID");
-		    strAppInsId = request.getParameter("TZ_APP_INS_ID");
-		    strRefLetterId = request.getParameter("TZ_REF_LETTER_ID");
-		    strManagerView = request.getParameter("TZ_MANAGER");
-		    strCopyFrom = request.getParameter("APPCOPY");
-		    strAttachedTplId = request.getParameter("TZ_APP_TPL_ID");
-		    strIsEdit = request.getParameter("isEdit");
-		    if(strClassId==null){
-		    	strClassId = "";
-		    }
-		    
-		}else{
+			strAppInsId = request.getParameter("TZ_APP_INS_ID");
+			strRefLetterId = request.getParameter("TZ_REF_LETTER_ID");
+			strManagerView = request.getParameter("TZ_MANAGER");
+			strCopyFrom = request.getParameter("APPCOPY");
+			strAttachedTplId = request.getParameter("TZ_APP_TPL_ID");
+			strIsEdit = request.getParameter("isEdit");
+			if (strClassId == null) {
+				strClassId = "";
+			}
+
+		} else {
 			strClassId = String.valueOf(jacksonUtil.getString("TZ_CLASS_ID"));
 			strSiteId = String.valueOf(jacksonUtil.getString("SITE_ID"));
 			strAppInsId = String.valueOf(jacksonUtil.getString("TZ_APP_INS_ID"));
@@ -240,476 +240,523 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strCopyFrom = String.valueOf(jacksonUtil.getString("APPCOPY"));
 			strAttachedTplId = String.valueOf(jacksonUtil.getString("TZ_APP_TPL_ID"));
 			strIsEdit = String.valueOf(jacksonUtil.getString("isEdit"));
-			if(strClassId==null){
-		    	strClassId = "";
-		    }
+			if (strClassId == null) {
+				strClassId = "";
+			}
 		}
-		
-		if(strRefLetterId==null) 
+
+		if (strRefLetterId == null)
 			strRefLetterId = "";
-		if(strManagerView==null) 
+		if (strManagerView == null)
 			strManagerView = "";
-		if(strCopyFrom==null) 
+		if (strCopyFrom == null)
 			strCopyFrom = "N";
-		
-		if("".equals(strAppInsId)||strAppInsId==null){
+
+		if ("".equals(strAppInsId) || strAppInsId == null) {
 			numAppInsId = 0L;
-		}else{
+		} else {
 			numAppInsId = Long.parseLong(strAppInsId);
 		}
 
-		if(numAppInsId > 0){
-			//如果存在报名表实例
+		if (numAppInsId > 0) {
+			// 如果存在报名表实例
 			PsTzAppInsT PsTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
-			if(PsTzAppInsT != null){
+			if (PsTzAppInsT != null) {
 				strTplId = PsTzAppInsT.getTzAppTplId();
 				strAppInsState = PsTzAppInsT.getTzAppFormSta();
 				strAppInsVersion = PsTzAppInsT.getTzAppInsVersion();
 				strInsData = PsTzAppInsT.getTzAppinsJsonStr();
-				if(strTplId==null) 
+				if (strTplId == null)
 					strTplId = "";
-				if(strAppInsState==null) 
+				if (strAppInsState == null)
 					strAppInsState = "N";
-				if(strAppInsVersion==null) 
+				if (strAppInsVersion == null)
 					strAppInsVersion = "";
 			}
-			if(!"".equals(strTplId) && strTplId !=null){
-				//查看是否是查看附属模版 Start
-				if(!"".equals(strAttachedTplId) && strAttachedTplId !=null){
+			if (!"".equals(strTplId) && strTplId != null) {
+				// 查看是否是查看附属模版 Start
+				if (!"".equals(strAttachedTplId) && strAttachedTplId != null) {
 					String sqlExistsZfFlag = "SELECT 'Y' FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? AND TZ_APP_M_TPL_ID = ? LIMIT 1";
-					String strExistsZfFlag = sqlQuery.queryForObject(sqlExistsZfFlag, new Object[] { strTplId,strAttachedTplId }, "String");
-					if("Y".equals(strExistsZfFlag)){
+					String strExistsZfFlag = sqlQuery.queryForObject(sqlExistsZfFlag,
+							new Object[] { strTplId, strAttachedTplId }, "String");
+					if ("Y".equals(strExistsZfFlag)) {
 						strTplId = strAttachedTplId;
-						//根据报名表实例和附属模版编号去获得报名表Json数据
+						// 根据报名表实例和附属模版编号去获得报名表Json数据
 						strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 						strIsAdmin = "Y";
 						strAppFormReadOnly = "Y";
 					}
 				}
 
-				//查看是否是查看附属模版 end
-				
-				//如果报名表已提交，则只读显示
-				if("U".equals(strAppInsState)){
+				// 查看是否是查看附属模版 end
+
+				// 如果报名表已提交，则只读显示
+				if ("U".equals(strAppInsState)) {
 					strAppFormReadOnly = "Y";
 				}
-				
+
 				String sqlGetAppTplInfo = "SELECT TZ_APP_TPL_LAN,TZ_USE_TYPE,TZ_JG_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 				Map<String, Object> MapAppTplInfo = sqlQuery.queryForMap(sqlGetAppTplInfo, new Object[] { strTplId });
-				strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
-				strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
-				strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
-				
-				//如果报名表模版类型为报名表
-				if("BMB".equals(strTplType)){
+				strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? ""
+						: String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
+				strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? ""
+						: String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
+				strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? ""
+						: String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
+
+				// 如果报名表模版类型为报名表
+				if ("BMB".equals(strTplType)) {
 					String sqlGetFormWorkInfo = "SELECT OPRID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID";
-					Map<String, Object> MapFormWorkInfo = sqlQuery.queryForMap(sqlGetFormWorkInfo, new Object[] { strAppInsId });
-					if(MapFormWorkInfo!=null){
+					Map<String, Object> MapFormWorkInfo = sqlQuery.queryForMap(sqlGetFormWorkInfo,
+							new Object[] { strAppInsId });
+					if (MapFormWorkInfo != null) {
 						strAppOprId = String.valueOf(MapFormWorkInfo.get("OPRID"));
 						strClassId = String.valueOf(MapFormWorkInfo.get("TZ_CLASS_ID"));
-						if("".equals(strSiteId) || strSiteId == null){
-							//如果没有传入siteId，则取班级对应的站点
+						if ("".equals(strSiteId) || strSiteId == null) {
+							// 如果没有传入siteId，则取班级对应的站点
 							String sqlGetSiteId = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B where A.TZ_CLASS_ID=? AND A.TZ_PRJ_ID = B.TZ_PRJ_ID LIMIT 1";
 							strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { strClassId }, "String");
 						}
-						
-						if("TZ_GUEST".equals(strAppOprId) || "".equals(strAppOprId)){
-							//如果是匿名报名
+
+						if ("TZ_GUEST".equals(strAppOprId) || "".equals(strAppOprId)) {
+							// 如果是匿名报名
 							String sqlGetIsGuest = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 							strIsGuest = sqlQuery.queryForObject(sqlGetIsGuest, new Object[] { strClassId }, "String");
-							if(!"Y".equals(strIsGuest)){
-								strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", 
-										strLanguage,"当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
+							if (!"Y".equals(strIsGuest)) {
+								strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+										"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", strLanguage, "当前会话已失效，请重新登陆。",
+										"The current session is timeout or the current access is invalid,Please relogin.");
 							}
-						}else{
-							if(oprid.equals(strAppOprId)){
-								//自己操作自己的报名表
-							}else{
-								//看是否管理员查看报名表
+						} else {
+							if (oprid.equals(strAppOprId)) {
+								// 自己操作自己的报名表
+							} else {
+								// 看是否管理员查看报名表
 								strIsAdmin = "";
 								strIsAdmin = this.checkAppViewQx(strTplId, oprid, strAppOrgId, strClassId);
-								if("Y".equals(strIsAdmin)){
-									//管理员只读查看
+								if ("Y".equals(strIsAdmin)) {
+									// 管理员只读查看
 									strAppFormReadOnly = "Y";
-								}else{
-									//非法访问
-									strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-											"ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
+								} else {
+									// 非法访问
+									strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+											"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作",
+											"Illegal operation.");
 								}
 							}
 						}
-					}else{
-						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-								"ILLEGAL_OPERATION", strLanguage,"非法操作", "Illegal operation.");
+					} else {
+						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+								"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作",
+								"Illegal operation.");
 					}
-					
-				}else if("TJX".equals(strTplType)){
-					//是否有推荐信编号
-					if(!"".equals(strRefLetterId) && strRefLetterId != null){
-						if("Y".equals(strManagerView)){
+
+				} else if ("TJX".equals(strTplType)) {
+					// 是否有推荐信编号
+					if (!"".equals(strRefLetterId) && strRefLetterId != null) {
+						if ("Y".equals(strManagerView)) {
 							strIsAdmin = "Y";
 							strAppFormReadOnly = "Y";
 						}
-						//查询推荐信报名表编号
+						// 查询推荐信报名表编号
 						String sqlGetKsTjxInfo = "SELECT TZ_APP_INS_ID,OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_REF_LETTER_ID = ? AND TZ_TJX_APP_INS_ID = ?";
-						Map<String, Object> MapKsTjxInfo = sqlQuery.queryForMap(sqlGetKsTjxInfo, new Object[] { strRefLetterId,strAppInsId });
+						Map<String, Object> MapKsTjxInfo = sqlQuery.queryForMap(sqlGetKsTjxInfo,
+								new Object[] { strRefLetterId, strAppInsId });
 						strAppInsIdRefer = String.valueOf(MapKsTjxInfo.get("TZ_APP_INS_ID"));
 						strAppOprId = String.valueOf(MapKsTjxInfo.get("OPRID"));
 						Long numAppInsIdRefer = Long.parseLong(strAppInsIdRefer);
-						if(numAppInsIdRefer > 0){
-							//找到有效的被推荐人
-							//获取推荐信对应的报名表
-							if("".equals(strSiteId) || strSiteId == null){
-								//如果没有传入siteId，则取班级对应的站点
+						if (numAppInsIdRefer > 0) {
+							// 找到有效的被推荐人
+							// 获取推荐信对应的报名表
+							if ("".equals(strSiteId) || strSiteId == null) {
+								// 如果没有传入siteId，则取班级对应的站点
 								String sqlGetSiteId = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B,PS_TZ_FORM_WRK_T C"
 										+ " where A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_PRJ_ID = B.TZ_PRJ_ID AND C.TZ_APP_INS_ID = ? ORDER BY C.OPRID LIMIT 1";
-								strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { strAppInsIdRefer }, "String");
+								strSiteId = sqlQuery.queryForObject(sqlGetSiteId, new Object[] { strAppInsIdRefer },
+										"String");
 							}
-						}else{
-							strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-									"PARAERROR", strLanguage,"参数错误", "Parameter error.");
+						} else {
+							strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+									"TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage, "参数错误", "Parameter error.");
 						}
-					}else{
-						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-								"PARAERROR", strLanguage,"参数错误", "Parameter error.");
+					} else {
+						strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+								"TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage, "参数错误", "Parameter error.");
 					}
-				}else{
-					strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-							"TEMPLATEERROR", strLanguage,"没有找到对应的模版", "Could not find the corresponding template");
+				} else {
+					strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+							"TEMPLATEERROR", strLanguage, "没有找到对应的模版", "Could not find the corresponding template");
 				}
-				//str_appform_main_html = "报名表语言"+ strLanguage + "报名表类型"+strTplType + "";
-			}else{
-				//没有找到对应的模版
-				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+				// str_appform_main_html = "报名表语言"+ strLanguage +
+				// "报名表类型"+strTplType + "";
+			} else {
+				// 没有找到对应的模版
+				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
 						"TEMPLATEERROR", "没有找到对应的模版", "Could not find the corresponding template");
 			}
-		}else{
-			//如果没有报名表实例编号，看是否有班级编号
-			if(!"".equals(strClassId) && strClassId != null){
-				//班级是否开放报名
+		} else {
+			// 如果没有报名表实例编号，看是否有班级编号
+			if (!"".equals(strClassId) && strClassId != null) {
+				// 班级是否开放报名
 				String sql = "SELECT TZ_IS_APP_OPEN FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 				String strClassIsOpen = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-				if("Y".equals(strClassIsOpen)){
-					//班级开放报名
-					if("TZ_GUEST".equals(oprid) || "".equals(oprid)){
-						//如果是Guest用户，看班级是否允许匿名报名
+				if ("Y".equals(strClassIsOpen)) {
+					// 班级开放报名
+					if ("TZ_GUEST".equals(oprid) || "".equals(oprid)) {
+						// 如果是Guest用户，看班级是否允许匿名报名
 						sql = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 						String strGuestApply = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-						if("Y".equals(strGuestApply)){
+						if ("Y".equals(strGuestApply)) {
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-							if("".equals(strTplId) || strTplId == null){
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
-										"PARAERROR", "参数错误", "Parameter error");
+							if ("".equals(strTplId) || strTplId == null) {
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+										"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 							}
 							strIsGuest = "Y";
-						}else{
+						} else {
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-							if("".equals(strTplId) || strTplId == null){
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
-										"PARAERROR", "参数错误", "Parameter error");
+							if ("".equals(strTplId) || strTplId == null) {
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+										"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 							}
-							strMessageError = gdKjComServiceImpl.getMessageText(request,response, "TZGD_APPONLINE_MSGSET", 
-									"SESSION_INVAILD", "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
+							strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+									"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", "当前会话已失效，请重新登陆。",
+									"The current session is timeout or the current access is invalid,Please relogin.");
 						}
-					}else{
-						//是注册用户在线报名
+					} else {
+						// 是注册用户在线报名
 						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? AND TZ_CLASS_ID = ?";
-						strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid,strClassId }, "String");
+						strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid, strClassId }, "String");
 						strAppOprId = oprid;
-						if(!"".equals(strAppInsId) && strAppInsId != null){
+						if (!"".equals(strAppInsId) && strAppInsId != null) {
 							numAppInsId = Long.parseLong(strAppInsId);
-						}else{
+						} else {
 							numAppInsId = 0L;
 						}
-						
-						if(numAppInsId > 0){
-							//传入了报名表实例
+
+						if (numAppInsId > 0) {
+							// 传入了报名表实例
 							PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
-							if(psTzAppInsT != null){
+							if (psTzAppInsT != null) {
 								strTplId = psTzAppInsT.getTzAppTplId();
 								strAppInsState = psTzAppInsT.getTzAppFormSta();
 								strAppInsVersion = psTzAppInsT.getTzAppInsVersion();
 								strInsData = psTzAppInsT.getTzAppinsJsonStr();
-								if(strAppInsVersion == null){
+								if (strAppInsVersion == null) {
 									strAppInsVersion = "";
 								}
-								
-								if("".equals(strTplId) || strTplId == null){
-									strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-											"PARAERROR", "参数错误", "Parameter error");
+
+								if ("".equals(strTplId) || strTplId == null) {
+									strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+											"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 								}
-								//如果报名表已提交，则只读显示
-								if("U".equals(strAppInsState)){
+								// 如果报名表已提交，则只读显示
+								if ("U".equals(strAppInsState)) {
 									strAppFormReadOnly = "Y";
 								}
-							}else{
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
-										"PARAERROR", "参数错误", "Parameter error");
+							} else {
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+										"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 							}
-							
-						}else{
+
+						} else {
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-							if("".equals(strTplId) || strTplId == null){
-								strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
-										"PARAERROR", "参数错误", "Parameter error");
+							if ("".equals(strTplId) || strTplId == null) {
+								strMessageError = gdKjComServiceImpl.getMessageText(request, response,
+										"TZGD_APPONLINE_MSGSET", "PARAERROR", "参数错误", "Parameter error");
 							}
 						}
-					}	
-				}else{
-					strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET", 
+					}
+				} else {
+					strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
 							"NOT_OPEN", "当前班级未开通在线报名", "Not open the online registration.");
 				}
-			}else{
-				//没有找到对应的模版
+			} else {
+				// 没有找到对应的模版
 				strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
 						"PARAERROR", "参数错误", "Parameter error");
 			}
 		}
-		
-		//如果存在报名表模版
+
+		// 如果存在报名表模版
 		String sql = "";
 		sql = "SELECT TZ_APPTPL_JSON_STR,TZ_USE_TYPE,TZ_JG_ID,TZ_APP_TPL_LAN,TZ_APP_TZURL,TZ_LEFT_WIDTH,TZ_RIGHT_WIDTH,TZ_ONLY_SUBMIT_BTN FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 		Map<String, Object> MapAppTplInfo = sqlQuery.queryForMap(sql, new Object[] { strTplId });
-		strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
-		strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
-		strTplData = MapAppTplInfo.get("TZ_APPTPL_JSON_STR") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APPTPL_JSON_STR"));
-		strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
-		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
-		String showSubmitBtnOnly = MapAppTplInfo.get("TZ_ONLY_SUBMIT_BTN") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_ONLY_SUBMIT_BTN"));
-		
-		//信息项Lebal左侧宽度
+		strAppOrgId = MapAppTplInfo.get("TZ_JG_ID") == null ? "" : String.valueOf(MapAppTplInfo.get("TZ_JG_ID"));
+		strTplType = MapAppTplInfo.get("TZ_USE_TYPE") == null ? "" : String.valueOf(MapAppTplInfo.get("TZ_USE_TYPE"));
+		strTplData = MapAppTplInfo.get("TZ_APPTPL_JSON_STR") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_APPTPL_JSON_STR"));
+		strLanguage = MapAppTplInfo.get("TZ_APP_TPL_LAN") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_APP_TPL_LAN"));
+		strAfterSubmitUrl = MapAppTplInfo.get("TZ_APP_TZURL") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_APP_TZURL"));
+		String showSubmitBtnOnly = MapAppTplInfo.get("TZ_ONLY_SUBMIT_BTN") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_ONLY_SUBMIT_BTN"));
+
+		// 信息项Lebal左侧宽度
 		String leftWidth = "";
-		leftWidth = MapAppTplInfo.get("TZ_LEFT_WIDTH") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_LEFT_WIDTH"));
-		//信息项输入框宽度
+		leftWidth = MapAppTplInfo.get("TZ_LEFT_WIDTH") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_LEFT_WIDTH"));
+		// 信息项输入框宽度
 		String rightWidth = "";
-		rightWidth = MapAppTplInfo.get("TZ_RIGHT_WIDTH") == null ? "":String.valueOf(MapAppTplInfo.get("TZ_RIGHT_WIDTH"));
-		
+		rightWidth = MapAppTplInfo.get("TZ_RIGHT_WIDTH") == null ? ""
+				: String.valueOf(MapAppTplInfo.get("TZ_RIGHT_WIDTH"));
+
 		String leftWidthStyle = "";
-		if(leftWidth != null && !"".equals(leftWidth) && !"0".equals(leftWidth)){
+		if (leftWidth != null && !"".equals(leftWidth) && !"0".equals(leftWidth)) {
 			leftWidthStyle = "width:" + leftWidth + "%";
 		}
 		String rightWidthStyle = "";
-		if(rightWidth != null && !"".equals(rightWidth) && !"0".equals(rightWidth)){
-			rightWidthStyle =  "width:" + rightWidth + "%";
+		if (rightWidth != null && !"".equals(rightWidth) && !"0".equals(rightWidth)) {
+			rightWidthStyle = "width:" + rightWidth + "%";
 		}
-		
-		
-		
-		//获得站点信息
-		//sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
-		//站点编号
-		//String strSiteId = "";
-		//strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId }, "String");
-		
+
+		// 获得站点信息
+		// sql = "SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ?
+		// AND TZ_SITEI_ENABLE = 'Y' LIMIT 1";
+		// 站点编号
+		// String strSiteId = "";
+		// strSiteId = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId
+		// }, "String");
+
 		String strMenuId = "";
-		
+
 		sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
 		strMenuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + strAppOrgId }, "String");
-		if(strMenuId == null) strMenuId = "";
-		
+		if (strMenuId == null)
+			strMenuId = "";
+
 		String strTest = "";
-		if("".equals(strMessageError)){
-			if(numAppInsId>0 && "BMB".equals(strTplType)){
-				//检查推荐信的完成状态 
+		if ("".equals(strMessageError)) {
+			if (numAppInsId > 0 && "BMB".equals(strTplType)) {
+				// 检查推荐信的完成状态
 				this.checkRefletter(numAppInsId, strTplId);
 			}
-			//执行页面加载事件-模版级事件开始
-			//模版级事件
+			// 执行页面加载事件-模版级事件开始
+			// 模版级事件
 			String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'LO_A'";
 			List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
 			for (Object objDataGetModalEvents : listGetModalEvents) {
 				Map<String, Object> MapGetModalEvents = (Map<String, Object>) objDataGetModalEvents;
 				String strAppClassPath = "";
-			    String strAppClassName = ""; 
-			    String strAppClassMethod = "";
-			    String strEventReturn = "";
-			    strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
-			    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
-			    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
-			    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
-			    	/*
-			    	String[] parameterTypes = new String[] {"String[]" };
-					Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
-					Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
-							parameterTypes, arglist);
-					strEventReturn = String.valueOf(objs);
-					*/
-			    	//根据配置需要去调用对应的程序
-			    	tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
-			    			ctx.getBean(strAppClassPath + "." + strAppClassName);
-			    	switch(strAppClassMethod){
-			    	//根据报名表配置的方法名称去调用不同的方法
-			    	}
-			    }
+				String strAppClassName = "";
+				String strAppClassMethod = "";
+				String strEventReturn = "";
+				strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? ""
+						: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
+				strAppClassName = MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? ""
+						: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
+				strAppClassMethod = MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? ""
+						: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
+				if (!"".equals(strAppClassPath) && !"".equals(strAppClassName) && !"".equals(strAppClassMethod)) {
+					/*
+					 * String[] parameterTypes = new String[] {"String[]" };
+					 * Object[] arglist = new Object[] { numAppInsId ,strClassId
+					 * , strAppOprId}; Object objs =
+					 * ObjectDoMethod.Load(strAppClassPath + "." +
+					 * strAppClassName, strAppClassMethod, parameterTypes,
+					 * arglist); strEventReturn = String.valueOf(objs);
+					 */
+					// 根据配置需要去调用对应的程序
+					tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) ctx
+							.getBean(strAppClassPath + "." + strAppClassName);
+					switch (strAppClassMethod) {
+					// 根据报名表配置的方法名称去调用不同的方法
+					}
+				}
 			}
-			
-			//执行页面加载事件-模版级事件结束
-			
-			//报名表Tab页签展示
+
+			// 执行页面加载事件-模版级事件结束
+
+			// 报名表Tab页签展示，modity by caoy
 			int numIndex = 0;
 			String strXxxBh = "";
-			//String strXxxMc = "";
+			// String strXxxMc = "";
 			String strXxxTitle = "";
 			String strTapStyle = "";
 			String strDivClass = "";
 			String strTabs = "";
+			// 父分隔符号的id
+			String strTZ_FPAGE_BH = "";
 			
-			String sqlGetTapInfo = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";	
+			int numChild = 0;
+
+			String sqlGetTapInfo = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE,TZ_FPAGE_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
 			List<?> listDataTap = sqlQuery.queryForList(sqlGetTapInfo, new Object[] { strTplId });
 			for (Object objDataTap : listDataTap) {
 				Map<String, Object> mapDataTap = (Map<String, Object>) objDataTap;
-				strXxxBh = mapDataTap.get("TZ_XXX_BH") == null ? "":String.valueOf(mapDataTap.get("TZ_XXX_BH"));
-				strXxxTitle = mapDataTap.get("TZ_TITLE") == null ? "":String.valueOf(mapDataTap.get("TZ_TITLE"));
-				strTapStyle = mapDataTap.get("TZ_TAPSTYLE") == null ? "":String.valueOf(mapDataTap.get("TZ_TAPSTYLE"));
-				
-				String strComplete = contextUrl + "/statics/images/appeditor/new/check.png";	//对号
-				numIndex = numIndex + 1;
-				//默认第一页高亮
-				if(numIndex == 1){
-					strDivClass = "menu-active";
-				}else{
-					strDivClass = "";
-				}
+				strXxxBh = mapDataTap.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapDataTap.get("TZ_XXX_BH"));
+				strXxxTitle = mapDataTap.get("TZ_TITLE") == null ? "" : String.valueOf(mapDataTap.get("TZ_TITLE"));
+				strTapStyle = mapDataTap.get("TZ_TAPSTYLE") == null ? ""
+						: String.valueOf(mapDataTap.get("TZ_TAPSTYLE"));
+				strTZ_FPAGE_BH = mapDataTap.get("TZ_FPAGE_BH") == null ? ""
+						: String.valueOf(mapDataTap.get("TZ_FPAGE_BH"));
 
-				if("Y".equals(strIsAdmin)){
-					strComplete = "";
-					//如果是管理员查看，不需要显示对号
-				}else{
-					String strPageComplete = "";
-					if(numAppInsId > 0){
-						sql = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-						strPageComplete = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strXxxBh }, "String");
-						if("Y".equals(strPageComplete)){
-							//已经完成的显示对号
-						}else{
-							//未完成时,不显示对号
-							strComplete = "";
-						}
-					}else{
-						//实例不存在时,不显示对号
-						strComplete = "";
+				String strComplete = contextUrl + "/statics/images/appeditor/new/check.png"; // 对号
+				numIndex = numIndex + 1;
+
+				// 默认第一级菜单高亮
+				if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+					strDivClass = "menu-active-top";
+				} else {
+					numChild = numChild+1;
+					// 默认第一页高亮
+					if (numChild == 1) {
+						strDivClass = "menu-active";
+					} else {
+						strDivClass = "";
 					}
 				}
 				
+				System.out.println(strXxxBh+":"+strDivClass);
+
+				if ("Y".equals(strIsAdmin)) {
+					strComplete = "";
+					// 如果是管理员查看，不需要显示对号
+				} else {
+					String strPageComplete = "";
+					if (numAppInsId > 0) {
+						sql = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+						strPageComplete = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strXxxBh },
+								"String");
+						if ("Y".equals(strPageComplete)) {
+							// 已经完成的显示对号
+						} else {
+							// 未完成时,不显示对号
+							strComplete = "";
+						}
+					} else {
+						// 实例不存在时,不显示对号
+						strComplete = "";
+					}
+				}
+
 				try {
-					//if(StringUtils.isNotBlank(strComplete)){}
+					// if(StringUtils.isNotBlank(strComplete)){}
 					strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG", strComplete);
-					
-					strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", strDivClass, strXxxTitle,strComplete, strXxxBh);
+
+					strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
+							strDivClass, strXxxTitle, strComplete, strXxxBh);
 				} catch (TzSystemException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					strTabs = "";
 				}
 			}
-			
-			/*如果页码大于1 这显示左侧否则不显示左侧*/
+
+			/* 如果页码大于1 则显示左侧，否则不显示左侧 */
 			String strLeftStyle = "";
 			String strRightStyle = "";
-			if(numIndex <= 1){
+			if (numIndex <= 1) {
 				strLeftStyle = "display:none";
 				strRightStyle = "margin: 0 auto;float:none";
 			}
 
-			//控件信息
+			// 控件信息
 			String strComRegInfo = "";
 			ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(strTplId);
 			strComRegInfo = jacksonUtil.List2json(comDfn);
 			strComRegInfo = strComRegInfo.replace("\\", "\\\\");
-			
-			/*最新历史报名表实例编号*/
+
+			/* 最新历史报名表实例编号 */
 			String strHisAppInsId = "";
-			
+
 			Long numHisAppInsId = 0l;
-			
-			if("".equals(strAppInsId) || strAppInsId == null){
-				if("Y".equals(strCopyFrom)){
+
+			if ("".equals(strAppInsId) || strAppInsId == null) {
+				if ("Y".equals(strCopyFrom)) {
 					String sqlGetHisAppInsId = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T A ,PS_TZ_CLASS_INF_T B "
 							+ "WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.OPRID = ? AND B.TZ_JG_ID = ? ORDER BY A.ROW_ADDED_DTTM DESC limit 0,1";
-					strHisAppInsId = sqlQuery.queryForObject(sqlGetHisAppInsId, new Object[] { strAppOprId,strAppOrgId }, "String");
-					if(!"".equals(strHisAppInsId) && strHisAppInsId != null){
+					strHisAppInsId = sqlQuery.queryForObject(sqlGetHisAppInsId,
+							new Object[] { strAppOprId, strAppOrgId }, "String");
+					if (!"".equals(strHisAppInsId) && strHisAppInsId != null) {
 						numHisAppInsId = Long.parseLong(strHisAppInsId);
 						strInsData = tzOnlineAppHisServiceImpl.getHisAppInfoJson(numHisAppInsId, strTplId);
-						//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numHisAppInsId, strTplId);
-						
+						// strInsData =
+						// tzOnlineAppViewServiceImpl.getHisAppInfoJson(numHisAppInsId,
+						// strTplId);
+
 					}
 				}
 			}
 
-			if(strTplData == null || "".equals(strTplData)){
+			if (strTplData == null || "".equals(strTplData)) {
 				strTplData = "''";
 			}
-			
-			if(strInsData == null || "".equals(strInsData)){
+
+			if (strInsData == null || "".equals(strInsData)) {
 				strInsData = "''";
 			}
-			
-			//双语化消息集合Json字符串
-			//msgSet 用于双语
-			String strMsgSet= "{}";
-			strMsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET", strLanguage);
+
+			// 双语化消息集合Json字符串
+			// msgSet 用于双语
+			String strMsgSet = "{}";
+			strMsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",
+					strLanguage);
 			jacksonUtil.json2Map(strMsgSet);
 			if (jacksonUtil.containsKey(strLanguage)) {
 				Map<String, Object> msgLang = jacksonUtil.getMap(strLanguage);
 				strMsgSet = jacksonUtil.Map2json(msgLang);
 			}
-			//获取个人基本信息
+			// 获取个人基本信息
 			String strUserInfoSet = "";
 			strUserInfoSet = this.getUserInfo();
-			
-			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-					"SAVE", strLanguage,"保存", "Save");
-			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"SUBMIT", strLanguage,"提交", "Submit");
-			String strNext = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"NEXT", strLanguage,"下一步", "Next");
-			String strPrev = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"PREV", strLanguage,"上一步", "Previous");
-			String strLoading = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"LOADING", strLanguage,"上传中", "Loading");
-			String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"PROCESS", strLanguage,"正在处理", "Processing");
-			String strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", 
-					"SUBMITCONFIRMMSG", strLanguage,"我已阅读声明，确认提交报名表。", "I have read the statement to confirm the submission of the registration form.");
-			
-			if("N".equals(strIsGuest)){
+
+			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
+					strLanguage, "保存", "Save");
+			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"SUBMIT", strLanguage, "提交", "Submit");
+			String strNext = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "NEXT",
+					strLanguage, "下一步", "Next");
+			String strPrev = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PREV",
+					strLanguage, "上一步", "Previous");
+			String strLoading = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"LOADING", strLanguage, "上传中", "Loading");
+			String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"PROCESS", strLanguage, "正在处理", "Processing");
+			String strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+					"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
+					"I have read the statement to confirm the submission of the registration form.");
+
+			if ("N".equals(strIsGuest)) {
 				sql = "SELECT TZ_IS_GUEST FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-				try{
-					strIsGuest = sqlQuery.queryForObject(sql, new Object[] { strClassId,strAppOprId }, "String");
-				}catch(Exception e){
+				try {
+					strIsGuest = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "String");
+				} catch (Exception e) {
 					strIsGuest = "N";
 				}
 			}
-			
-			//报名表头部信息
+
+			// 报名表头部信息
 			String strOnlineHead = "";
-			//报名表底部信息
+			// 报名表底部信息
 			String strOnlineFoot = "";
-			//报名表左侧
+			// 报名表左侧
 			String strOnlineLeft = "";
-			
+
 			String strMainInnerStyle = "";
-			
+
 			String strMainStyle = "";
-			
-			/*根据站点查找页头区域*/
+
+			/* 根据站点查找页头区域 */
 			String sqlGetSiteYt = "";
 			String strSiteYtHtml = "";
 			String strLogoImg = "";
 			try {
 				sqlGetSiteYt = "SELECT TZ_AREA_PUBCODE FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID = ? AND TZ_AREA_TYPE = 'YT'";
 				strSiteYtHtml = sqlQuery.queryForObject(sqlGetSiteYt, new Object[] { strSiteId }, "String");
-				
+
 				int numCharstart = strSiteYtHtml.indexOf("src=\"");
 				int numCharend = strSiteYtHtml.indexOf("\"", numCharstart + 5);
-				//System.out.println("开始位置:"+numCharstart + "结束位置:"+numCharend);
+				// System.out.println("开始位置:"+numCharstart +
+				// "结束位置:"+numCharend);
 				if (numCharend > numCharstart) {
 					strLogoImg = strSiteYtHtml.substring(numCharstart + 5, numCharend);
-					//System.out.println("logo:"+strLogoImg);
-				}else{
+					// System.out.println("logo:"+strLogoImg);
+				} else {
 					strLogoImg = contextUrl + "/statics/images/appeditor/new/logo.png";
 				}
 			} catch (Exception e1) {
@@ -717,23 +764,24 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strLogoImg = contextUrl + "/statics/images/appeditor/new/logo.png";
 				e1.printStackTrace();
 			}
-			
-			
-			if("Y".equals(strIsAdmin)){
+
+			if ("Y".equals(strIsAdmin)) {
 				strMainInnerStyle = "margin: 0 auto;float:none";
 				strMainStyle = "width:788px;";
-			}else{
+			} else {
 				try {
-					
-					strOnlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML",true,strLogoImg);
-					strOnlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML",true);
-					if("BMB".equals(strTplType)){
-						if("Y".equals(strIsGuest)){
+
+					strOnlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML", true,
+							strLogoImg);
+					strOnlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML", true);
+					if ("BMB".equals(strTplType)) {
+						if ("Y".equals(strIsGuest)) {
 							strMainInnerStyle = "margin: 0 auto;float:none";
-						}else{
-							strOnlineLeft = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_LEFTMENU_HTML",true);
+						} else {
+							strOnlineLeft = tzGdObject
+									.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_LEFTMENU_HTML", true);
 						}
-					}else{
+					} else {
 						strMainInnerStyle = "margin: 0 auto;float:none";
 					}
 				} catch (TzSystemException e) {
@@ -741,113 +789,116 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					e.printStackTrace();
 				}
 			}
-			
-			if("".equals(strAppInsId) || strAppInsId == null){
+
+			if ("".equals(strAppInsId) || strAppInsId == null) {
 				strAppInsId = "0";
 			}
-			
-			//非匿名报名时，如果当前登录人为管理员、并且可编辑，同时报名表只读参数为Y时，将只读参数改为N
-			if(!StringUtils.equals("Y", strIsGuest) && StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit) && StringUtils.equals("Y", strAppFormReadOnly)){
+
+			// 非匿名报名时，如果当前登录人为管理员、并且可编辑，同时报名表只读参数为Y时，将只读参数改为N
+			if (!StringUtils.equals("Y", strIsGuest) && StringUtils.equals("Y", strIsAdmin)
+					&& StringUtils.equals("Y", strIsEdit) && StringUtils.equals("Y", strAppFormReadOnly)) {
 				strAppFormReadOnly = "N";
 			}
-			
+
 			try {
-				
-				
+
 				strTplData = strTplData.replace("\\", "\\\\");
 				strTplData = strTplData.replace("$", "\\$");
-				//strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+				// strInsData =
+				// tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId,
+				// strTplId);
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
-				//处理HTML换行符号，是替换的\u2028; 
+				// 处理HTML换行符号，是替换的\u2028;
 				strInsData = strInsData.replace(" ", "");
-				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",true,
-								strTzGeneralURL, strComRegInfo ,
-								strTplId,strAppInsId,strClassId,strRefLetterId,strTplData,strInsData,strTabs,
-								strSiteId,strAppOrgId,strMenuId,strAppFormReadOnly,strMsgSet,strLanguage,
-								strSave,strNext,strSubmit,strTplType,strLoading,strProcessing,strAfterSubmitUrl,
-								strOnlineHead,strOnlineFoot,strOnlineLeft,strIsAdmin,strMainInnerStyle,strUserInfoSet,
-								strMainStyle,strPrev,strAppInsVersion,contextUrl,leftWidthStyle,rightWidthStyle,
-								strLeftStyle,strRightStyle,showSubmitBtnOnly,strSubmitConfirmMsg,strIsEdit);
-				
+				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
+						true, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
+						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
+						strMsgSet, strLanguage, strSave, strNext, strSubmit, strTplType, strLoading, strProcessing,
+						strAfterSubmitUrl, strOnlineHead, strOnlineFoot, strOnlineLeft, strIsAdmin, strMainInnerStyle,
+						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
+						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg,
+						strIsEdit);
+
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			str_appform_main_html = strMessageError;
 		}
-		 
-		//str_appform_main_html = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
-		
+
+		// str_appform_main_html =
+		// tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+
 		return str_appform_main_html;
 	}
-	
+
 	@Override
 	@Transactional
-	public String tzUpdate(String[] actData, String[] errMsg){
+	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-		
+
 		String successFlag = "0";
-		
+
 		String strMsg = "";
-		
-		//当前登陆人
+
+		// 当前登陆人
 		String oprid = "";
 		oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		//报名表机构编号
+		// 报名表机构编号
 		String strAppOrgId = "";
-		//班级编号
+		// 班级编号
 		String strClassId = "";
-		//报名表实例编号
+		// 报名表实例编号
 		String strAppInsId = "";
-		//被推荐人报名表实例编号
+		// 被推荐人报名表实例编号
 		String strAppInsIdRefer = "";
-		//报名表实例编号
+		// 报名表实例编号
 		Long numAppInsId = 0L;
-		//班级编号
+		// 班级编号
 		String strRefLetterId = "";
-		//是否允许匿名报名
+		// 是否允许匿名报名
 		String strGuestApply = "N";
-		//报名表审核，是否管理员可修改报名表
+		// 报名表审核，是否管理员可修改报名表
 		String strIsEdit = "N";
-		//是否后台管理员人员查看
+		// 是否后台管理员人员查看
 		String strIsAdmin = "";
-		//当前人员填写的报名表的版本号
+		// 当前人员填写的报名表的版本号
 		String strAppInsVersion = "";
-		//当前人员数据库版本
+		// 当前人员数据库版本
 		String strAppInsVersionDb = "";
-		//报名表是否只读标记
+		// 报名表是否只读标记
 		String strAppFormReadOnly = "";
-		//报名人Oprid
+		// 报名人Oprid
 		String strAppOprId = "";
-		//报名表状态
+		// 报名表状态
 		String strAppInsState = "";
-		//报名表使用模版编号
+		// 报名表使用模版编号
 		String strTplId = "";
-		//报名表模板类型
+		// 报名表模板类型
 		String strTplType = "";
-		//报名表模版语言
+		// 报名表模版语言
 		String strLanguage = "";
-		//报名表模版Json数据
+		// 报名表模版Json数据
 		String strTplData = "";
-		//报名表实例数据
+		// 报名表实例数据
 		String strInsData = "";
-		//是否匿名报名
+		// 是否匿名报名
 		String strIsGuest = "N";
-		//页面pageId
+		// 页面pageId
 		String strPageId = "";
-		//会话过期
+		// 会话过期
 		String strSessionInvalidTips = "";
-		//非法操作
+		// 非法操作
 		String strIllegalOperation = "";
-		//参数操作
+		// 参数操作
 		String strParaError = "";
-		//版本不一直
+		// 版本不一直
 		String strVersionError = "";
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 表单内容
 		int dataLength = actData.length;
@@ -862,84 +913,98 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			strIsEdit = String.valueOf(jacksonUtil.getString("isEdit"));
 			strAppInsVersion = String.valueOf(jacksonUtil.getString("TZ_APP_INS_VERSION"));
 			strPageId = String.valueOf(jacksonUtil.getString("TZ_PAGE_ID"));
-			if(strAppInsVersion == null){
+			if (strAppInsVersion == null) {
 				strAppInsVersion = "";
 			}
-			
+
 			numAppInsId = Long.parseLong(strAppInsId);
-			
-			strSessionInvalidTips = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", 
-					strLanguage, "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
-			strIllegalOperation = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", 
-					strLanguage, "非法操作", "Illegal operation");
-			strParaError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PARAERROR", 
-					strLanguage, "参数错误", "Parameter error.");
-			strVersionError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PAGE_INVALID", 
-					strLanguage, "当前页面已失效，请重新进入页面或刷新页面再试。", "The current page has expired, please re-enter the page and try again.");
-			
+
+			strSessionInvalidTips = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"SESSION_INVAILD", strLanguage, "当前会话已失效，请重新登陆。",
+					"The current session is timeout or the current access is invalid,Please relogin.");
+			strIllegalOperation = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"ILLEGAL_OPERATION", strLanguage, "非法操作", "Illegal operation");
+			strParaError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"PARAERROR", strLanguage, "参数错误", "Parameter error.");
+			strVersionError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"PAGE_INVALID", strLanguage, "当前页面已失效，请重新进入页面或刷新页面再试。",
+					"The current page has expired, please re-enter the page and try again.");
+
 			String sql = "";
-			if(!"".equals(strClassId) && strClassId != null){
+			if (!"".equals(strClassId) && strClassId != null) {
 				sql = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 				strGuestApply = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 				sql = "SELECT TZ_JG_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
 				strAppOrgId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-				if(!"Y".equals(strGuestApply) && ("TZ_GUEST".equals(oprid) || "".equals(oprid))){
-					//该班级未开发匿名报名
+				if (!"Y".equals(strGuestApply) && ("TZ_GUEST".equals(oprid) || "".equals(oprid))) {
+					// 该班级未开发匿名报名
 					errMsg[0] = "1";
 					errMsg[1] = strSessionInvalidTips;
 					strMsg = strSessionInvalidTips;
-				}else{
-					if(numAppInsId>0){
-						//有报名表实例编号
+				} else {
+					if (numAppInsId > 0) {
+						// 有报名表实例编号
 						PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
 						strTplId = psTzAppInsT.getTzAppTplId();
 						strAppInsState = psTzAppInsT.getTzAppFormSta();
 						strAppInsVersionDb = psTzAppInsT.getTzAppInsVersion();
-						
-						sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID";
-						strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strClassId }, "String");
-						if(!"".equals(strTplId) && strTplId!=null && !"".equals(strAppOprId) && strAppOprId!=null){
-							if(strAppOprId.equals(oprid) || "Y".equals(strGuestApply)){
-								//自己操作自己的报名表或者允许匿名报名
-							}else{
-								 /*判断当前登录人是不是班级管理员的逻辑与PS版保持一致  By WRL@20161130 BEGIN*/
-								 sql = "SELECT 'Y' FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-								 strIsAdmin = sqlQuery.queryForObject(sql, new Object[] { strClassId,oprid }, "String");
 
-								 //sql = "SELECT 'Y' FROM PS_TZ_APPTPL_R_T A,PSROLEUSER B WHERE A.ROLENAME = B.ROLENAME AND A.TZ_JG_ID = ? AND A.TZ_APP_TPL_ID = ? AND B.ROLEUSER = ?";
-								 //strIsAdmin = sqlQuery.queryForObject(sql, new Object[] { strAppOrgId,strTplId,oprid }, "String");
-								 /*判断当前登录人是不是班级管理员的逻辑与PS版保持一致  By WRL@20161130 END*/
-								 if(!"Y".equals(strIsAdmin)){
-									//非法操作
+						sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID";
+						strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strClassId }, "String");
+						if (!"".equals(strTplId) && strTplId != null && !"".equals(strAppOprId)
+								&& strAppOprId != null) {
+							if (strAppOprId.equals(oprid) || "Y".equals(strGuestApply)) {
+								// 自己操作自己的报名表或者允许匿名报名
+							} else {
+								/*
+								 * 判断当前登录人是不是班级管理员的逻辑与PS版保持一致 By WRL@20161130
+								 * BEGIN
+								 */
+								sql = "SELECT 'Y' FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+								strIsAdmin = sqlQuery.queryForObject(sql, new Object[] { strClassId, oprid }, "String");
+
+								// sql = "SELECT 'Y' FROM PS_TZ_APPTPL_R_T
+								// A,PSROLEUSER B WHERE A.ROLENAME = B.ROLENAME
+								// AND A.TZ_JG_ID = ? AND A.TZ_APP_TPL_ID = ?
+								// AND B.ROLEUSER = ?";
+								// strIsAdmin = sqlQuery.queryForObject(sql, new
+								// Object[] { strAppOrgId,strTplId,oprid },
+								// "String");
+								/*
+								 * 判断当前登录人是不是班级管理员的逻辑与PS版保持一致 By WRL@20161130
+								 * END
+								 */
+								if (!"Y".equals(strIsAdmin)) {
+									// 非法操作
 									errMsg[0] = "1";
 									errMsg[1] = strIllegalOperation;
 									strMsg = strIllegalOperation;
-								 }
+								}
 							}
-						}else{
-							//非法操作
+						} else {
+							// 非法操作
 							errMsg[0] = "1";
 							errMsg[1] = strParaError;
 							strMsg = strParaError;
 						}
-					}else{
-						//没报名表实例编号
+					} else {
+						// 没报名表实例编号
 						strAppOprId = oprid;
-						if(!"TZ_GUEST".equals(oprid)&&!"".equals(oprid)){
+						if (!"TZ_GUEST".equals(oprid) && !"".equals(oprid)) {
 							sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? AND TZ_CLASS_ID = ?";
-							strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid,strClassId }, "String");
-							if(strAppInsId == null || "".equals(strAppInsId)){
+							strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid, strClassId }, "String");
+							if (strAppInsId == null || "".equals(strAppInsId)) {
 								numAppInsId = 0L;
-							}else{
+							} else {
 								numAppInsId = Long.parseLong(strAppInsId);
 							}
 						}
-						if(numAppInsId>0){
-							//如果已报名有实例编号
+						if (numAppInsId > 0) {
+							// 如果已报名有实例编号
 							PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
 							strTplId = psTzAppInsT.getTzAppTplId();
 							strAppInsState = psTzAppInsT.getTzAppFormSta();
-						}else{
+						} else {
 							sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_IS_APP_OPEN = 'Y' AND TZ_CLASS_ID = ?";
 							strTplId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 							strAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
@@ -947,135 +1012,141 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 						}
 					}
 				}
-			}else{
-				if(!"".equals(strRefLetterId)&&strRefLetterId!=null){
-					 if(numAppInsId>0){
-						//查询推荐信报名表编号
+			} else {
+				if (!"".equals(strRefLetterId) && strRefLetterId != null) {
+					if (numAppInsId > 0) {
+						// 查询推荐信报名表编号
 						String sqlGetKsTjxInfo = "SELECT TZ_APP_INS_ID,OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_REF_LETTER_ID = ? AND TZ_TJX_APP_INS_ID = ?";
-						Map<String, Object> MapKsTjxInfo = sqlQuery.queryForMap(sqlGetKsTjxInfo, new Object[] { strRefLetterId,strAppInsId });
-						strAppInsIdRefer = MapKsTjxInfo.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(MapKsTjxInfo.get("TZ_APP_INS_ID"));
-						strAppOprId =MapKsTjxInfo.get("OPRID") == null ? "" : String.valueOf(MapKsTjxInfo.get("OPRID"));
-						//有报名表实例编号
+						Map<String, Object> MapKsTjxInfo = sqlQuery.queryForMap(sqlGetKsTjxInfo,
+								new Object[] { strRefLetterId, strAppInsId });
+						strAppInsIdRefer = MapKsTjxInfo.get("TZ_APP_INS_ID") == null ? ""
+								: String.valueOf(MapKsTjxInfo.get("TZ_APP_INS_ID"));
+						strAppOprId = MapKsTjxInfo.get("OPRID") == null ? ""
+								: String.valueOf(MapKsTjxInfo.get("OPRID"));
+						// 有报名表实例编号
 						PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
-						if(psTzAppInsT!=null){
+						if (psTzAppInsT != null) {
 							strTplId = psTzAppInsT.getTzAppTplId();
 							strAppInsState = psTzAppInsT.getTzAppFormSta();
 							strAppInsVersionDb = psTzAppInsT.getTzAppInsVersion();
 						}
-						
-						if("".equals(strAppInsIdRefer)){
+
+						if ("".equals(strAppInsIdRefer)) {
 							errMsg[0] = "1";
 							errMsg[1] = strParaError;
 							strMsg = strParaError;
 						}
-					 }else{
+					} else {
 						errMsg[0] = "1";
 						errMsg[1] = strParaError;
 						strMsg = strParaError;
-					 }
-				}else{
-					//非法操作
+					}
+				} else {
+					// 非法操作
 					errMsg[0] = "1";
 					errMsg[1] = strParaError;
 					strMsg = strParaError;
 				}
 			}
-			//当前报名表实例版本是否和数据库一致
-			if(strAppInsVersionDb == null){
+			// 当前报名表实例版本是否和数据库一致
+			if (strAppInsVersionDb == null) {
 				strAppInsVersionDb = "";
 			}
-				
-			if(strAppInsVersion.equals(strAppInsVersionDb)){
+
+			if (strAppInsVersion.equals(strAppInsVersionDb)) {
 				DateFormat formatDate = new SimpleDateFormat("yyyyMMddhhmmss");
-			    String simpleDate = formatDate.format(new Date());
-				
+				String simpleDate = formatDate.format(new Date());
+
 				String allChar = "0123456789";
 				StringBuffer sb = new StringBuffer();
 				Random random = new Random();
-					for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 10; i++) {
 					sb.append(allChar.charAt(random.nextInt(allChar.length())));
 				}
-				strAppInsVersionDb = String.valueOf(simpleDate) + sb.toString();	
-			}else{
+				strAppInsVersionDb = String.valueOf(simpleDate) + sb.toString();
+			} else {
 				errMsg[0] = "1";
 				errMsg[1] = strVersionError;
 				strMsg = strVersionError;
 			}
-			
-			if("U".equals(strAppInsState)){
-				if(StringUtils.equals("Y",strIsAdmin) && StringUtils.equals("Y", strIsEdit)){
-					//如果是管理员并且可编辑的话继续 By WRL@20161027
-				}else{
+
+			if ("U".equals(strAppInsState)) {
+				if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
+					// 如果是管理员并且可编辑的话继续 By WRL@20161027
+				} else {
 					errMsg[0] = "1";
 					errMsg[1] = strIllegalOperation;
 					strMsg = strIllegalOperation;
 				}
 			}
-			
-			if("0".equals(errMsg[0])&&"".equals(strMsg)){
+
+			if ("0".equals(errMsg[0]) && "".equals(strMsg)) {
 				sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 				strTplType = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
 				String strOtype = "";
 				strOtype = String.valueOf(jacksonUtil.getString("TZ_APP_C_TYPE"));
-				
-				//String strData = jacksonUtil.getString("data");
-				
+
+				// String strData = jacksonUtil.getString("data");
+
 				Map<String, Object> mapData = jacksonUtil.getMap("data");
-				
+
 				String strData = jacksonUtil.Map2json(mapData);
-				
-				if(!"U".equals(strAppInsState)){
+
+				if (!"U".equals(strAppInsState)) {
 					strAppInsState = "S";
 				}
-				//如果是匿名报名，报名表保存，需要为匿名用户自动注册非激活账号，并创建用户信息
+				// 如果是匿名报名，报名表保存，需要为匿名用户自动注册非激活账号，并创建用户信息
 				String strDefVal = "";
-				String strNAME= "";
+				String strNAME = "";
 				String strFirstName = "";
 				String strLastName = "";
 				String strGuestOprId = "";
-				if("Y".equals(strGuestApply)&&"".equals(oprid)&&"".equals(strAppOprId)){
+				if ("Y".equals(strGuestApply) && "".equals(oprid) && "".equals(strAppOprId)) {
 					strIsGuest = "Y";
-					for (Entry<String, Object> entry:mapData.entrySet()){
-						Map<String, Object> mapJsonItems = (Map<String, Object>)entry.getValue();
+					for (Entry<String, Object> entry : mapData.entrySet()) {
+						Map<String, Object> mapJsonItems = (Map<String, Object>) entry.getValue();
 						String strIsDoubleLine = "";
-						if(mapJsonItems.containsKey("isDoubleLine")){
+						if (mapJsonItems.containsKey("isDoubleLine")) {
 							strIsDoubleLine = String.valueOf(mapJsonItems.get("isDoubleLine"));
 						}
 						String strIsSingleLine = "";
-						if(mapJsonItems.containsKey("isSingleLine")){
+						if (mapJsonItems.containsKey("isSingleLine")) {
 							strIsSingleLine = String.valueOf(mapJsonItems.get("isSingleLine"));
 						}
 						String strIsFixedContainer = "";
-						if(mapJsonItems.containsKey("fixedContainer")){
+						if (mapJsonItems.containsKey("fixedContainer")) {
 							strIsSingleLine = String.valueOf(mapJsonItems.get("fixedContainer"));
 						}
-						if("Y".equals(strIsDoubleLine)){
-							//多行容器
-							if("Y".equals(strIsFixedContainer)){
-								//固定多行容器
-							}else{
+						if ("Y".equals(strIsDoubleLine)) {
+							// 多行容器
+							if ("Y".equals(strIsFixedContainer)) {
+								// 固定多行容器
+							} else {
 								List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
-								for(Object children1:mapChildrens1){
+								for (Object children1 : mapChildrens1) {
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
-									for (Entry<String, Object> entryChildren:mapChildren1.entrySet()){
-										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>)entryChildren.getValue();
-										if(mapJsonChildrenItems.containsKey("children")){
-											//donothing
-										}else{
-											if(mapJsonChildrenItems.containsKey("defaultval")){
+									for (Entry<String, Object> entryChildren : mapChildren1.entrySet()) {
+										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren
+												.getValue();
+										if (mapJsonChildrenItems.containsKey("children")) {
+											// donothing
+										} else {
+											if (mapJsonChildrenItems.containsKey("defaultval")) {
 												strDefVal = String.valueOf(mapJsonChildrenItems.get("defaultval"));
-												if(!"".equals(strDefVal) && strDefVal != null){
-													//取TZ_REALNAME
-													if("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")){
+												if (!"".equals(strDefVal) && strDefVal != null) {
+													// 取TZ_REALNAME
+													if ("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")) {
 														strNAME = String.valueOf(mapJsonChildrenItems.get("value"));
 													}
-													//取TZ_LAST_NAME
-													if("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")){
+													// 取TZ_LAST_NAME
+													if ("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")) {
 														strLastName = String.valueOf(mapJsonChildrenItems.get("value"));
 													}
-													//取TZ_FIRST_NAME
-													if("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")){
-														strFirstName = String.valueOf(mapJsonChildrenItems.get("value"));
+													// 取TZ_FIRST_NAME
+													if ("".equals(strFirstName)
+															&& strDefVal.contains("TZ_FIRST_NAME")) {
+														strFirstName = String
+																.valueOf(mapJsonChildrenItems.get("value"));
 													}
 												}
 											}
@@ -1083,23 +1154,23 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 									}
 								}
 							}
-						}else{
-							if("Y".equals(strIsSingleLine)){
-								//当行控件 donothing
-							}else{
-								if(mapJsonItems.containsKey("defaultval")){
+						} else {
+							if ("Y".equals(strIsSingleLine)) {
+								// 当行控件 donothing
+							} else {
+								if (mapJsonItems.containsKey("defaultval")) {
 									strDefVal = String.valueOf(mapJsonItems.get("defaultval"));
-									if(!"".equals(strDefVal) && strDefVal != null){
-										//取TZ_REALNAME
-										if("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")){
+									if (!"".equals(strDefVal) && strDefVal != null) {
+										// 取TZ_REALNAME
+										if ("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")) {
 											strNAME = String.valueOf(mapJsonItems.get("value"));
 										}
-										//取TZ_LAST_NAME
-										if("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")){
+										// 取TZ_LAST_NAME
+										if ("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")) {
 											strLastName = String.valueOf(mapJsonItems.get("value"));
 										}
-										//取TZ_FIRST_NAME
-										if("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")){
+										// 取TZ_FIRST_NAME
+										if ("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")) {
 											strFirstName = String.valueOf(mapJsonItems.get("value"));
 										}
 									}
@@ -1107,166 +1178,185 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 							}
 						}
 					}
-					
-					if(strLanguage != null && "ZHS".equals(strLanguage)){
-						if("".equals(strNAME) || strNAME == null ){
+
+					if (strLanguage != null && "ZHS".equals(strLanguage)) {
+						if ("".equals(strNAME) || strNAME == null) {
 							strNAME = "GUEST";
 						}
-					}else{
-						if("".equals(strLastName) || strLastName == null ){
-							if("".equals(strFirstName) || strFirstName == null ){
+					} else {
+						if ("".equals(strLastName) || strLastName == null) {
+							if ("".equals(strFirstName) || strFirstName == null) {
 								strNAME = "GUEST";
-							}else{
+							} else {
 								strNAME = strFirstName;
 							}
-						}else{
-							if("".equals(strFirstName) || strFirstName == null ){
+						} else {
+							if ("".equals(strFirstName) || strFirstName == null) {
 								strNAME = strLastName;
-							}else{
-								strNAME = strFirstName + " " +strFirstName;
+							} else {
+								strNAME = strFirstName + " " + strFirstName;
 							}
 						}
 					}
-					if(strAppOrgId == null || "".equals(strAppOrgId)){
+					if (strAppOrgId == null || "".equals(strAppOrgId)) {
 						String sqlGetOrgId = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = :1 AND TZ_EFFEXP_ZT = 'Y' LIMIT 1";
 						strAppOrgId = sqlQuery.queryForObject(sqlGetOrgId, new Object[] { strTplId }, "String");
 					}
-					//创建用户
-					strGuestOprId = createGuestUser(strAppOrgId,strNAME);
+					// 创建用户
+					strGuestOprId = createGuestUser(strAppOrgId, strNAME);
 					strAppOprId = strGuestOprId;
 				}
-				
-				if("SAVE".equals(strOtype)){
-					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState);
-					if("".equals(strMsg)){
+
+				if ("SAVE".equals(strOtype)) {
+					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType,
+							strIsGuest, strAppInsVersionDb, strAppInsState);
+					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
-						if("".equals(strMsg)){
+						if ("".equals(strMsg)) {
 							this.savePageCompleteState(numAppInsId, strPageId, "Y");
-						}else{
+						} else {
 							this.savePageCompleteState(numAppInsId, strPageId, "N");
 						}
 					}
-					//模版级事件
+					// 模版级事件
 					String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'SA_A'";
 					List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
 					for (Object objDataGetModalEvents : listGetModalEvents) {
 						Map<String, Object> MapGetModalEvents = (Map<String, Object>) objDataGetModalEvents;
 						String strAppClassPath = "";
-					    String strAppClassName = ""; 
-					    String strAppClassMethod = "";
-					    String strEventReturn = "";
-					    strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
-					    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
-					    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
-					    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
-					    	/*
-					    	String[] parameterTypes = new String[] {"String[]" };
-							Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
-							Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
-									parameterTypes, arglist);
-							strEventReturn = String.valueOf(objs);
-							*/
-					    	//根据配置需要去调用对应的程序
-					    	tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
-					    			ctx.getBean(strAppClassPath + "." + strAppClassName);
-					    	switch(strAppClassMethod){
-					    	//根据报名表配置的方法名称去调用不同的方法
-					    	}
-							
-					    }
+						String strAppClassName = "";
+						String strAppClassMethod = "";
+						String strEventReturn = "";
+						strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
+						strAppClassName = MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
+						strAppClassMethod = MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
+						if (!"".equals(strAppClassPath) && !"".equals(strAppClassName)
+								&& !"".equals(strAppClassMethod)) {
+							/*
+							 * String[] parameterTypes = new String[]
+							 * {"String[]" }; Object[] arglist = new Object[] {
+							 * numAppInsId ,strClassId , strAppOprId}; Object
+							 * objs = ObjectDoMethod.Load(strAppClassPath + "."
+							 * + strAppClassName, strAppClassMethod,
+							 * parameterTypes, arglist); strEventReturn =
+							 * String.valueOf(objs);
+							 */
+							// 根据配置需要去调用对应的程序
+							tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) ctx
+									.getBean(strAppClassPath + "." + strAppClassName);
+							switch (strAppClassMethod) {
+							// 根据报名表配置的方法名称去调用不同的方法
+							}
+
+						}
 					}
-					
-				}else if("SUBMIT".equals(strOtype)){
-					//先保存数据
-					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState);
-					//模版级事件
+
+				} else if ("SUBMIT".equals(strOtype)) {
+					// 先保存数据
+					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType,
+							strIsGuest, strAppInsVersionDb, strAppInsState);
+					// 模版级事件
 					String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'SU_A'";
 					List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
 					for (Object objDataGetModalEvents : listGetModalEvents) {
 						Map<String, Object> MapGetModalEvents = (Map<String, Object>) objDataGetModalEvents;
 						String strAppClassPath = "";
-					    String strAppClassName = ""; 
-					    String strAppClassMethod = "";
-					    String strEventReturn = "";
-					    strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
-					    strAppClassName =MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
-					    strAppClassMethod =MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? "" : String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
-					    if(!"".equals(strAppClassPath)&&!"".equals(strAppClassName)&&!"".equals(strAppClassMethod)){
-					    	/*
-					    	String[] parameterTypes = new String[] {"String[]" };
-							Object[] arglist = new Object[] { numAppInsId ,strClassId , strAppOprId};
-							Object objs = ObjectDoMethod.Load(strAppClassPath + "." + strAppClassName, strAppClassMethod,
-									parameterTypes, arglist);
-							strEventReturn = String.valueOf(objs);
-							if(!"".equals(strEventReturn)){
-								strMsg = strMsg + strEventReturn + "\n";
-							}*/
-							tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) 
-					    			ctx.getBean(strAppClassPath + "." + strAppClassName);
-					    	switch(strAppClassMethod){
-					    	//根据报名表配置的方法名称去调用不同的方法
-					    	}
-					    }
+						String strAppClassName = "";
+						String strAppClassMethod = "";
+						String strEventReturn = "";
+						strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
+						strAppClassName = MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
+						strAppClassMethod = MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
+						if (!"".equals(strAppClassPath) && !"".equals(strAppClassName)
+								&& !"".equals(strAppClassMethod)) {
+							/*
+							 * String[] parameterTypes = new String[]
+							 * {"String[]" }; Object[] arglist = new Object[] {
+							 * numAppInsId ,strClassId , strAppOprId}; Object
+							 * objs = ObjectDoMethod.Load(strAppClassPath + "."
+							 * + strAppClassName, strAppClassMethod,
+							 * parameterTypes, arglist); strEventReturn =
+							 * String.valueOf(objs);
+							 * if(!"".equals(strEventReturn)){ strMsg = strMsg +
+							 * strEventReturn + "\n"; }
+							 */
+							tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) ctx
+									.getBean(strAppClassPath + "." + strAppClassName);
+							switch (strAppClassMethod) {
+							// 根据报名表配置的方法名称去调用不同的方法
+							}
+						}
 					}
-					
-				    //提交数据
-				    String strMsgAlter = "";
-				    if("".equals(strMsg)){
+
+					// 提交数据
+					String strMsgAlter = "";
+					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, "", "submit");
 					}
-				    if("".equals(strMsg)){
-				    	if(StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)){
-				    		//如果是管理员并且可编辑的话继续 By WRL@20161027
-				    	}else{
-					    	//如果是推荐信，则提交后发送邮件
-					    	if("TJX".equals(strTplType)){
-					    		strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType);
-					    		String strSubmitTjxSendEmail =  tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
-					    	}
-					    	if("BMB".equals(strTplType)){
-					    		/*修改为在确认的时候再提交
-					    		//同步报名人联系方式
-					    		this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
-					    		//发送邮件
-					    		String strSubmitSendEmail = this.sendSubmitEmail(numAppInsId, strTplId, strAppOprId, strAppOrgId, strTplType);
-					    		*/
-					    	}
-				    	}
+					if ("".equals(strMsg)) {
+						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
+							// 如果是管理员并且可编辑的话继续 By WRL@20161027
+						} else {
+							// 如果是推荐信，则提交后发送邮件
+							if ("TJX".equals(strTplType)) {
+								strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType);
+								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
+							}
+							if ("BMB".equals(strTplType)) {
+								/*
+								 * 修改为在确认的时候再提交 //同步报名人联系方式
+								 * this.savaContactInfo(numAppInsId, strTplId,
+								 * strAppOprId); //发送邮件 String
+								 * strSubmitSendEmail =
+								 * this.sendSubmitEmail(numAppInsId, strTplId,
+								 * strAppOprId, strAppOrgId, strTplType);
+								 */
+							}
+						}
 					}
-				}else if("CONFIRMSUBMIT".equals(strOtype)){
-					/*确认提交报名表*/
-					if(StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)){
-			    		//如果是管理员并且可编辑的话继续 By WRL@20161027
+				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
+					/* 确认提交报名表 */
+					if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
+						// 如果是管理员并且可编辑的话继续 By WRL@20161027
 						this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
-			    	}else{
-				    	strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType);
-						if("BMB".equals(strTplType)){
-				    		//同步报名人联系方式
-				    		this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
-				    		//发送邮件
-				    		String strSubmitSendEmail = this.sendSubmitEmail(numAppInsId, strTplId, strAppOprId, strAppOrgId, strTplType);
-				    	}
-			    	}
+					} else {
+						strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType);
+						if ("BMB".equals(strTplType)) {
+							// 同步报名人联系方式
+							this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
+							// 发送邮件
+							String strSubmitSendEmail = this.sendSubmitEmail(numAppInsId, strTplId, strAppOprId,
+									strAppOrgId, strTplType);
+						}
+					}
 				}
 			}
-			
-			if(!"".equals(strMsg)){
+
+			if (!"".equals(strMsg)) {
 				successFlag = "1";
 			}
-			//页面完成状态Json
+			// 页面完成状态Json
 			String strPageXxxBh = "";
 			String strPageCompleteState = "";
-		
-			
+
 			ArrayList<Map<String, Object>> listJsonCompleteStateJson = new ArrayList<Map<String, Object>>();
 			String sqlGetPageCompleteState = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'Page'";
-			List<?> listGetPageCompleteState = sqlQuery.queryForList(sqlGetPageCompleteState, new Object[] { strTplId });
+			List<?> listGetPageCompleteState = sqlQuery.queryForList(sqlGetPageCompleteState,
+					new Object[] { strTplId });
 			for (Object objDataGetPageCompleteState : listGetPageCompleteState) {
 				Map<String, Object> MapGetPageCompleteState = (Map<String, Object>) objDataGetPageCompleteState;
-				strPageXxxBh = MapGetPageCompleteState.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapGetPageCompleteState.get("TZ_XXX_BH"));
+				strPageXxxBh = MapGetPageCompleteState.get("TZ_XXX_BH") == null ? ""
+						: String.valueOf(MapGetPageCompleteState.get("TZ_XXX_BH"));
 				String sqlPageHasCompleteFlag = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-				strPageCompleteState = sqlQuery.queryForObject(sqlPageHasCompleteFlag, new Object[] { numAppInsId,strPageXxxBh }, "String");
-				if(!"Y".equals(strPageCompleteState)){
+				strPageCompleteState = sqlQuery.queryForObject(sqlPageHasCompleteFlag,
+						new Object[] { numAppInsId, strPageXxxBh }, "String");
+				if (!"Y".equals(strPageCompleteState)) {
 					strPageCompleteState = "N";
 				}
 				Map<String, Object> strPageCompleteStateJson = new HashMap<String, Object>();
@@ -1281,113 +1371,116 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			mapJsonRet.put("pageCompleteState", listJsonCompleteStateJson);
 			mapJsonRet.put("appInsVersionId", strAppInsVersionDb);
 			strRet = jacksonUtil.Map2json(mapJsonRet);
-		}//end-for
-		
+		} // end-for
+
 		return strRet;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private String getUserInfo(){
-		
-	    //当前登陆人
+	private String getUserInfo() {
+
+		// 当前登陆人
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		String strField = "";		
+		String strField = "";
 		String strFieldValue = "";
 		String strUserInfo = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";	
+
+		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
 		for (Object objData : listData) {
 			strFieldValue = "";
 			Map<String, Object> mapData = (Map<String, Object>) objData;
-			strField = mapData.get("TZ_REG_FIELD_ID") == null ? "":String.valueOf(mapData.get("TZ_REG_FIELD_ID"));
-			if("TZ_PASSWORD".equals(strField)||"TZ_REPASSWORD".equals(strField)){
+			strField = mapData.get("TZ_REG_FIELD_ID") == null ? "" : String.valueOf(mapData.get("TZ_REG_FIELD_ID"));
+			if ("TZ_PASSWORD".equals(strField) || "TZ_REPASSWORD".equals(strField)) {
 				continue;
-			};
-			try{
-				if("TZ_SKYPE".equals(strField)||"TZ_MOBILE".equals(strField)||"TZ_EMAIL".equals(strField)){
-					if("TZ_MOBILE".equals(strField)){
+			}
+			;
+			try {
+				if ("TZ_SKYPE".equals(strField) || "TZ_MOBILE".equals(strField) || "TZ_EMAIL".equals(strField)) {
+					if ("TZ_MOBILE".equals(strField)) {
 						String sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
-					}else if("TZ_EMAIL".equals(strField)){
+					} else if ("TZ_EMAIL".equals(strField)) {
 						String sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
-					}else{
+					} else {
 						String sql = "SELECT TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					}
-				}else{
-					if("TZ_REALNAME".equals(strField)){
+				} else {
+					if ("TZ_REALNAME".equals(strField)) {
 						String sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
-						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { orgid,oprid }, "String");
-					}else{
-						//项目字段没对应;
-						if("TZ_PROJECT".equals(strField)){
-							String sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '"+ oprid +"'";
+						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { orgid, oprid }, "String");
+					} else {
+						// 项目字段没对应;
+						if ("TZ_PROJECT".equals(strField)) {
+							String sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
-						}else{
-							String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '"+ oprid +"'";
+						} else {
+							String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
 						}
 					}
 				}
-				if(strFieldValue == null) 
+				if (strFieldValue == null)
 					strFieldValue = "";
-				
+
 				map.put(strField, strFieldValue);
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				continue;
 			}
 		}
 		strUserInfo = jacksonUtil.Map2json(map);
-		
+
 		return strUserInfo;
 	}
-	
-	private String checkAppViewQx(String strTplId,String oprid,String orgid,String strClassId){
-		
+
+	private String checkAppViewQx(String strTplId, String oprid, String orgid, String strClassId) {
+
 		String strHasPermission = "";
 		String sql = "";
-	    sql = "SELECT 'Y' FROM PS_TZ_APPTPL_R_T A,PSROLEUSER B WHERE A.ROLENAME = B.ROLENAME AND A.TZ_JG_ID = ? AND A.TZ_APP_TPL_ID = ? AND B.ROLEUSER = ?";
-		strHasPermission = sqlQuery.queryForObject(sql, new Object[] { orgid,strTplId,oprid }, "String");
-		//对当前模版是否有访问权限
-		if("".equals(strHasPermission) || strHasPermission == null){
-			//是否材料评审评委
+		sql = "SELECT 'Y' FROM PS_TZ_APPTPL_R_T A,PSROLEUSER B WHERE A.ROLENAME = B.ROLENAME AND A.TZ_JG_ID = ? AND A.TZ_APP_TPL_ID = ? AND B.ROLEUSER = ?";
+		strHasPermission = sqlQuery.queryForObject(sql, new Object[] { orgid, strTplId, oprid }, "String");
+		// 对当前模版是否有访问权限
+		if ("".equals(strHasPermission) || strHasPermission == null) {
+			// 是否材料评审评委
 			sql = "SELECT 'Y' FROM PS_TZ_JUSR_REL_TBL WHERE OPRID = ?";
 			strHasPermission = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
-			
-			if("".equals(strHasPermission) || strHasPermission == null){
-				//是否是班级管理人员
+
+			if ("".equals(strHasPermission) || strHasPermission == null) {
+				// 是否是班级管理人员
 				sql = "SELECT 'Y' FROM PS_TZ_CLS_ADMIN_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-				strHasPermission = sqlQuery.queryForObject(sql, new Object[] { strClassId,oprid }, "String");
+				strHasPermission = sqlQuery.queryForObject(sql, new Object[] { strClassId, oprid }, "String");
 			}
 		}
-		
-		if(strHasPermission == null) strHasPermission = "";
-		
+
+		if (strHasPermission == null)
+			strHasPermission = "";
+
 		return strHasPermission;
-		
+
 	}
-	
-	//报名表保存
+
+	// 报名表保存
 	@SuppressWarnings("unchecked")
-	private String saveAppForm(String strTplId,Long numAppInsId,String strClassId,String strAppOprId,String strJsonData,String strTplType,String strIsGuest,String strAppInsVersion,String strAppInsState){
-		
+	private String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
+			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState) {
+
 		String returnMsg = "";
-		
+
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		//Long numAppInsId = Long.parseLong(strAppInsId);
-		try{
+		// Long numAppInsId = Long.parseLong(strAppInsId);
+		try {
 			String sql = "";
 			int count = 0;
 			sql = "SELECT COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
-			if(count>0){
+			if (count > 0) {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
@@ -1397,7 +1490,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
 				psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
-			}else{
+			} else {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
@@ -1410,21 +1503,21 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				psTzAppInsT.setRowLastmantDttm(new Date());
 				psTzAppInsTMapper.insert(psTzAppInsT);
 			}
-			
-			if("BMB".equals(strTplType)){
+
+			if ("BMB".equals(strTplType)) {
 				count = 0;
 				sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
 				count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
-				if(count>0){
-					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();	
+				if (count > 0) {
+					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 					psTzFormWrkT.setTzClassId(strClassId);
 					psTzFormWrkT.setOprid(strAppOprId);
 					psTzFormWrkT.setTzAppInsId(numAppInsId);
 					psTzFormWrkT.setRowLastmantOprid(oprid);
 					psTzFormWrkT.setRowLastmantDttm(new Date());
 					psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
-				}else{
-					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();	
+				} else {
+					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 					psTzFormWrkT.setTzClassId(strClassId);
 					psTzFormWrkT.setOprid(strAppOprId);
 					psTzFormWrkT.setTzAppInsId(numAppInsId);
@@ -1435,185 +1528,200 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					psTzFormWrkTMapper.insert(psTzFormWrkT);
 				}
 			}
-			//保存数据到结构化表
+			// 保存数据到结构化表
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
-			//jacksonUtil.json2Map(strJsonData);
-			
+			// jacksonUtil.json2Map(strJsonData);
+
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
-			
-			
-			
-			if (mapAppData!=null){
+
+			if (mapAppData != null) {
 				this.delAppIns(numAppInsId);
-				for (Entry<String, Object> entry:mapAppData.entrySet()){
-					Map<String, Object> mapJsonItems = (Map<String, Object>)entry.getValue();
+				for (Entry<String, Object> entry : mapAppData.entrySet()) {
+					Map<String, Object> mapJsonItems = (Map<String, Object>) entry.getValue();
 					String strClassName = "";
-					if(mapJsonItems.containsKey("classname")){
+					if (mapJsonItems.containsKey("classname")) {
 						strClassName = String.valueOf(mapJsonItems.get("classname"));
 					}
 					String strIsDoubleLine = "";
-					if(mapJsonItems.containsKey("isDoubleLine")){
+					if (mapJsonItems.containsKey("isDoubleLine")) {
 						strIsDoubleLine = String.valueOf(mapJsonItems.get("isDoubleLine"));
 					}
 					String strIsSingleLine = "";
-					if(mapJsonItems.containsKey("isSingleLine")){
+					if (mapJsonItems.containsKey("isSingleLine")) {
 						strIsSingleLine = String.valueOf(mapJsonItems.get("isSingleLine"));
 					}
 					String strOthervalue = "";
-					if(mapJsonItems.containsKey("othervalue")){
+					if (mapJsonItems.containsKey("othervalue")) {
 						strOthervalue = String.valueOf(mapJsonItems.get("othervalue"));
 					}
 					String strItemIdLevel0 = "";
-					if(mapJsonItems.containsKey("itemId")){
+					if (mapJsonItems.containsKey("itemId")) {
 						strItemIdLevel0 = String.valueOf(mapJsonItems.get("itemId"));
 					}
-					if(mapJsonItems.containsKey("children")){
-						
+					if (mapJsonItems.containsKey("children")) {
+
 						List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
-						if("Y".equals(strIsDoubleLine)){
-							this.saveDhLineNum(strItemIdLevel0, numAppInsId,(short)mapChildrens1.size());
-							for(Object children1:mapChildrens1){
-								//多行容器
+						if ("Y".equals(strIsDoubleLine)) {
+							this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							for (Object children1 : mapChildrens1) {
+								// 多行容器
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
-								for (Entry<String, Object> entryChildren:mapChildren1.entrySet()){
-									Map<String, Object> mapJsonChildrenItems = (Map<String, Object>)entryChildren.getValue();
+								for (Entry<String, Object> entryChildren : mapChildren1.entrySet()) {
+									Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren
+											.getValue();
 									String strItemIdLevel1 = "";
-									if(mapJsonChildrenItems.containsKey("itemId")){
+									if (mapJsonChildrenItems.containsKey("itemId")) {
 										strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
 									}
-									if(mapJsonChildrenItems.containsKey("children")){
-										//多行容器下的子容器
+									if (mapJsonChildrenItems.containsKey("children")) {
+										// 多行容器下的子容器
 										List<?> mapChildrens2 = (ArrayList<?>) mapJsonChildrenItems.get("children");
 										String strIsSingleLine2 = "";
-										if(mapJsonChildrenItems.containsKey("isSingleLine")){
+										if (mapJsonChildrenItems.containsKey("isSingleLine")) {
 											strIsSingleLine2 = String.valueOf(mapJsonChildrenItems.get("isSingleLine"));
 										}
-										if("Y".equals(strIsSingleLine2)){
-											//多行容器中的单行容器
-											for(Object children2:mapChildrens2){
+										if ("Y".equals(strIsSingleLine2)) {
+											// 多行容器中的单行容器
+											for (Object children2 : mapChildrens2) {
 												Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-												this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId);
+												this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2,
+														numAppInsId);
 											}
-										}else{
-											//多行容器中的附件
+										} else {
+											// 多行容器中的附件
 											String strStorageType = "";
-											if(mapJsonChildrenItems.containsKey("StorageType")){
-												strStorageType = mapJsonChildrenItems.get("StorageType") == null ? "" : String.valueOf(mapJsonChildrenItems.get("StorageType"));
-												if("F".equals(strStorageType)){
-													for(Object children2:mapChildrens2){
+											if (mapJsonChildrenItems.containsKey("StorageType")) {
+												strStorageType = mapJsonChildrenItems.get("StorageType") == null ? ""
+														: String.valueOf(mapJsonChildrenItems.get("StorageType"));
+												if ("F".equals(strStorageType)) {
+													for (Object children2 : mapChildrens2) {
 														Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-														this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId);
+														this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
+																mapChildren2, numAppInsId);
 														String strIsHidden = "";
-														if(mapJsonChildrenItems.containsKey("isHidden")){
-															strIsHidden = mapJsonChildrenItems.get("isHidden") == null ? "" : String.valueOf(mapJsonChildrenItems.get("isHidden"));
+														if (mapJsonChildrenItems.containsKey("isHidden")) {
+															strIsHidden = mapJsonChildrenItems.get("isHidden") == null
+																	? ""
+																	: String.valueOf(
+																			mapJsonChildrenItems.get("isHidden"));
 														}
-														this.saveXxxHidden(numAppInsId, strItemIdLevel0 + strItemIdLevel1, strIsHidden);
+														this.saveXxxHidden(numAppInsId,
+																strItemIdLevel0 + strItemIdLevel1, strIsHidden);
 													}
 												}
 											}
 										}
-									}else{
-										//多行容器中的单选框.复选框、一般字段
+									} else {
+										// 多行容器中的单选框.复选框、一般字段
 										String strStorageType = "";
-										strStorageType = mapJsonChildrenItems.get("StorageType") == null ? "" : String.valueOf(mapJsonChildrenItems.get("StorageType"));
-										if("S".equals(strStorageType)||"L".equals(strStorageType)){
-											//多行容器中的普通字段
+										strStorageType = mapJsonChildrenItems.get("StorageType") == null ? ""
+												: String.valueOf(mapJsonChildrenItems.get("StorageType"));
+										if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
+											// 多行容器中的普通字段
 											this.savePerXxxIns(strItemIdLevel0, mapJsonChildrenItems, numAppInsId);
-										}else if("D".equals(strStorageType)){
-											//单选框或者复选框
-											if(mapJsonChildrenItems.containsKey("option")){
-												Map<String, Object> mapOptions = (Map<String, Object>)mapJsonChildrenItems.get("option");
-												for (Entry<String, Object> entryOption:mapOptions.entrySet()){
-													Map<String, Object> mapOption = (Map<String, Object>)entryOption.getValue();
-													this.savePerXxxIns2(strItemIdLevel0 + strItemIdLevel1, "", mapOption, numAppInsId);
+										} else if ("D".equals(strStorageType)) {
+											// 单选框或者复选框
+											if (mapJsonChildrenItems.containsKey("option")) {
+												Map<String, Object> mapOptions = (Map<String, Object>) mapJsonChildrenItems
+														.get("option");
+												for (Entry<String, Object> entryOption : mapOptions.entrySet()) {
+													Map<String, Object> mapOption = (Map<String, Object>) entryOption
+															.getValue();
+													this.savePerXxxIns2(strItemIdLevel0 + strItemIdLevel1, "",
+															mapOption, numAppInsId);
 												}
 											}
-										}else if("F".equals(strStorageType)){
-											//推荐信附件信息和其他固定容器附件
-											if(!"recommendletter".equals(strClassName)){
-												this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapJsonChildrenItems, numAppInsId);
+										} else if ("F".equals(strStorageType)) {
+											// 推荐信附件信息和其他固定容器附件
+											if (!"recommendletter".equals(strClassName)) {
+												this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
+														mapJsonChildrenItems, numAppInsId);
 											}
 										}
 									}
 								}
 							}
-						}else if("Y".equals(strIsSingleLine)){
-							//如果是单行容器
-							for(Object children1:mapChildrens1){
+						} else if ("Y".equals(strIsSingleLine)) {
+							// 如果是单行容器
+							for (Object children1 : mapChildrens1) {
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 								String strStorageType = "";
-								if(mapChildren1.containsKey("StorageType")){
-									strStorageType = mapChildren1.get("StorageType") == null ? "" : String.valueOf(mapChildren1.get("StorageType"));
+								if (mapChildren1.containsKey("StorageType")) {
+									strStorageType = mapChildren1.get("StorageType") == null ? ""
+											: String.valueOf(mapChildren1.get("StorageType"));
 								}
-								if("S".equals(strStorageType)||"L".equals(strStorageType)){
+								if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 									this.savePerXxxIns(strItemIdLevel0, mapChildren1, numAppInsId);
 								}
 							}
-						}else{
-							//如果是附件信息
+						} else {
+							// 如果是附件信息
 							String strStorageType = "";
-							if(mapJsonItems.containsKey("StorageType")){
-								strStorageType = mapJsonItems.get("StorageType") == null ? "" : String.valueOf(mapJsonItems.get("StorageType"));
+							if (mapJsonItems.containsKey("StorageType")) {
+								strStorageType = mapJsonItems.get("StorageType") == null ? ""
+										: String.valueOf(mapJsonItems.get("StorageType"));
 							}
-							if("F".equals(strStorageType)){
-								for(Object children1:mapChildrens1){
+							if ("F".equals(strStorageType)) {
+								for (Object children1 : mapChildrens1) {
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 									this.savePerAttrInfo(strItemIdLevel0, mapChildren1, numAppInsId);
 									String strIsHidden = "";
-									if(mapJsonItems.containsKey("isHidden")){
-										strIsHidden = mapJsonItems.get("isHidden") == null ? "" : String.valueOf(mapJsonItems.get("isHidden"));
+									if (mapJsonItems.containsKey("isHidden")) {
+										strIsHidden = mapJsonItems.get("isHidden") == null ? ""
+												: String.valueOf(mapJsonItems.get("isHidden"));
 									}
-									this.saveXxxHidden(numAppInsId, strItemIdLevel0 , strIsHidden);
+									this.saveXxxHidden(numAppInsId, strItemIdLevel0, strIsHidden);
 								}
 							}
 						}
-					}else{
-						//没有Children节点
+					} else {
+						// 没有Children节点
 						String strStorageType = "";
-						if(mapJsonItems.containsKey("StorageType")){
-							strStorageType = mapJsonItems.get("StorageType") == null ? "" : String.valueOf(mapJsonItems.get("StorageType"));
+						if (mapJsonItems.containsKey("StorageType")) {
+							strStorageType = mapJsonItems.get("StorageType") == null ? ""
+									: String.valueOf(mapJsonItems.get("StorageType"));
 						}
-						if("D".equals(strStorageType)){
-							//如果是多项框或者单选框
-							if(mapJsonItems.containsKey("option")){
-								Map<String, Object> mapOptions = (Map<String, Object>)mapJsonItems.get("option");
-								for (Entry<String, Object> entryOption:mapOptions.entrySet()){
-									Map<String, Object> mapOption = (Map<String, Object>)entryOption.getValue();
-									this.savePerXxxIns2(strItemIdLevel0 , "", mapOption, numAppInsId);
+						if ("D".equals(strStorageType)) {
+							// 如果是多项框或者单选框
+							if (mapJsonItems.containsKey("option")) {
+								Map<String, Object> mapOptions = (Map<String, Object>) mapJsonItems.get("option");
+								for (Entry<String, Object> entryOption : mapOptions.entrySet()) {
+									Map<String, Object> mapOption = (Map<String, Object>) entryOption.getValue();
+									this.savePerXxxIns2(strItemIdLevel0, "", mapOption, numAppInsId);
 								}
 							}
-						}else if("S".equals(strStorageType)||"L".equals(strStorageType)){
+						} else if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 							this.savePerXxxIns("", mapJsonItems, numAppInsId);
-							if("bmrPhoto".equals(strClassName)){
-								//this.saveBmrPhoto("", mapJsonItems, numAppInsId);
+							if ("bmrPhoto".equals(strClassName)) {
+								// this.saveBmrPhoto("", mapJsonItems,
+								// numAppInsId);
 							}
-						}	
+						}
 					}
 				}
 			}
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			returnMsg = e.toString();
 		}
 		return returnMsg;
 	}
-	
-	
-	//报名表提交
-	private String submitAppForm(Long numAppInsId,String strClassId,String strAppOprId,String strTplType){
-		
+
+	// 报名表提交
+	private String submitAppForm(Long numAppInsId, String strClassId, String strAppOprId, String strTplType) {
+
 		String returnMsg = "";
-		
+
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		
-		try{
+
+		try {
 			String sql = "";
 			int count = 0;
 			sql = "SELECT COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
-			if(count>0){
+			if (count > 0) {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppFormSta("U");
@@ -1621,16 +1729,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
 				psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
-			}else{
+			} else {
 				returnMsg = "failed";
 			}
-			
-			if("BMB".equals(strTplType)){
+
+			if ("BMB".equals(strTplType)) {
 				count = 0;
 				sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
 				count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
-				if(count>0){
-					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();	
+				if (count > 0) {
+					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 					psTzFormWrkT.setTzClassId(strClassId);
 					psTzFormWrkT.setOprid(strAppOprId);
 					psTzFormWrkT.setTzAppInsId(numAppInsId);
@@ -1638,28 +1746,28 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 					psTzFormWrkT.setRowLastmantOprid(oprid);
 					psTzFormWrkT.setRowLastmantDttm(new Date());
 					psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
-				}else{
+				} else {
 					returnMsg = "failed";
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			returnMsg = e.toString();
 		}
 		return returnMsg;
 	}
-	
-	/*保存多行容器的行数信息*/
-	private void saveDhLineNum(String strItemId,Long numAppInsId, short numLineDh){
+
+	/* 保存多行容器的行数信息 */
+	private void saveDhLineNum(String strItemId, Long numAppInsId, short numLineDh) {
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
-		if(count>0){
+		if (count > 0) {
 			PsTzAppDhhsT psTzAppDhhsT = new PsTzAppDhhsT();
 			psTzAppDhhsT.setTzAppInsId(numAppInsId);
 			psTzAppDhhsT.setTzXxxBh(strItemId);
 			psTzAppDhhsT.setTzXxxLine(numLineDh);
 			psTzAppDhhsTMapper.updateByPrimaryKeySelective(psTzAppDhhsT);
-		}else{
+		} else {
 			PsTzAppDhhsT psTzAppDhhsT = new PsTzAppDhhsT();
 			psTzAppDhhsT.setTzAppInsId(numAppInsId);
 			psTzAppDhhsT.setTzXxxBh(strItemId);
@@ -1667,9 +1775,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzAppDhhsTMapper.insert(psTzAppDhhsT);
 		}
 	}
-	//删除报名表存储表信息
-	private void delAppIns(Long numAppInsId){
-		
+
+	// 删除报名表存储表信息
+	private void delAppIns(Long numAppInsId) {
+
 		Object[] args = new Object[] { numAppInsId };
 		sqlQuery.update("DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
@@ -1678,40 +1787,40 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ?", args);
 	}
-	
-	//将json数据解析保存到报名表存储表
-	private void savePerXxxIns(String strParentItemId,Map<String, Object> xxxObject ,Long numAppInsId){
-		
+
+	// 将json数据解析保存到报名表存储表
+	private void savePerXxxIns(String strParentItemId, Map<String, Object> xxxObject, Long numAppInsId) {
+
 		String strItemId = "";
-		if(xxxObject.containsKey("itemId")){
+		if (xxxObject.containsKey("itemId")) {
 			strItemId = String.valueOf(xxxObject.get("itemId"));
 		}
-		if(!"".equals(strParentItemId)&&strParentItemId!=null){
+		if (!"".equals(strParentItemId) && strParentItemId != null) {
 			strItemId = strParentItemId + strItemId;
 		}
-		//数据存储类型
+		// 数据存储类型
 		String strStorageType = "";
-		//存储值
+		// 存储值
 		String strValueL = "";
 		String strValueS = "";
 		String strValue = "";
-		//控件类名称
+		// 控件类名称
 		String strClassName = "";
-		
-		if(xxxObject.containsKey("StorageType")){
+
+		if (xxxObject.containsKey("StorageType")) {
 			strStorageType = xxxObject.get("StorageType") == null ? "" : String.valueOf(xxxObject.get("StorageType"));
-			if("L".equals(strStorageType)){
+			if ("L".equals(strStorageType)) {
 				strValueL = xxxObject.get("value") == null ? "" : String.valueOf(xxxObject.get("value"));
-			}else{
+			} else {
 				strValueS = xxxObject.get("value") == null ? "" : String.valueOf(xxxObject.get("value"));
 				strValueL = xxxObject.get("wzsm") == null ? "" : String.valueOf(xxxObject.get("wzsm"));
 			}
 		}
-		//如果是推荐信title Start
+		// 如果是推荐信title Start
 		String sql = "";
-		if(xxxObject.containsKey("classname")){
+		if (xxxObject.containsKey("classname")) {
 			strClassName = xxxObject.get("classname") == null ? "" : String.valueOf(xxxObject.get("classname"));
-			if("RefferTitle".equals(strClassName)){
+			if ("RefferTitle".equals(strClassName)) {
 				sql = "SELECT B.TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID = ? AND A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID";
 				String strTplLang = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
 				strValue = xxxObject.get("value") == null ? "" : String.valueOf(xxxObject.get("value"));
@@ -1719,67 +1828,68 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				Map<String, Object> Map = sqlQuery.queryForMap(sql, new Object[] { strValue });
 				String strDms = "";
 				String strZms = "";
-				if(Map != null){
+				if (Map != null) {
 					strDms = Map.get("TZ_ZHZ_DMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_DMS"));
 					strZms = Map.get("TZ_ZHZ_CMS") == null ? "" : String.valueOf(Map.get("TZ_ZHZ_CMS"));
 				}
-				
-				if("ENG".equals(strTplLang)){
-					if(!"".equals(strZms)){
+
+				if ("ENG".equals(strTplLang)) {
+					if (!"".equals(strZms)) {
 						strValueS = strZms;
 					}
-				}else{
-					if(!"".equals(strDms)){
+				} else {
+					if (!"".equals(strDms)) {
 						strValueS = strDms;
 					}
 				}
 			}
 		}
-		
-		if(strValueS.length()>254){
+
+		if (strValueS.length() > 254) {
 			strValueS = strValueS.substring(0, 254);
 		}
-		
-		//如果是推荐信title End
+
+		// 如果是推荐信title End
 		PsTzAppCcT psTzAppCcT = new PsTzAppCcT();
 		psTzAppCcT.setTzAppInsId(numAppInsId);
 		psTzAppCcT.setTzXxxBh(strItemId);
 		psTzAppCcT.setTzAppSText(strValueS);
 		psTzAppCcT.setTzAppLText(strValueL);
 		psTzAppCcTMapper.insert(psTzAppCcT);
-		
-		//是否隐藏
+
+		// 是否隐藏
 		String strIsHidden = "";
-		if(xxxObject.containsKey("isHidden")){
+		if (xxxObject.containsKey("isHidden")) {
 			strIsHidden = xxxObject.get("isHidden") == null ? "" : String.valueOf(xxxObject.get("isHidden"));
-			if("".equals(strIsHidden)){
+			if ("".equals(strIsHidden)) {
 				strIsHidden = "N";
 			}
-		}else{
+		} else {
 			strIsHidden = "N";
 		}
 		this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
 	}
-	
-	//将json数据解析保存到报名表存储表
-	private void savePerXxxIns2(String strParentItemId,String strOtherValue,Map<String, Object> xxxObject ,Long numAppInsId){
-		
+
+	// 将json数据解析保存到报名表存储表
+	private void savePerXxxIns2(String strParentItemId, String strOtherValue, Map<String, Object> xxxObject,
+			Long numAppInsId) {
+
 		String strIsChecked = "";
-		if(xxxObject.containsKey("checked")){
-			strIsChecked = xxxObject.get("checked") == null ? "" : String.valueOf(xxxObject.get("checked"));	
+		if (xxxObject.containsKey("checked")) {
+			strIsChecked = xxxObject.get("checked") == null ? "" : String.valueOf(xxxObject.get("checked"));
 		}
-		if(!"Y".equals(strIsChecked)){
+		if (!"Y".equals(strIsChecked)) {
 			strIsChecked = "N";
 		}
 		String strCode = "";
-		if(xxxObject.containsKey("code")){
-			strCode = xxxObject.get("code") == null ? "" : String.valueOf(xxxObject.get("code"));	
+		if (xxxObject.containsKey("code")) {
+			strCode = xxxObject.get("code") == null ? "" : String.valueOf(xxxObject.get("code"));
 		}
 		String strTxt = "";
-		if(xxxObject.containsKey("txt")){
-			strTxt = xxxObject.get("txt") == null ? "" : String.valueOf(xxxObject.get("txt"));	
+		if (xxxObject.containsKey("txt")) {
+			strTxt = xxxObject.get("txt") == null ? "" : String.valueOf(xxxObject.get("txt"));
 		}
-		if(xxxObject.containsKey("othervalue")){
+		if (xxxObject.containsKey("othervalue")) {
 			strOtherValue = xxxObject.get("othervalue") == null ? "" : String.valueOf(xxxObject.get("othervalue"));
 		}
 
@@ -1791,43 +1901,43 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 		psTzAppDhccT.setTzAppSText(strTxt);
 		psTzAppDhccT.setTzKxxQtz(strOtherValue);
 		psTzAppDhccTMapper.insert(psTzAppDhccT);
-		
+
 	}
-	
-	//将json数据解析保存到报名表附件存储表
-	private void savePerAttrInfo(String strParentItemId,Map<String, Object> xxxObject ,Long numAppInsId){
-		
+
+	// 将json数据解析保存到报名表附件存储表
+	private void savePerAttrInfo(String strParentItemId, Map<String, Object> xxxObject, Long numAppInsId) {
+
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String strSysFileName = "";
-		if(xxxObject.containsKey("sysFileName")){
-			strSysFileName = xxxObject.get("sysFileName") == null ? "" : String.valueOf(xxxObject.get("sysFileName"));	
+		if (xxxObject.containsKey("sysFileName")) {
+			strSysFileName = xxxObject.get("sysFileName") == null ? "" : String.valueOf(xxxObject.get("sysFileName"));
 		}
 		String strUseFileName = "";
-		if(xxxObject.containsKey("fileName")){
+		if (xxxObject.containsKey("fileName")) {
 			strUseFileName = xxxObject.get("fileName") == null ? "" : String.valueOf(xxxObject.get("fileName"));
-		}else{
-			if(xxxObject.containsKey("filename")){
+		} else {
+			if (xxxObject.containsKey("filename")) {
 				strUseFileName = xxxObject.get("filename") == null ? "" : String.valueOf(xxxObject.get("filename"));
 			}
 		}
 		String strOrderBy = "";
-		if(xxxObject.containsKey("orderby")){
-			strOrderBy = xxxObject.get("orderby") == null ? "" : String.valueOf(xxxObject.get("orderby"));	
+		if (xxxObject.containsKey("orderby")) {
+			strOrderBy = xxxObject.get("orderby") == null ? "" : String.valueOf(xxxObject.get("orderby"));
 		}
 		int numOrderBy = 0;
-		if("".equals(strOrderBy) || strOrderBy == null){
+		if ("".equals(strOrderBy) || strOrderBy == null) {
 			numOrderBy = 0;
-		}else{
+		} else {
 			numOrderBy = Integer.parseInt(strOrderBy);
 		}
-		
+
 		String strPath = "";
-		if(xxxObject.containsKey("accessPath")){
+		if (xxxObject.containsKey("accessPath")) {
 			strPath = xxxObject.get("accessPath") == null ? "" : String.valueOf(xxxObject.get("accessPath"));
 		}
-		
-		if(!"".equals(strSysFileName) && strSysFileName != null
-				&&!"".equals(strUseFileName) && strUseFileName != null){
+
+		if (!"".equals(strSysFileName) && strSysFileName != null && !"".equals(strUseFileName)
+				&& strUseFileName != null) {
 			PsTzFormAttT psTzFormAttT = new PsTzFormAttT();
 			psTzFormAttT.setTzAppInsId(numAppInsId);
 			psTzFormAttT.setTzXxxBh(strParentItemId);
@@ -1842,19 +1952,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzFormAttTMapper.insert(psTzFormAttT);
 		}
 	}
-	
-	/*设置字段是否隐藏*/
-	private void saveXxxHidden(Long numAppInsId ,String strItemId, String strIsHidden){
+
+	/* 设置字段是否隐藏 */
+	private void saveXxxHidden(Long numAppInsId, String strItemId, String strIsHidden) {
 		/**/
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
-		if(count>0){
+		if (count > 0) {
 			PsTzAppHiddenT psTzAppHiddenT = new PsTzAppHiddenT();
 			psTzAppHiddenT.setTzAppInsId(numAppInsId);
 			psTzAppHiddenT.setTzXxxBh(strItemId);
 			psTzAppHiddenT.setTzIsHidden(strIsHidden);
 			psTzAppHiddenTMapper.updateByPrimaryKeySelective(psTzAppHiddenT);
-		}else{
+		} else {
 			PsTzAppHiddenT psTzAppHiddenT = new PsTzAppHiddenT();
 			psTzAppHiddenT.setTzAppInsId(numAppInsId);
 			psTzAppHiddenT.setTzXxxBh(strItemId);
@@ -1862,172 +1972,175 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzAppHiddenTMapper.insert(psTzAppHiddenT);
 		}
 	}
-	
-	//保存报名人信息
-	private void saveBmrPhoto(String strParentItemId,Map<String, Object> xxxObject ,Long numAppInsId){
-		
+
+	// 保存报名人信息
+	private void saveBmrPhoto(String strParentItemId, Map<String, Object> xxxObject, Long numAppInsId) {
+
 		String strSysFileName = "";
-		if(xxxObject.containsKey("sysFileName")){
-			strSysFileName = xxxObject.get("sysFileName") == null ? "" : String.valueOf(xxxObject.get("sysFileName"));	
+		if (xxxObject.containsKey("sysFileName")) {
+			strSysFileName = xxxObject.get("sysFileName") == null ? "" : String.valueOf(xxxObject.get("sysFileName"));
 		}
 		String strUseFileName = "";
-		if(xxxObject.containsKey("filename")){
+		if (xxxObject.containsKey("filename")) {
 			strUseFileName = xxxObject.get("filename") == null ? "" : String.valueOf(xxxObject.get("filename"));
 		}
 		String strImaPath = "";
-		if(xxxObject.containsKey("imaPath")){
+		if (xxxObject.containsKey("imaPath")) {
 			strImaPath = xxxObject.get("imaPath") == null ? "" : String.valueOf(xxxObject.get("imaPath"));
 		}
 		String strPath = "";
-		if(xxxObject.containsKey("path")){
+		if (xxxObject.containsKey("path")) {
 			strPath = xxxObject.get("path") == null ? "" : String.valueOf(xxxObject.get("path"));
 		}
-		
-		if(!"".equals(strSysFileName) && !"".equals(strUseFileName) && !"".equals(strImaPath) && !"".equals(strPath)){
-			
+
+		if (!"".equals(strSysFileName) && !"".equals(strUseFileName) && !"".equals(strImaPath) && !"".equals(strPath)) {
+
 			String strAttPurl = "";
 			String strTzAttachSysfile = "";
 			String sql = "SELECT TZ_ATT_P_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_FORM_PHOTO_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.TZ_APP_INS_ID=?";
 			Map<String, Object> Map = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
-			strAttPurl = Map.get("sysFileName") == null ? "" : String.valueOf(Map.get("TZ_ATT_P_URL"));	
-			strTzAttachSysfile = Map.get("TZ_ATTACHSYSFILENA") == null ? "" : String.valueOf(Map.get("TZ_ATTACHSYSFILENA"));	
+			strAttPurl = Map.get("sysFileName") == null ? "" : String.valueOf(Map.get("TZ_ATT_P_URL"));
+			strTzAttachSysfile = Map.get("TZ_ATTACHSYSFILENA") == null ? ""
+					: String.valueOf(Map.get("TZ_ATTACHSYSFILENA"));
 			sql = "SELECT COUNT(1) FROM PS_TZ_FORM_PHOTO_T WHERE TZ_APP_INS_ID = ?";
 			int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
-			if(count>0){
+			if (count > 0) {
 				PsTzFormPhotoT psTzFormPhotoT = new PsTzFormPhotoT();
 				psTzFormPhotoT.setTzAppInsId(numAppInsId);
 				psTzFormPhotoT.setTzAttachsysfilena(strSysFileName);
 				psTzFormPhotoTMapper.updateByPrimaryKeySelective(psTzFormPhotoT);
-			}else{
+			} else {
 				PsTzFormPhotoT psTzFormPhotoT = new PsTzFormPhotoT();
 				psTzFormPhotoT.setTzAppInsId(numAppInsId);
 				psTzFormPhotoT.setTzAttachsysfilena(strSysFileName);
 				psTzFormPhotoTMapper.insert(psTzFormPhotoT);
 			}
-			//更新TZ_OPR_PHOTO_T//
+			// 更新TZ_OPR_PHOTO_T//
 			sql = "SELECT COUNT(1) FROM PS_TZ_OPR_PHOTO_T WHERE TZ_ATTACHSYSFILENA = ?";
 			int counFile = sqlQuery.queryForObject(sql, new Object[] { strSysFileName }, "Integer");
-			if(counFile>0){
+			if (counFile > 0) {
 				PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
 				psTzOprPhotoT.setTzAttachsysfilena(strSysFileName);
 				psTzOprPhotoT.setTzAttachfileName(strUseFileName);
 				psTzOprPhotoT.setTzAttAUrl(strImaPath);
 				psTzOprPhotoT.setTzAttPUrl(strPath);
 				psTzOprPhotoTMapper.updateByPrimaryKeySelective(psTzOprPhotoT);
-			}else{
+			} else {
 				PsTzOprPhotoT psTzOprPhotoT = new PsTzOprPhotoT();
 				psTzOprPhotoT.setTzAttachsysfilena(strSysFileName);
 				psTzOprPhotoT.setTzAttachfileName(strUseFileName);
 				psTzOprPhotoT.setTzAttAUrl(strImaPath);
 				psTzOprPhotoT.setTzAttPUrl(strPath);
 				psTzOprPhotoTMapper.insert(psTzOprPhotoT);
-			}	
+			}
 		}
 	}
-	
-	//检查是否填写完成
-	private String checkFiledValid(Long numAppInsId,String strTplId,String strPageId,String strOtype){
+
+	// 检查是否填写完成
+	private String checkFiledValid(Long numAppInsId, String strTplId, String strPageId, String strOtype) {
 		String returnMsg = "";
-		   
-	    /*信息项编号*/
-	    String strXxxBh = "";
-	   
-	    /*信息项名称*/
-	    String strXxxMc = "";
-	   
-	    /*控件类名称*/
-	    String strComMc = "";
-	   
-	    /*分页号*/
-	    int numPageNo;
-	   
-	    /*信息项日期格式*/
-	    String strXxxRqgs = "";
-	   
-	    /*信息项日期年份最小值*/
-	    String strXxxXfmin = "";
-	   
-	    /*信息项日期年份最大值*/
-	    String strXxxXfmax = "";
-	   
-	    /*信息项多选最少选择数量*/
-	    String strXxxZsxzgs = "";
-	   
-	    /*信息项多选最多选择数量*/
-	    String strXxxZdxzgs = "";
-	   
-	    /*信息项文件允许上传类型*/
-	    String strXxxYxsclx = "";
-	   
-	    /*信息项文件允许上传大小*/
-	    String strXxxYxscdx = "";
-	   
-	    /*信息项是否必填*/
-	    String strXxxBtBz = "";
-	   
-	    /*信息项是否启用字数范围*/
-	    String strXxxCharBz = "";
-	   
-	    /*信息项字数最小长度*/
-	    int numXxxMinlen;
-	   
-	    /*信息项字数最大长度*/
-	    int numXxxMaxlen;
-	   
-	    /*信息项是否启用数字范围*/
-	    String strXxxNumBz = "";
-	   
-	    /*信息项字数最小长度*/
-	    int numXxxMin;
-	   
-	    /*信息项字数最大长度*/
-	    int numXxxMax;
-	   
-	    /*信息项字段小数位数*/
-	    String strXxxXsws = "";
-	   
-	    /*信息项字段固定格式校验*/
-	    String strXxxGdgsjy = "";
-	   
-	    /*信息项字段是否多容器*/
-	    String strXxxDrqBz = "";
-	   
-	    /*信息项最小行记录数*/
-	    int numXxxMinLine;
-	   
-	    /*信息项最大行记录数*/
-	    int numXxxMaxLine;
-	   
-	    /*推荐信收集齐前是否允许提交报名表*/
-	    String strTjxSub = "";
-	   
-	    /*信息项校验规则*/
-	    String strJygzId;
-	   
-	    String strJygzTsxx;
-	   
-	    /*信息项校验程序*/
-	    String strPath, strName, strMethod;
-	    
-	    int numCurrentPageNo = 0;
-	    
-	    ArrayList<Integer> listPageNo = new ArrayList<Integer>();
-	    
-	    try{
-	    	if(!"".equals(strPageId)){
-		    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
-		    	numCurrentPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId, strPageId }, "Integer");
-		    }
-		    
-		    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL");
-	    
+
+		/* 信息项编号 */
+		String strXxxBh = "";
+
+		/* 信息项名称 */
+		String strXxxMc = "";
+
+		/* 控件类名称 */
+		String strComMc = "";
+
+		/* 分页号 */
+		int numPageNo;
+
+		/* 信息项日期格式 */
+		String strXxxRqgs = "";
+
+		/* 信息项日期年份最小值 */
+		String strXxxXfmin = "";
+
+		/* 信息项日期年份最大值 */
+		String strXxxXfmax = "";
+
+		/* 信息项多选最少选择数量 */
+		String strXxxZsxzgs = "";
+
+		/* 信息项多选最多选择数量 */
+		String strXxxZdxzgs = "";
+
+		/* 信息项文件允许上传类型 */
+		String strXxxYxsclx = "";
+
+		/* 信息项文件允许上传大小 */
+		String strXxxYxscdx = "";
+
+		/* 信息项是否必填 */
+		String strXxxBtBz = "";
+
+		/* 信息项是否启用字数范围 */
+		String strXxxCharBz = "";
+
+		/* 信息项字数最小长度 */
+		int numXxxMinlen;
+
+		/* 信息项字数最大长度 */
+		int numXxxMaxlen;
+
+		/* 信息项是否启用数字范围 */
+		String strXxxNumBz = "";
+
+		/* 信息项字数最小长度 */
+		int numXxxMin;
+
+		/* 信息项字数最大长度 */
+		int numXxxMax;
+
+		/* 信息项字段小数位数 */
+		String strXxxXsws = "";
+
+		/* 信息项字段固定格式校验 */
+		String strXxxGdgsjy = "";
+
+		/* 信息项字段是否多容器 */
+		String strXxxDrqBz = "";
+
+		/* 信息项最小行记录数 */
+		int numXxxMinLine;
+
+		/* 信息项最大行记录数 */
+		int numXxxMaxLine;
+
+		/* 推荐信收集齐前是否允许提交报名表 */
+		String strTjxSub = "";
+
+		/* 信息项校验规则 */
+		String strJygzId;
+
+		String strJygzTsxx;
+
+		/* 信息项校验程序 */
+		String strPath, strName, strMethod;
+
+		int numCurrentPageNo = 0;
+
+		ArrayList<Integer> listPageNo = new ArrayList<Integer>();
+
+		try {
+			if (!"".equals(strPageId)) {
+				String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
+				numCurrentPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId, strPageId },
+						"Integer");
+			}
+
+			String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL");
+
 			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId });
 			for (Object objData : listData) {
 				Map<String, Object> MapData = (Map<String, Object>) objData;
 				strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
 				strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
 				strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
-				numPageNo = MapData.get("TZ_PAGE_NO") == null ? 0 : Integer.valueOf(String.valueOf(MapData.get("TZ_PAGE_NO")));
+				numPageNo = MapData.get("TZ_PAGE_NO") == null ? 0
+						: Integer.valueOf(String.valueOf(MapData.get("TZ_PAGE_NO")));
 				strXxxRqgs = MapData.get("TZ_XXX_RQGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_RQGS"));
 				strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMIN"));
 				strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMAX"));
@@ -2036,220 +2149,240 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 				strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
 				strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
 				strXxxBtBz = MapData.get("TZ_XXX_BT_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BT_BZ"));
-				strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
-				numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
-				numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+				strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? ""
+						: String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
+				numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
+				numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
 				strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
-				numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
-				numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+				numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
+				numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
 				strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
 				strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
 				strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
-				numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
-				numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
+				numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
+				numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0
+						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
 				strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
 				strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
 				strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
-				strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
+				strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? ""
+						: String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
 				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
-				
-				if("save".equals(strOtype)){
-					if(numCurrentPageNo==numPageNo){
+
+				if ("save".equals(strOtype)) {
+					if (numCurrentPageNo == numPageNo) {
 						/*
-						String[] parameterTypes = new String[] {"Long","String","String","String","String",
-								"int","String","String","String","String","String",
-								"String","String","String","String","int","int",
-								"String","int","int","String",
-								"String","String","int","String","String"};
-						Object[] arglist = new Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-								numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-								strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-								strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-								strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx};
-						Object objs = ObjectDoMethod.Load(strPath + "." + strName, strMethod,
-								parameterTypes, arglist);
-								String strReturn = String.valueOf(objs);
-						*/
-						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
+						 * String[] parameterTypes = new String[]
+						 * {"Long","String","String","String","String",
+						 * "int","String","String","String","String","String",
+						 * "String","String","String","String","int","int",
+						 * "String","int","int","String",
+						 * "String","String","int","String","String"}; Object[]
+						 * arglist = new
+						 * Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,
+						 * strComMc,
+						 * numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,
+						 * strXxxZsxzgs,strXxxZdxzgs,
+						 * strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,
+						 * numXxxMinlen,numXxxMaxlen,
+						 * strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
+						 * strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,
+						 * strJygzTsxx}; Object objs =
+						 * ObjectDoMethod.Load(strPath + "." + strName,
+						 * strMethod, parameterTypes, arglist); String strReturn
+						 * = String.valueOf(objs);
+						 */
+						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
+								.getBean(strPath + "." + strName);
 						String strReturn = "";
-						switch(strMethod){
-							case "requireValidator":
-								strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "ahphValidator":
-								strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "charLenValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "valueValidator":
-								strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "regularValidator":
-								strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "dHLineValidator":
-								strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "refLetterValidator":
-								strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
+						switch (strMethod) {
+						case "requireValidator":
+							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "ahphValidator":
+							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "charLenValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "valueValidator":
+							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "regularValidator":
+							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "dHLineValidator":
+							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "refLetterValidator":
+							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
 						}
-						
-						if(!"".equals(strReturn)){
+
+						if (!"".equals(strReturn)) {
 							returnMsg = strReturn;
 							break;
 						}
-					}	
-				}else{
-					/*
-					String[] parameterTypes = new String[] {"String[]" };
-					Object[] arglist = new Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-							strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-							strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx};
-					Object objs = ObjectDoMethod.Load(strPath + "." + strName, strMethod,
-							parameterTypes, arglist);
-					String strReturn = String.valueOf(objs);
-					*/
-					tzOnlineAppUtility tzOnlineAppUtility =
-							(tzOnlineAppUtility) 
-							ctx.getBean(strPath + "." + strName);
-					String strReturn = "";
-					switch(strMethod){
-						case "requireValidator":
-							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "ahphValidator":
-							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "charLenValidator":
-							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "valueValidator":
-							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "regularValidator":
-							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "dHLineValidator":
-							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "refLetterValidator":
-							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
-						case "VerificationCodeValidator":
-							strReturn = tzOnlineAppUtility.VerificationCodeValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-									numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-									strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-									strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-									strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-							break;
 					}
-					if(!"".equals(strReturn)){
-						if(!listPageNo.contains(numPageNo)){
+				} else {
+					/*
+					 * String[] parameterTypes = new String[] {"String[]" };
+					 * Object[] arglist = new
+					 * Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
+					 * numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs
+					 * ,strXxxZdxzgs,
+					 * strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,
+					 * numXxxMinlen,numXxxMaxlen,strXxxNumBz,numXxxMin,numXxxMax
+					 * ,strXxxXsws,
+					 * strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,
+					 * strJygzTsxx}; Object objs = ObjectDoMethod.Load(strPath +
+					 * "." + strName, strMethod, parameterTypes, arglist);
+					 * String strReturn = String.valueOf(objs);
+					 */
+					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
+					String strReturn = "";
+					switch (strMethod) {
+					case "requireValidator":
+						strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "ahphValidator":
+						strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "charLenValidator":
+						strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "valueValidator":
+						strReturn = tzOnlineAppUtility.valueValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "regularValidator":
+						strReturn = tzOnlineAppUtility.regularValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "dHLineValidator":
+						strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "refLetterValidator":
+						strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+								strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs, strXxxZdxzgs,
+								strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen, numXxxMaxlen,
+								strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz, numXxxMinLine,
+								strTjxSub, strJygzTsxx);
+						break;
+					case "VerificationCodeValidator":
+						strReturn = tzOnlineAppUtility.VerificationCodeValidator(numAppInsId, strTplId, strXxxBh,
+								strXxxMc, strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+								strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+								numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy, strXxxDrqBz,
+								numXxxMinLine, strTjxSub, strJygzTsxx);
+						break;
+					}
+					if (!"".equals(strReturn)) {
+						if (!listPageNo.contains(numPageNo)) {
 							listPageNo.add(numPageNo);
 						}
 						returnMsg = returnMsg + strReturn + "<br/>";
-					}	
+					}
 				}
-			} 
-			
-			if("submit".equals(strOtype)){
-				//页面全部设置成完成
-				
+			}
+
+			if ("submit".equals(strOtype)) {
+				// 页面全部设置成完成
+
 				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
-				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, 
-			    		new Object[] { strTplId,"Page" });
+				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, new Object[] { strTplId, "Page" });
 				for (Object ObjValue : ListPageXxxBh) {
 					Map<String, Object> MapXxxBh = (Map<String, Object>) ObjValue;
-					String strPageXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
-					if(strPageXxxBh!=null && !"".equals(strPageXxxBh)){
-				         this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
-			         }
+					String strPageXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? ""
+							: String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
+					if (strPageXxxBh != null && !"".equals(strPageXxxBh)) {
+						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
+					}
 				}
-				
+
 				for (Integer numPageNo2 : listPageNo) {
-			         String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
-			         
-			         String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh, new Object[] { strTplId, "Page" ,numPageNo2 }, "String");
-			         if(strXxxBh2!=null && !"".equals(strXxxBh2)){
-				         this.savePageCompleteState(numAppInsId, strXxxBh2, "N"); 
-			         }
-			    }
+					String sqlGetXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND TZ_PAGE_NO = ?";
+
+					String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh,
+							new Object[] { strTplId, "Page", numPageNo2 }, "String");
+					if (strXxxBh2 != null && !"".equals(strXxxBh2)) {
+						this.savePageCompleteState(numAppInsId, strXxxBh2, "N");
+					}
+				}
 			}
-	    }catch(Exception e){
-	    	e.printStackTrace();
-	    }
-	    return returnMsg;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return returnMsg;
 	}
-	//更新页面完成状态
-	private void savePageCompleteState(Long numAppInsId,String strXxxBh,String strPageCompleteState){
-		
+
+	// 更新页面完成状态
+	private void savePageCompleteState(Long numAppInsId, String strXxxBh, String strPageCompleteState) {
+
 		String sql = "SELECT COUNT(1) FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 		int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strXxxBh }, "Integer");
-		if(count>0){
+		if (count > 0) {
 			PsTzAppCompTbl psTzAppCompTbl = new PsTzAppCompTbl();
 			psTzAppCompTbl.setTzAppInsId(numAppInsId);
 			psTzAppCompTbl.setTzXxxBh(strXxxBh);
 			psTzAppCompTbl.setTzHasComplete(strPageCompleteState);
 			psTzAppCompTblMapper.updateByPrimaryKeySelective(psTzAppCompTbl);
-		}else{
+		} else {
 			PsTzAppCompTbl psTzAppCompTbl = new PsTzAppCompTbl();
 			psTzAppCompTbl.setTzAppInsId(numAppInsId);
 			psTzAppCompTbl.setTzXxxBh(strXxxBh);
@@ -2257,836 +2390,874 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl{
 			psTzAppCompTblMapper.insert(psTzAppCompTbl);
 		}
 	}
-	
-	/*报名表提交后发送邮件*/
-	private String sendSubmitEmail(Long numAppInsId,String strTplId,String strAppOprId,String strAppOrgId,String strTplType){
-		
+
+	/* 报名表提交后发送邮件 */
+	private String sendSubmitEmail(Long numAppInsId, String strTplId, String strAppOprId, String strAppOrgId,
+			String strTplType) {
+
 		String returnMsg = "true";
-	
-		//收件人Email
+
+		// 收件人Email
 		String strEmail = "";
-		//收件人姓名
+		// 收件人姓名
 		String strName = "";
-		//邮件模版
+		// 邮件模版
 		String strEmlTmpId = "";
 		String sql = "SELECT TZ_EML_MODAL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ? AND TZ_ISSENDMAIL = 'Y'";
 		strEmlTmpId = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
-		if(!"".equals(strEmlTmpId)&&strEmlTmpId!=null){
-			if("BMB".equals(strTplType)){
+		if (!"".equals(strEmlTmpId) && strEmlTmpId != null) {
+			if ("BMB".equals(strTplType)) {
 				sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 				strName = sqlQuery.queryForObject(sql, new Object[] { strAppOprId }, "String");
 				sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
 				strEmail = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-				//创建邮件短信发送任务
+				// 创建邮件短信发送任务
 				String strTaskId = createTaskServiceImpl.createTaskIns(strAppOrgId, strEmlTmpId, "MAL", "A");
-				if(strTaskId==null || "".equals(strTaskId)){
+				if (strTaskId == null || "".equals(strTaskId)) {
 					return "false";
 				}
-				//创建短信、邮件发送的听众;
-				String createAudience = createTaskServiceImpl.createAudience(strTaskId,strAppOrgId,"报名表提交发送邮件", "BMB");
-				if("".equals(createAudience)||createAudience==null){
+				// 创建短信、邮件发送的听众;
+				String createAudience = createTaskServiceImpl.createAudience(strTaskId, strAppOrgId, "报名表提交发送邮件",
+						"BMB");
+				if ("".equals(createAudience) || createAudience == null) {
 					return "false";
 				}
-				//为听众添加听众成员
-				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience,strName, strName, "", "", strEmail, "", "", strAppOprId, "", "", String.valueOf(numAppInsId));
-				if(!addAudCy){
+				// 为听众添加听众成员
+				boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", strEmail,
+						"", "", strAppOprId, "", "", String.valueOf(numAppInsId));
+				if (!addAudCy) {
 					return "false";
 				}
-				//得到创建的任务ID
-				if("".equals(strTaskId)||strTaskId==null){
+				// 得到创建的任务ID
+				if ("".equals(strTaskId) || strTaskId == null) {
 					return "false";
-				}else{
-					//发送邮件
-					sendSmsOrMalServiceImpl.send(strTaskId,"");
+				} else {
+					// 发送邮件
+					sendSmsOrMalServiceImpl.send(strTaskId, "");
 				}
-			}else{
+			} else {
 				return "true";
 			}
-		}else{
+		} else {
 			return "true";
 		}
 		return returnMsg;
 	}
-	
-	//同步报名人联系方式
-	private void savaContactInfo(Long numAppInsId,String strTplId,String strAppOprId){
-		//注册信息
-		
-	   /*主要手机*/
-	   String strZysj = "";
-	   String strZysjHb = "";
-	   /*备用手机*/
-	   String strBysj = ""; 
-	   String strBysjHb = "";
-	   /*主要电话*/
-	   String strZydh = "";
-	   String strZydhHb = "";
-	   /*备用电话*/
-	   String strBydh = ""; 
-	   String strBydhHb = "";
-	   /*主要邮箱*/
-	   String strZyyx = ""; 
-	   String strZyyxHb = "";
-	   /*备用邮箱*/
-	   String strByyx = "";
-	   String strByyxHb = "";
-	   /*主要地址*/
-	   String strZydz = "";
-	   String strZydzHb = "";
-	   /*主要邮编*/
-	   String strZyyb = "";
-	   String strZyybHb = "";
-	   /*备要地址*/
-	   String strBydz = "";
-	   String strBydzHb = "";
-	   /*备要邮编*/
-	   String strByyb = "";
-	   String strByybHb = "";
-	   /*微信*/
-	   String strWx = ""; 
-	   String strWxHb = "";
-	   /*skype帐号*/
-	   String strSkype = "";
-	   String strSkypeHb = "";
-	   
-	   /*idcard*/
- 
-	   String strIdCard = ""; 
-	   
-	   String strDxxxBh = "";
-	   String strXxxBhLike = "";
-	   
-	   String strComLmc;
-	   String strXxxBh;
-	   String strSyncType = "";
-	   String strSyncSep = "";
-	   String sqlGetSyncXxx = "";
-	   sqlGetSyncXxx = "SELECT A.TZ_COM_LMC,A.TZ_XXX_BH,B.TZ_SYNC_TYPE,B.TZ_SYNC_SEP FROM PS_TZ_APP_XXXPZ_T A,PS_TZ_APPXX_SYNC_T B WHERE A.TZ_APP_TPL_ID = ? AND A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH AND B.TZ_QY_BZ = 'Y' AND B.TZ_SYNC_TYPE <> ' ' ORDER BY B.TZ_SYNC_ORDER";
-	   List<?> listData = sqlQuery.queryForList(sqlGetSyncXxx, new Object[] { strTplId });
-	   for (Object objData : listData) {
-			Map<String, Object> MapData = (Map<String, Object>) objData;
-			strComLmc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));	
-			   strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
-			   strSyncType = MapData.get("TZ_SYNC_TYPE") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_TYPE"));	
-			   strSyncSep = MapData.get("TZ_SYNC_SEP") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_SEP"));
-			   //查看是否在容器中
-			   String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
-			   strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId,strXxxBh }, "String");
-			   if(!"".equals(strDxxxBh)&&strDxxxBh!=null){
-				   strXxxBhLike = strDxxxBh + strXxxBh;
-			   }else{
-				   strDxxxBh = strXxxBh;
-				   strXxxBhLike = strXxxBh;
-			   }
-			   
-			   String strPhoneArea = "";
-			   String strPhoneNo = "";
-			   
-			   String strProvince = "";
-			   String strAddress = "";
-			   
-			   switch(strSyncType){
-			   		case "ZYSJ":
-			   			if("mobilePhone".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
-			   				strPhoneArea = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
-			   				strPhoneNo = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strPhoneNo)&&strPhoneNo!=null){
-			   					if(!"".equals(strPhoneArea)&&strPhoneArea!=null){
-			   						strZysj = strPhoneArea + "-" + strPhoneNo;
-			   					}else{
-			   						strZysj = strPhoneNo;
-			   					}
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strZysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//主要手机合并
-			   			if(!"".equals(strZysjHb)&&strZysjHb!=null){
-			   				if(!"".equals(strZysj)&&strZysj!=null){
-			   					strZysjHb = strZysjHb + strSyncSep + strZysj;
-				   			}
-			   			}else{
-			   				if(!"".equals(strZysj)&&strZysj!=null){
-			   					strZysjHb = strZysj;
-				   			}
-			   			}
-			   			break;
-			   		case "BYSJ":
-			   			if("mobilePhone".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
-			   				strPhoneArea = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
-			   				strPhoneNo = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strPhoneNo)&&strPhoneNo!=null){
-			   					if(!"".equals(strPhoneArea)&&strPhoneArea!=null){
-			   						strBysj = strPhoneArea + "-" + strPhoneNo;
-			   					}else{
-			   						strBysj = strPhoneNo;
-			   					}
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strBysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//备用手机合并
-			   			if(!"".equals(strBysjHb)&&strBysjHb!=null){
-			   				if(!"".equals(strBysj)&&strBysj!=null){
-			   					strBysjHb = strBysjHb + strSyncSep + strBysj;
-				   			}
-			   			}else{
-			   				if(!"".equals(strBysj)&&strBysj!=null){
-			   					strBysjHb = strBysj;
-				   			}
-			   			}
-			   			break;
-			   		case "ZYDH":
-			   			if("mobilePhone".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
-			   				strPhoneArea = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
-			   				strPhoneNo = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strPhoneNo)&&strPhoneNo!=null){
-			   					if(!"".equals(strPhoneArea)&&strPhoneArea!=null){
-			   						strZydh = strPhoneArea + "-" + strPhoneNo;
-			   					}else{
-			   						strZydh = strPhoneNo;
-			   					}
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strZydh = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//主要电话合并
-			   			if(!"".equals(strZydhHb)&&strZydhHb!=null){
-			   				if(!"".equals(strZydh)&&strZydh!=null){
-			   					strZydhHb = strBysjHb + strSyncSep + strZydh;
-				   			}
-			   			}else{
-			   				if(!"".equals(strZydh)&&strZydh!=null){
-			   					strZydhHb = strZydh;
-				   			}
-			   			}
-			   			break;
-			   		case "BYDH":
-			   			if("mobilePhone".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
-			   				strPhoneArea = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
-			   				strPhoneNo = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strPhoneNo)&&strPhoneNo!=null){
-			   					if(!"".equals(strPhoneArea)&&strPhoneArea!=null){
-			   						strBydh = strPhoneArea + "-" + strPhoneNo;
-			   					}else{
-			   						strBydh = strPhoneNo;
-			   					}
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strBysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//备用电话合并
-			   			if(!"".equals(strBydhHb)&&strBydhHb!=null){
-			   				if(!"".equals(strBydh)&&strBydh!=null){
-			   					strBydhHb = strBydhHb + strSyncSep + strBydh;
-				   			}
-			   			}else{
-			   				if(!"".equals(strBydh)&&strBydh!=null){
-			   					strBydhHb = strBydh;
-				   			}
-			   			}
-			   			break;
-			   		case "ZYYX":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strZyyx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//主要邮箱合并
-			   			if(!"".equals(strZyyxHb)&&strZyyxHb!=null){
-			   				if(!"".equals(strZyyx)&&strZyyx!=null){
-			   					strZyyxHb = strZyyxHb + strSyncSep + strZyyx;
-				   			}
-			   			}else{
-			   				if(!"".equals(strZyyx)&&strZyyx!=null){
-			   					strZyyxHb = strZyyx;
-				   			}
-			   			}
-			   			break;
-			   		case "BYYX":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strByyx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//备用邮箱合并
-			   			if(!"".equals(strByyxHb)&&strByyxHb!=null){
-			   				if(!"".equals(strZyyx)&&strZyyx!=null){
-			   					strByyxHb = strByyxHb + strSyncSep + strByyx;
-				   			}
-			   			}else{
-			   				if(!"".equals(strByyx)&&strByyx!=null){
-			   					strByyxHb = strByyx;
-				   			}
-			   			}
-			   			break;
-			   		case "ZYDZ":
-			   			if("MailingAddress".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'province'";
-			   				strProvince = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'address'";
-			   				strAddress = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strProvince)&&strProvince!=null&&!"".equals(strAddress)&&strAddress!=null){
-			   						strZydz = strProvince + strAddress;
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strZydz = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//主要地址合并
-			   			if(!"".equals(strZydzHb)&&strZydzHb!=null){
-			   				if(!"".equals(strZydz)&&strZydz!=null){
-			   					strZydzHb = strZydzHb + strSyncSep + strZydz;
-				   			}
-			   			}else{
-			   				if(!"".equals(strZydz)&&strZydz!=null){
-			   					strZydzHb = strZydz;
-				   			}
-			   			}
-			   			break;
-			   		case "ZYYB":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strZyyb = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//主要邮编合并
-			   			if(!"".equals(strZyybHb)&&strZyybHb!=null){
-			   				if(!"".equals(strZyyb)&&strZyyb!=null){
-			   					strByyxHb = strByyxHb + strSyncSep + strZyyb;
-				   			}
-			   			}else{
-			   				if(!"".equals(strZyyb)&&strZyyb!=null){
-			   					strZyybHb = strZyyb;
-				   			}
-			   			}
-			   			break;
-			   		case "BYDZ":
-			   			if("MailingAddress".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'province'";
-			   				strProvince = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'address'";
-			   				strAddress = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				if(!"".equals(strProvince)&&strProvince!=null&&!"".equals(strAddress)&&strAddress!=null){
-			   						strBydz = strProvince + strAddress;
-			   				}
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strBydz = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			//次要地址合并
-			   			if(!"".equals(strBydzHb)&&strBydzHb!=null){
-			   				if(!"".equals(strBydz)&&strBydz!=null){
-			   					strBydzHb = strZydzHb + strSyncSep + strBydz;
-				   			}
-			   			}else{
-			   				if(!"".equals(strBydz)&&strBydz!=null){
-			   					strBydzHb = strBydz;
-				   			}
-			   			}
-			   			break;
-			   		case "BYYB":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strByyb = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//备用邮编合并
-			   			if(!"".equals(strByybHb)&&strByybHb!=null){
-			   				if(!"".equals(strByyb)&&strByyb!=null){
-			   					strByybHb = strByybHb + strSyncSep + strByyb;
-				   			}
-			   			}else{
-			   				if(!"".equals(strByyb)&&strByyb!=null){
-			   					strByybHb = strByyb;
-				   			}
-			   			}
-			   			break;
-			   		case "WX":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strWx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//微信合并
-			   			if(!"".equals(strWxHb)&&strWxHb!=null){
-			   				if(!"".equals(strWx)&&strWx!=null){
-			   					strWxHb = strByybHb + strSyncSep + strWx;
-				   			}
-			   			}else{
-			   				if(!"".equals(strWx)&&strWx!=null){
-			   					strWxHb = strWx;
-				   			}
-			   			}
-			   			break;
-			   		case "SKY":
-		   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-		   				strSkype = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			//Skype合并
-			   			if(!"".equals(strSkypeHb)&&strSkypeHb!=null){
-			   				if(!"".equals(strSkype)&&strSkype!=null){
-			   					strSkypeHb = strByybHb + strSyncSep + strSkype;
-				   			}
-			   			}else{
-			   				if(!"".equals(strSkype)&&strSkype!=null){
-			   					strSkypeHb = strSkype;
-				   			}
-			   			}
-			   			break;
-			   		case "IDCARD":
-			   			/*证件号码同步*/
-			   			if("CertificateNum".equals(strComLmc)){
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'com_CerNum'";
-			   				strIdCard = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strDxxxBh,strXxxBhLike + "%" }, "String");
-			   				
-			   			}else{
-			   				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
-			   				strIdCard = sqlQuery.queryForObject(sql, new Object[] { numAppInsId,strTplId,strXxxBh }, "String");
-			   			}
-			   			break;
-			   }
-	   }
 
-	   //查询注册信息中的数据
-	   /*主要手机*/
-	   String strZysjZc = "";
-	   /*备用手机*/
-	   String strBysjZc = ""; 
-	   /*主要电话*/
-	   String strZydhZc = "";
-	   /*备用电话*/
-	   String strBydhZc = ""; 
-	   /*主要邮箱*/
-	   String strZyyxZc = ""; 
-	   /*备用邮箱*/
-	   String strByyxZc = "";
-	   /*主要地址*/
-	   String strZydzZc = "";
-	   /*主要邮编*/
-	   String strZyybZc = "";
-	   /*备要地址*/
-	   String strBydzZc = "";
-	   /*备要邮编*/
-	   String strByybZc = "";
-	   /*微信*/
-	   String strWxZc = ""; 
-	   /*skype帐号*/
-	   String strSkypeZc = "";
-	   
-	   String sqlGetZcInfo = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_ZY_TXYB,TZ_CY_TXDZ,TZ_CY_TXYB,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = ? AND TZ_LYDX_ID = ?";
-	   Map<String, Object> MapGetZcInfo = sqlQuery.queryForMap(sqlGetZcInfo,new Object[] { "ZCYH",strAppOprId });
-	   if(MapGetZcInfo != null){
-		   strZysjZc = MapGetZcInfo.get("TZ_ZY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_SJ"));
-		   strBysjZc = MapGetZcInfo.get("TZ_CY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_SJ"));
-		   strZydhZc = MapGetZcInfo.get("TZ_ZY_DH") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_DH"));
-		   strBydhZc = MapGetZcInfo.get("TZ_CY_DH") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_DH"));
-		   strZyyxZc = MapGetZcInfo.get("TZ_ZY_EMAIL") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_EMAIL"));
-		   strByyxZc = MapGetZcInfo.get("TZ_CY_EMAIL") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_EMAIL"));
-		   strZydzZc = MapGetZcInfo.get("TZ_ZY_TXDZ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_TXDZ"));
-		   strZyybZc = MapGetZcInfo.get("TZ_ZY_TXYB") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_TXYB"));
-		   strBydzZc = MapGetZcInfo.get("TZ_CY_TXDZ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_TXDZ"));
-		   strByybZc = MapGetZcInfo.get("TZ_CY_TXYB") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_TXYB"));
-		   strWxZc = MapGetZcInfo.get("TZ_WEIXIN") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_WEIXIN"));
-		   strSkypeZc = MapGetZcInfo.get("TZ_SKYPE") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_SKYPE"));
-		   if("".equals(strZysjHb)||strZysjHb==null){
-			   strZysjHb = strZysjZc;
-		   }
-		   if("".equals(strBysjHb)||strBysjHb==null){
-			   strBysjHb = strBysjZc;
-		   }
-		   if("".equals(strZydhHb)||strZydhHb==null){
-			   strZydhHb = strZydhZc;
-		   }
-		   if("".equals(strBydhHb)||strBydhHb==null){
-			   strBydhHb = strBydhZc;
-		   }
-		   if("".equals(strZyyxHb)||strZyyxHb==null){
-			   strZyyxHb = strZyyxZc;
-		   }
-		   if("".equals(strByyxHb)||strByyxHb==null){
-			   strByyxHb = strByyxZc;
-		   }
-		   if("".equals(strZydzHb)||strZydzHb==null){
-			   strZydzHb = strZydzZc;
-		   }
-		   if("".equals(strZyybHb)||strZyybHb==null){
-			   strZyybHb = strZyybZc;
-		   }
-		   if("".equals(strBydzHb)||strBydzHb==null){
-			   strBydzHb = strBydzZc;
-		   }
-		   if("".equals(strByybHb)||strByybHb==null){
-			   strByybHb = strByybZc;
-		   }
-		   if("".equals(strWxHb)||strWxHb==null){
-			   strWxHb = strWxZc;
-		   }
-		   if("".equals(strSkypeHb)||strSkypeHb==null){
-			   strSkypeHb = strSkypeZc;
-		   }
-	   }
-	   
-	   //mysql如果字符过长会报错，需要截取长度
-	   if(strZysjHb.length()>20){
-		   strZysjHb = strZysjHb.substring(0, 20);
-	   }
-	   if(strBysjHb.length()>20){
-		   strBysjHb = strBysjHb.substring(0, 20);
-	   }
-	   if(strZydhHb.length()>20){
-		   strZydhHb = strZydhHb.substring(0, 20);
-	   }
-	   if(strBydhHb.length()>20){
-		   strBydhHb = strBydhHb.substring(0, 20);
-	   }
-	   if(strZyyxHb.length()>100){
-		   strZyyxHb = strZyyxHb.substring(0, 100);
-	   }
-	   if(strByyxHb.length()>100){
-		   strByyxHb = strByyxHb.substring(0, 100);
-	   }
-	   if(strZydzHb.length()>254){
-		   strZydzHb = strZydzHb.substring(0, 254);
-	   }
-	   if(strZyybHb.length()>10){
-		   strZyybHb = strZyybHb.substring(0, 10);
-	   }
-	   if(strBydzHb.length()>254){
-		   strBydzHb = strBydzHb.substring(0, 254);
-	   }
-	   if(strByybHb.length()>10){
-		   strByybHb = strByybHb.substring(0, 10);
-	   }
-	   if(strWxHb.length()>20){
-		   strWxHb = strWxHb.substring(0, 20);
-	   }
-	   if(strSkypeHb.length()>70){
-		   strSkypeHb = strSkypeHb.substring(0, 70);
-	   }
-	   if(strIdCard.length()>20){
-		   strIdCard = strIdCard.substring(0, 20);
-	   }
-	   
-	   String sqlCount = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZSBM' AND TZ_LYDX_ID = ?";
-	   String strAppInsId = String.valueOf(numAppInsId);
-	   int count = sqlQuery.queryForObject(sqlCount, new Object[] { strAppInsId }, "Integer");
-	   if(count>0){
-		   PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
-		   psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-		   psTzLxfsInfoTbl.setTzLydxId(strAppInsId);
-		   psTzLxfsInfoTbl.setTzZySj(strZysjHb);
-		   psTzLxfsInfoTbl.setTzCySj(strBysjHb);
-		   psTzLxfsInfoTbl.setTzZyDh(strZydhHb);
-		   psTzLxfsInfoTbl.setTzCyDh(strBydhHb);
-		   psTzLxfsInfoTbl.setTzZyEmail(strZyyxHb);
-		   psTzLxfsInfoTbl.setTzCyEmail(strByyxHb);
-		   psTzLxfsInfoTbl.setTzZyTxdz(strZydzHb);
-		   psTzLxfsInfoTbl.setTzZyTxyb(strZyybHb);
-		   psTzLxfsInfoTbl.setTzCyTxdz(strBydzHb);
-		   psTzLxfsInfoTbl.setTzCyTxyb(strByybHb);
-		   psTzLxfsInfoTbl.setTzWeixin(strWxHb);
-		   psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
-		   psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
-	   }else{
-		   PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
-		   psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-		   psTzLxfsInfoTbl.setTzLydxId(strAppInsId);
-		   psTzLxfsInfoTbl.setTzZySj(strZysjHb);
-		   psTzLxfsInfoTbl.setTzCySj(strBysjHb);
-		   psTzLxfsInfoTbl.setTzZyDh(strZydhHb);
-		   psTzLxfsInfoTbl.setTzCyDh(strBydhHb);
-		   psTzLxfsInfoTbl.setTzZyEmail(strZyyxHb);
-		   psTzLxfsInfoTbl.setTzCyEmail(strByyxHb);
-		   psTzLxfsInfoTbl.setTzZyTxdz(strZydzHb);
-		   psTzLxfsInfoTbl.setTzZyTxyb(strZyybHb);
-		   psTzLxfsInfoTbl.setTzCyTxdz(strBydzHb);
-		   psTzLxfsInfoTbl.setTzCyTxyb(strByybHb);
-		   psTzLxfsInfoTbl.setTzWeixin(strWxHb);
-		   psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
-		   psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
-	   }
-	   
-	   /*同步身份证信息*/
-	   if(!"".equals(strIdCard)&&strIdCard!=null){
-		   String sqlRegInfoCount = "SELECT COUNT(1) FROM PS_TZ_REG_USER_T WHERE OPRID = ?";
-		   
-		   int regInfocount = sqlQuery.queryForObject(sqlRegInfoCount, new Object[] { strAppOprId }, "Integer");
-		   if(regInfocount>0){
-			    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
-			    psTzRegUserT.setOprid(strAppOprId);
-			    psTzRegUserT.setNationalId(strIdCard);
-			    psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
-		   }
-	   } 
+	// 同步报名人联系方式
+	private void savaContactInfo(Long numAppInsId, String strTplId, String strAppOprId) {
+		// 注册信息
+
+		/* 主要手机 */
+		String strZysj = "";
+		String strZysjHb = "";
+		/* 备用手机 */
+		String strBysj = "";
+		String strBysjHb = "";
+		/* 主要电话 */
+		String strZydh = "";
+		String strZydhHb = "";
+		/* 备用电话 */
+		String strBydh = "";
+		String strBydhHb = "";
+		/* 主要邮箱 */
+		String strZyyx = "";
+		String strZyyxHb = "";
+		/* 备用邮箱 */
+		String strByyx = "";
+		String strByyxHb = "";
+		/* 主要地址 */
+		String strZydz = "";
+		String strZydzHb = "";
+		/* 主要邮编 */
+		String strZyyb = "";
+		String strZyybHb = "";
+		/* 备要地址 */
+		String strBydz = "";
+		String strBydzHb = "";
+		/* 备要邮编 */
+		String strByyb = "";
+		String strByybHb = "";
+		/* 微信 */
+		String strWx = "";
+		String strWxHb = "";
+		/* skype帐号 */
+		String strSkype = "";
+		String strSkypeHb = "";
+
+		/* idcard */
+
+		String strIdCard = "";
+
+		String strDxxxBh = "";
+		String strXxxBhLike = "";
+
+		String strComLmc;
+		String strXxxBh;
+		String strSyncType = "";
+		String strSyncSep = "";
+		String sqlGetSyncXxx = "";
+		sqlGetSyncXxx = "SELECT A.TZ_COM_LMC,A.TZ_XXX_BH,B.TZ_SYNC_TYPE,B.TZ_SYNC_SEP FROM PS_TZ_APP_XXXPZ_T A,PS_TZ_APPXX_SYNC_T B WHERE A.TZ_APP_TPL_ID = ? AND A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH AND B.TZ_QY_BZ = 'Y' AND B.TZ_SYNC_TYPE <> ' ' ORDER BY B.TZ_SYNC_ORDER";
+		List<?> listData = sqlQuery.queryForList(sqlGetSyncXxx, new Object[] { strTplId });
+		for (Object objData : listData) {
+			Map<String, Object> MapData = (Map<String, Object>) objData;
+			strComLmc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
+			strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
+			strSyncType = MapData.get("TZ_SYNC_TYPE") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_TYPE"));
+			strSyncSep = MapData.get("TZ_SYNC_SEP") == null ? "" : String.valueOf(MapData.get("TZ_SYNC_SEP"));
+			// 查看是否在容器中
+			String sql = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 0,1";
+			strDxxxBh = sqlQuery.queryForObject(sql, new Object[] { strTplId, strXxxBh }, "String");
+			if (!"".equals(strDxxxBh) && strDxxxBh != null) {
+				strXxxBhLike = strDxxxBh + strXxxBh;
+			} else {
+				strDxxxBh = strXxxBh;
+				strXxxBhLike = strXxxBh;
+			}
+
+			String strPhoneArea = "";
+			String strPhoneNo = "";
+
+			String strProvince = "";
+			String strAddress = "";
+
+			switch (strSyncType) {
+			case "ZYSJ":
+				if ("mobilePhone".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
+					strPhoneArea = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
+					strPhoneNo = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strPhoneNo) && strPhoneNo != null) {
+						if (!"".equals(strPhoneArea) && strPhoneArea != null) {
+							strZysj = strPhoneArea + "-" + strPhoneNo;
+						} else {
+							strZysj = strPhoneNo;
+						}
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strZysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 主要手机合并
+				if (!"".equals(strZysjHb) && strZysjHb != null) {
+					if (!"".equals(strZysj) && strZysj != null) {
+						strZysjHb = strZysjHb + strSyncSep + strZysj;
+					}
+				} else {
+					if (!"".equals(strZysj) && strZysj != null) {
+						strZysjHb = strZysj;
+					}
+				}
+				break;
+			case "BYSJ":
+				if ("mobilePhone".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
+					strPhoneArea = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
+					strPhoneNo = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strPhoneNo) && strPhoneNo != null) {
+						if (!"".equals(strPhoneArea) && strPhoneArea != null) {
+							strBysj = strPhoneArea + "-" + strPhoneNo;
+						} else {
+							strBysj = strPhoneNo;
+						}
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strBysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 备用手机合并
+				if (!"".equals(strBysjHb) && strBysjHb != null) {
+					if (!"".equals(strBysj) && strBysj != null) {
+						strBysjHb = strBysjHb + strSyncSep + strBysj;
+					}
+				} else {
+					if (!"".equals(strBysj) && strBysj != null) {
+						strBysjHb = strBysj;
+					}
+				}
+				break;
+			case "ZYDH":
+				if ("mobilePhone".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
+					strPhoneArea = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
+					strPhoneNo = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strPhoneNo) && strPhoneNo != null) {
+						if (!"".equals(strPhoneArea) && strPhoneArea != null) {
+							strZydh = strPhoneArea + "-" + strPhoneNo;
+						} else {
+							strZydh = strPhoneNo;
+						}
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strZydh = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 主要电话合并
+				if (!"".equals(strZydhHb) && strZydhHb != null) {
+					if (!"".equals(strZydh) && strZydh != null) {
+						strZydhHb = strBysjHb + strSyncSep + strZydh;
+					}
+				} else {
+					if (!"".equals(strZydh) && strZydh != null) {
+						strZydhHb = strZydh;
+					}
+				}
+				break;
+			case "BYDH":
+				if ("mobilePhone".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_area'";
+					strPhoneArea = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'mobile_no'";
+					strPhoneNo = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strPhoneNo) && strPhoneNo != null) {
+						if (!"".equals(strPhoneArea) && strPhoneArea != null) {
+							strBydh = strPhoneArea + "-" + strPhoneNo;
+						} else {
+							strBydh = strPhoneNo;
+						}
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strBysj = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 备用电话合并
+				if (!"".equals(strBydhHb) && strBydhHb != null) {
+					if (!"".equals(strBydh) && strBydh != null) {
+						strBydhHb = strBydhHb + strSyncSep + strBydh;
+					}
+				} else {
+					if (!"".equals(strBydh) && strBydh != null) {
+						strBydhHb = strBydh;
+					}
+				}
+				break;
+			case "ZYYX":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strZyyx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// 主要邮箱合并
+				if (!"".equals(strZyyxHb) && strZyyxHb != null) {
+					if (!"".equals(strZyyx) && strZyyx != null) {
+						strZyyxHb = strZyyxHb + strSyncSep + strZyyx;
+					}
+				} else {
+					if (!"".equals(strZyyx) && strZyyx != null) {
+						strZyyxHb = strZyyx;
+					}
+				}
+				break;
+			case "BYYX":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strByyx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// 备用邮箱合并
+				if (!"".equals(strByyxHb) && strByyxHb != null) {
+					if (!"".equals(strZyyx) && strZyyx != null) {
+						strByyxHb = strByyxHb + strSyncSep + strByyx;
+					}
+				} else {
+					if (!"".equals(strByyx) && strByyx != null) {
+						strByyxHb = strByyx;
+					}
+				}
+				break;
+			case "ZYDZ":
+				if ("MailingAddress".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'province'";
+					strProvince = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'address'";
+					strAddress = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strProvince) && strProvince != null && !"".equals(strAddress)
+							&& strAddress != null) {
+						strZydz = strProvince + strAddress;
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strZydz = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 主要地址合并
+				if (!"".equals(strZydzHb) && strZydzHb != null) {
+					if (!"".equals(strZydz) && strZydz != null) {
+						strZydzHb = strZydzHb + strSyncSep + strZydz;
+					}
+				} else {
+					if (!"".equals(strZydz) && strZydz != null) {
+						strZydzHb = strZydz;
+					}
+				}
+				break;
+			case "ZYYB":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strZyyb = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// 主要邮编合并
+				if (!"".equals(strZyybHb) && strZyybHb != null) {
+					if (!"".equals(strZyyb) && strZyyb != null) {
+						strByyxHb = strByyxHb + strSyncSep + strZyyb;
+					}
+				} else {
+					if (!"".equals(strZyyb) && strZyyb != null) {
+						strZyybHb = strZyyb;
+					}
+				}
+				break;
+			case "BYDZ":
+				if ("MailingAddress".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'province'";
+					strProvince = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'address'";
+					strAddress = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+					if (!"".equals(strProvince) && strProvince != null && !"".equals(strAddress)
+							&& strAddress != null) {
+						strBydz = strProvince + strAddress;
+					}
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strBydz = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				}
+				// 次要地址合并
+				if (!"".equals(strBydzHb) && strBydzHb != null) {
+					if (!"".equals(strBydz) && strBydz != null) {
+						strBydzHb = strZydzHb + strSyncSep + strBydz;
+					}
+				} else {
+					if (!"".equals(strBydz) && strBydz != null) {
+						strBydzHb = strBydz;
+					}
+				}
+				break;
+			case "BYYB":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strByyb = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// 备用邮编合并
+				if (!"".equals(strByybHb) && strByybHb != null) {
+					if (!"".equals(strByyb) && strByyb != null) {
+						strByybHb = strByybHb + strSyncSep + strByyb;
+					}
+				} else {
+					if (!"".equals(strByyb) && strByyb != null) {
+						strByybHb = strByyb;
+					}
+				}
+				break;
+			case "WX":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strWx = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// 微信合并
+				if (!"".equals(strWxHb) && strWxHb != null) {
+					if (!"".equals(strWx) && strWx != null) {
+						strWxHb = strByybHb + strSyncSep + strWx;
+					}
+				} else {
+					if (!"".equals(strWx) && strWx != null) {
+						strWxHb = strWx;
+					}
+				}
+				break;
+			case "SKY":
+				sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+				strSkype = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh }, "String");
+				// Skype合并
+				if (!"".equals(strSkypeHb) && strSkypeHb != null) {
+					if (!"".equals(strSkype) && strSkype != null) {
+						strSkypeHb = strByybHb + strSyncSep + strSkype;
+					}
+				} else {
+					if (!"".equals(strSkype) && strSkype != null) {
+						strSkypeHb = strSkype;
+					}
+				}
+				break;
+			case "IDCARD":
+				/* 证件号码同步 */
+				if ("CertificateNum".equals(strComLmc)) {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO = 'com_CerNum'";
+					strIdCard = sqlQuery.queryForObject(sql,
+							new Object[] { numAppInsId, strTplId, strDxxxBh, strXxxBhLike + "%" }, "String");
+
+				} else {
+					sql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+					strIdCard = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strTplId, strXxxBh },
+							"String");
+				}
+				break;
+			}
+		}
+
+		// 查询注册信息中的数据
+		/* 主要手机 */
+		String strZysjZc = "";
+		/* 备用手机 */
+		String strBysjZc = "";
+		/* 主要电话 */
+		String strZydhZc = "";
+		/* 备用电话 */
+		String strBydhZc = "";
+		/* 主要邮箱 */
+		String strZyyxZc = "";
+		/* 备用邮箱 */
+		String strByyxZc = "";
+		/* 主要地址 */
+		String strZydzZc = "";
+		/* 主要邮编 */
+		String strZyybZc = "";
+		/* 备要地址 */
+		String strBydzZc = "";
+		/* 备要邮编 */
+		String strByybZc = "";
+		/* 微信 */
+		String strWxZc = "";
+		/* skype帐号 */
+		String strSkypeZc = "";
+
+		String sqlGetZcInfo = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_ZY_TXYB,TZ_CY_TXDZ,TZ_CY_TXYB,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = ? AND TZ_LYDX_ID = ?";
+		Map<String, Object> MapGetZcInfo = sqlQuery.queryForMap(sqlGetZcInfo, new Object[] { "ZCYH", strAppOprId });
+		if (MapGetZcInfo != null) {
+			strZysjZc = MapGetZcInfo.get("TZ_ZY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_SJ"));
+			strBysjZc = MapGetZcInfo.get("TZ_CY_SJ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_SJ"));
+			strZydhZc = MapGetZcInfo.get("TZ_ZY_DH") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_DH"));
+			strBydhZc = MapGetZcInfo.get("TZ_CY_DH") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_DH"));
+			strZyyxZc = MapGetZcInfo.get("TZ_ZY_EMAIL") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_EMAIL"));
+			strByyxZc = MapGetZcInfo.get("TZ_CY_EMAIL") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_EMAIL"));
+			strZydzZc = MapGetZcInfo.get("TZ_ZY_TXDZ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_TXDZ"));
+			strZyybZc = MapGetZcInfo.get("TZ_ZY_TXYB") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_ZY_TXYB"));
+			strBydzZc = MapGetZcInfo.get("TZ_CY_TXDZ") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_TXDZ"));
+			strByybZc = MapGetZcInfo.get("TZ_CY_TXYB") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_CY_TXYB"));
+			strWxZc = MapGetZcInfo.get("TZ_WEIXIN") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_WEIXIN"));
+			strSkypeZc = MapGetZcInfo.get("TZ_SKYPE") == null ? "" : String.valueOf(MapGetZcInfo.get("TZ_SKYPE"));
+			if ("".equals(strZysjHb) || strZysjHb == null) {
+				strZysjHb = strZysjZc;
+			}
+			if ("".equals(strBysjHb) || strBysjHb == null) {
+				strBysjHb = strBysjZc;
+			}
+			if ("".equals(strZydhHb) || strZydhHb == null) {
+				strZydhHb = strZydhZc;
+			}
+			if ("".equals(strBydhHb) || strBydhHb == null) {
+				strBydhHb = strBydhZc;
+			}
+			if ("".equals(strZyyxHb) || strZyyxHb == null) {
+				strZyyxHb = strZyyxZc;
+			}
+			if ("".equals(strByyxHb) || strByyxHb == null) {
+				strByyxHb = strByyxZc;
+			}
+			if ("".equals(strZydzHb) || strZydzHb == null) {
+				strZydzHb = strZydzZc;
+			}
+			if ("".equals(strZyybHb) || strZyybHb == null) {
+				strZyybHb = strZyybZc;
+			}
+			if ("".equals(strBydzHb) || strBydzHb == null) {
+				strBydzHb = strBydzZc;
+			}
+			if ("".equals(strByybHb) || strByybHb == null) {
+				strByybHb = strByybZc;
+			}
+			if ("".equals(strWxHb) || strWxHb == null) {
+				strWxHb = strWxZc;
+			}
+			if ("".equals(strSkypeHb) || strSkypeHb == null) {
+				strSkypeHb = strSkypeZc;
+			}
+		}
+
+		// mysql如果字符过长会报错，需要截取长度
+		if (strZysjHb.length() > 20) {
+			strZysjHb = strZysjHb.substring(0, 20);
+		}
+		if (strBysjHb.length() > 20) {
+			strBysjHb = strBysjHb.substring(0, 20);
+		}
+		if (strZydhHb.length() > 20) {
+			strZydhHb = strZydhHb.substring(0, 20);
+		}
+		if (strBydhHb.length() > 20) {
+			strBydhHb = strBydhHb.substring(0, 20);
+		}
+		if (strZyyxHb.length() > 100) {
+			strZyyxHb = strZyyxHb.substring(0, 100);
+		}
+		if (strByyxHb.length() > 100) {
+			strByyxHb = strByyxHb.substring(0, 100);
+		}
+		if (strZydzHb.length() > 254) {
+			strZydzHb = strZydzHb.substring(0, 254);
+		}
+		if (strZyybHb.length() > 10) {
+			strZyybHb = strZyybHb.substring(0, 10);
+		}
+		if (strBydzHb.length() > 254) {
+			strBydzHb = strBydzHb.substring(0, 254);
+		}
+		if (strByybHb.length() > 10) {
+			strByybHb = strByybHb.substring(0, 10);
+		}
+		if (strWxHb.length() > 20) {
+			strWxHb = strWxHb.substring(0, 20);
+		}
+		if (strSkypeHb.length() > 70) {
+			strSkypeHb = strSkypeHb.substring(0, 70);
+		}
+		if (strIdCard.length() > 20) {
+			strIdCard = strIdCard.substring(0, 20);
+		}
+
+		String sqlCount = "SELECT COUNT(1) FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZSBM' AND TZ_LYDX_ID = ?";
+		String strAppInsId = String.valueOf(numAppInsId);
+		int count = sqlQuery.queryForObject(sqlCount, new Object[] { strAppInsId }, "Integer");
+		if (count > 0) {
+			PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
+			psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
+			psTzLxfsInfoTbl.setTzLydxId(strAppInsId);
+			psTzLxfsInfoTbl.setTzZySj(strZysjHb);
+			psTzLxfsInfoTbl.setTzCySj(strBysjHb);
+			psTzLxfsInfoTbl.setTzZyDh(strZydhHb);
+			psTzLxfsInfoTbl.setTzCyDh(strBydhHb);
+			psTzLxfsInfoTbl.setTzZyEmail(strZyyxHb);
+			psTzLxfsInfoTbl.setTzCyEmail(strByyxHb);
+			psTzLxfsInfoTbl.setTzZyTxdz(strZydzHb);
+			psTzLxfsInfoTbl.setTzZyTxyb(strZyybHb);
+			psTzLxfsInfoTbl.setTzCyTxdz(strBydzHb);
+			psTzLxfsInfoTbl.setTzCyTxyb(strByybHb);
+			psTzLxfsInfoTbl.setTzWeixin(strWxHb);
+			psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
+			psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
+		} else {
+			PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
+			psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
+			psTzLxfsInfoTbl.setTzLydxId(strAppInsId);
+			psTzLxfsInfoTbl.setTzZySj(strZysjHb);
+			psTzLxfsInfoTbl.setTzCySj(strBysjHb);
+			psTzLxfsInfoTbl.setTzZyDh(strZydhHb);
+			psTzLxfsInfoTbl.setTzCyDh(strBydhHb);
+			psTzLxfsInfoTbl.setTzZyEmail(strZyyxHb);
+			psTzLxfsInfoTbl.setTzCyEmail(strByyxHb);
+			psTzLxfsInfoTbl.setTzZyTxdz(strZydzHb);
+			psTzLxfsInfoTbl.setTzZyTxyb(strZyybHb);
+			psTzLxfsInfoTbl.setTzCyTxdz(strBydzHb);
+			psTzLxfsInfoTbl.setTzCyTxyb(strByybHb);
+			psTzLxfsInfoTbl.setTzWeixin(strWxHb);
+			psTzLxfsInfoTbl.setTzSkype(strSkypeHb);
+			psTzLxfsInfoTblMapper.insert(psTzLxfsInfoTbl);
+		}
+
+		/* 同步身份证信息 */
+		if (!"".equals(strIdCard) && strIdCard != null) {
+			String sqlRegInfoCount = "SELECT COUNT(1) FROM PS_TZ_REG_USER_T WHERE OPRID = ?";
+
+			int regInfocount = sqlQuery.queryForObject(sqlRegInfoCount, new Object[] { strAppOprId }, "Integer");
+			if (regInfocount > 0) {
+				PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+				psTzRegUserT.setOprid(strAppOprId);
+				psTzRegUserT.setNationalId(strIdCard);
+				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+			}
+		}
 	}
-	
-	private String createGuestUser(String strOrgId,String strName){
-		
-		
+
+	private String createGuestUser(String strOrgId, String strName) {
+
 		String allChar = "0123456789";
 		StringBuffer sb = new StringBuffer();
 		Random random = new Random();
-			for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < 6; i++) {
 			sb.append(allChar.charAt(random.nextInt(allChar.length())));
 		}
 		String strTZ_REPASSWORD = sb.toString();
-		
-		//开始创建账号;
-	    String oprId = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
-	    //生成登录账号;
-	    String dlzh = SiteEnrollClsServiceImpl.tzGenerateAcount(strOrgId, oprId);
-	    
-	    //保存用户信息;
-	    Psoprdefn psoprdefn = new Psoprdefn();
-	    psoprdefn.setOprid(oprId);
-	    String password = DESUtil.encrypt(strTZ_REPASSWORD, "TZGD_Tranzvision");
-	    psoprdefn.setOperpswd(password);
-	    psoprdefn.setAcctlock((short)0);
-	    psoprdefn.setLastupdoprid(oprId);
-	    psoprdefn.setLastupddttm(new Date());
-	    psoprdefnMapper.insert(psoprdefn);
-	    
-	    
-	    PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
-	    psTzAqYhxxTbl.setTzDlzhId(dlzh);
-	    psTzAqYhxxTbl.setTzJgId(strOrgId);
-	    psTzAqYhxxTbl.setOprid(oprId);
-	    psTzAqYhxxTbl.setTzRealname(strName);
-	    psTzAqYhxxTbl.setTzRylx("ZCYH");
-	    psTzAqYhxxTbl.setTzZhceDt(new Date());
-	    psTzAqYhxxTbl.setTzBjsEml("N");
-	    psTzAqYhxxTbl.setTzBjsSms("N");
-	    psTzAqYhxxTbl.setRowAddedDttm(new Date());
-	    psTzAqYhxxTbl.setRowAddedOprid(oprId);
-	    psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-	    psTzAqYhxxTbl.setRowLastmantOprid(oprId);
-	    psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
-	    
-	    //保存用户注册信息
-	    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
-	    psTzRegUserT.setOprid(oprId);
-	    psTzRegUserT.setTzRealname(strName);
-	    psTzRegUserT.setRowAddedDttm(new Date());
-	    psTzRegUserT.setRowAddedOprid(oprId);
-	    psTzRegUserT.setRowLastmantDttm(new Date());
-	    psTzRegUserT.setRowLastmantOprid(oprId);
-	    psTzRegUserTMapper.insert(psTzRegUserT);
-	    
-	  //添加角色;
-	    String roleSQL = " SELECT ROLENAME FROM PS_TZ_JG_ROLE_T WHERE TZ_JG_ID=? AND TZ_ROLE_TYPE='C'";
-	    List<Map<String, Object>> roleList = sqlQuery.queryForList(roleSQL,new Object[]{strOrgId});
-	    if(roleList != null && roleList.size() > 0 ){
-	    	for(int j = 0; j < roleList.size(); j++){
-	    		String rolename = (String)roleList.get(j).get("ROLENAME");
-	    		Psroleuser psroleuser = new Psroleuser();
-	    		psroleuser.setRoleuser(oprId);
-	    		psroleuser.setRolename(rolename);
-	    		psroleuser.setDynamicSw("N");
-	    		psroleuserMapper.insert(psroleuser);
-	    	}
-	    }
-		
+
+		// 开始创建账号;
+		String oprId = "TZ_" + getSeqNum.getSeqNum("PSOPRDEFN", "OPRID");
+		// 生成登录账号;
+		String dlzh = SiteEnrollClsServiceImpl.tzGenerateAcount(strOrgId, oprId);
+
+		// 保存用户信息;
+		Psoprdefn psoprdefn = new Psoprdefn();
+		psoprdefn.setOprid(oprId);
+		String password = DESUtil.encrypt(strTZ_REPASSWORD, "TZGD_Tranzvision");
+		psoprdefn.setOperpswd(password);
+		psoprdefn.setAcctlock((short) 0);
+		psoprdefn.setLastupdoprid(oprId);
+		psoprdefn.setLastupddttm(new Date());
+		psoprdefnMapper.insert(psoprdefn);
+
+		PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+		psTzAqYhxxTbl.setTzDlzhId(dlzh);
+		psTzAqYhxxTbl.setTzJgId(strOrgId);
+		psTzAqYhxxTbl.setOprid(oprId);
+		psTzAqYhxxTbl.setTzRealname(strName);
+		psTzAqYhxxTbl.setTzRylx("ZCYH");
+		psTzAqYhxxTbl.setTzZhceDt(new Date());
+		psTzAqYhxxTbl.setTzBjsEml("N");
+		psTzAqYhxxTbl.setTzBjsSms("N");
+		psTzAqYhxxTbl.setRowAddedDttm(new Date());
+		psTzAqYhxxTbl.setRowAddedOprid(oprId);
+		psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+		psTzAqYhxxTbl.setRowLastmantOprid(oprId);
+		psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
+
+		// 保存用户注册信息
+		PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+		psTzRegUserT.setOprid(oprId);
+		psTzRegUserT.setTzRealname(strName);
+		psTzRegUserT.setRowAddedDttm(new Date());
+		psTzRegUserT.setRowAddedOprid(oprId);
+		psTzRegUserT.setRowLastmantDttm(new Date());
+		psTzRegUserT.setRowLastmantOprid(oprId);
+		psTzRegUserTMapper.insert(psTzRegUserT);
+
+		// 添加角色;
+		String roleSQL = " SELECT ROLENAME FROM PS_TZ_JG_ROLE_T WHERE TZ_JG_ID=? AND TZ_ROLE_TYPE='C'";
+		List<Map<String, Object>> roleList = sqlQuery.queryForList(roleSQL, new Object[] { strOrgId });
+		if (roleList != null && roleList.size() > 0) {
+			for (int j = 0; j < roleList.size(); j++) {
+				String rolename = (String) roleList.get(j).get("ROLENAME");
+				Psroleuser psroleuser = new Psroleuser();
+				psroleuser.setRoleuser(oprId);
+				psroleuser.setRolename(rolename);
+				psroleuser.setDynamicSw("N");
+				psroleuserMapper.insert(psroleuser);
+			}
+		}
+
 		return oprId;
 	}
-	
-	//检查推荐信对应页面完成状态
-	private void checkRefletter(Long numAppInsId,String strTplId){
-		   
-		String strMsg = "";
-	    /*信息项编号*/
-	    String strXxxBh = "";
-	   
-	    /*信息项名称*/
-	    String strXxxMc = "";
-	   
-	    /*控件类名称*/
-	    String strComMc = "";
-	   
-	    /*分页号*/
-	    int numPageNo;
-	   
-	    /*信息项日期格式*/
-	    String strXxxRqgs = "";
-	   
-	    /*信息项日期年份最小值*/
-	    String strXxxXfmin = "";
-	   
-	    /*信息项日期年份最大值*/
-	    String strXxxXfmax = "";
-	   
-	    /*信息项多选最少选择数量*/
-	    String strXxxZsxzgs = "";
-	   
-	    /*信息项多选最多选择数量*/
-	    String strXxxZdxzgs = "";
-	   
-	    /*信息项文件允许上传类型*/
-	    String strXxxYxsclx = "";
-	   
-	    /*信息项文件允许上传大小*/
-	    String strXxxYxscdx = "";
-	   
-	    /*信息项是否必填*/
-	    String strXxxBtBz = "";
-	   
-	    /*信息项是否启用字数范围*/
-	    String strXxxCharBz = "";
-	   
-	    /*信息项字数最小长度*/
-	    int numXxxMinlen;
-	   
-	    /*信息项字数最大长度*/
-	    int numXxxMaxlen;
-	   
-	    /*信息项是否启用数字范围*/
-	    String strXxxNumBz = "";
-	   
-	    /*信息项字数最小长度*/
-	    int numXxxMin;
-	   
-	    /*信息项字数最大长度*/
-	    int numXxxMax;
-	   
-	    /*信息项字段小数位数*/
-	    String strXxxXsws = "";
-	   
-	    /*信息项字段固定格式校验*/
-	    String strXxxGdgsjy = "";
-	   
-	    /*信息项字段是否多容器*/
-	    String strXxxDrqBz = "";
-	   
-	    /*信息项最小行记录数*/
-	    int numXxxMinLine;
-	   
-	    /*信息项最大行记录数*/
-	    int numXxxMaxLine;
-	   
-	    /*推荐信收集齐前是否允许提交报名表*/
-	    String strTjxSub = "";
-	   
-	    /*信息项校验规则*/
-	    String strJygzId;
-	   
-	    String strJygzTsxx;
-	   
-	    /*信息项校验程序*/
-	    String strPath, strName, strMethod;
 
-	    String strPageXxxBh = "";
-	    
-	    String strPageNo = "";
-	    
-	    try{
-	    	
-	    	String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
-	    	
-	    	strPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "String");
-	    	
-	    	if(strPageNo != null){
-	    		numPageNo = Integer.parseInt(strPageNo);
-	    		String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
-		    	strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId,numPageNo }, "String");
-		    	
-			    String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
-				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
+	// 检查推荐信对应页面完成状态
+	private void checkRefletter(Long numAppInsId, String strTplId) {
+
+		String strMsg = "";
+		/* 信息项编号 */
+		String strXxxBh = "";
+
+		/* 信息项名称 */
+		String strXxxMc = "";
+
+		/* 控件类名称 */
+		String strComMc = "";
+
+		/* 分页号 */
+		int numPageNo;
+
+		/* 信息项日期格式 */
+		String strXxxRqgs = "";
+
+		/* 信息项日期年份最小值 */
+		String strXxxXfmin = "";
+
+		/* 信息项日期年份最大值 */
+		String strXxxXfmax = "";
+
+		/* 信息项多选最少选择数量 */
+		String strXxxZsxzgs = "";
+
+		/* 信息项多选最多选择数量 */
+		String strXxxZdxzgs = "";
+
+		/* 信息项文件允许上传类型 */
+		String strXxxYxsclx = "";
+
+		/* 信息项文件允许上传大小 */
+		String strXxxYxscdx = "";
+
+		/* 信息项是否必填 */
+		String strXxxBtBz = "";
+
+		/* 信息项是否启用字数范围 */
+		String strXxxCharBz = "";
+
+		/* 信息项字数最小长度 */
+		int numXxxMinlen;
+
+		/* 信息项字数最大长度 */
+		int numXxxMaxlen;
+
+		/* 信息项是否启用数字范围 */
+		String strXxxNumBz = "";
+
+		/* 信息项字数最小长度 */
+		int numXxxMin;
+
+		/* 信息项字数最大长度 */
+		int numXxxMax;
+
+		/* 信息项字段小数位数 */
+		String strXxxXsws = "";
+
+		/* 信息项字段固定格式校验 */
+		String strXxxGdgsjy = "";
+
+		/* 信息项字段是否多容器 */
+		String strXxxDrqBz = "";
+
+		/* 信息项最小行记录数 */
+		int numXxxMinLine;
+
+		/* 信息项最大行记录数 */
+		int numXxxMaxLine;
+
+		/* 推荐信收集齐前是否允许提交报名表 */
+		String strTjxSub = "";
+
+		/* 信息项校验规则 */
+		String strJygzId;
+
+		String strJygzTsxx;
+
+		/* 信息项校验程序 */
+		String strPath, strName, strMethod;
+
+		String strPageXxxBh = "";
+
+		String strPageNo = "";
+
+		try {
+
+			String sqlGetPageNo = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'recommendletter' LIMIT 1";
+
+			strPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId }, "String");
+
+			if (strPageNo != null) {
+				numPageNo = Integer.parseInt(strPageNo);
+				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
+				strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId, numPageNo }, "String");
+
+				String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
+				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numPageNo });
 				for (Object objData : listData) {
 					Map<String, Object> MapData = (Map<String, Object>) objData;
 					strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
 					strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
 					strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
 					strXxxRqgs = MapData.get("TZ_XXX_RQGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_RQGS"));
-					strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMIN"));
-					strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NFMAX"));
-					strXxxZsxzgs = MapData.get("TZ_XXX_ZSXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZSXZGS"));
-					strXxxZdxzgs = MapData.get("TZ_XXX_ZDXZGS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_ZDXZGS"));
-					strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
-					strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? "" : String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
+					strXxxXfmin = MapData.get("TZ_XXX_NFMIN") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_NFMIN"));
+					strXxxXfmax = MapData.get("TZ_XXX_NFMAX") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_NFMAX"));
+					strXxxZsxzgs = MapData.get("TZ_XXX_ZSXZGS") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_ZSXZGS"));
+					strXxxZdxzgs = MapData.get("TZ_XXX_ZDXZGS") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_ZDXZGS"));
+					strXxxYxsclx = MapData.get("TZ_XXX_YXSCLX") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_YXSCLX"));
+					strXxxYxscdx = MapData.get("TZ_XXX_YXSCDX") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_YXSCDX"));
 					strXxxBtBz = MapData.get("TZ_XXX_BT_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BT_BZ"));
-					strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
-					numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
-					numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
-					strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
-					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
-					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+					strXxxCharBz = MapData.get("TZ_XXX_CHAR_BZ") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_CHAR_BZ"));
+					numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
+					numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+					strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
+					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
+					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
 					strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
-					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
-					strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
-					numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
-					numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0 : Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
+					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
+					strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? ""
+							: String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));
+					numXxxMinLine = MapData.get("TZ_XXX_MIN_LINE") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN_LINE")));
+					numXxxMaxLine = MapData.get("TZ_XXX_MAX_LINE") == null ? 0
+							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX_LINE")));
 					strTjxSub = MapData.get("TZ_TJX_SUB") == null ? "" : String.valueOf(MapData.get("TZ_TJX_SUB"));
-					strPath = MapData.get("TZ_APPCLS_PATH") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_PATH"));
-					strName = MapData.get("TZ_APPCLS_NAME") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_NAME"));
-					strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? "" : String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
-					strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
-					
-					if(!"".equals(strPath)&&!"".equals(strName)&&!"".equals(strMethod)){
-						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
+					strPath = MapData.get("TZ_APPCLS_PATH") == null ? ""
+							: String.valueOf(MapData.get("TZ_APPCLS_PATH"));
+					strName = MapData.get("TZ_APPCLS_NAME") == null ? ""
+							: String.valueOf(MapData.get("TZ_APPCLS_NAME"));
+					strMethod = MapData.get("TZ_APPCLS_METHOD") == null ? ""
+							: String.valueOf(MapData.get("TZ_APPCLS_METHOD"));
+					strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? ""
+							: String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
+
+					if (!"".equals(strPath) && !"".equals(strName) && !"".equals(strMethod)) {
+						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
+								.getBean(strPath + "." + strName);
 						String strReturn = "";
-						switch(strMethod){
-							case "requireValidator":
-								strReturn = tzOnlineAppUtility.requireValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "ahphValidator":
-								strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "charLenValidator":
-								strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "valueValidator":
-								strReturn = tzOnlineAppUtility.valueValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "regularValidator":
-								strReturn = tzOnlineAppUtility.regularValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "dHLineValidator":
-								strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
-							case "refLetterValidator":
-								strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-										numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs,strXxxZdxzgs,
-										strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,numXxxMinlen,numXxxMaxlen,
-										strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-										strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,strJygzTsxx);
-								break;
+						switch (strMethod) {
+						case "requireValidator":
+							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "ahphValidator":
+							strReturn = tzOnlineAppUtility.ahphValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "charLenValidator":
+							strReturn = tzOnlineAppUtility.charLenValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "valueValidator":
+							strReturn = tzOnlineAppUtility.valueValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "regularValidator":
+							strReturn = tzOnlineAppUtility.regularValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "dHLineValidator":
+							strReturn = tzOnlineAppUtility.dHLineValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
+						case "refLetterValidator":
+							strReturn = tzOnlineAppUtility.refLetterValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
+									strComMc, numPageNo, strXxxRqgs, strXxxXfmin, strXxxXfmax, strXxxZsxzgs,
+									strXxxZdxzgs, strXxxYxsclx, strXxxYxscdx, strXxxBtBz, strXxxCharBz, numXxxMinlen,
+									numXxxMaxlen, strXxxNumBz, numXxxMin, numXxxMax, strXxxXsws, strXxxGdgsjy,
+									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
+							break;
 						}
-						if(!"".equals(strReturn)){
+						if (!"".equals(strReturn)) {
 							strMsg = strReturn;
 							break;
 						}
 					}
 				}
-				if(!"".equals(strPageXxxBh)){
-					if("".equals(strMsg)){
-						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y"); 
-					}else{
-						this.savePageCompleteState(numAppInsId, strPageXxxBh, "N"); 
-					}	
+				if (!"".equals(strPageXxxBh)) {
+					if ("".equals(strMsg)) {
+						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
+					} else {
+						this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
+					}
 				}
-	    	}
-			
-		}catch(Exception e){
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -10,11 +10,21 @@ SurveyBuild.extend("Page", "baseComponent", {
 	tapHeight: "26",
 	tapStyle: 'width:100px;height:26px',
 	_CommonField: "N",
+	fPageId : "",
 	_getHtml: function(data, previewmode) {
 		if (previewmode) {
 			return;
 		}
 		var c = '<div class="question-title"><div class="question-split"><hr><div class="pagename">' + data.itemName + '</div></div></div>';
 		return c;
+	},
+
+	_edit: function(data) {
+		var e = "";
+		e += '<div class="edit_item_warp">';
+		e += '  <span class="edit_item_label">上级分隔符编号：</span>';
+		e += '  <input type="text" class="medium" id="fPageId" onkeyup="SurveyBuild.saveAttr(this,\'fPageId\')" value="' + data.fPageId + '"/>';
+		e += '</div>';
+		return e;
 	}
 });
