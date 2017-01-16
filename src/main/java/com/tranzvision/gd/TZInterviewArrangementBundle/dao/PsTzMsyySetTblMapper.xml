@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyySetTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_BATCH_ID" property="tzBatchId" jdbcType="VARCHAR" />
+    <result column="TZ_OPEN_DT" property="tzOpenDt" jdbcType="DATE" />
+    <result column="TZ_OPEN_TM" property="tzOpenTm" jdbcType="TIME" />
+    <result column="TZ_CLOSE_DT" property="tzCloseDt" jdbcType="DATE" />
+    <result column="TZ_CLOSE_TM" property="tzCloseTm" jdbcType="TIME" />
+    <result column="TZ_OPEN_STA" property="tzOpenSta" jdbcType="VARCHAR" />
+    <result column="TZ_SHOW_FRONT" property="tzShowFront" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" extends="BaseResultMap" >
+    <result column="TZ_DESCR" property="tzDescr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_BATCH_ID, TZ_OPEN_DT, TZ_OPEN_TM, TZ_CLOSE_DT, TZ_CLOSE_TM, TZ_OPEN_STA, 
+    TZ_SHOW_FRONT
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_DESCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MSYY_SET_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey" >
+    delete from PS_TZ_MSYY_SET_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    insert into PS_TZ_MSYY_SET_TBL (TZ_CLASS_ID, TZ_BATCH_ID, TZ_OPEN_DT, 
+      TZ_OPEN_TM, TZ_CLOSE_DT, TZ_CLOSE_TM, 
+      TZ_OPEN_STA, TZ_SHOW_FRONT, TZ_DESCR
+      )
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzBatchId,jdbcType=VARCHAR}, #{tzOpenDt,jdbcType=DATE}, 
+      #{tzOpenTm,jdbcType=TIME}, #{tzCloseDt,jdbcType=DATE}, #{tzCloseTm,jdbcType=TIME}, 
+      #{tzOpenSta,jdbcType=VARCHAR}, #{tzShowFront,jdbcType=VARCHAR}, #{tzDescr,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    insert into PS_TZ_MSYY_SET_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzBatchId != null" >
+        TZ_BATCH_ID,
+      </if>
+      <if test="tzOpenDt != null" >
+        TZ_OPEN_DT,
+      </if>
+      <if test="tzOpenTm != null" >
+        TZ_OPEN_TM,
+      </if>
+      <if test="tzCloseDt != null" >
+        TZ_CLOSE_DT,
+      </if>
+      <if test="tzCloseTm != null" >
+        TZ_CLOSE_TM,
+      </if>
+      <if test="tzOpenSta != null" >
+        TZ_OPEN_STA,
+      </if>
+      <if test="tzShowFront != null" >
+        TZ_SHOW_FRONT,
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchId != null" >
+        #{tzBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOpenDt != null" >
+        #{tzOpenDt,jdbcType=DATE},
+      </if>
+      <if test="tzOpenTm != null" >
+        #{tzOpenTm,jdbcType=TIME},
+      </if>
+      <if test="tzCloseDt != null" >
+        #{tzCloseDt,jdbcType=DATE},
+      </if>
+      <if test="tzCloseTm != null" >
+        #{tzCloseTm,jdbcType=TIME},
+      </if>
+      <if test="tzOpenSta != null" >
+        #{tzOpenSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShowFront != null" >
+        #{tzShowFront,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        #{tzDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    update PS_TZ_MSYY_SET_TBL
+    <set >
+      <if test="tzOpenDt != null" >
+        TZ_OPEN_DT = #{tzOpenDt,jdbcType=DATE},
+      </if>
+      <if test="tzOpenTm != null" >
+        TZ_OPEN_TM = #{tzOpenTm,jdbcType=TIME},
+      </if>
+      <if test="tzCloseDt != null" >
+        TZ_CLOSE_DT = #{tzCloseDt,jdbcType=DATE},
+      </if>
+      <if test="tzCloseTm != null" >
+        TZ_CLOSE_TM = #{tzCloseTm,jdbcType=TIME},
+      </if>
+      <if test="tzOpenSta != null" >
+        TZ_OPEN_STA = #{tzOpenSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShowFront != null" >
+        TZ_SHOW_FRONT = #{tzShowFront,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    update PS_TZ_MSYY_SET_TBL
+    set TZ_OPEN_DT = #{tzOpenDt,jdbcType=DATE},
+      TZ_OPEN_TM = #{tzOpenTm,jdbcType=TIME},
+      TZ_CLOSE_DT = #{tzCloseDt,jdbcType=DATE},
+      TZ_CLOSE_TM = #{tzCloseTm,jdbcType=TIME},
+      TZ_OPEN_STA = #{tzOpenSta,jdbcType=VARCHAR},
+      TZ_SHOW_FRONT = #{tzShowFront,jdbcType=VARCHAR},
+      TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl" >
+    update PS_TZ_MSYY_SET_TBL
+    set TZ_OPEN_DT = #{tzOpenDt,jdbcType=DATE},
+      TZ_OPEN_TM = #{tzOpenTm,jdbcType=TIME},
+      TZ_CLOSE_DT = #{tzCloseDt,jdbcType=DATE},
+      TZ_CLOSE_TM = #{tzCloseTm,jdbcType=TIME},
+      TZ_OPEN_STA = #{tzOpenSta,jdbcType=VARCHAR},
+      TZ_SHOW_FRONT = #{tzShowFront,jdbcType=VARCHAR}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+  </update>
+</mapper>

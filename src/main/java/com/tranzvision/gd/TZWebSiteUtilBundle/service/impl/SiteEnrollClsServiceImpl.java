@@ -605,10 +605,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
 				psTzAqYhxxTbl.setTzBjsEml("N");
 				psTzAqYhxxTbl.setTzBjsSms("N");
+				//注册产生的账号默认为完善
+				psTzAqYhxxTbl.setTzIsCmpl("Y");
+				//产生面试申请号，流水号格式：yyyy+00001
+				Calendar date=Calendar.getInstance();
+				String currentYear = String.valueOf(date.get(Calendar.YEAR));
+				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
+				xuhao = xuhao.substring(xuhao.length()-5);
+				String tzMshId = currentYear + xuhao;
+				psTzAqYhxxTbl.setTzMshId(tzMshId);
 				psTzAqYhxxTbl.setRowAddedDttm(new Date());
 				psTzAqYhxxTbl.setRowAddedOprid(oprId);
 				psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-				psTzAqYhxxTbl.setRowLastmantOprid(oprId);
+				psTzAqYhxxTbl.setRowLastmantOprid(oprId);				
 				psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
 
 				// 通过所有校验，保存联系方式;
@@ -734,8 +743,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 
 		return strResult;
-	}
-
+	}	
+	
 	public String checkCodeVerifyByPass(String strParams, String[] errMsg) {
 		String strCheckCode = "";
 		String strLang = "";
@@ -1498,6 +1507,33 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(map);
 	}
 
+	public String getCompleteUrl(String strParams){
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String siteid = "";
+		String url = "";
+		try {
+			jacksonUtil.json2Map(strParams);
+			siteid = jacksonUtil.getString("siteid");
+			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
+			url = url.replaceAll("\\\\", "/");
+			if(!"".equals(url)){
+				if((url.lastIndexOf("/") + 1) == url.length()){
+					url = request.getContextPath() + url + "perfect.html";
+				}else{
+					url = request.getContextPath() + url + "/perfect.html";
+				}
+			}else{
+				url = request.getContextPath() + "/perfect.html";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("url", url);
+		return jacksonUtil.Map2json(map);
+	}
+	
 	public String createPageForEmlAct(String strParams) {
 		String strOrgid = "";
 		String strLang = "";

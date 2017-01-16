@@ -156,7 +156,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     minWidth: 125,
                     flex:1
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.msZGFlag","初筛结果"),
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.msZGFlag","面试资格"),
                     dataIndex: 'msZGFlag',
                     filter: {
                         type: 'list',

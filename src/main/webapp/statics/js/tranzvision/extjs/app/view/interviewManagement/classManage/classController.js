@@ -19,19 +19,16 @@
         var classID = record.data.classID;
 		
 		var win = this.lookupReference('msBatchListWindow');
-			
 		if (!win) {
-				//className = 'KitchenSink.view.activity.applyOptionsWindow';
 				Ext.syncRequire(className);
 				ViewClass = Ext.ClassManager.get(className);
 				//新建类
 			win = new ViewClass();
 			this.getView().add(win);
 		}
-		
 		var windowgrid = this.lookupReference('msBatchWindowGrid');
 				
-		var tzStoreParams = "{'classID':'"+classID+"'}";
+		var tzStoreParams = '{"classID":"'+classID+'"}';
 		windowgrid.store.tzStoreParams = tzStoreParams;
 		windowgrid.store.load();		
 
@@ -95,6 +92,8 @@
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             var panelgrid = panel.child('form').child('grid');
+            
+            /*
             panelgrid.getView().on('expandbody', function (rowNode, record, expandRow, eOpts){
                 if(!record.get('moreInfo')){
                     var classID = record.get('classID');
@@ -105,31 +104,7 @@
                     //msOrderState="B";
                     if (msOrderState=='B'){
                         var moreInfo={"city":record.data.city,"country":record.data.country,"lxEmail":record.data.lxEmail,"timezone":record.data.timezone,"timezoneDiff":record.data.timezoneDiff,"localStartDate":record.data.localStartDate,"localFinishDate":record.data.localFinishDate};
-                        record.set('moreInfo',moreInfo);
-                        /*
-                        var tzExpandParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"getMoreInfo","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","msJxNo":"'+msJxNo+'","msOprId":"'+msOprId+'"}}';
-                        var mark= new Ext.LoadMask({
-                            msg : TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00022"),
-                            removeMask : true,
-                            target:panelgrid
-                        });
-                        mark.show();
-                        Ext.tzLoad(tzExpandParams,function(respData){
-                                var task = new Ext.util.DelayedTask(function(){
-                                    //if(panelgrid.getStore().getModifiedRecords().length>0){
-                                    //    record.set('moreInfo',respData);
-                                    //}else{
-                                    //    record.set('moreInfo',respData);
-                                    //    panelgrid.getStore().commitChanges( );
-                                    //}
-                                    var moreInfo={"city":"AAAA","country":"BBBB"};
-                                    record.set('moreInfo',respData);
-                                    mark.hide();
-                                });
-                                task.delay(100);
-                            }
-                        );
-                        */
+                        record.set('moreInfo',moreInfo); 
                     }else{
                         record.set('moreInfo',"{}");
                     }
@@ -158,14 +133,15 @@
                     }
                 }
             });
-
+			*/
             var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
             Ext.tzLoad(tzParams,function(responseData){
+            	console.log(responseData);
                 form.setValues(responseData);
                 var zl_grid = panel.down('grid[name=msjh_grid]');
 				Params= '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
 				zl_grid.store.tzStoreParams = Params;
-				zl_grid.store.reload();
+				zl_grid.store.load();
             });
         });
 
@@ -181,9 +157,10 @@
     //查询
     queryClassInfo:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_MS_MGR_COM.TZ_MS_MGR_CLS_STD.TZ_CLASS_OPR_V',
+            cfgSrhId: 'TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.TZ_CLASS_OPR_V',
             condition:{
-                TZ_DLZH_ID:TranzvisionMeikecityAdvanced.Boot.loginUserId
+                TZ_DLZH_ID: TranzvisionMeikecityAdvanced.Boot.loginUserId,
+                TZ_JG_ID: Ext.tzOrgID
             },
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;

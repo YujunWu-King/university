@@ -66,15 +66,27 @@
 .regmain-menu ul li a{
 	color:#0070c6;
 }
-.regmain-menu ul li.menu-active{
+/* 第一层菜单*/
+.regmain-menu ul li.menu-active-top{
 	background:#0070c6;
 	color:#fff;
+}
+.regmain-menu ul li.menu-active-top a{
+	color:#fff;
+}
+.regmain-menu ul li.menu-active-top:hover{
+	background:#0070c6;
+}
+/* 第二层默认菜单*/
+.regmain-menu ul li.menu-active{
+	background:#8e8e8e;
+	color:#000000;
 }
 .regmain-menu ul li.menu-active a{
-	color:#fff;
+	color:#000000;
 }
 .regmain-menu ul li.menu-active:hover{
-	background:#0070c6;
+	background:#8e8e8e;
 }
 .menu-gou{
 	width:20px;

@@ -58,8 +58,8 @@
       TZ_IS_SUB_BATCH, TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, 
       TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, 
-      TZ_CLASS_DESC)
+      SYNCID, SYNCDTTM, TZ_CLASS_DESC
+      )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
       #{tzClassName,jdbcType=VARCHAR}, #{tzStartDt,jdbcType=DATE}, #{tzEndDt,jdbcType=DATE}, 
       #{tzAppStartDt,jdbcType=DATE}, #{tzAppStartTm,jdbcType=TIME}, #{tzAppEndDt,jdbcType=DATE}, 
@@ -67,8 +67,8 @@
       #{tzIsSubBatch,jdbcType=VARCHAR}, #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, 
       #{tzPsAppModalId,jdbcType=VARCHAR}, #{tzGuestApply,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP},
-      #{tzClassDesc,jdbcType=LONGVARCHAR})
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzClassDesc,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
     insert into PS_TZ_CLASS_INF_T
