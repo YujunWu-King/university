@@ -1,53 +1,92 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>新版报名表</title>
-		<!-- <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
-		 
-		<!-- <link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/bootstrap.min2.css" type="text/css" /> -->
-		<link rel="stylesheet" href="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/css/FortAwesome/css/font-awesome.min.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/css/website/chosen.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.css" type="text/css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/js/lib/formvalidator/themes/Default/style/style.css" />
-		<link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/registration-public.css" type="text/css"/>
-		<link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/registration-page.css" type="text/css"/>
-		<style>
-			.input-list-info,.input-list-info-blank {%bind(:33)}
-			.input-list-text {%bind(:34)}
-		</style>
-		<script type="text/javascript">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>新版报名表</title> <!-- <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
+
+	<!-- <link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/bootstrap.min2.css" type="text/css" /> -->
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/css/FortAwesome/css/font-awesome.min.css"
+		type="text/css" />
+	<link rel="stylesheet" href="%bind(:32)/statics/css/website/chosen.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/js/lib/formvalidator/themes/Default/style/style.css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/css/appeditor/registration-public.css"
+		type="text/css" />
+	<link rel="stylesheet"
+		href="%bind(:32)/statics/css/appeditor/registration-page.css"
+		type="text/css" />
+	<style>
+.input-list-info, .input-list-info-blank { %
+	bind (: 33)
+}
+
+.input-list-text { %
+	bind (: 34)
+}
+</style>
+	<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:32)";
 		</script>
 
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/util/layer.js" ></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
-		<!-- <script type="text/javascript" src="%bind(:32)/statics/js/lib/bootstrap/js/bootstrap.min.js"></script> -->
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox.pack.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/util/layer.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+	<!-- <script type="text/javascript" src="%bind(:32)/statics/js/lib/bootstrap/js/bootstrap.min.js"></script> -->
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox.pack.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.js"></script>
 
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/common.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/flowplayer/flowplayer-3.2.12.min.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/util/swfobject.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/Survey.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/jquery.form.js"></script> 
-		
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/jquery/json.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/Answer.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/util/checkExplorer.js" charset="utf-8"></script>
-		
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
-		
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/formvalidator/formValidator.js"></script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/jquery/chosen.jquery.js" ></script>
-		<script type="text/javascript">
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/common.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/flowplayer/flowplayer-3.2.12.min.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/util/swfobject.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/Survey.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/jquery.form.js"></script>
+
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/jquery/json.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/Answer.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/util/checkExplorer.js"
+		charset="utf-8"></script>
+
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
+
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/formvalidator/formValidator.js"></script>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/jquery/chosen.jquery.js"></script>
+	<script type="text/javascript">
 				MsgSet = %bind(:14);
 				UserInfoSet = %bind(:28);
 				SurveyBuild.tzGeneralURL = "%bind(:1)"; //统一接口
@@ -82,120 +121,186 @@
 				}
 			
 				$(document).ready(function() {
-					$(".regmain-menu ul li").click(function(){
-						var pageno = $(this).index() + 1;
-						$(".page" + pageno).show();
+					//点击菜单的动作 如果是顶级层，则不做动作
+					$(".regmain-menu ul li[class!='menu-active-top']").click(function(){
+
+						//console.log($(this));
+						//console.log($(this).attr('class'));
 						
-						var pagelen = $(".regmain-menu ul li").length;
-						for(var i =1;i<= pagelen ;i++){
-							i != pageno && 	$(".page"+i).hide();
-						}
+						//console.log($(this).attr('id'));
+						var thisid = $(this).attr('id');
 						
-						$(this).siblings().removeClass("menu-active");
-						$(this).addClass("menu-active");
-						
-						$.each($(".menu-icon.left img"),function(i,obj){
-							var imgPath = $(obj).attr("src");
-							imgPath = imgPath.replace("-white.png", ".png");
-							$(obj).attr("src",imgPath);
-						})
-						$.each($(".menu-gou.right img"),function(i,obj){
-							var imgPath = $(obj).attr("src");
-							imgPath = imgPath.replace("-white.png", ".png");
-							if(imgPath!=""&&imgPath!=undefined){
-								$(obj).attr("src",imgPath);
-								$(obj).show();
-							}else{
-								$(obj).hide();
+						var pageno = 0;
+						var pagelen = 0;
+						//var index = 0;
+						//重新计算pageno和pagelen  顶层的不算
+						$.each($(".regmain-menu ul li"),function(i,obj){
+							//index = index +1;
+							if ($(obj).attr('class')!="menu-active-top") {	
+								pagelen = pagelen +1;
+								
+								//console.log($(obj).attr('id'));
+								if ($(obj).attr('id')== thisid) {
+									//console.log($(obj).attr('id')+":GO");
+									pageno = pagelen;
+								}
 							}
-						})
+						});
+
 						
-						var leftPath = $(this).find("img").first().attr("src");
-						var rightPath = $(this).find("img").last().attr("src");
-						if(leftPath){
-							$(this).find("img").first().attr("src",leftPath.replace(".png", "-white.png"));
-						}
-						if(rightPath){
-							$(this).find("img").last().attr("src",rightPath.replace(".png", "-white.png"));
-							$(this).find("img").last().show();
-						}else{
-							$(this).find("img").last().hide();
-						}
+							//var pageno = $(this).index() + 1;
+							//console.log("pageno="+pageno);
+							//console.log("pagelen="+pagelen);
+							
+							$(".page" + pageno).show();
+							
+							//var pagelen = $(".regmain-menu ul li").length;
+							for(var i =1;i<= pagelen ;i++){
+								i != pageno && 	$(".page"+i).hide();
+							}
 						
-						if(pagelen==0){
-							$("#app_save").show();
-							$("#app_submit").show();
-							$("#app_prev").hide();
-							$("#app_next").hide();
-						}else{
-							if (pageno == pagelen) {
-								if (pageno == 1) {
-									$("#app_save").show();
-									$("#app_submit").show();
-									$("#app_prev").hide();
-									$("#app_next").hide();
-								} else {
-									$("#app_save").show();
-									$("#app_submit").show();
-									$("#app_prev").show();
-									$("#app_next").hide();
-									if(showSubmitBtnOnly == "Y"){
-										$("#app_save").hide();
+							$(this).siblings().removeClass("menu-active");
+							$(this).addClass("menu-active");
+						
+							$.each($(".menu-icon.left img"),function(i,obj){
+								var imgPath = $(obj).attr("src");
+								imgPath = imgPath.replace("-white.png", ".png");
+								$(obj).attr("src",imgPath);
+							})
+							$.each($(".menu-gou.right img"),function(i,obj){
+								var imgPath = $(obj).attr("src");
+								imgPath = imgPath.replace("-white.png", ".png");
+								if(imgPath!=""&&imgPath!=undefined){
+									$(obj).attr("src",imgPath);
+									$(obj).show();
+								}else{
+									$(obj).hide();
+								}
+							})
+							
+							var leftPath = $(this).find("img").first().attr("src");
+							var rightPath = $(this).find("img").last().attr("src");
+							if(leftPath){
+								$(this).find("img").first().attr("src",leftPath.replace(".png", "-white.png"));
+							}
+							if(rightPath){
+								$(this).find("img").last().attr("src",rightPath.replace(".png", "-white.png"));
+								$(this).find("img").last().show();
+							}else{
+								$(this).find("img").last().hide();
+							}
+						
+							if(pagelen==0){
+								$("#app_save").show();
+								$("#app_submit").show();
+								$("#app_prev").hide();
+								$("#app_next").hide();
+							}else{
+								if (pageno == pagelen) {
+									if (pageno == 1) {
+										$("#app_save").show();
+										$("#app_submit").show();
 										$("#app_prev").hide();
 										$("#app_next").hide();
+									} else {
+										$("#app_save").show();
+										$("#app_submit").show();
+										$("#app_prev").show();
+										$("#app_next").hide();
+										if(showSubmitBtnOnly == "Y"){
+											$("#app_save").hide();
+											$("#app_prev").hide();
+											$("#app_next").hide();
+										}
+									}
+								} else {
+									if (pageno == 1) {
+										$("#app_save").show();
+										$("#app_submit").hide();
+										$("#app_prev").hide();
+										$("#app_next").show();
+									} else {
+										$("#app_save").show();
+										$("#app_submit").hide();
+										$("#app_prev").show();
+										$("#app_next").show();
 									}
 								}
-							} else {
-								if (pageno == 1) {
-									$("#app_save").show();
-									$("#app_submit").hide();
-									$("#app_prev").hide();
-									$("#app_next").show();
-								} else {
-									$("#app_save").show();
-									$("#app_submit").hide();
-									$("#app_prev").show();
-									$("#app_next").show();
-								}
 							}
-						}
 			
-						if (appReadOnly == "Y") {
-							$("#app_save").hide();
-							$("#app_submit").hide();
-						}
-						
-						currentPageId = $(this).attr("id");
-						//var tabClass = $("#tabNav").children("div:last-child").attr('class');
-						
+							if (appReadOnly == "Y") {
+								$("#app_save").hide();
+								$("#app_submit").hide();
+							}
+							
+							currentPageId = $(this).attr("id");
+							//var tabClass = $("#tabNav").children("div:last-child").attr('class');
+						//}
 					});
 					
-					/*页签切换*/
+					/*页签切换  modity by caoy*/
 					function tabChange(op) {
-						var pageno = $("#" + currentPageId).index();
+						
+						
+						
+						//页签跳过顶级层
+						var thisid = $("#" + currentPageId).attr('id');
+						console.log("thisid:"+thisid);
+											
+						var pagelen = 0;
+						var pageno =0;
+						//重新计算pageno和pagelen  顶层的不算
+						$.each($(".regmain-menu ul li"),function(i,obj){
+							//index = index +1;
+							if ($(obj).attr('class')!="menu-active-top") {	
+								$(obj).removeClass("menu-active");
+								pagelen = pagelen +1;
+								if ($(obj).attr('id')== thisid) {
+									//console.log($(obj).attr('id')+":GO");
+									pageno = pagelen;
+								}
+							}
+						});
+						
 						if (op == "next") {
-							pageno = pageno + 2;
+							pageno = pageno + 1;
 						}
-
+						if (op == "prev") {
+							pageno = pageno - 1;
+						}
+						
+						
+						
+						//console.log("pageno:"+pageno);
+						//console.log("pagelen:"+pagelen);
 						$(".page" + pageno).show();
 						
-						var pagelen = $(".regmain-menu ul li").length;
+
+						//var pagelen = $(".regmain-menu ul li").length;
 						for(var i =1;i<= pagelen ;i++){
 							i != pageno && 	$(".page"+i).hide();
 						}
 												
-						$.each($(".regmain-menu ul li"),function(i,obj){
-							$(obj).removeClass("menu-active");
-						})
-						
 						if (op == "next") {
-							currentPageId = $("#" + currentPageId).next().attr("id");
+							do {
+								currentPageId = $("#" + currentPageId).next().attr("id");
+								//console.log("next:"+$("#" + currentPageId).attr('css'));
+							  }
+							while ($("#" + currentPageId).attr('class') =="menu-active-top");
 						}
-						if (op == "prev") {
-							currentPageId = $("#" + currentPageId).prev().attr("id");
+						if (op == "prev") {							
+							do {
+								currentPageId = $("#" + currentPageId).prev().attr("id");
+								//console.log("prev:"+$("#" + currentPageId).attr('css'));
+							  }
+							while ($("#" + currentPageId).attr('class') =="menu-active-top");
 						}
+						
+						//console.log("currentPageId:"+currentPageId);
 						//console.log(currentPageId);
 						$("#" + currentPageId).addClass("menu-active");
+						
+						
 						if(pagelen==0){
 							$("#app_save").show();
 							$("#app_submit").show();
@@ -693,7 +798,7 @@
 					});
 				});
 			</script>
-			<script type="text/javascript">
+	<script type="text/javascript">
 				//图片缩放
 				function setImageSize(eml, t) {
 					var $aBtn = $(eml);
@@ -837,55 +942,67 @@
 					});
 				}
 			</script>
-	</head>
-	<body>
-		<!--头部内容开始-->
-		<div class="reg-top" id="header">%bind(:23)</div>
-		<!--头部内容结束-->
-		
-		<!--主体内容开始-->
-		<div class="reg-main">
-			<div class="regmain-menu left" style="%bind(:35)">
-				<ul>%bind(:9)</ul>
+</head>
+<body>
+	<!--头部内容开始-->
+	<div class="reg-top" id="header">%bind(:23)</div>
+	<!--头部内容结束-->
+
+	<!--主体内容开始-->
+	<div class="reg-main">
+		<div class="regmain-menu left" style="bind (: 35)">
+			<ul>%bind(:9)
+			</ul>
+		</div>
+		<div class="regmain-con right" style="bind (: 36)">
+			<form method="post" name="main_list" id="main_list"></form>
+			<div class="operation-btn">
+				<a href="#" id="app_prev" style="display: none"><div
+						class="btn-action">
+						<span class="operation-btn-icon"><img
+							src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)
+					</div></a> <a href="#" id="app_save"><div class="btn-save">
+						%bind(:16)&nbsp;&nbsp;<span class="operation-btn-icon"><img
+							src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span>
+					</div></a> <a href="#" id="app_next" style="display: none"><div
+						class="btn-action">
+						%bind(:17)&nbsp;&nbsp;<span class="operation-btn-icon"><img
+							src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
+					</div></a> <a href="#" id="app_submit"><div class="btn-action">
+						%bind(:18)&nbsp;&nbsp;<span class="operation-btn-icon"><img
+							src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
+					</div></a>
+				<div class="clear"></div>
 			</div>
-			<div class="regmain-con right" style="%bind(:36)">
-				<form method="post" name="main_list" id="main_list"></form>
-		        <div class="operation-btn">
-		        	<a href="#" id="app_prev" style="display:none"><div class="btn-action"><span class="operation-btn-icon"><img src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)</div></a>
-		        	<a href="#" id="app_save"><div class="btn-save">%bind(:16)&nbsp;&nbsp;<span class="operation-btn-icon"><img src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span></div></a>
-		        	<a href="#" id="app_next" style="display:none"><div class="btn-action">%bind(:17)&nbsp;&nbsp;<span class="operation-btn-icon"><img src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span></div></a>
-		        	<a href="#" id="app_submit"><div class="btn-action">%bind(:18)&nbsp;&nbsp;<span class="operation-btn-icon"><img src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span></div></a>
-		            <div class="clear"></div>
-		        </div>
-			</div>
-			<div class="clear"></div>
 		</div>
-		<!--主体内容结束-->
-		
-		<!--底部开始-->
-		<div class="footer" id="footer">
-			<div class="footer-main">
-				%bind(:24)
-			</div>
-		</div>
-		<!--底部结束-->
-		
-		<!--侧滑内容开始-->
-		<div class="sideslip">
-			<a href="javascript:void(0);" onclick='backToHome("%bind(:10)","%bind(:11)");'><img src="%bind(:32)/statics/images/appeditor/new/backindex.png" /></a>
-		</div>
-		<!--侧滑内容结束-->   
-		<div id="fancybox-main" style="display: none">
-      			<ul></ul>
-		</div>
-		<input id="ParamCon" type="hidden" name="ParamCon"/>
-		<input id="ParamValue" type="hidden" name="ParamValue"/>
-		
-		<input id="menuId" type="hidden" name="menuId" value="%bind(:12)"/>
-		<input id="siteId" type="hidden" name="siteId" value="%bind(:10)"/>
-		<input id="ClassId" type="hidden" name="ClassId" value="%bind(:5)"/>
-		
-		<script type="text/javascript">
+		<div class="clear"></div>
+	</div>
+	<!--主体内容结束-->
+
+	<!--底部开始-->
+	<div class="footer" id="footer">
+		<div class="footer-main">%bind(:24)</div>
+	</div>
+	<!--底部结束-->
+
+	<!--侧滑内容开始-->
+	<div class="sideslip">
+		<a href="javascript:void(0);"
+			onclick='backToHome("%bind(:10)","%bind(:11)");'><img
+			src="%bind(:32)/statics/images/appeditor/new/backindex.png" /></a>
+	</div>
+	<!--侧滑内容结束-->
+	<div id="fancybox-main" style="display: none">
+		<ul></ul>
+	</div>
+	<input id="ParamCon" type="hidden" name="ParamCon" />
+	<input id="ParamValue" type="hidden" name="ParamValue" />
+
+	<input id="menuId" type="hidden" name="menuId" value="%bind(:12)" />
+	<input id="siteId" type="hidden" name="siteId" value="%bind(:10)" />
+	<input id="ClassId" type="hidden" name="ClassId" value="%bind(:5)" />
+
+	<script type="text/javascript">
 			$(document).ready(function() {
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
@@ -961,8 +1078,10 @@
 		
 			});
 		</script>
-		<script type="text/javascript" src="%bind(:32)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.js"></script>
-		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
-	</body>
+	<script type="text/javascript"
+		src="%bind(:32)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.js"></script>
+	<div id="flowtips"
+		style="padding: 5px; border-radius: 3px; position: absolute; display: none; word-break: break-all; max-width: 150px; background-color: #FF893A; border: 1px solid; border-color: #FF0000;"></div>
+</body>
 
 </html>

@@ -8,6 +8,7 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
+        'KitchenSink.view.interviewManagement.interviewArrange.interviewAudienceStore',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeModel',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeStore',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeController'
@@ -23,32 +24,9 @@
 		}
 	},
 	initComponent: function (){
-		//预约状态
-		var msArrStateStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_ARR_STATE");
-		msArrStateStore.load();
-
-		//确认状态
-		var msConfStateStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_CONF_STA");
-		msConfStateStore.load();
-
-		//类别
-		var orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
-			recname:'TZ_ORG_COLOR_V',
-			condition:{
-				TZ_JG_ID:{
-					value:Ext.tzOrgID,
-					operator:'01',
-					type:'01'
-				}},
-			result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE'
-		});
-		orgColorSortStore.load();
-
-		Ext.util.CSS.createStyleSheet(" .x-grid-cell.msArrangeArrStateYesStyle {color: #66cc66;}","msArrangeArrStateYesStyle");
-		Ext.util.CSS.createStyleSheet(" .x-grid-cell.msArrangeArrStateNoStyle {color: #ff0000;}","msArrangeArrStateNoStyle");
-		Ext.util.CSS.createStyleSheet(" .x-grid-cell.msArragneConfigStateYesStyle {color: #66cc66;}","msArragneConfigStateYesStyle");
-		Ext.util.CSS.createStyleSheet(" .x-grid-cell.msArragneConfigStateNcStyle {color: #ff0000;}","msArragneConfigStateNcStyle");
-		Ext.util.CSS.createStyleSheet(" .x-grid-cell.msArragneConfigStateNoStyle {color: #ffa000;}","msArragneConfigStateNoStyle");
+		//开启状态
+		var msOpenStateStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_OPEN_STATE");
+		msOpenStateStore.load();
 
 		Ext.apply(this,{
 			items: [{
@@ -105,18 +83,81 @@
 					name: 'batchEndDate',
 					hidden:true
 				},{
-				 xtype: 'textfield',
-				 fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchStartTime",'面试开始时间'),
-				 name: 'batchStartTime',
-				 hidden:true
-				 },{
-				 xtype: 'textfield',
-				 fieldLabel:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.batchEndTime",'面试结束时间'),
-				 name: 'batchEndTime',
-				 hidden:true
-				 },{
+					layout: {
+						type: 'column'
+					},
+					bodyStyle:'padding:0 0 10px 0',
+					items: [{
+						columnWidth: .5,
+						xtype: 'datefield',
+			            fieldLabel: '预约开放日期',
+						format: 'Y-m-d',
+						name: 'openDate',
+						style:'margin-right:20px'
+					},{
+						columnWidth: .5,
+						xtype: 'timefield',
+			            fieldLabel: '预约开放时间',
+						increment:5,
+						editable:false,
+						format:'H:i',
+						name: 'openTime',
+						style:'margin-left:20px'
+					}]
+				},{
+					layout: {
+						type: 'column'
+					},
+					bodyStyle:'padding:0 0 10px 0',
+					items: [{
+						columnWidth: .5,
+						xtype: 'datefield',
+			            fieldLabel: '预约关闭日期',
+						format: 'Y-m-d',
+						name: 'closeDate',
+						style:'margin-right:20px'
+					},{
+						columnWidth: .5,
+						xtype: 'timefield',
+			            fieldLabel: '预约关闭时间',
+						increment:5,
+						editable:false,
+						format:'H:i',
+						name: 'closeTime',
+						style:'margin-left:20px'
+					}]
+				},{
+					layout: {
+						type: 'column'
+					},
+					bodyStyle:'padding:0 0 10px 0',
+					items: [{
+						columnWidth: .5,
+						xtype: 'combo',
+			            fieldLabel: '状态',
+						name: 'openStatus',
+						valueField: 'TValue',
+						displayField: 'TLDesc',
+						queryMode: 'local',
+						store: msOpenStateStore,
+						style:'margin-right:20px'
+					},{
+						columnWidth: .5,
+						xtype: 'checkbox',
+			            fieldLabel: '前台显示',
+						name: 'frontView',
+						boxLabel: '预约时间结束后，仍显示在学生前台',
+						inputValue: 'Y',
+						style:'margin-left:20px'
+					}]
+				},{
+					xtype: 'ueditor',
+		            fieldLabel: '说明',
+		            height: 200,
+		            zIndex: 900,
+					name: 'descr'
+				},{
 					xtype: 'grid',
-					//minHeight: 340,
 					frame: true,
 					name: 'msjh_grid',
 					reference: 'interviewArrangeDetailGrid',
@@ -128,20 +169,14 @@
 						xtype:"toolbar",
 						items:[
 							{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',
-							{text:"建议时间内自动安排考生",tooltip:"建议时间内自动安排考生",iconCls:"",handler:'msJYSJAutoArrStus'},'-',
-							{text:"发送面试时间确认邮件",tooltip:"发送面试时间确认邮件",iconCls:"email",handler:'sendInterviewArrConfirmEmail'},'-',
-							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'->',
+							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'-',
+							{text:"查看预约考生",tooltip:"查看预约考生",iconCls:"view",handler:'viewArrangeStuList'},'->',
 							{
 								xtype:'splitbutton',
 								text:'更多操作',
 								iconCls:  'list',
 								glyph: 61,
-								menu:[
-									{
-										text:'批量清除考生安排',
-										iconCls:"remove",
-										handler:'ms_cleanAp'
-									},{
+								menu:[{
 										text:'清除选中时间安排',
 										iconCls:"remove",
 										handler:'ms_cleanTimeArr'
@@ -150,26 +185,22 @@
 										iconCls:"reset",
 										handler:'ms_cleanAllTimeArr'
 									},{
-										text:'考生安排情况一览表',
-										iconCls:"preview",
-										handler:'ms_msArrPreview'
-									},{
-										text:'面试建议时间定义',
-										iconCls:"set",
-										handler:'ms_jytime'
-									},{
-										text:"发布",
+										text:"发布选中记录",
 										iconCls:"publish",
-										handler:'releaseSelList'},
-									{
-										text:"撤销发布",
+										handler:'releaseSelList'
+									},{
+										text:"撤销选中记录",
 										iconCls:"revoke",
-										handler:'UndoSelList'}
-								]
+										handler:'UndoSelList'
+									},{
+										text:"导出选中记录到Excel",
+										iconCls:"excel",
+										handler:'exportToExcel'
+									}]
 							}
 						]
 					}],
-					plugins: [{
+					plugins: [/*{
 						ptype:'rowexpander',
 						rowBodyTpl : new Ext.XTemplate(
 							'<div class="x-grid-group-title" style="margin-left:30px">',
@@ -201,7 +232,7 @@
 							'</div>',{}),
 						lazyRender : true,
 						enableCaching : false
-					},{
+					},*/{
 						ptype: 'cellediting',
 						pluginId: 'msArrCellEditingPlugin',
 						clicksToEdit: 1
@@ -220,21 +251,17 @@
 							xtype:"datefield",
 							format:"Y-m-d"
 						},
-						width: 105
+						width: 120
 					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msGroupId", '组号'),
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.maxPerson", '最多预约人数'),
 						sortable: true,
-						dataIndex: 'msGroupId',
+						dataIndex: 'maxPerson',
 						editor:{
-							xtype:'textfield',
-							allowBlank:false
+							xtype:'numberfield',
+							allowBlank:false,
+							minValue: 1
 						},
-						width: 60
-					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msGroupSn",  '序号'),
-						sortable: true,
-						dataIndex: 'msGroupSn',
-						width: 72
+						width: 120
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
 						xtype:'datecolumn',
@@ -248,7 +275,7 @@
 							allowBlank: false,
 							format:'H:i'
 						},
-						width: 90
+						width: 100
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
 						sortable: true,
@@ -262,165 +289,28 @@
 							allowBlank: false,
 							format:'H:i'
 						},
-						width: 90
+						width: 100
+					},{
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msLocation", '面试地点'),
+						dataIndex: 'msLocation',
+						editor:{
+							xtype:'textfield'
+						},
+						minWidth: 120,
+						width: 120,
+						flex: 1
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msXxBz", '备注'),
 						dataIndex: 'msXxBz',
 						editor:{
 							xtype:'textfield'
 						},
-						width: 100
-					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.localStartTime",'当地开始时间'),
-						dataIndex: 'localStartTime',
-						width: 125
-					},{
-						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.localFinishTime", '当地结束时间'),
-						dataIndex: 'localFinishTime',
-						width: 125
-					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.skypeId",  'Skype账号'),
-						dataIndex: 'skypeId',
-						width: 100
-					},{
-					 menuDisabled: true,
-					 sortable: false,
-					 width:40,
-					 header:' ',
-					 xtype: 'actioncolumn',
-					 dataIndex: 'transferSkype',
-					 items:[
-					 {	iconCls: 'skype',tooltip: 'Skype',handler:'transferSkype'}
-					 ]
-					 },{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msOprName",  '姓名'),
-						dataIndex: 'msOprName',
-						width: 100
-					},{
-						menuDisabled: true,
-						sortable: false,
-						xtype:'actioncolumn',
-						width: 35,
-						header:' ',
-						items:[
-							{iconCls: 'query',tooltip: '搜索',handler:'selInterviwStu'}
-						]
-					},{
-						menuDisabled: true,
-						sortable: false,
-						width:40,
-						header:'清除',
-						items:[	],
-						xtype: 'actioncolumn',
-						dataIndex: 'removeMsArrInfo',
-						renderer:function(){
-							return "<input class='msArrGridClearBtn' type='button' value='清除'/>";
-						}
-					},{
-						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msOrderState", '预约状态'),
-						sortable: true,
-						dataIndex: 'msOrderState',
-						minWidth: 100,
-						renderer : function(value, metadata, record) {
-							if (value=="B"){
-								metadata.tdCls = 'msArrangeArrStateYesStyle';
-							}else{
-								metadata.tdCls = 'msArrangeArrStateNoStyle';
-							}
-							//alert("render"+value);
-							var index = msArrStateStore.find('TValue',value);
-							if(index!=-1){
-								return msArrStateStore.getAt(index).data.TSDesc;
-							}
-							return record.get('msZGFlag');
-						}
-					},{
-						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msConfirmState", '确认状态'),
-						sortable: true,
-						dataIndex: 'msConfirmState',
-						minWidth: 100,
-						editor:{
-							xtype: 'combobox',
-							//emptyText:"请选择",
-							name: 'msConfirmStateCb',
-							queryMode: 'remote',
-							valueField: 'TValue',
-							displayField: 'TSDesc',
-							editable: false,
-							store:msConfStateStore
-							//allowBlank:false
-						},
-						renderer : function(value, metadata, record) {
-							if (value=="C"){
-								metadata.tdCls = 'msArragneConfigStateYesStyle';
-							}else if (value=="NA"){
-								metadata.tdCls = 'msArragneConfigStateNcStyle';
-							}else{
-								metadata.tdCls = 'msArragneConfigStateNoStyle';
-							}
-							//alert("render"+value);
-							var index = msConfStateStore.find('TValue',value);
-							if(index!=-1){
-								return msConfStateStore.getAt(index).data.TSDesc;
-							}
-							return record.get('msZGFlag');
-						}
-					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.sort", "类别") ,
-						sortable: true,
-						dataIndex: 'sort',
-						minWidth: 140,
-						flex:1,
-						renderer:function(v){
-							if(v){
-								var rec = orgColorSortStore.find('TZ_COLOR_SORT_ID',v,0,true,true,false);
-								if(rec>-1){
-									return "<div  class='x-colorpicker-field-swatch-inner' style='width:30px;height:50%;background-color: #"+orgColorSortStore.getAt(rec).get("TZ_COLOR_CODE")+"'></div><div style='margin-left:40px;'>"+orgColorSortStore.getAt(rec).get("TZ_COLOR_NAME")+"</div>";
-								}else{
-									return "";
-								}
-							}
-						},
-						editor: {
-							xtype: 'combo',
-							queryMode:'local',
-							valueField: 'TZ_COLOR_SORT_ID',
-							displayField: 'TZ_COLOR_NAME',
-							triggerAction: 'all',
-							editable : false,
-							triggers:{
-								clear: {
-									cls: 'x-form-clear-trigger',
-									handler: function(field){
-										field.setValue("");
-									}
-								}
-							},
-							store:orgColorSortStore,
-							tpl: Ext.create('Ext.XTemplate',
-								'<tpl for=".">',
-								'<div class="x-boundlist-item"><div class="x-colorpicker-field-swatch-inner" style="margin-top:6px;width:30px;height:50%;background-color: #{TZ_COLOR_CODE}"></div><div style="margin-left:40px;display: block;  overflow:  hidden; white-space: nowrap; -o-text-overflow: ellipsis; text-overflow:  ellipsis;"> {TZ_COLOR_NAME}</div></div>',
-								'</tpl>'
-							),
-							displayTpl: Ext.create('Ext.XTemplate',
-								'<tpl for=".">',
-								'{TZ_COLOR_NAME}',
-								'</tpl>'
-							),
-							listeners: {
-								focus: function (combo,event, eOpts) {
-									var selList = this.findParentByType("grid").getView().getSelectionModel().getSelection();
-									var colorSortID =selList[0].raw.sort;
-									if(colorSortID.length<=0){
-										combo.setValue("");
-									}
-								}
-							}
-						}
+						minWidth: 120,
+						width: 120,
+						flex: 1
 					},{
 						xtype: 'actioncolumn',
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.releaseOrUndo","发布/撤销") ,
-						//sortable: false,
 						minWidth:100,
 						width:100,
 						items:[
@@ -429,16 +319,12 @@
 								tooltip: '',
 								handler:'releaseOrUndo',
 								getClass: function(v, metadata , r,rowIndex ,colIndex ,store ){
-									if (store.getAt(rowIndex).get("msOprId")=='') {
-										return '';
+									if(store.getAt(rowIndex).get("releaseOrUndo")=='Y'){
+										metadata['tdAttr'] = "data-qtip=撤销";
+										return 'revoke';
 									}else{
-										if(store.getAt(rowIndex).get("releaseOrUndo")=='Y'){
-											metadata['tdAttr'] = "data-qtip=撤销";
-											return 'revoke';
-										}else{
-											metadata['tdAttr'] = "data-qtip=发布";
-											return 'publish';
-										}
+										metadata['tdAttr'] = "data-qtip=发布";
+										return 'publish';
 									}
 								}
 							}
@@ -447,7 +333,7 @@
 						menuDisabled: true,
 						sortable: false,
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.option", '操作'),
-						width:40,
+						width:60,
 						xtype: 'actioncolumn',
 						items:[
 							{	iconCls: 'add',tooltip: '添加',handler:'addMsCalRow'},
@@ -464,10 +350,12 @@
 							}
 						},
 						displayInfo: true,
+						/*
 						displayMsg: '显示{0}-{1}条，共{2}条',
 						beforePageText: '第',
 						afterPageText: '页/共{0}页',
 						emptyMsg: '没有数据显示',
+						*/
 						plugins: new Ext.ux.ProgressBarPager()
 					}
 				}]

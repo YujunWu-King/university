@@ -6,6 +6,94 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         btn.findParentByType('grid').filters.clearFilters();
 
     },
+    
+    //添加听众
+    adddAudience:function(btn){
+    	Ext.tzShowPromptSearch({
+            recname: 'TZ_AUD_DEFN_T',
+            searchDesc: '选择听众',
+            maxRow:50,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                		value: Ext.tzOrgID,
+                        type: '01'
+                    },
+                    TZ_LXFS_LY:{
+                        value: 'ZSBM',//来源类型：招生报名
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                    TZ_AUD_NAME:{
+                        desc:'听众名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_AUD_ID:'听众ID',
+                TZ_AUD_NAME: '听众名称',
+                ROW_ADDED_DTTM:'创建时间'
+            },
+            multiselect: true,
+            callback: function(selection){
+            	var arrAddAudience = [];
+            	var arrAddAudiValue = [];
+                if (selection.length>0){
+                    for(j=0;j<selection.length;j++){
+                        addAudirec="";
+                        addAudirec = {"id":selection[j].data.TZ_AUD_ID,"desc":selection[j].data.TZ_AUD_NAME};
+                        arrAddAudience.push(addAudirec);
+                        arrAddAudiValue.push(selection[j].data.TZ_AUD_ID);
+                    };
+                    var audform = btn.findParentByType('grid').down('form[reference=audienceForm]');
+                    var audStore=audform.down('tagfield[name="audTag"]').getStore();
+                    audStore.add(arrAddAudience);
+                    
+                   // audform.down('tagfield[name="audTag"]').removeListener('change','receverChange');
+                    audform.down('tagfield[name="audTag"]').addValue(arrAddAudiValue);
+                   // audform.down('tagfield[name="audTag"]').addListener('change','receverChange');
+                    
+                    
+                    var setStuListPanel = btn.up('interviewArrangeSetStuList');
+                    var setStuListForm = setStuListPanel.down('form[reference=interviewArrangeSetStuListForm]');
+                    var setStuListGrid = setStuListPanel.down('grid');
+                    var setStuListGridStore = setStuListGrid.getStore();
+                 
+                    var setStuListFormRec = setStuListForm.getForm().getFieldValues();
+                    var classID = setStuListFormRec["classID"];
+                    var batchID = setStuListFormRec["batchID"];
+                    var className = setStuListFormRec["className"];
+                    var batchName = setStuListFormRec["batchName"];
+                    
+                    var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzAddAudience","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+Ext.JSON.encode(arrAddAudiValue)+'}}';
+                    Ext.tzSubmit(tzParams,function(){
+                        Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+                        setStuListGridStore.tzStoreParams = Params;
+                        setStuListGridStore.load({
+                            callback : function(records, operation, success) {
+                                if (success == success) {
+                                    var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
+                                    var setStuListFormRec = {"itwArrInfFormData":{
+                                        "classID":classID,
+                                        "className":className,
+                                        "batchID":batchID,
+                                        "batchName":batchName,
+                                        "stuCount":setStuListGridStoreCount
+                                    }};
+                                    setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
+                                }
+                            }
+                        });
+                    },"添加听众成功",true,this);
+                }
+            }
+        })
+    },
+    
+    
     addIntervieStus:function(btn){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_ASTU_STD"];
@@ -126,8 +214,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     //保存
     onPanelSave:function(btn){
         var setStuListPanel = btn.up('panel');
-        var setStuListForm = setStuListPanel.child('form');
+        var setStuListForm = setStuListPanel.child('form[reference=interviewArrangeSetStuListForm]');
         var setStuListGrid = setStuListPanel.child('grid');
+        
+        var audFormRec = setStuListGrid.down("form[reference=audienceForm]").getForm().getValues();
+        var audIDs = audFormRec["audTag"];
 
         var setStuListFormRec = setStuListForm.getForm().getFieldValues();
         var classID = setStuListFormRec["classID"];
@@ -141,43 +232,50 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         var comParams="";
         //删除记录
         var removeRecs = setStuListGridStore.getRemovedRecords();
-        if (removeRecs.length>0){
-            for(var i=0;i<removeRecs.length;i++){
-                if(removeJson == ""){
-                    removeJson = Ext.JSON.encode(removeRecs[i].data);
-                }else{
-                    removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-                }
-            }
 
-            if(removeJson != ""){
-                comParams = '"delete":[' + removeJson + "]";
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
             }
-            //提交参数
-            var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
-            //保存数据
-            Ext.tzSubmit(tzParams,function(){
-                Params= '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
-                setStuListGridStore.tzStoreParams = Params;
-                setStuListGridStore.load({
-                    callback : function(records, operation, success) {
-                        if (success == success) {
-                            var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
-                            var setStuListFormRec = {"itwArrInfFormData":{
-                                "classID":classID,
-                                "className":className,
-                                "batchID":batchID,
-                                "batchName":batchName,
-                                "stuCount":setStuListGridStoreCount
-                            }};
-                            setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
-                        }
-                    }
-                });
-            },"",true,this);
+        }
+
+        var audIDsJson = "";
+        if(audIDs.length>0){
+        	audIDsJson = Ext.JSON.encode(audIDs);
         }else{
-            Ext.tzShowToast('保存成功','提示','t','#ffffff');
-        };
+        	audIDsJson = '[]';
+        }
+        
+        if(removeJson != ""){
+            comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+        }else{
+        	comParams = '"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+        }
+        
+        //提交参数
+        var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        //保存数据
+        Ext.tzSubmit(tzParams,function(){
+            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+            setStuListGridStore.tzStoreParams = Params;
+            setStuListGridStore.load({
+                callback : function(records, operation, success) {
+                    if (success == success) {
+                        var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
+                        var setStuListFormRec = {"itwArrInfFormData":{
+                            "classID":classID,
+                            "className":className,
+                            "batchID":batchID,
+                            "batchName":batchName,
+                            "stuCount":setStuListGridStoreCount
+                        }};
+                        setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
+                    }
+                }
+            });
+        },"",true,this);
     },
     //确定
     onPanelEnsure:function(btn){
@@ -187,5 +285,43 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     //关闭
     onPanelClose: function(){
         this.getView().close();
-    }
+    },
+	//给选中考生发送面试预约邮件
+	sendEmailToSelStu: function(btn){
+		var msStuGrid = btn.up('grid');
+		var msStuGridSelRecs=msStuGrid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = msStuGridSelRecs.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要发送邮件的记录");
+			return;
+		}else{
+			var stuJson = "";
+			for(var i=0;i<msStuGridSelRecs.length;i++){
+				if(stuJson == ""){
+					stuJson = Ext.JSON.encode(msStuGridSelRecs[i].data);
+				}else{
+					stuJson = stuJson + ','+Ext.JSON.encode(msStuGridSelRecs[i].data);
+				}
+			}
+			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzSendEmailToSelStu","comParams":{"stuList":['+stuJson+']}}';
+			
+			Ext.tzLoad(tzParams,function(responseData){
+				var emailTmpName = responseData['EmailTmpName'];
+				var arrEMLTmpls = new Array();
+				arrEMLTmpls=emailTmpName.split(",");
+	
+				var audienceId = responseData['audienceId'];
+	
+				Ext.tzSendEmail({
+					//发送的邮件模板;
+					"EmailTmpName":arrEMLTmpls,
+					//创建的需要发送的听众ID;
+					"audienceId": audienceId,
+					//是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
+					"file": "N"
+				});
+			});	
+		}
+	}
 });
