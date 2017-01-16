@@ -152,9 +152,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 						"Email address or password is incorrect ."));
 				return false;
 			}
-
+			//如果账号不完善，则调过激活步骤
+			String strCmpl = dataMap.get("TZ_IS_CMPL") == null ? "" : String.valueOf(dataMap.get("TZ_IS_CMPL"));
 			String strJhzt = dataMap.get("TZ_JIHUO_ZT") == null ? "" : String.valueOf(dataMap.get("TZ_JIHUO_ZT"));
-			if (!"Y".equals(strJhzt)) {
+			if ("Y"==strCmpl&&!"Y".equals(strJhzt)) {
 				errorMsg.add("1");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
 						"TZGD_FWINIT_00050", language, "此帐号暂未激活，请激活后重试。", "The account is not activated yet."));
@@ -454,8 +455,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		String tzIsCmpl = sqlQuery.queryForObject(sql, new Object[] { userName,OrgId }, "String");
 		if(!"Y".equals(tzIsCmpl)){
 			infoIsCmpl = false;
-		}
-		infoIsCmpl = false;
+		}		
 		return infoIsCmpl;
 	}
 }
