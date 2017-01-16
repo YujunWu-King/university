@@ -213,7 +213,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					break;
 				case "TZ_PROJECT":	
 					
-					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld2",
+					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							"查看新闻及活动范围设置：<a href=\"javaScript: void(0);\" onclick=\"selectNewsProject("+siteId+");\" ><img src=\""+ctxPath+"/statics/images/tranzvision/sz.png\" width=\"25px;\" height=\"25px;\"></a>");
 
 					strResult_fld_aleft = strResult_fld_aleft
