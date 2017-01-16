@@ -743,8 +743,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 
 		return strResult;
-	}
-
+	}	
+	
 	public String checkCodeVerifyByPass(String strParams, String[] errMsg) {
 		String strCheckCode = "";
 		String strLang = "";

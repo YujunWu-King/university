@@ -851,7 +851,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strHomePageCode = "";
 				String strLoginPageCode = "";
 				String strEnrollPageCode = "";
-
+				String strPerfectPageCode = "";
 				String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
@@ -872,12 +872,26 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点保存完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.savePerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点保存完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页保存失败！";
+												}
+													
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页保存失败！";
+											}
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页保存失败！";
@@ -915,12 +929,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点保存完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.savePerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点保存完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页保存失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页保存失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页保存失败！";
@@ -1085,7 +1112,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strHomePageCode = "";
 				String strLoginPageCode = "";
 				String strEnrollPageCode = "";
-
+				String strPerfectPageCode = "";
+				
 				String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
@@ -1111,12 +1139,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.releasEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点发布完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.releasPerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点发布完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页发布失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页发布失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页发布失败！";
@@ -1161,10 +1202,23 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 										boolResult = registeServiceImpl.releasEnrollpage(strEnrollPageCode, strSiteId,
 												errMsg);
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点发布完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.releasPerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点发布完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页发布失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页发布失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页发布失败！";
