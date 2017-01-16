@@ -441,4 +441,20 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		return tzSession.checkSession(userSessionName);
 	}
 
+	/**
+	 * (non-Javadoc)
+	 * @param userName
+	 * @param OrgId
+	 * @return
+	 */
+	public boolean getLoginIndex(String userName,String OrgId){
+		//校验登录用户是否注册完整
+		boolean infoIsCmpl = true;
+		String sql = "SELECT TZ_IS_CMPL FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
+		String tzIsCmpl = sqlQuery.queryForObject(sql, new Object[] { userName,OrgId }, "String");
+		if(!"Y".equals(tzIsCmpl)){
+			infoIsCmpl = false;
+		}		
+		return infoIsCmpl;
+	}
 }

@@ -454,6 +454,75 @@ public class RegisteServiceImpl {
 			return false; 
 		}
 	}
+	/**
+	 * 发布完善信息页面，2-17-01-16，yuds
+	 * @param strReleasContent
+	 * @param strSiteId
+	 * @param errMsg
+	 * @return
+	 */
+	public boolean releasPerfectpage(String strReleasContent, String strSiteId,String[] errMsg){
+		try{
+			PsTzSiteiDefnTWithBLOBs psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(strSiteId);
+			if(psTzSiteiDefnT != null){
+				String jgid = psTzSiteiDefnT.getTzJgId();
+		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
+		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
+		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
+		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        
+		        strReleasContent = doctypeHtml
+		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,request.getContextPath()) 
+		        	+ strReleasContent + "</html>";
+		        strReleasContent = objRep.repTitle(strReleasContent, strSiteId);
+		        strReleasContent = objRep.repCss(strReleasContent, strSiteId);
+		        strReleasContent = objRep.repWelcome(strReleasContent, "");
+		        strReleasContent = objRep.repSdkbar(strReleasContent, "");
+		        strReleasContent = objRep.repSiteid(strReleasContent, strSiteId);
+		        if(jgid != null && !"".equals(jgid)){
+		        	strReleasContent = objRep.repJgid(strReleasContent, jgid.toUpperCase());
+		        }else{
+		        	strReleasContent = objRep.repJgid(strReleasContent, "");
+		        }
+		        
+		        if(siteLang != null && !"".equals(siteLang)){
+		        	strReleasContent = objRep.repLang(strReleasContent, siteLang.toUpperCase());
+		        }else{
+		        	strReleasContent = objRep.repLang(strReleasContent, "");
+		        }
+		        psTzSiteiDefnT.setTzEnrollPrecode(strReleasContent);
+		        psTzSiteiDefnT.setTzEnrollPubcode(strReleasContent);
+		        int success = psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnT);
+		        if(success > 0){
+		        	PsTzUserregMbT psTzUserregMbT = psTzUserregMbTMapper.selectByPrimaryKey(strSiteId);
+		        	String enrollDir = psTzUserregMbT.getTzEnrollDir();
+		        	String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+		        	dir = request.getServletContext().getRealPath(dir);
+		        	if(enrollDir == null || "".equals(enrollDir)){
+		        		dir = dir + File.separator + jgid.toLowerCase();
+		        	}else{
+		        		dir = dir + enrollDir;
+		        	}
+		        	
+		        	boolean bl = this.staticFile(strReleasContent, dir, "perfect.html", errMsg);
+		        	return bl;  
+		        }else{
+		        	errMsg[0] = "1";
+					errMsg[1] = "更新失败！";
+		        	return false;  
+		        }
+			}else{
+				errMsg[0] = "1";
+				errMsg[1] = "站点不存在！！";
+	        	return false;  
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0] = "2";
+			errMsg[1] = "站点完善信息页发布异常！";
+			return false; 
+		}
+	}
 	
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg){
 		try{
