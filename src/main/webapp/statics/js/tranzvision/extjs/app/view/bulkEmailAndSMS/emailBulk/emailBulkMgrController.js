@@ -86,7 +86,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
             var emlItemStore = new KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetEmlItemStore();
 
             var emlBkDtForm = panel.child('form');
-
+        	emlBkDtForm.down('button[reference=copyHistoryBtn]').setHidden(false);/*显示历史复制按钮*/
             emlBkDtForm.down('grid[reference=emlTmplItemGrid]').setStore(emlItemStore);
             emlBkDtForm.down('grid[reference=emlInfoItemGrid]').setStore(attaStore);
 

@@ -58,7 +58,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                         t.down('button[reference=sendBtn]').setDisabled(true);
                                         t.getController().pageReadonly(t.child('form'));
                                     }
-                                    /*
+                                    
 									if (jsonObject.comContent.rwzxZt == "C" || jsonObject.comContent.rwzxZt == "D") {
                                         t.down('button[reference=revokeBtn]').setVisible(false);
 										t.down('displayfield[name=dsfsInfo]').setVisible(false);
@@ -69,7 +69,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
 										t.down('displayfield[name=dsfsInfo]').setValue(dsfsInfo);
 										t.down('displayfield[name=dsfsInfo]').setVisible(true);
                                     }
-                                    */
+                                    
                                 }
                             });
                         }
@@ -199,6 +199,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         xtype:'button',
                         text:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtn","导入Excel"),
                         tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtnTip","导入Excel"),
+                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small',
                         handler:"importFromExcel",
                         reference:'impExc',
                         bind: {
@@ -206,12 +207,28 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         }
                     }]
                 },{
+					layout: {
+						 type:'hbox',  
+						 padding:'0px 50px 10px 0',  
+						 pack:'end',  
+						 align:'middle'
+					},
+					items:[{
+						xtype: 'button',
+						reference:'copyHistoryBtn',
+						text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistory","复制历史任务"),
+						tooltip: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistoryTip","复制历史任务"),
+						hidden: true,
+						baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small',
+						handler:'copyHistoryData'
+					}]			
+				}/*,{
                     xtype:'splitter',
                     height:8,
                     style:{
                         background:'#fff'
                     }
-                },{
+                }*/,{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.recever","收件人"),
                     //emptyText:'可手工填写电子邮箱；也可从EXCEL中粘贴某一列的电子邮箱',
@@ -269,7 +286,14 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                     },
                     padding:'0 0 8px 0',
                     xtype:"toolbar",
-                    items:["->"/*,{
+                    items:["->",{
+						xtype:'button',
+                        reference:'selectStuBtn',
+                        text:'<span style="color:#fff">选择考生</span>',
+                        tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.selectStuTip","选择考生"),
+                        handler:'addStruData',
+                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+					}/*,{
                         xtype:'button',
                         reference:'addAudienceBtn',
                         text:'<span style="color:#fff">添加听众</span>',
@@ -329,6 +353,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         }
                     }]
                 },{
+					xtype: 'component',
+					style:{
+						marginLeft: '123px'	
+					},
+					html: '<span style="color: #F00;">说明：每封邮件都要抄送，例如同时给100个人发送邮件，抄送人将收到100封邮件，请慎重使用。</span>'	
+				},{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.mailCC","抄送"),
                     reference: 'mailCC',
@@ -400,6 +430,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                             emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
 
+                                            emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+											
                                             emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
                                             emlBkDetForm.down('button[reference=setEmlTmpl]').removeCls('x-item-disabled x-btn-disabled');
                                             //加载邮件模版信息
@@ -438,7 +471,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                             emlBkDetForm.child('tagfield[reference=recever]').disabled=false;
                                             emlBkDetForm.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
-
+                                            
+                                            emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+											
                                             emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=true;
                                         }
                                     }

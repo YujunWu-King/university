@@ -32,12 +32,14 @@ public class EmailSendEngineCls extends BaseEngine {
 		// 发送邮件;
 		if (strTaskId != null && !"".equals(strTaskId)) {
 			sendSmsOrMalServiceImpl.send(strTaskId, String.valueOf(processinstance));
+			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+					new Object[] { "9", processinstance });
 		} else {
-			sendSmsOrMalServiceImpl.send(strTaskId, String.valueOf(processinstance));
+			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
+					new Object[] { "10", processinstance });
 		}
 		
-		jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-				new Object[] { "10", processinstance });
+		
 
 	}
 }

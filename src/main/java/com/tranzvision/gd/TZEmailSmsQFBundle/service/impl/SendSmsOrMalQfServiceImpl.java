@@ -42,7 +42,7 @@ import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzYjfjlshiTbl;
 
 /**
- * 邮件短信发送；原：TZ_SMS_MAL:SendSmsOrMal
+ * 邮件短信发送；原：TZ_SMSMAL_QF_PKG:SendSmsOrMal
  * 
  * @author tang
  * @since 2015-11-30
@@ -490,13 +490,16 @@ public class SendSmsOrMalQfServiceImpl {
 			    //发送: 一般发送 or excel导入
 			    String sendModel = "";
 			    
+			    int count = 0;
+			    
+			    long totalSleepTime = 0; /*程序睡眠时间*/
+			    
 			    PsTzDxyjQfDyTWithBLOBs psTzDxyjQfDyT = psTzDxyjQfDyTMapper.selectByPrimaryKey(strPicID);
 			    cc_Address = psTzDxyjQfDyT.getTzMailCc();
 			    forcedPush = psTzDxyjQfDyT.getTzQztsFlag();
 			    useFrequent = psTzDxyjQfDyT.getTzQypfclFlag();
 			    hourSendNum = psTzDxyjQfDyT.getTzXsfssl();
 			    sendModel = psTzDxyjQfDyT.getTzSendModel();
-			      
 				// 查询总的发送数量;
 				String totalSQL = "select count(1) from PS_TZ_DXYJFSRW_TBL a, PS_TZ_DXYJRWMX_TBL b where a.TZ_EML_SMS_TASK_ID=b.TZ_EML_SMS_TASK_ID and a.TZ_AUDIENCE_ID=b.TZ_AUDIENCE_ID and a.TZ_EML_SMS_TASK_ID=?";
 				int totalSendNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { strTaskId }, "Integer");
@@ -522,6 +525,8 @@ public class SendSmsOrMalQfServiceImpl {
 				String content = "";
 				// 发送成功数;
 				int successNum = 0;
+				
+				Date startDateTime = null;
 				// 循环听众任务信息;
 				String sql = "select a.TZ_WEBMAL_FLAG,a.TZ_DYNAMIC_FLAG,a.TZ_SYYX_LX,a.TZ_JG_ID,c.TZ_AUD_XM,c.TZ_ZY_EMAIL,c.TZ_CY_EMAIL,c.TZ_AUDIENCE_ID,c.TZ_AUDCY_ID,a.TZ_EML_IF_PRT from PS_TZ_DXYJFSRW_TBL a, PS_TZ_DXYJRWMX_TBL b, PS_TZ_AUDCYUAN_T c WHERE a.TZ_EML_SMS_TASK_ID = b.TZ_EML_SMS_TASK_ID and a.TZ_AUDIENCE_ID=b.TZ_AUDIENCE_ID and b.TZ_AUDCY_ID=c.TZ_AUDCY_ID and b.TZ_AUDIENCE_ID = c.TZ_AUDIENCE_ID and a.TZ_EML_SMS_TASK_ID=?";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strTaskId });
@@ -559,6 +564,49 @@ public class SendSmsOrMalQfServiceImpl {
 						String strRwSlId = String.valueOf(getSeqNum.getSeqNum("TZ_YJFSLSHI_TBL", "TZ_RWSL_ID"));
 
 						boolean blRept = false;
+						
+						//是否强制推送，如果不是，退订邮箱不发送;
+						if(!"Y".equals(forcedPush)){
+							// 退订标识;
+							int debookFlagCount = jdbcTemplate.queryForObject("SELECT count(1) FROM PS_TZ_YJQFTD_TBL WHERE upper(TZ_EMAIL)=upper(?) AND TZ_QXDY_FLAG='Y'",new Object[]{mainEmail},"Integer" );
+				            if(debookFlagCount > 0){
+				            	// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
+								this.writeLsMalData(strRwSlId, mainEmail, "", "", "FAIL", strTaskId, prcsinstanceId,audCyId);
+								this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
+								this.deleteTaskAud(strTaskId, audId, audCyId);
+								continue;
+				            }
+							
+						}
+						
+						
+						/**记录发送开始时间**/
+				        long totalTimeConsuming = 0; /*发送邮件总耗时(单位：秒),不包含睡眠时间*/
+				        long preTimeConsuming = 0; /*发送一封邮件的平均耗时*/
+				        if(count == 0){
+				        	startDateTime = new Date();
+				        }else{
+				        	if("Y".equals(useFrequent) ){
+				        		Date currDateTime = new Date();
+				        		
+				        		totalTimeConsuming = currDateTime.getTime()-startDateTime.getTime() - totalSleepTime;
+				        		preTimeConsuming = (long) totalTimeConsuming / count ;
+				        		
+				        		/*计算1小时内发送的数量*/
+				        		if(preTimeConsuming == 0){
+				        			preTimeConsuming = 1;
+				        		}
+				        		
+				        		long maybeSendNum = (long)(60 * 60 * 1000 / preTimeConsuming);
+				        		if(maybeSendNum > hourSendNum){
+				        			long sleepTime = (long)((3600 * 1000 / hourSendNum - preTimeConsuming) * 0.9);
+				        				
+				        			Thread.sleep(sleepTime);
+				        			totalSleepTime = totalSleepTime + sleepTime;
+				        		}
+				        	}
+				        }
+				         
 
 						// 邮件接收地址
 						String emailAddrAdd = "";
@@ -570,7 +618,7 @@ public class SendSmsOrMalQfServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -586,7 +634,7 @@ public class SendSmsOrMalQfServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -602,7 +650,7 @@ public class SendSmsOrMalQfServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -614,7 +662,7 @@ public class SendSmsOrMalQfServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -627,7 +675,7 @@ public class SendSmsOrMalQfServiceImpl {
 						}
 
 						if (emailAddrAdd == null || "".equals(emailAddrAdd)) {
-							this.writeLsMalData(strRwSlId, "", "", "", "FAIL", strTaskId, prcsinstanceId);
+							this.writeLsMalData(strRwSlId, "", "", "", "FAIL", strTaskId, prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							continue;
@@ -693,11 +741,10 @@ public class SendSmsOrMalQfServiceImpl {
 						}
 
 						boolean ismail = mailer.sendMail();
-
 						if (ismail) {
 							// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "SUC", strTaskId,
-									prcsinstanceId);
+									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							successNum = successNum + 1;
@@ -706,9 +753,11 @@ public class SendSmsOrMalQfServiceImpl {
 							this.writeTaskLog(strTaskId, strRwSlId, "D", logEmailSendFalseMsg);
 							// 发送失败写邮件发送历史表，附件历史表
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
-									prcsinstanceId);
+									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 						}
+						 
+				        count = count + 1;
 
 					}
 				}
@@ -765,7 +814,7 @@ public class SendSmsOrMalQfServiceImpl {
 
 	// 写邮件历史数据表
 	private void writeLsMalData(String strRwSlId, String sjxEmail, String tj, String content, String strFsZt,
-			String strTaskId, String prcsinstanceId) {
+			String strTaskId, String prcsinstanceId,String tzAudcyId) {
 		PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(strTaskId);
 		String senderEmail = "";
 		if (psTzDxyjfsrwTbl != null) {
@@ -781,6 +830,7 @@ public class SendSmsOrMalQfServiceImpl {
 		psTzYjfslshiTbl.setTzEmlSmsTaskId(strTaskId);
 		psTzYjfslshiTbl.setTzFsZt(strFsZt);
 		psTzYjfslshiTbl.setTzJcslId(prcsinstanceId);
+		psTzYjfslshiTbl.setTzAudcyId(tzAudcyId);
 		psTzYjfslshiTblMapper.insert(psTzYjfslshiTbl);
 
 		// 邮件发送内容历史表

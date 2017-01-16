@@ -1,37 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.tranzvision.gd.TZProjectSetBundle.dao.PsTzPrjInfTMapper">
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    <id column="TZ_PRJ_ID" jdbcType="VARCHAR" property="tzPrjId" />
-    <result column="TZ_PRJ_NAME" jdbcType="VARCHAR" property="tzPrjName" />
-    <result column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
-    <result column="TZ_IS_OPEN" jdbcType="VARCHAR" property="tzIsOpen" />
-    <result column="TZ_APP_MODAL_ID" jdbcType="VARCHAR" property="tzAppModalId" />
-    <result column="TZ_PRJ_TYPE_ID" jdbcType="VARCHAR" property="tzPrjTypeId" />
-    <result column="TZ_SBMINF_TMP_ID" jdbcType="VARCHAR" property="tzSbminfTmpId" />
-    <result column="TZ_APPPRO_TMP_ID" jdbcType="VARCHAR" property="tzAppproTmpId" />
-    <result column="TZ_SCORE_MODAL_ID" jdbcType="VARCHAR" property="tzScoreModalId" />
-    <result column="TZ_MSPS_SCORE_M_ID" jdbcType="VARCHAR" property="tzMspsScoreMId" />
-    <result column="TZ_PS_APPF_M_ID" jdbcType="VARCHAR" property="tzPsAppfMId" />
-    <result column="ROW_ADDED_DTTM" jdbcType="TIMESTAMP" property="rowAddedDttm" />
-    <result column="ROW_ADDED_OPRID" jdbcType="VARCHAR" property="rowAddedOprid" />
-    <result column="ROW_LASTMANT_DTTM" jdbcType="TIMESTAMP" property="rowLastmantDttm" />
-    <result column="ROW_LASTMANT_OPRID" jdbcType="VARCHAR" property="rowLastmantOprid" />
-    <result column="SYNCID" jdbcType="INTEGER" property="syncid" />
-    <result column="SYNCDTTM" jdbcType="TIMESTAMP" property="syncdttm" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZProjectSetBundle.dao.PsTzPrjInfTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
+    <id column="TZ_PRJ_ID" property="tzPrjId" jdbcType="VARCHAR" />
+    <result column="TZ_PRJ_NAME" property="tzPrjName" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_IS_OPEN" property="tzIsOpen" jdbcType="VARCHAR" />
+    <result column="TZ_APP_MODAL_ID" property="tzAppModalId" jdbcType="VARCHAR" />
+    <result column="TZ_PRJ_TYPE_ID" property="tzPrjTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_SBMINF_TMP_ID" property="tzSbminfTmpId" jdbcType="VARCHAR" />
+    <result column="TZ_APPPRO_TMP_ID" property="tzAppproTmpId" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_MODAL_ID" property="tzScoreModalId" jdbcType="VARCHAR" />
+    <result column="TZ_MSPS_SCORE_M_ID" property="tzMspsScoreMId" jdbcType="VARCHAR" />
+    <result column="TZ_PS_APPF_M_ID" property="tzPsAppfMId" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    <result column="TZ_PRJ_DESC" jdbcType="LONGVARCHAR" property="tzPrjDesc" />
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" extends="BaseResultMap" >
+    <result column="TZ_PRJ_DESC" property="tzPrjDesc" jdbcType="LONGVARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, TZ_SBMINF_TMP_ID, 
     TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
     ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
-  <sql id="Blob_Column_List">
+  <sql id="Blob_Column_List" >
     TZ_PRJ_DESC
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     ,
@@ -39,11 +39,11 @@
     from PS_TZ_PRJ_INF_T
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from PS_TZ_PRJ_INF_T
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
+  <insert id="insert" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T (TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, 
       TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, 
       TZ_SBMINF_TMP_ID, TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, 
@@ -59,179 +59,179 @@
       #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzPrjDesc,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="tzPrjId != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
         TZ_PRJ_ID,
       </if>
-      <if test="tzPrjName != null">
+      <if test="tzPrjName != null" >
         TZ_PRJ_NAME,
       </if>
-      <if test="tzJgId != null">
+      <if test="tzJgId != null" >
         TZ_JG_ID,
       </if>
-      <if test="tzIsOpen != null">
+      <if test="tzIsOpen != null" >
         TZ_IS_OPEN,
       </if>
-      <if test="tzAppModalId != null">
+      <if test="tzAppModalId != null" >
         TZ_APP_MODAL_ID,
       </if>
-      <if test="tzPrjTypeId != null">
+      <if test="tzPrjTypeId != null" >
         TZ_PRJ_TYPE_ID,
       </if>
-      <if test="tzSbminfTmpId != null">
+      <if test="tzSbminfTmpId != null" >
         TZ_SBMINF_TMP_ID,
       </if>
-      <if test="tzAppproTmpId != null">
+      <if test="tzAppproTmpId != null" >
         TZ_APPPRO_TMP_ID,
       </if>
-      <if test="tzScoreModalId != null">
+      <if test="tzScoreModalId != null" >
         TZ_SCORE_MODAL_ID,
       </if>
-      <if test="tzMspsScoreMId != null">
+      <if test="tzMspsScoreMId != null" >
         TZ_MSPS_SCORE_M_ID,
       </if>
-      <if test="tzPsAppfMId != null">
+      <if test="tzPsAppfMId != null" >
         TZ_PS_APPF_M_ID,
       </if>
-      <if test="rowAddedDttm != null">
+      <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
       </if>
-      <if test="rowAddedOprid != null">
+      <if test="rowAddedOprid != null" >
         ROW_ADDED_OPRID,
       </if>
-      <if test="rowLastmantDttm != null">
+      <if test="rowLastmantDttm != null" >
         ROW_LASTMANT_DTTM,
       </if>
-      <if test="rowLastmantOprid != null">
+      <if test="rowLastmantOprid != null" >
         ROW_LASTMANT_OPRID,
       </if>
-      <if test="syncid != null">
+      <if test="syncid != null" >
         SYNCID,
       </if>
-      <if test="syncdttm != null">
+      <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
-      <if test="tzPrjDesc != null">
+      <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="tzPrjId != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
         #{tzPrjId,jdbcType=VARCHAR},
       </if>
-      <if test="tzPrjName != null">
+      <if test="tzPrjName != null" >
         #{tzPrjName,jdbcType=VARCHAR},
       </if>
-      <if test="tzJgId != null">
+      <if test="tzJgId != null" >
         #{tzJgId,jdbcType=VARCHAR},
       </if>
-      <if test="tzIsOpen != null">
+      <if test="tzIsOpen != null" >
         #{tzIsOpen,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppModalId != null">
+      <if test="tzAppModalId != null" >
         #{tzAppModalId,jdbcType=VARCHAR},
       </if>
-      <if test="tzPrjTypeId != null">
+      <if test="tzPrjTypeId != null" >
         #{tzPrjTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="tzSbminfTmpId != null">
+      <if test="tzSbminfTmpId != null" >
         #{tzSbminfTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppproTmpId != null">
+      <if test="tzAppproTmpId != null" >
         #{tzAppproTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzScoreModalId != null">
+      <if test="tzScoreModalId != null" >
         #{tzScoreModalId,jdbcType=VARCHAR},
       </if>
-      <if test="tzMspsScoreMId != null">
+      <if test="tzMspsScoreMId != null" >
         #{tzMspsScoreMId,jdbcType=VARCHAR},
       </if>
-      <if test="tzPsAppfMId != null">
+      <if test="tzPsAppfMId != null" >
         #{tzPsAppfMId,jdbcType=VARCHAR},
       </if>
-      <if test="rowAddedDttm != null">
+      <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowAddedOprid != null">
+      <if test="rowAddedOprid != null" >
         #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
-      <if test="rowLastmantDttm != null">
+      <if test="rowLastmantDttm != null" >
         #{rowLastmantDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowLastmantOprid != null">
+      <if test="rowLastmantOprid != null" >
         #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null">
+      <if test="syncid != null" >
         #{syncid,jdbcType=INTEGER},
       </if>
-      <if test="syncdttm != null">
+      <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="tzPrjDesc != null">
+      <if test="tzPrjDesc != null" >
         #{tzPrjDesc,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     update PS_TZ_PRJ_INF_T
-    <set>
-      <if test="tzPrjName != null">
+    <set >
+      <if test="tzPrjName != null" >
         TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
       </if>
-      <if test="tzJgId != null">
+      <if test="tzJgId != null" >
         TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
       </if>
-      <if test="tzIsOpen != null">
+      <if test="tzIsOpen != null" >
         TZ_IS_OPEN = #{tzIsOpen,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppModalId != null">
+      <if test="tzAppModalId != null" >
         TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
       </if>
-      <if test="tzPrjTypeId != null">
+      <if test="tzPrjTypeId != null" >
         TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
       </if>
-      <if test="tzSbminfTmpId != null">
+      <if test="tzSbminfTmpId != null" >
         TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppproTmpId != null">
+      <if test="tzAppproTmpId != null" >
         TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzScoreModalId != null">
+      <if test="tzScoreModalId != null" >
         TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
       </if>
-      <if test="tzMspsScoreMId != null">
+      <if test="tzMspsScoreMId != null" >
         TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
       </if>
-      <if test="tzPsAppfMId != null">
+      <if test="tzPsAppfMId != null" >
         TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
       </if>
-      <if test="rowAddedDttm != null">
+      <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowAddedOprid != null">
+      <if test="rowAddedOprid != null" >
         ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       </if>
-      <if test="rowLastmantDttm != null">
+      <if test="rowLastmantDttm != null" >
         ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="rowLastmantOprid != null">
+      <if test="rowLastmantOprid != null" >
         ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null">
+      <if test="syncid != null" >
         SYNCID = #{syncid,jdbcType=INTEGER},
       </if>
-      <if test="syncdttm != null">
+      <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
-      <if test="tzPrjDesc != null">
+      <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     update PS_TZ_PRJ_INF_T
     set TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
       TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
@@ -252,278 +252,7 @@
       TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR}
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    update PS_TZ_PRJ_INF_T
-    set TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
-      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
-      TZ_IS_OPEN = #{tzIsOpen,jdbcType=VARCHAR},
-      TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
-      TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
-      TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
-      TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
-      TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
-      TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
-      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
-      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
-      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
-      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
-      SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
-    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
-  </update>
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    <id column="TZ_PRJ_ID" jdbcType="VARCHAR" property="tzPrjId" />
-    <result column="TZ_PRJ_NAME" jdbcType="VARCHAR" property="tzPrjName" />
-    <result column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
-    <result column="TZ_IS_OPEN" jdbcType="VARCHAR" property="tzIsOpen" />
-    <result column="TZ_APP_MODAL_ID" jdbcType="VARCHAR" property="tzAppModalId" />
-    <result column="TZ_PRJ_TYPE_ID" jdbcType="VARCHAR" property="tzPrjTypeId" />
-    <result column="TZ_SBMINF_TMP_ID" jdbcType="VARCHAR" property="tzSbminfTmpId" />
-    <result column="TZ_APPPRO_TMP_ID" jdbcType="VARCHAR" property="tzAppproTmpId" />
-    <result column="TZ_SCORE_MODAL_ID" jdbcType="VARCHAR" property="tzScoreModalId" />
-    <result column="TZ_MSPS_SCORE_M_ID" jdbcType="VARCHAR" property="tzMspsScoreMId" />
-    <result column="TZ_PS_APPF_M_ID" jdbcType="VARCHAR" property="tzPsAppfMId" />
-    <result column="ROW_ADDED_DTTM" jdbcType="TIMESTAMP" property="rowAddedDttm" />
-    <result column="ROW_ADDED_OPRID" jdbcType="VARCHAR" property="rowAddedOprid" />
-    <result column="ROW_LASTMANT_DTTM" jdbcType="TIMESTAMP" property="rowLastmantDttm" />
-    <result column="ROW_LASTMANT_OPRID" jdbcType="VARCHAR" property="rowLastmantOprid" />
-    <result column="SYNCID" jdbcType="INTEGER" property="syncid" />
-    <result column="SYNCDTTM" jdbcType="TIMESTAMP" property="syncdttm" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    <result column="TZ_PRJ_DESC" jdbcType="LONGVARCHAR" property="tzPrjDesc" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, TZ_SBMINF_TMP_ID, 
-    TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
-  </sql>
-  <sql id="Blob_Column_List">
-    TZ_PRJ_DESC
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from PS_TZ_PRJ_INF_T
-    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from PS_TZ_PRJ_INF_T
-    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    insert into PS_TZ_PRJ_INF_T (TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, 
-      TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, 
-      TZ_SBMINF_TMP_ID, TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, 
-      TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_PRJ_DESC
-      )
-    values (#{tzPrjId,jdbcType=VARCHAR}, #{tzPrjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
-      #{tzIsOpen,jdbcType=VARCHAR}, #{tzAppModalId,jdbcType=VARCHAR}, #{tzPrjTypeId,jdbcType=VARCHAR}, 
-      #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzAppproTmpId,jdbcType=VARCHAR}, #{tzScoreModalId,jdbcType=VARCHAR}, 
-      #{tzMspsScoreMId,jdbcType=VARCHAR}, #{tzPsAppfMId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzPrjDesc,jdbcType=LONGVARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    insert into PS_TZ_PRJ_INF_T
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="tzPrjId != null">
-        TZ_PRJ_ID,
-      </if>
-      <if test="tzPrjName != null">
-        TZ_PRJ_NAME,
-      </if>
-      <if test="tzJgId != null">
-        TZ_JG_ID,
-      </if>
-      <if test="tzIsOpen != null">
-        TZ_IS_OPEN,
-      </if>
-      <if test="tzAppModalId != null">
-        TZ_APP_MODAL_ID,
-      </if>
-      <if test="tzPrjTypeId != null">
-        TZ_PRJ_TYPE_ID,
-      </if>
-      <if test="tzSbminfTmpId != null">
-        TZ_SBMINF_TMP_ID,
-      </if>
-      <if test="tzAppproTmpId != null">
-        TZ_APPPRO_TMP_ID,
-      </if>
-      <if test="tzScoreModalId != null">
-        TZ_SCORE_MODAL_ID,
-      </if>
-      <if test="tzMspsScoreMId != null">
-        TZ_MSPS_SCORE_M_ID,
-      </if>
-      <if test="tzPsAppfMId != null">
-        TZ_PS_APPF_M_ID,
-      </if>
-      <if test="rowAddedDttm != null">
-        ROW_ADDED_DTTM,
-      </if>
-      <if test="rowAddedOprid != null">
-        ROW_ADDED_OPRID,
-      </if>
-      <if test="rowLastmantDttm != null">
-        ROW_LASTMANT_DTTM,
-      </if>
-      <if test="rowLastmantOprid != null">
-        ROW_LASTMANT_OPRID,
-      </if>
-      <if test="syncid != null">
-        SYNCID,
-      </if>
-      <if test="syncdttm != null">
-        SYNCDTTM,
-      </if>
-      <if test="tzPrjDesc != null">
-        TZ_PRJ_DESC,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="tzPrjId != null">
-        #{tzPrjId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPrjName != null">
-        #{tzPrjName,jdbcType=VARCHAR},
-      </if>
-      <if test="tzJgId != null">
-        #{tzJgId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzIsOpen != null">
-        #{tzIsOpen,jdbcType=VARCHAR},
-      </if>
-      <if test="tzAppModalId != null">
-        #{tzAppModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPrjTypeId != null">
-        #{tzPrjTypeId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzSbminfTmpId != null">
-        #{tzSbminfTmpId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzAppproTmpId != null">
-        #{tzAppproTmpId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzScoreModalId != null">
-        #{tzScoreModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzMspsScoreMId != null">
-        #{tzMspsScoreMId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPsAppfMId != null">
-        #{tzPsAppfMId,jdbcType=VARCHAR},
-      </if>
-      <if test="rowAddedDttm != null">
-        #{rowAddedDttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rowAddedOprid != null">
-        #{rowAddedOprid,jdbcType=VARCHAR},
-      </if>
-      <if test="rowLastmantDttm != null">
-        #{rowLastmantDttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rowLastmantOprid != null">
-        #{rowLastmantOprid,jdbcType=VARCHAR},
-      </if>
-      <if test="syncid != null">
-        #{syncid,jdbcType=INTEGER},
-      </if>
-      <if test="syncdttm != null">
-        #{syncdttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="tzPrjDesc != null">
-        #{tzPrjDesc,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    update PS_TZ_PRJ_INF_T
-    <set>
-      <if test="tzPrjName != null">
-        TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
-      </if>
-      <if test="tzJgId != null">
-        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzIsOpen != null">
-        TZ_IS_OPEN = #{tzIsOpen,jdbcType=VARCHAR},
-      </if>
-      <if test="tzAppModalId != null">
-        TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPrjTypeId != null">
-        TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzSbminfTmpId != null">
-        TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzAppproTmpId != null">
-        TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzScoreModalId != null">
-        TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzMspsScoreMId != null">
-        TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPsAppfMId != null">
-        TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
-      </if>
-      <if test="rowAddedDttm != null">
-        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rowAddedOprid != null">
-        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
-      </if>
-      <if test="rowLastmantDttm != null">
-        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="rowLastmantOprid != null">
-        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
-      </if>
-      <if test="syncid != null">
-        SYNCID = #{syncid,jdbcType=INTEGER},
-      </if>
-      <if test="syncdttm != null">
-        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      </if>
-      <if test="tzPrjDesc != null">
-        TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
-    update PS_TZ_PRJ_INF_T
-    set TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
-      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
-      TZ_IS_OPEN = #{tzIsOpen,jdbcType=VARCHAR},
-      TZ_APP_MODAL_ID = #{tzAppModalId,jdbcType=VARCHAR},
-      TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
-      TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
-      TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
-      TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
-      TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
-      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
-      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
-      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
-      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
-      SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR}
-    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT">
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     update PS_TZ_PRJ_INF_T
     set TZ_PRJ_NAME = #{tzPrjName,jdbcType=VARCHAR},
       TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},

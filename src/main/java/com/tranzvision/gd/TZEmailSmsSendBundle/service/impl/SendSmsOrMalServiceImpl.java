@@ -538,7 +538,7 @@ public class SendSmsOrMalServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -554,7 +554,7 @@ public class SendSmsOrMalServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -570,7 +570,7 @@ public class SendSmsOrMalServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -582,7 +582,7 @@ public class SendSmsOrMalServiceImpl {
 							}
 							if (blRept) {
 								// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
-								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId);
+								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
 							} else {
@@ -595,7 +595,7 @@ public class SendSmsOrMalServiceImpl {
 						}
 
 						if (emailAddrAdd == null || "".equals(emailAddrAdd)) {
-							this.writeLsMalData(strRwSlId, "", "", "", "FAIL", strTaskId, prcsinstanceId);
+							this.writeLsMalData(strRwSlId, "", "", "", "FAIL", strTaskId, prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							continue;
@@ -655,7 +655,7 @@ public class SendSmsOrMalServiceImpl {
 						if (ismail) {
 							// 发送成功写邮件发送历史表，附件历史表，删除【TZ_DXYJRWMX_TBL】中的发送听众
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "SUC", strTaskId,
-									prcsinstanceId);
+									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
 							successNum = successNum + 1;
@@ -664,7 +664,7 @@ public class SendSmsOrMalServiceImpl {
 							this.writeTaskLog(strTaskId, strRwSlId, "D", logEmailSendFalseMsg);
 							// 发送失败写邮件发送历史表，附件历史表
 							this.writeLsMalData(strRwSlId, emailAddrAdd, malSubjectContent, content, "FAIL", strTaskId,
-									prcsinstanceId);
+									prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId);
 						}
 
@@ -716,7 +716,7 @@ public class SendSmsOrMalServiceImpl {
 
 	// 写邮件历史数据表
 	private void writeLsMalData(String strRwSlId, String sjxEmail, String tj, String content, String strFsZt,
-			String strTaskId, String prcsinstanceId) {
+			String strTaskId, String prcsinstanceId,String tzAudcyId) {
 		PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(strTaskId);
 		String senderEmail = "";
 		if (psTzDxyjfsrwTbl != null) {
@@ -732,6 +732,7 @@ public class SendSmsOrMalServiceImpl {
 		psTzYjfslshiTbl.setTzEmlSmsTaskId(strTaskId);
 		psTzYjfslshiTbl.setTzFsZt(strFsZt);
 		psTzYjfslshiTbl.setTzJcslId(prcsinstanceId);
+		psTzYjfslshiTbl.setTzAudcyId(tzAudcyId);
 		psTzYjfslshiTblMapper.insert(psTzYjfslshiTbl);
 
 		// 邮件发送内容历史表

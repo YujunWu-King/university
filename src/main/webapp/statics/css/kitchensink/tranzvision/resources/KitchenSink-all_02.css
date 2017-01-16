@@ -47,6 +47,8 @@
 .people{background: url(images/icons/toolbar/people.png) no-repeat center center}
 .peoples{background: url(images/icons/toolbar/peoples.png) no-repeat center center}
 
+.frequency_report{background: url(images/icons/toolbar/peoples.png) no-repeat center center}
+
 /*default button icon*/
 .x-btn-default-small .save{background:url(images/icons/button/save.png) no-repeat center center}
 .x-btn-default-small .close{background:url(images/icons/button/close.png) no-repeat center center}

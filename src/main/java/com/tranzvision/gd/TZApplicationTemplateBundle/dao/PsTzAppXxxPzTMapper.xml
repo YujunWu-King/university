@@ -49,6 +49,9 @@
     <result column="TZ_SYNC_TYPE" property="tzSyncType" jdbcType="VARCHAR" />
     <result column="TZ_SYNC_ORDER" property="tzSyncOrder" jdbcType="INTEGER" />
     <result column="TZ_SYNC_SEP" property="tzSyncSep" jdbcType="VARCHAR" />
+    <result column="TZ_REF_CHECK" property="tzRefCheck" jdbcType="VARCHAR" />
+    <result column="TZ_REF_CHECK_APP" property="tzRefCheckApp" jdbcType="VARCHAR" />
+    <result column="TZ_FPAGE_BH" property="tzFpageBh" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_TITLE" property="tzTitle" jdbcType="LONGVARCHAR" />
@@ -62,7 +65,7 @@
     TZ_XXX_CHAR_BZ, TZ_XXX_MINLEN, TZ_XXX_MAXLEN, TZ_XXX_NUM_BZ, TZ_XXX_MIN, TZ_XXX_MAX, 
     TZ_XXX_XSWS, TZ_XXX_GDGSJY, TZ_XXX_DRQ_BZ, TZ_XXX_MIN_LINE, TZ_XXX_MAX_LINE, TZ_XXX_SRQ_BZ, 
     TZ_IS_DOWNLOAD, TZ_IS_SHOW, TZ_TAPSTYLE, TZ_TJX_SUB, TZ_IS_ONLINESHOW, TZ_SYNC_FLAG, 
-    TZ_SYNC_TYPE, TZ_SYNC_ORDER, TZ_SYNC_SEP
+    TZ_SYNC_TYPE, TZ_SYNC_ORDER, TZ_SYNC_SEP, TZ_REF_CHECK, TZ_REF_CHECK_APP, TZ_FPAGE_BH
   </sql>
   <sql id="Blob_Column_List" >
     TZ_TITLE, TZ_XXX_WZSM
@@ -72,17 +75,17 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from PS_TZ_APP_XXXPZ_T
+    from ps_tz_app_xxxpz_t
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTKey" >
-    delete from PS_TZ_APP_XXXPZ_T
+    delete from ps_tz_app_xxxpz_t
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    insert into PS_TZ_APP_XXXPZ_T (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, 
+    insert into ps_tz_app_xxxpz_t (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, 
       TZ_XXX_SLID, TZ_XXX_MC, TZ_ORDER, 
       TZ_PAGE_NO, TZ_COM_LMC, TZ_XXX_KZTSXX, 
       TZ_XXX_JDTSXX, TZ_XXX_MRZ, TZ_XXX_HZ, 
@@ -97,7 +100,8 @@
       TZ_XXX_MAX_LINE, TZ_XXX_SRQ_BZ, TZ_IS_DOWNLOAD, 
       TZ_IS_SHOW, TZ_TAPSTYLE, TZ_TJX_SUB, 
       TZ_IS_ONLINESHOW, TZ_SYNC_FLAG, TZ_SYNC_TYPE, 
-      TZ_SYNC_ORDER, TZ_SYNC_SEP, TZ_TITLE, 
+      TZ_SYNC_ORDER, TZ_SYNC_SEP, TZ_REF_CHECK, 
+      TZ_REF_CHECK_APP, TZ_FPAGE_BH, TZ_TITLE, 
       TZ_XXX_WZSM)
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxBtBz,jdbcType=VARCHAR}, 
       #{tzXxxSlid,jdbcType=VARCHAR}, #{tzXxxMc,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, 
@@ -114,11 +118,12 @@
       #{tzXxxMaxLine,jdbcType=INTEGER}, #{tzXxxSrqBz,jdbcType=VARCHAR}, #{tzIsDownload,jdbcType=VARCHAR}, 
       #{tzIsShow,jdbcType=VARCHAR}, #{tzTapstyle,jdbcType=VARCHAR}, #{tzTjxSub,jdbcType=VARCHAR}, 
       #{tzIsOnlineshow,jdbcType=VARCHAR}, #{tzSyncFlag,jdbcType=VARCHAR}, #{tzSyncType,jdbcType=VARCHAR}, 
-      #{tzSyncOrder,jdbcType=INTEGER}, #{tzSyncSep,jdbcType=VARCHAR}, #{tzTitle,jdbcType=LONGVARCHAR}, 
+      #{tzSyncOrder,jdbcType=INTEGER}, #{tzSyncSep,jdbcType=VARCHAR}, #{tzRefCheck,jdbcType=VARCHAR}, 
+      #{tzRefCheckApp,jdbcType=VARCHAR}, #{tzFpageBh,jdbcType=VARCHAR}, #{tzTitle,jdbcType=LONGVARCHAR}, 
       #{tzXxxWzsm,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    insert into PS_TZ_APP_XXXPZ_T
+    insert into ps_tz_app_xxxpz_t
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzAppTplId != null" >
         TZ_APP_TPL_ID,
@@ -260,6 +265,15 @@
       </if>
       <if test="tzSyncSep != null" >
         TZ_SYNC_SEP,
+      </if>
+      <if test="tzRefCheck != null" >
+        TZ_REF_CHECK,
+      </if>
+      <if test="tzRefCheckApp != null" >
+        TZ_REF_CHECK_APP,
+      </if>
+      <if test="tzFpageBh != null" >
+        TZ_FPAGE_BH,
       </if>
       <if test="tzTitle != null" >
         TZ_TITLE,
@@ -410,6 +424,15 @@
       <if test="tzSyncSep != null" >
         #{tzSyncSep,jdbcType=VARCHAR},
       </if>
+      <if test="tzRefCheck != null" >
+        #{tzRefCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefCheckApp != null" >
+        #{tzRefCheckApp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpageBh != null" >
+        #{tzFpageBh,jdbcType=VARCHAR},
+      </if>
       <if test="tzTitle != null" >
         #{tzTitle,jdbcType=LONGVARCHAR},
       </if>
@@ -419,7 +442,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    update PS_TZ_APP_XXXPZ_T
+    update ps_tz_app_xxxpz_t
     <set >
       <if test="tzXxxBtBz != null" >
         TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
@@ -556,6 +579,15 @@
       <if test="tzSyncSep != null" >
         TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
       </if>
+      <if test="tzRefCheck != null" >
+        TZ_REF_CHECK = #{tzRefCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefCheckApp != null" >
+        TZ_REF_CHECK_APP = #{tzRefCheckApp,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFpageBh != null" >
+        TZ_FPAGE_BH = #{tzFpageBh,jdbcType=VARCHAR},
+      </if>
       <if test="tzTitle != null" >
         TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
       </if>
@@ -567,7 +599,7 @@
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    update PS_TZ_APP_XXXPZ_T
+    update ps_tz_app_xxxpz_t
     set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
       TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
       TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
@@ -613,13 +645,16 @@
       TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR},
       TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
       TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
+      TZ_REF_CHECK = #{tzRefCheck,jdbcType=VARCHAR},
+      TZ_REF_CHECK_APP = #{tzRefCheckApp,jdbcType=VARCHAR},
+      TZ_FPAGE_BH = #{tzFpageBh,jdbcType=VARCHAR},
       TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
       TZ_XXX_WZSM = #{tzXxxWzsm,jdbcType=LONGVARCHAR}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzT" >
-    update PS_TZ_APP_XXXPZ_T
+    update ps_tz_app_xxxpz_t
     set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
       TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
       TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
@@ -664,7 +699,10 @@
       TZ_SYNC_FLAG = #{tzSyncFlag,jdbcType=VARCHAR},
       TZ_SYNC_TYPE = #{tzSyncType,jdbcType=VARCHAR},
       TZ_SYNC_ORDER = #{tzSyncOrder,jdbcType=INTEGER},
-      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR}
+      TZ_SYNC_SEP = #{tzSyncSep,jdbcType=VARCHAR},
+      TZ_REF_CHECK = #{tzRefCheck,jdbcType=VARCHAR},
+      TZ_REF_CHECK_APP = #{tzRefCheckApp,jdbcType=VARCHAR},
+      TZ_FPAGE_BH = #{tzFpageBh,jdbcType=VARCHAR}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>
