@@ -37,8 +37,6 @@ public class PsTzPrjInfT {
 
     private Date syncdttm;
 
-    private String tzIsPay;
-
     private String tzPrjDesc;
 
     public String getTzPrjId() {
@@ -175,14 +173,6 @@ public class PsTzPrjInfT {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
-    }
-
-    public String getTzIsPay() {
-        return tzIsPay;
-    }
-
-    public void setTzIsPay(String tzIsPay) {
-        this.tzIsPay = tzIsPay == null ? null : tzIsPay.trim();
     }
 
     public String getTzPrjDesc() {
