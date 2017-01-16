@@ -126,7 +126,7 @@ public class TzWebsiteLoginController {
 
 				if (null != strSiteId && !"".equals(strSiteId)) {
 					sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetZcyhDlzhId");
-					strUserName = sqlQuery.queryForObject(sql, new Object[] { strUserName, strUserName, strOrgId },
+					strUserName = sqlQuery.queryForObject(sql, new Object[] { strUserName,strUserName, strUserName, strOrgId },
 							"String");
 					if (null != strUserName && !"".equals(strUserName)) {
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
@@ -148,7 +148,7 @@ public class TzWebsiteLoginController {
 						if (boolResult) {
 
 							String ctxPath = request.getContextPath();
-							/*
+							//如果信息未完善，则跳转到待完善页面
 							String indexUrl = "";
 							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
 							if(infoIsCmpl){
@@ -160,9 +160,7 @@ public class TzWebsiteLoginController {
 								jacksonUtil.json2Map(completeInfoUrl);
 								indexUrl= jacksonUtil.getString("url");
 							}							
-							*/
-							String indexUrl = "";
-							indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+														
 							jsonMap.put("url", indexUrl);
 
 						}

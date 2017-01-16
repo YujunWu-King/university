@@ -454,8 +454,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		String tzIsCmpl = sqlQuery.queryForObject(sql, new Object[] { userName,OrgId }, "String");
 		if(!"Y".equals(tzIsCmpl)){
 			infoIsCmpl = false;
-		}
-		infoIsCmpl = false;
+		}		
 		return infoIsCmpl;
 	}
 }
