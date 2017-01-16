@@ -4,8 +4,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         {name: 'classID'},
         {name: 'batchID'},
 		{name: 'msJxNo'},
-		{name: 'msGroupId'},
-        {name: 'msGroupSn'},
+		{name: 'maxPerson'},
         {name: 'msDate',type:'date'},
 	    {name: 'bjMsStartTime',convert:function(v){
             if (v!=""){
@@ -32,22 +31,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             }
         }},
 		{name: 'msXxBz'},
-		{name: 'msOprId'},
-        {name: 'msClearOprId'},
-		{name: 'msOprName'},
 		{name: 'msOrderState'},
-        {name: 'msConfirmState'},
-        {name: 'city'},
-        {name: 'country'},
-        {name: 'skypeId'},
-        {name: 'lxEmail'},
-        {name: 'timezone'},
-        {name: 'timezoneDiff'},
-        {name: 'localStartDate'},
-        {name: 'localStartTime'},
-        {name: 'localFinishDate'},
-        {name: 'localFinishTime'},
-        {name: 'sort'},
         {name: 'releaseOrUndo'}
     ]
 });

@@ -1,0 +1,162 @@
+<!DOCTYPE HTML> 
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+	<title></title>
+    <link href="%bind(:1)" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+		TzUniversityContextPath = "%bind(:6)";
+	</script>
+    <script type="text/javascript" src="%bind(:6)/statics/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+    <!--<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/js/laydate.js"></script>-->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#letf_menu").height(922);
+        });
+    </script>
+</head> 
+<body style="background:#fff">
+
+<!-- top start -->
+<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
+    <!---  网站标题头 begin--->
+    <!---  网站标题头 end---> 
+</div>
+<!-- top end -->
+<!-- content start -->
+<div id="main" class="main">
+
+    <!-- left start -->
+    <div  id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="">
+        <!--左侧菜单 begin-->
+        <div>
+
+        </div>
+        <!--左侧菜单 end-->
+    </div>
+    <!-- left end -->
+
+    <!-- main start -->
+    <div class="main_inner">
+        <div class="main_inner_title">
+            <div class="main_inner_title_text_wide">%bind(:2)</div>
+        </div>
+
+		<div  id="content1" style="margin-left:0px;">
+			<div class="i-appointment" id="appointmentList"></div>
+		
+        </div>
+    </div>
+    <!-- main end -->
+</div>
+
+
+
+<div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="">
+    <!---替换结尾footer--begin->
+    <!---替换结尾footer--end-->
+</div>
+
+<div id="sqjdDIV" >
+
+</div>
+
+
+<script type="text/javascript">
+	var url="%bind(:3)";
+    $(document).ready(function(){
+        LoadHeader("%bind(:4)","%bind(:5)","");
+        LoadMenu("%bind(:4)","%bind(:5)","");
+        LoadFooter("%bind(:4)","%bind(:5)","");
+        LoadWelcome("%bind(:4)","%bind(:5)","");
+  		
+        
+		var pctimezone = pcClientTimeZone();
+		onChangTimeZone(pctimezone);
+		/*
+		if($("#interviewtimezone").length > 0){
+			$("#interviewtimezone").val(pctimezone);
+			onChangTimeZone(pctimezone);
+		}
+
+		$("#interviewtimezone").change(function(){
+			var timezone = $("#interviewtimezone").val();
+			onChangTimeZone(timezone);
+		});
+		*/
+    });
+	
+	/*PC端时区*/
+	function pcClientTimeZone(){
+	     var munites = new Date().getTimezoneOffset();
+	     var hour = parseInt(munites / 60);
+	     var munite = munites % 60;
+	     var prefix = "-";
+
+	     if (hour < 0 || munite < 0) {
+	         prefix = "+";
+	         hour = -hour;
+	         if (munite < 0) {
+	              munite = -munite;
+	         }
+	     }
+		 if (hour ==0 && munite ==0){
+				prefix = "";
+		 }
+	     hour = hour + "";
+	     munite = munite + "";
+
+	     if (hour.length == 1) {
+	         hour = "0" + hour;
+	     }
+	     if (munite.length == 1) { 
+	         munite = "0" + munite;
+	     }
+	     return prefix + hour +":"+ munite+"01";
+	 }
+
+
+	function onChangTimeZone(timeZone){
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzGetAppointmentHtml","comParams":{"timeZone":"'+ timeZone +'"}}';
+		$.ajax({
+			type:"post",
+			dataType:"json",
+			async:false,
+			data: {"tzParams" : tzParams },				
+			url:url,
+			success:function(data){					
+				var _html =  data.comContent.appoHtml;
+				$("#appointmentList").html(_html);
+			}
+		});	
+	}
+		
+	/*确认面试预约*/
+	function onConfirmAppointment(el, classId, pcId, planId){
+		if($(el).hasClass("btn-disabled")) return;
+
+		var timezone = $("#interviewtimezone").val();
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'","timezone":"'+ timezone +'"}}';
+		$.ajax({
+			type:"post",
+			dataType:"json",
+			async:false, 
+			data: {"tzParams" : tzParams },				
+			url:url,
+			success:function(data){
+				var errcode = data.state.errcode;
+				var errMsg = data.state.errdesc;
+				
+				var timezone = $("#interviewtimezone").val();
+				onChangTimeZone(timezone);
+				alert(errMsg);
+			},
+			error: function(XMLHttpRequest,errorMsg){
+				alert("请求失败，请稍后再试。");
+			}
+		});
+	}
+</script>
+</body>
+</html>
