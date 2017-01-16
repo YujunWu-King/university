@@ -402,6 +402,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		
+		
+		System.out.println("strParams:"+strParams);
+		
 		/* 推荐人姓名 */
 		if (StringUtils.equals(oType, "RNAME")) {
 			String userName = "";
