@@ -148,7 +148,7 @@ public class TzWebsiteLoginController {
 						if (boolResult) {
 
 							String ctxPath = request.getContextPath();
-
+							/*
 							String indexUrl = "";
 							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
 							if(infoIsCmpl){
@@ -160,7 +160,9 @@ public class TzWebsiteLoginController {
 								jacksonUtil.json2Map(completeInfoUrl);
 								indexUrl= jacksonUtil.getString("url");
 							}							
-
+							*/
+							String indexUrl = "";
+							indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
 							jsonMap.put("url", indexUrl);
 
 						}
