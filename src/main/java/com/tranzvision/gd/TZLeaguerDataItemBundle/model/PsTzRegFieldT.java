@@ -23,6 +23,8 @@ public class PsTzRegFieldT extends PsTzRegFieldTKey {
 
     private String tzIsShowwzsy;
 
+    private String tzIsPrefect;
+
     public String getTzJgId() {
         return tzJgId;
     }
@@ -109,5 +111,13 @@ public class PsTzRegFieldT extends PsTzRegFieldTKey {
 
     public void setTzIsShowwzsy(String tzIsShowwzsy) {
         this.tzIsShowwzsy = tzIsShowwzsy == null ? null : tzIsShowwzsy.trim();
+    }
+
+    public String getTzIsPrefect() {
+        return tzIsPrefect;
+    }
+
+    public void setTzIsPrefect(String tzIsPrefect) {
+        this.tzIsPrefect = tzIsPrefect == null ? null : tzIsPrefect.trim();
     }
 }
