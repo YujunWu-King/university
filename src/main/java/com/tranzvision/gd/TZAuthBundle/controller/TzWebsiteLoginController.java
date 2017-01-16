@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cookie.TzCookie;
@@ -38,6 +39,9 @@ public class TzWebsiteLoginController {
 
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	
+	@Autowired
+	private SiteEnrollClsServiceImpl siteEnrollClsServiceImpl;
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -145,7 +149,17 @@ public class TzWebsiteLoginController {
 
 							String ctxPath = request.getContextPath();
 
-							String indexUrl = ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+							String indexUrl = "";
+							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
+							if(infoIsCmpl){
+								indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+							}else{
+								String strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\"}";
+								String completeInfoUrl = siteEnrollClsServiceImpl.getCompleteUrl(strParams);
+								
+								jacksonUtil.json2Map(completeInfoUrl);
+								indexUrl= jacksonUtil.getString("url");
+							}							
 
 							jsonMap.put("url", indexUrl);
 
@@ -206,4 +220,34 @@ public class TzWebsiteLoginController {
 		return redirect;
 	}
 
+	@RequestMapping(value = "completeInfo/{orgid}/{siteid}", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String completeInfo(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid){
+		String strRet = "";
+		
+		try {
+			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+
+			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
+
+			if (null != siteid && !"".equals(siteid)) {
+
+				String strParams = "{\"site\":\"" + siteid + "\",\"sen\":\"8\"}";
+				String completeInfoUrl = siteEnrollClsServiceImpl.getEnrollUrl(strParams);
+				strRet = "{\"url\":\"" + completeInfoUrl + "\"}";
+			} else {
+
+				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+						"Can not visit the site.Please check the url.");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+					"Can not visit the site.Please check the url.");
+		}
+
+		return strRet;
+	}
 }
