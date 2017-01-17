@@ -51,6 +51,16 @@ var RegisterTips={
 	_SmsTimeshort_eng:"Send too fast,Try again later",
 }
 
+var userName;
+
+function getQueryString(name) { 
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+	var r = window.location.search.substr(1).match(reg); 
+	if (r != null) return unescape(r[2]); return null; 
+} 
+
+userName = getQueryString("userName");
+
 /*注册页面提交按钮事件*/
 function submitEnroll() {
 
@@ -82,11 +92,11 @@ function submitEnroll() {
 
 
 	var _nameFlg=$("#status_TZ_REALNAME").val();
-	//var _emailFlg=$("#status_TZ_EMAIL").val();
+	var _emailFlg=$("#status_TZ_EMAIL").val();
 	var _moblieFlg=$("#status_TZ_MOBILE").val();
 	//var _passwordFlg=$("#status_TZ_PASSWORD").val();
 	//var _pwdFlg=$("#status_PASSWORD").val();
-	//var _yzmFlg=$("#status_yzm").val();
+	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
 	for (var key in jsonValue){
 		if(key=="TZ_REALNAME"){//姓名
@@ -96,7 +106,21 @@ function submitEnroll() {
 					$("#TZ_REALNAMEStyle").removeClass("alert_display_none");
 					_statusFlg="error";
 				}
-			}		
+			}
+		}else if(key=="TZ_EMAIL"){//邮箱
+			if(jsonValue[key] == "Y"){
+				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
+					if ($('#TZ_EMAIL_status').html())
+					{
+						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						_statusFlg="error";
+					}else{
+						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
+						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						_statusFlg="error";
+					}
+				}
+			}
 		}else if(key=="TZ_MOBILE"){//手机
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
@@ -105,7 +129,24 @@ function submitEnroll() {
 					_statusFlg="error";
 				}
 			}
-		}else{//其他
+		}/*else if(key=="TZ_PASSWORD"){//密码
+			if($('#TZ_PASSWORD').val() ==''){
+				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
+				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+			if(_pwdFlg != 0){
+				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
+				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+		}else if(key=="TZ_REPASSWORD"){//确认密码
+			if($('#TZ_REPASSWORD').val()==''){
+				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
+				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+		}*/else{//其他
 			if(jsonValue[key] == "Y"){
 				var val;
 
@@ -123,20 +164,43 @@ function submitEnroll() {
 			   }
 			}
 		}
-	}	
+	}
+	/*
+	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
+		
+		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
+		$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+		_statusFlg="error";
+	}
+	*/
+	if($("#yzfs").val() == "M"){
+		if(_yzmFlg !=0 || $('#yzm').val() ==''){
+			$('#yzm_status').html("<span>"+TipCode+"</span>");
+			$("#yzmStyle").removeClass("alert_display_none");
+			_statusFlg="error";
+		}
+	}else{
 
+		if(_yzmFlg !=0 || $('#yzmEmail').val() ==''){
+
+			$('#yzm_Emailstatus').html("<span>"+TipCode+"</span>");
+			$("#yzmEmailStyle").removeClass("alert_display_none");
+			_statusFlg="error";
+		}
+	}
+   
 	//alert(_statusFlg+" "+_nameFlg+" "+_emailFlg+" "+_moblieFlg+" "+_passwordFlg+" "+_yzmFlg);
 	if(_statusFlg=="error"){
 		return false;
 	}
 
-	if(_nameFlg=="0" && _moblieFlg=="0"){
+	if(_nameFlg=="0" && _emailFlg=="0" && _moblieFlg=="0" && _yzmFlg=="0"){
 		//$('#submitbutton').submit();
 		//var signupsContent = $("#signupForm").serialize();
 		
 		var signupsContent =$("#signupForm").serializeJson();
 
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"5","userName":"' + userName + '"}}';
 		$.ajax({
 			type: "post",
 			async :false,
@@ -156,6 +220,14 @@ function submitEnroll() {
 			}
 		});
   	}
+
+  	//create_yzm();
+	//$("#TZ_PASSWORD").val('');
+	//$("#TZ_REPASSWORD").val('');
+	//$("#status_TZ_PASSWORD").val('');
+	$("#status_yzm").val('');
+	$("#yzm").val('');
+	$("#yzmEmail").val('');
 }
 
 
@@ -239,6 +311,43 @@ $(document).ready(function(){
 								$('#' + fieldId + 'Style').removeClass("alert_display_none");
 							}
 						}
+					}else if(fieldId=="TZ_EMAIL"){//邮箱
+						if(val!=''){
+							var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+							if (!patrn.test(val)){
+							   $('#' + fieldId + '_status').html("<span>"+TipEmail+"</span>");
+							   $('#status_' + fieldId).attr("value", 1);
+							   $('#' + fieldId + 'Style').removeClass("alert_display_none");
+							}else{
+								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+								$.ajax({
+									type: "get",
+									async :false,
+									data:{
+										tzParams:tzParams
+									},
+									url: TzUniversityContextPath + "/dispatcher",
+									dataType: "json",
+									success: function(result){
+										if(result.comContent =="success"){
+											$('#' + fieldId + '_status').html("");
+											$('#status_' + fieldId).attr("value", 0); 
+											$('#' + fieldId + 'Style').addClass("alert_display_none");
+										}else{
+											$('#' + fieldId + '_status').html("<span>"+result.state.errdesc+"</span>");
+					   						$('#status_' + fieldId).attr("value", 1);
+											$('#' + fieldId + 'Style').removeClass("alert_display_none");
+										}
+									}
+								});
+							}
+						}else{
+							if(data[fieldId] == "Y"){
+								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
+								$('#status_' + fieldId).attr("value", 1);
+								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+							}
+						}
 					}else if(fieldId=="TZ_MOBILE"){//手机
 						if(val!=''){
 							var patrn=/^\d{8}$|^\d{11}$/;
@@ -276,7 +385,67 @@ $(document).ready(function(){
 								$('#' + fieldId + 'Style').removeClass("alert_display_none");
 							}
 						}
-					}else{//其他
+					}/*else if(fieldId=="TZ_PASSWORD"){//密码
+						$("#J_PwdTip").css("display","none");
+						if(val !=''){
+							var pwd = $("#status_PASSWORD").val();
+							if(pwd == 0){
+								$('#' + fieldId + '_status').html("");
+					        	$('#status_' + fieldId).attr("value", 0); 
+								$('#' + fieldId + 'Style').addClass("alert_display_none");
+							}else{
+								$('#' + fieldId + '_status').html(PwdError); 
+								$('#status_' + fieldId).attr("value", 1);
+								$('#' + fieldId + 'Style').removeClass("alert_display_none");		
+							}
+							
+							if(val.length<6 ||val.length>32){
+								$('#' + fieldId + '_status').html("密码长度必须大于6小于32位"); 
+								$('#status_' + fieldId).attr("value", 1);
+								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+							}else{
+								$('#' + fieldId + '_status').html("");
+					        	$('#status_' + fieldId).attr("value", 0); 
+								$('#' + fieldId + 'Style').addClass("alert_display_none");
+							}
+							
+						}else {
+							$('#' + fieldId + '_status').html(TipBlank);
+							$('#status_' + fieldId).attr("value", 1); 
+							$('#' + fieldId + 'Style').removeClass("alert_display_none");
+						}
+					}else if(fieldId=="TZ_REPASSWORD"){//确认密码
+						var password =$("#TZ_PASSWORD").val();
+						if(password !=''){
+							if(password.length<6 ||password.length>32){
+								$('#TZ_PASSWORD_status').html(PwdLen); 
+								$('#status_TZ_PASSWORD').attr("value", 1);
+								$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+							}else if(val ==''){
+								$('#TZ_PASSWORD_status').html("");
+								$('#TZ_REPASSWORD_status').html(TipBlank);
+						     	$('#status_TZ_PASSWORD').attr("value", 1); 
+								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
+								$('#TZ_REPASSWORDStyle').removeClass("alert_display_none");
+							}else if(val == password){
+								$('#TZ_PASSWORD_status').html("");
+								$('#TZ_REPASSWORD_status').html("");
+					        	$('#status_TZ_PASSWORD').attr("value", 0); 
+								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
+								$('#TZ_REPASSWORDStyle').addClass("alert_display_none");
+							}else if(val != password){
+								$('#TZ_PASSWORD_status').html("");
+								$('#TZ_REPASSWORD_status').html(PwdCor); 
+								$('#status_TZ_PASSWORD').attr("value", 1);
+								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
+								$('#TZ_REPASSWORDStyle').removeClass("alert_display_none");
+							}
+						}else {
+							$('#TZ_PASSWORD_status').html(TipBlank);
+							$('#status_TZ_PASSWORD').attr("value", 1); 
+							$('#TZ_PASSWORDStyle').removeClass("alert_display_none");
+						}
+					}*/else{//其他
 						if(data[fieldId] == "Y"){
 							if(val != ""){
 								$('#' + fieldId + 'Style').addClass("alert_display_none");
@@ -290,7 +459,173 @@ $(document).ready(function(){
 		    }
 		}
 	});
+	/*
+	setInterval(function(){
+		var val = $("#TZ_PASSWORD").val();
+		if(val != "" && val != null){
+			var patrn;
+			var num = 0;
+			var num1 = 0;
+			var num2 = 0;
+			var num3 = 0;
+			var num4 = 0;
+			var num5=0;
+			var num6=0;
+			var str1 = 0;
+			var str2 = 0;
+			var cr;
+			for (var i=0;i<val.length ;i++ )
+			{
+				 cr = val.charAt(i);
+						
+				patrn= /\w/;
+				if (patrn.test(cr)){
+					num = num + 1;
+				}else{
+					num5=1;
+				}
+				
+			}
+			
+				patrn= /[A-Z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[a-z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[0-9]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[_]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+
+			if(val.length >= 6 && val.length <= 32){
+				num1 = 1;				
+				$("#J_PwdTip .pw-rule-length .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#14c2b3");
+			}else{
+				num1 = 0;
+				$("#J_PwdTip .pw-rule-length .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#FF460F");
+			}
+			
+			if(num > 0 && num5==0){
+				num2 = 1;
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#14c2b3");
+			}else{
+				
+				num2 = 0;
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#FF460F");
+			}
+			
+			if(num5==0 && num6>1){
+				num3 = 1;
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#14c2b3");
+			}else{
+				num3 = 0;
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#FF460F");
+			}
+			
+			num4 = num1 + num2 + num3;
+			if(num4 < 1){
+				$("#J_PwdTip .pw-strength-1").css("background-color","");
+				$("#J_PwdTip .pw-strength-2").css("background-color","");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				
+				$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+				
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","");
+				
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+			}
+			if(num4 >= 1){
+				$("#J_PwdTip .pw-strength-1").css("background-color","#FF460F");
+				$("#J_PwdTip .pw-strength-2").css("background-color","");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				if ($("#lang").val()=="ENG"){
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("低");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}
+			}
+			if(num4 >= 2){
+				$("#J_PwdTip .pw-strength-2").css("background-color","#FF460F");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				if ($("#lang").val()=="ENG"){
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("中");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}
+			}
+
+			if(num5==0 && num4>=3 && num>10){
+				$("#J_PwdTip .pw-strength-1").css("background-color","#0A9E00");
+				$("#J_PwdTip .pw-strength-2").css("background-color","#0A9E00");
+				$("#J_PwdTip .pw-strength-3").css("background-color","#0A9E00");
+				if ($("#lang").val()=="ENG"){
+				
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("高");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}
+			}
+
+			if(num4 >= 3){
+				$('#status_PASSWORD').attr("value", 0);
+			}else{
+				$('#status_PASSWORD').attr("value", 1);
+			}
+			
+		}else{
+			$("#J_PwdTip .pw-strength-1").css("background-color","");
+			$("#J_PwdTip .pw-strength-2").css("background-color","");
+			$("#J_PwdTip .pw-strength-3").css("background-color","");
+			
+			$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+			
+			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+		}
+	},200);
+	
+	$("#TZ_PASSWORD").on("focus",function(){
+		var top = $("#TZ_PASSWORD").position().top;
+		var left = $("#TZ_PASSWORD").position().left;
+		var height = $("#TZ_PASSWORD").height()
+		var width = $("#TZ_PASSWORD").width()
+		var hi = $("#J_PwdTip").height();
 		
+		left = left + width + 15;
+		top = top + (height - hi) / 2;
+		$("#J_PwdTip").css("display","block");
+		$("#J_PwdTip").css("left",left);
+		$("#J_PwdTip").css("top",top);
+	});*/
 	$("#BIRTHDATE").click(function() {
 		laydate();
 	});
@@ -391,10 +726,28 @@ $(document).ready(function(){
 	$("#TZ_LEN_CITY_click").mouseout(function() {
 	   	$("#TZ_LEN_CITY_click").css("cursor","");
 	});
-	
+	$("#yzfs").change(function() {
+		var yzfs = $("#yzfs").val();
+		if(yzfs == "M"){
+			$("#yzfsEmail").hide();
+			$("#yzfsMobile").show();
+			$("#button_yzfs").show();
+		}else{
+			$("#yzfsEmail").show();
+			$("#yzfsMobile").hide();
+			$("#button_yzfs").hide();
+		}
+    });
+	$("#changeImgEmail").on("click",function(){
+		create_yzm();
+	});
 }).on("click", "#submitbutton", function () {
-	var _nameFlg=$("#status_TZ_REALNAME").val();	
+	var _nameFlg=$("#status_TZ_REALNAME").val();
+	var _emailFlg=$("#status_TZ_EMAIL").val();
 	var _moblieFlg=$("#status_TZ_MOBILE").val();
+	//var _passwordFlg=$("#status_TZ_PASSWORD").val();
+	//var _pwdFlg=$("#status_PASSWORD").val();
+	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
 
 	var TipBlank = "";
@@ -432,6 +785,20 @@ $(document).ready(function(){
 					_statusFlg="error";
 				}
 			}
+		}else if(key=="TZ_EMAIL"){//邮箱
+			if(jsonValue[key] == "Y"){
+				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
+					if ($('#TZ_EMAIL_status').html())
+					{
+						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						_statusFlg="error";
+					}else{
+						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
+						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						_statusFlg="error";
+					}
+				}
+			}
 		}else if(key=="TZ_MOBILE"){//手机
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
@@ -440,7 +807,24 @@ $(document).ready(function(){
 					_statusFlg="error";
 				}
 			}
-		}else{//其他
+		}/*else if(key=="TZ_PASSWORD"){//密码
+			if($('#TZ_PASSWORD').val() ==''){
+				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
+				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+			if(_pwdFlg != 0){
+				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
+				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+		}else if(key=="TZ_REPASSWORD"){//确认密码
+			if($('#TZ_REPASSWORD').val()==''){
+				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
+				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+				_statusFlg="error";
+			}
+		}*/else{//其他
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
@@ -450,20 +834,43 @@ $(document).ready(function(){
 			}
 		}
 	}
+	/*	
+	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
 		
-	
+		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
+		$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+		_statusFlg="error";
+	}
+	*/
+
+	if($("#yzfs").val() == "M"){
+		if(_yzmFlg !=0 || $('#yzm').val() ==''){
+			$('#yzm_status').html("<span>"+TipCode+"</span>");
+			$("#yzmStyle").removeClass("alert_display_none");
+			_statusFlg="error";
+		}
+	}else{
+
+		if(_yzmFlg !=0 || $('#yzmEmail').val() ==''){
+
+			$('#yzm_Emailstatus').html("<span>"+TipCode+"</span>");
+			$("#yzmEmailStyle").removeClass("alert_display_none");
+			_statusFlg="error";
+		}
+	}
+ 
 
 	if(_statusFlg=="error"){
 		return false;
 	}
 
-	if(_nameFlg=="0" && _moblieFlg=="0" ){
+	if(_nameFlg=="0" && _emailFlg=="0" && _moblieFlg=="0" && _yzmFlg=="0"){
 		//$('#submitbutton').submit();
 		//var signupsContent = $("#signupForm").serialize();
 		
 		var signupsContent =$("#signupForm").serializeJson();
 
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"5","userName":"' + userName + '"}}';
 		$.ajax({
 			type: "post",
 			async :false,
@@ -479,9 +886,9 @@ $(document).ready(function(){
 					//loading();
 					if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
-							alert("Update personal information successful.");
+							alert("Update personal infomation successful.");
 						}else{
-							alert("更新个人信息成功");
+							alert("个人信息维护成功");
 						}
 					}
 					window.location.href=result.comContent.jumpurl;
@@ -491,6 +898,14 @@ $(document).ready(function(){
 			}
 		});
   	}
+
+//  create_yzm();
+//	$("#TZ_PASSWORD").val('');
+//	$("#TZ_REPASSWORD").val('');
+//	$("#status_TZ_PASSWORD").val('');
+	$("#status_yzm").val('');
+	$("#yzm").val('');
+	$("#yzmEmail").val('');
 });
 
 
@@ -507,6 +922,208 @@ function loading(){
         }
 	var loadi = layer.load(Tipenr);
 	layer.area(loadi,"top:200px");
+}
+
+//判断输入的验证码是否一致
+function check_yzm(val){
+	var TipBlank = "";
+		if ($("#lang").val()=="ENG")
+		{
+			TipBlank = RegisterTips._blank_eng;
+		}else{
+			TipBlank = RegisterTips._blank_zhs;
+        }
+
+	var yzfs = $("#yzfs").val();
+	var email = $("#TZ_EMAIL").val();
+	var mobile = $("#TZ_MOBILE").val();
+	if(val !=''){
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"CODEVALIDATOR","comParams":{"yzm":"'+val+'","yzfs":"'+yzfs+'","TZ_EMAIL":"'+email+'","TZ_MOBILE":"'+mobile+'","siteId":"'+strSiteId+'","strJgid":"'+strJgid+'"}}';
+		$.ajax({
+			type: "get",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url: TzUniversityContextPath + "/dispatcher",
+			dataType: "json",
+			success: function(result){
+				result = result.comContent;
+				if(result.resultFlg =="success"){
+					$('#yzm_status').html("");
+					$('#status_yzm').attr("value", 0); 
+					$("#yzmStyle").addClass("alert_display_none");
+				}else{
+					$('#yzm_status').html("<span>"+result.errorDescr+"</span>");
+					$('#status_yzm').attr("value", 1);
+					$("#yzmStyle").removeClass("alert_display_none");
+				}
+			}
+		});
+	}else{
+		$('#yzm_status').html("<span>"+TipBlank+"</span>");
+		$('#status_yzm').attr("value", 1);
+		$("#yzmStyle").removeClass("alert_display_none");
+	}
+}
+
+//重新加载验证码
+function create_yzm(){
+	var _captchaURL = TzUniversityContextPath + "/captcha";
+	$('#yzmImgEmail').attr('src',_captchaURL + "?" + Math.random());
+}
+
+//判断输入的验证码是否一致
+function check_yzmEmail(val){
+	var TipBlank = "";
+		if ($("#lang").val()=="ENG")
+		{
+			TipBlank = RegisterTips._blank_eng;
+		}else{
+			TipBlank = RegisterTips._blank_zhs;
+        }
+
+	if(val !=''){
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
+		$.ajax({
+			type: "get",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url: TzUniversityContextPath + "/dispatcher",
+			dataType: "json",
+			success: function(result){
+				if(result.comContent =="success"){
+					$('#yzm_Emailstatus').html("");
+					$('#status_yzm').attr("value", 0);
+					$("#yzmEmailStyle").addClass("alert_display_none");
+				}else{
+					$('#yzm_Emailstatus').html("<span>"+result.state.errdesc+"</span>");
+					$('#status_yzm').attr("value", 1);
+					$("#yzmEmailStyle").removeClass("alert_display_none");
+				}
+			}
+		});
+	}else{
+		$('#yzm_Emailstatus').html("<span>"+TipBlank+"</span>");
+		$('#status_yzm').attr("value", 1);
+		$("#yzmEmailStyle").removeClass("alert_display_none");
+	}
+}
+
+//发送验证码
+function send_yzm(){
+	var yzfs = $("#yzfs").val();
+	var email = $("#TZ_EMAIL").val();
+	var mobile = $("#TZ_MOBILE").val();
+	if(yzfs == "M"){
+		if(mobile == ""){
+			$('#TZ_MOBILE_status').html("<span>请输入正确的手机号</span>");
+		  	$('#status_TZ_MOBILE').attr("value", 1);
+		  	$('#TZ_MOBILEStyle').removeClass("alert_display_none");
+			alert("请填写正确的手机");
+			return;
+		}
+	}else{
+		if(email == ""){
+			$('#TZ_EMAIL_status').html("<span>请输入正确的邮箱</span>");
+		  	$('#status_TZ_EMAIL').attr("value", 1);
+		  	$('#TZ_EMAILStyle').removeClass("alert_display_none");
+			alert("请输入正确的邮箱");
+			return;
+		}
+	}
+	var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+mobile+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'",	"sen":"2"}}';
+	$.ajax({
+		type:"post",
+		dataType:"json",
+		async:false,
+		data: {
+			tzParams:tzParams
+			},
+		url: TzUniversityContextPath + "/dispatcher",
+		success:function(result){
+			if(result.comContent=="success"){
+				atime();
+				if ($("#lang").val()=="ENG")
+					{
+					alert(RegisterTips._SmsSuccess_eng);
+				}else{
+					alert(RegisterTips._SmsSuccess_zhs);
+				}
+			}
+			else if(result.comContent=="shtime"){
+				if ($("#lang").val()=="ENG"){
+					alert(RegisterTips._SmsTimeshort_eng);
+				}else{
+					alert(RegisterTips._SmsTimeshort_zhs);
+				}
+			}
+			else{
+					alert(result.state.errdesc);
+			}
+		}
+	});
+}
+
+var stop;
+var wait=60;
+function atime() {
+	var sendCode="";
+	var sendAgain="";
+     if ($("#lang").val()=="ENG")
+		{
+			sendCode=RegisterTips._send_eng;
+			sendAgain = RegisterTips._send2_eng;
+		}else{
+			sendCode = RegisterTips._send_zhs;
+			sendAgain = RegisterTips._send2_zhs;
+        }
+
+	var obj;
+	var yzfs = $("#yzfs").val();
+	if(yzfs == "M"){obj = $("#TZ_MOBILE");}
+		else{obj = $("#TZ_EMAIL");}
+		
+	if(wait <= 0){
+		$("#send_Verification").css("cursor","pointer");
+		$("#send_Verification").css("opacity","0.8");
+		$("#send_Verification").removeAttr("disabled");
+		obj.removeAttr("readOnly");
+		$("#send_Verification").css("color","#000");			
+		$("#send_Verification").val(sendCode);
+		wait =60;
+	} else{
+		$("#send_Verification").css("cursor","default");
+		$("#send_Verification").prop("disabled","true");
+		$("#send_Verification").css("opacity","1");
+		$("#send_Verification").css("color","#A9A9A9");
+		$("#send_Verification").val(sendAgain+"("+wait+")");
+		obj.prop("readOnly","true");
+		if(wait>=0){
+			wait=wait-1;}
+		stop = setTimeout("atime()",1000);
+	}
+}
+
+function btime() {
+	var sendCode="";
+	
+     if ($("#lang").val()=="ENG")
+		{
+			sendCode=RegisterTips._send_eng;
+			
+		}else{
+			sendCode = RegisterTips._send_zhs;
+
+        }
+
+	$("#send_Verification").css("cursor","pointer");
+	$("#send_Verification").css("opacity","0.8");
+	$("#send_Verification").prop("disabled", "false");		
+	$("#send_Verification").val(sendCode);
+	wait =60;
 }
 
 //手机号码长度
