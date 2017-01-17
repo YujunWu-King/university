@@ -155,7 +155,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			//如果账号不完善，则调过激活步骤
 			String strCmpl = dataMap.get("TZ_IS_CMPL") == null ? "" : String.valueOf(dataMap.get("TZ_IS_CMPL"));
 			String strJhzt = dataMap.get("TZ_JIHUO_ZT") == null ? "" : String.valueOf(dataMap.get("TZ_JIHUO_ZT"));
-			if ("Y"==strCmpl&&!"Y".equals(strJhzt)) {
+			if ("Y".equals(strCmpl)&&!"Y".equals(strJhzt)) {
 				errorMsg.add("1");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
 						"TZGD_FWINIT_00050", language, "此帐号暂未激活，请激活后重试。", "The account is not activated yet."));
