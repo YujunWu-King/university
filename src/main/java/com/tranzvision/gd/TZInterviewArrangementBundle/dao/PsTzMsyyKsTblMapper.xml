@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyyKsTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_BATCH_ID" property="tzBatchId" jdbcType="VARCHAR" />
+    <id column="TZ_MS_PLAN_SEQ" property="tzMsPlanSeq" jdbcType="VARCHAR" />
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_MS_JOIN_STATE" property="tzMsJoinState" jdbcType="VARCHAR" />
+    <result column="TZ_MS_RESULT" property="tzMsResult" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_BATCH_ID, TZ_MS_PLAN_SEQ, OPRID, TZ_MS_JOIN_STATE, TZ_MS_RESULT, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_MSYY_KS_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+      and TZ_MS_PLAN_SEQ = #{tzMsPlanSeq,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey" >
+    delete from PS_TZ_MSYY_KS_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+      and TZ_MS_PLAN_SEQ = #{tzMsPlanSeq,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl" >
+    insert into PS_TZ_MSYY_KS_TBL (TZ_CLASS_ID, TZ_BATCH_ID, TZ_MS_PLAN_SEQ, 
+      OPRID, TZ_MS_JOIN_STATE, TZ_MS_RESULT, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzBatchId,jdbcType=VARCHAR}, #{tzMsPlanSeq,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR}, #{tzMsJoinState,jdbcType=VARCHAR}, #{tzMsResult,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl" >
+    insert into PS_TZ_MSYY_KS_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzBatchId != null" >
+        TZ_BATCH_ID,
+      </if>
+      <if test="tzMsPlanSeq != null" >
+        TZ_MS_PLAN_SEQ,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzMsJoinState != null" >
+        TZ_MS_JOIN_STATE,
+      </if>
+      <if test="tzMsResult != null" >
+        TZ_MS_RESULT,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchId != null" >
+        #{tzBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsPlanSeq != null" >
+        #{tzMsPlanSeq,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsJoinState != null" >
+        #{tzMsJoinState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsResult != null" >
+        #{tzMsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl" >
+    update PS_TZ_MSYY_KS_TBL
+    <set >
+      <if test="tzMsJoinState != null" >
+        TZ_MS_JOIN_STATE = #{tzMsJoinState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsResult != null" >
+        TZ_MS_RESULT = #{tzMsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+      and TZ_MS_PLAN_SEQ = #{tzMsPlanSeq,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl" >
+    update PS_TZ_MSYY_KS_TBL
+    set TZ_MS_JOIN_STATE = #{tzMsJoinState,jdbcType=VARCHAR},
+      TZ_MS_RESULT = #{tzMsResult,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR}
+      and TZ_MS_PLAN_SEQ = #{tzMsPlanSeq,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

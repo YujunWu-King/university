@@ -46,40 +46,53 @@
         }
     ],
     initComponent: function () {
-        var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore();
+		var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore(),
+			applyStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_BMGL_APPLY_STATUS");
+		
+		store.on('load',function(s,records){
+			
+		});
+		applyStatusStore.on('load',function(){
+			store.load();
+		});
+        
         Ext.apply(this, {
             columns: [{
                 xtype: 'rownumberer',
                 width:50
             },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.className","班级名称"),
-                dataIndex: 'className',
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirectionId","报考方向编号"),
+                dataIndex: 'classID',
                 minWidth:180,
                 flex:1
             },{
-                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.projectName","所属项目"),
-                dataIndex: 'projectName',
-                minWidth:120,
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirection","报考方向名称"),
+                minWidth:180,
                 flex:1
             },{
-                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.projectType","项目类别"),
-                dataIndex: 'projectType',
-                minWidth:110
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyBatch","申请批次"),
+                dataIndex: 'batchName',
+                width:110
             },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantsNumber","报名人数"),
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyChioce","申请志愿"),
+                dataIndex: 'className',
+                width:110
+            },{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyStatus","申请状态"),
+                dataIndex: 'applyStatusDesc',
+                width:110
+            },{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantsNumber","总申请人数"),
                 dataIndex: 'applicantsNumber',
                 width:110
             },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.noauditNumber","未审核人数"),
-                dataIndex: 'noauditNumber',
-                width:140,
-                renderer: function(val){
-                    if(val>0){
-                        return '<span  style="color: #ED0048;" >'+val+'</span>';
-                    }else{
-                        return val;
-                    }
-                }
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.expectedNumber","预报名人数"),
+                dataIndex: 'expectedNumber',
+                width:140
+            },{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.firstChoiceNumber","第一志愿申请人数"),
+                dataIndex: 'firstChoiceNumber',
+                width:140
             },{
                 xtype:'linkcolumn',
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.viewApplicants","查看报考学生"),

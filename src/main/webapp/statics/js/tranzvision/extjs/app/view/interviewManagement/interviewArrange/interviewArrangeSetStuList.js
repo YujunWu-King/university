@@ -7,6 +7,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         'Ext.grid.*',
         'Ext.util.*',
         'Ext.grid.filters.Filters',
+        'Ext.toolbar.Paging',
+        'Ext.ux.ProgressBarPager',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeSetStuListModel',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeSetStuListStore',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeSetStuListController'
@@ -111,24 +113,62 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 },
                 dockedItems:[{
                     xtype:"toolbar",
-                    items:[	{
+                    items:[{
+                    	xtype: 'form',
+                    	reference: 'audienceForm',
+                    	style: 'padding-top:8px;',
+                    	items:[{
+                    		xtype: 'tagfield',
+                    		name:'audTag',
+                    		displayField: 'desc',
+                            valueField: 'id',
+                            createNewOnEnter: false,
+                            createNewOnBlur: false,
+                            filterPickList: true,
+                            queryMode: 'local',
+                            publishes: 'value',
+                            //minWidth:400,
+                            //maxWidth:600,
+                            width: 600,
+                            listConfig:{
+                                maxHeight:1
+                            }
+                    	}]
+                    },{
+                    	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.adddAud","添加听众"),
+                        tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.adddAud","添加听众"),
+                        iconCls:"add",
+                        handler:'adddAudience'
+                    },/*{
                         text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarClearFilters","清除筛选条件"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarClearFiltersTip","清除筛选条件"),
                         iconCls:"reset",
                         reference:'msArrSetStuListClearFiltersBtn',
                         handler:'onClearFilters',
                         disabled:true
-                    },	{
+                    },{
                         text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarAdd","新增"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarAddTip","新增"),
                         iconCls:"add",
                         handler:'addIntervieStus'
-                    },	{
+                    },*/{
                         text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemove","删除"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemoveTip","删除"),
                         iconCls:"remove",
                         handler:'delSelStus'
-                    }]
+                    },'->',{
+							xtype:'splitbutton',
+							text:'更多操作',
+							iconCls:  'list',
+							glyph: 61,
+							menu:[
+								{
+									text:'选中考生发送面试预约邮件',
+									iconCls:"email",
+									handler:'sendEmailToSelStu'
+								}]
+						}
+					]
                 }],
                 columns: [{
                     text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.rowNum","序号"),
@@ -151,7 +191,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     minWidth: 100,
                     flex:1
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","初筛结果"),
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
                     dataIndex: 'msZGFlag',
                     filter: {
                         type: 'list',
@@ -194,7 +234,14 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     dataIndex: 'label',
                     minWidth: 200,
                     flex:2
-                }]
+                }],
+                bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 10,
+                    store: interviewArrangeSetStuListGridStore,
+                    displayInfo: true,
+                    plugins: new Ext.ux.ProgressBarPager()
+                }
             }]
         });
         this.callParent();

@@ -9,17 +9,9 @@
 
     initComponent: function() {
         var backgrounds = {
-            crisp: 'border-circle',
-            'crisp-touch': 'circle',
-            neptune: 'border-square',
-            'neptune-touch': 'square',
-            classic: 'rounded-square',
-            gray: 'rounded-square',
-            tranzvision: 'square',
-            yenching: 'square',
-            maple: 'square',
-            'tranzvision-classic':'square',
-            'yenching-classic':'square'
+            tranzvision: ['Sencha-Examples','square'],
+            maple: ['Sencha-Examples','square'],
+            simple:['FontAwesome','fa-rounded-square']
         };
 
         this.tpl =
