@@ -42,7 +42,7 @@ public class TzCanInTsinghuaLoginController {
 		}
 		
 		/*登录页面内容*/
-		String loginHtml = "";
+		String loginHtml = "";isMobile = true;
 		try {
 			if(isMobile){
 				loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MLOGIN",request.getContextPath(),"","");

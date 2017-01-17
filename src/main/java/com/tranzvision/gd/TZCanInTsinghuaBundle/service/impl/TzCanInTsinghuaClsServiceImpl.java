@@ -408,8 +408,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String createTestDirection(String isMobile) {
-		String strHtml = "获取数据失败，请联系管理员";
-
+		String strTypes = "获取数据失败，请联系管理员";
+		String strHtml = "";
 		try {
 			/*当前考生oprid*/
 			String strOprid = "";
@@ -424,7 +424,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String jsSql = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
 			String jgid = sqlQuery.queryForObject(jsSql, new Object[] { strOprid},"String");
 			if(StringUtils.isBlank(jgid) || StringUtils.isBlank(strOprid)){
-				return strHtml;
+				return strTypes;
 			}
 
 			//列表SQL
@@ -434,7 +434,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss"); 
 			Date nowTime = new Date();
 			
-			strHtml = "";
+			strTypes = "";
 			
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
@@ -451,15 +451,22 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				String wjUrl = sqlQuery.queryForObject(wjUrlSql, new Object[] { attrWjId },"String");
 				String strTr = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TR",attrCsWjId,attrCsWjName,wjUrl);
 
-				strHtml = strHtml + strTr;
+				strTypes = strTypes + strTr;
 			}
+			if(StringUtils.isBlank(strTypes)){
+				strTypes = "<tr><td><span'>没有可选择的测试方向！</span></td></tr>";
+				
+			}
+			
+			if(StringUtils.equals("Y", isMobile)){
+				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MTESTTYPE",request.getContextPath(),strTypes);
+			}else{
+				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+			}
+			
 		}catch(Exception e){
 	    	e.printStackTrace();
 	    }
-		
-		if(StringUtils.isBlank(strHtml)){
-			strHtml = "<tr><td><span'>没有可选择的问卷！</span></td></tr>";
-		}
 		
 		return strHtml;
 	}
