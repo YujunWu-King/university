@@ -11,7 +11,7 @@
         var backgrounds = {
             tranzvision: ['Sencha-Examples','icon-square'],
             maple: ['Sencha-Examples','icon-square'],
-            simple:['FontAwesome','fa-rounded-square']
+            simple:['FontAwesome','fa-square']
         };
 
         this.tpl =
