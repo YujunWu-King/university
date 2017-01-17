@@ -13,6 +13,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
     querySmsGroupSends:function(btn){
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_SMSQ_COM.TZ_SMSQ_MGR_STD.TZ_SMSQ_LIST_V',
+			condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID
+            },
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
@@ -76,35 +80,59 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
 			var TransmitStore = new KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsTransmitStore();
 
             SmsGroupForm.down('grid[reference=smsTmplItemGrid]').setStore(SmsItemStore);
+			SmsGroupForm.down('button[reference=copyHistoryBtn]').setHidden(false);/*显示历史复制按钮*/
 
             var par = '{"smsQfId": "","queryID": "recever"}';
             receverStore.tzStoreParams=par;
             receverStore.load({
                 callback: function (records, options, success) {
-                    SmsGroupForm.down('tagfield[reference=receverTagField]').setStore(receverStore);
-                    par="";
-                    SmsTmplStore.load({
-                            callback: function (records, options, success) {
-                                SmsGroupForm.down('combobox[reference=smsTmpId]').setStore(SmsTmplStore);
-								
-								TransmitStore.tzStoreParams = '{"smsQfId": "","queryID": "transmit"}';
-								TransmitStore.load({
-									callback: function(records, options, success){
-										SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
-									}	
-								});
-                            }
-                    });
+                    //SmsGroupForm.down('tagfield[reference=receverTagField]').setStore(receverStore);
                 }
             });
-
+			SmsGroupForm.down('tagfield[reference=receverTagField]').setStore(receverStore);
+			
+			par="";
+			SmsTmplStore.load({
+				callback: function (records, options, success) {
+					//SmsGroupForm.down('combobox[reference=smsTmpId]').setStore(SmsTmplStore);
+				}
+			});
+			SmsGroupForm.down('combobox[reference=smsTmpId]').setStore(SmsTmplStore);
+			
+			/*
+			TransmitStore.tzStoreParams = '{"smsQfId": "","queryID": "transmit"}';
+			TransmitStore.load({
+				callback: function(records, options, success){
+					//SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
+				}	
+			});
+			SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
+*/
+			
             var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"getCreInfo","comParams":{}}';
             Ext.tzLoad(tzParams,function(responseData){
-                panel.child("form").getForm().setValues(responseData);
-                panel.BulkTaskId = panel.child("form").down('textfield[name=smsQfId]').getValue();
+				var smsForm = panel.child("form");
+                smsForm.getForm().setValues(responseData);
+                panel.BulkTaskId = smsForm.down('textfield[name=smsQfId]').getValue();
 
-                panel.child("form").child('toolbar').child('button[reference=clearAllBtn]').disabled=true;
-                panel.child("form").child('toolbar').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
+                smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=clearAllBtn]').disabled=true;
+                smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
+				
+				
+				smsForm.child('tagfield[reference=receverTagField]').setEditable(false);
+				smsForm.child('tagfield[reference=receverTagField]').disabled=true;
+				smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=addAudienceBtn]').disabled=true;
+				smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+				smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=pasteFromExcelBtn]').disabled=true;
+				smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=selectStuBtn]').disabled=true;
+				smsForm.child('toolbar[reference=receverToolbar]').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+				
+				smsForm.down('combobox[reference=smsTmpId]').disabled=true;
+				smsForm.down('tagfield[reference=receverTagField]').addCls('readOnly-tagfield-BackgroundColor');
+				smsForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');
+				
+				smsForm.down('button[reference=setSmsTmpl]').disabled = true;
+				smsForm.down('button[reference=setSmsTmpl]').addCls('disabled-button-color');
             });
         });
 
@@ -185,14 +213,15 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
             });
 
             myMask.show();
-			
+			/*
 			TransmitStore.tzStoreParams = '{"smsQfId": "'+smsQfId+'","queryID": "transmit"}';
 			TransmitStore.load({
 				callback: function(){
-					SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
+					//SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
 				}	
 			});
-
+			SmsGroupForm.down('tagfield[reference=transPhoneNumsTagField]').setStore(TransmitStore);	
+*/
             var par = '{"smsQfId": "'+smsQfId+'","queryID": "recever"}';
             receverStore.tzStoreParams=par;
             receverStore.load({
@@ -203,9 +232,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
                             SmsGroupForm.down('combobox[reference=smsTmpId]').setStore(SmsTmplStore);
                             var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"QF","comParams":{"smsQfId":"'+smsQfId+'"}}';
                             Ext.tzLoad(tzParams,function(responseData){
-                                SmsGroupForm.down('radio[reference="sendModelExc"]').removeListener('change','excSend');
+                                SmsGroupForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
                                 SmsGroupForm.down('tagfield[reference="receverTagField"]').removeListener('change','receverChange');
                                 SmsGroupForm.getForm().setValues(responseData);
+								if(responseData.dsfsTime == ""){
+									SmsGroupForm.down('timefield[name=dsfsTime]').setValue('00:00'); /*解决报时间无效错误*/		
+								}
+								
                                 panel.BulkTaskId = SmsGroupForm.down('textfield[name=smsQfId]').getValue();
                                 //if (responseData['smsTmpId']!=""||SmsGroupForm.down('radio[reference="sendModelExc"]').checked) {
                                 if (SmsGroupForm.down('radio[reference="sendModelExc"]').checked) {
@@ -244,22 +277,41 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
                                     SmsGroupForm.down('displayfield[name=dsfsInfo]').setVisible(true);
                                 }
                                 SmsGroupForm.down('displayfield[name=creDt]').setVisible(true);
-
                                 if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
-                                    if(responseData['recever']!=""){
+                                    if(responseData['recever'].length>0){
                                         SmsGroupForm.down('tagfield[reference="receverTagField"]').removeListener('change','receverChange');
                                         SmsGroupForm.down('tagfield[reference=receverTagField]').setValue(responseData['recever']);
                                         SmsGroupForm.down('tagfield[reference="receverTagField"]').addListener('change','receverChange');
-                                        SmsGroupForm.down('combobox[reference=smsTmpId]').disabled=true;
-                                        SmsGroupForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');
+
+
+									    var arrRecever = responseData['recever'];
+                                       	var hasPhoneAdd = false;
+										for(var i=0; i<arrRecever.length; i++){
+											var phoneReg = /^1\d{10}$/;	
+											if (phoneReg.test(arrRecever[i])){
+												hasPhoneAdd = true;
+												break;
+											}
+										}
+										if(hasPhoneAdd) {
+											SmsGroupForm.down('combobox[reference=smsTmpId]').disabled=true;
+											SmsGroupForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');	
+										}else{
+											SmsGroupForm.down('combobox[reference=smsTmpId]').disabled=false;
+											SmsGroupForm.down('combobox[reference=smsTmpId]').removeCls('readOnly-combox-BackgroundColor');
+										}
                                     }
                                     if(responseData['sendModel']=="EXC"){
                                         SmsGroupForm.down('radio[reference=sendModelExc]').setValue(true);
 
                                         SmsGroupForm.child('tagfield[reference=receverTagField]').setEditable(false);
                                         SmsGroupForm.child('tagfield[reference=receverTagField]').disabled=true;
-                                        SmsGroupForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
-                                        SmsGroupForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
+                                        SmsGroupForm.child('toolbar[reference=receverToolbar]').child('button[reference=addAudienceBtn]').disabled=true;
+										SmsGroupForm.child('toolbar[reference=receverToolbar]').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+                                        SmsGroupForm.child('toolbar[reference=receverToolbar]').child('button[reference=pasteFromExcelBtn]').disabled=true;
+										SmsGroupForm.child('toolbar[reference=receverToolbar]').child('button[reference=selectStuBtn]').disabled=true;
+										SmsGroupForm.child('toolbar[reference=receverToolbar]').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+										
                                         SmsGroupForm.down('combobox[reference=smsTmpId]').disabled=true;
                                         SmsGroupForm.down('tagfield[reference=receverTagField]').addCls('readOnly-tagfield-BackgroundColor');
                                         SmsGroupForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');
@@ -269,7 +321,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
                                     panel.down('button[reference=sendBtn]').setDisabled(true);
                                     panel.getController().pageReadonly(SmsGroupForm);
                                 }
-
                                 if(responseData['rwzxZt']=="B"){
                                     panel.down('button[reference=revokeBtn]').setVisible(true);
                                 }
@@ -278,7 +329,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
                                     panel.down('button[reference=viewHisBtn]').setDisabled(false);
                                 }
 								*/
-                                SmsGroupForm.down('radio[reference="sendModelExc"]').addListener('change','excSend');
+                                SmsGroupForm.down('radio[reference="sendModelNor"]').addListener('change','norSend');
                                 SmsGroupForm.down('tagfield[reference="receverTagField"]').addListener('change','receverChange');
 
                                 myMask.hide();
@@ -365,7 +416,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgContro
         cmp = new ViewClass();
 
         cmp.on('afterrender',function(panel){
-            console.log(panel)
+
             var store=panel.getStore();
             var tzStoreParams ='{"storeType":"history","smsQfID":"'+smsQfId+'"}';
             store.tzStoreParams = tzStoreParams;

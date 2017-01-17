@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjqfTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl" >
+    <id column="RUN_CNTL_ID" property="runCntlId" jdbcType="VARCHAR" />
+    <result column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <result column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RUN_CNTL_ID, TZ_MLSM_QFPC_ID, TZ_EML_SMS_TASK_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DXYJQF_TBL
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DXYJQF_TBL
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl" >
+    insert into PS_TZ_DXYJQF_TBL (RUN_CNTL_ID, TZ_MLSM_QFPC_ID, TZ_EML_SMS_TASK_ID
+      )
+    values (#{runCntlId,jdbcType=VARCHAR}, #{tzMlsmQfpcId,jdbcType=VARCHAR}, #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl" >
+    insert into PS_TZ_DXYJQF_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        RUN_CNTL_ID,
+      </if>
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        #{runCntlId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl" >
+    update PS_TZ_DXYJQF_TBL
+    <set >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl" >
+    update PS_TZ_DXYJQF_TBL
+    set TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+</mapper>

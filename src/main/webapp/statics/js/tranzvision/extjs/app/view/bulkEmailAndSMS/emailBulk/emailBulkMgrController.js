@@ -18,7 +18,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
 			condition:
             {
                 "TZ_JG_ID": Ext.tzOrgID
-				/*,"SETID":Ext.tzSetID*/
             },    
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
@@ -86,78 +85,84 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
             var emlItemStore = new KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetEmlItemStore();
 
             var emlBkDtForm = panel.child('form');
-        	emlBkDtForm.down('button[reference=copyHistoryBtn]').setHidden(false);/*显示历史复制按钮*/
+			emlBkDtForm.down('button[reference=copyHistoryBtn]').setHidden(false);/*显示历史复制按钮*/
+
             emlBkDtForm.down('grid[reference=emlTmplItemGrid]').setStore(emlItemStore);
             emlBkDtForm.down('grid[reference=emlInfoItemGrid]').setStore(attaStore);
 
             var par = '{"emlQfId": "","queryID": "recever"}';
             receverStore.tzStoreParams=par;
-			/*
-            senderStore.load({
-                callback: function (records, options, success) {
-                    emlBkDtForm.down('combobox[name=sender]').setStore(senderStore);
-                    receverStore.load({
-                        callback: function (records, options, success) {
-                            emlBkDtForm.down('tagfield[reference=recever]').setStore(receverStore);
-                            par="";
-                            par = '{"emlQfId": "","queryID": "CC"}';
-                            CCStore.tzStoreParams=par;
-                            CCStore.load({
-                                callback: function (records, options, success) {
-                                    emlBkDtForm.down('tagfield[reference=mailCC]').setStore(CCStore);
-                                    EmlTmplStore.load({
-                                        callback: function (records, options, success) {
-                                            emlBkDtForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-			*/
+			
 			senderStore.load({
                 callback: function (records, options, success) {
-                    emlBkDtForm.down('combobox[name=sender]').setStore(senderStore);
+                    //emlBkDtForm.down('combobox[name=sender]').setStore(senderStore);
                 }
             });
+			emlBkDtForm.down('combobox[name=sender]').setStore(senderStore);
+			
 			receverStore.load({
 				callback: function (records, options, success) {
-					emlBkDtForm.down('tagfield[reference=recever]').setStore(receverStore);
+					//emlBkDtForm.down('tagfield[reference=recever]').setStore(receverStore);
 				}
 			});
+			emlBkDtForm.down('tagfield[reference=recever]').setStore(receverStore);
 
 			CCStore.tzStoreParams = '{"emlQfId": "","queryID": "CC"}';
 			CCStore.load({
 				callback: function (records, options, success) {
-					emlBkDtForm.down('tagfield[reference=mailCC]').setStore(CCStore);
+					//emlBkDtForm.down('tagfield[reference=mailCC]').setStore(CCStore);
 				}
 			});
+			emlBkDtForm.down('tagfield[reference=mailCC]').setStore(CCStore);
+			
 			EmlTmplStore.load({
 				callback: function (records, options, success) {
-					emlBkDtForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
+					//emlBkDtForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
 				}
 			});
-			
+			emlBkDtForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
 
             var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getCreInfo","comParams":{}}';
             Ext.tzLoad(tzParams,function(responseData){
+            	emlBkDtForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
+				emlBkDtForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+
                 emlBkDtForm.getForm().setValues(responseData);
                 panel.BulkTaskId = emlBkDtForm.down('textfield[name=emlQfId]').getValue();
 
                 par = '{"emlQfId": "'+responseData['emlQfId']+'","queryID": "atta"}';
                 attaStore.tzStoreParams=par;
                 attaStore.load();
+                                             
+                emlBkDtForm.down('radio[reference="sendModelNor"]').addListener('change','norSend');
+				emlBkDtForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+				
+				emlBkDtForm.down('button[reference=setEmlTmpl]').disabled=true;
+				emlBkDtForm.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
             });
 
             emlBkDtForm.child('toolbar').child('button[reference=clearAllBtn]').disabled=true;
             emlBkDtForm.child('toolbar').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
+			
             emlBkDtForm.down('checkbox[name=edmFlag]').setValue(true);
             emlBkDtForm.down('checkbox[name=qxdyFlag]').setValue(true);
             emlBkDtForm.down('checkbox[name=qypfFlag]').setValue(true);
             emlBkDtForm.down('textfield[name=fsslXs]').setVisible(true);
             emlBkDtForm.down('textfield[name=fsslXs]').setValue('500');
+			
+			emlBkDtForm.child('tagfield[reference=recever]').setEditable(false);
+			emlBkDtForm.child('tagfield[reference=recever]').disabled=true;
+			emlBkDtForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
+			
+			emlBkDtForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
+			emlBkDtForm.child('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+			
+			emlBkDtForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+			emlBkDtForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+			
+			emlBkDtForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
+			emlBkDtForm.down('combobox[reference=emlTmpId]').disabled=true;
+			emlBkDtForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
         });
 
         tab = contentPanel.add(cmp);
@@ -236,233 +241,141 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
             emlBkDetForm.down('grid[reference=emlTmplItemGrid]').setStore(emlItemStore);
             emlBkDetForm.down('grid[reference=emlInfoItemGrid]').setStore(attaStore);
 
-            var myMask = new Ext.LoadMask({
-                msg    : '加载中...',
-                target : Ext.getCmp('tranzvision-framework-content-panel')
-            });
-
-            myMask.show();
-
             var par = '{"emlQfId": "'+emlQfId+'","queryID": "recever"}';
             receverStore.tzStoreParams=par;
-			/*
-            senderStore.load({
-                callback: function (records, options, success) {
-                    emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
-                    receverStore.load({
-                        callback: function (records, options, success) {
-                            emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
-                            par="";
-                            par = '{"emlQfId": "'+emlQfId+'","queryID": "CC"}';
-                            CCStore.tzStoreParams=par;
-                            CCStore.load({
-                                callback: function (records, options, success) {
-                                    emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
-                                    EmlTmplStore.load({
-                                        callback: function (records, options, success) {
-                                            emlBkDetForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
-                                            var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"QF","comParams":{"emlQfId":"'+emlQfId+'"}}';
-                                            Ext.tzLoad(tzParams,function(responseData){
-                                                emlBkDetForm.down('radio[reference="sendModelExc"]').removeListener('change','excSend');
-                                                emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-                                                emlBkDetForm.getForm().setValues(responseData);
-                                                panel.BulkTaskId = emlBkDetForm.down('textfield[name=emlQfId]').getValue();
 
-                                                //if (responseData['emlTmpId']!=""||emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
-                                                if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
-                                                    emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
-
-                                                    var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlQfId":"'+emlQfId+'","emlTmpId":"'+responseData['emlTmpId']+'"}}';
-                                                    Ext.tzLoad(tzParams,function(responseData){
-                                                        emlItemStore.add(responseData['root']);
-                                                        emlItemStore.commitChanges();
-
-                                                        var userAgent = navigator.userAgent;
-                                                        if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
-                                                            var copyItemsDom = document.getElementsByName("itememlCopy");
-                                                            for (var i = 0; i < copyItemsDom.length; i++) {
-                                                                $(copyItemsDom[i]).zclip({
-                                                                    beforeCopy: function () {
-                                                                        var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
-                                                                        var itemFirstCharPositon = itemHtml.indexOf("[");
-                                                                        var itemLastCharPositon = itemHtml.indexOf("]");
-                                                                        var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
-                                                                        emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
-                                                                    },
-                                                                    copy: function () {
-                                                                        return emlBkDetForm.down('textfield[name=copyfield]').getValue();
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-                                                    });
-                                                };
-
-                                                par = '{"emlQfId": "'+emlQfId+'","queryID": "atta"}';
-                                                attaStore.tzStoreParams=par;
-                                                attaStore.load();
-
-                                                if(responseData['dsfsInfo']!=""){
-                                                    emlBkDetForm.down('displayfield[name=dsfsInfo]').setVisible(true);
-                                                }
-                                                emlBkDetForm.down('displayfield[name=creDt]').setVisible(true);
-
-                                                if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
-                                                    if(responseData['recever']!=""){
-                                                        emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-                                                        emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
-                                                        emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
-                                                        emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
-                                                        emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
-                                                    }
-                                                    if(responseData['mailCC']!=""){
-                                                        emlBkDetForm.down('tagfield[reference=mailCC]').setValue(responseData['mailCC']);
-                                                    }
-                                                    if(responseData['sendModel']=="EXC"){
-                                                        emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
-
-                                                        emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
-                                                        emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
-                                                        emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
-                                                        emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
-                                                        emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
-                                                        emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
-                                                        emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
-                                                    };
-                                                }else{
-                                                    panel.down('button[reference=saveBtn]').setDisabled(true);
-                                                    panel.down('button[reference=sendBtn]').setDisabled(true);
-                                                    panel.getController().pageReadonly(emlBkDetForm);
-                                                }
-
-                                                if(responseData['rwzxZt']=="B"){
-                                                    panel.down('button[reference=revokeBtn]').setVisible(true);
-                                                }
-                                                emlBkDetForm.down('radio[reference="sendModelExc"]').addListener('change','excSend');
-                                                emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
-
-                                                myMask.hide();
-                                            });
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-			*/
-			
 			senderStore.load({
                 callback: function (records, options, success) {
-                    emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
+                    //emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
                 }
             });
+			emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
+			
 			receverStore.load({
 				callback: function (records, options, success) {
-					emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
+					//emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
 				}
 			});
+			emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
+			
 			CCStore.tzStoreParams='{"emlQfId": "'+emlQfId+'","queryID": "CC"}';
 			CCStore.load({
 				callback: function (records, options, success) {
-					emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
+					//emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
 				}
 			});
+			emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
+			
 			EmlTmplStore.load({
 				callback: function (records, options, success) {
-					emlBkDetForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
-					var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"QF","comParams":{"emlQfId":"'+emlQfId+'"}}';
+					//emlBkDetForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
+				}
+			});
+			emlBkDetForm.down('combobox[reference=emlTmpId]').setStore(EmlTmplStore);
+			
+			var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"QF","comParams":{"emlQfId":"'+emlQfId+'"}}';
+			Ext.tzLoad(tzParams,function(responseData){
+				emlBkDetForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
+				emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+
+				emlBkDetForm.getForm().setValues(responseData);
+				if(responseData.dsfsTime == ""){
+					emlBkDetForm.down('timefield[name=dsfsTime]').setValue('00:00'); /*解决报时间无效错误*/		
+				}
+				panel.BulkTaskId = emlBkDetForm.down('textfield[name=emlQfId]').getValue();
+
+				if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
+					emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
+					var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlQfId":"'+emlQfId+'","emlTmpId":"'+responseData['emlTmpId']+'"}}';
 					Ext.tzLoad(tzParams,function(responseData){
-						emlBkDetForm.down('radio[reference="sendModelExc"]').removeListener('change','excSend');
-						emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-						emlBkDetForm.getForm().setValues(responseData);
-						panel.BulkTaskId = emlBkDetForm.down('textfield[name=emlQfId]').getValue();
+						emlItemStore.add(responseData['root']);
+						emlItemStore.commitChanges();
 
-						//if (responseData['emlTmpId']!=""||emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
-						if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
-							emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
-
-							var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlQfId":"'+emlQfId+'","emlTmpId":"'+responseData['emlTmpId']+'"}}';
-							Ext.tzLoad(tzParams,function(responseData){
-								emlItemStore.add(responseData['root']);
-								emlItemStore.commitChanges();
-
-								var userAgent = navigator.userAgent;
-								if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
-									var copyItemsDom = document.getElementsByName("itememlCopy");
-									for (var i = 0; i < copyItemsDom.length; i++) {
-										$(copyItemsDom[i]).zclip({
-											beforeCopy: function () {
-												var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
-												var itemFirstCharPositon = itemHtml.indexOf("[");
-												var itemLastCharPositon = itemHtml.indexOf("]");
-												var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
-												emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
-											},
-											copy: function () {
-												return emlBkDetForm.down('textfield[name=copyfield]').getValue();
-											}
-										});
+						var userAgent = navigator.userAgent;
+						if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
+							var copyItemsDom = document.getElementsByName("itememlCopy");
+							for (var i = 0; i < copyItemsDom.length; i++) {
+								$(copyItemsDom[i]).zclip({
+									beforeCopy: function () {
+										var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
+										var itemFirstCharPositon = itemHtml.indexOf("[");
+										var itemLastCharPositon = itemHtml.indexOf("]");
+										var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
+										emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
+									},
+									copy: function () {
+										return emlBkDetForm.down('textfield[name=copyfield]').getValue();
 									}
-								}
-							});
-						};
-
-						par = '{"emlQfId": "'+emlQfId+'","queryID": "atta"}';
-						attaStore.tzStoreParams=par;
-						attaStore.load();
-
-						if(responseData['dsfsInfo']!=""){
-							emlBkDetForm.down('displayfield[name=dsfsInfo]').setVisible(true);
-						}
-						emlBkDetForm.down('displayfield[name=creDt]').setVisible(true);
-						
-						if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
-							if(responseData['recever']!=""){
-								
-								emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-								
-								emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
-								
-								emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
-							
-								emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
-								
-								emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
+								});
 							}
-							
-							if(responseData['mailCC']!=""){
-								emlBkDetForm.down('tagfield[reference=mailCC]').setValue(responseData['mailCC']);
-							}
-							if(responseData['sendModel']=="EXC"){
-								emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
-
-								emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
-								emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
-								//emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
-								emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
-								emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
-								emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
-								emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
-							};
-							
-						}else{
-							panel.down('button[reference=saveBtn]').setDisabled(true);
-							panel.down('button[reference=sendBtn]').setDisabled(true);
-							panel.getController().pageReadonly(emlBkDetForm);
 						}
+					});
+				};
+				par = '{"emlQfId": "'+emlQfId+'","queryID": "atta"}';
+				attaStore.tzStoreParams=par;
+				attaStore.load();
 
-						if(responseData['rwzxZt']=="B"){
-							panel.down('button[reference=revokeBtn]').setVisible(true);
-						}
-						
-						emlBkDetForm.down('radio[reference="sendModelExc"]').addListener('change','excSend');
+				if(responseData['dsfsInfo']!=""){
+					emlBkDetForm.down('displayfield[name=dsfsInfo]').setVisible(true);
+				}
+				emlBkDetForm.down('displayfield[name=creDt]').setVisible(true);
+
+				if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
+					if(responseData['recever']!=""){
+						emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+						emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
 						emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
 						
-						myMask.hide();
-					});
+						var arrRecever = responseData['recever'];
+						var hasEmailAdd = false;
+						for(var i=0; i<arrRecever.length; i++){
+							var EmailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;	
+							if (EmailReg.test(arrRecever[i])){
+								hasEmailAdd = true;
+								break;
+							}
+						}
+						if(hasEmailAdd) {
+							emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
+							emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');	
+						}else{
+							emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=false;
+							emlBkDetForm.down('combobox[reference=emlTmpId]').removeCls('readOnly-combox-BackgroundColor');
+						}
+					}
+					if(responseData['mailCC']!=""){
+						emlBkDetForm.down('tagfield[reference=mailCC]').setValue(responseData['mailCC']);
+					}
+					if(responseData['sendModel']=="EXC"){
+						emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
+
+						emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
+						emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
+						emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
+						emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+						
+						emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
+						
+						emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+						emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+						
+						emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
+						emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
+						emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
+					};
+				}else{
+					panel.down('button[reference=saveBtn]').setDisabled(true);
+					panel.down('button[reference=sendBtn]').setDisabled(true);
+					panel.getController().pageReadonly(emlBkDetForm);
 				}
+
+				if(responseData['rwzxZt']=="B"){
+					panel.down('button[reference=revokeBtn]').setVisible(true);
+				}
+				emlBkDetForm.down('radio[reference="sendModelNor"]').addListener('change','norSend');
+				emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+				
+				panel.commitChanges(panel);
 			});
         });
 

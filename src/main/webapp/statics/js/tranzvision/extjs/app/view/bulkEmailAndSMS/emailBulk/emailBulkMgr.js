@@ -98,7 +98,15 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgr', {
                             },{
                                 iconCls: 'frequency_report',
                                 tooltip: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_MGR_STD.vwEmlCou","查看邮件发送统计"),
-                                handler:'viewEmailCount'
+                                handler:'viewEmailCount',
+								isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+									var edmFlag = record.get('edmFlag');
+									if(edmFlag == "Y"){
+										return false;
+									}else{
+										return true;
+									}
+								}
                             }
                         ]
                     }],

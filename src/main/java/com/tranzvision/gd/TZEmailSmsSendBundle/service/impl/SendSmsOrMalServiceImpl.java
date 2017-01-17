@@ -308,7 +308,7 @@ public class SendSmsOrMalServiceImpl {
 								sendPhone = mainPhone;
 								// 发送短信;
 								mapRst = sendSmsService.doSendSms(mainPhone, content);
-								if (mapRst.get("msg") != null && !"".equals(mapRst.get("msg"))) {
+								if (mapRst.get("msg") != null && !"".equals(mapRst.get("msg")) && !"发送成功".equals(mapRst.get("msg"))) {
 									errCode = mapRst.get("code");
 									errMsg = mapRst.get("msg");
 									this.writeTaskLog(strTaskId, strRwSlId, errCode, errMsg);

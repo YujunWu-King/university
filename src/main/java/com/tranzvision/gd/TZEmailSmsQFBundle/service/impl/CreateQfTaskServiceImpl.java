@@ -64,7 +64,7 @@ public class CreateQfTaskServiceImpl {
 			psTzDxyjfsrwTbl.setTzEmlSmsTaskId(taskId);
 			psTzDxyjfsrwTbl.setTzTaskLx(taskType);
 			psTzDxyjfsrwTbl.setTzJgId(strJgId);
-			psTzDxyjfsrwTbl.setTzSyyxLx(sendtype);
+			
 			psTzDxyjfsrwTbl.setTzBatchBz("Y");
 			
 			String mailContent = "";
@@ -80,6 +80,7 @@ public class CreateQfTaskServiceImpl {
 			psTzDxyjfsrwTbl.setTzMlsmQfpcId(strPicId);
 			psTzDxyjfsrwTbl.setTzTmplId(strTmpId);
 			if ("MAL".equals(taskType)) {
+				psTzDxyjfsrwTbl.setTzSyyxLx(sendtype);
 				// 如果邮件群发设置了邮件模板，发件箱为模板中配置的邮箱，如果没有配置模板，则发件箱为当前登录人对应SETID对应配置的邮箱;
 				if(strTmpId != null && !"".equals(strTmpId)){
 					Map<String, Object> tmpMap= jdbcTemplate.queryForMap("select a.TZ_DYNAMIC_FLAG, a.TZ_WEBMAL_FLAG , a.TZ_EMLSERV_ID, a.TZ_EML_IF_PRT from PS_TZ_EMALTMPL_TBL a, PS_TZ_TMP_DEFN_TBL b where a.TZ_YMB_ID=b.TZ_YMB_ID and a.TZ_JG_ID=? and a.TZ_TMPL_ID=?",new Object[]{strJgId, strTmpId});
@@ -117,6 +118,7 @@ public class CreateQfTaskServiceImpl {
 		        psTzDxyjfsrwTbl.setTzMalContent(mailContent);
 			}else{
 				if("SMS".equals(taskType)){
+					psTzDxyjfsrwTbl.setTzSysjLx(sendtype);
 					// 如果短信群发设置了短信模板，短信发送服务器为模板中配置的服务器，如果没有配置模板，则短信服务器为当前登录人对应SETID对应配置的服务器;
 					if(strTmpId != null && !"".equals(strTmpId)){
 						String smsServId = "";

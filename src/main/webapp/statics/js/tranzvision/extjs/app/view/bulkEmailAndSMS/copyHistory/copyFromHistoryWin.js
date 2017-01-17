@@ -30,7 +30,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryWin', {
 		
 		columns.push({
 				text: "序号",
-				width: 70,
+				width: 60,
 				align:'center',
 				xtype: 'rownumberer'
 			},{
@@ -97,7 +97,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryWin', {
 				 }],
 				 bbar: {
 					 xtype: 'pagingtoolbar',
-					 pageSize: 20,
+					 pageSize: 10,
 					 listeners:{
 						 afterrender: function(pbar){
 							 var grid = pbar.findParentByType("grid");
