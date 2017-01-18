@@ -3334,8 +3334,8 @@ var SurveyBuild = {
         e.preventDefault();
         var modalLocation = $(obj).attr('data-reveal-id');
         $(obj).attr("data-for-x", mX + "px");
-	$(obj).attr("data-for-y", mY + "px");
-	$('#' + modalLocation).reveal($(obj).data());
+        $(obj).attr("data-for-y", mY + "px");
+        $('#' + modalLocation).reveal($(obj).data());
     },
     _pointerX: function(event) {
         var docElement = document.documentElement,
