@@ -1,22 +1,18 @@
 ﻿Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeTimeSet', {
     extend: 'Ext.window.Window',
+    requires: [
+	    'Ext.data.*',
+        'Ext.util.*',
+		'KitchenSink.view.interviewManagement.interviewArrange.MspcController'
+	],
 	reference: 'interviewArrTimeSet',
     xtype: 'interviewArrTimeSet',
 	controller:'MspcController',
-	requires: [
-	    'Ext.data.*',
-        'Ext.grid.*',
-        'Ext.util.*',
-        'Ext.toolbar.Paging',
-        'Ext.ux.ProgressBarPager',
-        //'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeModel',
-		//'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeStore',
-		'KitchenSink.view.interviewManagement.interviewArrange.MspcController'
-	],
-	width: 600,
-	height: 400,
-	minWidth: 300,
-	minHeight: 300,
+	
+	width: 620,
+	height: 440,
+	minWidth: 600,
+	minHeight: 400,
     columnLines: true,
     title: '面试日程安排设置',
 	layout: 'fit',
@@ -83,14 +79,18 @@
 			labelSeparator:':',			
 			name: 'endTime'
         },{
+        	xtype: 'textfield',
+        	fieldLabel: '面试地点',
+        	labelSeparator:':',			
+			name: 'msLocation'
+        },{
             xtype: 'numberfield',
-            fieldLabel: '并发考官组数',
-			hideTrigger:true,
+            fieldLabel: '最多预约人数',
 			allowDecimals:false,
 			allowBlank: false,
 			minValue:1,
 			labelSeparator:':',
-			name: 'groupNum'
+			name: 'maxPerson'
         },{
             xtype: 'numberfield',
             fieldLabel: '间隔时间(分钟)',
@@ -106,22 +106,20 @@
 			},
 			bodyStyle:'padding:10px 0 10px 0',
 			items:[{
-				width:120,
+				width:130,
 				xtype: 'numberfield',
-				labelWidth: 50,
-				fieldLabel: '每组第',
-				hideTrigger:true,
-				//allowBlank: false,
+				labelWidth: 20,
+				fieldLabel: '每',
+				//hideTrigger:true,
 				allowDecimals:false,
 				minValue:0,
 				name: 'groupPersonNum'
 			},{
-				width:140,
+				width:260,
 				xtype: 'numberfield',
-				fieldLabel: '人后休息',
-				labelWidth: 70,
-				hideTrigger:true,
-				//allowBlank: false,
+				fieldLabel: '个时间安排后休息',
+				labelWidth: 135,
+				//hideTrigger:true,
 				allowDecimals:false,
 				minValue:0,
 				labelStyle: 'padding-left:8px;font-weight:bold',

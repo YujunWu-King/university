@@ -21,7 +21,7 @@
 				
 				reference: 'msBatchWindowGrid',
 				store: {
-						type: 'msBatchStore'
+					type: 'msBatchStore'
 				},
 				//style:"margin:10px",
 				columns: [{

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.cookie.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -159,6 +160,10 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				if ("4".equals(strSen)) {
 					strResponse = this.modifyPasswordByPass(strParams, errMsg);
+				}
+				
+				if ("5".equals(strSen)) {
+					strResponse = this.savePerfectInfo(strParams, errMsg);
 				}
 			}
 
@@ -605,10 +610,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
 				psTzAqYhxxTbl.setTzBjsEml("N");
 				psTzAqYhxxTbl.setTzBjsSms("N");
+				//注册产生的账号默认为完善
+				psTzAqYhxxTbl.setTzIsCmpl("Y");
+				//产生面试申请号，流水号格式：yyyy+00001
+				Calendar date=Calendar.getInstance();
+				String currentYear = String.valueOf(date.get(Calendar.YEAR));
+				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
+				xuhao = xuhao.substring(xuhao.length()-5);
+				String tzMshId = currentYear + xuhao;
+				psTzAqYhxxTbl.setTzMshId(tzMshId);
 				psTzAqYhxxTbl.setRowAddedDttm(new Date());
 				psTzAqYhxxTbl.setRowAddedOprid(oprId);
 				psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-				psTzAqYhxxTbl.setRowLastmantOprid(oprId);
+				psTzAqYhxxTbl.setRowLastmantOprid(oprId);				
 				psTzAqYhxxTblMapper.insert(psTzAqYhxxTbl);
 
 				// 通过所有校验，保存联系方式;
@@ -734,8 +748,517 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 
 		return strResult;
-	}
+	}	
+	
+	public String savePerfectInfo(String strParams, String[] errMsg) {
+		String strResult = "\"failure\"";
+		String strJumUrl = "";
+		String strOrgId = "";
+		String strSiteId = "";
+		String strLang = "";
+		String userName = "";
+		String oprid = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);			
+			strOrgId = jacksonUtil.getString("orgid");
+			strSiteId = jacksonUtil.getString("siteId");
+			strLang = jacksonUtil.getString("lang");
+			userName = jacksonUtil.getString("userName");
+			oprid = DESUtil.decrypt(userName, "TZ_GD_TRANZVISION");
+			if (strOrgId == null || "".equals(strOrgId)||oprid==null||"".equals(oprid)) {
+				errMsg[0] = "100";
+				errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
+						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+			}
 
+			if (jacksonUtil.containsKey("data")) {
+				Map<String, Object> dataMap = jacksonUtil.getMap("data");
+
+				// 姓名;
+				String strTZ_REALNAME = "";
+				if (dataMap.containsKey("TZ_REALNAME")) {
+					strTZ_REALNAME = ((String) dataMap.get("TZ_REALNAME")).trim();
+				}
+
+				// FIRST_NAME;
+				String strTZ_FIRST_NAME = "";
+				if (dataMap.containsKey("TZ_FIRST_NAME")) {
+					strTZ_FIRST_NAME = ((String) dataMap.get("TZ_FIRST_NAME")).trim();
+				}
+
+				// LAST_NAME;
+				String strTZ_LAST_NAME = "";
+				if (dataMap.containsKey("TZ_LAST_NAME")) {
+					strTZ_LAST_NAME = ((String) dataMap.get("TZ_LAST_NAME")).trim();
+				}
+
+				// 性别;
+				String strTZ_GENDER = "";
+				if (dataMap.containsKey("TZ_GENDER")) {
+					strTZ_GENDER = ((String) dataMap.get("TZ_GENDER")).trim();
+				}
+
+				// 出生日期;
+				String strBIRTHDATE = "";
+				if (dataMap.containsKey("BIRTHDATE")) {
+					strBIRTHDATE = ((String) dataMap.get("BIRTHDATE")).trim();
+				}
+
+				// 密码;
+				String strTZ_PASSWORD = "";
+				if (dataMap.containsKey("TZ_PASSWORD")) {
+					strTZ_PASSWORD = ((String) dataMap.get("TZ_PASSWORD")).trim();
+				}
+
+				// 确认密码;
+				String strTZ_REPASSWORD = "";
+				if (dataMap.containsKey("TZ_REPASSWORD")) {
+					strTZ_REPASSWORD = ((String) dataMap.get("TZ_REPASSWORD")).trim();
+				}
+
+				// 邮箱;
+				String strTZ_EMAIL = "";
+				if (dataMap.containsKey("TZ_EMAIL")) {
+					strTZ_EMAIL = ((String) dataMap.get("TZ_EMAIL")).trim();
+				}
+
+				// 手机;
+				String strTZ_MOBILE = "";
+				if (dataMap.containsKey("TZ_MOBILE")) {
+					strTZ_MOBILE = ((String) dataMap.get("TZ_MOBILE")).trim();
+				}
+
+				// SKYPE账号;
+				String strTZ_SKYPE = "";
+				if (dataMap.containsKey("TZ_SKYPE")) {
+					strTZ_SKYPE = ((String) dataMap.get("TZ_SKYPE")).trim();
+				}
+
+				// 行业类型;
+				String strTZ_COMP_INDUSTRY = "";
+				if (dataMap.containsKey("TZ_COMP_INDUSTRY")) {
+					strTZ_COMP_INDUSTRY = ((String) dataMap.get("TZ_COMP_INDUSTRY")).trim();
+				}
+
+				// 公司名称;
+				String strTZ_COMPANY_NAME = "";
+				if (dataMap.containsKey("TZ_COMPANY_NAME")) {
+					strTZ_COMPANY_NAME = ((String) dataMap.get("TZ_COMPANY_NAME")).trim();
+				}
+
+				// 部门;
+				String strTZ_DEPTMENT = "";
+				if (dataMap.containsKey("TZ_DEPTMENT")) {
+					strTZ_DEPTMENT = ((String) dataMap.get("TZ_DEPTMENT")).trim();
+				}
+
+				// 职务;
+				String strTZ_ZHIWU = "";
+				if (dataMap.containsKey("TZ_ZHIWU")) {
+					strTZ_ZHIWU = ((String) dataMap.get("TZ_ZHIWU")).trim();
+				}
+
+				// 时区;
+				String strTZ_TIME_ZONE = "";
+				if (dataMap.containsKey("TZ_TIMEZONE")) {
+					strTZ_TIME_ZONE = ((String) dataMap.get("TZ_TIMEZONE")).trim();
+				}
+
+				// 国籍;
+				String strTZ_COUNTRY = "";
+				if (dataMap.containsKey("TZ_COUNTRY")) {
+					strTZ_COUNTRY = ((String) dataMap.get("TZ_COUNTRY")).trim();
+				}
+
+				// 常住省;
+				String strTZ_LEN_PROID = "";
+				if (dataMap.containsKey("TZ_LEN_PROID")) {
+					strTZ_LEN_PROID = ((String) dataMap.get("TZ_LEN_PROID")).trim();
+				}
+
+				// 常驻城市;
+				String strTZ_LEN_CITY = "";
+				if (dataMap.containsKey("TZ_LEN_CITY")) {
+					strTZ_LEN_CITY = ((String) dataMap.get("TZ_LEN_CITY")).trim();
+				}
+
+				// 证件类型;
+				String strNATIONAL_ID_TYPE = "";
+				if (dataMap.containsKey("NATIONAL_ID_TYPE")) {
+					strNATIONAL_ID_TYPE = ((String) dataMap.get("NATIONAL_ID_TYPE")).trim();
+				}
+
+				// 证件编号;
+				String strNATIONAL_ID = "";
+				if (dataMap.containsKey("NATIONAL_ID")) {
+					strNATIONAL_ID = ((String) dataMap.get("NATIONAL_ID")).trim();
+				}
+
+				// 毕业院校;
+				String strTZ_SCH_CNAME = "";
+				if (dataMap.containsKey("TZ_SCH_CNAME")) {
+					strTZ_SCH_CNAME = ((String) dataMap.get("TZ_SCH_CNAME")).trim();
+				}
+				
+
+				// 专业;
+				String strTZ_SPECIALTY = "";
+				if (dataMap.containsKey("TZ_SPECIALTY")) {
+					strTZ_SPECIALTY = ((String) dataMap.get("TZ_SPECIALTY")).trim();
+				}
+
+				// 最高学历;
+				String strTZ_HIGHEST_EDU = "";
+				if (dataMap.containsKey("TZ_HIGHEST_EDU")) {
+					strTZ_HIGHEST_EDU = ((String) dataMap.get("TZ_HIGHEST_EDU")).trim();
+				}
+				
+				//项目;
+				String strTZ_PRJ_ID = "";
+				if (dataMap.containsKey("TZ_PROJECT")) {
+					strTZ_PRJ_ID = ((String) dataMap.get("TZ_PROJECT")).trim();
+				}
+				
+				String strTZ_MSSQH = "";
+				if (dataMap.containsKey("TZ_MSSQH")) {
+					strTZ_MSSQH = ((String) dataMap.get("TZ_MSSQH")).trim();
+				}
+				
+
+				// 预留字段1;
+				String strTZ_COMMENT1 = "";
+				if (dataMap.containsKey("TZ_COMMENT1")) {
+					strTZ_COMMENT1 = ((String) dataMap.get("TZ_COMMENT1")).trim();
+				}
+
+				// 预留字段2;
+				String strTZ_COMMENT2 = "";
+				if (dataMap.containsKey("TZ_COMMENT2")) {
+					strTZ_COMMENT2 = ((String) dataMap.get("TZ_COMMENT2")).trim();
+				}
+
+				// 预留字段3;
+				String strTZ_COMMENT3 = "";
+				if (dataMap.containsKey("TZ_COMMENT3")) {
+					strTZ_COMMENT3 = ((String) dataMap.get("TZ_COMMENT3")).trim();
+				}
+
+				// 预留字段4;
+				String strTZ_COMMENT4 = "";
+				if (dataMap.containsKey("TZ_COMMENT4")) {
+					strTZ_COMMENT4 = ((String) dataMap.get("TZ_COMMENT4")).trim();
+				}
+
+				// 预留字段5;
+				String strTZ_COMMENT5 = "";
+				if (dataMap.containsKey("TZ_COMMENT5")) {
+					strTZ_COMMENT5 = ((String) dataMap.get("TZ_COMMENT5")).trim();
+				}
+
+				// 预留字段6;
+				String strTZ_COMMENT6 = "";
+				if (dataMap.containsKey("TZ_COMMENT6")) {
+					strTZ_COMMENT6 = ((String) dataMap.get("TZ_COMMENT6")).trim();
+				}
+
+				// 预留字段7;
+				String strTZ_COMMENT7 = "";
+				if (dataMap.containsKey("TZ_COMMENT7")) {
+					strTZ_COMMENT7 = ((String) dataMap.get("TZ_COMMENT7")).trim();
+				}
+
+				// 预留字段8;
+				String strTZ_COMMENT8 = "";
+				if (dataMap.containsKey("TZ_COMMENT8")) {
+					strTZ_COMMENT8 = ((String) dataMap.get("TZ_COMMENT8")).trim();
+				}
+
+				// 预留字段9;
+				String strTZ_COMMENT9 = "";
+				if (dataMap.containsKey("TZ_COMMENT9")) {
+					strTZ_COMMENT9 = ((String) dataMap.get("TZ_COMMENT9")).trim();
+				}
+
+				// 预留字段10;
+				String strTZ_COMMENT10 = "";
+				if (dataMap.containsKey("TZ_COMMENT10")) {
+					strTZ_COMMENT10 = ((String) dataMap.get("TZ_COMMENT10")).trim();
+				}
+
+				// 验证方式;
+				String strActivateType = "";
+				if (dataMap.containsKey("yzfs")) {
+					strActivateType = ((String) dataMap.get("yzfs")).trim();
+				}
+
+				// 手机验证码;
+				String strCheckCode = "";
+				if (dataMap.containsKey("yzm")) {
+					strCheckCode = ((String) dataMap.get("yzm")).trim();
+				}
+
+				// 邮箱验证码;
+				String strCheckedEmail = "";
+				if (dataMap.containsKey("yzmEmail")) {
+					strCheckedEmail = ((String) dataMap.get("yzmEmail")).trim();
+				}
+
+				// 校验机构会员数据项--不能为空;
+				String strTemV = "";
+				//String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strSiteId });
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						String regFieldId = (String) list.get(i).get("TZ_REG_FIELD_ID");
+						String regFieldName = (String) list.get(i).get("TZ_REG_FIELD_NAME");
+						String required = (String) list.get(i).get("TZ_IS_REQUIRED");
+						String enable = (String) list.get(i).get("TZ_ENABLE");
+						if (dataMap.containsKey(regFieldId)) {
+							strTemV = (String) dataMap.get(regFieldId) == null ? ""
+									: ((String) dataMap.get(regFieldId)).trim();
+							if ("".equals(strTemV) && "Y".equals(required) && "Y".equals(enable)) {
+								errMsg[0] = "2";
+								errMsg[1] = regFieldName + validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang,
+										"TZ_SITE_MESSAGE", "26", "不能为空", "cannot be blank");
+								return strResult;
+							}
+						}
+
+						// 如果字段是邮箱，增加校验格式;
+						if ("TZ_EMAIL".equals(regFieldId)) {
+							String strEmailParas = "{\"email\":\"" + strTemV + "\",\"orgid\":\"" + strOrgId
+									+ "\",\"lang\":\"" + strLang + "\",\"sen\":\"1\"}";
+							String strEmailResult = registeMalServiceImpl.emailVerifyByEnroll(strEmailParas, errMsg);
+							if (!"0".equals(errMsg[0])) {
+								strResult = strEmailResult;
+								return strResult;
+							}
+						}
+
+						// 如果字段是手机,增加校验格式;如果手机为非必填，则不需要校验手机格式;
+						if ("TZ_MOBILE".equals(regFieldId) && "Y".equals(required)) {
+							String strPhoneParas = "{\"phone\":\"" + strTemV + "\",\"orgid\":\"" + strOrgId
+									+ "\",\"lang\":\"" + strLang + "\",\"sen\":\"1\"}";
+							String strPhoneResult = registeSmsServiceImpl.smsVerifyByActive(strPhoneParas, errMsg);
+							if (!"0".equals(errMsg[0])) {
+								strResult = strPhoneResult;
+								return strResult;
+							}
+						}
+					}
+				}
+
+				// 验证密码和确认密码是否一致;
+				/*if (strTZ_PASSWORD == null || !strTZ_PASSWORD.equals(strTZ_REPASSWORD)) {
+					errMsg[0] = "3";
+					errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
+							"密码和确认密码不一致", "New Password and Confirm Password is not consistent");
+					return strResult;
+				}*/
+
+				// 定义激活状态，默认不激活;
+				String strActiveStatus = "N";
+				if ("M".equals(strActivateType)) {
+					// 手机
+					String sjYzmSQL = "SELECT TZ_SJYZM FROM PS_TZ_SHJI_YZM_TBL WHERE TZ_EFF_FLAG='Y' AND TZ_JG_ID=? AND TZ_MOBILE_PHONE=? ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
+					try {
+						String tzSjYzm = jdbcTemplate.queryForObject(sjYzmSQL, new Object[] { strOrgId, strTZ_MOBILE },
+								"String");
+						if (tzSjYzm != null && tzSjYzm.equals(strCheckCode)) {
+							strActiveStatus = "Y";
+						} else {
+							errMsg[0] = "4";
+							errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
+									"50", "验证码不正确", "The security code is incorrect");
+							return strResult;
+						}
+					} catch (Exception e) {
+						errMsg[0] = "4";
+						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
+								"50", "验证码不正确", "The security code is incorrect");
+						return strResult;
+					}
+				} else {
+					// 邮箱
+					if (strCheckedEmail != null && !"".equals(strCheckedEmail)) {
+						// 校验验证码
+						Patchca patchca = new Patchca();
+						if (!patchca.verifyToken(request, strCheckedEmail)) {
+							errMsg[0] = "5";
+							errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
+									"50", "验证码不正确", "The security code is incorrect");
+							return strResult;
+						}
+
+					} else {
+						errMsg[0] = "5";
+						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
+								"50", "验证码不正确", "The security code is incorrect");
+						return strResult;
+					}
+				}
+
+				// TZ_REALNAME或（FIRST_NAME/LAST_NAME) 必填一项;
+				if (strTZ_REALNAME == null || "".equals(strTZ_REALNAME)) {
+					if (strTZ_FIRST_NAME != null && !"".equals(strTZ_FIRST_NAME) && strTZ_LAST_NAME != null
+							&& !"".equals(strTZ_LAST_NAME)) {
+						if ("ENG".equals(strLang)) {
+							strTZ_REALNAME = strTZ_FIRST_NAME + " " + strTZ_LAST_NAME;
+						} else {
+							strTZ_REALNAME = strTZ_LAST_NAME + " " + strTZ_FIRST_NAME;
+						}
+					} else {
+						errMsg[0] = "6";
+						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
+								"65", "姓名或者FIRST_NAME、LAST_NAME 必填一项",
+								"Name or LAST_NAME, FIRST_NAME at least one required");
+						return strResult;
+					}
+				}
+				
+				String sql = "select TZ_DLZH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=? and TZ_JG_ID=?";
+				String dlzh = jdbcTemplate.queryForObject(sql, new Object[]{oprid,strOrgId},"String");
+				
+				PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+				psTzAqYhxxTbl.setTzDlzhId(dlzh);
+				psTzAqYhxxTbl.setTzJgId(strOrgId);
+				psTzAqYhxxTbl.setOprid(oprid);
+				psTzAqYhxxTbl.setTzRealname(strTZ_REALNAME);
+				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
+				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
+				psTzAqYhxxTbl.setTzRylx("ZCYH");
+				if ("M".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzSjbdBz("Y");
+				}
+				if ("E".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzYxbdBz("Y");
+				}
+				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
+				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
+				psTzAqYhxxTbl.setTzZhceDt(new Date());
+				psTzAqYhxxTbl.setTzBjsEml("N");
+				psTzAqYhxxTbl.setTzBjsSms("N");				
+				psTzAqYhxxTbl.setTzIsCmpl("Y");
+				
+				//是否生产面试申请号;
+				String strMssqQH = "";
+				Calendar a = Calendar.getInstance();
+				String year = String.valueOf(a.get(Calendar.YEAR));//得到年
+				String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNumOracle("TZ_AQ_YHXX_T", "TZ_MSH_ID"+year));
+				strMssqQH = year + sjNum.substring(sjNum.length()-5);
+								
+				psTzAqYhxxTbl.setTzMshId(strMssqQH);
+				psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+				psTzAqYhxxTbl.setRowLastmantOprid(oprid);				
+				psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
+
+				// 通过所有校验，保存联系方式;
+				PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
+				psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+				psTzLxfsInfoTbl.setTzLydxId(oprid);
+				psTzLxfsInfoTbl.setTzZyEmail(strTZ_EMAIL);
+				psTzLxfsInfoTbl.setTzZySj(strTZ_MOBILE);
+				psTzLxfsInfoTbl.setTzSkype(strTZ_SKYPE);
+				psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
+
+				// 通过所有校验，保存用户注册信息;
+				PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+				psTzRegUserT.setOprid(oprid);
+				psTzRegUserT.setTzSiteiId(strSiteId);
+				psTzRegUserT.setTzRealname(strTZ_REALNAME);
+				psTzRegUserT.setTzGender(strTZ_GENDER);
+				psTzRegUserT.setTzSkype(strTZ_SKYPE);
+				psTzRegUserT.setTzFirstName(strTZ_FIRST_NAME);
+				psTzRegUserT.setTzLastName(strTZ_LAST_NAME);
+				psTzRegUserT.setTzCompanyName(strTZ_COMPANY_NAME);
+				psTzRegUserT.setTzCompIndustry(strTZ_COMP_INDUSTRY);
+				psTzRegUserT.setTzDeptment(strTZ_DEPTMENT);
+				psTzRegUserT.setTzZhiwu(strTZ_ZHIWU);
+				psTzRegUserT.setTzTimezone(strTZ_TIME_ZONE);
+				psTzRegUserT.setTzCountry(strTZ_COUNTRY);
+				psTzRegUserT.setTzLenProid(strTZ_LEN_PROID);
+				psTzRegUserT.setTzLenCity(strTZ_LEN_CITY);
+				psTzRegUserT.setNationalIdType(strNATIONAL_ID_TYPE);
+				psTzRegUserT.setNationalId(strNATIONAL_ID);
+
+				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+				if (strBIRTHDATE != null && !"".equals(strBIRTHDATE)) {
+					try {
+						Date bthDate = dateFormate.parse(strBIRTHDATE);
+						psTzRegUserT.setBirthdate(bthDate);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				psTzRegUserT.setTzSchCname(strTZ_SCH_CNAME);
+				psTzRegUserT.setTzSpecialty(strTZ_SPECIALTY);
+				psTzRegUserT.setTzHighestEdu(strTZ_HIGHEST_EDU);
+				psTzRegUserT.setTzPrjId(strTZ_PRJ_ID);
+				psTzRegUserT.setTzComment1(strTZ_COMMENT1);
+				psTzRegUserT.setTzComment2(strTZ_COMMENT2);
+				psTzRegUserT.setTzComment3(strTZ_COMMENT3);
+				psTzRegUserT.setTzComment4(strTZ_COMMENT4);
+				psTzRegUserT.setTzComment5(strTZ_COMMENT5);
+				psTzRegUserT.setTzComment6(strTZ_COMMENT6);
+				psTzRegUserT.setTzComment7(strTZ_COMMENT7);
+				psTzRegUserT.setTzComment8(strTZ_COMMENT8);
+				psTzRegUserT.setTzComment9(strTZ_COMMENT9);
+				psTzRegUserT.setTzComment10(strTZ_COMMENT10);
+				psTzRegUserT.setRowLastmantDttm(new Date());
+				psTzRegUserT.setRowLastmantOprid(oprid);
+				
+				//是否生产面试申请号;
+				if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){					
+					psTzRegUserT.setTzMssqh(strMssqQH);
+				}
+				
+				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+				
+				//如果选择了项目，则插入新闻活动历史表;
+				if(strTZ_PRJ_ID != null && !"".equals(strTZ_PRJ_ID)){
+					PsShowPrjNewsTKey psShowPrjNewsTKey = new PsShowPrjNewsTKey();
+					psShowPrjNewsTKey.setOprid(oprid);
+					psShowPrjNewsTKey.setTzPrjId(strTZ_PRJ_ID);
+					psShowPrjNewsTMapper.insert(psShowPrjNewsTKey);
+				}
+
+
+				if ("M".equals(strActivateType)) {
+					//String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT 0,1",new Object[] { strOrgId }, "String");					
+					strJumUrl= request.getContextPath() + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+				} else {
+					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
+							+ "\",\"lang\":\"" + strLang+ "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprid + "\",\"sen\":\"2\"}";
+					String strEmailSendResult = registeMalServiceImpl.tzQuery(strEmailSendParas, errMsg);
+					if (!"0".equals(errMsg[0])) {
+						strResult = strEmailSendResult;
+						return strResult;
+					}
+					strJumUrl = request.getContextPath() + "/dispatcher";
+					strJumUrl = strJumUrl
+							+ "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+							+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId+ "\",\"orgid\":\"" + strOrgId + "\",\"sen\":\"1\"}}";
+				}
+				Map<String, Object> returnMap = new HashMap<>();
+				returnMap.put("result", "success");
+				returnMap.put("jumpurl", strJumUrl);
+				strResult = jacksonUtil.Map2json(returnMap);
+				return strResult;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "100";
+			errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
+					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+		}
+
+		return strResult;
+	}
+	
 	public String checkCodeVerifyByPass(String strParams, String[] errMsg) {
 		String strCheckCode = "";
 		String strLang = "";
@@ -1498,6 +2021,33 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(map);
 	}
 
+	public String getCompleteUrl(String strParams){
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String siteid = "";
+		String url = "";
+		try {
+			jacksonUtil.json2Map(strParams);
+			siteid = jacksonUtil.getString("siteid");
+			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
+			url = url.replaceAll("\\\\", "/");
+			if(!"".equals(url)){
+				if((url.lastIndexOf("/") + 1) == url.length()){
+					url = request.getContextPath() + url + "perfect.html";
+				}else{
+					url = request.getContextPath() + url + "/perfect.html";
+				}
+			}else{
+				url = request.getContextPath() + "/perfect.html";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("url", url);
+		return jacksonUtil.Map2json(map);
+	}
+	
 	public String createPageForEmlAct(String strParams) {
 		String strOrgid = "";
 		String strLang = "";

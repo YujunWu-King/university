@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classStore', {
     extend: 'Ext.data.Store',
     alias: 'store.appFormClassStore',
     model: 'KitchenSink.view.enrollmentManagement.applicationForm.classModel',
-	autoLoad: true,
+	autoLoad: false,
     pageSize: 30,
     comID: 'TZ_BMGL_BMBSH_COM',
     pageID: 'TZ_BMGL_CLASS_STD',
@@ -12,6 +12,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classStore', {
         {
             direction:'DESC',
             property:'classID'
+        },
+		{
+            direction:'ASC',
+            property:'batchID'
         }
     ]
 });
