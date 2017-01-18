@@ -26,6 +26,7 @@ import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 
 /**
  * 机构网站登录前端控制器
@@ -157,8 +158,10 @@ public class TzWebsiteLoginController {
 								String strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\"}";
 								String completeInfoUrl = siteEnrollClsServiceImpl.getCompleteUrl(strParams);
 								
-								jacksonUtil.json2Map(completeInfoUrl);
+								jacksonUtil.json2Map(completeInfoUrl);								
 								indexUrl= jacksonUtil.getString("url");
+								String encryUserName = DESUtil.encrypt(strUserName,"TZ_GD_TRANZVISION");
+								indexUrl = indexUrl + "?userName=" + encryUserName;
 							}							
 														
 							jsonMap.put("url", indexUrl);

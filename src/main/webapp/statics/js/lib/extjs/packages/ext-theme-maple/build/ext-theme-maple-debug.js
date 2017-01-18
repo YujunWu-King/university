@@ -1,4 +1,4 @@
-Ext.define('ExtThemeNeptune.Component', {
+Ext.define('ExtThemeMaple.Component', {
     override: 'Ext.Component',
     initComponent: function() {
         this.callParent();
@@ -26,23 +26,18 @@ Ext.define('ExtThemeNeptune.Component', {
     }
 });
 
-Ext.define('ExtThemeNeptune.resizer.Splitter', {
+Ext.define('ExtThemeMaple.resizer.Splitter', {
     override: 'Ext.resizer.Splitter',
     size: 8
 });
 
-Ext.define('Ext.touch.sizing.resizer.Splitter', {
-    override: 'Ext.resizer.Splitter',
-    size: 16
-});
-
-Ext.define('ExtThemeNeptune.toolbar.Toolbar', {
+Ext.define('ExtThemeMaple.toolbar.Toolbar', {
     override: 'Ext.toolbar.Toolbar',
     usePlainButtons: false,
     border: false
 });
 
-Ext.define('ExtThemeNeptune.layout.component.Dock', {
+Ext.define('ExtThemeMaple.layout.component.Dock', {
     override: 'Ext.layout.component.Dock',
     /**
      * This table contains the border removal classes indexed by the sum of the edges to
@@ -311,7 +306,7 @@ Ext.define('ExtThemeNeptune.layout.component.Dock', {
     }
 });
 
-Ext.define('ExtThemeNeptune.panel.Panel', {
+Ext.define('ExtThemeMaple.panel.Panel', {
     override: 'Ext.panel.Panel',
     border: false,
     bodyBorder: false,
@@ -327,7 +322,7 @@ Ext.define('ExtThemeNeptune.panel.Panel', {
     }
 });
 
-Ext.define('ExtThemeNeptune.panel.Table', {
+Ext.define('ExtThemeMaple.panel.Table', {
     override: 'Ext.panel.Table',
     initComponent: function() {
         var me = this;
@@ -338,23 +333,18 @@ Ext.define('ExtThemeNeptune.panel.Table', {
     }
 });
 
-Ext.define('ExtThemeNeptune.container.ButtonGroup', {
+Ext.define('ExtThemeMaple.container.ButtonGroup', {
     override: 'Ext.container.ButtonGroup',
     usePlainButtons: false
 });
 
-Ext.define('Ext.touch.sizing.form.trigger.Spinner', {
-    override: 'Ext.form.trigger.Spinner',
-    vertical: false
-});
-
-Ext.define('ExtThemeNeptune.toolbar.Paging', {
+Ext.define('ExtThemeMaple.toolbar.Paging', {
     override: 'Ext.toolbar.Paging',
     defaultButtonUI: 'plain-toolbar',
     inputItemWidth: 40
 });
 
-Ext.define('ExtThemeNeptune.picker.Month', {
+Ext.define('ExtThemeMaple.picker.Month', {
     override: 'Ext.picker.Month',
     // Monthpicker contains logic that reduces the margins of the month items if it detects
     // that the text has wrapped.  This can happen in the classic theme  in certain
@@ -368,49 +358,29 @@ Ext.define('ExtThemeNeptune.picker.Month', {
     measureMaxHeight: 36
 });
 
-Ext.define('ExtThemeNeptune.form.field.HtmlEditor', {
+Ext.define('ExtThemeMaple.form.field.HtmlEditor', {
     override: 'Ext.form.field.HtmlEditor',
     defaultButtonUI: 'plain-toolbar'
 });
 
-Ext.define('ExtThemeNeptune.grid.RowEditor', {
+Ext.define('ExtThemeMaple.grid.RowEditor', {
     override: 'Ext.grid.RowEditor',
     buttonUI: 'default-toolbar'
 });
 
-Ext.define('ExtThemeNeptune.grid.column.RowNumberer', {
+Ext.define('ExtThemeMaple.grid.column.RowNumberer', {
     override: 'Ext.grid.column.RowNumberer',
     width: 25
 });
 
-Ext.define('Ext.touch.sizing.grid.column.RowNumberer', {
-    override: 'Ext.grid.column.RowNumberer',
-    width: 50
-});
-
-Ext.define('ExtThemeNeptune.menu.Separator', {
+Ext.define('ExtThemeMaple.menu.Separator', {
     override: 'Ext.menu.Separator',
     border: true
 });
 
-Ext.define('ExtThemeNeptune.menu.Menu', {
+Ext.define('ExtThemeMaple.menu.Menu', {
     override: 'Ext.menu.Menu',
     showSeparator: false
-});
-
-Ext.define('Ext.touch.sizing.grid.plugin.RowExpander', {
-    override: 'Ext.grid.plugin.RowExpander',
-    headerWidth: 32
-});
-
-Ext.define('Ext.touch.sizing.grid.selection.SpreadsheetModel', {
-    override: 'Ext.grid.selection.SpreadsheetModel',
-    checkboxHeaderWidth: 32
-});
-
-Ext.define('Ext.touch.sizing.selection.CheckboxModel', {
-    override: 'Ext.selection.CheckboxModel',
-    headerWidth: 32
 });
 
 

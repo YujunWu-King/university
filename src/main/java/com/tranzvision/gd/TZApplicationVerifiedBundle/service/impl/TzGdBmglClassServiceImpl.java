@@ -36,7 +36,7 @@ public class TzGdBmglClassServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME", "TZ_PRJ_TYPE_NAME", "TZ_NUM_APPLICANTS", "TZ_NUM_NOAUDIT" };
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_BATCH_ID", "TZ_BATCH_NAME", "TZ_APPLY_STATUS", "TZ_NUM_APPLICANTS", "TZ_NUM_NOAUDIT", "TZ_NUM_EXPECTED", "TZ_NUM_1STCHOICE"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -48,10 +48,13 @@ public class TzGdBmglClassServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("classID", rowList[0]);
 					mapList.put("className", rowList[1]);
-					mapList.put("projectName", rowList[2]);
-					mapList.put("projectType", rowList[3]);
-					mapList.put("applicantsNumber", rowList[4]);
-					mapList.put("noauditNumber", rowList[5]);
+					mapList.put("batchID", rowList[2]);
+					mapList.put("batchName", rowList[3]);
+					mapList.put("applyStatus", rowList[4]);
+					mapList.put("applicantsNumber", rowList[5]);
+					mapList.put("noauditNumber", rowList[6]);
+					mapList.put("expectedNumber", rowList[6]);
+					mapList.put("firstChoiceNumber", rowList[6]);
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);

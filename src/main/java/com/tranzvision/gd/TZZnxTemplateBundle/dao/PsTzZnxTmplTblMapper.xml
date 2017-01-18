@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZZnxTemplateBundle.dao.PsTzZnxTmplTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_TMPL_ID" property="tzTmplId" jdbcType="VARCHAR" />
+    <result column="TZ_TMPL_NAME" property="tzTmplName" jdbcType="VARCHAR" />
+    <result column="TZ_USE_FLAG" property="tzUseFlag" jdbcType="VARCHAR" />
+    <result column="TZ_YMB_ID" property="tzYmbId" jdbcType="VARCHAR" />
+    <result column="TZ_EMLSERV_ID" property="tzEmlservId" jdbcType="VARCHAR" />
+    <result column="TZ_TMPL_DESC" property="tzTmplDesc" jdbcType="VARCHAR" />
+    <result column="TZ_ZNX_SUBJUECT" property="tzZnxSubjuect" jdbcType="VARCHAR" />
+    <result column="TZ_DYNAMIC_FLAG" property="tzDynamicFlag" jdbcType="VARCHAR" />
+    <result column="TZ_WEBMAL_FLAG" property="tzWebmalFlag" jdbcType="VARCHAR" />
+    <result column="TZ_EML_IF_PRT" property="tzEmlIfPrt" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" extends="BaseResultMap" >
+    <result column="TZ_ZNX_CONTENT" property="tzZnxContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_TMPL_ID, TZ_TMPL_NAME, TZ_USE_FLAG, TZ_YMB_ID, TZ_EMLSERV_ID, TZ_TMPL_DESC, 
+    TZ_ZNX_SUBJUECT, TZ_DYNAMIC_FLAG, TZ_WEBMAL_FLAG, TZ_EML_IF_PRT, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_ZNX_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_ZNXTMPL_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTblKey" >
+    delete from PS_TZ_ZNXTMPL_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    insert into PS_TZ_ZNXTMPL_TBL (TZ_JG_ID, TZ_TMPL_ID, TZ_TMPL_NAME, 
+      TZ_USE_FLAG, TZ_YMB_ID, TZ_EMLSERV_ID, 
+      TZ_TMPL_DESC, TZ_ZNX_SUBJUECT, TZ_DYNAMIC_FLAG, 
+      TZ_WEBMAL_FLAG, TZ_EML_IF_PRT, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_ZNX_CONTENT
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzTmplId,jdbcType=VARCHAR}, #{tzTmplName,jdbcType=VARCHAR}, 
+      #{tzUseFlag,jdbcType=VARCHAR}, #{tzYmbId,jdbcType=VARCHAR}, #{tzEmlservId,jdbcType=VARCHAR}, 
+      #{tzTmplDesc,jdbcType=VARCHAR}, #{tzZnxSubjuect,jdbcType=VARCHAR}, #{tzDynamicFlag,jdbcType=VARCHAR}, 
+      #{tzWebmalFlag,jdbcType=VARCHAR}, #{tzEmlIfPrt,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzZnxContent,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    insert into PS_TZ_ZNXTMPL_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzTmplId != null" >
+        TZ_TMPL_ID,
+      </if>
+      <if test="tzTmplName != null" >
+        TZ_TMPL_NAME,
+      </if>
+      <if test="tzUseFlag != null" >
+        TZ_USE_FLAG,
+      </if>
+      <if test="tzYmbId != null" >
+        TZ_YMB_ID,
+      </if>
+      <if test="tzEmlservId != null" >
+        TZ_EMLSERV_ID,
+      </if>
+      <if test="tzTmplDesc != null" >
+        TZ_TMPL_DESC,
+      </if>
+      <if test="tzMalSubjuect != null" >
+        TZ_ZNX_SUBJUECT,
+      </if>
+      <if test="tzDynamicFlag != null" >
+        TZ_DYNAMIC_FLAG,
+      </if>
+      <if test="tzWebmalFlag != null" >
+        TZ_WEBMAL_FLAG,
+      </if>
+      <if test="tzEmlIfPrt != null" >
+        TZ_EML_IF_PRT,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzZnxContent != null" >
+        TZ_ZNX_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplId != null" >
+        #{tzTmplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplName != null" >
+        #{tzTmplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseFlag != null" >
+        #{tzUseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbId != null" >
+        #{tzYmbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlservId != null" >
+        #{tzEmlservId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplDesc != null" >
+        #{tzTmplDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxSubjuect != null" >
+        #{tzZnxSubjuect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDynamicFlag != null" >
+        #{tzDynamicFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWebmalFlag != null" >
+        #{tzWebmalFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlIfPrt != null" >
+        #{tzEmlIfPrt,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZnxContent != null" >
+        #{tzZnxContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    update PS_TZ_ZNXTMPL_TBL
+    <set >
+      <if test="tzTmplName != null" >
+        TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUseFlag != null" >
+        TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYmbId != null" >
+        TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlservId != null" >
+        TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTmplDesc != null" >
+        TZ_TMPL_DESC = #{tzTmplDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxSubjuect != null" >
+        TZ_ZNX_SUBJUECT = #{tzZnxSubjuect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDynamicFlag != null" >
+        TZ_DYNAMIC_FLAG = #{tzDynamicFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWebmalFlag != null" >
+        TZ_WEBMAL_FLAG = #{tzWebmalFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmlIfPrt != null" >
+        TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZnxContent != null" >
+        TZ_ZNX_CONTENT = #{tzZnxContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    update PS_TZ_ZNXTMPL_TBL
+    set TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
+      TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR},
+      TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      TZ_TMPL_DESC = #{tzTmplDesc,jdbcType=VARCHAR},
+      TZ_ZNX_SUBJUECT = #{tzZnxSubjuect,jdbcType=VARCHAR},
+      TZ_DYNAMIC_FLAG = #{tzDynamicFlag,jdbcType=VARCHAR},
+      TZ_WEBMAL_FLAG = #{tzWebmalFlag,jdbcType=VARCHAR},
+      TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ZNX_CONTENT = #{tzZnxContent,jdbcType=LONGVARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl" >
+    update PS_TZ_ZNXTMPL_TBL
+    set TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
+      TZ_YMB_ID = #{tzYmbId,jdbcType=VARCHAR},
+      TZ_EMLSERV_ID = #{tzEmlservId,jdbcType=VARCHAR},
+      TZ_TMPL_DESC = #{tzTmplDesc,jdbcType=VARCHAR},
+      TZ_ZNX_SUBJUECT = #{tzZnxSubjuect,jdbcType=VARCHAR},
+      TZ_DYNAMIC_FLAG = #{tzDynamicFlag,jdbcType=VARCHAR},
+      TZ_WEBMAL_FLAG = #{tzWebmalFlag,jdbcType=VARCHAR},
+      TZ_EML_IF_PRT = #{tzEmlIfPrt,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TMPL_ID = #{tzTmplId,jdbcType=VARCHAR}
+  </update>
+</mapper>
