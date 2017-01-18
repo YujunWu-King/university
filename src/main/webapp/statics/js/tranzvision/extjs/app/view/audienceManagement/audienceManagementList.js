@@ -18,7 +18,7 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
     },
 	style:"margin:8px",
     multiSelect: true,
-    title: '听众管理',
+    title: '听众管理系统',
     viewConfig: {
         enableTextSelection: true
     },
