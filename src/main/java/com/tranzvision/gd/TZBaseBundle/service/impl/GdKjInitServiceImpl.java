@@ -43,7 +43,6 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 		// css文件列表;
 		String strCssContent = "";
 		int num = 1;
-		int numJS = 0, numCss = 0;
 
 		String sqlList = "SELECT TZ_ZYJH_ID FROM PS_TZ_PT_ZTZY_TBL WHERE TZ_ZT_ID=? UNION SELECT TZ_ZYJH_ID FROM PS_TZ_PT_ZYJH_TBL WHERE TZ_ZYJH_ISGG='Y'";
 		List<Map<String, Object>> list = null;
@@ -56,6 +55,9 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 				String sqlResList = "SELECT TZ_RES_FILE_TYPE,TZ_RES_FILE_NAME,TZ_RES_FILE_PATH FROM PS_TZ_PT_ZYXX_TBL WHERE TZ_ZYJH_ID=?";
 				List<Map<String, Object>> list2 = null;
 
+				strJSContent = "";
+				strCssContent = "";
+				
 				list2 = jdbcTemplate.queryForList(sqlResList, new Object[] { strResSetID });
 				if (list2 != null) {
 					for (int j = 0; j < list2.size(); j++) {
@@ -63,8 +65,7 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 						strFileName = (String) list2.get(j).get("TZ_RES_FILE_NAME");
 						strFilePath = (String) list2.get(j).get("TZ_RES_FILE_PATH");
 						if (strFileType != null && "js".equals(strFileType.toLowerCase())) {
-							numJS = numJS + 1;
-							if (numJS == 1) {
+							if ("".equals(strJSContent)) {
 								strJSContent = "{\"path\": \"" + strFilePath + "\",\"name\": [\"" + strFileName
 										+ "\"] }";
 							} else {
@@ -74,8 +75,7 @@ public class GdKjInitServiceImpl extends GdObjectServiceImpl implements GdKjInit
 						}
 
 						if (strFileType != null && "css".equals(strFileType.toLowerCase())) {
-							numCss = numCss + 1;
-							if (numCss == 1) {
+							if ("".equals(strCssContent)) {
 								strCssContent = "{\"path\": \"" + strFilePath + "\",\"name\": [\"" + strFileName
 										+ "\"] }";
 							} else {
