@@ -960,43 +960,27 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					"The current page has expired, please re-enter the page and try again.");
 
 			strClassError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-					"CLASSERROR", strLanguage, "该班级已经提交报名表，不允许重复提交。",
-					"The class has submitted the application form, not allowed to repeat the submission.");
+					"CLASSERROR", strLanguage, "该班级已经填写报名表，不允许重复。",
+					"The class has filled in the application form, not allowed to repeat.");
 
 			String sql = "";
 			if (!"".equals(strClassId) && strClassId != null) {
-				// 如果跟换 class那么检查 新的classId 是否已经提交过了，如果是提交状态，不允许保存，报错 by caoy
-				// 20170118
+				// 如果跟换 class那么检查 新的classId 是否已经存在不允许保存，报错
+				// 整体逻辑变更，如果跟换班级，那么 修改 TZ_FORM_WRK_T 里面的内容 by caoy 20170118
+				//
 				if (!"".equals(strNewClassId) && strNewClassId != null) {
 					if (!strClassId.equals(strNewClassId)) {
 						if (!"TZ_GUEST".equals(oprid) && !"".equals(oprid)) {
-							sql = "select A.TZ_APP_FORM_STA from PS_TZ_APP_INS_T A,PS_TZ_FORM_WRK_T B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_CLASS_ID=? AND B.OPRID=?";
-							String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { strNewClassId, oprid },
-									"String");
-							if (TZ_APP_FORM_STA != null && TZ_APP_FORM_STA.equals("U")) {
-								if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
-									// 如果是管理员并且可编辑的话继续
-								} else {
-									errMsg[0] = "1";
-									errMsg[1] = strClassError;
-									strMsg = strClassError;
-								}
+							sql = " SELECT COUNT(1) from PS_TZ_FORM_WRK_T  where  TZ_CLASS_ID=? AND OPRID=?";
+							int have = sqlQuery.queryForObject(sql, new Object[] { strNewClassId, oprid }, "Integer");
+							if (have > 0) {
+								errMsg[0] = "1";
+								errMsg[1] = strClassError;
+								strMsg = strClassError;
 							}
 						}
 						chageClass = true;
 						strClassId = strNewClassId;
-						// 变换班级的化，实例ID，需要重新获取
-						if (!errMsg[0].equals("1")) {
-							sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
-							String TZ_APP_INS_ID = sqlQuery.queryForObject(sql, new Object[] { strNewClassId, oprid },
-									"String");
-							if (TZ_APP_INS_ID != null && !TZ_APP_INS_ID.equals("")) {
-								numAppInsId = Long.parseLong(TZ_APP_INS_ID);
-							} else {
-								numAppInsId = 0L;
-							}
-						}
-
 					}
 				}
 
@@ -1020,14 +1004,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strAppInsVersionDb = psTzAppInsT.getTzAppInsVersion();
 
 							sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID";
-							strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strClassId },
+							strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, tempClassId },
 									"String");
-
-							if ((strAppOprId == null || "".equals(strAppOprId)) && chageClass) {
-								sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? AND TZ_CLASS_ID = ? ORDER BY OPRID";
-								strAppOprId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, tempClassId },
-										"String");
-							}
 
 							if (!"".equals(strTplId) && strTplId != null && !"".equals(strAppOprId)
 									&& strAppOprId != null) {
@@ -1068,14 +1046,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								errMsg[0] = "1";
 								errMsg[1] = strParaError;
 								strMsg = strParaError;
-								System.out.println("1111111");
+								// System.out.println("1111111");
 							}
 						} else {
 							// 没报名表实例编号
 							strAppOprId = oprid;
 							if (!"TZ_GUEST".equals(oprid) && !"".equals(oprid)) {
 								sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? AND TZ_CLASS_ID = ?";
-								strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid, strClassId },
+								strAppInsId = sqlQuery.queryForObject(sql, new Object[] { oprid, tempClassId },
 										"String");
 								if (strAppInsId == null || "".equals(strAppInsId)) {
 									numAppInsId = 0L;
@@ -1310,8 +1288,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 
 				if ("SAVE".equals(strOtype)) {
-					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType,
-							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId);
+					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
+							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,strClassId);
 					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
 						if ("".equals(strMsg)) {
@@ -1358,8 +1336,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				} else if ("SUBMIT".equals(strOtype)) {
 					// 先保存数据
-					strMsg = this.saveAppForm(strTplId, numAppInsId, strClassId, strAppOprId, strData, strTplType,
-							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId);
+					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
+							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,strClassId);
 					// 模版级事件
 					String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'SU_A'";
 					List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
@@ -1429,8 +1407,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// 如果是管理员并且可编辑的话继续 By WRL@20161027
 						this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 					} else {
-						strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType, strBatchId
-								);
+						strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType, strBatchId);
 						if ("BMB".equals(strTplType)) {
 							// 同步报名人联系方式
 							this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
@@ -1575,7 +1552,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	private String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
 			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState,
-			String strBathId) {
+			String strBathId, String newClassId) {
 
 		String returnMsg = "";
 
@@ -1584,6 +1561,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		try {
 			String sql = "";
 			int count = 0;
+			boolean chageClass = false;
+
+			if (newClassId != null && !newClassId.equals(strClassId)) {
+				chageClass = true;
+			}
+
 			sql = "SELECT COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
 			if (count > 0) {
@@ -1611,29 +1594,55 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BMB".equals(strTplType)) {
-				count = 0;
-				sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-				count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
-				if (count > 0) {
-					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-					psTzFormWrkT.setTzClassId(strClassId);
-					psTzFormWrkT.setOprid(strAppOprId);
-					psTzFormWrkT.setTzAppInsId(numAppInsId);
-					psTzFormWrkT.setRowLastmantOprid(oprid);
-					psTzFormWrkT.setRowLastmantDttm(new Date());
-					psTzFormWrkT.setTzBatchId(strBathId);
-					psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+				// 如果是 变更班级，那么
+				if (chageClass) {
+					count = 0;
+					sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+					count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
+					if (count > 0) {
+						StringBuffer sb = new StringBuffer();
+						sb.append("UPDATE PS_TZ_FORM_WRK_T SET TZ_CLASS_ID=?,OPRID=?,TZ_APP_INS_ID=?,");
+						sb.append("TZ_BATCH_ID=?,ROW_ADDED_DTTM=?,ROW_ADDED_OPRID=?,ROW_LASTMANT_DTTM=?,");
+						sb.append("ROW_LASTMANT_OPRID=? where TZ_CLASS_ID = ? AND OPRID = ?");
+						sqlQuery.update(sb.toString(), new Object[] { newClassId, strAppOprId, numAppInsId, strBathId,
+								new Date(), oprid, new Date(), oprid, strClassId, strAppOprId });
+					} else {
+						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+						psTzFormWrkT.setTzClassId(newClassId);
+						psTzFormWrkT.setOprid(strAppOprId);
+						psTzFormWrkT.setTzAppInsId(numAppInsId);
+						psTzFormWrkT.setRowAddedOprid(oprid);
+						psTzFormWrkT.setRowAddedDttm(new Date());
+						psTzFormWrkT.setRowLastmantOprid(oprid);
+						psTzFormWrkT.setRowLastmantDttm(new Date());
+						psTzFormWrkT.setTzBatchId(strBathId);
+						psTzFormWrkTMapper.insert(psTzFormWrkT);
+					}
 				} else {
-					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-					psTzFormWrkT.setTzClassId(strClassId);
-					psTzFormWrkT.setOprid(strAppOprId);
-					psTzFormWrkT.setTzAppInsId(numAppInsId);
-					psTzFormWrkT.setRowAddedOprid(oprid);
-					psTzFormWrkT.setRowAddedDttm(new Date());
-					psTzFormWrkT.setRowLastmantOprid(oprid);
-					psTzFormWrkT.setRowLastmantDttm(new Date());
-					psTzFormWrkT.setTzBatchId(strBathId);
-					psTzFormWrkTMapper.insert(psTzFormWrkT);
+					count = 0;
+					sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+					count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
+					if (count > 0) {
+						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+						psTzFormWrkT.setTzClassId(strClassId);
+						psTzFormWrkT.setOprid(strAppOprId);
+						psTzFormWrkT.setTzAppInsId(numAppInsId);
+						psTzFormWrkT.setRowLastmantOprid(oprid);
+						psTzFormWrkT.setRowLastmantDttm(new Date());
+						psTzFormWrkT.setTzBatchId(strBathId);
+						psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+					} else {
+						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+						psTzFormWrkT.setTzClassId(strClassId);
+						psTzFormWrkT.setOprid(strAppOprId);
+						psTzFormWrkT.setTzAppInsId(numAppInsId);
+						psTzFormWrkT.setRowAddedOprid(oprid);
+						psTzFormWrkT.setRowAddedDttm(new Date());
+						psTzFormWrkT.setRowLastmantOprid(oprid);
+						psTzFormWrkT.setRowLastmantDttm(new Date());
+						psTzFormWrkT.setTzBatchId(strBathId);
+						psTzFormWrkTMapper.insert(psTzFormWrkT);
+					}
 				}
 			}
 			// 保存数据到结构化表
