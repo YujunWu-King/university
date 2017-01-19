@@ -147,25 +147,25 @@ public class RegisteServiceImpl {
 				    	//TZ_COUNTRY;
 				    	if("TZ_COUNTRY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
 				    	if("TZ_LEN_PROID".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_CITY;
 				    	if("TZ_LEN_CITY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
