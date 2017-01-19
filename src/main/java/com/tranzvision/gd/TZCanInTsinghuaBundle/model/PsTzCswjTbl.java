@@ -7,6 +7,8 @@ public class PsTzCswjTbl {
 
     private String tzCsWjName;
 
+    private String tzJgId;
+
     private String tzClassId;
 
     private String tzState;
@@ -15,7 +17,7 @@ public class PsTzCswjTbl {
 
     private String tzAppTplId;
 
-    private String tzAppWjId;
+    private String tzDcWjId;
 
     private String tzDcWjZt;
 
@@ -55,6 +57,14 @@ public class PsTzCswjTbl {
         this.tzCsWjName = tzCsWjName == null ? null : tzCsWjName.trim();
     }
 
+    public String getTzJgId() {
+        return tzJgId;
+    }
+
+    public void setTzJgId(String tzJgId) {
+        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
+    }
+
     public String getTzClassId() {
         return tzClassId;
     }
@@ -87,12 +97,12 @@ public class PsTzCswjTbl {
         this.tzAppTplId = tzAppTplId == null ? null : tzAppTplId.trim();
     }
 
-    public String getTzAppWjId() {
-        return tzAppWjId;
+    public String getTzDcWjId() {
+        return tzDcWjId;
     }
 
-    public void setTzAppWjId(String tzAppWjId) {
-        this.tzAppWjId = tzAppWjId == null ? null : tzAppWjId.trim();
+    public void setTzDcWjId(String tzDcWjId) {
+        this.tzDcWjId = tzDcWjId == null ? null : tzDcWjId.trim();
     }
 
     public String getTzDcWjZt() {

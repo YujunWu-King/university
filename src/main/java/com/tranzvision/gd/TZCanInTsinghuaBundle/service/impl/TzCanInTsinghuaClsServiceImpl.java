@@ -20,12 +20,12 @@ import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
-import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -52,7 +52,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	
 	@Autowired
-	private ValidateUtil validateUtil;
+	private GdObjectServiceImpl gdObjectServiceImpl;
 	
 	@Autowired
 	private SiteEnrollClsServiceImpl siteEnrollClsServiceImpl;
@@ -116,28 +116,33 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 */
 	public String saveEnrollInfo(String strParams, String[] errMsg) {
 		String strResult = "\"failure\"";
-		String strOrgId = "";
-		String strSiteId = "";
-		String strLang = "";
+
 		String oprid = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-//			strOrgId = jacksonUtil.getString("orgid");
-//			strSiteId = jacksonUtil.getString("siteId");
-//			strLang = jacksonUtil.getString("lang");
-			strOrgId = "SEM";
-			strSiteId = "27";
-			strLang = "ZHS";
-			if (strOrgId == null || "".equals(strOrgId)) {
-				errMsg[0] = "100";
-				errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
-						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
-			}
 
 			if (jacksonUtil.containsKey("data")) {
 				Map<String, Object> dataMap = jacksonUtil.getMap("data");
 
+				// 机构编号
+				String strOrgId = "";
+				if (dataMap.containsKey("_OrgId")) {
+					strOrgId = ((String) dataMap.get("_OrgId")).trim();
+				}
+				
+				// 站点编号
+				String strSiteId = "";
+				if (dataMap.containsKey("_SiteId")) {
+					strSiteId = ((String) dataMap.get("_SiteId")).trim();
+				}
+				
+				// 语音
+				String strLang = "";
+				if (dataMap.containsKey("_Lang")) {
+					strLang = ((String) dataMap.get("_Lang")).trim();
+				}
+				
 				// 密码;
 				String userPwd = "";
 				if (dataMap.containsKey("password")) {
@@ -173,8 +178,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					Patchca patchca = new Patchca();
 					if (!patchca.verifyToken(request, strYZM)) {
 						errMsg[0] = "3";
-						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZGD_FWINIT_MSGSET", "55",
-								"输入的验证码不正确", "Security code is incorrect.");
+						errMsg[1] = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "输入的验证码不正确",
+								"Security code is incorrect.");
+						
 						return strResult;
 					}
 
@@ -188,8 +194,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 					if (!"Y".equals(strFlag)) {
 						errMsg[0] = "3";
-						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZGD_FWINIT_MSGSET", "55",
-								"登录失败，请确认用户名和密码是否正确。", "Email address or password is incorrect !");
+						errMsg[1] = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "登录失败，请确认用户名和密码是否正确。",
+								"Email address or password is incorrect !");
 						return strResult;
 					}
 				}else{
@@ -197,8 +203,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					// 验证密码和确认密码是否一致;
 					if (userPwd == null || !userPwd.equals(strTZ_REPASSWORD)) {
 						errMsg[0] = "3";
-						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
-								"密码和确认密码不一致", "New Password and Confirm Password is not consistent");
+						errMsg[1] = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "密码和确认密码不一致!",
+								"New Password and Confirm Password is not consistent!");
 						return strResult;
 					}
 					/*激活方式*/
@@ -296,8 +302,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "100";
-			errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE", "55",
-					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+			errMsg[1] = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "获取数据失败，请联系管理员",
+					"Get the data failed, please contact the administrator");
 		}
 
 		return strResult;
@@ -408,8 +414,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String createTestDirection(String isMobile) {
-		String strHtml = "获取数据失败，请联系管理员";
-
+		String strTypes = "获取数据失败，请联系管理员";
+		String strHtml = "";
 		try {
 			/*当前考生oprid*/
 			String strOprid = "";
@@ -424,7 +430,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String jsSql = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
 			String jgid = sqlQuery.queryForObject(jsSql, new Object[] { strOprid},"String");
 			if(StringUtils.isBlank(jgid) || StringUtils.isBlank(strOprid)){
-				return strHtml;
+				return strTypes;
 			}
 
 			//列表SQL
@@ -434,7 +440,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss"); 
 			Date nowTime = new Date();
 			
-			strHtml = "";
+			strTypes = "";
 			
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
@@ -451,16 +457,54 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				String wjUrl = sqlQuery.queryForObject(wjUrlSql, new Object[] { attrWjId },"String");
 				String strTr = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TR",attrCsWjId,attrCsWjName,wjUrl);
 
-				strHtml = strHtml + strTr;
+				strTypes = strTypes + strTr;
 			}
+			if(StringUtils.isBlank(strTypes)){
+				strTypes = "<tr><td><span'>没有可选择的测试方向！</span></td></tr>";
+				
+			}
+			
+			if(StringUtils.equals("Y", isMobile)){
+				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MTESTTYPE",request.getContextPath(),strTypes);
+			}else{
+				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+			}
+			
 		}catch(Exception e){
 	    	e.printStackTrace();
 	    }
 		
-		if(StringUtils.isBlank(strHtml)){
-			strHtml = "<tr><td><span'>没有可选择的问卷！</span></td></tr>";
-		}
-		
 		return strHtml;
+	}
+	/**
+	 * 获取指定问卷、指定页的统计信息
+	 * 
+	 * @param wjid
+	 * @param pageno
+	 * @param isMobile
+	 * @return
+	 */
+	public String getCountPage(String wjid, String pageno, boolean isMobile) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * 问卷编号是否合法
+	 * 
+	 * @param wjid 问卷编号
+	 * @return
+	 */
+	public boolean isWjValid(String wjid) {
+		if(StringUtils.isBlank(wjid)){
+			return false;
+		}
+		String isValidwjSql = "SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? limit 0,1";
+		String isHas = sqlQuery.queryForObject(isValidwjSql, new Object[] { wjid },"String");
+		if(StringUtils.isNotBlank(isHas) && StringUtils.equals("Y", isHas)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

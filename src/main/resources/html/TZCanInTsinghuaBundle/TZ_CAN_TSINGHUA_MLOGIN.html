@@ -28,7 +28,7 @@
 					return serializeObj;
 				};
 			})(jQuery);
-	
+		
 			var TzUniversityContextPath = "%bind(:1)";
 			(function(config) {
 				config["extendDrag"] = false;
@@ -52,25 +52,10 @@
 					});
 				});
 			});
-			
-			function xs() {
-				if ($("#isxs").val() == "N") {
-					$("#isxs").val("Y");
-				}
-				if ($("#isxs").val() == "Y") {
-					$("#isxs").val("N");
-				}
-			}
-			function ld() {
-				yz();
-				if ($("#iszx").val() == "Y") {
-					window.location = "#md";
-				}
-			}
 		</script>
 		<style type="text/css">
 			.login dd,dt{float:left}
-			.email{color:#FF0000;margin:0px 0px 0px 0px;padding-left:20px;background:url("%bind(:1)/statics/js/MBA_KSH/images/i_error.gif") no-repeat scroll 0 0px rgba(0,0,0,0)}
+			.email{color:#FF0000;margin:0px 0px 0px 0px;padding-left:20px;background:url("%bind(:1)/statics/images/cantsinghua/i_error.gif") no-repeat scroll 0 0px rgba(0,0,0,0)}
 			.button,.button span{-moz-border-radius:.3em;border-radius:.3em}
 			.button span{border-top:1px solid #fff;border-top:1px solid rgba(255,255,255,0.5);display:block;padding:0.5em 2.5em}
 			.button-blue{background:#4477a1;background:-webkit-gradient(linear,left top,left bottom,from(#81a8cb),to(#4477a1));background:-moz-linear-gradient(-90deg,#81a8cb,#4477a1);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#81a8cb',endColorstr='#4477a1')}
@@ -92,7 +77,7 @@
 	</head>
 	<body style="width: 100%; background: #f5f5f5; margin-left: 0px; margin-right: 0px; margin-top: 0px;">
 		<table width="100%" border="0" align="center" style="margin-left:0px; border-spacing:0px; height:100%;">
-			<tr><td><img src="%bind(:1)/statics/js/MBA_KSH/images/jjs/index_banner.jpg" style="width: 100%;" /></td></tr>
+			<tr><td><img src="%bind(:1)/statics/images/cantsinghua/jjs/index_banner.jpg" style="width: 100%;" /></td></tr>
 			<tr>
 				<td><div class="m1-con clear">
 						<form id="form1" name="form1" action="" method="post">
@@ -133,7 +118,7 @@
 								<tr style="text-align: center;">
 									<td colspan="2">
 										<a onclick="formSubmit();" href="javascript:void(0);">
-											<img src="%bind(:1)/statics/js/MBA_KSH/images/jjs/mba_jjs_tjyx.jpg" style="width: 217px; height: 29px;" />
+											<img src="%bind(:1)/statics/images/cantsinghua/jjs/mba_jjs_tjyx.jpg" style="width: 217px; height: 29px;" />
 										</a>
 									</td>
 								</tr>
@@ -141,7 +126,7 @@
 								<tr class="mt25">
 									<td colspan="2">
 										<a href="http://mba.sem.tsinghua.edu.cn" target="_blank">
-											<img src="%bind(:1)/statics/js/MBA_KSH/images/jjs/mba_jjs_ljqh.jpg" style="width: 217px; height: 29px;" />
+											<img src="%bind(:1)/statics/images/cantsinghua/jjs/mba_jjs_ljqh.jpg" style="width: 217px; height: 29px;" />
 										</a>
 									</td>
 								</tr>
@@ -149,7 +134,7 @@
 								<tr style="text-align: center;">
 									<td colspan="2">
 										<div>本测试手机访问二维码</div>
-										<img src="%bind(:1)/statics/js/MBA_KSH/images/jjs_wzdl.png" style="width: 100px; height: 100px; text-align: center;" />
+										<img src="%bind(:1)/statics/images/cantsinghua/jjs_wzdl.png" style="width: 100px; height: 100px; text-align: center;" />
 									</td>
 								</tr>
 							</table>
@@ -157,6 +142,11 @@
 							<input type="hidden" name="_passwordFlg" id="_passwordFlg" value="false"/>
 							<input type="hidden" name="_repasswordFlg" id="_repasswordFlg" value="false"/>
 							<input type="hidden" name="_yzmFlg" id="_yzmFlg" value="false"/>
+							
+							<input type="hidden" name="_isReg" id="_isReg" value="N"/>
+							<input type="hidden" name="_OrgId" id="_OrgId" value="%bind(:2)"/>
+							<input type="hidden" name="_SiteId" id="_SiteId" value="%bind(:3)"/>
+							<input type="hidden" name="_Lang" id="_Lang" value="ZHS"/>
 						</form>
 					</div></td>
 			</tr>
@@ -168,117 +158,127 @@
 				var _captchaURL = TzUniversityContextPath + "/captcha";
 				return _captchaURL + "?" + Math.random();
 			}
-			/*获取二维码*/
-			function SetImgCode(){
-				$('#yzmImg').attr("src", GenCaptchaUrl());
+			/*获取验证码*/
+			function SetImgCode() {
+				$("#yzmImg").attr("src", GenCaptchaUrl());
 			}
 	
-			$(document).ready(function(){
+			$(document).ready(function() {
 				document.getElementById('form1').reset();
+				/*设置验证码*/
 				SetImgCode();
-				$("#email").on("blur",function(){
+				/*为邮箱字段添加blur事件*/
+				$("#email").on("blur",function() {
 					var val = this.value;
 					var tip = this.id + "Tip";
 					var flg = "_" + this.id + "Flg";
-					
-					if(val!=''){
+	
+					if (val != '') {
 						var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-						if (!patrn.test(val)){
-							$('#' + tip).html("邮箱地址不正确！");
-							$('#' + flg).val(false);
-						}else{
+						if (!patrn.test(val)) {
+							$("#" + tip).html("邮箱地址不正确！");
+							$("#" + flg).val(false);
+						} else {
 							var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"email":"' + val + '","sen":"1"}}';
 							$.ajax({
 								type: "get",
-								async :true,
-								data:{
-									tzParams:tzParams
-								},
+								async: true,
+								data: {tzParams: tzParams},
 								url: TzUniversityContextPath + "/dispatcher",
 								dataType: "json",
-								success: function(result){
-									if(result.comContent =="success"){
-						                $("#qrmm").hide();
-						                $("#qrmm2").hide();
-						                $("#qrmm3").hide();
-						                $("#repassword").val("");
-						                $("#_repasswordFlg").val(true);
-						                $("#szmm").html("输入系统");
-						                $('#' + tip).html("");
-						                $('#' + flg).val(true);
-									}else{
-						                $("#qrmm").show();
-						                $("#qrmm2").show();
-						                $("#qrmm3").show();
-						                $("#szmm").html("设置测试");
-						                $('#' + tip).html("");
-						                $('#' + flg).val(true);
+								success: function(result) {
+									if (result.comContent == "success") {
+										$("#qrmm").hide();
+										$("#qrmm2").hide();
+										$("#qrmm3").hide();
+										$("#repassword").val("");
+										$("#_repasswordFlg").val(true);
+										
+										$("#szmm").html("输入系统");
+										$("#" + tip).html("");
+										$("#" + flg).val(true);
+										$("#_isReg").val("Y");
+									} else {
+										$("#qrmm").show();
+										$("#qrmm2").show();
+										$("#qrmm3").show();
+										$("#szmm").html("设置测试");
+										$("#" + tip).html("");
+										$("#" + flg).val(true);
+										$("#_isReg").val("N");
 									}
 								}
 							});
 						}
-					}else{
-						$('#' + tip).html("必填项!");
-						$('#' + flg).val(false);
+					} else {
+						$("#" + tip).html("必填项!");
+						$("#" + flg).val(false);
 					}
 				});
 				
-				$("#password").on("blur",function(){
+				/*密码字段添加blur事件*/	
+				$("#password").on("blur", function() {
 					var val = this.value;
 					var tip = this.id + "Tip";
 					var flg = "_" + this.id + "Flg";
-					
-					if(val !=''){
-						if(val.length<6 ||val.length>32){
-							$('#' + tip).html("密码长度必须大于6位且小于32位!");
-							$('#' + flg).val(false);
+	
+					if (val != '') {
+						if (val.length < 6 || val.length > 32) {
+							$("#" + tip).html("密码长度必须大于6位且小于32位!");
+							$("#" + flg).val(false);
 						}else{
-							$('#' + tip).html("");
-							$('#' + flg).val(true);
+							$("#" + tip).html("");
+							$("#" + flg).val(true);
 						}
-
-					}else {
-						$('#' + tip).html("必填项!");
-						$('#' + flg).val(false);
+					} else {
+						$("#" + tip).html("必填项!");
+						$("#" + flg).val(false);
 					}
 				});
 				
-				$("#repassword").on("blur",function(){
+				/*确认密码字段添加blur事件*/
+				$("#repassword").on("blur", function() {
 					var val = this.value;
 					var tip = this.id + "Tip";
 					var flg = "_" + this.id + "Flg";
+	
+					var password = $("#password").val();
 					
-					var password =$("#password").val();
-					
-					if(password !=''){
-						if(password.length<6 ||password.length>32){
-							$('#' + tip).html("密码长度必须大于6位且小于32位!");
-							$('#' + flg).val(false);
-						}else if(val ==''){
-							$('#TZ_PASSWORD_status').html("");
-							$('#TZ_REPASSWORD_status').html("必填项!");
-					     	$('#status_TZ_PASSWORD').attr("value", 1); 
-							$('#TZ_PASSWORDStyle').addClass("alert_display_none");
-							$('#TZ_REPASSWORDStyle').removeClass("alert_display_none");
-						}else if(val == password){
-							$("#passwordTip").html("");
-							$("#repasswordTip").html("");
-							$("#_passwordFlg").val(true);
-							$('#_repasswordFlg').val(true);
-						}else if(val != password){
-							$("#repasswordTip").html("密码和确认密码不一致！");
-							$("#_passwordFlg").val(true);
-							$('#_repasswordFlg').val(false);
+					var _isReg = $("#_isReg").val();
+					if(_isReg == 'Y'){
+						//已注册用户
+						$("#" + tip).html("");
+						$("#" + flg).val(true);
+					}else{
+						//新用户
+						if (password != '') {
+							if (password.length < 6 || password.length > 32) {
+								$("#passwordTip").html("密码长度必须大于6位且小于32位!");
+								$("#_passwordFlg").val(false);
+							} else if (val == '') {
+								$("#" + tip).html("必填项!");
+								$("#" + flg).val(false);
+							} else if (val == password) {
+								$("#passwordTip").html("");
+								$("#repasswordTip").html("");
+								$("#_passwordFlg").val(true);
+								$("#_repasswordFlg").val(true);
+							} else if (val != password) {
+								$("#" + tip).html("密码和确认密码不一致！");
+								$("#_passwordFlg").val(true);
+								$("#_repasswordFlg").val(false);
+							}
+						} else {
+							$("#passwordTip").html("必填项!");
+							$("#_passwordFlg").val(false);
 						}
-					}else {
-						$('#passwordTip').html("必填项!");
-						$('#_passwordFlg').val(false);
 					}
 				});
-				
-				document.onkeydown = function(e){
-					var ev = document.all ? window.event : e;
-					if(ev.keyCode==13) {
+
+				/*回车事件处理*/
+				document.onkeydown = function(e) {
+					var ev = document.all ? window.event: e;
+					if (ev.keyCode == 13) {
 						formSubmit();
 					}
 				};
@@ -286,30 +286,28 @@
 	
 			/*测试提交页面*/
 			function formSubmit() {
-	
-				$('#email').trigger("blur");
-				$('#password').trigger("blur");
-				$('#repassword').trigger("blur");
+				$("#email").trigger("blur");
+				$("#password").trigger("blur");
+				$("#repassword").trigger("blur");
 	
 				var _emailFlg = $("#_emailFlg").val();
 				var _passwordFlg = $("#_passwordFlg").val();
 				var _repasswordFlg = $("#_repasswordFlg").val();
-				var	yzm = $("#yzm").val();
-				if(_emailFlg=="true" && _passwordFlg=="true" && _repasswordFlg=="true"){
+				var yzm = $("#yzm").val();
+				
+				if (_emailFlg == "true" && _passwordFlg == "true" && _repasswordFlg == "true") {
 	
 					var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"checkCode":"' + yzm + '","sen":"3"}}';
 					$.ajax({
 						type: "get",
-						async :true,
-						data:{
-							tzParams:tzParams
-						},
+						async: true,
+						data: {tzParams: tzParams},
 						url: TzUniversityContextPath + "/dispatcher",
 						dataType: "json",
-						success: function(result){
-							if(result.comContent =="success"){
-				                $("#_yzmFlg").val(true);
-							}else{
+						success: function(result) {
+							if (result.comContent == "success") {
+								$("#_yzmFlg").val(true);
+							} else {
 								$("#_yzmFlg").val(false);
 								$("#yzmTip").html("验证码错误！");
 								SetImgCode();
@@ -317,16 +315,14 @@
 							}
 						}
 					});
-					
-					var signupsContent =$("#form1").serializeJson();
 	
-					var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"sen":"2"}}';
+					var signupsContent = $("#form1").serializeJson();
+	
+					var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"data":' + JSON.stringify(signupsContent) + ',"sen":"2"}}';
 					$.ajax({
 						type: "post",
-						async :false,
-						data:{
-							tzParams:tzParams
-						},
+						async: false,
+						data: {tzParams: tzParams},
 						url: TzUniversityContextPath + "/dispatcher",
 						dataType: "json",
 						success: function(result){
@@ -335,7 +331,7 @@
 								$("#password").val("");
 								$("#repassword").val("");
 								$("#yzm").val("");
-								
+	
 								$("#_emailFlg").val(false);
 								$("#_passwordFlg").val(false);
 								$("#_repasswordFlg").val(false);
@@ -348,9 +344,9 @@
 							}
 						}
 					});
-			  	}
-	
-				SetImgCode();
+				}else{
+					SetImgCode();					
+				}
 			}
 		</script>
 	</body>
