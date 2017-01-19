@@ -64,7 +64,7 @@ public class SurveyMBSZClsServiceImpl extends FrameworkImpl {
 				TZ_APP_TPL_ID = map.get("TZ_APP_TPL_ID") == null ? "" : String.valueOf(map.get("TZ_APP_TPL_ID"));
 				TZ_APP_TPL_MC = map.get("TZ_APP_TPL_MC") == null ? "" : String.valueOf(map.get("TZ_APP_TPL_MC"));
 				TZ_APP_TPL_LX = map.get("TZ_APP_TPL_LX") == null ? "" : String.valueOf(map.get("TZ_APP_TPL_LX"));
-				TZ_APP_TPL_LAN = map.get("TZ_APP_TPL_LAN") == null ? "ZHS" : String.valueOf(map.get("TZ_APP_TPL_LAN"));
+				TZ_APP_TPL_LAN = map.get("TZ_APP_TPL_LAN") == null ? "" : String.valueOf(map.get("TZ_APP_TPL_LAN"));
 				TZ_DC_JTNR = map.get("TZ_DC_JTNR") == null ? "" : String.valueOf(map.get("TZ_DC_JTNR"));
 				TZ_DC_JWNR = map.get("TZ_DC_JWNR") == null ? "" : String.valueOf(map.get("TZ_DC_JWNR"));
 				TZ_EFFEXP_ZT = map.get("TZ_EFFEXP_ZT") == null ? "" : String.valueOf(map.get("TZ_EFFEXP_ZT"));
@@ -169,9 +169,6 @@ public class SurveyMBSZClsServiceImpl extends FrameworkImpl {
 			TZ_DC_JTNR = jacksonUtil.getString("TZ_DC_JTNR");
 			TZ_DC_JWNR = jacksonUtil.getString("TZ_DC_JWNR");
 			TZ_APP_TPL_LAN = jacksonUtil.getString("TZ_APP_TPL_LAN");
-			if(TZ_APP_TPL_LAN==null||TZ_APP_TPL_LAN.equals("")){
-				TZ_APP_TPL_LAN="ZHS";
-			}
 			TZ_EFFEXP_ZT = jacksonUtil.getString("TZ_EFFEXP_ZT");
 
 			String strNameRepeated = "";

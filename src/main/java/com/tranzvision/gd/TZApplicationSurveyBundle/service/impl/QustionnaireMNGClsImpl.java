@@ -106,6 +106,9 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 		//情况1：问卷ID为空--->新建空白问卷
 		String TZ_DC_WJ_ID=dataWjId;
 		if(dataWjId==null||dataWjId.equals("")){
+		//生成一个新的问卷ID(个人推荐方案)
+		//UUID uuid=UUID.randomUUID();
+		//psTzDcWjDyTWithBLOBs.setTzDcWjId(uuid.toString());
 		
 		//实际方案：
 		TZ_DC_WJ_ID = "" + getSeqNum.getSeqNum("TZ_DC_WJ_DY_T", "TZ_DC_WJ_ID");
@@ -121,9 +124,6 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 		 psTzDcWjDyTWithBLOBs.setTzDcWjbt(TZ_DC_WJBT);
 		//语言
 		String TZ_APP_TPL_LAN=jacksonUtil.getString("language");
-		if(TZ_APP_TPL_LAN==null||TZ_APP_TPL_LAN.equals("")){
-			TZ_APP_TPL_LAN="ZHS";
-		}
 		psTzDcWjDyTWithBLOBs.setTzAppTplLan(TZ_APP_TPL_LAN);
 		//问卷状态
 		String TZ_DC_WJ_ZT="0";
