@@ -1378,7 +1378,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1467,7 +1468,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1606,9 +1608,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts,orgid,
 						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzIndexPubcode(strReleasedHtml);
@@ -1683,9 +1686,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzLonginPubcode(strReleaseHtml);
