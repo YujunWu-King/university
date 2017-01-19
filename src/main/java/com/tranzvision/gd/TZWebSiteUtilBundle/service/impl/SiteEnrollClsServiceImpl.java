@@ -2005,12 +2005,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
 				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + "enroll.html";
+					url = request.getContextPath() + url + siteid + "/" + "enroll.html";
 				}else{
-					url = request.getContextPath() + url + "/enroll.html";
+					url = request.getContextPath() + url + "/" + siteid + "/enroll.html";
 				}
 			}else{
-				url = request.getContextPath() + "/enroll.html";
+				url = request.getContextPath() + "/" + siteid +"/enroll.html";
 			}
 			
 		}catch(Exception e){
@@ -2032,12 +2032,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
 				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + "perfect.html";
+					url = request.getContextPath() + url + siteid + "/" + "perfect.html";
 				}else{
-					url = request.getContextPath() + url + "/perfect.html";
+					url = request.getContextPath() + url + "/" + siteid + "/perfect.html";
 				}
 			}else{
-				url = request.getContextPath() + "/perfect.html";
+				url = request.getContextPath() + "/" + siteid + "/perfect.html";
 			}
 			
 		}catch(Exception e){
