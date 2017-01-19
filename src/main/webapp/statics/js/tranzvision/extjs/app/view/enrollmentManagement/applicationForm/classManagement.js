@@ -52,7 +52,9 @@
 		store.on('load',function(s,records){
 			
 		});
-		applyStatusStore.on('load',store.load);
+		applyStatusStore.on('load',function(){
+			store.load();
+		});
         
         Ext.apply(this, {
             columns: [{

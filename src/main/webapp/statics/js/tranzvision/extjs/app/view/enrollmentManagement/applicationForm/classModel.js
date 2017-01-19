@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classModel', {
 		{name: 'applyStatus'},
 		{name: 'applyStatusDesc'},
         {name: 'applicantsNumber',type:'number'},
+		{name: 'noauditNumber',type:'number'},
         {name: 'expectedNumber',type:'number'},
 		{name: 'firstChoiceNumber',type:'number'}
     ]
