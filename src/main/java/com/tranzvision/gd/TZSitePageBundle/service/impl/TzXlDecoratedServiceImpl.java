@@ -209,7 +209,7 @@ public class TzXlDecoratedServiceImpl extends FrameworkImpl {
 					boolean boolResult = false;
 					switch (strPageType) {
 					case "homepage":
-						boolResult = tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, errMsg);
+						boolResult = tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, "",errMsg);
 						break;
 
 					case "loginpage":

@@ -169,7 +169,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
 			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts,strBroadStyleJavascripts, orgid, siteid,
 					"Y");
-			System.out.println(strBroadStyleJavascripts);
+			
 			strRtn = strIndexHtml;
 
 		} catch (Exception e) {

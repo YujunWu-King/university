@@ -3048,7 +3048,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 
 	
 
-			var comParams = '"update":[{"typeFlag":"save","data":{"siteId":"'+siteid+'","savecontent":'+savecontent+',"pagetype":"'+pagetype+'","dataArea":'+areaArr+'}}]';
+			var comParams = '"update":[{"typeFlag":"save","data":{"siteId":"'+siteid+'","savecontent":'+savecontent+',"pagetype":"'+pagetype+'","dataArea":'+areaArr+',"siteIndexSaveTpl":"TZSitePageBroadStyleBundle.SiteIndexSaveTpl"}}]';
 
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
@@ -3104,7 +3104,6 @@ Ext.getCmp("gridPanel").reconfigure(store);
 			
 			 if (pagetype=="loginpage")
 			{
-				//releasecontent =   "<body style=\"background:#fff\" onkeydown=\"BindEnter(event)\">" + bodyCode + "</body>";
 				releasecontent =   "<body style=\"background:#fff\">" + bodyCode + "</body>";
 			}
 			else{
@@ -3165,7 +3164,7 @@ Ext.getCmp("gridPanel").reconfigure(store);
 
 			var pagetype = Ext.get("pagetype").getValue();
 
-			var comParams = '"update":[{"typeFlag":"release","data":{"siteId":"'+siteid+'","releasecontent":'+releasecontent+',"pagetype":"'+pagetype+'","dataArea":'+areaArr+'}}]';
+			var comParams = '"update":[{"typeFlag":"release","data":{"siteId":"'+siteid+'","releasecontent":'+releasecontent+',"pagetype":"'+pagetype+'","dataArea":'+areaArr+',"siteIndexReleaseTpl":"TZSitePageBroadStyleBundle.SiteIndexReleaseTpl"}}]';
 
 			var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SITEI_SETED_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
