@@ -3,6 +3,7 @@ var clsTzXlColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.T
 var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
 var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl";
 
+/*
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
 	  var siteid=$("#siteid").val();
@@ -43,7 +44,7 @@ function checkHisApply(classId,languageCd){
 			});
 
 }
-
+*/
 
 function getQueryString(name) {
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
@@ -78,10 +79,8 @@ function JumpToColu(siteId,menuId,opentype){
 	if(opentype=="index"){
 		window.location = TzUniversityContextPath + "/site/index/" + TZ_GD_LOGIN_SITEI_ORG_CODE.toLowerCase() + "/" + TZ_GD_LOGIN_SITEI_ID;
 	} else if (opentype=="_blank") {
-		//window.open(urlBegin+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}',"newwindow");
 		window.open(urlBegin+'?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R',"newwindow");
 	}else{
-		// location.href =urlBegin+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_ASK_MENU_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'","menuId":"'+menuId+'","oprate":"R"}}';
 		location.href =urlBegin+'?classid=askMenu&siteId='+siteId+'&menuId='+menuId+'&oprate=R';
 	}
 }

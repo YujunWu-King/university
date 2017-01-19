@@ -1,5 +1,6 @@
 //报名人选择班级;
 //报名人选择可以报名的班级;
+/*
 function viewClass(siteId,language,viewType){
 	 var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"' + viewType+ '","siteId":"' + siteId+ '","language":"' + language+ '","oprate":"R"}}';
 
@@ -22,10 +23,11 @@ function viewClass(siteId,language,viewType){
 	 				  		
 	 		    	}    
  			});
-}
+}*/
 
 
 //选择新闻活动范围弹出框显示;
+/*
 function selectNewsProject(siteid){
 	var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"viewType":"SELECTPROJECT","siteid":"' + siteid+ '","oprate":"R"}}';
 
@@ -48,9 +50,10 @@ function selectNewsProject(siteid){
 				  		
 		    	}    
 		});
-}
+}*/
 
 //选择新闻活动范围(全选和取消全选);
+/*
 function selectAllProject(){
 	var code_Values = document.getElementsByName("projectCheckbox"); 
 	var i = 0;
@@ -63,9 +66,10 @@ function selectAllProject(){
 			code_Values[i].checked = false;    
 		} 
 	}
-}
+}*/
 
 //选择新闻活动范围(确定);
+/*
 function addSelectPrj(){
 	var selectPrjs = "";
 	var code_Values = document.getElementsByName("projectCheckbox"); 
@@ -97,7 +101,7 @@ function addSelectPrj(){
 	});
 	 
 	$("div#showWindPerDiv").hide();
-}
+}*/
 
 //选择新闻活动范围(取消);
 function cancleSelectPrj(){
@@ -105,6 +109,7 @@ function cancleSelectPrj(){
 }
 
 //查看报名进度;
+/*
 function viewJd(classId, instanceId,language,viewType){
 	var tzParams = '{"ComID":"TZ_ZLSQ_JD_COM","PageID":"TZ_ZLSQ_JD_PAGE","OperateType":"HTML","comParams":{"bmClassId":"' + classId + '","instanceId":"' + instanceId+ '","viewType":"' + viewType+ '","language":"' + language+ '","oprate":"R"}}';
     $.ajax({
@@ -127,6 +132,7 @@ function viewJd(classId, instanceId,language,viewType){
 		}    
 	});
 }
+*/
 
 $(document).ready(function(){
 
@@ -134,16 +140,17 @@ $(document).ready(function(){
 	$("#siteid").val(TZ_GD_LOGIN_SITEI_ID);
 	$("#operator").val(getOperatorType());
 
-	$("#letf_menu").height($("#rigth_menu").height());
+	//$("#letf_menu").height($("#rigth_menu").height());
 
 	LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
 	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
-	iniArea();
-	getPerInfCard();
+	//iniArea();首页中初始化活动列表和新闻列表 待开发
+	//getPerInfCard();获取个人信息 待开发
 	
-	//加载报名中心;
+	//加载报名中心，切勿修改后台原来的代码，请另注册页面;
+	/*
 	var siteid = $("#siteid").val();
 	var oprate = $("#operator").val();
 
@@ -176,5 +183,6 @@ $(document).ready(function(){
 		} 
 		
 	});
+	*/
 	//end 报名中心;
 });
