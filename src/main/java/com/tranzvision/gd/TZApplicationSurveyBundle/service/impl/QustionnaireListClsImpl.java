@@ -220,13 +220,12 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 					String TZ_DC_WJ_JSGZ=dataMap.get("TZ_DC_WJ_JSGZ").toString();
 					psTzDcWjDyTWithBLOBs.setTzDcWjJsgz(TZ_DC_WJ_JSGZ);
 				}
-
 				//问卷密码
 				if(dataMap.containsKey("TZ_DC_WJ_PWD")&&dataMap.get("TZ_DC_WJ_PWD")!=null){
 					String TZ_DC_WJ_PWD=dataMap.get("TZ_DC_WJ_PWD").toString();
 					psTzDcWjDyTWithBLOBs.setTzDcWjPwd(TZ_DC_WJ_PWD);
+					//是否需要密码
 				}
-				//是否需要密码
 					String TZ_DC_WJ_NEEDPWD=dataMap.get("TZ_DC_WJ_NEEDPWD")==null?"N":dataMap.get("TZ_DC_WJ_NEEDPWD").toString();
 					if(TZ_DC_WJ_NEEDPWD!=null&&TZ_DC_WJ_NEEDPWD.equals("on"))
 						TZ_DC_WJ_NEEDPWD="Y";

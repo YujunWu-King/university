@@ -10,7 +10,7 @@
 	src="%bind(:3)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript"
 	src="%bind(:3)/statics/js/tranzvision/util/layer.js"></script>
-<link rel="stylesheet" href="%bind(:3)/statics/css/appeditor/css.css" />
+<!--  <link rel="stylesheet" href="%bind(:3)/statics/css/appeditor/css.css" />-->
 <!--张浪添加-->
 <script type="text/javascript">
 	var TzUniversityContextPath = "%bind(:10)";
@@ -45,23 +45,51 @@
 -->
 <!-- 载入左侧边栏自适应高度的js-->
 <style type="text/css">
-.city_close {
-	clear: right;
-	color: #9F9F9F;
-	float: right;
+  .choose_main{width:550px;height:260px;padding-left:20px;}
+  .photo_title {
 	font-size: 16px;
-	height: 30px;
-	line-height: 30px;
-	margin-top: 3px;
-	text-align: left;
-	width: 35px;
+	line-height: 62px;
+	font-weight: bold;
+	color: #8f5dc0;
+	background-repeat: no-repeat;
+	height: 62px;
+	width: 100%;
 }
+.city_close {
+    clear: right;
+    color: #9f9f9f;
+    float: right;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    text-align: left;
+    width: 35px;
+}
+a{text-decoration: none;}
+.dire_lable{color:#666;font-size: 14px;display: block;margin:5px 40px;}
+.btn{overflow: hidden;width:180px;margin:20px auto;}
+.btn_left{float: left;padding:10px 20px;text-align: center;background-color:#8e8e8e;font-size: 14px;border-radius: 5px;color: #fff;}
+.btn_right{float: right;padding:10px 20px;text-align: center;background-color:#8f5dc0;font-size: 14px;border-radius: 5px;color: #fff;}
+</style>
 </style>
 
 </head>
 
 <body>
-	<div class="city_main">
+ <div class="choose_main">
+ 	 <div class="photo_title">%bind(:4)
+ 	   <div id="idcity" class="city_close" onClick="closeThis();">
+        <img src="%bind(:3)/statics/images/appeditor/del2.png" height="15" width="15"/> &nbsp;</div>
+      </div>
+      %bind(:1)
+      <div class="btn">
+      	  <a href="#" class="btn_left" onclick="closeThis();">%bind(:6)</a>
+      	   <a href="#" class="btn_right" onclick="changeProvince();">%bind(:5)</a>
+      </div>
+ </div>
+
+	<!--  <div class="choose_main">
 		<div class="city_main_title">%bind(:4)</div>
 		<div class="city_main_line">%bind(:1)</div>
 	</div>
@@ -71,7 +99,8 @@
 				onclick="changeProvince();" /> <input type="button" name="submit"
 				value="%bind(:6)" onclick="closeThis();" />
 		</div>
-	</div>
+	</div>-->
+	
 	<script type="text/javascript">
 		function changeProvince() {
 			var classid = $('input[name="%bind(:7)"]:checked').val();
@@ -83,7 +112,8 @@
 				var linkId = "%bind(:9)";
 				$("#" + pageid, window.parent.document).val(classid);
 				$("#ClassId", window.parent.document).val(classid);
-				$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").next("label").text());
+				
+				$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").parent("label").text());
 				
 				//重置批次选择的下拉列表
 				//$("#" + linkId, window.parent.document).empty();

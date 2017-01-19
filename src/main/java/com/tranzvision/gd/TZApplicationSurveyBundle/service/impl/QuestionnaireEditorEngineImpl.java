@@ -321,6 +321,10 @@ public class QuestionnaireEditorEngineImpl {
 		//题号 数据库字段不明确
 		if(mapData.containsKey("qCode")&&mapData.get("qCode")!=null)
 			psTzDcWjXxxPzTWithBLOBs.setTzXxxQid(mapData.get("qCode").toString());
+		//是否计算分值
+		if(mapData.containsKey("isAvg")&&mapData.get("isAvg")!=null){
+			psTzDcWjXxxPzTWithBLOBs.setTzIsAvg(mapData.get("isAvg").toString());
+		}
 		//排序序号
 		if(mapData.containsKey("orderby")&&mapData.get("orderby")!=null)
 			psTzDcWjXxxPzTWithBLOBs.setTzOrder(Integer.valueOf(mapData.get("orderby").toString()));

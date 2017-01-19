@@ -1,6 +1,6 @@
 ﻿Ext.define('KitchenSink.view.audienceManagement.audienceManagementController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.audController', 
+    alias: 'controller.audienceManagementController', 
     addComRegInfo: function() {
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_COMREG_COM"]["TZ_AQ_COMREG_STD"];

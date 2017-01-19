@@ -1,0 +1,90 @@
+package com.tranzvision.gd.TZApplicationAdmissionBundle;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.qrcode.CreateQRCode;
+import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
+
+/**
+ * 生成录取通知书分享二维码页面
+ * 
+ * @author YTT
+ * @since 2017-01-16
+ */
+@Service("com.tranzvision.gd.TZApplicationAdmissionBundle.service.impl.TzAppAdGenQrcodeServiceImpl")
+
+public class TzAppAdGenQrcodeServiceImpl {
+	
+	@Autowired
+	private SqlQuery sqlQuery;
+	
+	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private TZGDObject tzGDObject;
+
+	//TZ_14062
+	public String genQrcode(String oprid,String tzAppInsID) {
+		String qrcodehtml="";
+		try {
+			
+			/*【1】查询个人信息照片：有则取；无则取默认*/
+			String ctxPath = request.getContextPath();
+			
+			String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetUserHeadImg");
+			Map<String, Object> mapUserHeadImg = sqlQuery.queryForMap(sql, new Object[] { oprid });
+			
+			String strPhoto = "";
+			
+			//如果有个人信息照片
+			if (null != mapUserHeadImg) {
+				String strPhotoDir = mapUserHeadImg.get("TZ_ATT_A_URL") == null ? ""
+						: String.valueOf(mapUserHeadImg.get("TZ_ATT_A_URL"));
+				String strPhotoName = mapUserHeadImg.get("TZ_ATTACHSYSFILENA") == null ? ""
+						: String.valueOf(mapUserHeadImg.get("TZ_ATTACHSYSFILENA"));
+
+				if (!"".equals(strPhotoDir) && !"".equals(strPhotoName)) {
+					strPhoto = ctxPath + strPhotoDir + strPhotoName;
+				}
+
+			}
+			
+			//如果没有个人信息照片
+			if ("".equals(strPhoto)) {
+				strPhoto = "/statics/images/website/skins/21/photo_reg.png";
+			}
+
+			/*【2】查询姓名*/
+			String nameSql = "SELECT A.TZ_REALNAME FROM TZGDQHJG.PS_TZ_OPR_PHT_GL_T A,TZGDQHJG.PS_TZ_REG_USER_T B WHERE A.OPRID=? AND A.OPRID=B.OPRID";
+			String perName = sqlQuery.queryForObject(nameSql, new Object[] {oprid}, "String");
+			
+			/*【3】查询班级*/
+			String classNameSql = "SELECT A.TZ_CLASS_NAME FROM TZGDQHJG.PS_TZ_CLASS_INF_T A ,TZGDQHJG.PS_TZ_APP_INS_T B WHERE A.TZ_APP_MODAL_ID=? AND A.TZ_APP_MODAL_ID=TZ_APP_TPL_ID";
+			String className = sqlQuery.queryForObject(classNameSql, new Object[] {tzAppInsID}, "String");
+			
+			qrcodehtml=tzGDObject.getHTMLText("HTML.TZApplicationAdmissionBundle.TZ_GD_APP_AD_HTML", strPhoto, perName,className);
+	
+		} catch (TzSystemException e) {			
+			e.printStackTrace();
+			return "无法获取相关数据";
+		}
+		return qrcodehtml;
+	}
+	
+
+}
+
+	
