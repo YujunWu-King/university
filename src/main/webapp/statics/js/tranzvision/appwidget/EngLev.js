@@ -211,7 +211,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		//12.BEC 存储结构		
 		"EngLevelOpt12_1": {
 			"instanceId": "EngLevelOpt12_1",
-			"itemId": "opt11_exam_result",
+			"itemId": "opt12_exam_result",
 			//"itemName": MsgSet["EXAM_GSCORE"],
 			"itemName": "总分(成绩)",
 			//"title": MsgSet["EXAM_GSCORE"],
