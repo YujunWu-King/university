@@ -176,7 +176,7 @@
 				},{
 					text: '状态',
 					dataIndex: 'skinStatus',
-					width: 200,
+					width: 200
 				},{
 					text: '操作',
 	               	menuDisabled: true,
@@ -299,7 +299,7 @@
 					dataIndex: 'lm_lx',
 					width: '150'
 				},{
-					text: '内容类型',
+					text: '活动类型',
 					dataIndex: 'lm_nrlx',
 					width: '150'
 				},{
