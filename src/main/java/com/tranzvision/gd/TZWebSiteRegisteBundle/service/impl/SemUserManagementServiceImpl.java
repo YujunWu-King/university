@@ -549,7 +549,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						strOrgId, strSiteId, strResultConten);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
-				return "【TZ_MENU_ZHGL_HTML】html对象未定义";
+				return "【TZ_MENU_ZHGL_HTML2】html对象未定义";
 			}
 
 			strResultConten = objRep.repTitle(strResultConten, strSiteId);
