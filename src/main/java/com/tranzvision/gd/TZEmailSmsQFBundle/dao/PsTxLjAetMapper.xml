@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTxLjAetMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet" >
+    <id column="PRCSINSTANCE" property="prcsinstance" jdbcType="INTEGER" />
+    <result column="TZ_ABSLT_URL" property="tzAbsltUrl" jdbcType="VARCHAR" />
+    <result column="TZ_REL_URL" property="tzRelUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PRCSINSTANCE, TZ_ABSLT_URL, TZ_REL_URL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TX_LJ_AET
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PS_TX_LJ_AET
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet" >
+    insert into PS_TX_LJ_AET (PRCSINSTANCE, TZ_ABSLT_URL, TZ_REL_URL
+      )
+    values (#{prcsinstance,jdbcType=INTEGER}, #{tzAbsltUrl,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet" >
+    insert into PS_TX_LJ_AET
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prcsinstance != null" >
+        PRCSINSTANCE,
+      </if>
+      <if test="tzAbsltUrl != null" >
+        TZ_ABSLT_URL,
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prcsinstance != null" >
+        #{prcsinstance,jdbcType=INTEGER},
+      </if>
+      <if test="tzAbsltUrl != null" >
+        #{tzAbsltUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet" >
+    update PS_TX_LJ_AET
+    <set >
+      <if test="tzAbsltUrl != null" >
+        TZ_ABSLT_URL = #{tzAbsltUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet" >
+    update PS_TX_LJ_AET
+    set TZ_ABSLT_URL = #{tzAbsltUrl,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR}
+    where PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+</mapper>
