@@ -142,14 +142,14 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			]
 		//------------------------------------------------------设置下拉框选项值 02填充select的option属性
 
-			types += '<div class="main_inner_content_para" style="display: inherit;" >';
+			types += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:10px" >';
 			
 			types += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 
 			//1.公司性质
 			if (SurveyBuild._readonly) {
 				//只读模式
-				var valDesc='';
+				var valDesc='--'+MsgSet["PLEASE_SELECT"]+'--';
 				for(var k=0;k<FIRM_TYPE_GRP.length;k++){
 					if(child.WorkExper1["value"]==("0"+parseInt(k+1))){
 						valDesc=FIRM_TYPE_GRP[k];
@@ -188,7 +188,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//2.职位类型：
 			if (SurveyBuild._readonly) {
 				//只读模式
-				var valDesc = "";
+				var valDesc = '--'+MsgSet["PLEASE_SELECT"]+'--';
 				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null&&FIRM_TYPE_DEF!="-1"){
 					//POSITION_TYPE_DEL
 					if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){

@@ -125,7 +125,7 @@ public class TzMenuShowdyServiceImpl extends FrameworkImpl {
 							if (dt.getTime() <= dateNow.getTime()) {
 								strRet = str_html;
 								String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsContent", ctxPath);
-								strRet = siteRepCssServiceImpl.repJavascriptTags(strRet, strSelfJavascripts, strOrgid, strSiteId, "Y");
+								strRet = siteRepCssServiceImpl.repJavascriptTags(strRet, strSelfJavascripts, "", strOrgid, strSiteId, "Y");
 
 							} else {
 								strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE",

@@ -3,27 +3,18 @@
 <script src="%bind(:1)/statics/js/lib/jquery/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 	function jy() {
-		var wj = $('input:radio:checked').val();
-		//var wj=$("#cswj").val();
-		//alert(wj);
-		if (wj == "" || wj == null) {
-			$("#xzwj").html("请选择一个测试方向！");
+		var radioSize = $(":radio").size();
+		if(radioSize == 0){
+			$("#msg").html("没有可选择的测试方向！");
+			return false;
+		}
+		
+		var selectType = $('input:radio:checked').val();
+		if (selectType == "" || selectType == null) {
+			$("#msg").html("请选择一个测试方向！");
 		} else {
 			var wj = "A" + $('input:radio:checked').attr("id");
 			$("#" + wj).trigger("click");
-			//手机外网访问添加
-			var submit_url = "http://166.111.96.211/psp/CRMDEV2/?cmd=login&languageCd=ZHS";
-			/*	$.ajax({
-						type: "post",
-						async :true,
-						url: submit_url,
-						data: {"userid":"%bind(:6)","pwd":"%bind(:4)"},
-						dataType: "html",
-						success: function(result){
-						document.form1.submit();
-						}
-					});*/
-			//end
 			document.form1.submit();
 		}
 	}
@@ -43,20 +34,10 @@
 	<div class="xzwj">
 		<form name="form1" method="post" action="" target="_top">
 			<table style="margin-top: 0px; margin-left: 5px; height: 125px;" id="tb" class="tb">%bind(:2)</table>
-			<span id="xzwj" style="color: red; font-size: 14px;">&nbsp;</span>
+			<span id="msg" style="color: red; font-size: 14px;">&nbsp;</span>
 			<div style="margin-top: 5px;">
 				<a class="button button-blue" href="javascript:void(0);" onclick="jy();"><span>确定</span></a>
 			</div>
-			<input type="hidden" name="user_email" value="%bind(:3)">
-			<input type="hidden" name="user_password1" value="%bind(:4)">
-			<input type="hidden" name="user_password2" value="%bind(:5)">
-			<input type="hidden" name="personid" value="%bind(:6)">
-			<input type="hidden" name="password" value="%bind(:7)">
-			<input type="hidden" name="isemailtj" value="%bind(:8)">
-			<input type="hidden" name="istj" value="Y">
-			<input type="hidden" name="addtz" value="Y">
-			<input type="hidden" name="issubmit" value="Y">
-			<input type="hidden" name="iszjdl" value="%bind(:9)">
 		</form>
 	</div>
 </body>

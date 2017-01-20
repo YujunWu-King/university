@@ -473,9 +473,12 @@
 							processing();
 							var appInsId = SurveyBuild.appInsId;
 							var appInsVersionId = SurveyBuild.appInsVersion;
-				
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							console.log("classId:"+classId);
+							console.log("batchId:"+batchId);
 							var _a = getData();
-							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","data":' + $.toJSON(_a) + '}]}}';
+							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -528,8 +531,11 @@
 						var appInsId = SurveyBuild.appInsId;
 						var appInsVersionId = SurveyBuild.appInsVersion;
 						var _a = getData();
-			
-						var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","data":' + $.toJSON(_a) + '}]}}';
+						var classId = $("#ClassId").val();
+						var batchId = $("#BatchId").val();
+						console.log("classId:"+classId);
+						console.log("batchId:"+batchId);
+						var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 						$.ajax({
 							type: "POST",
 							url: SurveyBuild.tzGeneralURL,
@@ -591,8 +597,11 @@
 							var appInsVersionId = SurveyBuild.appInsVersion;
 			
 							var _a = getData();
-			
-							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","data":' + $.toJSON(_a) + '}]}}';
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							console.log("classId:"+classId);
+							console.log("batchId:"+batchId);
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -651,8 +660,11 @@
 							var appInsVersionId = SurveyBuild.appInsVersion;
 			
 							var _a = getData();
-			
-							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","data":' + $.toJSON(_a) + '}]}}';
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							console.log("classId:"+classId);
+							console.log("batchId:"+batchId);
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -696,9 +708,12 @@
 						processing();
 						var appInsId = SurveyBuild.appInsId;
 						var appInsVersionId = SurveyBuild.appInsVersion;
-			
+						var classId = $("#ClassId").val();
+						var batchId = $("#BatchId").val();
+						console.log("classId:"+classId);
+						console.log("batchId:"+batchId);
 						var _a = getData();
-						var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","data":' + $.toJSON(_a) + '}]}}';
+						var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 						$.ajax({
 							type: "POST",
 							url: SurveyBuild.tzGeneralURL,
@@ -1001,6 +1016,7 @@
 	<input id="menuId" type="hidden" name="menuId" value="%bind(:12)" />
 	<input id="siteId" type="hidden" name="siteId" value="%bind(:10)" />
 	<input id="ClassId" type="hidden" name="ClassId" value="%bind(:5)" />
+	<input id="BatchId" type="hidden" name="BatchId" value="%bind(:40)"/>
 
 	<script type="text/javascript">
 			$(document).ready(function() {

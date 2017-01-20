@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>基础示例 - LHGDIALOG</title>
+	<link rel="icon" href="../favicon.ico" type="image/x-icon"/>
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon"/>
+	
+	<link href="../_doc/common.css" type="text/css" rel="stylesheet"/>
+	<link href="../_doc/prettify/prettify.css" type="text/css" rel="stylesheet"/>
+	<script type="text/javascript" src="../_doc/prettify/prettify.js"></script>
+	<script type="text/javascript" src="../jquery-1.7.1.min.js"></script>
+	
+	<script>
+	// skin demo
+	(function() {
+		var _skin, _lhgcore;
+		var _search = window.location.search;
+		if (_search) {
+			_skin = _search.split('demoSkin=')[1];
+		};	
+		document.write('<scr'+'ipt src="../lhgdialog.min.js?skin=' + (_skin || 'default') +'"></sc'+'ript>');
+		window._isDemoSkin = !!_skin;
+	})();
+</script>
+<script type="text/javascript" src="demo.js"></script>
+</head>
+
+<body>
+    <div class="container">
+		<div class="header">
+		    <div class="hd_logo"><a href="#"><img border="0" src="../_doc/images/hd_logo.gif" alt="lhgdialog"/></a></div>
+			<div class="hd_nav">
+			    <a href="#">首页</a> | <a href="_doc/api.html">API文档</a> | 基础示例 | <a href="_doc/update.html">更新记录</a>
+			</div>
+		</div>
+		<div class="line">&nbsp;</div>
+		<div class="cbody">
+			<h2>皮肤切换演示</h2>
+			<p><button class="runcode" id="demo_skin">运行»</button>&nbsp;&nbsp;&nbsp;&nbsp;更多演示示例请到官方论坛查看：<a href="http://bbs.lhgcore.com/lhg4/index.html" target="_blank">http://bbs.lhgcore.com/lhg4/index.html</a></p>
+			<h2>配置参数演示</h2>
+			<p></p>
+			<ol>
+			    <li>
+			        <h3>标题 [title]</h3>
+					<p></p>
+<pre class="prettyprint" id="demo_title">
+$.dialog({title:'我是新标题'});
+</pre>
+					<p><button class="runcode" name="demo_title">运行»</button></p>
+				</li>
+				
+				<li>
+			        <h3>内容 [content]</h3>
+					<p>1. 传入字符串</p>
+<pre class="prettyprint" id="demo_content">
+$.dialog({content: '我支持HTML'});
+</pre>
+					<p><button class="runcode" name="demo_content">运行»</button></p>
+					<p>2. 使用iframe方式加载单独的内容页</p>
+<pre class="prettyprint" id="demo_content_frm">
+$.dialog({content: 'url:content/content.html'});
+</pre>
+					<p><button class="runcode" name="demo_content_frm">运行»</button></p>
+				</li>
+			</ol>
+				
+		</div>	
+	</div>
+</body>	

@@ -80,7 +80,7 @@ public class TzMenuShowEventListServiceImpl extends FrameworkImpl {
 					String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle." + strScriptHtmlName,
 							ctxPath);
 
-					strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strSelfJavascripts,
+					strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strSelfJavascripts,"",
 							orgid, strSiteId, "Y");
 
 					return strResultContent;

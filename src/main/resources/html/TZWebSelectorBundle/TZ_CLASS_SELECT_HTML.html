@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>班级选择器</title>
+<!--
+		<link href="/onlineReg/css/css.css" rel="stylesheet" type="text/css" />
+		-->
+<script type="text/javascript"
+	src="%bind(:3)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:3)/statics/js/tranzvision/util/layer.js"></script>
+<!--  <link rel="stylesheet" href="%bind(:3)/statics/css/appeditor/css.css" />-->
+<!--张浪添加-->
+<script type="text/javascript">
+	var TzUniversityContextPath = "%bind(:10)";
+	$(document).ready(function() {
+		var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+		var head = document.getElementsByTagName("head").item(0);
+		//在子窗口中添加父窗口的外联样式
+		for (var i = 0; i < linkList.length; i++) {
+			var l = document.createElement("link");
+			l.rel = 'stylesheet'
+			l.type = 'text/css';
+			l.href = linkList[i].href;
+			head.appendChild(l);
+		}
+	})
+</script>
+<!--张浪注释
+		<script type="text/javascript">
+			window.onload = function(){
+				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
+				var head = document.getElementsByTagName("head").item(0);
+				//在子窗口中添加父窗口的外联样式
+				for(var i=0;i<linkList.length;i++){
+					var l=document.createElement("link");
+						l.rel = 'stylesheet'
+						l.type = 'text/css'; 
+						l.href=linkList[i].href;
+						head.appendChild(l);
+				}
+			}
+		</script>
+-->
+<!-- 载入左侧边栏自适应高度的js-->
+<style type="text/css">
+  .choose_main{width:550px;height:260px;padding-left:20px;}
+  .photo_title {
+	font-size: 16px;
+	line-height: 62px;
+	font-weight: bold;
+	color: #8f5dc0;
+	background-repeat: no-repeat;
+	height: 62px;
+	width: 100%;
+}
+.city_close {
+    clear: right;
+    color: #9f9f9f;
+    float: right;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    text-align: left;
+    width: 35px;
+}
+a{text-decoration: none;}
+.dire_lable{color:#666;font-size: 14px;display: block;margin:5px 40px;}
+.btn{overflow: hidden;width:180px;margin:20px auto;}
+.btn_left{float: left;padding:10px 20px;text-align: center;background-color:#8e8e8e;font-size: 14px;border-radius: 5px;color: #fff;}
+.btn_right{float: right;padding:10px 20px;text-align: center;background-color:#8f5dc0;font-size: 14px;border-radius: 5px;color: #fff;}
+</style>
+</style>
+
+</head>
+
+<body>
+ <div class="choose_main">
+ 	 <div class="photo_title">%bind(:4)
+ 	   <div id="idcity" class="city_close" onClick="closeThis();">
+        <img src="%bind(:3)/statics/images/appeditor/del2.png" height="15" width="15"/> &nbsp;</div>
+      </div>
+      %bind(:1)
+      <div class="btn">
+      	  <a href="#" class="btn_left" onclick="closeThis();">%bind(:6)</a>
+      	   <a href="#" class="btn_right" onclick="changeProvince();">%bind(:5)</a>
+      </div>
+ </div>
+
+	<!--  <div class="choose_main">
+		<div class="city_main_title">%bind(:4)</div>
+		<div class="city_main_line">%bind(:1)</div>
+	</div>
+	<div class="city_top">
+		<div>
+			<input type="button" name="submit" value="%bind(:5)"
+				onclick="changeProvince();" /> <input type="button" name="submit"
+				value="%bind(:6)" onclick="closeThis();" />
+		</div>
+	</div>-->
+	
+	<script type="text/javascript">
+		function changeProvince() {
+			var classid = $('input[name="%bind(:7)"]:checked').val();
+			if (classid == null) {
+				alert("%bind(:8)");
+				return;
+			} else {
+				var pageid = "%bind(:2)";
+				var linkId = "%bind(:9)";
+				$("#" + pageid, window.parent.document).val(classid);
+				$("#ClassId", window.parent.document).val(classid);
+				
+				$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").parent("label").text());
+				
+				//重置批次选择的下拉列表
+				//$("#" + linkId, window.parent.document).empty();
+
+				var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"'
+						+ classid + '"}}';
+				var option = {};
+				$.ajax({
+					type : "get",
+					dataType : "JSON",
+					data : {
+						tzParams : params
+					},
+					async : false,
+					url : TzUniversityContextPath,
+					success : function(f) {
+						if (f.state.errcode == "0") {
+							option = f.comContent;
+						}
+					}
+				});
+				//$("#"+pageid,window.parent.document).focus();
+				//$("#"+pageid,window.parent.document).trigger("blur");
+				var FIRM_TYPE="<option value=''>"
+					+ window.parent.MsgSet["PLEASE_SELECT"]
+				+ "</option>";
+				
+				//$("#" + linkId, window.parent.document).append(
+				//		"<option value=''>"+ window.parent.MsgSet["PLEASE_SELECT"]+ "</option>");
+
+				for ( var i in option) {
+					//$("#" + linkId, window.parent.document).append(
+					//		"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>");
+					FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>";
+				}
+				$("#" + linkId, window.parent.document).html(FIRM_TYPE);
+				window.parent.$("#" + linkId).trigger("chosen:updated");
+				closeThis();
+			}
+		}
+		function closeThis() {
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		}
+	</script>
+	<div class="city_foot"></div>
+</body>
+</html>
