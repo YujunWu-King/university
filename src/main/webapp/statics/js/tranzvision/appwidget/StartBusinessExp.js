@@ -117,6 +117,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//"itemName":"近12个月收入",
 			"title": MsgSet["INCOME"],
 			//"title": "近12个月收入",
+			"value":"",
 			"orderby": 1,
 			"StorageType": "S",
 			"classname": "SingleTextBox"
@@ -129,6 +130,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//"itemName":"年纯利润",
 			"title": MsgSet["YEAR_PROFIT"],
 			//"title": "年纯利润",
+			"value":"",
 			"orderby": 1,
 			"StorageType": "S",
 			"classname": "SingleTextBox"
@@ -140,6 +142,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//"itemName":"企业规模",
 			"title": MsgSet["FIRM_SCALE"],
 			//"title": "企业规模",
+			"value":"",
 			"orderby": 1,
 			"StorageType": "S",
 			"classname": "SingleTextBox"
@@ -219,7 +222,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//--融资情况初始值
 		var FINANCING_DEL=child.WorkExper2.value;
 		//--------------------------------------------放入创业类型下拉框html
-			htmlContent += '<div class="main_inner_content_para" style="display: inherit;" >';
+			htmlContent += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:10px" >';
 			
 			htmlContent += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 

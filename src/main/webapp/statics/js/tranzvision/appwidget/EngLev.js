@@ -359,7 +359,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		
 		//------------
 
-			htmlContent += '<div class="main_inner_content_para" style="display: inherit;" >';
+			htmlContent += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:10px" >';
 			
 			htmlContent += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 
@@ -776,8 +776,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					TOEIC_DIV+='<div id="'+data.itemId+'ENG_LEV_T13" style="margin-top:55px">'
 				else
 				TOEIC_DIV+='<div id="'+data.itemId+'ENG_LEV_T13" style="margin-top:55px;display:none">'
-					TOEIC_DIV+='<span>考试时间：</span><input type="datetime"/>'
-					TOEIC_DIV+='<span>总分</span><input id="'+data["itemId"] + child.EngLevelOpt13_1.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/>'
+					TOEIC_DIV+=TOEIC_DATE
+					TOEIC_DIV+='<span>总分</span><input id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/>'
 				TOEIC_DIV+='</div>'	
 				htmlContent+=TOEIC_DIV;
 				

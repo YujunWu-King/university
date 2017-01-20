@@ -142,7 +142,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			]
 		//------------------------------------------------------设置下拉框选项值 02填充select的option属性
 
-			types += '<div class="main_inner_content_para" style="display: inherit;" >';
+			types += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:10px" >';
 			
 			types += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 
