@@ -130,11 +130,11 @@ function viewJd(classId, instanceId,language,viewType){
 }
 
 $(document).ready(function(){
-	if ($(".main_mid").height()>760){
+	/*if ($(".main_mid").height()>760){
 		$("#letf_menu").height($(".main_mid").height());
 	}else{
 		$("#letf_menu").height(760);
-	}
+	}*/
 	
 	$("#jgid").val(TZ_GD_LOGIN_SITEI_ORG_CODE);
 	$("#siteid").val(TZ_GD_LOGIN_SITEI_ID);
