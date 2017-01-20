@@ -49,15 +49,15 @@
       TZ_SBMINF_TMP_ID, TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, 
       TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, 
-      TZ_PRJ_DESC)
+      SYNCID, SYNCDTTM, TZ_PRJ_DESC
+      )
     values (#{tzPrjId,jdbcType=VARCHAR}, #{tzPrjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzIsOpen,jdbcType=VARCHAR}, #{tzAppModalId,jdbcType=VARCHAR}, #{tzPrjTypeId,jdbcType=VARCHAR}, 
       #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzAppproTmpId,jdbcType=VARCHAR}, #{tzScoreModalId,jdbcType=VARCHAR}, 
       #{tzMspsScoreMId,jdbcType=VARCHAR}, #{tzPsAppfMId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP},
-      #{tzPrjDesc,jdbcType=LONGVARCHAR})
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzPrjDesc,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T

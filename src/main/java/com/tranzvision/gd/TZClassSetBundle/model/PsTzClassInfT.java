@@ -49,7 +49,6 @@ public class PsTzClassInfT {
 
     private Date syncdttm;
 
-
     private String tzClassDesc;
 
     public String getTzClassId() {
@@ -235,8 +234,6 @@ public class PsTzClassInfT {
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
     }
-
-
 
     public String getTzClassDesc() {
         return tzClassDesc;

@@ -42,7 +42,10 @@
     <result column="TZ_ENROLL_INITCODE" jdbcType="LONGVARCHAR" property="tzEnrollInitcode" />
     <result column="TZ_ENROLL_SAVECODE" jdbcType="LONGVARCHAR" property="tzEnrollSavecode" />
     <result column="TZ_ENROLL_PRECODE" jdbcType="LONGVARCHAR" property="tzEnrollPrecode" />
-    <result column="TZ_ENROLL_PUBCODE" jdbcType="LONGVARCHAR" property="tzEnrollPubcode" />
+    <result column="TZ_ENROLL_PUBCODE" jdbcType="LONGVARCHAR" property="tzEnrollPubcode" />    
+    <result column="TZ_PERFECT_SAVECODE" jdbcType="LONGVARCHAR" property="tzPerfectSavecode" />
+    <result column="TZ_PERFECT_PRECODE" jdbcType="LONGVARCHAR" property="tzPerfectPrecode" />
+    <result column="TZ_PERFECT_PUBCODE" jdbcType="LONGVARCHAR" property="tzPerfectPubcode" />
   </resultMap>
   <sql id="Base_Column_List">
     TZ_SITEI_ID, TZ_SITEM_ID, TZ_JG_ID, TZ_SITEI_NAME, TZ_SITEI_ENABLE, TZ_SITE_LANG, 
@@ -54,7 +57,8 @@
   <sql id="Blob_Column_List">
     TZ_SKIN_CODE, TZ_INDEX_INITCODE, TZ_INDEX_SAVECODE, TZ_INDEX_PRECODE, TZ_INDEX_PUBCODE, 
     TZ_LONGIN_INITCODE, TZ_LONGIN_SAVECODE, TZ_LOGIN_PRECODE, TZ_LONGIN_PUBCODE, TZ_ENROLL_INITCODE, 
-    TZ_ENROLL_SAVECODE, TZ_ENROLL_PRECODE, TZ_ENROLL_PUBCODE
+    TZ_ENROLL_SAVECODE, TZ_ENROLL_PRECODE, TZ_ENROLL_PUBCODE, TZ_PERFECT_SAVECODE, TZ_PERFECT_PRECODE, 
+    TZ_PERFECT_PUBCODE
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
@@ -83,8 +87,9 @@
       TZ_LONGIN_INITCODE, TZ_LONGIN_SAVECODE, 
       TZ_LOGIN_PRECODE, TZ_LONGIN_PUBCODE, 
       TZ_ENROLL_INITCODE, TZ_ENROLL_SAVECODE, 
-      TZ_ENROLL_PRECODE, TZ_ENROLL_PUBCODE
-      )
+      TZ_ENROLL_PRECODE, TZ_ENROLL_PUBCODE, 
+      TZ_PERFECT_SAVECODE, TZ_PERFECT_PRECODE, 
+      TZ_PERFECT_PUBCODE)
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzSitemId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzSiteiName,jdbcType=VARCHAR}, #{tzSiteiEnable,jdbcType=VARCHAR}, #{tzSiteLang,jdbcType=VARCHAR}, 
       #{tzSiteiDescr,jdbcType=VARCHAR}, #{tzImgStor,jdbcType=VARCHAR}, #{tzImgView,jdbcType=VARCHAR}, 
@@ -99,8 +104,9 @@
       #{tzLonginInitcode,jdbcType=LONGVARCHAR}, #{tzLonginSavecode,jdbcType=LONGVARCHAR}, 
       #{tzLoginPrecode,jdbcType=LONGVARCHAR}, #{tzLonginPubcode,jdbcType=LONGVARCHAR}, 
       #{tzEnrollInitcode,jdbcType=LONGVARCHAR}, #{tzEnrollSavecode,jdbcType=LONGVARCHAR}, 
-      #{tzEnrollPrecode,jdbcType=LONGVARCHAR}, #{tzEnrollPubcode,jdbcType=LONGVARCHAR}
-      )
+      #{tzEnrollPrecode,jdbcType=LONGVARCHAR}, #{tzEnrollPubcode,jdbcType=LONGVARCHAR}, 
+      #{tzPerfectSavecode,jdbcType=LONGVARCHAR}, #{tzPerfectPrecode,jdbcType=LONGVARCHAR}, 
+      #{tzPerfectPubcode,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs">
     insert into PS_TZ_SITEI_DEFN_T
@@ -341,6 +347,15 @@
       <if test="tzEnrollPubcode != null">
         #{tzEnrollPubcode,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzPerfectSavecode != null" >
+        #{tzPerfectSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzPerfectPrecode != null" >
+        #{tzPerfectPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzPerfectPubcode != null" >
+        #{tzPerfectPubcode,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs">
@@ -460,6 +475,15 @@
       <if test="tzEnrollPubcode != null">
         TZ_ENROLL_PUBCODE = #{tzEnrollPubcode,jdbcType=LONGVARCHAR},
       </if>
+      <if test="tzPerfectSavecode != null" >
+        TZ_PERFECT_SAVECODE = #{tzPerfectSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzPerfectPrecode != null" >
+        TZ_PERFECT_PRECODE = #{tzPerfectPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzPerfectPubcode != null" >
+        TZ_PERFECT_PUBCODE = #{tzPerfectPubcode,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </update>
@@ -502,7 +526,10 @@
       TZ_ENROLL_INITCODE = #{tzEnrollInitcode,jdbcType=LONGVARCHAR},
       TZ_ENROLL_SAVECODE = #{tzEnrollSavecode,jdbcType=LONGVARCHAR},
       TZ_ENROLL_PRECODE = #{tzEnrollPrecode,jdbcType=LONGVARCHAR},
-      TZ_ENROLL_PUBCODE = #{tzEnrollPubcode,jdbcType=LONGVARCHAR}
+      TZ_ENROLL_PUBCODE = #{tzEnrollPubcode,jdbcType=LONGVARCHAR},
+      TZ_PERFECT_SAVECODE = #{tzPerfectSavecode,jdbcType=LONGVARCHAR},
+      TZ_PERFECT_PRECODE = #{tzPerfectPrecode,jdbcType=LONGVARCHAR},
+      TZ_PERFECT_PUBCODE = #{tzPerfectPubcode,jdbcType=LONGVARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnT">

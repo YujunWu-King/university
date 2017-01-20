@@ -402,6 +402,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		
+		
+		System.out.println("strParams:"+strParams);
+		
 		/* 推荐人姓名 */
 		if (StringUtils.equals(oType, "RNAME")) {
 			String userName = "";
@@ -759,10 +762,12 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			int dataLength = actData.length;
-
+			
+			System.out.println();
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				String strForm = actData[num];
+				System.out.println("strForm:"+strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 

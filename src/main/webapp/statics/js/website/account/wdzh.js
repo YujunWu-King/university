@@ -78,7 +78,8 @@ $(document)
 										offset : [ '50%', '' ],
 										area : [ '830px', '720px' ],
 										iframe : {
-											src : '/mba/colselector_liu.html'
+											//src : '/mba/colselector_liu.html'
+											src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
 										}
 									});
 								});

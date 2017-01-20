@@ -11,11 +11,15 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     private String tzMobile;
 
+    private String openid;
+
     private String tzRylx;
 
     private String tzYxbdBz;
 
     private String tzSjbdBz;
+
+    private String tzWxbdBz;
 
     private String tzJihuoZt;
 
@@ -26,6 +30,8 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
     private String tzBjsEml;
 
     private String tzBjsSms;
+
+    private String tzIsCmpl;
 
     private Date rowAddedDttm;
 
@@ -38,6 +44,8 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
     private Integer syncid;
 
     private Date syncdttm;
+
+    private String tzMshId;
 
     public String getOprid() {
         return oprid;
@@ -71,6 +79,14 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
         this.tzMobile = tzMobile == null ? null : tzMobile.trim();
     }
 
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid == null ? null : openid.trim();
+    }
+
     public String getTzRylx() {
         return tzRylx;
     }
@@ -93,6 +109,14 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     public void setTzSjbdBz(String tzSjbdBz) {
         this.tzSjbdBz = tzSjbdBz == null ? null : tzSjbdBz.trim();
+    }
+
+    public String getTzWxbdBz() {
+        return tzWxbdBz;
+    }
+
+    public void setTzWxbdBz(String tzWxbdBz) {
+        this.tzWxbdBz = tzWxbdBz == null ? null : tzWxbdBz.trim();
     }
 
     public String getTzJihuoZt() {
@@ -133,6 +157,14 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     public void setTzBjsSms(String tzBjsSms) {
         this.tzBjsSms = tzBjsSms == null ? null : tzBjsSms.trim();
+    }
+
+    public String getTzIsCmpl() {
+        return tzIsCmpl;
+    }
+
+    public void setTzIsCmpl(String tzIsCmpl) {
+        this.tzIsCmpl = tzIsCmpl == null ? null : tzIsCmpl.trim();
     }
 
     public Date getRowAddedDttm() {
@@ -181,5 +213,13 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzMshId() {
+        return tzMshId;
+    }
+
+    public void setTzMshId(String tzMshId) {
+        this.tzMshId = tzMshId == null ? null : tzMshId.trim();
     }
 }

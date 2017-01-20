@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
+    <id column="TZ_CS_WJ_ID" property="tzCsWjId" jdbcType="VARCHAR" />
+    <result column="TZ_CS_WJ_NAME" property="tzCsWjName" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <result column="TZ_STATE" property="tzState" jdbcType="VARCHAR" />
+    <result column="TZ_PRESET_NUM" property="tzPresetNum" jdbcType="INTEGER" />
+    <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ZT" property="tzDcWjZt" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_KSRQ" property="tzDcWjKsrq" jdbcType="DATE" />
+    <result column="TZ_DC_WJ_KSSJ" property="tzDcWjKssj" jdbcType="TIME" />
+    <result column="TZ_DC_WJ_JSRQ" property="tzDcWjJsrq" jdbcType="DATE" />
+    <result column="TZ_DC_WJ_JSSJ" property="tzDcWjJssj" jdbcType="TIME" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_JG_ID, TZ_CLASS_ID, TZ_STATE, TZ_PRESET_NUM, TZ_APP_TPL_ID, 
+    TZ_DC_WJ_ID, TZ_DC_WJ_ZT, TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CSWJ_TBL
+    where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_CSWJ_TBL
+    where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
+    insert into PS_TZ_CSWJ_TBL (TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_JG_ID, 
+      TZ_CLASS_ID, TZ_STATE, TZ_PRESET_NUM, 
+      TZ_APP_TPL_ID, TZ_DC_WJ_ID, TZ_DC_WJ_ZT, 
+      TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, 
+      TZ_DC_WJ_JSSJ, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM)
+    values (#{tzCsWjId,jdbcType=VARCHAR}, #{tzCsWjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzClassId,jdbcType=VARCHAR}, #{tzState,jdbcType=VARCHAR}, #{tzPresetNum,jdbcType=INTEGER}, 
+      #{tzAppTplId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzDcWjZt,jdbcType=VARCHAR}, 
+      #{tzDcWjKsrq,jdbcType=DATE}, #{tzDcWjKssj,jdbcType=TIME}, #{tzDcWjJsrq,jdbcType=DATE}, 
+      #{tzDcWjJssj,jdbcType=TIME}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
+    insert into PS_TZ_CSWJ_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzCsWjId != null" >
+        TZ_CS_WJ_ID,
+      </if>
+      <if test="tzCsWjName != null" >
+        TZ_CS_WJ_NAME,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzState != null" >
+        TZ_STATE,
+      </if>
+      <if test="tzPresetNum != null" >
+        TZ_PRESET_NUM,
+      </if>
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzDcWjZt != null" >
+        TZ_DC_WJ_ZT,
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        TZ_DC_WJ_KSRQ,
+      </if>
+      <if test="tzDcWjKssj != null" >
+        TZ_DC_WJ_KSSJ,
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        TZ_DC_WJ_JSRQ,
+      </if>
+      <if test="tzDcWjJssj != null" >
+        TZ_DC_WJ_JSSJ,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzCsWjId != null" >
+        #{tzCsWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsWjName != null" >
+        #{tzCsWjName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzState != null" >
+        #{tzState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPresetNum != null" >
+        #{tzPresetNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjZt != null" >
+        #{tzDcWjZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        #{tzDcWjKsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjKssj != null" >
+        #{tzDcWjKssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        #{tzDcWjJsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjJssj != null" >
+        #{tzDcWjJssj,jdbcType=TIME},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
+    update PS_TZ_CSWJ_TBL
+    <set >
+      <if test="tzCsWjName != null" >
+        TZ_CS_WJ_NAME = #{tzCsWjName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzState != null" >
+        TZ_STATE = #{tzState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPresetNum != null" >
+        TZ_PRESET_NUM = #{tzPresetNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjZt != null" >
+        TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjKssj != null" >
+        TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        TZ_DC_WJ_JSRQ = #{tzDcWjJsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjJssj != null" >
+        TZ_DC_WJ_JSSJ = #{tzDcWjJssj,jdbcType=TIME},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
+    update PS_TZ_CSWJ_TBL
+    set TZ_CS_WJ_NAME = #{tzCsWjName,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      TZ_STATE = #{tzState,jdbcType=VARCHAR},
+      TZ_PRESET_NUM = #{tzPresetNum,jdbcType=INTEGER},
+      TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
+      TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
+      TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},
+      TZ_DC_WJ_JSRQ = #{tzDcWjJsrq,jdbcType=DATE},
+      TZ_DC_WJ_JSSJ = #{tzDcWjJssj,jdbcType=TIME},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -397,6 +397,49 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                             return (new Ext.grid.column.CheckColumn).renderer(value);
                         }
                     }
+                },
+                {
+                    xtype: 'checkcolumn',
+                    text: '所需完善信息',
+                    dataIndex: 'isPerfectInfo',
+                    flex: 1,
+                    listeners: {
+                        beforecheckchange: function(col, rowIndex, checked, eOpts) {
+                            var store = col.findParentByType("grid").store;
+                            var regId = store.getAt(rowIndex).data.regId;
+                            var isEnable = store.getAt(rowIndex).data.isEnable;
+
+                            if(isEnable == false ){
+                                Ext.Msg.alert("提示","请先启用此项，再进行设置！");
+                                return false;
+                            }
+
+                            if(regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                                return false;
+                            }
+                        }
+                    },
+                    renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
+
+                        var regId = record.get('regId');
+
+                        if (regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                            var isEnable = store.getAt(rowIndex).data.isEnable;
+
+                            //如何为当前CheckColumn添加disabled属性？
+                            cellmeta.tdCls = "x-item-disabled";
+                            return (new Ext.grid.column.CheckColumn).renderer(false);
+
+                        }/*else if(regId == "TZ_REALNAME" || regId == "TZ_GENDER" || regId == "TZ_EMAIL"){
+
+                            cellmeta.tdCls = "x-item-disabled";
+                           // return (new Ext.grid.column.CheckColumn).renderer(true);
+                            return (new Ext.grid.column.CheckColumn).renderer(value);*//*保持gird与数据库中的值一致*//*
+                        }*/else
+                        {
+                            return (new Ext.grid.column.CheckColumn).renderer(value);
+                        }
+                    }
                 }
             ]
         }],

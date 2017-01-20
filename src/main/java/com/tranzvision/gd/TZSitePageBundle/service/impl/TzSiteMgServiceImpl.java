@@ -800,7 +800,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					: String.valueOf(formData.get("savecontent"));
 			String strPagetype = formData.get("pagetype") == null ? "" : String.valueOf(formData.get("pagetype"));
 			strPagetype = strPagetype.toLowerCase();
-
+			String siteIndexSaveTpl = formData.get("siteIndexSaveTpl") == null ? ""
+					: String.valueOf(formData.get("siteIndexSaveTpl"));
+			
 			ArrayList<Map<String, Object>> listActData = (ArrayList<Map<String, Object>>) formData.get("dataArea");
 
 			for (Map<String, Object> mapActData : listActData) {
@@ -851,7 +853,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strHomePageCode = "";
 				String strLoginPageCode = "";
 				String strEnrollPageCode = "";
-
+				String strPerfectPageCode = "";
 				String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
@@ -860,7 +862,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					switch (strPagetype) {
 
 					case "homepage":
-						boolResult = this.saveHomepage(strSaveContent, strSiteId, errMsg);
+						boolResult = this.saveHomepage(strSaveContent, strSiteId,siteIndexSaveTpl, errMsg);
 						if (boolResult) {
 							strLoginPageCode = this.handleLoginPage(strSiteId);
 							if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
@@ -872,12 +874,26 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点保存完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.savePerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点保存完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页保存失败！";
+												}
+													
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页保存失败！";
+											}
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页保存失败！";
@@ -907,7 +923,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						if (boolResult) {
 							strHomePageCode = this.handleHomePage(strSiteId);
 							if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-								boolResult = this.saveHomepage(strHomePageCode, strSiteId, errMsg);
+								boolResult = this.saveHomepage(strHomePageCode, strSiteId,siteIndexSaveTpl, errMsg);
 								if (boolResult) {
 
 									// strEnrollPageCode =
@@ -915,12 +931,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.saveEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点保存完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.savePerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点保存完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页保存失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页保存失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页保存失败！";
@@ -954,7 +983,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							if (boolResult) {
 								strHomePageCode = this.handleHomePage(strSiteId);
 								if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-									boolResult = this.saveHomepage(strHomePageCode, strSiteId, errMsg);
+									boolResult = this.saveHomepage(strHomePageCode, strSiteId,siteIndexSaveTpl, errMsg);
 									if (boolResult) {
 										strLoginPageCode = this.handleLoginPage(strSiteId);
 										if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
@@ -1034,7 +1063,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 			String strReleaseContent = formData.get("releasecontent") == null ? ""
 					: String.valueOf(formData.get("releasecontent"));
 			String strPagetype = formData.get("pagetype") == null ? "" : String.valueOf(formData.get("pagetype"));
-
+			String siteIndexReleaseTpl = formData.get("siteIndexReleaseTpl") == null ? ""
+					: String.valueOf(formData.get("siteIndexReleaseTpl"));
+			
 			ArrayList<Map<String, Object>> listActData = (ArrayList<Map<String, Object>>) formData.get("dataArea");
 
 			for (Map<String, Object> mapActData : listActData) {
@@ -1085,7 +1116,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				String strHomePageCode = "";
 				String strLoginPageCode = "";
 				String strEnrollPageCode = "";
-
+				String strPerfectPageCode = "";
+				
 				String sql = "select 'Y' from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String recExists = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
 
@@ -1094,7 +1126,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					switch (strPagetype) {
 
 					case "homepage":
-						boolResult = this.releasHomepage(strReleaseContent, strSiteId, errMsg);
+						boolResult = this.releasHomepage(strReleaseContent, strSiteId, siteIndexReleaseTpl,errMsg);
 						if (boolResult) {
 							strLoginPageCode = this.handleLoginPage(strSiteId);
 							if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
@@ -1111,12 +1143,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 									strEnrollPageCode = registeServiceImpl.handleEnrollPage(strSiteId);
 									if (strEnrollPageCode != null && !"".equals(strEnrollPageCode)) {
 										boolResult = registeServiceImpl.releasEnrollpage(strEnrollPageCode, strSiteId,
-												errMsg);
+												errMsg);										
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点发布完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.releasPerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点发布完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页发布失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页发布失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页发布失败！";
@@ -1146,7 +1191,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						if (boolResult) {
 							strHomePageCode = this.handleHomePage(strSiteId);
 							if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-								boolResult = this.releasHomepage(strHomePageCode, strSiteId, errMsg);
+								boolResult = this.releasHomepage(strHomePageCode, strSiteId,siteIndexReleaseTpl, errMsg);
 								if (boolResult) {
 
 									errMsg[0] = "0";
@@ -1161,10 +1206,23 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 										boolResult = registeServiceImpl.releasEnrollpage(strEnrollPageCode, strSiteId,
 												errMsg);
 										if (boolResult) {
-											errMsg[0] = "0";
-											errMsg[1] = "站点发布完成！";
-											mapRet.put("success", true);
-											strRet = jacksonUtil.Map2json(mapRet);
+											strPerfectPageCode = registeServiceImpl.handlePerfectPage(strSiteId);
+											if (strPerfectPageCode != null && !"".equals(strPerfectPageCode)) {
+												boolResult = registeServiceImpl.releasPerfectpage(strPerfectPageCode, strSiteId,
+														errMsg);
+												if(boolResult){
+													errMsg[0] = "0";
+													errMsg[1] = "站点发布完成！";
+													mapRet.put("success", true);
+													strRet = jacksonUtil.Map2json(mapRet);	
+												}else{
+													errMsg[0] = "1";
+													errMsg[1] = "站点完善页发布失败！";
+												}
+											}else{
+												errMsg[0] = "1";
+												errMsg[1] = "站点完善页发布失败！";
+											}											
 										} else {
 											errMsg[0] = "1";
 											errMsg[1] = "站点注册页发布失败！";
@@ -1198,7 +1256,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							if (boolResult) {
 								strHomePageCode = this.handleHomePage(strSiteId);
 								if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-									boolResult = this.releasHomepage(strHomePageCode, strSiteId, errMsg);
+									boolResult = this.releasHomepage(strHomePageCode, strSiteId, siteIndexReleaseTpl,errMsg);
 									if (boolResult) {
 										strLoginPageCode = this.handleLoginPage(strSiteId);
 										if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
@@ -1261,7 +1319,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean saveHomepage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveHomepage(String strSaveContent, String strSiteId, String siteIndexSaveTpl,String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1298,7 +1356,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				if(strSaveContentReplace.contains("$")){
 					strSaveContentReplace = strSaveContentReplace.replace("$", "\\$");
 				}
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",strSaveContentReplace);
+				
+				if(siteIndexSaveTpl == null||siteIndexSaveTpl.equals("")){
+					siteIndexSaveTpl = "TZSitePageBundle.SiteIndexSaveTpl";
+				}
+				String strSavedContent = tzGDObject.getHTMLText("HTML."+siteIndexSaveTpl,strSaveContentReplace);
 
 				strSavedContent = siteRepCssServiceImpl.repTitle(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
@@ -1324,7 +1386,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1413,7 +1476,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1514,7 +1578,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean releasHomepage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasHomepage(String strReleaseContent, String strSiteId,String siteIndexReleaseTpl, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1533,7 +1597,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",
+				if(siteIndexReleaseTpl == null||siteIndexReleaseTpl.equals("")){
+					siteIndexReleaseTpl = "TZSitePageBundle.SiteIndexReleaseTpl";
+				}
+				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + siteIndexReleaseTpl,
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1548,15 +1615,18 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strReleasedHtml = siteRepCssServiceImpl.repJgid(strReleasedHtml, orgid);
 				strReleasedHtml = siteRepCssServiceImpl.repLang(strReleasedHtml, siteLang);
 
+				System.out.println(strReleasedHtml);
+				
 				String strPreviewHTML = strReleasedHtml;
-
+				
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts,orgid,
 						strSiteId, "Y");
-
+				
 				psTzSiteiDefnTWithBLOBs.setTzIndexPubcode(strReleasedHtml);
 				psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strPreviewHTML);
 				psTzSiteiDefnTWithBLOBs.setTzSiteFbzt("Y");
@@ -1629,9 +1699,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzLonginPubcode(strReleaseHtml);

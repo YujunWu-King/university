@@ -16,12 +16,12 @@ var SurveyBuild = {
     is_edit_moda: true,
     _alph: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
     _color: ["#FFFFFF", "#5D762A", "#FF0000", "#800080", "#008000", "#855B00", "#000000", "#FFFF00", "#990000", "#FFA500", "#E4E4E4", "#D2691E", "#1EDDFF", "#FFFFB1", "#98FB98", "#BDB76B", "#666666", "#4B0082", "#041690", "#FFB6C1", "#DDA0DD", "#0000FF", "url(" + TzUniversityContextPath + "/statics/images/appeditor/mixed.png);", "url(" + TzUniversityContextPath + "/statics/images/appeditor/trans.png);"],
-    comClass: {},//控件实例类
+    comClass: {},// 控件实例类
     _components: {},
-    _componentConfig: [],//控件后台配置信息
+    _componentConfig: [],// 控件后台配置信息
     _componentIndex: [],//
     _componentLoadedIndex: [],
-    _helpDescSet: {},//控件属性说明信息
+    _helpDescSet: {},// 控件属性说明信息
 	_baseRules: [],
     _define: function(clsassname, source, target) {
         var me = this;
@@ -33,7 +33,7 @@ var SurveyBuild = {
                 }
             }
         };
-        //prototype继承，hasOwnProperty()
+        // prototype继承，hasOwnProperty()
         if (target) {
             this["comClass"][clsassname].prototype = new this["comClass"][target]();
             this["comClass"][clsassname].prototype.constructor = this["comClass"][clsassname];
@@ -63,7 +63,7 @@ var SurveyBuild = {
     extend: function(classname, target, source) {
         if (classname && target && source) {
             if (typeof target == "string") {
-                //被继承的JS对象没有被加载
+                // 被继承的JS对象没有被加载
                 if (!this["comClass"][target]) {
                     this.loadScript(target);
                 }
@@ -114,18 +114,39 @@ var SurveyBuild = {
 
         }
     },
+    /* caoy 修改 */
 	_initTab: function() {
+		// alert("OK");
 		var tabs = "", i = 0;
 		$("#tabNav").empty();
+		// 标签分层显示，2层，先加载顶层，然后在加载次一层
+		// 加载顶层次
+		var topdiv = new Array();
 		$.each(this._items, function(h, obj) {
-			if (obj["classname"] == "Page") {
-				tabs += '<div data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;" style="' + obj.tapStyle + '">' + obj.title + '</div>';
+			// alert("fPageId"+obj.fPageId);
+			var variable2 = obj.fPageId || ''; 
+			// 顶层的显示
+			if (obj["classname"] == "Page" && variable2 =='' ) {
+				tabs += '<div id="'+obj.itemId+'" data_id="' + h + '" class="' + (i == 0 ? "tabNav_c": "tabNav") + '" onclick="SurveyBuild._editTabs();return false;" style="' + obj.tapStyle + '">' + obj.title + '</div>';
+				topdiv[i]=obj.itemId;
 				++i;
 			}
 		});
 		$("#tabNav").append(tabs);
+		// 第二层
+		for (x=0;x<topdiv.length;x++) {
+			tabs = "";
+			$.each(this._items, function(h, obj) {
+				var variable2 = obj.fPageId || '';
+				// 顶层的显示
+				if (obj["classname"] == "Page" && variable2 ==topdiv[x] ) {
+					tabs += '<div data_id="' + h + '" class="tabNav_child" onclick="SurveyBuild._editTabs();return false;" style="' + obj.tapStyle + '">' + obj.title + '</div>';
+				}
+			});
+			$("#"+topdiv[x]).append(tabs);
+		}
 	},
-	/*张彬彬修改*/
+	/* 张彬彬，caoy修改 */
     _editTabs: function() {
         $("#question-box>li").removeClass("active");
         $("#build-right").css("height", "auto");
@@ -218,69 +239,53 @@ var SurveyBuild = {
         }
 
     },
-    /* 暂时注释掉 By WRL @20160411
-    saveTabAttr: function(el, attrName) {
-		
-        if (!el || !attrName) return;
-        var instanceId = $(el).attr("data_id");
-        var val = this._getAttrVal(el);
-	
-        if(attrName == "itemName"){
-            //$("#tabNav div[data_id='" + instanceId + "']").html(val);
-            $("#question-box li[data_id='" + instanceId + "'] .pagename").html(val);
-        }
-        this._items[instanceId][attrName] = val;
-        this.is_edit = true;
-    },
-	saveTapNumAttr: function(el, attrName) {
-
-		var data = this._data;
-		
-		var pageHeight = data.hasOwnProperty("pageHeight") ? data.pageHeight : "55";
-		
-        if (!el || !attrName) return;
-        var instanceId = $(el).attr("data_id");
-		
-		var tapWidth = this._items[instanceId][attrName];
-		
-        var val = this._getAttrVal(el);
-		
-		this._items[instanceId][attrName] = val;
-		this.is_edit = true;
-		
-		$.each(this._items, function(h, obj) {
-			if (obj["classname"] == "Page") {
-				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px";
-			}
-		});
-    },
-
-	saveTapHeight: function(el, attrName) {
-        if (!el || !attrName) return;
-        data = this._data;
-		var tapHeight;
-		tapHeight = this._getAttrVal(el);
-        data[attrName] = tapHeight;
-
-        this.is_edit = true;
-		
-		$.each(this._items, function(h, obj) {
-            if (obj["classname"] == "Page") {
-				obj.tapHeight = tapHeight;
-				obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ tapHeight + "px";
-            }
-        });
-		
-		var items = this._items;
-		
-		$("#tabNav > div").each(function(){
-		  var instanceId = $(this).attr("data_id");
-		  $("#tabNav div[data_id='" + instanceId + "']").html(items[instanceId].title);
-		  //$("#tabNav div[data_id='" + instanceId + "']").attr("style",items[instanceId].tapStyle);
-		  
-		});
-    },
-    */
+    /*
+	 * 暂时注释掉 By WRL @20160411 saveTabAttr: function(el, attrName) {
+	 * 
+	 * if (!el || !attrName) return; var instanceId = $(el).attr("data_id"); var
+	 * val = this._getAttrVal(el);
+	 * 
+	 * if(attrName == "itemName"){ //$("#tabNav div[data_id='" + instanceId +
+	 * "']").html(val); $("#question-box li[data_id='" + instanceId + "']
+	 * .pagename").html(val); } this._items[instanceId][attrName] = val;
+	 * this.is_edit = true; }, saveTapNumAttr: function(el, attrName) {
+	 * 
+	 * var data = this._data;
+	 * 
+	 * var pageHeight = data.hasOwnProperty("pageHeight") ? data.pageHeight :
+	 * "55";
+	 * 
+	 * if (!el || !attrName) return; var instanceId = $(el).attr("data_id");
+	 * 
+	 * var tapWidth = this._items[instanceId][attrName];
+	 * 
+	 * var val = this._getAttrVal(el);
+	 * 
+	 * this._items[instanceId][attrName] = val; this.is_edit = true;
+	 * 
+	 * $.each(this._items, function(h, obj) { if (obj["classname"] == "Page") {
+	 * obj.tapStyle = "width:"+ obj.tapWidth+"px;height:"+ pageHeight + "px"; }
+	 * }); },
+	 * 
+	 * saveTapHeight: function(el, attrName) { if (!el || !attrName) return;
+	 * data = this._data; var tapHeight; tapHeight = this._getAttrVal(el);
+	 * data[attrName] = tapHeight;
+	 * 
+	 * this.is_edit = true;
+	 * 
+	 * $.each(this._items, function(h, obj) { if (obj["classname"] == "Page") {
+	 * obj.tapHeight = tapHeight; obj.tapStyle = "width:"+
+	 * obj.tapWidth+"px;height:"+ tapHeight + "px"; } });
+	 * 
+	 * var items = this._items;
+	 * 
+	 * $("#tabNav > div").each(function(){ var instanceId =
+	 * $(this).attr("data_id"); $("#tabNav div[data_id='" + instanceId +
+	 * "']").html(items[instanceId].title); //$("#tabNav div[data_id='" +
+	 * instanceId + "']").attr("style",items[instanceId].tapStyle);
+	 * 
+	 * }); },
+	 */
     saveTjx_fj: function() {
 		var _max_tjx_sm=$("#max_tjx_ts").val();
 		for (var i=1;i<=_max_tjx_sm;i++)
@@ -316,10 +321,11 @@ var SurveyBuild = {
             $(el).val("");
         }
     },
-    /*level0级属性赋值*/
+    /* level0级属性赋值 */
     saveAttr: function(el, attrName) {
         if (!el || !attrName) return;
-
+        // alert("OK");
+        // alert(attrName);
         var instanceId = $("#question-edit").attr("data_id");
         var data = {};
         if (SurveyBuild.isDHContainer) {
@@ -330,22 +336,24 @@ var SurveyBuild = {
 
         var val = this._getAttrVal(el);
         if (attrName == "fileType") {
-            //上传附件中的文件类型，去掉所有空额
+            // 上传附件中的文件类型，去掉所有空额
             val = val.replace(/[ ]/g, "")
         }
         data[attrName] = val;
 
         var rules = data["rules"];
         var _rules = this._componentConfig[$.inArray(data["classname"], this._componentIndex)]["rules"];
-
+        
+        
+        
         var $activeLi = $("#question-box li.active");
         if (attrName == "title") {
-            /*Bug修改TextExplain的Title属性，在设计区域会重复显示Title内容   暂时注释by WRL 2016/2/24
-             if (data["classname"] == 'TextExplain') {
-             $activeLi.find(".question-answer").html(val);
-             } else {
-             $activeLi.find(".question-question").first().html(val);
-             }*/
+            /*
+			 * Bug修改TextExplain的Title属性，在设计区域会重复显示Title内容 暂时注释by WRL 2016/2/24
+			 * if (data["classname"] == 'TextExplain') {
+			 * $activeLi.find(".question-answer").html(val); } else {
+			 * $activeLi.find(".question-question").first().html(val); }
+			 */
             $activeLi.find(".question-question").first().html(val);
             data["classname"] == "Page" && this._initTab();
         } else if (attrName == "suffix") {
@@ -421,7 +429,7 @@ var SurveyBuild = {
                         $("#is_checkNumSize").prop("checked", $(el).prop("checked"));
                     }
                 } else {
-                    //正则校验
+                    // 正则校验
                     if (attrName == "preg") {
                         var RegularValidatorObj = _rules["RegularValidator"]
                         if (!rules["RegularValidator"] && RegularValidatorObj) {
@@ -446,11 +454,12 @@ var SurveyBuild = {
                                 } else {
                                     rules["RefLetterValidator"]["isEnable"] = "N"
                                 }
-                                //$("#is_toCheck").prop("checked", $(el).prop("checked"));
+                                // $("#is_toCheck").prop("checked",
+								// $(el).prop("checked"));
                             }
                         } else {
                             if (attrName == "maxLines") {
-                                //设置最多行数时，初始化linesNo属性
+                                // 设置最多行数时，初始化linesNo属性
                                 var linesNo = [];
                                 for (var i = 1; i < val; i++) {
                                     linesNo.push(i);
@@ -458,7 +467,7 @@ var SurveyBuild = {
                                 data["linesNo"] = linesNo;
                             } else {
                                 if (attrName == "defaultval") {
-                                    //修改默认值时，直接将默认值赋值于value
+                                    // 修改默认值时，直接将默认值赋值于value
                                     if (val.indexOf("%BIND") == -1) {
                                         data["value"] = val;
                                     } else {
@@ -473,6 +482,9 @@ var SurveyBuild = {
                                             $("#mainTemplate").hide();
                                             $("#mainTemplateSpan").hide();
                                         }
+                                    } else if (attrName == "fPageId"){
+                                    	// alert("GO");
+                                    	data["classname"] == "Page" && this._initTab();
                                     }
                                 }
                             }
@@ -584,12 +596,14 @@ var SurveyBuild = {
         if ($liActive.length == 0) {
             return checkBz
         }
-        var tipObj; //提示信息目标元素
+        var tipObj; // 提示信息目标元素
         var d = $liActive.attr("data_id");
-        //if (!SurveyBuild.isDHContainer && this._items[d] && (this._items[d]["classname"] == "Page" || this._items[d]["classname"] == "Separator")) {
-        //    //分页符、文字描述控件跳过检查
-        //    return checkBz;
-        //}
+        // if (!SurveyBuild.isDHContainer && this._items[d] &&
+		// (this._items[d]["classname"] == "Page" || this._items[d]["classname"]
+		// == "Separator")) {
+        // //分页符、文字描述控件跳过检查
+        // return checkBz;
+        // }
 
         var $itemId = $("#question-edit").find(".edit_itemId");
         var $itemName = $("#question-edit").find(".edit_itemName");
@@ -602,35 +616,36 @@ var SurveyBuild = {
         }
 
         if (!$itemId.val()) {
-            /*信息项编号必填*/
+            /* 信息项编号必填 */
             checkBz = false;
             tipObj = $itemId;
             msg = "信息项编号不能为空";
         } else if (!/^\w+$/g.test($itemId.val())) {
-            /*信息项编号只允许字母、数字、下划线*/
+            /* 信息项编号只允许字母、数字、下划线 */
             checkBz = false;
             tipObj = $itemId;
             msg = "信息项编号只允许字母数字以及下划线";
         } else if ($itemName.length > 0 && !$itemName.val().length > 30) {
-            /*信息项编号长度限制*/
+            /* 信息项编号长度限制 */
             checkBz = false;
             tipObj = $itemId;
             msg = "信息项编号长度不能超过30";
         } else if ($itemName.length > 0 && !$itemName.val()) {
-            /*信息项名称必填*/
+            /* 信息项名称必填 */
             checkBz = false;
             tipObj = $itemName;
             msg = "信息项名称不能为空";
         } else {
-            //信息项编号是否重复
+            // 信息项编号是否重复
             dance: for (var insId in this._items) {
                 if (d != insId) {
                     if (this._items[insId]["itemId"] == $itemId.val()) {
                         has = true;
                         break;
-//                    } else if (!SurveyBuild.isDHContainer && this._items[insId]["isDoubleLine"] == "Y") {
+// } else if (!SurveyBuild.isDHContainer && this._items[insId]["isDoubleLine"]
+// == "Y") {
                     } else if (this._items[insId]["isDoubleLine"] == "Y") {
-                        //普通信息项与容器中信息项编号也不能重复
+                        // 普通信息项与容器中信息项编号也不能重复
                         for (var insDHId in this._items[insId]["children"]) {
                             if (d != insDHId && this._items[insId]["children"][insDHId]["itemId"] == $itemId.val()) {
                                 has = true;
@@ -638,18 +653,18 @@ var SurveyBuild = {
                             }
                         }
                     }
-//                    break dance;
+// break dance;
                 }
             }
             if (has) {
-                /*信息项编号重复*/
+                /* 信息项编号重复 */
                 checkBz = false;
                 tipObj = $itemId;
                 msg = "信息项编号已存在";
             } else {
-                //可选值重复性检查
+                // 可选值重复性检查
                 if (data.hasOwnProperty(d) && data[d].option) {
-                    //Option可选值不能重复
+                    // Option可选值不能重复
                     var hash = {},trId = "";
                     for (var i in data[d].option) {
                         if (hash[data[d].option[i]["code"]]) {
@@ -673,7 +688,7 @@ var SurveyBuild = {
             this.fail(tipObj, msg);
             return checkBz;
         };
-        /*控件属性验证*/
+        /* 控件属性验证 */
         if (data.hasOwnProperty(d) && data[d]._validatorAttr) {
             return data[d]._validatorAttr(data[d]);
         } else {
@@ -698,9 +713,9 @@ var SurveyBuild = {
             CallBack()
         };
     },
-    /*控件属性--高级设置--Begin*/
+    /* 控件属性--高级设置--Begin */
     RulesSet: function(el) {
-        /*控件实例ID*/
+        /* 控件实例ID */
         var instanceId = $("#question-edit").attr("data_id");
         var _d;
         if (SurveyBuild.isDHContainer) {
@@ -708,10 +723,10 @@ var SurveyBuild = {
         } else {
             _d = this._items[instanceId];
         }
-        /*控件最新规则列表*/
+        /* 控件最新规则列表 */
         var _rules = this._componentConfig[$.inArray(_d["classname"], this._componentIndex)]["rules"];
 
-        /*当前信息项规则列表*/
+        /* 当前信息项规则列表 */
         var rules = _d["rules"];
 
         var pageHtml = "";
@@ -726,14 +741,14 @@ var SurveyBuild = {
         pageHtml += '		<table id="table-advanced-relus" class="table table-hover table-bordered">';
         pageHtml += '			<tr><th style="text-align:center" width="50px">启用</th><th width="100px">规则名称</th><th>提示信息</th></tr>';
 
-        //table方式展示规则列表
+        // table方式展示规则列表
         $.each(_rules, function(ruleClsName, _ruleObj) {
-            //校验规则是否启用，后台配置信息中是否启用，当前实例对象中是否启用了该校验规则
+            // 校验规则是否启用，后台配置信息中是否启用，当前实例对象中是否启用了该校验规则
             var obj = rules[ruleClsName] || _ruleObj;
             var checked = obj["isEnable"] == "Y" ? "checked='checked'": "";
             var disabled = obj["isEnable"] != "Y" ? "disabled='disabled'" : "";
 
-            //校验规则启用属性的设置
+            // 校验规则启用属性的设置
             var onchange = "";
             if (ruleClsName == "RequireValidator") {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isRequire\')";
@@ -771,7 +786,7 @@ var SurveyBuild = {
         pageHtml += '		</table>';
         pageHtml += '   </fieldset>';
 
-        //信息项同步配置
+        // 信息项同步配置
         if ($.isEmptyObject(_d["syncRule"])) {
             var n = "S" + ( + new Date()),g = {};
             g[n] = {
@@ -845,7 +860,7 @@ var SurveyBuild = {
                 return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
             });
     },
-    //新增同步配置
+    // 新增同步配置
     plusSync: function(f) {
         this.is_edit = true;
         var m = $(f).parents("tr").attr("data_id"),
@@ -921,7 +936,7 @@ var SurveyBuild = {
         var d = $("#build-right").height();
         $(f).parents("tr").after(syncRow);
     },
-    /*删除同步配置*/
+    /* 删除同步配置 */
     minusSync: function(e) {
         this.is_edit = true;
         if ($(e).parents("tr").siblings().length == 0) {
@@ -951,7 +966,7 @@ var SurveyBuild = {
             }
         }
     },
-    //设置信息项同步规则属性
+    // 设置信息项同步规则属性
     saveSyncAttr: function(el, syncAttr) {
         if (!el || !syncAttr) return;
 
@@ -986,7 +1001,7 @@ var SurveyBuild = {
     DynamicBindVal: function(){
 		var callBack = function(){};
 		if(!SurveyBuild._DynamicBindHtml){
-			 /*判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html*/
+			 /* 判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html */
 			var tz_app_id=SurveyBuild._tid;
 			$.ajax({
 				type: "post",
@@ -998,10 +1013,10 @@ var SurveyBuild = {
 					if(result.comContent.total == "1"){
 						var siteObj = siteArr[0];
 						var siteId = siteObj.siteId;
-						//弹出页面
+						// 弹出页面
 						SurveyBuild.DynamicBindValBySite(siteId);
 					}else{
-						//弹出选择框
+						// 弹出选择框
 						var _DynamicSiteHtml;
 						var pageHtml = "";
 						 pageHtml += '<div class="modal-header">';
@@ -1085,7 +1100,7 @@ var SurveyBuild = {
 	this.openMoadal(SurveyBuild._DynamicBindHtml,callBack);
 
     },  
-    //设置常用控件的启用标识
+    // 设置常用控件的启用标识
     saveCommonRulesBz: function(el, key) {
         this.saveAttr(el, key);
         if (key == "preg") {
@@ -1097,7 +1112,7 @@ var SurveyBuild = {
         }
         this._setRuleStatu(el);
     },
-    //设置rules启用标识
+    // 设置rules启用标识
     saveRulesBz: function(el, ruleClassName) {
         if (!el || !ruleClassName) return;
 
@@ -1128,7 +1143,7 @@ var SurveyBuild = {
             this._setRuleStatu(el);
         }
     },
-    //设置当前行的状态(提示信息是否可编辑)
+    // 设置当前行的状态(提示信息是否可编辑)
     _setRuleStatu: function(el) {
         var $tr = $(el).closest("tr");
         var val = this._getAttrVal(el);
@@ -1139,7 +1154,7 @@ var SurveyBuild = {
             $tr.find(".adv_first_msg").attr("disabled", "disabled");
         }
     },
-    //设置rule的提示信息
+    // 设置rule的提示信息
     saveRuleMsg: function(el) {
         var instanceId = $("#question-edit").attr("data_id");
         var rules;
@@ -1160,15 +1175,15 @@ var SurveyBuild = {
         var className = $(el).closest("tr").attr("data-classname");
         rules[className]["messages"] = val;
     },
-    /*控件属性--高级属性--End*/
+    /* 控件属性--高级属性--End */
 
 
-	//推荐信控件选择推荐信模板和推荐信发送邮件模板(中文)
+	// 推荐信控件选择推荐信模板和推荐信发送邮件模板(中文)
 	RulesZHS: function(el) {
-		/*var _url=document.location.href;
-		var _url=_url.split("?");
-		var _url1=_url[1].split("=");
-		var tz_app_id=_url1[1];*/
+		/*
+		 * var _url=document.location.href; var _url=_url.split("?"); var
+		 * _url1=_url[1].split("="); var tz_app_id=_url1[1];
+		 */
 		var tz_app_id=SurveyBuild._tid;
 		var _url=SurveyBuild.tzGeneralURL;
 		var _bmb_xz="";
@@ -1188,16 +1203,16 @@ var SurveyBuild = {
 		});
 		ruleSetPage = '<div class="modal-header"><h4>中文推荐信设置</h4></div>';
 		ruleSetPage += '<div class="modal-line" style="width:330px;"></div>';
-		//是否启用中文推荐信
+		// 是否启用中文推荐信
 		ruleSetPage += '<div class="edit_item_warp" style="margin-top:15px;margin-left:20px;">';
         ruleSetPage += '<input type="checkbox" ' + (_tjx_qy == "Y" ? "checked='checked'" : "") + ' id="zhs_qy" onclick="SurveyBuild.tjx_zhschange()"/> <label for="zhs_qy" style="display:inline;">启用中文推荐信</label>';
         ruleSetPage += '</div>';
-		//选择推荐信报名表
+		// 选择推荐信报名表
 		ruleSetPage += "<div style='height:40px;margin-top:25px;'><div style='width: 120px; margin-left: 20px;'>推荐信模板</div>";
 		ruleSetPage += "<div style='width: 250px; margin-left: 120px; margin-top: -25px;'><select style='width:220px' id='tjx_mb_id' class='selectCss' " + (_tjx_qy != 'Y' ? 'disabled="disabled"' : '') + ">";
 		ruleSetPage += _bmb_xz;
 		ruleSetPage += "</select></div></div>";
-		//选择发送邮件模板
+		// 选择发送邮件模板
 		ruleSetPage += "<div style='height:40px;margin-top:25px;'><div style='width: 120px; margin-left: 20px;'>推荐信邮件模板</div>";
 		ruleSetPage += "<div style='width: 250px; margin-left: 120px; margin-top: -25px;'><select style='width:220px' id='tjx_eamil_id' class='selectCss' " + (_tjx_qy != 'Y' ? 'disabled="disabled"' : '') + ">";
 		ruleSetPage += _email_desc;
@@ -1235,12 +1250,12 @@ var SurveyBuild = {
 			}
 		});
 	},
-	//推荐信控件选择推荐信模板和推荐信发送邮件模板(英文)
+	// 推荐信控件选择推荐信模板和推荐信发送邮件模板(英文)
 	RulesENG: function(el) {
-		/*var _url=document.location.href;
-		var _url=_url.split("?");
-		var _url1=_url[1].split("=");
-		var tz_app_id=_url1[1];*/
+		/*
+		 * var _url=document.location.href; var _url=_url.split("?"); var
+		 * _url1=_url[1].split("="); var tz_app_id=_url1[1];
+		 */
 		var tz_app_id=SurveyBuild._tid;
 		var _url=SurveyBuild.tzGeneralURL;
 		var _bmb_xz="";
@@ -1260,16 +1275,16 @@ var SurveyBuild = {
 		});
 		ruleSetPage = '<div class="modal-header"><h4>英文推荐信设置</h4></div>';
 		ruleSetPage += '<div class="modal-line" style="width:330px;"></div>';
-		//是否启用英文推荐信
+		// 是否启用英文推荐信
 		ruleSetPage += '<div class="edit_item_warp" style="margin-top:15px;margin-left:20px;">';
         ruleSetPage += '<input type="checkbox" ' + (_tjx_qy == "Y" ? "checked='checked'" : "") + ' id="eng_qy" onclick="SurveyBuild.tjx_engchange()"/> <label for="eng_qy" style="display:inline;">启用英文推荐信</label>';
         ruleSetPage += '</div>';
-		//选择推荐信报名表
+		// 选择推荐信报名表
 		ruleSetPage += "<div style='height:40px;margin-top:25px;'><div style='width: 120px; margin-left: 20px;'>推荐信模板</div>";
 		ruleSetPage += "<div style='width: 250px; margin-left: 120px; margin-top: -25px;'><select style='width:220px' id='tjx_mb_id' class='selectCss' " + (_tjx_qy == 'N' ? 'disabled="disabled"' : '') + ">";
 		ruleSetPage += _bmb_xz;
 		ruleSetPage += "</select></div></div>";
-		//选择发送邮件模板
+		// 选择发送邮件模板
 		ruleSetPage += "<div style='height:40px;margin-top:25px;'><div style='width: 120px; margin-left: 20px;'>推荐信邮件模板</div>";
 		ruleSetPage += "<div style='width: 250px; margin-left: 120px; margin-top: -25px;'><select style='width:220px' id='tjx_eamil_id' class='selectCss' " + (_tjx_qy == 'N' ? 'disabled="disabled"' : '') + ">";
 		ruleSetPage += _email_desc;
@@ -1316,13 +1331,13 @@ var SurveyBuild = {
             SurveyBuild.isDHContainer = false;
             SurveyBuild.currentDHID = "";
             /*
-            $("#question-box li.active").removeClass("active");
-            $("#question-box li.grey").removeClass("grey");
-            $("#question-edit").empty();
-            */
+			 * $("#question-box li.active").removeClass("active");
+			 * $("#question-box li.grey").removeClass("grey");
+			 * $("#question-edit").empty();
+			 */
         }
 
-        this._count == 0 && $("#question-new").hide(); //第一次添加信息项时，隐藏提示信息
+        this._count == 0 && $("#question-new").hide(); // 第一次添加信息项时，隐藏提示信息
         SurveyBuild.isDHContainer != true && ++this._count;
         var callback = function(f) {
             var d = "A" + ( + new Date());
@@ -1343,7 +1358,7 @@ var SurveyBuild = {
             if (!component["itemId"]) {
                 component["itemId"] = "TZ_" + (SurveyBuild.isDHContainer ? me._items[SurveyBuild.currentDHID]["itemId"] + "_" + _childrenLen: me._count);
             }
-            //常用控件默认包含的校验规则
+            // 常用控件默认包含的校验规则
             var _getRules = function(instanceId) {
                 var rules = [];
                 var i = $.inArray(component["classname"], me._componentIndex);
@@ -1368,7 +1383,7 @@ var SurveyBuild = {
                         }
                     }
                 });
-            //把校验规则Copy到实例对象中
+            // 把校验规则Copy到实例对象中
             component["rules"] = cloneObj(rules);
             if (SurveyBuild.isDHContainer) {
                 me._items[SurveyBuild.currentDHID]["children"][d] = component;
@@ -1436,7 +1451,7 @@ var SurveyBuild = {
                 axis: "y",
                 opacity: 0.6,
                 revert: true,
-                //connectWith: '.DHContainer',
+                // connectWith: '.DHContainer',
                 receive: function(event, ui) {
                     SurveyBuild.isDHForTwo = true;
                     SurveyBuild.isDHContainer = true;
@@ -1468,15 +1483,15 @@ var SurveyBuild = {
         }
         $("#href2").click();
         var e = $(f);
-        //点击多行容器子项的时候置为Y
+        // 点击多行容器子项的时候置为Y
         var dhbz = e.closest("ul").attr("data-dhbz") == "Y" ? true: false;
         $("#question-box .grey").removeClass("grey");
         if (dhbz) {
-            //容器置灰
+            // 容器置灰
             e.parents("li").addClass("grey");
-            //设置为编辑多行容器模式
+            // 设置为编辑多行容器模式
             SurveyBuild.isDHContainer = true;
-            //设置当前多行容器ID
+            // 设置当前多行容器ID
             SurveyBuild.currentDHID = e.parents("li").attr("data_id");
         } else {
             SurveyBuild.isDHContainer = false;
@@ -1519,7 +1534,7 @@ var SurveyBuild = {
                 $(SurveyBuild._html(c)).find(".question-answer").replaceAll("#q" + c + " .question-answer")
             }
         });
-        /*拖拽元素，更新orderby的值*/
+        /* 拖拽元素，更新orderby的值 */
         $("#option-box tbody").sortable({
             cursor: "move",
             items: "tr",
@@ -1541,7 +1556,7 @@ var SurveyBuild = {
             }
         })
     },
-    /*控件属性*/
+    /* 控件属性 */
     _edit: function(d) {
         var data = this._items[d];
         if (SurveyBuild.isDHContainer) {
@@ -1570,7 +1585,7 @@ var SurveyBuild = {
         nt += '</div>';
         nt += '<textarea id="'+ data.instanceId +'" class="question-text" onkeyup="SurveyBuild.saveAttr(this,\'title\')">' + data.title + '</textarea>';
 
-        //e = (data["_CommonField"] == "Y" ? e: "") + data._edit(data);
+        // e = (data["_CommonField"] == "Y" ? e: "") + data._edit(data);
         e = e + (data["classname"] == "Separator" ? "" : nt) +data._edit(data);
         e += '<div class="edit_item_warp" style="text-align: right;">';
         e += '  <button class="btn btn-small" onclick="SurveyBuild.remove(event,\'' + d + '\')"><i class="icon-trash"></i>删除</button>';
@@ -1579,8 +1594,8 @@ var SurveyBuild = {
     },
     copy: function(e,g) {
         this.is_edit = true;
-		//var $currObj = $(event.target);
-		e = e||event; //火狐直接用event报错
+		// var $currObj = $(event.target);
+		e = e||event; // 火狐直接用event报错
         var $currObj = $(e.target);
         data = {};
         me = this;
@@ -1639,7 +1654,7 @@ var SurveyBuild = {
             if (SurveyBuild.isDHContainer || dhbz) {
                 $("#question-box li[data_id='" + target + "']").remove();
                 delete this._items[SurveyBuild.currentDHID]["children"][target];
-                //$("#question-edit").empty();
+                // $("#question-edit").empty();
 				target == $("#question-edit").attr("data_id") && $("#question-edit").empty();
                 this.dhSort(dhObj);
             }else if (this._items.hasOwnProperty(target)) {
@@ -1706,21 +1721,24 @@ var SurveyBuild = {
                 _style = "border:1px solid #eee;"
             }
         }
-		//固定多行容器，工作经历、教育经历
+		// 固定多行容器，工作经历、教育经历
 		if (_currentData["fixedContainer"] && _currentData["fixedContainer"] == "Y"){
 			_style = "";
 		}
-        //李丹丹修改，如果是分页符，则绑定和页签一样的事件
-        //if (_currentData.classname == "Page") {
-        //    c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild._editTabs();return false;" style="' + _style + '">';
-        //} else{
-        //    c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
-        //}
+        // 李丹丹修改，如果是分页符，则绑定和页签一样的事件
+        // if (_currentData.classname == "Page") {
+        // c = '<li data_id="' + d + '" id="q' + d + '"
+		// onclick="SurveyBuild._editTabs();return false;" style="' + _style +
+		// '">';
+        // } else{
+        // c = '<li data_id="' + d + '" id="q' + d + '"
+		// onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
+        // }
         c = '<li data_id="' + d + '" id="q' + d + '" onclick="SurveyBuild.edit(this,event)" style="' + _style + '">';
         if (_currentData["_CommonField"] == "Y") {
             c += '<div class="question-title"><b class="question-code">' + _currentData.orderby + '.</b><div class="question-question">' + _currentData.title + '</div></div>';
         }
-        //通过实例对象中的类名，找到类并调用_gethtml方法
+        // 通过实例对象中的类名，找到类并调用_gethtml方法
         c += _currentData._getHtml(_currentData) || "";
         c += '<div class="question-action"><a class="build-icon-minus" title="删除" onclick="return SurveyBuild.remove(event,\'' + d + '\')"></a><a class="build-icon-copy" title="复制" onclick="SurveyBuild.copy(event,\'' + d + '\')"></a><i style="display:none;" class="build-icon-arrow"></i></div></li>'
         if (_style) {
@@ -1739,8 +1757,9 @@ var SurveyBuild = {
         this.is_edit = true;
         var b = "K_" + a;
         $.fancybox.open({
-            //解决多行容器中的文字说明，在多行容器中的文字说明控件内容无法通过SurveyBuild._items[a].wzsm获取；
-            //content: '<textarea id="' + b + '">' + SurveyBuild._items[a].wzsm + "</textarea>",
+            // 解决多行容器中的文字说明，在多行容器中的文字说明控件内容无法通过SurveyBuild._items[a].wzsm获取；
+            // content: '<textarea id="' + b + '">' + SurveyBuild._items[a].wzsm
+			// + "</textarea>",
             content: '<textarea id="' + b + '">' + $("#" + a).val() + "</textarea>",
             minWidth: 1002,
             minHeight: 482,
@@ -1755,11 +1774,11 @@ var SurveyBuild = {
             },
             beforeClose: function() {
                 var c = editor.html();
-                //SurveyBuild._items[a].edit = 1;
-                //SurveyBuild._items[a].wzsm = c;
+                // SurveyBuild._items[a].edit = 1;
+                // SurveyBuild._items[a].wzsm = c;
                 $("#" + a).val(c);
                 $("#" + a).trigger("onkeyup");
-                //$("#q" + a).find(".question-answer").html(c);
+                // $("#q" + a).find(".question-answer").html(c);
                 KindEditor.remove("#" + b)
             }
         })
@@ -1768,9 +1787,10 @@ var SurveyBuild = {
         this.is_edit = true;
         var b = "K_" + a;
         $.fancybox.open({
-            //解决多行容器中的文字说明，在多行容器中的文字说明控件内容无法通过SurveyBuild._items[a].wzsm获取；
+            // 解决多行容器中的文字说明，在多行容器中的文字说明控件内容无法通过SurveyBuild._items[a].wzsm获取；
             content: '<textarea id="' + b + '">' + SurveyBuild._items[a].title + "</textarea>",
-            //content: '<textarea id="' + b + '">' + $("#" + a).val() + "</textarea>",
+            // content: '<textarea id="' + b + '">' + $("#" + a).val() +
+			// "</textarea>",
             minWidth: 482,
             minHeight: 242,
             beforeShow: function() {
@@ -2096,7 +2116,7 @@ var SurveyBuild = {
         a += '<div id="modal-question-option" class="modal-body">';
         a += '	<textarea id="' + e + '-batch" class="option-text">';
 
-        /*option列表*/
+        /* option列表 */
         var c = data.option;
         for (var b in c) {
             a += c[b]["code"] + "," + c[b]["txt"] + "\n"
@@ -2213,7 +2233,7 @@ var SurveyBuild = {
         } else {
             data = this._items[k];
         }
-        //生成唯一编号code
+        // 生成唯一编号code
         for (var e in data.option) {
             if ($.isNumeric(data.option[e].code)) {
                 var j = 1 * data.option[e].code;
@@ -2260,7 +2280,7 @@ var SurveyBuild = {
         $(this._html(k)).find(".question-answer").replaceAll("#question-box li[data_id='" + k + "'] .question-answer");
     },
 		
-	//add by kwl 20150420
+	// add by kwl 20150420
 	plusOption_radio: function(f) {
         this.is_edit = true;
         var m = $(f).parents("tr").attr("data-id").split("-"),
@@ -2277,7 +2297,7 @@ var SurveyBuild = {
             data = this._items[k];
         }
 
-        //生成唯一编号code
+        // 生成唯一编号code
         for (var e in data.option) {
             if ($.isNumeric(data.option[e].code)) {
                 var j = 1 * data.option[e].code;
@@ -2309,15 +2329,15 @@ var SurveyBuild = {
         var d = $("#build-right").height();
         var tr = "";
         tr += '<tr class="read-radio" data-id="' + k + '-' + n + '">';
-        //默认
+        // 默认
         tr += '<td><input type="checkbox" onchange="$(\'.defaultval\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'defaultval\')" class="defaultval" value="1"></td>';
-        //其他
+        // 其他
         tr += '<td><input type="checkbox" class="other" value="" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" onchange="$(\'.other\').not(this).prop(\'checked\',false);SurveyBuild.saveLevel1Attr(this,\'other\')"></td>';
-        //值
+        // 值
         tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'code\')" value="' + a + '" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="ocode"></td>';
-        //描述
+        // 描述
         tr += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr(this,\'txt\')" value="" oncontextmenu="return false;" ondragenter="return false" class="option-txt"></td>';
-        //操作
+        // 操作
         tr += '<td><a onclick="SurveyBuild.plusOption_radio(this);return false;" class="text-success" href="javascript:void(0);"><i class="icon-plus-sign"></i> </a><a onclick="SurveyBuild.minusOption(this);return false;" class="text-warning" href="javascript:void(0);"><i class="icon-minus-sign"></i> </a><a href="javascript:void(0);" class="text-info option-move"><i class="icon-move"></i> </a></td>';
         tr += '</tr>';
 		
@@ -2348,7 +2368,7 @@ var SurveyBuild = {
             }
         }
     },
-    /*修改问题后，自动保存*/
+    /* 修改问题后，自动保存 */
     saveQuestion: function(a) {
         this.is_edit = true;
         var c = $(a).attr("id"),
@@ -2465,18 +2485,51 @@ var SurveyBuild = {
 				return;
 			}
 		}
-        var a = {},b = true,d = "Page",c = 0,pageno = 0;
+        var a = {},b = true,d = "Page",c = 0,pageno = 1;// 页号从1 开始
+        
+        // 标记 顶层页 真正的页 不是页
+        var topPage=false,Page=false,noPage=false;
+        
         $("#question-box>li").each(function(f) {
+        	topPage=false,Page=false,noPage=false;
+        	
             var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
-            e == "Page" && ++c && ++pageno;
-            SurveyBuild._items[h]["pageno"] = pageno;
-            if (d == "Page" && e == "Page" && c != 1) {
-                SurveyBuild.fail($(this), "第" + c + "页不能没有问题", "top");
-                b = false;
-                return false
+            
+            if (e !="Page") {
+            	noPage = true;
             } else {
+            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
+            	if (variable2 !='') {
+            		Page = true;
+            	} else {
+            		topPage = true;
+            	}
+            }
+            // 顶级的页，不算pageno，固定写死为0
+            if (topPage) {
+            	SurveyBuild._items[h]["pageno"] = 0;
+            } else {
+            	SurveyBuild._items[h]["pageno"] = pageno;
+            }
+            
+            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计
+            if (noPage) {
+            	c =c +1;
+            }
+            
+            // modity by caoy 顶级的页，不需要做这个判断
+            if (Page && c == 0) {
+    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
+    			b = false;
+    			return false
+            } else {
+            	// 遇到Page pageno累加1 c重新计数
+                if (Page) {
+                	pageno = pageno+1;
+                	c = 0;
+                }
                 d = e;
-                /*如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序）*/
+                /* 如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序） */
                 if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
                     var children = {};
                      $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
@@ -2513,7 +2566,7 @@ var SurveyBuild = {
                         SurveyBuild.is_edit = false;
                         var e = $("#question-box>li.active").index() - 1;
                         if (isPreview) {
-							 /*判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html*/
+							 /* 判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html */
 							var tz_app_id=SurveyBuild._tid;
 							$.ajax({
 								type: "post",
@@ -2525,10 +2578,10 @@ var SurveyBuild = {
 									if(result.comContent.total == "1"){
 										var siteObj = siteArr[0];
 										var siteId = siteObj.siteId;
-										//弹出页面
+										// 弹出页面
 										SurveyBuild.preiewAppForm(siteId);
 									}else{
-										//弹出选择框
+										// 弹出选择框
 										var _DynamicSiteHtml;
 										var pageHtml = "";
 										 pageHtml += '<div class="modal-header">';
@@ -2596,7 +2649,7 @@ var SurveyBuild = {
 					axis: "y",
 					opacity: 0.6,
 					revert: true,
-					//connectWith: '.DHContainer',
+					// connectWith: '.DHContainer',
 					receive: function(event, ui) {
 						SurveyBuild.isDHForTwo = true;
 						SurveyBuild.isDHContainer = true;
@@ -2625,10 +2678,10 @@ var SurveyBuild = {
 					SurveyBuild.isDHForTwo = false;
 					$("#question-box>li").each(function(e) {
 						$(".draggable-holder").remove();
-						//if ($(this).attr("data-classname")) {
-						//	$(this).remove();
-						//	return
-						//}
+						// if ($(this).attr("data-classname")) {
+						// $(this).remove();
+						// return
+						// }
 					});
 				}
 			},
@@ -2678,7 +2731,7 @@ var SurveyBuild = {
 			axis: "y",
 			opacity: 0.6,
 			revert: true,
-			//connectWith: '.DHContainer',
+			// connectWith: '.DHContainer',
 			update: function(c, b) {
 				var dhObj = $(this).closest(".DHContainer");
 				SurveyBuild.dhSort(dhObj);
@@ -2693,7 +2746,7 @@ var SurveyBuild = {
             var classname = params[0];
             var data = params[1];
             var d = data["instanceId"];
-            //data转换成项对应的对象
+            // data转换成项对应的对象
             var component = me._items[d] = new me.comClass[classname](data);
             if (component.isDoubleLine == "Y" && component.fixedContainer != "Y") {
                 if (me.is_edit_moda) {
@@ -2713,12 +2766,12 @@ var SurveyBuild = {
             if (me.is_edit_moda) {
                 var $itemHtml = me._html(d);
                 $("#question-box").append($itemHtml);
-                /* 暂时注释 By WRL @2015-08-19
-                var _eventbindEditor = me._items[d]._eventbindEditor;
-                if (_eventbindEditor && typeof _eventbindEditor == "function") {
-                    _eventbindEditor(me._items[d]);
-                }
-                 */
+                /*
+				 * 暂时注释 By WRL @2015-08-19 var _eventbindEditor =
+				 * me._items[d]._eventbindEditor; if (_eventbindEditor && typeof
+				 * _eventbindEditor == "function") {
+				 * _eventbindEditor(me._items[d]); }
+				 */
             } else {
                 var _c = me._items[d]._getHtml(me._items[d], true),
                     data = me._items[d],_co = "";
@@ -2749,14 +2802,14 @@ var SurveyBuild = {
                             });
                     }
                 }
-                //是否可以继续添加
+                // 是否可以继续添加
                 if (data.children && data.maxLines >= 1 && data.maxLines == data.children.length) {
                     $(_c).find(".addnextbtn").hide();
                 }
             }
         };
 
-        /*加载信息项对应的JavaScript文件以及事件绑定 Begin*/
+        /* 加载信息项对应的JavaScript文件以及事件绑定 Begin */
         $.each(this._items, function (c) {
             ++me._count;
             d = true;
@@ -2779,9 +2832,9 @@ var SurveyBuild = {
             }
             me.loadScript(item["classname"], callback, [item["classname"], item]);
 
-            //预览模式、有校验规则、非单行组合框
+            // 预览模式、有校验规则、非单行组合框
             if (!me.is_edit_moda && item.hasOwnProperty("rules") && item.isSingleLine != "Y") {
-                //事件绑定
+                // 事件绑定
                 $.each(item["rules"], function (classname, classObj) {
                     if ($.inArray(classname, me._baseRules) == -1 && item["rules"][classname]["isEnable"] == "Y") {
                         var _ruleClass = ValidationRules[classname];
@@ -2814,7 +2867,7 @@ var SurveyBuild = {
                 if (ValidationRules && ValidationRules[item["requireJygz"]] && ValidationRules[item["requireJygz"]]._Validator && item["isRequire"] == "Y") {
                     ValidationRules[item["requireJygz"]]._Validator(item["itemId"], item["children"])
                 }
-                //多行容器中的校验
+                // 多行容器中的校验
             } else if (!me.is_edit_moda && item.isDoubleLine == "Y") {
                 $.each(item.children, function (i, rec) {
                     SurveyBuild._setValidator(rec);
@@ -2829,7 +2882,7 @@ var SurveyBuild = {
 
                         if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
 
-                            //事件绑定
+                            // 事件绑定
                             $.each(obj["rules"],function(classname, classObj) {
                                 if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
                                     var _ruleClass = ValidationRules[classname];
@@ -2852,7 +2905,7 @@ var SurveyBuild = {
                 }
             }
         });
-        /*加载信息项对应的JavaScript文件以及事件绑定 End*/
+        /* 加载信息项对应的JavaScript文件以及事件绑定 End */
 
         if (!d && me.is_edit_moda) {
             $("#question-new").show()
@@ -2860,10 +2913,10 @@ var SurveyBuild = {
 
         }
         if (me.is_edit_moda) this._initTab();
-        /*加载完成后默认第一个问题 By  WRL 2015-08-21 BEGIN*/
+        /* 加载完成后默认第一个问题 By WRL 2015-08-21 BEGIN */
         var firstChild = $("#question-box>li").eq(0);
         firstChild.click();
-        /*加载完成后默认第一个问题 By  WRL 2015-08-21 END*/
+        /* 加载完成后默认第一个问题 By WRL 2015-08-21 END */
     },
 	_initAssociatedShowHide: function(b) {
         var a = "",
@@ -2884,7 +2937,7 @@ var SurveyBuild = {
                 $.each(children1,function(insid, obj) {
                     if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
 						
-                        //事件绑定
+                        // 事件绑定
                         $.each(obj["rules"],function(classname, classObj) {
                             if(classname=="AssociatedValidator"){
 								if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
@@ -2911,9 +2964,9 @@ var SurveyBuild = {
                 });
                 }
             }else{
-                //预览模式、有校验规则、非单行组合框
+                // 预览模式、有校验规则、非单行组合框
                 if (!me.is_edit_moda && item.hasOwnProperty("rules") && item.isSingleLine != "Y") {
-                    //事件绑定
+                    // 事件绑定
                     $.each(item["rules"],function(classname, classObj) {
                         if(classname=="AssociatedValidator"){
                             if ($.inArray(classname, me._baseRules) == -1 && item["rules"][classname]["isEnable"] == "Y") {
@@ -3031,24 +3084,24 @@ var SurveyBuild = {
     _error: function(a) {
         alert(a)
     },
-    //多行容器添加行
+    // 多行容器添加行
     _addOneRec: function(children, i) {
-        var _co = "",del = "",lsep = ""; //容器行信息、容器行删除按钮、行与行直接的间隔
-        //容器中行删除按钮源码
+        var _co = "",del = "",lsep = ""; // 容器行信息、容器行删除按钮、行与行直接的间隔
+        // 容器中行删除按钮源码
         del += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
         del += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
         del += '</div>';
 
-        //容器中行与行直接的间隔
+        // 容器中行与行直接的间隔
         lsep += '<div class="main_inner_content_top"></div>';
         lsep += '<div class="padding_div"></div>';
         lsep += '<div class="main_inner_content_foot"></div>';
 
-        /*容器行信息 begin*/
+        /* 容器行信息 begin */
         _co += "<div class='main_inner_content_para'>";
 
         if (i > 0) {
-            //在第N行与N+1行直接添加间隔信息（首行除外）
+            // 在第N行与N+1行直接添加间隔信息（首行除外）
             _co += lsep;
         }
 		var lineno = 0;
@@ -3065,11 +3118,11 @@ var SurveyBuild = {
 				}
         });
         _co += "</div>";
-        /*容器行信息 end*/
+        /* 容器行信息 end */
 
         if (i > 0) {
-            //为除第一行之外的行添加删除功能
-            //将删除按钮添加在行信息中，首个信息项的后面（该信息项必须包含main_inner_content_info_autoheight）
+            // 为除第一行之外的行添加删除功能
+            // 将删除按钮添加在行信息中，首个信息项的后面（该信息项必须包含main_inner_content_info_autoheight）
             _co = $(_co).find(".main_inner_content_info_autoheight").eq(0).append(del).closest(".main_inner_content_para").get(0).outerHTML;
         }
         return _co;
@@ -3084,23 +3137,23 @@ var SurveyBuild = {
         var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
 		var defaultLines = this._items[instanceId]["defaultLines"];
         var maxLines = this._items[instanceId]["maxLines"], me = this;
-        var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器
+        var isFixedCon = this._items[instanceId].fixedContainer;    // 是否为固定多行容器
         var _children = this._items[instanceId]["children"], _fc = cloneObj(_children[0]);
 
         var suffix = this._items[dhid]["linesNo"].shift();
 
-        //初始化多行容器的行信息data
+        // 初始化多行容器的行信息data
         $.each(_fc,function(ins, obj) {
             _fc[ins]["value"] = "";
 
             if (obj.isSingleLine == "Y") {
                 $.each(obj.children,function(i, ch) {
                     ch["value"] = "";
-                    //ch["itemId"] += "_" + _children.length;
+                    // ch["itemId"] += "_" + _children.length;
                     ch["itemId"] += "_" + suffix;
                 });
             }else{
-                //_fc[ins]["itemId"] += "_" + _children.length;
+                // _fc[ins]["itemId"] += "_" + _children.length;
                 _fc[ins]["itemId"] += "_" + suffix;
             }
             if (!isFixedCon || isFixedCon != "Y"){
@@ -3116,10 +3169,10 @@ var SurveyBuild = {
         });
         _children.push(_fc);
         if (isFixedCon && isFixedCon == "Y"){
-            //处理固定多行容器
+            // 处理固定多行容器
             $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length)).insertBefore($(btnEl).parents(".main_inner_content_info"));
 
-            /*行信息中的Select格式化*/
+            /* 行信息中的Select格式化 */
             var selectObj = $(this._items[instanceId]._getHtml(this._items[instanceId],true)).find("select");
             $.each(selectObj,function(i,sObj){
                 $("#" + $(sObj).attr("id")).chosen();
@@ -3130,57 +3183,49 @@ var SurveyBuild = {
         } else {
             $(this._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
 
-            /*行信息中的Select格式化*/
+            /* 行信息中的Select格式化 */
             var selectObj = $(this._addOneRec(_children, _children.length - 1)).find("select");
             $.each(selectObj,function(i,sObj){
                 $("#" + $(sObj).attr("id")).chosen();
             });
         }
-		/*新增一行动态效果*/
+		/* 新增一行动态效果 */
 		var $newRow = $(btnEl).parents(".main_inner_content_info").prev(".main_inner_content_para");
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 		
 		
-        //行数等于最大行数时，隐藏“Add One +”按钮
+        // 行数等于最大行数时，隐藏“Add One +”按钮
         if (_children.length == maxLines) {
             $(btnEl).hide();
         }
 
-        /*子信息项事件绑定*/
+        /* 子信息项事件绑定 */
         $.each(_children[_children.length - 1],function(d, obj) {
             if (obj._eventbind && typeof obj._eventbind == "function") {
                 obj._eventbind(obj);
             }
             /*
-            if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
-                //事件绑定
-                $.each(obj["rules"],function(classname, classObj) {
-                    if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
-
-                        var _ruleClass = ValidationRules[classname];
-                        if (_ruleClass && _ruleClass._eventList && $.trim(classObj["messages"])!="") {
-                            if (obj["classname"] == "CheckBox") {
-                                $inputObject = $("#" + obj["itemId"]);
-                                $.each(_ruleClass._eventList, function (eventname, fun) {
-                                    $inputObject.bind(eventname, function () {
-                                        if (fun && typeof fun == "function") {
-                                            fun(obj["itemId"], classObj["messages"], classObj["params"] || {}, obj);
-                                        }
-                                    });
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-            */
+			 * if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
+			 * //事件绑定 $.each(obj["rules"],function(classname, classObj) { if
+			 * ($.inArray(classname, me._baseRules) == -1 &&
+			 * obj["rules"][classname]["isEnable"] == "Y") {
+			 * 
+			 * var _ruleClass = ValidationRules[classname]; if (_ruleClass &&
+			 * _ruleClass._eventList && $.trim(classObj["messages"])!="") { if
+			 * (obj["classname"] == "CheckBox") { $inputObject = $("#" +
+			 * obj["itemId"]); $.each(_ruleClass._eventList, function
+			 * (eventname, fun) { $inputObject.bind(eventname, function () { if
+			 * (fun && typeof fun == "function") { fun(obj["itemId"],
+			 * classObj["messages"], classObj["params"] || {}, obj); } }); }); } } }
+			 * }); }
+			 */
         });
         this._setValidator(_fc);
 
         $.each(_fc,function(insid, obj) {
             if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
 
-                //事件绑定
+                // 事件绑定
                 $.each(obj["rules"],function(classname, classObj) {
                     if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
 
@@ -3205,7 +3250,7 @@ var SurveyBuild = {
 	showTjx: function(btnEl, instanceId) {
         var max = this._items[instanceId]["maxLines"],
         me = this;
-		var isFixedCon = this._items[instanceId].fixedContainer; //是否为固定多行
+		var isFixedCon = this._items[instanceId].fixedContainer; // 是否为固定多行
         var _children = this._items[instanceId]["children"],
         _fc = cloneObj(_children[0]);
         $.each(_fc,function(ins, obj) {
@@ -3222,20 +3267,17 @@ var SurveyBuild = {
         });
         _children.push(_fc);
 		/*
-
-        $.each(_children[_children.length - 1],function(d, obj) {
-            if (obj.classname == "Select") {
-                $("#" + obj.itemId).chosen()
-            }
-            if (obj._eventbind && typeof obj._eventbind == "function") {
-                obj._eventbind(obj);
-            }
-        });*/
-        //this._setValidator(_fc);
+		 * 
+		 * $.each(_children[_children.length - 1],function(d, obj) { if
+		 * (obj.classname == "Select") { $("#" + obj.itemId).chosen() } if
+		 * (obj._eventbind && typeof obj._eventbind == "function") {
+		 * obj._eventbind(obj); } });
+		 */
+        // this._setValidator(_fc);
 
     },
     deleteFun: function(el) {
-        //if (confirm("是否删除该条信息？")) {
+        // if (confirm("是否删除该条信息？")) {
             var index = $(el).closest(".main_inner_content_para").index();
             var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
             if (index > 0) {
@@ -3268,9 +3310,9 @@ var SurveyBuild = {
                     }
                 })
             }
-            //delete SurveyBuild._items[instanceId]["children"][index];
+            // delete SurveyBuild._items[instanceId]["children"][index];
 
-        //}
+        // }
     },
     showMsg: function(obj, e) {
 
@@ -3292,8 +3334,8 @@ var SurveyBuild = {
         e.preventDefault();
         var modalLocation = $(obj).attr('data-reveal-id');
         $(obj).attr("data-for-x", mX + "px");
-	$(obj).attr("data-for-y", mY + "px");
-	$('#' + modalLocation).reveal($(obj).data());
+        $(obj).attr("data-for-y", mY + "px");
+        $('#' + modalLocation).reveal($(obj).data());
     },
     _pointerX: function(event) {
         var docElement = document.documentElement,
@@ -3339,7 +3381,7 @@ var SurveyBuild = {
         }
         return ret;
     },
-    /*模板设置---高级设置 BEGIN*/
+    /* 模板设置---高级设置 BEGIN */
     EventSet: function(el) {
 
 		var mainTplArr;
@@ -3356,8 +3398,8 @@ var SurveyBuild = {
                 url:SurveyBuild.tzGeneralURL,
                 success: function(f) {
                     if(f.state.errcode == "0"){
-                        //data.option = f.comContent;
-						//alert(f.comContent);
+                        // data.option = f.comContent;
+						// alert(f.comContent);
 						mainTplArr = f.comContent;
 						this.objthis._mainTplArr = f.comContent;
                     }
@@ -3366,7 +3408,7 @@ var SurveyBuild = {
 		}else{
 			mainTplArr = this._mainTplArr;
 		}
-	    /*邮件模板Begin*/
+	    /* 邮件模板Begin */
         var mailTpl = [];
         var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"MAILTPL"}}';
         $.ajax({
@@ -3381,7 +3423,7 @@ var SurveyBuild = {
                 }
             }
         });
-        /*邮件模板End*/
+        /* 邮件模板End */
         var eventSetPage = "";
 
         eventSetPage += '<div class="modal-header"><h4>高级设置</h4></div><div class="modal-line"></div><div class="modal-body" id="modal-question-advanced">';
@@ -3422,7 +3464,7 @@ var SurveyBuild = {
         eventSetPage += '<fieldset>';
         eventSetPage += '<div class="edit_item_warp"><span class="edit_item_label">跳转方式：</span><select id="targetType" class="edit_boxSize elewidth-select"><option value="IFRM" ' + (this._data.targetType == "IFRM" ? " selected=\'selected\'": "") + '>当前Iframe</option><option value="TOP" ' + (this._data.targetType == "TOP" ? " selected=\'selected\'": "") + '>顶层窗口</option></select></div>';
         eventSetPage += '<div class="edit_item_warp"><span class="edit_item_label">Redirect URL：</span><textarea id="redirectUrl" rows="3" class="elewidth">' + this._data.redirectUrl + '</textarea></div>';
-		/*附属模版*/
+		/* 附属模版 */
 		eventSetPage += '<div class="edit_item_warp" style = "padding-top:5px"><input style="margin:0 2px 2px 0;margin-bottom:4px\\0;" id="isAttachedTemplate" name="isAttachedTemplate" type="checkbox" onchange = "SurveyBuild.saveAttr(this,\'isAttachedTemplate\')" ' + (this._data.isAttachedTemplate == "Y" ? "checked='checked'" : "") + '/><span class="edit_item_label"><label for="isAttachedTemplate">附属模版</label></span>';
 
 		var showMainTpl = 'style="display:none;"';
@@ -3438,7 +3480,7 @@ var SurveyBuild = {
 		eventSetPage += '</select>';
 		eventSetPage += '</div>';
 
-        /*提交后发送邮件 Begin*/
+        /* 提交后发送邮件 Begin */
         eventSetPage += '<div style="padding-top: 5px" class="edit_item_warp">';
         eventSetPage += '   <input type="checkbox" ' + (this._data.isSendMail == "Y" ? "checked='checked'" : "") + ' name="isSendMail" id="isSendMail" style="margin:0 2px 2px 0;margin-bottom:4px\\0;">';
         eventSetPage += '   <span class="edit_item_label"><label for="isSendMail">提交后发送邮件</label></span>';
@@ -3449,15 +3491,15 @@ var SurveyBuild = {
         }
         eventSetPage += '   </select>';
         eventSetPage += '</div>';
-        /*提交后发送邮件 End*/
-		/*最后页是否只显示提交按钮 Begin*/
+        /* 提交后发送邮件 End */
+		/* 最后页是否只显示提交按钮 Begin */
 		console.log("Hell0");
         eventSetPage += '<div style="padding-top: 5px" class="edit_item_warp">';
         eventSetPage += '   <input type="checkbox" ' + (this._data.showSubmitOnly == "Y" ? "checked='checked'" : "") + ' name="showSubmitOnly" id="showSubmitOnly" style="margin:0 2px 2px 0;margin-bottom:4px\\0;">';
         eventSetPage += '   <span class="edit_item_label" style="width:400px"><label for="showSubmitOnly">最后页是否只显示提交按钮</label></span>';
         eventSetPage += '</div>';
 		console.log("world");
-        /*最后页是否只显示提交按钮 End*/
+        /* 最后页是否只显示提交按钮 End */
 
         eventSetPage += '</fieldset>';
         eventSetPage += '</fieldset>';
@@ -3474,7 +3516,7 @@ var SurveyBuild = {
         data.redirectUrl = $("#redirectUrl").val();
 		data.mainTemplate = $("#isAttachedTemplate").prop("checked") ? $("#mainTemplate").val() : "";
 		data.isAttachedTemplate = $("#isAttachedTemplate").prop("checked") ? "Y": "N";
-        /*提交后发送邮件、邮件模板*/
+        /* 提交后发送邮件、邮件模板 */
         data.mailTemplate = $("#mailTemplate").val();
         data.isSendMail = $("#isSendMail").prop("checked") ? "Y": "N";
 		
@@ -3490,7 +3532,7 @@ var SurveyBuild = {
 
         $.fancybox.close()
     },
-    /*添加事件*/
+    /* 添加事件 */
     plusEvent: function(f) {
         this.is_edit = true;
         var m = $(f).parents("tr").attr("data-id"),
@@ -3536,7 +3578,7 @@ var SurveyBuild = {
         var d = $("#build-right").height();
         $(f).parents("tr").after(eventRow);
     },
-    /*删除事件*/
+    /* 删除事件 */
     minusEvent: function(e) {
         this.is_edit = true;
         if ($(e).parents("tr").siblings().length == 0) {
@@ -3553,9 +3595,9 @@ var SurveyBuild = {
             }
         }
     },
-    /*模板设置---高级设置 END*/
+    /* 模板设置---高级设置 END */
 
-    /*模板设置 BEGIN*/
+    /* 模板设置 BEGIN */
     _htmlSet: function() {
 
         var htmlSet = "",data = this._data;
@@ -3622,70 +3664,85 @@ var SurveyBuild = {
         htmlSet += '	<span class="edit_item_label">Right Width：</span>';
         htmlSet += '	<input type="text" maxlength="11" class="medium" onkeyup="SurveyBuild.save0Attr(this,\'rightWidth\')" value="' + data.rightWidth + '">';
         htmlSet += '</legend></fieldset>';
-        /* 暂时注释 By WRL @2015-10-30 (BUG 1139)
-        htmlSet += '<fieldset><legend>';
-        htmlSet += '	<span class="edit_item_label">标签位置：</span>';
-        htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'labelPostion\')">';
-        htmlSet += '		<option ' + (data.hasOwnProperty("labelPostion") && data.labelPostion == "LEFT" ? " selected=\'selected\'": "") + ' value="LEFT">左</option>';
-        htmlSet += '		<option ' + (data.hasOwnProperty("labelPostion") && data.labelPostion == "UP" ? " selected=\'selected\'": "") + ' value="UP">上</option>';
-        htmlSet += '	</select>';
-        htmlSet += '</legend></fieldset>';
-
-        htmlSet += '<fieldset><legend>';
-        htmlSet += '	<span class="edit_item_label">提示方式：</span>';
-        htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'showType\')">';
-        htmlSet += '		<option ' + (data.hasOwnProperty("showType") && data.showType == "POP" ? " selected=\'selected\'": "") + ' value="POP">弹出框</option>';
-        htmlSet += '		<option value="VAL" ' + (data.hasOwnProperty("showType") && data.showType == "VAL" ? " selected=\'selected\'": "") + '>Validate</option>';
-        htmlSet += '	</select>';
-        htmlSet += '</legend></fieldset>';
-
-        
-        htmlSet += '<div class="header-title">';
-        htmlSet += '	<span class="title"><i class="icon-cog"></i> 打印设置</span>';
-        htmlSet += '</div>';
-
-        htmlSet += '<div class="groupbox">';
-		
-        htmlSet += '<div class="edit_item_warp">';
-        htmlSet += '	<span class="edit_item_label">第一步：</span>';
-        htmlSet += '	<div class="edit_item_right">';
-        htmlSet += '		<div style="display: inherit;" onclick="SurveyBuild.expSource();">';
-        htmlSet += '			<div class="bt_blue">导出报名表元数据</div>';
-        htmlSet += '		</div>';
-        htmlSet += '	</div>';
-        htmlSet += '	<a style="display:none" data-animation="fade" data-reveal-id="myModal" class="big-link" onclick="SurveyBuild.showMsg(this,event)" data-for-id="help_export" href="#">(?)</a>';
-        htmlSet += '</div>';
-
-        htmlSet += '<div class="edit_item_warp">';
-        htmlSet += '	<span class="edit_item_label">第二步：</span>';
-        htmlSet += '	<div class="edit_item_right">';
-        htmlSet += '		<a href="' + TzUniversityContextPath + '/statics/js/tranzvision/appwidget/manual20150914.doc" target="_blank">模板制作</a>';
-        htmlSet += '		<a data-animation="fade" data-reveal-id="myModal" class="big-link" onclick="SurveyBuild.showMsg(this,event)" data-for-id="help_tplMaking" href="#">(?)</a>';
-        htmlSet += '	</div>';
-        htmlSet += '</div>';
-
-        htmlSet += '<div class="edit_item_warp">';
-        htmlSet += '	<form id="form1" name="form1" method="post" action="' + TzUniversityContextPath + '/UpdWebServlet?filePath=appFormPrintTpl" enctype="multipart/form-data">';
-        htmlSet += '		<span class="edit_item_label">第三步：</span>';
-        htmlSet += '		<div class="edit_item_right">';
-        htmlSet += '			<div style="display: inherit;">';
-        htmlSet += '				<input class="right-uplfile" type="file" onchange="SurveyBuild.upload()" class="fileupload" name="websitefile" id="fileupload">';
-        htmlSet += '			</div>';
-        htmlSet += '			<input type="hidden" id="mbaSqXzsmj1" name="mbaSqXzsmj1" value="">';
-        htmlSet += '			<input type="hidden" id="newfilename" name="newfilename">';
-        htmlSet += '			<span style="display:none;" id="sysfilename"></span>';
-        htmlSet += '		</div>';
-        htmlSet += '		<a href="#" data-for-id="help_export" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-        htmlSet += '	</form>';
-        htmlSet += '</div>';
-		
-        htmlSet += '<div id="PrintAttFile" style="margin-bottom:5px;" class="edit_item_warp">';
-        htmlSet += '<a style="color: #0c7bce;" target="_blank" id="downAtt" href="' + (data.hasOwnProperty("sysFileName") && data.hasOwnProperty("accessPath") ? TzUniversityContextPath + data["accessPath"] + "/" + data["sysFileName"]: "javascript:void(0)") + '">' + (data.hasOwnProperty("filename") ? data["filename"]: "") + '</a>';
-        htmlSet += '&nbsp;&nbsp;&nbsp;&nbsp;<a id="deleteAtt" style="' + (data.hasOwnProperty("filename") && data["filename"].length > 1 ? "": "display:none") + '" href="javascript:void(0)" onclick="SurveyBuild.deleteAtt(this)">删除</a>';
-        htmlSet += '</div>';
-		
-        htmlSet += '</div>';
-        */
+        /*
+		 * 暂时注释 By WRL @2015-10-30 (BUG 1139) htmlSet += '<fieldset><legend>';
+		 * htmlSet += ' <span class="edit_item_label">标签位置：</span>'; htmlSet += '
+		 * <select class="edit_boxSize select"
+		 * onchange="SurveyBuild.save0Attr(this,\'labelPostion\')">'; htmlSet += '
+		 * <option ' + (data.hasOwnProperty("labelPostion") && data.labelPostion ==
+		 * "LEFT" ? " selected=\'selected\'": "") + ' value="LEFT">左</option>';
+		 * htmlSet += ' <option ' + (data.hasOwnProperty("labelPostion") &&
+		 * data.labelPostion == "UP" ? " selected=\'selected\'": "") + '
+		 * value="UP">上</option>'; htmlSet += ' </select>'; htmlSet += '</legend></fieldset>';
+		 * 
+		 * htmlSet += '<fieldset><legend>'; htmlSet += ' <span
+		 * class="edit_item_label">提示方式：</span>'; htmlSet += ' <select
+		 * class="edit_boxSize select"
+		 * onchange="SurveyBuild.save0Attr(this,\'showType\')">'; htmlSet += '
+		 * <option ' + (data.hasOwnProperty("showType") && data.showType ==
+		 * "POP" ? " selected=\'selected\'": "") + ' value="POP">弹出框</option>';
+		 * htmlSet += ' <option value="VAL" ' + (data.hasOwnProperty("showType") &&
+		 * data.showType == "VAL" ? " selected=\'selected\'": "") + '>Validate</option>';
+		 * htmlSet += ' </select>'; htmlSet += '</legend></fieldset>';
+		 * 
+		 * 
+		 * htmlSet += '<div class="header-title">'; htmlSet += ' <span
+		 * class="title"><i class="icon-cog"></i> 打印设置</span>'; htmlSet += '</div>';
+		 * 
+		 * htmlSet += '<div class="groupbox">';
+		 * 
+		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <span
+		 * class="edit_item_label">第一步：</span>'; htmlSet += ' <div
+		 * class="edit_item_right">'; htmlSet += ' <div style="display:
+		 * inherit;" onclick="SurveyBuild.expSource();">'; htmlSet += ' <div
+		 * class="bt_blue">导出报名表元数据</div>'; htmlSet += ' </div>'; htmlSet += '
+		 * </div>'; htmlSet += ' <a style="display:none" data-animation="fade"
+		 * data-reveal-id="myModal" class="big-link"
+		 * onclick="SurveyBuild.showMsg(this,event)" data-for-id="help_export"
+		 * href="#">(?)</a>'; htmlSet += '</div>';
+		 * 
+		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <span
+		 * class="edit_item_label">第二步：</span>'; htmlSet += ' <div
+		 * class="edit_item_right">'; htmlSet += ' <a href="' +
+		 * TzUniversityContextPath +
+		 * '/statics/js/tranzvision/appwidget/manual20150914.doc"
+		 * target="_blank">模板制作</a>'; htmlSet += ' <a data-animation="fade"
+		 * data-reveal-id="myModal" class="big-link"
+		 * onclick="SurveyBuild.showMsg(this,event)"
+		 * data-for-id="help_tplMaking" href="#">(?)</a>'; htmlSet += '
+		 * </div>'; htmlSet += '</div>';
+		 * 
+		 * htmlSet += '<div class="edit_item_warp">'; htmlSet += ' <form
+		 * id="form1" name="form1" method="post" action="' +
+		 * TzUniversityContextPath + '/UpdWebServlet?filePath=appFormPrintTpl"
+		 * enctype="multipart/form-data">'; htmlSet += ' <span
+		 * class="edit_item_label">第三步：</span>'; htmlSet += ' <div
+		 * class="edit_item_right">'; htmlSet += ' <div style="display:
+		 * inherit;">'; htmlSet += ' <input class="right-uplfile" type="file"
+		 * onchange="SurveyBuild.upload()" class="fileupload" name="websitefile"
+		 * id="fileupload">'; htmlSet += ' </div>'; htmlSet += ' <input
+		 * type="hidden" id="mbaSqXzsmj1" name="mbaSqXzsmj1" value="">'; htmlSet += '
+		 * <input type="hidden" id="newfilename" name="newfilename">'; htmlSet += '
+		 * <span style="display:none;" id="sysfilename"></span>'; htmlSet += '
+		 * </div>'; htmlSet += ' <a href="#" data-for-id="help_export"
+		 * onclick="SurveyBuild.showMsg(this,event)" class="big-link"
+		 * data-reveal-id="myModal" data-animation="fade">(?)</a>'; htmlSet += '
+		 * </form>'; htmlSet += '</div>';
+		 * 
+		 * htmlSet += '<div id="PrintAttFile" style="margin-bottom:5px;"
+		 * class="edit_item_warp">'; htmlSet += '<a style="color: #0c7bce;"
+		 * target="_blank" id="downAtt" href="' +
+		 * (data.hasOwnProperty("sysFileName") &&
+		 * data.hasOwnProperty("accessPath") ? TzUniversityContextPath +
+		 * data["accessPath"] + "/" + data["sysFileName"]: "javascript:void(0)") +
+		 * '">' + (data.hasOwnProperty("filename") ? data["filename"]: "") + '</a>';
+		 * htmlSet += '&nbsp;&nbsp;&nbsp;&nbsp;<a id="deleteAtt" style="' +
+		 * (data.hasOwnProperty("filename") && data["filename"].length > 1 ? "":
+		 * "display:none") + '" href="javascript:void(0)"
+		 * onclick="SurveyBuild.deleteAtt(this)">删除</a>'; htmlSet += '</div>';
+		 * 
+		 * htmlSet += '</div>';
+		 */
         htmlSet += '<div class="edit_item_warp">';
         htmlSet += '	<a onclick="SurveyBuild.EventSet(this);" href="javascript:void(0);"><i class="icon-cogs"></i> 高级设置</a>';
         htmlSet += '</div>';
@@ -3696,10 +3753,10 @@ var SurveyBuild = {
 
         $("#template-setting-box").html(htmlSet);
     },
-    //导出源数据
+    // 导出源数据
     expSource: function(){
         if(this.is_edit){
-            //noteing("请首先保存当前模板！", 2)
+            // noteing("请首先保存当前模板！", 2)
         }else{
 			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"METADATA","tid":"' + SurveyBuild._tid + '"}}';
 			$.ajax({
@@ -3722,7 +3779,7 @@ var SurveyBuild = {
 			});
         }
     },
-    //上传模板
+    // 上传模板
     upload: function(){
         var myDate = new Date();
         var path = document.getElementById("fileupload").value;
@@ -3735,7 +3792,7 @@ var SurveyBuild = {
         // 文件随机码，做系统文件名用
         var sysfilename = tmp_tp_num + rand;
 
-        //文件后缀
+        // 文件后缀
         var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
         try{
             allsysfilename = sysfilename + "." + sysfileSuffix;
@@ -3766,7 +3823,7 @@ var SurveyBuild = {
             alert(e);
         }
     },
-    //删除附件
+    // 删除附件
     deleteAtt: function(obj){
         this.is_edit = true;
         data = this._data;
@@ -3781,7 +3838,7 @@ var SurveyBuild = {
 
         noteing("已经删除，请保存模板！");
     },
-    /*模板设置 END*/
+    /* 模板设置 END */
     save0Attr: function(el, attrName) {
         if (!el || !attrName) return;
         data = this._data;

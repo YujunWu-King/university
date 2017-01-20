@@ -338,7 +338,8 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 							sendSmsOrMalServiceImpl.send(taskId, "");
 						}else{
 
-							int processInstance = getSeqNum.getSeqNum("PS_TZ_DXYJFSRW_TBL", "PROCESSINSTANCE");
+							//int processInstance = getSeqNum.getSeqNum("PS_TZ_DXYJFSRW_TBL", "PROCESSINSTANCE");
+							int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 							//当前用户;
 							String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 							/*生成运行控制ID*/

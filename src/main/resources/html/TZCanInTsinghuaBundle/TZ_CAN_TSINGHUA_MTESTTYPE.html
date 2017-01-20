@@ -1,0 +1,72 @@
+<head>
+	<title>测测你能否上清华MBA</title>
+	<meta name="viewport" content="width=device-width,inital-scale=1.0,minimum-scale=0.5,maximum-scale=2.0,user-scalable=no">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="%bind(:1)/statics/js/lib/jquery/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		function jy() {
+			var radioSize = $(":radio").size();
+			if(radioSize == 0){
+				$("#msg").html("没有可选择的测试方向！");
+				return false;
+			}
+		
+			var selectType = $('input:radio:checked').val();
+			if (selectType == "" || selectType == null) {
+				$("#msg").html("请选择一个测试方向！");
+			} else {
+				var wj = "A" + $('input:radio:checked').attr("id");
+				$("#" + wj).trigger("click");
+				document.form1.submit();
+			}
+		}
+	</script>
+	<style type="text/css">
+		.button,.button span{-moz-border-radius:.3em;border-radius:.3em}
+		.button span{border-top:1px solid #fff;border-top:1px solid rgba(255,255,255,0.5);display:block;padding:0.5em 2.0em}
+		.button-blue{background:#4477a1;background:-webkit-gradient(linear,left top,left bottom,from(#81a8cb),to(#4477a1));background:-moz-linear-gradient(-90deg,#81a8cb,#4477a1);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#81a8cb',endColorstr='#4477a1')}
+		.button{margin:0px;text-decoration:none;font:bold 1.5em 'Trebuchet MS',Arial,Helvetica;display:inline-block;text-align:center;color:#fff;border:1px solid #9c9c9c;border:1px solid rgba(0,0,0,0.3);text-shadow:0 1px 0 rgba(0,0,0,0.4);box-shadow:0 0 .05em rgba(0,0,0,0.4);-moz-box-shadow:0 0 .05em rgba(0,0,0,0.4);-webkit-box-shadow:0 0 .05em rgba(0,0,0,0.4)}
+		.button:link{font-size:12px;color:white;text-decoration:none}
+		.button:visited{font-size:12px;color:white;text-decoration:none}
+		.button:hover{font-size:12px;color:white;text-decoration:none}
+		.xzwj{text-align:center;margin-top:0px;color:#0c1a6f;font-family:"微软雅黑"}
+		.footer{text-align:center;color:#555}
+	</style>
+</head>
+<body style="width: 100%; background: #f5f5f5; margin-left: 0px; margin-right: 0px; margin-top: 0px;">
+	<table class="xzwj" border="0" align="center" style="margin-left: 0px; border-spacing: 0px;width:100%;">
+		<tr>
+			<td><img src="%bind(:1)/statics/images/cantsinghua/jjs/index_banner.jpg" style="width: 100%;" /></td>
+		</tr>
+		<tr>
+			<td><form name="form1" method="post" action="" target="_top">
+					<table cellspacing="0" cellpadding="0" border="0"
+						style="width:100%;border: 1px solid #9fa0a0; border-radius: 10px; padding: 20px; background: #fff; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="tb">
+						<tr><td><table style="width: 100%">%bind(:2)</table></td></tr>
+						<tr>
+							<td>
+								<table style="width: 100%">
+									<tr><td style="text-align: center;"><span id="msg" style="color: red; font-size: 14px;">&nbsp;</span></td></tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table style="width: 100%">
+									<tr>
+										<td style="text-align: center;">
+											<a class="button button-blue" href="javascript:void(0);" onclick="jy();">
+												<img src="%bind(:1)/statics/images/cantsinghua/jjs/btn_ok.jpg" />
+											</a>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+		<tr><td><div class="footer">版权所有 ：2014&nbsp;清华大学经济管理学院</div></td></tr>
+	</table>
+</body>

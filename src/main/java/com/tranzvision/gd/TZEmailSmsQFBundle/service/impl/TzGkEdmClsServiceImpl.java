@@ -1,7 +1,10 @@
 package com.tranzvision.gd.TZEmailSmsQFBundle.service.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +14,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTxLjAetMapper;
+import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjQfDyTMapper;
+import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjqfTblMapper;
+import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzYjqftxrzTMapper;
+import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet;
+import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs;
+import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl;
+import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /*
  * TZ_GK_EDM_PKG:TZ_GK_EDM_CLS
@@ -34,7 +51,25 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private PsTzYjqftxrzTMapper psTzYjqftxrzTMapper;
+	
+	@Autowired
+	private PsTzDxyjqfTblMapper psTzDxyjqfTblMapper;
+	
+	@Autowired
+	private analysisBounceServiceImpl analysisBounceServiceImpl;
+	
+	@Autowired
+	private PsprcsrqstMapper psprcsrqstMapper;
 
+	@Autowired
+	private TZGDObject tZGDObject;
+	
+	@Autowired
+	private PsTxLjAetMapper psTxLjAetMapper;
+	
 	/* 获取form及grid中的数据 */
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -157,7 +192,7 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 		String zbxPercent = "";
 
 		for (i = 0; i < zhiBiaoMc.length; i++) {
-			double tempPercent = (double) (zhiBiaoPercent.get(i)) * 100d;
+			double tempPercent = Double.parseDouble(String.valueOf(zhiBiaoPercent.get(i))) * 100d;
 			if (tempPercent != (int) tempPercent) {
 				BigDecimal d5 = new BigDecimal(tempPercent);
 				numPercent = d5.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -218,6 +253,19 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 				new Object[] { strEmailID }, "String");
 
 		String strRecPerson = "", strEmail = "";
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(
+				"SELECT TZ_ZY_EMAIL FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID IN (SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJFSRW_TBL A WHERE A.TZ_MLSM_QFPC_ID=?)", new Object[] { strEmailID });
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				strEmail = String.valueOf(list.get(i).get("TZ_ZY_EMAIL"));
+				if ("".equals(strRecPerson)) {
+					strRecPerson = strEmail;
+				} else {
+					strRecPerson = strRecPerson + "; " + strEmail;
+				}
+			}
+		}
+		/*
 		if ("NOR".equals(strSendModel)) {
 			// 收件人(从收件人表里获得);
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(
@@ -234,7 +282,6 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 			}
 
 			// 收件人(从听众表里获得);
-			// TODO
 		} else {
 			// 以Excel方式导入;
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(
@@ -251,10 +298,11 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 				}
 			}
 		}
-
+		*/
+		
 		// 收件人不需要显示全，只需要显示一行,末尾加上省略号;
 		if (strRecPerson.length() > 100) {
-			strRecPerson = strRecPerson.substring(0, 110);
+			strRecPerson = strRecPerson.substring(0, 118);
 			strRecPerson = strRecPerson + "......";
 		}
 
@@ -346,5 +394,99 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(returnMap);
 
 	}
+	
+	@Override
+	public String tzUpdate(String[] actData, String[] errMsg) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("TZ_MLSM_QFPC_ID", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		for(int i = 0; i<actData.length;i++){
+			String formData = actData[i];
+			jacksonUtil.json2Map(formData);
+			String dxyjQfpcID = jacksonUtil.getString("emailID");
+			
+			int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+			// 生成运行控制ID
+			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+			String s_dtm = datetimeFormate.format(new Date());
+			String runCntlId = "TX_" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
+			String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			Psprcsrqst psprcsrqst = new Psprcsrqst();
+			psprcsrqst.setPrcsinstance(processInstance);
+			psprcsrqst.setRunId(runCntlId);
+			psprcsrqst.setOprid(currentOprid);
+			psprcsrqst.setRundttm(new Date());
+			psprcsrqst.setRunstatus("5");
+			psprcsrqstMapper.insert(psprcsrqst);
+			
+			PsTxLjAet psTxLjAet = new PsTxLjAet();
+			
+			String portalUrlSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_LOG_URL'";
+			String TZ_PORTAL_URL = jdbcTemplate.queryForObject(portalUrlSql, "String");
+			if(TZ_PORTAL_URL != null && !"".equals(TZ_PORTAL_URL)){
+				if(TZ_PORTAL_URL.indexOf("/") != (TZ_PORTAL_URL.length()-1)){
+					TZ_PORTAL_URL = TZ_PORTAL_URL + "/";
+				}
+			}
+			
+			String dirPath = TZ_PORTAL_URL + "linkfiles/mailLog/";
+			dirPath = request.getServletContext().getRealPath(dirPath);
+			File tF = new File(dirPath);
+			if (!tF.exists()) {
+				tF.mkdirs();
+			}
+			
+			psTxLjAet.setPrcsinstance(processInstance);
+			psTxLjAet.setTzAbsltUrl(dirPath);
+			psTxLjAet.setTzRelUrl(TZ_PORTAL_URL + "linkfiles/mailLog/");
+			psTxLjAetMapper.insert(psTxLjAet);
+			
+			PsTzDxyjqfTbl psTzDxyjqfTbl = new PsTzDxyjqfTbl();
+			psTzDxyjqfTbl.setRunCntlId(runCntlId);
+			psTzDxyjqfTbl.setTzMlsmQfpcId(dxyjQfpcID);
+			psTzDxyjqfTblMapper.insert(psTzDxyjqfTbl);
+			
+			PsTzYjqftxrzT psTzYjqftxrzT = new PsTzYjqftxrzT();
+			psTzYjqftxrzT.setTzMlsmQfpcId(dxyjQfpcID);
+			psTzYjqftxrzT.setPrcsinstance(processInstance);
+			psTzYjqftxrzT.setTzTxaeDttm(new Date());
+			psTzYjqftxrzTMapper.insert(psTzYjqftxrzT);
 
+			try {
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_MAILTX_AE");
+				// 指定调度作业的相关参数
+				EngineParameters schdProcessParameters = new EngineParameters();
+
+				schdProcessParameters.setBatchServer("");
+				schdProcessParameters.setCycleExpression("");
+				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setPlanExcuteDateTime(new Date());
+				
+				schdProcessParameters.setRunControlId(runCntlId);
+
+				// 调度作业
+				tmpEngine.schedule(schdProcessParameters);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			/*
+			
+			String sql = "SELECT TZ_EML_SMS_TASK_ID,TZ_EMLSERV_ID FROM PS_TZ_DXYJFSRW_TBL WHERE TZ_MLSM_QFPC_ID=?";
+			List<Map<String , Object>> list = jdbcTemplate.queryForList(sql, new Object[]{dxyjQfpcID});
+			if(list != null && list.size() > 0){
+				for(int j = 0; j < list.size(); j++){
+					String mailServId = (String)list.get(j).get("TZ_EMLSERV_ID");
+					analysisBounceServiceImpl.analysisBounceByMailServId(dxyjQfpcID, mailServId, processInstance);
+				}
+			}
+			*/
+			map.replace("TZ_MLSM_QFPC_ID", dxyjQfpcID);
+		}
+		return jacksonUtil.Map2json(map);
+	}
+	
+	
 }

@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta name="renderer" content="webkit" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>测测你能否上清华MBA</title>
+		<meta name="description" content="测试由清华MBA项目为清华MBA申请者准备。您只需要填写少量信息即可了解自身特色，同时知晓自己在全国申请者中的相对水平。" />
+		<meta name="keywords" content="测测能否上清华MBA,清华MBA,清华MBA申请,清华MBA报考,MBA,MBA报考,2015MBA" />
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script src="%bind(:1)/statics/js/lib/lhgdialog/lhgdialog.min.js" type="text/javascript"></script>
+		<link type="text/css" rel="stylesheet" href="%bind(:1)/statics/js/lib/lhgdialog/skins/mac.css"/>
+		<link type="text/css" rel="stylesheet" href="%bind(:1)/statics/css/cantsinghua/style.css" />
+		<script type="text/javascript">
+			(function($) {
+				$.fn.serializeJson = function() {
+					var serializeObj = {};
+					var array = this.serializeArray();
+					var str = this.serialize();
+					$(array).each(function() {
+						if (serializeObj[this.name]) {
+							if ($.isArray(serializeObj[this.name])) {
+								serializeObj[this.name].push(this.value);
+							} else {
+								serializeObj[this.name] = [serializeObj[this.name], this.value];
+							}
+						} else {
+							serializeObj[this.name] = this.value;
+						}
+					});
+					return serializeObj;
+				};
+			})(jQuery);
+		
+			var TzUniversityContextPath = "%bind(:1)";
+
+			var ckheight = 220;
+			var browser = navigator.appName;
+			var b_version = navigator.appVersion;
+			var version = b_version.split(";");
+			var trim_Version = version[1].replace(/[ ]/g, "");
+			if ((browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") || (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0")) {
+				ckheight = 240;
+			}
+			
+			$(function() {
+				(function(config) {
+					config['extendDrag'] = true;
+					config['lock'] = true;
+					config['fixed'] = true;
+					config['okVal'] = '确定';
+					config['cancelVal'] = '取消'
+				})($.dialog.setting);
+				$.dialog.setting.extendDrag = true;
+				var path = $.dialog.setting.path
+			});
+
+		</script>
+		<style type="text/css">
+			.email {
+				color: #FF0000;
+				margin: 5px 0px 0px 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container_index">
+			<div class="top">
+				<div class="title">
+					<img src="%bind(:1)/statics/images/cantsinghua/jjs/title.png" width="467" height="43" />
+				</div>
+			</div>
+			<div class="main">
+				<div class="wrap">
+					<div class="intro" style="top: 20px;">
+						<span style="margin-left: 2em">本测试由清华MBA项目为清华MBA申请者准备。您只需要填写少量信息即可了解自身特色，同时知晓自己在全国申请者中的相对水平。</span><br />
+						<span style="margin-left: 2em">因为填写项目有限，本测试仅提供参考信息，测试结果高并不代表一定能申请成功。如果您的某项指标显得较小众，也不意味着您的申请成功率低。实际上清华MBA项目希望拥有优秀的、多样化的学生群体，您的任何独特特质都有可能成为获选理由。您参加本测试的信息将只会用于清华经管学院招生工作，不会被用于任何其他目的或被泄露。</span><br />
+						<span style="margin-left: 2em">您所填的内容可以更改，本测试结果对正式申请清华MBA不产生任何影响。</span>
+					</div>
+					<div class="form" style="width: 584px; left: 540px; top:12px;">
+						<form action="" method="post" id="form1" name="form1" enctype="multipart/form-data">
+					
+							<div class="item">
+								<img src="%bind(:1)/statics/images/cantsinghua/jjs/icon_mail.png" width="24" height="24" />请提供有效电子邮箱：&nbsp;
+								<div class="input" style="width: 405px;">
+									<input class="itext" name="email" id="email" type="text" tabindex="1" autocomplete="off"  />
+									<span id="emailTip" style="color: #ff3100;">&nbsp;</span>
+								</div>
+							</div>
+							<div class="item">
+								<img src="%bind(:1)/statics/images/cantsinghua/jjs/icon_lock.png" width="24" height="24" />请<span id="szmm">设置测试</span>密码：&nbsp;
+								<div class="input" style="width: 405px;">
+									<input class="itext" name="password" type="password" id="password" tabindex="2"/>
+									<span id="passwordTip" style="color: #ff3100;">&nbsp;</span>
+								</div>
+							</div>
+							<div class="item" id="qrmm">
+								<img src="%bind(:1)/statics/images/cantsinghua/jjs/icon_check.png" width="24" height="24" />确认密码：&nbsp;
+								<div class="input" style="width: 405px;">
+									<input class="itext" name="repassword" type="password" id="repassword" tabindex="3" />
+									<span id="repasswordTip" style="color: #ff3100;">&nbsp;</span>
+								</div>
+							</div>
+							<div class="item">
+								<img src="%bind(:1)/statics/images/cantsinghua/jjs/icon_check.png" width="24" height="24" />验 证 码：&nbsp;
+								<div class="input" style="width: 405px;">
+									<input class="itext" name="yzm" type="text" id="yzm" tabindex="4" />
+									<a id="changeImg" href="javascript:void(0)">&nbsp;&nbsp;<img src="" style="float:none" class="img_num" id="yzmImg" onclick="SetImgCode()" height="24" width="75"/> </a>
+									<span id="yzmTip" style="color: #ff3100;">&nbsp;</span>
+								</div>
+							</div>
+							<div class="info" style="font-size: 14px;">
+								<p style="text-align: left">注：已注册清华MBA报考服务系统的用户可以直接使用报考服务系统的账号密码进行测试</p>
+								<p style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;测试版，如有问题请联系电话：010-62781848</p>
+							</div>
+							<div class="submit">
+								<a onclick="formSubmit();" href="javascript:void(0);">
+									<img src="%bind(:1)/statics/images/cantsinghua/jjs/btn_submit.jpg" width="172" height="28"/>
+								</a>
+							</div>
+							<div class="moreinfo">
+								<a href="http://mba.sem.tsinghua.edu.cn" target="_blank">
+									<img src="%bind(:1)/statics/images/cantsinghua/jjs/btn_more.jpg" width="212" height="28" />
+								</a>
+							</div>
+							<div style="height: 100px; float: right; color: #21722A; position: absolute; left: 320px; top: 210px;">
+								<table>
+									<tr>
+										<td>手机版访问请扫描：</td>
+										<td rowspan="2"><img src="%bind(:1)/statics/images/cantsinghua/jjs_wzdl.png" style="width: 100px; height: 100px; text-align: center;" /></td>
+									</tr>
+									<tr><td></td></tr>
+								</table>
+							</div>
+
+							<input type="hidden" name="_emailFlg" id="_emailFlg" value="false"/>
+							<input type="hidden" name="_passwordFlg" id="_passwordFlg" value="false"/>
+							<input type="hidden" name="_repasswordFlg" id="_repasswordFlg" value="false"/>
+							<input type="hidden" name="_yzmFlg" id="_yzmFlg" value="false"/>
+							
+							<input type="hidden" name="_isReg" id="_isReg" value="N"/>
+							<input type="hidden" name="_OrgId" id="_OrgId" value="%bind(:2)"/>
+							<input type="hidden" name="_SiteId" id="_SiteId" value="%bind(:3)"/>
+							<input type="hidden" name="_Lang" id="_Lang" value="ZHS"/>
+						</form>
+					</div>
+					<div class="footerinfo">版权所有 ：2014 清华大学经济管理学院</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			function GenCaptchaUrl() {
+				var _captchaURL = TzUniversityContextPath + "/captcha";
+				return _captchaURL + "?" + Math.random();
+			}
+			/*获取验证码*/
+			function SetImgCode() {
+				$("#yzmImg").attr("src", GenCaptchaUrl());
+			}
+	
+			$(document).ready(function() {
+				document.getElementById('form1').reset();
+				/*设置验证码*/
+				SetImgCode();
+				/*为邮箱字段添加blur事件*/
+				$("#email").on("blur",function() {
+					var val = this.value;
+					var tip = this.id + "Tip";
+					var flg = "_" + this.id + "Flg";
+	
+					if (val != '') {
+						var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+						if (!patrn.test(val)) {
+							$("#" + tip).html("邮箱地址不正确！");
+							$("#" + flg).val(false);
+						} else {
+							var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"email":"' + val + '","sen":"1"}}';
+							$.ajax({
+								type: "get",
+								async: true,
+								data: {tzParams: tzParams},
+								url: TzUniversityContextPath + "/dispatcher",
+								dataType: "json",
+								success: function(result) {
+									if (result.comContent == "success") {
+										$("#qrmm").hide();
+										$("#repassword").val("");
+										$("#_repasswordFlg").val(true);
+										
+										$("#szmm").html("输入系统");
+										$("#" + tip).html("");
+										$("#" + flg).val(true);
+										$("#_isReg").val("Y");
+									} else {
+										$("#qrmm").show();
+										$("#szmm").html("设置测试");
+										$("#" + tip).html("");
+										$("#" + flg).val(true);
+									}
+								}
+							});
+						}
+					} else {
+						$("#" + tip).html("必填项!");
+						$("#" + flg).val(false);
+					}
+				});
+				
+				/*密码字段添加blur事件*/	
+				$("#password").on("blur", function() {
+					var val = this.value;
+					var tip = this.id + "Tip";
+					var flg = "_" + this.id + "Flg";
+	
+					if (val != '') {
+						if (val.length < 6 || val.length > 32) {
+							$("#" + tip).html("密码长度必须大于6位且小于32位!");
+							$("#" + flg).val(false);
+						}else{
+							$("#" + tip).html("");
+							$("#" + flg).val(true);
+						}
+					} else {
+						$("#" + tip).html("必填项!");
+						$("#" + flg).val(false);
+					}
+				});
+				
+				/*确认密码字段添加blur事件*/
+				$("#repassword").on("blur", function() {
+					var val = this.value;
+					var tip = this.id + "Tip";
+					var flg = "_" + this.id + "Flg";
+	
+					var password = $("#password").val();
+					
+					var _isReg = $("#_isReg").val();
+					if(_isReg == 'Y'){
+						//已注册用户
+						$("#" + tip).html("");
+						$("#" + flg).val(true);
+					}else{
+						//新用户
+						if (password != '') {
+							if (password.length < 6 || password.length > 32) {
+								$("#passwordTip").html("密码长度必须大于6位且小于32位!");
+								$("#_passwordFlg").val(false);
+							} else if (val == '') {
+								$("#" + tip).html("必填项!");
+								$("#" + flg).val(false);
+							} else if (val == password) {
+								$("#passwordTip").html("");
+								$("#repasswordTip").html("");
+								$("#_passwordFlg").val(true);
+								$("#_repasswordFlg").val(true);
+							} else if (val != password) {
+								$("#repasswordTip").html("密码和确认密码不一致！");
+								$("#_passwordFlg").val(true);
+								$("#_repasswordFlg").val(false);
+							}
+						} else {
+							$("#passwordTip").html("必填项!");
+							$("#_passwordFlg").val(false);
+						}
+					}
+				});
+
+				/*回车事件处理*/
+				document.onkeydown = function(e) {
+					var ev = document.all ? window.event: e;
+					if (ev.keyCode == 13) {
+						formSubmit();
+					}
+				};
+			});
+	
+			/*测试提交页面*/
+			function formSubmit() {
+				$("#email").trigger("blur");
+				$("#password").trigger("blur");
+				$("#repassword").trigger("blur");
+	
+				var _emailFlg = $("#_emailFlg").val();
+				var _passwordFlg = $("#_passwordFlg").val();
+				var _repasswordFlg = $("#_repasswordFlg").val();
+				var yzm = $("#yzm").val();
+				
+				if (_emailFlg == "true" && _passwordFlg == "true" && _repasswordFlg == "true") {
+	
+					var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"checkCode":"' + yzm + '","sen":"3"}}';
+					$.ajax({
+						type: "get",
+						async: true,
+						data: {tzParams: tzParams},
+						url: TzUniversityContextPath + "/dispatcher",
+						dataType: "json",
+						success: function(result) {
+							if (result.comContent == "success") {
+								$("#_yzmFlg").val(true);
+							} else {
+								$("#_yzmFlg").val(false);
+								$("#yzmTip").html("验证码错误！");
+								SetImgCode();
+								return false;
+							}
+						}
+					});
+	
+					var signupsContent = $("#form1").serializeJson();
+	
+					var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"data":' + JSON.stringify(signupsContent) + ',"sen":"2"}}';
+					$.ajax({
+						type: "post",
+						async: false,
+						data: {tzParams: tzParams},
+						url: TzUniversityContextPath + "/dispatcher",
+						dataType: "json",
+						success: function(result) {
+							if (result.comContent == 'success') {
+								var tzParams = '';
+								var url = TzUniversityContextPath + '/dispatcher?tzParams={"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"HTML","comParams":{"isMobile":"N"}}'
+								var dialog = $.dialog({
+									title: '请选择您的测试方向',
+									content: "url:" + url,
+									min: false,
+									max: false,
+									height: ckheight,
+									width: 350
+								});
+								$("#email").val("");
+								$("#password").val("");
+								$("#repassword").val("");
+								$("#yzm").val("");
+	
+								$("#_emailFlg").val(false);
+								$("#_passwordFlg").val(false);
+								$("#_repasswordFlg").val(false);
+								$("#_yzmFlg").val(false);
+							} else {
+								alert(result.state.errdesc);
+							}
+						}
+					});
+				}else{
+					SetImgCode();					
+				}
+			}
+		</script>
+	</body>
+</html>

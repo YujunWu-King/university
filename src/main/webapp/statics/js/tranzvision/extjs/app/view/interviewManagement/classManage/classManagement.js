@@ -83,7 +83,6 @@
                     xtype:'linkcolumn',
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.interviewArrange","面试时间安排"),
                     width:130,
-                    //flex:1,
                     sortable:false,
                     items:[{
                         text:"面试时间安排",
@@ -97,10 +96,12 @@
                     pageSize: 10,
                     store: store,
                     displayInfo: true,
+                    /*
                     displayMsg: '显示{0}-{1}条，共{2}条',
                     beforePageText: '第',
                     afterPageText: '页/共{0}页',
                     emptyMsg: '没有数据显示',
+                    */
                     plugins: new Ext.ux.ProgressBarPager()
                 }
             }]

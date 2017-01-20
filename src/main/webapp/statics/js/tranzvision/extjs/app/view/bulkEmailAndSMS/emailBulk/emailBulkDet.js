@@ -8,7 +8,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
         'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetSenderStore',
         'KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrStore',
-        'KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController'
+        'KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController',
+		'KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryWin'
     ],
     xtype: 'emailBulkDet',
     title:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.panelTitle","邮件发送定义"),
@@ -27,6 +28,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
         },
         afterrender:function(t){
             var params;
+
             t.pageId = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab().id;
 
             var refreshTask = {
@@ -34,6 +36,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                 run: function () {
                     var currentPage = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab();
                     if(currentPage.id.indexOf('emailBulkDet')!=-1){
+                        //console.log("run--->"+t.BulkTaskId);
                         if (t.BulkTaskId!=" "){
                             params = '"emlQfId":"'+t.BulkTaskId+'"';
                             var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getRwzxZt","comParams":{'+params+'}}';
@@ -46,19 +49,17 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                     var jsonText = response.responseText;
                                     var jsonObject = Ext.util.JSON.decode(jsonText);
                                     //console.log("ret-->"+currentPage.id+"___"+jsonObject.comContent.rwzxZt);
-
                                     if (jsonObject.comContent.rwzxZt==""||jsonObject.comContent.rwzxZt=="D"||jsonObject.comContent.rwzxZt=="E") {
-										//新建、发送失败和中断时页面显示
+										/*新建、发送失败和中断时页面显示*/
                                         t.down('button[reference=saveBtn]').setDisabled(false);
                                         t.down('button[reference=sendBtn]').setDisabled(false);
                                         t.getController().pageFiledsDisControl(t.child('form'));
                                     } else {
-										//正在发送和发送成功后页面只读
+										/*正在发送和发送成功后页面只读*/
                                         t.down('button[reference=saveBtn]').setDisabled(true);
                                         t.down('button[reference=sendBtn]').setDisabled(true);
                                         t.getController().pageReadonly(t.child('form'));
                                     }
-                                    
 									if (jsonObject.comContent.rwzxZt == "C" || jsonObject.comContent.rwzxZt == "D") {
                                         t.down('button[reference=revokeBtn]').setVisible(false);
 										t.down('displayfield[name=dsfsInfo]').setVisible(false);
@@ -69,7 +70,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
 										t.down('displayfield[name=dsfsInfo]').setValue(dsfsInfo);
 										t.down('displayfield[name=dsfsInfo]').setVisible(true);
                                     }
-                                    
                                 }
                             });
                         }
@@ -83,6 +83,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
     },
 
     initComponent: function () {
+        var me = this;
+
         var numreg = /^[0-9]*$/i;
         Ext.apply(Ext.form.field.VTypes, {
             numberOnly: function(val, field) {
@@ -91,12 +93,20 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                 return bolFlag;
             },
             numberOnlyText: '请输入大于0的正整数'
-            //numberOnlyMask: /[\d\s:amp]/i
         });
+		
+		Ext.apply(Ext.form.field.VTypes,{
+			emails: function(val, field){
+				var emlsReg = /^(([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6}\;))*([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;
+				return emlsReg.test(val);
+			},
+			emailsText: '请输入正确邮箱，多个邮箱之间用英文分号分隔'	
+		});
 
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-BackgroundColor div {background:#f4f4f4;}","readOnly-tagfield-BackgroundColor");
         Ext.util.CSS.createStyleSheet(" .readOnly-combox-BackgroundColor input {background:#f4f4f4;}","readOnly-combox-BackgroundColor");
 		Ext.util.CSS.createStyleSheet("div.tz_emlatt_upload_btn{position:absolute;}","tz_emlatt_upload_btn");
+		Ext.util.CSS.createStyleSheet(" .disabled-button-color span {opacity: 0.8;}","disabled-button-color");
 
         Ext.apply(this, {
             items: [{
@@ -121,92 +131,185 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                 },{
                     xtype: 'textfield',
                     fieldLabel:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.emlQfDesc","群发任务名称") ,
-                    name: 'emlQfDesc'
+                    name: 'emlQfDesc',
+					allowBlank:false
                 },/*{
-                    xtype: 'combobox',
-                    fieldLabel:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.sender","发件人") ,
-                    name: 'sender',
-                    allowBlank:false,
-                    queryMode: 'remote',
-                    valueField: 'email',
-                    displayField: 'desc',
-                    editable: false
+					layout:{
+						type:'column'	
+					},
+					items:[{
+						columnWidth:0.7,
+						xtype: 'fieldset',
+						border:false,
+						reference:'sendModelSet',
+						defaultType: 'radio', // each item will be a radio button
+						layout: {
+							type:'hbox',  
+							padding:'10px 0 0 0',  	
+						},
+						defaults: {
+							hideEmptyLabel: true
+						},
+						style:{
+							margin:'0 0 0 -10px'
+						},
+						items: [{
+							xtype:'label',
+							baseCls:'x-form-item-label-inner x-form-item-label-inner-default',
+							width:'125px',
+							style:{
+								padding:'5px 0 0 0',
+								'font-weight':'bold'
+							},
+							text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.sendModel","发送模式:")
+						}, {
+							//checked: true,
+							boxLabel: '一般发送',
+							name: 'sendModel',
+							inputValue: 'NOR',
+							reference:'sendModelNor',
+							listeners: {
+								change: 'norSend'
+							}
+						}, {
+							xtype:'button',
+							iconCls:'fa fa-question-circle',
+							tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.NorTip","使用邮件模板或者直接编写邮件内容发送，选择邮件模板时收件人只能添加听众"),
+							border:false,
+							style:{
+								background:'#fff',
+								padding:'5px 0 0 0'
+							},
+							disabled:true
+						},{
+							xtype:'splitter',
+							width:100,
+							style:{
+								background:'#fff'
+							}
+						}, {
+							checked: true,
+							boxLabel: '导入Excel发送',
+							name: 'sendModel',
+							inputValue: 'EXC',
+							reference:'sendModelExc',
+							listeners: {
+								change: 'excSend'
+							}
+						},{
+							xtype:'button',
+							iconCls:'fa fa-question-circle',
+							tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.ExcTip","导入Excel之后，可以设置Excel中对应的邮件收件人、内容等，并使用设置内容进行发送"),
+							border:false,
+							style:{
+								background:'#fff',
+								padding:'5px 0 0 0'
+							},
+							disabled:true
+						},{
+							xtype:'button',
+							text:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtn","导入Excel"),
+							tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtnTip","导入Excel"),
+							handler:"importFromExcel",
+							reference:'impExc',
+							bind: {
+								hidden: '{!sendModelExc.checked}'
+							}
+						}]
+					},{
+						columnWidth:0.3,
+						anchor:'100%', 
+						layout: {
+							 type:'hbox',  
+							 padding:'10px 50px 10px 0',  
+							 pack:'end',  
+							 align:'middle'
+						},
+						items:[{
+							xtype: 'button',
+							text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistory","复制历史任务"),
+							tooltip: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistoryTip","复制历史任务"),
+							handler:'copyHistoryData'
+						}]	
+					}]
                 },*/{
-                    xtype: 'fieldset',
-                    border:false,
-                    reference:'sendModelSet',
-                    defaultType: 'radio', // each item will be a radio button
-                    layout: 'hbox',
-                    defaults: {
-                        hideEmptyLabel: true
-                    },
-                    style:{
-                        margin:'0 0 0 -10px'
-                    },
-                    items: [{
-                        xtype:'label',
-                        baseCls:'x-form-item-label-inner x-form-item-label-inner-default',
-                        width:'125px',
-                        style:{
-                            padding:'8px 0 0 0',
-                            'font-weight':'bold'
-                        },
-                        text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.sendModel","发送模式:")
-                    }, {
-                        checked: true,
-                        boxLabel: '一般发送',
-                        name: 'sendModel',
-                        inputValue: 'NOR',
-                        reference:'sendModelNor',
-                        listeners: {
-                            change: 'norSend'
-                        }
-                    }, {
-                        xtype:'button',
-                        iconCls:'fa fa-question-circle',
-                        tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.NorTip","使用邮件模板或者直接编写邮件内容发送，选择邮件模板时收件人只能添加听众"),
-                        border:false,
-                        style:{
-                            background:'#fff',
-                            padding:'8px 0 0 0'
-                        },
-                        disabled:true
-                    },{
-                        xtype:'splitter',
-                        width:100,
-                        style:{
-                            background:'#fff'
-                        }
-                    }, {
-                        boxLabel: '导入Excel发送',
-                        name: 'sendModel',
-                        inputValue: 'EXC',
-                        reference:'sendModelExc',
-                        listeners: {
-                            change: 'excSend'
-                        }
-                    },{
-                        xtype:'button',
-                        iconCls:'fa fa-question-circle',
-                        tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.ExcTip","导入Excel之后，可以设置Excel中对应的邮件收件人、内容等，并使用设置内容进行发送"),
-                        border:false,
-                        style:{
-                            background:'#fff',
-                            padding:'8px 0 0 0'
-                        },
-                        disabled:true
-                    },{
-                        xtype:'button',
-                        text:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtn","导入Excel"),
-                        tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtnTip","导入Excel"),
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small',
-                        handler:"importFromExcel",
-                        reference:'impExc',
-                        bind: {
-                            hidden: '{!sendModelExc.checked}'
-                        }
-                    }]
-                },{
+					xtype: 'fieldset',
+					border:false,
+					reference:'sendModelSet',
+					defaultType: 'radiofield', // each item will be a radio button
+					layout: {
+						type:'hbox',  
+						padding:'10px 0 0 0'
+					},
+					defaults: {
+						hideEmptyLabel: true
+					},
+					style:{
+						margin:'0 0 0 -10px'
+					},
+					items: [{
+						xtype:'label',
+						baseCls:'x-form-item-label-inner x-form-item-label-inner-default',
+						width:'125px',
+						style:{
+							padding:'5px 0 0 0',
+							'font-weight':'bold'
+						},
+						text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.sendModel","发送模式:")
+					}, {
+						boxLabel: '一般发送',
+						name: 'sendModel',
+						inputValue: 'NOR',
+						reference:'sendModelNor',
+						listeners: {
+							change: 'norSend'
+						}
+					}, {
+						xtype:'button',
+						iconCls:'fa fa-question-circle',
+						tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.NorTip","使用邮件模板或者直接编写邮件内容发送，选择邮件模板时收件人只能添加听众"),
+						border:false,
+						style:{
+							background:'#fff',
+							padding:'5px 0 0 0'
+						},
+						disabled:true
+					},{
+						xtype:'splitter',
+						width:100,
+						style:{
+							background:'#fff'
+						}
+					}, {
+						checked: true,
+						boxLabel: '导入Excel发送',
+						name: 'sendModel',
+						inputValue: 'EXC',
+						reference:'sendModelExc',
+						listeners: {
+							change: 'excSend'
+						}
+					},{
+						xtype:'button',
+						iconCls:'fa fa-question-circle',
+						tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.ExcTip","导入Excel之后，可以设置Excel中对应的邮件收件人、内容等，并使用设置内容进行发送"),
+						border:false,
+						style:{
+							background:'#fff',
+							padding:'5px 0 0 0'
+						},
+						disabled:true
+					},{
+						xtype:'button',
+						text:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtn","导入Excel"),
+						tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.excBtnTip","导入Excel"),
+						handler:"importFromExcel",
+						reference:'impExc',
+						bind: {
+							hidden: '{!sendModelExc.checked}'
+						}
+					}]	
+				},{
 					layout: {
 						 type:'hbox',  
 						 padding:'0px 50px 10px 0',  
@@ -219,26 +322,16 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
 						text: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistory","复制历史任务"),
 						tooltip: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.copyHistoryTip","复制历史任务"),
 						hidden: true,
-						baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small',
 						handler:'copyHistoryData'
 					}]			
-				}/*,{
-                    xtype:'splitter',
-                    height:8,
-                    style:{
-                        background:'#fff'
-                    }
-                }*/,{
+				},{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.recever","收件人"),
-                    //emptyText:'可手工填写电子邮箱；也可从EXCEL中粘贴某一列的电子邮箱',
                     reference: 'recever',
                     name:'recever',
                     allowBlank:false,
                     displayField: 'desc',
                     valueField: 'id',
-                    //maxHeight:80,
-                    //height:80,
 					autoScroll: true,
                     createNewOnEnter: true,
                     createNewOnBlur: true,
@@ -292,21 +385,21 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         text:'<span style="color:#fff">选择考生</span>',
                         tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.selectStuTip","选择考生"),
                         handler:'addStruData',
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
-					}/*,{
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'	
+					},{
                         xtype:'button',
                         reference:'addAudienceBtn',
                         text:'<span style="color:#fff">添加听众</span>',
                         tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.addAudienceTip","添加听众"),
                         handler:'addAudience',
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
-                    }*/,{
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'
+                    },{
                         xtype:'button',
                         reference:'clearAllBtn',
                         text:'<span style="color:#fff">清除所有</span>',
                         tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.clearAllTip","清除所有"),
                         handler:'clearAll',
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'
                     },{
                         xtype:'button',
                         reference:'pasteFromExcelBtn',
@@ -347,7 +440,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         name: 'tsfsEmail',
                         labelSeparator:' ',
                         width:'75%',
-                        vtype: 'email',
+                        vtype: 'emails',
                         bind: {
                             disabled: '{!tsfsFlag.checked}'
                         }
@@ -429,12 +522,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                             emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
                                             emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
-
-                                            emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
-											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
 											
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+
                                             emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
-                                            emlBkDetForm.down('button[reference=setEmlTmpl]').removeCls('x-item-disabled x-btn-disabled');
+                                            emlBkDetForm.down('button[reference=setEmlTmpl]').removeCls('disabled-button-color');
                                             //加载邮件模版信息
                                             var form = emlBkDetForm.getForm();
                                             var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpInfo","comParams":{"emlTmpId":"'+newValue+'"}}';
@@ -444,9 +537,18 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                             });
                                             var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlTmpId":"'+newValue+'"}}';
                                             Ext.tzLoadAsync(tzParams,function(responseData){
-                                                emlBkDetForm.down('grid[reference=emlTmplItemGrid]').store.removeAll(true);
-                                                emlBkDetForm.down('grid[reference=emlTmplItemGrid]').store.add(responseData['root']);
-
+												var tmpItemGrid = emlBkDetForm.down('grid[reference=emlTmplItemGrid]');
+												
+												Ext.suspendLayouts();
+												tmpItemGrid.store.suspendEvents();
+												
+                                                tmpItemGrid.store.removeAll(true);
+                                                tmpItemGrid.store.add(responseData['root']);
+												
+												tmpItemGrid.store.resumeEvents();
+												tmpItemGrid.reconfigure(tmpItemGrid.store);
+												Ext.resumeLayouts(true);
+												
                                                 var userAgent = navigator.userAgent;
                                                 if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
                                                     var copyItemsDom = document.getElementsByName("itememlCopy");
@@ -471,11 +573,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                             emlBkDetForm.child('tagfield[reference=recever]').disabled=false;
                                             emlBkDetForm.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
-                                            
-                                            emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
-											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
 											
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
+											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
+
                                             emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=true;
+											emlBkDetForm.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
+											
                                         }
                                     }
                                 }
@@ -588,8 +692,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         tbar: [
                             {
                                 xtype: 'form',
-                                //bodyStyle: 'padding:10px 0px 0px 0px',
-								height: 32,
+                                bodyStyle: 'padding:3px 0px 0px 0px',
+								height: 30,
                                 items: [
                                     {
                                         xtype: 'filefield',
@@ -597,7 +701,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                         //name: 'attachmentUpload',
                                         name: 'orguploadfile',
                                         buttonOnly: true,
-                                        width: 78,
+                                        width: 62,
 										buttonConfig:{
 											iconCls: 'upload',
 											text: '<font style="color:#666;">上传</font>',
@@ -739,19 +843,30 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         labelWidth: 80,
                         bind: {
                             hidden: '{!dsfsFlag.checked}'
-                        }
+                        },
+						validator: function(val){
+							var dsfsFlag = this.findParentByType('form').getForm().findField('dsfsFlag').getValue();
+							if(dsfsFlag == true && val=="") return '请设置定时发送日期';
+							return true;	
+						}
                     },{
                         xtype: 'timefield',
                         fieldLabel:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.dsfsTime","发送时间"),
                         margin:'8px 0 0 33px',
+						labelWidth: 80,
+						labelStyle: 'font-weight:normal',
                         name: 'dsfsTime',
                         format: 'H:i',
                         increment: 5,
-                        labelStyle: 'font-weight:normal',
-                        labelWidth: 80,
+						value: "00:00",
                         bind: {
                             hidden: '{!dsfsFlag.checked}'
-                        }
+                        },
+						validator: function(val){
+							var dsfsFlag = this.findParentByType('form').getForm().findField('dsfsFlag').getValue();
+							if(dsfsFlag == true && val=="") return '请设置定时发送时间';
+							return true;	
+						}
                     },{
                         xtype: 'checkbox',
                         boxLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.qzfsFlag","不考虑免打扰，强制推送"),
@@ -772,17 +887,19 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.crePer","创建人"),
                         margin:'8px 0 0 8px',
                         name: 'crePer'
-                    }/*,{
+                    },{
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.dept","所属部门"),
                         margin:'8px 0 0 8px',
+                        hidden: true,
                         name: 'dept'
                     },{
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.setId","setID"),
                         margin:'8px 0 0 8px',
+                        hidden: true,
                         name: 'setId'
-                    }*/,{
+                    },{
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.creDt","创建时间"),
                         margin:'8px 0 0 8px',
@@ -825,7 +942,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
         text: '查看发送状态',
         iconCls:"view",
         handler: 'viewSendHistory',
-        reference:"viewHisBtn",
+        reference:"viewHisBtn"
         //disabled:true
     },{
         text: '关闭',

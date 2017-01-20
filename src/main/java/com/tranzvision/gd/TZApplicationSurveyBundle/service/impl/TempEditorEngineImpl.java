@@ -282,7 +282,6 @@ public class TempEditorEngineImpl {
 					messages = psTzJygzDyT.getTzJygzTsxx();
 					if (!StringUtils.equals(language, "ZHS")) {
 						PsTzJygzDyEngKey psTzJygzDyEngKey = new PsTzJygzDyEngKey();
-						System.out.println("language:"+language+"==ruleId:"+ruleId);
 						psTzJygzDyEngKey.setLanguageCd(language);
 						psTzJygzDyEngKey.setTzJygzId(ruleId);
 						PsTzJygzDyEng psTzJygzDyEng = psTzJygzDyEngMapper.selectByPrimaryKey(psTzJygzDyEngKey);

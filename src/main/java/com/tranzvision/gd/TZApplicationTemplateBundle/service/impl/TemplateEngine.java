@@ -847,6 +847,16 @@ public class TemplateEngine {
 		// 是否启用PDF在线阅读
 		String isOnlineShow = item.get("isOnlineShow") == null ? "" : String.valueOf(item.get("isOnlineShow"));
 		psTzAppXxxPz.setTzIsOnlineshow(isOnlineShow);
+		
+		//modity by caoy 上级PAGE的ID
+		String TZ_FPAGE_BH =  item.get("fPageId") == null ? "" : String.valueOf(item.get("fPageId"));
+		psTzAppXxxPz.setTzFpageBh(TZ_FPAGE_BH);
+		//默认父级节点的PAGE pageno=0;
+		if (classname.equals("Page")) {
+			if (TZ_FPAGE_BH==null || TZ_FPAGE_BH.equals("")) {
+				psTzAppXxxPz.setTzPageNo(new Integer(0));
+			}
+		}
 
 		// 是否只读
 		// String isReadOnly = item.get("isReadOnly") == null ? "" :

@@ -38,9 +38,10 @@
 
 
 /*--------------------左侧菜单--------------------*/
+/*--------------------左侧菜单--------------------*/
 .regmain-menu{
 	width:248px;
-	border:1px solid #dadbdd;
+	/*border:1px solid #dadbdd;*/
 }
 .regmain-menu ul{}
 .regmain-menu ul li{
@@ -62,19 +63,35 @@
 }
 .regmain-menu ul li{
 	border-bottom:1px solid #dadbdd;
+	padding-left: 15px;
 }
 .regmain-menu ul li a{
-	color:#0070c6;
+	color:#8f5dc0;
 }
-.regmain-menu ul li.menu-active{
-	background:#0070c6;
+/* 第一层菜单*/
+.regmain-menu ul li.menu-active-top{
+	background:#8f5dc0;
 	color:#fff;
+	border-radius: 5px;
+	padding-left: 15px;
+}
+.regmain-menu ul li.menu-active-top a{
+	color:#fff;
+}
+.regmain-menu ul li.menu-active-top:hover{
+	background:#8f5dc0;
+}
+/* 第二层默认菜单*/
+.regmain-menu ul li.menu-active{
+	background:#eee;
+	color:#000000;
+	padding-left:15px;
 }
 .regmain-menu ul li.menu-active a{
-	color:#fff;
+	color:#000000;
 }
 .regmain-menu ul li.menu-active:hover{
-	background:#0070c6;
+	background:#8e8e8e;
 }
 .menu-gou{
 	width:20px;
@@ -149,14 +166,14 @@
 	line-height:46px;
 	margin-right:10px;
 	border-radius:5px;
-	background:#0070c6;
+	background:#8f5dc0;
 }
 .operation-btn a{
 	float:none;
 	display:inline-block;
 }
 .btn-save{
-	background:#ff7b05;
+	background:#f1c748;
 }
 .operation-btn-icon{
 	width:18px;
@@ -164,7 +181,7 @@
     vertical-align: middle;
 }
 .btn-action:hover{
-	background:#0164b0;
+	background:#8f5dc0;
 }
 .btn-save:hover{
 	background:#d96600;

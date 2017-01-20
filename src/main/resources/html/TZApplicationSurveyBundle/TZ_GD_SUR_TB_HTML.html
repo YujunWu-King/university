@@ -1,0 +1,49 @@
+<div style="border:1px solid #E0E0E0;padding:5px;display:block;margin-bottom:10px">
+<h3 style="text-align:left">
+%bind(:1) <small style="color:gray">%bind(:2)</small>
+<font color=blue>%bind(:3)</font>
+</h3>
+<div id="chartdiv_%bind(:4)" style="display:block; height:350px;"></div>
+<script>
+ 	var chart_%bind(:4);
+    var legend_%bind(:4);
+    var chartData_%bind(:4) = [%bind(:5)];
+
+            AmCharts.ready(function() {
+                // 饼图
+                chart_%bind(:4) = new AmCharts.AmPieChart();
+                chart_%bind(:4).dataProvider = chartData_%bind(:4);
+                chart_%bind(:4).titleField = "Name";
+                chart_%bind(:4).valueField = "CountValue";
+                chart_%bind(:4).outlineColor = "";
+                chart_%bind(:4).outlineAlpha = 0.8;
+                chart_%bind(:4).outlineThickness = 2;
+                chart_%bind(:4).labelText="[[percents]]%"
+                // 3D
+                chart_%bind(:4).depth3D = 5;
+                chart_%bind(:4).angle = 30;
+                chart_%bind(:4).colors=
+                    [
+                        "#4472C4", "#5B9BD5", "#ED7D31", "#A5A5A5", "#FFC000",                         
+                        "#DF4C56", "#955893", "#508EE8", "#68C457", "#5B5B5B", 
+                        "#0F87E6", "#A02311", "#CBB062", "#DCCA96", "#990000", 
+                        "#8A0CCF", "#CD0D74", "#754DEB", "#DDDDDD", "#999999", 
+                        "#4B0C25"];
+                var legend_%bind(:4) = new AmCharts.AmLegend();
+                legend_%bind(:4).align="center";
+                legend_%bind(:4).valueText="[[close]]"
+                chart_%bind(:4).addLegend(legend_%bind(:4));
+                // 图形写入
+                chart_%bind(:4).write("chartdiv_%bind(:4)");
+                //chart_%bind(:4).invalidateSize();
+            });
+</script>
+<table style="width:600px;display:block;">
+<tr>
+	<th>项</th>
+	<th>结果</th>
+	<th>占百分比</th>
+</tr>
+%bind(:6)
+</table>
+ </div>

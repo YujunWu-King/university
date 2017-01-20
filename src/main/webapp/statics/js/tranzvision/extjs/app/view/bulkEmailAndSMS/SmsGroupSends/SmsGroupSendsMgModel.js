@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsMgModel'
     fields: [
         {name: 'smsQfId'},
         {name: 'smsQfDesc'},
-        {name: 'dept'},
+        /*{name: 'dept'},*/
 		{name: 'oprid'},
         {name: 'crePer'},
         {name: 'creDt'}

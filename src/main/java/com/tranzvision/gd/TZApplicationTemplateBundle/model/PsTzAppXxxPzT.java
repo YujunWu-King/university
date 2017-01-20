@@ -91,6 +91,12 @@ public class PsTzAppXxxPzT extends PsTzAppXxxPzTKey {
 
     private String tzSyncSep;
 
+    private String tzRefCheck;
+
+    private String tzRefCheckApp;
+
+    private String tzFpageBh;
+
     public String getTzXxxBtBz() {
         return tzXxxBtBz;
     }
@@ -449,5 +455,29 @@ public class PsTzAppXxxPzT extends PsTzAppXxxPzTKey {
 
     public void setTzSyncSep(String tzSyncSep) {
         this.tzSyncSep = tzSyncSep == null ? null : tzSyncSep.trim();
+    }
+
+    public String getTzRefCheck() {
+        return tzRefCheck;
+    }
+
+    public void setTzRefCheck(String tzRefCheck) {
+        this.tzRefCheck = tzRefCheck == null ? null : tzRefCheck.trim();
+    }
+
+    public String getTzRefCheckApp() {
+        return tzRefCheckApp;
+    }
+
+    public void setTzRefCheckApp(String tzRefCheckApp) {
+        this.tzRefCheckApp = tzRefCheckApp == null ? null : tzRefCheckApp.trim();
+    }
+
+    public String getTzFpageBh() {
+        return tzFpageBh;
+    }
+
+    public void setTzFpageBh(String tzFpageBh) {
+        this.tzFpageBh = tzFpageBh == null ? null : tzFpageBh.trim();
     }
 }

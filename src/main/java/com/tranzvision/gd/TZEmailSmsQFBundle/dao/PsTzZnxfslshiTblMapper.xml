@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxfslshiTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxfslshiTbl" >
+    <id column="TZ_RWSL_ID" property="tzRwslId" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_ZNX_ZT" property="tzZnxZt" jdbcType="VARCHAR" />
+    <result column="TZ_FS_DT" property="tzFsDt" jdbcType="TIMESTAMP" />
+    <result column="TZ_EML_SMS_TASK_ID" property="tzEmlSmsTaskId" jdbcType="VARCHAR" />
+    <result column="TZ_FS_ZT" property="tzFsZt" jdbcType="VARCHAR" />
+    <result column="TZ_JCSL_ID" property="tzJcslId" jdbcType="VARCHAR" />
+    <result column="TZ_AUDCY_ID" property="tzAudcyId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_RWSL_ID, OPRID, TZ_ZNX_ZT, TZ_FS_DT, TZ_EML_SMS_TASK_ID, TZ_FS_ZT, TZ_JCSL_ID, 
+    TZ_AUDCY_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_ZNXFSLSHI_TBL
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_ZNXFSLSHI_TBL
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxfslshiTbl" >
+    insert into PS_TZ_ZNXFSLSHI_TBL (TZ_RWSL_ID, OPRID, TZ_ZNX_ZT, 
+      TZ_FS_DT, TZ_EML_SMS_TASK_ID, TZ_FS_ZT, 
+      TZ_JCSL_ID, TZ_AUDCY_ID)
+    values (#{tzRwslId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzZnxZt,jdbcType=VARCHAR}, 
+      #{tzFsDt,jdbcType=TIMESTAMP}, #{tzEmlSmsTaskId,jdbcType=VARCHAR}, #{tzFsZt,jdbcType=VARCHAR}, 
+      #{tzJcslId,jdbcType=VARCHAR}, #{tzAudcyId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxfslshiTbl" >
+    insert into PS_TZ_ZNXFSLSHI_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzRwslId != null" >
+        TZ_RWSL_ID,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzZnxZt != null" >
+        TZ_ZNX_ZT,
+      </if>
+      <if test="tzFsDt != null" >
+        TZ_FS_DT,
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID,
+      </if>
+      <if test="tzFsZt != null" >
+        TZ_FS_ZT,
+      </if>
+      <if test="tzJcslId != null" >
+        TZ_JCSL_ID,
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzRwslId != null" >
+        #{tzRwslId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxZt != null" >
+        #{tzZnxZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsDt != null" >
+        #{tzFsDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsZt != null" >
+        #{tzFsZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcslId != null" >
+        #{tzJcslId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxfslshiTbl" >
+    update PS_TZ_ZNXFSLSHI_TBL
+    <set >
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxZt != null" >
+        TZ_ZNX_ZT = #{tzZnxZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsDt != null" >
+        TZ_FS_DT = #{tzFsDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzEmlSmsTaskId != null" >
+        TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsZt != null" >
+        TZ_FS_ZT = #{tzFsZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJcslId != null" >
+        TZ_JCSL_ID = #{tzJcslId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudcyId != null" >
+        TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxfslshiTbl" >
+    update PS_TZ_ZNXFSLSHI_TBL
+    set OPRID = #{oprid,jdbcType=VARCHAR},
+      TZ_ZNX_ZT = #{tzZnxZt,jdbcType=VARCHAR},
+      TZ_FS_DT = #{tzFsDt,jdbcType=TIMESTAMP},
+      TZ_EML_SMS_TASK_ID = #{tzEmlSmsTaskId,jdbcType=VARCHAR},
+      TZ_FS_ZT = #{tzFsZt,jdbcType=VARCHAR},
+      TZ_JCSL_ID = #{tzJcslId,jdbcType=VARCHAR},
+      TZ_AUDCY_ID = #{tzAudcyId,jdbcType=VARCHAR}
+    where TZ_RWSL_ID = #{tzRwslId,jdbcType=VARCHAR}
+  </update>
+</mapper>
