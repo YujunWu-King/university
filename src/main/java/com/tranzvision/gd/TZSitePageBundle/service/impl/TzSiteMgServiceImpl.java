@@ -622,6 +622,22 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 						// 7.初始化栏目
 						sql = "select * from PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=?";
+						
+						//初始化栏目前前插入一个父栏目;
+						String SqlsiteName="SELECT TZ_SITEI_NAME FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
+						String 	siteName=sqlQuery.queryForObject(SqlsiteName, new Object[]{strSiteIId}, "String");								
+						PsTzSiteiColuT psTzSiteiColuT1 = new PsTzSiteiColuT();
+					
+						psTzSiteiColuT1.setTzSiteiId(strSiteIId);
+						psTzSiteiColuT1.setTzColuId(String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_COLU_T", "TZ_COLU_ID")));
+						psTzSiteiColuT1.setTzColuName(siteName);
+						psTzSiteiColuT1.setTzColuState("Y");
+						psTzSiteiColuT1.setTzColuLevel(new Integer(0));
+						psTzSiteiColuT1.setTzColuType("A");
+						psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT1);
+											
+
+						
 						List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapColu : listColus) {
 
@@ -644,6 +660,21 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							psTzSiteiColuT.setTzContTemp(mapColu.get("TZ_CONT_TEMP") == null ? ""
 									: String.valueOf(mapColu.get("TZ_CONT_TEMP")));
 							psTzSiteiColuT.setTzColuState("Y");
+							
+							
+							/**
+							 * 1.添加TZ_ART_TYPE_ID字段的复制;
+							 * 2.栏目级别设置成1;
+							 * 3.插入父栏目的栏目ID;
+							 */
+							psTzSiteiColuT.setTzArtTypeId(mapColu.get("TZ_ART_TYPE_ID") == null ? ""
+									: String.valueOf(mapColu.get("TZ_ART_TYPE_ID")));
+							
+							psTzSiteiColuT.setTzColuLevel(new Integer(1));
+							
+							String sqlflmid="SELECT  TZ_COLU_ID  FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0 ";
+							String FlmID=sqlQuery.queryForObject(sqlflmid, new Object[]{strSiteIId}, "String");
+							psTzSiteiColuT.setTzFColuId(FlmID);
 
 							psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
 
