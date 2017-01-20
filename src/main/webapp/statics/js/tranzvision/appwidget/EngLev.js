@@ -251,13 +251,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			"instanceId": "EngLevelUp",
 			"itemId": "exam_upload",
 			//"itemName": MsgSet["EXAM_UPLOAD"],
-			"itemName": "文件上传",
+			"itemName": "扫描件上传",
 			//"title": MsgSet["EXAM_UPLOAD"],
-			"title": "文件上传",
+			"title": "扫描件上传",
 			"orderby": 20,
 			"value": "",
 			"StorageType": "S",
-			"classname": "SingleTextBox"
+			"classname": "imagesUpload"
 		}
 	},
 	minLines: "1",
