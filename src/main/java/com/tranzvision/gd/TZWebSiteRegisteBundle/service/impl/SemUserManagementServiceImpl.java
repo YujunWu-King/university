@@ -141,7 +141,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						+ siteId + "\"}}";
 				// 上传并处理照片;
 				String phoUrl = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_UP_PHOTO_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_UPPHOTO_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
 						+ siteId + "\"}}";
 				// 修改手机;
 				String str_mobile = commonUrl
@@ -540,7 +540,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 			try {
 				String contextPath = request.getContextPath();
-				strResultConten = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_MENU_ZHGL_HTML", contextPath,
+				strResultConten = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_MENU_ZHGL_HTML2", contextPath,
 						strOrgId, strSiteId, strResultConten);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
