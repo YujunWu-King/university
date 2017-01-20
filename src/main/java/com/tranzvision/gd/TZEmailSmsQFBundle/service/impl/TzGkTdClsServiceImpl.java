@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZEmailSmsQFBundle.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqfdkyjjlT;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqfdkyjjlTKey;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftdTbl;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftdTblKey;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -155,6 +157,34 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 		
 	}
 	
+	@Override
+	public String tzQuery(String strParams, String[] errMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String fileUrl, AEId, emailQfpcId;
+		Map<String, Object> returnMap = new HashMap<>();  
+		
+		
+		AEId = jacksonUtil.getString("AEId");
+		emailQfpcId = jacksonUtil.getString("yjqfId");
+		
+		fileUrl = jdbcTemplate.queryForObject("select TZ_FILE_PATH from PS_TZ_YJQFTXRZ_T where TZ_MLSM_QFPC_ID=? and PRCSINSTANCE=?", new Object[]{emailQfpcId,AEId},"String");
+		if(fileUrl != null && !"".equals(fileUrl)){
+			String RUNSTATUS = jdbcTemplate.queryForObject("SELECT PSQ.RUNSTATUS FROM PSPRCSRQST PSQ WHERE PSQ.PRCSINSTANCE=?", new Object[]{AEId},"String");
+			if("9".equals(RUNSTATUS)){
+				returnMap.put("fileUrl", fileUrl);
+			}else{
+				errMsg[0] = "1";
+				errMsg[1] = "没有找到日志";
+			}
+		}else{
+			errMsg[0] = "1";
+			errMsg[1] = "没有找到日志";
+		}
+		return jacksonUtil.Map2json(returnMap);
+		
+	}
+	
 	
 	private String getIpAddress(HttpServletRequest request) { 
 	    String ip = request.getHeader("x-forwarded-for"); 
@@ -174,6 +204,8 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 	      ip = request.getRemoteAddr(); 
 	    } 
 	    return ip; 
-	  } 
+	  }
+	
+	
 
 }

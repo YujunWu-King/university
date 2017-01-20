@@ -40,9 +40,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
         },
 		afterrender:function(){
 			//处理在火狐下fieldset下的上传控件按钮宽度不够的问题
-			//var filebutton = this.down("#excelFile").getTrigger('filebutton');;
-			var filebutton = this.down("#orguploadfile").getTrigger('filebutton');;
-			
+			//var filebutton = this.down("#excelFile").getTrigger('filebutton');
+			var filebutton = this.down("#orguploadfile").getTrigger('filebutton');
 			filebutton.el.dom.style.width='65px';
 		}
     },
@@ -279,8 +278,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
                 var form = me.down('form[name=uploadExcelForm]').getForm();
                 if(filename&&form.isValid()){
                     //var dateStr = Ext.Date.format(new Date(), 'Ymd');
-                    var filePath = 'smsAndEmailTmpExcel'
-                    var updateUrl =TzUniversityContextPath + '/UpdServlet';
+                    //var filePath = '/linkfile/FileUpLoad'
+                	var filePath = 'smsAndEmailTmpExcel';
+                    var updateUrl =TzUniversityContextPath+'/UpdServlet';
 
                     form.submit({
                         url: updateUrl,
@@ -292,6 +292,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
                             var sysFileName = action.result.msg.sysFileName;
                             //var path = action.result.msg.path;
                             var path = action.result.msg.accessPath;
+                            
                             /*后台解析Excsel*/
                             Ext.MessageBox.show({
                                 msg: '解析数据中，请稍候...',
@@ -310,7 +311,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
                                     Ext.Msg.alert("错误",responseData.error);
                                     return;
                                 }
-
                                 dataWithColumns = responseData;
                                 var firstLineTitle_1 = me.down('checkboxfield[name=firstLineTitle_1]').getValue();
 								//首行为标题行
@@ -367,6 +367,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
                     if(i==0&&firstLineTitle_2/*首行为标题行*/){
                         columns = columnData;
                     }else{
+                    	//去除所有前后空白;
+                    	for(var j = 0; j < columnData.length; j++){
+                    		columnData[j] = columnData[j].replace(/(^\s*)|(\s*$)/g, "")
+                    	}
 						dataWithColumns.push(columnData);	
 					}
                 }
@@ -614,6 +618,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow
         gridColumns.push({
 			text:'序号',
 			//locked:true,
+			width:60,
             xtype:'rownumberer'
         });	
 		for(var i = 0;i<columns.length;i++){

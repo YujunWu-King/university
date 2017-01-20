@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryModel', 
     fields: [
         {name: 'qfRwId'},
         {name: 'qfRwName'},
-        /*{name: 'deptDesc'},*/
+        {name: 'deptDesc'},
         {name: 'sendModal'},
 		{name: 'createDttm'},
 		{name: 'emlTheme'}

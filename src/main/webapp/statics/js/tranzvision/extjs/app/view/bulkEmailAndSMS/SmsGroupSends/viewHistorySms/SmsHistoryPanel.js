@@ -67,10 +67,11 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
 				}]
             },{
             	xtype: 'linkcolumn',
-                text: '已提交人数',
+                text: '已发送人数',
                 dataIndex: 'smsSubmitNum',
                 minWidth: 90,
                 flex: 1,
+                hidden:true,
                 items:[{
 					getText: function(v, meta, rec) {
 						return v;
@@ -112,6 +113,19 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
 						return v;
 					},
 					handler: 'onClickNumber'
+				}]
+            },{
+            	xtype: 'linkcolumn',
+                text: '短信回复人数',
+                dataIndex: 'smsReplyNum',
+                hidden: true,
+                minWidth: 90,
+                flex: 1,
+                items:[{
+					getText: function(v, meta, rec) {
+						return v;
+					},
+					handler: 'smsReplyView'
 				}]
             },{
                 text: '操作人',
