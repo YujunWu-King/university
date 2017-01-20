@@ -239,7 +239,7 @@ public class TzGdTjxPzClsServiceImpl extends FrameworkImpl {
 			}
 			String str_ref_ins_id = jacksonUtil.getString("TZ_REF_LETTER_ID");
 			
-			String tjxSQL = "SELECT TZ_TJX_TITLE,TZ_REFERRER_GNAME,TZ_REFERRER_NAME,TZ_COMP_CNAME,TZ_POSITION,TZ_TJR_GX,TZ_EMAIL,TZ_PHONE_AREA,TZ_PHONE,TZ_GENDER,TZ_TJX_YL_1,TZ_TJX_YL_2,TZ_TJX_YL_3,TZ_TJX_YL_4,TZ_TJX_YL_5,TZ_GENDER FROM PS_TZ_KS_TJX_TBL WHERE TZ_REF_LETTER_ID=? AND TZ_TJX_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
+			String tjxSQL = "SELECT TZ_TJX_TITLE,TZ_REFERRER_GNAME,TZ_REFERRER_NAME,TZ_COMP_CNAME,TZ_POSITION,TZ_TJR_GX,TZ_EMAIL,TZ_PHONE_AREA,TZ_PHONE,TZ_GENDER,TZ_TJX_YL_1,TZ_TJX_YL_2,TZ_TJX_YL_3,TZ_TJX_YL_4,TZ_TJX_YL_5,TZ_TJX_YL_6,TZ_TJX_YL_7,TZ_TJX_YL_8,TZ_TJX_YL_9,TZ_TJX_YL_10,TZ_GENDER FROM PS_TZ_KS_TJX_TBL WHERE TZ_REF_LETTER_ID=? AND TZ_TJX_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y'";
 			Map<String , Object> tjxMap = jdbcTemplate.queryForMap(tjxSQL,new Object[]{str_ref_ins_id,appinsId});
 			//TZ_TJX_TITLE,   TZ_REFERRER_GNAME,  TZ_REFERRER_NAME,  TZ_COMP_CNAME,    TZ_POSITION,   TZ_TJR_GX,  TZ_EMAIL,        TZ_PHONE_AREA,      TZ_PHONE,   TZ_GENDER,   TZ_TJX_YL_1,  TZ_TJX_YL_2,  TZ_TJX_YL_3,   TZ_TJX_YL_4,  TZ_TJX_YL_5,  TZ_GENDER
 			//str_tjr_title,  str_tjr_gname,      str_tjr_name,      str_tjr_company,  str_tjr_zw,    str_tjr_gx, str_tjr_email,   str_tjr_phone_area, str_tjr_dh, str_tjr_xb,  str_tjr_yl1,  str_tjr_yl2,  str_tjr_yl3,   str_tjr_yl4,  str_tjr_yl5,  str_sex
@@ -288,6 +288,11 @@ public class TzGdTjxPzClsServiceImpl extends FrameworkImpl {
 			returnMap.put("TJR_YL3", tjxMap.get("TZ_TJX_YL_3"));
 			returnMap.put("TJR_YL4", tjxMap.get("TZ_TJX_YL_4"));
 			returnMap.put("TJR_YL5", tjxMap.get("TZ_TJX_YL_5"));
+			returnMap.put("TJR_YL6", tjxMap.get("TZ_TJX_YL_6"));
+			returnMap.put("TJR_YL7", tjxMap.get("TZ_TJX_YL_7"));
+			returnMap.put("TJR_YL8", tjxMap.get("TZ_TJX_YL_8"));
+			returnMap.put("TJR_YL9", tjxMap.get("TZ_TJX_YL_9"));
+			returnMap.put("TJR_YL10", tjxMap.get("TZ_TJX_YL_10"));
 			returnMap.put("TZ_SEX", tjxMap.get("TZ_GENDER"));
 
 		}catch(Exception e){

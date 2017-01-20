@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZSiteTemplateBundle.service.impl;
 
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT;
 import com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 站点栏目设置；原：TZ_GD_ZDLM_PKG:TZ_GD_ZDLM_CLS
@@ -26,6 +28,8 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzSitemColuTMapper psTzSitemColuTMapper;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 
 	/* 添加站点栏目设置 */
 	@Override
@@ -47,8 +51,9 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 				String lm_nrlx = jacksonUtil.getString("lm_nrlx");
 				String lm_nrmb = jacksonUtil.getString("lm_nrmb");
 				String lm_id = String.valueOf(getSeqNum.getSeqNum("TZ_SITEM_COLU_T", "TZ_COLU_ID"));
-
+				
 				PsTzSitemColuT psTzSitemColuT = new PsTzSitemColuT();
+            
 				psTzSitemColuT.setTzSitemId(siteId);
 				psTzSitemColuT.setTzColuId(lm_id);
 				psTzSitemColuT.setTzColuName(lm_name);
