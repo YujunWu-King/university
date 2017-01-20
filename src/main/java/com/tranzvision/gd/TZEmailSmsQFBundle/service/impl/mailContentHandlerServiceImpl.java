@@ -185,7 +185,7 @@ public class mailContentHandlerServiceImpl {
 	}
 	   
 
-	private String getRandomString(int len) {
+	public String getRandomString(int len) {
 		String strDefn = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 		String strRtn = "";
 

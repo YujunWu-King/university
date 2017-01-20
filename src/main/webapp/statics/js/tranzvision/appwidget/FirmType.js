@@ -149,17 +149,23 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//1.公司性质
 			if (SurveyBuild._readonly) {
 				//只读模式
-				var valDesc='--'+MsgSet["PLEASE_SELECT"]+'--';
+				var OPT_FIRM='';
 				for(var k=0;k<FIRM_TYPE_GRP.length;k++){
-					if(child.WorkExper1["value"]==("0"+parseInt(k+1))){
-						valDesc=FIRM_TYPE_GRP[k];
-					}
+					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
 				}
-				var selectRead = '<select disabled="true"><option>'+valDesc+'</option></select>';
-				//alert("只读");
-				types += '<div class="main_inner_content_info_autoheight cLH">';
-				types += '	<div class="main_inner_connent_info_left">' + child.WorkExper1.itemName + '</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">' + selectRead + '</div>';
+				//----------------------------放入公司性质OPT
+				types += '<div class="main_inner_content_info_autoheight" style="margin-top:5px">';
+				types += '	<div class="main_inner_connent_info_left" style="width:120px">' + child.WorkExper1.itemName + '</div>';
+				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
+				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
+				types += OPT_FIRM;
+				types += '		</select>';
+				//----------------------------
+				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '			<div class="onCorrect">&nbsp;</div></div>';
+				types += '		</div>';
+				types += '	</div>';
 				types += '</div>';
 
 			} else {
@@ -188,28 +194,33 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//2.职位类型：
 			if (SurveyBuild._readonly) {
 				//只读模式
-				var valDesc = '--'+MsgSet["PLEASE_SELECT"]+'--';
+				var OPT_POSITION='';
 				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null&&FIRM_TYPE_DEF!="-1"){
-					//POSITION_TYPE_DEL
 					if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
 						for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-							if(POSITION_TYPE_DEL==("B"+parseInt(k+1))){
-								valDesc=POSITION_TYPE_GP1[k];
-							}
+							OPT_POSITION+='<option value="A'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("A"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP1[k]+'</option>'
 						}
 					}else if(FIRM_TYPE_DEF=='05'||FIRM_TYPE_DEF=='06'){
 						for(var k=0;k<POSITION_TYPE_GP2.length;k++){
-							if(POSITION_TYPE_DEL==("B"+parseInt(k+1))){
-								valDesc=POSITION_TYPE_GP2[k];
-							}
+							OPT_POSITION+='<option value="B'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("B"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP2[k]+'</option>'
 						}
 
 					}
 				}
-				var selectRead = '<select disabled="true"><option>'+valDesc+'</option></select>';
-				types += '<div class="main_inner_content_info_autoheight cLH">';
+				//var OPT_POSITION='--请选择--';
+				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
+				types += '<div class="main_inner_content_info_autoheight cLH" style="margin-top:45px">';
 				types += '	<div class="main_inner_connent_info_left" style="width:120px">' + child.WorkExper2.itemName + '</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">' + selectRead + '</div>';
+				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
+				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
+				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
+				//types += OPT_POSITION;
+				types += '		</select>';
+				//----------------------------
+				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '			<div class="onCorrect">&nbsp;</div></div>';
+				types += '		</div>';
+				types += '	</div>';
 				types += '</div>';
 
 			} else {

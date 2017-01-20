@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZEmailSmsQFBundle.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
+import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * PS:TZ_EMIAL_VIEWHISTORY_PKG:TZ_EMIAL_VIEWHISTORY_CLS 
@@ -30,6 +41,25 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	
+	@Autowired
+	private AyalysisExcItemsValServiceImpl ayalysisExcItemsValServiceImpl;
+
+	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private PsprcsrqstMapper psprcsrqstMapper;
+	
+	@Autowired
+	private PsTzEmlTaskAetMapper psTzEmlTaskAetMapper;
+	
+	@Autowired
+	private TZGDObject tZGDObject;
+	
+	@Autowired
+	private AyalysisMbSysVar ayalysisMbSysVar;
+
 	
 	//邮件历史查看
 	@Override
@@ -159,52 +189,200 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	public String tzOther(String OperateType, String comParams, String[] errorMsg) {
 		// 返回值;
 		String strResultConten = "";
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
 		String type = "";
-		if(jacksonUtil.containsKey("type")){
+		if (jacksonUtil.containsKey("type")) {
 			type = jacksonUtil.getString("type");
 		}
-		
+
 		if ("viewEachEmail".equals(type)) {
 			strResultConten = this.viewEachEmail(comParams, errorMsg);
 		}
 
-		
 		return strResultConten;
 	}
-	
-	private String viewEachEmail(String comParams, String[] errorMsg){
+
+	private String viewEachEmail(String comParams, String[] errorMsg) {
 		Map<String, Object> returnMap = new HashMap<>();
-		returnMap.put("formData", ""); 
-		
+		returnMap.put("formData", "");
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		
-	    // 发件箱，收件箱，邮件主题;
-	    String TZ_FS_EMAIL = "", TZ_JS_EMAIL = "", TZ_EM_ZHUTI = "";
-	    // 邮件发送日期，邮件正文;
-	    String TZ_YJ_ZHWEN = "";
-	      
-	    String rwsl_ID = jacksonUtil.getString("rwsl_ID");
-	    String sql = "select a.TZ_FS_EMAIL,a.TZ_JS_EMAIL,a.TZ_EM_ZHUTI,b.TZ_YJFS_RQ,b.TZ_YJ_ZHWEN from PS_TZ_YJFSLSHI_TBL a, PS_TZ_YJZWLSHI_TBL b where a.TZ_RWSL_ID=b.TZ_RWSL_ID and a.TZ_RWSL_ID=?";
-	    Map<String,Object> map = jdbcTemplate.queryForMap(sql,new Object[]{rwsl_ID});
-	    if(map != null){
-	    	TZ_FS_EMAIL = map.get("TZ_FS_EMAIL") == null ? "" : (String)map.get("TZ_FS_EMAIL");
-	    	TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" : (String)map.get("TZ_JS_EMAIL");
-	    	TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI") == null ? "" : (String)map.get("TZ_EM_ZHUTI");
-	    	//TZ_YJFS_RQ = map.get("TZ_YJFS_RQ") == null ? "" : (String)map.get("TZ_YJFS_RQ");
-	    	TZ_YJ_ZHWEN = map.get("TZ_YJ_ZHWEN") == null ? "" : (String)map.get("TZ_YJ_ZHWEN");
-	    }
-	    Map<String, Object> rMap = new HashMap<>();
-	    rMap.put("senderEmail", TZ_FS_EMAIL);
-	    rMap.put("AddresseeEmail", TZ_JS_EMAIL);
-	    rMap.put("emailTheme", TZ_EM_ZHUTI);
-	    rMap.put("emailContent", TZ_YJ_ZHWEN);
-	    
-	    returnMap.replace("formData", rMap);
-	    
-	    return jacksonUtil.Map2json(returnMap);
+
+		// 发件箱，收件箱，邮件主题;
+		String TZ_FS_EMAIL = "", TZ_JS_EMAIL = "", TZ_EM_ZHUTI = "";
+		// 邮件发送日期，邮件正文;
+		String TZ_YJ_ZHWEN = "";
+
+		String rwsl_ID = jacksonUtil.getString("rwsl_ID");
+		String content = "";
+		String taskId = "";
+		String audCyId = "";
+
+		Map<String, Object> map = jdbcTemplate.queryForMap(
+				"select TZ_EML_SMS_TASK_ID,TZ_AUDCY_ID,TZ_FS_EMAIL,TZ_JS_EMAIL,TZ_EM_ZHUTI from PS_TZ_YJFSLSHI_TBL where TZ_RWSL_ID=?",
+				new Object[] { rwsl_ID });
+		if (map != null) {
+			taskId = map.get("TZ_EML_SMS_TASK_ID") == null ? "" : (String) map.get("TZ_EML_SMS_TASK_ID");
+			audCyId = map.get("TZ_AUDCY_ID") == null ? "" : (String) map.get("TZ_AUDCY_ID");
+			TZ_FS_EMAIL = map.get("TZ_FS_EMAIL") == null ? "" : (String) map.get("TZ_FS_EMAIL");
+			TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" : (String) map.get("TZ_JS_EMAIL");
+			TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI") == null ? "" : (String) map.get("TZ_EM_ZHUTI");
+		}
+
+		// 邮件正文不从正文历史表取值，正文历史表中链接为中转链接，查看历史记录影响EDM统计*张浪修改@20170109;
+		String audId = "";
+		String sendPcId = "";
+		String sendModel = "";
+		String tmplId = "";
+		String strJgId = "";
+		Map<String, Object> map2 = jdbcTemplate.queryForMap(
+				"SELECT TZ_AUDIENCE_ID,TZ_MLSM_QFPC_ID,TZ_JG_ID FROM PS_TZ_DXYJFSRW_TBL WHERE TZ_EML_SMS_TASK_ID=?",
+				new Object[] { taskId });
+		if (map2 != null) {
+			audId = map2.get("TZ_AUDIENCE_ID") == null ? "" : (String) map2.get("TZ_AUDIENCE_ID");
+			sendPcId = map2.get("TZ_MLSM_QFPC_ID") == null ? "" : (String) map2.get("TZ_MLSM_QFPC_ID");
+			strJgId = map2.get("TZ_JG_ID") == null ? "" : (String) map2.get("TZ_JG_ID");
+		}
+
+		Map<String, Object> map3 = jdbcTemplate.queryForMap(
+				"SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",
+				new Object[] { sendPcId });
+		if (map3 != null) {
+			sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
+			tmplId = map3.get("TZ_MLSM_QFPC_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
+			content = map3.get("TZ_JG_ID") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
+		}
+
+		ArrayList<String[]> arrayList = new ArrayList<>();
+		if ("NOR".equals(sendModel)) {
+			String strYmbId = "";
+			if (tmplId != null && !"".equals(tmplId)) {
+				strYmbId = jdbcTemplate.queryForObject(
+						"select TZ_YMB_ID from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
+						new Object[] { strJgId, tmplId }, "String");
+
+				arrayList = ayalysisMbSysVar.ayalyMbVar(strJgId, strYmbId, audId, audCyId);
+			}
+		}
+
+		if ("EXC".equals(sendModel)) {
+			arrayList = this.ayalyExcVar(sendPcId, audCyId);
+		}
+		if (arrayList != null && arrayList.size() > 0) {
+			for (int i = 0; i < arrayList.size(); i++) {
+				String[] str = arrayList.get(i);
+				String name = str[0];
+				String value = str[1];
+				content = content.replaceAll(name, value);
+			}
+		}
+		/*
+		 * String sql =
+		 * "select a.TZ_FS_EMAIL,a.TZ_JS_EMAIL,a.TZ_EM_ZHUTI,b.TZ_YJFS_RQ,b.TZ_YJ_ZHWEN from PS_TZ_YJFSLSHI_TBL a, PS_TZ_YJZWLSHI_TBL b where a.TZ_RWSL_ID=b.TZ_RWSL_ID and a.TZ_RWSL_ID=?"
+		 * ; Map<String,Object> map = jdbcTemplate.queryForMap(sql,new
+		 * Object[]{rwsl_ID}); if(map != null){ TZ_FS_EMAIL =
+		 * map.get("TZ_FS_EMAIL") == null ? "" : (String)map.get("TZ_FS_EMAIL");
+		 * TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" :
+		 * (String)map.get("TZ_JS_EMAIL"); TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI")
+		 * == null ? "" : (String)map.get("TZ_EM_ZHUTI"); //TZ_YJFS_RQ =
+		 * map.get("TZ_YJFS_RQ") == null ? "" : (String)map.get("TZ_YJFS_RQ");
+		 * TZ_YJ_ZHWEN = map.get("TZ_YJ_ZHWEN") == null ? "" :
+		 * (String)map.get("TZ_YJ_ZHWEN"); }
+		 */
+		Map<String, Object> rMap = new HashMap<>();
+		rMap.put("senderEmail", TZ_FS_EMAIL);
+		rMap.put("AddresseeEmail", TZ_JS_EMAIL);
+		rMap.put("emailTheme", TZ_EM_ZHUTI);
+		rMap.put("emailContent", content);
+
+		returnMap.replace("formData", rMap);
+
+		return jacksonUtil.Map2json(returnMap);
 	}
+	
+
+		//excel导入解析;
+		private ArrayList<String[]> ayalyExcVar(String strPicId, String audCyId) {
+			ArrayList<String[]> arrayList = new ArrayList<String[]>();
+			String sql = "SELECT TZ_XXX_NAME,TZ_FIELD_NAME FROM PS_TZ_EXC_SET_TBL WHERE TZ_MLSM_QFPC_ID=?";
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strPicId });
+			if (list != null && list.size() > 0) {
+				for (int i = 0; i < list.size(); i++) {
+					
+					String itemName = (String)list.get(i).get("TZ_XXX_NAME");
+					String StoreFieldName = (String)list.get(i).get("TZ_FIELD_NAME");
+					
+					String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
+					String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
+
+					String name = "\\[" + itemName + "\\]";
+					String[] returnString = { name, fieldValue };
+					arrayList.add(returnString);
+				}
+			}
+			return arrayList;
+		}
+		
+		@Override
+		public String tzUpdate(String[] actData, String[] errMsg) {
+			
+			Map<String, Object> returnmap = new HashMap<>();
+			returnmap.put("success", "发送失败");
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				// 重新发送任务ID;
+		        String taskId = jacksonUtil.getString("taskId");
+		        //String emlQfId = jacksonUtil.getString("emlQfId");
+		         
+				int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+				// 当前用户;
+				String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				// 生成运行控制ID;
+				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+				String s_dtm = datetimeFormate.format(new Date());
+				String runCntlId = "SMS" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
+
+				Psprcsrqst psprcsrqst = new Psprcsrqst();
+				psprcsrqst.setPrcsinstance(processInstance);
+				psprcsrqst.setRunId(runCntlId);
+				psprcsrqst.setOprid(currentOprid);
+				psprcsrqst.setRundttm(new Date());
+				psprcsrqst.setRunstatus("5");
+				psprcsrqstMapper.insert(psprcsrqst);
+
+				PsTzEmlTaskAet psTzEmlTaskAet = new PsTzEmlTaskAet();
+				psTzEmlTaskAet.setRunId(runCntlId);
+				psTzEmlTaskAet.setTzEmlSmsTaskId(taskId);
+				psTzEmlTaskAetMapper.insert(psTzEmlTaskAet);
+
+				try {
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_QF_MS_AE");
+					// 指定调度作业的相关参数
+					EngineParameters schdProcessParameters = new EngineParameters();
+
+					schdProcessParameters.setBatchServer("");
+					schdProcessParameters.setCycleExpression("");
+					schdProcessParameters.setLoginUserAccount("Admin");
+					schdProcessParameters.setPlanExcuteDateTime(new Date());
+					schdProcessParameters.setRunControlId(runCntlId);
+
+					// 调度作业
+					tmpEngine.schedule(schdProcessParameters);
+					returnmap.replace("success", "邮件已发送");
+					
+				} catch (Exception e) {
+				}
+				
+			}
+			return jacksonUtil.Map2json(returnmap);
+			
+		}
 }
