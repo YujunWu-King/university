@@ -341,7 +341,7 @@
 				name: 'fmqd_desc',
 				style:'margin-left:8px'
 			}]
-		}/*20170118 end*/,{
+		}/*20170118 end**/,{
 			  xtype: 'tabpanel',
 			  frame: true,
 			  activeTab: 0,
