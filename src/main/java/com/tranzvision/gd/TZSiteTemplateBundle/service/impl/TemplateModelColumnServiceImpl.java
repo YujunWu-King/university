@@ -52,7 +52,9 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 				psTzSitemColuT.setTzSitemId(siteId);
 				psTzSitemColuT.setTzColuId(lm_id);
 				psTzSitemColuT.setTzColuName(lm_name);
-				psTzSitemColuT.setTzColuType(lm_lx);
+				//修改添加活动类型
+				//psTzSitemColuT.setTzColuType(lm_lx);
+				psTzSitemColuT.setTzArtTypeId(lm_lx);
 				psTzSitemColuT.setTzTempId(lm_mb);
 				psTzSitemColuT.setTzContType(lm_nrlx);
 				psTzSitemColuT.setTzContTemp(lm_nrmb);
@@ -97,7 +99,10 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 				psTzSitemColuT.setTzSitemId(siteId);
 				psTzSitemColuT.setTzColuId(lm_id);
 				psTzSitemColuT.setTzColuName(lm_name);
-				psTzSitemColuT.setTzColuType(lm_lx);
+				//修改添加活动类型
+				//psTzSitemColuT.setTzColuType(lm_lx);
+				//psTzSitemColuT.setTzColuType(lm_lx);
+				psTzSitemColuT.setTzArtTypeId(lm_lx);
 				psTzSitemColuT.setTzTempId(lm_mb);
 				psTzSitemColuT.setTzContType(lm_nrlx);
 				psTzSitemColuT.setTzContTemp(lm_nrmb);
@@ -141,7 +146,9 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
 					jsonMap.put("lm_id", lm_id);
 					jsonMap.put("lm_name", psTzSitemColuT.getTzColuName());
-					jsonMap.put("lm_lx", psTzSitemColuT.getTzColuType());
+					//jsonMap.put("lm_lx", psTzSitemColuT.getTzColuType());
+					
+					jsonMap.put("lm_lx", psTzSitemColuT.getTzArtTypeId());
 					jsonMap.put("lm_mb", psTzSitemColuT.getTzTempId());
 					jsonMap.put("lm_nrlx",psTzSitemColuT.getTzContType() );
 					jsonMap.put("lm_nrmb",psTzSitemColuT.getTzContTemp());

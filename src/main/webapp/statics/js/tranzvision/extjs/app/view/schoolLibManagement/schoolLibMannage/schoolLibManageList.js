@@ -11,12 +11,13 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
+        'Ext.slider.Widget',
         'KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageController',
         'KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageModel',
         'KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageStore'
     ],
     xtype: 'schoolMgList',
-    title:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.schoolLibList","院校库管路") ,
+    title:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.schoolLibList","院校库管理") ,
     controller: 'schoolMgConter',
  /*   listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
@@ -38,7 +39,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                 header:false,
                 frame: true,
                 dockedItems:[{
-                    xtype:"toolbar",
+                   xtype:"toolbar",
                     items:[
                          {text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.query","查询"),tooltip:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.querydata","查询数据"),iconCls:"query",handler:'queryResSet'},"-",
                          {text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.add","新增"),tooltip:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.adddata","新增数据"),iconCls:"add",handler:'addResSet'},"-",
@@ -46,7 +47,14 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                          {text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.remove","删除"),tooltip:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.removedata","删除选中的数据"),iconCls:"remove",handler:'deleteResSets'}
  
                         
-                    ]
+                    ]},
+                    {xtype:"toolbar",
+                    dock:"bottom",
+			        ui:"footer",
+                    items:['->', 
+            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.save","保存"),iconCls:"save",handler:'onSaveRemoveData'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.ensure","确定"),iconCls:"ensure",handler:'ensureonSaveRemoveData'},
+            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.close","关闭"),iconCls:"close",handler:'closeResSets'}]
                 }],
                  columns: [{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.OrganizationID","机构代码") ,
@@ -88,10 +96,10 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                 minWidth: 100
             
             },{
-                text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.State","州"),
+                text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.State","洲"),
                 dataIndex: 'state',
                 minWidth: 100
-               
+
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.type","类型"),
                 dataIndex: 'type',
@@ -128,13 +136,11 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     plugins: new Ext.ux.ProgressBarPager()
                 }
             }]
+
         });
         this.callParent();
-    },
-    buttons: [ 
-            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.save","保存"),iconCls:"save",handler:'saveResSets'},
-            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.ensure","确定"),iconCls:"ensure",handler:'ensureResSets'},
-            {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.close","关闭"),iconCls:"close",handler:'closeResSets'}]
+    }
+   
 });
 
 
