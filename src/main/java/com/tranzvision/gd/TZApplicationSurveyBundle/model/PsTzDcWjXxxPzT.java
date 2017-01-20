@@ -79,6 +79,8 @@ public class PsTzDcWjXxxPzT extends PsTzDcWjXxxPzTKey {
 
     private String tzXxxQid;
 
+    private String tzIsAvg;
+
     public String getTzXxxSlid() {
         return tzXxxSlid;
     }
@@ -389,5 +391,13 @@ public class PsTzDcWjXxxPzT extends PsTzDcWjXxxPzTKey {
 
     public void setTzXxxQid(String tzXxxQid) {
         this.tzXxxQid = tzXxxQid == null ? null : tzXxxQid.trim();
+    }
+
+    public String getTzIsAvg() {
+        return tzIsAvg;
+    }
+
+    public void setTzIsAvg(String tzIsAvg) {
+        this.tzIsAvg = tzIsAvg == null ? null : tzIsAvg.trim();
     }
 }

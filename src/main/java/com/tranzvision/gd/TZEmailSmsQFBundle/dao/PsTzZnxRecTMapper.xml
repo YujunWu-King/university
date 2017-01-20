@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzZnxRecTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    <id column="TZ_ZNX_RECID" property="tzZnxRecid" jdbcType="VARCHAR" />
+    <id column="TZ_ZNX_MSGID" property="tzZnxMsgid" jdbcType="VARCHAR" />
+    <result column="TZ_ZNX_STATUS" property="tzZnxStatus" jdbcType="VARCHAR" />
+    <result column="TZ_REC_DELSTATUS" property="tzRecDelstatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" extends="BaseResultMap" >
+    <result column="TZ_MSG_TEXT" property="tzMsgText" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZNX_RECID, TZ_ZNX_MSGID, TZ_ZNX_STATUS, TZ_REC_DELSTATUS
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MSG_TEXT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_ZNX_REC_T
+    where TZ_ZNX_RECID = #{tzZnxRecid,jdbcType=VARCHAR}
+      and TZ_ZNX_MSGID = #{tzZnxMsgid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecTKey" >
+    delete from PS_TZ_ZNX_REC_T
+    where TZ_ZNX_RECID = #{tzZnxRecid,jdbcType=VARCHAR}
+      and TZ_ZNX_MSGID = #{tzZnxMsgid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    insert into PS_TZ_ZNX_REC_T (TZ_ZNX_RECID, TZ_ZNX_MSGID, TZ_ZNX_STATUS, 
+      TZ_REC_DELSTATUS, TZ_MSG_TEXT)
+    values (#{tzZnxRecid,jdbcType=VARCHAR}, #{tzZnxMsgid,jdbcType=VARCHAR}, #{tzZnxStatus,jdbcType=VARCHAR}, 
+      #{tzRecDelstatus,jdbcType=VARCHAR}, #{tzMsgText,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    insert into PS_TZ_ZNX_REC_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZnxRecid != null" >
+        TZ_ZNX_RECID,
+      </if>
+      <if test="tzZnxMsgid != null" >
+        TZ_ZNX_MSGID,
+      </if>
+      <if test="tzZnxStatus != null" >
+        TZ_ZNX_STATUS,
+      </if>
+      <if test="tzRecDelstatus != null" >
+        TZ_REC_DELSTATUS,
+      </if>
+      <if test="tzMsgText != null" >
+        TZ_MSG_TEXT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZnxRecid != null" >
+        #{tzZnxRecid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxMsgid != null" >
+        #{tzZnxMsgid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZnxStatus != null" >
+        #{tzZnxStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRecDelstatus != null" >
+        #{tzRecDelstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgText != null" >
+        #{tzMsgText,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    update PS_TZ_ZNX_REC_T
+    <set >
+      <if test="tzZnxStatus != null" >
+        TZ_ZNX_STATUS = #{tzZnxStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRecDelstatus != null" >
+        TZ_REC_DELSTATUS = #{tzRecDelstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsgText != null" >
+        TZ_MSG_TEXT = #{tzMsgText,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_ZNX_RECID = #{tzZnxRecid,jdbcType=VARCHAR}
+      and TZ_ZNX_MSGID = #{tzZnxMsgid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    update PS_TZ_ZNX_REC_T
+    set TZ_ZNX_STATUS = #{tzZnxStatus,jdbcType=VARCHAR},
+      TZ_REC_DELSTATUS = #{tzRecDelstatus,jdbcType=VARCHAR},
+      TZ_MSG_TEXT = #{tzMsgText,jdbcType=LONGVARCHAR}
+    where TZ_ZNX_RECID = #{tzZnxRecid,jdbcType=VARCHAR}
+      and TZ_ZNX_MSGID = #{tzZnxMsgid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzZnxRecT" >
+    update PS_TZ_ZNX_REC_T
+    set TZ_ZNX_STATUS = #{tzZnxStatus,jdbcType=VARCHAR},
+      TZ_REC_DELSTATUS = #{tzRecDelstatus,jdbcType=VARCHAR}
+    where TZ_ZNX_RECID = #{tzZnxRecid,jdbcType=VARCHAR}
+      and TZ_ZNX_MSGID = #{tzZnxMsgid,jdbcType=VARCHAR}
+  </update>
+</mapper>

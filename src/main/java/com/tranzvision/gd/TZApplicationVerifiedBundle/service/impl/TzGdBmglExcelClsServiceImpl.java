@@ -170,7 +170,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psTzBmbDceT.setTzJdUrl(absexpDirPath);
 				psTzBmbDceTMapper.insert(psTzBmbDceT);
 				
-				processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+				//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+				processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 				psTzExcelDrxxT.setProcessinstance(processinstance);
 				psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");

@@ -145,7 +145,7 @@ public class TzLmDecoratedServiceImpl extends FrameworkImpl {
 
 					switch (strPageType) {
 					case "homepage":
-						tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, errMsg);
+						tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId,"", errMsg);
 						break;
 
 					case "loginpage":

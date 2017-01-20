@@ -110,7 +110,7 @@ public class TzAreaColuServiceImpl extends FrameworkImpl {
 
 			strResultContent = siteRepCssServiceImpl.repContextPath(strResultContent);
 			strResultContent = siteRepCssServiceImpl.repSkinsImgPath(strResultContent, strSkinId);
-			strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strScripts, strOrgId,
+			strResultContent = siteRepCssServiceImpl.repJavascriptTags(strResultContent, strScripts,"", strOrgId,
 					strSiteId, "");
 
 			strResultContent = siteRepCssServiceImpl.repTitle(strResultContent, strSiteId);

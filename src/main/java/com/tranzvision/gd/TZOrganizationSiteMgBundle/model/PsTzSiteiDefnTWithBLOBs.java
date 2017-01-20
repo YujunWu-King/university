@@ -27,6 +27,12 @@ public class PsTzSiteiDefnTWithBLOBs extends PsTzSiteiDefnT {
 
     private String tzEnrollPubcode;
 
+    private String tzPerfectSavecode;
+
+    private String tzPerfectPrecode;
+
+    private String tzPerfectPubcode;
+
     public String getTzSkinCode() {
         return tzSkinCode;
     }
@@ -129,5 +135,29 @@ public class PsTzSiteiDefnTWithBLOBs extends PsTzSiteiDefnT {
 
     public void setTzEnrollPubcode(String tzEnrollPubcode) {
         this.tzEnrollPubcode = tzEnrollPubcode == null ? null : tzEnrollPubcode.trim();
+    }
+
+    public String getTzPerfectSavecode() {
+        return tzPerfectSavecode;
+    }
+
+    public void setTzPerfectSavecode(String tzPerfectSavecode) {
+        this.tzPerfectSavecode = tzPerfectSavecode == null ? null : tzPerfectSavecode.trim();
+    }
+
+    public String getTzPerfectPrecode() {
+        return tzPerfectPrecode;
+    }
+
+    public void setTzPerfectPrecode(String tzPerfectPrecode) {
+        this.tzPerfectPrecode = tzPerfectPrecode == null ? null : tzPerfectPrecode.trim();
+    }
+
+    public String getTzPerfectPubcode() {
+        return tzPerfectPubcode;
+    }
+
+    public void setTzPerfectPubcode(String tzPerfectPubcode) {
+        this.tzPerfectPubcode = tzPerfectPubcode == null ? null : tzPerfectPubcode.trim();
     }
 }

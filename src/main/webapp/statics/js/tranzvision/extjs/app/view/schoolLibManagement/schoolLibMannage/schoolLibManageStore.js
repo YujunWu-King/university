@@ -6,9 +6,9 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
     alias: 'store.resourceStore',
     model: 'KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageModel',
     pageSize: 5,
-    autoLoad:false,
+    autoLoad:true,
     comID: 'TZ_SCH_LIB_COM',
     pageID: 'TZ_SCH_LIST_STD',
-    tzStoreParams: '{}',
+    tzStoreParams: '{"cfgSrhId":"TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.TZ_SCH_LIB_VW","condition":{}}',
     proxy: Ext.tzListProxy()
 });

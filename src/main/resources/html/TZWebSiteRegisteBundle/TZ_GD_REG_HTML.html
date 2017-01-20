@@ -28,7 +28,7 @@
 	    		<div class="main_full_line_title">用户注册</div>
 	    		<div class="main_full_full_right">
 					<a href="%bind(:6)" class="blue_">
-						&nbsp;&nbsp;&nbsp;返回
+						<img src="%bind(:4)/arrow.png" width="8" height="7">返回
 					</a>
 				</div>
 	  		</div>
@@ -42,13 +42,13 @@
 
 			<div class="main_full_line" id="button_yzfs" %bind(:8)>
 				<div class="main_full_line_right">
-	    			<input id="send_Verification" type="button" value="发送手机验证码" class="button_351px" onclick="send_yzm()"/>
+	    			<input id="send_Verification" type="button" value="发送手机验证码" class="button_351px" onclick="send_yzm()" style="width:351px;"/>
 				</div>
 	  		</div>
 	  		<div class="main_full_lines"></div>
 			<div class="main_full_line" id="yzfsMobile" %bind(:8)>
 				<div class="main_full_line_left">
-					<span class="reg_title_star">*</span>验证码:
+					<span class="reg_title_star">*</span>验证码：
 				</div>
 				<div class="main_full_line_right">
 					<input name="yzm" type="text" class="input_351px" id="yzm" onblur="check_yzm(this.value)"/>
@@ -62,7 +62,7 @@
 			</div>
 			<div class="main_full_line" id="yzfsEmail" %bind(:7)>
 				<div class="main_full_line_left">
-					<span class="reg_title_star">*</span>验证码:
+					<span class="reg_title_star">*</span>验证码：
 				</div>
 				<div class="main_full_line_right">
 			    	<input name="yzmEmail" type="text" class="input_225px" id="yzmEmail"  onblur="check_yzmEmail(this.value)"/>

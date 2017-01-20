@@ -38,7 +38,7 @@ public class TzEmailBulkMgrClsServiceImpl extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "TZ_DSFS_DT", "DESC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_MLSM_QFPC_ID", "TZ_MLSM_QFPC_DESC", "TZ_MAL_SUBJUECT", "TZ_CREPER", "TZ_DSFS_DT", "TZ_JG_ID" };
+		String[] resultFldArray = { "TZ_MLSM_QFPC_ID", "TZ_MLSM_QFPC_DESC", "TZ_MAL_SUBJUECT", "TZ_CREPER", "TZ_DSFS_DT", "TZ_JG_ID" ,"TZ_EDM_FLAG"};
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
@@ -55,6 +55,7 @@ public class TzEmailBulkMgrClsServiceImpl extends FrameworkImpl {
 				mapList.put("crePer", rowList[3]);
 				mapList.put("creDt", rowList[4]);
 				mapList.put("orgId", rowList[5]);
+				mapList.put("edmFlag", rowList[6]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
