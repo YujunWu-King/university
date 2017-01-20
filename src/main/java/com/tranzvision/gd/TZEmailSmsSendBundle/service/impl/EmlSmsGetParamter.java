@@ -306,25 +306,25 @@ public class EmlSmsGetParamter {
 		}
 	}
 
-	// 获得推荐人姓名（推荐信提醒邮件）;
+	// 获得推荐人姓名（推荐信提醒邮件）;  modity by caoy 修改查询 推荐信实例ID的SQL 把email去掉 改由TZ_TJR_ID查询
 	public String getTjxUrl(String[] paramters) {
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-			String sql = "SELECT TZ_BMB_ID,OPRID,TZ_ZY_EMAIL FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String sql = "SELECT TZ_BMB_ID,OPRID,TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
 			String audId = paramters[0];
 			String audCyId = paramters[1];
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { audId, audCyId });
 
-			String str_oprid = "", str_bmb_id = "", str_email = "";
+			String str_oprid = "", str_bmb_id = "", TZ_HUOD_ID = "";
 			if (map != null) {
 				str_bmb_id = (String) map.get("TZ_BMB_ID");
 				str_oprid = (String) map.get("OPRID");
-				str_email = (String) map.get("TZ_ZY_EMAIL");
+				TZ_HUOD_ID = (String) map.get("TZ_HUOD_ID");
 
 				String str_ref_id = jdbcTemplate.queryForObject(
-						"SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_EMAIL=? AND OPRID=?",
-						new Object[] { Long.parseLong(str_bmb_id), str_email, str_oprid }, String.class);
+						"SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? AND OPRID=?",
+						new Object[] { Long.parseLong(str_bmb_id), TZ_HUOD_ID, str_oprid }, String.class);
 				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
 						.getRequest();
 				String serv = "http://" + request.getServerName() + ":" + request.getServerPort()

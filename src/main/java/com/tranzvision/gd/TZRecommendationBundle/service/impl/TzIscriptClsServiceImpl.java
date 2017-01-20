@@ -250,15 +250,17 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1,
 						strAdd2, strAdd3, strAdd4, strAdd5, strAdd6, strAdd7, strAdd8, strAdd9, strAdd10, strTjrgx,
 						str_sysfilename, str_filename, "S", "Y", accessPath, tzAttAUrl);
+				//System.out.println("mess:" + mess);
 				if ("SUCCESS".equals(mess)) {
-					
+
 					if (jacksonUtil.containsKey("send_falg")) {
 						sendFlag = jacksonUtil.getString("send_falg");
 					} else {
 						sendFlag = "Y";
 					}
-					
-					mess = tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId,sendFlag);
+					//System.out.println("sendFlag:" + sendFlag);
+					mess = tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId, sendFlag);
+					//System.out.println("mess:" + mess);
 					if ("Y".equals(strTzsqrFlg)) {
 						// 发送邮件通知给申请人;
 						if ("SUCCESS".equals(mess)) {
