@@ -90,6 +90,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgr', {
                                 iconCls: 'edit',
                                 tooltip: Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.editZnxTask","编辑"),
                                 handler:'editZnxTask'
+                            },{
+                                iconCls: 'view',
+                                tooltip: Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.vwHistory","查看站内信发送历史"),
+                                handler:'viewZnxHistory'
                             }
                         ]
                     }],

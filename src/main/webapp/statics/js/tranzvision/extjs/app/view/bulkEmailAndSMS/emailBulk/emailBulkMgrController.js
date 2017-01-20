@@ -454,7 +454,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
         cmp = new ViewClass();
 
         cmp.on('afterrender',function(panel){
-            console.log(panel)
             var store=panel.getStore();
             var tzStoreParams ='{"storeType":"history","emailID":"'+emailID+'"}';
             store.tzStoreParams = tzStoreParams;

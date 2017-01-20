@@ -692,8 +692,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                         tbar: [
                             {
                                 xtype: 'form',
-                                //bodyStyle: 'padding:3px 0px 0px 0px',
-								height: 32,
+                                bodyStyle: 'padding:3px 0px 0px 0px',
+								height: 30,
                                 items: [
                                     {
                                         xtype: 'filefield',
@@ -701,7 +701,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                         //name: 'attachmentUpload',
                                         name: 'orguploadfile',
                                         buttonOnly: true,
-                                        width: 78,
+                                        width: 62,
 										buttonConfig:{
 											iconCls: 'upload',
 											text: '<font style="color:#666;">上传</font>',

@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     pageId:' ',
     BulkTaskId:' ',
-/*
+
     listeners: {
         close:function(t){
             for(var i =0;i<refreshTaskMgr.tasks.length;i++){
@@ -58,15 +58,17 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
                                         t.getController().pageReadonly(t.child('form'));
                                     }
 									if (jsonObject.comContent.rwzxZt == "C" || jsonObject.comContent.rwzxZt == "D") {
-                                        t.down('button[reference=revokeBtn]').setVisible(false);
-										t.down('displayfield[name=dsfsInfo]').setVisible(false);
+                                       t.down('button[reference=revokeBtn]').setVisible(false);
+									   //t.down('displayfield[name=dsfsInfo]').setVisible(false);
                                     }
 									
+									/*
 									if (jsonObject.comContent.rwzxZt == "B" && t.down('checkbox[name=dsfsFlag]').getValue()) {
 										var dsfsInfo='<span style="color:red">邮件将正在发送中...</span>';
 										t.down('displayfield[name=dsfsInfo]').setValue(dsfsInfo);
 										t.down('displayfield[name=dsfsInfo]').setVisible(true);
                                     }
+                                    */
                                 }
                             });
                         }
@@ -78,7 +80,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
             refreshTaskMgr.start(refreshTask);
         }
     },
-*/
     initComponent: function () {
         var me = this;
 
@@ -374,8 +375,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
                         tbar: [
                             {
                                 xtype: 'form',
-                                //bodyStyle: 'padding:3px 0px 0px 0px',
-								height: 32,
+                                bodyStyle: 'padding:3px 0px 0px 0px',
+								height: 30,
                                 items: [
                                     {
                                         xtype: 'filefield',
@@ -383,7 +384,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
                                         //name: 'attachmentUpload',
                                         name: 'orguploadfile',
                                         buttonOnly: true,
-                                        width: 78,
+                                        width: 62,
 										buttonConfig:{
 											iconCls: 'upload',
 											text: '<font style="color:#666;">上传</font>',
@@ -417,7 +418,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
                             ]
                         }]
                     }]
-                }]
                 },{
                     xtype:'fieldset',
                     title: '创建人信息',
@@ -446,10 +446,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_DET_STD.creDt","创建时间"),
                         margin:'8px 0 0 8px',
-                        name: 'creDt',
-                        hidden:true
+                        name: 'creDt'
                     }]
                 }]
+            }]
         });
         this.callParent();
     },
@@ -458,16 +458,16 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
         iconCls:"save",
         handler: 'onPanelSave',
         reference:"saveBtn"
-    }/*,{
+    },{
         text: '预览',
         iconCls:"preview",
-        handler: 'preViewEmail'
-    }*/,{
+        handler: 'preViewZnx'
+    },{
         text: '发送',
         iconCls:"send",
-        handler: 'sendEmail',
+        handler: 'sendZnx',
         reference:"sendBtn"
-    }/*,{
+    },{
         text: '中断发送',
         iconCls:"revoke",
         handler: 'interSend',
@@ -479,7 +479,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDet', {
         handler: 'viewSendHistory',
         reference:"viewHisBtn"
         //disabled:true
-    }*/,{
+    },{
         text: '关闭',
         iconCls:"close",
         handler: 'onPanelClose'

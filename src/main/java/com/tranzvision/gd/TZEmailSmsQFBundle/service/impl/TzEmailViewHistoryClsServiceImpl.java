@@ -189,84 +189,89 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	public String tzOther(String OperateType, String comParams, String[] errorMsg) {
 		// 返回值;
 		String strResultConten = "";
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
 		String type = "";
-		if(jacksonUtil.containsKey("type")){
+		if (jacksonUtil.containsKey("type")) {
 			type = jacksonUtil.getString("type");
 		}
-		
+
 		if ("viewEachEmail".equals(type)) {
 			strResultConten = this.viewEachEmail(comParams, errorMsg);
 		}
 
-		
 		return strResultConten;
 	}
-	
-	private String viewEachEmail(String comParams, String[] errorMsg){
+
+	private String viewEachEmail(String comParams, String[] errorMsg) {
 		Map<String, Object> returnMap = new HashMap<>();
-		returnMap.put("formData", ""); 
-		
+		returnMap.put("formData", "");
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		
-	    // 发件箱，收件箱，邮件主题;
-	    String TZ_FS_EMAIL = "", TZ_JS_EMAIL = "", TZ_EM_ZHUTI = "";
-	    // 邮件发送日期，邮件正文;
-	    String TZ_YJ_ZHWEN = "";
-	      
-	    String rwsl_ID = jacksonUtil.getString("rwsl_ID");
-	    String content = "";
-	    String taskId = "";
-	    String audCyId = "";
-	    
-	    
-	    Map<String,Object> map = jdbcTemplate.queryForMap("select TZ_EML_SMS_TASK_ID,TZ_AUDCY_ID,TZ_FS_EMAIL,TZ_JS_EMAIL,TZ_EM_ZHUTI from PS_TZ_YJFSLSHI_TBL where TZ_RWSL_ID=?", new Object[]{rwsl_ID});
-	    if (map != null){
-	    	 taskId = map.get("TZ_EML_SMS_TASK_ID") == null ? "" : (String)map.get("TZ_EML_SMS_TASK_ID");
-	    	 audCyId = map.get("TZ_AUDCY_ID") == null ? "" :(String)map.get("TZ_AUDCY_ID");
-	    	 TZ_FS_EMAIL = map.get("TZ_FS_EMAIL") == null ? "" :(String)map.get("TZ_FS_EMAIL");
-	    	 TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" :(String)map.get("TZ_JS_EMAIL");
-	    	 TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI") == null ? "" :(String)map.get("TZ_EM_ZHUTI");
-	    }
-	    
-	
-	    //邮件正文不从正文历史表取值，正文历史表中链接为中转链接，查看历史记录影响EDM统计*张浪修改@20170109;
-	    String audId = "";
-	    String sendPcId = "";
-	    String sendModel = "";
-	    String tmplId = "";
-	    String strJgId = "";
-	    Map<String,Object> map2 =jdbcTemplate.queryForMap("SELECT TZ_AUDIENCE_ID,TZ_MLSM_QFPC_ID,TZ_JG_ID FROM PS_TZ_DXYJFSRW_TBL WHERE TZ_EML_SMS_TASK_ID=?",new Object[]{taskId});
-	    if (map2 != null){
-	    	audId = map2.get("TZ_AUDIENCE_ID") == null ? "" : (String)map2.get("TZ_AUDIENCE_ID");
-	    	sendPcId = map2.get("TZ_MLSM_QFPC_ID") == null ? "" :(String)map2.get("TZ_MLSM_QFPC_ID");
-	    	strJgId = map2.get("TZ_JG_ID") == null ? "" :(String)map2.get("TZ_JG_ID");
-	    }
-	    
-	    Map<String,Object> map3 =jdbcTemplate.queryForMap("SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",new Object[]{sendPcId});
-	    if (map3 != null){
-	    	sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String)map3.get("TZ_SEND_MODEL");
-	    	tmplId = map3.get("TZ_MLSM_QFPC_ID") == null ? "" :(String)map3.get("TZ_TMPL_ID");
-	    	content = map3.get("TZ_JG_ID") == null ? "" :(String)map3.get("TZ_MAL_CONTENT");
-	    }
-	    
-	    ArrayList<String[]> arrayList = new ArrayList<>();
-	    if("NOR".equals(sendModel )){
-	    	String strYmbId = "";
-	    	if(tmplId != null && !"".equals(tmplId)){
-	    		strYmbId = jdbcTemplate.queryForObject("select TZ_YMB_ID from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?", new Object[]{strJgId, tmplId},"String");
 
-	    		arrayList = ayalysisMbSysVar.ayalyMbVar(strJgId, strYmbId, audId, audCyId);
-	    	}
-	    }
-	    
-	    if("EXC".equals(sendModel )){
-	    	arrayList = this.ayalyExcVar(sendPcId, audCyId);
-	    }
-	    if (arrayList != null && arrayList.size() > 0) {
+		// 发件箱，收件箱，邮件主题;
+		String TZ_FS_EMAIL = "", TZ_JS_EMAIL = "", TZ_EM_ZHUTI = "";
+		// 邮件发送日期，邮件正文;
+		String TZ_YJ_ZHWEN = "";
+
+		String rwsl_ID = jacksonUtil.getString("rwsl_ID");
+		String content = "";
+		String taskId = "";
+		String audCyId = "";
+
+		Map<String, Object> map = jdbcTemplate.queryForMap(
+				"select TZ_EML_SMS_TASK_ID,TZ_AUDCY_ID,TZ_FS_EMAIL,TZ_JS_EMAIL,TZ_EM_ZHUTI from PS_TZ_YJFSLSHI_TBL where TZ_RWSL_ID=?",
+				new Object[] { rwsl_ID });
+		if (map != null) {
+			taskId = map.get("TZ_EML_SMS_TASK_ID") == null ? "" : (String) map.get("TZ_EML_SMS_TASK_ID");
+			audCyId = map.get("TZ_AUDCY_ID") == null ? "" : (String) map.get("TZ_AUDCY_ID");
+			TZ_FS_EMAIL = map.get("TZ_FS_EMAIL") == null ? "" : (String) map.get("TZ_FS_EMAIL");
+			TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" : (String) map.get("TZ_JS_EMAIL");
+			TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI") == null ? "" : (String) map.get("TZ_EM_ZHUTI");
+		}
+
+		// 邮件正文不从正文历史表取值，正文历史表中链接为中转链接，查看历史记录影响EDM统计*张浪修改@20170109;
+		String audId = "";
+		String sendPcId = "";
+		String sendModel = "";
+		String tmplId = "";
+		String strJgId = "";
+		Map<String, Object> map2 = jdbcTemplate.queryForMap(
+				"SELECT TZ_AUDIENCE_ID,TZ_MLSM_QFPC_ID,TZ_JG_ID FROM PS_TZ_DXYJFSRW_TBL WHERE TZ_EML_SMS_TASK_ID=?",
+				new Object[] { taskId });
+		if (map2 != null) {
+			audId = map2.get("TZ_AUDIENCE_ID") == null ? "" : (String) map2.get("TZ_AUDIENCE_ID");
+			sendPcId = map2.get("TZ_MLSM_QFPC_ID") == null ? "" : (String) map2.get("TZ_MLSM_QFPC_ID");
+			strJgId = map2.get("TZ_JG_ID") == null ? "" : (String) map2.get("TZ_JG_ID");
+		}
+
+		Map<String, Object> map3 = jdbcTemplate.queryForMap(
+				"SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",
+				new Object[] { sendPcId });
+		if (map3 != null) {
+			sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
+			tmplId = map3.get("TZ_MLSM_QFPC_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
+			content = map3.get("TZ_JG_ID") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
+		}
+
+		ArrayList<String[]> arrayList = new ArrayList<>();
+		if ("NOR".equals(sendModel)) {
+			String strYmbId = "";
+			if (tmplId != null && !"".equals(tmplId)) {
+				strYmbId = jdbcTemplate.queryForObject(
+						"select TZ_YMB_ID from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
+						new Object[] { strJgId, tmplId }, "String");
+
+				arrayList = ayalysisMbSysVar.ayalyMbVar(strJgId, strYmbId, audId, audCyId);
+			}
+		}
+
+		if ("EXC".equals(sendModel)) {
+			arrayList = this.ayalyExcVar(sendPcId, audCyId);
+		}
+		if (arrayList != null && arrayList.size() > 0) {
 			for (int i = 0; i < arrayList.size(); i++) {
 				String[] str = arrayList.get(i);
 				String name = str[0];
@@ -274,26 +279,28 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				content = content.replaceAll(name, value);
 			}
 		}
-	    /*
-	    String sql = "select a.TZ_FS_EMAIL,a.TZ_JS_EMAIL,a.TZ_EM_ZHUTI,b.TZ_YJFS_RQ,b.TZ_YJ_ZHWEN from PS_TZ_YJFSLSHI_TBL a, PS_TZ_YJZWLSHI_TBL b where a.TZ_RWSL_ID=b.TZ_RWSL_ID and a.TZ_RWSL_ID=?";
-	    Map<String,Object> map = jdbcTemplate.queryForMap(sql,new Object[]{rwsl_ID});
-	    if(map != null){
-	    	TZ_FS_EMAIL = map.get("TZ_FS_EMAIL") == null ? "" : (String)map.get("TZ_FS_EMAIL");
-	    	TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" : (String)map.get("TZ_JS_EMAIL");
-	    	TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI") == null ? "" : (String)map.get("TZ_EM_ZHUTI");
-	    	//TZ_YJFS_RQ = map.get("TZ_YJFS_RQ") == null ? "" : (String)map.get("TZ_YJFS_RQ");
-	    	TZ_YJ_ZHWEN = map.get("TZ_YJ_ZHWEN") == null ? "" : (String)map.get("TZ_YJ_ZHWEN");
-	    }
-	    */
-	    Map<String, Object> rMap = new HashMap<>();
-	    rMap.put("senderEmail", TZ_FS_EMAIL);
-	    rMap.put("AddresseeEmail", TZ_JS_EMAIL);
-	    rMap.put("emailTheme", TZ_EM_ZHUTI);
-	    rMap.put("emailContent", content);
-	    
-	    returnMap.replace("formData", rMap);
-	    
-	    return jacksonUtil.Map2json(returnMap);
+		/*
+		 * String sql =
+		 * "select a.TZ_FS_EMAIL,a.TZ_JS_EMAIL,a.TZ_EM_ZHUTI,b.TZ_YJFS_RQ,b.TZ_YJ_ZHWEN from PS_TZ_YJFSLSHI_TBL a, PS_TZ_YJZWLSHI_TBL b where a.TZ_RWSL_ID=b.TZ_RWSL_ID and a.TZ_RWSL_ID=?"
+		 * ; Map<String,Object> map = jdbcTemplate.queryForMap(sql,new
+		 * Object[]{rwsl_ID}); if(map != null){ TZ_FS_EMAIL =
+		 * map.get("TZ_FS_EMAIL") == null ? "" : (String)map.get("TZ_FS_EMAIL");
+		 * TZ_JS_EMAIL = map.get("TZ_JS_EMAIL") == null ? "" :
+		 * (String)map.get("TZ_JS_EMAIL"); TZ_EM_ZHUTI = map.get("TZ_EM_ZHUTI")
+		 * == null ? "" : (String)map.get("TZ_EM_ZHUTI"); //TZ_YJFS_RQ =
+		 * map.get("TZ_YJFS_RQ") == null ? "" : (String)map.get("TZ_YJFS_RQ");
+		 * TZ_YJ_ZHWEN = map.get("TZ_YJ_ZHWEN") == null ? "" :
+		 * (String)map.get("TZ_YJ_ZHWEN"); }
+		 */
+		Map<String, Object> rMap = new HashMap<>();
+		rMap.put("senderEmail", TZ_FS_EMAIL);
+		rMap.put("AddresseeEmail", TZ_JS_EMAIL);
+		rMap.put("emailTheme", TZ_EM_ZHUTI);
+		rMap.put("emailContent", content);
+
+		returnMap.replace("formData", rMap);
+
+		return jacksonUtil.Map2json(returnMap);
 	}
 	
 

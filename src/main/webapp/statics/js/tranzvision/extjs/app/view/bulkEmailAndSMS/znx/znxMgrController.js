@@ -107,7 +107,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
             var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getCreInfo","comParams":{}}';
             Ext.tzLoad(tzParams,function(responseData){
             	//znxDtForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-
+    	
             	znxDtForm.getForm().setValues(responseData);
                 panel.BulkTaskId = znxDtForm.down('textfield[name=znxQfId]').getValue();
 
@@ -186,13 +186,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
         var emlBulkGridRecord = grid.store.getAt(rowIndex);
         var znxQfId = emlBulkGridRecord.data.znxQfId;
 
-        cmp.on('afterrender',function(panel){
-            var senderStore = new KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetSenderStore();
-            var receverStore = new KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetReceiverStore();
-            var CCStore = new KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetCCStore();
+        cmp.on('afterrender',function(panel){  
+            var receverStore = new KitchenSink.view.bulkEmailAndSMS.znx.znxDetReceiverStore();
             var ZnxTmplStore = new KitchenSink.view.bulkEmailAndSMS.znx.znxDetZnxTmplStore();
             var attaStore = new KitchenSink.view.bulkEmailAndSMS.znx.znxAttaStore();
             var znxItemStore = new KitchenSink.view.bulkEmailAndSMS.znx.znxDetZnxItemStore();
+
 
             var emlBkDetForm = panel.child('form');
 
@@ -201,13 +200,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 
             var par = '{"znxQfId": "'+znxQfId+'","queryID": "recever"}';
             receverStore.tzStoreParams=par;
-
-			senderStore.load({
-                callback: function (records, options, success) {
-                    //emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
-                }
-            });
-			emlBkDetForm.down('combobox[name=sender]').setStore(senderStore);
 			
 			receverStore.load({
 				callback: function (records, options, success) {
@@ -215,14 +207,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 				}
 			});
 			emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
-			
-			CCStore.tzStoreParams='{"znxQfId": "'+znxQfId+'","queryID": "CC"}';
-			CCStore.load({
-				callback: function (records, options, success) {
-					//emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
-				}
-			});
-			emlBkDetForm.down('tagfield[reference=mailCC]').setStore(CCStore);
 			
 			ZnxTmplStore.load({
 				callback: function (records, options, success) {
@@ -233,18 +217,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 			
 			var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"QF","comParams":{"znxQfId":"'+znxQfId+'"}}';
 			Ext.tzLoad(tzParams,function(responseData){
-				emlBkDetForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
-				emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-
 				emlBkDetForm.getForm().setValues(responseData);
-				if(responseData.dsfsTime == ""){
-					emlBkDetForm.down('timefield[name=dsfsTime]').setValue('00:00'); /*解决报时间无效错误*/		
-				}
+				
 				panel.BulkTaskId = emlBkDetForm.down('textfield[name=znxQfId]').getValue();
 
-				if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
+				/*
 					emlBkDetForm.down('button[reference=setZnxTmpl]').disabled=false;
-					var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getEmlTmpItem","comParams":{"znxQfId":"'+znxQfId+'","znxTmpId":"'+responseData['znxTmpId']+'"}}';
+					var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getZnxTmpItem","comParams":{"znxQfId":"'+znxQfId+'","znxTmpId":"'+responseData['znxTmpId']+'"}}';
 					Ext.tzLoad(tzParams,function(responseData){
 						znxItemStore.add(responseData['root']);
 						znxItemStore.commitChanges();
@@ -268,16 +247,11 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 							}
 						}
 					});
-				};
+				*/
 				par = '{"znxQfId": "'+znxQfId+'","queryID": "atta"}';
 				attaStore.tzStoreParams=par;
 				attaStore.load();
-
-				if(responseData['dsfsInfo']!=""){
-					emlBkDetForm.down('displayfield[name=dsfsInfo]').setVisible(true);
-				}
-				emlBkDetForm.down('displayfield[name=creDt]').setVisible(true);
-
+/*
 				if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
 					if(responseData['recever']!=""){
 						emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
@@ -301,9 +275,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 							emlBkDetForm.down('combobox[reference=znxTmpId]').removeCls('readOnly-combox-BackgroundColor');
 						}
 					}
-					if(responseData['mailCC']!=""){
-						emlBkDetForm.down('tagfield[reference=mailCC]').setValue(responseData['mailCC']);
-					}
+
 					if(responseData['sendModel']=="EXC"){
 						emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
 
@@ -330,9 +302,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 				if(responseData['rwzxZt']=="B"){
 					panel.down('button[reference=revokeBtn]').setVisible(true);
 				}
-				emlBkDetForm.down('radio[reference="sendModelNor"]').addListener('change','norSend');
-				emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
-				
+*/
 				panel.commitChanges(panel);
 			});
         });
@@ -354,5 +324,75 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
     onPanelClose: function(btn){
         var win = btn.findParentByType("panel");
         win.close();
+    },
+    viewZnxHistory: function(grid, rowIndex, colIndex){
+        // alert("查看邮件发送历史");
+        var store = grid.store;
+        var selRec = store.getAt(rowIndex);
+        var znxQfId = selRec.get("znxQfId");
+        Ext.tzSetCompResourses("TZ_ZNXQ_VIEWTY_COM");
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZNXQ_VIEWTY_COM"]["TZ_ZNXQ_VIEWTY_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZNXQ_VIEWTY_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        cmp = new ViewClass();
+
+        cmp.on('afterrender',function(panel){
+            var store=panel.getStore();
+            var tzStoreParams ='{"storeType":"history","znxQfId":"'+znxQfId+'"}';
+            store.tzStoreParams = tzStoreParams;
+            store.load({
+
+            });
+
+        });
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+
     }
 });

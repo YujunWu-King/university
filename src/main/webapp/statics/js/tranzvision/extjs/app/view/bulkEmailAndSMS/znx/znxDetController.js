@@ -129,25 +129,15 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
      */
     clearAll:function(btn){
         var emlBkDetForm = btn.findParentByType('form');
-        if(emlBkDetForm.down('radio[reference=sendModelExc]').checked){
-            var emlQfId=btn.findParentByType('form').down('textfield[name="emlQfId"]').value;
-            var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"clearAll","comParams":{"emlQfId":"'+emlQfId+'"}}';
-            Ext.tzLoad(tzParams,function(responseData){
-                emlBkDetForm.getForm().setValues(responseData);
-            });
-
-            emlBkDetForm.down('grid[reference=emlTmplItemGrid]').store.removeAll(true);
-        }else{
-            emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
-            emlBkDetForm.child('tagfield[reference=recever]').setValue("");
-        }
-        btn.addCls('x-item-disabled x-btn-disabled');
+        
+        emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
+        emlBkDetForm.child('tagfield[reference=recever]').setValue("");
     },
     /**
      * 功能：设置邮件模版
      * 刘阳阳  2016-01-07
      */
-    setEmlTmpl:function(btn){
+    setZnxTmpl:function(btn){
         Ext.tzSetCompResourses("TZ_EML_TMPL_MG_COM");
 
         //是否有访问权限
@@ -200,7 +190,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         //操作类型设置为更新
         cmp.actType = "update";
 
-        var emlTmpId = btn.findParentByType('form').down('combobox[reference=emlTmpId]').getValue();
+        var znxTmpId = btn.findParentByType('form').down('combobox[reference=znxTmpId]').getValue();
 
         cmp.on('afterrender',function(panel){
             //组件注册表单信息;
@@ -211,19 +201,19 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             form.findField("emltemporg").addCls("lanage_1");
 
             //加载邮件模版信息
-            var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlMetaTmpInfo","comParams":{"emlTmpId":"'+emlTmpId+'"}}';
+            var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getEmlMetaTmpInfo","comParams":{"znxTmpId":"'+znxTmpId+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 var emltemporg=responseData['emltemporg'];
                 var metaempid=responseData['metaempid'];
-                tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_STD","OperateType":"QF","comParams":{"emltempid":"'+emlTmpId+'","emltemporg":"'+emltemporg+'"}}';
+                tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_STD","OperateType":"QF","comParams":{"emltempid":"'+znxTmpId+'","emltemporg":"'+emltemporg+'"}}';
                 Ext.tzLoad(tzParams,function(responseData){
                     form.setValues(responseData);
                     //信息项数据
-                    var	emlTmplItemGrid = panel.down('grid[name=emlTmplItemGrid]');
+                    var	znxTmplItemGrid = panel.down('grid[name=znxTmplItemGrid]');
                     var tzStoreParamsItem = "{'restempid':'"+metaempid+"'}";
-                    emlTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
-                    emlTmplItemGrid.store.load();
+                    znxTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
+                    znxTmplItemGrid.store.load();
                     panel.commitChanges(panel);
                 });
             });
@@ -251,13 +241,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         var parainfoitem = rec.get('parainfoitem');
 
         var form = this.getView().child("form").getForm();
-        var objEmlContentHtml = form.findField("emlCont");
-        var dom = form.findField("emlCont").getEl();
+        //var objEmlContentHtml = form.findField("znxCont");
+        var dom = form.findField("znxCont").getEl();
         var editorId = dom.id + "-ueditor";
         UE.getEditor(editorId).execCommand("inserthtml",parainfoitem);
 
-        var emlcont = emlbkdefForm.down('ueditor[name=emlCont]').value;
-        emlbkdefForm.down('ueditor[name=emlCont]').setValue(emlcont);
+        var znxCont = emlbkdefForm.down('ueditor[name=znxCont]').value;
+        emlbkdefForm.down('ueditor[name=znxCont]').setValue(znxCont);
     },
     /**
      * 功能：上传附件
@@ -320,10 +310,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 
                     if(attachmentType=="ATTACHMENT"){
                         //var applyItemGrid = this.lookupReference('attachmentGrid');
-                        var applyItemGrid = file.findParentByType("grid[reference=emlInfoItemGrid]");
-                        var emlBBkDetFormRec = applyItemGrid.findParentByType("form[reference=emlBulkDetForm]").getForm().getFieldValues();
-                        var r = Ext.create('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkAttaModel', {
-                            "emlQfId":emlBBkDetFormRec['emlQfId'] ,
+                        var applyItemGrid = file.findParentByType("grid[reference=znxInfoItemGrid]");
+                        var emlBBkDetFormRec = applyItemGrid.findParentByType("form[reference=znxDetForm]").getForm().getFieldValues();
+                        var r = Ext.create('KitchenSink.view.bulkEmailAndSMS.znx.znxAttaModel', {
+                            "znxQfId":emlBBkDetFormRec['znxQfId'] ,
                             "attaID": 'NEXT',
                             "attaName": action.result.msg.filename,
                             "path":path,
@@ -348,8 +338,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
      */
     deleteArtAttenments: function(btn,rowIndex){
         //选中行
-        var store = btn.findParentByType("grid[reference=emlInfoItemGrid]").getStore();
-        var selList = btn.findParentByType("grid[reference=emlInfoItemGrid]").getSelectionModel().getSelection();
+        var store = btn.findParentByType("grid[reference=znxInfoItemGrid]").getStore();
+        var selList = btn.findParentByType("grid[reference=znxInfoItemGrid]").getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(rowIndex.toString().match(/^\d+$/)){
@@ -384,65 +374,26 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         var formdata =Ext.JSON.encode(emlbkdefForm.getValues());
         var formrec = emlbkdefForm.getForm().getFieldValues();
         var msgInfo="";
-		if(formrec["emlQfDesc"]==""||formrec["emlQfDesc"]==null){
+		if(formrec["znxQfDesc"]==""||formrec["znxQfDesc"]==null){
             Ext.Msg.alert("提示","请填写群发任务名称.");
-            return;
-        }
-        if(formrec["sender"]==""||formrec["sender"]==null){
-            Ext.Msg.alert("提示","请选择发件人.");
             return;
         }
         if(!emlbkdefForm.child('tagfield[reference="recever"]').value||emlbkdefForm.child('tagfield[reference="recever"]').value==""){
             Ext.Msg.alert("提示","收件人不能为空.");
             return;
         };
-        if(emlbkdefForm.down('checkbox[reference=tsfsFlag]').checked){
-            var tsfsEmail=emlbkdefForm.down('textfield[name=tsfsEmail]').value;
-            if(tsfsEmail==""){
-                Ext.Msg.alert("提示","同时发送给邮箱不能为空.");
-                return;
-            }else{
-				/*
-                var EmlReg =/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-                if(!EmlReg.test(tsfsEmail)){
-                    Ext.Msg.alert("提示","同时发送给邮箱格式不正确.");
-                    return;
-                }
-				*/
-            }
-        };
-        if(formrec["emlSubj"]==""){
+        if(formrec["znxSubj"]==""){
             Ext.Msg.alert("提示","邮件主题不能为空.");
             return;
         }
-        if(formrec["qypfFlag"]){
-            var numreg = /^[0-9]*$/i;
-            var val = formrec['fsslXs'];
-            var bolFlag = numreg.test(val)&&(val>0?true:false);
-            if(!bolFlag){
-                Ext.Msg.alert("提示","每小时发送邮件数必须为大于0的正整数.");
-                return;
-            }
-        }
-        if(formrec["dsfsFlag"]){
-            if(Ext.Date.format(formrec['dsfsDate'], 'Ymd')==Ext.Date.format(new Date(), 'Ymd')){
-                if(Ext.Date.format(formrec['dsfsTime'], 'Hi')<=Ext.Date.format(new Date(), 'Hi')){
-                    Ext.Msg.alert("提示","定时发送日期时间必须在当前时间之后.");
-                    return;
-                }
-            }else if(Ext.Date.format(formrec['dsfsDate'], 'Ymd')<Ext.Date.format(new Date(), 'Ymd')){
-                Ext.Msg.alert("提示","定时发送日期时间必须在当前时间之后.");
-                return;
-            }
-            msgInfo='邮件已存至草稿箱中，将会于 '+Ext.Date.format(formrec['dsfsDate'], 'Y-m-d  ')+Ext.Date.format(formrec['dsfsTime'], 'H:i')+' 发送';
-        }
-        var othInfo = '{"crePer":"'+formrec["crePer"]+'","dept":"'+formrec["dept"]+'","setId":"'+formrec["setId"]+'","recever":"'+emlbkdefForm.child('tagfield[reference="recever"]').value+'","mailCC":"'+emlbkdefForm.child('tagfield[reference="mailCC"]').value+'"}';
+
+        var othInfo = '{"crePer":"'+formrec["crePer"]+'","dept":"'+formrec["dept"]+'","setId":"'+formrec["setId"]+'","recever":"'+emlbkdefForm.child('tagfield[reference="recever"]').value+'"}';
         var attaGrid,
             attaAllRecs,attaDelRecs,attaNewAtta,
             attaList="",attaDelLit="",attaNewList="",
             comParams="";
-        attaGrid =emlbkdefForm.down("grid[reference=emlInfoItemGrid]");
-        if (formrec['emlQfId']=="NEXT"){
+        attaGrid =emlbkdefForm.down("grid[reference=znxInfoItemGrid]");
+        if (formrec['znxQfId']=="NEXT"){
             attaAllRecs = attaGrid.store.getRange();
             for(var i=0;i<attaAllRecs.length;i++){
                 if(attaList == ""){
@@ -474,26 +425,17 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             comParams = '"formdata":'+formdata+',"othInfo":'+othInfo+',"attaDelLit":['+attaDelLit+'],"attaNewList":['+attaNewList+']';
         }
 
-        var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"save","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"save","comParams":{'+comParams+'}}';
         Ext.tzSubmit(tzParams,function(responseData){
             emlbkdefForm.getForm().setValues(responseData);
-            emlbkdefForm.down('displayfield[name=creDt]').setVisible(true);
+            //emlbkdefForm.down('displayfield[name=creDt]').setVisible(true);
 
-            if(formrec["dsfsFlag"]){
-                var dsfsInfo=Ext.Date.format(formrec['dsfsDate'], 'Y-m-d')+"  "+Ext.Date.format(formrec['dsfsTime'], 'H:i');
-                dsfsInfo='<span style="color:red">邮件将会于'+dsfsInfo+'发送</span>';
-                emlbkdefForm.down('displayfield[name=dsfsInfo]').setValue(dsfsInfo);
-                emlbkdefForm.down('displayfield[name=dsfsInfo]').setVisible(true);
-            }else{
-                emlbkdefForm.down('displayfield[name=dsfsInfo]').setVisible(false);
-            }
-
-            var par = '{"emlQfId": "'+responseData['emlQfId']+'","queryID": "atta"}';
+            var par = '{"znxQfId": "'+responseData['znxQfId']+'","queryID": "atta"}';
             attaGrid.store.tzStoreParams=par;
             attaGrid.store.load();
         },msgInfo,true,this);
 
-        var arrEmlBkMgrPanel=Ext.ComponentQuery.query("emailBulkMgr");
+        var arrEmlBkMgrPanel=Ext.ComponentQuery.query("znxMgr");
         for(var i=0;i<arrEmlBkMgrPanel.length;i++){
             arrEmlBkMgrPanel[i].down('grid').store.load();
         }
@@ -502,67 +444,48 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
      * 功能：发送
      * 刘阳阳  2016-01-12
      */
-    sendEmail:function(btn){
+    sendZnx:function(btn){
 		var me = this;
 		var emlbkdefPanel = btn.up('panel');
         var emlbkdefForm = emlbkdefPanel.child('form');
 		/*表单验证*/
 		if(!emlbkdefForm.getForm().isValid()) return;
         Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ensure","确认"),
-            Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ensureSendDesc","确认要发送邮件?"), function(btnId) {
+            Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ensureSendDesc","确认要发送站内信?"), function(btnId) {
                 if (btnId == 'yes') {
                     var formdata = Ext.JSON.encode(emlbkdefForm.getValues());
                     var formrec = emlbkdefForm.getForm().getFieldValues();
                     var msgInfo = "";
-                    if(formrec["sender"]==""||formrec["sender"]==null){
-                        Ext.Msg.alert("提示","请选择发件人.");
+                    /*
+                    if(!emlbkdefForm.child('tagfield[reference="recever"]').value||emlbkdefForm.child('tagfield[reference="recever"]').value==""){
+                        Ext.Msg.alert("提示","收件人不能为空.");
+                        return;
+                    };
+                    */
+                    
+                    if(formrec["znxQfDesc"]==""||formrec["znxQfDesc"]==null){
+                        Ext.Msg.alert("提示","请填写群发任务名称.");
                         return;
                     }
                     if(!emlbkdefForm.child('tagfield[reference="recever"]').value||emlbkdefForm.child('tagfield[reference="recever"]').value==""){
                         Ext.Msg.alert("提示","收件人不能为空.");
                         return;
                     };
-                    if(emlbkdefForm.down('checkbox[reference=tsfsFlag]').checked){
-                        var tsfsEmail=emlbkdefForm.down('textfield[name=tsfsEmail]').value;
-                        if(tsfsEmail==""){
-                            Ext.Msg.alert("提示","同时发送给邮箱不能为空.");
-                            return;
-                        }else{
-							/*
-                            var EmlReg =/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
-                            if(!EmlReg.test(tsfsEmail)){
-                                Ext.Msg.alert("提示","同时发送给邮箱格式不正确.");
-                                return;
-                            }*/
-                        }
-                    };
-                    if(formrec["qypfFlag"]){
-                        var numreg = /^[0-9]*$/i;
-                        var val = formrec['fsslXs'];
-                        var bolFlag = numreg.test(val)&&(val>0?true:false);
-                        if(!bolFlag){
-                            Ext.Msg.alert("提示","每小时发送邮件数必须为大于0的正整数.");
-                            return;
-                        }
+                    if(formrec["znxSubj"]==""){
+                        Ext.Msg.alert("提示","邮件主题不能为空.");
+                        return;
                     }
+                    
                     msgInfo='群发任务已提交.';
-                    if (formrec["dsfsFlag"]) {
-                        if ((Ext.Date.format(formrec['dsfsDate'], 'Ymd') >= Ext.Date.format(new Date(), 'Ymd')) &&
-                            (Ext.Date.format(formrec['dsfsTime'], 'Hi') >= Ext.Date.format(new Date(), 'Hi'))) {
-                            msgInfo = '邮件已存至草稿箱中，将会于 ' + Ext.Date.format(formrec['dsfsDate'], 'Y-m-d  ') + Ext.Date.format(formrec['dsfsTime'], 'H:i') + ' 发送';
-                        } else {
-                            Ext.Msg.alert("提示", "定时发送日期时间必须在当前时间之后.");
-                            return;
-                        }
-                    };
-                    var othInfo = '{"crePer":"' + formrec["crePer"] + '","dept":"' + formrec["dept"] + '","setId":"' + formrec["setId"] + '","recever":"' + emlbkdefForm.child('tagfield[reference="recever"]').value + '","mailCC":"' + emlbkdefForm.child('tagfield[reference="mailCC"]').value + '"}';
-                    //alert(formrec['emlQfId']);
+                    
+                    var othInfo = '{"crePer":"' + formrec["crePer"] + '","dept":"' + formrec["dept"] + '","setId":"' + formrec["setId"] + '","recever":"' + emlbkdefForm.child('tagfield[reference="recever"]').value + '"}';
+                    //alert(formrec['znxQfId']);
                     var attaGrid,
                         attaAllRecs, attaDelRecs, attaNewAtta,
                         attaList = "", attaDelLit = "", attaNewList = "",
                         comParams = "";
-                    attaGrid = emlbkdefForm.down("grid[reference=emlInfoItemGrid]");
-                    if (formrec['emlQfId'] == "NEXT") {
+                    attaGrid = emlbkdefForm.down("grid[reference=znxInfoItemGrid]");
+                    if (formrec['znxQfId'] == "NEXT") {
                         attaAllRecs = attaGrid.store.getRange();
                         for (var i = 0; i < attaAllRecs.length; i++) {
                             if (attaList == "") {
@@ -596,46 +519,31 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
                         comParams = '"formdata":' + formdata + ',"othInfo":' + othInfo + ',"attaDelLit":[' + attaDelLit + '],"attaNewList":[' + attaNewList + ']';
                     }
 
-                    var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"sendEml","comParams":{' + comParams + '}}';
+                    var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"sendZnx","comParams":{' + comParams + '}}';
                     Ext.tzSubmit(tzParams, function (responseData) {
                         emlbkdefForm.getForm().setValues(responseData);
-                        emlbkdefForm.down('displayfield[name=creDt]').setVisible(true);
+                        //emlbkdefForm.down('displayfield[name=creDt]').setVisible(true);
 
-                        if (formrec["dsfsFlag"]) {
-                            var dsfsInfo = Ext.Date.format(formrec['dsfsDate'], 'Y-m-d') + "  " + Ext.Date.format(formrec['dsfsTime'], 'H:i');
-                            dsfsInfo = '<span style="color:red">邮件将会于' + dsfsInfo + '发送</span>';
-                            emlbkdefForm.down('displayfield[name=dsfsInfo]').setValue(dsfsInfo);
-                            emlbkdefForm.down('displayfield[name=dsfsInfo]').setVisible(true);
-                        } else {
-                            emlbkdefForm.down('displayfield[name=dsfsInfo]').setVisible(false);
-                        }
-
+                      
                         if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E") {
 
                         } else {
                             emlbkdefPanel.down('button[reference=saveBtn]').setDisabled(true);
                             emlbkdefPanel.down('button[reference=sendBtn]').setDisabled(true);
-							/*
-                            if (responseData['rwzxZt'] == "B") {
-                                emlbkdefPanel.down('button[reference=revokeBtn]').setVisible(true);
-                            }
-							*/
 							emlbkdefPanel.down('button[reference=revokeBtn]').setVisible(true);
                             emlbkdefPanel.getController().pageReadonly(emlbkdefForm);
                         }
-						/*
-                        if(responseData['rwzxZt']=="C"||responseData['rwzxZt']=="D"){
-                            emlbkdefPanel.down('button[reference=viewHisBtn]').setDisabled(false);
-                        }
-						*/
-                        var par = '{"emlQfId": "' + responseData['emlQfId'] + '","queryID": "atta"}';
+                        
+                        
+                        var par = '{"znxQfId": "' + responseData['znxQfId'] + '","queryID": "atta"}';
                         attaGrid.store.tzStoreParams = par;
                         attaGrid.store.load();
 						
+                        /*
 						if(!emlbkdefForm.down('button[reference=copyHistoryBtn]').hidden){
-							/*隐藏复制历史任务*/
+							
 							emlbkdefForm.down('button[reference=copyHistoryBtn]').setHidden(true);
-						}
+						}*/
 						
 						/*重置表单修改状态*/
 						var savedObject = me && me.getView && (typeof me.getView === "function") && me.getView();
@@ -662,8 +570,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         var emlbkdefPanel = btn.up('panel');
         var emlbkdefForm = emlbkdefPanel.child('form');
         var formrec = emlbkdefForm.getForm().getFieldValues();
-        var comParams = '"emlQfId":'+formrec['emlQfId']+'';
-        var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"revoke","comParams":{'+comParams+'}}';
+        var comParams = '"znxQfId":'+formrec['znxQfId']+'';
+        var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"revoke","comParams":{'+comParams+'}}';
         Ext.tzSubmit(tzParams,function(responseData){
             //emlbkdefForm.setDisabled(false);
             emlbkdefPanel.getController().pageFiledsDisControl(emlbkdefForm);
@@ -677,10 +585,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
      */
     viewSendHistory:function(btn){
         var form = btn.findParentByType("panel").child("form");
-        var emailID=form.getForm().findField("emlQfId").getValue();//群发任务ID
+        var znxQfId=form.getForm().findField("znxQfId").getValue();//群发任务ID
 
-        Ext.tzSetCompResourses("TZ_EMLQ_VIEWTY_COM");
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_EMLQ_VIEWTY_COM"]["TZ_EMLQ_VIEWTY_STD"];
+        Ext.tzSetCompResourses("TZ_ZNXQ_VIEWTY_COM");
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZNXQ_VIEWTY_COM"]["TZ_ZNXQ_VIEWTY_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -688,7 +596,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_EMLQ_VIEWTY_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZNXQ_VIEWTY_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -727,7 +635,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         cmp.on('afterrender',function(panel){
 
             var store=panel.getStore();
-            var tzStoreParams ='{"storeType":"history","emailID":"'+emailID+'"}';
+            var tzStoreParams ='{"storeType":"history","znxQfId":"'+znxQfId+'"}';
             store.tzStoreParams = tzStoreParams;
             store.load({
             });
@@ -756,16 +664,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
      * 功能：页面只读
      */
     pageReadonly:function(form){
-        form.down('textfield[name=emlQfDesc]').setReadOnly(true);
-        form.down('textfield[name=emlQfDesc]').addCls('readOnly-combox-BackgroundColor');
-        form.down('combobox[name=sender]').setReadOnly(true);
-        form.down('combobox[name=sender]').addCls('readOnly-combox-BackgroundColor');
-        form.down('radio[reference=sendModelNor]').setReadOnly(true);
-        form.down('radio[reference=sendModelExc]').setReadOnly(true);
-        if(form.down('radio[reference=sendModelExc]').checked){
-            form.down('button[reference=impExc]').disabled=true;
-            form.down('button[reference=impExc]').addCls('x-item-disabled x-btn-disabled');
-        };
+        form.down('textfield[name=znxQfDesc]').setReadOnly(true);
+        form.down('textfield[name=znxQfDesc]').addCls('readOnly-combox-BackgroundColor');
         form.down('tagfield[reference=recever]').setEditable(false);
         form.down('tagfield[reference=recever]').disabled=true;
         form.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
@@ -777,61 +677,41 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 						
         form.down('toolbar').child('button[reference=clearAllBtn]').disabled=true;
         form.down('toolbar').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
-        form.down('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
-        form.down('checkbox[name=tsfsFlag]').setReadOnly(true);
-        form.down('textfield[name=tsfsEmail]').setReadOnly(true);
-        form.down('textfield[name=tsfsEmail]').addCls('readOnly-combox-BackgroundColor');
-        form.down('tagfield[reference=mailCC]').setEditable(false);
-        form.down('tagfield[reference=mailCC]').disabled=true;
-        form.down('tagfield[reference=mailCC]').addCls('readOnly-tagfield-BackgroundColor');
-        form.down('combobox[reference=emlTmpId]').disabled=true;
-        form.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
-        if(form.down('combobox[reference=emlTmpId]').getValue()!=""){
-            form.down('button[reference=setEmlTmpl]').disabled=true;
-            form.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
+
+        form.down('combobox[reference=znxTmpId]').disabled=true;
+        form.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');
+        if(form.down('combobox[reference=znxTmpId]').getValue()!=""){
+            form.down('button[reference=setZnxTmpl]').disabled=true;
+            form.down('button[reference=setZnxTmpl]').addCls('disabled-button-color');
         };
-        form.down('textfield[name=emlSubj]').setReadOnly(true);
-        form.down('textfield[name=emlSubj]').addCls('readOnly-combox-BackgroundColor');
-        //form.down('ueditor[name=emlCont]').setReadOnly(true);
-        form.down('ueditor[name=emlCont]').addCls('readOnly-tagfield-BackgroundColor');
-        form.down('grid[name=emlTmplItemGrid]').setDisabled(true);
-        form.down('grid[name=emlInfoItemGrid]').setDisabled(true);
-        form.down('checkbox[name=edmFlag]').setReadOnly(true);
-        form.down('checkbox[name=qxdyFlag]').setReadOnly(true);
-        form.down('checkbox[name=qypfFlag]').setReadOnly(true);
-        if(form.down('checkbox[name=qypfFlag]').checked){
-            form.down('textfield[name=fsslXs]').setReadOnly(true);
-            form.down('textfield[name=fsslXs]').addCls('readOnly-combox-BackgroundColor');
-        };
-        form.down('checkbox[name=dsfsFlag]').setReadOnly(true);
-        if(form.down('checkbox[name=dsfsFlag]').checked){
-            form.down('datefield[name=dsfsDate]').setReadOnly(true);
-            form.down('datefield[name=dsfsDate]').addCls('readOnly-combox-BackgroundColor');
-            form.down('timefield[name=dsfsTime]').setReadOnly(true);
-            form.down('timefield[name=dsfsTime]').addCls('readOnly-combox-BackgroundColor');
-        };
-        form.down('checkbox[name=qzfsFlag]').setReadOnly(true);
+        form.down('textfield[name=znxSubj]').setReadOnly(true);
+        form.down('textfield[name=znxSubj]').addCls('readOnly-combox-BackgroundColor');
+        //form.down('ueditor[name=znxCont]').setReadOnly(true);
+        form.down('ueditor[name=znxCont]').addCls('readOnly-tagfield-BackgroundColor');
+        form.down('grid[name=znxTmplItemGrid]').setDisabled(true);
+        form.down('grid[name=znxInfoItemGrid]').setDisabled(true);
     },
     /**
      * 功能：控制页面字段
      */
     pageFiledsDisControl:function(form){
-        form.down('textfield[name=emlQfDesc]').setReadOnly(false);
-        form.down('textfield[name=emlQfDesc]').removeCls('readOnly-combox-BackgroundColor');
-        form.down('combobox[name=sender]').setReadOnly(false);
-        form.down('combobox[name=sender]').removeCls('readOnly-combox-BackgroundColor');
-        form.down('radio[reference=sendModelNor]').setReadOnly(false);
-        form.down('radio[reference=sendModelExc]').setReadOnly(false);
-        if(form.down('radio[reference=sendModelExc]').checked){
-            form.down('button[reference=impExc]').disabled=false;
-            form.down('button[reference=impExc]').removeCls('x-item-disabled x-btn-disabled');
-        };
+        form.down('textfield[name=znxQfDesc]').setReadOnly(false);
+        form.down('textfield[name=znxQfDesc]').removeCls('readOnly-combox-BackgroundColor');
+        //form.down('combobox[name=sender]').setReadOnly(false);
+        //form.down('combobox[name=sender]').removeCls('readOnly-combox-BackgroundColor');
+        //form.down('radio[reference=sendModelNor]').setReadOnly(false);
+        //form.down('radio[reference=sendModelExc]').setReadOnly(false);
+        //if(form.down('radio[reference=sendModelExc]').checked){
+        //    form.down('button[reference=impExc]').disabled=false;
+        //    form.down('button[reference=impExc]').removeCls('x-item-disabled x-btn-disabled');
+        //};
+        /*
         if (!form.down('radio[reference=sendModelExc]').checked){
 			//console.log(form.down('toolbar').child('button[reference=pasteFromExcelBtn]').disabled);
             form.down('toolbar').child('button[reference=addAudienceBtn]').disabled=false;
             form.down('toolbar').child('button[reference=addAudienceBtn]').removeCls('x-item-disabled x-btn-disabled');
 			
-            if(form.down('combobox[reference=emlTmpId]').getValue()==""||form.down('combobox[reference=emlTmpId]').getValue()==null){
+            if(form.down('combobox[reference=znxTmpId]').getValue()==""||form.down('combobox[reference=znxTmpId]').getValue()==null){
                 form.down('tagfield[reference=recever]').setEditable(true);
                 form.down('tagfield[reference=recever]').disabled=false;
                 form.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
@@ -841,10 +721,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             	form.down('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
             }
         }
+        */
         if(form.down('tagfield[reference=recever]').getValue!=""){
             form.down('toolbar').child('button[reference=clearAllBtn]').disabled=false;
             form.down('toolbar').child('button[reference=clearAllBtn]').removeCls('x-item-disabled x-btn-disabled');
         }
+        /*
         form.down('checkbox[name=tsfsFlag]').setReadOnly(false);
         form.down('textfield[name=tsfsEmail]').setReadOnly(false);
         form.down('textfield[name=tsfsEmail]').removeCls('readOnly-combox-BackgroundColor');
@@ -852,22 +734,24 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         form.down('tagfield[reference=mailCC]').disabled=false;
         form.down('tagfield[reference=mailCC]').removeCls('readOnly-tagfield-BackgroundColor');
         if (!form.down('radio[reference=sendModelExc]').checked&&form.down('tagfield[reference=recever]').getValue=="") {
-            form.down('combobox[reference=emlTmpId]').disabled = false;
-            form.down('combobox[reference=emlTmpId]').removeCls('readOnly-combox-BackgroundColor');
+            form.down('combobox[reference=znxTmpId]').disabled = false;
+            form.down('combobox[reference=znxTmpId]').removeCls('readOnly-combox-BackgroundColor');
         }
-        if(form.down('combobox[reference=emlTmpId]').getValue()=="" || form.down('combobox[reference=emlTmpId]').getValue()== null){
-			form.down('button[reference=setEmlTmpl]').disabled=true;
-			form.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
+        */
+        if(form.down('combobox[reference=znxTmpId]').getValue()=="" || form.down('combobox[reference=znxTmpId]').getValue()== null){
+			form.down('button[reference=setZnxTmpl]').disabled=true;
+			form.down('button[reference=setZnxTmpl]').addCls('disabled-button-color');
         }else{
-			form.down('button[reference=setEmlTmpl]').disabled=false;
-            form.down('button[reference=setEmlTmpl]').removeCls('disabled-button-color');
+			form.down('button[reference=setZnxTmpl]').disabled=false;
+            form.down('button[reference=setZnxTmpl]').removeCls('disabled-button-color');
 		}
-        form.down('textfield[name=emlSubj]').setReadOnly(false);
-        form.down('textfield[name=emlSubj]').removeCls('readOnly-combox-BackgroundColor');
-        //form.down('ueditor[name=emlCont]').setReadOnly(false);
-        form.down('ueditor[name=emlCont]').removeCls('readOnly-tagfield-BackgroundColor');
-        form.down('grid[name=emlTmplItemGrid]').setDisabled(false);
-        form.down('grid[name=emlInfoItemGrid]').setDisabled(false);
+        form.down('textfield[name=znxSubj]').setReadOnly(false);
+        form.down('textfield[name=znxSubj]').removeCls('readOnly-combox-BackgroundColor');
+        //form.down('ueditor[name=znxCont]').setReadOnly(false);
+        form.down('ueditor[name=znxCont]').removeCls('readOnly-tagfield-BackgroundColor');
+        form.down('grid[name=znxTmplItemGrid]').setDisabled(false);
+        form.down('grid[name=znxInfoItemGrid]').setDisabled(false);
+        /*
         form.down('checkbox[name=edmFlag]').setReadOnly(false);
         form.down('checkbox[name=qxdyFlag]').setReadOnly(false);
         form.down('checkbox[name=qypfFlag]').setReadOnly(false);
@@ -882,20 +766,21 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             form.down('timefield[name=dsfsTime]').setReadOnly(false);
             form.down('timefield[name=dsfsTime]').removeCls('readOnly-combox-BackgroundColor');
         };
-        form.down('checkbox[name=qzfsFlag]').setReadOnly(false);
+        */
+        //form.down('checkbox[name=qzfsFlag]').setReadOnly(false);
     },
     /*王耀:预览发送邮件
      2016.1.12 */
     /*王耀:预览发送邮件
      2016.1.12 */
 
-    preViewEmail:function(btn){
+    preViewZnx:function(btn){
         var form = btn.findParentByType("panel").child("form");
-        var sendPcId=form.getForm().findField("emlQfId").getValue();//群发任务ID
-        var senderEmail=form.getForm().findField("sender").getValue();//发件人邮箱
+        var sendPcId=form.getForm().findField("znxQfId").getValue();//群发任务ID
+        //var senderEmail=form.getForm().findField("sender").getValue();//发件人邮箱
         //手动输入的邮箱
-        var keyInputEmail=form.getForm().findField("receverOrigin").getValue(),
-            audIDTotal=form.down('tagfield[reference="recever"]').getValue();//添加听众
+        //var keyInputEmail=form.getForm().findField("receverOrigin").getValue();
+        var audIDTotal=form.down('tagfield[reference="recever"]').getValue();//添加听众
         if(audIDTotal=="" ||audIDTotal==undefined ){
             Ext.MessageBox.alert('提示', '收件人为空');
             return;
@@ -904,63 +789,31 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         var ShiJiEmail="";
         var Audience="";
         var AudienceEmail="",AudienceOprID="";
-        //获取发送模式，若为true则是一般发送，false则是导入excel发送;
-        var sendType=form.getForm().findField("sendModel").getValue();
-        if (sendType==true) {
-            //如果为true则是一般发送，分为邮箱和听众;
-            var EmlReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;//校验是否为邮箱
-            for (var i = 0; i < audIDTotal.length; i++) {
-                if (EmlReg.test(audIDTotal[i])) {
-                    if (ShiJiEmail == "") {
-                        ShiJiEmail = audIDTotal[i];
-                    } else {
-                        ShiJiEmail = ShiJiEmail + ',' + audIDTotal[i];
-                    }
-                }
-                else {
-                    if (Audience == "") {
-                        Audience = audIDTotal[i];
-                    } else {
-                        Audience = Audience + ',' + audIDTotal[i];
-                    }
-                }
+        
+        for (var i = 0; i < audIDTotal.length; i++) {
+        	 if (ShiJiEmail == "") {
+                 ShiJiEmail = audIDTotal[i];
+             } else {
+                 ShiJiEmail = ShiJiEmail + ',' + audIDTotal[i];
+             }
+        }
 
-            }
-            var tzTotalAudienceParams ='{"ComID":"TZ_EMLQ_PREVIEW_COM","PageID":"TZ_EMLQ_VIEW_STD",' +
-                '"OperateType":"checkEmailAudience","comParams":{"type":"checkEmailAudience","totalAudience":"'+Audience+'"}}';
+
+        var tzTotalAudienceParams ='{"ComID":"TZ_ZNXQ_PREVIEW_COM","PageID":"TZ_ZNXQ_VIEW_STD",' +
+                '"OperateType":"checkEmailAudience","comParams":{"type":"checkZnxAudience","totalAudience":"'+ShiJiEmail+'"}}';
             
-            Ext.tzLoadAsync(tzTotalAudienceParams,function(respData){
-                Audience=respData.totalAudienceID;
-                AudienceEmail=respData.totalAudienceEmail;
+        Ext.tzLoadAsync(tzTotalAudienceParams,function(respData){
                 AudienceOprID=respData.totalAudienceOprID;
 
 
-            });
-        }
-        //否则即为导入excel发送，不考虑听众情况;
-        else{
-            ShiJiEmail=audIDTotal;
-            Audience="";
-        }
-        //添加同时发送
-        var tsfsFlag=form.getForm().findField("tsfsFlag").getValue();
-        if(tsfsFlag){
-        	var tsfsEmail=form.getForm().findField("tsfsEmail").getValue();
-            if (tsfsEmail!=""){
-    			tsfsEmail = tsfsEmail.replace(/;/g,',');
-    			ShiJiEmail=ShiJiEmail+','+tsfsEmail
-    		}
-        }
-        
+        });
 
-        var emlTmpId=form.getForm().findField("emlTmpId").getValue(),//邮件模板
-            emailTheme=form.getForm().findField("emlSubj").getValue(),//邮件主题
-            emailModal=form.getForm().findField("emlTmpId").getValue(),//邮件模板
-        // emailContent=form.getForm().findField("emlCont").getValue();//邮件内容
-            emailContent= Ext.util.Format.htmlEncode(form.getForm().findField("emlCont").getValue());
+        var znxTmpId=form.getForm().findField("znxTmpId").getValue(),//站内信模板
+        	znxlTheme=form.getForm().findField("znxSubj").getValue(),//站内信主题
+        	znxContent= form.getForm().findField("znxCont").getValue();
         //是否有访问权限
-        Ext.tzSetCompResourses("TZ_EMLQ_PREVIEW_COM");
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_EMLQ_PREVIEW_COM"]["TZ_EMLQ_VIEW_STD"];
+        Ext.tzSetCompResourses("TZ_ZNXQ_PREVIEW_COM");
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZNXQ_PREVIEW_COM"]["TZ_ZNXQ_VIEW_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -968,7 +821,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_EMLQ_VIEW_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZNXQ_VIEW_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -1001,32 +854,46 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             }
             // </debug>
         }
+        /*
         var configuration ={
             "sendPcId":sendPcId,
             //模板ID;
-            "senderEmail": senderEmail,
-            "keyInputEmail": ShiJiEmail,
-            "audIDTotal": Audience,
-            "emlTmpId":emlTmpId,
-            "emailModal":emailModal,
-            "emailTheme": emailTheme,
-            "emailContent": emailContent,
-            "sendType":sendType,
-            "AudienceEmail":AudienceEmail,
+            //"senderEmail": senderEmail,
+            //"keyInputEmail": ShiJiEmail,
+            //"audIDTotal": Audience,
+            "znxTmpId":znxTmpId,
+            //"emailModal":emailModal,
+            "znxTheme": znxlTheme,
+            "znxContent": znxContent,
+            //"sendType":sendType,
+            //"AudienceEmail":AudienceEmail,
             "AudienceOprID":AudienceOprID
         }
-
+*/
         cmp = new ViewClass();
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            var tzParams = '{"ComID":"TZ_EMLQ_PREVIEW_COM","PageID":"TZ_EMLQ_VIEW_STD","OperateType":"previewEmail","comParams":{"type":"previewEmail","sendPcId":"'+sendPcId+'","sendType":"'+sendType+'","viewNumber":"1","senderEmail":"'+senderEmail+'","keyInputEmail":"'+ShiJiEmail+'","audIDTotal":"'+Audience+'", "emlTmpId":"'+emlTmpId+'","emailTheme":"'+emailTheme+'","emailModal":"'+emailModal+'","emailContent":"'+emailContent+'"}}';
+            var tzParamsJson = {
+            		"ComID":"TZ_ZNXQ_PREVIEW_COM",
+            		"PageID":"TZ_ZNXQ_VIEW_STD",
+            		"OperateType":"previewZnx",
+            		"comParams":{
+            			"type":"previewZnx",
+            			"viewNumber":"1",
+            			"AudienceOprID":AudienceOprID, 
+            			"znxTmpId":znxTmpId,
+            			"znxlTheme":znxlTheme,
+            			"znxContent":znxContent
+            		}
+            };
+            var tzParams = Ext.JSON.encode(tzParamsJson); 
             Ext.tzLoad(tzParams,function(responseData){
                     var formData = responseData.formData;
-                    formData.configuration = Ext.encode(configuration);
+                    //formData.configuration = Ext.encode(configuration);
                     form.setValues(formData);
-                    var htmlCom = panel.down("component[name=emailContentHtml]");
-                    htmlCom.getEl().update(Ext.util.Format.htmlDecode(formData.emailContent));
+                    var htmlCom = panel.down("component[name=znxContentHtml]");
+                    htmlCom.getEl().update(Ext.util.Format.htmlDecode(formData.znxContentHtml));
                 }
             )
         });
@@ -1053,20 +920,20 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
     },
 	viewMoreReceverForm: function(btn){
 		var form = this.findCmpParent(btn.target).findParentByType('form').getForm();
-		var emlQfId = form.findField('emlQfId').getValue(),
+		var znxQfId = form.findField('znxQfId').getValue(),
 			sendModel = form.findField('sendModel').getValue();
 		var config;
 		
 		if(sendModel==true){
 			//一般发送	
-			config = {"emlQfId":emlQfId, "sendModel":"NOR"}
+			config = {"znxQfId":znxQfId, "sendModel":"NOR"}
 		}else{
 			//Excel导入发送
-			config = {"emlQfId":emlQfId, "sendModel":"EXC"}
+			config = {"znxQfId":znxQfId, "sendModel":"EXC"}
 		}
 		
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_EMLQ_COM"]["TZ_EMLQ_SJR_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZNX_GL_COM"]["TZ_EMLQ_SJR_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -1125,21 +992,21 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 		var emlPanel = this.getView();
 		var emlBkDetForm = emlPanel.child("form");
 		
-		var currEmlQfId = emlPanel.BulkTaskId;
+		var currznxQfId = emlPanel.BulkTaskId;
 		
 		var receverStore = emlBkDetForm.down("tagfield[reference=recever]").getStore();
-        receverStore.tzStoreParams = '{"emlQfId": "'+qfRwId+'","queryID": "recever"}';
+        receverStore.tzStoreParams = '{"znxQfId": "'+qfRwId+'","queryID": "recever"}';
 		receverStore.load();
 		
 		var CCStore = emlBkDetForm.down('tagfield[reference=mailCC]').getStore();
-		CCStore.tzStoreParams='{"emlQfId": "'+qfRwId+'","queryID": "CC"}';
+		CCStore.tzStoreParams='{"znxQfId": "'+qfRwId+'","queryID": "CC"}';
 		CCStore.load();
 		
-		var attaStore = emlBkDetForm.down("grid[reference=emlInfoItemGrid]").getStore();
-		attaStore.tzStoreParams = '{"emlQfId": "'+qfRwId+'","queryID": "atta"}';
+		var attaStore = emlBkDetForm.down("grid[reference=znxInfoItemGrid]").getStore();
+		attaStore.tzStoreParams = '{"znxQfId": "'+qfRwId+'","queryID": "atta"}';
 		attaStore.load();
 		
-		var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getHistoryRwInfo","comParams":{"emlQfId":"'+qfRwId+'","currEmlQfId":"'+currEmlQfId+'"}}';
+		var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getHistoryRwInfo","comParams":{"znxQfId":"'+qfRwId+'","currznxQfId":"'+currznxQfId+'"}}';
 		Ext.tzLoad(tzParams,function(responseData){
 			emlBkDetForm.down('radio[reference="sendModelNor"]').removeListener('change','norSend');
 			emlBkDetForm.down('radio[reference="sendModelExc"]').removeListener('change','excSend');
@@ -1147,10 +1014,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 
 			emlBkDetForm.getForm().setValues(responseData);
 			if (emlBkDetForm.down('radio[reference="sendModelExc"]').checked) {
-				emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
-				var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpItem","comParams":{"emlQfId":"'+qfRwId+'","emlTmpId":"'+responseData['emlTmpId']+'"}}';
+				emlBkDetForm.down('button[reference=setZnxTmpl]').disabled=false;
+				var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getEmlTmpItem","comParams":{"znxQfId":"'+qfRwId+'","znxTmpId":"'+responseData['znxTmpId']+'"}}';
 				Ext.tzLoad(tzParams,function(resData){
-					var EmlItemGrid = emlBkDetForm.down("grid[reference=emlTmplItemGrid]");
+					var EmlItemGrid = emlBkDetForm.down("grid[reference=znxTmplItemGrid]");
 					var emlItemStore = EmlItemGrid.getStore();
 					
 					Ext.suspendLayouts();
@@ -1192,8 +1059,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 					var emailAddr = responseData['recever'][ind];
 					var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 					if (emailReg.test(emailAddr)){
-						emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
-						emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
+						emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=true;
+						emlBkDetForm.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');
 					}
 			   }
 			}

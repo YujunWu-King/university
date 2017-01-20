@@ -809,6 +809,15 @@ public class SendSmsOrMalServiceImpl {
 				analysisSysVar.setM_SysVarID(sysvarId);
 				analysisSysVar.setM_SysVarParam(sysVarParam);
 				Object obj = analysisSysVar.GetVarValue();
+				
+				ymbCslbm = ymbCslbm.replaceAll("\\(", "\\\\("); 
+			   	ymbCslbm = ymbCslbm.replaceAll("\\)", "\\\\)"); 
+			   	
+			   	ymbParaId = ymbParaId.replaceAll("\\(", "\\\\("); 
+			   	ymbParaId = ymbParaId.replaceAll("\\)", "\\\\)"); 
+			   	   
+			   	ymbParaAlias = ymbParaAlias.replaceAll("\\(", "\\\\("); 
+			   	ymbParaAlias = ymbParaAlias.replaceAll("\\)", "\\\\)"); 
 
 				String name = "\\[" + ymbCslbm + "\\." + ymbParaId + "\\." + ymbParaAlias + "\\]";
 				String value = (String) obj;

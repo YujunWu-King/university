@@ -19,7 +19,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
- * @author Administrator TZ_SMS_PREVIEW_PKG:TZ_SMS_PREVIEW_CLS 功能说明：短信群发预览
+ *TZ_SMS_PREVIEW_PKG:TZ_SMS_PREVIEW_CLS 功能说明：短信群发预览
  */
 @Service("com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.TzSmsPreviewClsServiceImpl")
 public class TzSmsPreviewClsServiceImpl extends FrameworkImpl {
@@ -83,9 +83,13 @@ public class TzSmsPreviewClsServiceImpl extends FrameworkImpl {
 		String sendType = jacksonUtil.getString("sendType");
 		// 当前预览的页面数字;
 		String viewNum = jacksonUtil.getString("viewNumber");
-
 		// 手动输入的邮箱;
 		String keyInputEmail = jacksonUtil.getString("keyInputEmail");
+		if (keyInputEmail != null && !"".equals(keyInputEmail)) {
+			if(keyInputEmail.indexOf("[") == 0 && (keyInputEmail.lastIndexOf("]") + 1) == keyInputEmail.length()){
+				keyInputEmail = keyInputEmail.substring(keyInputEmail.indexOf("[")+1, keyInputEmail.lastIndexOf("]"));
+			}
+		}
 		// 添加听众;
 		String audIDTotal = jacksonUtil.getString("audIDTotal");
 		// 邮件主题;
@@ -203,7 +207,7 @@ public class TzSmsPreviewClsServiceImpl extends FrameworkImpl {
 						new Object[] { audID, currentOprID }, "String");
 				ymbId = jdbcTemplate.queryForObject(
 						"select TZ_YMB_ID from PS_TZ_SMSTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
-						new Object[] { orgID, emlTmpId }, "Stirng");
+						new Object[] { orgID, emlTmpId }, "String");
 
 				ArrayList<String[]> arrayList = ayalysisMbSysVar.ayalyMbVar(orgID, ymbId, audID, audCyId);
 
@@ -388,7 +392,7 @@ public class TzSmsPreviewClsServiceImpl extends FrameworkImpl {
 						new Object[] { audID, currentOprID }, "String");
 				ymbId = jdbcTemplate.queryForObject(
 						"select TZ_YMB_ID from PS_TZ_SMSTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
-						new Object[] { orgID, emlTmpId }, "Stirng");
+						new Object[] { orgID, emlTmpId }, "String");
 
 				ArrayList<String[]> arrayList = ayalysisMbSysVar.ayalyMbVar(orgID, ymbId, audID, audCyId);
 

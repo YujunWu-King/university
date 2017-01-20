@@ -215,7 +215,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						new Object[] { audID, currentOprID }, "String");
 				ymbId = jdbcTemplate.queryForObject(
 						"select TZ_YMB_ID from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
-						new Object[] { orgID, emlTmpId }, "Stirng");
+						new Object[] { orgID, emlTmpId }, "String");
 
 				ArrayList<String[]> arrayList = ayalysisMbSysVar.ayalyMbVar(orgID, ymbId, audID, audCyId);
 
@@ -412,7 +412,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						new Object[] { audID, currentOprID }, "String");
 				ymbId = jdbcTemplate.queryForObject(
 						"select TZ_YMB_ID from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? and TZ_TMPL_ID=?",
-						new Object[] { orgID, emlTmpId }, "Stirng");
+						new Object[] { orgID, emlTmpId }, "String");
 
 				ArrayList<String[]> arrayList = ayalysisMbSysVar.ayalyMbVar(orgID, ymbId, audID, audCyId);
 

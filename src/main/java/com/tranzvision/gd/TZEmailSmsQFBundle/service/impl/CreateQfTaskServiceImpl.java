@@ -137,6 +137,18 @@ public class CreateQfTaskServiceImpl {
 						psTzDxyjfsrwTbl.setTzEmlIfPrt("N");
 					}
 					
+				}else{
+					if("ZNX".equals(taskType)){
+						psTzDxyjfsrwTbl.setTzSysjLx(sendtype);
+						if(strTmpId != null && !"".equals(strTmpId)){
+							String smsServId = "";
+				            Map<String, Object> smsMap = jdbcTemplate.queryForMap("select a.TZ_DYNAMIC_FLAG from PS_TZ_ZNXTMPL_TBL a, PS_TZ_TMP_DEFN_TBL b where a.TZ_YMB_ID=b.TZ_YMB_ID and a.TZ_JG_ID=? and a.TZ_TMPL_ID=?", new Object[]{strJgId,strTmpId});
+				            if(smsMap != null){
+				            	dynimicFlg = (String)smsMap.get("TZ_DYNAMIC_FLAG");
+				            }
+				            psTzDxyjfsrwTbl.setTzDynamicFlag(dynimicFlg);
+						}
+					}
 				}
 			}
 			
