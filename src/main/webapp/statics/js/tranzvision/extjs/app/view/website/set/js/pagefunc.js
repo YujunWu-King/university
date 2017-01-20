@@ -667,21 +667,6 @@ function openUpload2(){
     });
 }
 
-function openUpload3(){
-    var photoUrl = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_UPPHOTO_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}');
-    up = $.layer({
-        type: 2,
-        title: false,
-        fix: false,
-        closeBtn: 2,
-        shadeClose: false,
-        shade : [0.3 , '#000' , true],
-        border : [3 , 0.3 , '#000', true],
-        offset: ['50%',''],
-        area: ['840px','610px'],
-        iframe: {src:  photoUrl }
-    });
-}
 function tz_apply_click_to_signin_action2(displayURL) {
     var cover = document.createElement("div");
     cover.className = "cover";
