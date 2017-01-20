@@ -126,12 +126,9 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 					*******如果栏目级别不为0设置为1，如果为0，
 					*******则不更新。
 					**************/
-				System.out.println("Hello1");
 				PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
 				String SqlMeLev=("SELECT TZ_COLU_LEVEL FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?");
-				//System.out.println("lm_id");
 			    String mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "String");
-			    System.out.println("lm_id");
 			    if (mylm_level!="0") {
 			    	psTzSiteiColuT.setTzColuLevel(1);
 			    	String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
@@ -148,7 +145,6 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 			    }else{
 			    	
 			    }
-			    System.out.println("Hello2");
 				psTzSiteiColuT.setTzSiteiId(siteId);
 				psTzSiteiColuT.setTzColuId(lm_id);
 				psTzSiteiColuT.setTzColuName(lm_name);
