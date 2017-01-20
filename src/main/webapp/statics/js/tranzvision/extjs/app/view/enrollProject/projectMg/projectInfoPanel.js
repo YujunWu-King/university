@@ -139,53 +139,7 @@
 				style:'margin-left:5px',
 				name: 'appFormName'	
 			}]
-        },/*{
-			layout: {
-				type: 'column'
-			},
-			items:[{
-				columnWidth:.4,
-				xtype: 'textfield',
-				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.clps_cj_modal","材料评审成绩模型"),
-				name: 'clps_cj_modal',
-				editable: false,
-				triggers: {
-					search: {
-						cls: 'x-form-search-trigger',
-						handler: "choiceScoreModal"
-					}
-				}
-			},{
-				columnWidth:.6,
-				xtype: 'displayfield',
-				hideLabel: true,
-				name: 'clps_cj_modal_desc',
-				style:'margin-left:8px'
-			}]
-		},{
-			layout: {
-				type: 'column'
-			},
-			items:[{
-				columnWidth:.4,
-				xtype: 'textfield',
-				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.msps_cj_modal","面试评审成绩模型"),
-				name: 'msps_cj_modal',
-				editable: false,
-				triggers: {
-					search: {
-						cls: 'x-form-search-trigger',
-						handler: "choiceScoreModal"
-					}
-				}
-			},{
-				columnWidth:.6,
-				xtype: 'displayfield',
-				hideLabel: true,
-				name: 'msps_cj_modal_desc',
-				style:'margin-left:8px'
-			}]
-		},{
+        },/*,{
 			layout: {
 				type: 'column'
 			},
@@ -256,7 +210,138 @@
 				style:'margin-left:5px',
 				name: 'smtDtName'	
 			}]
-        },{
+        },/*20170118-ZXW*/{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.clps_cj_modal","材料评审成绩模型"),
+				name: 'clps_cj_modal',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "choiceScoreModal"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'clps_cj_modal_desc',
+				style:'margin-left:8px'
+			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.msps_cj_modal","面试评审成绩模型"),
+				name: 'msps_cj_modal',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "choiceScoreModal"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'msps_cj_modal_desc',
+				style:'margin-left:8px'
+			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.cs_cj_modal","自动初筛成绩模型"),
+				name: 'cs_cj_modal',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "choiceScoreModal"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'cs_cj_modal_desc',
+				style:'margin-left:8px'
+			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ttbl","淘汰比率"),
+				name: 'ttbl'				
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+                hideLabel: true,
+				name: 'ttbl2',
+				style:'margin-left:8px'
+			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ksbq","自动标签规则"),
+				name: 'ksbq',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "choiceBqzModal"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'ksbq_desc',
+				style:'margin-left:8px'
+			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.fmqd","负面清单规则"),
+				name: 'fmqd',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "choiceBqzModal"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'fmqd_desc',
+				style:'margin-left:8px'
+			}]
+		}/*20170118 end*/,{
 			  xtype: 'tabpanel',
 			  frame: true,
 			  activeTab: 0,
