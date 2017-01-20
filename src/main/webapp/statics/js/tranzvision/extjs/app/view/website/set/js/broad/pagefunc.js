@@ -666,7 +666,7 @@ function openUpload2(){
 
 function openUpload3(){
     var photoUrl = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_UPPHOTO_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}');
-    up = $.layer({
+    /*up = $.layer({
         type: 2,
         title: false,
         fix: false,
@@ -677,7 +677,19 @@ function openUpload3(){
         offset: ['50%',''],
         area: ['840px','610px'],
         iframe: {src:  photoUrl }
-    });
+    });*/
+    up = layer.open({
+    	  type: 2,
+    	  title: false,
+    	  fixed: false,
+    	  closeBtn: 0,
+          shadeClose: true,
+          shade : [0.3 , '#000' , true],
+          border : [3 , 0.3 , '#000', true],
+          offset: ['10%',''],
+          area: ['840px','610px'],
+    	  content: photoUrl
+    	}); 
 }
 
 function tz_apply_click_to_signin_action2(displayURL) {
