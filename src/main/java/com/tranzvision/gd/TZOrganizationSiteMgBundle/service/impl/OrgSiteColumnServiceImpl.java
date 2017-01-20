@@ -61,8 +61,8 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 					*******如果栏目级别不为0设置为1，如果为0，
 					*******则不更新。
 					**************/
-				String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL='0'");
-				String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL='0'");
+				String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+				String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
 				int count=jdbcTemplate.queryForObject(SqlLev, new Object[] {siteId}, "Integer");
 				if(count>0){
 					String lm_Flm=jdbcTemplate.queryForObject(SqlFlm, new Object[] {siteId}, "String");
@@ -81,6 +81,7 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 				psTzSiteiColuT.setTzArtTypeId(lm_nrlx);
 				psTzSiteiColuT.setTzContTemp(lm_nrmb);
 				psTzSiteiColuT.setTzColuState(lm_yxzt);
+				System.out.println("hello1");
 				int i = psTzSiteiColuTMapper.insert(psTzSiteiColuT);
 				if(i > 0){
 					returnJsonMap.replace("lm_id", lm_id);
@@ -125,18 +126,21 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 					*******如果栏目级别不为0设置为1，如果为0，
 					*******则不更新。
 					**************/
+				System.out.println("Hello1");
 				PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
 				String SqlMeLev=("SELECT TZ_COLU_LEVEL FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?");
-			    int mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "Integer");
-			    if (mylm_level!=0) {
+				//System.out.println("lm_id");
+			    String mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "String");
+			    System.out.println("lm_id");
+			    if (mylm_level!="0") {
 			    	psTzSiteiColuT.setTzColuLevel(1);
-			    	String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL='0'");
-					String SqlFlm=("SELECT TZ_COLU_ID,TZ_COLU_LEVEL FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL='0'");
-					
-					int count=jdbcTemplate.queryForObject(SqlLev, new Object[] {siteId}, "Integer");
+			    	String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+					String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+					System.out.println("siteId");
+					int count=jdbcTemplate.queryForObject(SqlLev, new Object[]{siteId}, "Integer");
 					
 					   if(count>0){
-						  String lm_Flm=jdbcTemplate.queryForObject(SqlFlm, new Object[] {siteId}, "String");
+						  String lm_Flm=jdbcTemplate.queryForObject(SqlFlm, new Object[]{siteId}, "String");
 						  psTzSiteiColuT.setTzFColuId(lm_Flm);
 					   }else{
 						
@@ -144,6 +148,7 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 			    }else{
 			    	
 			    }
+			    System.out.println("Hello2");
 				psTzSiteiColuT.setTzSiteiId(siteId);
 				psTzSiteiColuT.setTzColuId(lm_id);
 				psTzSiteiColuT.setTzColuName(lm_name);
