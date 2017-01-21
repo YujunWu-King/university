@@ -1,0 +1,128 @@
+<div  style="width: 100%; float: left; border: 1px solid #E0E0E0; padding: 5px; display: block; margin-bottom: 10px">
+	<h3 style="text-align: left">
+		%bind(:1) <small style="color: gray">%bind(:2)</small> 
+		<font  color=blue>%bind(:3)</font>
+	</h3>
+	<h5 style="text-align: left">2016年问卷统计情况</h5>
+	<div id="chartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
+	<div id="serialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
+	<!-- <h5 style="text-align: left">历史问卷统计情况</h5>
+	<div id="hischartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
+	<div id="hisserialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div> -->
+    
+	<script>
+	var arrColor = [
+	            	'#FF4700','#F10EF1','#03FC26','#3030CF','#FCF503','#640A62','#245D2C','#1A5267',
+	            	'#6A0A03','#C60210','#678B1A','#B8860B','#6F7CBC','#6F7CBC','#7b68ee','#cd5c5c'	
+	            	];
+	var chartData_%bind(:4)=[%bind(:5)];
+	var categories_%bind(:4)=[%bind(:6)];
+		$(function() {
+			//饼图
+			 $("#chartdiv_%bind(:4)").highcharts({
+			        chart: {
+			            animation: false
+			        },
+			        title: {
+			            text: ''
+			        }, 
+			        tooltip: {
+						enabled:true,
+			    	    pointFormat: '<span style="font-size:12px;"><b>{series.name}</b></span>'
+			        },
+					legend:{
+			                align:'center',
+			                itemDistance:10,
+			                labelFormat :'{name}({percentage:.2f}%)',
+			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
+			                layout:'vertical',
+			                align:'left',
+							verticalAlign:'middle'
+			        },
+			        plotOptions: {
+			            pie: {
+			                allowPointSelect: false,
+			                cursor: 'pointer',
+			                center:['50%','50%'],       
+			                size:'90%',
+			                minSize:100,
+							startAngle:0,
+			                dataLabels: {
+			                    enabled: false,
+			                    format: '{point.name}({point.percentage:.2f}%)'
+			                },
+			                showInLegend: true,
+							tooltip: {
+			                    headerFormat:' <span style="font-size: 12px">{point.key}:{point.percentage:.2f}%</span><br/>'
+			                },
+							point:{
+			                    events:{
+			                        legendItemClick:function(){return false}
+			                    }
+			                }
+			            }
+			        },
+			        series: [{
+			            type: 'pie',
+			            name: ' ',
+			            data:chartData_%bind(:4)
+			        }]
+			    });
+          //柱状图
+			$("#serialdiv_%bind(:4)").highcharts({
+								chart : {
+									type : 'column'
+								},
+								title : {
+									text : ''
+								},
+								legend : {
+									enabled : false
+								},
+								xAxis : {
+									categories : categories_%bind(:4),
+									lineWidth : 1.5,
+									lineColor : '#626262',
+									labels : {
+										rotation : -45,
+										align : 'right',
+										style : {
+											fontSize : '12px',
+											fontWeight : 'normal',
+											fontFamily : '微软雅黑,Arial',
+											color : '#626262'
+										}
+									}
+								},
+								yAxis : {
+									min : 0,
+									title : {
+										text : ''
+									},
+									lineWidth : 1.5,
+									lineColor : '#626262',
+									labels : {
+										format : '{value}%'
+									}
+								},
+								tooltip : {
+									pointFormat : '<span style="font-size: 12px"><b>{series.name}</b></span>'
+								},
+								plotOptions : {
+									column : {
+										pointPadding : 0,
+										cursor : 'pointer',
+										tooltip : {
+											headerFormat : ' <span style="font-size: 12px">{point.key}:{point.y:.2f}%</span><br/>'
+										}
+									}
+								},
+								series : [ {
+									name : ' ',
+									data :chartData_%bind(:4)
+								} ]
+							});
+			
+		});
+	</script>
+</div>

@@ -10,8 +10,6 @@
     <result column="TZ_PRJ_TYPE_ID" property="tzPrjTypeId" jdbcType="VARCHAR" />
     <result column="TZ_SBMINF_TMP_ID" property="tzSbminfTmpId" jdbcType="VARCHAR" />
     <result column="TZ_APPPRO_TMP_ID" property="tzAppproTmpId" jdbcType="VARCHAR" />
-    <result column="TZ_SCORE_MODAL_ID" property="tzScoreModalId" jdbcType="VARCHAR" />
-    <result column="TZ_MSPS_SCORE_M_ID" property="tzMspsScoreMId" jdbcType="VARCHAR" />
     <result column="TZ_PS_APPF_M_ID" property="tzPsAppfMId" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
@@ -19,14 +17,21 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_ZLPS_SCOR_MD_ID" property="tzZlpsScorMdId" jdbcType="VARCHAR" />
+    <result column="TZ_MSCJ_SCOR_MD_ID" property="tzMscjScorMdId" jdbcType="VARCHAR" />
+    <result column="TZ_CS_SCOR_MD_ID" property="tzCsScorMdId" jdbcType="VARCHAR" />
+    <result column="TZ_TT_BL" property="tzTtBl" jdbcType="VARCHAR" />
+    <result column="TZ_CS_KSBQZ_ID" property="tzCsKsbqzId" jdbcType="VARCHAR" />
+    <result column="TZ_CS_FMBQZ_ID" property="tzCsFmbqzId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" extends="BaseResultMap" >
     <result column="TZ_PRJ_DESC" property="tzPrjDesc" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, TZ_SBMINF_TMP_ID, 
-    TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_APPPRO_TMP_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_CS_SCOR_MD_ID, 
+    TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID
   </sql>
   <sql id="Blob_Column_List" >
     TZ_PRJ_DESC
@@ -46,18 +51,20 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T (TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, 
       TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, 
-      TZ_SBMINF_TMP_ID, TZ_APPPRO_TMP_ID, TZ_SCORE_MODAL_ID, 
-      TZ_MSPS_SCORE_M_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_PRJ_DESC
-      )
+      TZ_SBMINF_TMP_ID, TZ_APPPRO_TMP_ID, TZ_PS_APPF_M_ID, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_CS_SCOR_MD_ID, 
+      TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID, 
+      TZ_PRJ_DESC)
     values (#{tzPrjId,jdbcType=VARCHAR}, #{tzPrjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzIsOpen,jdbcType=VARCHAR}, #{tzAppModalId,jdbcType=VARCHAR}, #{tzPrjTypeId,jdbcType=VARCHAR}, 
-      #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzAppproTmpId,jdbcType=VARCHAR}, #{tzScoreModalId,jdbcType=VARCHAR}, 
-      #{tzMspsScoreMId,jdbcType=VARCHAR}, #{tzPsAppfMId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzPrjDesc,jdbcType=LONGVARCHAR}
-      )
+      #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzAppproTmpId,jdbcType=VARCHAR}, #{tzPsAppfMId,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, #{tzCsScorMdId,jdbcType=VARCHAR}, 
+      #{tzTtBl,jdbcType=VARCHAR}, #{tzCsKsbqzId,jdbcType=VARCHAR}, #{tzCsFmbqzId,jdbcType=VARCHAR}, 
+      #{tzPrjDesc,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T
@@ -86,12 +93,6 @@
       <if test="tzAppproTmpId != null" >
         TZ_APPPRO_TMP_ID,
       </if>
-      <if test="tzScoreModalId != null" >
-        TZ_SCORE_MODAL_ID,
-      </if>
-      <if test="tzMspsScoreMId != null" >
-        TZ_MSPS_SCORE_M_ID,
-      </if>
       <if test="tzPsAppfMId != null" >
         TZ_PS_APPF_M_ID,
       </if>
@@ -112,6 +113,24 @@
       </if>
       <if test="syncdttm != null" >
         SYNCDTTM,
+      </if>
+      <if test="tzZlpsScorMdId != null" >
+        TZ_ZLPS_SCOR_MD_ID,
+      </if>
+      <if test="tzMscjScorMdId != null" >
+        TZ_MSCJ_SCOR_MD_ID,
+      </if>
+      <if test="tzCsScorMdId != null" >
+        TZ_CS_SCOR_MD_ID,
+      </if>
+      <if test="tzTtBl != null" >
+        TZ_TT_BL,
+      </if>
+      <if test="tzCsKsbqzId != null" >
+        TZ_CS_KSBQZ_ID,
+      </if>
+      <if test="tzCsFmbqzId != null" >
+        TZ_CS_FMBQZ_ID,
       </if>
       <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC,
@@ -142,12 +161,6 @@
       <if test="tzAppproTmpId != null" >
         #{tzAppproTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzScoreModalId != null" >
-        #{tzScoreModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzMspsScoreMId != null" >
-        #{tzMspsScoreMId,jdbcType=VARCHAR},
-      </if>
       <if test="tzPsAppfMId != null" >
         #{tzPsAppfMId,jdbcType=VARCHAR},
       </if>
@@ -168,6 +181,24 @@
       </if>
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzZlpsScorMdId != null" >
+        #{tzZlpsScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMscjScorMdId != null" >
+        #{tzMscjScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsScorMdId != null" >
+        #{tzCsScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTtBl != null" >
+        #{tzTtBl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsKsbqzId != null" >
+        #{tzCsKsbqzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsFmbqzId != null" >
+        #{tzCsFmbqzId,jdbcType=VARCHAR},
       </if>
       <if test="tzPrjDesc != null" >
         #{tzPrjDesc,jdbcType=LONGVARCHAR},
@@ -198,12 +229,6 @@
       <if test="tzAppproTmpId != null" >
         TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
       </if>
-      <if test="tzScoreModalId != null" >
-        TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      </if>
-      <if test="tzMspsScoreMId != null" >
-        TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
-      </if>
       <if test="tzPsAppfMId != null" >
         TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
       </if>
@@ -225,6 +250,24 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzZlpsScorMdId != null" >
+        TZ_ZLPS_SCOR_MD_ID = #{tzZlpsScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMscjScorMdId != null" >
+        TZ_MSCJ_SCOR_MD_ID = #{tzMscjScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsScorMdId != null" >
+        TZ_CS_SCOR_MD_ID = #{tzCsScorMdId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTtBl != null" >
+        TZ_TT_BL = #{tzTtBl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsKsbqzId != null" >
+        TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsFmbqzId != null" >
+        TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
+      </if>
       <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -240,8 +283,6 @@
       TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
       TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
       TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
-      TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
       TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
@@ -249,6 +290,12 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ZLPS_SCOR_MD_ID = #{tzZlpsScorMdId,jdbcType=VARCHAR},
+      TZ_MSCJ_SCOR_MD_ID = #{tzMscjScorMdId,jdbcType=VARCHAR},
+      TZ_CS_SCOR_MD_ID = #{tzCsScorMdId,jdbcType=VARCHAR},
+      TZ_TT_BL = #{tzTtBl,jdbcType=VARCHAR},
+      TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
+      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
       TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR}
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
@@ -261,15 +308,19 @@
       TZ_PRJ_TYPE_ID = #{tzPrjTypeId,jdbcType=VARCHAR},
       TZ_SBMINF_TMP_ID = #{tzSbminfTmpId,jdbcType=VARCHAR},
       TZ_APPPRO_TMP_ID = #{tzAppproTmpId,jdbcType=VARCHAR},
-      TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR},
-      TZ_MSPS_SCORE_M_ID = #{tzMspsScoreMId,jdbcType=VARCHAR},
       TZ_PS_APPF_M_ID = #{tzPsAppfMId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_ZLPS_SCOR_MD_ID = #{tzZlpsScorMdId,jdbcType=VARCHAR},
+      TZ_MSCJ_SCOR_MD_ID = #{tzMscjScorMdId,jdbcType=VARCHAR},
+      TZ_CS_SCOR_MD_ID = #{tzCsScorMdId,jdbcType=VARCHAR},
+      TZ_TT_BL = #{tzTtBl,jdbcType=VARCHAR},
+      TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
+      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR}
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -202,7 +202,7 @@
               // </debug>
     	}
 		
-		cmp = new ViewClass();
+		cmp = new ViewClass({"coluId":columnId});
 
     	cmp.on('afterrender',function(panel){
 				var form = panel.child("form").getForm();
@@ -213,8 +213,10 @@
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
 						var formData = responseData.formData;
+						var siteId = formData.siteId;
 						form.findField("siteId").setValue(formData.siteId);
 						form.findField("coluId").setValue(formData.coluId);
+						form.findField("colus").setValue(formData.colus);
 						form.findField("siteType").setValue(formData.siteType);
 						form.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
 						form.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
@@ -309,6 +311,7 @@
 							var pubAud = panel.down('fieldset[name=pubAud]');
 //							pubAud.setHidden(true);
 						}
+						
 				});
 			});
     	
@@ -487,7 +490,7 @@
 				// </debug>
 			}
 	
-			cmp = new ViewClass();
+			cmp = new ViewClass({"coluId":coluId});
 			//操作类型设置为更新
 			cmp.actType = "update";
 			
@@ -619,7 +622,8 @@
 					var picDataView = panel.down('dataview[name=picView]');
 					var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"TPJ"}';
 					picDataView.store.tzStoreParams = tzStoreParams;
-					picDataView.store.load();					
+					picDataView.store.load();
+					
 				});
 				
 			});
