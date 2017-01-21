@@ -88,7 +88,7 @@
             minValue: 1,
 			name: 'areasxh'
         }, {
-            xtype: 'combobox',
+            xtype: 'tagfield',
             fieldLabel: '对应栏目',
 			forceSelection: true,
 			emptyText:'请选择',
