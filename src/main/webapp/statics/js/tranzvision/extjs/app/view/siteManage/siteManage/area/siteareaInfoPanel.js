@@ -19,11 +19,6 @@
     width:600,
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	actType: 'add',//默认新增,
-	listeners:{
-		afterrende:function(){
-			alert(1)
-		}
-	},
     items: [{
         xtype: 'form',
         reference: 'userAccountForm',
@@ -95,10 +90,7 @@
         }, {
             xtype: 'tagfield',
             fieldLabel: '对应栏目',
-			forceSelection: true,
-			emptyText:'请选择',
             queryMode: 'local',
-			filterPickList:true,
 			name: 'arealm',
 			valueField: 'TZ_COLU_ID',
     		displayField: 'TZ_COLU_NAME'

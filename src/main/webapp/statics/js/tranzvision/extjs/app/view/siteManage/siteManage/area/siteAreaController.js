@@ -2,12 +2,17 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.siteAreaInfo1', 
 	onFormSave: function(btn){
-		//组件注册表单
 		var form = this.getView().child("form").getForm();
-		//组件信息标志
+
 		var actType = this.getView().actType;
-		//更新操作参数
+
 		var comParams = "";
+		
+		var formData = form.getValues();
+		
+		//转换栏目值类型：array -> string
+		formData["arealm"] = typeof formData["arealm"] =="object"?formData["arealm"].join(","):formData["arealm"];
+		
 		//新增
 		if(actType == "add"){
 			comParams = '"add":['+Ext.JSON.encode(form.getValues())+']';
