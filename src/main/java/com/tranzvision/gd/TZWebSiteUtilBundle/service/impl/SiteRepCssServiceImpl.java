@@ -82,7 +82,7 @@ public class SiteRepCssServiceImpl {
 	 *            是否“装修”页面：Y-是；N-否；
 	 * @return String
 	 */
-	public String repJavascriptTags(String strContent, String strScripts, String orgid, String siteid,
+	public String repJavascriptTags(String strContent, String strScripts, String strBroadStyleScripts,String orgid, String siteid,
 			String isDecorate) {
 		if (null == strContent || "".equals(strContent)) {
 			return strContent;
@@ -94,6 +94,7 @@ public class SiteRepCssServiceImpl {
 			String gblScripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsGlobalVar", ctxPath, orgid,
 					siteid, isDecorate);
 			strContent = strContent.replace("<!--#{javascripts}#-->", gblScripts + strScripts);
+			strContent = strContent.replace("<!--#{broadstylejs}#-->", gblScripts + strBroadStyleScripts);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

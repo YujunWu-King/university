@@ -138,7 +138,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
                     var formData = responseData.formData;
                     form.setValues(formData);
                     var htmlCom = panel.down("component[name=SmsContentHtml]");
-                    htmlCom.getEl().update(Ext.util.Format.htmlDecode(formData.emailContent));
+					
+                    //htmlCom.getEl().update(Ext.util.Format.htmlDecode(formData.SmsContent));
+					htmlCom.getEl().update(formData.SmsContent);
+					htmlCom.updateLayout();
                 }
             )
 
@@ -187,7 +190,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
 				sendStatus = "";
 				break;
 			case 2:
-				sendStatus = "WAIT";
+				//sendStatus = "WAIT";
+				sendStatus = "";
 				break;
 			case 3:
 				sendStatus = "SUC";
@@ -195,7 +199,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
 			case 4:
 				sendStatus = "FAIL";
 				break;
-				case 5:
+			case 5:
 				sendStatus = "RPT";
 				break;
 		}
@@ -217,4 +221,23 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsHis
 		win.show();	
 	},
 	
+	smsReplyView: function(grid, rowIndex, colIndex){
+		var rec = grid.getStore().getAt(rowIndex);
+		var taskId = rec.data.taskID;
+		
+		var contentPanel,cmp, className, ViewClass;
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+							 	 
+		className = 'KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.viewHistorySms.SmsReplyWindow';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}
+		ViewClass = Ext.ClassManager.get(className);
+		var config = {
+				taskId: taskId
+			}
+		var win = new ViewClass(config);
+		win.show();	
+	}
 });

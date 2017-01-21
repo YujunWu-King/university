@@ -19,10 +19,6 @@ public class PsTzPrjInfT {
 
     private String tzAppproTmpId;
 
-    private String tzScoreModalId;
-
-    private String tzMspsScoreMId;
-
     private String tzPsAppfMId;
 
     private Date rowAddedDttm;
@@ -36,6 +32,18 @@ public class PsTzPrjInfT {
     private Integer syncid;
 
     private Date syncdttm;
+
+    private String tzZlpsScorMdId;
+
+    private String tzMscjScorMdId;
+
+    private String tzCsScorMdId;
+
+    private String tzTtBl;
+
+    private String tzCsKsbqzId;
+
+    private String tzCsFmbqzId;
 
     private String tzPrjDesc;
 
@@ -103,22 +111,6 @@ public class PsTzPrjInfT {
         this.tzAppproTmpId = tzAppproTmpId == null ? null : tzAppproTmpId.trim();
     }
 
-    public String getTzScoreModalId() {
-        return tzScoreModalId;
-    }
-
-    public void setTzScoreModalId(String tzScoreModalId) {
-        this.tzScoreModalId = tzScoreModalId == null ? null : tzScoreModalId.trim();
-    }
-
-    public String getTzMspsScoreMId() {
-        return tzMspsScoreMId;
-    }
-
-    public void setTzMspsScoreMId(String tzMspsScoreMId) {
-        this.tzMspsScoreMId = tzMspsScoreMId == null ? null : tzMspsScoreMId.trim();
-    }
-
     public String getTzPsAppfMId() {
         return tzPsAppfMId;
     }
@@ -173,6 +165,54 @@ public class PsTzPrjInfT {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzZlpsScorMdId() {
+        return tzZlpsScorMdId;
+    }
+
+    public void setTzZlpsScorMdId(String tzZlpsScorMdId) {
+        this.tzZlpsScorMdId = tzZlpsScorMdId == null ? null : tzZlpsScorMdId.trim();
+    }
+
+    public String getTzMscjScorMdId() {
+        return tzMscjScorMdId;
+    }
+
+    public void setTzMscjScorMdId(String tzMscjScorMdId) {
+        this.tzMscjScorMdId = tzMscjScorMdId == null ? null : tzMscjScorMdId.trim();
+    }
+
+    public String getTzCsScorMdId() {
+        return tzCsScorMdId;
+    }
+
+    public void setTzCsScorMdId(String tzCsScorMdId) {
+        this.tzCsScorMdId = tzCsScorMdId == null ? null : tzCsScorMdId.trim();
+    }
+
+    public String getTzTtBl() {
+        return tzTtBl;
+    }
+
+    public void setTzTtBl(String tzTtBl) {
+        this.tzTtBl = tzTtBl == null ? null : tzTtBl.trim();
+    }
+
+    public String getTzCsKsbqzId() {
+        return tzCsKsbqzId;
+    }
+
+    public void setTzCsKsbqzId(String tzCsKsbqzId) {
+        this.tzCsKsbqzId = tzCsKsbqzId == null ? null : tzCsKsbqzId.trim();
+    }
+
+    public String getTzCsFmbqzId() {
+        return tzCsFmbqzId;
+    }
+
+    public void setTzCsFmbqzId(String tzCsFmbqzId) {
+        this.tzCsFmbqzId = tzCsFmbqzId == null ? null : tzCsFmbqzId.trim();
     }
 
     public String getTzPrjDesc() {

@@ -5,27 +5,18 @@
 	<script src="%bind(:1)/statics/js/lib/jquery/jquery.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		function jy() {
-			var wj = $('input:radio:checked').val();
-			//var wj=$("#cswj").val();
-			//alert(wj);
-			if (wj == "" || wj == null) {
-				//alert("请选择一个调查问卷！");
-				$("#xzwj").html("请选择一个测试方向！");
+			var radioSize = $(":radio").size();
+			if(radioSize == 0){
+				$("#msg").html("没有可选择的测试方向！");
+				return false;
+			}
+		
+			var selectType = $('input:radio:checked').val();
+			if (selectType == "" || selectType == null) {
+				$("#msg").html("请选择一个测试方向！");
 			} else {
-				//手机外网访问添加
-				/*	var submit_url = "http://166.111.96.211/psp/CRMDEV2/?cmd=login&languageCd=ZHS";
-				 $.ajax({
-				 type: "post",
-				 async :true,
-				 url: submit_url,
-				 data: {"userid":"%bind(:6)","pwd":"%bind(:4)"},
-				 dataType: "html",
-				 success: function(result){
-				 document.form1.submit();
-				 }
-				 });*/
-				//end
-				document.form1.submit();
+				var wj = "A" + $('input:radio:checked').attr("id");
+				window.location.href = $("#" + wj).attr("href");
 			}
 		}
 	</script>
@@ -44,20 +35,17 @@
 <body style="width: 100%; background: #f5f5f5; margin-left: 0px; margin-right: 0px; margin-top: 0px;">
 	<table class="xzwj" border="0" align="center" style="margin-left: 0px; border-spacing: 0px;width:100%;">
 		<tr>
-			<td><img src="%bind(:1)/statics/js/MBA_KSH/images/jjs/index_banner.jpg" style="width: 100%;" /></td>
+			<td><img src="%bind(:1)/statics/images/cantsinghua/jjs/index_banner.jpg" style="width: 100%;" /></td>
 		</tr>
 		<tr>
-			<td><form name="form1" method="post" action="%bind(:2)" target="_top">
+			<td><form name="form1" method="post" action="" target="_top">
 					<table cellspacing="0" cellpadding="0" border="0"
-						style="width:100%;border: 1px solid #9fa0a0; border-radius: 10px; padding: 20px; background: #fff; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;"
-						class="tb">
-						<tr>
-							<td><table style="width: 100%">%bind(:1)</table></td>
-						</tr>
+						style="width:100%;border: 1px solid #9fa0a0; border-radius: 10px; padding: 20px; background: #fff; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="tb">
+						<tr><td><table style="width: 100%">%bind(:2)</table></td></tr>
 						<tr>
 							<td>
 								<table style="width: 100%">
-									<tr><td style="text-align: center;"><span id="xzwj" style="color: red; font-size: 14px;">&nbsp;</span></td></tr>
+									<tr><td style="text-align: center;"><span id="msg" style="color: red; font-size: 14px;">&nbsp;</span></td></tr>
 								</table>
 							</td>
 						</tr>
@@ -67,7 +55,7 @@
 									<tr>
 										<td style="text-align: center;">
 											<a class="button button-blue" href="javascript:void(0);" onclick="jy();">
-												<img src="%bind(:1)/statics/js/MBA_KSH/images/jjs/btn_ok.jpg" />
+												<img src="%bind(:1)/statics/images/cantsinghua/jjs/btn_ok.jpg" />
 											</a>
 										</td>
 									</tr>
@@ -75,21 +63,9 @@
 							</td>
 						</tr>
 					</table>
-					<input type="hidden" name="user_email" value="%bind(:3)">
-					<input type="hidden" name="user_password1" value="%bind(:4)">
-					<input type="hidden" name="user_password2" value="%bind(:5)">
-					<input type="hidden" name="personid" value="%bind(:6)">
-					<input type="hidden" name="password" value="%bind(:7)">
-					<input type="hidden" name="isemailtj" value="%bind(:8)">
-					<input type="hidden" name="istj" value="Y">
-					<input type="hidden" name="addtz" value="Y">
-					<input type="hidden" name="issubmit" value="Y">
-					<input type="hidden" name="iszjdl" value="%bind(:9)">
 				</form>
 			</td>
 		</tr>
-		<tr>
-			<td><div class="footer">版权所有 ：2014&nbsp;清华大学经济管理学院</div></td>
-		</tr>
+		<tr><td><div class="footer">版权所有 ：2014&nbsp;清华大学经济管理学院</div></td></tr>
 	</table>
 </body>

@@ -36,6 +36,11 @@
 .next{background: url(images/icons/toolbar/next.png) no-repeat center center}
 .prev{background: url(images/icons/toolbar/previous.png) no-repeat center center}
 .refresh{background: url(images/icons/toolbar/refresh.png) no-repeat center center}
+.frequency_report{background: url(images/icons/toolbar/frequency_report.png) no-repeat center center}
+.schedule_report{background: url(images/icons/toolbar/schedule_report.png) no-repeat center center}
+.share{background: url(images/icons/toolbar/share.png) no-repeat center center}
+.link{background: url(images/icons/toolbar/link.png) no-repeat center center}
+.favorite{background: url(images/icons/toolbar/favorite.png) no-repeat center center}
 
 /*tabbar menu*/
 .tab_close{background: url(images/icons/toolbar/tab_close.png) no-repeat center center}

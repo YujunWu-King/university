@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.previewSms.SmsBulkPre
     ],
 
     xtype: 'SmsBulkPreviewPanel',
-   title: Ext.tzGetResourse("TZ_SMSQ_PREVIEW_COM.TZ_SMSQ_VIEW_STD.preview","预览"),
+   title: "预览",
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     initComponent: function(){
 
@@ -30,31 +30,39 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.previewSms.SmsBulkPre
                 autoHeight:true,
                 //minHeight: 800,
                 items: [{
-                    xtype: 'hidden',
-                    name: 'audCyrTotal'
+                    xtype: 'textfield',
+                    name: 'audCyrTotal',
+                    hidden:true
                 },{
-                   xtype: 'hidden',
-                    name: 'currentPageNum'
+                    xtype: 'textfield',
+                    name: 'currentPageNum',
+                    hidden:true
                 },{
                     xtype: 'textareafield',
                     name: 'configuration',
                     hidden:true
                 },{
                         name: 'AudID',
+                    xtype: 'textfield',
                     hidden:true
                     },{
                     xtype: 'displayfield',
-                    fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.senderEmail","发送人"),
+                    fieldLabel: "发送人",
                     name: 'senderPhone',
                     hidden:true
                 },{
                     xtype:'displayfield',
-                    fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.AddresseeEmail","收件人"),
+                    fieldLabel: "收件人",
                     name:'AddresseePhone'
                 },{
                     xtype: 'displayfield',
-                    fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.emailTheme","主题"),
+                    fieldLabel: "主题",
                     name:'SmsTheme',
+                    hidden:true
+                },{
+                    xtype: 'textareafield',
+                    fieldLabel: "短信内容",
+                    name:'SmsContentArea',
                     hidden:true
                 }]
             },{
@@ -72,14 +80,14 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.previewSms.SmsBulkPre
                     },{
                 xtype: 'component',
                 padding: 10,
-                fieldLabel: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.emailContent","邮件内容"),
+                fieldLabel: "短信内容",
                 //html: me.emailContentHtml,
                 name:'SmsContentHtml'
             }]
           }
           ],
             buttons: [{
-                text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.previous","上一条"),
+                text: "上一条",
                 iconCls:"prev",
                 handler: function(btn){
 
@@ -103,11 +111,11 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.previewSms.SmsBulkPre
                             htmlCom.updateLayout();
                         });
                     }else{
-                        Ext.Msg.alert(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.reminder","提示"),Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.firstPage","已经是第一页"));
+                        Ext.Msg.alert("提示","已经是第一页");
                     }
                 }
             },{
-                text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.next","下一页"),
+                text: "下一页",
                 iconCls:"next",
                 handler: function(btn){
                     //获取窗口
@@ -131,17 +139,15 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.previewSms.SmsBulkPre
                             htmlCom.updateLayout();
                         });
                     }else{
-                        Ext.Msg.alert(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.reminder","提示"),Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.lastPage","已经是最后一页"));
+                        Ext.Msg.alert("提示","已经是最后一页");
                     }
                 }
             },{
-                text: Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.close","关闭"),
+                text: "关闭",
                 iconCls:"close",
                 handler: function(btn){
                     //获取窗口
-                    var win = btn.findParentByType("commonEmailPreviewPanel");
-                    //信息表单
-                    var form = win.child("form").getForm();
+                    var win = btn.findParentByType("SmsBulkPreviewPanel");
                     //关闭窗口
                     win.close();
                 }

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzYjqftxjlTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    <id column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <id column="TZ_TX_MSG_ID" property="tzTxMsgId" jdbcType="VARCHAR" />
+    <id column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_TX_TYPE" property="tzTxType" jdbcType="VARCHAR" />
+    <result column="TZ_TX_DTTM" property="tzTxDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_TX_DESC" property="tzTxDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" extends="BaseResultMap" >
+    <result column="TZ_MAL_CONTENT" property="tzMalContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_MLSM_QFPC_ID, TZ_TX_MSG_ID, TZ_EMAIL, TZ_TX_TYPE, TZ_TX_DTTM, TZ_TX_DESC
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MAL_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_YJQFTXJL_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_TX_MSG_ID = #{tzTxMsgId,jdbcType=VARCHAR}
+      and TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlTKey" >
+    delete from PS_TZ_YJQFTXJL_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_TX_MSG_ID = #{tzTxMsgId,jdbcType=VARCHAR}
+      and TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    insert into PS_TZ_YJQFTXJL_T (TZ_MLSM_QFPC_ID, TZ_TX_MSG_ID, TZ_EMAIL, 
+      TZ_TX_TYPE, TZ_TX_DTTM, TZ_TX_DESC, 
+      TZ_MAL_CONTENT)
+    values (#{tzMlsmQfpcId,jdbcType=VARCHAR}, #{tzTxMsgId,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{tzTxType,jdbcType=VARCHAR}, #{tzTxDttm,jdbcType=TIMESTAMP}, #{tzTxDesc,jdbcType=VARCHAR}, 
+      #{tzMalContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    insert into PS_TZ_YJQFTXJL_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="tzTxMsgId != null" >
+        TZ_TX_MSG_ID,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzTxType != null" >
+        TZ_TX_TYPE,
+      </if>
+      <if test="tzTxDttm != null" >
+        TZ_TX_DTTM,
+      </if>
+      <if test="tzTxDesc != null" >
+        TZ_TX_DESC,
+      </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxMsgId != null" >
+        #{tzTxMsgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxType != null" >
+        #{tzTxType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxDttm != null" >
+        #{tzTxDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTxDesc != null" >
+        #{tzTxDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalContent != null" >
+        #{tzMalContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    update PS_TZ_YJQFTXJL_T
+    <set >
+      <if test="tzTxType != null" >
+        TZ_TX_TYPE = #{tzTxType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTxDttm != null" >
+        TZ_TX_DTTM = #{tzTxDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTxDesc != null" >
+        TZ_TX_DESC = #{tzTxDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMalContent != null" >
+        TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_TX_MSG_ID = #{tzTxMsgId,jdbcType=VARCHAR}
+      and TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    update PS_TZ_YJQFTXJL_T
+    set TZ_TX_TYPE = #{tzTxType,jdbcType=VARCHAR},
+      TZ_TX_DTTM = #{tzTxDttm,jdbcType=TIMESTAMP},
+      TZ_TX_DESC = #{tzTxDesc,jdbcType=VARCHAR},
+      TZ_MAL_CONTENT = #{tzMalContent,jdbcType=LONGVARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_TX_MSG_ID = #{tzTxMsgId,jdbcType=VARCHAR}
+      and TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxjlT" >
+    update PS_TZ_YJQFTXJL_T
+    set TZ_TX_TYPE = #{tzTxType,jdbcType=VARCHAR},
+      TZ_TX_DTTM = #{tzTxDttm,jdbcType=TIMESTAMP},
+      TZ_TX_DESC = #{tzTxDesc,jdbcType=VARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and TZ_TX_MSG_ID = #{tzTxMsgId,jdbcType=VARCHAR}
+      and TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR}
+  </update>
+</mapper>

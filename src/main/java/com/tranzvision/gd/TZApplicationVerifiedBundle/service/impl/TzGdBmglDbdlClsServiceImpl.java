@@ -174,7 +174,8 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					
 					String[] appids = strAppInsIdList.split(";");
 
-					processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+					//processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+					processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 					psTzExcelDrxxT.setProcessinstance(processInstance);
 					psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");

@@ -43,6 +43,7 @@
     <result column="TZ_IS_DOWNLOAD" property="tzIsDownload" jdbcType="VARCHAR" />
     <result column="TZ_SUB_QS_INTH" property="tzSubQsInth" jdbcType="VARCHAR" />
     <result column="TZ_XXX_QID" property="tzXxxQid" jdbcType="VARCHAR" />
+    <result column="TZ_IS_AVG" property="tzIsAvg" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjXxxPzTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_TITLE" property="tzTitle" jdbcType="LONGVARCHAR" />
@@ -55,7 +56,7 @@
     TZ_XXX_YXSCLX, TZ_XXX_YXSCDX, TZ_XXX_SFCJ, TZ_XXX_TPCJLX, TZ_XXX_BT_BZ, TZ_XXX_CHAR_BZ, 
     TZ_XXX_MIN_LINE, TZ_XXX_MAX_LINE, TZ_XXX_NUM_BZ, TZ_XXX_MIN, TZ_XXX_MAX, TZ_XXX_XSWS, 
     TZ_XXX_GDGSJY, TZ_XXX_DRQ_BZ, TZ_XXX_MINLEN, TZ_XXX_MAXLEN, TZ_XXX_SRQ_BZ, TZ_IS_SHOW, 
-    TZ_IS_DOWNLOAD, TZ_SUB_QS_INTH, TZ_XXX_QID
+    TZ_IS_DOWNLOAD, TZ_SUB_QS_INTH, TZ_XXX_QID, TZ_IS_AVG
   </sql>
   <sql id="Blob_Column_List" >
     TZ_TITLE, TZ_XXX_WZSM
@@ -88,8 +89,8 @@
       TZ_XXX_MAX, TZ_XXX_XSWS, TZ_XXX_GDGSJY, 
       TZ_XXX_DRQ_BZ, TZ_XXX_MINLEN, TZ_XXX_MAXLEN, 
       TZ_XXX_SRQ_BZ, TZ_IS_SHOW, TZ_IS_DOWNLOAD, 
-      TZ_SUB_QS_INTH, TZ_XXX_QID, TZ_TITLE, 
-      TZ_XXX_WZSM)
+      TZ_SUB_QS_INTH, TZ_XXX_QID, TZ_IS_AVG, 
+      TZ_TITLE, TZ_XXX_WZSM)
     values (#{tzDcWjId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, #{tzXxxSlid,jdbcType=VARCHAR}, 
       #{tzXxxMc,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, #{tzPageNo,jdbcType=INTEGER}, 
       #{tzComLmc,jdbcType=VARCHAR}, #{tzXxxKztsxx,jdbcType=VARCHAR}, #{tzXxxJdtsxx,jdbcType=VARCHAR}, 
@@ -103,8 +104,8 @@
       #{tzXxxMax,jdbcType=BIGINT}, #{tzXxxXsws,jdbcType=SMALLINT}, #{tzXxxGdgsjy,jdbcType=VARCHAR}, 
       #{tzXxxDrqBz,jdbcType=VARCHAR}, #{tzXxxMinlen,jdbcType=INTEGER}, #{tzXxxMaxlen,jdbcType=INTEGER}, 
       #{tzXxxSrqBz,jdbcType=VARCHAR}, #{tzIsShow,jdbcType=VARCHAR}, #{tzIsDownload,jdbcType=VARCHAR}, 
-      #{tzSubQsInth,jdbcType=VARCHAR}, #{tzXxxQid,jdbcType=VARCHAR}, #{tzTitle,jdbcType=LONGVARCHAR}, 
-      #{tzXxxWzsm,jdbcType=LONGVARCHAR})
+      #{tzSubQsInth,jdbcType=VARCHAR}, #{tzXxxQid,jdbcType=VARCHAR}, #{tzIsAvg,jdbcType=VARCHAR}, 
+      #{tzTitle,jdbcType=LONGVARCHAR}, #{tzXxxWzsm,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjXxxPzTWithBLOBs" >
     insert into PS_TZ_DCWJ_XXXPZ_T
@@ -231,6 +232,9 @@
       </if>
       <if test="tzXxxQid != null" >
         TZ_XXX_QID,
+      </if>
+      <if test="tzIsAvg != null" >
+        TZ_IS_AVG,
       </if>
       <if test="tzTitle != null" >
         TZ_TITLE,
@@ -363,6 +367,9 @@
       <if test="tzXxxQid != null" >
         #{tzXxxQid,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsAvg != null" >
+        #{tzIsAvg,jdbcType=VARCHAR},
+      </if>
       <if test="tzTitle != null" >
         #{tzTitle,jdbcType=LONGVARCHAR},
       </if>
@@ -491,6 +498,9 @@
       <if test="tzXxxQid != null" >
         TZ_XXX_QID = #{tzXxxQid,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsAvg != null" >
+        TZ_IS_AVG = #{tzIsAvg,jdbcType=VARCHAR},
+      </if>
       <if test="tzTitle != null" >
         TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
       </if>
@@ -542,6 +552,7 @@
       TZ_IS_DOWNLOAD = #{tzIsDownload,jdbcType=VARCHAR},
       TZ_SUB_QS_INTH = #{tzSubQsInth,jdbcType=VARCHAR},
       TZ_XXX_QID = #{tzXxxQid,jdbcType=VARCHAR},
+      TZ_IS_AVG = #{tzIsAvg,jdbcType=VARCHAR},
       TZ_TITLE = #{tzTitle,jdbcType=LONGVARCHAR},
       TZ_XXX_WZSM = #{tzXxxWzsm,jdbcType=LONGVARCHAR}
     where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
@@ -587,7 +598,8 @@
       TZ_IS_SHOW = #{tzIsShow,jdbcType=VARCHAR},
       TZ_IS_DOWNLOAD = #{tzIsDownload,jdbcType=VARCHAR},
       TZ_SUB_QS_INTH = #{tzSubQsInth,jdbcType=VARCHAR},
-      TZ_XXX_QID = #{tzXxxQid,jdbcType=VARCHAR}
+      TZ_XXX_QID = #{tzXxxQid,jdbcType=VARCHAR},
+      TZ_IS_AVG = #{tzIsAvg,jdbcType=VARCHAR}
     where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>

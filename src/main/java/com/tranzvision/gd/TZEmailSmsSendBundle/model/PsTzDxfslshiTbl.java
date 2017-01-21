@@ -15,6 +15,8 @@ public class PsTzDxfslshiTbl {
 
     private String tzJcslId;
 
+    private String tzAudcyId;
+
     public String getTzRwslId() {
         return tzRwslId;
     }
@@ -61,5 +63,13 @@ public class PsTzDxfslshiTbl {
 
     public void setTzJcslId(String tzJcslId) {
         this.tzJcslId = tzJcslId == null ? null : tzJcslId.trim();
+    }
+
+    public String getTzAudcyId() {
+        return tzAudcyId;
+    }
+
+    public void setTzAudcyId(String tzAudcyId) {
+        this.tzAudcyId = tzAudcyId == null ? null : tzAudcyId.trim();
     }
 }

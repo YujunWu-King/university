@@ -12,6 +12,7 @@ import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiColuTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 站点栏目设置；原：TZ_GD_ZDDY_PKG:TZ_GD_ZDLM_CLS
@@ -26,6 +27,8 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzSiteiColuTMapper psTzSiteiColuTMapper;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	
 	/* 添加站点栏目设置 */
 	@Override
@@ -48,16 +51,37 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 				String lm_nrmb = jacksonUtil.getString("lm_nrmb");
 				String lm_yxzt = jacksonUtil.getString("lm_yxzt");
 				String lm_id = String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_COLU_T", "TZ_COLU_ID"));
-
+				
+				
 				PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
+			    /*************
+	                ******保存的时候，需要设置栏目级别，
+					*******需要检查有没有上级栏目，如果是没有上级栏目，
+					********则需要设置级别为0的栏目为上级栏目，
+					*******如果栏目级别不为0设置为1，如果为0，
+					*******则不更新。
+					**************/
+				String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+				String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+				int count=jdbcTemplate.queryForObject(SqlLev, new Object[] {siteId}, "Integer");
+				if(count>0){
+					String lm_Flm=jdbcTemplate.queryForObject(SqlFlm, new Object[] {siteId}, "String");
+					psTzSiteiColuT.setTzFColuId(lm_Flm);
+				}else{
+					
+				}				
+				psTzSiteiColuT.setTzColuLevel(1);					
 				psTzSiteiColuT.setTzSiteiId(siteId);
 				psTzSiteiColuT.setTzColuId(lm_id);
 				psTzSiteiColuT.setTzColuName(lm_name);
 				psTzSiteiColuT.setTzColuType(lm_lx);
 				psTzSiteiColuT.setTzTempId(lm_mb);
-				psTzSiteiColuT.setTzContType(lm_nrlx);
+				//添加活动类型
+				//psTzSiteiColuT.setTzContType(lm_nrlx);
+				psTzSiteiColuT.setTzArtTypeId(lm_nrlx);
 				psTzSiteiColuT.setTzContTemp(lm_nrmb);
 				psTzSiteiColuT.setTzColuState(lm_yxzt);
+				System.out.println("hello1");
 				int i = psTzSiteiColuTMapper.insert(psTzSiteiColuT);
 				if(i > 0){
 					returnJsonMap.replace("lm_id", lm_id);
@@ -95,14 +119,40 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 				String lm_nrlx = jacksonUtil.getString("lm_nrlx");
 				String lm_nrmb = jacksonUtil.getString("lm_nrmb");
 				String lm_yxzt = jacksonUtil.getString("lm_yxzt");
-
+				 /*************
+	                ******保存的时候，需要设置栏目级别，
+					*******需要检查有没有上级栏目，如果是没有上级栏目，
+					********则需要设置级别为0的栏目为上级栏目，
+					*******如果栏目级别不为0设置为1，如果为0，
+					*******则不更新。
+					**************/
 				PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
+				String SqlMeLev=("SELECT TZ_COLU_LEVEL FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?");
+			    String mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "String");
+			    if (mylm_level!="0") {
+			    	psTzSiteiColuT.setTzColuLevel(1);
+			    	String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+					String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
+					System.out.println("siteId");
+					int count=jdbcTemplate.queryForObject(SqlLev, new Object[]{siteId}, "Integer");
+					
+					   if(count>0){
+						  String lm_Flm=jdbcTemplate.queryForObject(SqlFlm, new Object[]{siteId}, "String");
+						  psTzSiteiColuT.setTzFColuId(lm_Flm);
+					   }else{
+						
+					  }	
+			    }else{
+			    	
+			    }
 				psTzSiteiColuT.setTzSiteiId(siteId);
 				psTzSiteiColuT.setTzColuId(lm_id);
 				psTzSiteiColuT.setTzColuName(lm_name);
 				psTzSiteiColuT.setTzColuType(lm_lx);
 				psTzSiteiColuT.setTzTempId(lm_mb);
-				psTzSiteiColuT.setTzContType(lm_nrlx);
+				//添加活动类型
+				//psTzSiteiColuT.setTzContType(lm_nrlx);
+				psTzSiteiColuT.setTzArtTypeId(lm_nrlx);
 				psTzSiteiColuT.setTzContTemp(lm_nrmb);
 				psTzSiteiColuT.setTzColuState(lm_yxzt);
 				int i = psTzSiteiColuTMapper.updateByPrimaryKey(psTzSiteiColuT);
@@ -147,8 +197,10 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 					jsonMap.put("lm_id", lm_id);
 					jsonMap.put("lm_name", psTzSiteiColuT.getTzColuName());
 					jsonMap.put("lm_lx", psTzSiteiColuT.getTzColuType());
-					jsonMap.put("lm_mb", psTzSiteiColuT.getTzTempId());
-					jsonMap.put("lm_nrlx",psTzSiteiColuT.getTzContType() );
+					jsonMap.put("lm_mb", psTzSiteiColuT.getTzTempId());					
+					//jsonMap.put("lm_nrlx",psTzSiteiColuT.getTzContType() );
+					//添加活动类型
+					jsonMap.put("lm_nrlx",psTzSiteiColuT.getTzArtTypeId());
 					jsonMap.put("lm_nrmb",psTzSiteiColuT.getTzContTemp());
 					jsonMap.put("lm_yxzt",psTzSiteiColuT.getTzColuState());
 					returnJsonMap.replace("formData", jsonMap);

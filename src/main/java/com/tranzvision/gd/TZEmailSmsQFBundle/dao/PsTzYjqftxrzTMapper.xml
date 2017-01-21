@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzYjqftxrzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT" >
+    <id column="TZ_MLSM_QFPC_ID" property="tzMlsmQfpcId" jdbcType="VARCHAR" />
+    <id column="PRCSINSTANCE" property="prcsinstance" jdbcType="INTEGER" />
+    <result column="TZ_TXAE_DTTM" property="tzTxaeDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_FILE_PATH" property="tzFilePath" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_MLSM_QFPC_ID, PRCSINSTANCE, TZ_TXAE_DTTM, TZ_FILE_PATH
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_YJQFTXRZ_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzTKey" >
+    delete from PS_TZ_YJQFTXRZ_T
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT" >
+    insert into PS_TZ_YJQFTXRZ_T (TZ_MLSM_QFPC_ID, PRCSINSTANCE, TZ_TXAE_DTTM, 
+      TZ_FILE_PATH)
+    values (#{tzMlsmQfpcId,jdbcType=VARCHAR}, #{prcsinstance,jdbcType=INTEGER}, #{tzTxaeDttm,jdbcType=TIMESTAMP}, 
+      #{tzFilePath,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT" >
+    insert into PS_TZ_YJQFTXRZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        TZ_MLSM_QFPC_ID,
+      </if>
+      <if test="prcsinstance != null" >
+        PRCSINSTANCE,
+      </if>
+      <if test="tzTxaeDttm != null" >
+        TZ_TXAE_DTTM,
+      </if>
+      <if test="tzFilePath != null" >
+        TZ_FILE_PATH,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMlsmQfpcId != null" >
+        #{tzMlsmQfpcId,jdbcType=VARCHAR},
+      </if>
+      <if test="prcsinstance != null" >
+        #{prcsinstance,jdbcType=INTEGER},
+      </if>
+      <if test="tzTxaeDttm != null" >
+        #{tzTxaeDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzFilePath != null" >
+        #{tzFilePath,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT" >
+    update PS_TZ_YJQFTXRZ_T
+    <set >
+      <if test="tzTxaeDttm != null" >
+        TZ_TXAE_DTTM = #{tzTxaeDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzFilePath != null" >
+        TZ_FILE_PATH = #{tzFilePath,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT" >
+    update PS_TZ_YJQFTXRZ_T
+    set TZ_TXAE_DTTM = #{tzTxaeDttm,jdbcType=TIMESTAMP},
+      TZ_FILE_PATH = #{tzFilePath,jdbcType=VARCHAR}
+    where TZ_MLSM_QFPC_ID = #{tzMlsmQfpcId,jdbcType=VARCHAR}
+      and PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+  </update>
+</mapper>

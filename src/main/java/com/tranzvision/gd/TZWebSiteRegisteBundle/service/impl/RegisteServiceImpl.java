@@ -147,25 +147,25 @@ public class RegisteServiceImpl {
 				    	//TZ_COUNTRY;
 				    	if("TZ_COUNTRY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
 				    	if("TZ_LEN_PROID".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_CITY;
 				    	if("TZ_LEN_CITY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
@@ -183,7 +183,7 @@ public class RegisteServiceImpl {
 				    		}else{
 				    			//String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 				    			String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_SITEI_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
-					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strJgid,regFieldId});
+					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strSiteId,regFieldId});
 					    		
 					    		for(int j = 0; j<dropList.size(); j++ ){
 					    			String optId = (String)dropList.get(j).get("TZ_OPT_ID");
@@ -228,10 +228,10 @@ public class RegisteServiceImpl {
 			if(strActType != null && !"".equals(strActType)){
 				if(strActType.indexOf("MOBILE")>=0 && strActType.indexOf("EMAIL")>=0){
 					if("ENG".equals(strLang)){
-						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
+						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
 				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", strActHtml,imgPath);
 					}else{
-						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
+						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
 				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", strActHtml,imgPath);
 					}
 				}else{
@@ -434,7 +434,8 @@ public class RegisteServiceImpl {
 		        	}else{
 		        		dir = dir + enrollDir;
 		        	}
-		        	
+		        	//一个机构下可以有多个站点
+		        	dir = dir + "/" + strSiteId;
 		        	boolean bl = this.staticFile(strReleasContent, dir, "enroll.html", errMsg);
 		        	return bl;  
 		        }else{
@@ -555,25 +556,25 @@ public class RegisteServiceImpl {
 				    	//TZ_COUNTRY;
 				    	if("TZ_COUNTRY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
 				    	if("TZ_LEN_PROID".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\"/>";
-					    	fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+					    	fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 					    }
 					    	
 				    	//TZ_LEN_CITY;
 				    	if("TZ_LEN_CITY".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
 				    	}
 				    	
 				    	//如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
@@ -635,10 +636,10 @@ public class RegisteServiceImpl {
 			if(strActType != null && !"".equals(strActType)){
 				if(strActType.indexOf("MOBILE")>=0 && strActType.indexOf("EMAIL")>=0){
 					if("ENG".equals(strLang)){
-						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
+						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
 				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML", strActHtml,imgPath);
 					}else{
-						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
+						 strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
 				         strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML", strActHtml,imgPath);
 					}
 				}else{
@@ -774,8 +775,8 @@ public class RegisteServiceImpl {
 		        	strReleasContent2 = objRep.repLang(strReleasContent2, "");
 		        }
 	        
-		        psTzSiteiDefnT.setTzEnrollPrecode(strReleasContent1);
-		        psTzSiteiDefnT.setTzEnrollSavecode(strReleasContent2);
+		        psTzSiteiDefnT.setTzPerfectPrecode(strReleasContent1);
+		        psTzSiteiDefnT.setTzPerfectSavecode(strReleasContent1);
 		        int success = psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnT);
 		        if(success > 0){
 		        	return true;  
@@ -833,8 +834,8 @@ public class RegisteServiceImpl {
 		        }else{
 		        	strReleasContent = objRep.repLang(strReleasContent, "");
 		        }
-		        psTzSiteiDefnT.setTzEnrollPrecode(strReleasContent);
-		        psTzSiteiDefnT.setTzEnrollPubcode(strReleasContent);
+		        psTzSiteiDefnT.setTzPerfectPrecode(strReleasContent);
+		        psTzSiteiDefnT.setTzPerfectPubcode(strReleasContent);
 		        int success = psTzSiteiDefnTMapper.updateByPrimaryKeySelective(psTzSiteiDefnT);
 		        if(success > 0){
 		        	PsTzUserregMbT psTzUserregMbT = psTzUserregMbTMapper.selectByPrimaryKey(strSiteId);
@@ -846,7 +847,9 @@ public class RegisteServiceImpl {
 		        	}else{
 		        		dir = dir + enrollDir;
 		        	}
-		        	
+		        	//一个机构可以有多个站点
+		        	dir = dir + "/" + strSiteId;
+		        		
 		        	boolean bl = this.staticFile(strReleasContent, dir, "perfect.html", errMsg);
 		        	return bl;  
 		        }else{
