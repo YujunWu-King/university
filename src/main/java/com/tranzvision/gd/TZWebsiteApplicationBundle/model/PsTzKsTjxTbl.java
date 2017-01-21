@@ -51,8 +51,6 @@ public class PsTzKsTjxTbl {
 
     private String tzAttAUrl;
 
-    private String tzAccessPath;
-
     private String attachsysfilename;
 
     private String attachuserfile;
@@ -68,6 +66,18 @@ public class PsTzKsTjxTbl {
     private Integer syncid;
 
     private Date syncdttm;
+
+    private String tzAccessPath;
+
+    private String tzTjxYl6;
+
+    private String tzTjxYl7;
+
+    private String tzTjxYl8;
+
+    private String tzTjxYl9;
+
+    private String tzTjxYl10;
 
     public String getTzRefLetterId() {
         return tzRefLetterId;
@@ -261,14 +271,6 @@ public class PsTzKsTjxTbl {
         this.tzAttAUrl = tzAttAUrl == null ? null : tzAttAUrl.trim();
     }
 
-    public String getTzAccessPath() {
-        return tzAccessPath;
-    }
-
-    public void setTzAccessPath(String tzAccessPath) {
-        this.tzAccessPath = tzAccessPath == null ? null : tzAccessPath.trim();
-    }
-
     public String getAttachsysfilename() {
         return attachsysfilename;
     }
@@ -331,5 +333,53 @@ public class PsTzKsTjxTbl {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzAccessPath() {
+        return tzAccessPath;
+    }
+
+    public void setTzAccessPath(String tzAccessPath) {
+        this.tzAccessPath = tzAccessPath == null ? null : tzAccessPath.trim();
+    }
+
+    public String getTzTjxYl6() {
+        return tzTjxYl6;
+    }
+
+    public void setTzTjxYl6(String tzTjxYl6) {
+        this.tzTjxYl6 = tzTjxYl6 == null ? null : tzTjxYl6.trim();
+    }
+
+    public String getTzTjxYl7() {
+        return tzTjxYl7;
+    }
+
+    public void setTzTjxYl7(String tzTjxYl7) {
+        this.tzTjxYl7 = tzTjxYl7 == null ? null : tzTjxYl7.trim();
+    }
+
+    public String getTzTjxYl8() {
+        return tzTjxYl8;
+    }
+
+    public void setTzTjxYl8(String tzTjxYl8) {
+        this.tzTjxYl8 = tzTjxYl8 == null ? null : tzTjxYl8.trim();
+    }
+
+    public String getTzTjxYl9() {
+        return tzTjxYl9;
+    }
+
+    public void setTzTjxYl9(String tzTjxYl9) {
+        this.tzTjxYl9 = tzTjxYl9 == null ? null : tzTjxYl9.trim();
+    }
+
+    public String getTzTjxYl10() {
+        return tzTjxYl10;
+    }
+
+    public void setTzTjxYl10(String tzTjxYl10) {
+        this.tzTjxYl10 = tzTjxYl10 == null ? null : tzTjxYl10.trim();
     }
 }

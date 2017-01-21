@@ -212,7 +212,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					isShowBindEmail = "none";
 					isShowBindPhone = "none";
 				}
-
+				/*去除微信绑定功能*/
+				/*
 				String bindHtml = "";
 				//增加微信绑定
 				String qrcodeFileUrl = "";
@@ -242,7 +243,11 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							strChangePhoneShow, strChangeEmailShow, strChange, strPhone, strEmail, isShowBindEmail,
 							isShowBindPhone,strWeChat,strWeChatBind,strRelease);
 				}
-
+				*/
+				String zhbd = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML1",  strBindPhone,
+						strBindPhoneFlg, strBindPhoneEvent, strBindEmail, strBindEmailFlg, strBindEmailEvent,
+						strChangePhoneShow, strChangeEmailShow, strChange, strPhone, strEmail, isShowBindEmail,
+						isShowBindPhone);
 				// 获取要显示的字段;
 				String fields = "";
 				//面试申请号和项目是不需要显示修改的;
@@ -544,7 +549,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						strOrgId, strSiteId, strResultConten);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
-				return "【TZ_MENU_ZHGL_HTML】html对象未定义";
+				return "【TZ_MENU_ZHGL_HTML2】html对象未定义";
 			}
 
 			strResultConten = objRep.repTitle(strResultConten, strSiteId);

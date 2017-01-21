@@ -36,25 +36,34 @@ $(document)
 										el
 												.click(function(e) {
 													var countryUrl = encodeURI(tzGdWdzhCountryUrl);
-													$("#ParamCon").val(
-															"TZ_COUNTRY");
+													$("#ParamCon").val("TZ_COUNTRY");
+													s = layer.open({
+														type : 2,
+														title : false,
+														fixed : false,
+														closeBtn : 0,
+														shadeClose : false,
+														shade : [ 0.3, '#000', true ],
+														border : [ 3, 0.3, '#000', true ],
+														offset : [ '20%', '' ],
+														area : [ '830px','610px' ],
+														content:countryUrl
+													});
+													/*
 													s = $.layer({
 														type : 2,
 														title : false,
 														fix : false,
 														closeBtn : false,
 														shadeClose : false,
-														shade : [ 0.3, '#000',
-																true ],
-														border : [ 3, 0.3,
-																'#000', true ],
+														shade : [ 0.3, '#000',true ],
+														border : [ 3, 0.3,'#000', true ],
 														offset : [ '50%', '' ],
-														area : [ '830px',
-																'610px' ],
+														area : [ '830px','610px' ],
 														iframe : {
 															src : countryUrl
 														},
-													});
+													});*/
 												});
 									});
 					$("#TZ_COUNTRY_click").mouseover(function() {
@@ -67,7 +76,7 @@ $(document)
 							function(i, el) {
 								el.click(function(e) {
 									$("#ParamValue").val("TZ_SCH_CNAME");
-									s = $.layer({
+									/*s = $.layer({
 										type : 2,
 										title : false,
 										fix : false,
@@ -81,7 +90,19 @@ $(document)
 											//src : '/mba/colselector_liu.html'
 											src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
 										}
-									});
+									});*/
+									s = layer.open({
+										type : 2,
+										title : false,
+										fixed : false,
+										closeBtn : 0,
+										shadeClose : false,
+										shade : [ 0.3, '#000', true ],
+										border : [ 3, 0.3, '#000', true ],
+										offset : [ '10%', '' ],
+										area : [ '830px', '720px' ],
+										content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
+									})
 								});
 							});
 					$("#TZ_SCH_CNAME_click").mouseover(function() {
@@ -95,7 +116,7 @@ $(document)
 								el.click(function(e) {
 									var _prov_id = "TZ_LEN_PROID";
 									var provUrl = encodeURI(tzGdWdzhProvUrl);
-									prov = $.layer({
+									/*prov = $.layer({
 										type : 2,
 										title : false,
 										fix : false,
@@ -108,6 +129,18 @@ $(document)
 										iframe : {
 											src : provUrl
 										}
+									});*/
+									prov = layer.open({
+										type : 2,
+										title : false,
+										fixed : false,
+										closeBtn : 0,
+										shadeClose : false,
+										shade : [ 0.3, '#000', true ],
+										border : [ 3, 0.3, '#000', true ],
+										offset : [ '20%', '' ],
+										area : [ '588px', '300px' ],
+										content:provUrl
 									});
 								});
 							});
@@ -122,7 +155,7 @@ $(document)
 								el.click(function(e) {
 									var _city_id = "TZ_LEN_CITY";
 									var cityUrl = encodeURI(tzGdWdzhCityUrl);
-									i2 = $.layer({
+									/*i2 = $.layer({
 										type : 2,
 										title : false,
 										fix : false,
@@ -135,6 +168,18 @@ $(document)
 										iframe : {
 											src : cityUrl
 										}
+									});*/
+									prov = layer.open({
+										type : 2,
+										title : false,
+										fixed : false,
+										closeBtn : 0,
+										shadeClose : false,
+										shade : [ 0.3, '#000', true ],
+										border : [ 3, 0.3, '#000', true ],
+										offset : [ '20%', '' ],
+										area : [ '588px', '400px' ],
+										content:cityUrl
 									});
 								});
 							});
@@ -257,7 +302,8 @@ $(document)
 											},
 											url : tzGdWdzhSaveActivateUrl,
 											success : function(data) {
-												alert(data.comContent.success);
+												//alert(data.comContent.success);
+												layer.msg(data.comContent.success,{time:1000});
 											}
 										});
 									});
@@ -290,7 +336,8 @@ $(document)
 											},
 											url : tzGdWdzhSaveRemind,
 											success : function(data) {
-												alert(data.comContent.success);
+												//alert(data.comContent.success);
+												layer.msg(data.comContent.success,{time:1000});
 											}
 										});
 									});
@@ -328,9 +375,11 @@ function changeBindEmail() {
 					$("#change_Email").hide();
 					$("#bind_Email").attr("emailBindState","N");
 				}
-				alert(tzGdWdzhPassSucTips);
+				//alert(tzGdWdzhPassSucTips);
+				layer.msg(tzGdWdzhPassSucTips,{time:1000});
 			} else {
-				alert(data.comContent.errorDesc);
+				//alert(data.comContent.errorDesc);
+				layer.msg(data.comContent.errorDesc,{time:1000});
 			}
 		}
 	});
@@ -365,9 +414,11 @@ function changeBindMobile() {
 					$("#bind_Mobile").html(tzGdWdzhDoBind).attr("phonebindstate","N");
 					$("#change_Mobile").hide();
 				}
-				alert(tzGdWdzhPassSucTips);
+				//alert(tzGdWdzhPassSucTips);
+				layer.msg(tzGdWdzhPassSucTips,{time:1000});
 			} else {
-				alert(data.comContent.errorDesc);
+				//alert(data.comContent.errorDesc);
+				layer.msg(data.comContent.errorDesc,{time:1000});
 			}
 		}
 	});
@@ -397,7 +448,7 @@ function changeEmail() {
 			+ $("#siteid").val() + '","orgid":"' + $("#jgid").val()
 			+ '","lang":"' + $("#lang").val() + '","sen":"6"}}';
 	changeEmailUrl = tzGdWdzhChangeEmailUrl + "?tzParams=" + encodeURI(changeEmailUrlParams);
-	$
+	/*$
 			.layer({
 				type : 2,
 				title : false,
@@ -411,12 +462,24 @@ function changeEmail() {
 				iframe : {
 					src : changeEmailUrl
 				}
-			});
+			});*/
+	layer.open({
+		type : 2,
+		title : false,
+		fixed : false,
+		closeBtn : 0,
+		shadeClose : false,
+		shade : [ 0.3, '#000', true ],
+		border : [ 3, 0.3, '#000', true ],
+		offset : [ '20%', '' ],
+		area : [ '589px', '306px' ],
+		content:changeEmailUrl
+	})
 }
 
 function changeMobile() {
 	var changeMobileUrl = encodeURI(tzGdWdzhChangeMobileUrl);
-	$.layer({
+	/*$.layer({
 		type : 2,
 		title : false,
 		fix : false,
@@ -429,7 +492,19 @@ function changeMobile() {
 		iframe : {
 			src : changeMobileUrl
 		}
-	});
+	});*/
+	layer.open({
+		type : 2,
+		title : false,
+		fixed : false,
+		closeBtn : 0,
+		shadeClose : false,
+		shade : [ 0.3, '#000', true ],
+		border : [ 3, 0.3, '#000', true ],
+		offset : [ '20%', '' ],
+		area : [ '589px', '306px' ],
+		content:changeMobileUrl
+	})
 }
 
 function bindMobile(el) {

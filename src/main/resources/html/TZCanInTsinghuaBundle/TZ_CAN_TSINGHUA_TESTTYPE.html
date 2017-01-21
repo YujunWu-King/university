@@ -14,8 +14,7 @@
 			$("#msg").html("请选择一个测试方向！");
 		} else {
 			var wj = "A" + $('input:radio:checked').attr("id");
-			$("#" + wj).trigger("click");
-			document.form1.submit();
+			window.top.location.href = $("#" + wj).attr("href");
 		}
 	}
 </script>

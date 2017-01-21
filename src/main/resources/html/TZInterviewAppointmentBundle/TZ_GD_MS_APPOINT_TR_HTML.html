@@ -4,12 +4,13 @@
 	<td>%bind(:3)</td>
 	<td>%bind(:4)</td>
 	<td>
-		<div class="colorArea %bind(:5)"></div>
-		<div class="appoNumbers">（%bind(:6)/%bind(:7)）</div>
+		<!-- <div class="colorArea %bind(:5)"></div>
+		<div class="appoNumbers">（%bind(:6)/%bind(:7)）</div>-->
+		<div class="table_amount"><div class="%bind(:5)"></div><span class="amount">（%bind(:6)/%bind(:7)）</span></div>
 	</td>
-	<td style="text-align: center;">
-		<a href="javascript:void(0)" onclick=onConfirmAppointment(this,"%bind(:8)","%bind(:9)","%bind(:10)") class="confirm-btn %bind(:11)">
-			<div class="bt_blue1">%bind(:12)</div>
+	<td>
+		<a href="javascript:void(0)" onclick=onConfirmAppointment(this,"%bind(:8)","%bind(:9)","%bind(:10)") class="zxj_opera %bind(:11)">
+			%bind(:12)
 		</a>
 	</td>
 </tr>
