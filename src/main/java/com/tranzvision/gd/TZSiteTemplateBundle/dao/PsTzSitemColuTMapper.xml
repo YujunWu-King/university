@@ -9,32 +9,34 @@
     <result column="TZ_TEMP_ID" property="tzTempId" jdbcType="VARCHAR" />
     <result column="TZ_CONT_TYPE" property="tzContType" jdbcType="VARCHAR" />
     <result column="TZ_CONT_TEMP" property="tzContTemp" jdbcType="VARCHAR" />
+    <result column="TZ_ART_TYPE_ID" property="tzArtTypeId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, TZ_CONT_TEMP
+    TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, TZ_CONT_TEMP, 
+    TZ_ART_TYPE_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
     select 
     <include refid="Base_Column_List" />
-    from PS_TZ_SITEM_COLU_T
+    from ps_tz_sitem_colu_t
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
-    delete from PS_TZ_SITEM_COLU_T
+    delete from ps_tz_sitem_colu_t
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    insert into PS_TZ_SITEM_COLU_T (TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, 
+    insert into ps_tz_sitem_colu_t (TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, 
       TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, 
-      TZ_CONT_TEMP)
+      TZ_CONT_TEMP, TZ_ART_TYPE_ID)
     values (#{tzSitemId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzColuName,jdbcType=VARCHAR}, 
       #{tzColuType,jdbcType=VARCHAR}, #{tzTempId,jdbcType=VARCHAR}, #{tzContType,jdbcType=VARCHAR}, 
-      #{tzContTemp,jdbcType=VARCHAR})
+      #{tzContTemp,jdbcType=VARCHAR}, #{tzArtTypeId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    insert into PS_TZ_SITEM_COLU_T
+    insert into ps_tz_sitem_colu_t
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzSitemId != null" >
         TZ_SITEM_ID,
@@ -56,6 +58,9 @@
       </if>
       <if test="tzContTemp != null" >
         TZ_CONT_TEMP,
+      </if>
+      <if test="tzArtTypeId != null" >
+        TZ_ART_TYPE_ID,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -80,10 +85,13 @@
       <if test="tzContTemp != null" >
         #{tzContTemp,jdbcType=VARCHAR},
       </if>
+      <if test="tzArtTypeId != null" >
+        #{tzArtTypeId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    update PS_TZ_SITEM_COLU_T
+    update ps_tz_sitem_colu_t
     <set >
       <if test="tzColuName != null" >
         TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
@@ -100,17 +108,21 @@
       <if test="tzContTemp != null" >
         TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
       </if>
+      <if test="tzArtTypeId != null" >
+        TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    update PS_TZ_SITEM_COLU_T
+    update ps_tz_sitem_colu_t
     set TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
       TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
       TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
       TZ_CONT_TYPE = #{tzContType,jdbcType=VARCHAR},
-      TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR}
+      TZ_CONT_TEMP = #{tzContTemp,jdbcType=VARCHAR},
+      TZ_ART_TYPE_ID = #{tzArtTypeId,jdbcType=VARCHAR}
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>

@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZScoreModeManagementBundle.dao.PsTzModalDtTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TREE_NAME" property="treeName" jdbcType="VARCHAR" />
+    <id column="TZ_SCORE_ITEM_ID" property="tzScoreItemId" jdbcType="VARCHAR" />
+    <result column="DESCR" property="descr" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_ITEM_TYPE" property="tzScoreItemType" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_HZ" property="tzScoreHz" jdbcType="DECIMAL" />
+    <result column="TZ_SCORE_QZ" property="tzScoreQz" jdbcType="DECIMAL" />
+    <result column="TZ_M_FBDZ_MX_XX_JX" property="tzMFbdzMxXxJx" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_LIMITED2" property="tzScoreLimited2" jdbcType="DECIMAL" />
+    <result column="TZ_M_FBDZ_MX_SX_JX" property="tzMFbdzMxSxJx" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_LIMITED" property="tzScoreLimited" jdbcType="DECIMAL" />
+    <result column="TZ_SCORE_PY_ZSLIM0" property="tzScorePyZslim0" jdbcType="INTEGER" />
+    <result column="TZ_SCORE_PY_ZSLIM" property="tzScorePyZslim" jdbcType="INTEGER" />
+    <result column="TZ_SCR_TO_SCORE" property="tzScrToScore" jdbcType="VARCHAR" />
+    <result column="TZ_SCR_SQZ" property="tzScrSqz" jdbcType="DECIMAL" />
+    <result column="TZ_SCORE_CKZL" property="tzScoreCkzl" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_SCORE_ITEM_DFSM" property="tzScoreItemDfsm" jdbcType="LONGVARCHAR" />
+    <result column="TZ_SCORE_ITEM_CKWT" property="tzScoreItemCkwt" jdbcType="LONGVARCHAR" />
+    <result column="TZ_SCORE_ITEM_MSFF" property="tzScoreItemMsff" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID, DESCR, TZ_SCORE_ITEM_TYPE, TZ_SCORE_HZ, TZ_SCORE_QZ, 
+    TZ_M_FBDZ_MX_XX_JX, TZ_SCORE_LIMITED2, TZ_M_FBDZ_MX_SX_JX, TZ_SCORE_LIMITED, TZ_SCORE_PY_ZSLIM0, 
+    TZ_SCORE_PY_ZSLIM, TZ_SCR_TO_SCORE, TZ_SCR_SQZ, TZ_SCORE_CKZL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_SCORE_ITEM_DFSM, TZ_SCORE_ITEM_CKWT, TZ_SCORE_ITEM_MSFF
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MODAL_DT_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblKey" >
+    delete from PS_TZ_MODAL_DT_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" >
+    insert into PS_TZ_MODAL_DT_TBL (TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID, 
+      DESCR, TZ_SCORE_ITEM_TYPE, TZ_SCORE_HZ, 
+      TZ_SCORE_QZ, TZ_M_FBDZ_MX_XX_JX, TZ_SCORE_LIMITED2, 
+      TZ_M_FBDZ_MX_SX_JX, TZ_SCORE_LIMITED, TZ_SCORE_PY_ZSLIM0, 
+      TZ_SCORE_PY_ZSLIM, TZ_SCR_TO_SCORE, TZ_SCR_SQZ, 
+      TZ_SCORE_CKZL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM, TZ_SCORE_ITEM_DFSM, TZ_SCORE_ITEM_CKWT, 
+      TZ_SCORE_ITEM_MSFF)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{treeName,jdbcType=VARCHAR}, #{tzScoreItemId,jdbcType=VARCHAR}, 
+      #{descr,jdbcType=VARCHAR}, #{tzScoreItemType,jdbcType=VARCHAR}, #{tzScoreHz,jdbcType=DECIMAL}, 
+      #{tzScoreQz,jdbcType=DECIMAL}, #{tzMFbdzMxXxJx,jdbcType=VARCHAR}, #{tzScoreLimited2,jdbcType=DECIMAL}, 
+      #{tzMFbdzMxSxJx,jdbcType=VARCHAR}, #{tzScoreLimited,jdbcType=DECIMAL}, #{tzScorePyZslim0,jdbcType=INTEGER}, 
+      #{tzScorePyZslim,jdbcType=INTEGER}, #{tzScrToScore,jdbcType=VARCHAR}, #{tzScrSqz,jdbcType=DECIMAL}, 
+      #{tzScoreCkzl,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzScoreItemDfsm,jdbcType=LONGVARCHAR}, #{tzScoreItemCkwt,jdbcType=LONGVARCHAR}, 
+      #{tzScoreItemMsff,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" >
+    insert into PS_TZ_MODAL_DT_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="treeName != null" >
+        TREE_NAME,
+      </if>
+      <if test="tzScoreItemId != null" >
+        TZ_SCORE_ITEM_ID,
+      </if>
+      <if test="descr != null" >
+        DESCR,
+      </if>
+      <if test="tzScoreItemType != null" >
+        TZ_SCORE_ITEM_TYPE,
+      </if>
+      <if test="tzScoreHz != null" >
+        TZ_SCORE_HZ,
+      </if>
+      <if test="tzScoreQz != null" >
+        TZ_SCORE_QZ,
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        TZ_M_FBDZ_MX_XX_JX,
+      </if>
+      <if test="tzScoreLimited2 != null" >
+        TZ_SCORE_LIMITED2,
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        TZ_M_FBDZ_MX_SX_JX,
+      </if>
+      <if test="tzScoreLimited != null" >
+        TZ_SCORE_LIMITED,
+      </if>
+      <if test="tzScorePyZslim0 != null" >
+        TZ_SCORE_PY_ZSLIM0,
+      </if>
+      <if test="tzScorePyZslim != null" >
+        TZ_SCORE_PY_ZSLIM,
+      </if>
+      <if test="tzScrToScore != null" >
+        TZ_SCR_TO_SCORE,
+      </if>
+      <if test="tzScrSqz != null" >
+        TZ_SCR_SQZ,
+      </if>
+      <if test="tzScoreCkzl != null" >
+        TZ_SCORE_CKZL,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzScoreItemDfsm != null" >
+        TZ_SCORE_ITEM_DFSM,
+      </if>
+      <if test="tzScoreItemCkwt != null" >
+        TZ_SCORE_ITEM_CKWT,
+      </if>
+      <if test="tzScoreItemMsff != null" >
+        TZ_SCORE_ITEM_MSFF,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="treeName != null" >
+        #{treeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreItemId != null" >
+        #{tzScoreItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="descr != null" >
+        #{descr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreItemType != null" >
+        #{tzScoreItemType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreHz != null" >
+        #{tzScoreHz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScoreQz != null" >
+        #{tzScoreQz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreLimited2 != null" >
+        #{tzScoreLimited2,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreLimited != null" >
+        #{tzScoreLimited,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScorePyZslim0 != null" >
+        #{tzScorePyZslim0,jdbcType=INTEGER},
+      </if>
+      <if test="tzScorePyZslim != null" >
+        #{tzScorePyZslim,jdbcType=INTEGER},
+      </if>
+      <if test="tzScrToScore != null" >
+        #{tzScrToScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScrSqz != null" >
+        #{tzScrSqz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScoreCkzl != null" >
+        #{tzScoreCkzl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzScoreItemDfsm != null" >
+        #{tzScoreItemDfsm,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreItemCkwt != null" >
+        #{tzScoreItemCkwt,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreItemMsff != null" >
+        #{tzScoreItemMsff,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" >
+    update PS_TZ_MODAL_DT_TBL
+    <set >
+      <if test="descr != null" >
+        DESCR = #{descr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreItemType != null" >
+        TZ_SCORE_ITEM_TYPE = #{tzScoreItemType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreHz != null" >
+        TZ_SCORE_HZ = #{tzScoreHz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScoreQz != null" >
+        TZ_SCORE_QZ = #{tzScoreQz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        TZ_M_FBDZ_MX_XX_JX = #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreLimited2 != null" >
+        TZ_SCORE_LIMITED2 = #{tzScoreLimited2,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        TZ_M_FBDZ_MX_SX_JX = #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreLimited != null" >
+        TZ_SCORE_LIMITED = #{tzScoreLimited,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScorePyZslim0 != null" >
+        TZ_SCORE_PY_ZSLIM0 = #{tzScorePyZslim0,jdbcType=INTEGER},
+      </if>
+      <if test="tzScorePyZslim != null" >
+        TZ_SCORE_PY_ZSLIM = #{tzScorePyZslim,jdbcType=INTEGER},
+      </if>
+      <if test="tzScrToScore != null" >
+        TZ_SCR_TO_SCORE = #{tzScrToScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScrSqz != null" >
+        TZ_SCR_SQZ = #{tzScrSqz,jdbcType=DECIMAL},
+      </if>
+      <if test="tzScoreCkzl != null" >
+        TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzScoreItemDfsm != null" >
+        TZ_SCORE_ITEM_DFSM = #{tzScoreItemDfsm,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreItemCkwt != null" >
+        TZ_SCORE_ITEM_CKWT = #{tzScoreItemCkwt,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreItemMsff != null" >
+        TZ_SCORE_ITEM_MSFF = #{tzScoreItemMsff,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" >
+    update PS_TZ_MODAL_DT_TBL
+    set DESCR = #{descr,jdbcType=VARCHAR},
+      TZ_SCORE_ITEM_TYPE = #{tzScoreItemType,jdbcType=VARCHAR},
+      TZ_SCORE_HZ = #{tzScoreHz,jdbcType=DECIMAL},
+      TZ_SCORE_QZ = #{tzScoreQz,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_XX_JX = #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      TZ_SCORE_LIMITED2 = #{tzScoreLimited2,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_SX_JX = #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      TZ_SCORE_LIMITED = #{tzScoreLimited,jdbcType=DECIMAL},
+      TZ_SCORE_PY_ZSLIM0 = #{tzScorePyZslim0,jdbcType=INTEGER},
+      TZ_SCORE_PY_ZSLIM = #{tzScorePyZslim,jdbcType=INTEGER},
+      TZ_SCR_TO_SCORE = #{tzScrToScore,jdbcType=VARCHAR},
+      TZ_SCR_SQZ = #{tzScrSqz,jdbcType=DECIMAL},
+      TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_SCORE_ITEM_DFSM = #{tzScoreItemDfsm,jdbcType=LONGVARCHAR},
+      TZ_SCORE_ITEM_CKWT = #{tzScoreItemCkwt,jdbcType=LONGVARCHAR},
+      TZ_SCORE_ITEM_MSFF = #{tzScoreItemMsff,jdbcType=LONGVARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTbl" >
+    update PS_TZ_MODAL_DT_TBL
+    set DESCR = #{descr,jdbcType=VARCHAR},
+      TZ_SCORE_ITEM_TYPE = #{tzScoreItemType,jdbcType=VARCHAR},
+      TZ_SCORE_HZ = #{tzScoreHz,jdbcType=DECIMAL},
+      TZ_SCORE_QZ = #{tzScoreQz,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_XX_JX = #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      TZ_SCORE_LIMITED2 = #{tzScoreLimited2,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_SX_JX = #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      TZ_SCORE_LIMITED = #{tzScoreLimited,jdbcType=DECIMAL},
+      TZ_SCORE_PY_ZSLIM0 = #{tzScorePyZslim0,jdbcType=INTEGER},
+      TZ_SCORE_PY_ZSLIM = #{tzScorePyZslim,jdbcType=INTEGER},
+      TZ_SCR_TO_SCORE = #{tzScrToScore,jdbcType=VARCHAR},
+      TZ_SCR_SQZ = #{tzScrSqz,jdbcType=DECIMAL},
+      TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TREE_NAME = #{treeName,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+</mapper>

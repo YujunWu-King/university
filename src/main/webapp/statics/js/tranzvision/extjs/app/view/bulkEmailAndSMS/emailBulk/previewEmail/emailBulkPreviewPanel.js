@@ -30,11 +30,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.previewEmail.emailBulkPre
                 autoHeight:true,
                 //minHeight: 800,
                 items: [{
-                    xtype: 'hidden',
-                    name: 'audCyrTotal'
+                    xtype: 'textfield',
+                    name: 'audCyrTotal',
+                    hidden:true
                 },{
-                    xtype: 'hidden',
-                    name: 'currentPageNum'
+                    xtype: 'textfield',
+                    name: 'currentPageNum',
+                    hidden:true
                 },{
                     xtype: 'textareafield',
                     name: 'configuration',
@@ -105,7 +107,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.previewEmail.emailBulkPre
                     var currentPageNum = parseInt(form.findField("currentPageNum").getValue());
                     var audCyrTotal = parseInt(form.findField("audCyrTotal").getValue());
                     if(currentPageNum < audCyrTotal){
-                    	console.log(configuration);
+
                         currentPageNum = currentPageNum + 1;
                         var tzParams = '{"ComID":"TZ_EMLQ_PREVIEW_COM","PageID":"TZ_EMLQ_VIEW_STD","OperateType":"previewEmail","comParams":{"type":"previewOtherEmail","audID":"'+audID+'", "viewNumber":"'+currentPageNum+'",'+configuration.split("{")[1]+'}';
                         //加载数据
@@ -126,8 +128,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.previewEmail.emailBulkPre
                 handler: function(btn){
                     //获取窗口
                     var win = btn.findParentByType("emailBulkPreviewPanel");
-                    //信息表单
-                    var form = win.child("form").getForm();
                     //关闭窗口
                     win.close();
                 }

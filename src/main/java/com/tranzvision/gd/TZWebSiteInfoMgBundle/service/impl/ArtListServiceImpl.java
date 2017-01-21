@@ -417,10 +417,11 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 				String deleteSQL = "DELETE from PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
 				int success = jdbcTemplate.update(deleteSQL, new Object[] { siteId, columnId, articleId });
+				/*
 				if (success > 0 && maxZdSEQ > 0) {
 					String updateMaxZdSeqSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
 					jdbcTemplate.update(updateMaxZdSeqSQL, new Object[] { siteId, columnId, maxZdSEQ });
-				}
+				}*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -487,8 +488,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								}
 
 								if (maxZdSeq > 0) {
+									/*
 									updateSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
 									jdbcTemplate.update(updateSQL, new Object[] { siteId, columnId, maxZdSeq });
+									*/
 
 									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 									psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
@@ -614,7 +617,7 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
 								}
 								if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-
+									
 									fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
 								}
 								psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());

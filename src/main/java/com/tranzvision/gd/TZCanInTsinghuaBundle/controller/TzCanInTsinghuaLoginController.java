@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzCanInTsinghuaClsServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -41,21 +42,9 @@ public class TzCanInTsinghuaLoginController {
 	@ResponseBody
 	public String login(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid) {
-		String sUserAgent = request.getHeader("User-Agent");
-		
+	
 		//是否移动设备访问
-		boolean isMobile = false;
-		
-		String[] mobileAgents = {"Windows CE","iPod","Symbian","iPhone","BlackBerry","Android","Windows Phone"};
-		if(sUserAgent.indexOf("Android") > -1 && (sUserAgent.indexOf("ERD79) > -1 || sUserAgent.indexOf('MZ60") > -1 || sUserAgent.indexOf("GT-P7") > -1 || sUserAgent.indexOf("SCH-P7") > -1)){
-		}else{
-			for( int i = 0; i < mobileAgents.length; i++){
-				if(sUserAgent.indexOf(mobileAgents[i])>-1){
-					isMobile = true;
-					break;
-				}
-			}
-		}
+		boolean isMobile = CommonUtils.isMobile(request);
 		
 		/*登录页面内容*/
 		String loginHtml = "";

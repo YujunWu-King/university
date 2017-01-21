@@ -130,11 +130,11 @@ function viewJd(classId, instanceId,language,viewType){
 }
 
 $(document).ready(function(){
-	if ($(".main_mid").height()>760){
+	/*if ($(".main_mid").height()>760){
 		$("#letf_menu").height($(".main_mid").height());
 	}else{
 		$("#letf_menu").height(760);
-	}
+	}*/
 	
 	$("#jgid").val(TZ_GD_LOGIN_SITEI_ORG_CODE);
 	$("#siteid").val(TZ_GD_LOGIN_SITEI_ID);
@@ -151,7 +151,7 @@ $(document).ready(function(){
 	var siteid = $("#siteid").val();
 	var oprate = $("#operator").val();
 
-	var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAGE","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","oprate":"'+oprate+'"}}';
+	var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAG2","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","oprate":"'+oprate+'"}}';
 	$.ajax({
 		type:"POST",
 		url: TzUniversityContextPath+"/dispatcher",
@@ -159,21 +159,7 @@ $(document).ready(function(){
 			tzParams:tzParams
 		},
 		success:function(response){
-			$('.applicationCenter').prop('outerHTML', response);
-					 
-			$(".active").parent().parent().parent().next("table").find(".index_bd").hide();
-			$(".index-bm table tr.index_hd td:first-child").click(function(){
-	        
-				$(this).toggleClass("active").parent().parent().parent().next("table").find(".index_bd").slideToggle();
-				if($(this).hasClass("active")){
-	         		 $(this).find("i").removeClass("application_shrink");
-	         		 $(this).find("i").addClass("application_expand");
-	             
-				}else{
-					$(this).find("i").removeClass("application_expand");
-					$(this).find("i").addClass("application_shrink");
-				}
-			})
+			$('.main_mid_zxj_interview').prop('innerHTML', response);
 		},
 		failure: function () {
 		  	

@@ -33,7 +33,7 @@ public class TzSmsqfGlClsServiceImpl extends FrameworkImpl{
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] {};
+		String[][] orderByArr = new String[][] {{"ROW_ADDED_DTTM","DESC"}};
 
 		// json数据要的结果字段;
 		String[] resultFldArray = {"TZ_MLSM_QFPC_ID", "TZ_MLSM_QFPC_DESC",  "OPRID", "TZ_REALNAME", "ROW_ADDED_DTTM"};

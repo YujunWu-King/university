@@ -13,11 +13,28 @@
 	    'KitchenSink.view.content.artMg.artInfoController',
 		'KitchenSink.view.content.artMg.artAttachmentModel',
         'KitchenSink.view.content.artMg.artAttachmentStore',
-        'KitchenSink.view.content.artMg.artPicStore'
+        'KitchenSink.view.content.artMg.artPicStore',
+		'KitchenSink.view.content.artMg.artColuModel',
+        'KitchenSink.view.content.artMg.artColuStore'
 	],
 	title: '内容详情', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	actType: 'add',//默认新增
+	constructor:function(obj){
+		this.coluId = obj.coluId;
+        this.callParent();
+    },
+	initComponent:function(){	
+	   var me=this;
+	   var artColuStore = new KitchenSink.view.content.artMg.artColuStore();
+	   var tzStoreParamsJson = {
+				"gridTyp":"COLU",
+				"coluId": me.coluId
+	   };
+	   artColuStore.tzStoreParams = Ext.JSON.encode(tzStoreParamsJson);
+	   artColuStore.load();
+  
+	Ext.apply(this,{
     items: [{
         xtype: 'form',
         reference: 'artInfoForm',
@@ -46,6 +63,28 @@
            xtype: 'textfield',
 			name: 'coluId',
 			hidden: true
+        },{
+            xtype: 'tagfield',
+            fieldLabel:'栏目',
+            name: 'colus',
+            store: artColuStore,
+            valueField: 'coluIdDup',
+            displayField: 'coluName',
+            filterPickList:true,
+            createNewOnEnter: true,
+            createNewOnBlur: true,
+            queryMode: 'local',
+            listeners:{
+                'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                {
+                    var me = this;
+                    me.inputEl.dom.value = "";
+                }
+            },
+            afterLabelTextTpl: [
+                                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                ],
+            allowBlank: false
         },{
             xtype: 'textfield',
 			name: 'saveImageAccessUrl',
@@ -550,6 +589,9 @@
 					 name: 'publishUrl'
         }]
     }],
+	});
+	this.callParent();
+	},
     buttons: [{
 			text: '发布',
 			iconCls:"publish",
