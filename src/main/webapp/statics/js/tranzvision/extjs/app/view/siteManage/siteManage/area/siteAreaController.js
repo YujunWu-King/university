@@ -15,12 +15,12 @@
 		
 		//新增
 		if(actType == "add"){
-			comParams = '"add":['+Ext.JSON.encode(form.getValues())+']';
+			comParams = '"add":['+Ext.JSON.encode(formData)+']';
 		}
 		//修改json字符串
 		var editJson = "";
 		if(actType == "update"){
-			editJson = Ext.JSON.encode(form.getValues());
+			editJson = Ext.JSON.encode(formData);
 		}
 		
 		if(editJson != ""){
