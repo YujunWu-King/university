@@ -164,7 +164,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfoMth', {
 		}
 		
 		//提交参数
-		var tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_ZNX_TMPL_MG_COM","PageID":"TZ_ZNX_TMPL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
 	},
 	
@@ -221,10 +221,10 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfoMth', {
 		znxTmplItemGrid.store.tzStoreParams = tzStoreParamsItem;
 		znxTmplItemGrid.store.load();
 
-		/*加载默认邮箱*/
+		/*加载默认站内信*/
 		
 		var tzParams = '{"restempid":"' + combo.value + '","searchType":"searchResTmpl"}';
-        tzParams = '{"ComID":"TZ_EML_TMPL_MG_COM","PageID":"TZ_EML_TMPL_MG_STD","OperateType":"QF","comParams":' + tzParams +'}';
+        tzParams = '{"ComID":"TZ_ZNX_TMPL_MG_COM","PageID":"TZ_ZNX_TMPL_MG_STD","OperateType":"QF","comParams":' + tzParams +'}';
    
         Ext.Ajax.request({
 			 url: Ext.tzGetGeneralURL,
@@ -235,9 +235,9 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfoMth', {
          
           var responseText = Ext.util.JSON.decode(response.responseText);
 
-          var tempemailserv = responseText.comContent.tempemailserv;
+          //var tempemailserv = responseText.comContent.tempemailserv;
           
-		  form.findField("tempemailserv").setValue(tempemailserv);
+		  //form.findField("tempemailserv").setValue(tempemailserv);
 		  
          },
          failure: function (response) {

@@ -245,7 +245,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletController', {
 			}
 		});    
     }, 
-	saveznxTemplet: function(btn){
+    saveZnxTemplet: function(btn){
         
         var grid = btn.findParentByType("grid");
         
@@ -309,21 +309,5 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletController', {
         var grid = btn.findParentByType("grid");
         grid.close();
         
-    },
-	resetAllTemplet: function(btn){
-		
-	   	Ext.MessageBox.confirm('确认', '“初始化设置默认模版”操作将会清除用户目前设置的所有模版数据，是否继续？', function(btnId){
-			if(btnId == 'yes'){					   
-				//提交参数
-				var tzParams = '{"ComID":"TZ_ZNX_TMPL_MG_COM","PageID":"TZ_ZNX_TMPL_MG_STD","OperateType":"initializ","comParams":{}}';
-				Ext.tzSubmit(tzParams,function(){
-					//初始化成功
-					var grid = btn.findParentByType("grid");
-					var store = grid.getStore();
-					store.reload();
-					
-				},"",true,this);
-			}												  
-		},this);   	   	
-	}
+    }
 });
