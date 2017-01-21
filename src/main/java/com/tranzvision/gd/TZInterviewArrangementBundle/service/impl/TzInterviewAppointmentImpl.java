@@ -137,6 +137,9 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			interviewAppointHtml = siteRepCssServiceImpl.repTitle(interviewAppointHtml, strSiteId);
 			interviewAppointHtml=siteRepCssServiceImpl.repCss(interviewAppointHtml, strSiteId);
 			
+			interviewAppointHtml = siteRepCssServiceImpl.repSiteid(interviewAppointHtml, strSiteId);
+			interviewAppointHtml = siteRepCssServiceImpl.repJgid(interviewAppointHtml, str_jg_id);
+			interviewAppointHtml = siteRepCssServiceImpl.repLang(interviewAppointHtml, language);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -281,34 +284,34 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			    
 			    Date startDatetime = dttmSimpleDateFormat.parse(msDate+" "+msStartTime);
 			    if(currDate.after(startDatetime) || currDate.equals(startDatetime)){
-			    	disabledClass = "btn-disabled";
+			    	disabledClass = "btn-disabled full_icon";
 			    }
 			    
 			    if(appoCount>=maxPerson){
 			    	legendClass = "full";
-			    	disabledClass = "btn-disabled";
+			    	disabledClass = "btn-disabled full_icon";
 			    }else{
-			    	legendClass = "avaliable";
+			    	legendClass = "order_p";
 			    }
 			    
 			    if("Y".equals(isAppoFlag)){
-			    	disabledClass = "btn-disabled";
+			    	disabledClass = "btn-disabled full_icon";
 			    	
 			    	sql = "SELECT 'Y' FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=? AND OPRID=?";
 			    	String inCurrPlan = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, msPlanSeq, oprid }, "String");
 			    	//当前学生已预约当前预约计划
 			    	if("Y".equals(inCurrPlan)){
-			    		legendClass = "success";
-			    		disabledClass = "";
+			    		legendClass = "my_order";
+			    		disabledClass = "admit_icon";
 			    		buttonLabel = "已预约/撤销预约";
 			    	}
 			    }else{
 			    	//当前学生尚未预约
 			    	if(appoCount>=maxPerson){
 				    	legendClass = "full";
-				    	disabledClass = "btn-disabled";
+				    	disabledClass = "btn-disabled full_icon";
 				    }else{
-				    	legendClass = "avaliable";
+				    	legendClass = "order_p";
 				    }
 			    }
 			    

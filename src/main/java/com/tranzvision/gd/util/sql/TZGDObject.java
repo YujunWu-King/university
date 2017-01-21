@@ -384,7 +384,7 @@ public class TZGDObject
 					//val = val.replace("\\", "\\\\");
 				}
 				if(val.contains("$")){
-					//val = val.replace("$", "\\$");
+					val = val.replace("$", "\\$");
 				}
 				
 				htmlText = htmlText.replaceAll(repStr1, val);

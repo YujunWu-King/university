@@ -2639,6 +2639,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						if (result.comContent=="SUCCESS"){
 							$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+							
+							$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+							
 							$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 							$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
 							//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
@@ -2659,11 +2663,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("readonly");
 							$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("readonly");
 							
-							$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
-							$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
-							$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
-							$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
-							$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
+							$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("readonly");
+							$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("readonly");
+							$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
+							$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
+							$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
 							
 							console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]));
 							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).trigger("liszt:updated");

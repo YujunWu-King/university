@@ -147,7 +147,7 @@ $(document).ready(function(){
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
 	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	//iniArea();首页中初始化活动列表和新闻列表 待开发
-	//getPerInfCard();获取个人信息 待开发
+	//getPerInfCard();获取个人信息，待开发
 	
 	//加载报名中心，切勿修改后台原来的代码，请另注册页面;
 	/*
