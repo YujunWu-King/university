@@ -75,17 +75,17 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from ps_tz_app_xxxpz_t
+    from PS_TZ_APP_XXXPZ_T
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTKey" >
-    delete from ps_tz_app_xxxpz_t
+    delete from PS_TZ_APP_XXXPZ_T
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    insert into ps_tz_app_xxxpz_t (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, 
+    insert into PS_TZ_APP_XXXPZ_T (TZ_APP_TPL_ID, TZ_XXX_BH, TZ_XXX_BT_BZ, 
       TZ_XXX_SLID, TZ_XXX_MC, TZ_ORDER, 
       TZ_PAGE_NO, TZ_COM_LMC, TZ_XXX_KZTSXX, 
       TZ_XXX_JDTSXX, TZ_XXX_MRZ, TZ_XXX_HZ, 
@@ -123,7 +123,7 @@
       #{tzXxxWzsm,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    insert into ps_tz_app_xxxpz_t
+    insert into PS_TZ_APP_XXXPZ_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzAppTplId != null" >
         TZ_APP_TPL_ID,
@@ -442,7 +442,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    update ps_tz_app_xxxpz_t
+    update PS_TZ_APP_XXXPZ_T
     <set >
       <if test="tzXxxBtBz != null" >
         TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
@@ -599,7 +599,7 @@
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzTWithBLOBs" >
-    update ps_tz_app_xxxpz_t
+    update PS_TZ_APP_XXXPZ_T
     set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
       TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
       TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
@@ -654,7 +654,7 @@
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzAppXxxPzT" >
-    update ps_tz_app_xxxpz_t
+    update PS_TZ_APP_XXXPZ_T
     set TZ_XXX_BT_BZ = #{tzXxxBtBz,jdbcType=VARCHAR},
       TZ_XXX_SLID = #{tzXxxSlid,jdbcType=VARCHAR},
       TZ_XXX_MC = #{tzXxxMc,jdbcType=VARCHAR},
