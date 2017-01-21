@@ -817,16 +817,16 @@
 		});
 	},
 	
-	//放大镜选择标签组20170121 ZXW
+	//放大镜选择标签组20170118 ZXW
 	choiceBqzModal: function(btn){
 		var fieldName = btn.name;
 		var searchDesc,modal,modal_desc;
-		if(fieldName=='clps_cj_modal'){
-			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索标签组");
+		if(fieldName=='ksbq'){
+			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索自动标签规则");
 			bq="ksbq";
-			bq_desc="ksbql_desc";
-		}else if(fieldName=="msps_cj_modal"){
-			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索标签组");
+			bq_desc="fmqd";
+		}else if(fieldName=="fmqd"){
+			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索负面清单规则");
 			bq="fmqd";
 			bq_desc="fmqd_desc";
 		}

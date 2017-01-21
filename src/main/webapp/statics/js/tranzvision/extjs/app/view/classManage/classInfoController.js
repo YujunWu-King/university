@@ -100,7 +100,7 @@
             }
         });
     },
-  //选择标签组
+  //选择标签组 20170118 ZXW
     choiceBqzModal: function(btn){
         var fieldName = btn.name;
         var searchDesc,modal,modal_desc;
