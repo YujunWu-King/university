@@ -18,17 +18,17 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
     select 
     <include refid="Base_Column_List" />
-    from ps_tz_sitem_colu_t
+    from PS_TZ_SITEM_COLU_T
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuTKey" >
-    delete from ps_tz_sitem_colu_t
+    delete from PS_TZ_SITEM_COLU_T
     where TZ_SITEM_ID = #{tzSitemId,jdbcType=VARCHAR}
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    insert into ps_tz_sitem_colu_t (TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, 
+    insert into PS_TZ_SITEM_COLU_T (TZ_SITEM_ID, TZ_COLU_ID, TZ_COLU_NAME, 
       TZ_COLU_TYPE, TZ_TEMP_ID, TZ_CONT_TYPE, 
       TZ_CONT_TEMP, TZ_ART_TYPE_ID)
     values (#{tzSitemId,jdbcType=VARCHAR}, #{tzColuId,jdbcType=VARCHAR}, #{tzColuName,jdbcType=VARCHAR}, 
@@ -36,7 +36,7 @@
       #{tzContTemp,jdbcType=VARCHAR}, #{tzArtTypeId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    insert into ps_tz_sitem_colu_t
+    insert into PS_TZ_SITEM_COLU_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzSitemId != null" >
         TZ_SITEM_ID,
@@ -91,7 +91,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    update ps_tz_sitem_colu_t
+    update PS_TZ_SITEM_COLU_T
     <set >
       <if test="tzColuName != null" >
         TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
@@ -116,7 +116,7 @@
       and TZ_COLU_ID = #{tzColuId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSiteTemplateBundle.model.PsTzSitemColuT" >
-    update ps_tz_sitem_colu_t
+    update PS_TZ_SITEM_COLU_T
     set TZ_COLU_NAME = #{tzColuName,jdbcType=VARCHAR},
       TZ_COLU_TYPE = #{tzColuType,jdbcType=VARCHAR},
       TZ_TEMP_ID = #{tzTempId,jdbcType=VARCHAR},
