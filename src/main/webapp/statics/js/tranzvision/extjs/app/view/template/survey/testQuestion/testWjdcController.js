@@ -680,11 +680,13 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         searchDesc="信息项选择";
         modal="TZ_XXX_BH";
         modal_desc="TZ_XXX_MC";
-        var grid=this.getView().child("grid");
-        var selList = grid.getSelectionModel().getSelectionMode();
+		
+        var grid = this.getView().child("grid");
+        var record = grid.getSelectionModel().getSelection()[0];
+		
         var form=grid.findParentByType("panel").child("form").getForm();
         var wjID=form.findField("TZ_DC_WJ_ID").getValue();
-        console.log(grid,wjID,selList);
+
         Ext.tzShowPromptSearch({
             recname: 'PS_TZ_DCWJ_XXX_VW',
             searchDesc: searchDesc,
@@ -715,10 +717,8 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             },
             multiselect: false, 
             callback: function(selection){
-                console.log(selection[0].data.TZ_XXX_BH,selection[0].data.TZ_XXX_MC);
-                selList.get("TZ_XXX_BH").setValue(selection[0].data.TZ_XXX_BH);
-                selList.get("TZ_XXX_MC").setValue(selection[0].data.TZ_XXX_MC);
-                //grid.findField(modal_desc).setValue(selection[0].data.TZ_XXX_MC);
+                record.set("TZ_XXX_BH",selection[0].data.TZ_XXX_BH);
+                record.set("TZ_XXX_MC",selection[0].data.TZ_XXX_MC);
             }
         });
     }
