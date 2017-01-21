@@ -14,10 +14,8 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZEmailTemplateBundle.dao.PsTzEmalTmplTblMapper;
-import com.tranzvision.gd.TZEmailTemplateBundle.dao.PsTzSmsTmplTblMapper;
-import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzEmalTmplTbl;
-import com.tranzvision.gd.TZEmailTemplateBundle.model.PsTzSmsTmplTbl;
+import com.tranzvision.gd.TZZnxTemplateBundle.dao.PsTzZnxTmplTblMapper;
+import com.tranzvision.gd.TZZnxTemplateBundle.model.PsTzZnxTmplTbl;
 import com.tranzvision.gd.TZTemplateBundle.dao.PsTzTmpDefnTblMapper;
 import com.tranzvision.gd.TZTemplateBundle.dao.PsTzTmpParaTblMapper;
 import com.tranzvision.gd.TZTemplateBundle.dao.PsTzTmpRrkfTblMapper;
@@ -30,8 +28,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
- * @author tang
- * @since 2015-11-19
+ * @author jufeng
+ * @since 2017-01-17
  */
 @Service("com.tranzvision.gd.TZZnxTemplateBundle.service.impl.ZnxTemplateMgServiceImpl")
 public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
@@ -52,9 +50,7 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzTmpRrkfTblMapper psTzTmpRrkfTblMapper;
 	@Autowired
-	private PsTzEmalTmplTblMapper psTzEmalTmplTblMapper;
-	@Autowired
-	private PsTzSmsTmplTblMapper psTzSmsTmplTblMapper;
+	private PsTzZnxTmplTblMapper psTzZnxTmplTblMapper;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -71,7 +67,7 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_JG_ID", "TZ_TMPL_ID", "TZ_TMPL_NAME", "TZ_YMB_ID", "TZ_YMB_NAME", "TZ_USE_FLAG" };
+			String[] resultFldArray = { "TZ_JG_ID", "TZ_TMPL_ID", "TZ_TMPL_NAME","TZ_YMB_ID", "TZ_YMB_NAME", "TZ_USE_FLAG" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr,strParams, numLimit, numStart, errorMsg);
@@ -84,9 +80,9 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("emltemporg", rowList[0]);
-					mapList.put("emltempid", rowList[1]);
-					mapList.put("emltempname", rowList[2]);
+					mapList.put("znxtemporg", rowList[0]);
+					mapList.put("znxtempid", rowList[1]);
+					mapList.put("znxtempname", rowList[2]);
 					mapList.put("restempid", rowList[3]);
 					mapList.put("restempname", rowList[4]);
 					boolean isuser = false;
@@ -127,12 +123,12 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 				String strComInfo = actData[num];
 				jacksonUtil.json2Map(strComInfo);
 				// 站内信模版编号和机构;
-				String emltempid = jacksonUtil.getString("emltempid");
-				String emltemporg = jacksonUtil.getString("emltemporg");
-				if (emltempid != null && !"".equals(emltempid) && emltemporg != null && !"".equals(emltemporg)) {
+				String znxtempid = jacksonUtil.getString("znxtempid");
+				String znxtemporg = jacksonUtil.getString("znxtemporg");
+				if (znxtempid != null && !"".equals(znxtempid) && znxtemporg != null && !"".equals(znxtemporg)) {
 					//删除站内信模板;
-					String deletesql = "DELETE FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
-					jdbcTemplate.update(deletesql, new Object[]{emltemporg, emltempid});
+					String deletesql = "DELETE FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
+					jdbcTemplate.update(deletesql, new Object[]{znxtemporg, znxtempid});
 					
 				}
 			}
@@ -153,7 +149,7 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 			if("initializ".equals(oprType)){
 				if(orgID != null && !"".equals(orgID) && !"ADMIN".equals(orgID.toUpperCase())){
 					/*删除该机构所有的元模版信息*/
-					String deleteSQL = "DELETE FROM PS_TZ_TMP_DEFN_TBL WHERE TZ_JG_ID = ?";
+					String deleteSQL = "DELETE FROM PS_TZ_ZNX_DEFN_TBL WHERE TZ_JG_ID = ?";
 					jdbcTemplate.update(deleteSQL,new Object[]{orgID});
 					
 					deleteSQL = "delete FROM PS_TZ_TMP_PARA_TBL  WHERE TZ_JG_ID = ? and EXISTS (SELECT 'Y' FROM PS_TZ_TMP_DEFN_TBL B WHERE PS_TZ_TMP_PARA_TBL.TZ_JG_ID = B.TZ_JG_ID AND PS_TZ_TMP_PARA_TBL.TZ_YMB_ID = B.TZ_YMB_ID)";
@@ -162,7 +158,7 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 					deleteSQL = "delete FROM PS_TZ_TMP_RRKF_TBL  WHERE TZ_JG_ID = ? and EXISTS (SELECT 'Y' FROM PS_TZ_TMP_DEFN_TBL B WHERE PS_TZ_TMP_RRKF_TBL.TZ_JG_ID = B.TZ_JG_ID AND PS_TZ_TMP_RRKF_TBL.TZ_YMB_ID = B.TZ_YMB_ID)";
 					jdbcTemplate.update(deleteSQL,new Object[]{orgID});
 					
-					deleteSQL="DELETE FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID = ?";
+					deleteSQL="DELETE FROM PS_TZ_ZNX_DEFN_TBL WHERE TZ_JG_ID = ?";
 					jdbcTemplate.update(deleteSQL,new Object[]{orgID});
 					
 					deleteSQL="DELETE FROM PS_TZ_SMSTMPL_TBL WHERE TZ_JG_ID = ?";
@@ -235,53 +231,29 @@ public class ZnxTemplateMgServiceImpl extends FrameworkImpl {
 							}
 							
 							/*站内信模版*/
-							String getEmlTempletSQL = "SELECT TZ_TMPL_ID,TZ_TMPL_NAME,TZ_DYNAMIC_FLAG,TZ_TMPL_DESC,TZ_WEBMAL_FLAG,TZ_MAL_SUBJUECT,TZ_MAL_CONTENT FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID=? AND TZ_YMB_ID = ? AND TZ_USE_FLAG = 'Y'";
-							List<Map<String, Object>> getEmlTempletList = jdbcTemplate.queryForList(getEmlTempletSQL, new Object[]{str_orgIdAdmin, strTmpIdAdmin});
-							if(getEmlTempletList != null && getEmlTempletList.size()>0){
-								for(int h = 0; h < getEmlTempletList.size(); h++){
-									PsTzEmalTmplTbl psTzEmalTmplTbl = new PsTzEmalTmplTbl();
-									Map<String, Object> emlTempletMap = getEmlTempletList.get(h);
-									psTzEmalTmplTbl.setTzJgId(orgID);
-									psTzEmalTmplTbl.setTzTmplId((String)emlTempletMap.get("TZ_TMPL_ID"));
-									psTzEmalTmplTbl.setTzTmplName((String)emlTempletMap.get("TZ_TMPL_NAME"));
-									psTzEmalTmplTbl.setTzUseFlag("Y");
-									psTzEmalTmplTbl.setTzTmplDesc((String)emlTempletMap.get("TZ_TMPL_DESC"));
-									psTzEmalTmplTbl.setTzYmbId(strTmpId);
-									psTzEmalTmplTbl.setTzEmlservId(strTmpEmlServ);
-									psTzEmalTmplTbl.setTzDynamicFlag((String)emlTempletMap.get("TZ_DYNAMIC_FLAG"));
-									psTzEmalTmplTbl.setTzWebmalFlag((String)emlTempletMap.get("TZ_WEBMAL_FLAG"));
-									psTzEmalTmplTbl.setTzMalSubjuect((String)emlTempletMap.get("TZ_MAL_SUBJUECT"));
-									psTzEmalTmplTbl.setTzMalContent((String)emlTempletMap.get("TZ_MAL_CONTENT"));
-									psTzEmalTmplTbl.setRowAddedDttm(new Date());
-									psTzEmalTmplTbl.setRowAddedOprid(oprid);
-									psTzEmalTmplTbl.setRowLastmantDttm(new Date());
-									psTzEmalTmplTbl.setRowLastmantOprid(oprid);
+							String getZnxTempletSQL = "SELECT TZ_TMPL_ID,TZ_TMPL_NAME,TZ_DYNAMIC_FLAG,TZ_TMPL_DESC,TZ_WEBMAL_FLAG,TZ_ZNX_SUBJUECT,TZ_ZNX_CONTENT FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID=? AND TZ_YMB_ID = ? AND TZ_USE_FLAG = 'Y'";
+							List<Map<String, Object>> getZnxTempletList = jdbcTemplate.queryForList(getZnxTempletSQL, new Object[]{str_orgIdAdmin, strTmpIdAdmin});
+							if(getZnxTempletList != null && getZnxTempletList.size()>0){
+								for(int h = 0; h < getZnxTempletList.size(); h++){
+									PsTzZnxTmplTbl psTzZnxTmplTbl = new PsTzZnxTmplTbl();
+									Map<String, Object> znxTempletMap = getZnxTempletList.get(h);
+									psTzZnxTmplTbl.setTzJgId(orgID);
+									psTzZnxTmplTbl.setTzTmplId((String)znxTempletMap.get("TZ_TMPL_ID"));
+									psTzZnxTmplTbl.setTzTmplName((String)znxTempletMap.get("TZ_TMPL_NAME"));
+									psTzZnxTmplTbl.setTzUseFlag("Y");
+									psTzZnxTmplTbl.setTzTmplDesc((String)znxTempletMap.get("TZ_TMPL_DESC"));
+									psTzZnxTmplTbl.setTzYmbId(strTmpId);
+									psTzZnxTmplTbl.setTzEmlservId(strTmpEmlServ);
+									psTzZnxTmplTbl.setTzDynamicFlag((String)znxTempletMap.get("TZ_DYNAMIC_FLAG"));
+									psTzZnxTmplTbl.setTzWebmalFlag((String)znxTempletMap.get("TZ_WEBMAL_FLAG"));
+									psTzZnxTmplTbl.setTzZnxSubjuect((String)znxTempletMap.get("TZ_ZNX_SUBJUECT"));
+									psTzZnxTmplTbl.setTzZnxContent((String)znxTempletMap.get("TZ_ZNX_CONTENT"));
+									psTzZnxTmplTbl.setRowAddedDttm(new Date());
+									psTzZnxTmplTbl.setRowAddedOprid(oprid);
+									psTzZnxTmplTbl.setRowLastmantDttm(new Date());
+									psTzZnxTmplTbl.setRowLastmantOprid(oprid);
 									
-									psTzEmalTmplTblMapper.insert(psTzEmalTmplTbl);
-								}
-							}
-							
-							/*短信内容*/
-							String getSmsTempletSQL = "SELECT TZ_TMPL_ID, TZ_TMPL_NAME,TZ_DYNAMIC_FLAG,TZ_TMPL_DESC,TZ_SMS_CONTENT FROM PS_TZ_SMSTMPL_TBL WHERE TZ_JG_ID=? AND TZ_YMB_ID = ? AND TZ_USE_FLAG = 'Y'";
-							List<Map<String, Object>> smsTempletList = jdbcTemplate.queryForList(getSmsTempletSQL, new Object[]{str_orgIdAdmin, strTmpIdAdmin});
-							if(smsTempletList != null && smsTempletList.size()>0){
-								for(int l = 0; l < smsTempletList.size(); l++){
-									Map<String, Object> smsTempletMap = smsTempletList.get(l);
-									PsTzSmsTmplTbl psTzSmsTmplTbl = new PsTzSmsTmplTbl();
-									psTzSmsTmplTbl.setTzJgId(orgID);
-									psTzSmsTmplTbl.setTzTmplId((String)smsTempletMap.get("TZ_TMPL_ID"));
-									psTzSmsTmplTbl.setTzTmplName((String)smsTempletMap.get("TZ_TMPL_NAME"));
-									psTzSmsTmplTbl.setTzUseFlag("Y");
-									psTzSmsTmplTbl.setTzTmplDesc((String)smsTempletMap.get("TZ_TMPL_DESC"));
-									psTzSmsTmplTbl.setTzYmbId(strTmpId);
-									psTzSmsTmplTbl.setTzSmsServId(strTmpSmsServ);
-									psTzSmsTmplTbl.setTzDynamicFlag((String)smsTempletMap.get("TZ_DYNAMIC_FLAG"));
-									psTzSmsTmplTbl.setTzSmsContent((String)smsTempletMap.get("TZ_SMS_CONTENT"));
-									psTzSmsTmplTbl.setRowAddedDttm(new Date());
-									psTzSmsTmplTbl.setRowAddedOprid(oprid);
-									psTzSmsTmplTbl.setRowLastmantDttm(new Date());
-									psTzSmsTmplTbl.setRowLastmantOprid(oprid);
-									psTzSmsTmplTblMapper.insert(psTzSmsTmplTbl);
+									psTzZnxTmplTblMapper.insert(psTzZnxTmplTbl);
 								}
 							}
 						}
