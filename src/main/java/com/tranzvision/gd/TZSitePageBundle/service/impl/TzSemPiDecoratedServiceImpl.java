@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -43,6 +44,9 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
@@ -85,7 +89,8 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			String strCityLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "4","所在城市", "City");
 			String strSiteMsgLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "5","系统消息", "System message");
 			String strMyActLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "6","我的活动", "My activities");
-			
+			//个人账号管理为菜单跳转，通过hardcode获取菜单编号
+			String personInfoMenuId = getHardCodePoint.getHardCodePointVal("TZ_SEM_USER_MENUID");
 			
 			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath();
 
@@ -141,18 +146,41 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 				strRegEmail = (String) siteMap.get("TZ_EMAIL");
 				strApplicationNum = (String) siteMap.get("TZ_MSH_ID");
 			}
-			
+						
 			String cityInfo="select TZ_LEN_PROID from ps_TZ_REG_USER_T where OPRID=?";
 			strCity = jdbcTemplate.queryForObject(cityInfo, new Object[] { m_curOPRID}, "String");
+			//未读站内信数量
+			int MsgCount = 0;
+			String MsgSql = "select count(*) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID=? and TZ_ZNX_STATUS='N' and TZ_REC_DELSTATUS<>'Y'";
+			MsgCount = jdbcTemplate.queryForObject(MsgSql, new Object[] { m_curOPRID}, "int");
+			String MsgDisplay = "";
+			String strMsgCount="";
+			if(MsgCount==0){
+				MsgDisplay = "display:none;";
+			}else{
+				strMsgCount = String.valueOf(MsgCount);
+			}
+			//我已报名但未过期的活动
+			int actCount = 0;
+			String actSql = "select count(*) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B where A.TZ_ART_ID=B.TZ_ART_ID and (A.TZ_START_DT<=DATE_FORMAT(CURDATE(), 'yyyy-MM-dd') and A.TZ_START_TM<=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and (A.TZ_END_DT>=DATE_FORMAT(CURDATE(), 'yyyy-MM-dd') and A.TZ_END_TM>=DATE_FORMAT(CURDATE(), 'hh24:00:00')) and B.OPRID=? and B.TZ_NREG_STAT='1'";
+			actCount = jdbcTemplate.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
+			String ActDisplay = "";
+			String strActCount = "";
+			if(actCount==0){
+				ActDisplay = "display:none;";
+			}else{
+				strActCount = String.valueOf(actCount);
+			}
+			System.out.println("strActCount=" + strActCount);
 			//sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
 			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
 			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 			if ("Y".equals(isShowPhoto)) {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",strName,strModifyLabel,siteId,"384",
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,"6",strSiteMsgLabel,"6",strMyActLabel,strPhoto);
+				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",strName,strModifyLabel,siteId,personInfoMenuId,
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto);
 			} else {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", strName,strModifyLabel,siteId,"384",
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,"6",strSiteMsgLabel,"6",strMyActLabel);
+				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", strName,strModifyLabel,siteId,personInfoMenuId,
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay);
 			}
 
 			strRet = strRet.replace((char) (10), ' ');
@@ -168,7 +196,7 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			e.printStackTrace();
 
 		}
-		
+		System.out.println(strRet);
 		return strRet;
 	}
 
