@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.basicData.resData.import.importTplList', {
+﻿Ext.define('KitchenSink.view.basicData.import.importTplList', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -6,8 +6,8 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.basicData.resData.import.importTplController',
-        'KitchenSink.view.basicData.resData.import.importTplStore'
+        'KitchenSink.view.basicData.import.importTplController',
+        'KitchenSink.view.basicData.import.importTplStore'
     ],
     alilas: 'widget.imporTplList',
     controller: 'importTplController',

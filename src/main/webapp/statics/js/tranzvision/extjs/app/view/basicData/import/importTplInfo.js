@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.basicData.resData.import.importTplInfo', {
+﻿Ext.define('KitchenSink.view.basicData.import.importTplInfo', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.importTplInfo', 
 	controller: 'importTplController',

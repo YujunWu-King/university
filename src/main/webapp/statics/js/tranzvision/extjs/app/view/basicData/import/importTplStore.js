@@ -1,7 +1,7 @@
-Ext.define('KitchenSink.view.basicData.resData.import.importTplStore', {
+Ext.define('KitchenSink.view.basicData.import.importTplStore', {
     extend: 'Ext.data.Store',
     alias: 'store.importTplStore',
-    model: 'KitchenSink.view.basicData.resData.import.importTplModel',
+    model: 'KitchenSink.view.basicData.import.importTplModel',
 		autoLoad: true,
 		pageSize: 10,
 		comID: 'TZ_IMP_TPL_COM',

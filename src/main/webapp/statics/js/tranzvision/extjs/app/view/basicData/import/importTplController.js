@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.basicData.resData.import.importTplController', {
+﻿Ext.define('KitchenSink.view.basicData.import.importTplController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.importTplController', 
 

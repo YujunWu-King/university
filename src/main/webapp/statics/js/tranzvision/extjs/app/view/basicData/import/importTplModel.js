@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.basicData.resData.import.importTplModel', {
+Ext.define('KitchenSink.view.basicData.import.importTplModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'tplId'},
