@@ -627,7 +627,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						
 						String SqlsiteName="SELECT TZ_SITEI_NAME FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
 						String 	siteName=sqlQuery.queryForObject(SqlsiteName, new Object[]{strSiteIId}, "String");
-						String  Sqlcount="SELECT COUNT(1) FROM TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=?";
+						String  Sqlcount="SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=?";
 						int loucount=sqlQuery.queryForObject(Sqlcount, new Object[]{strSiteIId}, "Integer");
 						if (loucount>0) {
 							
