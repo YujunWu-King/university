@@ -124,7 +124,8 @@
 	//查询
     cfgSearch: function(btn){
     	//var columId = btn.findParentByType('toolbar').child('combobox').getValue();
-		var panel = btn.findParentByType("panel");
+		var panel = btn.findParentByType("panel").findParentByType("panel");
+		console.log(panel);
 		var columnId = panel.columnId;
 		if(columnId == "" || columnId == undefined){
 			Ext.MessageBox.alert('提示', '请先选择栏目。');
@@ -163,7 +164,7 @@
 		}
 		  
 	    //栏目;
-	    var panel = btn.findParentByType("panel");
+	    var panel = btn.findParentByType("panel").findParentByType("panel");
 		var columnId = panel.columnId;
 
 	    if(columnId == "" || columnId == undefined){
