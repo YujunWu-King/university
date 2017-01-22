@@ -66,6 +66,17 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                          '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ],
                 },{
+					xtype: 'combo',
+					labelWidth: 100,
+					editable: false,
+					fieldLabel: '是否启用',
+					name: 'useFlag',
+					emptyText: '请选择',
+					mode: "remote",
+					valueField: 'TValue',
+					displayField: 'TSDesc',
+					store: new KitchenSink.view.common.store.appTransStore("TZ_USE_FLAG")
+				},{
                         xtype: 'tabpanel',
                         frame: true,
                         activeTab: 0,

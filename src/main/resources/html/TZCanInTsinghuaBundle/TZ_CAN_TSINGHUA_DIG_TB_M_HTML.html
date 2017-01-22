@@ -1,14 +1,14 @@
-<div  style="width: 100%; float: left; border: 1px solid #E0E0E0; padding: 5px; display: block; margin-bottom: 10px">
+<div  style="width: 100%;border: 1px solid #E0E0E0; padding: 5px; display: block; margin-bottom: 10px">
 	<h3 style="text-align: left">
 		%bind(:1) <small style="color: gray">%bind(:2)</small> 
 		<font  color=blue>%bind(:3)</font>
 	</h3>
 	<h5 style="text-align: left">2016年问卷统计情况</h5>
-	<div id="chartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
-	<div id="serialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
-	 <h5 style="text-align: left">历史问卷统计情况</h5>
-	<div id="hischartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
-	<div id="hisserialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div> 
+	<div id="chartdiv_%bind(:4)" style="width: 100%;display: block; height: 300px;"></div>
+	<div id="serialdiv_%bind(:4)" style="width: 100%;display: block; height: 300px;"></div>
+	 <!-- <h5 style="text-align: left">历史问卷统计情况</h5>
+	<div id="hischartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
+	<div id="hisserialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>  -->
     
 	<script>
 	var arrColor = [
@@ -36,8 +36,8 @@
 			                itemDistance:10,
 			                labelFormat :'{name}({percentage:.2f}%)',
 			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
-			                layout:'vertical',//垂直方向
-			                align:'left',//水平方向
+			                layout:'vertical',
+			                align:'left',
 							verticalAlign:'middle',
 							borderRadius:5,
 							borderColor:"#909090",
@@ -145,10 +145,7 @@
 			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
 			                layout:'vertical',
 			                align:'left',
-							verticalAlign:'middle',
-							borderRadius:5,
-							borderColor:"#909090",
-							borderWidth:1
+							verticalAlign:'middle'
 			        },
 			        plotOptions: {
 			            pie: {

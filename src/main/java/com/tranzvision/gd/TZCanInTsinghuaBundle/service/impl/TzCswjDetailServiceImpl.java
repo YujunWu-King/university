@@ -399,11 +399,13 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 								Map<String, Object> mbLJXSMap = new HashMap<String, Object>();
 								mbLJXSMap = cswjPctDataList.get(k);
 								String TZ_XXXKXZ_MC = mbLJXSMap.get("TZ_XXXKXZ_MC") == null ? null: mbLJXSMap.get("TZ_XXXKXZ_MC").toString();
+								String TZ_XXXKXZ_MS = sqlQuery.queryForObject("select TZ_XXXKXZ_MS from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?",new Object[] { TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "String");
 								PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
 								PsTzCswjPctTbl.setTzCsWjId(TZ_CS_WJ_ID);
 								PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);
 								PsTzCswjPctTbl.setTzXxxBh(TZ_XXX_BH);
 								PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
+								PsTzCswjPctTbl.setTzXxxkxzMs(TZ_XXXKXZ_MS);
 								PsTzCswjPctTbl.setTzOrder(j);
 								PsTzCswjPctTblMapper.insert(PsTzCswjPctTbl);
 							}
@@ -439,10 +441,12 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			if (jacksonUtil.containsKey("TZ_CS_WJ_ID")) {
-				// 流程模版编号;
+				// 测试问卷编号;
 				String tzCsWjId = jacksonUtil.getString("TZ_CS_WJ_ID");
 				PsTzCswjTbl PStzCsWjTbl = PsTzCswjTblMapper.selectByPrimaryKey(tzCsWjId);
 				if (PStzCsWjTbl != null) {
+					String TZ_DC_WJMC=sqlQuery.queryForObject("select TZ_APP_TPL_MC from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?", new Object[]{PStzCsWjTbl.getTzAppTplId()}, "String");
+					TZ_DC_WJMC=(TZ_DC_WJMC==null?"":TZ_DC_WJMC.toString());
 					Map<String, Object> retMap = new HashMap<String, Object>();
 					retMap.put("TZ_CS_WJ_ID", PStzCsWjTbl.getTzCsWjId().toString());
 					retMap.put("TZ_CS_WJ_NAME", PStzCsWjTbl.getTzCsWjName());
@@ -456,6 +460,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 					retMap.put("TZ_DC_WJ_JSRQ",dateFormat.format(PStzCsWjTbl.getTzDcWjJsrq()));
 					retMap.put("TZ_DC_WJ_JSSJ", timeFormat.format(PStzCsWjTbl.getTzDcWjJssj()));
 					retMap.put("TZ_CLASS_ID", PStzCsWjTbl.getTzClassId());
+					retMap.put("TZ_DC_WJMC", TZ_DC_WJMC);
 					returnJsonMap.replace("formData",retMap);
 				} else {
 					errMsg[0] = "1";

@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZCertTmplGLBundle.dao.PsTzCertTblMapper;
 import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCertTmplTbl;
+import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerTmplKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -81,7 +82,7 @@ public class certTmplGl extends FrameworkImpl {
 	}
 
 	/* 获取证书模板定义信息 */
-	public String tzQuery(String strParams, String[] errMsg) {
+	/*public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
@@ -91,14 +92,21 @@ public class certTmplGl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			
 			if (jacksonUtil.containsKey("certTmpl")) {
-				// 类方法ID;
 				String certTmpl = jacksonUtil.getString("certTmpl");
-				PsTzCertTmplTbl psTzAppclsTbl = psTzCertTblMapper.selectByPrimaryKey(certTmpl);
+				String JgId = jacksonUtil.getString("JgId");
+				PsTzCerTmplKey psTzCerTmplKey = new PsTzCerTmplKey();
+				psTzCerTmplKey.setTzCertTmpl(certTmpl);
+				psTzCerTmplKey.setTzJgId(JgId);
+				
+				
+				PsTzCertTmplTbl psTzAppclsTbl = psTzCertTblMapper.selectByPrimaryKey(psTzCerTmplKey);
 				if (psTzAppclsTbl != null) {
 					Map<String, Object> map = new HashMap<>();
+					map.put("JgId", psTzAppclsTbl.getTzJgId());
 					map.put("certTmpl", psTzAppclsTbl.getTzCertTmpl());
 					map.put("tmplName", psTzAppclsTbl.getTzTmplName());
 					map.put("certJGID", psTzAppclsTbl.getTzCertJGID());
+					map.put("useFlag", psTzAppclsTbl.getTzUseFlag());
 					map.put("certMergHtml1", psTzAppclsTbl.getTzCertMergHtml1());
 					map.put("certMergHtml2", psTzAppclsTbl.getTzCertMergHtml2());
 					map.put("certMergHtml3", psTzAppclsTbl.getTzCertMergHtml3());
@@ -118,7 +126,7 @@ public class certTmplGl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return jacksonUtil.Map2json(returnJsonMap);
-	}
+	}*/
 
 	/* 新增类方法 */
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -138,6 +146,7 @@ public class certTmplGl extends FrameworkImpl {
 				String tmplName = (String) infoData.get("tmplName");
 				String JgId = (String) infoData.get("JgId");
 				String certJGID = (String) infoData.get("certJGID");
+				String useFlag = (String) infoData.get("useFlag");
 				String certMergHtml1 = (String) infoData.get("certMergHtml1");
 				String certMergHtml2 = (String) infoData.get("certMergHtml2");
 				String certMergHtml3 = (String) infoData.get("certMergHtml3");
@@ -152,6 +161,7 @@ public class certTmplGl extends FrameworkImpl {
 					psTzCertTmplTbl.setTzCertTmpl(certTmpl);
 					psTzCertTmplTbl.setTzTmplName(tmplName);
 					psTzCertTmplTbl.setTzCertJGID(certJGID);
+					psTzCertTmplTbl.setTzUseFlag(useFlag);
 					psTzCertTmplTbl.setTzCertMergHtml1(certMergHtml1);
 					psTzCertTmplTbl.setTzCertMergHtml2(certMergHtml2);
 					psTzCertTmplTbl.setTzCertMergHtml3(certMergHtml3);
