@@ -303,12 +303,13 @@
 							form.findField("tzdate2").hide();
 						}
 						
+						
 						//发布对象
 						var siteType = form.findField("siteType").getValue();
 					
 						if(siteType=="A" || siteType == "B"){
 							var pubAud = panel.down('fieldset[name=pubAud]');
-							pubAud.setHidden(true);
+//							pubAud.setHidden(true);
 						}
 						
 				});
@@ -601,7 +602,9 @@
 					}else{
 						form.findField("tzdate2").hide();
 					}
-					//发布对象
+					//
+
+					
 					var siteType = form.findField("siteType").getValue();
 				
 					if(siteType=="A" || siteType == "B"){

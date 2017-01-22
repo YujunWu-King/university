@@ -401,6 +401,9 @@ Ext.define('KitchenSink.view.siteManage.siteManage.siteChildsController', {
 		Ext.tzLoad(tzParams,function(responseData){
 			//皮肤设置数据
 			var formData = responseData.formData;
+			//转换栏目值类型：string -> array
+			formData["arealm"] = formData["arealm"].split(",");
+			
 			form.setValues(formData);
 			form.setValues({siteId:siteId});
 		});

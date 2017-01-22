@@ -18,7 +18,7 @@
     reference:'siteareaInfoPanel',
     width:600,
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
-	actType: 'add',//默认新增
+	actType: 'add',//默认新增,
     items: [{
         xtype: 'form',
         reference: 'userAccountForm',
@@ -88,12 +88,9 @@
             minValue: 1,
 			name: 'areasxh'
         }, {
-            xtype: 'combobox',
+            xtype: 'tagfield',
             fieldLabel: '对应栏目',
-			forceSelection: true,
-			emptyText:'请选择',
-            queryMode: 'remote',
-            editable:false,
+            queryMode: 'local',
 			name: 'arealm',
 			valueField: 'TZ_COLU_ID',
     		displayField: 'TZ_COLU_NAME'

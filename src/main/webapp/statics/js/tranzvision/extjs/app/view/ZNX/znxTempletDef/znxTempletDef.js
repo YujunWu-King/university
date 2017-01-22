@@ -39,17 +39,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletDef', {
 			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:'searchComList'},"-",
 			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:'addZnxTemplet'},"-",
 			{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:'editSelZnxTemplet'},"-",
-			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelZnxTemplet'},'->',
-			{
-				xtype:'splitbutton',
-				text:'更多操作',
-				iconCls:  'list',
-				glyph: 61,
-				menu:[{
-					text:'初始化设置默认模版',
-					handler:'resetAllTemplet'
-				}]
-			}
+			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelZnxTemplet'},'->'
 		]
 	}],
     initComponent: function () {
@@ -67,22 +57,17 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletDef', {
                 text: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_MG_STD.znxtempid","模板编号"),
                 sortable: true,
                 dataIndex: 'znxtempid',
-				width: 180
+				width: 200
             },{
                 text: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_MG_STD.znxtempname","模板名称"),
                 sortable: true,
                 dataIndex: 'znxtempname',
-                width: 280
+                width: 500
             },{
                 text: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_MG_STD.restempid","元模版编号"),
                 sortable: true,
                 dataIndex: 'restempid',
                 hidden:true
-            },{
-                text: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_MG_STD.restempname","模板类型"),
-                sortable: true,
-                dataIndex: 'restempname',
-                width: 280
             },{
                 text:Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_MG_STD.isuse","是否启用"),
                 sortable: true,
