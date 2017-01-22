@@ -11,10 +11,11 @@
     <result column="TZ_HISTORY_VAL" property="tzHistoryVal" jdbcType="INTEGER" />
     <result column="TZ_CURYEAR_VAL" property="tzCuryearVal" jdbcType="INTEGER" />
     <result column="TZ_ORDER" property="tzOrder" jdbcType="INTEGER" />
+    <result column="TZ_XXXKXZ_MS" property="tzXxxkxzMs" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC, TZ_U_LIMIT, TZ_L_LIMIT, TZ_HISTORY_VAL, 
-    TZ_CURYEAR_VAL, TZ_ORDER
+    TZ_CURYEAR_VAL, TZ_ORDER, TZ_XXXKXZ_MS
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTblKey" >
     select 
@@ -25,94 +26,100 @@
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
       and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTblKey" >
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTblKey">
     delete from PS_TZ_CSWJ_PCT_TBL
     where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
       and TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}
       and TZ_XXXKXZ_MC = #{tzXxxkxzMc,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl">
     insert into PS_TZ_CSWJ_PCT_TBL (TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, 
       TZ_XXXKXZ_MC, TZ_U_LIMIT, TZ_L_LIMIT, 
-      TZ_HISTORY_VAL, TZ_CURYEAR_VAL, TZ_ORDER
-      )
+      TZ_HISTORY_VAL, TZ_CURYEAR_VAL, TZ_ORDER, 
+      TZ_XXXKXZ_MS)
     values (#{tzCsWjId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzXxxBh,jdbcType=VARCHAR}, 
       #{tzXxxkxzMc,jdbcType=VARCHAR}, #{tzULimit,jdbcType=INTEGER}, #{tzLLimit,jdbcType=INTEGER}, 
-      #{tzHistoryVal,jdbcType=INTEGER}, #{tzCuryearVal,jdbcType=INTEGER}, #{tzOrder,jdbcType=INTEGER}
-      )
+      #{tzHistoryVal,jdbcType=INTEGER}, #{tzCuryearVal,jdbcType=INTEGER}, #{tzOrder,jdbcType=INTEGER}, 
+      #{tzXxxkxzMs,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl">
     insert into PS_TZ_CSWJ_PCT_TBL
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="tzCsWjId != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tzCsWjId != null">
         TZ_CS_WJ_ID,
       </if>
-      <if test="tzDcWjId != null" >
+      <if test="tzDcWjId != null">
         TZ_DC_WJ_ID,
       </if>
-      <if test="tzXxxBh != null" >
+      <if test="tzXxxBh != null">
         TZ_XXX_BH,
       </if>
-      <if test="tzXxxkxzMc != null" >
+      <if test="tzXxxkxzMc != null">
         TZ_XXXKXZ_MC,
       </if>
-      <if test="tzULimit != null" >
+      <if test="tzULimit != null">
         TZ_U_LIMIT,
       </if>
-      <if test="tzLLimit != null" >
+      <if test="tzLLimit != null">
         TZ_L_LIMIT,
       </if>
-      <if test="tzHistoryVal != null" >
+      <if test="tzHistoryVal != null">
         TZ_HISTORY_VAL,
       </if>
-      <if test="tzCuryearVal != null" >
+      <if test="tzCuryearVal != null">
         TZ_CURYEAR_VAL,
       </if>
-      <if test="tzOrder != null" >
+      <if test="tzOrder != null">
         TZ_ORDER,
       </if>
+      <if test="tzXxxkxzMs != null">
+        TZ_XXXKXZ_MS,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="tzCsWjId != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tzCsWjId != null">
         #{tzCsWjId,jdbcType=VARCHAR},
       </if>
-      <if test="tzDcWjId != null" >
+      <if test="tzDcWjId != null">
         #{tzDcWjId,jdbcType=VARCHAR},
       </if>
-      <if test="tzXxxBh != null" >
+      <if test="tzXxxBh != null">
         #{tzXxxBh,jdbcType=VARCHAR},
       </if>
-      <if test="tzXxxkxzMc != null" >
+      <if test="tzXxxkxzMc != null">
         #{tzXxxkxzMc,jdbcType=VARCHAR},
       </if>
-      <if test="tzULimit != null" >
+      <if test="tzULimit != null">
         #{tzULimit,jdbcType=INTEGER},
       </if>
-      <if test="tzLLimit != null" >
+      <if test="tzLLimit != null">
         #{tzLLimit,jdbcType=INTEGER},
       </if>
-      <if test="tzHistoryVal != null" >
+      <if test="tzHistoryVal != null">
         #{tzHistoryVal,jdbcType=INTEGER},
       </if>
-      <if test="tzCuryearVal != null" >
+      <if test="tzCuryearVal != null">
         #{tzCuryearVal,jdbcType=INTEGER},
       </if>
-      <if test="tzOrder != null" >
+      <if test="tzOrder != null">
         #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxkxzMs != null">
+        #{tzXxxkxzMs,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl">
     update PS_TZ_CSWJ_PCT_TBL
-    <set >
-      <if test="tzULimit != null" >
+    <set>
+      <if test="tzULimit != null">
         TZ_U_LIMIT = #{tzULimit,jdbcType=INTEGER},
       </if>
-      <if test="tzLLimit != null" >
+      <if test="tzLLimit != null">
         TZ_L_LIMIT = #{tzLLimit,jdbcType=INTEGER},
       </if>
-      <if test="tzHistoryVal != null" >
+      <if test="tzHistoryVal != null">
         TZ_HISTORY_VAL = #{tzHistoryVal,jdbcType=INTEGER},
       </if>
       <if test="tzCuryearVal != null" >
@@ -120,6 +127,9 @@
       </if>
       <if test="tzOrder != null" >
         TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzXxxkxzMs != null" >
+        TZ_XXXKXZ_MS = #{tzXxxkxzMs,jdbcType=VARCHAR},
       </if>
     </set>
     where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
@@ -133,7 +143,8 @@
       TZ_L_LIMIT = #{tzLLimit,jdbcType=INTEGER},
       TZ_HISTORY_VAL = #{tzHistoryVal,jdbcType=INTEGER},
       TZ_CURYEAR_VAL = #{tzCuryearVal,jdbcType=INTEGER},
-      TZ_ORDER = #{tzOrder,jdbcType=INTEGER}
+      TZ_ORDER = #{tzOrder,jdbcType=INTEGER},
+      TZ_XXXKXZ_MS = #{tzXxxkxzMs,jdbcType=VARCHAR}
     where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
       and TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
       and TZ_XXX_BH = #{tzXxxBh,jdbcType=VARCHAR}

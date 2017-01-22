@@ -7,8 +7,6 @@ Ext.define('KitchenSink.controller.Global', {
         'KitchenSink.store.Navigation',
         'KitchenSink.view.common.store.appTransStore',//translateValue使用
         'KitchenSink.view.common.store.comboxStore',//下拉框
-        //'KitchenSink.view.orgmgmt.initOrgInfo',
-        //'KitchenSink.view.orgmgmt.orgJgInfo',
         'Ext.window.*'
     ],
 
@@ -33,9 +31,6 @@ Ext.define('KitchenSink.controller.Global', {
                 itemclick: 'onThumbnailClick',
                 itemdblclick: 'onThumbnailClick'
             },
-            '#tranzvision-framework-codePreview tool[type=maximize]': {
-                click: 'onMaximizeClick'
-            },
             'tool[regionTool]': {
                 click: 'onSetRegion'
             }
@@ -46,7 +41,6 @@ Ext.define('KitchenSink.controller.Global', {
             navigationBreadcrumb: 'navigation-breadcrumb',
             contentPanel: 'contentPanel',
             descriptionPanel: 'descriptionPanel',
-            codePreview: '#tranzvision-framework-codePreview',
             thumbnails: {
                 selector: 'thumbnails',
                 xtype: 'thumbnails',
@@ -274,7 +268,6 @@ Ext.define('KitchenSink.controller.Global', {
             contentPanel = me.getContentPanel(),
             themeName = Ext.themeName,
             thumbnails = me.getThumbnails(),
-            codePreview = me.getCodePreview(),
             hasTree = navigationTree && navigationTree.isVisible(),
             cmp, className, ViewClass, clsProto, thumbnailsStore;
 
@@ -368,8 +361,6 @@ Ext.define('KitchenSink.controller.Global', {
             /*结束*/
 
             contentPanel.setActiveTab(tab);
-			 
-            this.setupPreview(clsProto);
 
             this.updateTitle(node);
 			
@@ -461,9 +452,6 @@ Ext.define('KitchenSink.controller.Global', {
           if(node.isLeaf() == false)
           {
             contentPanel.body.removeCls('kitchensink-example');
-            codePreview.removeAll();
-            codePreview.add({html: tmpNode.get('description') || ''});
-            codePreview.tabBar.hide();
             this.updateTitle(tmpNode);
           }
         }
@@ -494,101 +482,8 @@ Ext.define('KitchenSink.controller.Global', {
         document.title = document.title.split(' - ')[0] + ' - ' + text;
     },
 
-    setupPreview: function(clsProto) {
-        var me = this,
-            preview = me.getCodePreview(),
-            otherContent = clsProto.otherContent,
-            resources = [],
-            codePreviewProcessed = clsProto.codePreviewProcessed;
-
-        if (!codePreviewProcessed) {
-            resources.push({
-                type: 'View',
-                path: clsProto.$className.replace(/\./g, '/').replace('KitchenSink', TzUniversityContextPath + '/statics/js/tranzvision/extjs/app') + '.js'
-            });
-
-            if (otherContent) {
-                resources = resources.concat(otherContent);
-            }
-
-            // Clone everything, since we're about to hook up loaders
-            codePreviewProcessed = clsProto.codePreviewProcessed = [];
-            Ext.each(resources, function(resource) {
-                resource.xtype = 'codeContent';
-                resource.rtl = false;
-                resource.title = resource.type;
-                //resource.tabConfig = {
-                //    tooltip: resource.path
-                //};
-                var clone = Ext.apply({}, resource);
-                codePreviewProcessed.push(clone);
-                resource.loader = {
-                    url: resource.path,
-                    autoLoad: true,
-                    rendererScope: me,
-                    renderer: me.renderCodeMarkup,
-                    resource: clone,
-                    themeInfo: clsProto.themeInfo
-                };
-            });
-        } else {
-            resources = codePreviewProcessed;
-        }
-
-        preview.removeAll();
-
-        preview.add(resources);
-        preview.setActiveTab(0);
-
-        // Hide the Tab Panel if there's only one resource
-        preview.tabBar.setVisible(resources.length > 1);
-
-        preview.activeView = clsProto;
-    },
-
     exampleRe: /^\s*\/\/\s*(\<\/?example\>)\s*$/,
     themeInfoRe: /this\.themeInfo\.(\w+)/g,
-
-    renderCodeMarkup: function(loader, response) {
-        var code = this.processText(response.responseText, loader.themeInfo);
-        // Passed in from the block above, we keep the proto cloned copy.
-        loader.resource.html = code;
-        loader.getTarget().setHtml(code);
-        prettyPrint();
-        return true;
-    },
-
-    processText: function (text, themeInfo) {
-        var lines = text.split('\n'),
-            removing = false,
-            keepLines = [],
-            len = lines.length,
-            exampleRe = this.exampleRe,
-            themeInfoRe = this.themeInfoRe,
-            encodeTheme = function (text, match) {
-                return Ext.encode(themeInfo[match]);
-            },
-            i, line, code;
-
-        for (i = 0; i < len; ++i) {
-            line = lines[i];
-            if (removing) {
-                if (exampleRe.test(line)) {
-                    removing = false;
-                }
-            } else if (exampleRe.test(line)) {
-                removing = true;
-            } else {
-                // Replace "this.themeInfo.foo" with the value of "foo" properly encoded
-                // for JavaScript (otherwise strings would not be quoted).
-                line = line.replace(themeInfoRe, encodeTheme);
-                keepLines.push(line);
-            }
-        }
-
-        code = Ext.htmlEncode(keepLines.join('\n'));
-        return '<pre class="prettyprint">' + code + '</pre>';
-    },
 
     onSetRegion: function (tool) {
         var panel = tool.toolOwner;
@@ -715,33 +610,6 @@ Ext.define('KitchenSink.controller.Global', {
         }
 
         me.redirectToByToken(tNode.getId());
-    },
-
-    onMaximizeClick: function(){
-        var preview = this.getCodePreview();
-
-        var w = new Ext.window.Window({
-            rtl: false,
-            maximized: true,
-            title: TranzvisionMeikecityAdvanced.Boot.languagePackage['tz-frmwrk-lang-00004'],
-            closable: false,
-            layout: 'fit',
-            items: {
-                xtype: 'codePreview',
-                tools: [],
-                showTitle: false,
-                items: preview.activeView.codePreviewProcessed
-            },
-            tools: [{
-                type: 'close',
-                handler: function() {
-                    w.hide(preview, function() {
-                        w.destroy();
-                    });
-                }
-            }]
-        });
-        w.show(preview);
     },
 
 	//获取组件资源

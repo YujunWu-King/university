@@ -4,11 +4,11 @@
 		<font  color=blue>%bind(:3)</font>
 	</h3>
 	<h5 style="text-align: left">2016年问卷统计情况</h5>
-	<div id="chartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
-	<div id="serialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
+	<div id="chartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
+	<div id="serialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
 	 <h5 style="text-align: left">历史问卷统计情况</h5>
-	<div id="hischartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
-	<div id="hisserialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div> 
+	<div id="hischartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
+	<div id="hisserialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div> 
     
 	<script>
 	var arrColor = [
@@ -36,9 +36,12 @@
 			                itemDistance:10,
 			                labelFormat :'{name}({percentage:.2f}%)',
 			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
-			                layout:'vertical',
-			                align:'left',
-							verticalAlign:'middle'
+			                layout:'vertical',//垂直方向
+			                align:'left',//水平方向
+							verticalAlign:'middle',
+							borderRadius:5,
+							borderColor:"#909090",
+							borderWidth:1
 			        },
 			        plotOptions: {
 			            pie: {
@@ -142,7 +145,10 @@
 			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
 			                layout:'vertical',
 			                align:'left',
-							verticalAlign:'middle'
+							verticalAlign:'middle',
+							borderRadius:5,
+							borderColor:"#909090",
+							borderWidth:1
 			        },
 			        plotOptions: {
 			            pie: {
