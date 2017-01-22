@@ -486,6 +486,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	public String getCountPage(String wjid, String pageno, boolean isMobile) {
 		String strCountHtml = "";
         int TZ_PAGE_NO=Integer.valueOf((pageno==null?"1":pageno));
+        TZ_PAGE_NO=TZ_PAGE_NO-1;
 		this.logger.info(new Date() + " >---问卷编号:---- " + wjid + " >----PageNo----" + pageno);
 		try {
 			String strDivHtml = "";
