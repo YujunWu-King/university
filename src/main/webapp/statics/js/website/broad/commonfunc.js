@@ -61,6 +61,7 @@ function getOperatorType(){
       function tab(nav,content,on,type)
           {
             $(nav).children().bind(type,(function(){
+           
               var $tab=$(this);
               var tab_index=$tab.prevAll().length;
               var $content = $(content).children();
@@ -98,8 +99,5 @@ function getOperatorType(){
 
             // Now crack on with whatever
         }
-
-
-
- 
+        
 
