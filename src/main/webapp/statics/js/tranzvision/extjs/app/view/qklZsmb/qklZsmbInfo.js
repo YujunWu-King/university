@@ -44,8 +44,8 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                     cls:'lanage_1',
                     allowBlank: false,
                     afterLabelTextTpl: [
-                                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                                    ],
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
                 },{
                     xtype: 'textfield',
                     fieldLabel: '证书名称',
@@ -53,8 +53,8 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                     cls:'lanage_1',
                     allowBlank: false,
                     afterLabelTextTpl: [
-                                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                                    ],
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
 
                 },{
                     xtype: 'textfield',
@@ -63,8 +63,8 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                     cls:'lanage_1',
                     allowBlank: false,
                     afterLabelTextTpl: [
-                                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                                    ],
+                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
                 },{
                         xtype: 'tabpanel',
                         frame: true,
@@ -86,7 +86,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml1',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
@@ -104,7 +104,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml2',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
@@ -122,7 +122,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml3',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
