@@ -271,7 +271,7 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
 			},"",true,this);
 		}
 	},
-	closeTmplDfn::function(btn){
+	closeTmplDfn:function(btn){
 			var panel = btn.findParentByType("panel");
 			panel.close();
     }

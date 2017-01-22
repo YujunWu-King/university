@@ -25,7 +25,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * 证书模版管理
  * @author tang
  */
-@Service("com.tranzvision.gd.TZCertTmplGLBundle.service.impl.certTmplGl")
+@Service("com.tranzvision.gd.TZCertTmplGLBundle.service.Impl.certTmplGl")
 public class certTmplGl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -136,6 +136,7 @@ public class certTmplGl extends FrameworkImpl {
 
 				String certTmpl = (String) infoData.get("certTmpl");
 				String tmplName = (String) infoData.get("tmplName");
+				String JgId = (String) infoData.get("JgId");
 				String certJGID = (String) infoData.get("certJGID");
 				String certMergHtml1 = (String) infoData.get("certMergHtml1");
 				String certMergHtml2 = (String) infoData.get("certMergHtml2");
@@ -147,6 +148,7 @@ public class certTmplGl extends FrameworkImpl {
 					errMsg[1] = "模板编号:" + certTmpl + ",已经存在";
 				} else {
 					PsTzCertTmplTbl psTzCertTmplTbl = new PsTzCertTmplTbl();
+					psTzCertTmplTbl.setTzJgId(JgId);
 					psTzCertTmplTbl.setTzCertTmpl(certTmpl);
 					psTzCertTmplTbl.setTzTmplName(tmplName);
 					psTzCertTmplTbl.setTzCertJGID(certJGID);
@@ -196,6 +198,7 @@ public class certTmplGl extends FrameworkImpl {
 				if (count > 0) {
 					PsTzCertTmplTbl psTzCertTmplTbl = new PsTzCertTmplTbl();
 					psTzCertTmplTbl.setTzTmplName(tmplName);
+					psTzCertTmplTbl.setTzCertJGID(certJGID);
 					psTzCertTmplTbl.setTzCertMergHtml1(certMergHtml1);
 					psTzCertTmplTbl.setTzCertMergHtml2(certMergHtml2);
 					psTzCertTmplTbl.setTzCertMergHtml3(certMergHtml3);
