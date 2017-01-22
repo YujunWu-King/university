@@ -58,10 +58,10 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 				psTzSitemColuT.setTzColuId(lm_id);
 				psTzSitemColuT.setTzColuName(lm_name);
 				//修改添加活动类型
-				//psTzSitemColuT.setTzColuType(lm_lx);
-				psTzSitemColuT.setTzArtTypeId(lm_lx);
+				psTzSitemColuT.setTzColuType(lm_lx);
+				//psTzSitemColuT.setTzArtTypeId(lm_lx);
 				psTzSitemColuT.setTzTempId(lm_mb);
-				psTzSitemColuT.setTzContType(lm_nrlx);
+				psTzSitemColuT.setTzArtTypeId(lm_nrlx);
 				psTzSitemColuT.setTzContTemp(lm_nrmb);
 				int i = psTzSitemColuTMapper.insert(psTzSitemColuT);
 				if(i > 0){
@@ -106,10 +106,10 @@ public class TemplateModelColumnServiceImpl extends FrameworkImpl {
 				psTzSitemColuT.setTzColuName(lm_name);
 				//修改添加活动类型
 				//psTzSitemColuT.setTzColuType(lm_lx);
-				//psTzSitemColuT.setTzColuType(lm_lx);
-				psTzSitemColuT.setTzArtTypeId(lm_lx);
+				psTzSitemColuT.setTzColuType(lm_lx);
+				//psTzSitemColuT.setTzArtTypeId(lm_lx);
 				psTzSitemColuT.setTzTempId(lm_mb);
-				psTzSitemColuT.setTzContType(lm_nrlx);
+				psTzSitemColuT.setTzArtTypeId(lm_nrlx);
 				psTzSitemColuT.setTzContTemp(lm_nrmb);
 				int i = psTzSitemColuTMapper.updateByPrimaryKey(psTzSitemColuT);
 				if(i > 0){
