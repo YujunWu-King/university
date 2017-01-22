@@ -245,6 +245,18 @@
 		/*保存在线调查*/
 		function SaveSurvey(cType){
 			if(SurveyBuild.subState == 'S'){
+				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
+					$(".pagebtn1").hide();
+				}else{
+					$(".pagebtn1").show();
+				}
+
+				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
+					$(".pagebtn2").hide();
+				}else{
+					$(".pagebtn2").show();
+				}
+				SurveyBuild._load();
 				return false;
 			}
 			var appInsId = SurveyBuild.appInsId;
@@ -320,7 +332,10 @@
 				//只有一页，禁止跳转
 				return false;
 			}
-			var isValid = $.formValidator.pageIsValid();
+			var isValid = true;
+			if(SurveyBuild.subState != 'S'){
+				var isValid = $.formValidator.pageIsValid();
+			}
 			if(isValid){
 				SurveyBuild.curPageNo = pageno;
 				SaveSurvey("SAVE");
