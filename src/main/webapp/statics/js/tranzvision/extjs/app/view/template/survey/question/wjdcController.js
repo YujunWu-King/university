@@ -273,6 +273,23 @@
                 }else{
                     form.findField("TZ_DC_WJ_NEEDPWD").setValue(false);
                 }
+                //问卷调查听众赋值
+                var audIDList=formData.AudID;
+                var audNameList=formData.AudName;
+                var oprIdArray=new Array();
+                var i=0,j=0;
+                for(j=0;j<audIDList.length;j++){
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audId = audIDList[j];
+                    var audName=audNameList[j];
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                form.findField("AudList").setValue(oprIdArray);
+            
+       
             });
 
         });

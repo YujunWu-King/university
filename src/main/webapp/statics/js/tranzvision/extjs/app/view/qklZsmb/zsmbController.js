@@ -224,5 +224,55 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
     closeMbList:function(btn){
         //关闭窗口
         this.getView().close();
+    },
+    saveTmplDfn: function(btn){
+		var panel = btn.findParentByType("panel");
+		//操作类型，add-添加，edit-编辑
+		var actType = panel.actType;
+		var form = panel.child("form").getForm();
+		if (form.isValid()) {
+			
+			//新增
+			var comParams="";
+			if(actType == "add"){
+				comParams = '"add":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}else{
+				//修改
+				comParams = '"update":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}
+			var tzParams = '{"ComID":"TZ_ZHENGSHU_COM","PageID":"TZ_MOBAN_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			Ext.tzSubmit(tzParams,function(responseData){
+					panel.actType = "update";	
+					form.findField("certTmpl").setReadOnly(true);
+                    form.findField("certTmpl").addCls('lanage_1');
+			},"",true,this);
+		}
+	},
+	ensureTmplDfn: function(btn){ 
+		var panel = btn.findParentByType("panel");
+		//操作类型，add-添加，edit-编辑
+		var actType = panel.actType;
+		var form = panel.child("form").getForm();
+		if (form.isValid()) {
+		
+			//新增
+			var comParams="";
+			if(actType == "add"){
+				comParams = '"add":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}else{
+				//修改
+				comParams = '"update":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}
+			var tzParams = '{"ComID":"TZ_ZHENGSHU_COM","PageID":"TZ_MOBAN_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			Ext.tzSubmit(tzParams,function(responseData){
+					panel.actType = "update";
+					form.reset();
+					panel.close();
+			},"",true,this);
+		}
+	},
+	closeTmplDfn:function(btn){
+			var panel = btn.findParentByType("panel");
+			panel.close();
     }
 });
