@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZImportTplMgBundle.dao.TzImpTplFldTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldT" >
+    <id column="TZ_TPL_ID" property="tzTplId" jdbcType="VARCHAR" />
+    <id column="TZ_FIELD" property="tzField" jdbcType="VARCHAR" />
+    <result column="TZ_FIELD_NAME" property="tzFieldName" jdbcType="VARCHAR" />
+    <result column="TZ_SEQ" property="tzSeq" jdbcType="INTEGER" />
+    <result column="TZ_REQUIRED" property="tzRequired" jdbcType="VARCHAR" />
+    <result column="TZ_COVER" property="tzCover" jdbcType="VARCHAR" />
+    <result column="TZ_DISPLAY" property="tzDisplay" jdbcType="VARCHAR" />
+    <result column="TZ_COL_TITLE" property="tzColTitle" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_TPL_ID, TZ_FIELD, TZ_FIELD_NAME, TZ_SEQ, TZ_REQUIRED, TZ_COVER, TZ_DISPLAY, TZ_COL_TITLE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_TPL_FLD_T
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+      and TZ_FIELD = #{tzField,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldTKey" >
+    delete from TZ_IMP_TPL_FLD_T
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+      and TZ_FIELD = #{tzField,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldT" >
+    insert into TZ_IMP_TPL_FLD_T (TZ_TPL_ID, TZ_FIELD, TZ_FIELD_NAME, 
+      TZ_SEQ, TZ_REQUIRED, TZ_COVER, 
+      TZ_DISPLAY, TZ_COL_TITLE)
+    values (#{tzTplId,jdbcType=VARCHAR}, #{tzField,jdbcType=VARCHAR}, #{tzFieldName,jdbcType=VARCHAR}, 
+      #{tzSeq,jdbcType=INTEGER}, #{tzRequired,jdbcType=VARCHAR}, #{tzCover,jdbcType=VARCHAR}, 
+      #{tzDisplay,jdbcType=VARCHAR}, #{tzColTitle,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldT" >
+    insert into TZ_IMP_TPL_FLD_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzTplId != null" >
+        TZ_TPL_ID,
+      </if>
+      <if test="tzField != null" >
+        TZ_FIELD,
+      </if>
+      <if test="tzFieldName != null" >
+        TZ_FIELD_NAME,
+      </if>
+      <if test="tzSeq != null" >
+        TZ_SEQ,
+      </if>
+      <if test="tzRequired != null" >
+        TZ_REQUIRED,
+      </if>
+      <if test="tzCover != null" >
+        TZ_COVER,
+      </if>
+      <if test="tzDisplay != null" >
+        TZ_DISPLAY,
+      </if>
+      <if test="tzColTitle != null" >
+        TZ_COL_TITLE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzTplId != null" >
+        #{tzTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzField != null" >
+        #{tzField,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFieldName != null" >
+        #{tzFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeq != null" >
+        #{tzSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzRequired != null" >
+        #{tzRequired,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCover != null" >
+        #{tzCover,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDisplay != null" >
+        #{tzDisplay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColTitle != null" >
+        #{tzColTitle,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldT" >
+    update TZ_IMP_TPL_FLD_T
+    <set >
+      <if test="tzFieldName != null" >
+        TZ_FIELD_NAME = #{tzFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeq != null" >
+        TZ_SEQ = #{tzSeq,jdbcType=INTEGER},
+      </if>
+      <if test="tzRequired != null" >
+        TZ_REQUIRED = #{tzRequired,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCover != null" >
+        TZ_COVER = #{tzCover,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDisplay != null" >
+        TZ_DISPLAY = #{tzDisplay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColTitle != null" >
+        TZ_COL_TITLE = #{tzColTitle,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+      and TZ_FIELD = #{tzField,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplFldT" >
+    update TZ_IMP_TPL_FLD_T
+    set TZ_FIELD_NAME = #{tzFieldName,jdbcType=VARCHAR},
+      TZ_SEQ = #{tzSeq,jdbcType=INTEGER},
+      TZ_REQUIRED = #{tzRequired,jdbcType=VARCHAR},
+      TZ_COVER = #{tzCover,jdbcType=VARCHAR},
+      TZ_DISPLAY = #{tzDisplay,jdbcType=VARCHAR},
+      TZ_COL_TITLE = #{tzColTitle,jdbcType=VARCHAR}
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+      and TZ_FIELD = #{tzField,jdbcType=VARCHAR}
+  </update>
+</mapper>

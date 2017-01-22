@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZImportTplMgBundle.service.impl;
+package com.tranzvision.gd.TZExportTplMgBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,25 +9,25 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZImportTplMgBundle.dao.TzImpTplDfnTMapper;
-import com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplDfnT;
+import com.tranzvision.gd.TZExportTplMgBundle.dao.TzExpTplDfnTMapper;
+import com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
- * Hardcode点定义， 原PS类：TZ_GD_HARDCODE_PKG:TZ_GD_HARDCODE_CLS
- * @author tang
+ * 导出模板管理
+ * @author shaweyet
  */
-@Service("com.tranzvision.gd.TZImportTplMgBundle.service.impl.ImportTplMgServiceImpl")
-public class ImportTplMgServiceImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZExportTplMgBundle.service.impl.ExportTplMgImpl")
+public class ExportTplMgImpl extends FrameworkImpl {
 	@Autowired
-	private TzImpTplDfnTMapper TzImpTplDfnTMapper;
+	private TzExpTplDfnTMapper TzExpTplDfnTMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private FliterForm fliterForm;
 	
-	/* 加载导入模板列表 */
+	/* 加载导出模板列表 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart,
@@ -43,7 +43,7 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "TZ_TPL_ID", "ASC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_TPL_ID", "TZ_TPL_NAME", "TZ_TARGET_TBL", "TZ_JAVA_CLASS", "TZ_EXCEL_TPL", "TZ_ENABLE_MAPPING"};
+		String[] resultFldArray = { "TZ_TPL_ID", "TZ_TPL_NAME", "TZ_JAVA_CLASS"};
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
@@ -56,10 +56,7 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("tplId", rowList[0]);
 				mapList.put("tplName", rowList[1]);
-				mapList.put("targetTbl", rowList[2]);
 				mapList.put("javaClass", rowList[3]);
-				mapList.put("excelTpl", rowList[4]);
-				mapList.put("enableMapping", rowList[5]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
@@ -70,7 +67,7 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 	}
 	
 	
-	/* 获取HardCode定义信息 */
+	/* 获取导出模板信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -80,22 +77,19 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("tplId")) {
 				String tplId = jacksonUtil.getString("tplId");
-				TzImpTplDfnT tzImpTplDfnT=  TzImpTplDfnTMapper.selectByPrimaryKey(tplId);
-				if (tzImpTplDfnT != null) {
-					returnJsonMap.put("tplId", tzImpTplDfnT.getTzTplId());
-					returnJsonMap.put("tplName", tzImpTplDfnT.getTzTplName());
-					returnJsonMap.put("targetTbl", tzImpTplDfnT.getTzTargetTbl());
-					returnJsonMap.put("javaClass", tzImpTplDfnT.getTzJavaClass());
-					returnJsonMap.put("excelTpl", tzImpTplDfnT.getTzExcelTpl());
-					returnJsonMap.put("enableMapping", tzImpTplDfnT.getTzEnableMapping());
+				TzExpTplDfnT tzExpTplDfnT=  TzExpTplDfnTMapper.selectByPrimaryKey(tplId);
+				if (tzExpTplDfnT != null) {
+					returnJsonMap.put("tplId", tzExpTplDfnT.getTzTplId());
+					returnJsonMap.put("tplName", tzExpTplDfnT.getTzTplName());
+					returnJsonMap.put("javaClass", tzExpTplDfnT.getTzJavaClass());
 				} else {
 					errMsg[0] = "1";
-					errMsg[1] = "该导入模板不存在";
+					errMsg[1] = "该导出模板不存在";
 				}
 
 			} else {
 				errMsg[0] = "1";
-				errMsg[1] = "该导入模板不存在";
+				errMsg[1] = "该导出模板不存在";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,12 +125,12 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 					errMsg[0] = "1";
 					errMsg[1] = "HardCode点：" + hardCodeName + ",已经存在";
 				} else {
-					TzImpTplDfnT tzImpTplDfnT = new TzImpTplDfnT();
-					tzImpTplDfnT.setTzHardcodePnt(hardCodeName);
-					tzImpTplDfnT.setTzDescr254(hardCodeDesc);
-					tzImpTplDfnT.setTzHardcodeVal(hardCodeValue);
-					tzImpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
-					TzImpTplDfnTMapper.insert(tzImpTplDfnT);
+					TzExpTplDfnT tzExpTplDfnT = new TzExpTplDfnT();
+					tzExpTplDfnT.setTzHardcodePnt(hardCodeName);
+					tzExpTplDfnT.setTzDescr254(hardCodeDesc);
+					tzExpTplDfnT.setTzHardcodeVal(hardCodeValue);
+					tzExpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
+					TzExpTplDfnTMapper.insert(tzExpTplDfnT);
 				}
 			}
 		} catch (Exception e) {
@@ -168,12 +162,12 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
 				if (count > 0) {
-					TzImpTplDfnT tzImpTplDfnT = new TzImpTplDfnT();
-					tzImpTplDfnT.setTzHardcodePnt(hardCodeName);
-					tzImpTplDfnT.setTzDescr254(hardCodeDesc);
-					tzImpTplDfnT.setTzHardcodeVal(hardCodeValue);
-					tzImpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
-					TzImpTplDfnTMapper.updateByPrimaryKeyWithBLOBs(tzImpTplDfnT);
+					TzExpTplDfnT tzExpTplDfnT = new TzExpTplDfnT();
+					tzExpTplDfnT.setTzHardcodePnt(hardCodeName);
+					tzExpTplDfnT.setTzDescr254(hardCodeDesc);
+					tzExpTplDfnT.setTzHardcodeVal(hardCodeValue);
+					tzExpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
+					TzExpTplDfnTMapper.updateByPrimaryKeyWithBLOBs(tzExpTplDfnT);
 					
 				} else {
 					errMsg[0] = "1";
@@ -209,7 +203,7 @@ public class ImportTplMgServiceImpl extends FrameworkImpl {
 					// hardcode ID;
 					String hardCodeName = jacksonUtil.getString("hardCodeName");
 					if (hardCodeName != null && !"".equals(hardCodeName)) {
-						TzImpTplDfnTMapper.deleteByPrimaryKey(hardCodeName);
+						TzExpTplDfnTMapper.deleteByPrimaryKey(hardCodeName);
 					}
 				}
 			} catch (Exception e) {
