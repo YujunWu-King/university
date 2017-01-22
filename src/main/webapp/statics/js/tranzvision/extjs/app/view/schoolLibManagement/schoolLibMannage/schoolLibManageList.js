@@ -70,7 +70,8 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                 minWidth: 100
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.country","国家"),
-                dataIndex: 'country'
+                dataIndex: 'country',
+                minWidth: 150
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.maindepartment","主管部门"),
                 dataIndex: 'mainDeart',
@@ -88,12 +89,12 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.attribute","属性"),
                 dataIndex: 'attriBute',
-                minWidth: 100
+                minWidth: 250
                
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.dec","备注"),
                 dataIndex: 'adddec',
-                minWidth: 100
+                minWidth: 250
             
             },{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.State","洲"),

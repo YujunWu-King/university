@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZScoolLiblistManage.dao.PsTzPayLogTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZScoolLiblistManage.model.PsTzPayLogT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_NAME" property="tzSchoolName" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_NAMEENG" property="tzSchoolNameeng" jdbcType="VARCHAR" />
+    <result column="COUNTRY" property="country" jdbcType="VARCHAR" />
+    <result column="TZ_ZGBM" property="tzZgbm" jdbcType="VARCHAR" />
+    <result column="CITY" property="city" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_LEVEL" property="tzSchoolLevel" jdbcType="VARCHAR" />
+    <result column="tz_school_natrue" property="tzSchoolNatrue" jdbcType="VARCHAR" />
+    <result column="tz_school_type" property="tzSchoolType" jdbcType="VARCHAR" />
+    <result column="decstring" property="decstring" jdbcType="VARCHAR" />
+    <result column="tz_state" property="tzState" jdbcType="VARCHAR" />
+    <result column="tz_hemisphere" property="tzHemisphere" jdbcType="VARCHAR" />
+    <result column="TZ_ADDTIME" property="tzAddtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_SCHOOL_NAME, TZ_SCHOOL_NAMEENG, COUNTRY, TZ_ZGBM, CITY, TZ_SCHOOL_LEVEL, 
+    tz_school_natrue, tz_school_type, decstring, tz_state, tz_hemisphere, TZ_ADDTIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ps_tz_sch_lib_tbl
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ps_tz_sch_lib_tbl
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZScoolLiblistManage.model.PsTzPayLogT" >
+    insert into ps_tz_sch_lib_tbl (TZ_JG_ID, TZ_SCHOOL_NAME, TZ_SCHOOL_NAMEENG, 
+      COUNTRY, TZ_ZGBM, CITY, 
+      TZ_SCHOOL_LEVEL, tz_school_natrue, tz_school_type, 
+      decstring, tz_state, tz_hemisphere, 
+      TZ_ADDTIME)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzSchoolName,jdbcType=VARCHAR}, #{tzSchoolNameeng,jdbcType=VARCHAR}, 
+      #{country,jdbcType=VARCHAR}, #{tzZgbm,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{tzSchoolLevel,jdbcType=VARCHAR}, #{tzSchoolNatrue,jdbcType=VARCHAR}, #{tzSchoolType,jdbcType=VARCHAR}, 
+      #{decstring,jdbcType=VARCHAR}, #{tzState,jdbcType=VARCHAR}, #{tzHemisphere,jdbcType=VARCHAR}, 
+      #{tzAddtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZScoolLiblistManage.model.PsTzPayLogT" >
+    insert into ps_tz_sch_lib_tbl
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzSchoolName != null" >
+        TZ_SCHOOL_NAME,
+      </if>
+      <if test="tzSchoolNameeng != null" >
+        TZ_SCHOOL_NAMEENG,
+      </if>
+      <if test="country != null" >
+        COUNTRY,
+      </if>
+      <if test="tzZgbm != null" >
+        TZ_ZGBM,
+      </if>
+      <if test="city != null" >
+        CITY,
+      </if>
+      <if test="tzSchoolLevel != null" >
+        TZ_SCHOOL_LEVEL,
+      </if>
+      <if test="tzSchoolNatrue != null" >
+        tz_school_natrue,
+      </if>
+      <if test="tzSchoolType != null" >
+        tz_school_type,
+      </if>
+      <if test="decstring != null" >
+        decstring,
+      </if>
+      <if test="tzState != null" >
+        tz_state,
+      </if>
+      <if test="tzHemisphere != null" >
+        tz_hemisphere,
+      </if>
+      <if test="tzAddtime != null" >
+        TZ_ADDTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolName != null" >
+        #{tzSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolNameeng != null" >
+        #{tzSchoolNameeng,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZgbm != null" >
+        #{tzZgbm,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolLevel != null" >
+        #{tzSchoolLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolNatrue != null" >
+        #{tzSchoolNatrue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolType != null" >
+        #{tzSchoolType,jdbcType=VARCHAR},
+      </if>
+      <if test="decstring != null" >
+        #{decstring,jdbcType=VARCHAR},
+      </if>
+      <if test="tzState != null" >
+        #{tzState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHemisphere != null" >
+        #{tzHemisphere,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddtime != null" >
+        #{tzAddtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZScoolLiblistManage.model.PsTzPayLogT" >
+    update ps_tz_sch_lib_tbl
+    <set >
+      <if test="tzSchoolName != null" >
+        TZ_SCHOOL_NAME = #{tzSchoolName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolNameeng != null" >
+        TZ_SCHOOL_NAMEENG = #{tzSchoolNameeng,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        COUNTRY = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZgbm != null" >
+        TZ_ZGBM = #{tzZgbm,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        CITY = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolLevel != null" >
+        TZ_SCHOOL_LEVEL = #{tzSchoolLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolNatrue != null" >
+        tz_school_natrue = #{tzSchoolNatrue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolType != null" >
+        tz_school_type = #{tzSchoolType,jdbcType=VARCHAR},
+      </if>
+      <if test="decstring != null" >
+        decstring = #{decstring,jdbcType=VARCHAR},
+      </if>
+      <if test="tzState != null" >
+        tz_state = #{tzState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHemisphere != null" >
+        tz_hemisphere = #{tzHemisphere,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddtime != null" >
+        TZ_ADDTIME = #{tzAddtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZScoolLiblistManage.model.PsTzPayLogT" >
+    update ps_tz_sch_lib_tbl
+    set TZ_SCHOOL_NAME = #{tzSchoolName,jdbcType=VARCHAR},
+      TZ_SCHOOL_NAMEENG = #{tzSchoolNameeng,jdbcType=VARCHAR},
+      COUNTRY = #{country,jdbcType=VARCHAR},
+      TZ_ZGBM = #{tzZgbm,jdbcType=VARCHAR},
+      CITY = #{city,jdbcType=VARCHAR},
+      TZ_SCHOOL_LEVEL = #{tzSchoolLevel,jdbcType=VARCHAR},
+      tz_school_natrue = #{tzSchoolNatrue,jdbcType=VARCHAR},
+      tz_school_type = #{tzSchoolType,jdbcType=VARCHAR},
+      decstring = #{decstring,jdbcType=VARCHAR},
+      tz_state = #{tzState,jdbcType=VARCHAR},
+      tz_hemisphere = #{tzHemisphere,jdbcType=VARCHAR},
+      TZ_ADDTIME = #{tzAddtime,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

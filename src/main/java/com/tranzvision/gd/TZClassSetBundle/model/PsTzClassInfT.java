@@ -49,6 +49,14 @@ public class PsTzClassInfT {
 
     private Date syncdttm;
 
+    private String tzCsScorMdId;
+
+    private Float tzTtBl;
+
+    private String tzCsKsbqzId;
+
+    private String tzCsFmbqzId;
+
     private String tzClassDesc;
 
     public String getTzClassId() {
@@ -233,6 +241,38 @@ public class PsTzClassInfT {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzCsScorMdId() {
+        return tzCsScorMdId;
+    }
+
+    public void setTzCsScorMdId(String tzCsScorMdId) {
+        this.tzCsScorMdId = tzCsScorMdId == null ? null : tzCsScorMdId.trim();
+    }
+
+    public Float getTzTtBl() {
+        return tzTtBl;
+    }
+
+    public void setTzTtBl(Float tzTtBl) {
+        this.tzTtBl = tzTtBl;
+    }
+
+    public String getTzCsKsbqzId() {
+        return tzCsKsbqzId;
+    }
+
+    public void setTzCsKsbqzId(String tzCsKsbqzId) {
+        this.tzCsKsbqzId = tzCsKsbqzId == null ? null : tzCsKsbqzId.trim();
+    }
+
+    public String getTzCsFmbqzId() {
+        return tzCsFmbqzId;
+    }
+
+    public void setTzCsFmbqzId(String tzCsFmbqzId) {
+        this.tzCsFmbqzId = tzCsFmbqzId == null ? null : tzCsFmbqzId.trim();
     }
 
     public String getTzClassDesc() {

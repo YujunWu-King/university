@@ -16,51 +16,47 @@
         });
     </script>
 </head> 
-<body style="background:#fff">
-
-<!-- top start -->
-<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
-    <!---  网站标题头 begin--->
-    <!---  网站标题头 end---> 
+<body style="background:#eee;">
+<div id="all">
+	<!-- top start -->
+	<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
+	    <!---  网站标题头 begin--->
+	    <!---  网站标题头 end---> 
+	</div>
+	<!-- top end -->
 </div>
-<!-- top end -->
+
 <!-- content start -->
 <div id="main" class="main">
-
     <!-- left start -->
-    <div  id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="">
-        <!--左侧菜单 begin-->
-        <div>
-
+    <div class="zxj_left">
+	    <div id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="" style="height:560px;">
+	        <!--左侧菜单 begin-->
+	        <div style="height:100%;border-left:3px solid #e7ceeb;padding-top:25px;margin-left: 6%;">
+	        
+	        </div>
+	        <!--左侧菜单 end-->
+	    </div>
+	    
+	    <div class="friends">
+            	<div class="zxj_tit">友情链接</div>
         </div>
-        <!--左侧菜单 end-->
+        <div class="zxj_code"></div>
+	            
     </div>
     <!-- left end -->
 
     <!-- main start -->
-    <div class="main_inner">
-        <div class="main_inner_title">
-            <div class="main_inner_title_text_wide">%bind(:2)</div>
-        </div>
-
-		<div  id="content1" style="margin-left:0px;">
-			<div class="i-appointment" id="appointmentList"></div>
-		
-        </div>
+    <div class="main_mid_left">
+      <div class="main_tit">%bind(:2)</div>
+      <div class="zxj_main_body" id="appointmentList">
+      		
+      </div> 
     </div>
     <!-- main end -->
 </div>
 
-
-
-<div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="">
-    <!---替换结尾footer--begin->
-    <!---替换结尾footer--end-->
-</div>
-
-<div id="sqjdDIV" >
-
-</div>
+<div class="footer"></div>
 
 
 <script type="text/javascript">
@@ -72,51 +68,9 @@
         LoadWelcome("%bind(:4)","%bind(:5)","");
   		
         
-		var pctimezone = pcClientTimeZone();
-		onChangTimeZone(pctimezone);
-		/*
-		if($("#interviewtimezone").length > 0){
-			$("#interviewtimezone").val(pctimezone);
-			onChangTimeZone(pctimezone);
-		}
-
-		$("#interviewtimezone").change(function(){
-			var timezone = $("#interviewtimezone").val();
-			onChangTimeZone(timezone);
-		});
-		*/
+		onChangTimeZone("");
     });
 	
-	/*PC端时区*/
-	function pcClientTimeZone(){
-	     var munites = new Date().getTimezoneOffset();
-	     var hour = parseInt(munites / 60);
-	     var munite = munites % 60;
-	     var prefix = "-";
-
-	     if (hour < 0 || munite < 0) {
-	         prefix = "+";
-	         hour = -hour;
-	         if (munite < 0) {
-	              munite = -munite;
-	         }
-	     }
-		 if (hour ==0 && munite ==0){
-				prefix = "";
-		 }
-	     hour = hour + "";
-	     munite = munite + "";
-
-	     if (hour.length == 1) {
-	         hour = "0" + hour;
-	     }
-	     if (munite.length == 1) { 
-	         munite = "0" + munite;
-	     }
-	     return prefix + hour +":"+ munite+"01";
-	 }
-
-
 	function onChangTimeZone(timeZone){
 		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzGetAppointmentHtml","comParams":{"timeZone":"'+ timeZone +'"}}';
 		$.ajax({
@@ -136,8 +90,7 @@
 	function onConfirmAppointment(el, classId, pcId, planId){
 		if($(el).hasClass("btn-disabled")) return;
 
-		var timezone = $("#interviewtimezone").val();
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'","timezone":"'+ timezone +'"}}';
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'","timezone":""}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",

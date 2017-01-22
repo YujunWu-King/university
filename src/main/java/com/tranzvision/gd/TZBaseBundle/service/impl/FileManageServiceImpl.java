@@ -49,16 +49,19 @@ public class FileManageServiceImpl implements FileManageService {
 		if (!path.startsWith(ctxPath)) {
 			path = ctxPath + path;
 		}
-
+		
 		realPath = request.getServletContext().getRealPath(path);
+		System.out.println("第一次"+realPath);
 		if (null == realPath) {
 			try {
 				realPath = request.getSession().getServletContext().getRealPath(path);
+				System.out.println("第二次"+realPath);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "";
 			}
 		}
+		System.out.println("第三次"+realPath);
 		if (!"".equals(ctxPath)) {
 			String ctxPathName = ctxPath.replace("/", "");
 			if (realPath.contains("/")) {

@@ -9,6 +9,12 @@
     parentGridStore:"",
 
      initComponent:function(){
+     	
+     	var tagStore1 = new Ext.data.Store({
+            fields:['tagName','tagId'],
+            data:[]
+        });
+        
          Ext.apply(this,{
              items: [{
                  xtype: 'form',
@@ -250,7 +256,26 @@
                              hideLabel:true,
                              ignoreChangesFlag:true,
                              handler:"checkBoxAction"
-                         }
+                         },
+                         {   xtype:'tagfield',
+                            fieldLabel:'听众列表',
+                            name:'AudList',
+                            anyMatch:true,
+                            filterPickList: true,
+                            createNewOnEnter: true,
+                            createNewOnBlur: false,
+                            enableKeyEvents: true,
+                            ignoreChangesFlag:true,
+                            store: tagStore1,
+                            valueField: 'tagId',
+                            displayField: 'tagName',
+                            triggers: {
+                                search: {
+                                    cls: 'x-form-search-trigger',
+                                    handler: "searchListeners"
+                                }
+                            }
+                        }
                      ]
                  },
                  {

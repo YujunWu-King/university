@@ -378,5 +378,71 @@
 				}												  
 			},this);   
 	   }
-	}
+	},
+	addHotStyle:function(btn){
+		var form = this.getView().child("form").getForm();
+		var artTitle = form.findField("artTitle").getValue();
+		var styleTitle = artTitle+"<span><font color ='#6633CC'> HOT</font></span>";
+		form.findField("titleStyleView").setValue(styleTitle);
+		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
+	},
+	addNewStyle:function(btn){
+		var form = this.getView().child("form").getForm();
+		var artTitle = form.findField("artTitle").getValue();
+		var styleTitle = artTitle+"<span><font color ='#bb1914'> NEW</font></span>";
+		form.findField("titleStyleView").setValue(styleTitle);
+		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
+	},
+	addAudience:function(btn){
+        var arrAddAudience=[];
+        var addAudirec;
+        var arrAddAudiValue=[];
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_AUDIENCE_VW',
+            searchDesc: '选择听众',
+            maxRow:50,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                    TZ_AUD_NAME:{
+                        desc:'听众名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_AUD_ID:'听众ID',
+                TZ_AUD_NAME: '听众名称',
+                //TZ_ORG_CODE:'所属部门',
+                ROW_ADDED_DTTM:'创建时间'
+                // ROW_LASTMANT_DTTM:'修改时间'
+            },
+            multiselect: true,
+            callback: function(selection){
+                if(selection.length>0){
+                    for(j=0;j<selection.length;j++){
+                        addAudirec="";
+                        addAudirec = {"id":selection[j].data.TZ_AUD_ID,"desc":selection[j].data.TZ_AUD_NAME};
+                        arrAddAudience.push(addAudirec);
+                        arrAddAudiValue.push(selection[j].data.TZ_AUD_ID);
+                    };
+//                    var znxBulkDetForm = btn.findParentByType('panel').child('form');
+//                    //var storereceive=znxBulkDetForm.child('tagfield[reference="recever"]').getStore();
+//                    //storereceive.add(arrAddAudience);
+//                    //znxBulkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+//                    znxBulkDetForm.child('tagfield[reference="recever"]').addValue(arrAddAudiValue);
+//                    //znxBulkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+//
+//                    znxBulkDetForm.down('button[reference=clearAllBtn]').disabled=false;
+//                    znxBulkDetForm.down('button[reference=clearAllBtn]').removeCls('x-item-disabled x-btn-disabled')
+                }
+            }
+        })
+    }
 });

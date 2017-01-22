@@ -553,33 +553,30 @@ function reactivate(jgid){
 
 /*获取个人信息*/
 function getPerInfCard(){
-								var siteid=$("#siteid").val();
-
-								var oprate=$("#operator").val();
-
-								var orgid=$("#jgid").val();
-				
-								
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_PI_INFOCARD_STD","OperateType":"JHTML","comParams":{"orgId":"'+orgid+'","siteId":"'+siteid+'","typeflg":"perinfo","isd":"'+TZ_GD_SITEI_ISD+'"}}';
-
+	var siteid=$("#siteid").val();
+	var oprate=$("#operator").val();
+	var orgid=$("#jgid").val();
+	
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SEMINFOCARD_STD","OperateType":"JHTML","comParams":{"orgId":"'+orgid+'","siteId":"'+siteid+'","typeflg":"perinfo","isd":"'+TZ_GD_SITEI_ISD+'"}}';
+	
 	$.ajax({
-				type:"POST",
-				url:urlBegin,
-				data:{
-					tzParams:tzParams
-				},
-				dataType:'json',
-				success:function(response){	
-					$('#perInfoCard').prop('innerHTML', response.comContent);
-                    //原始高度;
-                    var tz_flds_h = 158;
-                    //展示的字段个数;
-                    var tz_fld_num=document.getElementById("tz_fld_num").value;
+		type:"POST",
+		url:urlBegin,
+		data:{
+			tzParams:tzParams
+		},
+		dataType:'json',
+		success:function(response){				
+			$('#perInfo').prop('innerHTML', response.comContent);
+				//原始高度;
+                var tz_flds_h = 158;
+                 //展示的字段个数;
+                    //var tz_fld_num=document.getElementById("tz_fld_num").value;
                     //如果字段个数大于6 ， 则高度按比例扩大;
-                    if (tz_fld_num > 6){
-                        var tmp = tz_fld_num - 6;
-                        tz_flds_h = tz_flds_h + tmp * 25;
-                    }
+                    //if (tz_fld_num > 6){
+                        //var tmp = tz_fld_num - 6;
+                        //tz_flds_h = tz_flds_h + tmp * 25;
+                    //}
                     //重新设置高度;
                     $("#perInfo").height(tz_flds_h|"px");
 
@@ -587,7 +584,7 @@ function getPerInfCard(){
 	    		failure: function () {
 				
 			  		alert(response.state.errdesc);
-	    		}    
+	    		},
 			});
 
 }
@@ -664,6 +661,35 @@ function openUpload2(){
         area: ['840px','610px'],
         iframe: {src:  photoUrl }
     });
+}
+
+
+function openUpload3(){
+    var photoUrl = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_UPPHOTO_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}');
+    /*up = $.layer({
+        type: 2,
+        title: false,
+        fix: false,
+        closeBtn: 2,
+        shadeClose: false,
+        shade : [0.3 , '#000' , true],
+        border : [3 , 0.3 , '#000', true],
+        offset: ['50%',''],
+        area: ['840px','610px'],
+        iframe: {src:  photoUrl }
+    });*/
+    up = layer.open({
+    	  type: 2,
+    	  title: false,
+    	  fixed: false,
+    	  closeBtn: 0,
+          shadeClose: true,
+          shade : [0.3 , '#000' , true],
+          border : [3 , 0.3 , '#000', true],
+          offset: ['10%',''],
+          area: ['840px','610px'],
+    	  content: photoUrl
+    	}); 
 }
 
 function tz_apply_click_to_signin_action2(displayURL) {

@@ -73,7 +73,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	@Autowired
 	private QuestionnaireEditorEngineImpl questionnaireEditorEngineImpl;
 
-	/* 查询信息项列表列表 */
+	/* 查询信息项可选值列表 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -97,7 +97,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 			// 查询总数;
 			String totalSQL = "select count(*) from PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=?";
 			total = jdbcTemplate.queryForObject(totalSQL, new Object[] { strCswjId, strWjId, strXxxBh }, "Integer");
-			String sql = "select TZ_XXXKXZ_MC,TZ_U_LIMIT,TZ_L_LIMIT,TZ_HISTORY_VAL,TZ_CURYEAR_VAL from  PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? order by TZ_ORDER LIMIT ?,?";
+			String sql = "select TZ_XXXKXZ_MC,TZ_XXXKXZ_MS,TZ_U_LIMIT,TZ_L_LIMIT,TZ_HISTORY_VAL,TZ_CURYEAR_VAL from  PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? order by TZ_ORDER LIMIT ?,?";
 			List<?> listData = jdbcTemplate.queryForList(sql,
 					new Object[] { strCswjId, strWjId, strXxxBh, numStart, numLimit });
 			for (Object objData : listData) {
@@ -108,8 +108,8 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_HISTORY_VAL")));
 				int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
 				String TZ_XXXKXZ_MC = String.valueOf(mapData.get("TZ_XXXKXZ_MC"));
-				String TZ_XXXKXZ_MS = jdbcTemplate.queryForObject("select TZ_XXXKXZ_MS from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?",new Object[] { strWjId, strXxxBh, TZ_XXXKXZ_MC }, "String");
-
+				//String TZ_XXXKXZ_MS = jdbcTemplate.queryForObject("select TZ_XXXKXZ_MS from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?",new Object[] { strWjId, strXxxBh, TZ_XXXKXZ_MC }, "String");
+				String TZ_XXXKXZ_MS=(mapData.get("TZ_XXXKXZ_MS")==null?"":String.valueOf(mapData.get("TZ_XXXKXZ_MS")));
 				Map<String, Object> mapJson = new HashMap<String, Object>();
 				mapJson.put("TZ_CS_WJ_ID", strCswjId);
 				mapJson.put("TZ_DC_WJ_ID", strWjId);
@@ -136,7 +136,10 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 	}
 
-	// 根据问卷模板创建在线调查，在线调查创建成功后，建立与当前测试问卷关联关系
+	/*开通在线调查
+	 * 根据问卷模板创建在线调查，在线调查创建成功后，建立与测试问卷之间的关系
+	 * */
+	
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -257,8 +260,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				/* 保存信息配置项表 */
 				questionnaireEditorEngineImpl.saveSurvy(TZ_DC_WJ_ID, mapData, userID, new String[2]);
 
-				/* 建立问卷和测试问卷之间的关系 不知道怎么只更新一个字段 暂时隐藏 */
-				System.out.println(csWjId + "-------------->" + TZ_DC_WJ_ID);
+				/* 建立问卷和测试问卷之间的关系*/
 				PsTzCswjTbl PsTzCswjTbl = new PsTzCswjTbl();
 				PsTzCswjTbl.setTzCsWjId(csWjId);
 				PsTzCswjTbl.setTzCsWjName(TZ_DC_WJBT);
@@ -288,9 +290,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						PsTzCswjDcxTbl.setTzXxxBh(TZ_XXX_BH);
 						PsTzCswjDcxTbl.setTzXxxDesc(TZ_TITLE);
 						PsTzCswjDcxTbl.setTzXxxMc(TZ_XXX_MC);
-
 						PsTzCswjDcxTblMapper.insert(PsTzCswjDcxTbl);
-						// System.out.println("==执行==PsTzCswjDcxTblMapper.insert()");
 					}
 				}
 
@@ -311,13 +311,14 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 								j = j + 1;
 								Map<String, Object> mbLJXSMap = new HashMap<String, Object>();
 								mbLJXSMap = cswjPctDataList.get(k);
-								
 								String TZ_XXXKXZ_MC = mbLJXSMap.get("TZ_XXXKXZ_MC") == null ? null: mbLJXSMap.get("TZ_XXXKXZ_MC").toString();
+								String TZ_XXXKXZ_MS = jdbcTemplate.queryForObject("select TZ_XXXKXZ_MS from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?",new Object[] { TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "String");
 								PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
 								PsTzCswjPctTbl.setTzCsWjId(csWjId);
 								PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);
 								PsTzCswjPctTbl.setTzXxxBh(TZ_XXX_BH);
 								PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
+								PsTzCswjPctTbl.setTzXxxkxzMs(TZ_XXXKXZ_MS);
 								PsTzCswjPctTbl.setTzOrder(j);
 
 								PsTzCswjPctTblMapper.insert(PsTzCswjPctTbl);
@@ -448,7 +449,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	}
 
 	/**
-	 * 更新调查项统计百分比配置
+	 * 更新调查项统计百分比配置(需要加以判断，百分比相加要么为0要么相加等于100,已经在JS端加以判断了)
 	 * 
 	 * @param actData
 	 * @param errMsg
@@ -458,10 +459,8 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -473,34 +472,31 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = jacksonUtil.getMap("data");
 
 				if ("PAGE".equals(typeFlag)) {
-
 					String TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
 					String TZ_DC_WJ_ID = String.valueOf(mapData.get("TZ_DC_WJ_ID"));
 					String TZ_XXX_BH = String.valueOf(mapData.get("TZ_XXX_BH"));
 
 					String TZ_XXXKXZ_MC = String.valueOf(mapData.get("TZ_XXXKXZ_MC"));
-
-					int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
-					int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
-					int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0
-							: Integer.valueOf(mapData.get("TZ_U_LIMIT").toString());
-					int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0
-							: Integer.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
-					int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
+					String TZ_XXXKXZ_MS = String.valueOf(mapData.get("TZ_XXXKXZ_MS"));
+					/*数字题的可选值编号自增*/
+					if(TZ_XXXKXZ_MC.equals("null")){
+						TZ_XXXKXZ_MC="" + getSeqNum.getSeqNum("PS_TZ_CSWJ_PCT_TBL", "TZ_XXXKXZ_MC");
+					}
+					int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
+					int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
+					int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Integer.valueOf(mapData.get("TZ_U_LIMIT").toString());
+					int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Integer.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
+					int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
 
 					String sqlGetMsgInfoTmp = "select count(*) from PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?";
-					int count = jdbcTemplate.queryForObject(sqlGetMsgInfoTmp,
-							new Object[] { TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "Integer");
+					int count = jdbcTemplate.queryForObject(sqlGetMsgInfoTmp,new Object[] { TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "Integer");
 					if (count > 0) {
-
 						PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
 						PsTzCswjPctTbl.setTzCsWjId(TZ_CS_WJ_ID);
 						PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);
 						PsTzCswjPctTbl.setTzXxxBh(TZ_XXX_BH);
 						PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
+						PsTzCswjPctTbl.setTzXxxkxzMs(TZ_XXXKXZ_MS);
 						PsTzCswjPctTbl.setTzCuryearVal(TZ_CURYEAR_VAL);
 						PsTzCswjPctTbl.setTzHistoryVal(TZ_HISTORY_VAL);
 						PsTzCswjPctTbl.setTzLLimit(TZ_L_LIMIT);
@@ -512,6 +508,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						PsTzCswjPctTbl.setTzCsWjId(TZ_CS_WJ_ID);
 						PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);
 						PsTzCswjPctTbl.setTzXxxBh(TZ_XXX_BH);
+						PsTzCswjPctTbl.setTzXxxkxzMs(TZ_XXXKXZ_MS);
 						PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
 						PsTzCswjPctTbl.setTzCuryearVal(TZ_CURYEAR_VAL);
 						PsTzCswjPctTbl.setTzHistoryVal(TZ_HISTORY_VAL);
@@ -529,5 +526,48 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return strRet;
+	}
+	
+	/*
+	 * 删除信息项配置表
+	 * */
+	@Override
+	@Transactional
+	public String tzDelete(String[] actData, String[] errMsg) {
+		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String strCswjID="";
+		try {
+
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
+				// 表单内容
+				String strForm = actData[num];
+				// 解析json
+				jacksonUtil.json2Map(strForm);
+				// 测试问卷编号;
+				 strCswjID = jacksonUtil.getString("TZ_CS_WJ_ID");
+				//问卷编号
+				String strWjID = jacksonUtil.getString("TZ_DC_WJ_ID");
+				//信息项编号
+				String strXxBh = jacksonUtil.getString("TZ_XXX_BH");
+				//信息项可选值编号
+				String strXxxKxzBh = jacksonUtil.getString("TZ_XXXKXZ_MC");
+				
+				if (strCswjID != null && !"".equals(strCswjID) && strWjID != null && !"".equals(strWjID)&&strXxBh != null && !"".equals(strXxBh)&&strXxxKxzBh != null && !"".equals(strXxxKxzBh)) {
+					PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
+					PsTzCswjPctTbl.setTzCsWjId(strCswjID);
+					PsTzCswjPctTbl.setTzDcWjId(strWjID);
+					PsTzCswjPctTbl.setTzXxxBh(strXxBh);
+					PsTzCswjPctTbl.setTzXxxkxzMc(strXxxKxzBh);
+					PsTzCswjPctTblMapper.deleteByPrimaryKey(PsTzCswjPctTbl);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return "{\"delete\":\"true\"}";
 	}
 }

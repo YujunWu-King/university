@@ -379,6 +379,7 @@
                             layout: {
                                 type: 'column'
                             },
+                            //bodyStyle:'padding:10px 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',
@@ -413,14 +414,14 @@
                                     search: {
                                         cls: 'x-form-search-trigger',
                                         handler: "choiceScoreModal"
-                                    },
+                                    }/*,
                                     clear: {
                                         cls: 'x-form-clear-trigger',
                                         handler: function(field){
                                             field.setValue();
                                             field.findParentByType('form').getForm().findField('clps_cj_modal_desc').setValue();
                                         }
-                                    }
+                                    }*/
                                 }
                             },{
                                 columnWidth:.5,
@@ -443,14 +444,14 @@
                                     search: {
                                         cls: 'x-form-search-trigger',
                                         handler: "choiceScoreModal"
-                                    },
+                                    }/*,
                                     clear: {
                                         cls: 'x-form-clear-trigger',
                                         handler: function(field){
                                             field.setValue();
                                             field.findParentByType('form').getForm().findField('msps_cj_modal_desc').setValue();
                                         }
-                                    }
+                                    }*/
                                 }
                             },{
                                 columnWidth:.5,
@@ -474,14 +475,14 @@
                                     search: {
                                         cls: 'x-form-search-trigger',
                                         handler: "bmb_mbChoice"
-                                    },
+                                    }/*,
                                     clear: {
                                         cls: 'x-form-clear-trigger',
                                         handler: function(field){
                                             field.setValue();
                                             field.findParentByType('form').getForm().findField('psbmb_mb_desc').setValue();
                                         }
-                                    }
+                                    }*/
                                 }
                             },{
                                 columnWidth:.5,
@@ -490,7 +491,96 @@
                                 name: 'psbmb_mb_desc',
                                 style:'margin-left:8px'
                             }]
+                        }/*20170118*/,{
+                            layout: {
+                                type: 'column'
+                            },
+                            //bodyStyle:'padding:0 0 10px 0',
+                            items:[{
+                                columnWidth:.5,
+                                xtype: 'textfield',
+                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.csmb_id","自动初筛成绩模型"),
+                                name: 'csmb_id',
+                                editable: false,
+                                triggers: {
+                                    search: {
+                                        cls: 'x-form-search-trigger',
+                                        handler: "choiceScoreModal"
+                                    }
+                                }
+                            },{
+                                columnWidth:.5,
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'csmb_desc',
+                                style:'margin-left:8px'
+                            }]
                         },{
+                            layout: {
+                                type: 'column'
+                            },
+                            //bodyStyle:'padding:0 0 10px 0',
+                            items:[{
+                                columnWidth:.5,
+                                xtype: 'textfield',
+                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.ttbl","自动初筛淘汰比率"),
+                                name: 'ttbl'
+                            },{
+                                columnWidth:.5,
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'ttbl2',
+                                style:'margin-left:8px'
+                            }]
+                        },{
+                            layout: {
+                                type: 'column'
+                            },
+                           // bodyStyle:'padding:0 0 10px 0',
+                            items:[{
+                                columnWidth:.5,
+                                xtype: 'textfield',
+                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.zdbq_id","自动标签规则"),
+                                name: 'zdbq_id',
+                                editable: false,
+                                triggers: {
+                                    search: {
+                                        cls: 'x-form-search-trigger',
+                                        handler: "choiceBqzModal"
+                                    }
+                                }
+                            },{
+                                columnWidth:.5,
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'zdbq_desc',
+                                style:'margin-left:8px'
+                            }]
+                        },{
+                            layout: {
+                                type: 'column'
+                            },
+                            //bodyStyle:'padding:0 0 10px 0',
+                            items:[{
+                                columnWidth:.5,
+                                xtype: 'textfield',
+                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.fmqd_id","负面清单规则"),
+                                name: 'fmqd_id',
+                                editable: false,
+                                triggers: {
+                                    search: {
+                                        cls: 'x-form-search-trigger',
+                                        handler: "choiceBqzModal"
+                                    }
+                                }
+                            },{
+                                columnWidth:.5,
+                                xtype: 'displayfield',
+                                hideLabel: true,
+                                name: 'fmqd_desc',
+                                style:'margin-left:8px'
+                            }]
+                        }/*20170118-end*/,{
                             xtype : 'tabpanel',
                             activeTab: 0,
                             plain:false,

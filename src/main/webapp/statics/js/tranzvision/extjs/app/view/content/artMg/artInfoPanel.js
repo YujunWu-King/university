@@ -13,11 +13,28 @@
 	    'KitchenSink.view.content.artMg.artInfoController',
 		'KitchenSink.view.content.artMg.artAttachmentModel',
         'KitchenSink.view.content.artMg.artAttachmentStore',
-        'KitchenSink.view.content.artMg.artPicStore'
+        'KitchenSink.view.content.artMg.artPicStore',
+		'KitchenSink.view.content.artMg.artColuModel',
+        'KitchenSink.view.content.artMg.artColuStore'
 	],
 	title: '内容详情', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	actType: 'add',//默认新增
+	constructor:function(obj){
+		this.coluId = obj.coluId;
+        this.callParent();
+    },
+	initComponent:function(){	
+	   var me=this;
+	   var artColuStore = new KitchenSink.view.content.artMg.artColuStore();
+	   var tzStoreParamsJson = {
+				"gridTyp":"COLU",
+				"coluId": me.coluId
+	   };
+	   artColuStore.tzStoreParams = Ext.JSON.encode(tzStoreParamsJson);
+	   artColuStore.load();
+  
+	Ext.apply(this,{
     items: [{
         xtype: 'form',
         reference: 'artInfoForm',
@@ -47,6 +64,28 @@
 			name: 'coluId',
 			hidden: true
         },{
+            xtype: 'tagfield',
+            fieldLabel:'栏目',
+            name: 'colus',
+            store: artColuStore,
+            valueField: 'coluIdDup',
+            displayField: 'coluName',
+            filterPickList:true,
+            createNewOnEnter: true,
+            createNewOnBlur: true,
+            queryMode: 'local',
+            listeners:{
+                'select': function(combo,record,index,eOpts)//匹配下拉值之后置空输入文字
+                {
+                    var me = this;
+                    me.inputEl.dom.value = "";
+                }
+            },
+            afterLabelTextTpl: [
+                                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                ],
+            allowBlank: false
+        },{
             xtype: 'textfield',
 			name: 'saveImageAccessUrl',
 			hidden: true
@@ -68,6 +107,65 @@
             ],
             allowBlank: false
         },{
+            xtype: 'displayfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题格式预览"),
+			name: 'titleStyleView',
+			maxLength : 254,
+			hidden:true
+        },{
+			xtype: 'form',
+			name:'setType',
+			layout: 'hbox',
+			width:'100%',
+			height:'100%',
+			defaults:{
+				margin:'0 0 0 20px',
+			},
+			items:[{
+				margin:'7px 35px 0 0',		
+				xtype:'label',
+				html:'<span style="font-weight:bold">'+ Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.addTitleStyle","标题格式") +':</span>'
+			},{
+				xtype:'button',
+                reference:'selectStuBtn',
+                text:'<span style="color:#fff">Hot</span>',
+                tooltip:Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.selectHotStyle","Hot格式"),
+                handler:'addHotStyle',
+                baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+			},{
+                xtype:'button',
+                reference:'clearAllBtn',
+                text:'<span style="color:#fff">New</span>',
+                tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.selectNewStyle","New格式"),
+                handler:'addNewStyle',
+                baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+            }]
+        },{
+            layout:{
+                type:'column'
+            },
+            items:[
+				 {
+                	margin:'7px 27px 0 0',		
+					xtype:'label',
+					name:'viewLabel',
+					html:'<span style="font-weight:bold">'+ Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题格式预览") +':</span>'
+				 },
+                {
+                    xtype:'component',
+                    margin:'3px 0 0 0',
+                    columnWidth:1.0,
+                    height: 40,
+                    itemId:'titleView',
+                    name:'titleView',
+                    border:1,
+                    style:{
+                        borderColor:'#ccc',
+                        overflow:'auto'
+                    }
+                }
+            ]
+            },{
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artShortTitle","简短标题"),
 			name: 'artShortTitle',
@@ -244,31 +342,28 @@
 			       inputValue : 'A'
 			    },{
 			    	xtype: 'radio',
-			    	boxLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.project","项目"),
-					name: 'limit',
+//			    	boxLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.project","项目"),
+			    	boxLabel:Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.audience","听众"),
+			    	name: 'limit',
 					inputValue : 'B'
-				}, {
+				},{
                     xtype: 'tagfield',
                     //fieldLabel:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.tag","标签"),
-                    name: 'projects',
+                    name: 'audience',
+                    reference: 'audience',
                     store:new KitchenSink.view.common.store.comboxStore({
-                        recname:'PS_TZ_PRJ_INF_T',
+                        recname:'PS_TZ_AUD_DEFN_T',
                         condition:{
                         	TZ_JG_ID:{
                                 value:Ext.tzOrgID,
                                 operator:'01',
                                 type:'01'
-                            },
-                            TZ_IS_OPEN:{
-                                value:"Y",
-                                operator:'01',
-                                type:'01'
                             }
                         },
-                        result:'TZ_PRJ_ID,TZ_PRJ_NAME'
+                        result:'TZ_AUD_ID,TZ_AUD_NAM'
                     }),
-                    valueField: 'TZ_PRJ_ID',
-                    displayField: 'TZ_PRJ_NAME',
+                    valueField: 'TZ_AUD_ID',
+                    displayField: 'TZ_AUD_NAM',
                     filterPickList:true,
                     createNewOnEnter: false,
                     createNewOnBlur: false,
@@ -280,6 +375,13 @@
                             me.inputEl.dom.value = "";
                         }
                     }
+                },{
+                	xtype:'button',
+                	reference:'selectAudBtn',
+                    text:'<span style="color:#fff">添加听众</span>',
+                    tooltip:Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.addAudienceTip","添加听众"),
+                    handler:'addAudience',
+                    baseCls:'x-btn x-unselectable x-column x-btn-default-small'
                 }]
 			}]
         },{
@@ -550,6 +652,9 @@
 					 name: 'publishUrl'
         }]
     }],
+	});
+	this.callParent();
+	},
     buttons: [{
 			text: '发布',
 			iconCls:"publish",

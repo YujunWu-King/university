@@ -1,6 +1,9 @@
 ﻿Ext.define('KitchenSink.view.template.survey.question.wjdcController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.wjdcController',
+    requires: [
+        'KitchenSink.view.template.survey.question.tagModel'
+    ],
 
     /*查询调查问卷*/
     findDcwj:function(btn){
@@ -270,6 +273,23 @@
                 }else{
                     form.findField("TZ_DC_WJ_NEEDPWD").setValue(false);
                 }
+                //问卷调查听众赋值
+                var audIDList=formData.AudID;
+                var audNameList=formData.AudName;
+                var oprIdArray=new Array();
+                var i=0,j=0;
+                for(j=0;j<audIDList.length;j++){
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audId = audIDList[j];
+                    var audName=audNameList[j];
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                form.findField("AudList").setValue(oprIdArray);
+            
+       
             });
 
         });
@@ -343,6 +363,8 @@
         var dtgz=form.findField("dtgz");
         //数据采集规则
         var sjcjgz=form.findField("sjcjgz");
+        //听众列表
+        var audList=form.findField("AudList");
         if(checked){ //如果选中，就隐藏掉,不显示
            dtgz.items.items[2].setHidden(true);
            sjcjgz.items.items[3].setHidden(true);
@@ -350,10 +372,12 @@
             {
                 sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
             }
+            audList.setVisible(false);
        } else{
             sjcjgz.setValue({TZ_DC_WJ_IPGZ:3});
             dtgz.items.items[2].setHidden(false);
             sjcjgz.items.items[3].setHidden(false);
+            audList.setVisible(true);
         }
     },
     /*问卷调查密码，默认隐藏，如果勾选，就表示需要密码，密码框显示*/
@@ -1292,6 +1316,63 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             function(data) {
                 console.log("问卷编号：" + data.id);
             },"",true,this);
+    },
+     //查看听众
+    searchListeners:function(btn){
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_AUDIENCE_VW',
+            searchDesc: '选择听众',
+            maxRow:20,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                    TZ_AUD_NAME:{
+                        desc:'听众名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_AUD_ID:'听众ID',
+                TZ_AUD_NAME: '听众名称',
+                //TZ_ORG_CODE:'所属部门',
+                ROW_ADDED_DTTM:'创建时间'
+                // ROW_LASTMANT_DTTM:'修改时间'
+            },
+            multiselect: true,
+            callback: function(selection){
+                var oprIdArray=new Array();
+                var i=0;
+                var listenersList=btn.findParentByType("form").getForm().findField("AudList");
+                var j= 0,k=0;
+                for (k=0;k<listenersList.valueCollection.items.length;k++){
+                    var listData=listenersList.valueCollection.items[k];;
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audName = listData.data.tagName;
+                    var audId=listData.data.tagId;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                for(j=0;j<selection.length;j++){
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audName = selection[j].data.TZ_AUD_NAME;
+                    var audId=selection[j].data.TZ_AUD_ID;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                };
+                btn.findParentByType("form").getForm().findField("AudList").setValue(oprIdArray);
+            }
+        })
     }
 });
 

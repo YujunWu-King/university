@@ -1,122 +1,13 @@
-	<div>%bind(:2)</div>
-	<div class="timeZone">
-		<span class="title">时间安排</span>
-		 
-		<!--<span class="label">Time Zone:</span>-->
-		<select id="interviewtimezone" class="chosen-select" name="interviewtimezone" style="display: none;">
-			<option value="-12:0001">(UTC-12:00) International Date Line West</option>
-			<option value="-11:0001">(UTC-11:00) Coordinated Universal Time-11</option>
-			<option value="-10:0001">(UTC-10:00) Hawaii</option>
-			<option value="-09:0001">(UTC-09:00) Alaska</option>
-			<option value="-08:0001">(UTC-08:00) Baja California</option>
-			<option value="-08:0001">(UTC-08:00) Pacific Time(US & Canada)</option>
-			<option value="-07:0001">(UTC-07:00) Arizona</option>
-			<option value="-07:0002">(UTC-07:00) Chihuahua, La Paz, Mazatlan</option>
-			<option value="-07:0003">(UTC-07:00) Mountain Time(US & Canada)</option>
-			<option value="-06:0001">(UTC-06:00) Central America</option>
-			<option value="-06:0002">(UTC-06:00) Central Time(US & Canada)</option>
-			<option value="-06:0003">(UTC-06:00) Guadalajara, Mexico City, Monterrey</option>
-			<option value="-06:0004">(UTC-06:00) Saskatchewan</option>
-			<option value="-05:0001">(UTC-05:00) Bogota, Lima, Quito, Rio Branco</option>
-			<option value="-05:0002">(UTC-05:00) Eastern Time(US & Canada)</option>
-			<option value="-05:0003">(UTC-05:00) Indiana(East)</option>
-			<option value="-04:3001">(UTC-04:30) Caracas</option>
-			<option value="-04:0001">(UTC-04:00) Asuncion</option>
-			<option value="-04:0002">(UTC-04:00) Atlantic Time(Canada)</option>
-			<option value="-04:0003">(UTC-04:00) Cuiaba</option>
-			<option value="-04:0004">(UTC-04:00) Georgetown, La Paz, Manaus, San Juan</option>
-			<option value="-04:0005">(UTC-04:00) Santiago</option>
-			<option value="-03:3001">(UTC-03:30) Newfoundland</option>
-			<option value="-03:0001">(UTC-03:00) Brasilia</option>
-			<option value="-03:0002">(UTC-03:00) Buenos Aires</option>
-			<option value="-03:0003">(UTC-03:00) Cayenne, Fortaleza</option>
-			<option value="-03:0004">(UTC-03:00) Greenland</option>
-			<option value="-03:0005">(UTC-03:00) Montevideo</option>
-			<option value="-03:0006">(UTC-03:00) Salvador</option>
-			<option value="-02:0001">(UTC-02:00) Coordinated Universal Time-02</option>
-			<option value="-01:0001">(UTC-01:00) Azores</option>
-			<option value="-01:0002">(UTC-01:00) Cabo Verde Is.</option>
-			<option value="00:0001">(UTC) Casablanca</option>
-			<option value="00:0002">(UTC) Coordinated Universal Time</option>
-			<option value="00:0003">(UTC) Dublin, Edinburgh, Lisbon, London</option>
-			<option value="00:0004">(UTC) Monrovia, Reykjavik</option>
-			<option value="+01:0001">(UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</option>
-			<option value="+01:0002">(UTC+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</option>
-			<option value="+01:0003">(UTC+01:00) Brussels, Copenhagen, Madrid, Paris</option>
-			<option value="+01:0004">(UTC+01:00) Sarajevo, Skopje, Warsaw, Zagreb</option>
-			<option value="+01:0005">(UTC+01:00) West Central Africa</option>
-			<option value="+01:0006">(UTC+01:00) Windhoek</option>
-			<option value="+02:0001">(UTC+02:00) Amman</option>
-			<option value="+02:0002">(UTC+02:00) Athens, Bucharest</option>
-			<option value="+02:0003">(UTC+02:00) Beirut</option>
-			<option value="+02:0004">(UTC+02:00) Cairo</option>
-			<option value="+02:0005">(UTC+02:00) Damascus</option>
-			<option value="+02:0006">(UTC+02:00) E. Europe</option>
-			<option value="+02:0007">(UTC+02:00) Harare, Pretoria</option>
-			<option value="+02:0008">(UTC+02:00) Helsinki, Kyiv, Riqa, Safia, Tallinn, Vilnius</option>
-			<option value="+02:0009">(UTC+02:00) Istanbul</option>
-			<option value="+02:0010">(UTC+02:00) Jerusalem</option>
-			<option value="+02:0011">(UTC+02:00) Kaliningrad(RTZ 1)</option>
-			<option value="+02:0012">(UTC+02:00) Tripoli</option>
-			<option value="+03:0001">(UTC+03:00) Baghdad</option>
-			<option value="+03:0002">(UTC+03:00) Kuwait, Riyadh</option>
-			<option value="+03:0003">(UTC+03:00) Minsk</option>
-			<option value="+03:0004">(UTC+03:00) Moscow, St. Petersburg, Volgograd(RTZ 2)</option>
-			<option value="+03:0005">(UTC+03:00) Nairobi</option>
-			<option value="+03:3001">(UTC+03:30) Tehran</option>
-			<option value="+04:0001">(UTC+04:00) Abu Dhabi, Muscat</option>
-			<option value="+04:0002">(UTC+04:00) Baku</option>
-			<option value="+04:0003">(UTC+04:00) Izhevsk, Samara(RTZ 3)</option>
-			<option value="+04:0004">(UTC+04:00) Port Louis</option>
-			<option value="+04:0005">(UTC+04:00) Tbilisi</option>
-			<option value="+04:0006">(UTC+04:00) Yerevan</option>
-			<option value="+04:3001">(UTC+04:30) Kabul</option>
-			<option value="+05:0001">(UTC+05:00) Ashgabat, Tashkent</option>
-			<option value="+05:0002">(UTC+05:00) Ekaterinburg(RTZ 4)</option>
-			<option value="+05:0003">(UTC+05:00) Islamabad, Karachi</option>
-			<option value="+05:3001">(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
-			<option value="+05:3002">(UTC+05:30) Sri Jayawardenepura</option>
-			<option value="+05:4501">(UTC+05:45) Kathmandu</option>
-			<option value="+06:0001">(UTC+06:00) Astana</option>
-			<option value="+06:0002">(UTC+06:00) Dhaka</option>
-			<option value="+06:0003">(UTC+06:00) Novosibirsk(RTZ 5)</option>
-			<option value="+06:3001">(UTC+06:30) Yangon(Rangoon)</option>
-			<option value="+07:0001">(UTC+07:00) Bangkok, Hanoi, Jakarta</option>
-			<option value="+07:0002">(UTC+07:00) Krasnoyarsk(RTZ 6)</option>
-			<option value="+08:0001">(UTC+08:00) Beijing, Chongqing, Hong Kong, Urumqi</option>
-			<option value="+08:0002">(UTC+08:00) Irkutsk(RTZ 7)</option>
-			<option value="+08:0003">(UTC+08:00) Kuala Lumpur, Singapore</option>
-			<option value="+08:0004">(UTC+08:00) Perth</option>
-			<option value="+08:0005">(UTC+08:00) TaiPei</option>
-			<option value="+08:0006">(UTC+08:00) Ulaanbaatar</option>
-			<option value="+09:0001">(UTC+09:00) Osaka, Sapporo, Tokyo</option>
-			<option value="+09:0002">(UTC+09:00) Seoul</option>
-			<option value="+09:0003">(UTC+09:00) Yakutsk(RTZ 8)</option>
-			<option value="+09:3001">(UTC+09:30) Adelaide</option>
-			<option value="+09:3002">(UTC+09:30) Darwin</option>
-			<option value="+10:0001">(UTC+10:00) Brisbane</option>
-			<option value="+10:0002">(UTC+10:00) Canberra, Melbourne, Sydney</option>
-			<option value="+10:0003">(UTC+10:00) Guam, Port Moresby</option>
-			<option value="+10:0004">(UTC+10:00) Hobart</option>
-			<option value="+10:0005">(UTC+10:00) Magadan</option>
-			<option value="+10:0006">(UTC+10:00) Vladivostok, Magadan(RTZ 9)</option>
-			<option value="+11:0001">(UTC+11:00) Chokurdakh(RTZ 10)</option>
-			<option value="+11:0002">(UTC+11:00) Solomon Is., New Caledonia</option>
-			<option value="+12:0001">(UTC+12:00) Anadyr, Petropavlovsk-Kamchatsky(RTZ 11)</option>
-			<option value="+12:0002">(UTC+12:00) Auckland, WellingTon</option>
-			<option value="+12:0003">(UTC+12:00) Coordinated Universal Time+12</option>
-			<option value="+12:0004">(UTC+12:00) Fiji</option>
-			<option value="+13:0001">(UTC+13:00) Nuku'alofa</option>
-			<option value="+13:0002">(UTC+13:00) Samoa</option>
-			<option value="+14:0001">(UTC+14:00) Kiritimati Island</option>
-		</select>
-	</div>
-	
-	<table align="center" border="0" cellpadding="0" cellspacing="0">
+	<p class="order_sm">%bind(:2)</p>
+	<table class="table_style" style="margin-top:10px;">
 		%bind(:1)
 	</table>
-	<div class="legend-area">
-		<span class="legend full"></span><span class="legend-label" style="position:relative;top:-4px;">预约人数已满</span>
-		<span class="legend avaliable"></span><span class="legend-label" style="position:relative;top:-4px;">可预约</span>
-		<span class="legend success"></span><span class="legend-label" style="position:relative;top:-4px;">已预约</span>
-	</div>
+    <div class="yuyue">
+    	<div class="yuyue_status">
+    	<i class="full"></i>
+    	<span>人数已满</span>
+    	<i class="order_p"></i>
+    	<span>可预约</span>
+    	<i class="my_order"></i>
+    	<span>我的预约</span>
+    </div>

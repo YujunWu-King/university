@@ -3,14 +3,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<title>%bind(:8)</title>
-		<link href="%bind(:13)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
-		<link href="%bind(:13)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="%bind(:13)/statics/js/lib/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="%bind(:13)/statics/js/onlineSurvey/layer/layer.js"></script>
-		<script type="text/javascript" src="%bind(:13)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<title>%bind(:7)</title>
+		<link href="%bind(:12)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
+		<link href="%bind(:12)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="%bind(:12)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:12)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:12)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
 		<script>
-			var passAuth = "%bind(:11)";				//是否密码安全
+			var passAuth = "%bind(:10)";				//是否密码安全
 			var tzGeneralURL = "%bind(:4)";
 			var beginURL = "%bind(:4)?classid=surveyapp&SURVEY_WJ_ID=%bind(:5)";
 			var surveyInsId = "%bind(:6)";
@@ -24,7 +24,7 @@
 					var targetVal = surveyInsId + "_" + templId + "_Y";
 					if(is_password && is_password === targetVal){
 						//Cookie中保存的密码，验证通过
-						location.href = beginURL + "&AC=%bind(:7)&F=Y";
+						location.href = beginURL + "&F=Y";
 					}else{
 						layer.prompt(
 							{
@@ -46,7 +46,7 @@
 											if(f.comContent.code && f.comContent.code == "0"){
 												layer.closeAll();
 												//新输入的密码，验证通过
-												location.href = beginURL + "&AC=%bind(:7)&F=Y";
+												location.href = beginURL + "&F=Y";
 											}else{
 												alert(f.comContent.msg);
 											}
@@ -60,7 +60,7 @@
 						);
 					}
 				}else{
-					location.href = beginURL + "&AC=%bind(:7)&F=Y";
+					location.href = beginURL + "&F=Y";
 				}
 			}
 		</script>
@@ -68,7 +68,7 @@
 	<body>
 		<div class="container">
 			<div class="top">
-				%bind(:9)
+				%bind(:8)
 				<div class="clear"></div>
 			</div>
 			<div class="uploadlogo">
@@ -78,7 +78,7 @@
 			<div class="maincon" style="min-height:300px;">
 				%bind(:2)
 			</div>
-			<div style="float:right;"><a href="#" onclick="javascript:begin()"><div class="pagebtn1">%bind(:10) ></div></a></div>
+			<div style="float:right;"><a href="#" onclick="javascript:begin()"><div class="pagebtn1">%bind(:9) ></div></a></div>
 			<div class="fotter">
 				%bind(:3)
 			</div>
@@ -92,7 +92,7 @@
 			return start == -1 ? '' : unescape(document.cookie.substring(start + name.length + 1, (end > start ? end : document.cookie.length)));
 		}
 
-		var templId = "%bind(:12)";					//模板ＩＤ
+		var templId = "%bind(:11)";					//模板ＩＤ
 		//是否密码安全
 		if(passAuth && passAuth === "Y"){
 			var is_password = getcookie("SURVEY_WJ_IS_PASSWORD");

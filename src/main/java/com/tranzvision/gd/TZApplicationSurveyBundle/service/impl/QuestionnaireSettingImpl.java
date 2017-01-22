@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjDyTMapper;
+import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzSureyAudTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
+import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzSureyAudT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZThemeMgBundle.model.PsTzPtZtxxTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -36,6 +39,9 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 	@Autowired
 	private HttpServletRequest request;
 	
+	@Autowired
+	private PsTzSureyAudTMapper PsTzSureyAudTMapper;
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 			String strComContent="{}";
@@ -99,24 +105,31 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		    TZ_DC_WJ_JSGZ=sruvyDataMap.get("TZ_DC_WJ_JSGZ")==null?"1":sruvyDataMap.get("TZ_DC_WJ_JSGZ").toString();
 		    //听众列表 听众不唯一？
 		    String strAudID,strAudName;
+		    
 		    //PS_TZ_SURVEY_AUD_T 数据表缺失？PS_TZ_AUDIENCE_VW?
-		    String sqlTag="SELECT TZ_AUD_ID FROM PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=?";
-		    List<String>AudIDList=new ArrayList<String>();
-		    	AudIDList=jdbcTemplate.queryForList(sqlTag, new Object[]{wjId});
+		    String sqlTag="SELECT A.TZ_AUD_ID,B.TZ_AUD_NAM FROM PS_TZ_SURVEY_AUD_T A,PS_TZ_AUDIENCE_VW B WHERE  A.TZ_AUD_ID=B.TZ_AUD_ID AND TZ_DC_WJ_ID=?";
+		    
+    
+		    List<Map<String, Object>>AudList=new ArrayList<Map<String, Object>>();
+		    AudList=jdbcTemplate.queryForList(sqlTag, new Object[]{wjId});
 		    List<String>AudNameList=new ArrayList<String>();
-		    if(AudIDList!=null&&AudIDList.size()>0)
-		    {
-		    	for(int i=0;i<AudIDList.size();i++)
-		    	{
-		    		strAudID=AudIDList.get(i);
-		    		if(strAudID==null)
-		    			continue;
-		    		//根据观众ID查询姓名
-		    		strAudName=jdbcTemplate.queryForObject("SELECT TZ_AUD_NAME FROM PS_TZ_AUDIENCE_VW WHERE TZ_AUD_ID=?", new Object[]{strAudID},"String");
-		    		//将观众名称放入数组中
-		    		AudNameList.add(strAudName);
-		    	}
-		    }
+		    List<String>AudIDList=new ArrayList<String>();
+		    
+			if (AudList != null && AudList.size() > 0) {
+				for (int i = 0; i < AudList.size(); i++) {
+					//AudList.get(i).get("TZ_AUD_ID");
+					//AudList.get(i).get("TZ_AUD_NAM");
+					AudNameList.add((String) AudList.get(i).get("TZ_AUD_NAM"));
+					AudIDList.add((String) AudList.get(i).get("TZ_AUD_ID"));
+					
+				}
+			}
+			sruvyDataMap.put("AudID",AudIDList);
+			sruvyDataMap.put("AudName",AudNameList);
+			System.out.println(sruvyDataMap.put("AudName",AudNameList));
+			
+			
+		    
 		    TZ_DC_WJ_JSRQ=sruvyDataMap.get("TZ_DC_WJ_JSRQ")==null?null:sruvyDataMap.get("TZ_DC_WJ_JSRQ").toString();
 		    TZ_DC_WJ_ZT=sruvyDataMap.get("TZ_DC_WJ_ZT")==null?"0":sruvyDataMap.get("TZ_DC_WJ_ZT").toString();
 		    TZ_DC_WJ_KSRQ=sruvyDataMap.get("TZ_DC_WJ_KSRQ")==null?null:sruvyDataMap.get("TZ_DC_WJ_KSRQ").toString();
@@ -191,6 +204,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		    
 		    //TZ_APPTPL_JSON_STR没有用到暂时移除
 		    sruvyDataMap.remove("TZ_APPTPL_JSON_STR");
+		    
 		    JacksonUtil josnUtil=new JacksonUtil();
 		    strComContent=josnUtil.Map2json(sruvyDataMap);
 		    strComContent="{\"formData\":"+strComContent+"}";
@@ -228,6 +242,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		return actResult;
 	}
 	/*更新信息*/
+	@SuppressWarnings("unchecked")
 	private String tzUpdateFattrInfo(String strForm,String[] errMsg){
 		System.out.println("==设置====tzUpdateFattrInfo执行");
 		//System.out.println("strForm:"+strForm);
@@ -483,15 +498,35 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 			psTzDcWjDyTWithBLOBs.setTzDcWjTlsj(TZ_DC_WJ_TLSJ);
 		}
 		//听众列表 将听众ID分离成为一个字符串数组
-		//if(dataMap.containsKey("AudList")&&dataMap.get("AudList")!=null){
-		//	ArrayList<String> strListenersId=new ArrayList<String>();
-		//	strListenersId=(ArrayList<String>) dataMap.get("AudList");
+		
+		if(dataMap.containsKey("AudList")&&dataMap.get("AudList")!=null){
+			ArrayList<String> strListenersId=new ArrayList<String>();
+			strListenersId=(ArrayList<String>) dataMap.get("AudList");
+			PsTzSureyAudT  PsTzSureyAudT=new PsTzSureyAudT();
+			for (int i = 0; i < strListenersId.size(); i++) {
+				
+				String sql = "select COUNT(1) from PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=? AND TZ_AUD_ID=?";
+				int count = jdbcTemplate.queryForObject(sql, new Object[]{TZ_DC_WJ_ID,(String) strListenersId.get(i)},"Integer");
+				if(count > 0){
+					
+				}else{
+					PsTzSureyAudT.setTzAudId((String) strListenersId.get(i));
+					PsTzSureyAudT.setTzDcWjId(TZ_DC_WJ_ID);
+                    PsTzSureyAudTMapper.insert(PsTzSureyAudT);
+
+				}
+			}
+				
+		}
 		//}
 		
 		/*去重判断*/ //听众列表 座位ID是什么鬼？
 		//String isRepeatedSQL="SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_JG_ID=? AND TZ_DC_WJBT=? AND TZ_DC_WJ_ID=? AND SETID=?";     
-		//List result=jdbcTemplate.queryForList(isRepeatedSQL, new Object[]{jgId,TZ_DC_WJBT,TZ_DC_WJ_ID,tmpSetID}) ;     
+		//List result=jdbcTemplate.queryForList(isRepeatedSQL, new Object[]{jgId,TZ_DC_WJBT,TZ_DC_WJ_ID,tmpSetID}) ;  
 		
+		
+		
+			
 		//保存数据 选择性      
 		psTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
 		return new JacksonUtil().Map2json(dataMap);

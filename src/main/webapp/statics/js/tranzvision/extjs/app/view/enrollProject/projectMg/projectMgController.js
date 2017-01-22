@@ -771,6 +771,10 @@
 			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ssmspscjmx","搜索面试评审成绩模型");
 			modal="msps_cj_modal";
 			modal_desc="msps_cj_modal_desc";
+		}else if(fieldName=="cs_cj_modal"){
+			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ssmspscjmx","搜索自动初筛成绩模型");
+			modal="cs_cj_modal";
+			modal_desc="cs_cj_modal_desc";
 		}
 		var form = this.getView().child("form").getForm();
 		Ext.tzShowPromptSearch({
@@ -809,6 +813,56 @@
 			callback: function(selection){
 				form.findField(modal).setValue(selection[0].data.TZ_SCORE_MODAL_ID);
 				form.findField(modal_desc).setValue(selection[0].data.TZ_MODAL_NAME);
+			} 
+		});
+	},
+	
+	//放大镜选择标签组20170118 ZXW
+	choiceBqzModal: function(btn){
+		var fieldName = btn.name;
+		var searchDesc,modal,modal_desc;
+		if(fieldName=='ksbq'){
+			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索自动标签规则");
+			bq="ksbq";
+			bq_desc="ksbq_desc";
+		}else if(fieldName=="fmqd"){
+			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索负面清单规则");
+			bq="fmqd";
+			bq_desc="fmqd_desc";
+		}
+		var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_BIAOQZ_T',
+			searchDesc: searchDesc,
+			maxRow:20,
+			condition:{
+				presetFields:{
+					TZ_JG_ID:{
+						value: Ext.tzOrgID,
+						type: '01'
+					}
+				},
+				srhConFields:{
+					TZ_BIAOQZ_ID:{
+						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tzBiaoqzId","标签组ID"),
+						operator:'07',
+						type:'01'
+					},
+					TZ_BIAOQZ_NAME:{
+						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tzBiaoqzName","标签组名称") ,
+						operator:'07',
+						type:'01'
+					}
+				}
+			},
+			srhresult:{
+				TZ_BIAOQZ_ID: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tzBiaoqzId","标签组ID"),
+				TZ_BIAOQZ_NAME:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tzBiaoqzName","标签组名称")
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField(bq).setValue(selection[0].data.TZ_BIAOQZ_ID);
+				form.findField(bq_desc).setValue(selection[0].data.TZ_BIAOQZ_NAME);
 			}
 		});
 	},

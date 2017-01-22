@@ -10,6 +10,7 @@ import java.util.Date;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormWrkTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhhsTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
@@ -148,12 +151,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
 	@Autowired
 	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
-
+	@Autowired
+	private PsTzKsTjxTblMapper psTzKsTjxTblMapper;
 	/* 报名表展示 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetHtmlContent(String comParams) {
 
+		//System.out.println("执行tzGetHtmlContent()"+"\n comParams:"+comParams);
 		// 返回值;
 		String str_appform_main_html = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -544,6 +549,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		if ("".equals(strMessageError)) {
 			if (numAppInsId > 0 && "BMB".equals(strTplType)) {
 				// 检查推荐信的完成状态
+				//System.out.println("numAppInsId:"+numAppInsId+" strTplId:"+strTplId);
 				this.checkRefletter(numAppInsId, strTplId);
 			}
 			// 执行页面加载事件-模版级事件开始
@@ -622,7 +628,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 				}
 
-				System.out.println(strXxxBh + ":" + strDivClass);
+				//System.out.println(strXxxBh + ":" + strDivClass);
 
 				if ("Y".equals(strIsAdmin)) {
 					strComplete = "";
@@ -676,7 +682,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			String strHisAppInsId = "";
 
 			Long numHisAppInsId = 0l;
-
+			//System.out.println("==执行到此==strAppInsId:"+strAppInsId);
 			if ("".equals(strAppInsId) || strAppInsId == null) {
 				if ("Y".equals(strCopyFrom)) {
 					String sqlGetHisAppInsId = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T A ,PS_TZ_CLASS_INF_T B "
@@ -685,11 +691,181 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							new Object[] { strAppOprId, strAppOrgId }, "String");
 					if (!"".equals(strHisAppInsId) && strHisAppInsId != null) {
 						numHisAppInsId = Long.parseLong(strHisAppInsId);
+						//-------------复制推荐信
+						//---0.去年的推荐信不为空，则进行“复制推荐信”操作
+						//记录已经提交的"推荐信实例ID"
+						String uLetterInsId="";
+						//查询“去年推荐信实例ID”  可能不止1个
+						sql="SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=?";
+						List<Map<String,Object>> letteInsIdList= sqlQuery.queryForList(sql, new Object[] { numHisAppInsId });
+						
+						if(letteInsIdList!=null){
+							for(int k=0;k<letteInsIdList.size();k++){
+								if(letteInsIdList.get(k).get("TZ_TJX_APP_INS_ID")==null||letteInsIdList.get(k).get("TZ_TJX_APP_INS_ID").equals("")){
+									continue;
+								}
+								//查询推荐信实例ID
+								String lastLetterInsId=letteInsIdList.get(k).get("TZ_TJX_APP_INS_ID").toString();
+								//"已提交"推荐信实例ID
+								sql="SELECT TZ_APP_INS_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=? AND TZ_APP_FORM_STA='U'";
+								uLetterInsId=sqlQuery.queryForObject(sql, new Object[] { lastLetterInsId }, "String");
+								//如果"都未提交",则给空字符串
+								if(uLetterInsId==null){
+									uLetterInsId="";
+								}
+								//查询"去年推荐信模板ID"
+								sql="SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+								String letterTplId=sqlQuery.queryForObject(sql, new Object[] { lastLetterInsId }, "String");
+								
+								//类型 是推荐信么？
+								sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
+								String useType = sqlQuery.queryForObject(sql, new Object[] { letterTplId }, "String");
+								
+								//System.out.println("==复制推荐信 执行==去年推荐信ID："+lastLetterInsId+" 推荐信模板ID:"+letterTplId+" useType："+useType);
+								
+								if("TJX".equals(useType)){
+									final String LAST_LETTER_SQL="SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ?";
+									List<Map<String,Object>>LetterList=new ArrayList<Map<String,Object>>();
+									LetterList=sqlQuery.queryForList(LAST_LETTER_SQL,new Object[]{lastLetterInsId});
+									//将所有的推荐信 信息复制过去  考生推荐信表
+									if(LetterList!=null){
+										//---1.向"报名表实例表"，加入报名表实例信息PS_TZ_APP_INS_T
+										Long tzAppInsId=Long.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
+										PsTzAppInsT psTzAppInsT=new PsTzAppInsT();
+										psTzAppInsT.setTzAppInsId(tzAppInsId);//报名表实例ID 新生成的
+										psTzAppInsT.setRowAddedOprid(oprid); //当前用户ID
+										psTzAppInsT.setTzAppTplId(strTplId);//当前报名表模板ID
+										psTzAppInsT.setTzAppinsJsonStr(strInsData);//从历史表中即将推送到前台的json，存入报名表实例表中
+										psTzAppInsT.setTzAppFormSta("S");
+										psTzAppInsTMapper.insertSelective(psTzAppInsT);
+										
+										//---2.将"班级"和"报名表"关系数据 存入  "PS_TZ_FORM_WRK_T"
+										PsTzFormWrkT psTzFormWrkT=new PsTzFormWrkT();
+										psTzFormWrkT.setTzClassId(strClassId);//班级ID
+										psTzFormWrkT.setOprid(oprid);//当前用户
+										psTzFormWrkT.setTzAppInsId(tzAppInsId);//报名表实例ID
+										psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
+										
+										//---3.向推荐信相关表中，加入”推荐信“信息  "PS_TZ_KS_TJX_TBL" 
+										for(int i=0;i<LetterList.size();i++){
+											Map<String, Object> letterMap = LetterList.get(i);
+											String tzRefLetterId=String.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));  
+											PsTzKsTjxTbl psTzKsTjxTbl=new PsTzKsTjxTbl();
+											psTzKsTjxTbl.setTzRefLetterId(tzRefLetterId);//主键 推荐信ID
+											psTzKsTjxTbl.setTzAppInsId(tzAppInsId);//关联报名表 实例ID
+											Long tzTjxAppInsId=Long.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+											psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId);	  //推荐信 报名表编号
+											psTzKsTjxTbl.setOprid(oprid);
+											if(letterMap.get("TZ_TJX_TYPE")!=null){
+												psTzKsTjxTbl.setTzTjxType(String.valueOf(letterMap.get("TZ_TJX_TYPE")));
+											}
+											if(letterMap.get("TZ_REFLETTERTYPE")!=null){
+												psTzKsTjxTbl.setTzReflettertype(String.valueOf(letterMap.get("TZ_REFLETTERTYPE")));
+											}
+											if(letterMap.get("TZ_TJR_ID")!=null){
+												psTzKsTjxTbl.setTzTjrId(String.valueOf(letterMap.get("TZ_TJR_ID")));
+											}
+											if(letterMap.get("TZ_MBA_TJX_YX")!=null){
+												psTzKsTjxTbl.setTzMbaTjxYx(String.valueOf(letterMap.get("TZ_MBA_TJX_YX")));
+											}
+											if(letterMap.get("TZ_REFERRER_NAME")!=null){
+												psTzKsTjxTbl.setTzReferrerName(String.valueOf(letterMap.get("TZ_REFERRER_NAME")));
+											}
+											if(letterMap.get("TZ_REFERRER_GNAME")!=null){
+												psTzKsTjxTbl.setTzReferrerGname(String.valueOf(letterMap.get("TZ_REFERRER_GNAME")));
+											}
+											if(letterMap.get("TZ_COMP_CNAME")!=null){
+												psTzKsTjxTbl.setTzCompCname(String.valueOf(letterMap.get("TZ_COMP_CNAME")));
+											}
+											if(letterMap.get("TZ_POSITION")!=null){
+												psTzKsTjxTbl.setTzPosition(String.valueOf(letterMap.get("TZ_POSITION")));
+											}
+											if(letterMap.get("TZ_TJX_TITLE")!=null){
+												psTzKsTjxTbl.setTzTjxTitle(String.valueOf(letterMap.get("TZ_TJX_TITLE")));
+											}
+											if(letterMap.get("TZ_TJR_GX")!=null){
+												psTzKsTjxTbl.setTzTjrGx(String.valueOf(letterMap.get("TZ_TJR_GX")));
+											}
+											if(letterMap.get("TZ_EMAIL")!=null){
+												psTzKsTjxTbl.setTzEmail(String.valueOf(letterMap.get("TZ_EMAIL")));
+											}
+											if(letterMap.get("TZ_PHONE_AREA")!=null){
+												psTzKsTjxTbl.setTzPhoneArea(String.valueOf(letterMap.get("TZ_PHONE_AREA")));
+											}
+											if(letterMap.get("TZ_PHONE")!=null){
+												psTzKsTjxTbl.setTzPhone(String.valueOf(letterMap.get("TZ_PHONE")));
+											}
+											if(letterMap.get("TZ_GENDER")!=null){
+												psTzKsTjxTbl.setTzGender(String.valueOf(letterMap.get("TZ_GENDER")));
+											}
+											if(letterMap.get("TZ_TJX_YL_1")!=null){
+												psTzKsTjxTbl.setTzTjxYl1(String.valueOf(letterMap.get("TZ_TJX_YL_1")));
+											}
+											if(letterMap.get("TZ_TJX_YL_2")!=null){
+												psTzKsTjxTbl.setTzTjxYl2(String.valueOf(letterMap.get("TZ_TJX_YL_2")));
+											}
+											if(letterMap.get("TZ_TJX_YL_3")!=null){
+												psTzKsTjxTbl.setTzTjxYl3(String.valueOf(letterMap.get("TZ_TJX_YL_3")));
+											}
+											if(letterMap.get("TZ_TJX_YL_4")!=null){
+												psTzKsTjxTbl.setTzTjxYl4(String.valueOf(letterMap.get("TZ_TJX_YL_4")));
+											}
+											if(letterMap.get("TZ_TJX_YL_5")!=null){
+												psTzKsTjxTbl.setTzTjxYl5(String.valueOf(letterMap.get("TZ_TJX_YL_5")));
+											}
+											if(letterMap.get("TZ_TJX_YL_6")!=null){
+												psTzKsTjxTbl.setTzTjxYl6(String.valueOf(letterMap.get("TZ_TJX_YL_6")));
+											}
+											if(letterMap.get("TZ_TJX_YL_7")!=null){
+												psTzKsTjxTbl.setTzTjxYl7(String.valueOf(letterMap.get("TZ_TJX_YL_7")));
+											}
+											if(letterMap.get("TZ_TJX_YL_8")!=null){
+												psTzKsTjxTbl.setTzTjxYl8(String.valueOf(letterMap.get("TZ_TJX_YL_8")));
+											}
+											if(letterMap.get("TZ_TJX_YL_9")!=null){
+												psTzKsTjxTbl.setTzTjxYl9(String.valueOf(letterMap.get("TZ_TJX_YL_9")));
+											}
+											if(letterMap.get("TZ_TJX_YL_10")!=null){
+												psTzKsTjxTbl.setTzTjxYl10(String.valueOf(letterMap.get("TZ_TJX_YL_10")));
+											}
+											if(letterMap.get("TZ_ATT_A_URL")!=null){
+												psTzKsTjxTbl.setTzAttAUrl(String.valueOf(letterMap.get("TZ_ATT_A_URL")));
+											}
+											if(letterMap.get("ATTACHSYSFILENAME")!=null){
+												psTzKsTjxTbl.setAttachsysfilename(String.valueOf(letterMap.get("ATTACHSYSFILENAME")));
+											}
+											if(letterMap.get("ATTACHUSERFILE")!=null){
+												psTzKsTjxTbl.setAttachuserfile(String.valueOf(letterMap.get("ATTACHUSERFILE")));
+											}
+												psTzKsTjxTbl.setRowAddedDttm(new Date());
+												psTzKsTjxTbl.setRowAddedOprid(oprid);
+												psTzKsTjxTbl.setRowLastmantDttm(new Date());
+												psTzKsTjxTbl.setRowLastmantOprid(oprid);
+											if(letterMap.get("SYNCID")!=null&&letterMap.get("SYNCID")!=""){
+												psTzKsTjxTbl.setSyncid(Integer.valueOf(String.valueOf(letterMap.get("SYNCID"))));
+											}
+												psTzKsTjxTbl.setSyncdttm(new Date());
+											if(letterMap.get("TZ_ACCESS_PATH")!=null){
+												psTzKsTjxTbl.setTzAccessPath(String.valueOf(letterMap.get("TZ_ACCESS_PATH")));
+											}
+											psTzKsTjxTblMapper.insertSelective(psTzKsTjxTbl);
+										}
+										//---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId
+										//strAppInsId=String.valueOf(tzAppInsId);
+										//System.out.println("strAppInsId:"+strAppInsId);
+										
+										//---4.通过新产生的"报名表实例ID"信息,再次调用getHtmlContent()方法
+										String tempComParams="'TZ_CLASS_ID':'"+strClassId+"','SITE_ID':'"+strSiteId+"','TZ_APP_INS_ID':'"+tzAppInsId+"','TZ_REF_LETTER_ID':'"+uLetterInsId+"','TZ_MANAGER':'"+strManagerView+"','APPCOPY':'"+strCopyFrom+",'TZ_APP_TPL_ID':'"+strAttachedTplId+"','isEdit':'"+strIsEdit+"'";
+										this.tzGetHtmlContent(tempComParams);
+									}
+								}
+							}
+						}
+						//-----------------复制推荐信 代码结束
 						strInsData = tzOnlineAppHisServiceImpl.getHisAppInfoJson(numHisAppInsId, strTplId);
 						// strInsData =
 						// tzOnlineAppViewServiceImpl.getHisAppInfoJson(numHisAppInsId,
 						// strTplId);
-
 					}
 				}
 			}
