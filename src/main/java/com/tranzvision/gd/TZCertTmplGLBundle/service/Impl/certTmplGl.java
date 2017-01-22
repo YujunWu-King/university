@@ -25,7 +25,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * 证书模版管理
  * @author tang
  */
-@Service("com.tranzvision.gd.TZCertTmplGLBundle.service.impl.certTmplGl")
+@Service("com.tranzvision.gd.TZCertTmplGLBundle.service.Impl.certTmplGl")
 public class certTmplGl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
