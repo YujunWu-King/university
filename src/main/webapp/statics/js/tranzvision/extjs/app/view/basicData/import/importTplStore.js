@@ -6,6 +6,6 @@ Ext.define('KitchenSink.view.basicData.import.importTplStore', {
 		pageSize: 10,
 		comID: 'TZ_IMP_TPL_COM',
 		pageID: 'TZ_TPL_LST_STD',
-		tzStoreParams: '{"cfgSrhId":"TZ_IMP_TPL_COM.TZ_TPL_LST_STD.TZ_IMP_DFN_TBL"}',
+		tzStoreParams: '{"cfgSrhId":"TZ_IMP_TPL_COM.TZ_TPL_LST_STD.TZ_IMP_TPL_DFN_T"}',
 		proxy: Ext.tzListProxy()
 });
