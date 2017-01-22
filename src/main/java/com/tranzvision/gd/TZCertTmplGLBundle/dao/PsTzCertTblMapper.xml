@@ -21,7 +21,7 @@
   <sql id="Base_Column_List" >TZ_JG_ID,TZ_CERT_TMPL_ID,TZ_TMPL_NAME,TZ_CERT_JG_ID,TZ_USE_FLAG,TZ_CERT_MERG_HTML1,TZ_CERT_MERG_HTML2,TZ_CERT_MERG_HTML3,TZ_ATTACHSYSFILENA,ROW_ADDED_DTTM,ROW_ADDED_OPRID,ROW_LASTMANT_DTTM,ROW_LASTMANT_OPRID,SYNCID,SYNCDTTM</sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
-    <include refid="Base_Column_List" />from PS_TZ_CERTTMPL_TBL    where TZ_JG_ID= #{tzJgId,jdbcType=VARCHAR} and TZ_CERT_TMPL_ID=#{tzCertTmpl,jdbcType=VARCHAR}</select>
+    <include refid="Base_Column_List" ></include>from PS_TZ_CERTTMPL_TBL    where TZ_JG_ID= #{tzJgId,jdbcType=VARCHAR} and TZ_CERT_TMPL_ID=#{tzCertTmpl,jdbcType=VARCHAR}</select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >delete from PS_TZ_CERTTMPL_TBL    where TZ_JG_ID= #{tzJgId,jdbcType=VARCHAR} and TZ_CERT_TMPL_ID=#{tzCertTmpl,jdbcType=VARCHAR}</delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZClassDefnBundle.model.PsTzAppclsTbl" >insert into PS_TZ_CERTTMPL_TBL (TZ_JG_ID,TZ_CERT_TMPL_ID,TZ_TMPL_NAME,TZ_CERT_JG_ID,TZ_USE_FLAG,TZ_CERT_MERG_HTML1,TZ_CERT_MERG_HTML2,TZ_CERT_MERG_HTML3,TZ_ATTACHSYSFILENA,ROW_ADDED_DTTM,ROW_ADDED_OPRID,ROW_LASTMANT_DTTM,ROW_LASTMANT_OPRID,SYNCID SYNCDTTM)</insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCertTmplTbl;" >update  PS_TZ_CERTTMPL_TBL<set >

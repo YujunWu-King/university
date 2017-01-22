@@ -68,7 +68,7 @@ public class PsTzCertTmplTbl {
     }
 
 
-    public void setTzUseFlag(String tzAppclsId) {
+    public void setTzUseFlag(String tzUseFlag) {
         this.tzUseFlag = tzUseFlag == null ? null : tzUseFlag.trim();
     }
     public String getTzCertMergHtml1() {
