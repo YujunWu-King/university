@@ -5,10 +5,11 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.Ueditor',
-        'Ext.ux.ProgressBarPager'
+        'Ext.ux.ProgressBarPager',
+        'KitchenSink.view.qklZsmb.zsmbController'
     ],
     extend : 'Ext.panel.Panel',
-    controller:'',
+    controller:'zsmbController',
     autoScroll:false,
     actType:'add',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
