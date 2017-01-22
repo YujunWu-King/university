@@ -379,6 +379,7 @@
                             layout: {
                                 type: 'column'
                             },
+                            //bodyStyle:'padding:10px 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',
@@ -494,7 +495,7 @@
                             layout: {
                                 type: 'column'
                             },
-                            bodyStyle:'padding:0 0 10px 0',
+                            //bodyStyle:'padding:0 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',
@@ -518,11 +519,11 @@
                             layout: {
                                 type: 'column'
                             },
-                            bodyStyle:'padding:0 0 10px 0',
+                            //bodyStyle:'padding:0 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',
-                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.ttbl","淘汰比率"),
+                                fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.ttbl","自动初筛淘汰比率"),
                                 name: 'ttbl'
                             },{
                                 columnWidth:.5,
@@ -535,7 +536,7 @@
                             layout: {
                                 type: 'column'
                             },
-                            bodyStyle:'padding:0 0 10px 0',
+                           // bodyStyle:'padding:0 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',
@@ -559,7 +560,7 @@
                             layout: {
                                 type: 'column'
                             },
-                            bodyStyle:'padding:0 0 10px 0',
+                            //bodyStyle:'padding:0 0 10px 0',
                             items:[{
                                 columnWidth:.5,
                                 xtype: 'textfield',

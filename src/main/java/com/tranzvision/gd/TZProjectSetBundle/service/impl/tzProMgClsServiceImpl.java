@@ -196,19 +196,19 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 							"String");
 					map.replace("cs_cj_modal_desc", strCsScoreModelName);
 
-					/* 自动标签规则描述 20170118 TZ_CS_KSBQZ_ID */
+					/* 负面清单规则描述 20170118 TZ_CS_KSBQZ_ID */
 					sql = "SELECT TZ_BIAOQZ_NAME FROM PS_TZ_BIAOQZ_T WHERE TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
-					String strtTzCsFmbqzId = psTzPrjInfT.getTzAppproTmpId();
+					String strtTzCsFmbqzId = psTzPrjInfT.getTzCsFmbqzId();
 					String strtTzCsFmbqzDesc = sqlQuery.queryForObject(sql, new Object[] { orgid,strtTzCsFmbqzId },
 							"String");
-					map.replace("appScheduModName", strtTzCsFmbqzDesc);
+					map.replace("fmqd_desc", strtTzCsFmbqzDesc);
 					
-					/* 负面清单规则描述 20170118 TZ_CS_FMBQZ_ID */
+					/* 自动标签规则描述 20170118 TZ_CS_FMBQZ_ID */
 					sql = "SELECT TZ_BIAOQZ_NAME FROM PS_TZ_BIAOQZ_T WHERE TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
-					String strtTzCsKsbqzId = psTzPrjInfT.getTzAppproTmpId();
+					String strtTzCsKsbqzId = psTzPrjInfT.getTzCsKsbqzId();
 					String strtTzCsKsbqzDesc = sqlQuery.queryForObject(sql, new Object[] { orgid,strtTzCsKsbqzId },
 							"String");
-					map.replace("appScheduModName", strtTzCsKsbqzDesc);
+					map.replace("ksbq_desc", strtTzCsKsbqzDesc);
 					
 					/* 项目发布的站点 */
 					ArrayList<String> sites = new ArrayList<>();

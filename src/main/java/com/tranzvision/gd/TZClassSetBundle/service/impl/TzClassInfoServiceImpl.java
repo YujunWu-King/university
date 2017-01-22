@@ -447,7 +447,14 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzCsScorMdId(psTzClassInfT.getTzCsScorMdId());
 					psTzClassInfT.setTzCsFmbqzId(psTzClassInfT.getTzCsFmbqzId());
 					psTzClassInfT.setTzCsKsbqzId(psTzClassInfT.getTzCsKsbqzId());
-					psTzClassInfT.setTzTtBl(psTzClassInfT.getTzTtBl());
+					float floatTtBl = 0f;
+					if (psTzClassInfT.getTzTtBl()== null){
+						floatTtBl = 0f;
+					}else {
+						floatTtBl = psTzClassInfT.getTzTtBl();
+					}						
+					psTzClassInfT.setTzTtBl(floatTtBl);
+					//psTzClassInfT.setTzTtBl(psTzClassInfT.getTzTtBl());
 					/*20170119-end*/
 					int rst = psTzClassInfTMapper.insert(psTzClassInfT);
 
@@ -680,11 +687,8 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 							mapData.get("fmqd_id") == null ? "" : String.valueOf(mapData.get("fmqd_id")));
 					psTzClassInfT.setTzCsKsbqzId(
 							mapData.get("zdbq_id") == null ? "" : String.valueOf(mapData.get("zdbq_id")));					
-//				float ttbltest =(float)(mapData.get("ttbl"));  
 					float ttbltest =Float.valueOf((mapData.get("ttbl").toString()));
-				psTzClassInfT.setTzTtBl(
-						mapData.get("ttbl") == null ? 0 : ttbltest);
-					//psTzClassInfT.setTzTtBl(mapData.get("ttbl") == null ? 0 : ((float)(mapData.get("ttbl"))));
+			    	psTzClassInfT.setTzTtBl(mapData.get("ttbl") == null ? 0 : ttbltest);
 					/*20170118-end*/
 					String str_xs = mapData.get("bj_xs") == null ? "" : String.valueOf(mapData.get("bj_xs"));
 					if ("true".equals(str_xs)) {

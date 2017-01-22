@@ -19,6 +19,8 @@ import com.tranzvision.gd.util.base.JacksonUtil;
  * 
  * @author SHIHUA
  * @since 2016-01-28
+ * @author ZXW  2017-01-21
+ * 功能修改说明：新增班级的时候，同时给材料面试初筛相关字段赋值
  */
 @Service("com.tranzvision.gd.TZClassSetBundle.service.impl.TzClassMgServiceImpl")
 public class TzClassMgServiceImpl extends FrameworkImpl {

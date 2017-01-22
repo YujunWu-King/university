@@ -567,7 +567,7 @@ function getPerInfCard(){
 		},
 		dataType:'json',
 		success:function(response){				
-			$('#perInfoCard').prop('innerHTML', response.comContent);
+			$('#perInfo').prop('innerHTML', response.comContent);
 				//原始高度;
                 var tz_flds_h = 158;
                  //展示的字段个数;
