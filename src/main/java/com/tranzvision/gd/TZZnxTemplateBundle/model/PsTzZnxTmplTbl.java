@@ -77,11 +77,11 @@ public class PsTzZnxTmplTbl extends PsTzZnxTmplTblKey {
         this.tzTmplDesc = tzTmplDesc == null ? null : tzTmplDesc.trim();
     }
 
-    public String getTzMalSubjuect() {
+    public String getTzZnxSubjuect() {
         return tzZnxSubjuect;
     }
 
-    public void setTzMalSubjuect(String tzZnxSubjuect) {
+    public void setTzZnxSubjuect(String tzZnxSubjuect) {
         this.tzZnxSubjuect = tzZnxSubjuect == null ? null : tzZnxSubjuect.trim();
     }
 

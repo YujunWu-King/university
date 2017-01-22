@@ -136,7 +136,10 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 	}
 
-	// 根据问卷模板创建在线调查，在线调查创建成功后，建立与当前测试问卷关联关系
+	/*
+	 * 根据问卷模板创建在线调查，在线调查创建成功后，建立与测试问卷之间的关系
+	 * */
+	
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -257,7 +260,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				/* 保存信息配置项表 */
 				questionnaireEditorEngineImpl.saveSurvy(TZ_DC_WJ_ID, mapData, userID, new String[2]);
 
-				/* 建立问卷和测试问卷之间的关系 不知道怎么只更新一个字段 暂时隐藏 */
+				/* 建立问卷和测试问卷之间的关系*/
 				System.out.println(csWjId + "-------------->" + TZ_DC_WJ_ID);
 				PsTzCswjTbl PsTzCswjTbl = new PsTzCswjTbl();
 				PsTzCswjTbl.setTzCsWjId(csWjId);
@@ -448,7 +451,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	}
 
 	/**
-	 * 更新调查项统计百分比配置
+	 * 更新调查项统计百分比配置(需要加以判断，百分比相加要么为0要么相加等于100,已经在JS端加以判断了)
 	 * 
 	 * @param actData
 	 * @param errMsg
@@ -458,10 +461,8 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-
 			int dataLength = actData.length;
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
@@ -480,22 +481,15 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 
 					String TZ_XXXKXZ_MC = String.valueOf(mapData.get("TZ_XXXKXZ_MC"));
 
-					int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
-					int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
-					int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0
-							: Integer.valueOf(mapData.get("TZ_U_LIMIT").toString());
-					int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0
-							: Integer.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
-					int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0
-							: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
+					int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
+					int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
+					int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Integer.valueOf(mapData.get("TZ_U_LIMIT").toString());
+					int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Integer.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
+					int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
 
 					String sqlGetMsgInfoTmp = "select count(*) from PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?";
-					int count = jdbcTemplate.queryForObject(sqlGetMsgInfoTmp,
-							new Object[] { TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "Integer");
+					int count = jdbcTemplate.queryForObject(sqlGetMsgInfoTmp,new Object[] { TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "Integer");
 					if (count > 0) {
-
 						PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
 						PsTzCswjPctTbl.setTzCsWjId(TZ_CS_WJ_ID);
 						PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);

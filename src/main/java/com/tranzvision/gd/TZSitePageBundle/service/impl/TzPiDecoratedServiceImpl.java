@@ -221,19 +221,6 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 									"查看新闻及活动范围设置：<a href=\"javaScript: void(0);\" onclick=\"selectNewsProject("+siteId+");\" ><img src=\""+ctxPath+"/statics/images/tranzvision/sz.png\" width=\"25px;\" height=\"25px;\"></a>");
 					
 					break;
-					
-				case "TZ_REMIND":
-					//TZ_ZNX_STATUS '0':未查看； TZ_REC_DELSTATUS '1'：未删除；
-					sql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_STATUS ='0' and TZ_REC_DELSTATUS = '1' and TZ_ZNX_RECID = ?";
-					int tz_count_num = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "int");
-				    String tz_unread_num = String.valueOf(tz_count_num);
-					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
-							str_TZ_REG_FIELD_NAME, "您有"+tz_unread_num+"条未读", String.valueOf(td_long));
-
-					strResult_fld_aleft = strResult_fld_aleft
-							+ tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFldAleft", str_TZ_REG_FIELD_NAME,"您有"+
-									tz_unread_num+"条未读", String.valueOf(td_long));
-					break;
 
 				default:
 

@@ -498,7 +498,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				e.printStackTrace();
 			}
 			String strXxxBh, strComLmc, strXxxKxzMs, strXxxKxzQz, strXxxKxzCode, strAppStext;
+			@SuppressWarnings("unused")
 			String strRadioBoxHtml, strRadioBoxHtml2;
+			String strCategories;
 			// 是否计算分值字段TZ_IS_AVG
 			String TZ_IS_AVG = "N";
 			String TZ_XXX_QID = "";
@@ -507,11 +509,16 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			double avgScore = 0;
 			int countY, count;
 			double tempCount;
+			//表格显示颜色
+			String[] arrColor = {
+					"#FF4700","#F10EF1","#03FC26","#3030CF","#FCF503","#640A62","#245D2C","#1A5267",
+	            	"#6A0A03","#C60210","#678B1A","#B8860B","#6F7CBC","#6F7CBC","#7b68ee","#cd5c5c"		
+			};
 			// 用来保留小数2位位数
 			DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
 			// 所有循环的索引都用index,i,j
-			final String dcwjXxxPzSQL = "select TZ_XXX_BH,TZ_TITLE,TZ_XXX_QID,TZ_COM_LMC,TZ_IS_AVG  from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=? and  TZ_COM_LMC not in ('PageNav') order by TZ_ORDER";
+			final String dcwjXxxPzSQL = "select TZ_XXX_BH,TZ_TITLE,TZ_XXX_QID,TZ_COM_LMC,TZ_IS_AVG  from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=?   and TZ_COM_LMC not in ('PageNav') order by TZ_ORDER";
 			List<Map<String, Object>> dcwjXxxPzDataList = new ArrayList<Map<String, Object>>();
 			dcwjXxxPzDataList = sqlQuery.queryForList(dcwjXxxPzSQL, new Object[] { wjid });
 			if (dcwjXxxPzDataList != null) {
@@ -532,7 +539,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						avgScore = 0;
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
-
+						strCategories="";
 						final String radioBoxSQL = "select TZ_XXXKXZ_MS,TZ_XXXKXZ_MC,TZ_XXXKXZ_QZ from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and  TZ_XXX_BH=? order by TZ_ORDER";
 						List<Map<String, Object>> radioBoxDataList = new ArrayList<Map<String, Object>>();
 						radioBoxDataList = sqlQuery.queryForList(radioBoxSQL, new Object[] { wjid, strXxxBh });
@@ -545,7 +552,6 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								strXxxKxzMs = radioBoxMap.get("TZ_XXXKXZ_MS") == null ? null : radioBoxMap.get("TZ_XXXKXZ_MS").toString();
 								// 单选题 可选值名称(这里实际是选项题号)
 								strXxxKxzCode = radioBoxMap.get("TZ_XXXKXZ_MC") == null ? null : radioBoxMap.get("TZ_XXXKXZ_MC").toString();
-
 								final String SQL1 = "select count(*) from PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=?";
 								count = sqlQuery.queryForObject(SQL1, new Object[] { wjid, strXxxBh }, "int");
 								final String SQL2 = "select count(*) from PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?";
@@ -559,45 +565,37 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								if (count > 0) {
 									// 投票百分比
 									tempCount = Double.valueOf(decimalFormat.format((double) countY / (double) count * 100));
-									// 单选题平均得分
-									avgScore = Double.valueOf(decimalFormat.format(avgScore
-											+ (double) countY / (double) count * Double.valueOf(strXxxKxzQz)));// decimalFormat用于取2位小数，乘除法运算实用
 								} else {
 									tempCount = 0;
 									avgScore = avgScore + 0;
 								}
-								// TZ_IS_AVG控制是否显示分值,'Y'则显示
-								if (TZ_IS_AVG.equals("Y")) {
-									// strRadioBoxHtml 记录{选项名称+分数,投票数}用于饼状图显示数据
-									if (!strRadioBoxHtml.equals("")) {
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML",strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									}
-									// strRadioBoxHtml2 记录选项名称+分数 投票数 百分比
-									// ->用于界面中表格统计数据
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY), tempCount + "%");
+								//暂时不显示分值，只显示百分比和信息项描述
+								if (!strRadioBoxHtml.equals("")) {
+									strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								} else {
-									if (!strRadioBoxHtml.equals("")) {
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
-									}
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs, String.valueOf(countY), tempCount + "%");
+									strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								}
-								logger.info("===单选题====strRadioBoxHtml:" + strRadioBoxHtml);
-								logger.info("===单选题====strRadioBoxHtml:" + strRadioBoxHtml2);
+							    if(!strCategories.equals("")){
+							    	strCategories=strCategories+",'"+strXxxKxzMs+"'";
+							    }else{
+							    	strCategories="'"+strXxxKxzMs+"'";
+							    }
+							    //计算历史得分
+							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    if (!strRadioBoxHtml2.equals("")) {
+							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								} else {
+									strRadioBoxHtml2 = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								}
+								//logger.info("===单选题====strRadioBoxHtml:" + strRadioBoxHtml);
 							}
 							// 拼最终统计 单选题结果的Html
-							if (TZ_IS_AVG.equals("Y")) {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选题", avgScore + "分", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							} else {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选题", "", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							}
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选题", "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
 							strRadioBoxHtml = "";
 							strRadioBoxHtml2 = "";
+							strCategories="";
 						}
 						logger.info("单选题终strDivHtml==" + strDivHtml);
 					}
@@ -606,6 +604,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						avgScore = 0;
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
+						strCategories="";
 						final String radioBoxQuSQL = "select TZ_XXXKXZ_MS,TZ_XXXKXZ_QZ,TZ_XXXKXZ_MC from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and  TZ_XXX_BH=? order by TZ_ORDER";
 						List<Map<String, Object>> radioBoxDataList = new ArrayList<Map<String, Object>>();
 						radioBoxDataList = sqlQuery.queryForList(radioBoxQuSQL, new Object[] { wjid, strXxxBh });
@@ -628,42 +627,37 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 									// 百分比
 									tempCount = Double.valueOf(decimalFormat.format((double) countY / (double) count * 100));
 									// 平均分
-									avgScore = Double.valueOf(decimalFormat.format(avgScore
-											+ (double) countY / (double) count * Double.valueOf(strXxxKxzQz)));
+									avgScore = Double.valueOf(decimalFormat.format(avgScore+ (double) countY / (double) count * Double.valueOf(strXxxKxzQz)));
 								} else {
 									tempCount = 0;
 									avgScore = avgScore + 0;
 								}
-								// TZ_IS_AVG控制是否显示分值,'Y'则显示
-								if (TZ_IS_AVG.equals("Y")) {
-									// strRadioBoxHtml 记录{选项名称+分数,投票数}用于饼状图显示数据
-									if (!strRadioBoxHtml.equals("")) {
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML",strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									}
-									// strRadioBoxHtml2 记录选项名称+分数 投票数 百分比
-									// ->用于界面中表格统计数据
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY), tempCount + "%");
+								if (!strRadioBoxHtml.equals("")) {
+									strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText( "HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								} else {
-									if (!strRadioBoxHtml.equals("")) {
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText( "HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs,String.valueOf(countY));
-									}
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs,String.valueOf(countY), tempCount + "%");
+									strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs,String.valueOf(tempCount),arrColor[i]);
 								}
+								//计算历史得分
+							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    if (!strRadioBoxHtml2.equals("")) {
+							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								} else {
+									strRadioBoxHtml2 = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								}
+							   if(!strCategories.equals("")){
+							    	strCategories=strCategories+",'"+strXxxKxzMs+"'";
+							   }else{
+							    	strCategories="'"+strXxxKxzMs+"'";
+							   }
 							}
 							// 拼最终统计 单选题结果的Html
-							if (TZ_IS_AVG.equals("Y")) {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选量表题", avgScore + "分", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							} else {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选量表题", "", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							}
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "单选量表题", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+ 
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
 							strRadioBoxHtml = "";
 							strRadioBoxHtml2 = "";
+							strCategories="";
 						}
 					}
 
@@ -671,6 +665,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					if (strComLmc != null && strComLmc.equals("ComboBox")) {
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
+						strCategories="";
 						final String comboBoxSQL = "select TZ_XXXKXZ_MS,TZ_XXXKXZ_MC from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and  TZ_XXX_BH=? order by TZ_ORDER";
 						List<Map<String, Object>> comboBoxDataList = new ArrayList<Map<String, Object>>();
 						comboBoxDataList = sqlQuery.queryForList(comboBoxSQL, new Object[] { wjid, strXxxBh });
@@ -682,8 +677,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 								strXxxKxzMs = comboBoxMap.get("TZ_XXXKXZ_MS") == null ? null : comboBoxMap.get("TZ_XXXKXZ_MS").toString();
 								strXxxKxzCode = comboBoxMap.get("TZ_XXXKXZ_MC") == null ? null : comboBoxMap.get("TZ_XXXKXZ_MC").toString();
-								logger.info("===下拉框TZ_XXXKXZ_MS：" + strXxxKxzMs + "==TZ_XXXKXZ_MC:" + strXxxKxzCode);
-								
+
 								final String SQL1 = "select count(*) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT !=' '";
 								count = sqlQuery.queryForObject(SQL1, new Object[] { wjid, strXxxBh }, "int");
 								
@@ -698,18 +692,31 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								// 下拉框不显示分数
 								if (!strRadioBoxHtml.equals("")) {
-									strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
+									strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								} else {
-									strRadioBoxHtml = tzGdObject.getHTMLText( "HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
+									strRadioBoxHtml = tzGdObject.getHTMLText( "HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								}
-								strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs, String.valueOf(countY), tempCount + "%");
+								//计算历史得分
+							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    if (!strRadioBoxHtml2.equals("")) {
+							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								} else {
+									strRadioBoxHtml2 = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								}
+								if(!strCategories.equals("")){
+							    	strCategories=strCategories+",'"+strXxxKxzMs+"'";
+							    }else{
+							    	strCategories="'"+strXxxKxzMs+"'";
+							    }
+								//strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs, String.valueOf(countY), tempCount + "%");
 							}
 							// 拼最终统计 单选题结果的Html
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "下拉框", "", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "下拉框", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
 							strRadioBoxHtml = "";
 							strRadioBoxHtml2 = "";
+							strCategories="";
 						}
 					}
 					
@@ -718,6 +725,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						avgScore = 0;
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
+						strCategories="";
 						final String quantifyQuSQL = "select TZ_XXXKXZ_MS,TZ_XXXKXZ_QZ,TZ_XXXKXZ_MC from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and  TZ_XXX_BH=? order by TZ_ORDER";
 
 						List<Map<String, Object>> quantifyQuDataList = new ArrayList<Map<String, Object>>();
@@ -746,42 +754,35 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 									tempCount = 0;
 									avgScore = avgScore + 0;
 								}
-								// TZ_IS_AVG控制是否显示分值,'Y'则显示
-								if (TZ_IS_AVG.equals("Y")) {
-									if (!strRadioBoxHtml.equals("")) {
-										// strRadioBoxHtml
-										// 记录{选项名称+分数,投票数}用于饼状图显示数据
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY));
-									}
-									// strRadioBoxHtml2 记录选项名称+分数 投票数 百分比
-									// ->用于界面中表格统计数据
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs + "(" + strXxxKxzQz + "分)", String.valueOf(countY), tempCount + "%");
+								if (!strRadioBoxHtml.equals("")) {
+									strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML",strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								} else {
-									if (!strRadioBoxHtml.equals("")) {
-										strRadioBoxHtml = strRadioBoxHtml + "," + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML",strXxxKxzMs, String.valueOf(countY));
-									} else {
-										strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(countY));
-									}
-									strRadioBoxHtml2 = strRadioBoxHtml2 + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML", strXxxKxzMs, String.valueOf(countY), tempCount + "%");
+									strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								}
-							}
-							// 拼最终统计 单选题结果的Html
-							if (TZ_IS_AVG.equals("Y")) {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "量表题", avgScore + "分", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							} else {
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "量表题", "", strXxxBh, strRadioBoxHtml, strRadioBoxHtml2);
-							}
-							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
-							// 每次用完要进行初始化
-							strRadioBoxHtml = "";
-							strRadioBoxHtml2 = "";
+								//计算历史得分
+							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    if (!strRadioBoxHtml2.equals("")) {
+							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								} else {
+									strRadioBoxHtml2 = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
+								}
+								if(!strCategories.equals("")){
+							    	strCategories=strCategories+",'"+strXxxKxzMs+"'";
+							    }else{
+							    	strCategories="'"+strXxxKxzMs+"'";
+							    }
 						}
+						// 拼最终统计 单选题结果的Html
+						strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "量表题", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+						// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
+						// 每次用完要进行初始化
+						strRadioBoxHtml = "";
+						strRadioBoxHtml2 = "";
+						strCategories="";
 					}
 					
 					// 数字填空题
-					if (strComLmc != null && (strComLmc.equals("DigitalCompletion"))) {
+			/*		if (strComLmc != null && (strComLmc.equals("DigitalCompletion"))) {
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
 						// type用于后面合成最终结果html中 显示控件类型
@@ -804,23 +805,27 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TXT_HTML", TZ_XXX_QID + ":" + TZ_TITLE, type, "", strComHtml);
 						}
-					}
+					}*/
 
 				}
 			}
+		}
 			// 整合结果html
 			logger.info("strDivHtml最终值：" + strDivHtml);
 			String strTitle = sqlQuery.queryForObject("select TZ_DC_WJBT from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?", new Object[] { wjid }, "String");
 			
 			int totalCount = sqlQuery.queryForObject("select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?", new Object[] { wjid }, "int");
 			
+			//strCountHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML", request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
 			strCountHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML", request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
 			return strCountHtml;
+			
 		} catch (Exception e) {
 			// 最外层 try catch捕捉所有异常
 			e.printStackTrace();
 			return null;
 		}
+			
 	}
 	
 	/**

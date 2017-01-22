@@ -43,7 +43,10 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     xtype: 'textfield',
                     name: 'TZ_CS_WJ_NAME',
                     allowBlank:false,
-                    fieldLabel:'测试问卷名称'
+                    fieldLabel:'测试问卷名称',
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },{
                     xtype:'textfield',
                     name:'TZ_CLASS_ID',
@@ -64,7 +67,10 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_KSRQ", "开始日期"),
                     format: 'Y-m-d',
                     allowBlank:false,
-                    name: 'TZ_DC_WJ_KSRQ'
+                    name: 'TZ_DC_WJ_KSRQ',
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },
                 {
                     xtype: 'timefield',
@@ -72,14 +78,20 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     format: 'H:i:s',
                     value:'8:30',
                     allowBlank:false,
-                    name: 'TZ_DC_WJ_KSSJ'
+                    name: 'TZ_DC_WJ_KSSJ',
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_JSRQ", "结束日期"),
                     format: 'Y-m-d',
                     allowBlank:false,
-                    name: 'TZ_DC_WJ_JSRQ'
+                    name: 'TZ_DC_WJ_JSRQ',
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },
                 {
                     xtype: 'timefield',
@@ -87,7 +99,10 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     format: 'H:i:s',
                     value:'17:30',
                     allowBlank:false,
-                    name: 'TZ_DC_WJ_JSSJ'
+                    name: 'TZ_DC_WJ_JSSJ',
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },{
                     xtype: 'combobox',
                     fieldLabel: Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_DETAIL_STD.TZ_STATE", "有效状态"),
@@ -115,6 +130,9 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                             name: 'TZ_APP_TPL_ID',
                             editable: false,
                             allowBlank: false,
+                            afterLabelTextTpl: [
+                                                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                                            ],
                             triggers: {
                                 search: {
                                     cls: 'x-form-search-trigger',
@@ -208,14 +226,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
         {
             xtype: 'grid',
           // title: '问卷实例详情',
-           //  width:750, 
+           //  width:750,  
             height:330,
             frame: true,
             columnLines: true,
             style: "margin:10px",
             plugins: {
                 ptype: 'cellediting',
-                pluginId: 'attrItemCellEditing'
+                pluginId: 'attrItemCellEditing',
+                clicksToEdit:1
             },
             viewConfig: {
                 plugins: {
@@ -237,7 +256,21 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                 type: 'testWjXxxStore'
             },
             columns: [
-                 {text:'序号',
+                {   text:'测试问卷编号',
+                    dataIndex:'TZ_CS_WJ_ID',
+                    width:50,
+                    hidden:true
+                },
+                {   text:'调查问卷编号',
+                    dataIndex:'TZ_DC_WJ_ID',
+                    width:50,
+                    hidden:true
+                },{
+                    text:'信息项名称',
+                    dataIndex:'TZ_COM_LMC',
+                    width:50,
+                    hidden:false
+                },{text:'序号',
                   dataIndex:'TZ_ORDER',
                   width:50,
                   hidden:true
@@ -259,12 +292,12 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                 },{ 
                     text: '信息项名称',
                     dataIndex: 'TZ_XXX_MC',
-                    minWidth: 100,
-                    editor: {
+                    minWidth: 250
+                   /* editor: {
 						xtype:'textfield',
 						maxLength:50,
 						allowBlank: false
-					}
+					}*/
                 },{
                     xtype:'linkcolumn',
                     sortable: false,
@@ -275,14 +308,9 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                         handler:'setCswjXXXInfo'
                     }]
                 },{
-                    text: '描述',
+                    text: '信息项描述',
                     dataIndex: 'TZ_XXX_DESC',
-                    minWidth: 170,
-                    editor: {
-						xtype:'textfield',
-						maxLength:50,
-						allowBlank: false
-					}
+                    minWidth: 250
                 },{
                     menuDisabled: true,
                     sortable: false,
@@ -308,7 +336,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
             }
         }],
         buttons: [{
-            text: '保存',
+            text: '保存', 
             iconCls: "close",
             handler:'onCsWjdcSave'
         },{

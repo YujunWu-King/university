@@ -13,10 +13,10 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
                 store.load();
-            }
+            } 
         });
     }, 
-    //关闭
+    //关闭 
     CsWjdcClose:function(btn){
         btn.findParentByType("grid").close();
     },
@@ -151,24 +151,22 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
            }
         if (tagNameCount > 1) {
             Ext.MessageBox.alert('提示','信息项编号不能重复');
+        }else{
+        var form = this.getView().child("form").getForm();
+        if (form.isValid()) {
+            var tzParams = this.getOrgInfoParams();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams, function (responseData) {
+                form.setValues({"TZ_CS_WJ_ID": responseData.id});
+                var tzStoreParams = '{"TZ_CS_WJ_ID":"' + form.findField("TZ_CS_WJ_ID").getValue() + '","FLAG":"A"}';
+                store.tzStoreParams = tzStoreParams;
+                store.reload();
+                comView.actType = "update";
+              //  var interviewMgrPanel = Ext.ComponentQuery.query("panel[reference=testWjdcInfo]");
+               // interviewMgrPanel[0].getStore().reload();
+            }, "", true, this);
+          }
         }
-
-            var form = this.getView().child("form").getForm();
-            if (form.isValid()) {
-                var tzParams = this.getOrgInfoParams();
-                var comView = this.getView();
-                Ext.tzSubmit(tzParams, function (responseData) {
-                    form.setValues({"TZ_CS_WJ_ID": responseData.id});
-                    var tzStoreParams = '{"TZ_CS_WJ_ID":"' + form.findField("TZ_CS_WJ_ID").getValue() + '","FLAG":"A"}';
-                    store.tzStoreParams = tzStoreParams;
-                    store.reload();
-                    comView.actType = "update";
-                    var interviewMgrPanel = Ext.ComponentQuery.query("panel[reference=testWjdcInfo]");
-                    interviewMgrPanel[0].getStore().reload();
-                }, "", true, this);
-
-            }
-
     },
     getOrgInfoParams: function(){
         //报名流程信息表单
@@ -216,7 +214,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
                 removeJson = Ext.JSON.encode(removeRecs[i].data);
             }else{
                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-            }
+            } 
         }
         if(removeJson != ""){
             if(comParams == ""){
@@ -528,25 +526,44 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
     },
     setCswjXXXInfo:function(grid, rowIndex, colIndex){
         var rec = grid.getStore().getAt(rowIndex);
+        var comMc=rec.get("TZ_COM_LMC");
+        var win;
+        var pageResSet;
+        var className;
 
+        if(comMc=='DigitalCompletion'){
+            pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CSWJ_LIST_COM"]["TZ_CSWJ_XXX_STD2"];
+            if( pageResSet == "" || pageResSet == undefined){
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.prompt","提示"), Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.nmyqx","您没有权限"));
+                return;
+            }
+            //该功能对应的JS类
+            className = pageResSet["jsClassName"];
+            if(className == "" || className == undefined){
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.prompt","提示"),Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+                return;
+            }
+            win = this.lookupReference('backDigitalXXXWin');
+        }else{
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CSWJ_LIST_COM"]["TZ_CSWJ_XXX_STD"];
+         pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CSWJ_LIST_COM"]["TZ_CSWJ_XXX_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.prompt","提示"), Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.nmyqx","您没有权限"));
             return;
         }
         //该功能对应的JS类
-        var className = pageResSet["jsClassName"];
+         className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.prompt","提示"),Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
             return;
         }
+         win = this.lookupReference('backXXXWin');
+        }
 
-        var win = this.lookupReference('backXXXWin');
 
         if (!win) {
             Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
+             ViewClass = Ext.ClassManager.get(className);
             //新建类
             win = new ViewClass();
             this.getView().add(win);
@@ -555,6 +572,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         win.cswjId = rec.get('TZ_CS_WJ_ID');
         win.wjId = rec.get('TZ_DC_WJ_ID');
         win.xxxBh = rec.get('TZ_XXX_BH');
+        win.comMc=rec.get("TZ_COM_LMC");
         if(win.cswjId=="" || win.wjId==""||win.xxxBh==""){
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.prompt","提示"),Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD.qxbcdjzlxx","请先保存信息项,在进行信息项设置！"));
             return;
@@ -583,27 +601,41 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             }
         },this);
     },
-    //添加一个信息项
+    //添加一个信息项 
     addCswjXXX:function(view,rowIndex){
         var store = view.findParentByType("grid").store;
         store.insert(rowIndex+1,new KitchenSink.view.template.survey.testQuestion.testWjXxxModal());
     },
     //信息项设置保存
-    onGridSave:function(btn){
+    onGridSave:function(btn) {
         var win = this.lookupReference('backXXXWin');
         var cswjId = win.cswjId;
         var wjId = win.wjId;
         var xxxBh = win.xxxBh;
         var grid = win.child("grid");
         var store = grid.getStore();
-        var tzParams = this.getBackMsgParams(btn);
-        var comView = this.getView();
-        Ext.tzSubmit(tzParams,function(responseData){
-            var tzStoreParams = '{"cswjId":"'+cswjId+'","wjId":"'+wjId+'","xxxBh":"'+xxxBh+'"}';
-            store.tzStoreParams = tzStoreParams;
-            comView.actType = "update";
-            store.reload();
-        },"",true,this);
+        /*信息项历史取值要么为0，要么是100*/
+        var totalHisVal=0;
+        var totalCurVal=0;
+        store.each(function (rec) {
+            var hisVal = rec.get("TZ_HISTORY_VAL");
+            totalCurVal=totalCurVal+parseInt(rec.get("TZ_CURYEAR_VAL"));
+            totalHisVal = totalHisVal + parseInt(hisVal);
+        });
+        alert(totalHisVal);
+        alert(totalCurVal);
+        if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
+        	  var tzParams = this.getBackMsgParams(btn);
+              var comView = this.getView();
+               Ext.tzSubmit(tzParams,function(responseData){
+               //var tzStoreParams = '{"cswjId":"'+cswjId+'","wjId":"'+wjId+'","xxxBh":"'+xxxBh+'"}';
+              // store.tzStoreParams = tzStoreParams;
+               //comView.actType = "update";
+               //store.reload();
+               },"",true,this);
+        } else {
+        	Ext.MessageBox.alert('提示','调查项设置的往年取值或者当初年份百分比之和不等于100，请重新设置！');
+        }
     },
     onGridSure:function(btn){
         var win = this.lookupReference('backXXXWin');
@@ -612,15 +644,27 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var xxxBh = win.xxxBh;
         var grid = win.child("grid");
         var store = grid.getStore();
-        var tzParams = this.getBackMsgParams(btn);
-        var comView = this.getView();
-        Ext.tzSubmit(tzParams,function(responseData){
-            var tzStoreParams = '{"cswjId":"'+cswjId+'","wjId":"'+wjId+'","xxxBh":"'+xxxBh+'"}';
-            store.tzStoreParams = tzStoreParams;
-            comView.actType = "update";
-            store.reload();
-            win.close();
-        },"",true,this);
+        /*信息项历史取值要么为0，要么是100*/
+        var totalHisVal=0;
+        var totalCurVal=0;
+        store.each(function (rec) {
+            var hisVal = rec.get("TZ_HISTORY_VAL");
+            totalCurVal=totalCurVal+parseInt(rec.get("TZ_CURYEAR_VAL"));
+            totalHisVal = totalHisVal + parseInt(hisVal);
+        });
+        if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
+        	  var tzParams = this.getBackMsgParams(btn);
+              var comView = this.getView();
+              Ext.tzSubmit(tzParams, function (responseData) {
+                  var tzStoreParams = '{"cswjId":"' + cswjId + '","wjId":"' + wjId + '","xxxBh":"' + xxxBh + '"}';
+                 // store.tzStoreParams = tzStoreParams;
+                  comView.actType = "update";
+                  store.reload();
+                  win.close();
+              }, "", true, this);
+         } else {
+         	 Ext.MessageBox.alert('提示','调查项设置的往年取值或者当初年份百分比之和不等于100，请重新设置！');
+         }
     },
     onGridClose:function(btn){
         var win = btn.findParentByType('window');
@@ -661,7 +705,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             }else{
                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
             }
-        }
+        } 
         if(removeJson != ""){
             if(comParams == ""){
                 comParams = '"delete":[' + removeJson + "]";
@@ -679,12 +723,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var searchDesc,modal,modal_desc;
         searchDesc="信息项选择";
         modal="TZ_XXX_BH";
-        modal_desc="TZ_XXX_MC";
-        var grid=this.getView().child("grid");
-        var selList = grid.getSelectionModel().getSelectionMode();
+        modal_desc="TZ_XXX_MC"; 
+		
+        var grid = this.getView().child("grid");
+        var len=grid.getStore().getCount();
+        var record = grid.getSelectionModel().getSelection()[0];
+		
         var form=grid.findParentByType("panel").child("form").getForm();
         var wjID=form.findField("TZ_DC_WJ_ID").getValue();
-        console.log(grid,wjID,selList);
+        var cswjID=form.findField("TZ_CS_WJ_ID").getValue();
         Ext.tzShowPromptSearch({
             recname: 'PS_TZ_DCWJ_XXX_VW',
             searchDesc: searchDesc,
@@ -711,16 +758,43 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             },
             srhresult:{
                 TZ_XXX_BH: '信息项编号',
-                TZ_XXX_MC: '信息项名称'
+                TZ_XXX_MC: '信息项名称',
+                TZ_TITLE:'信息项描述',
+                TZ_COM_LMC:'信息项类型'
             },
             multiselect: false, 
             callback: function(selection){
-                console.log(selection[0].data.TZ_XXX_BH,selection[0].data.TZ_XXX_MC);
-                selList.get("TZ_XXX_BH").setValue(selection[0].data.TZ_XXX_BH);
-                selList.get("TZ_XXX_MC").setValue(selection[0].data.TZ_XXX_MC);
-                //grid.findField(modal_desc).setValue(selection[0].data.TZ_XXX_MC);
+                record.set("TZ_XXX_BH",selection[0].data.TZ_XXX_BH);
+                record.set("TZ_XXX_MC",selection[0].data.TZ_XXX_MC);
+                record.set("TZ_XXX_DESC",selection[0].data.TZ_TITLE);
+                record.set("TZ_COM_LMC",selection[0].data.TZ_COM_LMC);
+                record.set("TZ_ORDER",len);
+                record.set("TZ_DC_WJ_ID",wjID);
+                record.set("TZ_CS_WJ_ID",cswjID);
             }
         });
+    },
+    //数值型信息项可选值新增
+    addDigitalXxxKxz:function(btn){
+        var grid=btn.findParentByType("window").child("grid");
+        var store=grid.store;
+        var dropBoxSetCellediting = grid.getPlugin('dropBoxSetCellediting');
+        var rowCount = store.getCount(); 
+        store.insert(rowCount, new KitchenSink.view.template.survey.testQuestion.testWjXxxModal());
+        dropBoxSetCellediting.startEditByPosition({
+            row: rowCount,
+            column: 2
+        }); 
+    },
+    deleteOption:function(view,rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?',
+            function(btnId) {
+                if (btnId == 'yes') {
+                    var store = view.child("grid").store;
+                    store.removeAt(rowIndex);
+                }
+            },
+            this);
     }
 
 })

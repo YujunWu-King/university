@@ -53,15 +53,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from ps_tz_ks_tjx_tbl
+    from PS_TZ_KS_TJX_TBL
     where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from ps_tz_ks_tjx_tbl
+    delete from PS_TZ_KS_TJX_TBL
     where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
-    insert into ps_tz_ks_tjx_tbl (TZ_REF_LETTER_ID, TZ_APP_INS_ID, TZ_TJX_APP_INS_ID, 
+    insert into PS_TZ_KS_TJX_TBL (TZ_REF_LETTER_ID, TZ_APP_INS_ID, TZ_TJX_APP_INS_ID, 
       OPRID, TZ_TJX_TYPE, TZ_REFLETTERTYPE, 
       TZ_TJR_ID, TZ_MBA_TJX_YX, TZ_REFERRER_NAME, 
       TZ_REFERRER_GNAME, TZ_COMP_CNAME, TZ_POSITION, 
@@ -89,7 +89,7 @@
       #{tzTjxYl9,jdbcType=VARCHAR}, #{tzTjxYl10,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
-    insert into ps_tz_ks_tjx_tbl
+    insert into PS_TZ_KS_TJX_TBL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzRefLetterId != null" >
         TZ_REF_LETTER_ID,
@@ -324,7 +324,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
-    update ps_tz_ks_tjx_tbl
+    update PS_TZ_KS_TJX_TBL
     <set >
       <if test="tzAppInsId != null" >
         TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT},
@@ -441,7 +441,7 @@
     where TZ_REF_LETTER_ID = #{tzRefLetterId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl" >
-    update ps_tz_ks_tjx_tbl
+    update PS_TZ_KS_TJX_TBL
     set TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT},
       TZ_TJX_APP_INS_ID = #{tzTjxAppInsId,jdbcType=BIGINT},
       OPRID = #{oprid,jdbcType=VARCHAR},

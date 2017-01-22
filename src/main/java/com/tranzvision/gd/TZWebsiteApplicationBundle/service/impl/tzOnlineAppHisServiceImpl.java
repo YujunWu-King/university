@@ -77,7 +77,7 @@ public class tzOnlineAppHisServiceImpl {
 						strOprNameApp = "";
 					}
 				}
-			}	
+			}
 		}
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();

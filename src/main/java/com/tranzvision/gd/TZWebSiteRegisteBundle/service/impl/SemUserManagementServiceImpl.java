@@ -443,24 +443,27 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					strImgC = imgPath + "/edituser-pic.png";
 				}
 
+				
+				String returnHtml="";
 				// 判断是否需要显示头像，如果为Y则显示，否则不显示;
 				//String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID =?";
 				String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID =?";
 				String strIsShowPhoto = jdbcTemplate.queryForObject(strIsShowPhotoSQL, new Object[] { siteId }, "String");
 				if ("Y".equals(strIsShowPhoto)) {
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_HTML2", saveActivate_url,
+					returnHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_HTML2", saveActivate_url,
 							phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd, str_userInfo, SaveRemind,
 							fields, Province, City1, strColuTitle, strTab1, strTab2, strTab3, strTab4, strPhoto,
 							strSaveBtn, strBind, strRelease, strAbsence, strPassSucTips, countryUrl, strImgC, userPhoto,
 							contextPath);
 				} else {
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_NOT_PHOTO_HTML",
+					returnHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_NOT_PHOTO_HTML",
 							saveActivate_url, phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd,
 							str_userInfo, SaveRemind, fields, Province, City1, strColuTitle, strTab1, strTab2, strTab3,
 							strTab4, strPhoto, strSaveBtn, strBind, strRelease, strAbsence, strPassSucTips, countryUrl,
 							contextPath);
 				}
-
+				
+				return returnHtml;
 			} else {
 				return "站点不存在";
 			}
