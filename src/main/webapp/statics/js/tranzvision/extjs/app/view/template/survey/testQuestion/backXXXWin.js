@@ -11,12 +11,13 @@
     ],
     title: "调查项设置",
 	actType : "add",//默认add
-	width: 620,
+	width: 600,
     height: 400,
     layout: 'fit',
 	cswjId:'',
 	wjId:'',
     xxxBh:'',
+    comMc:'',
     resizable: true,
     modal: true,
 	multiSel: '',
@@ -33,7 +34,6 @@
                     pluginId: 'dataCellediting',
                     clicksToEdit: 1
 				 },
-		
 		viewConfig: {
 			plugins: {
 				ptype: 'gridviewdragdrop',
@@ -58,20 +58,20 @@
             dataIndex: 'TZ_ORDER',
             hidden: true
         },{
-		    text: "名称",
-			dataIndex: 'TZ_XXXKXZ_MC'
+		    text: "信息项编号",
+			dataIndex: 'TZ_XXXKXZ_MC',
+            hidden: true
 		},{ 
-		    text: "描述",
+		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
-			minWidth: 100
+			minWidth: 150
 		},{
 		    text: "取值下限",
 			dataIndex: 'TZ_L_LIMIT',
 			width: 80,
             editor: {
                 xtype:'textfield',
-                maxLength:50,
-                allowBlank: false
+                maxLength:50
             }
         },{
 		    text: "取值上限",
@@ -82,7 +82,7 @@
                 maxLength:50
             }
 		},{
-            text: "往年取值",
+            text: "往年取值(%)",
             dataIndex: 'TZ_HISTORY_VAL',
             minWidth: 80,
             editor: {
@@ -90,7 +90,7 @@
                 maxLength:50
             }
         },{
-            text: "当初年份初始取值",
+            text: "当初年份初始取值(%)",
             dataIndex: 'TZ_CURYEAR_VAL',
             minWidth: 80,
             editor: {
@@ -103,7 +103,7 @@
 		},
 		bbar: {
 				xtype: 'pagingtoolbar',
-				pageSize: 10,
+				pageSize:20, 
 				listeners:{
 				afterrender: function(pbar){
 					var grid = pbar.findParentByType("grid");
@@ -112,7 +112,7 @@
 			    },
 				plugins: new Ext.ux.ProgressBarPager()
 		}	
-	}],		  
+	}],
     buttons: [{
 		text:"保存",
 		iconCls:"save",
@@ -120,7 +120,7 @@
 	},{
         text: "确定",
         iconCls:"ensure",
-        handler: 'onGridSure'
+        handler: 'onGridSure' 
     }, {
 		text: "关闭",
 		iconCls:"close",

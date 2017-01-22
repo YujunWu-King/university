@@ -55,6 +55,10 @@
             searchDesc=Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.ssmspscjmx","搜索面试评审成绩模型");
             modal="msps_cj_modal";
             modal_desc="msps_cj_modal_desc";
+        }else if(fieldName=="csmb_id"){
+            searchDesc=Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.ssmspscjmx","搜索自动初筛成绩模型");
+            modal="csmb_id";
+            modal_desc="csmb_desc";
         }
         var form = this.getView().child("form").getForm();
         Ext.tzShowPromptSearch({
@@ -93,6 +97,55 @@
             callback: function(selection){
                 form.findField(modal).setValue(selection[0].data.TZ_SCORE_MODAL_ID);
                 form.findField(modal_desc).setValue(selection[0].data.TZ_MODAL_NAME);
+            }
+        });
+    },
+  //选择标签组 20170118 ZXW
+    choiceBqzModal: function(btn){
+        var fieldName = btn.name;
+        var searchDesc,modal,modal_desc;
+        if(fieldName=='zdbq_id'){
+            searchDesc=Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqz","搜索自动标签组");
+            modal="zdbq_id";
+            modal_desc="zdbq_desc";
+        }else if(fieldName=="fmqd_id"){
+            searchDesc=Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqz","搜索负面清单标签组");
+            modal="fmqd_id";
+            modal_desc="fmqd_desc";
+        }
+        var form = this.getView().child("form").getForm();
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_BIAOQZ_T',
+            searchDesc: searchDesc,
+            maxRow:20,
+            condition:{
+                presetFields:{
+                    TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                	TZ_BIAOQZ_ID:{
+                        desc:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqzid","标签组编号"),
+                        operator:'07',
+                        type:'01'
+                    },
+                    TZ_BIAOQZ_NAME:{
+                        desc:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqzname","标签组名称"),
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TZ_BIAOQZ_ID: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqzid","标签组编号"),
+            	TZ_BIAOQZ_NAME:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bqzname","标签组名称")
+            },
+            multiselect: false,
+            callback: function(selection){
+                form.findField(modal).setValue(selection[0].data.TZ_BIAOQZ_ID);
+                form.findField(modal_desc).setValue(selection[0].data.TZ_BIAOQZ_NAME);
             }
         });
     },

@@ -4,11 +4,11 @@
 		<font  color=blue>%bind(:3)</font>
 	</h3>
 	<h5 style="text-align: left">2016年问卷统计情况</h5>
-	<div id="chartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
-	<div id="serialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
-	<!-- <h5 style="text-align: left">历史问卷统计情况</h5>
-	<div id="hischartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
-	<div id="hisserialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div> -->
+	<div id="chartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
+	<div id="serialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
+	 <h5 style="text-align: left">历史问卷统计情况</h5>
+	<div id="hischartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div>
+	<div id="hisserialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 350px;"></div> 
     
 	<script>
 	var arrColor = [
@@ -17,6 +17,7 @@
 	            	];
 	var chartData_%bind(:4)=[%bind(:5)];
 	var categories_%bind(:4)=[%bind(:6)];
+	var chartHisData_%bind(:4)=[%bind(:7)];
 		$(function() {
 			//饼图
 			 $("#chartdiv_%bind(:4)").highcharts({
@@ -35,9 +36,12 @@
 			                itemDistance:10,
 			                labelFormat :'{name}({percentage:.2f}%)',
 			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
-			                layout:'vertical',
-			                align:'left',
-							verticalAlign:'middle'
+			                layout:'vertical',//垂直方向
+			                align:'left',//水平方向
+							verticalAlign:'middle',
+							borderRadius:5,
+							borderColor:"#909090",
+							borderWidth:1
 			        },
 			        plotOptions: {
 			            pie: {
@@ -122,7 +126,114 @@
 									data :chartData_%bind(:4)
 								} ]
 							});
-			
+			//历史饼图
+			 $("#hischartdiv_%bind(:4)").highcharts({
+			        chart: {
+			            animation: false
+			        },
+			        title: {
+			            text: ''
+			        }, 
+			        tooltip: {
+						enabled:true,
+			    	    pointFormat: '<span style="font-size:12px;"><b>{series.name}</b></span>'
+			        },
+					legend:{
+			                align:'center',
+			                itemDistance:10,
+			                labelFormat :'{name}({percentage:.2f}%)',
+			                itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "normal" },
+			                layout:'vertical',
+			                align:'left',
+							verticalAlign:'middle',
+							borderRadius:5,
+							borderColor:"#909090",
+							borderWidth:1
+			        },
+			        plotOptions: {
+			            pie: {
+			                allowPointSelect: false,
+			                cursor: 'pointer',
+			                center:['50%','50%'],       
+			                size:'90%',
+			                minSize:100,
+							startAngle:0,
+			                dataLabels: {
+			                    enabled: false,
+			                    format: '{point.name}({point.percentage:.2f}%)'
+			                },
+			                showInLegend: true,
+							tooltip: {
+			                    headerFormat:' <span style="font-size: 12px">{point.key}:{point.percentage:.2f}%</span><br/>'
+			                },
+							point:{
+			                    events:{
+			                        legendItemClick:function(){return false}
+			                    }
+			                }
+			            }
+			        },
+			        series: [{
+			            type: 'pie',
+			            name: ' ',
+			            data:chartHisData_%bind(:4)
+			        }]
+			    });
+         //历史柱状图
+			$("#hisserialdiv_%bind(:4)").highcharts({
+								chart : {
+									type : 'column'
+								},
+								title : {
+									text : ''
+								},
+								legend : {
+									enabled : false
+								},
+								xAxis : {
+									categories : categories_%bind(:4),
+									lineWidth : 1.5,
+									lineColor : '#626262',
+									labels : {
+										rotation : -45,
+										align : 'right',
+										style : {
+											fontSize : '12px',
+											fontWeight : 'normal',
+											fontFamily : '微软雅黑,Arial',
+											color : '#626262'
+										}
+									}
+								},
+								yAxis : {
+									min : 0,
+									title : {
+										text : ''
+									},
+									lineWidth : 1.5,
+									lineColor : '#626262',
+									labels : {
+										format : '{value}%'
+									}
+								},
+								tooltip : {
+									pointFormat : '<span style="font-size: 12px"><b>{series.name}</b></span>'
+								},
+								plotOptions : {
+									column : {
+										pointPadding : 0,
+										cursor : 'pointer',
+										tooltip : {
+											headerFormat : ' <span style="font-size: 12px">{point.key}:{point.y:.2f}%</span><br/>'
+										}
+									}
+								},
+								series : [ {
+									name : ' ',
+									data :chartHisData_%bind(:4)
+								} ]
+							});
+
 		});
 	</script>
 </div>
