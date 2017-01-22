@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjDcxTblMapper;
+import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjPctTblMapper;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjTblMapper;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjDcxTbl;
+import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -37,12 +40,13 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzCswjTblMapper PsTzCswjTblMapper;
 	@Autowired
+	private PsTzCswjPctTblMapper PsTzCswjPctTblMapper;
+	@Autowired
 	private GetSeqNum getSeqNum;
 	
 	/*调查问卷信息项配置列表查询
 	 * 
-	 * 需要分两种情况，情况一：开通调查问卷的时候，自动加载问卷中的信息项(下拉框,单选题多选题)，
-	 *           情况二：编辑测试问卷详情，从问卷配置项中获取
+	 * 需要分两种情况，情况一：开通调查问卷的时候，自动加载问卷中的信息项(下拉框,单选题多选题);
 	 * */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -65,7 +69,6 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				int total = 0;
 				// 查询总数;
 				String  strWjId=sqlQuery.queryForObject("select TZ_DC_WJ_ID from PS_TZ_CSWJ_TBL where TZ_CS_WJ_ID=?", new Object[] { strCswjId },"String");
-				System.out.println(strWjId+"-------------"+strCswjId);
 				String totalSQL = "SELECT COUNT(1) FROM PS_TZ_CSWJ_DCX_TBL WHERE TZ_CS_WJ_ID=? AND TZ_DC_WJ_ID=?";
 				total = sqlQuery.queryForObject(totalSQL, new Object[] { strCswjId,strWjId },"Integer");
 				String sql = "select TZ_XXX_BH,TZ_XXX_MC,TZ_XXX_DESC,TZ_ORDER from PS_TZ_CSWJ_DCX_TBL WHERE TZ_CS_WJ_ID=? AND TZ_DC_WJ_ID=? order by TZ_ORDER LIMIT ?,?";
@@ -82,6 +85,8 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 					strXXXMc = String.valueOf(mapData.get("TZ_XXX_MC"));
 					strXXXDesc = String.valueOf(mapData.get("TZ_XXX_DESC"));
 					numOrder = Integer.parseInt(String.valueOf(mapData.get("TZ_ORDER")));
+					//信息项题型
+					String strComMc=sqlQuery.queryForObject("select TZ_COM_LMC from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=? AND TZ_XXX_BH=?", new Object[]{strWjId,strXXXId}, "String");
 					
 					Map<String, Object> mapJson = new HashMap<String, Object>();
 					mapJson.put("TZ_CS_WJ_ID", strCswjId);
@@ -90,6 +95,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 					mapJson.put("TZ_XXX_BH", strXXXId);
 					mapJson.put("TZ_XXX_MC", strXXXMc);
 					mapJson.put("TZ_XXX_DESC", strXXXDesc);
+					mapJson.put("TZ_COM_LMC", strComMc);
 					listJson.add(mapJson);
 					mapRet.replace("total",total);
 				}
@@ -247,7 +253,6 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
-		Map<String, Object> returnJson = new HashMap<String, Object>();
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		DateFormat timeFormat=new SimpleDateFormat("HH:mm:ss"); 
@@ -262,7 +267,6 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-				
 				String typeFlag = jacksonUtil.getString("typeFlag");
 				Map<String, Object> mapData = jacksonUtil.getMap("data");
 
@@ -287,7 +291,6 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 						TZ_CS_WJ_NAME = TZ_CS_WJ_NAME.trim();
 					/*模版名称是否已经存在*/
 					String sql = "select count(*) from PS_TZ_CSWJ_TBL where TZ_CS_WJ_NAME=? and TZ_CS_WJ_ID<>?";
-
 					int isExistAppProcessTmpNum = sqlQuery.queryForObject(sql, new Object[] { TZ_CS_WJ_NAME,TZ_CS_WJ_ID }, "Integer");
 					
 					if (isExistAppProcessTmpNum == 0) {
@@ -325,11 +328,11 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 						errMsg[1] = "测试问卷名称不能重复！";
 					}
 				}else if("MEM".equals(typeFlag)){
-					/*模版编号*/
+					/*测试问卷编号*/
 					 TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
-					/*流程编号*/
+					/*调查问卷编号*/
 					String TZ_DC_WJ_ID =  String.valueOf(mapData.get("TZ_DC_WJ_ID")); 
-					/*流程名称*/
+					/*信息项编号*/
 					String TZ_XXX_BH = String.valueOf(mapData.get("TZ_XXX_BH"));
 					/*信息项名称*/
 					String TZ_XXX_MC = String.valueOf(mapData.get("TZ_XXX_MC"));
@@ -340,8 +343,8 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 					
 					TZ_XXX_DESC = TZ_XXX_DESC.trim();
 						
-					String sqlGetAppProcess = "select COUNT(1) from PS_TZ_CSWJ_DCX_TBL WHERE TZ_CS_WJ_ID=? AND TZ_DC_WJ_ID=?";
-					int count = sqlQuery.queryForObject(sqlGetAppProcess, new Object[] { TZ_CS_WJ_ID,TZ_DC_WJ_ID }, "Integer");
+					String sqlGetAppProcess = "select COUNT(1) from PS_TZ_CSWJ_DCX_TBL WHERE TZ_CS_WJ_ID=? AND TZ_DC_WJ_ID=? and TZ_XXX_BH=?";
+					int count = sqlQuery.queryForObject(sqlGetAppProcess, new Object[] { TZ_CS_WJ_ID,TZ_DC_WJ_ID,TZ_XXX_BH }, "Integer");
 					if(count>0){
 						PsTzCswjDcxTbl PsTzCswjDcxTbl = new PsTzCswjDcxTbl();
 						PsTzCswjDcxTbl.setTzCsWjId(TZ_CS_WJ_ID);
@@ -360,6 +363,52 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 						PsTzCswjDcxTbl.setTzXxxDesc(TZ_XXX_DESC);
 						PsTzCswjDcxTbl.setTzOrder(Integer.parseInt(TZ_ORDER));
 						PsTzCswjDcxTblMapper.insertSelective(PsTzCswjDcxTbl);
+						//信息项重新排序
+						final String cswjDcxSql = "select TZ_XXX_BH from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? ORDER BY TZ_ORDER";
+						List<Map<String, Object>> cswjDcxDataList = new ArrayList<Map<String, Object>>();
+						cswjDcxDataList = sqlQuery.queryForList(cswjDcxSql, new Object[] { TZ_DC_WJ_ID });
+						if (cswjDcxDataList != null) {
+							int j = 0;
+							for (int k = 0; k < cswjDcxDataList.size(); k++) {
+								Map<String, Object> cswjDcxMap = new HashMap<String, Object>();
+								cswjDcxMap = cswjDcxDataList.get(k);
+								String strXxxBh = cswjDcxMap.get("TZ_XXX_BH") == null ? null: cswjDcxMap.get("TZ_XXX_BH").toString();
+								String exist=sqlQuery.queryForObject("select 'Y' from PS_TZ_CSWJ_DCX_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=?", new Object[]{TZ_CS_WJ_ID,TZ_DC_WJ_ID,strXxxBh}, "String");
+							  if("Y".equals(exist)){
+							   j = j + 1;
+							   PsTzCswjDcxTbl PsTzCswjDcx2Tbl = new PsTzCswjDcxTbl();
+							   PsTzCswjDcx2Tbl.setTzCsWjId(TZ_CS_WJ_ID);
+							   PsTzCswjDcx2Tbl.setTzDcWjId(TZ_DC_WJ_ID);
+							   PsTzCswjDcx2Tbl.setTzXxxBh(TZ_XXX_BH);
+							   PsTzCswjDcx2Tbl.setTzXxxMc(TZ_XXX_MC);
+							   PsTzCswjDcx2Tbl.setTzXxxDesc(TZ_XXX_DESC);
+							   PsTzCswjDcx2Tbl.setTzOrder(j);
+								PsTzCswjDcxTblMapper.updateByPrimaryKeySelective(PsTzCswjDcx2Tbl);
+							   }
+							}
+						}
+
+						//插入信息项可选值
+						final String cswjPctSql = "select a.TZ_XXXKXZ_MC from PS_TZ_DCWJ_XXKXZ_T a where  a.TZ_DC_WJ_ID=? and a.TZ_XXX_BH=? ORDER BY a.TZ_ORDER";
+						List<Map<String, Object>> cswjPctDataList = new ArrayList<Map<String, Object>>();
+						cswjPctDataList = sqlQuery.queryForList(cswjPctSql, new Object[] { TZ_DC_WJ_ID ,TZ_XXX_BH});
+						if (cswjPctDataList != null) {
+							int j = 0;
+							for (int k = 0; k < cswjPctDataList.size(); k++) {
+								j = j + 1;
+								Map<String, Object> mbLJXSMap = new HashMap<String, Object>();
+								mbLJXSMap = cswjPctDataList.get(k);
+								String TZ_XXXKXZ_MC = mbLJXSMap.get("TZ_XXXKXZ_MC") == null ? null: mbLJXSMap.get("TZ_XXXKXZ_MC").toString();
+								PsTzCswjPctTbl PsTzCswjPctTbl = new PsTzCswjPctTbl();
+								PsTzCswjPctTbl.setTzCsWjId(TZ_CS_WJ_ID);
+								PsTzCswjPctTbl.setTzDcWjId(TZ_DC_WJ_ID);
+								PsTzCswjPctTbl.setTzXxxBh(TZ_XXX_BH);
+								PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
+								PsTzCswjPctTbl.setTzOrder(j);
+								PsTzCswjPctTblMapper.insert(PsTzCswjPctTbl);
+							}
+						}
+						
 					}
 				}
 			}
@@ -371,7 +420,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 		
 		//strRet = jacksonUtil.Map2json(returnJson);
 		//保存成功后，返回測試問卷的編號
-		strRet=TZ_CS_WJ_ID==null?"":TZ_CS_WJ_ID.toString();
+		strRet=(TZ_CS_WJ_ID==null?"":TZ_CS_WJ_ID.toString());
 		return "{\"id\":\"" +strRet+"\"}";
 	}
 	

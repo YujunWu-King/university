@@ -55,6 +55,11 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                     sortable: true,
                     dataIndex: 'TZ_CS_WJ_ID',
                     hidden   : true
+                }, {
+                    text:Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_LIST_STD.TZ_DC_WJ_ID","问卷ID"),
+                    sortable: true,
+                    dataIndex: 'TZ_DC_WJ_ID',
+                    hidden   : true
                 },{
                     text:Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_LIST_STD.TZ_CS_WJ_NAME","问卷名称"),
                     sortable: true,
@@ -89,8 +94,24 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                     width:'100',
                     items:[
                         {iconCls:'edit',tooltip:'编辑',handler:'editTestWjdc'},
-                        {iconCls:'view',tooltip:'调查详情',handler:'viewCsWjdcDetail'},
-                        {iconCls:'view',tooltip:'汇总统计',handler:'csWjdcSumStatic'}
+                        {iconCls:'view',tooltip:'调查详情',handler:'viewCsWjdcDetail',
+                            isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+                                if(record.get('TZ_DC_WJ_ID')==''){
+                                    return true;
+                                }else{
+                                    return false;
+                                }
+                            }
+                        },
+                        {iconCls:'view',tooltip:'汇总统计',handler:'csWjdcSumStatic',
+                            isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+                                if(record.get('TZ_DC_WJ_ID')==''){
+                                    return true;
+                                }else{
+                                    return false;
+                                }
+                            }
+                        }
                     ] 
                 }
                 ],
