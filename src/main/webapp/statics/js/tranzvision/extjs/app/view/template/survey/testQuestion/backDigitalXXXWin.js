@@ -80,7 +80,7 @@
 			dataIndex: 'TZ_L_LIMIT',
 			width: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
@@ -88,7 +88,7 @@
 			dataIndex: 'TZ_U_LIMIT',
 			minWidth:80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
 		},{
@@ -96,7 +96,7 @@
             dataIndex: 'TZ_HISTORY_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },
@@ -105,7 +105,7 @@
                 dataIndex: 'TZ_CURYEAR_VAL',
                 minWidth: 100,
                 editor: {
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     maxLength: 50
                 }
             },{
