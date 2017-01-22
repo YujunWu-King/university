@@ -144,7 +144,7 @@ $(document).ready(function(){
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
 	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
-	iniArea();
+//	iniArea();
 	getPerInfCard();
 	
 	//加载报名中心;
@@ -167,4 +167,23 @@ $(document).ready(function(){
 		
 	});
 	//end 报名中心;
+	
+	//加载报考日历
+	//var siteid = $("#siteid").val();
+	//var oprate = $("#operator").val();
+	var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAG3","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","oprate":"'+oprate+'"}}';
+	$.ajax({
+		type:"POST",
+		url: TzUniversityContextPath+"/dispatcher",
+		data:{
+			tzParams:tzParams
+		},
+		success:function(response){
+			$('.main_mid_zxj_rili').prop('innerHTML', response);
+		},
+		failure: function () {
+		  	
+		} 
+	});
+	//end 报考日历;
 });
