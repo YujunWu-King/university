@@ -135,6 +135,13 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="YCAPRD-高端产品-开发机">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="ZSDEV-交大安泰">
         <serverdata>
           <mappings>

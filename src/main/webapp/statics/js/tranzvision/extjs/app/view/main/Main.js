@@ -9,7 +9,6 @@ Ext.define('KitchenSink.view.main.Main', {
         'KitchenSink.view.ThemeSwitcher',
         'KitchenSink.view.ContentPanel',
         'KitchenSink.view.navigation.Breadcrumb',
-        //'KitchenSink.view.CodePreview'
     ],
 
     controller: 'main',
@@ -23,7 +22,7 @@ Ext.define('KitchenSink.view.main.Main', {
                 var e = event || window.event;
                 var keyCode = e.keyCode || e.which;
 
-                var activeTab =me.down('contentPanel').getActiveTab();
+                var activeTab =Ext.getCmp('tranzvision-framework-content-panel').getActiveTab();
 
                 switch (keyCode) {
                     case 74://J
@@ -109,20 +108,7 @@ Ext.define('KitchenSink.view.main.Main', {
             xtype: 'navigation-breadcrumb',
             reference: 'breadcrumb>'
         }]
-    }, /*{
-        xtype: 'codePreview',
-        region: 'east',
-        id: 'tranzvision-framework-east-region',
-        itemId: 'tranzvision-framework-codePreview',
-        stateful: true,
-        stateId: 'tranzvision-framework-mainnav.east',
-        split: true,
-        collapsible: true,
-        collapsed: true,
-        width: 350,
-        minWidth: 100,
-		hidden: true
-    }*/],
+    }],
 
     applyState: function(state) {
         this.getController().applyState(state);
