@@ -624,20 +624,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						sql = "select * from PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=?";
 						
 						//初始化栏目前前插入一个父栏目;
-						String SqlsiteName="SELECT TZ_SITEI_NAME FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
-						String 	siteName=sqlQuery.queryForObject(SqlsiteName, new Object[]{strSiteIId}, "String");								
-						PsTzSiteiColuT psTzSiteiColuT1 = new PsTzSiteiColuT();
-					
-						psTzSiteiColuT1.setTzSiteiId(strSiteIId);
-						psTzSiteiColuT1.setTzColuId(String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_COLU_T", "TZ_COLU_ID")));
-						psTzSiteiColuT1.setTzColuName(siteName);
-						psTzSiteiColuT1.setTzColuState("Y");
-						psTzSiteiColuT1.setTzColuLevel(new Integer(0));
-						psTzSiteiColuT1.setTzColuType("A");
-						psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT1);
-											
-
 						
+						String SqlsiteName="SELECT TZ_SITEI_NAME FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
+						String 	siteName=sqlQuery.queryForObject(SqlsiteName, new Object[]{strSiteIId}, "String");
+						String  Sqlcount="SELECT COUNT(1) FROM TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=?";
+						int loucount=sqlQuery.queryForObject(Sqlcount, new Object[]{strSiteIId}, "Integer");
+						if (loucount>0) {
+							
+						}else{
+							PsTzSiteiColuT psTzSiteiColuT1 = new PsTzSiteiColuT();
+							
+							psTzSiteiColuT1.setTzSiteiId(strSiteIId);
+							psTzSiteiColuT1.setTzColuId(String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_COLU_T", "TZ_COLU_ID")));
+							psTzSiteiColuT1.setTzColuName(siteName);
+							psTzSiteiColuT1.setTzColuState("Y");
+							psTzSiteiColuT1.setTzColuLevel(new Integer(0));
+							psTzSiteiColuT1.setTzColuType("A");
+							psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT1);
+						}
+					
 						List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapColu : listColus) {
 
