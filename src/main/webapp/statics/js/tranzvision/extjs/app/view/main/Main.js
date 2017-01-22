@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.main.Main', {
         'KitchenSink.view.ThemeSwitcher',
         'KitchenSink.view.ContentPanel',
         'KitchenSink.view.navigation.Breadcrumb',
-        'KitchenSink.view.CodePreview'
+        //'KitchenSink.view.CodePreview'
     ],
 
     controller: 'main',
@@ -109,7 +109,7 @@ Ext.define('KitchenSink.view.main.Main', {
             xtype: 'navigation-breadcrumb',
             reference: 'breadcrumb>'
         }]
-    }, {
+    }, /*{
         xtype: 'codePreview',
         region: 'east',
         id: 'tranzvision-framework-east-region',
@@ -122,7 +122,7 @@ Ext.define('KitchenSink.view.main.Main', {
         width: 350,
         minWidth: 100,
 		hidden: true
-    }],
+    }*/],
 
     applyState: function(state) {
         this.getController().applyState(state);

@@ -7,8 +7,6 @@ Ext.define('KitchenSink.controller.Global', {
         'KitchenSink.store.Navigation',
         'KitchenSink.view.common.store.appTransStore',//translateValue使用
         'KitchenSink.view.common.store.comboxStore',//下拉框
-        //'KitchenSink.view.orgmgmt.initOrgInfo',
-        //'KitchenSink.view.orgmgmt.orgJgInfo',
         'Ext.window.*'
     ],
 
