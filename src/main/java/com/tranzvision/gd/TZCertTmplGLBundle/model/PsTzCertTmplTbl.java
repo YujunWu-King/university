@@ -11,6 +11,8 @@ public class PsTzCertTmplTbl {
 
     private String tzCertJGID;
 
+    private String tzUseFlag;
+    
     private String tzCertMergHtml1;
     
     private String  tzCertMergHtml2;
@@ -61,7 +63,14 @@ public class PsTzCertTmplTbl {
     public void setTzCertJGID(String tzCertJGID) {
         this.tzCertJGID = tzCertJGID == null ? null : tzCertJGID.trim();
     }
+    public String getTzUseFlag() {
+        return tzUseFlag;
+    }
 
+
+    public void setTzUseFlag(String tzAppclsId) {
+        this.tzUseFlag = tzUseFlag == null ? null : tzUseFlag.trim();
+    }
     public String getTzCertMergHtml1() {
         return tzCertMergHtml1;
     }

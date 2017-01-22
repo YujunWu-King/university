@@ -16,6 +16,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZCertTmplGLBundle.dao.PsTzCertTblMapper;
 import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCertTmplTbl;
+import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerTmplKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -91,9 +92,14 @@ public class certTmplGl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			
 			if (jacksonUtil.containsKey("certTmpl")) {
-				// 类方法ID;
 				String certTmpl = jacksonUtil.getString("certTmpl");
-				PsTzCertTmplTbl psTzAppclsTbl = psTzCertTblMapper.selectByPrimaryKey(certTmpl);
+				String JgId = jacksonUtil.getString("JgId");
+				PsTzCerTmplKey psTzCerTmplKey = new PsTzCerTmplKey();
+				psTzCerTmplKey.setTzCertTmpl(certTmpl);
+				psTzCerTmplKey.setTzJgId(JgId);
+				
+				
+				PsTzCertTmplTbl psTzAppclsTbl = psTzCertTblMapper.selectByPrimaryKey(psTzCerTmplKey);
 				if (psTzAppclsTbl != null) {
 					Map<String, Object> map = new HashMap<>();
 					map.put("certTmpl", psTzAppclsTbl.getTzCertTmpl());
