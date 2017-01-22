@@ -208,7 +208,7 @@ $(document).ready(function(){
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
 	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	iniArea();
-	//getPerInfCard();
+	getPerInfCard();
 	
 	//加载报名中心;
 	var siteid = $("#siteid").val();
