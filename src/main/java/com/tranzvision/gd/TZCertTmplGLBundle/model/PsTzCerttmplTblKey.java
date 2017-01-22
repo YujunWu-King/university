@@ -1,9 +1,9 @@
 package com.tranzvision.gd.TZCertTmplGLBundle.model;
 
-public class PsTzCerTmplKey {
+public class PsTzCerttmplTblKey {
     private String tzJgId;
 
-    private String tzCertTmpl;
+    private String tzCertTmplId;
 
     public String getTzJgId() {
         return tzJgId;
@@ -13,11 +13,11 @@ public class PsTzCerTmplKey {
         this.tzJgId = tzJgId == null ? null : tzJgId.trim();
     }
 
-    public String getTzCertTmpl() {
-        return tzCertTmpl;
+    public String getTzCertTmplId() {
+        return tzCertTmplId;
     }
 
-    public void setTzCertTmpl(String tzCertTmpl) {
-        this.tzCertTmpl = tzCertTmpl == null ? null : tzCertTmpl.trim();
+    public void setTzCertTmplId(String tzCertTmplId) {
+        this.tzCertTmplId = tzCertTmplId == null ? null : tzCertTmplId.trim();
     }
 }
