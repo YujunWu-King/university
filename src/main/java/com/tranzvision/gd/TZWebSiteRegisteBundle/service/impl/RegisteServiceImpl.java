@@ -328,7 +328,7 @@ public class RegisteServiceImpl {
 		        
 		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
 		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
-		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        //explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 				String strReleasContent1 = doctypeHtml
 						+ "<html>" 
@@ -400,7 +400,7 @@ public class RegisteServiceImpl {
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
 		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
 		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
-		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        //explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 		        strReleasContent = doctypeHtml
 		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,request.getContextPath()) 
@@ -734,7 +734,7 @@ public class RegisteServiceImpl {
 		        
 		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
 		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
-		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        //explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 				String strReleasContent1 = doctypeHtml
 						+ "<html>" 
@@ -813,7 +813,7 @@ public class RegisteServiceImpl {
 		        String siteLang = psTzSiteiDefnT.getTzSiteLang();
 		        String doctypeHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_DOCTYPE_HTML");
 		        String explorerHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_PANDUAN_LIULANQI_HTML",request.getContextPath());
-		        explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
+		        //explorerHtml = explorerHtml.replaceAll("\\$",  "\\\\\\$");
 		        
 		        strReleasContent = doctypeHtml
 		        	+ "<html>" +tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,request.getContextPath()) 
