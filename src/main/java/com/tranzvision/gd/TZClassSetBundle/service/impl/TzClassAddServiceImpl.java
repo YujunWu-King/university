@@ -42,6 +42,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * 
  * @author SHIHUA
  * @since 2016-02-03
+ * 20170122 ZXW 新增班級時，給材料面試相關字段賦值
  */
 @Service("com.tranzvision.gd.TZClassSetBundle.service.impl.TzClassAddServiceImpl")
 public class TzClassAddServiceImpl extends FrameworkImpl {
@@ -197,7 +198,23 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 						str_bmlc_id = psTzPrjInfT.getTzAppproTmpId();
 						str_bj_desc = psTzPrjInfT.getTzPrjDesc();
 					}
-
+					/*20170122*/
+					String tzZlpsScorMdId = "";
+					String tzMscjScorMdId = "";
+					String tzCsScorMdId = "";
+					Float tzTtBl = (float) 10 ;
+					String tzCsKsbqzId = "";					
+					String tzCsFmbqzId = "";
+					
+					if (psTzPrjInfT != null) {
+						tzZlpsScorMdId = psTzPrjInfT.getTzZlpsScorMdId();
+						tzMscjScorMdId = psTzPrjInfT.getTzMscjScorMdId();
+						tzCsScorMdId = psTzPrjInfT.getTzCsScorMdId();
+						tzTtBl = Float.valueOf(psTzPrjInfT.getTzTtBl());
+						tzCsKsbqzId = psTzPrjInfT.getTzCsKsbqzId();
+						tzCsFmbqzId = psTzPrjInfT.getTzCsFmbqzId();
+					}
+					/*20170122*/
 					sql = "select TZ_APP_TPL_MC from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
 					String str_bmb_desc = sqlQuery.queryForObject(sql, new Object[] { str_modal_id }, "String");
 
@@ -209,7 +226,14 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzGuestApply(str_guest_apply);
 					psTzClassInfT.setTzAppModalId(str_modal_id);
 					psTzClassInfT.setTzClassDesc(str_bj_desc);
-
+					/*20170122-end*/
+					psTzClassInfT.setTzZlpsScorMdId(tzZlpsScorMdId);
+					psTzClassInfT.setTzMscjScorMdId(tzMscjScorMdId);
+					psTzClassInfT.setTzCsScorMdId(tzCsScorMdId);
+					psTzClassInfT.setTzTtBl(tzTtBl);
+					psTzClassInfT.setTzCsKsbqzId(tzCsKsbqzId);
+					psTzClassInfT.setTzCsFmbqzId(tzCsFmbqzId);
+					/*20170122-end*/
 					sql = "select 'Y' from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?";
 					String recKeyExists = sqlQuery.queryForObject(sql, new Object[] { str_bj_id }, "String");
 
