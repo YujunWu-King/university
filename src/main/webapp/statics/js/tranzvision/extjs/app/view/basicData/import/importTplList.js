@@ -47,7 +47,7 @@
         ]
     }],
     initComponent: function(){
-        var store = new KitchenSink.view.basicData.resData.import.importTplStore();
+        var store = new KitchenSink.view.basicData.import.importTplStore();
         Ext.apply(this, {
             columns: [{
                 text: '应用程序类ID',
