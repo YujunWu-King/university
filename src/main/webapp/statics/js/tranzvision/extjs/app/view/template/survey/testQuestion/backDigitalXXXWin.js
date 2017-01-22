@@ -1,6 +1,6 @@
-﻿Ext.define('KitchenSink.view.template.survey.testQuestion.backXXXWin', {
+﻿Ext.define('KitchenSink.view.template.survey.testQuestion.backDigitalXXXWin', {
     extend: 'Ext.window.Window',
-	reference: 'backXXXWin',
+	reference: 'backDigitalXXXWin',
 	requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -19,9 +19,17 @@
     xxxBh:'',
     comMc:'',
     resizable: true,
-    modal: true,
+    modal: true, 
 	multiSel: '',
 	rowNum: 0,
+    id: 'backDigitalXXXGrid',
+    name: 'backDigitalXXXGrid',
+    dockedItems:[{
+        xtype:"toolbar",
+        items:[
+            {text:"新增",tooltip:'新增',iconCls:"add",handler:'addDigitalXxxKxz'},'->'
+        ]
+    }],
 	items: [{
 		xtype: 'grid',
 		height: 315, 
@@ -31,10 +39,9 @@
 		columnLines: true, 
 		plugins: {
                     ptype: 'cellediting',
-                    pluginId: 'dataCellediting',
+                    pluginId: 'dropBoxSetCellediting',
                     clicksToEdit: 1
 				 },
-		
 		viewConfig: {
 			plugins: {
 				ptype: 'gridviewdragdrop',
@@ -60,11 +67,16 @@
             hidden: true
         },{
 		    text: "名称",
-			dataIndex: 'TZ_XXXKXZ_MC'
+			dataIndex: 'TZ_XXXKXZ_MC',
+            hidden:false
 		},{ 
 		    text: "描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
-			minWidth: 100
+			minWidth: 100,
+            editor: {
+                xtype:'textfield',
+                allowBlank:false
+            }
 		},{
 		    text: "取值下限",
 			dataIndex: 'TZ_L_LIMIT',
@@ -89,15 +101,27 @@
                 xtype:'textfield',
                 maxLength:50
             }
-        },{
-            text: "当初年份初始取值(%)",
-            dataIndex: 'TZ_CURYEAR_VAL',
-            minWidth: 80,
-            editor: {
-                xtype:'textfield',
-                maxLength:50
-            }
-        }],
+        },
+            {
+                text: "当初年份初始取值(%)",
+                dataIndex: 'TZ_CURYEAR_VAL',
+                minWidth: 80,
+                editor: {
+                    xtype: 'textfield',
+                    maxLength: 50
+                }
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width: 60,
+                align:'center',
+                xtype: 'actioncolumn',
+                items: [{
+                    iconCls: 'remove',
+                    tooltip: '删除',
+                    handler: 'deleteOption'
+                }]
+            }],
 		store: {
 			type: 'backXXXStore'
 		},
@@ -111,7 +135,7 @@
 				    }
 			    },
 				plugins: new Ext.ux.ProgressBarPager()
-		}	
+		}
 	}],
     buttons: [{
 		text:"保存",
@@ -124,6 +148,6 @@
     }, {
 		text: "关闭",
 		iconCls:"close",
-		handler: 'onGridClose'
+		handler: 'onGridClose' 
 	}]
 });

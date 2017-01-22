@@ -21,13 +21,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzCsWjglListServiceImpl")
 public class TzCsWjglListServiceImpl extends FrameworkImpl {
 	@Autowired
-	private SqlQuery jdbcTemplate;
-	@Autowired
 	private FliterForm fliterForm;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
 	
 	/*获取用户账号信息列表*/
 	@Override
