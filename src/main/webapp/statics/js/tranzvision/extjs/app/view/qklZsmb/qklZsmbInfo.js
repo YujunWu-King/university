@@ -35,7 +35,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
         			xtype: 'textfield',
         			fieldLabel: "机构",
         			hidden:true,
-        			name: 'certJGID',
+        			name: 'JgId',
         			value:Ext.tzOrgID
         		},{
                     xtype: 'textfield',

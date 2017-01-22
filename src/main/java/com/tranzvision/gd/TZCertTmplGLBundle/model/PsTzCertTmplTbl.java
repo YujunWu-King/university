@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZCertTmplGLBundle.model;
 import java.util.Date;
 
 public class PsTzCertTmplTbl {
+	private String tzJgId;
+	
     private String tzCertTmpl;
 
     private String tzTmplName;
@@ -26,13 +28,22 @@ public class PsTzCertTmplTbl {
     private Integer syncid;
 
     private Date syncdttm;
+    
+    public String getTzJgId() {
+        return tzJgId;
+    }
 
+
+    public void setTzJgId(String tzAppclsId) {
+        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
+    }
+    
     public String getTzCertTmpl() {
         return tzCertTmpl;
     }
 
     public void setTzCertTmpl(String tzAppclsId) {
-        this.tzCertTmpl = tzCertTmpl == null ? null : tzAppclsId.trim();
+        this.tzCertTmpl = tzCertTmpl == null ? null : tzCertTmpl.trim();
     }
 
     public String getTzTmplName() {
