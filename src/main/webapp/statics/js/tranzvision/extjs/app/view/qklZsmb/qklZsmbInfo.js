@@ -32,24 +32,39 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                 margin:'8px',
                 style:'border:0px',
                 items: [{
+        			xtype: 'textfield',
+        			fieldLabel: "机构",
+        			hidden:true,
+        			name: 'JgId',
+        			value:Ext.tzOrgID
+        		},{
                     xtype: 'textfield',
                     fieldLabel: '证书模板编号',
                     name: 'certTmpl',
                     cls:'lanage_1',
-                    allowBlank: false
+                    allowBlank: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
                 },{
                     xtype: 'textfield',
                     fieldLabel: '证书名称',
                     name: 'tmplName',
                     cls:'lanage_1',
-                    allowBlank: false
+                    allowBlank: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
 
                 },{
                     xtype: 'textfield',
                     fieldLabel: '证书颁发机构',
                     name: 'certJGID',
                     cls:'lanage_1',
-                    allowBlank: false
+                    allowBlank: false,
+                    afterLabelTextTpl: [
+                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
                 },{
                         xtype: 'tabpanel',
                         frame: true,
@@ -71,7 +86,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml1',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
@@ -89,7 +104,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml2',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
@@ -107,7 +122,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
                                 style:'border:0',
                                 items:[{
                                     xtype: 'ueditor',
-                                    name: 'descript',
+                                    name: 'certMergHtml3',
                                     zIndex:999,
                                     height: 415,
                                     allowBlank: true
@@ -131,7 +146,7 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
     			items:[{
     				margin:'10 35 0 0',		
     				xtype:'label',
-    				html:'<span style="font-weight:bold">'+ 标题图+':</span>'
+    				html:'<span style="font-weight:bold">'+ '标题图'+':</span>'
     			},{
     				xtype:'image',
     				width:70,
@@ -227,21 +242,21 @@ Ext.define('KitchenSink.view.qklZsmb.qklZsmbInfo', {
             buttons:[
                 {
                     text: '预览',
-                    handler:'sendEmail',
+                    handler:'seeTmplDfn',
                     iconCls:'send'
                 },
                 {
                     text: '保存',
-                    handler:'bugInfoSave',
+                    handler:'saveTmplDfn',
                     iconCls:'save'
                 },{
                     text:'确定',
-                    handler:'bugInfoEnsure',
+                    handler:'ensureTmplDfn',
                     iconCls:'ensure'
                 },{
                     text:'关闭',
                     iconCls:'close',
-                    handler:'bugInfoClose'
+                    handler:'closeTmplDfn'
                 }
             ]
         });
