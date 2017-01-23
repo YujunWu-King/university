@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -687,8 +688,16 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 							mapData.get("fmqd_id") == null ? "" : String.valueOf(mapData.get("fmqd_id")));
 					psTzClassInfT.setTzCsKsbqzId(
 							mapData.get("zdbq_id") == null ? "" : String.valueOf(mapData.get("zdbq_id")));					
-					float ttbltest =Float.valueOf((mapData.get("ttbl").toString()));
-			    	psTzClassInfT.setTzTtBl(mapData.get("ttbl") == null ? 0 : ttbltest);
+					
+					String strTtbl = (mapData.get("ttbl")==null ? "0" :mapData.get("ttbl").toString());	
+					
+					if(StringUtils.isBlank(strTtbl)){
+						strTtbl = "0";
+					}
+					
+					//float floatTtBl =(mapData.get("ttbl")==null ? 0f :(Float.valueOf(strTtbl)));
+					psTzClassInfT.setTzTtBl(Float.valueOf(strTtbl));
+					
 					/*20170118-end*/
 					String str_xs = mapData.get("bj_xs") == null ? "" : String.valueOf(mapData.get("bj_xs"));
 					if ("true".equals(str_xs)) {

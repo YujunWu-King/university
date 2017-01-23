@@ -8,7 +8,6 @@
     <result column="TZ_APP_TPL_MS" property="tzAppTplMs" jdbcType="VARCHAR" />
     <result column="TZ_APP_TPL_YT" property="tzAppTplYt" jdbcType="VARCHAR" />
     <result column="TZ_USE_TYPE" property="tzUseType" jdbcType="VARCHAR" />
-    <result column="TZ_PDF_TYPE" property="tzPdfType" jdbcType="VARCHAR" />
     <result column="TZ_APP_LABEL_WZ" property="tzAppLabelWz" jdbcType="VARCHAR" />
     <result column="TZ_APP_TSXX_FS" property="tzAppTsxxFs" jdbcType="VARCHAR" />
     <result column="TZ_APP_TPL_LAN" property="tzAppTplLan" jdbcType="VARCHAR" />
@@ -34,6 +33,9 @@
     <result column="TZ_EML_MODAL_ID" property="tzEmlModalId" jdbcType="VARCHAR" />
     <result column="TZ_LEFT_WIDTH" property="tzLeftWidth" jdbcType="INTEGER" />
     <result column="TZ_RIGHT_WIDTH" property="tzRightWidth" jdbcType="INTEGER" />
+    <result column="TZ_PDF_TYPE" property="tzPdfType" jdbcType="VARCHAR" />
+    <result column="TZ_ONLY_SUBMIT_BTN" property="tzOnlySubmitBtn" jdbcType="VARCHAR" />
+    <result column="TZ_PWD_TYPE" property="tzPwdType" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_APPTPL_JSON_STR" property="tzApptplJsonStr" jdbcType="LONGVARCHAR" />
@@ -43,12 +45,12 @@
     <result column="TZ_FOOTER" property="tzFooter" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, TZ_PDF_TYPE, 
+    TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
     TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, 
     TZ_ATT_A_URL, TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, TZ_APP_M_TPL_ID, TZ_EFFEXP_ZT, 
     TZ_CHN_MODAL_ID, TZ_ENG_MODAL_ID, TZ_ENG_QY, TZ_CHN_QY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
     ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ISSENDMAIL, TZ_EML_MODAL_ID, 
-    TZ_LEFT_WIDTH, TZ_RIGHT_WIDTH
+    TZ_LEFT_WIDTH, TZ_RIGHT_WIDTH, TZ_PDF_TYPE, TZ_ONLY_SUBMIT_BTN, TZ_PWD_TYPE
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
@@ -67,7 +69,7 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs" >
     insert into PS_TZ_APPTPL_DY_T (TZ_APP_TPL_ID, TZ_JG_ID, TZ_APP_TPL_MC, 
-      TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, TZ_PDF_TYPE,
+      TZ_APP_TPL_MS, TZ_APP_TPL_YT, TZ_USE_TYPE, 
       TZ_APP_LABEL_WZ, TZ_APP_TSXX_FS, TZ_APP_TPL_LAN, 
       TZ_ATTACHFILE_NAME, TZ_ATTSYSFILENAME, TZ_ATT_A_URL, 
       TZ_ATT_P_URL, TZ_APP_TZFS, TZ_APP_TZURL, 
@@ -76,11 +78,12 @@
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
       TZ_ISSENDMAIL, TZ_EML_MODAL_ID, TZ_LEFT_WIDTH, 
-      TZ_RIGHT_WIDTH, TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, 
+      TZ_RIGHT_WIDTH, TZ_PDF_TYPE, TZ_ONLY_SUBMIT_BTN, 
+      TZ_PWD_TYPE, TZ_APPTPL_JSON_STR, TZ_CH_M_CONTENT, 
       TZ_EN_M_CONTENT, TZ_HEADER, TZ_FOOTER
       )
     values (#{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAppTplMc,jdbcType=VARCHAR}, 
-      #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, #{tzPdfType,jdbcType=VARCHAR}, 
+      #{tzAppTplMs,jdbcType=VARCHAR}, #{tzAppTplYt,jdbcType=VARCHAR}, #{tzUseType,jdbcType=VARCHAR}, 
       #{tzAppLabelWz,jdbcType=VARCHAR}, #{tzAppTsxxFs,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
       #{tzAttachfileName,jdbcType=VARCHAR}, #{tzAttsysfilename,jdbcType=VARCHAR}, #{tzAttAUrl,jdbcType=VARCHAR}, 
       #{tzAttPUrl,jdbcType=VARCHAR}, #{tzAppTzfs,jdbcType=VARCHAR}, #{tzAppTzurl,jdbcType=VARCHAR}, 
@@ -89,7 +92,8 @@
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
       #{tzIssendmail,jdbcType=VARCHAR}, #{tzEmlModalId,jdbcType=VARCHAR}, #{tzLeftWidth,jdbcType=INTEGER}, 
-      #{tzRightWidth,jdbcType=INTEGER}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, #{tzChMContent,jdbcType=LONGVARCHAR}, 
+      #{tzRightWidth,jdbcType=INTEGER}, #{tzPdfType,jdbcType=VARCHAR}, #{tzOnlySubmitBtn,jdbcType=VARCHAR}, 
+      #{tzPwdType,jdbcType=VARCHAR}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, #{tzChMContent,jdbcType=LONGVARCHAR}, 
       #{tzEnMContent,jdbcType=LONGVARCHAR}, #{tzHeader,jdbcType=LONGVARCHAR}, #{tzFooter,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -113,9 +117,6 @@
       </if>
       <if test="tzUseType != null" >
         TZ_USE_TYPE,
-      </if>
-      <if test="tzPdfType != null" >
-        TZ_PDF_TYPE,
       </if>
       <if test="tzAppLabelWz != null" >
         TZ_APP_LABEL_WZ,
@@ -192,6 +193,15 @@
       <if test="tzRightWidth != null" >
         TZ_RIGHT_WIDTH,
       </if>
+      <if test="tzPdfType != null" >
+        TZ_PDF_TYPE,
+      </if>
+      <if test="tzOnlySubmitBtn != null" >
+        TZ_ONLY_SUBMIT_BTN,
+      </if>
+      <if test="tzPwdType != null" >
+        TZ_PWD_TYPE,
+      </if>
       <if test="tzApptplJsonStr != null" >
         TZ_APPTPL_JSON_STR,
       </if>
@@ -226,9 +236,6 @@
       </if>
       <if test="tzUseType != null" >
         #{tzUseType,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPdfType != null" >
-        #{tzPdfType,jdbcType=VARCHAR},
       </if>
       <if test="tzAppLabelWz != null" >
         #{tzAppLabelWz,jdbcType=VARCHAR},
@@ -305,6 +312,15 @@
       <if test="tzRightWidth != null" >
         #{tzRightWidth,jdbcType=INTEGER},
       </if>
+      <if test="tzPdfType != null" >
+        #{tzPdfType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOnlySubmitBtn != null" >
+        #{tzOnlySubmitBtn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwdType != null" >
+        #{tzPwdType,jdbcType=VARCHAR},
+      </if>
       <if test="tzApptplJsonStr != null" >
         #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -339,9 +355,6 @@
       </if>
       <if test="tzUseType != null" >
         TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
-      </if>
-      <if test="tzPdfType != null" >
-        TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
       </if>
       <if test="tzAppLabelWz != null" >
         TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
@@ -418,6 +431,15 @@
       <if test="tzRightWidth != null" >
         TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER},
       </if>
+      <if test="tzPdfType != null" >
+        TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOnlySubmitBtn != null" >
+        TZ_ONLY_SUBMIT_BTN = #{tzOnlySubmitBtn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwdType != null" >
+        TZ_PWD_TYPE = #{tzPwdType,jdbcType=VARCHAR},
+      </if>
       <if test="tzApptplJsonStr != null" >
         TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -443,7 +465,6 @@
       TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
       TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
       TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
-      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
       TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
       TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
       TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
@@ -469,6 +490,9 @@
       TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
       TZ_LEFT_WIDTH = #{tzLeftWidth,jdbcType=INTEGER},
       TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER},
+      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
+      TZ_ONLY_SUBMIT_BTN = #{tzOnlySubmitBtn,jdbcType=VARCHAR},
+      TZ_PWD_TYPE = #{tzPwdType,jdbcType=VARCHAR},
       TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
       TZ_CH_M_CONTENT = #{tzChMContent,jdbcType=LONGVARCHAR},
       TZ_EN_M_CONTENT = #{tzEnMContent,jdbcType=LONGVARCHAR},
@@ -483,7 +507,6 @@
       TZ_APP_TPL_MS = #{tzAppTplMs,jdbcType=VARCHAR},
       TZ_APP_TPL_YT = #{tzAppTplYt,jdbcType=VARCHAR},
       TZ_USE_TYPE = #{tzUseType,jdbcType=VARCHAR},
-      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
       TZ_APP_LABEL_WZ = #{tzAppLabelWz,jdbcType=VARCHAR},
       TZ_APP_TSXX_FS = #{tzAppTsxxFs,jdbcType=VARCHAR},
       TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
@@ -508,7 +531,10 @@
       TZ_ISSENDMAIL = #{tzIssendmail,jdbcType=VARCHAR},
       TZ_EML_MODAL_ID = #{tzEmlModalId,jdbcType=VARCHAR},
       TZ_LEFT_WIDTH = #{tzLeftWidth,jdbcType=INTEGER},
-      TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER}
+      TZ_RIGHT_WIDTH = #{tzRightWidth,jdbcType=INTEGER},
+      TZ_PDF_TYPE = #{tzPdfType,jdbcType=VARCHAR},
+      TZ_ONLY_SUBMIT_BTN = #{tzOnlySubmitBtn,jdbcType=VARCHAR},
+      TZ_PWD_TYPE = #{tzPwdType,jdbcType=VARCHAR}
     where TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR}
   </update>
 </mapper>

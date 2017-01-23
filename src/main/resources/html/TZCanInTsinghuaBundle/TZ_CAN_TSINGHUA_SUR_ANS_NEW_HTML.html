@@ -72,14 +72,17 @@
 		<script type="text/javascript" src="%bind(:1)/statics/js/onlineSurvey/answer/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="%bind(:1)/statics/js/onlineSurvey/answer/easyui-lang-zh_CN.js" charset="utf-8"></script>
 		<script>
-			jQuery(function() {
-		
+			$(function() {
+				var pageno=$("#pageno").val();
+		        if(pageno<=0){
+		        	$("#applyMBA").css("display","none");
+		        }		     
 			});
 		</script>
 	</head>
 	<body style="padding: 10px">
-		<h2><small>问卷收集数量： %bind(:2)</small></h2>
 		 %bind(:3)
-		 <input type="button" onclick="" value="马上申请清华MBA"/>
+		 <input type="button" value="马上申请清华MBA" id="applyMBA" onclick="%bind(:4)"/>
+		 <input type="hidden" value="%bind(:2)" id="pageno"/>
 	</body>
 </html>

@@ -201,7 +201,8 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         //提交参数.
         var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
-        Ext.tzSubmit(tzParams,function(){
+        Ext.tzSubmit(tzParams,function(responseData){
+        	form.findField("typeID").setValue(responseData);
             store.reload();
         },"保存成功！",true,this);
     },
@@ -271,6 +272,18 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
         console.log(tzParams);
         return tzParams;
-    }
+    },
+     //可配置搜索
+	searchschMgList: function(btn){
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.TZ_SCHOOL_TYPE_VW',
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load();
+			}
+		});	
+	}
+    
 });
 
