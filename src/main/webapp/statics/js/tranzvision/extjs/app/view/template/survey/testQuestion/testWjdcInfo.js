@@ -103,7 +103,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                                 }
                             } 
                         },
-                        {iconCls:'view',tooltip:'汇总统计',handler:'csWjdcSumStatic',
+                        {iconCls:'frequency_report',tooltip:'汇总统计',handler:'csWjdcSumStatic',
                             isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
                                 if(record.get('TZ_DC_WJ_ID')==''){
                                     return true;
