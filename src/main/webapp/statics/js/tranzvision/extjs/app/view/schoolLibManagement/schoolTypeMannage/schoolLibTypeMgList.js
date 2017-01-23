@@ -33,7 +33,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
                 dockedItems:[{
                    xtype:"toolbar",
                     items:[
-                         {text:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.query","查询"),tooltip:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.querydata","查询数据"),iconCls:"query",handler:'queryResSet'},"-",
+                         {text:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.query","查询"),tooltip:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.querydata","查询数据"),iconCls:"query",handler:'searchschMgList'},"-",
                          {text:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.add","新增"),tooltip:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.adddata","新增数据"),iconCls:"add",handler:'addResSet'},"-",
                          {text:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.edit","编辑"),tooltip:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.editdata","编辑数据"),iconCls: "edit",handler:'editResSet'},"-",
                          {text:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.remove","删除"),tooltip:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.removedata","删除选中的数据"),iconCls:"remove",handler:'deleteResSets'}
