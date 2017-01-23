@@ -911,4 +911,48 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			return false;
 		}
 	}
+	
+	/**
+	 * 根据当前登录人获取注册信息项页面URL
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private String createPerfectUrl(){
+		
+		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
+		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
+		TzSession tzSession = new TzSession(request);
+		Object objOprid = tzSession.getSession(userSessionName);
+
+		if (null != objOprid) {
+			strOprid = String.valueOf(objOprid);
+			String jgSql = "SELECT TZ_JG_ID,TZ_IS_CMPL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
+			String siteSql = "SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID = ? limit 0,1";
+
+			Map<String, Object> map = sqlQuery.queryForMap(jgSql, new Object[] { strOprid });
+			if(map != null){
+				strJgId = map.get("TZ_JG_ID") == null?"":String.valueOf(map.get("TZ_JG_ID"));
+				strIsCmpl = map.get("TZ_IS_CMPL") == null?"":String.valueOf(map.get("TZ_IS_CMPL"));
+			}
+			
+			strSiteId = sqlQuery.queryForObject(siteSql, new Object[] { strOprid }, "String");
+			
+			if(StringUtils.isBlank(strJgId) || StringUtils.isBlank(strSiteId)){
+				return url;
+			}
+			
+			String encryUserName = DESUtil.encrypt(strOprid,"TZ_GD_TRANZVISION");
+			
+			if(StringUtils.equals("Y", strIsCmpl)){
+				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/login";
+			}else{
+				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+			}
+
+			return url;
+		}else{
+			return url;
+		}
+	}
 }
