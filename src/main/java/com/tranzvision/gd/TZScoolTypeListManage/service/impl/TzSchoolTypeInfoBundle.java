@@ -71,7 +71,7 @@ public class TzSchoolTypeInfoBundle extends FrameworkImpl {
 				
 				PsTzShoolLogTMapper.insert(PsTzShoolLogT);
 			
-				
+				strRet=String.valueOf(typeID);
 				}	
 			
 		} catch (Exception e) {
@@ -161,7 +161,7 @@ public class TzSchoolTypeInfoBundle extends FrameworkImpl {
 				
 				PsTzShoolLogTMapper.updateByPrimaryKeySelective(PsTzShoolLogT);
 				
-			
+				strRet=String.valueOf(typeID);
 
 					
 
