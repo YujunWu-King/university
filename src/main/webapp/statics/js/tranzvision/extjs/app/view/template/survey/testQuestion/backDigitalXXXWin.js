@@ -10,8 +10,8 @@
 		'KitchenSink.view.template.survey.testQuestion.backXXXStore'
     ],
     title: "调查项设置",
-	actType : "add",//默认add
-	width: 620,
+	actType : "add",//默认add 
+	width: 630,
     height: 400,
     layout: 'fit',
 	cswjId:'',
@@ -22,8 +22,6 @@
     modal: true, 
 	multiSel: '',
 	rowNum: 0,
-    id: 'backDigitalXXXGrid',
-    name: 'backDigitalXXXGrid',
     dockedItems:[{
         xtype:"toolbar",
         items:[
@@ -68,11 +66,11 @@
         },{
 		    text: "名称",
 			dataIndex: 'TZ_XXXKXZ_MC',
-            hidden:false
+            hidden:true
 		},{ 
-		    text: "描述",
+		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
-			minWidth: 100,
+			minWidth: 150,
             editor: {
                 xtype:'textfield',
                 allowBlank:false
@@ -82,7 +80,7 @@
 			dataIndex: 'TZ_L_LIMIT',
 			width: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
@@ -90,7 +88,7 @@
 			dataIndex: 'TZ_U_LIMIT',
 			minWidth:80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
 		},{
@@ -98,22 +96,22 @@
             dataIndex: 'TZ_HISTORY_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },
             {
                 text: "当初年份初始取值(%)",
                 dataIndex: 'TZ_CURYEAR_VAL',
-                minWidth: 80,
+                minWidth: 100,
                 editor: {
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     maxLength: 50
                 }
             },{
                 menuDisabled: true,
                 sortable: false,
-                width: 60,
+                width: 50,
                 align:'center',
                 xtype: 'actioncolumn',
                 items: [{
@@ -137,14 +135,14 @@
 				plugins: new Ext.ux.ProgressBarPager()
 		}
 	}],
-    buttons: [{
+    buttons: [{  
 		text:"保存",
-		iconCls:"save",
-		handler: 'onGridSave'
+		iconCls:"save",  
+		handler: 'onDigtalGridSave'
 	},{
-        text: "确定",
-        iconCls:"ensure",
-        handler: 'onGridSure'
+        text: "确定", 
+        iconCls:"ensure", 
+        handler: 'onDigtalGridSure' 
     }, {
 		text: "关闭",
 		iconCls:"close",

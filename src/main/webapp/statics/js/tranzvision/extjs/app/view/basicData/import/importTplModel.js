@@ -3,8 +3,8 @@ Ext.define('KitchenSink.view.basicData.import.importTplModel', {
     fields: [
         {name: 'tplId'},
         {name: 'tplName'},
-        {name: 'appClassName'},
-        {name: 'appClassPath'},
-        {name: 'appClassMehtod'}
+        {name: 'targetTbl'},
+        {name: 'javaClass'},
+        {name: 'excelTpl'}
 	]
 });

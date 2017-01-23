@@ -3649,6 +3649,16 @@ var SurveyBuild = {
         htmlSet += '	</select>';
         htmlSet += '</legend></fieldset>';
         
+        
+        htmlSet += '<fieldset><legend>';
+        htmlSet += '	<span class="edit_item_label">推荐信开启密码：</span>';
+        htmlSet += '	<select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'tpPwdType\')">';
+        htmlSet += '		<option value="" ' + (data.hasOwnProperty("tpPwdType") && data.tpPwdType == "" ? " selected=\'selected\'": "") + '></option>';
+        htmlSet += '		<option value="Y" ' + (data.hasOwnProperty("tpPwdType") && data.tpPwdType == "Y" ? " selected=\'selected\'": "") + '>开启密码</option>';
+        htmlSet += '		<option value="N" ' + (data.hasOwnProperty("tpPwdType") && data.tpPwdType == "N" ? " selected=\'selected\'": "") + '>不开启密码</option>';
+        htmlSet += '	</select>';
+        htmlSet += '</legend></fieldset>';
+        
     	if(!data.hasOwnProperty("leftWidth")){
     		data.leftWidth = "35";
     	}

@@ -2,10 +2,80 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.importTplController', 
 
-    addAppClassDfn: function() {
+	listSearch: function(btn){
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_IMP_TPL_COM.TZ_TPL_LST_STD.TZ_IMP_TPL_DFN_T',
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load();
+			}
+		});	
+	},
+    deleteTpl: function(view, rowIndex){
+		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+			if(btnId == 'yes'){					   
+			   var store = view.findParentByType("grid").store;
+			   store.removeAt(rowIndex);
+			}												  
+		},this);  
+	},
+	deleteTpls: function(){
+	   var selList = this.getView().getSelectionModel().getSelection();
+	   var checkLen = selList.length;
+	   if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要删除的记录");   
+			return;
+	   }else{
+			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+				if(btnId == 'yes'){					   
+				   var store = this.getView().store;
+				   store.remove(selList);
+				}												  
+			},this);   
+	   }
+	},
+	//列表模板保存和确定
+	listSave: function(btn){
+		var grid = btn.findParentByType("grid");
+		var store = grid.getStore();
+
+		var removeJson = "";
+		var removeRecs = store.getRemovedRecords();
+
+        var comParams="";
+
+		for(var i=0;i<removeRecs.length;i++){
+			if(removeJson == ""){
+				removeJson = Ext.JSON.encode(removeRecs[i].data);
+			}else{
+				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+			}
+		}
+		if(removeJson != ""){
+			comParams = '"delete":[' + removeJson + "]";
+			//提交参数
+			var tzParams = '{"ComID":"TZ_IMP_TPL_COM","PageID":"TZ_TPL_LST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+	        //保存数据
+			Ext.tzSubmit(tzParams,function(){
+				if(btn.name=="save"){
+					store.reload();	
+				}else{
+					grid.close();
+				}
+			},"",true,this);
+		}else{
+			if(btn.name=="save"){
+				TranzvisionMeikecityAdvanced.Boot.showToast("没有需要保存的数据");
+			}else{
+				grid.close();
+			}
+		}
+	},
+	addTpl: function() {
 		
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_APP_CLS_COM"]["TZ_APP_CLSINF_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_IMP_TPL_COM"]["TZ_TPL_INF_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -13,7 +83,7 @@
 		//该功能对应的JS类
 		var className = pageResSet["jsClassName"];
 		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_APP_CLSINF_STD，请检查配置。');
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_TPL_INF_STD，请检查配置。');
 			return;
 		}
 		var contentPanel,cmp, className, ViewClass, clsProto;
@@ -46,7 +116,7 @@
 			}
 		}	
             cmp = new ViewClass();
-						cmp.actType = "add";
+			cmp.actType = "add";
             tab = contentPanel.add(cmp);     
             contentPanel.setActiveTab(tab);
             Ext.resumeLayouts(true);
@@ -54,6 +124,10 @@
                 cmp.show();
             }
     },
+    
+    
+    
+    
 	editAppClassDfn: function() {
 	  //选中行
 	   var selList = this.getView().getSelectionModel().getSelection();
@@ -195,71 +269,4 @@
 			},"",true,this);
 		}
 	},
-	//可配置搜索
-	cfgSearchAppCls: function(btn){
-		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_APP_CLS_COM.TZ_APP_CLSLIST_STD.TZ_APPCLS_TBL',
-			callback: function(seachCfg){
-				var store = btn.findParentByType("grid").store;
-				store.tzStoreParams = seachCfg;
-				store.load();
-			}
-		});	
-	},
-	deleteSelAppClassDfn: function(view, rowIndex){
-		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
-			if(btnId == 'yes'){					   
-			   var store = view.findParentByType("grid").store;
-			   store.removeAt(rowIndex);
-			}												  
-		},this);  
-	},
-	deleteAppClassDfns: function(){
-	   //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
-	   //选中行长度
-	   var checkLen = selList.length;
-	   if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择要删除的记录");   
-			return;
-	   }else{
-			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
-				if(btnId == 'yes'){					   
-				   var store = this.getView().store;
-				   store.remove(selList);
-				}												  
-			},this);   
-	   }
-	},
-	saveAppClass: function(btn){
-		var grid = btn.findParentByType("grid");
-		var store = grid.getStore();
-		//删除json字符串
-		var removeJson = "";
-		//删除记录
-		var removeRecs = store.getRemovedRecords();
-
-        var comParams="";
-
-		for(var i=0;i<removeRecs.length;i++){
-			if(removeJson == ""){
-				removeJson = Ext.JSON.encode(removeRecs[i].data);
-			}else{
-				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-			}
-		}
-		if(removeJson != ""){
-			comParams = '"delete":[' + removeJson + "]";
-		}
-		//提交参数
-		var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSLIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        //保存数据
-		Ext.tzSubmit(tzParams,function(){
-			if(btn.name=="save"){
-				store.reload();	
-			}else{
-				grid.close();
-			}
-		},"",true,this);
-	}
 });

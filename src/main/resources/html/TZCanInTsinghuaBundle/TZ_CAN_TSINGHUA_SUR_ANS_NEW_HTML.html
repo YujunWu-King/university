@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="description" content="问卷调查《%bind(:2)》的问卷调查报告被分享出来了，赶紧来看看！">
+		<style>
+			body{font-size:16px;font-family:Microsoft YaHei,helvetica;background:#F3F3F3;color:#4C4C4C;padding:10px;background:white}
+			html{background:#fff}
+			body,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,pre,blockquote,form,input,textarea,select,button,img{padding:0;margin:0}
+			body,input,textarea,button,select{font:13px/1.5 Microsoft YaHei,Arial,Helvetica,sans-serif;color:#333;word-wrap:break-word}
+			input,button,select{line-height:19px}
+			h1{font-size:1.9em;margin:1.1em 0 .5em}
+			h2{font-size:1.5em;color:#222}
+			h3{font-size:16px;color:#322;font-weight:normal;margin:.95em 0 .4em}
+			h4{font-size:1.1em;color:#222;font-weight:normal;margin:.5em 0 .2em}
+			h5,h6{font-size:1em;margin:.4em 0 .15em}
+			ul{list-style:none}
+			ol{padding-left:2em}
+			dl{margin:1.5em 0}
+			dt{color:#666;margin:24px 0 2px}
+			dd{margin-bottom:.8em;color:#222}
+			a{color:#e83;text-decoration:none;font-weight:bold}
+			a.normal{font-weight:normal}
+			a:hover{color:#f93;text-decoration:underline}
+			img{border:0}
+			textarea{overflow:auto;resize:vertical;outline:0}
+			textarea,select,input{border:1px solid #ddd}
+			input{height:22px;margin:3px 0;outline:0}
+			input,button{display:inline-block}
+			input[type=submit],input[type=button],input.submit{height:auto}
+			button,input[type=submit],input[type=button],input.submit,.fileinput-button{padding:5px 6px;background:-webkit-linear-gradient(top,#fafafb,#eee);background:-moz-linear-gradient(top,#fafafb,#eee);background:linear-gradient(top,#fafafb,#eee);border:1px solid #c5c5c5;border-radius:2px}
+			input[type=radio]{height:auto;border:0}
+			input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+			input::-moz-focus-inner,button::-moz-focus-inner{border:0;padding:0}
+			input[type=submit],input.submit{margin-top:8px}
+			input[type=submit]:hover,input[type=reset]:hover,input[type=button]:hover,button:hover,.fileinput-button:hover{cursor:pointer;background:#fff}
+			input[type="file"]{border:0;height:24px;line-height:24px}
+			label{display:inline-block;margin:4px 0}
+			iframe{display:block;width:100%}
+			pre,code{font-family:Consolas,"Liberation Mono",Courier,monospace}
+			pre{white-space:pre-wrap;word-wrap:break-word}
+			table{border-spacing:0;border-collapse:collapse;width:100%;table-layout:fixed;margin:8px 0 40px}
+			caption{font-size:1.1em;font-weight:bold;margin-bottom:.6em}
+			th{text-align:left;font-weight:normal;color:#9c9c9c}
+			td,th{padding:5px 3px;word-wrap:break-word;border-bottom:1px solid #eee}
+			td{color:#333;font-size:14px}
+			table img{vertical-align:middle}
+			p{margin:.5em 0}
+		</style>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/amcharts.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/pie.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/serial.js" type="text/javascript"></script>
+		
+		<!-- scripts for exporting chart as an image -->
+		<!-- Exporting to image works on all modern browsers except IE9 (IE10 works fine) -->
+		<!-- Note, the exporting will work only if you view the file from web server -->
+		<!--[if (!IE) | (gte IE 10)]> -->
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/amexport.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/rgbcolor.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/canvg.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/jspdf.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/filesaver.js" type="text/javascript"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/jspdf.plugin.addimage.js" type="text/javascript"></script>
+		<!-- <![endif]-->
+		<script type="text/javascript" charset="utf-8" src="%bind(:1)/statics/js/onlineSurvey/answer/jquery-1.11.0.min.js"></script>
+		<script src="%bind(:1)/statics/js/onlineSurvey/answer/highcharts.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/onlineSurvey/answer/css/easyui.css" />
+		<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/onlineSurvey/answer/css/icon.css" />
+		<script type="text/javascript" src="%bind(:1)/statics/js/onlineSurvey/answer/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/onlineSurvey/answer/easyui-lang-zh_CN.js" charset="utf-8"></script>
+		<script>
+			$(function() {
+				var pageno=$("#pageno").val();
+		        if(pageno<=0){
+		        	$("#applyMBA").css("display","none");
+		        }		     
+			});
+		</script>
+	</head>
+	<body style="padding: 10px">
+		 %bind(:3)
+		 <input type="button" value="马上申请清华MBA" id="applyMBA" onclick="www.baidu.com"/>
+		 <input type="hidden" value="%bind(:2)" id="pageno"/>
+	</body>
+</html>

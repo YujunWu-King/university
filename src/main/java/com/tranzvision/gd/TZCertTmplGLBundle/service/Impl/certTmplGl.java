@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZCertTmplGLBundle.dao.PsTzCertTblMapper;
-import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCertTmplTbl;
+import com.tranzvision.gd.TZCertTmplGLBundle.dao.PsTzCerttmplTblMapper;
+import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTbl;
+import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblKey;
+import com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -30,7 +32,7 @@ public class certTmplGl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
-	private PsTzCertTblMapper psTzCertTblMapper;
+	private PsTzCerttmplTblMapper psTzCerttmplTblMapper;
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
@@ -91,18 +93,15 @@ public class certTmplGl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			
 			if (jacksonUtil.containsKey("certTmpl")) {
-				// 类方法ID;
 				String certTmpl = jacksonUtil.getString("certTmpl");
-				PsTzCertTmplTbl psTzAppclsTbl = psTzCertTblMapper.selectByPrimaryKey(certTmpl);
-				if (psTzAppclsTbl != null) {
-					Map<String, Object> map = new HashMap<>();
-					map.put("certTmpl", psTzAppclsTbl.getTzCertTmpl());
-					map.put("tmplName", psTzAppclsTbl.getTzTmplName());
-					map.put("certJGID", psTzAppclsTbl.getTzCertJGID());
-					map.put("certMergHtml1", psTzAppclsTbl.getTzCertMergHtml1());
-					map.put("certMergHtml2", psTzAppclsTbl.getTzCertMergHtml2());
-					map.put("certMergHtml3", psTzAppclsTbl.getTzCertMergHtml3());
-					returnJsonMap.replace("formData", map);
+				String JgId = jacksonUtil.getString("JgId");
+				PsTzCerttmplTblKey psTzCerttmplTblKey = new PsTzCerttmplTblKey();
+				psTzCerttmplTblKey.setTzCertTmplId(certTmpl);
+				psTzCerttmplTblKey.setTzJgId(JgId);
+				
+				
+				PsTzCerttmplTbl psTzCerttmplTbl = psTzCerttmplTblMapper.selectByPrimaryKey(psTzCerttmplTblKey);
+				if (psTzCerttmplTbl != null) {
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "请选择证书模板";
@@ -138,6 +137,7 @@ public class certTmplGl extends FrameworkImpl {
 				String tmplName = (String) infoData.get("tmplName");
 				String JgId = (String) infoData.get("JgId");
 				String certJGID = (String) infoData.get("certJGID");
+				String useFlag = (String) infoData.get("useFlag");
 				String certMergHtml1 = (String) infoData.get("certMergHtml1");
 				String certMergHtml2 = (String) infoData.get("certMergHtml2");
 				String certMergHtml3 = (String) infoData.get("certMergHtml3");
@@ -147,20 +147,6 @@ public class certTmplGl extends FrameworkImpl {
 					errMsg[0] = "1";
 					errMsg[1] = "模板编号:" + certTmpl + ",已经存在";
 				} else {
-					PsTzCertTmplTbl psTzCertTmplTbl = new PsTzCertTmplTbl();
-					psTzCertTmplTbl.setTzJgId(JgId);
-					psTzCertTmplTbl.setTzCertTmpl(certTmpl);
-					psTzCertTmplTbl.setTzTmplName(tmplName);
-					psTzCertTmplTbl.setTzCertJGID(certJGID);
-					psTzCertTmplTbl.setTzCertMergHtml1(certMergHtml1);
-					psTzCertTmplTbl.setTzCertMergHtml2(certMergHtml2);
-					psTzCertTmplTbl.setTzCertMergHtml3(certMergHtml3);
-					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					psTzCertTmplTbl.setRowAddedDttm(new Date());
-					psTzCertTmplTbl.setRowAddedOprid(oprid);
-					psTzCertTmplTbl.setRowLastmantDttm(new Date());
-					psTzCertTmplTbl.setRowLastmantOprid(oprid);
-					psTzCertTblMapper.insert(psTzCertTmplTbl);
 				}
 
 			}
@@ -171,7 +157,7 @@ public class certTmplGl extends FrameworkImpl {
 		return strRet;
 	}
 
-	/* 修改类定义信息 */
+	/*修改类定义信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -196,16 +182,6 @@ public class certTmplGl extends FrameworkImpl {
 
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { certTmpl }, "Integer");
 				if (count > 0) {
-					PsTzCertTmplTbl psTzCertTmplTbl = new PsTzCertTmplTbl();
-					psTzCertTmplTbl.setTzTmplName(tmplName);
-					psTzCertTmplTbl.setTzCertJGID(certJGID);
-					psTzCertTmplTbl.setTzCertMergHtml1(certMergHtml1);
-					psTzCertTmplTbl.setTzCertMergHtml2(certMergHtml2);
-					psTzCertTmplTbl.setTzCertMergHtml3(certMergHtml3);
-					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					psTzCertTmplTbl.setRowLastmantDttm(new Date());
-					psTzCertTmplTbl.setRowLastmantOprid(oprid);
-					psTzCertTblMapper.updateByPrimaryKeySelective(psTzCertTmplTbl);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = "模板编号:" + certTmpl + "不存在";
@@ -240,7 +216,6 @@ public class certTmplGl extends FrameworkImpl {
 				// 类定义ID;
 				String certTmpl = jacksonUtil.getString("certTmpl");
 				if (certTmpl != null && !"".equals(certTmpl)) {
-					psTzCertTblMapper.deleteByPrimaryKey(certTmpl);
 				}
 			}
 		} catch (Exception e) {

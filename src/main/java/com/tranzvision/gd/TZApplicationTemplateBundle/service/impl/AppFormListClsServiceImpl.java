@@ -66,7 +66,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	
+
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
@@ -87,7 +87,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzAppXxxKxzTMapper psTzAppXxxKxzTMapper;
-	
+
 	@Autowired
 	private TemplateEngine templateEngine;
 
@@ -171,8 +171,8 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 						return strRet;
 					}
 				}
-				
-				if(StringUtils.isBlank(language)){
+
+				if (StringUtils.isBlank(language)) {
 					language = tzLoginServiceImpl.getSysLanaguageCD(request);
 				}
 
@@ -191,6 +191,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapTplDef.put("tplUseType", "BMB");
 					// add by caoy @2016-6-13
 					mapTplDef.put("tpPdfType", "HPDF");
+					// add by caoy @2017-1-21 增加推荐信开启密码 默认不开启
+					mapTplDef.put("tpPwdType", "N");
+
 					mapTplDef.put("labelPostion", "UP");
 					mapTplDef.put("showType", "POP");
 					mapTplDef.put("printTplName", "");
@@ -213,6 +216,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					psTzApptplDyT.setTzUseType("BMB");
 					// add by caoy @2016-6-13
 					psTzApptplDyT.setTzPdfType("HPDF");
+					psTzApptplDyT.setTzPwdType("N");
 					psTzApptplDyT.setTzAppLabelWz("UP");
 					psTzApptplDyT.setTzAppTsxxFs("POP");
 					psTzApptplDyT.setTzAppTplLan(language);
@@ -401,25 +405,24 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		}
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		
-		
-		System.out.println("strParams:"+strParams);
-		
+
+		System.out.println("strParams:" + strParams);
+
 		/* 推荐人姓名 */
 		if (StringUtils.equals(oType, "RNAME")) {
 			String userName = "";
 			String insid = jacksonUtil.getString("insid");
-			if(StringUtils.isNotBlank(insid) && StringUtils.length(insid) > 0){
+			if (StringUtils.isNotBlank(insid) && StringUtils.length(insid) > 0) {
 				String sqlTjx = "SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ? LIMIT 1";
 				insid = sqlQuery.queryForObject(sqlTjx, new Object[] { insid }, "String");
-				
+
 				String sqlOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? ORDER BY OPRID LIMIT 1";
 				String refereesOprid = sqlQuery.queryForObject(sqlOprid, new Object[] { insid }, "String");
-				
+
 				String sqlRealName = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
 				userName = sqlQuery.queryForObject(sqlRealName, new Object[] { refereesOprid }, "String");
-			}		
-			if(userName == null){
+			}
+			if (userName == null) {
 				userName = "";
 			}
 			Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -432,17 +435,20 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			// 判断当前登录人是否有个人照片信息
 			String ishasSql = "SELECT 'Y' FROM PS_TZ_OPR_PHT_GL_T WHERE OPRID = ?";
 			String isHas = sqlQuery.queryForObject(ishasSql, new Object[] { oprId }, "String");
-			if(StringUtils.equals("Y", isHas)){
+			if (StringUtils.equals("Y", isHas)) {
 				String sql = "SELECT PH.TZ_ATTACHSYSFILENA,PH.TZ_ATTACHFILE_NAME,PH.TZ_ATT_P_URL,PH.TZ_ATT_A_URL FROM PS_TZ_OPR_PHT_GL_T GL, PS_TZ_OPR_PHOTO_T PH WHERE GL.TZ_ATTACHSYSFILENA = PH.TZ_ATTACHSYSFILENA AND GL.OPRID = ?";
 				Map<String, Object> photoMap = sqlQuery.queryForMap(sql, new Object[] { oprId });
-				
-				String sysfilename = photoMap.get("TZ_ATTACHSYSFILENA") == null ? "" : String.valueOf(photoMap.get("TZ_ATTACHSYSFILENA"));
-				String filename = photoMap.get("TZ_ATTACHFILE_NAME") == null ? "" : String.valueOf(photoMap.get("TZ_ATTACHFILE_NAME"));
+
+				String sysfilename = photoMap.get("TZ_ATTACHSYSFILENA") == null ? ""
+						: String.valueOf(photoMap.get("TZ_ATTACHSYSFILENA"));
+				String filename = photoMap.get("TZ_ATTACHFILE_NAME") == null ? ""
+						: String.valueOf(photoMap.get("TZ_ATTACHFILE_NAME"));
 				String path = photoMap.get("TZ_ATT_P_URL") == null ? "" : String.valueOf(photoMap.get("TZ_ATT_P_URL"));
-				String imapath = photoMap.get("TZ_ATTACHSYSFILENA") == null ? "" : String.valueOf(photoMap.get("TZ_ATT_A_URL"));
-				
+				String imapath = photoMap.get("TZ_ATTACHSYSFILENA") == null ? ""
+						: String.valueOf(photoMap.get("TZ_ATT_A_URL"));
+
 				String photo = imapath + sysfilename;
-				
+
 				Map<String, Object> mapRet = new HashMap<String, Object>();
 				mapRet.put("photo", photo);
 				mapRet.put("sysFileName", sysfilename);
@@ -685,34 +691,34 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			}
 			return jacksonUtil.Map2json(mapRet);
 		}
-		
+
 		/* 报名表元数据导出 */
 		if (StringUtils.equals(oType, "METADATA")) {
 			String code = "0";
 			String msg = "";
 			String url = "";
-			
+
 			String tplId = jacksonUtil.getString("tid");
-			
-			if(StringUtils.isBlank(tplId)){
+
+			if (StringUtils.isBlank(tplId)) {
 				code = "1";
 				msg = "参数错误，未提供报名表模板编号！";
 			}
-			
-			if(StringUtils.equals(code, "0")){
+
+			if (StringUtils.equals(code, "0")) {
 				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				String downloadPath = getSysHardCodeVal.getDownloadPath();
-				
+
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 				String s_dtm = datetimeFormate.format(new Date());
 				String fileName = s_dtm + "-" + Math.round(Math.random() * 899999999 + 100000000) + ".xlsx";
 
 				ExcelHandle excelHandle = new ExcelHandle(request, downloadPath, orgid, "METADATA");
-				
+
 				List<String[]> dataCellKeys = new ArrayList<String[]>();
 				List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 				Map<String, Object> mapData = new HashMap<String, Object>();
-				
+
 				String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_CCLX IN ('D','L','S')";
 				List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplId });
 				for (Object obj : resultlist) {
@@ -723,7 +729,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapData.put(xxxbh, xxxbh);
 				}
 				dataList.add(mapData);
-				
+
 				boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
 				if (rst) {
 					code = "0";
@@ -743,7 +749,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		}
 		return strRet;
 	}
-	
+
 	/**
 	 * 更新报名表模板
 	 */
@@ -751,29 +757,29 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 	@Transactional
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
-		
+
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		if(StringUtils.isBlank(orgId)){
+		if (StringUtils.isBlank(orgId)) {
 			errMsg[0] = "1";
 			errMsg[1] = "您当前没有机构，不能保存报名表模板！";
 			return strRet;
 		}
-		
+
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			int dataLength = actData.length;
-			
+
 			System.out.println();
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				String strForm = actData[num];
-				System.out.println("strForm:"+strForm);
+				System.out.println("strForm:" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 
 				String tid = jacksonUtil.getString("tid");
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
-				strRet = templateEngine.saveTpl(tid,infoData);
+				strRet = templateEngine.saveTpl(tid, infoData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -788,11 +794,11 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-			JacksonUtil jacksonUtil = new JacksonUtil();
-			jacksonUtil.json2Map(strParams);
-			String tplId = jacksonUtil.getString("TZ_APP_TPL_ID");
-			
-			String editHtml = templateEngine.init(tplId,"");
-			return editHtml;
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String tplId = jacksonUtil.getString("TZ_APP_TPL_ID");
+
+		String editHtml = templateEngine.init(tplId, "");
+		return editHtml;
 	}
 }

@@ -11,6 +11,8 @@ public class PsTzCswjPctTbl extends PsTzCswjPctTblKey {
 
     private Integer tzOrder;
 
+    private String tzXxxkxzMs;
+
     public Integer getTzULimit() {
         return tzULimit;
     }
@@ -49,5 +51,13 @@ public class PsTzCswjPctTbl extends PsTzCswjPctTblKey {
 
     public void setTzOrder(Integer tzOrder) {
         this.tzOrder = tzOrder;
+    }
+
+    public String getTzXxxkxzMs() {
+        return tzXxxkxzMs;
+    }
+
+    public void setTzXxxkxzMs(String tzXxxkxzMs) {
+        this.tzXxxkxzMs = tzXxxkxzMs == null ? null : tzXxxkxzMs.trim();
     }
 }
