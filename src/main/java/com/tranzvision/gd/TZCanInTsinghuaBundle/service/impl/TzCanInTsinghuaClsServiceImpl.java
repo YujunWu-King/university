@@ -503,6 +503,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String strCategories;
 			// 是否计算分值字段TZ_IS_AVG
 			//String TZ_IS_AVG = "N";
+			@SuppressWarnings("unused")
 			String TZ_XXX_QID = "";
 			String TZ_TITLE = "";
 			// 保存平均分
@@ -884,8 +885,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if(pageno.equals(maxPageNo)){
 				lastPageNo=maxPageNo;
 			}
-			//strCountHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML", request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), lastPageNo, strDivHtml);
+			//获取注册信息页面
+			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), lastPageNo, strDivHtml,this.createPerfectUrl());
 			return strCountHtml;
 			
 		} catch (Exception e) {
@@ -920,7 +921,6 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	private String createPerfectUrl(){
 		
 		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/

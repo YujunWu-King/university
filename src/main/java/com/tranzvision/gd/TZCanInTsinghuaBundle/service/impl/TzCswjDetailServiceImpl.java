@@ -312,8 +312,8 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 							PsTzCswjTbl.setTzAppTplId(TZ_APP_TPL_ID);
 							PsTzCswjTbl.setTzDcWjId(TZ_DC_WJ_ID);
 							PsTzCswjTbl.setTzJgId(orgid);
-							PsTzCswjTbl.setRowAddedDttm(new Date());
-							PsTzCswjTbl.setRowAddedOprid(oprid);
+							//PsTzCswjTbl.setRowAddedDttm(new Date());
+							//PsTzCswjTbl.setRowAddedOprid(oprid);
 							PsTzCswjTbl.setRowLastmantDttm(new Date());
 							PsTzCswjTbl.setRowLastmantOprid(oprid);
 							
