@@ -1,0 +1,30 @@
+<div id="mask" class="mask">
+</div>
+	<div id="inpwd" class="regmain-con right" style="margin: 0 auto; float: none;z-index: 999999;position: absolute;top: 10%;left: 50%;margin-left:-464px;background-color:#fff">
+		<div class="input-list" style="display: block">
+			<div class="input-list-info left">
+				<span class="red">*</span>%bind(:1)
+			</div>
+			<div class="input-list-text left">
+				<input title="%bind(:1)" id="pwd" class="inpu-list-text-enter"
+					name="%bind(:1)" value="" type="password" />
+			</div>
+			<div class="input-list-suffix left">
+				<div id="pwdTip"
+					style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;"
+					class="onShow">
+					<div class="onShow" tips="">&nbsp;</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="operation-btn">
+			<a href="#" id="pwdbutton">
+				<div class="btn-save">
+					%bind(:2)&nbsp;&nbsp;<span class="operation-btn-icon"><img
+						src="%bind(:3)/statics/images/appeditor/new/btn-save.png" /></span>
+				</div>
+			</a>
+			<div class="clear"></div>
+		</div>
+	</div>

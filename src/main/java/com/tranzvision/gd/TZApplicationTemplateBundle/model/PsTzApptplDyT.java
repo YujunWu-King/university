@@ -69,6 +69,8 @@ public class PsTzApptplDyT {
 
     private String tzOnlySubmitBtn;
 
+    private String tzPwdType;
+
     public String getTzAppTplId() {
         return tzAppTplId;
     }
@@ -331,5 +333,13 @@ public class PsTzApptplDyT {
 
     public void setTzOnlySubmitBtn(String tzOnlySubmitBtn) {
         this.tzOnlySubmitBtn = tzOnlySubmitBtn == null ? null : tzOnlySubmitBtn.trim();
+    }
+
+    public String getTzPwdType() {
+        return tzPwdType;
+    }
+
+    public void setTzPwdType(String tzPwdType) {
+        this.tzPwdType = tzPwdType == null ? null : tzPwdType.trim();
     }
 }
