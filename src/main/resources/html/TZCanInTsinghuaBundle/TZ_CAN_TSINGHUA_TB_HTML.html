@@ -1,14 +1,15 @@
 <div  style="width: 100%; float: left; border: 1px solid #E0E0E0; padding: 5px; display: block; margin-bottom: 10px">
 	<h3 style="text-align: left">
-		%bind(:1) <small style="color: gray">%bind(:2)</small> 
-		<font  color=blue>%bind(:3)</font>
+		%bind(:1) <font  color=blue>%bind(:3)</font>
 	</h3>
-	<h5 style="text-align: left">2016年问卷统计情况</h5>
-	<div id="chartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div>
-	<div id="serialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div>
-	 <h5 style="text-align: left">历史问卷统计情况</h5>
+	
+	<h5 style="text-align: left">历史问卷统计情况</h5>
 	<div id="hischartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div>
 	<div id="hisserialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div> 
+	<h5 style="text-align: left">已参加测试的%bind(:2)名考生的分布图：</h5>
+	<div id="chartdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div>
+	<div id="serialdiv_%bind(:4)" style=" width: 50%;float: left; display: block; height: 260px;"></div>
+	
     
 	<script>
 		var arrColor = ['#FF4700', '#F10EF1', '#03FC26', '#3030CF', '#FCF503', '#640A62', '#245D2C', '#1A5267', '#6A0A03', '#C60210', '#678B1A', '#B8860B', '#6F7CBC', '#6F7CBC', '#7b68ee', '#cd5c5c'];
