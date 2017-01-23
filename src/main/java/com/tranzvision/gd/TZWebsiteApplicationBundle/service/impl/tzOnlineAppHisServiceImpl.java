@@ -214,7 +214,7 @@ public class tzOnlineAppHisServiceImpl {
 		 }
 		 
 		 strAppInsJson = jacksonUtil.Map2json(map);
-		 //System.out.println(strAppInsJson);
+		 System.out.println(strAppInsJson);
 		 return strAppInsJson;
 	}
 	

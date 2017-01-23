@@ -11,7 +11,7 @@
     ],
     title: "调查项设置",
 	actType : "add",//默认add
-	width: 620,
+	width: 600,
     height: 400,
     layout: 'fit',
 	cswjId:'',
@@ -34,7 +34,6 @@
                     pluginId: 'dataCellediting',
                     clicksToEdit: 1
 				 },
-		
 		viewConfig: {
 			plugins: {
 				ptype: 'gridviewdragdrop',
@@ -59,26 +58,27 @@
             dataIndex: 'TZ_ORDER',
             hidden: true
         },{
-		    text: "名称",
-			dataIndex: 'TZ_XXXKXZ_MC'
+		    text: "信息项编号",
+			dataIndex: 'TZ_XXXKXZ_MC',
+            hidden: true
 		},{ 
-		    text: "描述",
+		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
-			minWidth: 100
+			minWidth: 150
 		},{
 		    text: "取值下限",
 			dataIndex: 'TZ_L_LIMIT',
 			width: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
 		    text: "取值上限",
-			dataIndex: 'TZ_U_LIMIT',
+			dataIndex: 'numberfield',
 			minWidth:80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
 		},{
@@ -86,7 +86,7 @@
             dataIndex: 'TZ_HISTORY_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
@@ -94,7 +94,7 @@
             dataIndex: 'TZ_CURYEAR_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         }],
@@ -120,7 +120,7 @@
 	},{
         text: "确定",
         iconCls:"ensure",
-        handler: 'onGridSure'
+        handler: 'onGridSure' 
     }, {
 		text: "关闭",
 		iconCls:"close",

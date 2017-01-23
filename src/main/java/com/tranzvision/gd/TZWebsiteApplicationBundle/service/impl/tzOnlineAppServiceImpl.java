@@ -28,7 +28,6 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.TemplateEngine;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;

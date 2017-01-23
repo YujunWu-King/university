@@ -16,7 +16,9 @@
     width: 640,
     layout: 'border',
     viewModel: true,
+    frame:true,
     actType: 'update',
+    style:"margin:8px",
     initComponent: function() {
 		me = this;
 		var treeStore = new KitchenSink.view.content.artMg.artTreeStore({siteid: me.siteid});
@@ -91,13 +93,10 @@
 			{
 				xtype: 'panel',
                 region: 'center', 
-                frame: true,
+                frame: false,
                 title: '内容发布',
                 reference: 'artListGridPanel',
-                layout: {
-                    type: 'vbox',
-                    align: 'stretch'
-                },
+                layout: 'fit',
                 border: false,
                 //bodyPadding: 10,
                 //height: 400,
@@ -107,33 +106,8 @@
                     msgTarget: 'side',
                     labelWidth:120,
                     labelStyle: 'font-weight:bold'
-                },
-
-                items: [{
-                    xtype:"toolbar",
-                    items:[
-                        {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'cfgSearch'},"-",
-						{text:"新增",tooltip:"新增数据",iconCls: 'add',handler:'addArt',name:'add'},"-",
-						{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSelArt'},"-",
-						{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelList'},'-',
-						{text:"复制",tooltip:"复制",iconCls:"copy",handler:'copySelList'},'-',
-						{text:"发布",tooltip:"发布选中内容",iconCls:"publish",handler:'releaseSelList'},'-',
-						{text:"撤销发布",tooltip:"撤销发布选中内容",iconCls:"revoke",handler:'UndoSelList'}
-                        /*
-						{xtype:'splitbutton',
-                         text:'更多操作',
-                         iconCls:'list',
-                         glyph: 61,
-                         menu:
-                         [
-                                {
-                                    text:'复制',
-                                    iconCls:"switch ",
-                                    handler:'copy'
-                                }
-                         ]
-                        }*/
-                    ]},
+                },                
+                items: [
 					{
 						xtype: 'grid',
 						reference: 'artListGrid',
@@ -144,6 +118,31 @@
 						viewConfig: {
 							enableTextSelection: true
 						},
+						dockedItems:[{
+		                    xtype:"toolbar",
+		                    items:[
+		                        {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'cfgSearch'},"-",
+								{text:"新增",tooltip:"新增数据",iconCls: 'add',handler:'addArt',name:'add'},"-",
+								{text:"编辑",tooltip:"编辑数据",iconCls: 'edit',handler:'editSelArt'},"-",
+								{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteSelList'},'-',
+								{text:"复制",tooltip:"复制",iconCls:"copy",handler:'copySelList'},'-',
+								{text:"发布",tooltip:"发布选中内容",iconCls:"publish",handler:'releaseSelList'},'-',
+								{text:"撤销发布",tooltip:"撤销发布选中内容",iconCls:"revoke",handler:'UndoSelList'}
+		                        /*
+								{xtype:'splitbutton',
+		                         text:'更多操作',
+		                         iconCls:'list',
+		                         glyph: 61,
+		                         menu:
+		                         [
+		                                {
+		                                    text:'复制',
+		                                    iconCls:"switch ",
+		                                    handler:'copy'
+		                                }
+		                         ]
+		                        }*/
+		                    ]}],
 						columns: [{
 							text: '站点编号',
 							hidden: true,

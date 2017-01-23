@@ -813,7 +813,7 @@
 			callback: function(selection){
 				form.findField(modal).setValue(selection[0].data.TZ_SCORE_MODAL_ID);
 				form.findField(modal_desc).setValue(selection[0].data.TZ_MODAL_NAME);
-			}
+			} 
 		});
 	},
 	
@@ -824,7 +824,7 @@
 		if(fieldName=='ksbq'){
 			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索自动标签规则");
 			bq="ksbq";
-			bq_desc="fmqd";
+			bq_desc="ksbq_desc";
 		}else if(fieldName=="fmqd"){
 			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.csbqz","搜索负面清单规则");
 			bq="fmqd";
@@ -861,8 +861,8 @@
 			},
 			multiselect: false,
 			callback: function(selection){
-				form.findField(bq).setValue(selection[0].data.TZ_SCORE_MODAL_ID);
-				form.findField(bq_desc).setValue(selection[0].data.TZ_MODAL_NAME);
+				form.findField(bq).setValue(selection[0].data.TZ_BIAOQZ_ID);
+				form.findField(bq_desc).setValue(selection[0].data.TZ_BIAOQZ_NAME);
 			}
 		});
 	},

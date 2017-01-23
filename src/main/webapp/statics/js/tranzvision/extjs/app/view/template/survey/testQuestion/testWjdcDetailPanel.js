@@ -57,6 +57,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     forceSelection: true,
                     valueField: 'TValue',
                     displayField: 'TSDesc',
+                    editable:false,
                     name:'TZ_DC_WJ_ZT',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_DC_WJ_ZT"),
                     queryMode: 'local',
@@ -67,6 +68,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_KSRQ", "开始日期"),
                     format: 'Y-m-d',
                     allowBlank:false,
+                    editable:false,
                     name: 'TZ_DC_WJ_KSRQ',
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -77,6 +79,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_KSSJ", "开始时间"),
                     format: 'H:i:s',
                     value:'8:30',
+                    editable:false,
                     allowBlank:false,
                     name: 'TZ_DC_WJ_KSSJ',
                     afterLabelTextTpl: [
@@ -88,6 +91,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_JSRQ", "结束日期"),
                     format: 'Y-m-d',
                     allowBlank:false,
+                    editable:false,
                     name: 'TZ_DC_WJ_JSRQ',
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -99,6 +103,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     format: 'H:i:s',
                     value:'17:30',
                     allowBlank:false,
+                    editable:false,
                     name: 'TZ_DC_WJ_JSSJ',
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -112,6 +117,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     name:'TZ_STATE',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_STATE"),
                     queryMode: 'local',
+                    editable:false,
                     name: 'TZ_STATE',
                     value: '0'
                 },{
@@ -154,11 +160,13 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                             listeners:{ 
                                 click:function(button,e,eOpts ){
 
-                                	var form = button.findParentByType("form").getForm();
-                                    var tplId = form.findField("TZ_APP_TPL_ID").value;
-                                    var csWjId = form.findField("TZ_CS_WJ_ID").value;
-                                    var wjId=form.findField("TZ_DC_WJ_ID").value;
-                                    if (wjId==''){
+	                            	var form = button.findParentByType("form").getForm();
+	                            	var grid=button.findParentByType("form").findParentByType("panel").child("grid");
+	                                var tplId = form.findField("TZ_APP_TPL_ID").value;
+	                                var csWjId = form.findField("TZ_CS_WJ_ID").value;
+	                                var wjId=form.findField("TZ_DC_WJ_ID").value;
+
+                                  if (wjId==''){
                                     if (tplId == '') {
                                         Ext.Msg.alert('提示', "请先选择问卷模板！");
                                     } else {
@@ -175,10 +183,9 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                                                         form.findField("TZ_DC_WJ_ID").setValue(wjId);
                                                         form.findField("TZ_DC_WJMC").setValue(wjName);
                                                         button.setDisabled(true);
-                                                       /* var grid = this.getView().child("grid");
-                                                        var tzStoreParams = '{"FLAG":"A","TZ_DC_WJ_ID":"' + wjId + '"}';
-                                                        grid.store.tzStoreParams = tzStoreParams;
-                                                        grid.store.load();*/
+                                                      var tzStoreParams = '{"FLAG":"A","TZ_CS_WJ_ID":"' + csWjId + '"}';
+                                                         grid.store.tzStoreParams = tzStoreParams;
+                                                         grid.store.load(); 
 
                                                     });
                                                 }
@@ -197,13 +204,14 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     layout: {
                         type: 'column'
                     },
-                    items: [
+                    items: [ 
                         {
                             columnWidth: .4,
                             xtype: 'textfield',
                             fieldLabel: "测试问卷",
                             name: 'TZ_DC_WJ_ID',
                             editable: false,
+                            cls:'lanage_1',
                             displayOnly:true
                         },
                         {
@@ -227,6 +235,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
             xtype: 'grid',
           // title: '问卷实例详情',
            //  width:750,  
+            id:'wjdcXxxGrid',
             height:330,
             frame: true,
             columnLines: true,
@@ -256,7 +265,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                 type: 'testWjXxxStore'
             },
             columns: [
-                {   text:'测试问卷编号',
+              /*  {   text:'测试问卷编号',
                     dataIndex:'TZ_CS_WJ_ID',
                     width:50,
                     hidden:true
@@ -269,12 +278,17 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     text:'信息项名称',
                     dataIndex:'TZ_COM_LMC',
                     width:50,
-                    hidden:false
+                    hidden:true
                 },{text:'序号',
                   dataIndex:'TZ_ORDER',
                   width:50,
                   hidden:true
-                 },{
+                 },*/{
+                    text:'信息项类型',
+                    dataIndex:'TZ_COM_LMC',
+                    width:50,
+                    hidden:true
+                },{
                     text: '信息项编号',
                     dataIndex: 'TZ_XXX_BH',
                     width: 170,

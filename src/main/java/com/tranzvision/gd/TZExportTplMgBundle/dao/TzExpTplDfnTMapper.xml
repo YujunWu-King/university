@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZExportTplMgBundle.dao.TzExpTplDfnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT" >
+    <id column="TZ_TPL_ID" property="tzTplId" jdbcType="VARCHAR" />
+    <result column="TZ_TPL_NAME" property="tzTplName" jdbcType="VARCHAR" />
+    <result column="TZ_JAVA_CLASS" property="tzJavaClass" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_TPL_ID, TZ_TPL_NAME, TZ_JAVA_CLASS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_EXP_TPL_DFN_T
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TZ_EXP_TPL_DFN_T
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT" >
+    insert into TZ_EXP_TPL_DFN_T (TZ_TPL_ID, TZ_TPL_NAME, TZ_JAVA_CLASS
+      )
+    values (#{tzTplId,jdbcType=VARCHAR}, #{tzTplName,jdbcType=VARCHAR}, #{tzJavaClass,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT" >
+    insert into TZ_EXP_TPL_DFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzTplId != null" >
+        TZ_TPL_ID,
+      </if>
+      <if test="tzTplName != null" >
+        TZ_TPL_NAME,
+      </if>
+      <if test="tzJavaClass != null" >
+        TZ_JAVA_CLASS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzTplId != null" >
+        #{tzTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTplName != null" >
+        #{tzTplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJavaClass != null" >
+        #{tzJavaClass,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT" >
+    update TZ_EXP_TPL_DFN_T
+    <set >
+      <if test="tzTplName != null" >
+        TZ_TPL_NAME = #{tzTplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJavaClass != null" >
+        TZ_JAVA_CLASS = #{tzJavaClass,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT" >
+    update TZ_EXP_TPL_DFN_T
+    set TZ_TPL_NAME = #{tzTplName,jdbcType=VARCHAR},
+      TZ_JAVA_CLASS = #{tzJavaClass,jdbcType=VARCHAR}
+    where TZ_TPL_ID = #{tzTplId,jdbcType=VARCHAR}
+  </update>
+</mapper>

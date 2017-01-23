@@ -147,7 +147,7 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 				strApplicationNum = (String) siteMap.get("TZ_MSH_ID");
 			}
 						
-			String cityInfo="select TZ_LEN_PROID from ps_TZ_REG_USER_T where OPRID=?";
+			String cityInfo="select TZ_LEN_PROID from PS_TZ_REG_USER_T where OPRID=?";
 			strCity = jdbcTemplate.queryForObject(cityInfo, new Object[] { m_curOPRID}, "String");
 			//未读站内信数量
 			int MsgCount = 0;
