@@ -46,7 +46,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
             {text:"新增",tooltip:"新增",iconCls:"add",handler:'addDcwj'},'-',
           //  {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdc'},'-',
           //   {text:'删除',tooltip:'删除',iconCls:"remove",handler:'generateWjdc'},'-',
-            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->',
+            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->'
             /**
             *lzh-20160414------------------start
             *仅为燕京提供在线调查数据导出功能，
@@ -145,7 +145,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                                     return false;
                                 }
                             }
-                        }
+                        },
+                        {iconCls:' people',tooltip:'参与人管理',handler:'majorPersonMg'}
                     ]
                 }
 //                ,  {
