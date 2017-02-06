@@ -444,9 +444,14 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				// 测试问卷编号;
 				String tzCsWjId = jacksonUtil.getString("TZ_CS_WJ_ID");
 				PsTzCswjTbl PStzCsWjTbl = PsTzCswjTblMapper.selectByPrimaryKey(tzCsWjId);
+				String TZ_DC_WJMC;
 				if (PStzCsWjTbl != null) {
-					String TZ_DC_WJMC=sqlQuery.queryForObject("select TZ_APP_TPL_MC from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?", new Object[]{PStzCsWjTbl.getTzAppTplId()}, "String");
-					TZ_DC_WJMC=(TZ_DC_WJMC==null?"":TZ_DC_WJMC.toString());
+					if(!"".equals(PStzCsWjTbl.getTzDcWjId().toString())){
+					    TZ_DC_WJMC=sqlQuery.queryForObject("select TZ_APP_TPL_MC from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?", new Object[]{PStzCsWjTbl.getTzAppTplId()}, "String");
+						TZ_DC_WJMC=(TZ_DC_WJMC==null?"":TZ_DC_WJMC.toString());
+					}else{
+						TZ_DC_WJMC="";
+					}
 					Map<String, Object> retMap = new HashMap<String, Object>();
 					retMap.put("TZ_CS_WJ_ID", PStzCsWjTbl.getTzCsWjId().toString());
 					retMap.put("TZ_CS_WJ_NAME", PStzCsWjTbl.getTzCsWjName());
