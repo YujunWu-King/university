@@ -432,10 +432,14 @@ public class RegisteServiceImpl {
 		        	if(enrollDir == null || "".equals(enrollDir)){
 		        		dir = dir + File.separator + jgid.toLowerCase();
 		        	}else{
-		        		dir = dir + enrollDir;
+		        		if((dir.lastIndexOf(File.separator)+1) != dir.length()){
+		        			dir = dir + File.separator + enrollDir;
+		        		}else{
+		        			dir = dir + enrollDir;
+		        		}
 		        	}
 		        	//一个机构下可以有多个站点
-		        	dir = dir + "/" + strSiteId;
+		        	dir = dir + File.separator + strSiteId;
 		        	boolean bl = this.staticFile(strReleasContent, dir, "enroll.html", errMsg);
 		        	return bl;  
 		        }else{
@@ -845,11 +849,14 @@ public class RegisteServiceImpl {
 		        	if(enrollDir == null || "".equals(enrollDir)){
 		        		dir = dir + File.separator + jgid.toLowerCase();
 		        	}else{
-		        		dir = dir + enrollDir;
+		        		if((dir.lastIndexOf(File.separator)+1) != dir.length()){
+		        			dir = dir + File.separator + enrollDir;
+		        		}else{
+		        			dir = dir + enrollDir;
+		        		}
 		        	}
 		        	//一个机构可以有多个站点
-		        	dir = dir + "/" + strSiteId;
-		        		
+		        	dir = dir + File.separator + strSiteId;
 		        	boolean bl = this.staticFile(strReleasContent, dir, "perfect.html", errMsg);
 		        	return bl;  
 		        }else{
