@@ -182,9 +182,11 @@ public class tzOnlineAppHisServiceImpl {
 						 mapAppXxxInsJson = this.getEduOrWorkExprXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp); 
 					 }	 
 					 //1.解析"英语水平"控件   //2.解析"职业背景"控件  //3.解析"开始创业"控件 //4.解析"推荐信"控件
-					 else if("EngLev".equals(strComLmc)||"FirmType".equals(strComLmc)||"StartBusinessExp".equals(strComLmc)||"recommendletter".equals(strComLmc))
+					 else if("EngLev".equals(strComLmc)||"FirmType".equals(strComLmc)||"StartBusinessExp".equals(strComLmc))
 					 {
 						 mapAppXxxInsJson=this.getGpCtrlData(strComLmc, numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp);
+					 }else if("recommendletter".equals(strComLmc)){
+						 mapAppXxxInsJson=getRefLetterXxxInfoJson(numAppInsId, strTplId, strXxxBhChild,i, strOprNameApp);
 					 }
 					 else{
 						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp);
@@ -1283,11 +1285,11 @@ public class tzOnlineAppHisServiceImpl {
 		}
 		return null;
 	}
-	//解析"英语水平","职业背景","创业经历","推荐信"控件数据  //'EngLev','FirmType','StartBusinessExp','recommendletter'
+	//解析"英语水平","职业背景","创业经历"控件数据  //'EngLev','FirmType','StartBusinessExp'
 	public Map<String,Object> getGpCtrlData(String  strComLmc,Long numAppInsId, String strTplId, String strXxxBhChild, int i, String strOprNameApp){
 			//Map<String,Object>returnMap=new HashMap<String,Object>();
 			Map<String,Object>childMap=new HashMap<String,Object>();
-			System.out.println("strComLmc:"+strComLmc);
+			//System.out.println("strComLmc:"+strComLmc);
 			//查询所有实例ID为“numAppInsId”的页面数据
 			//final String SQL1="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? ";
 			
@@ -1298,8 +1300,8 @@ public class tzOnlineAppHisServiceImpl {
 			//"strXxxBhChild"在"FirmType"中的值为:firm_type和position_type
 			Map<String,Object>valMap=sqlQuery.queryForMap(LIKE_SQL, new Object[]{numAppInsId});
 			Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
-			System.out.println("valMap:"+valMap);
-			System.out.println("normalDataMap"+normalDataMap);
+			//System.out.println("valMap:"+valMap);
+			//System.out.println("normalDataMap"+normalDataMap);
 			
 			Map<String,Object>tempMap=new HashMap<String,Object>();
 			tempMap.put("instanceId",normalDataMap.get("TZ_XXX_SLID"));
@@ -1313,11 +1315,13 @@ public class tzOnlineAppHisServiceImpl {
 			tempMap.put("StorageType",normalDataMap.get("TZ_XXX_CCLX"));
 			tempMap.put("orderby", normalDataMap.get("TZ_ORDER"));
 			tempMap.put("classname",normalDataMap.get("TZ_COM_LMC"));
+			
 			childMap.put(normalDataMap.get("TZ_XXX_SLID").toString(), tempMap);
-		
+			
 			//"children"这一层数据 原代码已经做过解析
 			//returnMap.put("children", childMap);
-			System.out.println("childMap:"+childMap);
+			
+			//System.out.println("childMap:"+childMap);
 		return childMap;
 	}
 }
