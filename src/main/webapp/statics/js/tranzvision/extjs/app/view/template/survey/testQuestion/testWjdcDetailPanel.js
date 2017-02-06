@@ -156,10 +156,12 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                             xtype:'button',
                             text:'开通在线调查',
                             reference:'ktWjdcBtn',
+                            name:'ktWjdcBtn', 
                             listeners:{ 
                                 click:function(button,e,eOpts ){
 
 	                            	var form = button.findParentByType("form").getForm();
+	                            	var panel=button.findParentByType("form").findParentByType("panel");
 	                            	var grid=button.findParentByType("form").findParentByType("panel").child("grid");
 	                                var tplId = form.findField("TZ_APP_TPL_ID").value;
 	                                var csWjId = form.findField("TZ_CS_WJ_ID").value;
@@ -181,11 +183,11 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                                                         var wjName = responseData.name;
                                                         form.findField("TZ_DC_WJ_ID").setValue(wjId);
                                                         form.findField("TZ_DC_WJMC").setValue(wjName);
-                                                        button.setDisabled(true);
-                                                      var tzStoreParams = '{"FLAG":"A","TZ_CS_WJ_ID":"' + csWjId + '"}';
+                                                        //在线调查开通后，设置按钮可点
+                                                        panel.child('form').down("button[name=setWjdcBtn]").setDisabled(false);
+                                                        var tzStoreParams = '{"FLAG":"A","TZ_CS_WJ_ID":"' + csWjId + '"}';
                                                          grid.store.tzStoreParams = tzStoreParams;
                                                          grid.store.load(); 
-
                                                     });
                                                 }
                                            });
@@ -223,6 +225,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                             columnWidth:0.15,
                             xtype:'button',
                             reference:'setWjdcBtn',
+                            name:'setWjdcBtn', 
                             text:'设置在线调查',
                             handler:'setWjdc'
                         }
