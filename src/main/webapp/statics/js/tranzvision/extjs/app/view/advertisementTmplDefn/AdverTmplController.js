@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
     //院校库列表页编辑
     editResSet: function() {
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -153,7 +153,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
     //院校库列表页删除按钮
     deleteResSets: function(){
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -162,7 +162,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
-                    var resSetStore = this.getView().down('grid').store;
+                    var resSetStore = this.getView().store;
                     resSetStore.remove(selList);
                 }
             },this);
