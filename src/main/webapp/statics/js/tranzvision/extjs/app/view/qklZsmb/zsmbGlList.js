@@ -45,6 +45,11 @@ initComponent: function () {
 	var store = new KitchenSink.view.qklZsmb.zsmbListStore();
 	Ext.apply(this, {
 		columns:[{
+			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.JgId","证书模板编号"),
+			dataIndex: 'JgId',
+			width: 200,
+			hidden:true
+		},{
 			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.certTmpl","证书模板编号"),
 			dataIndex: 'certTmpl',
 			width: 200
@@ -66,7 +71,7 @@ initComponent: function () {
 			xtype: 'actioncolumn',
 			items:[
 				{iconCls: 'edit',tooltip: '编辑',handler:'editCurrTmpl'},
-				{iconCls: 'remove',tooltip: '删除',handler:'deleteCurrTmpln'}
+				{iconCls: 'remove',tooltip: '删除',handler:'deleteCurrTmpl'}
 			]
 		}],
 		store: store,

@@ -70,15 +70,15 @@
 			dataIndex: 'TZ_L_LIMIT',
 			width: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
 		    text: "取值上限",
-			dataIndex: 'TZ_U_LIMIT',
+			dataIndex: 'numberfield',
 			minWidth:80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
 		},{
@@ -86,7 +86,7 @@
             dataIndex: 'TZ_HISTORY_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         },{
@@ -94,7 +94,7 @@
             dataIndex: 'TZ_CURYEAR_VAL',
             minWidth: 80,
             editor: {
-                xtype:'textfield',
+                xtype:'numberfield',
                 maxLength:50
             }
         }],

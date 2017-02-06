@@ -122,6 +122,7 @@ window.layer = {
         }
     }, 
     
+   
     //tips层快捷引用
     tips: function(html, follow, parme, maxWidth, guide, style){
         var conf = {type: 4, shade: false, success: function(layerE){

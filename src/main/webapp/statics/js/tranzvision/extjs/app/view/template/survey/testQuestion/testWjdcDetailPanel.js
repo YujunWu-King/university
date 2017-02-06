@@ -61,7 +61,6 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
                     name:'TZ_DC_WJ_ZT',
                     store: new KitchenSink.view.common.store.appTransStore("TZ_DC_WJ_ZT"),
                     queryMode: 'local',
-                    name: 'TZ_DC_WJ_ZT',
                     value: '0'
                 }, {
                     xtype: 'datefield',

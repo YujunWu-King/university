@@ -13,13 +13,14 @@
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
     <result column="TZ_APP_INS_VERSION" property="tzAppInsVersion" jdbcType="VARCHAR" />
+    <result column="TZ_PWD" property="tzPwd" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT" extends="BaseResultMap" >
     <result column="TZ_APPINS_JSON_STR" property="tzAppinsJsonStr" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_APP_INS_ID, TZ_APP_FORM_STA, TZ_APP_SUB_DTTM, TZ_APP_TPL_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_APP_INS_VERSION
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_APP_INS_VERSION, TZ_PWD
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPINS_JSON_STR
@@ -40,13 +41,13 @@
     insert into PS_TZ_APP_INS_T (TZ_APP_INS_ID, TZ_APP_FORM_STA, TZ_APP_SUB_DTTM, 
       TZ_APP_TPL_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
       ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM, TZ_APP_INS_VERSION, TZ_APPINS_JSON_STR
-      )
+      SYNCDTTM, TZ_APP_INS_VERSION, TZ_PWD, 
+      TZ_APPINS_JSON_STR)
     values (#{tzAppInsId,jdbcType=BIGINT}, #{tzAppFormSta,jdbcType=VARCHAR}, #{tzAppSubDttm,jdbcType=TIMESTAMP}, 
       #{tzAppTplId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
       #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP}, #{tzAppInsVersion,jdbcType=VARCHAR}, #{tzAppinsJsonStr,jdbcType=LONGVARCHAR}
-      )
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzAppInsVersion,jdbcType=VARCHAR}, #{tzPwd,jdbcType=VARCHAR}, 
+      #{tzAppinsJsonStr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT" >
     insert into PS_TZ_APP_INS_T
@@ -83,6 +84,9 @@
       </if>
       <if test="tzAppInsVersion != null" >
         TZ_APP_INS_VERSION,
+      </if>
+      <if test="tzPwd != null" >
+        TZ_PWD,
       </if>
       <if test="tzAppinsJsonStr != null" >
         TZ_APPINS_JSON_STR,
@@ -122,6 +126,9 @@
       <if test="tzAppInsVersion != null" >
         #{tzAppInsVersion,jdbcType=VARCHAR},
       </if>
+      <if test="tzPwd != null" >
+        #{tzPwd,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppinsJsonStr != null" >
         #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -160,6 +167,9 @@
       <if test="tzAppInsVersion != null" >
         TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR},
       </if>
+      <if test="tzPwd != null" >
+        TZ_PWD = #{tzPwd,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppinsJsonStr != null" >
         TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -178,6 +188,7 @@
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR},
+      TZ_PWD = #{tzPwd,jdbcType=VARCHAR},
       TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </update>
@@ -192,7 +203,8 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR}
+      TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR},
+      TZ_PWD = #{tzPwd,jdbcType=VARCHAR}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </update>
 </mapper>

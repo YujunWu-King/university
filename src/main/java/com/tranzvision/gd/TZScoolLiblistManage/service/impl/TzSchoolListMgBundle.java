@@ -38,25 +38,12 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	
-/*	 tzJgId;
-	 tzSchoolName;
-	 tzSchoolNameeng;
-	 country;
-	 tzZgbm;
-	 city;
-	 tzSchoolLevel;
-	 tzSchoolNatrue;
-	 tzSchoolType;
-	 dec;
-	 tzState;
-	 tzHemisphere;
-	 tzAddtime;
-	*/
+
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg){
 		String strRet = "{}";
 		int tzJgId;
-	Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+	//Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 	
 	
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -104,7 +91,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 	
 				PsTzPayLogTMapper.insert(PsTzPayLogT);
 			
-				
+				strRet=String.valueOf(tzJgId);
 				}	
 			
 		} catch (Exception e) {
@@ -215,7 +202,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				    
 				    PsTzPayLogTMapper.updateByPrimaryKeySelective(PsTzPayLogT);
 
-					
+				    strRet=String.valueOf(orgaID);
 
 				} else {
 					errMsg[0] = "1";

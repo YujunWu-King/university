@@ -179,12 +179,10 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				// 模板ID
 				psTzDcWjDyTWithBLOBs.setTzAppTplId(dataWjId);
 				// 问卷标题
-				TZ_DC_WJBT = cswjDataMap.get("TZ_CS_WJ_NAME") == null ? null
-						: cswjDataMap.get("TZ_CS_WJ_NAME").toString();
+				TZ_DC_WJBT = cswjDataMap.get("TZ_CS_WJ_NAME") == null ? null: cswjDataMap.get("TZ_CS_WJ_NAME").toString();
 				psTzDcWjDyTWithBLOBs.setTzDcWjbt(TZ_DC_WJBT);
 				// 问卷状态
-				String TZ_DC_WJ_ZT = cswjDataMap.get("TZ_DC_WJ_ZT") == null ? null
-						: cswjDataMap.get("TZ_DC_WJ_ZT").toString();
+				String TZ_DC_WJ_ZT = cswjDataMap.get("TZ_DC_WJ_ZT") == null ? null: cswjDataMap.get("TZ_DC_WJ_ZT").toString();
 				psTzDcWjDyTWithBLOBs.setTzDcWjZt(TZ_DC_WJ_ZT);
 				// 发布状态 默认为已发布
 				psTzDcWjDyTWithBLOBs.setTzDcWjFb("1");
@@ -195,20 +193,16 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				String TZ_JG_ID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				psTzDcWjDyTWithBLOBs.setTzJgId(TZ_JG_ID);
 
-				String TZ_APPTPL_JSON_STR = tplDataMap.get("TZ_APPTPL_JSON_STR") == null ? null
-						: tplDataMap.get("TZ_APPTPL_JSON_STR").toString();
+				String TZ_APPTPL_JSON_STR = tplDataMap.get("TZ_APPTPL_JSON_STR") == null ? null: tplDataMap.get("TZ_APPTPL_JSON_STR").toString();
 				psTzDcWjDyTWithBLOBs.setTzApptplJsonStr(TZ_APPTPL_JSON_STR);
 
-				String TZ_DC_JWNR = tplDataMap.get("TZ_DC_JWNR") == null ? null
-						: tplDataMap.get("TZ_DC_JWNR").toString();
+				String TZ_DC_JWNR = tplDataMap.get("TZ_DC_JWNR") == null ? null: tplDataMap.get("TZ_DC_JWNR").toString();
 				psTzDcWjDyTWithBLOBs.setTzDcJwnr(TZ_DC_JWNR);
 
-				String TZ_DC_JTNR = tplDataMap.get("TZ_DC_JTNR") == null ? null
-						: tplDataMap.get("TZ_DC_JTNR").toString();
+				String TZ_DC_JTNR = tplDataMap.get("TZ_DC_JTNR") == null ? null: tplDataMap.get("TZ_DC_JTNR").toString();
 				psTzDcWjDyTWithBLOBs.setTzDcJtnr(TZ_DC_JTNR);
 
-				String TZ_APP_TPL_LAN = tplDataMap.get("TZ_APP_TPL_LAN") == null ? null
-						: tplDataMap.get("TZ_APP_TPL_LAN").toString();
+				String TZ_APP_TPL_LAN = tplDataMap.get("TZ_APP_TPL_LAN") == null ? null: tplDataMap.get("TZ_APP_TPL_LAN").toString();
 				psTzDcWjDyTWithBLOBs.setTzAppTplLan(TZ_APP_TPL_LAN);
 				// 答题规则
 				String TZ_DC_WJ_DTGZ = "0";
@@ -232,20 +226,16 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 					DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					// 开始日期
-					Date TZ_DC_WJ_KSRQ = cswjDataMap.get("TZ_DC_WJ_KSRQ") == null ? null
-							: dateFormat.parse(cswjDataMap.get("TZ_DC_WJ_KSRQ").toString());
+					Date TZ_DC_WJ_KSRQ = cswjDataMap.get("TZ_DC_WJ_KSRQ") == null ? null: dateFormat.parse(cswjDataMap.get("TZ_DC_WJ_KSRQ").toString());
 					psTzDcWjDyTWithBLOBs.setTzDcWjKsrq(TZ_DC_WJ_KSRQ);
 					// 开始时间
-					Date TZ_DC_WJ_KSSJ = cswjDataMap.get("TZ_DC_WJ_KSSJ") == null ? null
-							: timeFormat.parse(cswjDataMap.get("TZ_DC_WJ_KSSJ").toString());
+					Date TZ_DC_WJ_KSSJ = cswjDataMap.get("TZ_DC_WJ_KSSJ") == null ? null: timeFormat.parse(cswjDataMap.get("TZ_DC_WJ_KSSJ").toString());
 					psTzDcWjDyTWithBLOBs.setTzDcWjKssj(TZ_DC_WJ_KSSJ);
 					// 结束日期
-					Date TZ_DC_WJ_JSRQ = cswjDataMap.get("TZ_DC_WJ_JSRQ") == null ? null
-							: dateFormat.parse(cswjDataMap.get("TZ_DC_WJ_JSRQ").toString());
+					Date TZ_DC_WJ_JSRQ = cswjDataMap.get("TZ_DC_WJ_JSRQ") == null ? null: dateFormat.parse(cswjDataMap.get("TZ_DC_WJ_JSRQ").toString());
 					psTzDcWjDyTWithBLOBs.setTzDcWjJsrq(TZ_DC_WJ_JSRQ);
 					// 结束时间
-					Date TZ_DC_WJ_JSSJ = cswjDataMap.get("TZ_DC_WJ_JSSJ") == null ? null
-							: timeFormat.parse(cswjDataMap.get("TZ_DC_WJ_JSSJ").toString());
+					Date TZ_DC_WJ_JSSJ = cswjDataMap.get("TZ_DC_WJ_JSSJ") == null ? null: timeFormat.parse(cswjDataMap.get("TZ_DC_WJ_JSSJ").toString());
 					psTzDcWjDyTWithBLOBs.setTzDcWjJssj(TZ_DC_WJ_JSSJ);
 				} catch (Exception e) {
 					System.out.println("====问卷添加==时间转换错误=");
@@ -277,12 +267,9 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						j = j + 1;
 						Map<String, Object> mbLJXSMap = new HashMap<String, Object>();
 						mbLJXSMap = cswjDcxDataList.get(k);
-						String TZ_XXX_BH = mbLJXSMap.get("TZ_XXX_BH") == null ? null
-								: mbLJXSMap.get("TZ_XXX_BH").toString();
-						String TZ_XXX_MC = mbLJXSMap.get("TZ_XXX_MC") == null ? null
-								: mbLJXSMap.get("TZ_XXX_MC").toString();
-						String TZ_TITLE = mbLJXSMap.get("TZ_TITLE") == null ? null
-								: mbLJXSMap.get("TZ_TITLE").toString();
+						String TZ_XXX_BH = mbLJXSMap.get("TZ_XXX_BH") == null ? null: mbLJXSMap.get("TZ_XXX_BH").toString();
+						String TZ_XXX_MC = mbLJXSMap.get("TZ_XXX_MC") == null ? null: mbLJXSMap.get("TZ_XXX_MC").toString();
+						String TZ_TITLE = mbLJXSMap.get("TZ_TITLE") == null ? null: mbLJXSMap.get("TZ_TITLE").toString();
 						PsTzCswjDcxTbl PsTzCswjDcxTbl = new PsTzCswjDcxTbl();
 						PsTzCswjDcxTbl.setTzCsWjId(csWjId);
 						PsTzCswjDcxTbl.setTzDcWjId(TZ_DC_WJ_ID);
@@ -308,6 +295,8 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						if (cswjPctDataList != null) {
 							int j = 0;
 							for (int k = 0; k < cswjPctDataList.size(); k++) {
+								//当前年份初始取值,开通在线调查的时候，在线调查填写人是是0(初始化的时候分母为0？？,暂不初始化)
+								//int preset=jdbcTemplate.queryForObject("SELECT TZ_PRESET_NUM from PS_TZ_CSWJ_TBL where TZ_DC_WJ_ID=?", new Object[]{csWjId}, "Integer");
 								j = j + 1;
 								Map<String, Object> mbLJXSMap = new HashMap<String, Object>();
 								mbLJXSMap = cswjPctDataList.get(k);
