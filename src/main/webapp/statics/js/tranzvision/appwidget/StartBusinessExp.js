@@ -22,7 +22,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//融资情况
 		"WorkExper2": {
 			"instanceId": "WorkExper2",
-			"itemId": "financing",
+			"itemId": "financing_type",
 			"itemName": MsgSet["FINANCING"],
 			//"itemName": "融资情况",
 			"title": MsgSet["FINANCING"],
@@ -30,8 +30,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			"orderby": 2,
 			"value": "",
 			"format":"5",
-			"StorageType": "D",
-			"classname": "Radio"
+			"StorageType": "S",
+			"classname": "SingleTextBox"
 		},
 		"WorkExper2_1": {
 			"instanceId": "WorkExper2_1",
@@ -64,7 +64,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//SingleTextBox
 		"WorkExper3": {
 			"instanceId": "WorkExper3",
-			"itemId": "income",
+			"itemId": "income_y",
 			"itemName": MsgSet["INCOME"],
 			//"itemName":"近12个月收入",
 			"title": MsgSet["INCOME"],
@@ -265,16 +265,16 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!---融资radioGroup-->	
 					NET_DIV+='<div  class="main_inner_content_info_right" style="width:100%">'
 						//<!--加入一个隐藏input缓存radio数据-->
-						NET_DIV+='<input disabled=true type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
-						NET_DIV+='<input disabled=true type="radio" name="financing"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input disabled=true type="radio" name="financing"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING" >'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input disabled=true type="radio" name="financing"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST" />'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input disabled=true type="radio" name="financing"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING" />'+MsgSet["NO_FINANCING"]+'<br/>'	
-						NET_DIV+='<input disabled=true type="radio" name="financing"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE" />'+MsgSet["NEW_CREATE"]+''	
+						NET_DIV+='<input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
+						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING" >'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST" />'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING" />'+MsgSet["NO_FINANCING"]+'<br/>'	
+						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE" />'+MsgSet["NEW_CREATE"]+''	
 					NET_DIV+='</div>'	
 					
 					//<!--收入140px-->
-					NET_DIV+='<div id="income" style="margin-top:10px">'	
+					NET_DIV+='<div id="income_y" style="margin-top:10px">'	
 						NET_DIV+='<div  class="main_inner_connent_info_left" style="width:120px">'+MsgSet["INCOME"]+':</div>'
 						NET_DIV+='<div class="main_inner_content_info_right" style="width:100%"><input readOnly=true id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					NET_DIV+='</div>'	
@@ -399,15 +399,15 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					NET_DIV+='<div  class="main_inner_content_info_right" style="width:100%">'
 						//<!--加入一个隐藏input缓存radio数据-->
 						NET_DIV+='<input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
-						NET_DIV+='<input type="radio" name="financing"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING" >'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST" />'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING" />'+MsgSet["NO_FINANCING"]+'<br/>'	
-						NET_DIV+='<input type="radio" name="financing"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE" />'+MsgSet["NEW_CREATE"]+''	
+						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING" >'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST" />'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
+						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING" />'+MsgSet["NO_FINANCING"]+'<br/>'	
+						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE" />'+MsgSet["NEW_CREATE"]+''	
 					NET_DIV+='</div>'	
 					
 					//<!--收入140px-->
-					NET_DIV+='<div id="income" style="margin-top:10px">'	
+					NET_DIV+='<div id="income_y" style="margin-top:10px">'	
 						NET_DIV+='<div  class="main_inner_connent_info_left" style="width:120px">'+MsgSet["INCOME"]+':</div>'
 						NET_DIV+='<div class="main_inner_content_info_right" style="width:100%"><input id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					NET_DIV+='</div>'	
@@ -515,6 +515,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				$("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
 				$("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
 				$("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+				$("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+				$("#"+data["itemId"] + child.WorkExper4.itemId).val("");
 				
 				$("#"+data["itemId"] + child.WorkExper5.itemId).val("");
 				$("#"+data["itemId"] + child.WorkExper6.itemId).val("");
@@ -525,7 +527,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			}
 		});
 		//----"互联网"类型下，radio的切换处理
-		$("input[name='financing']").click(function(){
+		$("input[name='financing_type']").click(function(){
 			//alert($(this).val());
 			var financingTypeVal=($(this).val());
 			//获取5个radio的句柄
