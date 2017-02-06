@@ -1488,8 +1488,8 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 
         Ext.tzLoad(Ext.JSON.encode(params),function(audID){
             Ext.tzSendSms({
-                //发送的短信模板;
-                "SmsTmpName": ["TZ_SMS_N_001"],
+                //发送的短信模板; 
+                "SmsTmpName": ["TZ_WJDC_SMS"],
                 //创建的需要发送的听众ID;
                 "audienceId": audID
             });
