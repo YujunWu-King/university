@@ -3,6 +3,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 	title: "创业经历",
 	isDoubleLine: "Y",
 	fixedContainer: "Y",//固定容器标识
+	minLines: "1",
+	maxLines: "4",
 	children: {
 		//创业类型
 		"WorkExper1": {

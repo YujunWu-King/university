@@ -131,7 +131,10 @@
 					});
 				}
 			
-				$(document).ready(function() {				
+				$(document).ready(function() {
+					
+
+					
 					//点击菜单的动作 如果是顶级层，则不做动作
 					$(".regmain-menu ul li[class!='menu-active-top']").click(function(){
 
@@ -593,7 +596,7 @@
 								
 							
 							var _a = getData();
-							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'",TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -718,6 +721,8 @@
 						});
 			
 					});
+					
+					
 			
 					$("#app_prev").click(function() {
 			
@@ -1049,8 +1054,163 @@
 						}
 					});
 				});
+				
+				$(function(){
+				     $(document).on("click", "#app_preButtom", function(event){
+				    	 	console.log("1111");
+							var pwdTitleId = $("#%bind(:45)");
+							var pwdDivId = $("#%bind(:46)");
+							var pwdDiv2Id = $("#%bind(:47)");
+							console.log("pwdTitleId:"+pwdTitleId);
+							console.log("pwdDivId:"+pwdDivId);
+							console.log("pwdDiv2Id:"+pwdDiv2Id);
+							
+							var pwd="";
+							var pwd2="";
+							
+							if (pwdTitleId != undefined && pwdDivId != undefined && pwdDiv2Id!= undefined) {
+								pwd = $("#%bind(:43)").val();
+								pwd2 = $("#%bind(:44)").val();
+								//console.log("pwd:"+pwd);
+								//console.log("pwd2:"+pwd2);
+								if (pwd =="" || pwd2=="") {
+									alert("%bind(:48)");
+									$("#%bind(:43)").focus();
+									return ;
+								}
+								if (pwd != pwd2) {
+									alert("%bind(:49)");
+									$("#%bind(:43)").focus();
+									return ;
+								}
+							}	
+							
+							var formValidatorSave = $.formValidator.pageIsValid();
+							processing();
+							var appInsId = SurveyBuild.appInsId;
+							var appInsVersionId = SurveyBuild.appInsVersion;
+							var _a = getData();
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							//console.log("classId:"+classId);
+							//console.log("batchId:"+batchId);
+							console.log($.toJSON(_a));
+							
+							
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"PRE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"%bind(:5)","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							$.ajax({
+								type: "POST",
+								url: SurveyBuild.tzGeneralURL,
+								data: {
+									tzParams: tzSaveParams
+								},
+								dataType: "JSON",
+								success: function(f) {
+									if (f.state.errcode == "0") {
+										SurveyBuild.appInsId = f.comContent.insid;
+										SurveyBuild.appInsVersion = f.comContent.appInsVersionId;
+										/*设置样式*/
+										////console.log(currentPageId);
+										/*设置页面完成状态*/
+										console.log(f.comContent.code);
+										if (f.comContent.code == "0") { 
+									 	/*当前页签设置为完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src",TzUniversityContextPath + "/statics/images/appeditor/new/check-white.png");
+											$("#" + currentPageId).find(".menu-gou.right img").show();
+											layer.closeAll();
+											noteing(MsgSet.SAVE_SUCCEED);
+											SurveyBuild.saveTjx_fj();
+										}else{
+											/*当前页签设置为未完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src","");
+											$("#" + currentPageId).find(".menu-gou.right img").hide();
+											console.log("2222");
+											layer.closeAll();
+											layer.alert(f.comContent.msg);
+										}
+										
+				
+									} else {
+										layer.closeAll();
+										//layer.alert(f.comContent.msg);
+										noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+									}
+									//设置页面完成状态
+									//setPageComplete(f.comContent.pageCompleteState);
+								}
+							});
+				     });
+				 })
+				
 			</script>
 	<script type="text/javascript">
+	function getData() {
+		var _a = SurveyBuild["_items"];
+
+		var _setValue = function(obj, id) {
+			if ($("#" + id).length > 0) {
+				obj["value"] = SurveyBuild._getAttrVal($("#" + id).get(0));;
+
+			}
+			//单选、多选 其他值
+			if (obj.classname == "Check" || obj.classname == "Radio") {
+				var $other = $("#main_list div[data-instancid='" + obj["instanceId"] + "'] .sur_other_box");
+				if ($other.length > 0) {
+					obj.option[$other.attr('instanceId')]["othervalue"] = "";		
+					obj.option[$other.attr('instanceId')]["othervalue"] = $other.closest('div').siblings("input").val();
+				}
+			}
+		}
+
+		$.each(_a,function(i, item) {
+			if (item.hasOwnProperty("children")) {
+				//包含子元素
+				if (item.isDoubleLine == "Y") {
+					if (item.fixedContainer == "Y") {
+						//固定多行容器
+						$.each(item["children"],
+						function(y, rec) {
+							$.each(rec,
+							function(instanceid, children) {
+								_setValue(children, item.itemId + children.itemId);
+							});
+						})
+					} else {
+						//通用多行容器
+						$.each(item["children"],
+						function(y, rec) {
+							$.each(rec,
+							function(instanceid, children) {
+								if (children.hasOwnProperty("children")) {
+									$.each(children["children"],
+									function(z, _children) {
+
+										_setValue(_children, children.itemId + _children.itemId);
+									})
+								} else {
+
+									_setValue(children, children.itemId);
+								}
+							});
+						})
+					}
+				} else if (item.isSingleLine == "Y") {
+					//普通组合控件、日期组合框、通讯地址等
+					$.each(item["children"],
+					function(y, rec) {
+						_setValue(rec, item["itemId"] + rec.itemId);
+					})
+				}
+			} else {
+				//简单控件
+				_setValue(item, item.itemId);
+			}
+
+		});
+		return _a;
+	}
+	
+	
 				//图片缩放
 				function setImageSize(eml, t) {
 					var $aBtn = $(eml);
