@@ -3430,7 +3430,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				numPageNo = Integer.parseInt(strPageNo);
 				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
 				strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId, numPageNo }, "String");
-
+				if(strPageXxxBh==null)
+					strPageXxxBh="";
 				String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
 				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numPageNo });
 				for (Object objData : listData) {
