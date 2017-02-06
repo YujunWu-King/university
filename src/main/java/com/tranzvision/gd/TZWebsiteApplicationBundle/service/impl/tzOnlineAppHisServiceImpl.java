@@ -1287,25 +1287,29 @@ public class tzOnlineAppHisServiceImpl {
 	public Map<String,Object> getGpCtrlData(String  strComLmc,Long numAppInsId, String strTplId, String strXxxBhChild, int i, String strOprNameApp){
 			//Map<String,Object>returnMap=new HashMap<String,Object>();
 			Map<String,Object>childMap=new HashMap<String,Object>();
-			
+			System.out.println("strComLmc:"+strComLmc);
 			//查询所有实例ID为“numAppInsId”的页面数据
 			//final String SQL1="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? ";
 			
-			final String LIKE_SQL="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+			final String LIKE_SQL="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE '%"+strXxxBhChild+"%'";
 			//查询item通用数据
 			final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
 
 			//"strXxxBhChild"在"FirmType"中的值为:firm_type和position_type
-			String param="'%"+strXxxBhChild+"%'";
-			Map<String,Object>valMap=sqlQuery.queryForMap(LIKE_SQL, new Object[]{numAppInsId,param});
-			Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{numAppInsId,strXxxBhChild});
+			Map<String,Object>valMap=sqlQuery.queryForMap(LIKE_SQL, new Object[]{numAppInsId});
+			Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
+			System.out.println("valMap:"+valMap);
+			System.out.println("normalDataMap"+normalDataMap);
 			
 			Map<String,Object>tempMap=new HashMap<String,Object>();
 			tempMap.put("instanceId",normalDataMap.get("TZ_XXX_SLID"));
 			tempMap.put("itemId",strXxxBhChild);
 			tempMap.put("itemName",normalDataMap.get("TZ_XXX_MC"));
 			tempMap.put("title",normalDataMap.get("TZ_XXX_MC"));
-			tempMap.put("value",valMap.get("TZ_APP_S_TEXT").toString());
+			String val="";
+			if(valMap!=null&&valMap.get("TZ_APP_S_TEXT")!=null)
+				val=valMap.get("TZ_APP_S_TEXT").toString();
+			tempMap.put("value",val);
 			tempMap.put("StorageType",normalDataMap.get("TZ_XXX_CCLX"));
 			tempMap.put("orderby", normalDataMap.get("TZ_ORDER"));
 			tempMap.put("classname",normalDataMap.get("TZ_COM_LMC"));
@@ -1313,7 +1317,7 @@ public class tzOnlineAppHisServiceImpl {
 		
 			//"children"这一层数据 原代码已经做过解析
 			//returnMap.put("children", childMap);
-
+			System.out.println("childMap:"+childMap);
 		return childMap;
 	}
 }
