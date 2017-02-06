@@ -3,7 +3,7 @@
  */
 
 Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagList', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -18,20 +18,16 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagList', {
     xtype: 'zsbfjgMgList',
     title:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.zfbfjgmg","证书颁发机构管理") ,
     controller: 'zsbfjgMgController',
-
-    initComponent: function () {
-        var store = new KitchenSink.view.zsorganizationManagement.ZsJgMagListStore();
-        Ext.apply(this, {
-            items: [{
-                xtype: 'grid',
-                columnLines: true,
-                style:"margin:8px",
-                 selModel: {
-                    type: 'checkboxmodel'
-                },
-                header:false,
-                frame: true,
-                dockedItems:[{
+        viewConfig: {markDirty: false},
+    columnLines: true,
+	style:"margin:8px",
+	selModel: {
+       	type: 'checkboxmodel'
+    },
+    multiSelect: false,
+	header:false,
+	frame: true,
+	dockedItems:[{
                    xtype:"toolbar",
                     items:[
                          {text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.query","查询"),tooltip:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.querydata","查询数据"),iconCls:"query",handler:'searchzsMgList'},"-",
@@ -49,6 +45,12 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagList', {
             {minWidth:80,text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.ensure","确定"),iconCls:"ensure",handler:'ensureonSaveRemoveData'},
             {minWidth:80,text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.close","关闭"),iconCls:"close",handler:'closeResSets'}]
                 }],
+
+    initComponent: function () {
+        var store = new KitchenSink.view.zsorganizationManagement.ZsJgMagListStore();
+        Ext.apply(this, {
+           
+                
                  columns: [{
                 text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.zsJGID","机构ID") ,
                 dataIndex: 'zhjgID',
@@ -83,7 +85,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagList', {
                     emptyMsg: "没有数据显示",
                     plugins: new Ext.ux.ProgressBarPager()
                 }
-            }]
+            
 
         });
         this.callParent();
