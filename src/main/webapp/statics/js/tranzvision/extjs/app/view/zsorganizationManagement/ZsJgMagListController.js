@@ -234,7 +234,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
     ensureonschoolSave:function(btn){
     	this.onschoolSave(btn);
     	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("zsbfjgMgList").down("grid").store.reload();
+		contentPanel.child("zsbfjgMgList").store.reload();
     	var comView = this.getView();
     	comView.close();
     	

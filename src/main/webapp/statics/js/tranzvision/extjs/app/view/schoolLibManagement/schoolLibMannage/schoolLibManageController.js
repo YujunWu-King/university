@@ -275,7 +275,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         this.onschoolSave(btn);
         //关闭窗口
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("schoolMgList").down("grid").store.reload();
+		contentPanel.child("schoolMgList").store.reload();
         var comView = this.getView(); 		
         comView.close();
     },
