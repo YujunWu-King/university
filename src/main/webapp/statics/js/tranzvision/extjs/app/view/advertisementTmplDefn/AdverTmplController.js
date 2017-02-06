@@ -1,13 +1,13 @@
 /**
  * Created by tzhjl on 2017/1/12.
  */
-Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibTypeMgController', {
+Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.schoolMgTypeConter',
+    alias: 'controller.adTmplMgController',
     //院校库添加
     addResSet: function() {
         //是否有访问权限   
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_SCH_TYPE_COM"]["TZ_SCTYE_INFO_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AD_TMPL_COM"]["TZ_AD_INFO_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_SCTYE_INFO_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AD_INFO_STD，请检查配置。');
             return;
         }
 
@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            form.findField('typeID').setValue('NEXT');
+            form.findField('adcertTmpl').setValue('NEXT');
         });
 
 
@@ -73,22 +73,22 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
             return;
         }
         //资源集合ID
-        var resSetID = selList[0].get("typeID");
+        var adcertTmpl = selList[0].get("adcertTmpl");
         //显示资源集合信息编辑页面
-        this.editResSetInfoByID(resSetID);
+        this.editResSetInfoByID(adcertTmpl);
     },
     editCurrResSet: function(view,rowIndex) {
         var store = view.findParentByType("grid").store;
         var selRec = store.getAt(rowIndex);
         //资源集合ID
-        var typeID = selRec.get("typeID");
+        var adcertTmpl = selRec.get("adcertTmpl");
         //显示资源集合信息编辑页面
-        this.editResSetInfoByID(typeID);
+        this.editResSetInfoByID(adcertTmpl);
     },
     ////院校库列表页编辑数据操作
-    editResSetInfoByID: function(typeID){
+    editResSetInfoByID: function(adcertTmpl){
         //是否有访问权限.
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_SCH_TYPE_COM"]["TZ_SCTYE_INFO_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AD_TMPL_COM"]["TZ_AD_INFO_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -96,7 +96,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_SCTYE_INFO_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AD_INFO_STD，请检查配置。');
             return;
         }
 
@@ -121,12 +121,12 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         cmp.on('afterrender',function(panel){
             //资源集合表单信息;
             var form = panel.child('form').getForm();
-            form.findField("typeID").setReadOnly(true);
-            form.findField("typeID").addCls("lanage_1");
+            form.findField("adcertTmpl").setReadOnly(true);
+            form.findField("adcertTmpl").addCls("lanage_1");
             //资源信息列表
 
             //参数
-            var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_INFO_STD","OperateType":"QF","comParams":{"typeID":"'+typeID+'"}}';
+            var tzParams = '{"ComID":"TZ_AD_TMPL_COM","PageID":"TZ_AD_INFO_STD","OperateType":"QF","comParams":{"adcertTmpl":"'+adcertTmpl+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
@@ -153,7 +153,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
     //院校库列表页删除按钮
     deleteResSets: function(){
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -199,10 +199,10 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
             comParams = '"delete":[' + removeJson + "]";
         }
         //提交参数.
-        var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_AD_TMPL_COM","PageID":"TZ_AD_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
-        Ext.tzSubmit(tzParams,function(responseData){
-        	form.findField("typeID").setValue(responseData);
+        Ext.tzSubmit(tzParams,function(){
+        	
             store.reload();
         },"保存成功！",true,this);
     },
@@ -224,6 +224,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
+            	form.findField("adcertTmpl").setValue(responseData);
                 comView.actType = "update";
             },"",true,this);
         }
@@ -233,7 +234,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
     ensureonschoolSave:function(btn){
     	this.onschoolSave(btn);
     	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("schoolMgTypeList").store.reload();
+		contentPanel.child("adtmplMgList").store.reload();
     	var comView = this.getView();
     	comView.close();
     	
@@ -269,14 +270,14 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         }
 
         //提交参数
-        var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_AD_TMPL_COM","PageID":"TZ_AD_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
         console.log(tzParams);
         return tzParams;
     },
-     //可配置搜索
-	searchschMgList: function(btn){
+    //可配置搜索
+	searchzsMgList: function(btn){
 		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.TZ_SCHOOL_TYPE_VW',
+			cfgSrhId: 'TZ_AD_TMPL_COM.TZ_AD_LIST_STD.TZ_ADTMPL_VW',
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
@@ -284,6 +285,5 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
 			}
 		});	
 	}
-    
 });
 

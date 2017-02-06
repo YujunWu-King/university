@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
     //院校库列表页编辑
     editResSet: function() {
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -162,7 +162,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
-                    var resSetStore = this.getView().down('grid').store;
+                    var resSetStore = this.getView().store;
                     resSetStore.remove(selList);
                 }
             },this);
@@ -234,7 +234,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
     ensureonschoolSave:function(btn){
     	this.onschoolSave(btn);
     	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("zsbfjgMgList").down("grid").store.reload();
+		contentPanel.child("zsbfjgMgList").store.reload();
     	var comView = this.getView();
     	comView.close();
     	
