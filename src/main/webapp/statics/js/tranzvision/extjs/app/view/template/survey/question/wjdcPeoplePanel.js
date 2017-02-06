@@ -85,23 +85,18 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_FIRST_NAME","姓名"),
                     sortable: true,
                     dataIndex: 'name',
-                    width: 120
+                    width: 150
                 },
                 {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_PHONE","手机"),
                     sortable: true,
                     dataIndex: 'phone',
-                    width: 120
+                    width: 150
                 },
                 {   text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_EMAIL","邮箱"),
                     sortable: true,
                     dataIndex: 'email',
-                    width: 180
-                },
-                {   text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_ROLE","角色"),
-                    sortable: true,
-                    dataIndex: 'role',
-                    width: 150
+                    width: 200
                 },{ text: '奖学金申请状态',
                     dataIndex: 'jxjStatus',
                     width:150,

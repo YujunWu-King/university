@@ -27,7 +27,7 @@ import com.tranzvision.gd.util.qrcode.CreateQRCode;
 
 /**
  * 
- * @author tang 招生账号管理 PS:TZ_GD_USERMG_PKG:TZ_USER_MANAGEMENT
+ * @author yuds复制原有UserManagementServiceImpl
  */
 @Service("com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.SemUserManagementServiceImpl")
 public class SemUserManagementServiceImpl extends FrameworkImpl { 

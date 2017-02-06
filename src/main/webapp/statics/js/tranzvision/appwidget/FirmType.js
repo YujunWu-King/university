@@ -213,8 +213,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '	<div class="main_inner_connent_info_left" style="width:120px">' + child.WorkExper2.itemName + '</div>';
 				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
 				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
-				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
-				//types += OPT_POSITION;
+				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
+				types += OPT_POSITION;
 				types += '		</select>';
 				//----------------------------
 				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -245,8 +245,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '	<div class="main_inner_connent_info_left" style="width:120px">' + child.WorkExper2.itemName + '</div>';
 				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
-				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
-				//types += OPT_POSITION;
+				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
+				types += OPT_POSITION;
 				types += '		</select>';
 				//----------------------------
 				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
