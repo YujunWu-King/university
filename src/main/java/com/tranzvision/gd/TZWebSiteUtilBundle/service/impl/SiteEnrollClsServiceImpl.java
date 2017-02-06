@@ -2005,9 +2005,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
 				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + siteid + "/" + "enroll.html";
+					url = request.getContextPath() + "/" + url + siteid + "/" + "enroll.html";
 				}else{
-					url = request.getContextPath() + url + "/" + siteid + "/enroll.html";
+					url = request.getContextPath() + "/" + url + "/" + siteid + "/enroll.html";
 				}
 			}else{
 				url = request.getContextPath() + "/" + siteid +"/enroll.html";

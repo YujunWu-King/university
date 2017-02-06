@@ -82,16 +82,18 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
             Ext.Msg.alert("提示","只能选择一条要修改的记录");
             return;
         }
-        var planID = selList[0].get("certTmpl");
-        this.editCertTmplByID(planID);
+        var certTmpl = selList[0].get("certTmpl");
+        var JgId = selList[0].get("JgId");
+        this.editCertTmplByID(JgId,certTmpl);
     },
     editCurrTmpl:function(view,rowIndex){
         var store = view.findParentByType("grid").store;
         var selPlan = store.getAt(rowIndex) ;
-        var planID = selPlan.get("certTmpl");
-        this.editCertTmplByID(planID);
+        var certTmpl = selPlan.get("certTmpl");
+        var JgId = selPlan.get("JgId");
+        this.editCertTmplByID(JgId,certTmpl);
     },
-    editCertTmplByID:function(planID){
+    editCertTmplByID:function(JgId,certTmpl){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZHENGSHU_COM"]["TZ_MOBAN_INFO_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -141,17 +143,16 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
         //操作类型设置为更新
         cmp.actType = "update";
         cmp.on('afterrender',function(panel){
-            //资源集合表单信息;
             var form = panel.child('form').getForm();
             form.findField("certTmpl").setReadOnly(true);
             form.findField("certTmpl").addCls("lanage_1");
-            //资源信息列表
-            var grid = panel.child('grid');
             //参数
-            var tzParams = '{"ComID":"TZ_ZHENGSHU_COM","PageID":"TZ_MOBAN_INFO_STD","OperateType":"QF","comParams":{"certTmpl":"'+certTmpl+'"}}';
+            var tzParams = '{"ComID":"TZ_ZHENGSHU_COM","PageID":"TZ_MOBAN_INFO_STD","OperateType":"QF","comParams":{"certTmpl":"'+certTmpl+'","JgId":"'+JgId+'"}}';
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
-
+            	var formData = responseData.formData;
+                form.setValues(formData);
+                panel.down('image[name=titleImage]').setSrc(TzUniversityContextPath +formData.imageAUrl+formData.titleImageName);	
             });
         });
         tab = contentPanel.add(cmp);
@@ -251,7 +252,7 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
 	ensureTmplDfn: function(btn){ 
 		var panel = btn.findParentByType("panel");
 		//操作类型，add-添加，edit-编辑
-		var actType = panel.actType;
+		var actType = panel.actType; 
 		var form = panel.child("form").getForm();
 		if (form.isValid()) {
 		

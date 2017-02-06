@@ -958,7 +958,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 					strOnlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML", false,
 							strLogoImg);
-					strOnlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML", false);
+					strOnlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML",
+							false);
 					if ("BMB".equals(strTplType)) {
 						if ("Y".equals(strIsGuest)) {
 							strMainInnerStyle = "margin: 0 auto;float:none";
@@ -1038,19 +1039,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				String pwdError2 = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"TJXSETPWDError", strLanguage, "密码和确认密码不一致", "Password and confirm password inconsistent");
-				
-				
-				
+
 				String Pwdname = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"TJXSETPWD", strLanguage, "访问密码", "Access password");
 				String strSubmit2 = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"SUBMIT", strLanguage, "提交", "Submit");
-				
-				//构建密码输入框
+
+				// 构建密码输入框
 				String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
 						Pwdname, strSubmit2, contextUrl);
-				
-				
+
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
 						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
 						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
@@ -1059,8 +1057,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2,PWDHTML);
-			
+						pwdError, pwdError2, PWDHTML);
 
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);
@@ -1530,9 +1527,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				if ("SAVE".equals(strOtype)) {
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
-							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd);
+							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd, strOtype);
 					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
+						System.out.println("checkFiledValid："+strMsg);
 						if ("".equals(strMsg)) {
 							this.savePageCompleteState(numAppInsId, strPageId, "Y");
 						} else {
@@ -1574,11 +1572,76 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 						}
 					}
+				} else if ("PRE".equals(strOtype)) {
 
+					// 先保存数据
+					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
+							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd, "SAVE");
+					// 模版级事件
+					String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'SU_A'";
+					List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
+					for (Object objDataGetModalEvents : listGetModalEvents) {
+						Map<String, Object> MapGetModalEvents = (Map<String, Object>) objDataGetModalEvents;
+						String strAppClassPath = "";
+						String strAppClassName = "";
+						String strAppClassMethod = "";
+						String strEventReturn = "";
+						strAppClassPath = MapGetModalEvents.get("CMBC_APPCLS_PATH") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_PATH"));
+						strAppClassName = MapGetModalEvents.get("CMBC_APPCLS_NAME") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_NAME"));
+						strAppClassMethod = MapGetModalEvents.get("CMBC_APPCLS_METHOD") == null ? ""
+								: String.valueOf(MapGetModalEvents.get("CMBC_APPCLS_METHOD"));
+						if (!"".equals(strAppClassPath) && !"".equals(strAppClassName)
+								&& !"".equals(strAppClassMethod)) {
+							/*
+							 * String[] parameterTypes = new String[]
+							 * {"String[]" }; Object[] arglist = new Object[] {
+							 * numAppInsId ,strClassId , strAppOprId}; Object
+							 * objs = ObjectDoMethod.Load(strAppClassPath + "."
+							 * + strAppClassName, strAppClassMethod,
+							 * parameterTypes, arglist); strEventReturn =
+							 * String.valueOf(objs);
+							 * if(!"".equals(strEventReturn)){ strMsg = strMsg +
+							 * strEventReturn + "\n"; }
+							 */
+							tzOnlineAppEventServiceImpl tzOnlineAppEventServiceImpl = (tzOnlineAppEventServiceImpl) ctx
+									.getBean(strAppClassPath + "." + strAppClassName);
+							switch (strAppClassMethod) {
+							// 根据报名表配置的方法名称去调用不同的方法
+							}
+						}
+					}
+
+					// 提交数据
+					// String strMsgAlter = "";
+
+					if ("".equals(strMsg)) {
+						strMsg = this.checkFiledValid(numAppInsId, strTplId, "", "submit");
+					}
+
+					if ("".equals(strMsg)) {
+						strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
+								strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
+								strOtype);
+
+						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
+							// 如果是管理员并且可编辑的话继续 By WRL@20161027
+						} else {
+							// 如果是推荐信，则提交后发送邮件
+							if ("TJX".equals(strTplType)) {
+								strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType,
+										strBatchId, strPwd);
+								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
+							}
+							if ("BMB".equals(strTplType)) {
+							}
+						}
+					}
 				} else if ("SUBMIT".equals(strOtype)) {
 					// 先保存数据
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
-							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd);
+							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd, strOtype);
 					// 模版级事件
 					String sqlGetModalEvents = "SELECT CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM PS_TZ_APP_EVENTS_T WHERE TZ_APP_TPL_ID = ? AND TZ_EVENT_TYPE = 'SU_A'";
 					List<?> listGetModalEvents = sqlQuery.queryForList(sqlGetModalEvents, new Object[] { strTplId });
@@ -1754,7 +1817,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					password = formDataMap.get("PASSWORD").toString();
 				}
 				boolRtn = tzOnlineAppRulesImpl.checkTJXPwd(dataPwd, language, password);
-				System.out.println("boolRtn:"+boolRtn);
+				System.out.println("boolRtn:" + boolRtn);
 				if (!boolRtn) {
 					successFlag = "1";
 					strMsg = tzOnlineAppRulesImpl.msg;
@@ -1770,18 +1833,18 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
-				//System.out.println("11111111");
+				// System.out.println("11111111");
 				try {
 					String Pwdname = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 							"TJXSETPWD", language, "访问密码", "Access password");
 					String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 							"SUBMIT", language, "提交", "Submit");
-					
+
 					String contextUrl = request.getContextPath();
-					
+
 					String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 							"TJXSETPWDError", language, "请填写密码", "Please fill in the password");
-					
+
 					String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
 							Pwdname, strSubmit, pwdError, contextUrl);
 					return PWDHTML;
@@ -1895,7 +1958,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	private String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
 			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState,
-			String strBathId, String newClassId, String pwd) {
+			String strBathId, String newClassId, String pwd, String strOtype) {
 
 		String returnMsg = "";
 
@@ -1917,7 +1980,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
 				psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
-				psTzAppInsT.setTzAppFormSta(strAppInsState);
+
+				if (strOtype.equals("PRE")) {
+					psTzAppInsT.setTzAppFormSta("P");
+				} else {
+					psTzAppInsT.setTzAppFormSta(strAppInsState);
+				}
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
@@ -1928,7 +1996,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
 				psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
-				psTzAppInsT.setTzAppFormSta(strAppInsState);
+				if (strOtype.equals("PRE")) {
+					psTzAppInsT.setTzAppFormSta("P");
+				} else {
+					psTzAppInsT.setTzAppFormSta(strAppInsState);
+				}
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowAddedOprid(oprid);
 				psTzAppInsT.setRowAddedDttm(new Date());
@@ -2585,8 +2657,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		/* 信息项校验程序 */
 		String strPath, strName, strMethod;
-
-		int numCurrentPageNo = 0;
+		
+		
+		//modity by caoy 页面从1开始 
+		int numCurrentPageNo = 1;
 
 		ArrayList<Integer> listPageNo = new ArrayList<Integer>();
 
@@ -2641,6 +2715,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
 
 				if ("save".equals(strOtype)) {
+					//System.out.println("numCurrentPageNo:"+numCurrentPageNo);
+					//System.out.println("numPageNo:"+numPageNo);
 					if (numCurrentPageNo == numPageNo) {
 						/*
 						 * String[] parameterTypes = new String[]
@@ -2666,6 +2742,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
 								.getBean(strPath + "." + strName);
 						String strReturn = "";
+						System.out.println("strMethod:"+strMethod);
 						switch (strMethod) {
 						case "requireValidator":
 							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2717,7 +2794,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
 							break;
 						}
-
+						System.out.println("strReturn:"+strReturn);
 						if (!"".equals(strReturn)) {
 							returnMsg = strReturn;
 							break;
@@ -2740,6 +2817,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					 */
 					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
+					System.out.println("strMethod:"+strMethod);
 					switch (strMethod) {
 					case "requireValidator":
 						strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2798,6 +2876,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								numXxxMinLine, strTjxSub, strJygzTsxx);
 						break;
 					}
+					System.out.println("strReturn:"+strReturn);
 					if (!"".equals(strReturn)) {
 						if (!listPageNo.contains(numPageNo)) {
 							listPageNo.add(numPageNo);
@@ -3600,7 +3679,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				numPageNo = Integer.parseInt(strPageNo);
 				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_PAGE_NO = ? AND TZ_COM_LMC = 'Page' LIMIT 1";
 				strPageXxxBh = sqlQuery.queryForObject(sqlGetPageXxxBh, new Object[] { strTplId, numPageNo }, "String");
-
+				if (strPageXxxBh == null)
+					strPageXxxBh = "";
 				String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_BYPAGE_SQL");
 				List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numPageNo });
 				for (Object objData : listData) {

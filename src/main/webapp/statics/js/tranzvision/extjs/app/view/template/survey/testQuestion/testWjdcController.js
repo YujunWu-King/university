@@ -337,9 +337,13 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
                 var formData = responseData.formData;
                 form.setValues(formData);
                 var wjID=form.findField("TZ_DC_WJ_ID").getValue();
+                var openBtn=panel.child('form').down("button[name=ktWjdcBtn]");
+                var setBtn=panel.child('form').down("button[name=setWjdcBtn]");
                 if (wjID==''){
+                    setBtn.setDisabled(true);
                 }else{
                     //开通在线调查只读
+                    openBtn.setDisabled(true);
                 }
                 //页面注册信息列表数据
                 var tzStoreParams = '{"FLAG":"A","TZ_CS_WJ_ID":"'+cswjId+'"}';

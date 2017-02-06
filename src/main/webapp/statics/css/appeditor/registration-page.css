@@ -168,6 +168,15 @@
 	border-radius:5px;
 	background:#8f5dc0;
 }
+.btn-pre{
+	text-align:center;
+	width:108px;
+	height:46px;
+	color:#fff;
+	line-height:46px;
+	border-radius:5px;
+	background:#f1c748;
+}
 .operation-btn a{
 	float:none;
 	display:inline-block;
