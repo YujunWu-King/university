@@ -715,37 +715,43 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// -------------复制推荐信
 
 						// ---0.去年的推荐信不为空，则进行“复制推荐信”操作
-						sql = "SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
-						String tempId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-
-						sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
-						String useType = sqlQuery.queryForObject(sql, new Object[] { tempId }, "String");
-						if ("TJX".equals(useType)) {
-							final String LAST_LETTER_SQL = "SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID = ?";
-							List<Map<String, Object>> LetterList = new ArrayList<Map<String, Object>>();
-							LetterList = sqlQuery.queryForList(LAST_LETTER_SQL);
+							final String LAST_LETTER_SQL = "SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =?";
+							List<Map<String, Object>> letterList = new ArrayList<Map<String, Object>>();
+							//System.out.println("numHisAppInsId:"+numHisAppInsId+"->numAppInsId:"+numAppInsId);
+							letterList = sqlQuery.queryForList(LAST_LETTER_SQL,new Object[]{numHisAppInsId});
 							// 将所有的推荐信 信息复制过去 考生推荐信表
-							if (LetterList != null) {
+							if (letterList != null) {
 								// ---1.向"报名表实例表"，加入报名表实例信息PS_TZ_APP_INS_T
 								Long tzAppInsId = Long.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
 								PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 								psTzAppInsT.setTzAppInsId(tzAppInsId);// 报名表实例ID
 																		// 新生成的
 								psTzAppInsT.setRowAddedOprid(oprid); // 当前用户ID
+								psTzAppInsT.setRowAddedDttm(new Date());
+								psTzAppInsT.setRowLastmantDttm(new Date());
 								psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
 								psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
-								psTzAppInsT.setTzAppFormSta("S");
+								//psTzAppInsT.setTzAppFormSta("S");
 								psTzAppInsTMapper.insertSelective(psTzAppInsT);
-
+								//System.out.println("向报名表实例表，加入报名表实例信息 ");
+								
 								// ---2.将"班级"和"报名表"关系数据 存入 "PS_TZ_FORM_WRK_T"
 								PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
 								psTzFormWrkT.setTzClassId(strClassId);// 班级ID
 								psTzFormWrkT.setOprid(oprid);// 当前用户
 								psTzFormWrkT.setTzAppInsId(tzAppInsId);// 报名表实例ID
+								psTzFormWrkT.setRowAddedDttm(new Date());
+								psTzFormWrkT.setRowLastmantDttm(new Date());
+								psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
+								//System.out.println("将班级和报名表关系数据 存入 ");
 
+								
 								// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
-								for (int i = 0; i < LetterList.size(); i++) {
-									Map<String, Object> letterMap = LetterList.get(i);
+								//System.out.println(letterList.size());
+								for (int i = 0; i < letterList.size(); i++) {
+									//System.out.println("推荐信读取");
+									Map<String, Object> letterMap = letterList.get(i);
+									
 									String tzRefLetterId = String
 											.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
 									PsTzKsTjxTbl psTzKsTjxTbl = new PsTzKsTjxTbl();
@@ -754,8 +760,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									psTzKsTjxTbl.setTzAppInsId(tzAppInsId);// 关联报名表
 																			// 实例ID
 									Long tzTjxAppInsId = Long
-											.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_TJX_APP_INS_ID"));
-									psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId); // 推荐信
+											.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
+									psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId); // 推荐信在 报名表实例表中的实例ID
 																					// 报名表编号
 									psTzKsTjxTbl.setOprid(oprid);
 									if (letterMap.get("TZ_TJX_TYPE") != null) {
@@ -856,12 +862,45 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 										psTzKsTjxTbl.setTzAccessPath(String.valueOf(letterMap.get("TZ_ACCESS_PATH")));
 									}
 									psTzKsTjxTblMapper.insertSelective(psTzKsTjxTbl);
+									//System.out.println("考生推荐信 信息存入");
+									// ---3.2.向“报名表实例表”中加入”推荐信“实例信息 （这表结构设计的有毒）
+									//将“原报名表”关联的“推荐信实例ID”拿出来
+									String LAST_LETTER_INS_ID=letterMap.get("TZ_TJX_APP_INS_ID")==null?"":letterMap.get("TZ_TJX_APP_INS_ID").toString();
+									//已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
+									final String SQL_LETTER_INS="SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+									if(!LAST_LETTER_INS_ID.equals("")){
+										List<Map<String,Object>>letterInsList=sqlQuery.queryForList(SQL_LETTER_INS,new Object[]{LAST_LETTER_INS_ID});
+										if(letterInsList!=null){
+											for(int k=0;k<letterInsList.size();k++){
+												Map<String,Object> letterInsMap=letterInsList.get(k);
+												PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
+												psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);// 报名表实例ID
+												// 新生成的
+												psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
+												psTzAppInsT2.setRowLastmantOprid(oprid);
+												psTzAppInsT2.setRowAddedDttm(new Date());
+												psTzAppInsT2.setRowLastmantDttm(new Date());
+												psTzAppInsT2.setTzAppTplId(letterInsMap.get("TZ_APP_TPL_ID").toString());// 历史推荐信模板ID
+												psTzAppInsT2.setTzAppinsJsonStr(letterInsMap.get("TZ_APPINS_JSON_STR").toString());// 历史推荐信字符串信息
+												//新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
+												String submitState=letterInsMap.get("TZ_APP_FORM_STA")==null?"":letterInsMap.get("TZ_APP_FORM_STA").toString();
+												if(submitState.equals("U")){
+													strRefLetterId=tzRefLetterId;
+												}
+												psTzAppInsT2.setTzAppFormSta(submitState);
+												String tzPwd=letterInsMap.get("")==null?"":letterInsMap.get("").toString();
+												psTzAppInsT2.setTzPwd(tzPwd);
+												psTzAppInsTMapper.insertSelective(psTzAppInsT2);
+												//System.out.println("存入推荐信实例");
+											}
+										}
+										}
+									
 								}
-								// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId
+								// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId,
 								strAppInsId = String.valueOf(tzAppInsId);
-								System.out.println("strAppInsId:" + strAppInsId);
+								//System.out.println("strAppInsId:" + strAppInsId);
 							}
-						}
 
 						// -----------------复制推荐信 代码结束
 					}

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZImportTplMgBundle.dao.TzImpTplDfnTMapper;
-import com.tranzvision.gd.TZImportTplMgBundle.model.TzImpTplDfnT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -67,42 +66,6 @@ public class ImportTplMgImpl extends FrameworkImpl {
 		}
 
 		return jacksonUtil.Map2json(mapRet);
-	}
-	
-	
-	/* 获取导入模板定义信息 */
-	@Override
-	public String tzQuery(String strParams, String[] errMsg) {
-		// 返回值;
-		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-			jacksonUtil.json2Map(strParams);
-			if (jacksonUtil.containsKey("tplId")) {
-				String tplId = jacksonUtil.getString("tplId");
-				TzImpTplDfnT tzImpTplDfnT=  TzImpTplDfnTMapper.selectByPrimaryKey(tplId);
-				if (tzImpTplDfnT != null) {
-					returnJsonMap.put("tplId", tzImpTplDfnT.getTzTplId());
-					returnJsonMap.put("tplName", tzImpTplDfnT.getTzTplName());
-					returnJsonMap.put("targetTbl", tzImpTplDfnT.getTzTargetTbl());
-					returnJsonMap.put("javaClass", tzImpTplDfnT.getTzJavaClass());
-					returnJsonMap.put("excelTpl", tzImpTplDfnT.getTzExcelTpl());
-					returnJsonMap.put("enableMapping", tzImpTplDfnT.getTzEnableMapping());
-				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "该导入模板不存在";
-				}
-
-			} else {
-				errMsg[0] = "1";
-				errMsg[1] = "该导入模板不存在";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-		return jacksonUtil.Map2json(returnJsonMap);
 	}
 	
 	// 功能说明：删除导入模板定义;

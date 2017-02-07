@@ -57,7 +57,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> list;
 			// 通过省市名称查询 BEGIN
 			if ("BYSCHOOL".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_NTL_CLGE_TBL where TZ_PROVINCE=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strValue });
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
@@ -75,7 +75,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSEARCH".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_NTL_CLGE_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
 				ArrayList<String> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
@@ -91,7 +91,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSCHOOLNAME".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_NTL_CLGE_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {

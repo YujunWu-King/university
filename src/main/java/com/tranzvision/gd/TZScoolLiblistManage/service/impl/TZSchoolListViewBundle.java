@@ -41,7 +41,7 @@ public class TZSchoolListViewBundle  extends FrameworkImpl {
 
 		// json数据要的结果字段;
 		
-		String[] resultFldArray = { "TZ_JG_ID", "TZ_SCHOOL_NAME", "TZ_SCHOOL_NAMEENG", "COUNTRY" ,"TZ_ZGBM","CITY","tz_hemisphere","tz_state","decstring","tz_school_type","tz_school_natrue","TZ_SCHOOL_LEVEL",};
+		String[] resultFldArray = { "TZ_JG_ID", "TZ_SCHOOL_NAME", "TZ_SCHOOL_NAMEENG", "COUNTRY" ,"TZ_ZGBM","CITY","TZ_HEMISPHERE","TZ_STATE","DECSTRING","TZ_SCHOOL_TYPE","TZ_SCHOOL_NATRUE","TZ_SCHOOL_LEVEL",};
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr,comParams, numLimit, numStart, errorMsg);
