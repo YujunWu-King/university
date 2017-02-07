@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZLeaguerAccountBundle.service.impl;
+package com.tranzvision.gd.TZBlackListManageBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +20,13 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * 申请用户信息；原：TZ_GD_USERGL_PKG:TZ_GD_USER_CLS
+ * 黑名单用户信息
  * 
- * @author tang
- * @since 2015-11-20
+ * @author xzx
+ * @since 2017-1-17
  */
-@Service("com.tranzvision.gd.TZLeaguerAccountBundle.service.impl.LeaguerAccountInfoServiceImpl")
-public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
+@Service("com.tranzvision.gd.TZBlackListManageBundle.service.impl.BlackListMgInfoServiceImpl")
+public class BlackListMgInfoServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -68,17 +68,16 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 						}
 					}
 				}
-				//------------
+
+				
 				//工作地址，单位，行业类别，本科院校;
 				String str_lenCity = "",str_comName="",str_comIndus = "",str_schName="";
 				//是否是黑名单，是否允许申请;备注
 				String str_blackName = "",str_allowApply="",str_beizhu="";
-				//面试申请号
-				String str_msSqh="";
-				//------------
-				
 				//性别;
 				String str_sex = "",str_name="",str_acctlook="";
+				//面试申请号
+				String str_msSqh="";
 				//邮箱、手机,skype;
 				String str_email = "", str_phone= "", str_skype="";
 				//账号激活状态、创建日期时间;
@@ -99,7 +98,6 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					}
 					
 					str_name= psTzRegUserT.getTzRealname();
-					//-----------------
 					str_msSqh= psTzRegUserT.getTzMssqh();
 					str_blackName= psTzRegUserT.getTzBlackName();
 					str_allowApply= psTzRegUserT.getTzAllowApply();
@@ -109,7 +107,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					str_comName= psTzRegUserT.getTzCompanyName();
 					str_comIndus= psTzRegUserT.getTzCompIndustry();
 					str_schName= psTzRegUserT.getTzSchCname();
-					//-----------------
+					
+					
 					
 					
 					String phoneAndEmailSQL = "select TZ_ZY_EMAIL,TZ_ZY_SJ,TZ_SKYPE from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
@@ -194,10 +193,6 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 						}
 					}
 					
-//					jsonMap = new HashMap<>();
-//					jsonMap.put("TZ_SKYPE", str_skype);
-//					jsonMap.put("desc", "Sky账号");
-//					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
 					jsonMap.put("TZ_LEN_CITY", str_lenCity);
 					jsonMap.put("desc", "工作所在省市");
@@ -215,7 +210,6 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					jsonMap.put("desc", "本科院校");
 					arraylist.add(jsonMap);
 					
-					
 				}
 				
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
@@ -230,7 +224,6 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
-				
 				jsonMap2.put("blackName",str_blackName );
 				jsonMap2.put("allowApply",str_allowApply );
 				jsonMap2.put("beizhu",str_beizhu );
@@ -283,9 +276,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    	psoprdefn.setAcctlock(Short.valueOf("0"));
 				    }
 				    
-				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
-					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
-				
+					    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
+						jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
+					
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 					if (i > 0) {
 						returnJsonMap.replace("OPRID", strOprId);

@@ -202,7 +202,6 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
         var tzParams = '{"ComID":"TZ_SCH_TYPE_COM","PageID":"TZ_SCTYE_LIST_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
         Ext.tzSubmit(tzParams,function(responseData){
-        	form.findField("typeID").setValue(responseData);
             store.reload();
         },"保存成功！",true,this);
     },

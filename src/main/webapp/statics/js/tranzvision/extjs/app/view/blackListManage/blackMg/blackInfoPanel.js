@@ -1,7 +1,7 @@
-﻿Ext.define('KitchenSink.view.enrollProject.userMg.userMgInfoPanel', {
+﻿Ext.define('KitchenSink.view.blackListManage.blackMg.blackInfoPanel', {
     extend: 'Ext.panel.Panel',
-    xtype: 'userMgInfoPanel',
-    controller: 'userMgController',
+    xtype: 'blackMgInfo',
+    controller: 'blackMg',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -136,13 +136,11 @@
                         items:[{
                         	boxLabel: "是",
                             name: "blackName",
-                            inputValue: "Y",
-                            readOnly : true
+                            inputValue: "Y"
                         },{
                         	boxLabel: "否",
                             name: "blackName",
-                            inputValue: "N",
-                            readOnly : true
+                            inputValue: "N"
                         }]  
                     },{
                         xtype: 'radiogroup',
@@ -154,13 +152,11 @@
                         items:[{
                         	boxLabel: "是",
                             name: "allowApply",
-                            inputValue: "Y",
-                            readOnly : true
+                            inputValue: "Y"
                         },{
                         	boxLabel: "否",
                             name: "allowApply",
-                            inputValue: "N",
-                            readOnly : true
+                            inputValue: "N"
                         }]
                     },{
                         xtype: 'textarea',
