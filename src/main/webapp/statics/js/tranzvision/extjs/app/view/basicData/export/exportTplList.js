@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.basicData.import.importTplList', {
+﻿Ext.define('KitchenSink.view.basicData.export.exportTplList', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -6,18 +6,18 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.basicData.import.importTplController',
-        'KitchenSink.view.basicData.import.importTplStore'
+        'KitchenSink.view.basicData.export.exportTplController',
+        'KitchenSink.view.basicData.export.exportTplStore'
     ],
-    alilas: 'widget.importTplList',
-    controller: 'importTplController',
+    alilas: 'widget.exportTplList',
+    controller: 'exportTplController',
     columnLines: true,
     selModel: {
         type: 'checkboxmodel'
     },
     style:"margin:8px",
     multiSelect: true,
-    title: '导入模板管理',
+    title: '导出模板管理',
     viewConfig: {
         enableTextSelection: true
     },
@@ -47,7 +47,7 @@
         ]
     }],
     initComponent: function(){
-        var store = new KitchenSink.view.basicData.import.importTplStore();
+        var store = new KitchenSink.view.basicData.export.exportTplStore();
         Ext.apply(this, {
             columns: [{
                 text: '模板编号',
@@ -58,10 +58,6 @@
                 dataIndex: 'tplName',
                 minWidth: 200,
                 flex: 1
-            },{
-                text: '目标表',
-                dataIndex: 'targetTbl',
-                width: 200
             },{
                 text: 'Java类',
                 dataIndex: 'javaClass',
