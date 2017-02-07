@@ -56,10 +56,11 @@ public class TzCanInTsinghuaLoginController {
 				loginHtml = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
 						"Can not visit the site.Please check the url.");
 			}else{
+				String passwordUrl = request.getContextPath() + "/dispatcher?classid=enrollCls&siteid=" + siteid + "&orgid=" + orgid.toUpperCase() + "&lang=ZHS&sen=4";
 				if(isMobile){
-					loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MLOGIN",request.getContextPath(),orgid,siteid);
+					loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MLOGIN",request.getContextPath(),orgid,siteid,passwordUrl);
 				}else{
-					loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_LOGIN",request.getContextPath(),orgid,siteid);
+					loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_LOGIN",request.getContextPath(),orgid,siteid,passwordUrl);
 				}
 			}
 		} catch (TzSystemException e) {
@@ -107,4 +108,34 @@ public class TzCanInTsinghuaLoginController {
 
 		return loginHtml;
 	}
+	
+	@RequestMapping(value = { "/test" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String counttest(HttpServletRequest request, HttpServletResponse response) {
+		String sUserAgent = request.getHeader("User-Agent");
+		
+		//是否移动设备访问
+		boolean isMobile = false;
+		
+		String[] mobileAgents = {"Windows CE","iPod","Symbian","iPhone","BlackBerry","Android","Windows Phone"};
+		if(sUserAgent.indexOf("Android") > -1 && (sUserAgent.indexOf("ERD79) > -1 || sUserAgent.indexOf('MZ60") > -1 || sUserAgent.indexOf("GT-P7") > -1 || sUserAgent.indexOf("SCH-P7") > -1)){
+		}else{
+			for( int i = 0; i < mobileAgents.length; i++){
+				if(sUserAgent.indexOf(mobileAgents[i])>-1){
+					isMobile = true;
+					break;
+				}
+			}
+		}
+		
+		String loginHtml = null;
+		try {
+			loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_IFRAME_TEST",request.getContextPath());
+		} catch (TzSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return loginHtml;
+	}	
 }
