@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
+Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -7,12 +7,12 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.scholarShipManage.scholarModel',
-        'KitchenSink.view.scholarShipManage.scholarController',
-        'KitchenSink.view.scholarShipManage.scholarStore'
+        'KitchenSink.view.scholarShipManage.scholarStore',
+        'KitchenSink.view.scholarShipManage.scholarController'
     ],
-    xtype: 'scholarlist',
+    xtype: 'scholarList',
     controller: 'scholarController',
-    reference:'scholarlist',
+    reference:'scholarList',
     store: {
         type: 'scholarStore'
     },
@@ -65,9 +65,9 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
                     dataIndex: 'TZ_STATE',
                     width:100,
                     renderer:function(v) {
-                    if (v == '0') {
+                    if (v == 'Y') { 
                         return "有效";
-                    } else if (v == '1') {
+                    } else if (v == 'N') {
                         return "无效";
                     }
                    }
@@ -80,15 +80,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
                     width:100,
                     items:[
                         {iconCls:'edit',tooltip:'编辑',handler:'editScholarRow'},
-                        {iconCls:'view',tooltip:'参与人管理',handler:'viewSchCyr',
-                            isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
-                                /*if(record.get('TZ_DC_WJ_ID')==''){
-                                    return true;
-                                }else{ 
-                                    return false;
-                                }*/
-                            } 
-                        }
+                        {iconCls:'people',tooltip:'参与人管理',handler:'viewScholarCyr'}
                     ] 
                 }
                 ],

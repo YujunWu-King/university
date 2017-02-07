@@ -1587,6 +1587,15 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams, function (responseData) { 
             grid.close();
         }, "", true, this);
+    },
+    //导出参与人 ldd 20170207
+    downloadAllCyr:function(btn){
+        var grid=btn.findParentByType('grid');
+        grid.saveDocumentAs({
+            type: 'excel',
+            title: '奖学金参与人',
+            fileName: '奖学金参与人.xls'
+        })
     }
 
 });
