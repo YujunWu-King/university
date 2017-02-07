@@ -81,6 +81,12 @@ public class PsTzRegUserT {
 
     private Date syncdttm;
 
+    private String tzBlackName;
+
+    private String tzAllowApply;
+
+    private String tzBeizhu;
+
     public String getOprid() {
         return oprid;
     }
@@ -391,5 +397,29 @@ public class PsTzRegUserT {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzBlackName() {
+        return tzBlackName;
+    }
+
+    public void setTzBlackName(String tzBlackName) {
+        this.tzBlackName = tzBlackName == null ? null : tzBlackName.trim();
+    }
+
+    public String getTzAllowApply() {
+        return tzAllowApply;
+    }
+
+    public void setTzAllowApply(String tzAllowApply) {
+        this.tzAllowApply = tzAllowApply == null ? null : tzAllowApply.trim();
+    }
+
+    public String getTzBeizhu() {
+        return tzBeizhu;
+    }
+
+    public void setTzBeizhu(String tzBeizhu) {
+        this.tzBeizhu = tzBeizhu == null ? null : tzBeizhu.trim();
     }
 }

@@ -14,15 +14,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from ps_tz_school_type_tbl
+    from PS_TZ_SCHOOL_TYPE_TBL
     where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from ps_tz_school_type_tbl
+    delete from PS_TZ_SCHOOL_TYPE_TBL
     where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
-    insert into ps_tz_school_type_tbl (TZ_SCHOOL_TYPEID, TZ_SCHOOL_TYPENAME, 
+    insert into PS_TZ_SCHOOL_TYPE_TBL (TZ_SCHOOL_TYPEID, TZ_SCHOOL_TYPENAME, 
       TZ_SCHOOL_DEC, TZ_SCHOOL_FLAG, TZ_SCHOOL_ADDTIME
       )
     values (#{tzSchoolTypeid,jdbcType=VARCHAR}, #{tzSchoolTypename,jdbcType=VARCHAR}, 
@@ -30,7 +30,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
-    insert into ps_tz_school_type_tbl
+    insert into PS_TZ_SCHOOL_TYPE_TBL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzSchoolTypeid != null" >
         TZ_SCHOOL_TYPEID,
@@ -67,7 +67,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
-    update ps_tz_school_type_tbl
+    update PS_TZ_SCHOOL_TYPE_TBL
     <set >
       <if test="tzSchoolTypename != null" >
         TZ_SCHOOL_TYPENAME = #{tzSchoolTypename,jdbcType=VARCHAR},
@@ -85,7 +85,7 @@
     where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
-    update ps_tz_school_type_tbl
+    update PS_TZ_SCHOOL_TYPE_TBL
     set TZ_SCHOOL_TYPENAME = #{tzSchoolTypename,jdbcType=VARCHAR},
       TZ_SCHOOL_DEC = #{tzSchoolDec,jdbcType=VARCHAR},
       TZ_SCHOOL_FLAG = #{tzSchoolFlag,jdbcType=VARCHAR},

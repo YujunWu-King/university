@@ -1875,21 +1875,22 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 			String sql = "select TZ_INDEX_SAVECODE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			String strContent = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
-
+			
 			if (null != strContent && !"".equals(strContent)) {
 
 				Pattern p = Pattern.compile("<body\\sstyle=\"background:#fff\">([\\s\\S]*)</body>");
 				Matcher m = p.matcher(strContent);
-				while (m.find()) {
-					// System.out.println(m.group(1));
+				while (m.find()) {					
+					//System.out.println(m.group(1));
 					strRet = m.group(1);
 					break;
 				}
-
+				if(null ==strRet||"".equals(strRet)){
+					strRet = strContent;
+				}
 				if (strRet != null && !"".equals(strRet)) {
 					strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
 				}
-
 			}
 
 		} catch (Exception e) {

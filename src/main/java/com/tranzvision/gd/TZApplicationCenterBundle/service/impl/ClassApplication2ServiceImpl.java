@@ -263,9 +263,11 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 						}
 					}
 					lcContentHtml = "<div class=\"step_Note\">" + lcContentHtml + "</div>";
+					//历史报名页面;
+					String hisUrl = rootPath + "/dispatcher?classid=applyHis&siteId="+strSiteId;
 					applicationCenterHtml = tzGDObject.getHTMLText(
 							"HTML.TZApplicationCenterBundle.TZ_CLASS_LC_HTML", ApplicationCenter, viewHistoryDesc,
-							viewBmbDesc, lcContentHtml, stepHtml, applyFromUrl);
+							viewBmbDesc, lcContentHtml, stepHtml, applyFromUrl,hisUrl);
 					
 				} else {
 					// 未报名的显示开始申请按钮;

@@ -38,25 +38,12 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	
-/*	 tzJgId;
-	 tzSchoolName;
-	 tzSchoolNameeng;
-	 country;
-	 tzZgbm;
-	 city;
-	 tzSchoolLevel;
-	 tzSchoolNatrue;
-	 tzSchoolType;
-	 dec;
-	 tzState;
-	 tzHemisphere;
-	 tzAddtime;
-	*/
+
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg){
 		String strRet = "{}";
 		int tzJgId;
-	Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+	//Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 	
 	
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -70,7 +57,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				// 解析 json
 				jacksonUtil.json2Map(strForm);
 				
-				tzJgId=getSeqNum.getSeqNum("ps_tz_sch_lib_tbl", "TZ_JG_ID");
+				tzJgId=getSeqNum.getSeqNum("PS_TZ_SCH_LIB_TBL", "TZ_JG_ID");
 				String tzSchoolName=jacksonUtil.getString("chinaName");
 				String tzSchoolNameeng=jacksonUtil.getString("engName");
 				String country=jacksonUtil.getString("country");
@@ -104,7 +91,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 	
 				PsTzPayLogTMapper.insert(PsTzPayLogT);
 			
-				
+				strRet=String.valueOf(tzJgId);
 				}	
 			
 		} catch (Exception e) {
@@ -195,7 +182,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				String tzHemisphere=jacksonUtil.getString("hemiHere");
 				
 
-				String sql = "select COUNT(1) from ps_tz_sch_lib_tbl WHERE TZ_JG_ID=?";
+				String sql = "select COUNT(1) from PS_TZ_SCH_LIB_TBL WHERE TZ_JG_ID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgaID }, "Integer");
 				if (count > 0) {
 
@@ -215,7 +202,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				    
 				    PsTzPayLogTMapper.updateByPrimaryKeySelective(PsTzPayLogT);
 
-					
+				    strRet=String.valueOf(orgaID);
 
 				} else {
 					errMsg[0] = "1";

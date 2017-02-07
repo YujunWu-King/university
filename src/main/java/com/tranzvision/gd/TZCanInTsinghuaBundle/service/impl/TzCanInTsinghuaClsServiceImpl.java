@@ -503,6 +503,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String strCategories;
 			// 是否计算分值字段TZ_IS_AVG
 			//String TZ_IS_AVG = "N";
+			@SuppressWarnings("unused")
 			String TZ_XXX_QID = "";
 			String TZ_TITLE = "";
 			// 保存平均分
@@ -516,7 +517,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			};
 			// 用来保留小数2位位数
 			DecimalFormat decimalFormat = new DecimalFormat("#.00");
-
+			//该问卷下面的所有问卷实例
+			String totalCount = sqlQuery.queryForObject("select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?", new Object[] { wjid }, "String");
 			// 所有循环的索引都用index,i,j
 			final String dcwjXxxPzSQL = "select TZ_XXX_BH,TZ_TITLE,TZ_XXX_QID,TZ_COM_LMC,TZ_IS_AVG  from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=?   and TZ_PAGE_NO=? and TZ_COM_LMC not in ('PageNav') order by TZ_ORDER";
 			List<Map<String, Object>> dcwjXxxPzDataList = new ArrayList<Map<String, Object>>();
@@ -594,9 +596,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}else{
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -662,9 +664,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}
  
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -729,9 +731,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -797,9 +799,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						}
 						// 拼最终统计 单选题结果的Html
 						if(isMobile){
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}else{
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}
 						
 						// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -861,9 +863,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 数字填空题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML",  TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML", TZ_XXX_QID + ":" + TZ_TITLE, "", "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -878,11 +880,13 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 		}
 			// 整合结果html
 			logger.info("strDivHtml最终值：" + strDivHtml);
-		
-			int totalCount = sqlQuery.queryForObject("select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?", new Object[] { wjid }, "int");
-			
-			//strCountHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML", request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(totalCount), strDivHtml);
+			String maxPageNo=sqlQuery.queryForObject("select max(TZ_PAGE_NO) from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=?", new Object[]{wjid}, "String");
+			String lastPageNo="";
+			if(pageno.equals(maxPageNo)){
+				lastPageNo=maxPageNo;
+			}
+			//获取注册信息页面
+			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), lastPageNo, strDivHtml,this.createPerfectUrl());
 			return strCountHtml;
 			
 		} catch (Exception e) {
@@ -909,6 +913,49 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			return true;
 		}else{
 			return false;
+		}
+	}
+	
+	/**
+	 * 根据当前登录人获取注册信息项页面URL
+	 * 
+	 * @return
+	 */
+	private String createPerfectUrl(){
+		
+		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
+		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
+		TzSession tzSession = new TzSession(request);
+		Object objOprid = tzSession.getSession(userSessionName);
+
+		if (null != objOprid) {
+			strOprid = String.valueOf(objOprid);
+			String jgSql = "SELECT TZ_JG_ID,TZ_IS_CMPL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
+			String siteSql = "SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID = ? limit 0,1";
+
+			Map<String, Object> map = sqlQuery.queryForMap(jgSql, new Object[] { strOprid });
+			if(map != null){
+				strJgId = map.get("TZ_JG_ID") == null?"":String.valueOf(map.get("TZ_JG_ID"));
+				strIsCmpl = map.get("TZ_IS_CMPL") == null?"":String.valueOf(map.get("TZ_IS_CMPL"));
+			}
+			
+			strSiteId = sqlQuery.queryForObject(siteSql, new Object[] { strOprid }, "String");
+			
+			if(StringUtils.isBlank(strJgId) || StringUtils.isBlank(strSiteId)){
+				return url;
+			}
+			
+			String encryUserName = DESUtil.encrypt(strOprid,"TZ_GD_TRANZVISION");
+			
+			if(StringUtils.equals("Y", strIsCmpl)){
+				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/login";
+			}else{
+				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+			}
+
+			return url;
+		}else{
+			return url;
 		}
 	}
 }

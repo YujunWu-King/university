@@ -103,7 +103,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
 	//院校库列表页编辑
     editResSet: function() {
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -203,7 +203,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
-                    var resSetStore = this.getView().down('grid').store;
+                    var resSetStore = this.getView().store;
                     resSetStore.remove(selList);
                 }
             },this);
@@ -264,6 +264,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
+            	form.findField("orgaID").setValue(responseData);
                 comView.actType = "update";
             },"",true,this);
         }  
@@ -274,7 +275,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         this.onschoolSave(btn);
         //关闭窗口
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("schoolMgList").down("grid").store.reload();
+		contentPanel.child("schoolMgList").store.reload();
         var comView = this.getView(); 		
         comView.close();
     },
@@ -283,20 +284,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         var comView = this.getView();
         comView.close();
     },
-    onResSetInfoSave: function(btn){
-        //资源集合表单
-        var form = this.getView().child("form").getForm();
-        if (form.isValid()) {
-            //获取资源集合信息参数
-            var tzParams = this.getResSetInfoParams();
-            var comView = this.getView();
-            Ext.tzSubmit(tzParams,function(responseData){
-                comView.actType = "update";
-                form.findField("resSetID").setReadOnly(true);
-                form.findField("resSetID").addCls("lanage_1");
-            },"",true,this);
-        }
-    },
+
     onResSetInfoEnsure: function(btn){
         //资源集合表单
         var form = this.getView().child("form").getForm();
@@ -436,77 +424,18 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
         form.findField("resourceID").setReadOnly(false);
         win.show();
     },
-    editResource: function(btn){
-        //选中行
-        var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
-        //选中行长度
-        var checkLen = selList.length;
-        if(checkLen == 0){
-            Ext.Msg.alert("提示","请选择一条要修改的记录");
-            return;
-        }else if(checkLen >1){
-            Ext.Msg.alert("提示","只能选择一条要修改的记录");
-            return;
-        }
-        //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZY_RESSET_COM"]["TZ_RESSET_RES_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-            return;
-        }
-        //该功能对应的JS类
-        var className = pageResSet["jsClassName"];
-        if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_RESSET_RES_STD，请检查配置。');
-            return;
-        }
-
-        var win = this.lookupReference('resourceInfoWindow');
-
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-
-        //操作类型设置为更新
-        win.actType = "update";
-        //资源集合ID
-        var resSetID = selList[0].get("resSetID");
-        //资源ID
-        var resourceID = selList[0].get("resourceID");
-        //参数
-        var tzParams = '{"ComID":"TZ_ZY_RESSET_COM","PageID":"TZ_RESSET_RES_STD","OperateType":"QF","comParams":{"resSetID":"'+resSetID+'","resourceID":"'+resourceID+'"}}';
-        //资源信息表单
-        var form = win.child("form").getForm();
-        Ext.tzLoad(tzParams,function(responseData){
-            form.setValues(responseData);
-            form.findField("resourceID").setReadOnly(true);
-            form.findField("resourceID").addCls("lanage_1");
-        });
-        win.show();
-    },
-    deleteResources: function(btn){
-        //资源信息列表
-        var grid = this.getView().child("grid");
-        //选中行
-        var selList = grid.getSelectionModel().getSelection();
-        //选中行长度
-        var checkLen = selList.length;
-        if(checkLen == 0){
-            Ext.Msg.alert("提示","请选择要删除的记录");
-            return;
-        }else{
-            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
-                if(btnId == 'yes'){
-                    var store = grid.store;
-                    store.remove(selList);
-                }
-            },this);
-        }
-    }
+        //可配置搜索
+	searchschMgList: function(btn){
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.TZ_SCH_LIB_VW',
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load();
+			}
+		});	
+	}
+    
  
  
 

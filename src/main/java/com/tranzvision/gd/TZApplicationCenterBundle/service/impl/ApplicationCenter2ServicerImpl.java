@@ -237,7 +237,9 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						}
 					}
 					lcContentHtml = "<div class=\"step_Note\">"+lcContentHtml+"</div>";
-					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_HTML", ApplicationCenter,viewHistoryDesc,viewBmbDesc,lcContentHtml,stepHtml,applyFromUrl);
+					//历史报名页面;
+					String hisUrl = rootPath + "/dispatcher?classid=applyHis&siteId="+strSiteId;
+					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_HTML", ApplicationCenter,viewHistoryDesc,viewBmbDesc,lcContentHtml,stepHtml,applyFromUrl,hisUrl);
 					return applicationCenterHtml;
 				}else{
 					//未报名的显示开始申请按钮;

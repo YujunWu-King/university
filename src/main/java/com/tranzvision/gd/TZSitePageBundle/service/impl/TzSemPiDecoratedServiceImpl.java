@@ -90,7 +90,7 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			String strSiteMsgLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "5","系统消息", "System message");
 			String strMyActLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "6","我的活动", "My activities");
 			//个人账号管理为菜单跳转，通过hardcode获取菜单编号
-			String personInfoMenuId = getHardCodePoint.getHardCodePointVal("TZ_SEM_USER_MENUID");
+			String personInfoMenuId = getHardCodePoint.getHardCodePointVal("TZ_" + siteId + "_SEMUSER_MENUID");
 			
 			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath();
 
