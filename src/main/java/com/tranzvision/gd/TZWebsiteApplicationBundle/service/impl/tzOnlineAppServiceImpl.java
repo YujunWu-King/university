@@ -754,7 +754,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									psTzKsTjxTbl.setTzAppInsId(tzAppInsId);// 关联报名表
 																			// 实例ID
 									Long tzTjxAppInsId = Long
-											.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+											.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_TJX_APP_INS_ID"));
 									psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId); // 推荐信
 																					// 报名表编号
 									psTzKsTjxTbl.setOprid(oprid);
