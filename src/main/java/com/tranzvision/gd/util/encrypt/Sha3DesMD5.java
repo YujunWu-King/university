@@ -323,4 +323,10 @@ public class Sha3DesMD5 {
         return hs.toString().toUpperCase();
     }
 	
+    
+    public static void main(String[] args) {
+    	String input="nbAdmin2)!^";
+    	System.out.println(Sha3DesMD5.md5(input));
+    	System.out.println(Sha3DesMD5.md5_16(input));
+    }
 }

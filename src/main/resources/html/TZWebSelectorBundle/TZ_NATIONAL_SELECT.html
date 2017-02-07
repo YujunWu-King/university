@@ -78,6 +78,7 @@
 			$(function(){
 				$("#FanhuiType").val("");
 				$("#FanhuiValue").val("");
+				$("#FanhuiValue2").val("");
 				
 				//取得div层
 				var $search = $('.city_main2');
@@ -146,7 +147,7 @@
 								//遍历data，添加到自动完成区
 								$.each(data, function(index,term) {
 									//创建li标签,添加到下拉列表中 
-									$('<li title="'+term.descr+'" onclick="setFanhuiLi(this)"></li>').text(term.descr+" " +term.country).appendTo($autocomplete)
+									$('<li title="'+term.descr+'" ccode="'+term.country+'" onclick="setFanhuiLi(this)"></li>').text(term.descr+" " +term.country).appendTo($autocomplete)
 									.addClass('clickable')
 									.hover(function(){
 												//下拉列表每一项的事件，鼠标移进去的操作
@@ -290,7 +291,7 @@
 							if(data.length){
 								$selectorList.empty();
 								$.each(data, function(index,term) {
-									$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);
+									$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);
 								});
 							}else{
 								$selectorList.empty();
@@ -301,25 +302,31 @@
 	
 		function setFanhuiLi(obj){
 			$("#FanhuiValue").val($(obj).attr("title"));
+			$("#FanhuiValue2").val( $(obj).attr("ccode"));
 			setScholl();
 		}
 	
 		function setFanhui(obj){
 			$("#FanhuiValue").val($(obj).val());
+			$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
 		}
 		function setFanhui2(obj){
 			$(obj).find("input").attr('checked','checked');
 			$("#FanhuiValue").val($(obj).find("input:radio").val());	
+			$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
 		}
 	
 		function setScholl(){
 			var $value = $("#FanhuiValue").val();
+			var $value2 = $("#FanhuiValue2").val();
 			
 			var $ParamCon = $("#ParamCon",window.parent.document).val();
 			$("#"+$ParamCon,window.parent.document).val($value);
 			$("#"+$ParamCon,window.parent.document).focus();
-			parent.$("#"+$ParamCon,window.parent.document).trigger("change");
+			/* parent.$("#"+$ParamCon,window.parent.document).trigger("change"); caoy*/
 			parent.$("#"+$ParamCon,window.parent.document).trigger("blur");
+			
+			$("#"+$ParamCon,window.parent.document).attr("ccode",$value2);
 			closeThis();
 		}
 	
@@ -339,7 +346,7 @@
 					if(data.length){
 						$selectorList.empty();
 						$.each(data, function(index,term) {
-							$("<div class='city_main_city2'><label for='radio' style='cursor:pointer;' onclick='setFanhui2(this);'><input type='radio' name='radio' value='"+term.descr+"' onclick='setFanhui(this);'  />"+term.descr+" " +term.country+"</label></div>").appendTo($selectorList);
+							$("<div class='city_main_city2'><label for='radio' style='cursor:pointer;' onclick='setFanhui2(this);'><input type='radio' name='radio' ccode='"+term.country+"' value='"+term.descr+"' onclick='setFanhui(this);'  />"+term.descr+" " +term.country+"</label></div>").appendTo($selectorList);
 						 });
 					}else{
 						$selectorList.empty();
@@ -420,6 +427,7 @@
 
 		<div>
 			<input id="FanhuiValue" type="hidden" />
+			<input id="FanhuiValue2" type="hidden" />
 			<input id="language" type="hidden" value="%bind(:6)"/>
 		</div>
 		<script type="text/javascript">

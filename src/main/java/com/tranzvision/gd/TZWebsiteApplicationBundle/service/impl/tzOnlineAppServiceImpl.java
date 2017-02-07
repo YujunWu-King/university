@@ -727,6 +727,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								psTzAppInsT.setTzAppInsId(tzAppInsId);// 报名表实例ID
 																		// 新生成的
 								psTzAppInsT.setRowAddedOprid(oprid); // 当前用户ID
+								psTzAppInsT.setRowAddedDttm(new Date());
+								psTzAppInsT.setRowLastmantDttm(new Date());
 								psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
 								psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
 								//psTzAppInsT.setTzAppFormSta("S");
@@ -738,6 +740,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								psTzFormWrkT.setTzClassId(strClassId);// 班级ID
 								psTzFormWrkT.setOprid(oprid);// 当前用户
 								psTzFormWrkT.setTzAppInsId(tzAppInsId);// 报名表实例ID
+								psTzFormWrkT.setRowAddedDttm(new Date());
+								psTzFormWrkT.setRowLastmantDttm(new Date());
 								psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
 								//System.out.println("将班级和报名表关系数据 存入 ");
 
@@ -862,8 +866,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									// ---3.2.向“报名表实例表”中加入”推荐信“实例信息 （这表结构设计的有毒）
 									//将“原报名表”关联的“推荐信实例ID”拿出来
 									String LAST_LETTER_INS_ID=letterMap.get("TZ_TJX_APP_INS_ID")==null?"":letterMap.get("TZ_TJX_APP_INS_ID").toString();
-									//已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='S'表示已提交
-									final String SQL_LETTER_INS="SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=? AND TZ_APP_FORM_STA='S'";
+									//已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
+									final String SQL_LETTER_INS="SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
 									if(!LAST_LETTER_INS_ID.equals("")){
 										List<Map<String,Object>>letterInsList=sqlQuery.queryForList(SQL_LETTER_INS,new Object[]{LAST_LETTER_INS_ID});
 										if(letterInsList!=null){

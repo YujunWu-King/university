@@ -67,31 +67,48 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			String siteId = jacksonUtil.getString("SiteID");
 			//String oprId = jacksonUtil.getString("OPRID");
 			
-			
+			// 父分隔符号的id
+			String strTZ_FPAGE_BH = "";
 			/*--- TAB页签  BEGIN ---*/
-			String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
+			String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE,TZ_FPAGE_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplId });
 			String tabHtml = "";
-			int i = 1;
+			//int i = 0;
+			int numChild = 0;
+			int numIndex = 0;
+			
+			String strDivClass = "";
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
 
 				String xxxBh = result.get("TZ_XXX_BH") == null ? "" : String.valueOf(result.get("TZ_XXX_BH"));
 				String xxxTitle = result.get("TZ_TITLE") == null ? "" : String.valueOf(result.get("TZ_TITLE"));
 				String tapStyle = result.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(result.get("TZ_TAPSTYLE"));
-				String divClass = "";
-				if(i == 1){
-					divClass = "menu-active";
-				}else{
-					divClass = "";
+				strTZ_FPAGE_BH = result.get("TZ_FPAGE_BH") == null ? ""
+						: String.valueOf(result.get("TZ_FPAGE_BH"));
+				
+				//String divClass = "";
+				numIndex = numIndex + 1;
+				
+				// 默认第一级菜单高亮
+				if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+					strDivClass = "menu-active-top";
+				} else {
+					numChild = numChild + 1;
+					// 默认第一页高亮
+					if (numChild == 1) {
+						strDivClass = "menu-active";
+					} else {
+						strDivClass = "";
+					}
 				}
 
 				try {
-					tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", divClass,xxxTitle,"",xxxBh);
+					tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", strDivClass,xxxTitle,"",xxxBh);
 				} catch (TzSystemException e) {
 					e.printStackTrace();
 				}
-				i++;
+				//i++;
 			}
 
 		   /*--- TAB页签  END ---*/
