@@ -45,10 +45,10 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			//排序字段如果没有不要赋值
-			//String[][] orderByArr = new String[][]{{"TZ_DLZH_ID","ASC"}};
+			//String[][] orderByArr=new String[][]{{"ROW_ADDED_DTTM","DESC"}};
 			String[][] orderByArr=new String[][]{};
 			//json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CS_WJ_ID","TZ_CS_WJ_NAME", "TZ_DC_WJ_KSRQ", "TZ_DC_WJ_JSRQ", "TZ_STATE","TZ_DC_WJ_ID"};
+			String[] resultFldArray = { "TZ_SCHLR_ID","TZ_SCHLR_NAME", "TZ_STATE", "TZ_DC_WJ_ID","TZ_DC_WJ_KSRQ","TZ_DC_WJ_JSRQ"};
 					
 			//可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit,numStart, errorMsg);
@@ -59,13 +59,12 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("TZ_CS_WJ_ID", rowList[0]);
-					mapList.put("TZ_CS_WJ_NAME", rowList[1]);
-					mapList.put("TZ_DC_WJ_KSRQ", rowList[2]);
-					mapList.put("TZ_DC_WJ_JSRQ", rowList[3]);
-					mapList.put("TZ_STATE", rowList[4]);
-					mapList.put("TZ_DC_WJ_ID", rowList[5]);
-					
+					mapList.put("TZ_SCHLR_ID", rowList[0]);
+					mapList.put("TZ_SCHLR_NAME", rowList[1]);
+					mapList.put("TZ_STATE", rowList[2]);
+					mapList.put("TZ_DC_WJ_ID", rowList[3]);
+					mapList.put("TZ_DC_WJ_KSRQ", rowList[4]);
+					mapList.put("TZ_DC_WJ_JSRQ", rowList[5]);
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);
