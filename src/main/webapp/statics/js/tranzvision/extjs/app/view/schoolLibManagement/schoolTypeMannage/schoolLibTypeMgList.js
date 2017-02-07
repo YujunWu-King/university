@@ -3,7 +3,7 @@
  */
 
 Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibTypeMgList', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -17,7 +17,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
     xtype: 'schoolMgTypeList',
     title:Ext.tzGetResourse("TZ_SCH_TYPE_COM.TZ_SCTYE_LIST_STD.schoolLibList","院校类型管理") ,
     controller: 'schoolMgTypeConter',
-        viewConfig: {markDirty: false},
+    viewConfig: {markDirty: false},
     columnLines: true,
 	style:"margin:8px",
 	selModel: {
