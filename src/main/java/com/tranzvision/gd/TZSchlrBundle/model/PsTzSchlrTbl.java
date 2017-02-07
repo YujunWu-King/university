@@ -5,6 +5,8 @@ import java.util.Date;
 public class PsTzSchlrTbl {
     private String tzSchlrId;
 
+    private String tzSchlrName;
+
     private String tzJgId;
 
     private String tzState;
@@ -25,6 +27,14 @@ public class PsTzSchlrTbl {
 
     public void setTzSchlrId(String tzSchlrId) {
         this.tzSchlrId = tzSchlrId == null ? null : tzSchlrId.trim();
+    }
+
+    public String getTzSchlrName() {
+        return tzSchlrName;
+    }
+
+    public void setTzSchlrName(String tzSchlrName) {
+        this.tzSchlrName = tzSchlrName == null ? null : tzSchlrName.trim();
     }
 
     public String getTzJgId() {

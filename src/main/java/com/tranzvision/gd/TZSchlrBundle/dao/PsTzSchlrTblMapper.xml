@@ -3,6 +3,7 @@
 <mapper namespace="com.tranzvision.gd.TZSchlrBundle.dao.PsTzSchlrTblMapper" >
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl" >
     <id column="TZ_SCHLR_ID" property="tzSchlrId" jdbcType="VARCHAR" />
+    <result column="TZ_SCHLR_NAME" property="tzSchlrName" jdbcType="VARCHAR" />
     <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_STATE" property="tzState" jdbcType="VARCHAR" />
     <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
@@ -12,8 +13,8 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_SCHLR_ID, TZ_JG_ID, TZ_STATE, TZ_DC_WJ_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-    ROW_LASTMANT_OPRID
+    TZ_SCHLR_ID, TZ_SCHLR_NAME, TZ_JG_ID, TZ_STATE, TZ_DC_WJ_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -26,18 +27,23 @@
     where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl" >
-    insert into PS_TZ_SCHLR_TBL (TZ_SCHLR_ID, TZ_JG_ID, TZ_STATE, 
-      TZ_DC_WJ_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID)
-    values (#{tzSchlrId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzState,jdbcType=VARCHAR}, 
-      #{tzDcWjId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR})
+    insert into PS_TZ_SCHLR_TBL (TZ_SCHLR_ID, TZ_SCHLR_NAME, TZ_JG_ID, 
+      TZ_STATE, TZ_DC_WJ_ID, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+      )
+    values (#{tzSchlrId,jdbcType=VARCHAR}, #{tzSchlrName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzState,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl" >
     insert into PS_TZ_SCHLR_TBL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzSchlrId != null" >
         TZ_SCHLR_ID,
+      </if>
+      <if test="tzSchlrName != null" >
+        TZ_SCHLR_NAME,
       </if>
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -65,6 +71,9 @@
       <if test="tzSchlrId != null" >
         #{tzSchlrId,jdbcType=VARCHAR},
       </if>
+      <if test="tzSchlrName != null" >
+        #{tzSchlrName,jdbcType=VARCHAR},
+      </if>
       <if test="tzJgId != null" >
         #{tzJgId,jdbcType=VARCHAR},
       </if>
@@ -91,6 +100,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl" >
     update PS_TZ_SCHLR_TBL
     <set >
+      <if test="tzSchlrName != null" >
+        TZ_SCHLR_NAME = #{tzSchlrName,jdbcType=VARCHAR},
+      </if>
       <if test="tzJgId != null" >
         TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
       </if>
@@ -117,7 +129,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl" >
     update PS_TZ_SCHLR_TBL
-    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+    set TZ_SCHLR_NAME = #{tzSchlrName,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
       TZ_STATE = #{tzState,jdbcType=VARCHAR},
       TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
