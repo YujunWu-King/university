@@ -104,7 +104,7 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 				}
 
 				try {
-					tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",true, strDivClass,xxxTitle,"",xxxBh);
+					tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", strDivClass,xxxTitle,"",xxxBh);
 				} catch (TzSystemException e) {
 					e.printStackTrace();
 				}
