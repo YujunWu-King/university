@@ -129,11 +129,11 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
                     }]
             }],
             buttons:[
-                {
+                /*{
                     text: '预览',
                     handler:'seeTmplDfn',
                     iconCls:'preview'
-                },
+                },*/
                 {
                     text: Ext.tzGetResourse("TZ_AD_TMPL_COM.TZ_AD_INFO_STD.save","保存"),
                     handler:'onschoolSave',

@@ -57,7 +57,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				// 解析 json
 				jacksonUtil.json2Map(strForm);
 				
-				tzJgId=getSeqNum.getSeqNum("ps_tz_sch_lib_tbl", "TZ_JG_ID");
+				tzJgId=getSeqNum.getSeqNum("PS_TZ_SCH_LIB_TBL", "TZ_JG_ID");
 				String tzSchoolName=jacksonUtil.getString("chinaName");
 				String tzSchoolNameeng=jacksonUtil.getString("engName");
 				String country=jacksonUtil.getString("country");
@@ -182,7 +182,7 @@ public class TzSchoolListMgBundle extends FrameworkImpl {
 				String tzHemisphere=jacksonUtil.getString("hemiHere");
 				
 
-				String sql = "select COUNT(1) from ps_tz_sch_lib_tbl WHERE TZ_JG_ID=?";
+				String sql = "select COUNT(1) from PS_TZ_SCH_LIB_TBL WHERE TZ_JG_ID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgaID }, "Integer");
 				if (count > 0) {
 
