@@ -727,6 +727,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								psTzAppInsT.setTzAppInsId(tzAppInsId);// 报名表实例ID
 																		// 新生成的
 								psTzAppInsT.setRowAddedOprid(oprid); // 当前用户ID
+								psTzAppInsT.setRowAddedDttm(new Date());
+								psTzAppInsT.setRowLastmantDttm(new Date());
 								psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
 								psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
 								//psTzAppInsT.setTzAppFormSta("S");
@@ -738,6 +740,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								psTzFormWrkT.setTzClassId(strClassId);// 班级ID
 								psTzFormWrkT.setOprid(oprid);// 当前用户
 								psTzFormWrkT.setTzAppInsId(tzAppInsId);// 报名表实例ID
+								psTzFormWrkT.setRowAddedDttm(new Date());
+								psTzFormWrkT.setRowLastmantDttm(new Date());
 								psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
 								//System.out.println("将班级和报名表关系数据 存入 ");
 
