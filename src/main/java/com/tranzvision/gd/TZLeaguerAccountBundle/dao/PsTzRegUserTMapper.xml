@@ -41,6 +41,9 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_BLACK_NAME" property="tzBlackName" jdbcType="VARCHAR" />
+    <result column="TZ_ALLOW_APPLY" property="tzAllowApply" jdbcType="VARCHAR" />
+    <result column="TZ_BEIZHU" property="tzBeizhu" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     OPRID, TZ_REALNAME, TZ_GENDER, TZ_SKYPE, TZ_FIRST_NAME, TZ_LAST_NAME, TZ_COMPANY_NAME, 
@@ -48,7 +51,8 @@
     NATIONAL_ID_TYPE, NATIONAL_ID, BIRTHDATE, TZ_SCH_CNAME, TZ_SPECIALTY, TZ_HIGHEST_EDU, 
     TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
     TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_BLACK_NAME, 
+    TZ_ALLOW_APPLY, TZ_BEIZHU
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -73,7 +77,8 @@
       TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, 
       TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_BLACK_NAME, TZ_ALLOW_APPLY, TZ_BEIZHU
       )
     values (#{oprid,jdbcType=VARCHAR}, #{tzRealname,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
       #{tzSkype,jdbcType=VARCHAR}, #{tzFirstName,jdbcType=VARCHAR}, #{tzLastName,jdbcType=VARCHAR}, 
@@ -87,7 +92,8 @@
       #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, #{tzComment8,jdbcType=VARCHAR}, 
       #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzBlackName,jdbcType=VARCHAR}, #{tzAllowApply,jdbcType=VARCHAR}, #{tzBeizhu,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT" >
@@ -210,6 +216,15 @@
       <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
+      <if test="tzBlackName != null" >
+        TZ_BLACK_NAME,
+      </if>
+      <if test="tzAllowApply != null" >
+        TZ_ALLOW_APPLY,
+      </if>
+      <if test="tzBeizhu != null">
+        TZ_BEIZHU,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="oprid != null" >
@@ -328,6 +343,15 @@
       </if>
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBlackName != null" >
+        #{tzBlackName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAllowApply != null" >
+        #{tzAllowApply,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBeizhu != null">
+        #{tzBeizhu,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -448,6 +472,15 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzBlackName != null" >
+        TZ_BLACK_NAME = #{tzBlackName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAllowApply != null" >
+        TZ_ALLOW_APPLY = #{tzAllowApply,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBeizhu != null" >
+        TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
+      </if>
     </set>
     where OPRID = #{oprid,jdbcType=VARCHAR}
   </update>
@@ -490,7 +523,10 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_BLACK_NAME = #{tzBlackName,jdbcType=VARCHAR},
+      TZ_ALLOW_APPLY = #{tzAllowApply,jdbcType=VARCHAR},
+      TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR}
     where OPRID = #{oprid,jdbcType=VARCHAR}
   </update>
 </mapper>

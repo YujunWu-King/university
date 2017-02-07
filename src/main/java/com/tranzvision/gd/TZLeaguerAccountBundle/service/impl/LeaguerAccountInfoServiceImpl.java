@@ -68,7 +68,14 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 						}
 					}
 				}
-
+				//------------
+				//工作地址，单位，行业类别，本科院校;
+				String str_lenCity = "",str_comName="",str_comIndus = "",str_schName="";
+				//是否是黑名单，是否允许申请;备注
+				String str_blackName = "",str_allowApply="",str_beizhu="";
+				//面试申请号
+				String str_msSqh="";
+				//------------
 				
 				//性别;
 				String str_sex = "",str_name="",str_acctlook="";
@@ -92,7 +99,17 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					}
 					
 					str_name= psTzRegUserT.getTzRealname();
+					//-----------------
+					str_msSqh= psTzRegUserT.getTzMssqh();
+					str_blackName= psTzRegUserT.getTzBlackName();
+					str_allowApply= psTzRegUserT.getTzAllowApply();
+					str_beizhu= psTzRegUserT.getTzBeizhu();
 					
+					str_lenCity= psTzRegUserT.getTzLenCity();
+					str_comName= psTzRegUserT.getTzCompanyName();
+					str_comIndus= psTzRegUserT.getTzCompIndustry();
+					str_schName= psTzRegUserT.getTzSchCname();
+					//-----------------
 					
 					
 					String phoneAndEmailSQL = "select TZ_ZY_EMAIL,TZ_ZY_SJ,TZ_SKYPE from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
@@ -172,20 +189,38 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 								jsonMap = new HashMap<>();
 								jsonMap.put(regfieldId, str_fld);
 								jsonMap.put("desc", str_fld_name);
-								arraylist.add(jsonMap);
+//								arraylist.add(jsonMap);
 							}
 						}
 					}
 					
+//					jsonMap = new HashMap<>();
+//					jsonMap.put("TZ_SKYPE", str_skype);
+//					jsonMap.put("desc", "Sky账号");
+//					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
-					jsonMap.put("TZ_SKYPE", str_skype);
-					jsonMap.put("desc", "Sky账号");
+					jsonMap.put("TZ_LEN_CITY", str_lenCity);
+					jsonMap.put("desc", "工作所在省市");
 					arraylist.add(jsonMap);
+					jsonMap = new HashMap<>();
+					jsonMap.put("TZ_COMPANY_NAME", str_comName);
+					jsonMap.put("desc", "工作单位");
+					arraylist.add(jsonMap);
+					jsonMap = new HashMap<>();
+					jsonMap.put("TZ_COMP_INDUSTRY", str_comIndus);
+					jsonMap.put("desc", "行业类别");
+					arraylist.add(jsonMap);
+					jsonMap = new HashMap<>();
+					jsonMap.put("TZ_SCH_CNAME", str_schName);
+					jsonMap.put("desc", "本科院校");
+					arraylist.add(jsonMap);
+					
 					
 				}
 				
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
+				jsonMap2.put("msSqh", str_msSqh);
 				jsonMap2.put("userName", str_name);
 				jsonMap2.put("userSex",str_sex );
 				jsonMap2.put("userEmail",str_email );
@@ -195,6 +230,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
+				
+				jsonMap2.put("blackName",str_blackName );
+				jsonMap2.put("allowApply",str_allowApply );
+				jsonMap2.put("beizhu",str_beizhu );
 				
 				returnJsonMap.replace("formData", jsonMap2);	
 	
@@ -231,7 +270,11 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String strOprId = (String) map.get("OPRID");
 				    // 锁定状态;
 				    String strAcctLock = (String) map.get("acctlock");
-
+				    // 黑名单状态
+				    String strBlackName = (String) map.get("blackName");
+				    String strAllowApply = (String) map.get("allowApply");
+				    String strBeiZhu = (String) map.get("beizhu");
+				    
 				    Psoprdefn psoprdefn = new Psoprdefn();
 				    psoprdefn.setOprid(strOprId);
 				    if("1".equals(strAcctLock)){
@@ -240,6 +283,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    	psoprdefn.setAcctlock(Short.valueOf("0"));
 				    }
 				    
+				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
+					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
+				
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 					if (i > 0) {
 						returnJsonMap.replace("OPRID", strOprId);
