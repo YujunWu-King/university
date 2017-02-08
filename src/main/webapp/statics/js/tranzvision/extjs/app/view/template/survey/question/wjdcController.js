@@ -1557,7 +1557,6 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         }
         //提交参数
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        console.log(tzParams);
         Ext.tzSubmit(tzParams, function (responseData) {
         }, "", true, this);
 
@@ -1603,18 +1602,17 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
     cyrScholarStatus:function(view,t,rowIndex){
         var msg="";
         var record = view.findParentByType("grid").store.getAt(rowIndex);
-        var schLrId=view.findParentByType("grid").schLrId;
-        var wjId=view.findParentByType("grid").wjId;
-        
+        var schLrId=view.findParentByType("grid").schLrId;       
         if (record.get("isApply")=="Y"||record.get("isApply")=="N"){
 	        if(record.get("isApply") == "Y"){
 	            record.set("isApply", "N");
+	            msg = "设置申请未通过成功";
 	        }else{
 	            record.set("isApply", "Y");
+	            msg = "设置申请通过成功";
 	        }
-	        var tzParams = this.submitContentParams("P",msg);
+	        var tzParams = this.submitContentParams(schLrId,msg);
        }
-       
     },
     //获取修改的记录(提交的参数)
     submitContentParams: function(schLrId,msg){
@@ -1658,7 +1656,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         //提交参数
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
         Ext.tzSubmit(tzParams,function(){
-            store.reload();
+            //store.reload();
         },msg,true,this);
     }
 

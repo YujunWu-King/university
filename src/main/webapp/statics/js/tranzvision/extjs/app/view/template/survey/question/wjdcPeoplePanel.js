@@ -39,8 +39,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:[ '->',{minWidth:80,text:"保存",iconCls:"save",handler:"wjdcPeopleSave"},'-',
-                {minWidth:80,text:"确定",iconCls:"ensure",handler:"wjdcPeopleSure"},'-',
+        items:[ '->',/*{minWidth:80,text:"保存",iconCls:"save",handler:"wjdcPeopleSave"},'-',
+                {minWidth:80,text:"确定",iconCls:"ensure",handler:"wjdcPeopleSure"},'-',*/
                 {minWidth:80,text:"关闭",iconCls:"close",handler:"wjdcInfoClose"},'-'
         ]
     },{
@@ -70,19 +70,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
         var store = new KitchenSink.view.template.survey.question.wjdcPeopleStore();
         Ext.apply(this, {
             columns: [
-                //new Ext.grid.RowNumberer() ,
-               /* {
-                    text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_DC_WJ_ID","调查问卷ID"),
-                    sortable: true,
-                    dataIndex: 'wjId',
-                    hidden   : true
-                },
-                {
-                    text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.PERSON_ID","问卷人ID"),
-                    sortable: true,
-                    dataIndex: 'oprid',
-                    hidden   : true
-                },*/{
+               {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_FIRST_NAME","姓名"),
                     sortable: true,
                     dataIndex: 'name',
@@ -97,7 +85,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                 {   text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_EMAIL","邮箱"),
                     sortable: true,
                     dataIndex: 'email',
-                    width: 200
+                    width: 220
                 },{
                     text: '完成状态',
                     sortable: false,
