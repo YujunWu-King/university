@@ -62,12 +62,32 @@
 			}
 
 			$(document).ready(function(){
-				$(".regmain-menu ul li").click(function(){
-					var pageno = $(this).index() + 1;
+				//点击菜单的动作 如果是顶级层，则不做动作
+				$(".regmain-menu ul li[class!='menu-active-top']").click(function(){
+					
+					
+					var thisid = $(this).attr('id');
+					
+					var pageno = 0;
+					var pagelen = 0;
+					//var index = 0;
+					//重新计算pageno和pagelen  顶层的不算
+					$.each($(".regmain-menu ul li"),function(i,obj){
+						//index = index +1;
+						if ($(obj).attr('class')!="menu-active-top") {	
+							pagelen = pagelen +1;
+							
+							////console.log($(obj).attr('id'));
+							if ($(obj).attr('id')== thisid) {
+								////console.log($(obj).attr('id')+":GO");
+								pageno = pagelen;
+							}
+						}
+					});
+
 					$(".page" + pageno).show();
 					
-					var pageSize = $(".regmain-menu ul li").length;
-					for(var i =1;i<= pageSize ;i++){
+					for(var i =1;i<= pagelen ;i++){
 						i != pageno && 	$(".page"+i).hide();
 					}
 					
@@ -82,7 +102,12 @@
 					$.each($(".menu-gou.right img"),function(i,obj){
 						var imgPath = $(obj).attr("src");
 						imgPath = imgPath.replace("-white.png", ".png");
-						$(obj).attr("src",imgPath);
+						if(imgPath!=""&&imgPath!=undefined){
+							$(obj).attr("src",imgPath);
+							$(obj).show();
+						}else{
+							$(obj).hide();
+						}
 					})
 					
 					var leftPath = $(this).find("img").first().attr("src");
@@ -92,6 +117,9 @@
 					}
 					if(rightPath){
 						$(this).find("img").last().attr("src",rightPath.replace(".png", "-white.png"));
+						$(this).find("img").last().show();
+					}else{
+						$(this).find("img").last().hide();
 					}
 				});
 

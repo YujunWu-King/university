@@ -499,7 +499,8 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		}
 		//听众列表 将听众ID分离成为一个字符串数组
 		
-		if(dataMap.containsKey("AudList")&&dataMap.get("AudList")!=null){
+		
+		if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
 			ArrayList<String> strListenersId=new ArrayList<String>();
 			strListenersId=(ArrayList<String>) dataMap.get("AudList");
 			PsTzSureyAudT  PsTzSureyAudT=new PsTzSureyAudT();

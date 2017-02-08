@@ -4,7 +4,7 @@
 
 
 Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageList', {
-    extend: 'Ext.panel.Panel',
+    extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -19,26 +19,16 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
     xtype: 'schoolMgList',
     title:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.schoolLibList","院校库管理") ,
     controller: 'schoolMgConter',
- /*   listeners:{
-        resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 44;button height plus panel body padding
-            var grid = panel.child('grid');
-            if(grid) grid.setHeight( height -buttonHeight -8);
-        }
-    },*/
-    initComponent: function () {
-        var store = new KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageStore();
-        Ext.apply(this, {
-            items: [{
-                xtype: 'grid',
-                columnLines: true,
-                style:"margin:8px",
-                 selModel: {
-                    type: 'checkboxmodel'
-                },
-                header:false,
-                frame: true,
-                dockedItems:[{
+    viewConfig: {markDirty: false},
+    columnLines: true,
+	style:"margin:8px",
+	selModel: {
+       	type: 'checkboxmodel'
+    },
+    multiSelect: false,
+	header:false,
+	frame: true,
+	 dockedItems:[{
                    xtype:"toolbar",
                     items:[
                          {text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.query","查询"),tooltip:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.querydata","查询数据"),iconCls:"query",handler:'searchschMgList'},"-",
@@ -56,6 +46,18 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.ensure","确定"),iconCls:"ensure",handler:'ensureonSaveRemoveData'},
             {minWidth:80,text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.close","关闭"),iconCls:"close",handler:'closeResSets'}]
                 }],
+ /*   listeners:{
+        resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
+            var buttonHeight = 44;button height plus panel body padding
+            var grid = panel.child('grid');
+            if(grid) grid.setHeight( height -buttonHeight -8);
+        }
+    },*/
+    initComponent: function () {
+        var store = new KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageStore();
+        Ext.apply(this, {
+       
+               
                  columns: [{
                 text:Ext.tzGetResourse("TZ_SCH_LIB_COM.TZ_SCH_LIST_STD.OrganizationID","机构代码") ,
                 dataIndex: 'orgaID',
@@ -136,7 +138,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
                     emptyMsg: "没有数据显示",
                     plugins: new Ext.ux.ProgressBarPager()
                 }
-            }]
+            
 
         });
         this.callParent();

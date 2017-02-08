@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZSchlrBundle.dao.PsTzSchlrRsltTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
+    <id column="TZ_SCHLR_ID" property="tzSchlrId" jdbcType="VARCHAR" />
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_IS_APPLY" property="tzIsApply" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SCHLR_ID, OPRID, TZ_IS_APPLY
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SCHLR_RSLT_TBL
+    where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTblKey" >
+    delete from PS_TZ_SCHLR_RSLT_TBL
+    where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
+    insert into PS_TZ_SCHLR_RSLT_TBL (TZ_SCHLR_ID, OPRID, TZ_IS_APPLY
+      )
+    values (#{tzSchlrId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzIsApply,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
+    insert into PS_TZ_SCHLR_RSLT_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSchlrId != null" >
+        TZ_SCHLR_ID,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzIsApply != null" >
+        TZ_IS_APPLY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSchlrId != null" >
+        #{tzSchlrId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsApply != null" >
+        #{tzIsApply,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
+    update PS_TZ_SCHLR_RSLT_TBL
+    <set >
+      <if test="tzIsApply != null" >
+        TZ_IS_APPLY = #{tzIsApply,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
+    update PS_TZ_SCHLR_RSLT_TBL
+    set TZ_IS_APPLY = #{tzIsApply,jdbcType=VARCHAR}
+    where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

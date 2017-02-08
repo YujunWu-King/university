@@ -43,6 +43,8 @@
 			width: 50px;
 			margin:8px 0;
 		}
+		.city_main_city2 {width: 660px;line-height: 18px;}
+		.city_main_title2 {width: 760px;}
 
 		</style>
 	
@@ -111,6 +113,7 @@
 						data = f.comContent;
 					}
 					if(data.length) {
+						$autocomplete.html("");
 						//遍历data，添加到自动完成区
 						$.each(data, function(index,term) {
 							//创建li标签,添加到下拉列表中 
@@ -225,11 +228,15 @@
 		});
        
      	function setTab(n){
-			var menu=document.getElementById("chose").getElementsByTagName("a");  
+			/* var menu=document.getElementById("chose").getElementsByTagName("a");  
 			for(i=0;i<menu.length;i++){
 		   		menu[i].className=i==n?"now2":""; 
 			}
-			var title = $(menu[n]).attr("title");
+			var title = $(menu[n]).attr("title"); */
+			
+			var $CountryCode = $("#CountryCode", window.parent.document).val();
+			var title = $("#" + $CountryCode, window.parent.document).attr("ccode");
+			console.log($CountryCode + "   " + title);
 			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + title + '"}}';
 			
 			$.ajax({
@@ -266,7 +273,7 @@
 			layerChange();
 		}
         
-        function findData(){
+        /*function findData(){
         	var tzByNameParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOLNAME","search-text":"' + $("#search-text").val() + '"}}';
 			$.ajax({
 				'url':tzGeneralURL, //服务器的地址
@@ -291,7 +298,29 @@
 				}
          	});
           setTab2(1,0)
-        }
+        } */
+        function findData() {
+			$.ajax({
+				'url': tzGeneralURL,//服务器的地址
+				'data': {'search-text': $("#search-text").val()},//参数
+				'dataType': 'json',//返回数据类型
+				'type': 'POST',//请求类型
+				'success': function(data) {
+					var $selectorList = $("#selectorList");
+					if (data.length) {
+						$selectorList.empty();
+						$.each(data,
+						function(index, term) {
+							$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui4(this);"><input type="radio" name="radio" value=' + term.schoolName + ' onclick="setFanhui(this);" />' + term.schoolName + '</label></div>').appendTo($selectorList);
+						});
+					} else {
+						$selectorList.empty();
+					}
+				}
+			});
+			setTab2(1, 0)
+		}
+        
 		function setFanhuiLi(obj){
 			$("#FanhuiType").val("C");
 			$("#FanhuiValue").val($(obj).text());
@@ -337,16 +366,16 @@
    <div class="city_main_title2" id="search_img" style="width:800px">
   <div class="search_left"><span class="font_gray_16px_s">搜索 </span>
     <input name="search-text" type="text" class="input_251px" id="search-text" /></div>
- <div class="search_right">
+ <!--  <div class="search_right">
 	 <a href="#" id="search" class="alpha" onclick="findData();" > <img src="%bind(:3)/search_bt.png" width="40" height="39"/></a></div>
- </div>
+ </div> -->
 <div class="city_main_title2"><span class="font_gray_16px_s">如果搜索不到相应学校，请点击其他学校或境外学校输入对应的学校</span></div>
   <div class="city_main_title3" id="tab1">
       <div class="float_left">
       <ul>
         <li class="now" onclick="setTab2(1,0)" >全部地区</li>
         <li onclick="setTab2(1,1)">其他学校</li>
-        <li onclick="setTab2(1,2)">境外学校</li>
+        <!--  <li onclick="setTab2(1,2)">境外学校</li> -->
       </ul>
       </div>
       
@@ -354,7 +383,7 @@
     </div>
     <div  id="content1">
     <div class="tab1 block">
-  <div class="city_main_line2" id="chose">
+  <!--  <div class="city_main_line2" id="chose">
     <div class="city_main_city"><a title="北京" href="javascript:;" onclick="setTab(0);layerChange();">北京</a></div>
     <div class="city_main_city"><a title="天津" href="javascript:;" onclick="setTab(1);layerChange();">天津</a></div>
     <div class="city_main_city"><a title="河北" href="javascript:;" onclick="setTab(2);layerChange();">河北</a></div>
@@ -387,7 +416,7 @@
 	<div class="city_main_city"><a title="青海" href="javascript:;" onclick="setTab(29);layerChange();">青海</a></div>
 	<div class="city_main_city"><a title="新疆" href="javascript:;" onclick="setTab(30);layerChange();">新疆</a></div>
 	
-  </div>
+  </div> -->
   <div class="city_main_line3" id="selectorList">
   </div>
   </div>
@@ -397,11 +426,11 @@
   </div>
   </div>
   
-  <div class="tab1">
+  <!--  <div class="tab1">
    <div  class="other">境外学校 ： 
     <input name="2" type="text" class="input_251px" id="2" onchange="setFanhui2(this);"/>
   </div>
-  </div>
+  </div> -->
   </div>
   <div class="main_full_lines_400px"></div>
   <div class="center_bt">
@@ -411,6 +440,8 @@
 <div>
 <input id="FanhuiType" type="hidden"/>
 <input id="FanhuiValue" type="hidden"/>
+<input id="language" type="hidden" value="ENG" />
+<input id="country" type="hidden" value="" />
 </div>
 
 <script type="text/javascript">
@@ -422,6 +453,11 @@
 		//parent.layer.close(index);
 		parent.layer.iframeAuto(index);
 	}
+	$(document).ready(function(){
+		setTab(1);
+		layerChange();
+		
+    });
 	</script>
 </body>
 </html>
