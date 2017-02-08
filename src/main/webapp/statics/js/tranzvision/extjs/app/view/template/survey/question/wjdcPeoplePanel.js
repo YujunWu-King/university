@@ -72,10 +72,16 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
             columns: [
                {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_FIRST_NAME","姓名"),
-                    sortable: true,
+                    sortable: true, 
                     dataIndex: 'name',
-                    width: 200
-                },
+                    width: 200,
+                    renderer:function(v){
+                        return '<a href="javascript:void(0)">'+v+'</a>';
+                    },
+                    listeners: {
+                       click: 'cyrDcStatusDetail'
+                    }
+               },
                 {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_PHONE","手机"),
                     sortable: true,

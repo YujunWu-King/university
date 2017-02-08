@@ -1449,7 +1449,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             }
         });
     },
-    /*参与人调查状态
+    /*参与人调查详情*/
     cyrDcStatusDetail:function(view,t,rowIndex){
         var record=view.findParentByType("grid").store.getAt(rowIndex);
         var wjId = record.data.wjId;
@@ -1458,8 +1458,10 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + wjId +'","SURVEY_INS_ID":"'+wjInsId +'"}}';
             var newTab=window.open('about:blank');
             newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        }else{
+            Ext.Msg.alert("提示","该用户尚未参与调查！"); 
         }
-    },*/ 
+    },
     /*给选中的参与人发送短信*/
     sendSmsToCyr:function(btn){
         var grid = btn.findParentByType("grid");
