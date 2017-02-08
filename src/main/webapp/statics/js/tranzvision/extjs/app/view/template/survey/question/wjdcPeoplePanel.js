@@ -85,13 +85,13 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_FIRST_NAME","姓名"),
                     sortable: true,
                     dataIndex: 'name',
-                    width: 150
+                    width: 200
                 },
                 {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_PHONE","手机"),
                     sortable: true,
                     dataIndex: 'phone',
-                    width: 150
+                    width: 200
                 },
                 {   text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_EMAIL","邮箱"),
                     sortable: true,
@@ -101,27 +101,22 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     text: '完成状态',
                     sortable: false,
                     dataIndex: 'dcState', 
-                    width: 100,
-                    renderer: function(v) {
-                      if(v=='未开始'){
-                         return v;
-                       }else{
-                         return '<a href="javascript:void(0)">'+v+'</a>';
-                       }
-                    },
-                    listeners:{
-                        click:'cyrDcStatusDetail' 
-                    }
-                },{
-                	xtype:'linkcolumn',
-                    sortable: false,
-                    width: 120,
-                    text: '通过/未通过',
-                    items:[{
-                        text: '通过/未通过',
-                        handler:'cyrScholarStatus'
-                    }]
-                }],
+                    width: 120
+                },  text: '通过/未通过',
+		            dataIndex: 'isApply',
+		            width: 120,
+		            align: 'center',
+		            groupable: false,
+		            renderer: function(v) {
+		                if(v == "Y"){
+		                	return '<a href="javascript:void(0)">未通过</a>';
+		                }else{
+		                	return '<a href="javascript:void(0)">通过</a>';
+		                }
+	            },
+	            listeners:{
+	            	click:'cyrScholarStatus'
+	            }],
                 store:store,
                 bbar: {
                     xtype: 'pagingtoolbar',
