@@ -67,7 +67,7 @@
     		displayField: 'TZ_TEMP_NAME'
         },{
            	xtype: 'combo',
-            fieldLabel: "活动类型",
+            fieldLabel: "内容类型",
 			name: 'lm_nrlx',
 			emptyText:"请选择...",
             queryMode: 'remote',

@@ -270,7 +270,7 @@
 					dataIndex: 'lm_lx',
 					width: '150'
 				},{
-					text: '活动类型',
+					text: '内容类型',
 					dataIndex: 'lm_nrlx',
 					width: '150'
 				},{
