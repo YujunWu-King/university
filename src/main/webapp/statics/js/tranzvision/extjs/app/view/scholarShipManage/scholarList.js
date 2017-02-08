@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
                     dataIndex: 'TZ_DC_WJ_JSRQ',
                     width: 150               
                 },{ text: Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_STATE","状态"),
-                    dataIndex: 'TZ_STATE',
+                    dataIndex: 'TZ_JXJ_STATE',
                     width:100,
                     renderer:function(v) {
                     if (v == 'Y') { 
