@@ -51,13 +51,13 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//公司类型
 			typeLi += '<div class="type_item_li">';
 			typeLi += '	<span class="type_item_label">'+MsgSet["FIRM_TYPE"]+'：</span>';
-			typeLi += '		<b class="read-select"  >--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			typeLi += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
 			typeLi += '	</div>';
 
 			//岗位类型
 			typeLi += '<div class="type_item_li">';
 			typeLi += '	<span class="type_item_label">'+MsgSet["POSITION_TYPE"]+'：</span>';
-			typeLi += '		<b class="read-select"  >--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			typeLi += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
 			typeLi += '	</div>';
 			
 			
@@ -154,9 +154,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
 				}
 				//----------------------------放入公司性质OPT
-				types += '<div class="input-list" style="margin-top:5px">';
-				types += '	<div class="input-list-info left" ><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
+				types += '<div class="input-list" style="display:block">';
+				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
 				types += OPT_FIRM;
@@ -166,6 +166,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
+				types +='<div class="clear"></div>';
 				types += '</div>';
 
 			} else {
@@ -176,10 +177,10 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
 				}
 				//----------------------------放入公司性质OPT
-				types += '<div class="input-list" style="margin-top:5px">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
-				types += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+				types += '<div class="input-list" style="display:block">';
+				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-text left input-edu-select">';
+				types += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
 				types += OPT_FIRM;
 				types += '		</select>';
@@ -188,6 +189,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
+				types +='<div class="clear"><div>';
 				types += '</div>';
 			}
 
@@ -209,9 +211,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				}
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
-				types += '<div class="input-list" style="margin-top:45px">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + '：</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
+				types += '<div class="input-list" style="display:block">';
+				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
 				types += OPT_POSITION;
@@ -221,6 +223,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
+				types += '<div class="clear"></div>';
 				types += '</div>';
 
 			} else {
@@ -241,10 +244,10 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				}
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
-				types += '<div class="input-list"  style="margin-top:45px">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + '：</div>';
-				types += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
-				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
+				types += '<div class="input-list" style="display:block">';
+				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-text left input-edu-select">';
+				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
 				types += OPT_POSITION;
 				types += '		</select>';
@@ -253,6 +256,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
+				types += '<div class="clear"></div>';
 				types += '</div>';
 			}
 		

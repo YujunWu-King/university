@@ -145,8 +145,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                                     return false;
                                 }
                             }
-                        },
-                        {iconCls:' people',tooltip:'参与人管理',handler:'majorPersonMg'}
+                        }/*,
+                        {iconCls:' people',tooltip:'参与人管理',handler:'majorPersonMg'}*/
                     ]
                 }
 //                ,  {
