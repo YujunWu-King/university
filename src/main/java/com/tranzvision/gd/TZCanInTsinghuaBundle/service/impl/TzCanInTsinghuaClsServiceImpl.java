@@ -586,6 +586,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							    }
 							    //计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -650,6 +651,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -716,6 +718,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -785,6 +788,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -879,13 +883,13 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 		}
 			// 整合结果html
 			logger.info("strDivHtml最终值：" + strDivHtml);
-			String maxPageNo=sqlQuery.queryForObject("select max(TZ_PAGE_NO) from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=?", new Object[]{wjid}, "String");
-			String lastPageNo="";
-			if(pageno.equals(maxPageNo)){
+			int maxPageNo=sqlQuery.queryForObject("select max(TZ_PAGE_NO) from PS_TZ_DCWJ_XXXPZ_T where TZ_DC_WJ_ID=?", new Object[]{wjid}, "Integer");
+			int lastPageNo=0;
+			if(Integer.valueOf(pageno).equals(maxPageNo)){
 				lastPageNo=maxPageNo;
 			}
 			//获取注册信息页面
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), lastPageNo, strDivHtml,this.createPerfectUrl());
+			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl());
 			return strCountHtml;
 			
 		} catch (Exception e) {
