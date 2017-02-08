@@ -30,6 +30,10 @@ public class PsTzModalDtTbl extends PsTzModalDtTblKey {
 
     private String tzScoreCkzl;
 
+    private String tzIfZdcs;
+
+    private String tzZdcsgzId;
+
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -144,6 +148,22 @@ public class PsTzModalDtTbl extends PsTzModalDtTblKey {
 
     public void setTzScoreCkzl(String tzScoreCkzl) {
         this.tzScoreCkzl = tzScoreCkzl == null ? null : tzScoreCkzl.trim();
+    }
+
+    public String getTzIfZdcs() {
+        return tzIfZdcs;
+    }
+
+    public void setTzIfZdcs(String tzIfZdcs) {
+        this.tzIfZdcs = tzIfZdcs == null ? null : tzIfZdcs.trim();
+    }
+
+    public String getTzZdcsgzId() {
+        return tzZdcsgzId;
+    }
+
+    public void setTzZdcsgzId(String tzZdcsgzId) {
+        this.tzZdcsgzId = tzZdcsgzId == null ? null : tzZdcsgzId.trim();
     }
 
     public Date getRowAddedDttm() {

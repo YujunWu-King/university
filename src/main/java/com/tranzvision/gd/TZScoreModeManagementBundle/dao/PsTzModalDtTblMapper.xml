@@ -18,6 +18,8 @@
     <result column="TZ_SCR_TO_SCORE" property="tzScrToScore" jdbcType="VARCHAR" />
     <result column="TZ_SCR_SQZ" property="tzScrSqz" jdbcType="DECIMAL" />
     <result column="TZ_SCORE_CKZL" property="tzScoreCkzl" jdbcType="VARCHAR" />
+    <result column="TZ_IF_ZDCS" property="tzIfZdcs" jdbcType="VARCHAR" />
+    <result column="TZ_ZDCSGZ_ID" property="tzZdcsgzId" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -33,8 +35,8 @@
   <sql id="Base_Column_List" >
     TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID, DESCR, TZ_SCORE_ITEM_TYPE, TZ_SCORE_HZ, TZ_SCORE_QZ, 
     TZ_M_FBDZ_MX_XX_JX, TZ_SCORE_LIMITED2, TZ_M_FBDZ_MX_SX_JX, TZ_SCORE_LIMITED, TZ_SCORE_PY_ZSLIM0, 
-    TZ_SCORE_PY_ZSLIM, TZ_SCR_TO_SCORE, TZ_SCR_SQZ, TZ_SCORE_CKZL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_SCORE_PY_ZSLIM, TZ_SCR_TO_SCORE, TZ_SCR_SQZ, TZ_SCORE_CKZL, TZ_IF_ZDCS, TZ_ZDCSGZ_ID, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <sql id="Blob_Column_List" >
     TZ_SCORE_ITEM_DFSM, TZ_SCORE_ITEM_CKWT, TZ_SCORE_ITEM_MSFF
@@ -61,18 +63,20 @@
       TZ_SCORE_QZ, TZ_M_FBDZ_MX_XX_JX, TZ_SCORE_LIMITED2, 
       TZ_M_FBDZ_MX_SX_JX, TZ_SCORE_LIMITED, TZ_SCORE_PY_ZSLIM0, 
       TZ_SCORE_PY_ZSLIM, TZ_SCR_TO_SCORE, TZ_SCR_SQZ, 
-      TZ_SCORE_CKZL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM, TZ_SCORE_ITEM_DFSM, TZ_SCORE_ITEM_CKWT, 
+      TZ_SCORE_CKZL, TZ_IF_ZDCS, TZ_ZDCSGZ_ID, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_SCORE_ITEM_DFSM, TZ_SCORE_ITEM_CKWT, 
       TZ_SCORE_ITEM_MSFF)
     values (#{tzJgId,jdbcType=VARCHAR}, #{treeName,jdbcType=VARCHAR}, #{tzScoreItemId,jdbcType=VARCHAR}, 
       #{descr,jdbcType=VARCHAR}, #{tzScoreItemType,jdbcType=VARCHAR}, #{tzScoreHz,jdbcType=DECIMAL}, 
       #{tzScoreQz,jdbcType=DECIMAL}, #{tzMFbdzMxXxJx,jdbcType=VARCHAR}, #{tzScoreLimited2,jdbcType=DECIMAL}, 
       #{tzMFbdzMxSxJx,jdbcType=VARCHAR}, #{tzScoreLimited,jdbcType=DECIMAL}, #{tzScorePyZslim0,jdbcType=INTEGER}, 
       #{tzScorePyZslim,jdbcType=INTEGER}, #{tzScrToScore,jdbcType=VARCHAR}, #{tzScrSqz,jdbcType=DECIMAL}, 
-      #{tzScoreCkzl,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP}, #{tzScoreItemDfsm,jdbcType=LONGVARCHAR}, #{tzScoreItemCkwt,jdbcType=LONGVARCHAR}, 
+      #{tzScoreCkzl,jdbcType=VARCHAR}, #{tzIfZdcs,jdbcType=VARCHAR}, #{tzZdcsgzId,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzScoreItemDfsm,jdbcType=LONGVARCHAR}, #{tzScoreItemCkwt,jdbcType=LONGVARCHAR}, 
       #{tzScoreItemMsff,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZScoreModeManagementBundle.model.PsTzModalDtTblWithBLOBs" >
@@ -125,6 +129,12 @@
       </if>
       <if test="tzScoreCkzl != null" >
         TZ_SCORE_CKZL,
+      </if>
+      <if test="tzIfZdcs != null" >
+        TZ_IF_ZDCS,
+      </if>
+      <if test="tzZdcsgzId != null" >
+        TZ_ZDCSGZ_ID,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -203,6 +213,12 @@
       <if test="tzScoreCkzl != null" >
         #{tzScoreCkzl,jdbcType=VARCHAR},
       </if>
+      <if test="tzIfZdcs != null" >
+        #{tzIfZdcs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdcsgzId != null" >
+        #{tzZdcsgzId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -274,6 +290,12 @@
       <if test="tzScoreCkzl != null" >
         TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
       </if>
+      <if test="tzIfZdcs != null" >
+        TZ_IF_ZDCS = #{tzIfZdcs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdcsgzId != null" >
+        TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -321,6 +343,8 @@
       TZ_SCR_TO_SCORE = #{tzScrToScore,jdbcType=VARCHAR},
       TZ_SCR_SQZ = #{tzScrSqz,jdbcType=DECIMAL},
       TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
+      TZ_IF_ZDCS = #{tzIfZdcs,jdbcType=VARCHAR},
+      TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
@@ -349,6 +373,8 @@
       TZ_SCR_TO_SCORE = #{tzScrToScore,jdbcType=VARCHAR},
       TZ_SCR_SQZ = #{tzScrSqz,jdbcType=DECIMAL},
       TZ_SCORE_CKZL = #{tzScoreCkzl,jdbcType=VARCHAR},
+      TZ_IF_ZDCS = #{tzIfZdcs,jdbcType=VARCHAR},
+      TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
