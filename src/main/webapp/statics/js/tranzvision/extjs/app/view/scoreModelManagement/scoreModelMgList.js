@@ -8,7 +8,8 @@
         'Ext.ux.ProgressBarPager',
 		'KitchenSink.view.scoreModelManagement.scoreModelMgStore',
 		'KitchenSink.view.scoreModelManagement.scoreModelMgController',
-		'tranzvision.extension.grid.column.Link'
+		'tranzvision.extension.grid.column.Link',
+		'KitchenSink.view.scoreModelManagement.copyScoreModelWin'
     ],
     xtype: 'scoreModelMgList',
 	controller: 'scoreModelMgController',

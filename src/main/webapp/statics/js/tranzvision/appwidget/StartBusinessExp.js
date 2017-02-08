@@ -276,13 +276,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--收入140px-->
 					NET_DIV+='<div id="income_y" style="margin-top:10px" class="input-list">'	
 						NET_DIV+='<div  class="input-list-info left">'+MsgSet["INCOME"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"><input readOnly=true class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						NET_DIV+='<div class="input-list-text left"><input readOnly=true class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					NET_DIV+='</div>'	
 				
 					//<!--用户数20px-->
 					NET_DIV+='<div id="people" style="margin-top:10px" class="input-list">'
 						NET_DIV+='<div  class="input-list-info left">'+MsgSet["USER_NUM"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'
+						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'
 					NET_DIV+='</div>'	
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
@@ -296,12 +296,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
 						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["OWN_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					FAM_DIV+='</div>'		
 					//<!--家族企业资产-->
 					FAM_DIV+='<div id="family_money" class="input-list">'	
 						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["FAMILY_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					FAM_DIV+='</div>'	
 				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
@@ -315,17 +315,17 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--'+MsgSet["INCOME"]+'-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["INCOME"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'	
 					OTH_DIV+='</div>'	
 					//<!--'+MsgSet["YEAR_PROFIT"]+'-->
 					OTH_DIV+='<div id="year_income" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["YEAR_PROFIT"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					OTH_DIV+='</div>'	
 					//<!--企业规模-->
 					OTH_DIV+='<div id="firm_scale" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["FIRM_SCALE"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" readOnly=true id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " readOnly=true id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'	
 					OTH_DIV+='</div>'	
 				OTH_DIV+='</div>'		
 				//-------------------------------
@@ -409,12 +409,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--收入140px-->
 					NET_DIV+='<div id="income_y" style="margin-top:10px" class="input-list">'	
 						NET_DIV+='<div  class="input-list-info left">'+MsgSet["INCOME"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					NET_DIV+='</div>'					
 					//<!--用户数20px-->
 					NET_DIV+='<div id="people" style="margin-top:10px" class="input-list">'
 						NET_DIV+='<div  class="input-list-info left">'+MsgSet["USER_NUM"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" /><span>'+MsgSet["PEOPLES"]+'</span></div>'
+						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" /><span>'+MsgSet["PEOPLES"]+'</span></div>'
 					NET_DIV+='</div>'	
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
@@ -428,12 +428,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
 						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["OWN_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					FAM_DIV+='</div>'		
 					//<!--家族企业资产-->
 					FAM_DIV+='<div id="family_money" class="input-list">'	
 						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["FAMILY_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					FAM_DIV+='</div>'	
 				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
@@ -447,17 +447,17 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--近12个月收入-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left" >'+MsgSet["INCOME"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'	
 					OTH_DIV+='</div>'	
 					//<!--年纯利润-->
 					OTH_DIV+='<div id="year_income" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["YEAR_PROFIT"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
 					OTH_DIV+='</div>'	
 					//<!--企业规模-->
 					OTH_DIV+='<div id="firm_scale" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["FIRM_SCALE"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px;width:240px" id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'	
 					OTH_DIV+='</div>'	
 				OTH_DIV+='</div>'		
 				//-------------------------------

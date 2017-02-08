@@ -90,6 +90,7 @@
 		            xtype: 'textfield',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCRMOD_DEFN_STD.modeName","模型名称"),
 					name: 'modeName',
+					maxLength: 18,
 		            allowBlank: false
 		        },{
 		           	xtype: 'combo',
@@ -261,7 +262,14 @@
 								minWidth: 150,
 								flex: 1,
 								editor: {
-									xtype: 'textfield'	
+									xtype: 'textfield',
+									editable: false,
+									triggers: {
+				                        search: {
+				                            cls: 'x-form-search-trigger',
+				                            handler: "selectScoreModelItemId"
+				                        }
+				                    }
 								}
 							},
 							{
@@ -353,7 +361,14 @@
 								minWidth: 150,
 								flex: 1,
 								editor: {
-									xtype: 'textfield'	
+									xtype: 'textfield',
+									editable: false,
+									triggers: {
+				                        search: {
+				                            cls: 'x-form-search-trigger',
+				                            handler: "selectScoreModelItemId"
+				                        }
+				                    }
 								}
 							},
 							{
