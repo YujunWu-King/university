@@ -238,21 +238,93 @@ $(document).ready(function(){
 	//end 报名中心;
 	
 	//加载报考日历
-	//var siteid = $("#siteid").val();
-	//var oprate = $("#operator").val();
-	var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAG3","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","oprate":"'+oprate+'"}}';
-	$.ajax({
-		type:"POST",
-		url: TzUniversityContextPath+"/dispatcher",
-		data:{
-			tzParams:tzParams
-		},
-		success:function(response){
-			$('.main_mid_zxj_rili').prop('innerHTML', response);
-		},
-		failure: function () {
-		  	
-		} 
+	$(".main_mid_zxj_rili").each(function(){
+		var $me = $(this);
+		var areaId = $me.attr("area-id");
+		var colId = $me.attr("area-col");
+		
+		$me.html("加载中...");
+		
+		var tzParams = '{"ComID":"TZ_RECRUIT_VIEW_COM","PageID":"TZ_BKRL_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
+		$.ajax({
+			type:"POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data:{
+				tzParams:tzParams
+			},
+			success:function(response){
+				$me.html(response);
+				$(".date_body").each(function(){
+					$clamp(this, {clamp:2});
+				});
+			},
+			failure: function () {
+			  	//ToDo
+			} 
+		});
 	});
 	//end 报考日历;
+	
+	//加载招生活动、报考通知、资料专区区域
+	$(".main_mid_zxj_zs").each(function(){
+		var $me = $(this);
+		//区域id;
+		var areaId = $me.attr("area-id");
+		//栏目id;
+		var colId = $me.attr("area-col");
+	
+		$me.html("加载中...");
+		var tzParams = '{"ComID":"TZ_RECRUIT_VIEW_COM","PageID":"TZ_RECRUIT_ACT_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","colId":"'+colId+'","oprate":"'+oprate+'"}}';
+		$.ajax({
+			type:"POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data:{
+				tzParams:tzParams
+			},
+			success:function(response){
+				$me.html(response);
+//				$(".date_body").each(function(){
+//					$clamp(this, {clamp:2});
+//				});
+			},
+			failure: function () {
+			  	//ToDo
+			} 
+		});
+	});
+	
+	//end招生活动、报考通知、资料专区区域
+	
+	//友情链接区域
+	$(".friends").each(function(){
+		var $me = $(this);
+		//区域id;
+		var areaId = $me.attr("area-id");
+		//栏目id;
+		var colId = $me.attr("area-col");
+//		$me.html("加载中...");
+	});
+	//end友情链接区域
+	
+	//左侧菜单下二维码区域
+	$(".zxj_code").each(function(){
+		var $me = $(this);
+		//区域id;
+		var areaId = $me.attr("area-id");
+		//栏目id;
+		var colId = $me.attr("area-col");
+//		$me.html("加载中...");
+	});
+	
+	//右上角图片区域
+	$(".mid_right_ad_1").each(function(){
+		var $me = $(this);
+		//区域id;
+		var areaId = $me.attr("area-id");
+		//栏目id;
+		var colId = $me.attr("area-col");
+//		$me.html("图片");
+	});
+	
+	
 });
