@@ -224,7 +224,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//--融资情况初始值
 		var FINANCING_DEL=child.WorkExper2.value;
 		//--------------------------------------------放入创业类型下拉框html
-			htmlContent += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:10px" >';
+			htmlContent += '<div class="main_inner_content_para" >';
 			
 			htmlContent += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 
@@ -237,8 +237,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					OPT_BTYPE+='<option value="0'+parseInt(k+1)+'"'+(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+BUSINESS_TYPE_GP[k]+'</option>';
 				}
 				//----------------------------放入创业类型OPT "请选择"：MsgSet["PLEASE_SELECT"]
-				htmlContent += '<div class="main_inner_content_info_autoheight" style="margin-top:45px">';
-				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
+				htmlContent += '<div class="input-list">';
+				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
 				htmlContent += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
 				htmlContent += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" disabled=true class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				//htmlContent += '			<option value="-1">' + '--'+"请选择"+'--' + '</option>';
@@ -256,14 +256,14 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var NET_DIV=''
 					//初始值设定
 				if(BUSINESS_TYPE_DEF=="01"||BUSINESS_TYPE_DEF==""){
-					NET_DIV+='<div id="NET_TYPE_SHOW" style="margin-top:50px">'
+					NET_DIV+='<div id="NET_TYPE_SHOW">'
 				}else{
-					NET_DIV+='<div id="NET_TYPE_SHOW" style="margin-top:50px;display:none">'
+					NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
 				}
 					//<!--融资标题-->
-					NET_DIV+='<div class="input-list-info left" style="height:100px"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+					NET_DIV+='<div class="input-list-info left" style="height:100px"><span class="red">*</span>'+MsgSet["FINANCING"]+':</div>'
 					//<!---融资radioGroup-->	
-					NET_DIV+='<div  class="main_inner_content_info_right"  >'
+					NET_DIV+='<div  class="input-list-text left" style="height:240px" >'
 						//<!--加入一个隐藏input缓存radio数据-->
 						NET_DIV+='<input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
 						NET_DIV+='<input disabled=true type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input readOnly=true id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
@@ -289,9 +289,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var FAM_DIV='';
 					//初始值设定
 				if(BUSINESS_TYPE_DEF=="02"){
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="margin-top:50px">'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
 				}else{
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;margin-top:50px">'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;">'
 				}	
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
@@ -308,9 +308,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var OTH_DIV='';
 					//初始值设定
 				if(FINANCING_DEL=="03"){
-					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="margin-top:50px">'
+					OTH_DIV+='<div id="OTHER_TYPE_SHOW">'
 				}else{
-					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;margin-top:50px">'
+					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;">'
 				}
 					//<!--'+MsgSet["INCOME"]+'-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
@@ -354,10 +354,10 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					OPT_BTYPE+='<option value="0'+parseInt(k+1)+'"'+(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+BUSINESS_TYPE_GP[k]+'</option>';
 				}
 				//----------------------------放入创业类型OPT "请选择"：MsgSet["PLEASE_SELECT"]
-				htmlContent += '<div class="main_inner_content_info_autoheight" style="margin-top:45px">';
-				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
-				htmlContent += '	<div class="main_inner_content_info_right" style="margin-left:5px">';
-				htmlContent += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+				htmlContent += '<div class="input-list">';
+				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
+				htmlContent += '	<div class="input-list-text left input-edu-select">';
+				htmlContent += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				//htmlContent += '			<option value="-1">' + '--'+"请选择"+'--' + '</option>';
 				htmlContent += OPT_BTYPE;
 				htmlContent += '		</select>';
@@ -389,14 +389,14 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var NET_DIV=''
 					//初始值设定
 				if(BUSINESS_TYPE_DEF=="01"||BUSINESS_TYPE_DEF==""){
-					NET_DIV+='<div id="NET_TYPE_SHOW" style="margin-top:50px">'
+					NET_DIV+='<div id="NET_TYPE_SHOW">'
 				}else{
-					NET_DIV+='<div id="NET_TYPE_SHOW" style="margin-top:50px;display:none">'
+					NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
 				}
 					//<!--融资标题-->
-					NET_DIV+='<div class="input-list-info left" style="height:100px"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+					NET_DIV+='<div class="input-list-info left" style="height:100px"><span class="red">*</span>'+MsgSet["FINANCING"]+':</div>'
 					//<!---融资radioGroup-->	
-					NET_DIV+='<div  class="main_inner_content_info_right"  >'
+					NET_DIV+='<div class="input-list-text left" style="height:240px" >'
 						//<!--加入一个隐藏input缓存radio数据-->
 						NET_DIV+='<input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
 						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
@@ -421,9 +421,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var FAM_DIV='';
 					//初始值设定
 				if(BUSINESS_TYPE_DEF=="02"){
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="margin-top:50px">'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
 				}else{
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;margin-top:50px">'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;>'
 				}	
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
@@ -440,9 +440,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var OTH_DIV='';
 					//初始值设定
 				if(BUSINESS_TYPE_DEF=="03"){
-					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="margin-top:50px">'
+					OTH_DIV+='<div id="OTHER_TYPE_SHOW">'
 				}else{
-					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;margin-top:50px">'
+					OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;">'
 				}
 					//<!--近12个月收入-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
