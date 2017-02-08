@@ -1519,7 +1519,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLoginRelease", ctxPath);
 				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
