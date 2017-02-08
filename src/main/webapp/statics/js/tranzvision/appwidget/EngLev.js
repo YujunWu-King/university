@@ -373,7 +373,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				//----------------------------放入考试种类OPT
 				htmlContent += '<div  class="input-list" style="display:block">';
-				htmlContent += '	<div   class="input-list-info left">' + child.EngLevelType.itemName + '</div>';
+				htmlContent += '	<div   class="input-list-info left">' + child.EngLevelType.itemName + ':</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select disabled=true id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
 				htmlContent += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
@@ -417,7 +417,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GRE_DIV+='<div id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span>Total(Score)：</span></div> <div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
+					GRE_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div> <div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
 				GRE_DIV+='</div>';
 				GRE_DIV+='<div class="clear"></div>';
 				htmlContent+=GRE_DIV;
@@ -429,7 +429,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GMAT_DIV+='<div id="'+data.itemId+'ENG_LEV_T2" class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score)：</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
 				GMAT_DIV+='</div>'
 					GMAT_DIV+='<div class="clear"></div>'
 				htmlContent+=GMAT_DIV;
@@ -441,7 +441,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOFEL_DIV+='<div id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span>Total：</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span>Total:</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
 				TOFEL_DIV+='</div>'	
 					TOFEL_DIV+='<div class="clear"></div>'	
 				htmlContent+=TOFEL_DIV;
@@ -453,7 +453,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				IELTS_DIV+='<div id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score：</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
+					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score:</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
 				IELTS_DIV+='</div>'
 					IELTS_DIV+='<div class="clear"></div>'
 				htmlContent+=IELTS_DIV;
@@ -464,7 +464,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV+='<div id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
 				else	
 				CET6_DIV+='<div id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<span class="input-list-info left">总分</span><div class="input-list-text left" ><input readOnly=true class="input-list-text left"   id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
+					CET6_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left" ><input readOnly=true class="input-list-text left"   id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
 				CET6_DIV+='</div>'
 					CET6_DIV+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV;
@@ -475,7 +475,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV+='<div id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
 				else
 				CET4_DIV+='<div id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<span class="input-list-info left">总分</span><div class="input-list-text left" ><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
+					CET4_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left" ><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
 				CET4_DIV+='</div>'
 					CET4_DIV+='<div class="clear"></div>'
 				htmlContent+=CET4_DIV;
@@ -486,8 +486,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV2+='<div id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
 				else
 				CET6_DIV2+='<div id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span>是否通过：</span></div>'
-					CET6_DIV2+='<div class="input-list-text left" ><select disabled=true id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
+					CET6_DIV2+='<div class="input-list-info left"><span>是否通过:</span></div>'
+					CET6_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
 						CET6_DIV2+='<option value="Y">通过</option>'
 						CET6_DIV2+='<option value="N">未通过</option>'
 					CET6_DIV2+='</select></div>'
@@ -501,8 +501,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV2+='<div id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
 				else
 				CET4_DIV2+='<div id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span>是否通过：</span></div>'
-					CET4_DIV2+='<div class="input-list-text left" ><select disabled=true  id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
+					CET4_DIV2+='<div class="input-list-info left"><span>是否通过:</span></div>'
+					CET4_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
 						CET4_DIV2+='<option value="Y">通过</option>'
 						CET4_DIV2+='<option value="N">未通过</option>'
 					CET4_DIV2+='</select></div>'
@@ -516,8 +516,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					TEM_DIV+='<div id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
 				else
 				TEM_DIV+='<div id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					TEM_DIV+='<div class="input-list-text left" ><select disabled=true  id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
+					TEM_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					TEM_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
 						TEM_DIV+='<option value="TEM4">专业四级</option>'
 						TEM_DIV+='<option value="TEM8">专业八级</option>'
 					TEM_DIV+='</select></div>'
@@ -531,8 +531,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					H_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
 				else
 				H_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					H_INTER_DIV+='<div class="input-list-text left" ><select disabled=true  id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
+					H_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					H_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
 						H_INTER_DIV+='<option>拿到资格证书</option>'
 						H_INTER_DIV+='<option>笔试证书</option>'
 					H_INTER_DIV+='</select></div>'
@@ -546,8 +546,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					M_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
 				else
 				M_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					M_INTER_DIV+='<div class="input-list-text left" ><select disabled=true  id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
+					M_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					M_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
 						M_INTER_DIV+='<option value="A">拿到资格证书</option>'
 						M_INTER_DIV+='<option value="B">笔试证书</option>'
 					M_INTER_DIV+='</select></div>'
@@ -561,8 +561,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					BEC_DIV+='<div id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
 				else
 				BEC_DIV+='<div id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					BEC_DIV+='<div class="input-list-text left" ><select disabled=true  id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
+					BEC_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					BEC_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
 						BEC_DIV+='<option value="A">高级</option>'
 						BEC_DIV+='<option value="B">中级</option>'
 						BEC_DIV+='<option value="C">初级</option>'
@@ -578,7 +578,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOEIC_DIV+='<div id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span>总分</span><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt13_1.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/>'
+					TOEIC_DIV+='<div class="input-list-info left"><span>总分:</span><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt13_1.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/>'
 				TOEIC_DIV+='</div>'	
 					TOEIC_DIV+='<div class="clear"></div>'	
 				htmlContent+=TOEIC_DIV;
@@ -602,7 +602,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				//----------------------------放入考试种类OPT
 				htmlContent += '<div  class="input-list" style="display:block">';
-				htmlContent += '	<div  class="input-list-info left">' + child.EngLevelType.itemName + '</div>';
+				htmlContent += '	<div  class="input-list-info left">' + child.EngLevelType.itemName + ':</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
 				htmlContent += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
@@ -647,7 +647,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GRE_DIV+='<div id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span>Total(Score)：</span></div> <div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
+					GRE_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div> <div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
 				GRE_DIV+='</div>';
 				GRE_DIV+='<div class="clear"></div>'
 				htmlContent+=GRE_DIV;
@@ -659,7 +659,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GMAT_DIV+='<div id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score)：</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
 				GMAT_DIV+='</div>'
 					GMAT_DIV+='<div class="clear"></div>'	
 				htmlContent+=GMAT_DIV;
@@ -671,7 +671,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOFEL_DIV+='<div id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span>Total：</span></div><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span>Total:</span></div><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
 				TOFEL_DIV+='</div>'	
 					TOFEL_DIV+='<div class="clear"></div>'		
 				htmlContent+=TOFEL_DIV;
@@ -683,7 +683,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				IELTS_DIV+='<div id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score：</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
+					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score:</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
 				IELTS_DIV+='</div>'
 					IELTS_DIV+='<div class="clear"></div>'
 				htmlContent+=IELTS_DIV;
@@ -694,7 +694,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV+='<div id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
 				else	
 				CET6_DIV+='<div id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<span class="input-list-info left">总分</span><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
+					CET6_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
 				CET6_DIV+='</div>'
 					CET6_DIV+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV;
@@ -705,7 +705,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV+='<div id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
 				else
 				CET4_DIV+='<div id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<span class="input-list-info left">总分</span><div class="input-list-text left"><input   id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
+					CET4_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input   id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
 					CET4_DIV+='<div class="clear"></div>'
 				CET4_DIV+='</div>'
 					CET4_DIV+='<div class="clear"></div>'	
@@ -717,8 +717,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV2+='<div id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
 				else
 				CET6_DIV2+='<div id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span >是否通过：</span></div>'
-					CET6_DIV2+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
+					CET6_DIV2+='<div class="input-list-info left"><span >是否通过:</span></div>'
+					CET6_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
 						CET6_DIV2+='<option value="Y">通过</option>'
 						CET6_DIV2+='<option value="N">未通过</option>'
 					CET6_DIV2+='</select></div>'
@@ -732,8 +732,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV2+='<div id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
 				else
 				CET4_DIV2+='<div id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span>是否通过：</span></div>'
-					CET4_DIV2+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
+					CET4_DIV2+='<div class="input-list-info left"><span>是否通过:</span></div>'
+					CET4_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
 						CET4_DIV2+='<option value="Y">通过</option>'
 						CET4_DIV2+='<option value="N">未通过</option>'
 					CET4_DIV2+='</select></div>'
@@ -747,8 +747,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					TEM_DIV+='<div id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
 				else
 				TEM_DIV+='<div id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					TEM_DIV+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
+					TEM_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					TEM_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
 						TEM_DIV+='<option value="TEM4">专业四级</option>'
 						TEM_DIV+='<option value="TEM8">专业八级</option>'
 					TEM_DIV+='</select></div>'
@@ -762,8 +762,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					H_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
 				else
 				H_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					H_INTER_DIV+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
+					H_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					H_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
 						H_INTER_DIV+='<option value="A">拿到资格证书</option>'
 						H_INTER_DIV+='<option value="B">笔试证书</option>'
 					H_INTER_DIV+='</select></div>'
@@ -777,8 +777,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					M_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
 				else
 				M_INTER_DIV+='<div id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					M_INTER_DIV+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
+					M_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					M_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
 						M_INTER_DIV+='<option value="A">拿到资格证书</option>'
 						M_INTER_DIV+='<option value="B">笔试证书</option>'
 					M_INTER_DIV+='</select></div>'
@@ -792,8 +792,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					BEC_DIV+='<div id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
 				else
 				BEC_DIV+='<div id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span>总分(成绩)：</span></div>'
-					BEC_DIV+='<div class="input-list-text left" ><select id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
+					BEC_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
+					BEC_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
 						BEC_DIV+='<option value="A">高级</option>'
 						BEC_DIV+='<option value="B">中级</option>'
 						BEC_DIV+='<option value="C">初级</option>'
@@ -809,7 +809,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOEIC_DIV+='<div id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span>总分</span></div><div  class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/></div>'
+					TOEIC_DIV+='<div class="input-list-info left"><span>总分:</span></div><div  class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/></div>'
 				TOEIC_DIV+='</div>'	
 					TOEIC_DIV+='<div class="clear"></div>'	
 				htmlContent+=TOEIC_DIV;
