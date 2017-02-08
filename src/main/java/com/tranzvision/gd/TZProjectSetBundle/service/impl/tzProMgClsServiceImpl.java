@@ -144,6 +144,11 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 					map.put("ttbl2", "%");
 					/*20170118 end*/
 					
+					//@added by ytt 2017-2-8
+					//证书模板
+					map.put("zsmbid", psTzPrjInfT.getTzCertTmplId());
+					map.put("zsmbname", "%");
+					
 					map.put("ps_appf_modal", psTzPrjInfT.getTzPsAppfMId());
 					map.put("ps_appf_modal_desc", "");
 					map.put("sites", "");
@@ -209,6 +214,15 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 					String strtTzCsKsbqzDesc = sqlQuery.queryForObject(sql, new Object[] { orgid,strtTzCsKsbqzId },
 							"String");
 					map.replace("ksbq_desc", strtTzCsKsbqzDesc);
+					
+					//@added by ytt 2017-2-8
+					//证书模板名称
+					sql = "SELECT TZ_TMPL_NAME FROM PS_TZ_CERTTMPL_TBL WHERE TZ_JG_ID=? AND TZ_CERT_TMPL_ID=?";
+					String strtzCertTmplId = psTzPrjInfT.getTzCertTmplId();
+					String strtzTmplName = sqlQuery.queryForObject(sql, new Object[] { orgid,strtzCertTmplId },
+							"String");
+					map.replace("zsmbname", strtzTmplName);
+					
 					
 					/* 项目发布的站点 */
 					ArrayList<String> sites = new ArrayList<>();
@@ -295,6 +309,7 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						String strtTzCsKsbqzId = String.valueOf(mapData.get("ksbq"));
 						String strtTzCsFmbqzId = String.valueOf(mapData.get("fmqd"));
 						String strTtbl = String.valueOf(mapData.get("ttbl"));
+						String strCertTmplId = String.valueOf(mapData.get("zsmbid"));
 						/*20170118 tzAdd方法end*/
 						PsTzPrjInfT psTzPrjInfT = new PsTzPrjInfT();
 						psTzPrjInfT.setTzPrjId(strPojectId);
@@ -314,6 +329,7 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						psTzPrjInfT.setTzMscjScorMdId(strtTzCsKsbqzId) ;
 						psTzPrjInfT.setTzMscjScorMdId(strtTzCsFmbqzId) ;
 						psTzPrjInfT.setTzMscjScorMdId(strTtbl);
+						psTzPrjInfT.setTzCertTmplId(strCertTmplId);
 						/*20170118 tzAdd方法end*/
 						int i = PsTzPrjInfTMapper.insert(psTzPrjInfT);
 						if (i > 0) {
@@ -420,6 +436,7 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						String strtTzCsKsbqzId = String.valueOf(mapData.get("ksbq"));
 						String strtTzCsFmbqzId = String.valueOf(mapData.get("fmqd"));
 						String strTtbl = String.valueOf(mapData.get("ttbl"));
+						String strCertTmplId = String.valueOf(mapData.get("zsmbid"));
 						/*20170118 tzUpdate方法end*/
 						
 						PsTzPrjInfT psTzPrjInfT = new PsTzPrjInfT();
@@ -440,6 +457,7 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						psTzPrjInfT.setTzCsKsbqzId(strtTzCsKsbqzId) ;
 						psTzPrjInfT.setTzCsFmbqzId(strtTzCsFmbqzId) ;
 						psTzPrjInfT.setTzTtBl(strTtbl);
+						psTzPrjInfT.setTzCertTmplId(strCertTmplId);
 						/*20170118 tzUpdate方法end*/
 						if (isExistProjectNum > 0) {
 							PsTzPrjInfTMapper.updateByPrimaryKeyWithBLOBs(psTzPrjInfT);
