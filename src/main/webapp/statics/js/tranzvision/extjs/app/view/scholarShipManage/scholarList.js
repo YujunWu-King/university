@@ -46,8 +46,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
         var store = new KitchenSink.view.scholarShipManage.scholarStore();
         Ext.apply(this, {
             columns: [
-              {
-                    text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
+              {     text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
                     sortable: true,
                     dataIndex: 'TZ_SCHLR_NAME',
                     flex:1
