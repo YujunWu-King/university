@@ -206,7 +206,6 @@ $(document).ready(function(){
 	LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
-	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 //	iniArea();
 	getPerInfCard();
 	
