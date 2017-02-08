@@ -105,10 +105,9 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     name:'TZ_JXJ_STATE',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_STATE"),
+                    store: new KitchenSink.view.common.store.appTransStore("TZ_JXJ_STATE"),
                     queryMode: 'local',
-                    editable:false,
-                    name: 'TZ_JXJ_STATE'
+                    editable:false
                 },{
                     layout: {
                         type: 'column'
