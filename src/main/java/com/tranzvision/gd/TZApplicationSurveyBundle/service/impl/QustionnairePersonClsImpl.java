@@ -70,7 +70,7 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 						}
 					}else{
 				       mapList.put("dcState", "未完成");	
-				       //为完成不可设置奖学金通过状态
+				       //未完成不可设置奖学金通过状态
 				       isApply="X";
 					}
 					mapList.put("isApply", isApply);
