@@ -1644,7 +1644,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					sitePageBundle="TZSitePageBundle";
 				}
 				
-				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".siteIndexReleaseTpl",
+				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".SiteIndexReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
