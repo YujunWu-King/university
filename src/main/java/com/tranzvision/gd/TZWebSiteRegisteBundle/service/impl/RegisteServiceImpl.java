@@ -153,7 +153,7 @@ public class RegisteServiceImpl {
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML3", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath,regFieldId+"_Country",regFieldId+"_Country","");
 				    	}
 				    	
 				    	//TZ_LEN_PROID;
@@ -566,7 +566,7 @@ public class RegisteServiceImpl {
 				    	//TZ_SCH_CNAME;
 				    	if("TZ_SCH_CNAME".equals(regFieldId)){
 				    		img = "<img src=\""+imgPath+"/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/>";
-				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML2", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath);
+				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_FIELD_HTML3", isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", img, regDefValue,imgPath,regFieldId+"_Country",regFieldId+"_Country","");
 				    	}
 				    	
 				    	//TZ_LEN_PROID;

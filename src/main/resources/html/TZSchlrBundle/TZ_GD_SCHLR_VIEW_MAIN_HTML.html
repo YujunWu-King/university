@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+		<title>清华MBA申请奖学金</title>
+		<link href="%bind(:1)" rel="stylesheet" type="text/css"></link>
+	    <script type="text/javascript">
+			TzUniversityContextPath = "%bind(:2)";
+		</script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+	</head>
+	<body style="background:#eee;">
+		<!---  网站标题头 begin--->
+		<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id=""></div>
+		<!---  网站标题头 end--->
+		
+		<div id="main" class="main">
+			<div class="zxj_left">
+				<div id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="" style="height:560px;">
+					<div style="height:100%;border-left:3px solid #e7ceeb;padding-top:25px;margin-left: 6%;"></div>
+				</div>
+				<div class="friends">
+					<div class="zxj_tit">友情链接</div>
+				</div>
+				<div class="zxj_code"></div>
+			</div>
+			<!-- content start -->
+			<div class="main_mid_left">
+					<div class="main_tit">%bind(:3)</div>
+					<div class="mian_inner_nav" id="tab1">
+						<div class="float_left">
+							<ul>
+								<li class="now" onClick="setTab(1,0)">
+									可申请奖学金
+								</li>
+								<li class="" onClick="setTab(1,1)">
+									已申请奖学金
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div id="content1">
+						<div style="display:block;" class="tab1 block">
+							<table class="table_style" style="margin-top:10px;">
+								<thead>
+									<tr>
+										<td>
+											奖学金名称
+										</td>
+										<td>
+											开始时间
+										</td>
+										<td>
+											结束时间
+										</td>
+										<td>
+											操作
+										</td>
+									</tr>
+								</thead>
+								<tbody>%bind(:6)</tbody>
+							</table>
+							<div class="padding_div_50px">
+							</div>
+						</div>
+						<div style="display:none;" class="tab1">
+							<table class="table_style" style="margin-top:10px;">
+								<thead>
+									<tr>
+										<td>
+											奖学金名称
+										</td>
+										<td>
+											开始时间
+										</td>
+										<td>
+											结束时间
+										</td>
+										<td>
+											申请结果
+										</td>
+										<td>
+											操作
+										</td>
+									</tr>
+								</thead>
+								<tbody>%bind(:7)</tbody>
+							</table>
+							<div class="padding_div_50px">
+							</div>
+							<div style="clear: both;">
+							</div>
+							<!-- content end -->
+						</div>
+					</div>
+					<!-- content end -->
+				</div>
+		</div>
+		<!-- Footer Begin -->
+		<div class="footer"></div>
+		<!-- Footer End -->
+	</body>
+	<script type="text/javascript">
+    $(document).ready(function(){
+        LoadHeader("%bind(:4)","%bind(:5)","");
+        LoadMenu("%bind(:4)","%bind(:5)","");
+        LoadFooter("%bind(:4)","%bind(:5)","");
+        LoadWelcome("%bind(:4)","%bind(:5)","");
+    });
+		function setTab(m, n) {
+			var menu = document.getElementById("tab" + m).getElementsByTagName("li");
+			var showdiv = $("#content" + m + " .tab1");
+			for (i = 0; i < menu.length; i++) {
+				menu[i].className = i == n ? "now": "";
+				showdiv[i].style.display = i == n ? "block": "none";
+			}
+		}
+	</script>
+</html>

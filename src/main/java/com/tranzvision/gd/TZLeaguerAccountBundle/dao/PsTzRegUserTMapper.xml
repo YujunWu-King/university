@@ -19,6 +19,7 @@
     <result column="NATIONAL_ID_TYPE" property="nationalIdType" jdbcType="VARCHAR" />
     <result column="NATIONAL_ID" property="nationalId" jdbcType="VARCHAR" />
     <result column="BIRTHDATE" property="birthdate" jdbcType="DATE" />
+    <result column="TZ_SCH_COUNTRY" property="tzSchCountry" jdbcType="VARCHAR" />
     <result column="TZ_SCH_CNAME" property="tzSchCname" jdbcType="VARCHAR" />
     <result column="TZ_SPECIALTY" property="tzSpecialty" jdbcType="VARCHAR" />
     <result column="TZ_HIGHEST_EDU" property="tzHighestEdu" jdbcType="VARCHAR" />
@@ -48,11 +49,11 @@
   <sql id="Base_Column_List" >
     OPRID, TZ_REALNAME, TZ_GENDER, TZ_SKYPE, TZ_FIRST_NAME, TZ_LAST_NAME, TZ_COMPANY_NAME, 
     TZ_COMP_INDUSTRY, TZ_DEPTMENT, TZ_ZHIWU, TZ_COUNTRY, TZ_LEN_PROID, TZ_LEN_CITY, TZ_TIMEZONE, 
-    NATIONAL_ID_TYPE, NATIONAL_ID, BIRTHDATE, TZ_SCH_CNAME, TZ_SPECIALTY, TZ_HIGHEST_EDU, 
-    TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
-    TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_BLACK_NAME, 
-    TZ_ALLOW_APPLY, TZ_BEIZHU
+    NATIONAL_ID_TYPE, NATIONAL_ID, BIRTHDATE, TZ_SCH_COUNTRY, TZ_SCH_CNAME, TZ_SPECIALTY, 
+    TZ_HIGHEST_EDU, TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, 
+    TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+    TZ_BLACK_NAME, TZ_ALLOW_APPLY, TZ_BEIZHU
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -70,31 +71,31 @@
       TZ_COMPANY_NAME, TZ_COMP_INDUSTRY, TZ_DEPTMENT, 
       TZ_ZHIWU, TZ_COUNTRY, TZ_LEN_PROID, 
       TZ_LEN_CITY, TZ_TIMEZONE, NATIONAL_ID_TYPE, 
-      NATIONAL_ID, BIRTHDATE, TZ_SCH_CNAME, 
-      TZ_SPECIALTY, TZ_HIGHEST_EDU, TZ_PRJ_ID, 
-      TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, 
-      TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
-      TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, 
-      TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, 
-      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-      TZ_BLACK_NAME, TZ_ALLOW_APPLY, TZ_BEIZHU
-      )
+      NATIONAL_ID, BIRTHDATE, TZ_SCH_COUNTRY, 
+      TZ_SCH_CNAME, TZ_SPECIALTY, TZ_HIGHEST_EDU, 
+      TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, 
+      TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, 
+      TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, 
+      TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, 
+      TZ_SITEI_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM, TZ_BLACK_NAME, TZ_ALLOW_APPLY, 
+      TZ_BEIZHU)
     values (#{oprid,jdbcType=VARCHAR}, #{tzRealname,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
       #{tzSkype,jdbcType=VARCHAR}, #{tzFirstName,jdbcType=VARCHAR}, #{tzLastName,jdbcType=VARCHAR}, 
       #{tzCompanyName,jdbcType=VARCHAR}, #{tzCompIndustry,jdbcType=VARCHAR}, #{tzDeptment,jdbcType=VARCHAR}, 
       #{tzZhiwu,jdbcType=VARCHAR}, #{tzCountry,jdbcType=VARCHAR}, #{tzLenProid,jdbcType=VARCHAR}, 
       #{tzLenCity,jdbcType=VARCHAR}, #{tzTimezone,jdbcType=VARCHAR}, #{nationalIdType,jdbcType=VARCHAR}, 
-      #{nationalId,jdbcType=VARCHAR}, #{birthdate,jdbcType=DATE}, #{tzSchCname,jdbcType=VARCHAR}, 
-      #{tzSpecialty,jdbcType=VARCHAR}, #{tzHighestEdu,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
-      #{tzMssqh,jdbcType=VARCHAR}, #{tzComment1,jdbcType=VARCHAR}, #{tzComment2,jdbcType=VARCHAR}, 
-      #{tzComment3,jdbcType=VARCHAR}, #{tzComment4,jdbcType=VARCHAR}, #{tzComment5,jdbcType=VARCHAR}, 
-      #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, #{tzComment8,jdbcType=VARCHAR}, 
-      #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
-      #{tzBlackName,jdbcType=VARCHAR}, #{tzAllowApply,jdbcType=VARCHAR}, #{tzBeizhu,jdbcType=VARCHAR}
-      )
+      #{nationalId,jdbcType=VARCHAR}, #{birthdate,jdbcType=DATE}, #{tzSchCountry,jdbcType=VARCHAR}, 
+      #{tzSchCname,jdbcType=VARCHAR}, #{tzSpecialty,jdbcType=VARCHAR}, #{tzHighestEdu,jdbcType=VARCHAR}, 
+      #{tzPrjId,jdbcType=VARCHAR}, #{tzMssqh,jdbcType=VARCHAR}, #{tzComment1,jdbcType=VARCHAR}, 
+      #{tzComment2,jdbcType=VARCHAR}, #{tzComment3,jdbcType=VARCHAR}, #{tzComment4,jdbcType=VARCHAR}, 
+      #{tzComment5,jdbcType=VARCHAR}, #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, 
+      #{tzComment8,jdbcType=VARCHAR}, #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, 
+      #{tzSiteiId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzBlackName,jdbcType=VARCHAR}, #{tzAllowApply,jdbcType=VARCHAR}, 
+      #{tzBeizhu,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT" >
     insert into PS_TZ_REG_USER_T
@@ -149,6 +150,9 @@
       </if>
       <if test="birthdate != null" >
         BIRTHDATE,
+      </if>
+      <if test="tzSchCountry != null" >
+        TZ_SCH_COUNTRY,
       </if>
       <if test="tzSchCname != null" >
         TZ_SCH_CNAME,
@@ -278,6 +282,9 @@
       <if test="birthdate != null" >
         #{birthdate,jdbcType=DATE},
       </if>
+      <if test="tzSchCountry != null" >
+        #{tzSchCountry,jdbcType=VARCHAR},
+      </if>
       <if test="tzSchCname != null" >
         #{tzSchCname,jdbcType=VARCHAR},
       </if>
@@ -406,6 +413,9 @@
       <if test="birthdate != null" >
         BIRTHDATE = #{birthdate,jdbcType=DATE},
       </if>
+      <if test="tzSchCountry != null" >
+        TZ_SCH_COUNTRY = #{tzSchCountry,jdbcType=VARCHAR},
+      </if>
       <if test="tzSchCname != null" >
         TZ_SCH_CNAME = #{tzSchCname,jdbcType=VARCHAR},
       </if>
@@ -502,6 +512,7 @@
       NATIONAL_ID_TYPE = #{nationalIdType,jdbcType=VARCHAR},
       NATIONAL_ID = #{nationalId,jdbcType=VARCHAR},
       BIRTHDATE = #{birthdate,jdbcType=DATE},
+      TZ_SCH_COUNTRY = #{tzSchCountry,jdbcType=VARCHAR},
       TZ_SCH_CNAME = #{tzSchCname,jdbcType=VARCHAR},
       TZ_SPECIALTY = #{tzSpecialty,jdbcType=VARCHAR},
       TZ_HIGHEST_EDU = #{tzHighestEdu,jdbcType=VARCHAR},

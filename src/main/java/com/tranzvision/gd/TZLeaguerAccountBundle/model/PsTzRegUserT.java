@@ -37,6 +37,8 @@ public class PsTzRegUserT {
 
     private Date birthdate;
 
+    private String tzSchCountry;
+
     private String tzSchCname;
 
     private String tzSpecialty;
@@ -221,6 +223,14 @@ public class PsTzRegUserT {
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+    }
+
+    public String getTzSchCountry() {
+        return tzSchCountry;
+    }
+
+    public void setTzSchCountry(String tzSchCountry) {
+        this.tzSchCountry = tzSchCountry == null ? null : tzSchCountry.trim();
     }
 
     public String getTzSchCname() {

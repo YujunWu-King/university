@@ -17,7 +17,6 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 	@Autowired
 	private FliterForm fliterForm;
 
-	/* 查询调查表列表 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -52,11 +51,7 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 					if("0".equals(rowList[5])){
 					  mapList.put("dcState", "已完成");
 					}else{
-					  if("未开始".equals(rowList[5])){
-						mapList.put("dcState", rowList[5]);
-					  }else{
-				       mapList.put("dcState", "未完成");
-					  }
+				       mapList.put("dcState", "未完成");		
 					}
 					listData.add(mapList);
 				}
