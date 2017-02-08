@@ -1379,6 +1379,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         var store = view.findParentByType("grid").store;
         var selRec = store.getAt(rowIndex);
         var wjId = selRec.get("TZ_DC_WJ_ID");
+        var schLrId=selRec.get("TZ_SCHLR_ID");
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_WJGL_COM"]["TZ_ZXDC_PERSON_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -1423,6 +1424,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
            grid.store.tzStoreParams = tzStoreParams;  
            grid.store.reload();
            grid.wjId=wjId;
+           grid.schLrId=schLrId;
         }); 
         var tab = contentPanel.add(cmp);
         contentPanel.setActiveTab(tab);
@@ -1596,6 +1598,68 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             title: '奖学金参与人',
             fileName: '奖学金参与人.xls'
         })
+    },
+    //设置奖学金通过状态
+    cyrScholarStatus:function(view,t,rowIndex){
+        var msg="";
+        var record = view.findParentByType("grid").store.getAt(rowIndex);
+        var schLrId=view.findParentByType("grid").schLrId;
+        var wjId=view.findParentByType("grid").wjId;
+        
+        if (record.get("isApply")=="Y"||record.get("isApply")=="N"){
+	        if(record.get("isApply") == "Y"){
+	            record.set("isApply", "N");
+	        }else{
+	            record.set("isApply", "Y");
+	        }
+	        var tzParams = this.submitContentParams("P",msg);
+       }
+       
+    },
+    //获取修改的记录(提交的参数)
+    submitContentParams: function(schLrId,msg){
+        var comParams = "";
+        var editJson = "";
+        var store = this.getView().getStore();
+        //修改记录
+        var mfRecs = store.getModifiedRecords();
+        for(var i=0;i<mfRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"schLrId":"'+schLrId+'","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ',{"schLrId":"'+schLrId+'","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //删除json字符串
+        var removeJson = "";
+        //删除记录
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams,function(){
+            store.reload();
+        },msg,true,this);
     }
 
 });

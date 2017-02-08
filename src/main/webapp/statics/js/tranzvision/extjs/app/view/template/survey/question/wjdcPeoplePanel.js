@@ -16,6 +16,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
     controller: 'wjdcController',
     reference:'wjdcPeoplePanel',
     wjId:'',
+    schLrId:'',
     store: {
         type: 'wjdcPeopleStore'
     },

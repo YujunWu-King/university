@@ -587,6 +587,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							    }
 							    //计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -651,6 +652,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -717,6 +719,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
@@ -786,6 +789,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								}
 								//计算历史得分
 							    String strHisTempCount=sqlQuery.queryForObject("select TZ_HISTORY_VAL from PS_TZ_CSWJ_PCT_TBL where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?", new Object[]{wjid, strXxxBh, strXxxKxzCode}, "String");
+							    strHisTempCount=(strHisTempCount==null?"0":strHisTempCount.toString());
 							    if (!strRadioBoxHtml2.equals("")) {
 							    	strRadioBoxHtml2 = strRadioBoxHtml2 + "," + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, strHisTempCount,arrColor[i]);
 								} else {
