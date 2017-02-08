@@ -240,7 +240,7 @@ public class TzAcDecoratedServiceImpl extends FrameworkImpl {
 						boolResult = tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, "",errMsg);
 						break;
 					case "loginpage":
-						boolResult = tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId, errMsg);
+						boolResult = tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId,"", errMsg);
 						break;
 					}
 
