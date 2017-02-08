@@ -1,25 +1,18 @@
-Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
+Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
     extend: 'Ext.window.Window',
     requires: [
         'Ext.layout.container.Card'
     ],
-    xtype: 'importExcelWindow',
+    xtype: 'unifiedImportWindow',
     layout:'fit',
     ignoreChangesFlag: true,
     viewModel: {
         data: {
-            title: '导入Excel'
+            title: '选择导入类型'
         }
     },
     bind: {
         title: '{title}'
-    },
-    constructor: function (config) {
-    	config = config||{};
-        this.importType=config.importType,//导入类型A：上传Excel；B：粘贴Excel数据
-        this.businessHandler=config.businessHandler,//回调函数
-        this.tplResId = config.tplResId,
-        this.callParent();
     },
     modal:true,
     defaults: {
@@ -45,7 +38,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
             excelTplUrl;
 
         if(!excelLinkHidden){
-            var tzParams = '{"ComID":"TZ_IMPORT_EXCEL_COM","PageID":"TZ_IMP_EXCEL_STD","OperateType":"tzGetExcelTplUrl","comParams":{"tplResId":"'+me.tplResId+'"}}';
+            var tzParams = '{"ComID":"TZ_UNIFIED_IMP_COM","PageID":"TZ_UNIFIED_IMP_STD","OperateType":"QF","comParams":{}}';
             Ext.tzLoadAsync(tzParams,function(respData){
                 excelTplUrl = respData.url;
 				if(excelTplUrl==undefined){
@@ -93,13 +86,21 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                         }
                     ],
                     items: [
-
-                        {title:'导入Excel',
+						{
+						    title:'选择导入类型',
+						    header:false,
+						    name:'selectImpTpl',
+						    itemId:'card-0',
+						    xtype:'form',
+						    ignoreLabelWidth: true
+						},
+                        {
+							title:'导入Excel',
                             header:false,
                             name:'importExcel',
                             bodyPadding:10,
                             xtype:'form',
-                            itemId:'card-0',
+                            itemId:'card-1',
                             items:[
                                 {
                                     xtype:'form',
@@ -232,7 +233,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                             title:'预览导入数据(仅预览20列*1000行以内的数据)',
                             header:false,
                             name:'previewExcelData',
-                            itemId:'card-1',
+                            itemId:'card-2',
                             xtype:'form',
                             ignoreLabelWidth: true
                         },
@@ -241,7 +242,7 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
                             title:'处理导入数据',
                             header:false,
                             name:'dealExcelData',
-                            itemId:'card-2'
+                            itemId:'card-3'
                         }
                     ]
                 }

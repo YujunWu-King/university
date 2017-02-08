@@ -91,12 +91,8 @@
     					    xtype: 'textfield',
     						fieldLabel: "上传Excel模板",
     						name: 'excelTpl',
-    						afterLabelTextTpl: [
-    					        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-    					    ],
     					    columnWidth:.95,
     					    editable:false,
-    						allowBlank: false,
     						triggers:{
     					        clear: {
     					            cls: 'x-form-clear-trigger',
