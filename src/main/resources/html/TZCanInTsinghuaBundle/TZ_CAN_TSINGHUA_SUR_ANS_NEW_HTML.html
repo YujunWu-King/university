@@ -72,15 +72,18 @@
 		<script>
 			$(function() {
 				var pageno=$("#pageno").val();
-		        if(pageno<=0){
+		        if(pageno<1){
 		        	$("#applyMBA").css("display","none");
-		        }		     
+		        }
+		        $('#applyMBA').bind("click", function(){
+		        	window.location.href="%bind(:4)";
+		        });
 			});
 		</script>
 	</head>
 	<body style="padding: 10px">
 		 %bind(:3)
-		 <input type="button" value="马上申请清华MBA" id="applyMBA" onclick="%bind(:4)"/>
+		 <input type="button" value="马上申请清华MBA" id="applyMBA" />
 		 <input type="hidden" value="%bind(:2)" id="pageno"/>
 	</body>
 </html>
