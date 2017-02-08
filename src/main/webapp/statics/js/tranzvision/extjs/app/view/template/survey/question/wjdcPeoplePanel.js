@@ -102,21 +102,23 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     sortable: false,
                     dataIndex: 'dcState', 
                     width: 120
-                },  text: '通过/未通过',
-		            dataIndex: 'isApply',
-		            width: 120,
-		            align: 'center',
-		            groupable: false,
-		            renderer: function(v) {
-		                if(v == "Y"){
-		                	return '<a href="javascript:void(0)">未通过</a>';
-		                }else{
-		                	return '<a href="javascript:void(0)">通过</a>';
-		                }
-	            },
-	            listeners:{
-	            	click:'cyrScholarStatus'
-	            }],
+                },
+                {   text: '通过/未通过',
+                    dataIndex: 'isApply',
+                    width: 120,
+                    align: 'center',
+                    groupable: false,
+                    renderer: function (v) {
+                        if (v == "Y") {
+                            return '<a href="javascript:void(0)">未通过</a>';
+                        } else {
+                            return '<a href="javascript:void(0)">通过</a>';
+                        }
+                    },
+                    listeners: {
+                        click: 'cyrScholarStatus'
+                    } 
+                }],
                 store:store,
                 bbar: {
                     xtype: 'pagingtoolbar',
