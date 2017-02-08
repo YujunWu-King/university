@@ -91,10 +91,10 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                     text: '操作',
                     align: 'center',
                     xtype: 'actioncolumn',
-                    width:100,
+                    width:120,
                     items:[
                         {iconCls:'edit',tooltip:'编辑',handler:'editTestWjdc'},
-                        {iconCls:'view',tooltip:'调查详情',handler:'viewCsWjdcDetail',
+                        {iconCls:' view',tooltip:'调查详情',handler:'viewCsWjdcDetail',
                             isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
                                 if(record.get('TZ_DC_WJ_ID')==''){
                                     return true;
@@ -103,7 +103,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                                 }
                             } 
                         },
-                        {iconCls:'frequency_report',tooltip:'汇总统计',handler:'csWjdcSumStatic',
+                        {iconCls:' frequency_report',tooltip:'汇总统计',handler:'csWjdcSumStatic',
                             isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
                                 if(record.get('TZ_DC_WJ_ID')==''){
                                     return true;
