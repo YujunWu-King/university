@@ -9,6 +9,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QustionnairePersonClsImpl")
 public class QustionnairePersonClsImpl extends FrameworkImpl{
@@ -16,8 +17,9 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 
-	/* 查询调查表列表 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -27,6 +29,9 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(comParams);
+		Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+		String TZ_SCHLR_ID=(String) conditionJson.get("TZ_SCHLR_ID");
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
@@ -36,13 +41,14 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+            //获取奖学金编号
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
+					
 					mapList.put("wjId", rowList[0]);
 					mapList.put("oprid", rowList[1]);
 					mapList.put("name", rowList[2]);
@@ -52,11 +58,7 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 					if("0".equals(rowList[5])){
 					  mapList.put("dcState", "已完成");
 					}else{
-					  if("未开始".equals(rowList[5])){
-						mapList.put("dcState", rowList[5]);
-					  }else{
-				       mapList.put("dcState", "未完成");
-					  }
+				       mapList.put("dcState", "未完成");		
 					}
 					listData.add(mapList);
 				}

@@ -225,7 +225,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 			PsTzSchlrTbl.setTzJgId(TZ_JG_ID);
 			PsTzSchlrTbl.setTzDcWjId(TZ_DC_WJ_ID);
 			//默认为有效
-			PsTzSchlrTbl.setTzState("0");
+			PsTzSchlrTbl.setTzState("Y");
 			PsTzSchlrTbl.setRowAddedOprid(TZ_OPRID);
 			PsTzSchlrTbl.setRowLastmantOprid(TZ_OPRID);
 			try {
@@ -372,7 +372,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 					Map<String, Object> retMap = new HashMap<String, Object>();
 					retMap.put("TZ_SCHLR_ID", tzSchLrId);
 					retMap.put("TZ_SCHLR_NAME", PsTzSchlrTbl.getTzSchlrName());
-					retMap.put("TZ_STATE", PsTzSchlrTbl.getTzState());
+					retMap.put("TZ_JXJ_STATE", PsTzSchlrTbl.getTzState());
 					retMap.put("TZ_DC_WJ_ID", PsTzSchlrTbl.getTzDcWjId());
 					retMap.put("TZ_DC_WJ_ZT", psTzDcWjDyTWithBLOBs.getTzDcWjZt());
 					if(psTzDcWjDyTWithBLOBs.getTzDcWjKsrq()!=null){
