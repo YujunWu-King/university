@@ -1535,7 +1535,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             });
         });
     },
-    /*参与人管理保存*/
+    /*参与人管理保存
     wjdcPeopleSave:function(btn){
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
@@ -1562,8 +1562,8 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams, function (responseData) {
         }, "", true, this);
 
-    },
-    /*参与人管理-确定*/
+    },*/
+    /*参与人管理-确定
     wjdcPeopleSure:function(btn){
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
@@ -1590,7 +1590,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams, function (responseData) { 
             grid.close();
         }, "", true, this);
-    },
+    },*/
     //导出参与人 ldd 20170207
     downloadAllCyr:function(btn){
         var grid=btn.findParentByType('grid');

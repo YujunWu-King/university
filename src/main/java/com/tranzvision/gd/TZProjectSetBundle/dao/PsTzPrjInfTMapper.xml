@@ -23,6 +23,7 @@
     <result column="TZ_TT_BL" property="tzTtBl" jdbcType="VARCHAR" />
     <result column="TZ_CS_KSBQZ_ID" property="tzCsKsbqzId" jdbcType="VARCHAR" />
     <result column="TZ_CS_FMBQZ_ID" property="tzCsFmbqzId" jdbcType="VARCHAR" />
+    <result column="TZ_CERT_TMPL_ID" property="tzCertTmplId" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" extends="BaseResultMap" >
     <result column="TZ_PRJ_DESC" property="tzPrjDesc" jdbcType="LONGVARCHAR" />
@@ -31,7 +32,7 @@
     TZ_PRJ_ID, TZ_PRJ_NAME, TZ_JG_ID, TZ_IS_OPEN, TZ_APP_MODAL_ID, TZ_PRJ_TYPE_ID, TZ_SBMINF_TMP_ID, 
     TZ_APPPRO_TMP_ID, TZ_PS_APPF_M_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
     ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_CS_SCOR_MD_ID, 
-    TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID
+    TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID, TZ_CERT_TMPL_ID
   </sql>
   <sql id="Blob_Column_List" >
     TZ_PRJ_DESC
@@ -56,7 +57,7 @@
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
       TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_CS_SCOR_MD_ID, 
       TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID, 
-      TZ_PRJ_DESC)
+      TZ_CERT_TMPL_ID, TZ_PRJ_DESC)
     values (#{tzPrjId,jdbcType=VARCHAR}, #{tzPrjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzIsOpen,jdbcType=VARCHAR}, #{tzAppModalId,jdbcType=VARCHAR}, #{tzPrjTypeId,jdbcType=VARCHAR}, 
       #{tzSbminfTmpId,jdbcType=VARCHAR}, #{tzAppproTmpId,jdbcType=VARCHAR}, #{tzPsAppfMId,jdbcType=VARCHAR}, 
@@ -64,7 +65,7 @@
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
       #{tzZlpsScorMdId,jdbcType=VARCHAR}, #{tzMscjScorMdId,jdbcType=VARCHAR}, #{tzCsScorMdId,jdbcType=VARCHAR}, 
       #{tzTtBl,jdbcType=VARCHAR}, #{tzCsKsbqzId,jdbcType=VARCHAR}, #{tzCsFmbqzId,jdbcType=VARCHAR}, 
-      #{tzPrjDesc,jdbcType=LONGVARCHAR})
+      #{tzCertTmplId,jdbcType=VARCHAR}, #{tzPrjDesc,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProjectSetBundle.model.PsTzPrjInfT" >
     insert into PS_TZ_PRJ_INF_T
@@ -131,6 +132,9 @@
       </if>
       <if test="tzCsFmbqzId != null" >
         TZ_CS_FMBQZ_ID,
+      </if>
+      <if test="tzCertTmplId != null" >
+        TZ_CERT_TMPL_ID,
       </if>
       <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC,
@@ -200,6 +204,9 @@
       <if test="tzCsFmbqzId != null" >
         #{tzCsFmbqzId,jdbcType=VARCHAR},
       </if>
+      <if test="tzCertTmplId != null" >
+        #{tzCertTmplId,jdbcType=VARCHAR},
+      </if>
       <if test="tzPrjDesc != null" >
         #{tzPrjDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -268,6 +275,9 @@
       <if test="tzCsFmbqzId != null" >
         TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
       </if>
+      <if test="tzCertTmplId != null" >
+        TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR},
+      </if>
       <if test="tzPrjDesc != null" >
         TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -296,6 +306,7 @@
       TZ_TT_BL = #{tzTtBl,jdbcType=VARCHAR},
       TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
       TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
+      TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR},
       TZ_PRJ_DESC = #{tzPrjDesc,jdbcType=LONGVARCHAR}
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
@@ -320,7 +331,8 @@
       TZ_CS_SCOR_MD_ID = #{tzCsScorMdId,jdbcType=VARCHAR},
       TZ_TT_BL = #{tzTtBl,jdbcType=VARCHAR},
       TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
-      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR}
+      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
+      TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR}
     where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
   </update>
 </mapper>
