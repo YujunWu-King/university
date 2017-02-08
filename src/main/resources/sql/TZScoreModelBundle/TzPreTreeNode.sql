@@ -1,0 +1,17 @@
+SELECT 
+    TREE_NODE
+FROM
+    PSTREENODE A
+WHERE
+    TREE_NAME = ?
+        AND EXISTS( SELECT 
+            'Y'
+        FROM
+            PSTREENODE B
+        WHERE
+            B.TREE_NAME = A.TREE_NAME
+                AND B.TREE_NODE = ?
+                AND B.PARENT_NODE_NAME = A.PARENT_NODE_NAME
+                AND B.TREE_NODE_NUM > A.TREE_NODE_NUM)
+ORDER BY TREE_NODE_NUM DESC
+LIMIT 1

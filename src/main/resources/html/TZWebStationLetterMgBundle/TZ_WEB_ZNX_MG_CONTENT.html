@@ -1,0 +1,39 @@
+ <div class="main_tit">%bind(:1)</div>
+              <div class="zxj_main_body">
+                 <div class="table_top">
+                 	<p class="zxj_messages">%bind(:2)<span class="message_cur">%bind(:3)</span>%bind(:4)</p>
+                 	<a class="detele_icon">
+                 		<img src="statics/images/website/skins/23/message_de.png">
+                 		<span>%bind(:5)</span>
+                 	</a>
+                 	<div class="table_search">
+                 		<input type="text" class="search_input">
+                 		<a class="search_icon"></a>
+                 	</div>
+
+                 </div>
+              	 <table class="table_style" style="margin-top:10px;">
+					<thead>
+					   <tr onclick="checkAll(this);" class="erow">
+					   	<td><div class="check-box"> <i class="ico-check" id="checkAll"></i></div></div>
+					   	</td>
+						<td>%bind(:6)</td>
+						<td>%bind(:7)</td>
+						<td>%bind(:8)</td>
+					   </tr>
+					</thead>
+					<tbody>
+						%bind(:9)
+					</tbody>
+	            </table>
+	            <div class="main_article_nav" >
+      			<div class="main_article_nav_left2">
+	
+			      <ul id="pagecount"><li onClick="QueryColu(1)">&lt;&lt;</li><li class="now" onClick="QueryColu(1)">1</li><li onClick="QueryColu(1)">&gt;&gt;</li></ul>
+      			</div>
+      			<div id="curentcoutpage" class="main_article_nav_right2">第 <span id="nowpage">1</span>/1 页</div>
+				
+			</div>
+              </div>
+              
+            </div>

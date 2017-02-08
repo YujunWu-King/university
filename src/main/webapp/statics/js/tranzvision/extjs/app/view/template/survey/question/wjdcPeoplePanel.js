@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
     xtype: 'wjdcPeoplePanel',
     controller: 'wjdcController',
     reference:'wjdcPeoplePanel',
-    wjId:'', 
+    wjId:'',
     store: {
         type: 'wjdcPeopleStore'
     },
@@ -110,9 +110,14 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     groupable: false,
                     renderer: function (v) {
                         if (v == "Y") {
-                            return '<a href="javascript:void(0)">未通过</a>';
-                        } else {
                             return '<a href="javascript:void(0)">通过</a>';
+                        } else {
+                        	if(v == "N"){
+                        		return '<a href="javascript:void(0)">未通过</a>';
+                        	}else{
+                        		return "未通过";
+                        	}
+                            
                         }
                     },
                     listeners: {

@@ -13,25 +13,6 @@ Ext.define('KitchenSink.view.scoreModelManagement.scoreModelTreeStore', {
            //树节点数据
             root = respData.root;
         });
-
-	    /*
-	    root = {
-	    	text: '总分',
-	    	itemId: 'total',
-	    	id: 'total',
-	    	expanded: true,
-            children: [{
-            	text: '英语',
-    	    	itemId: 'eng',
-    	    	id: 'eng',
-    	    	expanded: false
-            },{text: '数学',
-    	    	itemId: 'mas',
-    	    	id: 'mas',
-    	    	expanded: false
-    	    }]
-	    }
-	    */
 	    
 		items = root.children;
 
