@@ -36,7 +36,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg){
-		String strRet = " ";
+		String strRet = "";
 	Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 	
 	
@@ -54,7 +54,9 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 				// 解析 json
 				jacksonUtil.json2Map(strForm);
 
-				int adcertTmpl=getSeqNum.getSeqNum("TZ_ADTMPL_TBL", "TZ_AD_TMPL_ID");
+				//int adcertTmpl=getSeqNum.getSeqNum("TZ_ADTMPL_TBL", "TZ_AD_TMPL_ID");
+				String adcertTmpl=jacksonUtil.getString("adcertTmpl");
+				System.out.println(adcertTmpl);
 				String adtmplName=jacksonUtil.getString("adtmplName");
 				String useFlag=jacksonUtil.getString("useFlag");
 				String adcertMergHtml=jacksonUtil.getString("adcertMergHtml");
@@ -62,7 +64,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 				 
 				PsTzADTMPLTBL PsTzADTMPLTBL=new PsTzADTMPLTBL();
 				PsTzADTMPLTBL.setTzJgId(OrgID);
-				PsTzADTMPLTBL.setTzAdTmplId(String.valueOf(adcertTmpl));
+				PsTzADTMPLTBL.setTzAdTmplId(adcertTmpl);
 				PsTzADTMPLTBL.setTzTmplName(adtmplName);
 				PsTzADTMPLTBL.setTzAdHtml(adcertMergHtml);
 				PsTzADTMPLTBL.setTzUseFlag(useFlag);
@@ -74,9 +76,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 	
 				PsTzADTMPLTBLMapper.insert(PsTzADTMPLTBL);
 				
-				returnJsonMap.put("adcertTmpl", String.valueOf(adcertTmpl));
-				
-				strRet=String.valueOf(adcertTmpl);
+
 				
 				}	
 			
@@ -185,7 +185,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 					PsTzADTMPLTBL.setTzJgId(OrgID);
 					PsTzADTMPLTBLMapper.updateByPrimaryKeySelective(PsTzADTMPLTBL);
 
-					strRet=String.valueOf(adcertTmpl);
+					//strRet=String.valueOf(adcertTmpl);
 					
 
 				} else {

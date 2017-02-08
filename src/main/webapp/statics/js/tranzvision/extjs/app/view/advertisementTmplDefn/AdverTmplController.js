@@ -36,10 +36,10 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
         cmp = new ViewClass();
         cmp.actType="add";
 
-        cmp.on('afterrender',function(panel){
+        /*cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             form.findField('adcertTmpl').setValue('NEXT');
-        });
+        });*/
 
 
         tab = contentPanel.add(cmp);
@@ -224,7 +224,9 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
-            	form.findField("adcertTmpl").setValue(responseData);
+            	form.findField("adcertTmpl").setReadOnly(true);
+                form.findField("adcertTmpl").addCls("lanage_1");
+            	
                 comView.actType = "update";
             },"",true,this);
         }
@@ -232,14 +234,20 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
 
     //院校库详情页确定按钮
     ensureonschoolSave:function(btn){
-    	this.onschoolSave(btn);
-    	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("adtmplMgList").store.reload();
-    	var comView = this.getView();
-    	comView.close();
+    var form = this.getView().child("form").getForm();
+
+        if (form.isValid()) {
+            //获得院校库表单信息
+            var tzParams = this.getResSetInfoParams();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		    contentPanel.child("adtmplMgList").store.reload();
+                comView.close();
+            },"",true,this);
+        }
     	
 
-      
         
     },
     closeResSets:function(btn){

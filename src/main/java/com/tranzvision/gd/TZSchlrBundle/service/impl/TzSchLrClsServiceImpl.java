@@ -98,9 +98,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 			//可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit,numStart, errorMsg);
 			if (obj != null && obj.length > 0) {
-
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
@@ -246,17 +244,12 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 				for (int i = 0; i < mbLJGZDataList.size(); i++) {
 					Map<String, Object> mbLJGZMap = mbLJGZDataList.get(i);
 
-					TZ_DC_LJTJ_ID = mbLJGZMap.get("TZ_DC_LJTJ_ID") == null ? null
-							: mbLJGZMap.get("TZ_DC_LJTJ_ID").toString();
+					TZ_DC_LJTJ_ID = mbLJGZMap.get("TZ_DC_LJTJ_ID") == null ? null: mbLJGZMap.get("TZ_DC_LJTJ_ID").toString();
 					String logicalId = "L" + getSeqNum.getSeqNum("TZ_DC_WJ_LJGZ_T", "TZ_DC_LJTJ_ID");
-					String TZ_XXX_BH = mbLJGZMap.get("TZ_XXX_BH") == null ? null
-							: mbLJGZMap.get("TZ_XXX_BH").toString();
-					String TZ_LJ_LX = mbLJGZMap.get("TZ_LJ_LX") == null ? null
-							: mbLJGZMap.get("TZ_LJ_LX").toString();
-					String TZ_PAGE_NO = mbLJGZMap.get("TZ_PAGE_NO") == null ? null
-							: mbLJGZMap.get("TZ_PAGE_NO").toString();
-					String TZ_LJTJ_XH = mbLJGZMap.get("TZ_LJTJ_XH") == null ? null
-							: mbLJGZMap.get("TZ_LJTJ_XH").toString();
+					String TZ_XXX_BH = mbLJGZMap.get("TZ_XXX_BH") == null ? null: mbLJGZMap.get("TZ_XXX_BH").toString();
+					String TZ_LJ_LX = mbLJGZMap.get("TZ_LJ_LX") == null ? null: mbLJGZMap.get("TZ_LJ_LX").toString();
+					String TZ_PAGE_NO = mbLJGZMap.get("TZ_PAGE_NO") == null ? null: mbLJGZMap.get("TZ_PAGE_NO").toString();
+					String TZ_LJTJ_XH = mbLJGZMap.get("TZ_LJTJ_XH") == null ? null: mbLJGZMap.get("TZ_LJTJ_XH").toString();
 
 					PsTzDcWjLjgzT psTzDcWjLjgzT = new PsTzDcWjLjgzT();
 					psTzDcWjLjgzT.setTzDcLjtjId(logicalId);
@@ -268,7 +261,6 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 					psTzDcWjLjgzT.setTzLjtjXh(Integer.valueOf(TZ_LJTJ_XH));
 
 					psTzDcWjLjgzTMapper.insert(psTzDcWjLjgzT);
-					// System.out.println("==执行==psTzDcWjLjgzTMapper.insert()");
 					/* 复制模板逻辑-在线调查问卷一般题型逻辑规则关系表 */
 					final String mbYBGZSql = "select TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_IS_SELECTED from PS_TZ_DC_MB_YBGZ_T where TZ_APP_TPL_ID=? and TZ_DC_LJTJ_ID=?";
 
@@ -280,12 +272,9 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 							Map<String, Object> mbYBGZMap = new HashMap<String, Object>();
 							mbYBGZMap = mbYBGZDataList.get(j);
 
-							TZ_XXX_BH = mbYBGZMap.get("TZ_XXX_BH") == null ? null
-									: mbYBGZMap.get("TZ_XXX_BH").toString();
-							String TZ_XXXKXZ_MC = mbYBGZMap.get("TZ_XXXKXZ_MC") == null ? null
-									: mbYBGZMap.get("TZ_XXXKXZ_MC").toString();
-							String TZ_IS_SELECTED = mbYBGZMap.get("TZ_IS_SELECTED") == null ? null
-									: mbYBGZMap.get("TZ_IS_SELECTED").toString();
+							TZ_XXX_BH = mbYBGZMap.get("TZ_XXX_BH") == null ? null: mbYBGZMap.get("TZ_XXX_BH").toString();
+							String TZ_XXXKXZ_MC = mbYBGZMap.get("TZ_XXXKXZ_MC") == null ? null: mbYBGZMap.get("TZ_XXXKXZ_MC").toString();
+							String TZ_IS_SELECTED = mbYBGZMap.get("TZ_IS_SELECTED") == null ? null: mbYBGZMap.get("TZ_IS_SELECTED").toString();
 
 							PsTzDcWjYbgzT psTzDcWjYbgzT = new PsTzDcWjYbgzT();
 							psTzDcWjYbgzT.setTzDcLjtjId(logicalId);
@@ -307,14 +296,10 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 							Map<String, Object> mbGZGXSMap = new HashMap<String, Object>();
 							mbGZGXSMap = mbGZGXSDataList.get(m);
 
-							TZ_XXX_BH = mbGZGXSMap.get("TZ_XXX_BH") == null ? null
-									: mbGZGXSMap.get("TZ_XXX_BH").toString();
-							String TZ_XXXZWT_MC = mbGZGXSMap.get("TZ_XXXZWT_MC") == null ? null
-									: mbGZGXSMap.get("TZ_XXXZWT_MC").toString();
-							String TZ_XXXKXZ_MC = mbGZGXSMap.get("TZ_XXXKXZ_MC") == null ? null
-									: mbGZGXSMap.get("TZ_XXXKXZ_MC").toString();
-							String TZ_IS_SELECTED = mbGZGXSMap.get("TZ_IS_SELECTED") == null ? null
-									: mbGZGXSMap.get("TZ_IS_SELECTED").toString();
+							TZ_XXX_BH = mbGZGXSMap.get("TZ_XXX_BH") == null ? null: mbGZGXSMap.get("TZ_XXX_BH").toString();
+							String TZ_XXXZWT_MC = mbGZGXSMap.get("TZ_XXXZWT_MC") == null ? null: mbGZGXSMap.get("TZ_XXXZWT_MC").toString();
+							String TZ_XXXKXZ_MC = mbGZGXSMap.get("TZ_XXXKXZ_MC") == null ? null: mbGZGXSMap.get("TZ_XXXKXZ_MC").toString();
+							String TZ_IS_SELECTED = mbGZGXSMap.get("TZ_IS_SELECTED") == null ? null: mbGZGXSMap.get("TZ_IS_SELECTED").toString();
 
 							PsTzDcWjGzgxT psTzDcWjGzgxT = new PsTzDcWjGzgxT();
 							psTzDcWjGzgxT.setTzDcLjtjId(logicalId);

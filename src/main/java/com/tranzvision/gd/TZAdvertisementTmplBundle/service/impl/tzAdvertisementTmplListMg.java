@@ -43,7 +43,8 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl{
 		// 排序字段如果没有不要赋值
 		   
 	
-		String[][] orderByArr = new String[][] { { "TZ_AD_TMPL_ID", "ASC" } };
+		//String[][] orderByArr = new String[][] { { "TZ_AD_TMPL_ID", "ASC" } };
+		String[][] orderByArr = new String[][] {  };
 
 		// json数据要的结果字段;
 		

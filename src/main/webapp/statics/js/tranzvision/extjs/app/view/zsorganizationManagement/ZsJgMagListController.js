@@ -73,7 +73,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
             return;
         }
         //资源集合ID
-        var resSetID = selList[0].get("zhjgID");
+        var zhjgID = selList[0].get("zhjgID");
         //显示资源集合信息编辑页面
         this.editResSetInfoByID(zhjgID);
     },
@@ -232,14 +232,20 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
 
     //院校库详情页确定按钮
     ensureonschoolSave:function(btn){
-    	this.onschoolSave(btn);
-    	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("zsbfjgMgList").store.reload();
-    	var comView = this.getView();
-    	comView.close();
-    	
+    	var form = this.getView().child("form").getForm();
 
-      
+        if (form.isValid()) {
+            //获得院校库表单信息
+            var tzParams = this.getResSetInfoParams();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		    contentPanel.child("zsbfjgMgList").store.reload();
+                comView.close();
+            },"",true,this);
+        }
+
+    	  
         
     },
     closeResSets:function(btn){
