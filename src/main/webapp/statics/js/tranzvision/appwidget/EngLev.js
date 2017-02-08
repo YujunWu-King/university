@@ -588,7 +588,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					htmlContent+='<div id="'+data.itemId+'UP" class="input-list" style="display:block">'
 				else
 				htmlContent+='<div id="'+data.itemId+'UP" class="input-list" style="display:none">'
-					htmlContent+='<div class="input-list-info left"><span>上传证书/成绩扫描件</span></div><div class="input-list-text left" ><input readOnly=true type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'"/>'
+					htmlContent+='<div class="input-list-info-readonly left"><span>上传证书/成绩扫描件</span></div><div class="input-list-wz-readonly left" ><input readOnly=true type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'"/>'
 				htmlContent+='<div class="clear"></div>'
 					htmlContent+='</div>'
 				//---------------------------
@@ -819,7 +819,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					htmlContent+='<div id="'+data.itemId+'UP" class="input-list" style="display:block">'
 				else
 				htmlContent+='<div id="'+data.itemId+'UP"  class="input-list" style="display:none">'
-					htmlContent+='<div class="input-list-info left"><span >上传证书/成绩扫描件</span></div><div class="input-list-text left" ><input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'"/></div>'
+					htmlContent+='<div class="input-list-info-readonly left"><span >上传证书/成绩扫描件</span></div><div class="input-list-wz-readonly left" ><input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'"/></div>'
 					htmlContent+='<div class="clear"></div>'
 				htmlContent+='</div>'
 				//---------------------------
