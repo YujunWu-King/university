@@ -322,15 +322,14 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	public String emailVerifyByEnroll(String strParams,String[] errorMsg){
-		String strEmail = "";
-		String strOrgid = "sem";
 		String strResult = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();   
 		try{
 			jacksonUtil.json2Map(strParams);
 			if(jacksonUtil.containsKey("email")){
-				strEmail = jacksonUtil.getString("email").trim();
-	      	
+				String strEmail = jacksonUtil.getString("email").trim();
+				String strOrgid = jacksonUtil.getString("orgid").trim();
+				
 		      	//邮箱是否被占用
 		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
 		      	int count = sqlQuery.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
