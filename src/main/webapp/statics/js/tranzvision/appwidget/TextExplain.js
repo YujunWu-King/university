@@ -8,6 +8,7 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 	title: "文字说明",
 	"StorageType": "L",
 	"isDownLoad": "N", //是否导出
+	
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {

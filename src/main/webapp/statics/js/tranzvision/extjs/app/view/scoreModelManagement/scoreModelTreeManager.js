@@ -17,20 +17,42 @@
     rootVisible: true,
     collapseFirst: false,
     
-    /*
-    layout: {
-		type: 'vbox',
-		align: 'stretch'
-    },
-	*/
     viewConfig: {  
         plugins: {  
-            ptype: 'treeviewdragdrop'  
+            ptype: 'treeviewdragdrop'
         },  
         listeners: {  
             drop: function(node, data, dropRec, dropPosition) {  
-                store.sync();  
-            }  
+            	var treeManager = data.view.up("scoreModelTreeManager");
+            	var treeName = treeManager.treeName;
+            	var parentId = data.records[0].get("parentId");
+            	var dragitemId = data.records[0].get("itemId");
+            	var dropitemId = dropRec.get("itemId");
+            	
+            	var paramsObj = {
+            		treeName: treeName,
+            		parentId: parentId,
+            		dragitemId: dragitemId,
+            		dropitemId: dropitemId,
+            		dropPosition: dropPosition
+            	};
+            	
+            	var tzParams = Ext.JSON.encode(paramsObj);
+            	tzParams = '{"ComID":"TZ_SCORE_MOD_COM","PageID":"TZ_TREE_MG_STD","OperateType":"tzTreeNodeSort","comParams":'+tzParams+'}';
+            	
+    			Ext.tzLoad(tzParams,function(respData){
+
+    			});
+            },
+            beforedrop:function(node,data,overModel,dropPosition,dropHandlers){
+            	var parentId1 = data.records[0].get("parentId");
+            	var parentId2 = overModel.get("parentId");
+            	if(parentId1 == parentId2){
+            		dropHandlers.processDrop();
+            	}else{
+            		dropHandlers.cancelDrop();
+            	}
+            }
         }  
     },  
     

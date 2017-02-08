@@ -3,12 +3,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
+import com.tranzvision.gd.TZSchlrBundle.dao.PsTzSchlrRsltTblMapper;
+import com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QustionnairePersonClsImpl")
 public class QustionnairePersonClsImpl extends FrameworkImpl{
@@ -16,8 +21,10 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private FliterForm fliterForm;
-
-	/* 查询调查表列表 */
+	@Autowired
+	private SqlQuery jdbcTemplate;
+	@Autowired
+	private PsTzSchlrRsltTblMapper psTzSchlrRsltTblMapper;
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -27,6 +34,9 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(comParams);
+		Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+		String TZ_SCHLR_ID=(String) conditionJson.get("TZ_SCHLR_ID");
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
@@ -36,13 +46,14 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+            //获取奖学金编号
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
+					String isApply="";
 					mapList.put("wjId", rowList[0]);
 					mapList.put("oprid", rowList[1]);
 					mapList.put("name", rowList[2]);
@@ -50,14 +61,19 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 					mapList.put("email", rowList[4]);
 					mapList.put("wjInsId", rowList[6]);
 					if("0".equals(rowList[5])){
-					  mapList.put("dcState", "已完成");
+					   mapList.put("dcState", "已完成");
+					   String flag=jdbcTemplate.queryForObject("select 'Y' from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?", new Object[]{TZ_SCHLR_ID,rowList[1]}, "String");
+						if("Y".equals(flag)){
+							isApply=jdbcTemplate.queryForObject("select TZ_IS_APPLY from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?",new Object[]{TZ_SCHLR_ID,rowList[1]},"String");
+						}else{
+						   isApply="N";
+						}
 					}else{
-					  if("未开始".equals(rowList[5])){
-						mapList.put("dcState", rowList[5]);
-					  }else{
-				       mapList.put("dcState", "未完成");
-					  }
+				       mapList.put("dcState", "未完成");	
+				       //未完成不可设置奖学金通过状态
+				       isApply="X";
 					}
+					mapList.put("isApply", isApply);
 					listData.add(mapList);
 				}
 
@@ -73,8 +89,44 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
-		return "";
+		String strRet = "{}";
+		int dataLength = actData.length;
+		if (dataLength<=0){
+			return strRet;
+		}
+		try {
+			String strForm = actData[0];
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			jacksonUtil.json2Map(strForm);
+			Map<String, Object> data = jacksonUtil.getMap("data");
+			String shcLrId=jacksonUtil.getString("schLrId");
+			String oprid=data.get("oprid")==null?"":data.get("oprid").toString();
+			String isApply=String.valueOf(data.get("isApply"));
+			String flag=jdbcTemplate.queryForObject("select 'Y' from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?", new Object[]{shcLrId,oprid}, "String");
+			if("Y".equals(flag)){
+				PsTzSchlrRsltTbl PsTzSchlrRsltTbl=new PsTzSchlrRsltTbl();
+				PsTzSchlrRsltTbl.setTzSchlrId(shcLrId);
+				PsTzSchlrRsltTbl.setOprid(oprid);
+				PsTzSchlrRsltTbl.setTzIsApply(isApply);
+				psTzSchlrRsltTblMapper.updateByPrimaryKeySelective(PsTzSchlrRsltTbl);
+			}else{
+				PsTzSchlrRsltTbl PsTzSchlrRsltTbl=new PsTzSchlrRsltTbl();
+				PsTzSchlrRsltTbl.setTzSchlrId(shcLrId);
+				PsTzSchlrRsltTbl.setOprid(oprid);
+				PsTzSchlrRsltTbl.setTzIsApply(isApply);
+				psTzSchlrRsltTblMapper.insert(PsTzSchlrRsltTbl);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return strRet;
+	
 	}
+	
+
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		// 返回值;

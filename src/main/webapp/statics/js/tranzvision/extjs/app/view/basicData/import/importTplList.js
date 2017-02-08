@@ -9,7 +9,7 @@
         'KitchenSink.view.basicData.import.importTplController',
         'KitchenSink.view.basicData.import.importTplStore'
     ],
-    alilas: 'widget.imporTplList',
+    alilas: 'widget.importTplList',
     controller: 'importTplController',
     columnLines: true,
     selModel: {

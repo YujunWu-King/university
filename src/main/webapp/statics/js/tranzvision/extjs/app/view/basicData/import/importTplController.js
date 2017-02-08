@@ -92,7 +92,6 @@
 		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
 		contentPanel.body.addCls('kitchensink-example');
 
-		//className = 'KitchenSink.view.security.com.comInfoPanel';
 		if(!Ext.ClassManager.isCreated(className)){
 			Ext.syncRequire(className);
 		}	
@@ -125,34 +124,32 @@
             }
     },
     
-    
-    
-    
-	editAppClassDfn: function() {
-	  //选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
-	   //选中行长度
-	   var checkLen = selList.length;
-	   if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择一条要修改的记录");   
-			return;
-	   }else if(checkLen >1){
-		   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
-		   return;
-	   }
-	   var appClassId = selList[0].get("appClassId");
-	   this.editAppClassInfoByID(appClassId);
-    },
-	editSelAppClassDfn: function(view, rowIndex) {
-		 var store = view.findParentByType("grid").store;
-		 var selRec = store.getAt(rowIndex);
-	   	 var appClassId = selRec.get("appClassId");
-	     this.editAppClassInfoByID(appClassId);
+    editTpl: function(obj,rowIndex) {
+    	var tplId;
+    	
+    	if(obj.isXType("button",true)){
+    		var selList = this.getView().getSelectionModel().getSelection();
+
+    		   var checkLen = selList.length;
+    		   if(checkLen == 0){
+    				Ext.Msg.alert("提示","请选择一条要修改的记录");   
+    				return;
+    		   }else if(checkLen >1){
+    			   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
+    			   return;
+    		   }
+    		   tplId = selList[0].get("tplId");
+    	}else{
+    		var store = this.getView().store;
+    		var selRec = store.getAt(rowIndex);
+    		tplId = selRec.get("tplId");
+    	}
+	   
+	   this.editTplByTplId(tplId);
     },
 	
-	editAppClassInfoByID: function(appClassId){
-	//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_APP_CLS_COM"]["TZ_APP_CLSINF_STD"];
+    editTplByTplId: function(tplId){
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_IMP_TPL_COM"]["TZ_TPL_INF_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -160,7 +157,7 @@
 		//该功能对应的JS类
 		var className = pageResSet["jsClassName"];
 		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_APP_CLSINF_STD，请检查配置。');
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_TPL_INF_STD，请检查配置。');
 			return;
 		}
 		
@@ -197,14 +194,29 @@
 		cmp.on('afterrender',function(panel){
 			
 			var form = panel.child('form').getForm();
-			var appClassIdField = form.findField("appClassId");
-            appClassIdField.setReadOnly(true);
-            appClassIdField.addCls('lanage_1');/*灰掉应用程序类ID输入框*/
+			var tplIdField = form.findField("tplId");
+			tplIdField.setReadOnly(true);
+			tplIdField.addCls('lanage_1');/*置灰*/
 			//参数
-			var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSINF_STD","OperateType":"QF","comParams":{"appClassId":"'+appClassId+'"}}';
+			var tzParams = '{"ComID":"TZ_IMP_TPL_COM","PageID":"TZ_TPL_INF_STD","OperateType":"QF","comParams":{"tplId":"'+tplId+'"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
-				form.setValues(responseData.formData);	
+				form.setValues(responseData);
+			});
+			
+			panel.fieldStore.tzStoreParams=Ext.encode({
+				cfgSrhId:"TZ_IMP_TPL_COM.TZ_TPL_INF_STD.TZ_IMP_TPL_FLD_T",
+				condition:{
+					"TZ_TPL_ID-operator":"01",
+					"TZ_TPL_ID-value":tplId
+					}
+				}),
+			panel.fieldStore.load({
+				callback:function(){
+					Ext.defer(function(panel){
+						panel.updateLayout();
+					},100,this,[panel]);
+				}
 			});
 			
 		});
@@ -217,56 +229,161 @@
 		}	  
 	},
 	
-	onAppClassClose: function(btn){
-		var panel = btn.findParentByType("panel");
-		panel.close();
-	},
-	
-	onAppClassSave: function(btn){
-		var panel = btn.findParentByType("panel");
-		//操作类型，add-添加，edit-编辑
-		var actType = panel.actType;
-		var form = panel.child("form").getForm();
-		if (form.isValid()) {
+	searchTbl:function(field){
+    	var me = this,
+    		form = me.getView().child("form").getForm();
+    	
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_SCHEMA_TABLES_VW',
+			searchDesc: '搜索所有表',
+			maxRow:20,
+			condition:{
+				srhConFields:{
+					TABLE_NAME:{
+						desc:'表名',
+						operator:'07',
+						type:'01'
+					},
+					TABLE_COMMENT:{
+						desc:'摘要',
+						operator:'07',
+						type:'01'
+					}
+				}
+			},
+			srhresult:{
+				TABLE_NAME:'表名',
+				TABLE_COMMENT:'摘要'
+			},
+			multiselect: false,
+			callback: function(selection){
+				var targetTblField = form.findField("targetTbl");
+				
+				if(targetTblField.getValue()!=selection[0].data.TABLE_NAME){
+					Ext.MessageBox.confirm('确认', '更换目标表会重新加载字段，您确定要选择所选表吗?', function(btnId){
+						if(btnId == 'yes'){
+							targetTblField.setValue(selection[0].data.TABLE_NAME);
+							var tzParams = {
+									"OperateType":"COMBOX",
+									"recname":"TZ_SCHEMA_COLUMNS_VW",
+									"condition":{
+										"TABLE_NAME":{
+											"value":selection[0].data.TABLE_NAME,
+											"operator":"01",
+											"type":"01"
+											}
+									},
+									"result":"COLUMN_NAME"
+								};
+							Ext.tzLoad(Ext.encode(tzParams),function(responseData){
+								var columns = responseData["TZ_SCHEMA_COLUMNS_VW"],
+									seq = 0,
+									store = me.getView().fieldStore;
+								
+								store.removeAll();
+								
+								Ext.each(columns,function(column){
+									seq ++;
+									var record = new KitchenSink.view.basicData.import.importTplFieldModel({
+										tplId:form.findField("tplId").getValue(),
+										field:column["COLUMN_NAME"],
+										seq:seq,
+										required:false,
+										cover:false,
+										display:false
+									});
+									store.add(record);
+								});
+								store.clearFlag=true;
+								me.getView().child("tabpanel").updateLayout();
+							});
+						}
+					},this);
+				}
+			}
+		});	
+    },
+    
+    uploadExcelTpl:function(file, value, eOpts ){
+		if(value != ""){
+			var form = file.findParentByType("form").getForm();
+			var panel = file.findParentByType("importTplInfo");
 			
-			//新增
-			var comParams="";
-			if(actType == "add"){
-				comParams = '"add":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			//获取后缀
+			var fix = value.substring(value.lastIndexOf(".") + 1,value.length);
+			if(fix.toLowerCase() == "xls" || fix.toLowerCase() == "xlsx"){
+				form.submit({
+					url: TzUniversityContextPath + '/UpdServlet?filePath=importExcelTpl',
+					waitMsg: '正在上传，请耐心等待....',
+					success: function (form, action) {
+						var message = action.result.msg;
+						var path = message.accessPath;
+						var sysFileName = message.sysFileName;
+						if(path.charAt(path.length - 1) == '/'){
+							path = path + sysFileName;
+						}else{
+							path = path + "/" + sysFileName;
+						}
+						
+						var excelTplField = panel.child("form").getForm().findField("excelTpl");
+						excelTplField.setValue(path);
+
+						form.reset();
+					},
+					failure: function (form, action) {
+						form.reset();
+						Ext.MessageBox.alert("错误", action.result.msg);
+					}
+				});
 			}else{
-				//修改
-				comParams = '"update":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+				//重置表单
+				form.reset();
+				Ext.MessageBox.alert("提示", "请上传[xls,xlsx]格式的Excel文件。");
 			}
-			var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSINF_STD","OperateType":"U","comParams":{'+comParams+'}}';
-			Ext.tzSubmit(tzParams,function(responseData){
-					panel.actType = "update";	
-					form.findField("appClassId").setReadOnly(true);
-                    form.findField("appClassId").addCls('lanage_1');
-			},"",true,this);
 		}
 	},
 	
-	onAppClassEsure: function(btn){ 
+	infoSave: function(btn){
 		var panel = btn.findParentByType("panel");
-		//操作类型，add-添加，edit-编辑
+		//操作类型，add-添加，update-更新
 		var actType = panel.actType;
 		var form = panel.child("form").getForm();
 		if (form.isValid()) {
-		
-			//新增
-			var comParams="";
-			if(actType == "add"){
-				comParams = '"add":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
-			}else{
-				//修改
-				comParams = '"update":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			var comParams = "",
+				modifiedJson,
+				formData = form.getValues();
+			
+			if(formData["enableMapping"] == undefined){
+				formData["enableMapping"] = "N";
 			}
-			var tzParams = '{"ComID":"TZ_APP_CLS_COM","PageID":"TZ_APP_CLSINF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			
+			modifiedJson = [{type:"TPL",data:formData,targetTblChanged:panel.fieldStore.clearFlag===true}];
+			
+			//Store
+			var modifiedRecs = panel.fieldStore.getModifiedRecords();
+
+			for(var i=0;i<modifiedRecs.length;i++){
+				modifiedJson.push({type:"FIELD",data:modifiedRecs[i].data});
+			}
+			
+			if(actType=="add"){
+				comParams="add:"+Ext.encode(modifiedJson);
+			}else{
+				comParams="update:"+Ext.encode(modifiedJson);
+			}
+			
+			var tzParams = '{"ComID":"TZ_IMP_TPL_COM","PageID":"TZ_TPL_INF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			Ext.tzSubmit(tzParams,function(responseData){
-					panel.actType = "update";
-					form.reset();
+				//清除store的更改目标表字段标识
+				panel.fieldStore.clearFlag=true;	
+				if(btn.name=="ensure"){
 					panel.close();
+				}else{
+					panel.actType = "update";
+					form.findField("tplId").setReadOnly(true);
+                    form.findField("tplId").addCls('lanage_1');
+				}
 			},"",true,this);
 		}
-	},
+	}
 });

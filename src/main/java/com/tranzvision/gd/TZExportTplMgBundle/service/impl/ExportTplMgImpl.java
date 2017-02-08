@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZExportTplMgBundle.dao.TzExpTplDfnTMapper;
-import com.tranzvision.gd.TZExportTplMgBundle.model.TzExpTplDfnT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
- * 导出模板管理
+ * 导入模板管理
  * @author shaweyet
  */
 @Service("com.tranzvision.gd.TZExportTplMgBundle.service.impl.ExportTplMgImpl")
@@ -23,11 +21,9 @@ public class ExportTplMgImpl extends FrameworkImpl {
 	@Autowired
 	private TzExpTplDfnTMapper TzExpTplDfnTMapper;
 	@Autowired
-	private SqlQuery jdbcTemplate;
-	@Autowired
 	private FliterForm fliterForm;
 	
-	/* 加载导出模板列表 */
+	/*加载导出模板列表 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart,
@@ -56,7 +52,7 @@ public class ExportTplMgImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("tplId", rowList[0]);
 				mapList.put("tplName", rowList[1]);
-				mapList.put("javaClass", rowList[3]);
+				mapList.put("javaClass", rowList[2]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
@@ -66,123 +62,7 @@ public class ExportTplMgImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
-	
-	/* 获取导出模板信息 */
-	@Override
-	public String tzQuery(String strParams, String[] errMsg) {
-		// 返回值;
-		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-			jacksonUtil.json2Map(strParams);
-			if (jacksonUtil.containsKey("tplId")) {
-				String tplId = jacksonUtil.getString("tplId");
-				TzExpTplDfnT tzExpTplDfnT=  TzExpTplDfnTMapper.selectByPrimaryKey(tplId);
-				if (tzExpTplDfnT != null) {
-					returnJsonMap.put("tplId", tzExpTplDfnT.getTzTplId());
-					returnJsonMap.put("tplName", tzExpTplDfnT.getTzTplName());
-					returnJsonMap.put("javaClass", tzExpTplDfnT.getTzJavaClass());
-				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "该导出模板不存在";
-				}
-
-			} else {
-				errMsg[0] = "1";
-				errMsg[1] = "该导出模板不存在";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-		return jacksonUtil.Map2json(returnJsonMap);
-	}
-	
-	
-	//@Override
-	/* 新增hardcode方法 
-	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-			int num = 0;
-			for (num = 0; num < actData.length; num++) {
-				// 表单内容;
-				String strForm = actData[num];
-				// 将字符串转换成json;
-				jacksonUtil.json2Map(strForm);
-				// hardCode名称;
-				String hardCodeName = jacksonUtil.getString("hardCodeName");
-				// hardCode描述;
-				String hardCodeDesc = jacksonUtil.getString("hardCodeDesc");
-				String hardCodeValue = jacksonUtil.getString("hardCodeValue");
-				String hardCodeDetailDesc = jacksonUtil.getString("hardCodeDetailDesc");
-
-				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
-				if (count > 0) {
-					errMsg[0] = "1";
-					errMsg[1] = "HardCode点：" + hardCodeName + ",已经存在";
-				} else {
-					TzExpTplDfnT tzExpTplDfnT = new TzExpTplDfnT();
-					tzExpTplDfnT.setTzHardcodePnt(hardCodeName);
-					tzExpTplDfnT.setTzDescr254(hardCodeDesc);
-					tzExpTplDfnT.setTzHardcodeVal(hardCodeValue);
-					tzExpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
-					TzExpTplDfnTMapper.insert(tzExpTplDfnT);
-				}
-			}
-		} catch (Exception e) {
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-		return strRet;
-	}*/
-	
-	//@Override
-	/* 修改hardcode方法 
-	public String tzUpdate(String[] actData, String[] errMsg) {
-		String strRet = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-			int num = 0;
-			for (num = 0; num < actData.length; num++) {
-				// 表单内容;
-				String strForm = actData[num];
-				// 将字符串转换成json;
-				jacksonUtil.json2Map(strForm);
-				// hardCode名称;
-				String hardCodeName = jacksonUtil.getString("hardCodeName");
-				// hardCode描述;
-				String hardCodeDesc = jacksonUtil.getString("hardCodeDesc");
-				String hardCodeValue = jacksonUtil.getString("hardCodeValue");
-				String hardCodeDetailDesc = jacksonUtil.getString("hardCodeDetailDesc");
-
-				String sql = "select COUNT(1) from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				int count = jdbcTemplate.queryForObject(sql, new Object[] { hardCodeName }, "Integer");
-				if (count > 0) {
-					TzExpTplDfnT tzExpTplDfnT = new TzExpTplDfnT();
-					tzExpTplDfnT.setTzHardcodePnt(hardCodeName);
-					tzExpTplDfnT.setTzDescr254(hardCodeDesc);
-					tzExpTplDfnT.setTzHardcodeVal(hardCodeValue);
-					tzExpTplDfnT.setTzDescr1000(hardCodeDetailDesc);
-					TzExpTplDfnTMapper.updateByPrimaryKeyWithBLOBs(tzExpTplDfnT);
-					
-				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "更新的HardCode点：" + hardCodeName + ",不存在";
-				}
-			}
-		} catch (Exception e) {
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-		return strRet;
-	}
-*/
-	
-	// 功能说明：删除Hardcode定义;
+	// 功能说明：删除导出模板定义;
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -200,10 +80,10 @@ public class ExportTplMgImpl extends FrameworkImpl {
 					//提交信息
 					String strForm = actData[num];
 					jacksonUtil.json2Map(strForm);
-					// hardcode ID;
-					String hardCodeName = jacksonUtil.getString("hardCodeName");
-					if (hardCodeName != null && !"".equals(hardCodeName)) {
-						TzExpTplDfnTMapper.deleteByPrimaryKey(hardCodeName);
+
+					String tplId = jacksonUtil.getString("tplId");
+					if (tplId != null && !"".equals(tplId)) {
+						TzExpTplDfnTMapper.deleteByPrimaryKey(tplId);
 					}
 				}
 			} catch (Exception e) {

@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
+Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -7,12 +7,12 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.scholarShipManage.scholarModel',
-        'KitchenSink.view.scholarShipManage.scholarController',
-        'KitchenSink.view.scholarShipManage.scholarStore'
+        'KitchenSink.view.scholarShipManage.scholarStore',
+        'KitchenSink.view.scholarShipManage.scholarController'
     ],
-    xtype: 'scholarlist',
+    xtype: 'scholarList',
     controller: 'scholarController',
-    reference:'scholarlist',
+    reference:'scholarList',
     store: {
         type: 'scholarStore'
     },
@@ -46,11 +46,10 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
         var store = new KitchenSink.view.scholarShipManage.scholarStore();
         Ext.apply(this, {
             columns: [
-              {
-                    text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
+              {     text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
                     sortable: true,
                     dataIndex: 'TZ_SCHLR_NAME',
-                    width: 450
+                    flex:1
                 },{
                     text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_DC_WJ_KSRQ","开始时间"),
                     sortable: true,
@@ -62,12 +61,12 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
                     dataIndex: 'TZ_DC_WJ_JSRQ',
                     width: 150               
                 },{ text: Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_STATE","状态"),
-                    dataIndex: 'TZ_STATE',
+                    dataIndex: 'TZ_JXJ_STATE',
                     width:100,
                     renderer:function(v) {
-                    if (v == '0') {
+                    if (v == 'Y') { 
                         return "有效";
-                    } else if (v == '1') {
+                    } else if (v == 'N') {
                         return "无效";
                     }
                    }
@@ -80,15 +79,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarlist', {
                     width:100,
                     items:[
                         {iconCls:'edit',tooltip:'编辑',handler:'editScholarRow'},
-                        {iconCls:'view',tooltip:'参与人管理',handler:'viewSchCyr',
-                            isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
-                                /*if(record.get('TZ_DC_WJ_ID')==''){
-                                    return true;
-                                }else{ 
-                                    return false;
-                                }*/
-                            } 
-                        }
+                        {iconCls:'people',tooltip:'参与人管理',handler:'viewScholarCyr'}
                     ] 
                 }
                 ],

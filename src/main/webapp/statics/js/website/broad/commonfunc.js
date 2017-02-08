@@ -43,19 +43,10 @@ function getOperatorType(){
            
        // });
       //文字超出隐藏
-       
-       var module = document.getElementById("date_body_view");
-       var module1 = document.getElementById("date_body_view1");
-       var module2 = document.getElementById("date_body_view2");
-       var module3 = document.getElementById("date_body_view3");
-
-       $clamp(module, {clamp:2});
-       $clamp(module1, {clamp:2});
-       $clamp(module2, {clamp:2});
-       $clamp(module3, {clamp:2});
-      
-
-
+        $(".date_body").each(function(){
+        	$clamp(this, {clamp:2});
+        });
+     
     });
 
       function tab(nav,content,on,type)
