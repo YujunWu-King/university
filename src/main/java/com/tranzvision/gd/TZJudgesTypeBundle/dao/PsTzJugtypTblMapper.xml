@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZJudgesTypeBundle.dao.PsTzJugtypTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzJugtypTbl" >
+    <id column="TZ_JUGTYP_ID" property="tzJugtypId" jdbcType="VARCHAR" />
+    <result column="TZ_JUGTYP_NAME" property="tzJugtypName" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="ROLENAME" property="rolename" jdbcType="VARCHAR" />
+    <result column="TZ_JUGTYP_STAT" property="tzJugtypStat" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JUGTYP_ID, TZ_JUGTYP_NAME, TZ_JG_ID, ROLENAME, TZ_JUGTYP_STAT, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_JUGTYP_TBL
+    where TZ_JUGTYP_ID = #{tzJugtypId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_JUGTYP_TBL
+    where TZ_JUGTYP_ID = #{tzJugtypId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzJugtypTbl" >
+    insert into PS_TZ_JUGTYP_TBL (TZ_JUGTYP_ID, TZ_JUGTYP_NAME, TZ_JG_ID, 
+      ROLENAME, TZ_JUGTYP_STAT, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
+    values (#{tzJugtypId,jdbcType=VARCHAR}, #{tzJugtypName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{rolename,jdbcType=VARCHAR}, #{tzJugtypStat,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzJugtypTbl" >
+    insert into PS_TZ_JUGTYP_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJugtypId != null" >
+        TZ_JUGTYP_ID,
+      </if>
+      <if test="tzJugtypName != null" >
+        TZ_JUGTYP_NAME,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="rolename != null" >
+        ROLENAME,
+      </if>
+      <if test="tzJugtypStat != null" >
+        TZ_JUGTYP_STAT,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJugtypId != null" >
+        #{tzJugtypId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJugtypName != null" >
+        #{tzJugtypName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJugtypStat != null" >
+        #{tzJugtypStat,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzJugtypTbl" >
+    update PS_TZ_JUGTYP_TBL
+    <set >
+      <if test="tzJugtypName != null" >
+        TZ_JUGTYP_NAME = #{tzJugtypName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="rolename != null" >
+        ROLENAME = #{rolename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJugtypStat != null" >
+        TZ_JUGTYP_STAT = #{tzJugtypStat,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JUGTYP_ID = #{tzJugtypId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzJugtypTbl" >
+    update PS_TZ_JUGTYP_TBL
+    set TZ_JUGTYP_NAME = #{tzJugtypName,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      ROLENAME = #{rolename,jdbcType=VARCHAR},
+      TZ_JUGTYP_STAT = #{tzJugtypStat,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JUGTYP_ID = #{tzJugtypId,jdbcType=VARCHAR}
+  </update>
+</mapper>
