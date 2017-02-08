@@ -1,5 +1,5 @@
 insert into 
-	ps_TZ_TREENODE_TMP (
+	PS_TZ_TREENODE_TMP (
 		TZ_SEQNUM, 
 		TREE_NAME,
 		TREE_NODE_NUM,

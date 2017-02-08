@@ -476,9 +476,12 @@ public class TzScoreModeDefnServiceImpl extends FrameworkImpl {
 			PsTzTreeDefnKey psTzTreeDefnKey = new PsTzTreeDefnKey();
 			psTzTreeDefnKey.setTzJgId(orgId);
 			psTzTreeDefnKey.setTreeName(treeName);
-			
 			PsTzTreeDefn psTzTreeDefn = psTzTreeDefnMapper.selectByPrimaryKey(psTzTreeDefnKey);
-			if(psTzTreeDefn == null){
+			
+			String sql = "SELECT 'Y' FROM PSTREENODE WHERE TREE_NAME=?";
+			String treeExists = jdbcTemplate.queryForObject(sql, new Object[]{treeName}, "String");
+			
+			if(psTzTreeDefn == null && !"Y".equals(treeExists)){
 				psTzTreeDefn = new PsTzTreeDefn();
 				psTzTreeDefn.setTzJgId(orgId);
 				psTzTreeDefn.setTreeName(treeName);
@@ -498,6 +501,9 @@ public class TzScoreModeDefnServiceImpl extends FrameworkImpl {
 					
 					rtnMap.replace("result", "success");
 				}
+			}else{
+				errorMsg[0] = "1";
+				errorMsg[1] = "树已存在,请重新命名树名称";
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -514,7 +520,7 @@ public class TzScoreModeDefnServiceImpl extends FrameworkImpl {
 		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
 		Date effdt;
 		try {
-			effdt = format.parse(format.format(new Date()));
+			effdt = format.parse("2015-11-11");
 
 			PsTreeNode psTreeNode = new PsTreeNode();
 			psTreeNode.setSetid("");
