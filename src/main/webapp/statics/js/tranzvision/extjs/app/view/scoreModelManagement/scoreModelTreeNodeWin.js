@@ -7,7 +7,8 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.scoreModelManagement.scoreModelTreeManagerController'
+        'KitchenSink.view.scoreModelManagement.scoreModelTreeManagerController',
+        'KitchenSink.view.scoreModelManagement.scoreItemOptionsStore'
 	],
 	controller: 'scoreModelTreeManagerController',
 	reference: 'scoreModelTreeNodeWin',
@@ -25,8 +26,8 @@
 	pageY:80, 
 	
 	constructor: function(config, callback){
-		this.actType = config.actType;
-		this.reloadGrid = callback;
+		this.opeConfig = config;
+		this.treeReload = callback;
 		
 		this.callParent();	
 	},
@@ -55,7 +56,58 @@
              		itemTypeDesc: '下拉框'
              	}]
 		 });
-	
+		
+		
+		//上限操作符
+		var upLimitStore = Ext.create('Ext.data.Store', {
+			 fields: [{
+				 	name:'value'
+			 	},{
+			 		name:'descr'
+			 	}],
+             data: [{
+            	 	value: '<', 
+            	 	descr: '小于'
+             	},{
+             		value: '<=', 
+             		descr: '小于等于'
+             	}]
+		 });
+		
+		//下限操作符
+		var downLimitStore = Ext.create('Ext.data.Store', {
+			 fields: [{
+				 	name:'value'
+			 	},{
+			 		name:'descr'
+			 	}],
+             data: [{
+            	 	value: '>', 
+            	 	descr: '大于'
+             	},{
+             		value: '>=', 
+             		descr: '大于等于'
+             	}]
+		 });
+		
+		//下拉选项转换为分值Store
+		var optTransStore = Ext.create('Ext.data.Store', {
+			 fields: [{
+				 	name:'value'
+			 	},{
+			 		name:'descr'
+			 	}],
+             data: [{
+            	 	value: 'Y', 
+            	 	descr: '是'
+             	},{
+             		value: 'N', 
+             		descr: '否'
+             	}]
+		 });
+		
+		var itemOptionStore = new KitchenSink.view.scoreModelManagement.scoreItemOptionsStore();
+		
         Ext.apply(this, {
 		    items: [{        
 		        xtype: 'form',
@@ -76,10 +128,12 @@
 		            xtype: 'hiddenfield',
 					name: 'orgId'
 		        },{
-		           	xtype: 'displayfield',
+		           	xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.treeName","树名称"),
 					name: 'treeName',
-					allowBlank: false
+					allowBlank: false,
+					readOnly: true,
+					cls: 'lanage_1'
 		        },{
 		            xtype: 'textfield',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.itemId","成绩项ID"),
@@ -120,9 +174,20 @@
 			        	labelWidth: 140
 			        },
 		        	items:[{
-		        		xtype: 'textfield',
-			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.UpHzXs","向上级成绩汇总系数"),
-						name: 'UpHzXs',
+		        		layout: {
+							type: 'column'
+						},
+						items:[{
+							columnWidth: 1,
+							xtype: 'numberfield',
+				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.UpHzXs","向上级成绩汇总系数"),
+							name: 'UpHzXs',
+							decimalPrecision: 2,
+							decimalSeparator: '.'
+						},{
+							xtype:'displayfield',
+							value: '%'
+						}]
 		        	}]
 		        },{
 		        	xtype: 'fieldcontainer',
@@ -136,13 +201,27 @@
 			        	labelWidth: 90
 			        },
 		        	items:[{
-		        		xtype: 'numberfield',
-			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
-						name: 'weightA',
+		        		layout: {
+							type: 'column'
+						},
+						items:[{
+							columnWidth: 1,
+			        		xtype: 'numberfield',
+				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
+							name: 'weightA'
+						},{
+							xtype:'displayfield',
+							value: '%'
+						}]
 		        	},{
 		        		xtype: 'combo',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.lowerOperator","下限操作符"),
 						name: 'lowerOperator',
+						store: downLimitStore,
+						queryMode: 'local',
+			            editable:false,
+			            valueField: 'value',
+			    		displayField: 'descr'
 		        	},{
 		        		xtype: 'numberfield',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.lowerLimit","分值下限"),
@@ -151,6 +230,11 @@
 		        		xtype: 'combo',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.upperOperator","上限操作符"),
 						name: 'upperOperator',
+						store: upLimitStore,
+						queryMode: 'local',
+			            editable:false,
+			            valueField: 'value',
+			    		displayField: 'descr'
 		        	},{
 		        		xtype: 'numberfield',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.upperLimit","分值上限"),
@@ -191,40 +275,84 @@
 		        		xtype: 'combo',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.xlTransScore","下拉选项转换为分值"),
 						name: 'xlTransScore',
+						store: optTransStore,
+						queryMode: 'local',
+			            editable:false,
+			            valueField: 'value',
+			    		displayField: 'descr'
 		        	},{
-		        		xtype: 'numberfield',
-			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
-						name: 'weightD',
+		        		layout: {
+							type: 'column'
+						},
+						items:[{
+							columnWidth: 1,
+			        		xtype: 'numberfield',
+				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
+							name: 'weightD'
+						},{
+							xtype:'displayfield',
+							value: '%'
+						}]
 		        	},{
 		        		xtype: 'grid',
-		        		height: 315, 
+		        		height: 300, 
 						frame: true,
 						columnLines: true,
 						name: 'comboTypeGrid',
-						store: "",
+						store: itemOptionStore,
+						selModel:{
+							type: 'checkboxmodel'
+						},
 						plugins: {
 							ptype: 'cellediting',
 							pluginId: 'TypeDCellediting',
 							clicksToEdit: 1
 						},
+						dockedItems:[{
+							xtype:"toolbar",
+							items:[
+								{
+									text:Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.add","新增"),
+									iconCls:"add",
+									handler:"addScoreItemOption"
+								},"-",
+								{
+									text:Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.remove","删除"),
+									iconCls:"remove",
+									handler:'deleteScoreItemOptions'
+								}
+							]
+						}],
 						columns: [{
 							text: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.optId","选项编号"),
 							dataIndex: 'optId',
-							width:60
+							width:100,
+							flex: 1,
+							editor: {
+								xtype: 'textfield'	
+							}
 						},{
 							text: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.optName","选项名称"),
 							dataIndex: 'optName',
-							width:60
+							width:100,
+							flex: 1,
+							editor: {
+								xtype: 'textfield'	
+							}
 						},{
 							xtype: 'numbercolumn',
 							text: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.optScore","选项分值"),
 							dataIndex: 'optScore',
-							width:60
+							width:100,
+							flex: 1,
+							editor: {
+								xtype: 'numberfield'	
+							}
 						},{
 							xtype: 'checkcolumn',
 							text: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.isDefault","初始默认值"),
 							dataIndex: 'isDefault',
-							width:60
+							width:100
 						},{
 							menuDisabled: true,
 							sortable: false,
@@ -232,7 +360,7 @@
 							xtype: 'actioncolumn',
 							align: 'center',
 							items:[
-								{iconCls: 'add', handler: 'addRowAfterCurrent'},
+								/*{iconCls: 'add', handler: 'addRowAfterCurrent'},*/
 								{iconCls: 'remove', handler: 'deleteCurrentRow'}
 							]
 						}]
@@ -241,15 +369,24 @@
 		        	 xtype: 'textfield',
 			         fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.refDataSet","参考资料设置"),
 					 name: 'refDataSet',
-					 editable: false,
+					 //editable: false,
                      triggers: {
                          clear: {
                              cls: 'x-form-clear-trigger',
-                             handler: 'clearPmtSearch'
+                             hidden: true,
+             				 handler: function(field){
+             					field.setValue("");
+             					field.getTrigger('clear').hide();
+             				 }
                          },
                          search: {
                              cls: 'x-form-search-trigger',
-                             handler: "pmtSearchConRef"
+                             handler: "ckzlPmtSearch"
+                         }
+                     },
+                     listeners: {
+                    	 change: function(field, newValue, oldValue) {
+                    		 field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
                          }
                      }
 		        },{

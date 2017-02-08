@@ -1447,7 +1447,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             }
         });
     },
-    /*参与人调查状态*/ 
+    /*参与人调查状态
     cyrDcStatusDetail:function(view,t,rowIndex){
         var record=view.findParentByType("grid").store.getAt(rowIndex);
         var wjId = record.data.wjId;
@@ -1457,7 +1457,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             var newTab=window.open('about:blank');
             newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
         }
-    },
+    },*/ 
     /*给选中的参与人发送短信*/
     sendSmsToCyr:function(btn){
         var grid = btn.findParentByType("grid");

@@ -46,11 +46,10 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
         var store = new KitchenSink.view.scholarShipManage.scholarStore();
         Ext.apply(this, {
             columns: [
-              {
-                    text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
+              {     text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_SCHLR_NAME","奖学金名称"),
                     sortable: true,
                     dataIndex: 'TZ_SCHLR_NAME',
-                    width: 450
+                    flex:1
                 },{
                     text:Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_DC_WJ_KSRQ","开始时间"),
                     sortable: true,
@@ -62,7 +61,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
                     dataIndex: 'TZ_DC_WJ_JSRQ',
                     width: 150               
                 },{ text: Ext.tzGetResourse("TZ_SCHOLAR_COM.TZ_SCHLR_LIST_STD.TZ_STATE","状态"),
-                    dataIndex: 'TZ_STATE',
+                    dataIndex: 'TZ_JXJ_STATE',
                     width:100,
                     renderer:function(v) {
                     if (v == 'Y') { 

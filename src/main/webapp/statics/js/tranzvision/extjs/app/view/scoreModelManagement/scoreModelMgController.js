@@ -1,6 +1,7 @@
 ﻿Ext.define('KitchenSink.view.scoreModelManagement.scoreModelMgController', {
 	extend: 'Ext.app.ViewController',
 	alias: 'controller.scoreModelMgController',
+	
 	//新增
 	addNewScoreModel: function(btn){
 		//是否有访问权限
@@ -132,6 +133,58 @@
 			cmp.show();
 		}
 	},
+	
+	//复制成绩模型
+	copyScoreModel: function(grid, rowIndex){
+		var rec = grid.getStore().getAt(rowIndex);
+		var orgId = rec.data.orgId;
+		var modeId = rec.data.modeId;
+		
+		var className = 'KitchenSink.view.scoreModelManagement.copyScoreModelWin';
+        if(!Ext.ClassManager.isCreated(className)){
+             Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass();
+        win.orgId = orgId;
+        win.modeId = modeId;
+        win.modelGrid = grid;
+        
+        win.show();
+	},
+	
+	//确认复制
+	copyScoreModelEnsure: function(btn){
+		var win = btn.findParentByType('copyScoreModelWin');
+		var form = win.child('form');
+		var formRec = form.getForm().getValues();
+
+		if(form.isValid()){
+			var orgId = win.orgId;
+			var modeId = win.modeId;
+			var copyModeId = formRec.copyModeId;
+			var copyTreeName = formRec.copyTreeName;
+			
+			var comParamsObj = {
+				ComID: 'TZ_SCORE_MOD_COM',
+				PageID: 'TZ_SCORE_MG_STD',
+				OperateType: 'tzCopyScoreModel',
+				comParams:{
+					orgId: orgId,
+					modeId: modeId,
+					copyModeId: copyModeId,
+					copyTreeName: copyTreeName
+				}
+			}
+			var tzParams = Ext.JSON.encode(comParamsObj);
+			
+			Ext.tzSubmit(tzParams,function(respData){
+				win.modelGrid.getStore().reload();
+				win.close();				
+			},"复制成功",true,this);
+		}
+	},
+	
 	
 	//保存
 	onScoreModelSave: function(btn){
@@ -322,7 +375,7 @@
 			}
 			
 			var tzParams = Ext.JSON.encode(comParamsObj);
-			console.log(tzParams);
+			//console.log(tzParams);
 			
 			Ext.tzSubmit(tzParams,function(respData){
 				if(respData.result == "success"){
@@ -355,6 +408,47 @@
 	onScoreModelClose: function(btn){
 		var panel = btn.findParentByType("scoreModelInfo");
 		panel.close();
+	},
+	
+	//选择成绩模型树
+	pmtSearchScoreModelTree: function(field){
+		Ext.tzShowPromptSearch({
+            recname: 'PS_TZ_TREEDEFN',
+            searchDesc: '选择成绩模型树',
+            maxRow:20,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    },
+                    TZ_TREE_TYPE:{
+                        value: 'A', //成绩模型树
+                        type: '01'
+                    },
+                },
+                srhConFields:{
+                	TREE_NAME:{
+                        desc:'成绩树',
+                        operator:'01',
+                        type:'01'
+                    },
+                    DESCR:{
+                        desc:'树描述',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TREE_NAME: '成绩树',
+            	DESCR: '树描述'
+            },
+            multiselect: false, 
+            callback: function(selection){
+            	field.setValue("treeName",selection[0].data.TREE_NAME);
+            }
+        });
 	},
 	
 	
@@ -690,6 +784,53 @@
 		var selRec = store.getAt(rowIndex);
 		var professionId = selRec.get("professionId");
 		this.editPrjByID(projectId,professionId);
-	}
+	},
 
+	//选择成绩项
+	selectScoreModelItemId: function(btn){
+		var grid = btn.up('grid');
+		var formRec = grid.up('scoreModelInfo').child('form').getForm().getValues();
+		var record = grid.getSelectionModel().getSelection()[0];
+		
+		var orgId = formRec.orgId;
+		var treeName = formRec.treeName;
+		
+		Ext.tzShowPromptSearch({
+            recname: 'PS_TZ_MODAL_DT_TBL',
+            searchDesc: '查询成绩项',
+            maxRow:20,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: orgId,
+                        type: '01'
+                    },
+                    TREE_NAME:{
+                        value: treeName,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                	TZ_SCORE_ITEM_ID:{
+                        desc:'成绩项ID',
+                        operator:'01',
+                        type:'01'
+                    },
+                    DESCR:{
+                        desc:'成绩项名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TZ_SCORE_ITEM_ID: '成绩项ID',
+            	DESCR: '成绩项名称'
+            },
+            multiselect: false, 
+            callback: function(selection){
+                record.set("itemId",selection[0].data.TZ_SCORE_ITEM_ID);
+            }
+        });
+	}
 });
