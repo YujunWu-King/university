@@ -8,13 +8,14 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 	title: "表单填写说明",
 	"StorageType": "L",
 	"isDownLoad": "N", //是否导出
+
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {
 			//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
 			c +='<div class="readme" id="' + data.itemId + '">'
-			c +=' <div class="form_sm"><img class="tips" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/tips2.png">'+MsgSet["FORM_DES"]+'</div>';
-            c +=' <div class="form_input">';
+			c +=' <div class="form_sm" ><img class="tips" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/tips2.png">'+MsgSet["FORM_DES"]+'</div>';
+            c +=' <div class="form_input" id="' + data.itemId + '_DIV">';
             c +=  data.title;
              c +=' </div>';
              c +='</div>';
@@ -35,17 +36,24 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 		return e;
 	},
 	_eventbind: function(data) {
+		 $(".form_input").hide();
 		var desc = $("#" + data["itemId"]);
 		desc.hover(
 				function () {
-					$(this).children(".form_sm").css("background-color","#0070c6");
+				    $(this).children(".form_sm").css("background-color","#0070c6");
 				    $(this).children(".form_sm").css("color","#fff");
 				    $(this).children(".form_input").css("display","block");
-				 },
-				 function () {
+				    //$(this).css("background-color","#0070c6");
+				    //$(this).css("color","#fff");
+				    //$("#" + data["itemId"]+"_DIV").css("display","block");
+				  },
+				  function () {
 				    $(this).children(".form_sm").css("background-color","#fff");
 				    $(this).children(".form_sm").css("color","#000");
 				    $(this).children(".form_input").css("display","none");
-		});
+					  //$(this).css("background-color","#fff");
+					  //  $(this).css("color","#000");
+					  //  $("#" + data["itemId"]+"_DIV").css("display","none");
+				  });
 	},
 })
