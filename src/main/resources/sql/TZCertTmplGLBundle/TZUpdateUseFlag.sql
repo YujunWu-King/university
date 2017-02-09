@@ -1,0 +1,1 @@
+update PS_TZ_CERTTMPL_TBL set TZ_USE_FLAG='N' where TZ_JG_ID=? and TZ_CERT_TYPE_ID=?

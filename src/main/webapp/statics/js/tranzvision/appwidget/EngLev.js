@@ -351,6 +351,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		};
 		console.dir(data);
 		var child=data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child=data["children"];
 		var htmlContent="";
 		//--考试种类初始值
@@ -847,6 +850,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					"ENG_LEV_T13":"TOEIC（990）"				
 				};
 				var child=data["children"][0];
+				if (child == undefined) {
+			   		 child=data["children"];
+			   	 	}
 				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.on("change",function(){
 					for(var i in EXAM_TYPE_MAP){

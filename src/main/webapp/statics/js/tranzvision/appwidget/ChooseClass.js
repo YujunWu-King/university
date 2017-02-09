@@ -39,13 +39,18 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		 // 预览模式
 		 var c = '',e='',params='',desc = '';
 		 console.log("data:"+data);
-		 console.log("previewmode:"+previewmode);
-		 console.log("_readonly:"+SurveyBuild._readonly);
+		 console.dir(data);
+		 //console.log("previewmode:"+previewmode);
+		 //console.log("_readonly:"+SurveyBuild._readonly);
 		 //console.dir(data);
 		
 		 
 	     if(previewmode){
 	    	 var child=data["children"][0];
+	    	 
+	    	 if (child == undefined) {
+	    		 child=data["children"];
+	    	 }
 			// console.log("child:"+child);
 			 console.dir(child);
 			 var val=child.bmrClass.value;
@@ -182,6 +187,9 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	
 	_eventbind: function(data) {
 		var child = data["children"][0];
+		if (child == undefined) {
+   		 child=data["children"];
+   	 	}
 		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btn");
 
 		var siteId=$("#siteId").val();

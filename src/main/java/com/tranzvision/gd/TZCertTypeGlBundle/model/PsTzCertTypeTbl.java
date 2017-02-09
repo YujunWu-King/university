@@ -1,17 +1,11 @@
-package com.tranzvision.gd.TZCertTmplGLBundle.model;
+package com.tranzvision.gd.TZCertTypeGlBundle.model;
 
 import java.util.Date;
 
-public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
-    private String tzTmplName;
-
-    private String tzCertTypeId;
-
-    private String tzCertJgId;
+public class PsTzCertTypeTbl extends PsTzCertTypeTblKey {
+    private String tzCertTypeName;
 
     private String tzUseFlag;
-
-    private String tzAttachsysfilena;
 
     private Date rowAddedDttm;
 
@@ -21,28 +15,12 @@ public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
 
     private String rowLastmantOprid;
 
-    public String getTzTmplName() {
-        return tzTmplName;
+    public String getTzCertTypeName() {
+        return tzCertTypeName;
     }
 
-    public void setTzTmplName(String tzTmplName) {
-        this.tzTmplName = tzTmplName == null ? null : tzTmplName.trim();
-    }
-
-    public String getTzCertTypeId() {
-        return tzCertTypeId;
-    }
-
-    public void setTzCertTypeId(String tzCertTypeId) {
-        this.tzCertTypeId = tzCertTypeId == null ? null : tzCertTypeId.trim();
-    }
-
-    public String getTzCertJgId() {
-        return tzCertJgId;
-    }
-
-    public void setTzCertJgId(String tzCertJgId) {
-        this.tzCertJgId = tzCertJgId == null ? null : tzCertJgId.trim();
+    public void setTzCertTypeName(String tzCertTypeName) {
+        this.tzCertTypeName = tzCertTypeName == null ? null : tzCertTypeName.trim();
     }
 
     public String getTzUseFlag() {
@@ -51,14 +29,6 @@ public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
 
     public void setTzUseFlag(String tzUseFlag) {
         this.tzUseFlag = tzUseFlag == null ? null : tzUseFlag.trim();
-    }
-
-    public String getTzAttachsysfilena() {
-        return tzAttachsysfilena;
-    }
-
-    public void setTzAttachsysfilena(String tzAttachsysfilena) {
-        this.tzAttachsysfilena = tzAttachsysfilena == null ? null : tzAttachsysfilena.trim();
     }
 
     public Date getRowAddedDttm() {
