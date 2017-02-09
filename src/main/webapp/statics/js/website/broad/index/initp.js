@@ -282,12 +282,9 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
-<<<<<<< HEAD
 				$(".date_body").each(function(){
 					$clamp(this, {clamp:2});
 				});
-=======
->>>>>>> 900b5627648fd6807036157d378fd3882a3660f8
 			},
 			failure: function () {
 			  	//ToDo

@@ -45,7 +45,7 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
 			String strAreaId = "";
-			strAreaId = jacksonUtil.getString("siteId");
+			strSiteId = jacksonUtil.getString("siteId");
 			strAreaId = jacksonUtil.getString("areaId");
 
 			// 根据siteid得到机构id;
@@ -71,8 +71,12 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 			String actColuId = "";
 			String applyNoticeColuId = "";
 			String dataAreaColuId = "";
-			actColuId = coluId.substring(0,coluId.indexOf(",")+1);
-			System.out.println(actColuId+"test");
+			System.out.println(coluId+"test1");
+			if (coluId != null){
+				String[] coluId1 = coluId.split(",");
+				System.out.println(coluId1[0]+"test2");
+			}
+
 			// 招生活动;
 			String recruitAct = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "1",language, "招生活动", "招生活动");
 			

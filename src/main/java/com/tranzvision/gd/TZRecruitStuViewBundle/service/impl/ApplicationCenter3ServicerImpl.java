@@ -97,11 +97,10 @@ public class ApplicationCenter3ServicerImpl extends FrameworkImpl {
 						
 //						//根据siteid和coluid得到artid
 						String artIdSql = "select TZ_ART_ID from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=?";
-						String artId = jdbcTemplate.queryForObject(artIdSql, new Object[]{strSiteId,coluId}, "String");
 						List<Map<String, Object>> artIdList = jdbcTemplate.queryForList(artIdSql,new Object[] { strSiteId,coluId });
 						if (artIdList != null && artIdList.size()>0){
 							for(int i=0;i<artIdList.size();i++){
-								artId = (String) artIdList.get(i).get("TZ_ART_ID");
+								String artId = (String) artIdList.get(i).get("TZ_ART_ID");
 								/**报考日历内容类型配置字段 TZ_LONG1：地点  ，TZ_LONG2：名称，TZ_DATE1：时间 */
 								String bkrlSql = "select TZ_LONG1,TZ_LONG2,month(TZ_DATE1),day(TZ_DATE1) from PS_TZ_ART_REC_TBL where TZ_ART_ID=? order by ROW_ADDED_DTTM DESC limit 4";
 								List<Map<String, Object>> coluMapList = jdbcTemplate.queryForList(bkrlSql,new Object[] { artId });
@@ -112,9 +111,11 @@ public class ApplicationCenter3ServicerImpl extends FrameworkImpl {
 									registerName = (String) coluMapList.get(j).get("TZ_LONG2");
 									}
 								}
-								applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_BKRL_HTML", registerCalendar,
+								applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZ_APPCENTER_BKRL_HTML", registerCalendar,
 										more,date,place,"上海");
 							}
+						}else{
+							applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZ_APPCENTER_BKRL_NO",registerCalendar);
 						}
 			return applicationCenterHtml;
 		} catch (Exception e) {
