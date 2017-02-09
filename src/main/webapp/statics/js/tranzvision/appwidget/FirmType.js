@@ -105,6 +105,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 	_getContentHtml: function(data) {
 		console.dir(data);
 		var child=data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child=data["children"];
 		var types="";
 		//--公司类型初始值
@@ -294,6 +297,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			];
 		//-----------------------
 		var child = data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//	var child = data["children"];
 		//取得公司性质下拉框的”选择器“
 		var $firm_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
