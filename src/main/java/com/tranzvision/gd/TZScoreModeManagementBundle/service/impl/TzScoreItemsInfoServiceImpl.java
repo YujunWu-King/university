@@ -80,25 +80,41 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 			psTzModalDtTblKey.setTzScoreItemId(OpeItemId);
 			PsTzModalDtTblWithBLOBs psTzModalDtTbl = psTzModalDtTblMapper.selectByPrimaryKey(psTzModalDtTblKey);
 			if(psTzModalDtTbl != null){
-				
+				/*成绩项名称*/
 				String itemName = psTzModalDtTbl.getDescr() == null ? "" : psTzModalDtTbl.getDescr();
+				/*成绩项类型*/
 				String itemType = psTzModalDtTbl.getTzScoreItemType() == null ? "" : psTzModalDtTbl.getTzScoreItemType();
+				/*汇总系数*/
 				BigDecimal UpHzXs = psTzModalDtTbl.getTzScoreHz() == null ? new BigDecimal(0) : psTzModalDtTbl.getTzScoreHz();
+				/*权重*/
 				BigDecimal weightA = psTzModalDtTbl.getTzScoreQz() == null ? new BigDecimal(0) : psTzModalDtTbl.getTzScoreQz();
-				
+				/*下限操作符*/
 				String lowerOperator = psTzModalDtTbl.getTzMFbdzMxXxJx() == null ? "" : psTzModalDtTbl.getTzMFbdzMxXxJx();
+				/*分值下限*/
 				BigDecimal lowerLimit = psTzModalDtTbl.getTzScoreLimited2() == null ? new BigDecimal(0) : psTzModalDtTbl.getTzScoreLimited2();
+				/*上限操作符*/
 				String upperOperator = psTzModalDtTbl.getTzMFbdzMxSxJx() == null ? "" : psTzModalDtTbl.getTzMFbdzMxSxJx();
+				/*分值上限*/
 				BigDecimal upperLimit = psTzModalDtTbl.getTzScoreLimited() == null ? new BigDecimal(0) : psTzModalDtTbl.getTzScoreLimited();
-				
+				/*评语的字数下限*/
 				Integer wordLowerLimit = psTzModalDtTbl.getTzScorePyZslim0() == null ? 0 : psTzModalDtTbl.getTzScorePyZslim0();
+				/*评语的字数上限*/
 				Integer wordUpperLimit = psTzModalDtTbl.getTzScorePyZslim() == null ? 0 : psTzModalDtTbl.getTzScorePyZslim();
+				/*下拉选项转换为分值*/
 				String xlTransScore = psTzModalDtTbl.getTzScrToScore() == null ? "" : psTzModalDtTbl.getTzScrToScore();
+				/*下拉框权重*/
 				BigDecimal weightD = psTzModalDtTbl.getTzScrSqz() == null ? new BigDecimal(0) : psTzModalDtTbl.getTzScrSqz();
-				
+				/*自动初筛标记*/
+				String autoScreen = psTzModalDtTbl.getTzIfZdcs() == null ? "N" : psTzModalDtTbl.getTzIfZdcs();
+				/*成绩项打分规则*/
+				String scoringRules = psTzModalDtTbl.getTzZdcsgzId() == null ? "" : psTzModalDtTbl.getTzZdcsgzId();
+				/*参考资料*/
 				String refDataSet = psTzModalDtTbl.getTzScoreCkzl() == null ? "" : psTzModalDtTbl.getTzScoreCkzl();
+				/*参考问题*/
 				String standard = psTzModalDtTbl.getTzScoreItemCkwt() == null ? "" : psTzModalDtTbl.getTzScoreItemCkwt();
+				/*打分说明*/
 				String descr = psTzModalDtTbl.getTzScoreItemDfsm() == null ? "" : psTzModalDtTbl.getTzScoreItemDfsm();
+				/*面试方法*/
 				String interviewMethod = psTzModalDtTbl.getTzScoreItemMsff() == null ? "" : psTzModalDtTbl.getTzScoreItemMsff();
 				
 
@@ -121,6 +137,8 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 				mapRet.put("xlTransScore", xlTransScore);
 				mapRet.put("weightD", weightD.toString());
 				
+				mapRet.put("autoScreen", autoScreen);
+				mapRet.put("scoringRules", scoringRules);
 				
 				mapRet.put("refDataSet", refDataSet);
 				mapRet.put("standard", standard);
@@ -260,6 +278,10 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 					//String weightD = formDate.get("weightD").toString();
 					BigDecimal weightD = formDate.get("weightD") == null ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("weightD").toString()));
+					
+					String autoScreen = formDate.get("autoScreen").toString();
+					String scoringRules = formDate.get("scoringRules").toString();
+					
 					String refDataSet = formDate.get("refDataSet").toString();
 					String standard = formDate.get("standard").toString();
 					String descr = formDate.get("descr").toString();
@@ -290,6 +312,8 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 						
 						psTzModalDtTbl.setTzScrToScore(xlTransScore);
 						psTzModalDtTbl.setTzScrSqz(weightD);
+						psTzModalDtTbl.setTzIfZdcs(autoScreen);
+						psTzModalDtTbl.setTzZdcsgzId(scoringRules);
 						psTzModalDtTbl.setTzScoreCkzl(refDataSet);
 						
 						psTzModalDtTbl.setTzScoreItemDfsm(descr);
@@ -422,6 +446,10 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 
 					BigDecimal weightD = formDate.get("weightD") == null || "".equals(formDate.get("weightD").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("weightD").toString()));
+					
+					String autoScreen = formDate.get("autoScreen").toString();
+					String scoringRules = formDate.get("scoringRules").toString();
+					
 					String refDataSet = formDate.get("refDataSet").toString();
 					String standard = formDate.get("standard").toString();
 					String descr = formDate.get("descr").toString();
@@ -484,12 +512,16 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 							
 							psTzModalDtTbl.setTzScrToScore(xlTransScore);
 							psTzModalDtTbl.setTzScrSqz(weightD);
+							psTzModalDtTbl.setTzIfZdcs(autoScreen);
+							psTzModalDtTbl.setTzZdcsgzId(scoringRules);
 							psTzModalDtTbl.setTzScoreCkzl(refDataSet);
 							
 							psTzModalDtTbl.setTzScoreItemDfsm(descr);
 							psTzModalDtTbl.setTzScoreItemCkwt(standard);
 							psTzModalDtTbl.setTzScoreItemMsff(interviewMethod);
 							
+							psTzModalDtTbl.setRowAddedDttm(new Date());
+							psTzModalDtTbl.setRowAddedOprid(oprid);
 							psTzModalDtTbl.setRowLastmantDttm(new Date());
 							psTzModalDtTbl.setRowLastmantOprid(oprid);
 							

@@ -213,7 +213,7 @@ public class TzXlDecoratedServiceImpl extends FrameworkImpl {
 						break;
 
 					case "loginpage":
-						boolResult = tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId, errMsg);
+						boolResult = tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId,"", errMsg);
 						break;
 					}
 					

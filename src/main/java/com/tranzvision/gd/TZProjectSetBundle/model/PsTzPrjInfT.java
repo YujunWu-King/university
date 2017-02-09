@@ -45,6 +45,8 @@ public class PsTzPrjInfT {
 
     private String tzCsFmbqzId;
 
+    private String tzCertTmplId;
+
     private String tzPrjDesc;
 
     public String getTzPrjId() {
@@ -213,6 +215,14 @@ public class PsTzPrjInfT {
 
     public void setTzCsFmbqzId(String tzCsFmbqzId) {
         this.tzCsFmbqzId = tzCsFmbqzId == null ? null : tzCsFmbqzId.trim();
+    }
+
+    public String getTzCertTmplId() {
+        return tzCertTmplId;
+    }
+
+    public void setTzCertTmplId(String tzCertTmplId) {
+        this.tzCertTmplId = tzCertTmplId == null ? null : tzCertTmplId.trim();
     }
 
     public String getTzPrjDesc() {

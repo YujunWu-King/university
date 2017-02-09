@@ -2016,11 +2016,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
-				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + siteid + "/" + "enroll.html";
-				}else{
-					url = request.getContextPath() + url + "/" + siteid + "/enroll.html";
+				if(!"/".equals(url.substring(0, 1))){
+					url = "/" + url;
 				}
+				if(!"/".equals(url.substring(url.length()-1))){
+					url = url + "/";
+				}
+				url = request.getContextPath() + url + siteid + "/enroll.html";
 			}else{
 				url = request.getContextPath() + "/" + siteid +"/enroll.html";
 			}
