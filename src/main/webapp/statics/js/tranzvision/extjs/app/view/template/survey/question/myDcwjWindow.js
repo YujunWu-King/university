@@ -17,8 +17,7 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjWindow', {
         text: '确定',
         iconCls: "ensure",
         handler: 'onNewWjEnsure'
-    },
-        {
+    },{
             text: '关闭',
             iconCls: "close",
             handler: 'onNewClose'

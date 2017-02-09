@@ -139,6 +139,55 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
             "value": "",
             "StorageType":"S",
             "classname":"SingleTextBox"
+        },
+        "recommend_16": {
+            "instanceId": "rec_by6",
+            "itemId": "r_by6",
+            "itemName": "备用字段六",
+            "orderby": 16,
+			"useby":"",
+            "value": "",
+            "StorageType":"S",
+            "classname":"SingleTextBox"
+        },"recommend_17": {
+            "instanceId": "rec_by7",
+            "itemId": "r_by7",
+            "itemName": "备用字段七",
+            "orderby": 17,
+			"useby":"",
+            "value": "",
+            "StorageType":"S",
+            "classname":"SingleTextBox"
+        },
+        "recommend_18": {
+            "instanceId": "rec_by8",
+            "itemId": "r_by8",
+            "itemName": "备用字段八",
+            "orderby": 18,
+			"useby":"",
+            "value": "",
+            "StorageType":"S",
+            "classname":"SingleTextBox"
+        },
+        "recommend_19": {
+            "instanceId": "rec_by9",
+            "itemId": "r_by9",
+            "itemName": "备用字段九",
+            "orderby": 19,
+			"useby":"",
+            "value": "",
+            "StorageType":"S",
+            "classname":"SingleTextBox"
+        },
+        "recommend_20": {
+            "instanceId": "rec_by10",
+            "itemId": "r_by10",
+            "itemName": "备用字段十",
+            "orderby": 20,
+			"useby":"",
+            "value": "",
+            "StorageType":"S",
+            "classname":"SingleTextBox"
         }
     },
     minLines: 1,
@@ -214,6 +263,31 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 			//备用字段五
             c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by5_1'+'" '+(data.children.recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by5'+'">'+data.children.recommend_14["itemName"]+'：</span>';
+            c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+            c += '</div>';
+            //备用字段六
+            c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by6_1'+'" '+(data.children.recommend_16["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by6'+'">'+data.children.recommend_16["itemName"]+'：</span>';
+            c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+            c += '</div>';
+            //备用字段七
+            c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by7_1'+'" '+(data.children.recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by7'+'">'+data.children.recommend_17["itemName"]+'：</span>';
+            c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+            c += '</div>';
+            //备用字段八
+            c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by8_1'+'" '+(data.children.recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by8'+'">'+data.children.recommend_18["itemName"]+'：</span>';
+            c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+            c += '</div>';
+            //备用字段九
+            c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by9_1'+'" '+(data.children.recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by9'+'">'+data.children.recommend_19["itemName"]+'：</span>';
+            c += '<b class="read-input" style="width:272px">&nbsp;</b>';
+            c += '</div>';
+            //备用字段十
+            c += '<div class="edu_item_li" id="'+data.instanceId+'-rec_by10_1'+'" '+(data.children.recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+            c += '<span class="edu_item_label" id="'+data.instanceId+'-rec_by10'+'">'+data.children.recommend_20["itemName"]+'：</span>';
             c += '<b class="read-input" style="width:272px">&nbsp;</b>';
             c += '</div>';
 
@@ -329,6 +403,46 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_14\')" '+(child.recommend_14["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
         list += '</tr>';
 		//备用字段五-结束
+        
+        //备用字段六-开始
+		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by6">';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_16\')" value="'+child.recommend_16["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" value="rec_by6" class="option-txt" disabled="disabled"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_16\')" '+(child.recommend_16["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
+        list += '</tr>';
+		//备用字段六-结束
+        
+        //备用字段七-开始
+		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by7">';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_17\')" value="'+child.recommend_17["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" value="rec_by7" class="option-txt" disabled="disabled"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_17\')" '+(child.recommend_17["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
+        list += '</tr>';
+		//备用字段五-结束
+        
+        //备用字段八-开始
+		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by8">';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_18\')" value="'+child.recommend_18["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" value="rec_by8" class="option-txt" disabled="disabled"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_18\')" '+(child.recommend_18["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
+        list += '</tr>';
+		//备用字段八-结束
+        
+        //备用字段九-开始
+		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by9">';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_19\')" value="'+child.recommend_19["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" value="rec_by9" class="option-txt" disabled="disabled"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_19\')" '+(child.recommend_19["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
+        list += '</tr>';
+		//备用字段九-结束
+        
+        //备用字段十-开始
+		list += '<tr class="read-radio" data-id="'+data.instanceId+'-rec_by10">';
+        list += '<td><input type="text" onkeyup="SurveyBuild.saveLevel1Attr1(this,\'itemName\',\'recommend_20\')" value="'+child.recommend_20["itemName"]+'" oncontextmenu="return false;" ondragenter="return false" onpaste="return false" class="option-txt"></td>';
+        list += '<td><input type="text" value="rec_by10" class="option-txt" disabled="disabled"></td>';
+		list += '<td><input type="checkbox" onchange="SurveyBuild.saveLevel1Attr2(this,\'useby\',\'recommend_20\')" '+(child.recommend_20["useby"] == "Y" ? "checked='checked'" : "")+' value="1"></td>';
+        list += '</tr>';
+		//备用字段十-结束
 
 		e += '<fieldset id="option-box"><span class="edit_item_label titlewidth"><i class="icon-list-alt"></i> 信息项</span><table class="table table-bordered data-table"><thead><tr><th width="55">Label Name</th><th width="55">Field Name</th><th width="20">启用</th></tr></thead><tbody class="ui-sortable">' + list + '</tbody></table></fieldset>';
 		e += '</div>';
@@ -363,6 +477,11 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 		var _ref_yl3="";
 		var _ref_yl4="";
 		var _ref_yl5="";
+		var _ref_yl6="";
+		var _ref_yl7="";
+		var _ref_yl8="";
+		var _ref_yl9="";
+		var _ref_yl10="";
 		var _ref_sex="";
 		var params = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"EJSON","comParams":{"APP_INS_ID":"'+tz_app_ins_id+'","TZ_REF_LETTER_ID":"'+tz_ref_id+'"}}';
 		$.ajax({
@@ -387,6 +506,12 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 					_ref_yl3=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL3);
 					_ref_yl4=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL4);
 					_ref_yl5=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL5);
+					_ref_yl6=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL6);
+					_ref_yl7=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL7);
+					_ref_yl8=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL8);
+					_ref_yl9=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL9);
+					_ref_yl10=SurveyBuild.htmlCharReplace(f.comContent.TJR_YL10);
+					
 					_ref_sex=f.comContent.TZ_SEX;
 				}
 			}
@@ -638,6 +763,107 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
                 works += '</div>';
             }
 			//备用字段五结束
+            
+            //备用字段六-开始
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="input-list" ' + (child[i].recommend_16["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_16["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left">' + _ref_yl6 + '</div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="input-list" ' + (child[i].recommend_16["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_16["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left"><input type="text" class="inpu-list-text-enter" disabled="disabled" title="' + child[i].recommend_16["itemName"] + '" id="' + data.itemId + child[i].recommend_16["itemId"] + '" name="' + data.itemId + child[i].recommend_16["itemId"] + '" value="' + _ref_yl6 + '"/></div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }
+			//备用字段六结束
+            
+            //备用字段七-开始
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="input-list" ' + (child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_17["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left">' + _ref_yl7 + '</div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="input-list" ' + (child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_17["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left"><input type="text" class="inpu-list-text-enter" disabled="disabled" title="' + child[i].recommend_17["itemName"] + '" id="' + data.itemId + child[i].recommend_17["itemId"] + '" name="' + data.itemId + child[i].recommend_17["itemId"] + '" value="' + _ref_yl7 + '"/></div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }
+			//备用字段七结束
+            
+            //备用字段八-开始
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_18["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left">' + _ref_yl8 + '</div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_18["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left"><input type="text" class="inpu-list-text-enter" disabled="disabled" title="' + child[i].recommend_18["itemName"] + '" id="' + data.itemId + child[i].recommend_18["itemId"] + '" name="' + data.itemId + child[i].recommend_18["itemId"] + '" value="' + _ref_yl8 + '"/></div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }
+			//备用字段八结束
+            
+            //备用字段九-开始
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="input-list" ' + (child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_19["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left">' + _ref_yl9 + '</div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="input-list" ' + (child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_19["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left"><input type="text" class="inpu-list-text-enter" disabled="disabled" title="' + child[i].recommend_19["itemName"] + '" id="' + data.itemId + child[i].recommend_19["itemId"] + '" name="' + data.itemId + child[i].recommend_19["itemId"] + '" value="' + _ref_yl9 + '"/></div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }
+			//备用字段九结束
+            
+            //备用字段十-开始
+            if(SurveyBuild._readonly){
+                //只读模式
+                works += '<div class="input-list" ' + (child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_20["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left">' + _ref_yl10 + '</div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }else{
+                //填写模式
+                works += '<div class="input-list" ' + (child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
+                works += '	<div class="input-list-info left">' + child[i].recommend_20["itemName"] + '：</div>';
+                works += '	<div class="input-list-text left"><input type="text" class="inpu-list-text-enter" disabled="disabled" title="' + child[i].recommend_20["itemName"] + '" id="' + data.itemId + child[i].recommend_20["itemId"] + '" name="' + data.itemId + child[i].recommend_20["itemId"] + '" value="' + _ref_yl10 + '"/></div>';
+                works += '	<div class="input-list-suffix left"></div>';
+                works += '	<div class="clear"></div>';
+                works += '</div>';
+            }
+			//备用字段十结束
+            
         }
         return works;
     },

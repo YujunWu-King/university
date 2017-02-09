@@ -166,9 +166,10 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strIndexHtml = siteRepCssServiceImpl.repTitle(strIndexHtml, siteid);
 
 			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
-			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts, orgid, siteid,
+			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
+			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts,strBroadStyleJavascripts, orgid, siteid,
 					"Y");
-
+			
 			strRtn = strIndexHtml;
 
 		} catch (Exception e) {
@@ -328,7 +329,8 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strLoginHtml = siteRepCssServiceImpl.repCss(strLoginHtml, siteid);
 
 			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
-			strLoginHtml = siteRepCssServiceImpl.repJavascriptTags(strLoginHtml, strSelfJavascripts, orgid, siteid,
+			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLogin", ctxPath);
+			strLoginHtml = siteRepCssServiceImpl.repJavascriptTags(strLoginHtml, strSelfJavascripts,strBroadStyleJavascripts, orgid, siteid,
 					"Y");
 
 			strRtn = strLoginHtml;

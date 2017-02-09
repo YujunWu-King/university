@@ -66,6 +66,28 @@
 			valueField: 'TZ_TEMP_ID',
     		displayField: 'TZ_TEMP_NAME'
         },{
+           	xtype: 'combo',
+            fieldLabel: "内容类型",
+			name: 'lm_nrlx',
+			emptyText:"请选择...",
+            queryMode: 'remote',
+            editable:false,
+			valueField: 'TZ_ART_TYPE_ID',
+    		displayField: 'TZ_ART_TYPE_NAME',
+			store:new KitchenSink.view.common.store.comboxStore({
+				recname: 'PS_TZ_ART_TYPE_T',
+				condition:{
+					
+					IS_ENABLED_FLG:{
+						value: 'Y',
+							operator:"01",
+							type:"01"
+					}
+				},
+				result:'TZ_ART_TYPE_ID,TZ_ART_TYPE_NAME'
+			})
+
+        },/*{
             xtype: 'combobox',
             fieldLabel: '内容类型',
 			//forceSelection: true,
@@ -76,7 +98,7 @@
 			name: 'lm_nrlx',
 			store: new KitchenSink.view.common.store.appTransStore("TZ_ZD_NRLX")
 			
-        },{
+        },*/{
             xtype: 'combobox',
             fieldLabel: '内容模板',
 			name: 'lm_nrmb',

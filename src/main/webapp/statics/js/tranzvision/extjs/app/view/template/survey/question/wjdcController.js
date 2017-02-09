@@ -1,6 +1,9 @@
 ﻿Ext.define('KitchenSink.view.template.survey.question.wjdcController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.wjdcController',
+    requires: [
+        'KitchenSink.view.template.survey.question.tagModel'
+    ],
 
     /*查询调查问卷*/
     findDcwj:function(btn){
@@ -270,6 +273,23 @@
                 }else{
                     form.findField("TZ_DC_WJ_NEEDPWD").setValue(false);
                 }
+                //问卷调查听众赋值
+                var audIDList=formData.AudID;
+                var audNameList=formData.AudName;
+                var oprIdArray=new Array();
+                var i=0,j=0;
+                for(j=0;j<audIDList.length;j++){
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audId = audIDList[j];
+                    var audName=audNameList[j];
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                form.findField("AudList").setValue(oprIdArray);
+            
+       
             });
 
         });
@@ -343,6 +363,8 @@
         var dtgz=form.findField("dtgz");
         //数据采集规则
         var sjcjgz=form.findField("sjcjgz");
+        //听众列表
+        var audList=form.findField("AudList");
         if(checked){ //如果选中，就隐藏掉,不显示
            dtgz.items.items[2].setHidden(true);
            sjcjgz.items.items[3].setHidden(true);
@@ -350,10 +372,12 @@
             {
                 sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
             }
+            audList.setVisible(false);
        } else{
             sjcjgz.setValue({TZ_DC_WJ_IPGZ:3});
             dtgz.items.items[2].setHidden(false);
             sjcjgz.items.items[3].setHidden(false);
+            audList.setVisible(true);
         }
     },
     /*问卷调查密码，默认隐藏，如果勾选，就表示需要密码，密码框显示*/
@@ -1292,6 +1316,351 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             function(data) {
                 console.log("问卷编号：" + data.id);
             },"",true,this);
+    },
+     //查看听众
+    searchListeners:function(btn){
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_AUDIENCE_VW',
+            searchDesc: '选择听众',
+            maxRow:20,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                    TZ_AUD_NAME:{
+                        desc:'听众名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_AUD_ID:'听众ID',
+                TZ_AUD_NAME: '听众名称',
+                //TZ_ORG_CODE:'所属部门',
+                ROW_ADDED_DTTM:'创建时间'
+                // ROW_LASTMANT_DTTM:'修改时间'
+            },
+            multiselect: true,
+            callback: function(selection){
+                var oprIdArray=new Array();
+                var i=0;
+                var listenersList=btn.findParentByType("form").getForm().findField("AudList");
+                var j= 0,k=0;
+                for (k=0;k<listenersList.valueCollection.items.length;k++){
+                    var listData=listenersList.valueCollection.items[k];;
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audName = listData.data.tagName;
+                    var audId=listData.data.tagId;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                for(j=0;j<selection.length;j++){
+                    var TagModel=new KitchenSink.view.template.survey.question.tagModel();
+                    var audName = selection[j].data.TZ_AUD_NAME;
+                    var audId=selection[j].data.TZ_AUD_ID;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                };
+                btn.findParentByType("form").getForm().findField("AudList").setValue(oprIdArray);
+            }
+        })
+    },
+    //参与人管理
+    majorPersonMg:function(view,rowIndex){
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var wjId = selRec.get("TZ_DC_WJ_ID");
+        var schLrId=selRec.get("TZ_SCHLR_ID");
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZXDC_WJGL_COM"]["TZ_ZXDC_PERSON_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_ZXDC_PERSON_STD，请检查配置。');
+            return;
+        }
+
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+        } 
+        cmp=new ViewClass();
+        cmp.actType = "update";
+        cmp.on('afterrender',function(grid){
+           var tzStoreParams = '{"cfgSrhId":"TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_ZXDC_CYR_VW","condition":{"TZ_DC_WJ_ID-operator": "01","TZ_DC_WJ_ID-value":"'+wjId+'"}}';
+           grid.store.tzStoreParams = tzStoreParams;  
+           grid.store.reload();
+           grid.wjId=wjId;
+           grid.schLrId=schLrId;
+        }); 
+        var tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    /*参与人管理查询*/
+    findDcwjPeople:function(btn){
+        var wjId=btn.findParentByType("grid").wjId;
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_ZXDC_CYR_VW',
+            condition:
+            {
+                "TZ_DC_WJ_ID":wjId
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load(); 
+            }
+        });
+    },
+    /*参与人调查详情*/
+    cyrDcStatusDetail:function(view,t,rowIndex){
+        var record=view.findParentByType("grid").store.getAt(rowIndex);
+        var wjId = record.data.wjId;
+        var wjInsId=record.data.wjInsId;
+        if(wjInsId>0){
+            var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + wjId +'","SURVEY_INS_ID":"'+wjInsId +'"}}';
+            var newTab=window.open('about:blank');
+            newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        }else{
+            Ext.Msg.alert("提示","该用户尚未参与调查！"); 
+        }
+    },
+    /*给选中的参与人发送短信*/
+    sendSmsToCyr:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","您没有选中任何记录");
+            return ;
+        }
+
+        var personList = [];
+        for(var i=0;i<checkLen;i++){
+            var name  = selList[i].get('name');
+            var email  = selList[i].get('email');
+            var phone=selList[i].get('phone');
+            personList.push({"name":name,"email":email,"phone":phone});
+        };
+
+        var params = {
+            "ComID":"TZ_ZXDC_WJGL_COM",
+            "PageID":"TZ_ZXDC_PERSON_STD",
+            "OperateType":"U",
+            "comParams":{"add":[{"personList":personList,"flag":"SMS"}]}
+        };
+
+        Ext.tzLoad(Ext.JSON.encode(params),function(audID){
+            Ext.tzSendSms({
+                //发送的短信模板; 
+                "SmsTmpName": ["TZ_WJDC_SMS"],
+                //创建的需要发送的听众ID;
+                "audienceId": audID
+            });
+        });
+    },
+    /*给选中的参与人发送邮件*/
+    sendEmailToCyr:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","您没有选中任何记录");
+            return ;
+        }
+        var personList = [];
+        for(var i=0;i<checkLen;i++){
+            var name  = selList[i].get('name');
+            var email  = selList[i].get('email');
+            var phone=selList[i].get('phone');
+            personList.push({"name":name,"email":email,"phone":phone});
+        };
+        var params = {
+            "ComID":"TZ_ZXDC_WJGL_COM",
+            "PageID":"TZ_ZXDC_PERSON_STD",
+            "OperateType":"U",
+            "comParams":{"add":[{"personList":personList,"flag":"EML"}]} 
+        };
+        Ext.tzLoad(Ext.JSON.encode(params),function(audID){
+            Ext.tzSendEmail({
+                //发送的邮件模板;
+                "EmailTmpName": ["TZ_EML_N_001"],
+                //创建的需要发送的听众ID;
+                "audienceId": audID,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N" 
+            });
+        });
+    },
+    /*参与人管理保存
+    wjdcPeopleSave:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        //修改记录
+        var mfRecs = store.getModifiedRecords();
+        var editJson="";
+        var comParams="";
+        for(var i=0;i<mfRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams, function (responseData) {
+        }, "", true, this);
+
+    },*/
+    /*参与人管理-确定
+    wjdcPeopleSure:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        //修改记录
+        var mfRecs = store.getModifiedRecords();
+        var editJson="";
+        var comParams="";
+        for(var i=0;i<mfRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams, function (responseData) { 
+            grid.close();
+        }, "", true, this);
+    },*/
+    //导出参与人 ldd 20170207
+    downloadAllCyr:function(btn){
+        var grid=btn.findParentByType('grid');
+        grid.saveDocumentAs({
+            type: 'excel',
+            title: '奖学金参与人',
+            fileName: '奖学金参与人.xls'
+        })
+    },
+    //设置奖学金通过状态
+    cyrScholarStatus:function(view,t,rowIndex){
+        var msg="";
+        var record = view.findParentByType("grid").store.getAt(rowIndex);
+        var schLrId=view.findParentByType("grid").schLrId;       
+        if (record.get("isApply")=="Y"||record.get("isApply")=="N"){
+	        if(record.get("isApply") == "Y"){
+	            record.set("isApply", "N");
+	            msg = "设置申请未通过成功";
+	        }else{
+	            record.set("isApply", "Y");
+	            msg = "设置申请通过成功";
+	        }
+	        var tzParams = this.submitContentParams(schLrId,msg);
+       }
+    },
+    //获取修改的记录(提交的参数)
+    submitContentParams: function(schLrId,msg){
+        var comParams = "";
+        var editJson = "";
+        var store = this.getView().getStore();
+        //修改记录
+        var mfRecs = store.getModifiedRecords();
+        for(var i=0;i<mfRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"schLrId":"'+schLrId+'","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ',{"schLrId":"'+schLrId+'","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //删除json字符串
+        var removeJson = "";
+        //删除记录
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams,function(){
+            //store.reload();
+        },msg,true,this);
     }
+
 });
 

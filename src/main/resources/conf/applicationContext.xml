@@ -104,5 +104,7 @@
 	
 	<!-- 邮件发送bean -->
 	<bean id="sendSmsOrMalQfServiceImpl" class="com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.SendSmsOrMalQfServiceImpl" />
-
+	
+	<!-- 邮件退信bean -->
+	<bean id="analysisBounceServiceImpl" class="com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.analysisBounceServiceImpl" />
 </beans>

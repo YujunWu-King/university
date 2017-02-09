@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZScoolTypeListManage.dao.PsTzShoolLogTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
+    <id column="TZ_SCHOOL_TYPEID" property="tzSchoolTypeid" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_TYPENAME" property="tzSchoolTypename" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_DEC" property="tzSchoolDec" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_FLAG" property="tzSchoolFlag" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOOL_ADDTIME" property="tzSchoolAddtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SCHOOL_TYPEID, TZ_SCHOOL_TYPENAME, TZ_SCHOOL_DEC, TZ_SCHOOL_FLAG, TZ_SCHOOL_ADDTIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_SCHOOL_TYPE_TBL
+    where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_SCHOOL_TYPE_TBL
+    where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
+    insert into PS_TZ_SCHOOL_TYPE_TBL (TZ_SCHOOL_TYPEID, TZ_SCHOOL_TYPENAME, 
+      TZ_SCHOOL_DEC, TZ_SCHOOL_FLAG, TZ_SCHOOL_ADDTIME
+      )
+    values (#{tzSchoolTypeid,jdbcType=VARCHAR}, #{tzSchoolTypename,jdbcType=VARCHAR}, 
+      #{tzSchoolDec,jdbcType=VARCHAR}, #{tzSchoolFlag,jdbcType=VARCHAR}, #{tzSchoolAddtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
+    insert into PS_TZ_SCHOOL_TYPE_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSchoolTypeid != null" >
+        TZ_SCHOOL_TYPEID,
+      </if>
+      <if test="tzSchoolTypename != null" >
+        TZ_SCHOOL_TYPENAME,
+      </if>
+      <if test="tzSchoolDec != null" >
+        TZ_SCHOOL_DEC,
+      </if>
+      <if test="tzSchoolFlag != null" >
+        TZ_SCHOOL_FLAG,
+      </if>
+      <if test="tzSchoolAddtime != null" >
+        TZ_SCHOOL_ADDTIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSchoolTypeid != null" >
+        #{tzSchoolTypeid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolTypename != null" >
+        #{tzSchoolTypename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolDec != null" >
+        #{tzSchoolDec,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolFlag != null" >
+        #{tzSchoolFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolAddtime != null" >
+        #{tzSchoolAddtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
+    update PS_TZ_SCHOOL_TYPE_TBL
+    <set >
+      <if test="tzSchoolTypename != null" >
+        TZ_SCHOOL_TYPENAME = #{tzSchoolTypename,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolDec != null" >
+        TZ_SCHOOL_DEC = #{tzSchoolDec,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolFlag != null" >
+        TZ_SCHOOL_FLAG = #{tzSchoolFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSchoolAddtime != null" >
+        TZ_SCHOOL_ADDTIME = #{tzSchoolAddtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZScoolTypeListManage.model.PsTzShoolLogT" >
+    update PS_TZ_SCHOOL_TYPE_TBL
+    set TZ_SCHOOL_TYPENAME = #{tzSchoolTypename,jdbcType=VARCHAR},
+      TZ_SCHOOL_DEC = #{tzSchoolDec,jdbcType=VARCHAR},
+      TZ_SCHOOL_FLAG = #{tzSchoolFlag,jdbcType=VARCHAR},
+      TZ_SCHOOL_ADDTIME = #{tzSchoolAddtime,jdbcType=TIMESTAMP}
+    where TZ_SCHOOL_TYPEID = #{tzSchoolTypeid,jdbcType=VARCHAR}
+  </update>
+</mapper>

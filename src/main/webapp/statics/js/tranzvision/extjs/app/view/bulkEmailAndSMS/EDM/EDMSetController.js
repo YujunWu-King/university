@@ -554,7 +554,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMSetController', {
             var tzParams='{"ComID":"TZ_GK_EDM_COM","PageID":"TZ_EDM_TD_STD","OperateType":"QF","comParams":{"yjqfId":"'+emailId+'","AEId":"'+AEId+'"}}';
             Ext.tzLoad(tzParams,function(responseData){
                 if(responseData.fileUrl){
-                    window.open(responseData.fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+                    window.open(TzUniversityContextPath + responseData.fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
                   //  window.location.href=responseData.fileUrl;
                 }
             });

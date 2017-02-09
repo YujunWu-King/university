@@ -148,6 +148,7 @@
 	CloseClassEasy: function(){
 		this.getView().close();
 	},
+	
 	//保存并关闭新增班级页面
 	AddClassEasy: function(btn){
 		var me=this;

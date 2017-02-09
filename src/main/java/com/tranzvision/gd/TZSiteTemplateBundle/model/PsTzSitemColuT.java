@@ -11,6 +11,8 @@ public class PsTzSitemColuT extends PsTzSitemColuTKey {
 
     private String tzContTemp;
 
+    private String tzArtTypeId;
+
     public String getTzColuName() {
         return tzColuName;
     }
@@ -49,5 +51,13 @@ public class PsTzSitemColuT extends PsTzSitemColuTKey {
 
     public void setTzContTemp(String tzContTemp) {
         this.tzContTemp = tzContTemp == null ? null : tzContTemp.trim();
+    }
+
+    public String getTzArtTypeId() {
+        return tzArtTypeId;
+    }
+
+    public void setTzArtTypeId(String tzArtTypeId) {
+        this.tzArtTypeId = tzArtTypeId == null ? null : tzArtTypeId.trim();
     }
 }

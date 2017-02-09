@@ -176,7 +176,7 @@
 				},{
 					text: '状态',
 					dataIndex: 'skinStatus',
-					width: 200,
+					width: 200
 				},{
 					text: '操作',
 	               	menuDisabled: true,

@@ -49,6 +49,25 @@ public class TzGkViewpersonClsServiceImpl extends FrameworkImpl {
 			int startNum = Integer.valueOf(start);
 			int limitNum = Integer.valueOf(limit);
 			
+			
+			String strRealName = "", strEmail = "",strMobile="";
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(
+					"SELECT TZ_AUD_XM,TZ_ZY_EMAIL,TZ_ZY_SJ FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID IN (SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJFSRW_TBL A WHERE A.TZ_MLSM_QFPC_ID=?) ORDER BY TZ_AUDCY_ID LIMIT ?,?", new Object[] { emailID,startNum,limitNum });
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					strRealName = (String)list.get(i).get("TZ_AUD_XM");
+					strEmail = (String)list.get(i).get("TZ_ZY_EMAIL");
+					strMobile = (String)list.get(i).get("TZ_ZY_SJ");
+
+					Map<String, Object> map1 = new HashMap<String, Object>();
+					map1.put("personName", strRealName);
+					map1.put("personEmail",strEmail);
+					map1.put("personMobile", strMobile);
+					returnList.add(map1);
+					count = count + 1;
+				}
+			}
+			/*
 			//短信邮件群发收件人表;
 			List<Map<String, Object>> list = jdbcTemplate.queryForList("select TZ_AUDCY_ID,TZ_EMAIL from PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=? ORDER BY TZ_AUDCY_ID LIMIT ?,?",new Object[]{emailID,startNum,limitNum});
 			if(list != null && list.size()>0){
@@ -72,7 +91,6 @@ public class TzGkViewpersonClsServiceImpl extends FrameworkImpl {
 			}
 			
 			//短信邮件群发听众表;
-			//TODO;
 			
 			//短信邮件群发excel导入内容表;
 			list = jdbcTemplate.queryForList("select A.TZ_AUDCY_ID,A.TZ_ZY_EMAIL from (select distinct TZ_AUDCY_ID,TZ_ZY_EMAIL from PS_TZ_AUDCYUAN_T where  TZ_AUDCY_ID in (select TZ_AUDCY_ID from PS_TZ_MLSM_DRNR_T where TZ_MLSM_QFPC_ID=?)) A ORDER BY A.TZ_AUDCY_ID limit ?,?",new Object[]{emailID,startNum,limitNum});
@@ -95,6 +113,7 @@ public class TzGkViewpersonClsServiceImpl extends FrameworkImpl {
 					count = count + 1;
 				}
 			}
+			*/
 		}
 		
 	    returnMap.put("total", count);

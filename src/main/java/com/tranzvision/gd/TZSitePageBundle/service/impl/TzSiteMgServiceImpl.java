@@ -622,6 +622,27 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 						// 7.初始化栏目
 						sql = "select * from PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=?";
+						
+						//初始化栏目前前插入一个父栏目;
+						
+						String SqlsiteName="SELECT TZ_SITEI_NAME FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
+						String 	siteName=sqlQuery.queryForObject(SqlsiteName, new Object[]{strSiteIId}, "String");
+						String  Sqlcount="SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=?";
+						int loucount=sqlQuery.queryForObject(Sqlcount, new Object[]{strSiteIId}, "Integer");
+						if (loucount>0) {
+							
+						}else{
+							PsTzSiteiColuT psTzSiteiColuT1 = new PsTzSiteiColuT();
+							
+							psTzSiteiColuT1.setTzSiteiId(strSiteIId);
+							psTzSiteiColuT1.setTzColuId(String.valueOf(getSeqNum.getSeqNum("TZ_SITEI_COLU_T", "TZ_COLU_ID")));
+							psTzSiteiColuT1.setTzColuName(siteName);
+							psTzSiteiColuT1.setTzColuState("Y");
+							psTzSiteiColuT1.setTzColuLevel(new Integer(0));
+							psTzSiteiColuT1.setTzColuType("A");
+							psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT1);
+						}
+					
 						List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { strSiteId });
 						for (Map<String, Object> mapColu : listColus) {
 
@@ -644,6 +665,21 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							psTzSiteiColuT.setTzContTemp(mapColu.get("TZ_CONT_TEMP") == null ? ""
 									: String.valueOf(mapColu.get("TZ_CONT_TEMP")));
 							psTzSiteiColuT.setTzColuState("Y");
+							
+							
+							/**
+							 * 1.添加TZ_ART_TYPE_ID字段的复制;
+							 * 2.栏目级别设置成1;
+							 * 3.插入父栏目的栏目ID;
+							 */
+							psTzSiteiColuT.setTzArtTypeId(mapColu.get("TZ_ART_TYPE_ID") == null ? ""
+									: String.valueOf(mapColu.get("TZ_ART_TYPE_ID")));
+							
+							psTzSiteiColuT.setTzColuLevel(new Integer(1));
+							
+							String sqlflmid="SELECT  TZ_COLU_ID  FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0 ";
+							String FlmID=sqlQuery.queryForObject(sqlflmid, new Object[]{strSiteIId}, "String");
+							psTzSiteiColuT.setTzFColuId(FlmID);
 
 							psTzSiteiColuTMapper.insertSelective(psTzSiteiColuT);
 
@@ -800,7 +836,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					: String.valueOf(formData.get("savecontent"));
 			String strPagetype = formData.get("pagetype") == null ? "" : String.valueOf(formData.get("pagetype"));
 			strPagetype = strPagetype.toLowerCase();
-
+			
+			String sitePageBundle = formData.get("sitePageBundle") == null ? "TZSitePageBundle"
+					: String.valueOf(formData.get("sitePageBundle"));
+			
 			ArrayList<Map<String, Object>> listActData = (ArrayList<Map<String, Object>>) formData.get("dataArea");
 
 			for (Map<String, Object> mapActData : listActData) {
@@ -860,11 +899,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					switch (strPagetype) {
 
 					case "homepage":
-						boolResult = this.saveHomepage(strSaveContent, strSiteId, errMsg);
+						boolResult = this.saveHomepage(strSaveContent, strSiteId,sitePageBundle, errMsg);
 						if (boolResult) {
 							strLoginPageCode = this.handleLoginPage(strSiteId);
 							if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
-								boolResult = this.saveLoginpage(strLoginPageCode, strSiteId, errMsg);
+								boolResult = this.saveLoginpage(strLoginPageCode, strSiteId, sitePageBundle, errMsg);
 								if (boolResult) {
 
 									// strEnrollPageCode =
@@ -917,11 +956,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						break;
 
 					case "loginpage":
-						boolResult = this.saveLoginpage(strSaveContent, strSiteId, errMsg);
+						boolResult = this.saveLoginpage(strSaveContent, strSiteId,sitePageBundle, errMsg);
 						if (boolResult) {
 							strHomePageCode = this.handleHomePage(strSiteId);
 							if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-								boolResult = this.saveHomepage(strHomePageCode, strSiteId, errMsg);
+								boolResult = this.saveHomepage(strHomePageCode, strSiteId,sitePageBundle, errMsg);
 								if (boolResult) {
 
 									// strEnrollPageCode =
@@ -981,11 +1020,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							if (boolResult) {
 								strHomePageCode = this.handleHomePage(strSiteId);
 								if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-									boolResult = this.saveHomepage(strHomePageCode, strSiteId, errMsg);
+									boolResult = this.saveHomepage(strHomePageCode, strSiteId,sitePageBundle, errMsg);
 									if (boolResult) {
 										strLoginPageCode = this.handleLoginPage(strSiteId);
 										if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
-											boolResult = this.saveLoginpage(strLoginPageCode, strSiteId, errMsg);
+											boolResult = this.saveLoginpage(strLoginPageCode, strSiteId,sitePageBundle, errMsg);
 											if (boolResult) {
 												errMsg[0] = "0";
 												errMsg[1] = "站点保存完成！";
@@ -1062,6 +1101,9 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					: String.valueOf(formData.get("releasecontent"));
 			String strPagetype = formData.get("pagetype") == null ? "" : String.valueOf(formData.get("pagetype"));
 
+			String sitePageBundle = formData.get("sitePageBundle") == null ? "TZSitePageBundle"
+					: String.valueOf(formData.get("sitePageBundle"));
+			
 			ArrayList<Map<String, Object>> listActData = (ArrayList<Map<String, Object>>) formData.get("dataArea");
 
 			for (Map<String, Object> mapActData : listActData) {
@@ -1122,11 +1164,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					switch (strPagetype) {
 
 					case "homepage":
-						boolResult = this.releasHomepage(strReleaseContent, strSiteId, errMsg);
+						boolResult = this.releasHomepage(strReleaseContent, strSiteId, sitePageBundle,errMsg);
 						if (boolResult) {
 							strLoginPageCode = this.handleLoginPage(strSiteId);
 							if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
-								boolResult = this.releasLoginpage(strLoginPageCode, strSiteId, errMsg);
+								boolResult = this.releasLoginpage(strLoginPageCode, strSiteId, sitePageBundle, errMsg);
 								if (boolResult) {
 
 									errMsg[0] = "0";
@@ -1177,17 +1219,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							}
 						} else {
 							errMsg[0] = "1";
-							errMsg[1] = "站点首页发布失败！";
+							errMsg[1] = "站点首页发布失败！错误信息："+errMsg[1];
 						}
 
 						break;
 
 					case "loginpage":
-						boolResult = this.releasLoginpage(strReleaseContent, strSiteId, errMsg);
+						boolResult = this.releasLoginpage(strReleaseContent, strSiteId,sitePageBundle, errMsg);
 						if (boolResult) {
 							strHomePageCode = this.handleHomePage(strSiteId);
 							if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-								boolResult = this.releasHomepage(strHomePageCode, strSiteId, errMsg);
+								boolResult = this.releasHomepage(strHomePageCode, strSiteId,sitePageBundle, errMsg);
 								if (boolResult) {
 
 									errMsg[0] = "0";
@@ -1230,7 +1272,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 								} else {
 									errMsg[0] = "1";
-									errMsg[1] = "站点首页发布失败！";
+									errMsg[1] = "站点首页发布失败！错误信息："+errMsg[1];
 								}
 							} else {
 								errMsg[0] = "1";
@@ -1252,11 +1294,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							if (boolResult) {
 								strHomePageCode = this.handleHomePage(strSiteId);
 								if (strHomePageCode != null && !"".equals(strHomePageCode)) {
-									boolResult = this.releasHomepage(strHomePageCode, strSiteId, errMsg);
+									boolResult = this.releasHomepage(strHomePageCode, strSiteId, sitePageBundle,errMsg);
 									if (boolResult) {
 										strLoginPageCode = this.handleLoginPage(strSiteId);
 										if (strLoginPageCode != null && !"".equals(strLoginPageCode)) {
-											boolResult = this.releasLoginpage(strLoginPageCode, strSiteId, errMsg);
+											boolResult = this.releasLoginpage(strLoginPageCode, strSiteId,sitePageBundle, errMsg);
 											if (boolResult) {
 												errMsg[0] = "0";
 												errMsg[1] = "站点发布完成！";
@@ -1315,7 +1357,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean saveHomepage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveHomepage(String strSaveContent, String strSiteId, String sitePageBundle,String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1352,7 +1394,12 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				if(strSaveContentReplace.contains("$")){
 					strSaveContentReplace = strSaveContentReplace.replace("$", "\\$");
 				}
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexSaveTpl",strSaveContentReplace);
+				
+				if(sitePageBundle==null||"".equals(sitePageBundle)){
+					sitePageBundle="TZSitePageBundle";
+				}
+				
+				String strSavedContent = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteIndexSaveTpl",strSaveContentReplace);
 
 				strSavedContent = siteRepCssServiceImpl.repTitle(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
@@ -1370,7 +1417,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				if(strPreviewContentReplace.contains("$")){
 					strPreviewContentReplace = strPreviewContentReplace.replace("$", "\\$");
 				}
-				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",strPreviewContentReplace);
+				String strPreviewHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteIndexReleaseTpl",strPreviewContentReplace);
 				
 				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
 				strPreviewHtml = siteRepCssServiceImpl.repCss(strPreviewHtml, strSiteId);
@@ -1378,7 +1425,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1419,7 +1467,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean saveLoginpage(String strSaveContent, String strSiteId, String[] errMsg) {
+	public boolean saveLoginpage(String strSaveContent, String strSiteId,String sitePageBundle, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1439,6 +1487,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					strSaveContent = "<body style=\"background:#fff\">" + strSaveContent + "</body>";
 				}
 
+				if(sitePageBundle==null||"".equals(sitePageBundle)){
+					sitePageBundle="TZSitePageBundle";
+				}
+				
 				String strPreviewContent = strSaveContent;
 
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteSkinId");
@@ -1448,8 +1500,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				strSaveContent = siteRepCssServiceImpl.repResetContextPath(strSaveContent);
 				strSaveContent = siteRepCssServiceImpl.repResetSkinsImgPath(strSaveContent, strSkinId);
-
-				String strSavedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginSaveTpl", strSaveContent);
+				
+				String strSavedHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginSaveTpl", strSaveContent);
 				strSavedHtml = siteRepCssServiceImpl.repTitle(strSavedHtml, strSiteId);
 				strSavedHtml = siteRepCssServiceImpl.repWelcome(strSavedHtml, "");
 				strSavedHtml = siteRepCssServiceImpl.repSiteid(strSavedHtml, strSiteId);
@@ -1458,7 +1510,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(strSavedHtml);
 
 				// 生成预览代码
-				String strPreviewHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginReleaseTpl",
+				String strPreviewHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
 						strPreviewContent);
 
 				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
@@ -1467,7 +1519,8 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLoginRelease", ctxPath);
+				strPreviewHtml = siteRepCssServiceImpl.repJavascriptTags(strPreviewHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				strPreviewHtml = siteRepCssServiceImpl.repTitle(strPreviewHtml, strSiteId);
@@ -1568,7 +1621,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean releasHomepage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasHomepage(String strReleaseContent, String strSiteId,String sitePageBundle, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1587,7 +1640,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteIndexReleaseTpl",
+				if(sitePageBundle==null||"".equals(sitePageBundle)){
+					sitePageBundle="TZSitePageBundle";
+				}
+				
+				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".SiteIndexReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1601,16 +1658,17 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strReleasedHtml = siteRepCssServiceImpl.repSiteid(strReleasedHtml, strSiteId);
 				strReleasedHtml = siteRepCssServiceImpl.repJgid(strReleasedHtml, orgid);
 				strReleasedHtml = siteRepCssServiceImpl.repLang(strReleasedHtml, siteLang);
-
+				
 				String strPreviewHTML = strReleasedHtml;
-
+				
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndexRelease",
 						ctxPath);
-				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndexRelease", ctxPath);
+				strReleasedHtml = siteRepCssServiceImpl.repJavascriptTags(strReleasedHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts,orgid,
 						strSiteId, "Y");
-
+				
 				psTzSiteiDefnTWithBLOBs.setTzIndexPubcode(strReleasedHtml);
 				psTzSiteiDefnTWithBLOBs.setTzIndexPrecode(strPreviewHTML);
 				psTzSiteiDefnTWithBLOBs.setTzSiteFbzt("Y");
@@ -1629,7 +1687,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
-			errMsg[1] = "站点首页发布异常！";
+			errMsg[1] = e.toString();
 		}
 
 		return boolRet;
@@ -1645,7 +1703,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 	 * @return boolean
 	 */
 	@Transactional
-	public boolean releasLoginpage(String strReleaseContent, String strSiteId, String[] errMsg) {
+	public boolean releasLoginpage(String strReleaseContent, String strSiteId,String sitePageBundle, String[] errMsg) {
 
 		boolean boolRet = false;
 
@@ -1664,7 +1722,11 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleaseHtml = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteLoginReleaseTpl",
+				if(sitePageBundle==null||"".equals(sitePageBundle)){
+					sitePageBundle="TZSitePageBundle";
+				}
+				
+				String strReleaseHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1683,9 +1745,10 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLoginRelease",
 						ctxPath);
-				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, orgid,
+				String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLoginRelease", ctxPath);
+				strReleaseHtml = siteRepCssServiceImpl.repJavascriptTags(strReleaseHtml, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "");
-				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, orgid,
+				strPreviewHTML = siteRepCssServiceImpl.repJavascriptTags(strPreviewHTML, strSelfJavascripts, strBroadStyleJavascripts, orgid,
 						strSiteId, "Y");
 
 				psTzSiteiDefnTWithBLOBs.setTzLonginPubcode(strReleaseHtml);
@@ -1822,21 +1885,22 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 			String sql = "select TZ_INDEX_SAVECODE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			String strContent = sqlQuery.queryForObject(sql, new Object[] { strSiteId }, "String");
-
+			
 			if (null != strContent && !"".equals(strContent)) {
 
 				Pattern p = Pattern.compile("<body\\sstyle=\"background:#fff\">([\\s\\S]*)</body>");
 				Matcher m = p.matcher(strContent);
-				while (m.find()) {
-					// System.out.println(m.group(1));
+				while (m.find()) {					
+					//System.out.println(m.group(1));
 					strRet = m.group(1);
 					break;
 				}
-
+				if(null ==strRet||"".equals(strRet)){
+					strRet = strContent;
+				}
 				if (strRet != null && !"".equals(strRet)) {
 					strRet = "<body style=\"background:#fff\">" + strRet + "</body>";
 				}
-
 			}
 
 		} catch (Exception e) {

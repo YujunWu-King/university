@@ -417,10 +417,11 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 				String deleteSQL = "DELETE from PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID=?";
 				int success = jdbcTemplate.update(deleteSQL, new Object[] { siteId, columnId, articleId });
+				/*
 				if (success > 0 && maxZdSEQ > 0) {
 					String updateMaxZdSeqSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
 					jdbcTemplate.update(updateMaxZdSeqSQL, new Object[] { siteId, columnId, maxZdSEQ });
-				}
+				}*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -487,8 +488,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								}
 
 								if (maxZdSeq > 0) {
+									/*
 									updateSQL = "UPDATE PS_TZ_LM_NR_GL_T SET TZ_MAX_ZD_SEQ = TZ_MAX_ZD_SEQ - 1 WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_MAX_ZD_SEQ>?";
 									jdbcTemplate.update(updateSQL, new Object[] { siteId, columnId, maxZdSeq });
+									*/
 
 									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 									psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
@@ -514,117 +517,127 @@ public class ArtListServiceImpl extends FrameworkImpl {
 						String strBasePath = "";
 						String getBasePathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_LEVEL = '0' LIMIT 1";
 						strBasePath = jdbcTemplate.queryForObject(getBasePathSql, new Object[] { siteId }, "String");
-						String strColuPath = "";
-						String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
-						strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[] { siteId, columnId },
-								"String");
-
-						String strFileName = "";
-						String strFilePath = "";
-						String strFilePathAccess = "";
-
-						if (strBasePath != null && !"".equals(strBasePath)) {
-							if (!strBasePath.startsWith("/")) {
-								strBasePath = "/" + strBasePath;
-							}
-							if (strBasePath.endsWith("/")) {
-								strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
-							}
-						}
-
-						if (strColuPath != null && !"".equals(strColuPath)) {
-							if (!strColuPath.startsWith("/")) {
-								strColuPath = "/" + strColuPath;
-							}
-							if (strColuPath.endsWith("/")) {
-								strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
-							}
-						}
-
-						String dir = getSysHardCodeVal.getWebsiteEnrollPath();
-						dir = request.getServletContext().getRealPath(dir);
-						strFilePath = dir + strBasePath + strColuPath;
-						strFilePathAccess = strBasePath + strColuPath;
-
-						String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
-								+ request.getContextPath();
-
-						PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
-						psTzLmNrGlTKey.setTzSiteId(siteId);
-						psTzLmNrGlTKey.setTzColuId(columnId);
-						psTzLmNrGlTKey.setTzArtId(articleId);
-						PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
-						if (psTzLmNrGlT != null) {
-							Date artNewsDt = psTzLmNrGlT.getTzArtNewsDt();
-							String strStaticName = psTzLmNrGlT.getTzStaticName();
-							String strAutoStaticName = psTzLmNrGlT.getTzStaticAotoName();
-							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
-							psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
-							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
-							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
-							psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
-							// 解析的模板内容;
-							String contentHtml = artContentHtml.getContentHtml(siteId, columnId, articleId);
-							int success = 0;
-							psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
-							if ("Y".equals(releaseOrUndo)) {
-								// 如果发布但没有发布时间，则赋值当前时间为发布时间;
-								if (artNewsDt == null) {
-									psTzLmNrGlTWithBLOBs.setTzArtNewsDt(new Date());
-								}
-								psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
-								// 发布时，判断是否是外网网站，如果是，则静态化
-								// 如果是外网站点和手机站点，则静态话
-								if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
-									// 静态化
-									if (strStaticName != null && !"".equals(strStaticName)) {
-										strFileName = strStaticName + ".html";
-									} else {
-										if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-											strFileName = strAutoStaticName + ".html";
-										} else {
-											strAutoStaticName = String
-													.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
-											psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
-										}
-										strFileName = strAutoStaticName + ".html";
+						
+						/*发布文章和撤销发布时，需要同时撤销掉其他栏目的文章*/
+						List<Map<String, Object>> coluList = jdbcTemplate.queryForList(
+								"select TZ_COLU_ID from PS_TZ_LM_NR_GL_T where TZ_ART_ID=?", new Object[] { articleId });
+						if (coluList != null) {
+							for (int h = 0; h < coluList.size(); h++) {
+								String coluId = (String) coluList.get(h).get("TZ_COLU_ID");
+						
+								String strColuPath = "";
+								String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
+								strColuPath = jdbcTemplate.queryForObject(getColuPathSql, new Object[] { siteId, coluId },
+										"String");
+		
+								String strFileName = "";
+								String strFilePath = "";
+								String strFilePathAccess = "";
+		
+								if (strBasePath != null && !"".equals(strBasePath)) {
+									if (!strBasePath.startsWith("/")) {
+										strBasePath = "/" + strBasePath;
 									}
-									// System.out.println("文件路径：" +
-									// strFilePath);
-									// fileManageServiceImpl.UpdateFile(strFilePath,
-									// strFileName,contentHtml.getBytes());
-									artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
-
-									String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
-									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
-									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
-									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-									artContentHtml.staticSiteInfoByChannel(siteId, columnId);
-								} else {
-									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
-									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-									success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+									if (strBasePath.endsWith("/")) {
+										strBasePath = strBasePath.substring(0, strBasePath.length() - 1);
+									}
 								}
-							} else {
-								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
-								// 删除静态化文件
-								if (strStaticName != null && !"".equals(strStaticName)) {
-
-									fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
+		
+								if (strColuPath != null && !"".equals(strColuPath)) {
+									if (!strColuPath.startsWith("/")) {
+										strColuPath = "/" + strColuPath;
+									}
+									if (strColuPath.endsWith("/")) {
+										strColuPath = strColuPath.substring(0, strColuPath.length() - 1);
+									}
 								}
-								if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-
-									fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+		
+								String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+								dir = request.getServletContext().getRealPath(dir);
+								strFilePath = dir + strBasePath + strColuPath;
+								strFilePathAccess = strBasePath + strColuPath;
+		
+								String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+										+ request.getContextPath();
+		
+								PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
+								psTzLmNrGlTKey.setTzSiteId(siteId);
+								psTzLmNrGlTKey.setTzColuId(coluId);
+								psTzLmNrGlTKey.setTzArtId(articleId);
+								PsTzLmNrGlTWithBLOBs psTzLmNrGlT = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
+								if (psTzLmNrGlT != null) {
+									Date artNewsDt = psTzLmNrGlT.getTzArtNewsDt();
+									String strStaticName = psTzLmNrGlT.getTzStaticName();
+									String strAutoStaticName = psTzLmNrGlT.getTzStaticAotoName();
+									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+									psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+									psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
+									psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
+									psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
+									// 解析的模板内容;
+									String contentHtml = artContentHtml.getContentHtml(siteId, coluId, articleId);
+									int success = 0;
+									psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
+									if ("Y".equals(releaseOrUndo)) {
+										// 如果发布但没有发布时间，则赋值当前时间为发布时间;
+										if (artNewsDt == null) {
+											psTzLmNrGlTWithBLOBs.setTzArtNewsDt(new Date());
+										}
+										psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
+										// 发布时，判断是否是外网网站，如果是，则静态化
+										// 如果是外网站点和手机站点，则静态话
+										if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+											// 静态化
+											if (strStaticName != null && !"".equals(strStaticName)) {
+												strFileName = strStaticName + ".html";
+											} else {
+												if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+													strFileName = strAutoStaticName + ".html";
+												} else {
+													strAutoStaticName = String
+															.valueOf(getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
+													psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+												}
+												strFileName = strAutoStaticName + ".html";
+											}
+											// System.out.println("文件路径：" +
+											// strFilePath);
+											// fileManageServiceImpl.UpdateFile(strFilePath,
+											// strFileName,contentHtml.getBytes());
+											artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
+		
+											String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+											psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+											psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+											success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+											artContentHtml.staticSiteInfoByChannel(siteId, coluId);
+										} else {
+											psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+											psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+											success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+										}
+									} else {
+										psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+										// 删除静态化文件
+										if (strStaticName != null && !"".equals(strStaticName)) {
+		
+											fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
+										}
+										if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
+											
+											fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+										}
+										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+										success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+										artContentHtml.staticSiteInfoByChannel(siteId, coluId);
+									}
+									if (success <= 0) {
+										errMsg[0] = "1";
+										errMsg[1] = "保存数据出错，未找到对应的数据";
+									}
 								}
-								psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
-								psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
-								success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
-								artContentHtml.staticSiteInfoByChannel(siteId, columnId);
-							}
-							if (success <= 0) {
-								errMsg[0] = "1";
-								errMsg[1] = "保存数据出错，未找到对应的数据";
 							}
 						}
 					}

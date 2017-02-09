@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * 
  * @author SHIHUA
  * @since 2016-01-28
+ * @author ZXW  20160117 
+ * 功能修改说明：材料面试相关-添加自动初筛模板、标签组、初筛比率字段 
  */
 @Service("com.tranzvision.gd.TZClassSetBundle.service.impl.TzClassInfoServiceImpl")
 public class TzClassInfoServiceImpl extends FrameworkImpl {
@@ -151,9 +154,10 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("formData", "{}");
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			jacksonUtil.json2Map(strParams);
-
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String str_bj_id = jacksonUtil.getString("bj_id");
 			String sql = "";
 
@@ -179,12 +183,12 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				String str_msps_cj_modal = psTzClassInfT.getTzMscjScorMdId();
 				String str_clps_cj_modal_desc = "";
 				String str_msps_cj_modal_desc = "";
-				sql = "select TZ_MODAL_NAME from PS_TZ_RS_MODAL_TBL where TZ_SCORE_MODAL_ID=?";
+				sql = "select TZ_MODAL_NAME from PS_TZ_RS_MODAL_TBL where TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=?";
 				if (null != str_clps_cj_modal && !"".equals(str_clps_cj_modal)) {
-					str_clps_cj_modal_desc = sqlQuery.queryForObject(sql, new Object[] { str_clps_cj_modal }, "String");
+					str_clps_cj_modal_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_clps_cj_modal }, "String");
 				}
 				if (null != str_msps_cj_modal && !"".equals(str_msps_cj_modal)) {
-					str_msps_cj_modal_desc = sqlQuery.queryForObject(sql, new Object[] { str_msps_cj_modal }, "String");
+					str_msps_cj_modal_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_msps_cj_modal }, "String");
 				}
 
 				String str_psbmb_id = psTzClassInfT.getTzPsAppModalId();
@@ -242,7 +246,27 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				String strTimeFormat = getSysHardCodeVal.getTimeHMFormat();
 				SimpleDateFormat dateFormat = new SimpleDateFormat(strDateFormat);
 				SimpleDateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
-
+				/*20170118*/
+				String str_zdbq_id = psTzClassInfT.getTzCsKsbqzId();
+				String str_fmqd_id = psTzClassInfT.getTzCsFmbqzId();
+				String str_csmb_id = psTzClassInfT.getTzCsScorMdId();
+				String str_csmb_desc = "";
+				String str_zdbq_desc = "";
+				String str_fmqd_desc = "";
+				Float ins_ttbl = psTzClassInfT.getTzTtBl();				
+				if (null != str_csmb_id && !"".equals(str_csmb_id)) {
+					sql = "select TZ_MODAL_NAME from PS_TZ_RS_MODAL_TBL where TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=?";
+					str_csmb_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_csmb_id }, "String");
+				}
+				if (null != str_zdbq_id && !"".equals(str_zdbq_id)) {
+					sql = "select TZ_BIAOQZ_NAME from PS_TZ_BIAOQZ_T where TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
+					str_zdbq_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_zdbq_id }, "String");
+				}
+				if (null != str_fmqd_id && !"".equals(str_fmqd_id)) {
+					sql = "select TZ_BIAOQZ_NAME from PS_TZ_BIAOQZ_T where TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
+					str_fmqd_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_fmqd_id }, "String");
+				}
+				/*20170118-end*/
 				String str_st_dt = "";
 				if (psTzClassInfT.getTzStartDt() != null) {
 					str_st_dt = dateFormat.format(psTzClassInfT.getTzStartDt());
@@ -273,7 +297,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					str_bmend_tm = timeFormat.format(psTzClassInfT.getTzAppEndTm());
 				}
 
-				Map<String, String> mapJson = new HashMap<String, String>();
+				Map<String, Object> mapJson = new HashMap<>();
 				mapJson.put("bj_id", str_bj_id);
 				mapJson.put("bj_name", str_bj_name);
 				mapJson.put("xm_id", str_xm_id);
@@ -297,7 +321,16 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				mapJson.put("psbmb_mb_desc", str_psbmb_desc);
 				mapJson.put("guest_apply", str_guest_apply);
 				mapJson.put("guest_apply_url", guest_apply_url);
-
+				/*20170118*/
+				mapJson.put("zdbq_id", str_zdbq_id);
+				mapJson.put("zdbq_desc", str_zdbq_desc);
+				mapJson.put("fmqd_id", str_fmqd_id);
+				mapJson.put("fmqd_desc", str_fmqd_desc);
+				mapJson.put("csmb_id", str_csmb_id);
+				mapJson.put("csmb_desc", str_csmb_desc);
+				mapJson.put("ttbl", ins_ttbl);
+				mapJson.put("ttbl2", "%");
+				/*20170118-end*/
 				mapRet.replace("formData", mapJson);
 
 			} else {
@@ -411,7 +444,19 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setRowAddedOprid(oprid);
 					psTzClassInfT.setRowLastmantDttm(dateNow);
 					psTzClassInfT.setRowLastmantOprid(oprid);
-
+					/*20170119*/
+					psTzClassInfT.setTzCsScorMdId(psTzClassInfT.getTzCsScorMdId());
+					psTzClassInfT.setTzCsFmbqzId(psTzClassInfT.getTzCsFmbqzId());
+					psTzClassInfT.setTzCsKsbqzId(psTzClassInfT.getTzCsKsbqzId());
+					float floatTtBl = 0f;
+					if (psTzClassInfT.getTzTtBl()== null){
+						floatTtBl = 0f;
+					}else {
+						floatTtBl = psTzClassInfT.getTzTtBl();
+					}						
+					psTzClassInfT.setTzTtBl(floatTtBl);
+					//psTzClassInfT.setTzTtBl(psTzClassInfT.getTzTtBl());
+					/*20170119-end*/
 					int rst = psTzClassInfTMapper.insert(psTzClassInfT);
 
 					if (rst == 1) {
@@ -625,8 +670,8 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 						psTzClassInfT.setTzAppEndTm(null);
 					}
 
-					psTzClassInfT
-							.setTzIsAppOpen(mapData.get("bm_kt") == null ? "" : String.valueOf(mapData.get("bm_kt")));
+					psTzClassInfT.setTzIsAppOpen(
+							mapData.get("bm_kt") == null ? "" : String.valueOf(mapData.get("bm_kt")));
 					psTzClassInfT.setTzAppModalId(
 							mapData.get("bmb_mb") == null ? "" : String.valueOf(mapData.get("bmb_mb")));
 					psTzClassInfT.setTzZlpsScorMdId(
@@ -635,7 +680,25 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 							mapData.get("msps_cj_modal") == null ? "" : String.valueOf(mapData.get("msps_cj_modal")));
 					psTzClassInfT.setTzPsAppModalId(
 							mapData.get("psbmb_mb") == null ? "" : String.valueOf(mapData.get("psbmb_mb")));
-
+		
+					/*20170118*/
+					psTzClassInfT.setTzCsScorMdId(
+							mapData.get("csmb_id") == null ? "" : String.valueOf(mapData.get("csmb_id")));
+					psTzClassInfT.setTzCsFmbqzId(
+							mapData.get("fmqd_id") == null ? "" : String.valueOf(mapData.get("fmqd_id")));
+					psTzClassInfT.setTzCsKsbqzId(
+							mapData.get("zdbq_id") == null ? "" : String.valueOf(mapData.get("zdbq_id")));					
+					
+					String strTtbl = (mapData.get("ttbl")==null ? "0" :mapData.get("ttbl").toString());	
+					
+					if(StringUtils.isBlank(strTtbl)){
+						strTtbl = "0";
+					}
+					
+					//float floatTtBl =(mapData.get("ttbl")==null ? 0f :(Float.valueOf(strTtbl)));
+					psTzClassInfT.setTzTtBl(Float.valueOf(strTtbl));
+					
+					/*20170118-end*/
 					String str_xs = mapData.get("bj_xs") == null ? "" : String.valueOf(mapData.get("bj_xs"));
 					if ("true".equals(str_xs)) {
 						str_xs = "Y";

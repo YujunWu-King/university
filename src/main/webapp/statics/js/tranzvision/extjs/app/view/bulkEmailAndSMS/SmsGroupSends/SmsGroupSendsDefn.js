@@ -8,7 +8,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
         'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnController',
         'KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.pasteFromExcelWinSMS',
-        'KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow'
+        'KitchenSink.view.bulkEmailAndSMS.ImportExcel.smsEmlImportExcelWindow',
+		'KitchenSink.view.bulkEmailAndSMS.copyHistory.copyFromHistoryWin'
     ],
     xtype: 'smsGroupDet',
     title:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.panelTitle","短信发送定义"),
@@ -19,7 +20,6 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
 
     listeners: {
         close:function(t){
-            //console.log('close--->'+t.pageId);
             for(var i =0;i<refreshTaskMgr.tasks.length;i++){
                 if(refreshTaskMgr.tasks[i].id== t.pageId){
                     refreshTaskMgr.stop(refreshTaskMgr.tasks[i]);
@@ -99,12 +99,20 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                 return bolFlag;
             },
             phoneText: '请输入手机号码'
-            //numberOnlyMask: /[\d\s:amp]/i
         });
+		
+		Ext.apply(Ext.form.field.VTypes,{
+			mobiles: function(val, field){
+				var emlsReg = /^(1\d{10}\;)*(1\d{10})$/;
+				return emlsReg.test(val);
+			},
+			mobilesText: '请输入正确手机号码，多个手机号码之间用英文分号分隔'	
+		});
 
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-BackgroundColor div {background:#f4f4f4;}","readOnly-tagfield-BackgroundColor");
         Ext.util.CSS.createStyleSheet(" .readOnly-combox-BackgroundColor input {background:#f4f4f4;}","readOnly-combox-BackgroundColor");
         Ext.util.CSS.createStyleSheet(" .readOnly-textarea-BackgroundColor textarea {background:#f4f4f4;}","readOnly-textarea-BackgroundColor");
+		Ext.util.CSS.createStyleSheet(" .disabled-button-color span {opacity: 0.8;}","disabled-button-color");
 
         Ext.apply(this, {
             items: [{
@@ -129,8 +137,110 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                 },{
                     xtype: 'textfield',
                     fieldLabel:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.smsQfDesc","群发任务名称") ,
-                    name: 'smsQfDesc'
+                    name: 'smsQfDesc',
+					allowBlank: false
                 },{
+					layout:{
+						type:'column'	
+					},
+					items:[{
+						columnWidth:0.8,
+						xtype: 'fieldset',
+						border:false,
+						reference:'sendModelSet',
+						defaultType: 'radio', // each item will be a radio button
+						layout: {
+							type:'hbox',  
+							padding:'10px 0 10px 0',  	
+						},
+						defaults: {
+							hideEmptyLabel: true
+						},
+						style:{
+							margin:'0 0 0 -10px'
+						},
+                   		items: [{
+							xtype:'label',
+							baseCls:'x-form-item-label-inner x-form-item-label-inner-default',
+							width:'125px',
+							style:{
+								padding:'5px 0 0 0',
+								'font-weight':'bold'
+							},
+							text: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.sendModel","发送模式:")
+						}, {
+							//checked: true,
+							boxLabel: '一般发送',
+							name: 'sendModel',
+							inputValue: 'NOR',
+							reference:'sendModelNor',
+							listeners: {
+								change: 'norSend'
+							}
+						}, {
+							xtype:'button',
+							iconCls:'fa fa-question-circle',
+							tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.NorTip","使用邮件模板或者直接编写邮件内容发送，选择邮件模板时收件人只能添加听众"),
+							border:false,
+							style:{
+								background:'#fff',
+								padding:'5px 0 0 0'
+							},
+							disabled:true
+						},{
+							xtype:'splitter',
+							width:100,
+							style:{
+								background:'#fff'
+							}
+						}, {
+							checked: true,
+							boxLabel: '导入Excel发送',
+							name: 'sendModel',
+							inputValue: 'EXC',
+							reference:'sendModelExc',
+							listeners: {
+								change: 'excSend'
+							}
+						},{
+							xtype:'button',
+							iconCls:'fa fa-question-circle',
+							tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.ExcTip","导入Excel之后，可以设置Excel中对应的邮件收件人、内容等，并使用设置内容进行发送"),
+							border:false,
+							style:{
+								background:'#fff',
+								padding:'5px 0 0 0'
+							},
+							disabled:true
+						},{
+							xtype:'button',
+							text:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.excBtn","导入Excel"),
+							tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.excBtnTip","导入Excel"),
+							handler:'importFromExcel',
+							reference:'impExc',
+							bind: {
+								hidden: '{!sendModelExc.checked}'
+							}
+						}]
+					},{
+						columnWidth:0.2,
+						anchor:'100%', 
+						layout: {
+							 type:'hbox',  
+							 padding:'10px 50px 10px 0',  
+							 pack:'end',  
+							 align:'middle'
+						},
+						items:[{
+							xtype: 'button',
+							reference:'copyHistoryBtn',
+							text: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.copyHistory","复制历史任务"),
+							tooltip: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.copyHistoryTip","复制历史任务"),
+							hidden: true,
+							handler:'copyHistoryData'
+						}]	
+					}]
+					/*
                     xtype: 'fieldset',
                     border:false,
                     reference:'sendModelSet',
@@ -152,7 +262,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         },
                         text: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.sendModel","发送模式:")
                     }, {
-                        checked: true,
+                        //checked: true,
                         boxLabel: '一般发送',
                         name: 'sendModel',
                         inputValue: 'NOR',
@@ -177,6 +287,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                             background:'#fff'
                         }
                     }, {
+						checked: true,
                         boxLabel: '导入Excel发送',
                         name: 'sendModel',
                         inputValue: 'EXC',
@@ -203,13 +314,35 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         bind: {
                             hidden: '{!sendModelExc.checked}'
                         }
-                    }]
+                    },{
+						layout: {
+                         type:'hbox',  
+						 padding:'0 10px 10px 0',  
+						 pack:'end',  
+						 align:'middle'
+						},
+						items:[{
+							xtype:'button',
+							text:'<span style="color:#fff">复制历史任务</span>',
+							tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.copyHistory","复制历史任务"),
+							width:100
+						}]	
+					}]
                 },{
-                    xtype:'splitter',
-                    height:8,
-                    style:{
-                        background:'#fff'
-                    }
+					//anchor:'100%', 
+					
+                    layout: {
+                         type:'hbox',  
+						 padding:'0 10px 10px 0',  
+						 pack:'end',  
+						 align:'middle'
+                    },
+					items:[{
+						xtype:'button',
+						text:'<span style="color:#fff">复制历史任务</span>',
+						tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.copyHistory","复制历史任务"),
+						width:100
+					}]*/
                 },{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.recever","收件人"),
@@ -242,20 +375,30 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                     },
                     padding:'0 0 8px 0',
                     xtype:"toolbar",
+					reference: 'receverToolbar',
                     items:["->",{
+						xtype:'button',
+                        reference:'selectStuBtn',
+                        text:'<span style="color:#fff">选择考生</span>',
+                        tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.selectStuTip","选择考生"),
+                        handler:'addStruData',
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'
+					},{
                         xtype:'button',
                         reference:'addAudienceBtn',
                         text:'<span style="color:#fff">添加听众</span>',
                         tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.addAudienceTip","添加听众"),
                         handler:'addAudience',
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+                        //baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'
                     },{
                         xtype:'button',
                         reference:'clearAllBtn',
                         text:'<span style="color:#fff">清除所有</span>',
                         tooltip:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.clearAllTip","清除所有"),
                         handler:'clearAll',
-                        baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+                        //baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+						baseCls:'x-btn x-unselectable x-column x-btn-default-small'
                     },{
                         xtype:'button',
                         reference:'pasteFromExcelBtn',
@@ -264,7 +407,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         handler:'pasteFromExcel',
                         baseCls:'x-btn-inner x-btn-inner-default-small',
                         style:{
-                            color:'#fff'
+                            color:'#666',
+							cursor:'pointer'
                         },
                         border:false
                     }]
@@ -296,7 +440,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         name: 'tsfsPhone',
                         labelSeparator:' ',
                         width:'75%',
-                        vtype: 'phone',
+                        vtype: 'mobiles',
                         bind: {
                             disabled: '{!tsfsFlag.checked}'
                         }
@@ -341,9 +485,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                             SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=true;
                                             SmsGroupDtFrom.down('tagfield[reference=receverTagField]').addCls('readOnly-tagfield-BackgroundColor');
                                             SmsGroupDtFrom.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
+											
+											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
 
-                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').disabled=false;
-                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').removeCls('x-item-disabled x-btn-disabled');
+                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').setDisabled(false);
+                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').removeCls('disabled-button-color');
                                             //加载邮件模版信息
                                             var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"getSmsTmpInfo","comParams":{"SmsTmpId":"'+newValue+'"}}';
                                             Ext.tzLoadAsync(tzParams,function(responseData){
@@ -351,8 +498,16 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                             });
                                             var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"getSmsTmpItem","comParams":{"SmsTmpId":"'+newValue+'"}}';
                                             Ext.tzLoadAsync(tzParams,function(responseData){
-                                                SmsGroupDtFrom.down('grid[reference=smsTmplItemGrid]').store.removeAll(true);
-                                                SmsGroupDtFrom.down('grid[reference=smsTmplItemGrid]').store.add(responseData['root']);
+												var tmpItemGrid = SmsGroupDtFrom.down('grid[reference=smsTmplItemGrid]');
+												Ext.suspendLayouts();
+												tmpItemGrid.store.suspendEvents();
+												
+                                                tmpItemGrid.store.removeAll(true);
+                                                tmpItemGrid.store.add(responseData['root']);
+												
+												tmpItemGrid.store.resumeEvents();
+												tmpItemGrid.reconfigure(tmpItemGrid.store);
+												Ext.resumeLayouts(true);
 
                                                 var userAgent = navigator.userAgent;
                                                 if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
@@ -379,8 +534,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                             SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=false;
                                             SmsGroupDtFrom.down('tagfield[reference=receverTagField]').removeCls('readOnly-tagfield-BackgroundColor');
                                             SmsGroupDtFrom.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
+											
+											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
+											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
 
-                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').disabled=true;
+                                            SmsGroupDtFrom.down('button[reference=setSmsTmpl]').setDisabled(true);
+											SmsGroupDtFrom.down('button[reference=setSmsTmpl]').addCls('disabled-button-color');
                                         }
                                     }
                                 }
@@ -394,7 +553,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                             style:{
                                 background:'#fff'
                             },
-                            disabled: true,
+                            //disabled: true,
                             handler:'setSmsTmpl',
                             width:30
                         }
@@ -539,7 +698,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         bind: {
                             hidden: '{!dsfsFlag.checked}'
                         }
-                    },{
+                    }/*,{
                         xtype: 'checkbox',
                         boxLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.transFlag","是否转发回复信息"),
                         name:'transmitFlag',
@@ -548,11 +707,11 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         inputValue:'Y',
                         uncheckedValue:'N',
                         listeners: {
-                           /* change:function(t,newValue, oldValue){
-                                if(!newValue){
-                                    t.findParentByType('form').down('displayfield[name=dsfsInfo]').setVisible(false);
-                                }
-                            }*/
+                           // change:function(t,newValue, oldValue){
+                             //   if(!newValue){
+                             //       t.findParentByType('form').down('displayfield[name=dsfsInfo]').setVisible(false);
+                             //   }
+                            //}
                         }
                     },{
 						xtype: 'tagfield',
@@ -584,7 +743,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
 						fieldLabel:"转发人" ,
 						name: 'transOrigin',
 						hidden:true
-					}]
+					}*/]
                 },{
                     xtype:'fieldset',
                     title: '创建人信息',
@@ -601,12 +760,14 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.dept","所属部门"),
                         margin:'8px 0 0 8px',
-                        name: 'dept'
+                        name: 'dept',
+                        hidden: true
                     },{
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.setId","setID"),
                         margin:'8px 0 0 8px',
-                        name: 'setId'
+                        name: 'setId',
+                        hidden: true
                     },{
                         xtype: 'displayfield',
                         fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.creDt","创建时间"),

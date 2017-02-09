@@ -124,7 +124,8 @@
 	//查询
     cfgSearch: function(btn){
     	//var columId = btn.findParentByType('toolbar').child('combobox').getValue();
-		var panel = btn.findParentByType("panel");
+		var panel = btn.findParentByType("panel").findParentByType("panel");
+		console.log(panel);
 		var columnId = panel.columnId;
 		if(columnId == "" || columnId == undefined){
 			Ext.MessageBox.alert('提示', '请先选择栏目。');
@@ -163,7 +164,7 @@
 		}
 		  
 	    //栏目;
-	    var panel = btn.findParentByType("panel");
+	    var panel = btn.findParentByType("panel").findParentByType("panel");
 		var columnId = panel.columnId;
 
 	    if(columnId == "" || columnId == undefined){
@@ -202,7 +203,7 @@
               // </debug>
     	}
 		
-		cmp = new ViewClass();
+		cmp = new ViewClass({"coluId":columnId});
 
     	cmp.on('afterrender',function(panel){
 				var form = panel.child("form").getForm();
@@ -213,8 +214,10 @@
 				//加载数据
 				Ext.tzLoad(tzParams,function(responseData){
 						var formData = responseData.formData;
+						var siteId = formData.siteId;
 						form.findField("siteId").setValue(formData.siteId);
 						form.findField("coluId").setValue(formData.coluId);
+						form.findField("colus").setValue(formData.colus);
 						form.findField("siteType").setValue(formData.siteType);
 						form.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
 						form.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
@@ -301,13 +304,15 @@
 							form.findField("tzdate2").hide();
 						}
 						
+						
 						//发布对象
 						var siteType = form.findField("siteType").getValue();
 					
 						if(siteType=="A" || siteType == "B"){
 							var pubAud = panel.down('fieldset[name=pubAud]');
-							pubAud.setHidden(true);
+//							pubAud.setHidden(true);
 						}
+						
 				});
 			});
     	
@@ -486,7 +491,7 @@
 				// </debug>
 			}
 	
-			cmp = new ViewClass();
+			cmp = new ViewClass({"coluId":coluId});
 			//操作类型设置为更新
 			cmp.actType = "update";
 			
@@ -598,7 +603,9 @@
 					}else{
 						form.findField("tzdate2").hide();
 					}
-					//发布对象
+					//
+
+					
 					var siteType = form.findField("siteType").getValue();
 				
 					if(siteType=="A" || siteType == "B"){
@@ -616,7 +623,8 @@
 					var picDataView = panel.down('dataview[name=picView]');
 					var tzStoreParams = '{"artId":"'+articleId+'","gridTyp":"TPJ"}';
 					picDataView.store.tzStoreParams = tzStoreParams;
-					picDataView.store.load();					
+					picDataView.store.load();
+					
 				});
 				
 			});

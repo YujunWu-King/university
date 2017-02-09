@@ -71,7 +71,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
 				
 				items: [{
 					xtype: 'textfield',
-					fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtempid","邮件模板编号"),
+					fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtempid","站内信模板编号"),
 					name: 'znxtempid',
 					maxLength: 15,
 					allowBlank: false,
@@ -85,7 +85,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
 					hidden:true
 				},{
 					xtype: 'textfield',
-					fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtempname","邮件模板名称"),
+					fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtempname","站内信模板名称"),
 					name: 'znxtempname',
 					maxLength: 60,
 					afterLabelTextTpl: [
@@ -134,7 +134,7 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
                     height:'auto',
 					listeners:{
 						tabchange: function(tabPanel,newCard){
-							if (newCard.title == "编辑邮件内容")
+							if (newCard.title == "内容编辑")
 							{
 								
 								var form = tabPanel.findParentByType('form').getForm();
@@ -253,58 +253,10 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
 									xtype: 'textarea',
 									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpdesc","描述"),
 									name:'znxtmpdesc'
-								},{
-									xtype: 'combobox',
-									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.tempemailserv","邮箱服务"),
-									forceSelection: true,
-									editable: false,
-									
-									store: new KitchenSink.view.common.store.comboxStore({
-										recname: 'TZ_EMLS_DEF_TBL',
-										condition:{
-										},
-										result:'TZ_EMLSERV_ID,TZ_EML_ADDR100'
-									}),
-									
-									valueField: 'TZ_EMLSERV_ID',
-									displayField: 'TZ_EML_ADDR100',
-									queryMode: 'local',
-									name: 'tempemailserv',
-									listeners: {
-					  
-										focus: function (combo,event, eOpts) {
-
-											var form = this.findParentByType("form");
-											var znxtemporg = form.getForm().findField("znxtemporg").getValue();
-										   
-											var tzStoreParams ='{"OperateType":"COMBOX","recname":"TZ_EMLS_DEF_TBL","condition":{"TZ_JG_ID":{"value":"'+znxtemporg+'","operator":"01","type":"01"}},"result":"TZ_EMLSERV_ID,TZ_EML_ADDR100"}';
-											
-											var arrayData;
-											
-											arrayData = new Array();
-											
-											znxTempletInfoPanel.znxServStore.tzStoreParams=tzStoreParams;
-											
-											znxTempletInfoPanel.znxServStore.load({
-												scope: this,
-												callback: function(records, operation, success) {
-													//console.log(records);
-													for(var i=0;i<records.length;i++){
-														arrayData.push(records[i].data);
-													}
-												combo.store.loadData(arrayData);
-												}
-											} );
-										 }
-									},
-									afterLabelTextTpl: [
-										'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-									],
-									allowBlank: false
 								}]
 							}]
 						},{
-							title:'编辑邮件内容',
+							title:'内容编辑',
 							items:[{
                                 xtype:'form',
 								layout: {
@@ -320,13 +272,13 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
 								},
 								items:[{
 									xtype: 'textfield',
-									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpsubject","邮件主题"),
+									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpsubject","站内信主题"),
 									maxLength: 254,
 									name: 'znxtmpsubject',
                                     margin:10
 								},{
 									xtype: 'checkbox',
-									boxLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.ispersonalize","邮件内容不包含个性化动态合并内容"),
+									boxLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.ispersonalize","站内信内容不包含个性化动态合并内容"),
 									name:'ispersonalize',
                                     margin:10,
 									inputValue:'Y',
@@ -365,13 +317,13 @@ Ext.define('KitchenSink.view.ZNX.znxTempletDef.znxTempletInfo', {
 									}
 								},{
 									xtype: 'textarea',
-									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpcontent","邮件内容"),
+									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpcontent","站内信内容"),
 									name:'znxtmpcontent',
                                     margin:10
 								},{
 									//xtype: 'htmleditor',
 									xtype: 'ueditor',
-									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpcontentHtml","邮件内容"),
+									fieldLabel: Ext.tzGetResourse("TZ_ZNX_TMPL_MG_COM.TZ_ZNX_TMPL_STD.znxtmpcontentHtml","站内信内容"),
 									height: 300,
 									zIndex: 900,
 									name:'znxtmpcontentHtml',

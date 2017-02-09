@@ -38,9 +38,10 @@
 
 
 /*--------------------左侧菜单--------------------*/
+/*--------------------左侧菜单--------------------*/
 .regmain-menu{
 	width:248px;
-	border:1px solid #dadbdd;
+	/*border:1px solid #dadbdd;*/
 }
 .regmain-menu ul{}
 .regmain-menu ul li{
@@ -62,25 +63,29 @@
 }
 .regmain-menu ul li{
 	border-bottom:1px solid #dadbdd;
+	padding-left: 15px;
 }
 .regmain-menu ul li a{
-	color:#0070c6;
+	color:#8f5dc0;
 }
 /* 第一层菜单*/
 .regmain-menu ul li.menu-active-top{
-	background:#0070c6;
+	background:#8f5dc0;
 	color:#fff;
+	border-radius: 5px;
+	padding-left: 15px;
 }
 .regmain-menu ul li.menu-active-top a{
 	color:#fff;
 }
 .regmain-menu ul li.menu-active-top:hover{
-	background:#0070c6;
+	background:#8f5dc0;
 }
 /* 第二层默认菜单*/
 .regmain-menu ul li.menu-active{
-	background:#8e8e8e;
+	background:#eee;
 	color:#000000;
+	padding-left:15px;
 }
 .regmain-menu ul li.menu-active a{
 	color:#000000;
@@ -161,14 +166,23 @@
 	line-height:46px;
 	margin-right:10px;
 	border-radius:5px;
-	background:#0070c6;
+	background:#8f5dc0;
+}
+.btn-pre{
+	text-align:center;
+	width:108px;
+	height:46px;
+	color:#fff;
+	line-height:46px;
+	border-radius:5px;
+	background:#f1c748;
 }
 .operation-btn a{
 	float:none;
 	display:inline-block;
 }
 .btn-save{
-	background:#ff7b05;
+	background:#f1c748;
 }
 .operation-btn-icon{
 	width:18px;
@@ -176,7 +190,7 @@
     vertical-align: middle;
 }
 .btn-action:hover{
-	background:#0164b0;
+	background:#8f5dc0;
 }
 .btn-save:hover{
 	background:#d96600;
@@ -1104,3 +1118,9 @@ url("chrome://browser/content/history/history-panel.xul")
 .alert-success{background-color:#dff0d8;border-color:#a3d48e;color:#468847}
 .alert-success,.alert-danger,.alert-error,.alert-info{text-shadow:0 1px 0 rgba(255,255,255,0.5)}
 .noteing .alert{padding:8px 20px}
+
+/*表单填写说明css*/
+.form_sm{padding:5px 10px;width:150px;text-align:center;}
+.form_input{width:750px;height:400px;overflow-y:auto;border:1px solid #0070c6;display:none;}
+.readme{width:150px;}
+.tips{margin:0px 4px 0 0;vertical-align:middle;}

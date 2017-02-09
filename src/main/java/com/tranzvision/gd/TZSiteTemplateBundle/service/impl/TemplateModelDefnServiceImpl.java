@@ -485,10 +485,10 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 			String sql = "";
 			List<Map<String, Object>> list = null;
 			if (numLimit > 0) {
-				sql = "SELECT TZ_COLU_ID,TZ_COLU_NAME,TZ_COLU_TYPE,TZ_CONT_TYPE FROM PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=? limit ?,?";
+				sql = "SELECT TZ_COLU_ID,TZ_COLU_NAME,TZ_COLU_TYPE,TZ_CONT_TYPE, TZ_ART_TYPE_ID FROM PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=? limit ?,?";
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId, numStart, numLimit });
 			} else {
-				sql = "SELECT TZ_COLU_ID,TZ_COLU_NAME,TZ_COLU_TYPE,TZ_CONT_TYPE FROM PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=?";
+				sql = "SELECT TZ_COLU_ID,TZ_COLU_NAME,TZ_COLU_TYPE,TZ_CONT_TYPE, TZ_ART_TYPE_ID FROM PS_TZ_SITEM_COLU_T where TZ_SITEM_ID=?";
 				list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 			}
 
@@ -497,10 +497,17 @@ public class TemplateModelDefnServiceImpl extends FrameworkImpl {
 				for (int i = 0; i < list.size(); i++) {
 					Map<String, Object> jsonMap = new HashMap<String, Object>();
 					String zhzSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
+					String zhzSQL1="SELECT TZ_ART_TYPE_NAME FROM PS_TZ_ART_TYPE_VW WHERE TZ_ART_TYPE_ID=?";
 					String lm_lx = (String) list.get(i).get("TZ_COLU_TYPE");
 					lm_lx = jdbcTemplate.queryForObject(zhzSQL, new Object[]{"TZ_ZDLM_LX",lm_lx},"String");
-					String lm_nrlx = (String) list.get(i).get("TZ_CONT_TYPE");
-					lm_nrlx = jdbcTemplate.queryForObject(zhzSQL, new Object[]{"TZ_ZD_NRLX",lm_nrlx},"String");
+					//String lm_nrlx = (String) list.get(i).get("TZ_CONT_TYPE");
+					
+					String lm_nrlx = (String) list.get(i).get("TZ_ART_TYPE_ID");
+					System.out.println(lm_nrlx);
+					
+					//修改添加 活动类型
+					lm_nrlx = jdbcTemplate.queryForObject(zhzSQL1, new Object[]{lm_nrlx},"String");
+					System.out.println(lm_nrlx);
 					jsonMap.put("lm_id", list.get(i).get("TZ_COLU_ID"));
 					jsonMap.put("lm_name", list.get(i).get("TZ_COLU_NAME"));
 					jsonMap.put("lm_lx", lm_lx);

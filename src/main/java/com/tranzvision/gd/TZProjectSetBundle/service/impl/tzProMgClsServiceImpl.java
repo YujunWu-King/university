@@ -30,6 +30,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 /**
  * 
  * @author 张彬彬; 功能说明：招生项目管理; 原PS类：TZ_GD_PROMG_PKG:TZ_GD_PROMG_CLS
+ * @author ZXW  20160117 
+ * 功能说明：材料面试相关-修改面试评审模板对应字段，添加自动初筛模板、标签组、初筛比率字段 
  */
 @Service("com.tranzvision.gd.TZProjectSetBundle.service.impl.tzProMgClsServiceImpl")
 public class tzProMgClsServiceImpl extends FrameworkImpl {
@@ -98,6 +100,7 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 	/* 获取项目详情信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		// 返回值;
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("formData", "");
@@ -122,10 +125,30 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 					map.put("appScheduModName", "");
 					map.put("smtDtTmpId", psTzPrjInfT.getTzSbminfTmpId());
 					map.put("smtDtName", "");
-					map.put("clps_cj_modal", psTzPrjInfT.getTzScoreModalId());
+					/*20170118*/
+					map.put("clps_cj_modal", psTzPrjInfT.getTzZlpsScorMdId());
 					map.put("clps_cj_modal_desc", "");
-					map.put("msps_cj_modal", psTzPrjInfT.getTzMspsScoreMId());
-					map.put("msps_cj_modal_desc", "");
+					map.put("msps_cj_modal", psTzPrjInfT.getTzMscjScorMdId());
+					map.put("msps_cj_modal_desc", "");					
+					//初筛模型
+					map.put("cs_cj_modal", psTzPrjInfT.getTzCsScorMdId());
+					map.put("cs_cj_modal_desc", "");
+					//考生标签
+					map.put("ksbq", psTzPrjInfT.getTzCsKsbqzId());
+					map.put("ksbq_desc", "");
+					//负面清单
+					map.put("fmqd", psTzPrjInfT.getTzCsFmbqzId());
+					map.put("fmqd_desc", "");
+					//淘汰比率
+					map.put("ttbl", psTzPrjInfT.getTzTtBl());
+					map.put("ttbl2", "%");
+					/*20170118 end*/
+					
+					//@added by ytt 2017-2-8
+					//证书模板
+					map.put("zsmbid", psTzPrjInfT.getTzCertTmplId());
+					map.put("zsmbname", "%");
+					
 					map.put("ps_appf_modal", psTzPrjInfT.getTzPsAppfMId());
 					map.put("ps_appf_modal_desc", "");
 					map.put("sites", "");
@@ -144,16 +167,16 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 					map.replace("ps_appf_modal_desc", strAppSubModelName);
 
 					/* 材料评审成绩模型描述 */
-					sql = "SELECT TZ_MODAL_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=?";
-					String strClpsScoreModelID = psTzPrjInfT.getTzScoreModalId();
-					String strClpsScoreModelName = sqlQuery.queryForObject(sql, new Object[] { strClpsScoreModelID },
+					sql = "SELECT TZ_MODAL_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=?";
+					String strClpsScoreModelID = psTzPrjInfT.getTzZlpsScorMdId();
+					String strClpsScoreModelName = sqlQuery.queryForObject(sql, new Object[] {orgid,strClpsScoreModelID },
 							"String");
 					map.replace("clps_cj_modal_desc", strClpsScoreModelName);
 
 					/* 面试评审成绩模型描述 */
-					sql = "SELECT TZ_MODAL_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=?";
-					String strMspsScoreModelID = psTzPrjInfT.getTzMspsScoreMId();
-					String strMspsScoreModelName = sqlQuery.queryForObject(sql, new Object[] { strMspsScoreModelID },
+					sql = "SELECT TZ_MODAL_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=?";
+					String strMspsScoreModelID = psTzPrjInfT.getTzMscjScorMdId();
+					String strMspsScoreModelName = sqlQuery.queryForObject(sql, new Object[] {orgid,strMspsScoreModelID },
 							"String");
 					map.replace("msps_cj_modal_desc", strMspsScoreModelName);
 
@@ -170,7 +193,37 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 					String strSubmitInfoModName = sqlQuery.queryForObject(sql, new Object[] { strSubmitInfoModId },
 							"String");
 					map.replace("smtDtName", strSubmitInfoModName);
+				
+					/* 自动初筛模型描述 20170118 TZ_CS_SCOR_MD_ID */
+					sql = "SELECT TZ_MODAL_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=?";
+					String strCsScoreModelID = psTzPrjInfT.getTzCsScorMdId();
+					String strCsScoreModelName = sqlQuery.queryForObject(sql, new Object[] { orgid,strCsScoreModelID },
+							"String");
+					map.replace("cs_cj_modal_desc", strCsScoreModelName);
 
+					/* 负面清单规则描述 20170118 TZ_CS_KSBQZ_ID */
+					sql = "SELECT TZ_BIAOQZ_NAME FROM PS_TZ_BIAOQZ_T WHERE TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
+					String strtTzCsFmbqzId = psTzPrjInfT.getTzCsFmbqzId();
+					String strtTzCsFmbqzDesc = sqlQuery.queryForObject(sql, new Object[] { orgid,strtTzCsFmbqzId },
+							"String");
+					map.replace("fmqd_desc", strtTzCsFmbqzDesc);
+					
+					/* 自动标签规则描述 20170118 TZ_CS_FMBQZ_ID */
+					sql = "SELECT TZ_BIAOQZ_NAME FROM PS_TZ_BIAOQZ_T WHERE TZ_JG_ID=? AND TZ_BIAOQZ_ID=?";
+					String strtTzCsKsbqzId = psTzPrjInfT.getTzCsKsbqzId();
+					String strtTzCsKsbqzDesc = sqlQuery.queryForObject(sql, new Object[] { orgid,strtTzCsKsbqzId },
+							"String");
+					map.replace("ksbq_desc", strtTzCsKsbqzDesc);
+					
+					//@added by ytt 2017-2-8
+					//证书模板名称
+					sql = "SELECT TZ_TMPL_NAME FROM PS_TZ_CERTTMPL_TBL WHERE TZ_JG_ID=? AND TZ_CERT_TMPL_ID=?";
+					String strtzCertTmplId = psTzPrjInfT.getTzCertTmplId();
+					String strtzTmplName = sqlQuery.queryForObject(sql, new Object[] { orgid,strtzCertTmplId },
+							"String");
+					map.replace("zsmbname", strtzTmplName);
+					
+					
 					/* 项目发布的站点 */
 					ArrayList<String> sites = new ArrayList<>();
 					List<Map<String, Object>> siteList = sqlQuery.queryForList(
@@ -251,7 +304,13 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						String strClpsScoreModelID = String.valueOf(mapData.get("clps_cj_modal"));
 						String strMspsScoreModelID = String.valueOf(mapData.get("msps_cj_modal"));
 						String strProjectDesc = String.valueOf(mapData.get("projectDesc"));
-
+						/*20170118 tzAdd方法：获取*/
+						String strCsScoreModelID = String.valueOf(mapData.get("cs_cj_modal"));
+						String strtTzCsKsbqzId = String.valueOf(mapData.get("ksbq"));
+						String strtTzCsFmbqzId = String.valueOf(mapData.get("fmqd"));
+						String strTtbl = String.valueOf(mapData.get("ttbl"));
+						String strCertTmplId = String.valueOf(mapData.get("zsmbid"));
+						/*20170118 tzAdd方法end*/
 						PsTzPrjInfT psTzPrjInfT = new PsTzPrjInfT();
 						psTzPrjInfT.setTzPrjId(strPojectId);
 						psTzPrjInfT.setTzPrjName(strProjectName);
@@ -262,10 +321,16 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						psTzPrjInfT.setTzIsOpen(strIsOpen);
 						psTzPrjInfT.setTzAppproTmpId(strAppScheduModId);
 						psTzPrjInfT.setTzSbminfTmpId(strSubmitInfoModId);
-						psTzPrjInfT.setTzScoreModalId(strClpsScoreModelID);
-						psTzPrjInfT.setTzMspsScoreMId(strMspsScoreModelID);
+						psTzPrjInfT.setTzZlpsScorMdId(strClpsScoreModelID);
+						psTzPrjInfT.setTzMscjScorMdId(strMspsScoreModelID);
 						psTzPrjInfT.setTzPrjDesc(strProjectDesc);
-
+						/*20170118 tzAdd方法：保存*/
+						psTzPrjInfT.setTzMscjScorMdId(strCsScoreModelID) ;
+						psTzPrjInfT.setTzMscjScorMdId(strtTzCsKsbqzId) ;
+						psTzPrjInfT.setTzMscjScorMdId(strtTzCsFmbqzId) ;
+						psTzPrjInfT.setTzMscjScorMdId(strTtbl);
+						psTzPrjInfT.setTzCertTmplId(strCertTmplId);
+						/*20170118 tzAdd方法end*/
 						int i = PsTzPrjInfTMapper.insert(psTzPrjInfT);
 						if (i > 0) {
 							// 限定的项目;
@@ -366,7 +431,14 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						String strClpsScoreModelID = String.valueOf(mapData.get("clps_cj_modal"));
 						String strMspsScoreModelID = String.valueOf(mapData.get("msps_cj_modal"));
 						String strProjectDesc = String.valueOf(mapData.get("projectDesc"));
-
+						/*20170118 tzUpdate方法：获取*/
+						String strCsScoreModelID = String.valueOf(mapData.get("cs_cj_modal"));
+						String strtTzCsKsbqzId = String.valueOf(mapData.get("ksbq"));
+						String strtTzCsFmbqzId = String.valueOf(mapData.get("fmqd"));
+						String strTtbl = String.valueOf(mapData.get("ttbl"));
+						String strCertTmplId = String.valueOf(mapData.get("zsmbid"));
+						/*20170118 tzUpdate方法end*/
+						
 						PsTzPrjInfT psTzPrjInfT = new PsTzPrjInfT();
 						psTzPrjInfT.setTzPrjId(strPojectId);
 						psTzPrjInfT.setTzPrjName(strProjectName);
@@ -377,10 +449,16 @@ public class tzProMgClsServiceImpl extends FrameworkImpl {
 						psTzPrjInfT.setTzIsOpen(strIsOpen);
 						psTzPrjInfT.setTzAppproTmpId(strAppScheduModId);
 						psTzPrjInfT.setTzSbminfTmpId(strSubmitInfoModId);
-						psTzPrjInfT.setTzScoreModalId(strClpsScoreModelID);
-						psTzPrjInfT.setTzMspsScoreMId(strMspsScoreModelID);
+						psTzPrjInfT.setTzZlpsScorMdId(strClpsScoreModelID);
+						psTzPrjInfT.setTzMscjScorMdId(strMspsScoreModelID);
 						psTzPrjInfT.setTzPrjDesc(strProjectDesc);
-
+						/*20170118 tzUpdate方法：保存*/
+						psTzPrjInfT.setTzCsScorMdId(strCsScoreModelID) ;
+						psTzPrjInfT.setTzCsKsbqzId(strtTzCsKsbqzId) ;
+						psTzPrjInfT.setTzCsFmbqzId(strtTzCsFmbqzId) ;
+						psTzPrjInfT.setTzTtBl(strTtbl);
+						psTzPrjInfT.setTzCertTmplId(strCertTmplId);
+						/*20170118 tzUpdate方法end*/
 						if (isExistProjectNum > 0) {
 							PsTzPrjInfTMapper.updateByPrimaryKeyWithBLOBs(psTzPrjInfT);
 						} else {

@@ -4,11 +4,12 @@
   <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
     <id column="TZ_CS_WJ_ID" property="tzCsWjId" jdbcType="VARCHAR" />
     <result column="TZ_CS_WJ_NAME" property="tzCsWjName" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <result column="TZ_STATE" property="tzState" jdbcType="VARCHAR" />
     <result column="TZ_PRESET_NUM" property="tzPresetNum" jdbcType="INTEGER" />
     <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
-    <result column="TZ_APP_WJ_ID" property="tzAppWjId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
     <result column="TZ_DC_WJ_ZT" property="tzDcWjZt" jdbcType="VARCHAR" />
     <result column="TZ_DC_WJ_KSRQ" property="tzDcWjKsrq" jdbcType="DATE" />
     <result column="TZ_DC_WJ_KSSJ" property="tzDcWjKssj" jdbcType="TIME" />
@@ -22,8 +23,8 @@
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_CLASS_ID, TZ_STATE, TZ_PRESET_NUM, TZ_APP_TPL_ID, 
-    TZ_APP_WJ_ID, TZ_DC_WJ_ZT, TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
+    TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_JG_ID, TZ_CLASS_ID, TZ_STATE, TZ_PRESET_NUM, TZ_APP_TPL_ID, 
+    TZ_DC_WJ_ID, TZ_DC_WJ_ZT, TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
     ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -37,20 +38,20 @@
     where TZ_CS_WJ_ID = #{tzCsWjId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
-    insert into PS_TZ_CSWJ_TBL (TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_CLASS_ID, 
-      TZ_STATE, TZ_PRESET_NUM, TZ_APP_TPL_ID, 
-      TZ_APP_WJ_ID, TZ_DC_WJ_ZT, TZ_DC_WJ_KSRQ, 
-      TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
-      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
-      )
-    values (#{tzCsWjId,jdbcType=VARCHAR}, #{tzCsWjName,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, 
-      #{tzState,jdbcType=VARCHAR}, #{tzPresetNum,jdbcType=INTEGER}, #{tzAppTplId,jdbcType=VARCHAR}, 
-      #{tzAppWjId,jdbcType=VARCHAR}, #{tzDcWjZt,jdbcType=VARCHAR}, #{tzDcWjKsrq,jdbcType=DATE}, 
-      #{tzDcWjKssj,jdbcType=TIME}, #{tzDcWjJsrq,jdbcType=DATE}, #{tzDcWjJssj,jdbcType=TIME}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
-      )
+    insert into PS_TZ_CSWJ_TBL (TZ_CS_WJ_ID, TZ_CS_WJ_NAME, TZ_JG_ID, 
+      TZ_CLASS_ID, TZ_STATE, TZ_PRESET_NUM, 
+      TZ_APP_TPL_ID, TZ_DC_WJ_ID, TZ_DC_WJ_ZT, 
+      TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, 
+      TZ_DC_WJ_JSSJ, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM)
+    values (#{tzCsWjId,jdbcType=VARCHAR}, #{tzCsWjName,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzClassId,jdbcType=VARCHAR}, #{tzState,jdbcType=VARCHAR}, #{tzPresetNum,jdbcType=INTEGER}, 
+      #{tzAppTplId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzDcWjZt,jdbcType=VARCHAR}, 
+      #{tzDcWjKsrq,jdbcType=DATE}, #{tzDcWjKssj,jdbcType=TIME}, #{tzDcWjJsrq,jdbcType=DATE}, 
+      #{tzDcWjJssj,jdbcType=TIME}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
     insert into PS_TZ_CSWJ_TBL
@@ -60,6 +61,9 @@
       </if>
       <if test="tzCsWjName != null" >
         TZ_CS_WJ_NAME,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
       </if>
       <if test="tzClassId != null" >
         TZ_CLASS_ID,
@@ -73,8 +77,8 @@
       <if test="tzAppTplId != null" >
         TZ_APP_TPL_ID,
       </if>
-      <if test="tzAppWjId != null" >
-        TZ_APP_WJ_ID,
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
       </if>
       <if test="tzDcWjZt != null" >
         TZ_DC_WJ_ZT,
@@ -117,6 +121,9 @@
       <if test="tzCsWjName != null" >
         #{tzCsWjName,jdbcType=VARCHAR},
       </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
       <if test="tzClassId != null" >
         #{tzClassId,jdbcType=VARCHAR},
       </if>
@@ -129,8 +136,8 @@
       <if test="tzAppTplId != null" >
         #{tzAppTplId,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppWjId != null" >
-        #{tzAppWjId,jdbcType=VARCHAR},
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
       </if>
       <if test="tzDcWjZt != null" >
         #{tzDcWjZt,jdbcType=VARCHAR},
@@ -173,6 +180,9 @@
       <if test="tzCsWjName != null" >
         TZ_CS_WJ_NAME = #{tzCsWjName,jdbcType=VARCHAR},
       </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
       <if test="tzClassId != null" >
         TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
       </if>
@@ -185,8 +195,8 @@
       <if test="tzAppTplId != null" >
         TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppWjId != null" >
-        TZ_APP_WJ_ID = #{tzAppWjId,jdbcType=VARCHAR},
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
       </if>
       <if test="tzDcWjZt != null" >
         TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
@@ -227,11 +237,12 @@
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl" >
     update PS_TZ_CSWJ_TBL
     set TZ_CS_WJ_NAME = #{tzCsWjName,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
       TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
       TZ_STATE = #{tzState,jdbcType=VARCHAR},
       TZ_PRESET_NUM = #{tzPresetNum,jdbcType=INTEGER},
       TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
-      TZ_APP_WJ_ID = #{tzAppWjId,jdbcType=VARCHAR},
+      TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
       TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
       TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
       TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},

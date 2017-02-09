@@ -353,6 +353,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strNATIONAL_ID = ((String) dataMap.get("NATIONAL_ID")).trim();
 				}
 
+				// 毕业院校所属国家;
+				String strTZ_SCH_CNAME_COUNTRY = "";
+				if (dataMap.containsKey("TZ_SCH_COUNTRYCODE")) {
+					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRYCODE")).trim();
+				}
+				
 				// 毕业院校;
 				String strTZ_SCH_CNAME = "";
 				if (dataMap.containsKey("TZ_SCH_CNAME")) {
@@ -662,8 +668,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}
-
+				}				
+				psTzRegUserT.setTzSchCountry(strTZ_SCH_CNAME_COUNTRY);
 				psTzRegUserT.setTzSchCname(strTZ_SCH_CNAME);
 				psTzRegUserT.setTzSpecialty(strTZ_SPECIALTY);
 				psTzRegUserT.setTzHighestEdu(strTZ_HIGHEST_EDU);
@@ -895,6 +901,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strNATIONAL_ID = ((String) dataMap.get("NATIONAL_ID")).trim();
 				}
 
+				// 毕业院校所属国家;
+				String strTZ_SCH_CNAME_COUNTRY = "";
+				if (dataMap.containsKey("TZ_SCH_COUNTRYCODE")) {
+					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRYCODE")).trim();
+				}
+				
 				// 毕业院校;
 				String strTZ_SCH_CNAME = "";
 				if (dataMap.containsKey("TZ_SCH_CNAME")) {
@@ -1192,7 +1204,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						e.printStackTrace();
 					}
 				}
-
+				psTzRegUserT.setTzSchCountry(strTZ_SCH_CNAME_COUNTRY);
 				psTzRegUserT.setTzSchCname(strTZ_SCH_CNAME);
 				psTzRegUserT.setTzSpecialty(strTZ_SPECIALTY);
 				psTzRegUserT.setTzHighestEdu(strTZ_HIGHEST_EDU);
@@ -2004,13 +2016,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
-				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + "enroll.html";
-				}else{
-					url = request.getContextPath() + url + "/enroll.html";
+				if(!"/".equals(url.substring(0, 1))){
+					url = "/" + url;
 				}
+				if(!"/".equals(url.substring(url.length()-1))){
+					url = url + "/";
+				}
+				url = request.getContextPath() + url + siteid + "/enroll.html";
 			}else{
-				url = request.getContextPath() + "/enroll.html";
+				url = request.getContextPath() + "/" + siteid +"/enroll.html";
 			}
 			
 		}catch(Exception e){
@@ -2032,12 +2046,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
 				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + "perfect.html";
+					url = request.getContextPath() + url + siteid + "/" + "perfect.html";
 				}else{
-					url = request.getContextPath() + url + "/perfect.html";
+					url = request.getContextPath() + url + "/" + siteid + "/perfect.html";
 				}
 			}else{
-				url = request.getContextPath() + "/perfect.html";
+				url = request.getContextPath() + "/" + siteid + "/perfect.html";
 			}
 			
 		}catch(Exception e){

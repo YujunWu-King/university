@@ -21,8 +21,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 
- * @author tang
- * @since 2015-11-19
+ * @author 
+ * @since 2017-01-17
  */
 @Service("com.tranzvision.gd.TZZnxTemplateBundle.service.impl.ZnxTemplateInfoServiceImpl")
 public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
@@ -52,11 +52,11 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 				if("EMLTMPLINFO".equals(typeFlag)){
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					// 站内信模板编号;
-					String str_emlTmplId = (String) dataMap.get("emltempid");
+					String str_znxTmplId = (String) dataMap.get("znxtempid");
 					// 站内信模板名称;
-					String str_emlTmplName = (String) dataMap.get("emltempname");
+					String str_znxTmplName = (String) dataMap.get("znxtempname");
 					//机构;
-					String str_restemporg = (String) dataMap.get("emltemporg");
+					String str_restemporg = (String) dataMap.get("znxtemporg");
 					//使用邮箱服务;
 					String strEmailServId = (String) dataMap.get("tempemailserv");
 					//是否启用
@@ -64,7 +64,7 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					//是否判重
 					String ifRpt = (String) dataMap.get("ifRpt");  
 					//描述
-					String str_emlTmplDesc = (String) dataMap.get("emltmpdesc");
+					String str_emlTmplDesc = (String) dataMap.get("znxtmpdesc");
 					//元模版
 					String str_resTmplId = (String) dataMap.get("restempid");
 					//是否包含动态个性化内容
@@ -74,14 +74,14 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					// ueditor是否实例化
 					//String str_isUeditor = (String) dataMap.get("emlContentMode");
 					//站内信主题
-					String str_emlTmplSubject = (String) dataMap.get("emltmpsubject");
+					String str_znxTmplSubject = (String) dataMap.get("znxtmpsubject");
 
 					//站内信内容
-					String str_emlTmplContent="";
+					String str_znxTmplContent="";
 					if("Y".equals(str_ishtml)){
-						str_emlTmplContent = jacksonUtil.getString("emltmpcontentHtml");
+						str_znxTmplContent = jacksonUtil.getString("znxtmpcontentHtml");
 					}else{
-						str_emlTmplContent = jacksonUtil.getString("emltmpcontent");
+						str_znxTmplContent = jacksonUtil.getString("znxtmpcontent");
 					}
 					
 					/*检查选择的元模版是否可扩展子模版，如果不可扩展子模版，检查该元模版是否已经存在已经启用的业务模版，如果已经存在，则不允许保存*/
@@ -95,8 +95,8 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 						str_ymb_name = (String) map.get("TZ_YMB_NAME");
 						if(!"Y".equals(str_ymb_extent_c)){
 							int hasEmlTmplNum = 0;
-							String hasEmlTmplSQL = "SELECT count(1) FROM PS_TZ_EMALTMPL_TBL WHERE TZ_YMB_ID = ? AND TZ_JG_ID = ? AND TZ_USE_FLAG = 'Y' AND TZ_TMPL_ID <> ?";
-							hasEmlTmplNum = jdbcTemplate.queryForObject(hasEmlTmplSQL, new Object[]{str_resTmplId, str_restemporg, str_emlTmplId},"Integer");
+							String hasEmlTmplSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_YMB_ID = ? AND TZ_JG_ID = ? AND TZ_USE_FLAG = 'Y' AND TZ_TMPL_ID <> ?";
+							hasEmlTmplNum = jdbcTemplate.queryForObject(hasEmlTmplSQL, new Object[]{str_resTmplId, str_restemporg, str_znxTmplId},"Integer");
 							if(hasEmlTmplNum > 0){
 								b_save = false;
 								errMsg[0] = "1";
@@ -108,15 +108,15 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					if(b_save){
 						int existNum = 0;
 						//编号是否存在;
-						String existSQL = "SELECT count(1) FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
-						existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_emlTmplId},"Integer");
+						String existSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
+						existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_znxTmplId},"Integer");
 						if(existNum > 0){
 							errMsg[0] = "1";
 							errMsg[1] = "站内信模版编号已经被占用，请修改站内信模版编号。";
 						}else{
 							//名称是否已经被使用;
 							existSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_NAME = ? AND  TZ_TMPL_ID <> ?";
-							existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_emlTmplName, str_emlTmplId},"Integer");
+							existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_znxTmplName, str_znxTmplId},"Integer");
 							if(existNum > 0){
 								errMsg[0] = "1";
 								errMsg[1] = "站内信模版名称已经被占用，请修改站内信模版名称。";
@@ -125,8 +125,8 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 								
 								PsTzZnxTmplTbl psTzZnxTmpTbl = new PsTzZnxTmplTbl();
 								psTzZnxTmpTbl.setTzJgId(str_restemporg);
-								psTzZnxTmpTbl.setTzTmplId(str_emlTmplId);
-								psTzZnxTmpTbl.setTzTmplName(str_emlTmplName);
+								psTzZnxTmpTbl.setTzTmplId(str_znxTmplId);
+								psTzZnxTmpTbl.setTzTmplName(str_znxTmplName);
 								psTzZnxTmpTbl.setTzUseFlag(str_is_use);
 								psTzZnxTmpTbl.setTzEmlIfPrt(ifRpt);
 								psTzZnxTmpTbl.setTzTmplDesc(str_emlTmplDesc);
@@ -134,8 +134,8 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 								psTzZnxTmpTbl.setTzEmlservId(strEmailServId);
 								psTzZnxTmpTbl.setTzDynamicFlag(str_ispersonalize);
 								psTzZnxTmpTbl.setTzWebmalFlag(str_ishtml);
-								psTzZnxTmpTbl.setTzMalSubjuect(str_emlTmplSubject);
-								psTzZnxTmpTbl.setTzZnxContent(str_emlTmplContent);
+								psTzZnxTmpTbl.setTzZnxSubjuect(str_znxTmplSubject);
+								psTzZnxTmpTbl.setTzZnxContent(str_znxTmplContent);
 								psTzZnxTmpTbl.setRowAddedDttm(new Date());
 								psTzZnxTmpTbl.setRowAddedOprid(oprid);
 								psTzZnxTmpTbl.setRowLastmantDttm(new Date());
@@ -171,11 +171,11 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 				if("EMLTMPLINFO".equals(typeFlag)){
 					Map<String, Object> dataMap = jacksonUtil.getMap("data");
 					// 站内信模板编号;
-					String str_emlTmplId = (String) dataMap.get("emltempid");
+					String str_znxTmplId = (String) dataMap.get("znxtempid");
 					// 站内信模板名称;
-					String str_emlTmplName = (String) dataMap.get("emltempname");
+					String str_znxTmplName = (String) dataMap.get("znxtempname");
 					//机构;
-					String str_restemporg = (String) dataMap.get("emltemporg");
+					String str_restemporg = (String) dataMap.get("znxtemporg");
 					//使用邮箱服务;
 					String strEmailServId = (String) dataMap.get("tempemailserv");
 					//是否启用
@@ -183,7 +183,7 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					//是否判重
 					String ifRpt = (String) dataMap.get("ifRpt");  
 					//描述
-					String str_emlTmplDesc = (String) dataMap.get("emltmpdesc");
+					String str_emlTmplDesc = (String) dataMap.get("znxtmpdesc");
 					//元模版
 					String str_resTmplId = (String) dataMap.get("restempid");
 					//是否包含动态个性化内容
@@ -193,14 +193,14 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					// ueditor是否实例化
 					//String str_isUeditor = (String) dataMap.get("emlContentMode");
 					//站内信主题
-					String str_emlTmplSubject = (String) dataMap.get("emltmpsubject");
+					String str_znxTmplSubject = (String) dataMap.get("znxtmpsubject");
 
 					//站内信内容
-					String str_emlTmplContent="";
+					String str_znxTmplContent="";
 					if("Y".equals(str_ishtml)){
-						str_emlTmplContent = (String) dataMap.get("emltmpcontentHtml");
+						str_znxTmplContent = (String) dataMap.get("znxtmpcontentHtml");
 					}else{
-						str_emlTmplContent = (String) dataMap.get("emltmpcontent");
+						str_znxTmplContent = (String) dataMap.get("znxtmpcontent");
 					}
 					
 					/*检查选择的元模版是否可扩展子模版，如果不可扩展子模版，检查该元模版是否已经存在已经启用的业务模版，如果已经存在，则不允许保存*/
@@ -214,8 +214,8 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 						str_ymb_name = (String) map.get("TZ_YMB_NAME");
 						if(!"Y".equals(str_ymb_extent_c)){
 							int hasEmlTmplNum = 0;
-							String hasEmlTmplSQL = "SELECT count(1) FROM PS_TZ_EMALTMPL_TBL WHERE TZ_YMB_ID = ? AND TZ_JG_ID = ? AND TZ_USE_FLAG = 'Y' AND TZ_TMPL_ID <> ?";
-							hasEmlTmplNum = jdbcTemplate.queryForObject(hasEmlTmplSQL, new Object[]{str_resTmplId, str_restemporg, str_emlTmplId},"Integer");
+							String hasEmlTmplSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_YMB_ID = ? AND TZ_JG_ID = ? AND TZ_USE_FLAG = 'Y' AND TZ_TMPL_ID <> ?";
+							hasEmlTmplNum = jdbcTemplate.queryForObject(hasEmlTmplSQL, new Object[]{str_resTmplId, str_restemporg, str_znxTmplId},"Integer");
 							if(hasEmlTmplNum > 0){
 								b_save = false;
 								errMsg[0] = "1";
@@ -227,25 +227,25 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 					if(b_save){
 						int existNum = 0;
 						//编号是否存在;
-						String existSQL = "SELECT count(1) FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
-						existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_emlTmplId},"Integer");
+						String existSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_ID = ?";
+						existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_znxTmplId},"Integer");
 						if(existNum == 0){
 							errMsg[0] = "1";
-							errMsg[1] =  "模版编号为" + str_emlTmplId + "的站内信模版不存在。";
+							errMsg[1] =  "模版编号为" + str_znxTmplId + "的站内信模版不存在。";
 						}else{
 							//名称是否已经被使用;
-							existSQL = "SELECT count(1) FROM PS_TZ_EMALTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_NAME = ? AND  TZ_TMPL_ID <> ?";
-							existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_emlTmplName, str_emlTmplId},"Integer");
+							existSQL = "SELECT count(1) FROM PS_TZ_ZNXTMPL_TBL WHERE TZ_JG_ID = ? AND TZ_TMPL_NAME = ? AND  TZ_TMPL_ID <> ?";
+							existNum = jdbcTemplate.queryForObject(existSQL, new Object[]{str_restemporg, str_znxTmplName, str_znxTmplId},"Integer");
 							if(existNum > 0){
 								errMsg[0] = "1";
-								errMsg[1] = "机构" + str_restemporg + "已经定义过模版名称为" + str_emlTmplName + "的站内信模版，请务重复定义。";
+								errMsg[1] = "机构" + str_restemporg + "已经定义过模版名称为" + str_znxTmplName + "的站内信模版，请务重复定义。";
 							}else{
 								String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 								
 								PsTzZnxTmplTbl psTzZnxTmpTbl = new PsTzZnxTmplTbl();
 								psTzZnxTmpTbl.setTzJgId(str_restemporg);
-								psTzZnxTmpTbl.setTzTmplId(str_emlTmplId);
-								psTzZnxTmpTbl.setTzTmplName(str_emlTmplName);
+								psTzZnxTmpTbl.setTzTmplId(str_znxTmplId);
+								psTzZnxTmpTbl.setTzTmplName(str_znxTmplName);
 								psTzZnxTmpTbl.setTzUseFlag(str_is_use);
 								psTzZnxTmpTbl.setTzEmlIfPrt(ifRpt);
 								psTzZnxTmpTbl.setTzTmplDesc(str_emlTmplDesc);
@@ -253,8 +253,8 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 								psTzZnxTmpTbl.setTzEmlservId(strEmailServId);
 								psTzZnxTmpTbl.setTzDynamicFlag(str_ispersonalize);
 								psTzZnxTmpTbl.setTzWebmalFlag(str_ishtml);
-								psTzZnxTmpTbl.setTzMalSubjuect(str_emlTmplSubject);
-								psTzZnxTmpTbl.setTzZnxContent(str_emlTmplContent);
+								psTzZnxTmpTbl.setTzZnxSubjuect(str_znxTmplSubject);
+								psTzZnxTmpTbl.setTzZnxContent(str_znxTmplContent);
 								psTzZnxTmpTbl.setRowLastmantDttm(new Date());
 								psTzZnxTmpTbl.setRowLastmantOprid(oprid);
 								psTzZnxTmpTblMapper.updateByPrimaryKeySelective(psTzZnxTmpTbl);
@@ -333,10 +333,10 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-			if (jacksonUtil.containsKey("emltempid") && jacksonUtil.containsKey("emltemporg")) {
+			if (jacksonUtil.containsKey("znxtempid") && jacksonUtil.containsKey("znxtemporg")) {
 				// 站内信服务器参数id;
-				String strTmpId = jacksonUtil.getString("emltempid");
-				String strOrgName = jacksonUtil.getString("emltemporg");
+				String strTmpId = jacksonUtil.getString("znxtempid");
+				String strOrgName = jacksonUtil.getString("znxtemporg");
 				
 				PsTzZnxTmplTblKey psTzZnxTmpTblKey = new PsTzZnxTmplTblKey();
 				psTzZnxTmpTblKey.setTzJgId(strOrgName);
@@ -344,18 +344,18 @@ public class ZnxTemplateInfoServiceImpl extends FrameworkImpl {
 				
 				PsTzZnxTmplTbl psTzZnxTmpTbl = psTzZnxTmpTblMapper.selectByPrimaryKey(psTzZnxTmpTblKey);
 				if(psTzZnxTmpTbl != null){
-					returnJsonMap.put("emltempid", strTmpId);
-					returnJsonMap.put("emltempname", psTzZnxTmpTbl.getTzTmplName());
-					returnJsonMap.put("emltemporg", strOrgName);
+					returnJsonMap.put("znxtempid", strTmpId);
+					returnJsonMap.put("znxtempname", psTzZnxTmpTbl.getTzTmplName());
+					returnJsonMap.put("znxtemporg", strOrgName);
 					returnJsonMap.put("restempid", psTzZnxTmpTbl.getTzYmbId());
 					returnJsonMap.put("tempemailserv",psTzZnxTmpTbl.getTzEmlservId() );
 					returnJsonMap.put("isuse",psTzZnxTmpTbl.getTzUseFlag() );
-					returnJsonMap.put("emltmpdesc", psTzZnxTmpTbl.getTzTmplDesc());
+					returnJsonMap.put("znxtmpdesc", psTzZnxTmpTbl.getTzTmplDesc());
 					returnJsonMap.put("ispersonalize", psTzZnxTmpTbl.getTzDynamicFlag());
 					returnJsonMap.put("ishtml", psTzZnxTmpTbl.getTzWebmalFlag());
-					returnJsonMap.put("emltmpsubject", psTzZnxTmpTbl.getTzMalSubjuect());
-					returnJsonMap.put("emltmpcontent", psTzZnxTmpTbl.getTzZnxContent());
-					returnJsonMap.put("emltmpcontentHtml", psTzZnxTmpTbl.getTzZnxContent());
+					returnJsonMap.put("znxtmpsubject", psTzZnxTmpTbl.getTzZnxSubjuect());
+					returnJsonMap.put("znxtmpcontent", psTzZnxTmpTbl.getTzZnxContent());
+					returnJsonMap.put("znxtmpcontentHtml", psTzZnxTmpTbl.getTzZnxContent());
 					returnJsonMap.put("ifRpt", psTzZnxTmpTbl.getTzEmlIfPrt());
 				}
 				

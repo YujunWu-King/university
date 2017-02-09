@@ -1,0 +1,1 @@
+select COUNT(1) from PS_TZ_CERTTMPL_TBL WHERE TZ_JG_ID=? and TZ_CERT_TMPL_ID=?

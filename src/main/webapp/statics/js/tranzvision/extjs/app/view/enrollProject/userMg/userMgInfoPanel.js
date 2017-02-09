@@ -60,6 +60,12 @@
                     fieldStyle:'background:#F4F4F4'
                 },{
                     xtype: 'textfield',
+                    fieldLabel: '面试申请号',
+                    readOnly:true,
+                    name: 'msSqh',
+                    fieldStyle:'background:#F4F4F4'
+                },{
+                    xtype: 'textfield',
                     fieldLabel: '姓名',
                     readOnly:true,
                     name: 'userName',
@@ -120,6 +126,47 @@
                         readOnly:true,
                         name: 'zcTime',
                         fieldStyle:'background:#F4F4F4'
+                    },{
+                        xtype: 'radiogroup',
+                        fieldLabel: '黑名单用户',
+                        readOnly:true,
+                        name: 'blackNames',
+                        fieldStyle:'background:#F4F4F4',
+                        columns: 6,
+                        items:[{
+                        	boxLabel: "是",
+                            name: "blackName",
+                            inputValue: "Y",
+                            readOnly : true
+                        },{
+                        	boxLabel: "否",
+                            name: "blackName",
+                            inputValue: "N",
+                            readOnly : true
+                        }]  
+                    },{
+                        xtype: 'radiogroup',
+                        fieldLabel: '允许继续申请',
+                        readOnly:true,
+                        name: 'allowApplys',
+                        fieldStyle:'background:#F4F4F4',
+                        columns: 6,
+                        items:[{
+                        	boxLabel: "是",
+                            name: "allowApply",
+                            inputValue: "Y",
+                            readOnly : true
+                        },{
+                        	boxLabel: "否",
+                            name: "allowApply",
+                            inputValue: "N",
+                            readOnly : true
+                        }]
+                    },{
+                        xtype: 'textarea',
+                        fieldLabel: '备注',
+                        name: 'beizhu',
+                        //fieldStyle:'background:#F4F4F4'
                     },{
                         xtype: 'hiddenfield',
                         name: 'titleImageUrl'

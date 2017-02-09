@@ -21,12 +21,14 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxYjDsfsTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxYjQfSjrTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjQfDyTMapper;
+import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjqaudTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzExcSetTblMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzMlsmDrnrTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzYjQfFjXxTblMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjDsfsT;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxYjQfSjrT;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs;
+import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqaudTKey;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzExcSetTbl;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzMlsmDrnrT;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjQfFjXxTbl;
@@ -87,6 +89,12 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TZGDObject tZGDObject;
+	
+	@Autowired
+	private SendSmsOrMalQfServiceImpl sendSmsOrMalQfServiceImpl;
+	
+	@Autowired
+	private PsTzDxyjqaudTMapper psTzDxyjqaudTMapper;
 
 	/* 获取页面信息 */
 	@Override
@@ -234,7 +242,7 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		String stredmFlag = "", strqxdyFlag = "", strqypfFlag = "", strfsslXs = "", strdsfsFlag = "", strdsfsDate = "",
 				strdsfsTime = "", strqzfsFlag = "";
 		// 创建人，创建时间,所属部门desc;
-		String strCreName = "", strCreDt = "";
+		String strCreName = "", strCreDt = "", strCreOprid = "";
 		// 任务执行状态;
 		String strRwzxZt = "";
 
@@ -271,18 +279,34 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 			strdsfsDate = (String) dyMap.get("TZ_DSFS_DATE") == null ? "" : (String) dyMap.get("TZ_DSFS_DATE");
 			strdsfsTime = (String) dyMap.get("TZ_DSFS_TIME") == null ? "" : (String) dyMap.get("TZ_DSFS_TIME");
 			strqzfsFlag = (String) dyMap.get("TZ_QZTS_FLAG") == null ? "" : (String) dyMap.get("TZ_QZTS_FLAG");
-			// strCreOprid = (String)dyMap.get("OPRID") == null ? "" :
-			// (String)dyMap.get("OPRID");
+			strCreOprid = (String) dyMap.get("OPRID") == null ? "" : (String) dyMap.get("OPRID");
 			strCreDt = (String) dyMap.get("ROW_ADDED_DTTM") == null ? "" : (String) dyMap.get("ROW_ADDED_DTTM");
-		}
 
-		strCreName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM  PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?",
-				new Object[] { oprid }, "String");
+			strCreName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM  PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?",
+					new Object[] { strCreOprid }, "String");
+
+		} else {
+			strCreName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM  PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?",
+					new Object[] { oprid }, "String");
+
+		}
 
 		// 收件人;
 		if ("NOR".equals(strsendModel)) {
+			 // 邮件群发听众;
+			String strSql = "SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJQAUD_T WHERE TZ_MLSM_QFPC_ID=?";
+			List<Map<String, Object>> tzList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+			if (tzList != null && tzList.size() > 0) {
+				for (int i = 0; i < tzList.size(); i++) {
+					strReceverTmp = (String) tzList.get(i).get("TZ_AUDIENCE_ID");
+					if (strReceverTmp != null && !"".equals(strReceverTmp)) {
+						arrrecever.add(strReceverTmp);
+					}
+				}
+			}
+	         
 			// 邮件群发收件人;
-			String strSql = "SELECT TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?";
+			strSql = "SELECT TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?";
 			List<Map<String, Object>> sjrList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
 			if (sjrList != null && sjrList.size() > 0) {
 				for (int i = 0; i < sjrList.size(); i++) {
@@ -425,9 +449,29 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		} else {
 			return jacksonUtil.Map2json(mapRet);
 		}
-
+		
+		
+		// 邮件群发听众;
+		String strSql = "select A.TZ_AUDIENCE_ID,B.TZ_AUD_NAM from PS_TZ_DXYJQAUD_T A,PS_TZ_AUD_DEFN_T B WHERE A.TZ_AUDIENCE_ID=B.TZ_AUD_ID AND A.TZ_MLSM_QFPC_ID=?";
+		List<Map<String, Object>> audlist = jdbcTemplate.queryForList(strSql, new Object[] { strEmlQfId });
+		if (audlist != null && audlist.size() > 0) {
+			int i = 0;
+			String strID, strDesc;
+			for (i = 0; i < audlist.size(); i++) {
+				strID = (String) audlist.get(i).get("TZ_AUDIENCE_ID");
+				strDesc = (String) audlist.get(i).get("TZ_AUD_NAM");
+				if (strID != null && !"".equals(strID) && strDesc != null && !"".equals(strDesc)) {
+					Map<String, Object> map = new HashMap<>();
+					map.put("id", strID);
+					map.put("desc", strDesc);
+					listData.add(map);
+				}
+			}
+			mapRet.replace("root", listData);
+		}
+	      
 		// 邮件群发收件人;
-		String strSql = "SELECT TZ_AUDCY_ID,TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?";
+		strSql = "SELECT TZ_AUDCY_ID,TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?";
 		List<Map<String, Object>> list = jdbcTemplate.queryForList(strSql, new Object[] { strEmlQfId });
 		if (list != null && list.size() > 0) {
 			int i = 0;
@@ -941,18 +985,42 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 				// 删除收件人数据;
 				jdbcTemplate.update("DELETE from PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?",
 						new Object[] { stremlQfId });
+				
+				// 删除听众;
+				jdbcTemplate.update("DELETE from PS_TZ_DXYJQAUD_T WHERE TZ_MLSM_QFPC_ID=?",
+						new Object[] { stremlQfId });
+				
 				// 添加收件人;
 				for (int i = 0; i < arrrecever.length; i++) {
-					PsTzDxYjQfSjrT psTzDxYjQfSjrT = new PsTzDxYjQfSjrT();
-					psTzDxYjQfSjrT.setTzMlsmQfpcId(stremlQfId);
-					psTzDxYjQfSjrT.setTzAudcyId(String.valueOf(getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID")));
-					psTzDxYjQfSjrT.setTzEmail(arrrecever[i]);
-					psTzDxYjQfSjrTMapper.insert(psTzDxYjQfSjrT);
+					String sjrStr = arrrecever[i].trim();
+					if(sjrStr!= null && !"".equals(sjrStr)){
+						if(sjrStr.indexOf("@") >= 0){
+							PsTzDxYjQfSjrT psTzDxYjQfSjrT = new PsTzDxYjQfSjrT();
+							psTzDxYjQfSjrT.setTzMlsmQfpcId(stremlQfId);
+							psTzDxYjQfSjrT.setTzAudcyId(String.valueOf(getSeqNum.getSeqNum("TZ_AUDCYUAN_T", "TZ_AUDCY_ID")));
+							psTzDxYjQfSjrT.setTzEmail(sjrStr);
+							psTzDxYjQfSjrTMapper.insert(psTzDxYjQfSjrT);
+						}else{
+							//查看是不是听众，是听众则插入听众表;
+							int count = jdbcTemplate.queryForObject("select COUNT(1) FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=?", new Object[]{sjrStr},"Integer");
+							if(count == 1){
+								PsTzDxyjqaudTKey psTzDxyjqaudTKey = new PsTzDxyjqaudTKey();
+								psTzDxyjqaudTKey.setTzMlsmQfpcId(stremlQfId);
+								psTzDxyjqaudTKey.setTzAudienceId(sjrStr);
+								psTzDxyjqaudTMapper.insert(psTzDxyjqaudTKey);
+							}
+						}
+					}
+					
 				}
 
 			} else {
 				if ("EXC".equals(strsendModel)) {
 					jdbcTemplate.update("DELETE FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?",
+							new Object[] { stremlQfId });
+					
+					// 删除听众;
+					jdbcTemplate.update("DELETE from PS_TZ_DXYJQAUD_T WHERE TZ_MLSM_QFPC_ID=?",
 							new Object[] { stremlQfId });
 				}
 			}
@@ -1042,7 +1110,6 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 			try {
 				dsfsDateTime = sdf.parse(fsDateStr);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -1078,76 +1145,106 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		if ("NOR".equals(strsendModel)) {
 			// 收件人;
 			strSql = "SELECT TZ_AUDCY_ID,TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID= ?";
-			List<Map<String, Object>> audList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
-			if (audList != null && audList.size() > 0) {
-				for (int i = 0; i < audList.size(); i++) {
-					strAudIDTemp = (String) audList.get(i).get("TZ_AUDCY_ID");
-					strEmlTmp = (String) audList.get(i).get("TZ_EMAIL");
+			List<Map<String, Object>> sjrList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+			if (sjrList != null && sjrList.size() > 0) {
+				for (int i = 0; i < sjrList.size(); i++) {
+					strAudIDTemp = (String) sjrList.get(i).get("TZ_AUDCY_ID");
+					strEmlTmp = (String) sjrList.get(i).get("TZ_EMAIL");
 					createQfTaskServiceImpl.addAudCy(strAudID, strAudIDTemp, "", "", "", "", strEmlTmp, "", "", "", "",
 							"", "");
 				}
-
-			} else {
-				if ("EXC".equals(strsendModel)) {
-					String strXXXField = "", strXXXFieldTemp = "";
-					String strNameTemp = "";
-					int numFieldCount = 0;
-					String typeAFieldName = "";
-					String typeBFieldName = "";
-					strSql = "SELECT TZ_FIELD_NAME FROM PS_TZ_EXC_SET_TBL WHERE TZ_MLSM_QFPC_ID=? AND TZ_XXX_TYPE IN('A','B') order by TZ_XXX_TYPE";
-					List<Map<String, Object>> excList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
-					if (excList != null && excList.size() > 0) {
-						for (int i = 0; i < excList.size(); i++) {
-							strXXXFieldTemp = (String) excList.get(i).get("TZ_FIELD_NAME");
-							if ("".equals(strXXXField)) {
-								strXXXField = strXXXFieldTemp;
-								;
-							} else {
-								strXXXField = strXXXField + "," + strXXXFieldTemp;
+			}
+			
+			// 添加听众 ;
+			strSql = "SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJQAUD_T WHERE TZ_MLSM_QFPC_ID = ?";
+			List<Map<String, Object>> audList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+			if(audList != null && audList.size() > 0){
+				ArrayList<String> audPersonidArr = new ArrayList<>();
+				for(int i = 0; i < audList.size(); i++){
+					String audiendeId = (String)audList.get(i).get("TZ_AUDIENCE_ID");
+					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					List<Map<String, Object>> oprList = jdbcTemplate.queryForList(sql,new Object[]{audiendeId});
+					
+					if(oprList != null && oprList.size()>0){
+						for(int j = 0; j<oprList.size(); j++){
+							String oprid = (String)oprList.get(j).get("OPRID");
+							String email = (String)oprList.get(j).get("TZ_ZY_EMAIL");
+							String realName = (String)oprList.get(j).get("TZ_REALNAME");
+							if(audPersonidArr.contains(oprid)){
+								
+							}else{
+								audPersonidArr.add(oprid);
+								createQfTaskServiceImpl.addAudCy(strAudID, "", realName, "", "", "", email, "", "", oprid, "",
+										"", "");
 							}
-							if (i == 0) {
-								typeAFieldName = strXXXFieldTemp;
-							}
-							if (i == 1) {
-								typeBFieldName = strXXXFieldTemp;
-							}
-
-							numFieldCount = numFieldCount + 1;
 						}
 					}
-
-					if ("".equals(strXXXField)) {
-						strXXXField = "TZ_AUDCY_ID";
-					} else {
-						strXXXField = "TZ_AUDCY_ID," + strXXXField;
-					}
-
-					strSql = "SELECT " + strXXXField + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=?";
-					List<Map<String, Object>> list = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
-					if (list != null && list.size() > 0) {
-						for (int i = 0; i < list.size(); i++) {
-							if (numFieldCount == 1) {
-								strAudIDTemp = (String) list.get(i).get("TZ_AUDCY_ID");
-								strEmlTmp = (String) list.get(i).get(typeAFieldName);
-							}
-
-							if (numFieldCount == 2) {
-								strAudIDTemp = (String) list.get(i).get("TZ_AUDCY_ID");
-								strNameTemp = (String) list.get(i).get(typeAFieldName);
-								strEmlTmp = (String) list.get(i).get(typeBFieldName);
-							}
-
-							createQfTaskServiceImpl.addAudCy(strAudID, strAudIDTemp, strNameTemp, "", "", "", strEmlTmp,
-									"", "", "", "", "", "");
+				}
+			}
+		} else {
+			if ("EXC".equals(strsendModel)) {
+				String strXXXField = "", strXXXFieldTemp = "";
+				String strNameTemp = "";
+				int numFieldCount = 0;
+				String typeAFieldName = "";
+				String typeBFieldName = "";
+				strSql = "SELECT TZ_FIELD_NAME FROM PS_TZ_EXC_SET_TBL WHERE TZ_MLSM_QFPC_ID=? AND TZ_XXX_TYPE IN('A','B') order by TZ_XXX_TYPE";
+				List<Map<String, Object>> excList = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+				if (excList != null && excList.size() > 0) {
+					for (int i = 0; i < excList.size(); i++) {
+						strXXXFieldTemp = (String) excList.get(i).get("TZ_FIELD_NAME");
+						if ("".equals(strXXXField)) {
+							strXXXField = strXXXFieldTemp;
+							;
+						} else {
+							strXXXField = strXXXField + "," + strXXXFieldTemp;
 						}
+						if (i == 0) {
+							typeAFieldName = strXXXFieldTemp;
+						}
+						if (i == 1) {
+							typeBFieldName = strXXXFieldTemp;
+						}
+
+						numFieldCount = numFieldCount + 1;
+					}
+				}
+
+				if ("".equals(strXXXField)) {
+					strXXXField = "TZ_AUDCY_ID";
+				} else {
+					strXXXField = "TZ_AUDCY_ID," + strXXXField;
+				}
+
+				strSql = "SELECT " + strXXXField + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=?";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						if (numFieldCount == 1) {
+							strAudIDTemp = (String) list.get(i).get("TZ_AUDCY_ID");
+							strEmlTmp = (String) list.get(i).get(typeAFieldName);
+						}
+
+						if (numFieldCount == 2) {
+							strAudIDTemp = (String) list.get(i).get("TZ_AUDCY_ID");
+							strNameTemp = (String) list.get(i).get(typeAFieldName);
+							strEmlTmp = (String) list.get(i).get(typeBFieldName);
+						}
+
+						createQfTaskServiceImpl.addAudCy(strAudID, strAudIDTemp, strNameTemp, "", "", "", strEmlTmp, "",
+								"", "", "", "", "");
 					}
 				}
 			}
 		}
 
 		// 同时发送;
-		if ("on".equals(strTsfsFlag)) {
-			createQfTaskServiceImpl.addAudCy(strAudID, "", "", "", "", "", strtsfsEmail, "", "", "", "", "", "");
+		if ("on".equals(strTsfsFlag) && strtsfsEmail != null && !"".equals(strtsfsEmail)) {
+			String[] mailCCArr = strtsfsEmail.split(";");
+			for (int k = 0 ;k < mailCCArr.length; k++){
+				createQfTaskServiceImpl.addAudCy(strAudID, "", "", "", "", "", mailCCArr[k], "", "", "", "", "", "");
+			}
+			
 		}
 
 		PsTzDxYjDsfsT psTzDxYjDsfsT = psTzDxYjDsfsTMapper.selectByPrimaryKey(stremlQfId);
@@ -1156,11 +1253,12 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 			psTzDxYjDsfsTMapper.updateByPrimaryKey(psTzDxYjDsfsT);
 		}
 
-		// sendSmsOrMalQfServiceImpl.send(strTaskId, "");
+		//sendSmsOrMalQfServiceImpl.send(strTaskId, "");
+		
 		int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 		// 当前用户;
 		String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		/* 生成运行控制ID */
+		// 生成运行控制ID;
 		SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 		String s_dtm = datetimeFormate.format(new Date());
 		String runCntlId = "SMS" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
@@ -1190,7 +1288,7 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 			if (!"Y".equals(strdsfsFlag)) {
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
 			} else {
-				//定时发送;
+				// 定时发送;
 				schdProcessParameters.setPlanExcuteDateTime(dsfsDateTime);
 			}
 			schdProcessParameters.setRunControlId(runCntlId);
@@ -1341,9 +1439,14 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		// 收件人;
 		if ("NOR".equals(strsendModel)) {
 			// 邮件群发听众;
-			// TODO
-			// strSql = "SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJQAUD_T WHERE
-			// TZ_MLSM_QFPC_ID=?";
+			 strSql = "SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJQAUD_T WHERE TZ_MLSM_QFPC_ID=?";
+			 List<Map<String, Object>> autlist = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });
+			 if (autlist != null && autlist.size() > 0) {
+				for (i = 0; i < autlist.size(); i++) {
+					arrrecever.add(String.valueOf(autlist.get(i).get("TZ_AUDIENCE_ID")));
+				}
+			}
+			 
 			// 邮件群发收件人;
 			strSql = "SELECT TZ_EMAIL FROM PS_TZ_DXYJQFSJR_T WHERE TZ_MLSM_QFPC_ID=?";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(strSql, new Object[] { stremlQfId });

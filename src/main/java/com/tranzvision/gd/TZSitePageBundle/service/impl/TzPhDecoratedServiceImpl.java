@@ -154,11 +154,11 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 
 					switch (strPageType) {
 					case "homepage":
-						tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId, errMsg);
+						tzSiteMgServiceImpl.saveHomepage(strBodyCode, strSiteId,"", errMsg);
 						break;
 
 					case "loginpage":
-						tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId, errMsg);
+						tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId,"", errMsg);
 						break;
 
 					case "enrollpage":

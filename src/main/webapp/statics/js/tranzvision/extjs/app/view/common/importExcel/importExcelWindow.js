@@ -15,10 +15,11 @@ Ext.define('KitchenSink.view.common.importExcel.importExcelWindow', {
         title: '{title}'
     },
     constructor: function (config) {
+    	config = config||{};
         this.importType=config.importType,//导入类型A：上传Excel；B：粘贴Excel数据
-            this.businessHandler=config.businessHandler,//回调函数
-            this.tplResId = config.tplResId,
-            this.callParent();
+        this.businessHandler=config.businessHandler,//回调函数
+        this.tplResId = config.tplResId,
+        this.callParent();
     },
     modal:true,
     defaults: {

@@ -14,6 +14,7 @@
 		</script>
 		
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/browser.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/common.js"></script>
 
@@ -111,6 +112,28 @@
 					}
 				});
 			});
+			function SetCwinHeight(obj) {
+				var cwin = obj;
+				var ab = 0;
+				if ($.browser.msie && ($.browser.version == "6.0")) {
+					ab = 0;
+				}
+				if (document.getElementById) {
+					if (cwin && !window.opera) {
+						if (cwin.contentDocument && cwin.contentDocument.body.offsetHeight) {
+							ab = 0;
+							cwin.height = '150px';
+							cwin.height = (cwin.contentDocument.body.offsetHeight + ab) + 'px';
+						} else if (cwin.Document && cwin.Document.body.scrollHeight) {
+							cwin.height = cwin.Document.body.scrollHeight;
+						}
+					} else {
+						if (cwin.contentWindow.document && cwin.contentWindow.document.body.scrollHeight){
+							cwin.height = cwin.contentWindow.document.body.scrollHeight + ab;
+						}
+					}
+				}
+			}
 		</script>
 	</head>
 
@@ -245,6 +268,18 @@
 		/*保存在线调查*/
 		function SaveSurvey(cType){
 			if(SurveyBuild.subState == 'S'){
+				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
+					$(".pagebtn1").hide();
+				}else{
+					$(".pagebtn1").show();
+				}
+
+				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
+					$(".pagebtn2").hide();
+				}else{
+					$(".pagebtn2").show();
+				}
+				SurveyBuild._load();
 				return false;
 			}
 			var appInsId = SurveyBuild.appInsId;
@@ -320,7 +355,10 @@
 				//只有一页，禁止跳转
 				return false;
 			}
-			var isValid = $.formValidator.pageIsValid();
+			var isValid = true;
+			if(SurveyBuild.subState != 'S'){
+				var isValid = $.formValidator.pageIsValid();
+			}
 			if(isValid){
 				SurveyBuild.curPageNo = pageno;
 				SaveSurvey("SAVE");

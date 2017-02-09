@@ -1,16 +1,20 @@
 package com.tranzvision.gd.TZApplicationSurveyBundle.service.impl;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,9 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppUti
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
+import com.tranzvision.gd.util.httpclient.HttpClientService;
+import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -48,6 +55,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QuestionnaireFillImpl")
 public class QuestionnaireFillImpl extends FrameworkImpl {
+	private static final Logger logger = LoggerFactory.getLogger(HttpClientService.class);
+	
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -108,6 +117,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	@Autowired
 	private ApplicationContext ctx;
 
+	/**
+	 * Session存储的测试考生的Oprid
+	 */
+	public final String userSessionName = "TUser";
+	
 	/* 问卷保存 */
 
 	/*******************************************************************************************************************************
@@ -140,9 +154,18 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		if (userId != null && !userId.equals("TZ_GUEST") && !userId.equals("")) {
 			strPersonId = userId;
 		} else {
-			// 如果不存在登录人设置为访客
-			strPersonId = "TZ_GUEST";
+			TzSession tzSession = new TzSession(request);
+			Object objOprid = tzSession.getSession(userSessionName);
+
+			if (null != objOprid) {
+				strPersonId = String.valueOf(objOprid);
+			}else{
+				// 如果不存在登录人设置为访客
+				strPersonId = "TZ_GUEST";
+			}
 		}
+		
+
 
 		String strForm = null;
 		// 取JSON数据的MAP
@@ -204,7 +227,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						psTzDcInsT.setRowLastmantDttm(new Date());
 						psTzDcInsT.setRowLastmantOprid(strPersonId);
 						psTzDcInsTMapper.insert(psTzDcInsT);
-						System.out.println("Insert INTO PS_TZ_DC_INS_T");
+						logger.info("Insert INTO PS_TZ_DC_INS_T");
 						/* 将实例编号写入Cookie */
 						if (surveyInsId == null || surveyInsId.equals("")) {
 							Cookie cookie = new Cookie("SURVEY_INS_ID", "");
@@ -212,7 +235,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 							url = request.getRequestURL();
 							tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length())
 									.append("/").toString();
-							System.out.println("Domain=" + tempContextUrl);
+							logger.info("Domain=" + tempContextUrl);
 							cookie.setDomain(tempContextUrl);
 							cookie.setPath("/");
 							cookie.setMaxAge(-1);
@@ -284,8 +307,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						sql = "update PS_TZ_DC_INS_T set TZ_APPINS_JSON_STR=?,TZ_DC_INS_IP=?,";
 						sql = sql + "ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=? where TZ_APP_INS_ID=?";
 					}
-					System.out.println("strData:" + strData);
-					System.out.println("sql:" + sql);
+					logger.info("strData:" + strData);
+					logger.info("sql:" + sql);
 					// psTzDcInsT.setTzAppinsJsonStr(strData);
 					// psTzDcInsT.setTzDcInsFrom("1");
 					// psTzDcInsT.setTzDcInsIp(request.getRemoteAddr());
@@ -296,7 +319,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 					int XX = jdbcTemplate.update(sql,
 							new Object[] { strData, request.getRemoteAddr(), new Date(), strPersonId, surveyInsId });
-					System.out.println("Update  PS_TZ_DC_INS_T:" + XX);
+					logger.info("Update  PS_TZ_DC_INS_T:" + XX);
 					// }
 
 				} catch (Exception e) {
@@ -329,18 +352,20 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-		System.out.println("问卷填写页面");
-		// JacksonUtil jacksonUtil = new JacksonUtil();
+		logger.info("问卷填写页面");
+
+		//客户端是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
+
 		String successFlag = "0";
 		String strHtml = null;
 		String strMsg = "";
-		// 客户端类型P（PC端）、M（移动端）;
-		String accessType = "";
+
 		// REM 实例唯一随机数;
 		String uniqueNum = "";
 
 		String fromIntro = "";
-		boolean boolRtn = false;
+
 
 		String strTitle = null, strModeDesc = null;
 		String strReturn = null;
@@ -350,27 +375,29 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		// 如果不存在登录人设置为访客
 		if (strPersonId == null || strPersonId.equals("")) {
-			strPersonId = "TZ_GUEST";
+			/*是不是测测上清华相关的功能*/
+			TzSession tzSession = new TzSession(request);
+			Object objOprid = tzSession.getSession(userSessionName);
+
+			if (null != objOprid) {
+				strPersonId = String.valueOf(objOprid);
+			}else{
+				strPersonId = "TZ_GUEST";
+			}
 		}
 
 		jsonUtil.json2Map(strParams);
 
+		/* 问卷编号 、实例编号、控制逻辑*/
+		String surveyID = "",surveyInsId = "",surveyLogic = "";
+		
 		/* 调查问卷应用编号 */
-		String str_appId = request.getParameter("classid");
-
-		/* 问卷编号 */
-		String surveyID = "";
-		/* 实例编号 */
-		String surveyInsId = "";
-		/* 控制逻辑 */
-		String surveyLogic = "";
-
+		String classId = request.getParameter("classid");
+		
 		/* 从参数中获取问卷编号、实例编号 */
-		if (str_appId != null && !str_appId.equals("")) {
+		if (classId != null && !classId.equals("")) {
 			surveyID = request.getParameter("SURVEY_WJ_ID");
-
 			surveyInsId = request.getParameter("SURVEY_INS_ID");
-			accessType = request.getParameter("AC");
 			fromIntro = request.getParameter("F");
 			uniqueNum = request.getParameter("unique");
 		} else {
@@ -380,9 +407,6 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			if (jsonUtil.containsKey("SURVEY_INS_ID")) {
 				surveyInsId = jsonUtil.getString("SURVEY_INS_ID");
 			}
-			if (jsonUtil.containsKey("AC")) {
-				accessType = jsonUtil.getString("AC");
-			}
 			if (jsonUtil.containsKey("F")) {
 				fromIntro = jsonUtil.getString("F");
 			}
@@ -390,66 +414,92 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				uniqueNum = jsonUtil.getString("unique");
 			}
 		}
-
-		/* 参数实例编号、实例唯一随机数都为空，那么生产实例唯一随机数 */
-		System.out.println("surveyInsId:" + surveyInsId);
-		System.out.println("uniqueNumBefro2:" + uniqueNum);
-		System.out.println("surveyInsId:" + surveyInsId);
-		System.out.println(
-				(surveyInsId == null || surveyInsId.equals("")) && (uniqueNum == null || uniqueNum.equals("")));
-
-		if ((surveyInsId == null || surveyInsId.equals("")) && (uniqueNum == null || uniqueNum.equals(""))) {
-			uniqueNum = String.valueOf(((int) (Math.random() * 100)) * 951)
-					+ String.valueOf(((int) (Math.random() * 100)) * 233)
-					+ String.valueOf(((int) (Math.random() * 100)) * 5713)
-					+ String.valueOf(((int) (Math.random() * 100)) * 35771) + "000000000000000";
-			System.out.println("uniqueNumBefro:" + uniqueNum);
-			uniqueNum = uniqueNum.substring(0, 15);
-		}
-		/* 统一接口URL */
-		String tzGeneralURL = request.getContextPath() + "/dispatcher";
-
-		String path = request.getContextPath();
-
-		if (accessType == null || accessType.equals("")) {
-			try {
-				strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_NAV_HTML", tzGeneralURL,
-						surveyID, surveyInsId, uniqueNum);
-			} catch (TzSystemException e) {
-				strHtml = "";
-				e.printStackTrace();
-			}
-			System.out.println("返回到TZ_SURVEY_NAV_HTML");
-			System.out.println("surveyID:" + surveyID);
-			System.out.println("surveyInsId:" + surveyInsId);
-			System.out.println("uniqueNum:" + uniqueNum);
-			return strHtml;
-		}
-
-		/*--进入页面前检查规则--BEGIN*/
-		if (surveyID == null || surveyID.equals("")) {
+		
+		/* 1.验证实例编号是否为null*/
+		logger.info("--- 1.验证实例编号是否为null ---");
+		if (StringUtils.isBlank(surveyID)) {
 			successFlag = "1";
 			strMsg = "The Survey Id is empty!";
-			return strMsg;
 		}
-		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
-		if (psTzDcWjDyTWithBLOBs == null) {
-			successFlag = "1";
-			strMsg = "The Survey Id is not valid!";
-			return strMsg;
+		
+		/* 2.验证问卷编号是否合法*/
+		logger.info("--- 2.验证问卷编号是否合法 ---");
+		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = new PsTzDcWjDyTWithBLOBs();
+		if (successFlag.equals("0")) {
+			psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
+			if (psTzDcWjDyTWithBLOBs == null) {
+				successFlag = "1";
+				strMsg = "The Survey Id is not valid!";
+			}
 		}
+		
+		/*卷头、卷尾、语言*/
+		String header = "",footer = "",language = "";
+		if (successFlag.equals("0")) {
+			header = psTzDcWjDyTWithBLOBs.getTzDcJtnr();
+			footer = psTzDcWjDyTWithBLOBs.getTzDcJwnr();
 
-		/* 卷头、卷尾 */
-		String header = psTzDcWjDyTWithBLOBs.getTzDcJtnr();
-		String footer = psTzDcWjDyTWithBLOBs.getTzDcJwnr();
-		/* 语言 */
-		String language = psTzDcWjDyTWithBLOBs.getTzAppTplLan();
-		if (language == null || language.equals("")) {
-			language = "ZHS";
+			language = psTzDcWjDyTWithBLOBs.getTzAppTplLan();
+			if (StringUtils.isBlank(language)) {
+				language = "ZHS";
+			}
 		}
+		
+		/* 3.根据登录状态判断是否可以参与调查*/
+		logger.info("---2.根据登录状态判断是否可以参与调查 ---");
+		boolean boolRtn = false;
+		if (successFlag.equals("0")) {
+			boolRtn = surveryRulesImpl.checkCanAnswer(psTzDcWjDyTWithBLOBs, language, strPersonId);
+			if (!boolRtn) {
+				successFlag = "1";
+				strMsg = surveryRulesImpl.msg;
+			}
+		}
+		
+		/* 4.实例编号、实例唯一随机数是否为null*/
+		logger.info("---4.实例编号、实例唯一随机数是否为null ---");
+		logger.info(" ----- 问卷实例编号:" + surveyInsId + "            --------------实例唯一随机数Befro2: " + uniqueNum);
+		if(successFlag.equals("0")){
+			if(StringUtils.isBlank(surveyInsId) && StringUtils.isBlank(uniqueNum)){
+				String isTrue = "N";
+				isTrue = jdbcTemplate.queryForObject("SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? AND TZ_DC_WJ_DLZT = 'N' AND TZ_DC_WJ_IPGZ = '3'", new Object[] { surveyID },"String");
+				if(StringUtils.equals("Y", isTrue)){
+					Map<String, Object> map = jdbcTemplate.queryForMap("SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1", new Object[] { surveyID,strPersonId });
+					if(map != null){
+						surveyInsId = map.get("TZ_APP_INS_ID") == null?"":String.valueOf(map.get("TZ_APP_INS_ID"));
+						uniqueNum = map.get("TZ_UNIQUE_NUM") == null?"":String.valueOf(map.get("TZ_UNIQUE_NUM"));
+					}
+				}
+				if(StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1){
+					uniqueNum = String.valueOf(((int) (Math.random() * 100)) * 951)
+							+ String.valueOf(((int) (Math.random() * 100)) * 233)
+							+ String.valueOf(((int) (Math.random() * 100)) * 5713)
+							+ String.valueOf(((int) (Math.random() * 100)) * 35771) + "000000000000000";
+					uniqueNum = uniqueNum.substring(0, 15);
+				}
+				
+				String url = request.getRequestURL() + "?" + request.getQueryString();
+				if(StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0){
+					url = url + "&SURVEY_INS_ID=" + surveyInsId;
+				}
+				url = url + "&unique=" + uniqueNum;
+				logger.info("   --- 请求URL     " + url);
 
-		/* 问卷状态检查 */
-		System.out.println("问卷状态检查");
+				try {
+					response.sendRedirect(url);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		/* 统一接口URL */
+		String tzGeneralURL = request.getContextPath() + "/dispatcher";
+		String path = request.getContextPath();
+
+		/* 5.问卷状态检查 */
+		logger.info("5.问卷状态检查");
 		if (successFlag.equals("0")) {
 			boolRtn = surveryRulesImpl.checkSurveryStatus(psTzDcWjDyTWithBLOBs, language);
 			if (!boolRtn) {
@@ -458,8 +508,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
-		/* 开始结束时间、开始结束日期检查 */
-		System.out.println("时间检查");
+		/* 6.开始结束时间、开始结束日期检查 */
+		logger.info("6.开始结束时间、开始结束日期检查");
 		if (successFlag.equals("0")) {
 			boolRtn = surveryRulesImpl.checkSurveryDate(psTzDcWjDyTWithBLOBs, language);
 			if (!boolRtn) {
@@ -468,80 +518,59 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
-		/* 非登录用户是否可参加调查检查 */
-		System.out.println("非登录用户是否可参加调查检查 ");
+		
+		//TODO 不允许匿名调查,检查听众 JAVA版本没有听众这个 
+		/* 7.根据唯一序列号获取实例编号*/
 		if (successFlag.equals("0")) {
-			boolRtn = surveryRulesImpl.checkCanAnswer(psTzDcWjDyTWithBLOBs, language, strPersonId);
-			if (!boolRtn) {
-				successFlag = "1";
-				strMsg = surveryRulesImpl.msg;
-			}
-		}
-
-		/* 不允许匿名调查,检查听众 JAVA版本没有听众这个 */
-
-		/* 调查数据采集规则 */
-		System.out.println("调查数据采集规则 ");
-		if (successFlag.equals("0")) {
-			boolRtn = surveryRulesImpl.checkSingleAnswerRules(psTzDcWjDyTWithBLOBs, language, request, strPersonId);
-			if (!boolRtn) {
-				successFlag = "1";
-				strMsg = surveryRulesImpl.msg;
-			}
-		}
-
-		if (successFlag.equals("0")) {
-			if (surveyInsId == null || surveyInsId.equals("")) {
+			if (StringUtils.isBlank(surveyInsId)) {
 				surveyInsId = jdbcTemplate.queryForObject(
 						"SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_UNIQUE_NUM = ?", new Object[] { uniqueNum },
 						"String");
 			}
 		}
+		
+		/* 8.调查数据采集规则 */
+		logger.info("7.调查数据采集规则");
+		if (successFlag.equals("0")) {
+			if(StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1){
+				
+				boolRtn = surveryRulesImpl.checkSingleAnswerRules(psTzDcWjDyTWithBLOBs, language, request, strPersonId);
+				if (!boolRtn) {
+					successFlag = "1";
+					strMsg = surveryRulesImpl.msg;
+				}
+			}
+		}
+
 
 		/* 是否可以填写调查问卷 */
 		if (successFlag.equals("0")) {
 			/* 模式信息 */
-			String survey_mode = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET",
-					"SURVEY_MODE", language, "调查模式", "Survey");
-			String survey_mode_desc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET",
-					"SURVEY_MODE_DESC", language, "您提交的数据我们将会保存", "Save");
-			String begin = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "BEGIN", language,
-					"开始", "GO");
-			String submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SUBMIT",
-					language, "提交问卷", "Submit");
-			String strPre = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_PRE",
-					language, "上一页", "Pre");
-			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",
-					language, "下一页", "Next");
+			String survey_mode = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET","SURVEY_MODE", language, "调查模式", "Survey");
+			String survey_mode_desc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET","SURVEY_MODE_DESC", language, "您提交的数据我们将会保存", "Save");
+			String begin = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "BEGIN", language,"开始", "GO");
+			String submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SUBMIT",language, "提交问卷", "Submit");
+			String strPre = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_PRE",language, "上一页", "Pre");
+			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",language, "下一页", "Next");
 
-			if (accessType != null && accessType.equals("P")) {
-				try {
-					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_HTML",
-							survey_mode, survey_mode_desc, path);
-				} catch (TzSystemException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			try {
+				if(isMobile){
+					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_M_HTML", survey_mode, survey_mode_desc);
+				}else{
+					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_HTML", survey_mode, survey_mode_desc, path);
 				}
-			} else {
-				try {
-					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_M_HTML",
-							survey_mode, survey_mode_desc);
-				} catch (TzSystemException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			} catch (TzSystemException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			/* 是否需要密码 */
-			System.out.println("是否需要密码 ");
+			logger.info("是否需要密码 ");
 			boolRtn = surveryRulesImpl.checkSurveryNeedsPwd(psTzDcWjDyTWithBLOBs, language);
-			String isPassAuth = "";
+			String isPassAuth = "N";
 			if (boolRtn) {
 				/* 需要密码 */
 				isPassAuth = "Y";
-			} else {
-				/* 不需要密码 */
-				isPassAuth = "N";
 			}
 
 			// 是否启用前导页
@@ -555,19 +584,20 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			try {
 				if (isEnable != null && isEnable.equals("Y") && (fromIntro == null || fromIntro.equals(""))) {
 					strHtml = "";
-					if (accessType != null && accessType.equals("P")) {
-						strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_INTRO_HTML", header,
-								strIntro, footer, tzGeneralURL, surveyID, surveyInsId, accessType, strTitle,
-								strModeDesc, begin, isPassAuth, surveyID, path);
-					} else {
+					if(isMobile){
 						strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_INTRO_M_HTML",
-								header, strIntro, footer, tzGeneralURL, surveyID, surveyInsId, accessType, strTitle,
+								header, strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle,
+								strModeDesc, begin, isPassAuth, surveyID, path);
+					}else{
+						strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_INTRO_HTML", header,
+								strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle,
 								strModeDesc, begin, isPassAuth, surveyID, path);
 					}
-					System.out.println("返回到TZ_SURVEY_INTRO_HTML 或TZ_SURVEY_INTRO_M_HTML");
-					System.out.println("surveyID:" + surveyID);
-					System.out.println("surveyInsId:" + surveyInsId);
-					// System.out.println("uniqueNum:"+uniqueNum);
+
+					logger.info("返回到TZ_SURVEY_INTRO_HTML 或TZ_SURVEY_INTRO_M_HTML");
+					logger.info("surveyID:" + surveyID);
+					logger.info("surveyInsId:" + surveyInsId);
+					// logger.info("uniqueNum:"+uniqueNum);
 					return strHtml;
 				}
 			} catch (TzSystemException e) {
@@ -577,10 +607,10 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			/* 文件报文数据、问卷实例报文数据 */
 			String surveyData = psTzDcWjDyTWithBLOBs.getTzApptplJsonStr();
-			System.out.println("surveyData:" + surveyData);
+			logger.info("surveyData:" + surveyData);
 			String surveyInsData = null;
 			try {
-				if (surveyInsId != null && surveyInsId.equals("") && Integer.parseInt(surveyInsId) > 0) {
+				if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
 					surveyInsData = jdbcTemplate.queryForObject(
 							"SELECT TZ_APPINS_JSON_STR FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND TZ_APP_INS_ID = ?",
 							new Object[] { surveyID, surveyInsId }, "String");
@@ -593,18 +623,18 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("surveyInsData:" + surveyInsData);
+			logger.info("surveyInsData:" + surveyInsData);
 
 			int numMaxPage = jdbcTemplate.queryForObject(
 					"SELECT MAX(TZ_PAGE_NO) + 1 FROM PS_TZ_DCWJ_XXXPZ_T WHERE TZ_DC_WJ_ID = ?",
 					new Object[] { surveyID }, "int");
 
-			System.out.println("numMaxPage:" + numMaxPage);
+			logger.info("numMaxPage:" + numMaxPage);
 			/* 控件信息 */
 			ArrayList<Map<String, Object>> comDfn = questionnaireEditorEngineImpl.getComDfn(surveyID);
 			String strComRegInfo = jsonUtil.List2json(comDfn);
 
-			System.out.println("strComRegInfo:" + strComRegInfo);
+			logger.info("strComRegInfo:" + strComRegInfo);
 			/* 控制逻辑 */
 			try {
 				if (surveyInsId != null && !surveyInsId.equals("") && Integer.parseInt(surveyInsId) > 0) {
@@ -618,7 +648,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("surveyLogic:" + surveyLogic);
+			logger.info("surveyLogic:" + surveyLogic);
 			/* 调查问卷消息集合 */
 			String str_MsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_SURVEY_MSGSET",
 					language);
@@ -629,7 +659,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				Map<String, Object> msgLang = jsonUtil.getMap(language);
 				str_MsgSet = jsonUtil.Map2json(msgLang);
 			}
-			System.out.println("str_MsgSet:" + str_MsgSet);
+			logger.info("str_MsgSet:" + str_MsgSet);
 
 			/* 当前问卷的提交状态 */
 			String strSubState = "A";
@@ -637,35 +667,40 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
 			try {
-				if (accessType != null && accessType.equals("P")) {
-					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
-							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
-							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path);
-				} else {
+				/*是否为测试问卷*/
+				String isTestSurvey = jdbcTemplate.queryForObject("SELECT 'Y' FROM PS_TZ_CSWJ_TBL WHERE TZ_DC_WJ_ID = ? limit 0,1", new Object[] { surveyID },"String");
+				if(StringUtils.equals("Y", isTestSurvey)){
+					submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "QUIT",
+							language, "退出/测试其他项目", "Quit");
+				}
+				if(isMobile){
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
 							submit, language, strPre, strNext, strSubState, uniqueNum, path);
+				}else{
+					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
+							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
+							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
+							submit, language, strPre, strNext, strSubState, uniqueNum, path);
 				}
-				System.out.println("返回到TZ_SURVEY_PAGE_HTML 或TZ_SURVEY_PAGE_M_HTML");
-				System.out.println("surveyID:" + surveyID);
-				System.out.println("surveyInsId:" + surveyInsId);
-				System.out.println("uniqueNum:" + uniqueNum);
+
+				logger.info("返回到TZ_SURVEY_PAGE_HTML 或TZ_SURVEY_PAGE_M_HTML");
+				logger.info("surveyID:" + surveyID);
+				logger.info("surveyInsId:" + surveyInsId);
+				logger.info("uniqueNum:" + uniqueNum);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			/* 不能填写问卷 */
 			try {
-				if (accessType != null && accessType.equals("P")) {
-					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_HTML", header,
-							strMsg, footer, path);
-				} else {
+				if(isMobile){
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_M_HTML", header,
 							strMsg, footer, path);
-					System.out.println("返回到TZ_SURVEY_ERROR_HTML 或TZ_SURVEY_ERROR_M_HTML");
-					System.out.println("strMsg:" + strMsg);
+				}else{
+					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_HTML", header,
+							strMsg, footer, path);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -689,7 +724,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		if (formDataMap.containsKey("EType") && formDataMap.get("EType") != null) {
 			String strEType = formDataMap.get("EType").toString();
 
-			String surveyID = null, surveyInsId = null, rtncode = null, rtnMsg = null;
+			String surveyID = null, surveyInsId = null, rtnMsg = null;
 
 			if (formDataMap.containsKey("SURVEY_WJ_ID") && formDataMap.get("SURVEY_WJ_ID") != null) {
 				surveyID = formDataMap.get("SURVEY_WJ_ID").toString();
@@ -731,7 +766,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				} else {
 					Cookie cookie = new Cookie("SURVEY_WJ_IS_PASSWORD", "");
 
-					System.out.println("Domain=" + tempContextUrl);
+					logger.info("Domain=" + tempContextUrl);
 					cookie.setDomain(tempContextUrl);
 					cookie.setPath("/");
 					cookie.setMaxAge(-1);
@@ -967,11 +1002,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				if (optionValueMap.containsKey("accessPath") && optionValueMap.get("accessPath") != null) {
 					strPath = optionValueMap.get("accessPath").toString();
 				}
-				System.out.println("path:" + strPath);
-				System.out.println("orderby:" + strOrderBy);
-				System.out.println("fileName:" + strUserFileName);
-				System.out.println("sysFileName:" + strSysFileName);
-				System.out.println("itemId:" + strItemId);
+				logger.info("path:" + strPath);
+				logger.info("orderby:" + strOrderBy);
+				logger.info("fileName:" + strUserFileName);
+				logger.info("sysFileName:" + strSysFileName);
+				logger.info("itemId:" + strItemId);
 
 				try {
 					if (!StringUtils.isEmpty(strSysFileName) && !StringUtils.isEmpty(strUserFileName)
@@ -1251,7 +1286,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 							break;
 						} // 必须要有类对象才可以调用
 					}
-					System.out.println("结果返回值：" + result);
+					logger.info("结果返回值：" + result);
 					if (result != null) {
 						str_msg = str_msg + result + "\n";
 					}
