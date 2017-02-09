@@ -158,7 +158,7 @@ public class TzPhDecoratedServiceImpl extends FrameworkImpl {
 						break;
 
 					case "loginpage":
-						tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId, errMsg);
+						tzSiteMgServiceImpl.saveLoginpage(strBodyCode, strSiteId,"", errMsg);
 						break;
 
 					case "enrollpage":

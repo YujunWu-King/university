@@ -758,7 +758,46 @@
 			}
 		});
 	},
-
+	
+	//放大镜搜索证书模板
+	pmtSearchZsmb: function(btn){
+		var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_CERTTMPL_TBL',
+			searchDesc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.zsmb","搜索证书模板") ,
+			maxRow:20,
+			condition:{
+				presetFields:{
+					TZ_JG_ID:{
+						value: Ext.tzOrgID,
+						type: '01'
+					}
+				},
+				srhConFields:{
+					TZ_CERT_TMPL_ID:{
+						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tmpzsmbid","证书模板编号"),
+						operator:'01',
+						type:'01'
+					},
+					TZ_TMPL_NAME:{
+						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tmpzsmbname","证书名称"),
+						operator:'01',
+						type:'01'
+					}
+				}
+			},
+			srhresult:{
+				TZ_CERT_TMPL_ID: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tmpzsmbid","证书模板编号"),
+				TZ_TMPL_NAME: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.tmpzsmbname","证书名称")
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("zsmbid").setValue(selection[0].data.TZ_CERT_TMPL_ID);
+				form.findField("zsmbname").setValue(selection[0].data.TZ_TMPL_NAME);
+			}
+		});
+	},
+	
 	//放大镜选择材料/面试评审成绩模型
 	choiceScoreModal: function(btn){
 		var fieldName = btn.name;

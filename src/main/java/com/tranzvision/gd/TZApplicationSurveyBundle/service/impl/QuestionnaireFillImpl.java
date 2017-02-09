@@ -464,7 +464,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				String isTrue = "N";
 				isTrue = jdbcTemplate.queryForObject("SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? AND TZ_DC_WJ_DLZT = 'N' AND TZ_DC_WJ_IPGZ = '3'", new Object[] { surveyID },"String");
 				if(StringUtils.equals("Y", isTrue)){
-					Map<String, Object> map = jdbcTemplate.queryForMap("SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1", new Object[] { strPersonId });
+					Map<String, Object> map = jdbcTemplate.queryForMap("SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1", new Object[] { surveyID,strPersonId });
 					if(map != null){
 						surveyInsId = map.get("TZ_APP_INS_ID") == null?"":String.valueOf(map.get("TZ_APP_INS_ID"));
 						uniqueNum = map.get("TZ_UNIQUE_NUM") == null?"":String.valueOf(map.get("TZ_UNIQUE_NUM"));

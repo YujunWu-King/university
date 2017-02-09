@@ -112,16 +112,20 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 		String schlredHtml = "";
 		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID,SCHR.TZ_IS_APPLY FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_SCHLR_RSLT_TBL SCHR WHERE SCH.TZ_SCHLR_ID = SCHR.TZ_SCHLR_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND SCHR.OPRID = ?";
+//		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID,SCHR.TZ_IS_APPLY FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_SCHLR_RSLT_TBL SCHR WHERE SCH.TZ_SCHLR_ID = SCHR.TZ_SCHLR_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND SCHR.OPRID = ?";
+		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_DC_WJ_DY_T WJ,PS_TZ_DC_INS_T INS WHERE WJ.TZ_DC_WJ_ID = SCH.TZ_DC_WJ_ID AND SCH.TZ_DC_WJ_ID = INS.TZ_DC_WJ_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND INS.ROW_ADDED_OPRID = ?";
 		String wjSql = "SELECT CONCAT(WJ.TZ_DC_WJ_KSRQ,' ',WJ.TZ_DC_WJ_KSSJ) AS TZ_DC_WJ_KRQ,CONCAT(WJ.TZ_DC_WJ_JSRQ,' ',WJ.TZ_DC_WJ_JSSJ) AS TZ_DC_WJ_JRQ,TZ_DC_WJ_URL FROM PS_TZ_DC_WJ_DY_T WJ WHERE TZ_DC_WJ_ID = ?";
+		String applySql = "SELECT TZ_IS_APPLY FROM PS_TZ_SCHLR_RSLT_TBL WHERE TZ_SCHLR_ID = ? AND OPRID = ?";
 		List<?> schlrList = sqlQuery.queryForList(sql, new Object[]{jgId,oprid});
 		String attrKrq = "";
 		String attrJrq = "";
 		String attrWjUrl = "";
 		for (Object obj : schlrList) {
 			Map<String, Object> result = (Map<String, Object>) obj;
-
-			String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
+			
+			String attrSchlrId = result.get("TZ_SCHLR_ID") == null ? "" : String.valueOf(result.get("TZ_SCHLR_ID"));
+//			String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
+			String attrIsApply = sqlQuery.queryForObject(applySql, new Object[]{attrSchlrId,oprid}, "String");
 			if(StringUtils.equals("Y", attrIsApply)){
 				attrIsApply = "通过申请";
 			}else{

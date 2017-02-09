@@ -106,6 +106,13 @@
              	}]
 		 });
 		
+		//打分规则Store
+		var ScoringRulesStore = new KitchenSink.view.common.store.comboxStore({
+            recname:'PS_TZ_ZDCS_DFGZ_T',
+            condition:{},
+            result:'TZ_ZDCSGZ_ID,TZ_ZDCSGZ_NAME'
+        });
+		
 		var itemOptionStore = new KitchenSink.view.scoreModelManagement.scoreItemOptionsStore();
 		
         Ext.apply(this, {
@@ -155,7 +162,7 @@
 					store: itemTypestore,
 					allowBlank: false,
 					listeners:{
-                        change:function(combo){
+						change:function(combo){
                             combo.findParentByType('form').down('[reference=scoreItemTypeA]').setHidden(combo.value!="A");
                             combo.findParentByType('form').down('[reference=scoreItemTypeB]').setHidden(combo.value!="B");
                             combo.findParentByType('form').down('[reference=scoreItemTypeC]').setHidden(combo.value!="C");
@@ -239,6 +246,32 @@
 		        		xtype: 'numberfield',
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.upperLimit","分值上限"),
 						name: 'upperLimit',
+		        	},{
+		        		layout: {
+							type: 'column'
+						},
+						items:[{
+							width: 95,
+			        		xtype: 'checkbox',
+			        		name: 'autoScreen',
+			        		reference:'autoScreenCheck',
+			        		inputValue: 'Y',
+			        		boxLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.autoScreen","自动初筛")
+						},{
+							columnWidth: 1,
+							xtype:'combo',
+							name: 'scoringRules',
+							hideLabel: true,
+							emptyText: '请选择成绩项打分规则',
+							store: ScoringRulesStore,
+							queryMode: 'local',
+				            editable:false,
+				            valueField: 'TZ_ZDCSGZ_ID',
+				    		displayField: 'TZ_ZDCSGZ_NAME',
+				    		bind: {
+				    			hidden: '{!autoScreenCheck.checked}'
+				    		}
+						}]
 		        	}]
 		        },{
 		        	xtype: 'fieldcontainer',

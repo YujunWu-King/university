@@ -179,7 +179,9 @@
 							$("#" + tip).html("邮箱地址不正确！");
 							$("#" + flg).val(false);
 						} else {
-							var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"email":"' + val + '","sen":"1"}}';
+							var _orgId = $("#_OrgId").val();
+							
+							var tzParams = '{"ComID":"TZ_CAN_TSINGHUA_COM","PageID":"TZ_CAN_TSING_STD","OperateType":"QF","comParams":{"email":"' + val + '","orgid":"' + _orgId + '","sen":"1"}}';
 							$.ajax({
 								type: "get",
 								async: true,

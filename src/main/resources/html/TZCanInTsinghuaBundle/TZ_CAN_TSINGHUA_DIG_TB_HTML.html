@@ -1,10 +1,10 @@
-<div  style="width: 100%; float: left; border: 1px solid #E0E0E0; padding: 5px; display: block; margin-bottom: 10px">
-	<h3 style="text-align: left">
-		%bind(:1) <font  color=blue>%bind(:3)</font>
-	</h3>
+<div  style="width: 98%; border: 1px solid #E0E0E0; padding: 5px; margin-bottom: 10px">
+	<h3 style="text-align:left">%bind(:1)<font color=blue>%bind(:3)</font></h3>
 	<h5 style="text-align: left">已参加测试的%bind(:2)名考生的分布图：</h5>
-	<div id="chartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 260px;"></div>
-	<div id="serialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 260px;"></div>
+	<div style="width:100%;height:420px;">
+		<div id="chartdiv_%bind(:4)" style="width:48%;float:left;"></div>
+		<div id="serialdiv_%bind(:4)" style="width:48%;float:left;"></div>
+	</div>
 	 <!-- <h5 style="text-align: left">历史问卷统计情况</h5>
 	<div id="hischartdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>
 	<div id="hisserialdiv_%bind(:4)" style="width: 50%; float: left; display: block; height: 350px;"></div>  -->
