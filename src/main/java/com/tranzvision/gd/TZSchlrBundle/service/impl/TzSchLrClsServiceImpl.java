@@ -20,7 +20,6 @@ import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjGzgxTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjLjgzTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjLjxsTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjYbgzTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjgzT;
@@ -30,12 +29,6 @@ import com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QuestionnaireEd
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjDcxTblMapper;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjPctTblMapper;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjTblMapper;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjDcxTbl;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjPctTbl;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.model.PsTzCswjTbl;
 import com.tranzvision.gd.TZSchlrBundle.dao.PsTzSchlrTblMapper;
 import com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -57,19 +50,14 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 	private SqlQuery jdbcTemplate;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
 	@Autowired
 	private PsTzDcWjDyTMapper psTzDcWjDyTMapper;
-
 	@Autowired
 	private PsTzDcWjLjgzTMapper psTzDcWjLjgzTMapper;
-
 	@Autowired
 	private PsTzDcWjYbgzTMapper psTzDcWjYbgzTMapper;
-
 	@Autowired
 	private PsTzDcWjLjxsTMapper psTzDcWjLjxsTMapper;
-
 	@Autowired
 	private PsTzDcWjGzgxTMapper psTzDcWjGzgxTMapper;
 	@Autowired

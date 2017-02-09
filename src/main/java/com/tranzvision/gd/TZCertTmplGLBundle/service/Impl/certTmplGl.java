@@ -12,6 +12,7 @@ import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.beust.jcommander.internal.Console;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -46,6 +47,8 @@ public class certTmplGl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private SqlQuery sqlQuery;
+	@Autowired
 	private TZGDObject tzSQLObject;
 
 	/* 查询列表 */
@@ -64,7 +67,7 @@ public class certTmplGl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "TZ_CERT_TMPL_ID", "ASC" } };
 
 			// 数据要的结果字段;
-			String[] resultFldArray = {"TZ_JG_ID", "TZ_CERT_TMPL_ID", "TZ_TMPL_NAME","TZ_CERT_JG_ID" };
+			String[] resultFldArray = {"TZ_CERT_TMPL_ID", "TZ_CERT_TYPE_NAME", "TZ_CERT_JG_NAME","TZ_USE_FLAG","TZ_JG_ID"  };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -74,10 +77,12 @@ public class certTmplGl extends FrameworkImpl {
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("JgId", rowList[0]);
-					mapList.put("certTmpl", rowList[1]);
-					mapList.put("tmplName", rowList[2]);
-					mapList.put("certJGID", rowList[3]);
+					
+					mapList.put("certTmpl", rowList[0]);
+					mapList.put("certType", rowList[1]);
+					mapList.put("certJGID", rowList[2]);
+					mapList.put("useFlag", rowList[3]);
+					mapList.put("JgId", rowList[4]);
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);
@@ -112,6 +117,7 @@ public class certTmplGl extends FrameworkImpl {
 					map.put("JgId", psTzCerttmplTblWithBLOBs.getTzJgId());
 					map.put("tmplName", psTzCerttmplTblWithBLOBs.getTzTmplName());
 					map.put("certJGID", psTzCerttmplTblWithBLOBs.getTzCertJgId());
+					map.put("certTypeID", psTzCerttmplTblWithBLOBs.getTzCertTypeId());
 					map.put("useFlag", psTzCerttmplTblWithBLOBs.getTzUseFlag());
 					map.put("certMergHtml1", psTzCerttmplTblWithBLOBs.getTzCertMergHtml1());
 					map.put("certMergHtml2", psTzCerttmplTblWithBLOBs.getTzCertMergHtml2());
@@ -159,12 +165,18 @@ public class certTmplGl extends FrameworkImpl {
 				String tmplName = (String) infoData.get("tmplName");
 				String JgId = (String) infoData.get("JgId");
 				String certJGID = (String) infoData.get("certJGID");
+				String certTypeID = (String) infoData.get("certTypeID");
 				String useFlag = (String) infoData.get("useFlag");
 				String certMergHtml1 = (String) infoData.get("certMergHtml1");
 				String certMergHtml2 = (String) infoData.get("certMergHtml2");
 				String certMergHtml3 = (String) infoData.get("certMergHtml3");
 				String titleImageName = (String) infoData.get("titleImageName");
 				String imageAUrl = (String) infoData.get("imageAUrl");
+				if("Y".equals(useFlag)){
+					String sqlUpdate = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TZUpdateUseFlag");
+					sqlQuery.update(sqlUpdate, new Object[] { JgId,certTypeID });
+				}else{
+				}
 				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzgetCountTmplByCertId");
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { JgId,certTmpl }, "Integer");
 				if (count > 0) {
@@ -177,6 +189,7 @@ public class certTmplGl extends FrameworkImpl {
 					psTzCerttmplTblWithBLOBs.setTzCertTmplId(certTmpl);
 					psTzCerttmplTblWithBLOBs.setTzTmplName(tmplName);
 					psTzCerttmplTblWithBLOBs.setTzCertJgId(certJGID);
+					psTzCerttmplTblWithBLOBs.setTzCertTypeId(certTypeID);
 					psTzCerttmplTblWithBLOBs.setTzUseFlag(useFlag);
 					psTzCerttmplTblWithBLOBs.setTzCertMergHtml1(certMergHtml1);
 					psTzCerttmplTblWithBLOBs.setTzCertMergHtml2(certMergHtml2);
@@ -215,15 +228,21 @@ public class certTmplGl extends FrameworkImpl {
 				String tmplName = (String) infoData.get("tmplName");
 				String JgId = (String) infoData.get("JgId");
 				String certJGID = (String) infoData.get("certJGID");
+				String certTypeID = (String) infoData.get("certTypeID");
 				String useFlag = (String) infoData.get("useFlag");
 				String certMergHtml1 = (String) infoData.get("certMergHtml1");
 				String certMergHtml2 = (String) infoData.get("certMergHtml2");
 				String certMergHtml3 = (String) infoData.get("certMergHtml3");
 				String titleImageName = (String) infoData.get("titleImageName");
-				
-				
+				System.out.println(useFlag);
+				System.out.println(JgId);
+				System.out.println(certTypeID);
+				if("Y".equals(useFlag)){
+					String sqlUpdate = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TZUpdateUseFlag");
+					sqlQuery.update(sqlUpdate, new Object[] { JgId,certTypeID });
+				}else{
+				}
 				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzgetCountTmplByCertId");;
-
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { JgId,certTmpl }, "Integer");
 				if (count > 0) {
 					PsTzCerttmplTblWithBLOBs psTzCerttmplTblWithBLOBs = new PsTzCerttmplTblWithBLOBs();
@@ -231,6 +250,7 @@ public class certTmplGl extends FrameworkImpl {
 					psTzCerttmplTblWithBLOBs.setTzJgId(JgId);
 					psTzCerttmplTblWithBLOBs.setTzTmplName(tmplName);
 					psTzCerttmplTblWithBLOBs.setTzCertJgId(certJGID);
+					psTzCerttmplTblWithBLOBs.setTzCertTypeId(certTypeID);
 					psTzCerttmplTblWithBLOBs.setTzUseFlag(useFlag);
 					psTzCerttmplTblWithBLOBs.setTzCertMergHtml1(certMergHtml1);
 					psTzCerttmplTblWithBLOBs.setTzCertMergHtml2(certMergHtml2);
@@ -239,6 +259,7 @@ public class certTmplGl extends FrameworkImpl {
 					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzCerttmplTblWithBLOBs.setRowLastmantDttm(new Date());
 					psTzCerttmplTblWithBLOBs.setRowLastmantOprid(oprid);
+					
 					psTzCerttmplTblMapper.updateByPrimaryKeySelective(psTzCerttmplTblWithBLOBs);
 				} else {
 					errMsg[0] = "1";

@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZRecruitStuViewBundle.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 
- * 招生活动
+ * 清华MBA招生网站活动通知
  *
  */
 @Service("com.tranzvision.gd.TZRecruitStuViewBundle.service.impl.TZRecruitStuActServicerImpl")
@@ -33,7 +34,7 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
-	/****** 招生活动********/
+	/****** 活动通知********/
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String applicationCenterHtml = "";
@@ -43,13 +44,9 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
-			if (jacksonUtil.containsKey("siteId")) {
-				strSiteId = jacksonUtil.getString("siteId");
-			}
-
-			if (strSiteId == null || "".equals(strSiteId)) {
-				strSiteId = request.getParameter("siteId");
-			}
+			String strAreaId = "";
+			strAreaId = jacksonUtil.getString("siteId");
+			strAreaId = jacksonUtil.getString("areaId");
 
 			// 根据siteid得到机构id;
 			String str_jg_id = "";
@@ -68,32 +65,50 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 				language = "ZHS";
 			}
 			
-			// 报考日历;
-			String registerCalendar = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "1",language, "招生活动", "招生活动");
+			//根据siteid和areaId得到栏目id;
+			String coluSQL = "select TZ_COLU_ID from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
+			String coluId = jdbcTemplate.queryForObject(coluSQL, new Object[] { strSiteId,strAreaId }, "String");
+			String actColuId = "";
+			String applyNoticeColuId = "";
+			String dataAreaColuId = "";
+			actColuId = coluId.substring(0,coluId.indexOf(",")+1);
+			System.out.println(actColuId+"test");
+			// 招生活动;
+			String recruitAct = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "1",language, "招生活动", "招生活动");
+			
+			//报考通知;
+			String applyNotice = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "2",language, "报考通知", "报考通知");
+			
+			//资料专区;
+			String dataArea = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "3",language, "资料专区", "资料专区");
 			
 			//更多;
-			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "2", language, "更多","more");
+			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACTMESSAGE", "4", language, "更多","more");
 			
-			//报考时间;
-			String date = "";
+			//根据siteid和coluid得到artid
+			String artIdSql = "select TZ_ART_ID from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=?";
+			String artId = jdbcTemplate.queryForObject(artIdSql, new Object[]{strSiteId,coluId}, "String");
+			List<Map<String, Object>> artIdList = jdbcTemplate.queryForList(artIdSql,new Object[] { strSiteId,coluId });
 			
-			//报考地点;
-			String place = "";
+			String recruitActHtml = "";
 			
-			//报考名称;
-			String registerName = "";
+			String applyNoticeHtml = "";
 			
+			String dataAreaHtml = "";
 			
-			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
-			int totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { strSiteId,str_jg_id }, "Integer");
+			recruitActHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuAct");
+			
+			applyNoticeHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuNotice");
+			
+			dataAreaHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuData");
 			
 			applicationCenterHtml = tzGDObject.getHTMLText(
-					"HTML.TZRecruitStuViewBundle.TZRecruitStuInfoView", registerCalendar,
-					more);
+					"HTML.TZRecruitStuViewBundle.TZRecruitStuInfoView", recruitAct,applyNotice,dataArea,
+					more,recruitActHtml,applyNoticeHtml,dataAreaHtml);
 			return applicationCenterHtml;
 		} catch (Exception e) {
 
 		}
-		return "测试";
+		return "没有相关数据";
 	}
 }

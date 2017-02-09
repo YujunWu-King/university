@@ -343,6 +343,7 @@ public class ComRegImpl extends FrameworkImpl {
 		try {
 			// 组件编号;
 			String strComID = (String) infoData.get("comID");
+			
 			// 组件名称;
 			String strPageID = (String) infoData.get("pageID");
 			// 序号;

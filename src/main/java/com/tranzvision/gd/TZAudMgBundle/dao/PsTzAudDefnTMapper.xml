@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
+    <id column="TZ_AUD_ID" property="tzAudId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_NAM" property="tzAudNam" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_STAT" property="tzAudStat" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_TYPE" property="tzAudType" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_MS" property="tzAudMs" jdbcType="VARCHAR" />
+    <result column="TZ_AUD_SQL" property="tzAudSql" jdbcType="VARCHAR" />
+    <result column="TZ_LXFS_LY" property="tzLxfsLy" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_AUD_ID, TZ_JG_ID, TZ_AUD_NAM, TZ_AUD_STAT, TZ_AUD_TYPE, TZ_AUD_MS, TZ_AUD_SQL, 
+    TZ_LXFS_LY, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_AUD_DEFN_T
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_AUD_DEFN_T
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
+    insert into PS_TZ_AUD_DEFN_T (TZ_AUD_ID, TZ_JG_ID, TZ_AUD_NAM, 
+      TZ_AUD_STAT, TZ_AUD_TYPE, TZ_AUD_MS, 
+      TZ_AUD_SQL, TZ_LXFS_LY, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
+    values (#{tzAudId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzAudNam,jdbcType=VARCHAR}, 
+      #{tzAudStat,jdbcType=VARCHAR}, #{tzAudType,jdbcType=VARCHAR}, #{tzAudMs,jdbcType=VARCHAR}, 
+      #{tzAudSql,jdbcType=VARCHAR}, #{tzLxfsLy,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
+    insert into PS_TZ_AUD_DEFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAudId != null" >
+        TZ_AUD_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzAudNam != null" >
+        TZ_AUD_NAM,
+      </if>
+      <if test="tzAudStat != null" >
+        TZ_AUD_STAT,
+      </if>
+      <if test="tzAudType != null" >
+        TZ_AUD_TYPE,
+      </if>
+      <if test="tzAudMs != null" >
+        TZ_AUD_MS,
+      </if>
+      <if test="tzAudSql != null" >
+        TZ_AUD_SQL,
+      </if>
+      <if test="tzLxfsLy != null" >
+        TZ_LXFS_LY,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAudId != null" >
+        #{tzAudId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudNam != null" >
+        #{tzAudNam,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudStat != null" >
+        #{tzAudStat,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudType != null" >
+        #{tzAudType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudMs != null" >
+        #{tzAudMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudSql != null" >
+        #{tzAudSql,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLxfsLy != null" >
+        #{tzLxfsLy,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
+    update PS_TZ_AUD_DEFN_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudNam != null" >
+        TZ_AUD_NAM = #{tzAudNam,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudStat != null" >
+        TZ_AUD_STAT = #{tzAudStat,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudType != null" >
+        TZ_AUD_TYPE = #{tzAudType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudMs != null" >
+        TZ_AUD_MS = #{tzAudMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAudSql != null" >
+        TZ_AUD_SQL = #{tzAudSql,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLxfsLy != null" >
+        TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT" >
+    update PS_TZ_AUD_DEFN_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_AUD_NAM = #{tzAudNam,jdbcType=VARCHAR},
+      TZ_AUD_STAT = #{tzAudStat,jdbcType=VARCHAR},
+      TZ_AUD_TYPE = #{tzAudType,jdbcType=VARCHAR},
+      TZ_AUD_MS = #{tzAudMs,jdbcType=VARCHAR},
+      TZ_AUD_SQL = #{tzAudSql,jdbcType=VARCHAR},
+      TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+  </update>
+</mapper>

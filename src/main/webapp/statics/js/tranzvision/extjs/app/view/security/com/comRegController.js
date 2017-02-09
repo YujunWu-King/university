@@ -484,6 +484,7 @@
 		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_PAGEREG_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
 		var tzStoreParams = '{"comID":"'+formParams["comID"]+'"}';
 		var pageGrid = this.getView().child("grid");
+		console.log(pageGrid);
 		Ext.tzSubmit(tzParams,function(resp){
 			win.actType = "update";
 			form.findField("pageID").setReadOnly(true);

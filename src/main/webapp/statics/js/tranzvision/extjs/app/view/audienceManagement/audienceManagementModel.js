@@ -1,7 +1,9 @@
 Ext.define('KitchenSink.view.audienceManagement.audienceManagementModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'comID'},
-        {name: 'comName'}
+        {name: 'audId'},
+        {name: 'audName'},
+        {name: 'audType'},
+        {name: 'audStat'}
 	]
 });
