@@ -88,71 +88,71 @@ function JumpToColu(siteId,menuId,opentype){
 
 
 /*首页中初始化活动列表和新闻列表*/
-//function iniArea(){
-//
-//$(".autoload").each(function(index,element){
-//
-//    var siteid=$("#siteid").val();
-//	var areaid=$(element).attr("area-id");
-//	if (!areaid)
-//		{
-//			areaid="";
-//		}
-//	var areaZone=$(element).attr("area-postion");
-//	if (!areaZone)
-//		{
-//			areaZone="";
-//		}
-//	var areaType=$(element).attr("area-type");
-//	if (!areaType)
-//		{
-//			areaType="";
-//	    }
-//	var page =1;
-//	var type="0";
-//
-//	var appCls ="";
-//	if(areaType =="HY"){
-//		appCls = clsTzHyColuServiceImpl;
-//	}
-//
-//	if(areaType =="XL"){
-//		appCls = clsTzXlColuServiceImpl;
-//		
-//	}
-//
-//		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","appCls":"'+appCls+'","page":"'+page+'","pagesize":"5","type":"'+type+'","qureyFrom":"A"}}';
-//
-//		$.ajax({
-//				type:"POST",
-//				url:urlBegin,
-//				data:{
-//					tzParams:tzParams
-//				},
-//				dataType:'json',
-//				success:function(response){
-//							if (response !="false"){
-//									var tips="暂无相关信息！";
-//								
-//									if ($("#lang").val()=="ENG")
-//									{
-//										tips="No relevant information!";
-//									}
-//							if (!response.comContent.coluItem){$(element).find("ul").html(tips);}else{
-//									$(element).find("ul").html(response.comContent.coluItem);
-//								}
-//								
-//							}else{
-//							
-//							}
-//				},
-//	    		failure: function () {
-//			  		alert(response.state.errdesc);
-//	    		}    
-//			});
-//
-//});
-//
+function iniArea(){
+
+$(".autoload").each(function(index,element){
+
+    var siteid=$("#siteid").val();
+	var areaid=$(element).attr("area-id");
+	if (!areaid)
+		{
+			areaid="";
+		}
+	var areaZone=$(element).attr("area-postion");
+	if (!areaZone)
+		{
+			areaZone="";
+		}
+	var areaType=$(element).attr("area-type");
+	if (!areaType)
+		{
+			areaType="";
+	    }
+	var page =1;
+	var type="0";
+
+	var appCls ="";
+	if(areaType =="HY"){
+		appCls = clsTzHyColuServiceImpl;
+	}
+
+	if(areaType =="XL"){
+		appCls = clsTzXlColuServiceImpl;
+		
+	}
+
+		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","appCls":"'+appCls+'","page":"'+page+'","pagesize":"5","type":"'+type+'","qureyFrom":"A"}}';
+
+		$.ajax({
+				type:"POST",
+				url:urlBegin,
+				data:{
+					tzParams:tzParams
+				},
+				dataType:'json',
+				success:function(response){
+							if (response !="false"){
+									var tips="暂无相关信息！";
+								
+									if ($("#lang").val()=="ENG")
+									{
+										tips="No relevant information!";
+									}
+							if (!response.comContent.coluItem){$(element).find("ul").html(tips);}else{
+									$(element).find("ul").html(response.comContent.coluItem);
+								}
+								
+							}else{
+							
+							}
+				},
+	    		failure: function () {
+			  		alert(response.state.errdesc);
+	    		}    
+			});
+
+});
+
 }
 
 function QueryColu(page){
