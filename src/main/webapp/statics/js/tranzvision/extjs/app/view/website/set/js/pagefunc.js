@@ -153,7 +153,7 @@ function JumpToColu(siteId,menuId,opentype){
 //
 //});
 //
-//}
+}
 
 function QueryColu(page){
 	/*
