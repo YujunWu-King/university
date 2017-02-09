@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudListTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT" >
+    <id column="TZ_AUD_ID" property="tzAudId" jdbcType="VARCHAR" />
+    <id column="TZ_LXFS_LY" property="tzLxfsLy" jdbcType="VARCHAR" />
+    <id column="TZ_LYDX_ID" property="tzLydxId" jdbcType="VARCHAR" />
+    <result column="TZ_DXZT" property="tzDxzt" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_AUD_ID, TZ_LXFS_LY, TZ_LYDX_ID, TZ_DXZT, OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_AUD_LIST_T
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+      and TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListTKey" >
+    delete from PS_TZ_AUD_LIST_T
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+      and TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT" >
+    insert into PS_TZ_AUD_LIST_T (TZ_AUD_ID, TZ_LXFS_LY, TZ_LYDX_ID, 
+      TZ_DXZT, OPRID)
+    values (#{tzAudId,jdbcType=VARCHAR}, #{tzLxfsLy,jdbcType=VARCHAR}, #{tzLydxId,jdbcType=VARCHAR}, 
+      #{tzDxzt,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT" >
+    insert into PS_TZ_AUD_LIST_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAudId != null" >
+        TZ_AUD_ID,
+      </if>
+      <if test="tzLxfsLy != null" >
+        TZ_LXFS_LY,
+      </if>
+      <if test="tzLydxId != null" >
+        TZ_LYDX_ID,
+      </if>
+      <if test="tzDxzt != null" >
+        TZ_DXZT,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAudId != null" >
+        #{tzAudId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLxfsLy != null" >
+        #{tzLxfsLy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLydxId != null" >
+        #{tzLydxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDxzt != null" >
+        #{tzDxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT" >
+    update PS_TZ_AUD_LIST_T
+    <set >
+      <if test="tzDxzt != null" >
+        TZ_DXZT = #{tzDxzt,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+      and TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT" >
+    update PS_TZ_AUD_LIST_T
+    set TZ_DXZT = #{tzDxzt,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR}
+    where TZ_AUD_ID = #{tzAudId,jdbcType=VARCHAR}
+      and TZ_LXFS_LY = #{tzLxfsLy,jdbcType=VARCHAR}
+      and TZ_LYDX_ID = #{tzLydxId,jdbcType=VARCHAR}
+  </update>
+</mapper>

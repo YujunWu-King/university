@@ -423,7 +423,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(BUSINESS_TYPE_DEF=="02"){
 					FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
 				}else{
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;>'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;">'
 				}	
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'

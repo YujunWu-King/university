@@ -89,8 +89,10 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			String strCityLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "4","所在城市", "City");
 			String strSiteMsgLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "5","系统消息", "System message");
 			String strMyActLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_MBASITE_MESSAGE", "6","我的活动", "My activities");
-			//个人账号管理为菜单跳转，通过hardcode获取菜单编号
-			String personInfoMenuId = getHardCodePoint.getHardCodePointVal("TZ_" + siteId + "_SEMUSER_MENUID");
+			//个人账号管理为菜单跳转，通过菜单类型为账户管理获取
+			//String personInfoMenuId = getHardCodePoint.getHardCodePointVal("TZ_" + siteId + "_SEMUSER_MENUID");
+			String sqlMenuId = "SELECT A.TZ_MENU_ID FROM PS_TZ_SITEI_MENU_T A,PS_TZ_SITEI_MTYP_T B WHERE A.TZ_MENU_TYPE_ID=B.TZ_MENU_TYPE_ID AND A.TZ_SITEI_ID=B.TZ_SITEI_ID AND B.TZ_TYPE_STATE='Y' AND B.TZ_MENU_TYPE_NAME='账户管理' AND A.TZ_SITEI_ID=?";
+			String personInfoMenuId = jdbcTemplate.queryForObject(sqlMenuId, new Object[] { siteId}, "String");
 			
 			String websiteImgCommonPath = ctxPath + getSysHardCodeVal.getWebsiteSkinsImgPath();
 

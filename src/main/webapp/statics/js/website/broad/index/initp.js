@@ -206,7 +206,7 @@ $(document).ready(function(){
 	LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
-//	iniArea();
+	//iniArea();
 	getPerInfCard();
 	
 	//加载报名中心;
@@ -282,9 +282,12 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+<<<<<<< HEAD
 				$(".date_body").each(function(){
 					$clamp(this, {clamp:2});
 				});
+=======
+>>>>>>> 900b5627648fd6807036157d378fd3882a3660f8
 			},
 			failure: function () {
 			  	//ToDo
@@ -294,15 +297,15 @@ $(document).ready(function(){
 	
 	//end招生活动、报考通知、资料专区区域
 	
-	//友情链接区域
-	$(".friends").each(function(){
+	//获取栏目单篇文章：友情链接，二维码等区域
+	$(".single_page").each(function(){
 		var $me = $(this);
 		//区域id;
 		var areaId = $me.attr("area-id");
 		//栏目id;
 		var colId = $me.attr("area-col");
-		$me.html("加载中...");
-		var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_WEBINFO_FRIENDS","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
+		$me.html("<span style='margin:50% auto'>加载中...</span>");
+		var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_SINGLE_PAGE_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
 		$.ajax({
 			type:"POST",
 			url: TzUniversityContextPath+"/dispatcher",
@@ -311,25 +314,14 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
-//				$(".date_body").each(function(){
-//					$clamp(this, {clamp:2});
-//				});
 			},
 			failure: function () {
 			  	//ToDo
 			} 
 		});
 	});
-	//end友情链接区域
+	//end获取栏目单篇文章
 	
-	//左侧菜单下二维码区域
-	$(".zxj_code").each(function(){
-		var $me = $(this);
-		//区域id;
-		var areaId = $me.attr("area-id");
-		//栏目id;
-		var colId = $me.attr("area-col");
-//		$me.html("加载中...");
-	});
+
 
 });
