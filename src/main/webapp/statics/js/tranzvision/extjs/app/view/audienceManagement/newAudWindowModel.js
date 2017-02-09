@@ -1,9 +1,10 @@
-Ext.define('KitchenSink.view.audienceManagement.audienceManagementModel', {
+Ext.define('KitchenSink.view.audienceManagement.newAudWindowModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'audId'},
         {name: 'audName'},
-        {name: 'audType'},
+        {name: 'audMobile'},
+        {name: 'audMail'},
         {name: 'audStat'}
 	]
 });

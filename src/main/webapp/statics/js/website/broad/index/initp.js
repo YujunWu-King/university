@@ -273,7 +273,7 @@ $(document).ready(function(){
 		var colId = $me.attr("area-col");
 	
 		$me.html("加载中...");
-		var tzParams = '{"ComID":"TZ_RECRUIT_VIEW_COM","PageID":"TZ_RECRUIT_ACT_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","colId":"'+colId+'","oprate":"'+oprate+'"}}';
+		var tzParams = '{"ComID":"TZ_RECRUIT_VIEW_COM","PageID":"TZ_RECRUIT_ACT_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
 		$.ajax({
 			type:"POST",
 			url: TzUniversityContextPath+"/dispatcher",
@@ -301,7 +301,24 @@ $(document).ready(function(){
 		var areaId = $me.attr("area-id");
 		//栏目id;
 		var colId = $me.attr("area-col");
-//		$me.html("加载中...");
+		$me.html("加载中...");
+		var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_WEBINFO_FRIENDS","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
+		$.ajax({
+			type:"POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data:{
+				tzParams:tzParams
+			},
+			success:function(response){
+				$me.html(response);
+//				$(".date_body").each(function(){
+//					$clamp(this, {clamp:2});
+//				});
+			},
+			failure: function () {
+			  	//ToDo
+			} 
+		});
 	});
 	//end友情链接区域
 	
@@ -314,16 +331,5 @@ $(document).ready(function(){
 		var colId = $me.attr("area-col");
 //		$me.html("加载中...");
 	});
-	
-	//右上角图片区域
-	$(".mid_right_ad_1").each(function(){
-		var $me = $(this);
-		//区域id;
-		var areaId = $me.attr("area-id");
-		//栏目id;
-		var colId = $me.attr("area-col");
-//		$me.html("图片");
-	});
-	
-	
+
 });
