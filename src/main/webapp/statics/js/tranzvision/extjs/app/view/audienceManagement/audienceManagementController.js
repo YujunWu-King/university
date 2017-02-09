@@ -517,7 +517,7 @@ console.log(store);
 				comParams = '"delete":[' + removeJson + "]";
 			}
 			
-		//	console.log(comParams);
+			console.log(comParams);
 			var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		//	console.log(tzParams2);
 			//保存数据
@@ -769,10 +769,19 @@ console.log(comParamsALL);
 			var audSQL =formParams["audSQL"];
 			var audID =formParams["audID"];
 			 console.log(audSQL);
-		//	 console.log(audID);
+			 console.log(audID);
 			
+			 var removeAud =Ext.JSON.encode(audID); 
+			 var comParams = "";
+				if(removeAud != ""){
+					//		 	 "delete":[{"audID":"4","audDxzt":"1"}]	
+					comParams = '"delete":[{"audID":' + removeAud + ',"audDxzt":"A"}]';
+				}
+//console.log(comParams);
+//     var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			 
 	 var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"tzOther","comParams":{"audSQL":"'+audSQL+'"}}';
-	 console.log(tzParams); 
+//console.log(tzParams); 
 	//	 var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audID+'"}}'
 		 
 	 var tzStoreParams =audSQL;
@@ -780,6 +789,13 @@ console.log(comParamsALL);
 		var gridStore =win.child("form").child("grid").getStore();	
 	//	gridStore.tzStoreParams = tzStoreParams;
 		
+/*		 if(comParams!=""){
+	            Ext.tzSubmit(tzParams2,function(){
+	            	gridStore.reload();
+	            },"",true,this);
+	        }
+
+*/		
 		Ext.tzLoad(tzParams,function(responseData){
 			
 			gridStore.reload();

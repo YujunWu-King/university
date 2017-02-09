@@ -110,7 +110,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 							var formParams = form.getValues();
 							var audTypeNow =formParams["audType"];
 							
-							 console.log(audTypeNow);
+					//		 console.log(audTypeNow);
 						
 						
 						if(audTypeNow=="1"){
@@ -252,15 +252,15 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 						xtype: 'combobox',
 							store:{
 								fields: [{name:'applyItemTypeValue'},{name:'applyItemTypeDesc'}],
-								data: [{applyItemTypeValue: '1', applyItemTypeDesc: '正常'},{applyItemTypeValue: '2', applyItemTypeDesc: '失效'},{applyItemTypeValue: '3', applyItemTypeDesc: '锁定'}]
+								data: [{applyItemTypeValue: 'A', applyItemTypeDesc: '正常'},{applyItemTypeValue: 'N', applyItemTypeDesc: '失效'},{applyItemTypeValue: 'L', applyItemTypeDesc: '锁定'}]
 									},
 						displayField: 'applyItemTypeDesc',
 						valueField: 'applyItemTypeValue'
 					},
 					renderer: function(v){
-						if(v=='1'){
+						if(v=='A'){
 							return "正常";
-						}else if(v=='2'){
+						}else if(v=='N'){
 							return "失效";
 						}else{
 							return "锁定";
