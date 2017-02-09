@@ -41,6 +41,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 			// 返回值;
 			Map<String, Object> mapRet = new HashMap<String, Object>();
 			mapRet.put("total", 0);
+			
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 			mapRet.put("root", listData);
 			JacksonUtil jacksonUtil = new JacksonUtil();
