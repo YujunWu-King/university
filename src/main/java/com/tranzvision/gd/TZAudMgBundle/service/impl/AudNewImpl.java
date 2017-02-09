@@ -202,7 +202,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 				return strRet;
 			}
 			
-			/* 新增组件页面注册信息 */
+			/* 新增 */
 			@Override
 			public String tzAdd(String[] actData, String[] errMsg) {
 				String strRet = "";
@@ -277,7 +277,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						}
 					} else {
 						errMsg[0] = "1";
-						errMsg[1] = "当前组件下,请修改ID。";
+						errMsg[1] = "请修改ID。";
 						return strRet;
 					}
 
@@ -291,7 +291,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 			}
 			
 			
-			/* 修改组件注册信息 */
+			/* 修改 */
 			@Override
 			public String tzUpdate(String[] actData, String[] errMsg) {
 				// 返回值;
