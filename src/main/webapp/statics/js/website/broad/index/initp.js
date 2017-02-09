@@ -282,9 +282,9 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
-//				$(".date_body").each(function(){
-//					$clamp(this, {clamp:2});
-//				});
+				$(".date_body").each(function(){
+					$clamp(this, {clamp:2});
+				});
 			},
 			failure: function () {
 			  	//ToDo

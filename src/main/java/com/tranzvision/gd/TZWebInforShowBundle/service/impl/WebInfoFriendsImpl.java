@@ -82,21 +82,27 @@ public class WebInfoFriendsImpl extends FrameworkImpl {
 				for(int i=0;i<artIdList.size();i++){
 					artId = (String) artIdList.get(i).get("TZ_ART_ID");
 					/**友情链接内容类型配置字段 TZ_LONG1：友情链接 */
+					String friendsLinkName1 ="";
+					String friendsLinkName2 ="";
+					String friendsLinkName3 ="";
+					String friendsLinkName4 ="";
 					String friendsLink1 ="";
 					String friendsLink2 ="";
 					String friendsLink3 ="";
 					String friendsLink4 ="";
-					String friendsSql = "select TZ_LONG1 from PS_TZ_ART_REC_TBL where TZ_ART_ID=? order by ROW_ADDED_DTTM DESC limit 4";
+					String friendsSql = "select TZ_LONG1,TZ_OUT_ART_URL from PS_TZ_ART_REC_TBL where TZ_ART_ID=? order by ROW_ADDED_DTTM DESC limit 4";
 					List<Map<String, Object>> coluMapList = jdbcTemplate.queryForList(friendsSql,new Object[] { artId });
 					if (coluMapList != null && coluMapList.size()>0) {
 						for(int j=0;j<coluMapList.size();j++){
-//						friendsLink1 = (String) coluMapList.get(1).get("TZ_LONG1");
+						friendsLinkName1 = (String) coluMapList.get(j).get("TZ_LONG1");
+						friendsLink1 = (String) coluMapList.get(j).get("TZ_OUT_ART_URL");
 //						friendsLink2 = (String) coluMapList.get(2).get("TZ_LONG1");
 //						friendsLink3 = (String) coluMapList.get(3).get("TZ_LONG1");
 //						friendsLink4 = (String) coluMapList.get(4).get("TZ_LONG1");
 						}
 					}
-					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZWebInforShowBundle.TZ_WEBINFO_FRIENDS",friends,friendsLink1,friendsLink2,friendsLink3,friendsLink4);
+					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZWebInforShowBundle.TZ_WEBINFO_FRIENDS",
+							friends,friendsLink1,friendsLinkName1,friendsLink2,friendsLinkName2,friendsLink3,friendsLinkName3,friendsLink4,friendsLinkName4);
 				}
 			}
 			return applicationCenterHtml;

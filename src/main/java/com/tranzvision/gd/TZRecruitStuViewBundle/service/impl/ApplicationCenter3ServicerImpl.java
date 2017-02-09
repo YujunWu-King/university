@@ -78,7 +78,7 @@ public class ApplicationCenter3ServicerImpl extends FrameworkImpl {
 						if (language == null || "".equals(language)) {
 							language = "ZHS";
 						}
-//						//根据siteid和areaId得到栏目id;
+						//根据siteid和areaId得到栏目id;
 						String coluSQL = "select TZ_COLU_ID from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
 						String coluId = jdbcTemplate.queryForObject(coluSQL, new Object[] { strSiteId,strAreaId }, "String");
 						
