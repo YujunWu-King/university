@@ -342,14 +342,13 @@ public class ComRegImpl extends FrameworkImpl {
 		String strRet = "{}";
 		try {
 			// 组件编号;
-		//	String strComID = (String) infoData.get("comID");
-			String strDxID = (String) infoData.get("dxID");
-			String strAudID = (String) infoData.get("audID");
+			String strComID = (String) infoData.get("comID");
+			
 			// 组件名称;
-		//	String strPageID = (String) infoData.get("pageID");
+			String strPageID = (String) infoData.get("pageID");
 			// 序号;
-		//	String numOrderStr = String.valueOf(infoData.get("orderNum"));
-		//	short numOrder = Short.parseShort(numOrderStr);
+			String numOrderStr = String.valueOf(infoData.get("orderNum"));
+			short numOrder = Short.parseShort(numOrderStr);
 			
 			// 默认首页;
 			boolean isDefaultBoolean = (boolean) infoData.get("isDefault");
