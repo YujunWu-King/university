@@ -64,7 +64,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcInfo', {
                     text:Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_LIST_STD.TZ_CS_WJ_NAME","问卷名称"),
                     sortable: true,
                     dataIndex: 'TZ_CS_WJ_NAME',
-                    width: 450
+                    flex:1
                 },{
                     text:Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_LIST_STD.TZ_DC_WJ_KSRQ","开始日期"),
                     sortable: true,
