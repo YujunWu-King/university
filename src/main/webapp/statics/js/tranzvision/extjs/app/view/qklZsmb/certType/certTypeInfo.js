@@ -41,7 +41,7 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeInfo', {
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_CERTTYPE_COM.TZ_TYPE_INFO_STD.certTypeId","证书类型编号"),
 			name: 'certTypeId',
-			maxLength: 15,
+			value:'NEXT',
 			afterLabelTextTpl: [
 				'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
 			],

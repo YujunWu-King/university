@@ -187,20 +187,26 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 设置语言环境
 			this.switchSysLanguage(request, response, language);
-
+			System.out.println("登录时写cookie-----------------------------------------------------------");
+			System.out.println(cookieWebOrgId + "=" + psTzAqYhxxTblKey.getTzJgId());
+			System.out.println(cookieWebSiteId + "=" + siteid);
+			System.out.println(cookieWebLoginedUserName + "=" + psTzAqYhxxTblKey.getTzDlzhId());
+			System.out.println(cookieContextLoginType + "=" + "SQR");
 			// 设置cookie参数
 			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24 * 3600);
 			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24 * 3600);
 			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
 			tzCookie.addCookie(response, cookieContextLoginType, "SQR");
-
+			System.out.println("写cookie结束------------------------------------------------------------");
 			errorMsg.add("0");
 			errorMsg.add("");
 			return true;
 
 		} catch (TzSystemException tze) {
+			System.out.println("写入cookie出现TzSystemException异常，信息为：" + tze.toString());
 			tze.printStackTrace();
 		} catch (Exception e) {
+			System.out.println("写入cookie出现Exception异常，信息为：" + e.toString());
 			e.printStackTrace();
 		}
 
