@@ -16,9 +16,11 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZCertTypeGlBundle.dao.PsTzCertTypeTblMapper;
 import com.tranzvision.gd.TZCertTypeGlBundle.model.PsTzCertTypeTbl;
 import com.tranzvision.gd.TZCertTypeGlBundle.model.PsTzCertTypeTblKey;
+import com.tranzvision.gd.TZZsCreOrorganizationBundle.model.PsTzZsJGTBL;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 
 
 /*
@@ -39,6 +41,8 @@ public class certTypeGl extends FrameworkImpl {
 	private FliterForm fliterForm;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	/* 查询列表 */
 	@Override
@@ -132,9 +136,11 @@ public class certTypeGl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				// 信息内容;
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
-				
+				Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 				String JgId = (String) infoData.get("JgId");
-				String certTypeId = (String) infoData.get("certTypeId");
+				//String certTypeId = (String) infoData.get("certTypeId");
+				int certType= getSeqNum.getSeqNum("TZ_CERT_TYPE_TBL", "TZ_CERT_TYPE_ID");
+				String certTypeId= String.valueOf(certType);
 				String certName = (String) infoData.get("certName");
 				
 				String sql = tzSQLObject.getSQLText("SQL.TZCertTypeGlBundle.TZGetCertID");
@@ -147,12 +153,17 @@ public class certTypeGl extends FrameworkImpl {
 					psTzCertTypeTbl.setTzJgId(JgId);
 					psTzCertTypeTbl.setTzCertTypeId(certTypeId);
 					psTzCertTypeTbl.setTzCertTypeName(certName);
+					psTzCertTypeTbl.setTzUseFlag("Y");
 					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					psTzCertTypeTbl.setRowAddedDttm(new Date());
 					psTzCertTypeTbl.setRowAddedOprid(oprid);
 					psTzCertTypeTbl.setRowLastmantDttm(new Date());
 					psTzCertTypeTbl.setRowLastmantOprid(oprid);
 					psTzCertTypeTblMapper.insert(psTzCertTypeTbl);
+					
+					returnJsonMap.put("certTypeId", String.valueOf(certTypeId));
+					
+					strRet=String.valueOf(certTypeId);
 				}
 			}
 		} catch (Exception e) {
@@ -175,7 +186,7 @@ public class certTypeGl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 				// 信息内容;
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
-
+				Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 				String JgId = (String) infoData.get("JgId");
 				String certTypeId = (String) infoData.get("certTypeId");
 				String certName = (String) infoData.get("certName");				
@@ -186,12 +197,15 @@ public class certTypeGl extends FrameworkImpl {
 				if (count > 0) {
 					PsTzCertTypeTbl psTzCertTypeTbl  = new PsTzCertTypeTbl();
 					psTzCertTypeTbl.setTzJgId(JgId);
-					psTzCertTypeTbl.setTzCertTypeId(certTypeId);
+					//psTzCertTypeTbl.setTzCertTypeId(certTypeId);
 					psTzCertTypeTbl.setTzCertTypeName(certName);
 					psTzCertTypeTblMapper.updateByPrimaryKeySelective(psTzCertTypeTbl);
+					
+					returnJsonMap.put("certTypeId", String.valueOf(certTypeId));
+					
+					strRet=String.valueOf(certTypeId);
 				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "证书类型:" + certName + "不存在";
+					
 				}
 			}
 		} catch (Exception e) {
@@ -222,11 +236,14 @@ public class certTypeGl extends FrameworkImpl {
 				// 类定义ID;
 				String certTypeId = jacksonUtil.getString("certTypeId");
 				String JgId = jacksonUtil.getString("JgId");
-				PsTzCertTypeTblKey PsTzCertTypeTblKey = new PsTzCertTypeTblKey();
-				PsTzCertTypeTblKey.setTzCertTypeId(certTypeId);
-				PsTzCertTypeTblKey.setTzJgId(JgId);
+				
 				if (certTypeId != null && !"".equals(certTypeId)) {
-					psTzCertTypeTblMapper.deleteByPrimaryKey(PsTzCertTypeTblKey);
+					PsTzCertTypeTbl psTzCertTypeTbl=new PsTzCertTypeTbl();
+					psTzCertTypeTbl.setTzCertTypeId(certTypeId);
+					psTzCertTypeTbl.setTzUseFlag("N");
+					psTzCertTypeTbl.setTzJgId(JgId);
+					psTzCertTypeTblMapper.updateByPrimaryKeySelective(psTzCertTypeTbl);
+			
 				}
 			}
 		} catch (Exception e) {

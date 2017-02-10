@@ -125,7 +125,8 @@
 				//applyItemGrid.store.load();
 				
 				var cmpForm = panel.child("form").getForm();
-
+				//新建时，隐藏听众列表
+				cmpForm.findField("AudList").hide(); 
 				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
 				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
 				//加载数据
@@ -293,6 +294,35 @@
 					//活动基本信息
 					var formData = responseData.formData;
 					form.setValues(formData);
+					
+										
+					//听众赋值20170209
+				     var audIDList=formData.AudID;
+		             var audNameList=formData.AudName;
+		             var oprIdArray=new Array();
+		             var i=0,j=0;
+		                for(j=0;j<audIDList.length;j++){
+		                    var TagModel=new KitchenSink.view.activity.tagModel();
+		                    var audId = audIDList[j];
+		                    var audName=audNameList[j];
+		                    TagModel.set('tagId',audId);
+		                    TagModel.set('tagName',audName);
+		                    oprIdArray[i]=TagModel;
+		                    i++;
+		                }
+		                form.findField("AudList").setValue(oprIdArray);
+		                
+		             //根据发布对象判断是否因此听众
+		             var str_limit=formData.limit;
+		             if ("B"==str_limit){
+		            	 //听众
+		            	 form.findField("AudList").show(); 
+		             }else{
+		            	 //无限制
+		            	 form.findField("AudList").hide(); 
+		             }
+		             
+		             
 					
 					/*
 					var publishStatus = form.findField("publishStatus").getValue();

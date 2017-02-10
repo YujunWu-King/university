@@ -20,7 +20,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tang
  * TZ_GD_SELF_PKG:TZ_SELFINFO_CLS
  */
-@Service("com.tranzvision.gd.TZSelfInfoBundle.service.impl.SelfInfoClsServiceImpl")
+@Service("com.tranzvision.gd.TZSelfInfoBundle.service.impl.copy.SelfInfoClsServiceImpl")
 public class SelfInfoClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;

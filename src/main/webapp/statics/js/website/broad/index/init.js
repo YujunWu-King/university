@@ -145,7 +145,7 @@ $(document).ready(function(){
 	LoadHeader($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadFooter($("#jgid").val(),$("#siteid").val(),$("#operator").val());
 	LoadMenu($("#jgid").val(),$("#siteid").val(),"");
-	LoadWelcome($("#jgid").val(),$("#siteid").val(),$("#operator").val());
+	
 	//iniArea();首页中初始化活动列表和新闻列表 待开发
 	//getPerInfCard();获取个人信息，待开发
 	

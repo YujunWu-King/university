@@ -40,6 +40,11 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 	   
 	   var coluStore = new KitchenSink.view.activity.ColuStore(); 
 	   
+	   var tagStore1 = new Ext.data.Store({
+           fields:['tagName','tagId'],
+           data:[]
+       });
+	   
 	   
 	 Ext.apply(this,{
     items: [{
@@ -273,6 +278,56 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
                                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                                 ],
            allowBlank: false
+        },  
+        {
+        	xtype:'radiogroup',
+        	fieldLabel:'发布对象',
+        	items: [{
+        		name: 'limit',
+        		inputValue: 'A',
+        		boxLabel: '无限制',
+        		
+        		checked: true,
+        		listeners:{
+        			"change":function(el,checked){
+        				if(checked){
+        					el.findParentByType("form").getForm().findField('AudList').hide();
+        				}
+        			}
+        		}
+        		},{
+        		name: 'limit',
+        		inputValue: 'B',
+        		boxLabel: '听众',
+                
+        			listeners:{
+            			"change":function(el,checked){
+            				if(checked){
+            					el.findParentByType("form").getForm().findField('AudList').show();
+            				}
+            			}
+            		}
+        		}]
+        },        
+        
+        {   xtype:'tagfield',
+            fieldLabel:'听众列表',
+            name:'AudList',
+            anyMatch:true,
+            filterPickList: true,
+            createNewOnEnter: true,
+            createNewOnBlur: false,
+            enableKeyEvents: true,
+            ignoreChangesFlag:true,
+            store: tagStore1,
+            valueField: 'tagId',
+            displayField: 'tagName',
+            triggers: {
+                search: {
+                    cls: 'x-form-search-trigger',
+                    handler: "searchListeners"
+                }
+            }
         },{
 			xtype: 'fieldset',
 			name: 'fbSet',
@@ -285,12 +340,12 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 				items:[{
 			       xtype: 'radio',
 			       boxLabel: '无限制',
-			       name: 'limit',
+			       name: 'limit-abandon',
 			       inputValue : 'A'
 			    },{
 			    	xtype: 'radio',
 			    	boxLabel: '项目',
-					name: 'limit',
+					name: 'limit-abandon',
 					inputValue : 'B'
 				}, {
                     xtype: 'tagfield',

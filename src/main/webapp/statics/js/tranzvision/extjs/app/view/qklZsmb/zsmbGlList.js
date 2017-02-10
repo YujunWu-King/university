@@ -74,7 +74,6 @@ initComponent: function () {
 					return "不启用";
 				}
 			}
-
 		},{
 			menuDisabled: true,
 			sortable: false,
