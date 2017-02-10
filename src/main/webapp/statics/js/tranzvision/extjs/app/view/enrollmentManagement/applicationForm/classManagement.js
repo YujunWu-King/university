@@ -68,16 +68,17 @@
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirection","报考方向名称"),
                 minWidth:180,
+                dataIndex:'className',
                 flex:1
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyBatch","申请批次"),
                 dataIndex: 'batchName',
                 width:110
-            },{
+            }/*,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyChioce","申请志愿"),
                 dataIndex: 'className',
                 width:110
-            },{
+            }*/,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyStatus","申请状态"),
                 dataIndex: 'applyStatusDesc',
                 width:110
@@ -89,11 +90,11 @@
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.expectedNumber","预报名人数"),
                 dataIndex: 'expectedNumber',
                 width:140
-            },{
+            }/*,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.firstChoiceNumber","第一志愿申请人数"),
                 dataIndex: 'firstChoiceNumber',
                 width:140
-            },{
+            }*/,{
                 xtype:'linkcolumn',
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.viewApplicants","查看报考学生"),
                 menuDisabled:true,
