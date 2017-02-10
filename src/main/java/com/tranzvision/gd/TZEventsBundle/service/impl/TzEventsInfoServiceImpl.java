@@ -188,7 +188,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			 */
 			/*
 			 * if (null == coluId || "".equals(coluId)) { sql =
-			 * "select TZ_COLU_ID from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_CONT_TYPE='A'"
+			 * "select TZ_COLU_ID from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_TYPE='D'"
 			 * ; coluId = sqlQuery.queryForObject(sql, new Object[] { siteId },
 			 * "String");
 			 * 
@@ -624,7 +624,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							if (coluId != null && !"".equals(coluId)) {
 								// 查看站点栏目是否对应;
 								int existNum = sqlQuery.queryForObject(
-										"select count(1) from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=? and TZ_CONT_TYPE='A'",
+										"select count(1) from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=? and TZ_COLU_TYPE='D'",
 										new Object[] { siteId, coluId }, "Integer");
 								if (existNum > 0) {
 									// 生成页面代码;需要等数据保存完之后得到都要的代码;
@@ -857,7 +857,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 								// 查看站点栏目是否对应;
 								int existNum = sqlQuery.queryForObject(
-										"select count(1) from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=? and TZ_CONT_TYPE='A'",
+										"select count(1) from PS_TZ_SITEI_COLU_T where TZ_SITEI_ID=? and TZ_COLU_ID=? and TZ_COLU_TYPE='D'",
 										new Object[] { siteId, coluId }, "Integer");
 								if (existNum > 0) {
 
@@ -1590,7 +1590,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				if (siteids != null && siteids.size() > 0) {
 					for (int i = 0; i < siteids.size(); i++) {
 						String siteId = (String) siteids.get(i);
-						sql = "select a.TZ_COLU_ID,CONCAT(b.TZ_SITEI_NAME ,'-',a.TZ_COLU_NAME) TZ_COLU_NAME from PS_TZ_SITEI_COLU_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID AND a.TZ_SITEI_ID=? and a.TZ_CONT_TYPE='A'";
+						sql = "select a.TZ_COLU_ID,CONCAT(b.TZ_SITEI_NAME ,'-',a.TZ_COLU_NAME) TZ_COLU_NAME from PS_TZ_SITEI_COLU_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID AND a.TZ_SITEI_ID=? and a.TZ_COLU_TYPE='D'";
 						// sql =
 						// tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventTpjsList");
 						List<Map<String, Object>> listColus = sqlQuery.queryForList(sql, new Object[] { siteId });
@@ -1643,7 +1643,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					String publicUrl = mapArtView.get("TZ_STATIC_ART_URL") == null ? ""
 							: String.valueOf(mapArtView.get("TZ_STATIC_ART_URL"));
 					String coluName = "";
-					sql = "select CONCAT(b.TZ_SITEI_NAME ,'-',a.TZ_COLU_NAME) TZ_COLU_NAME from PS_TZ_SITEI_COLU_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID AND a.TZ_SITEI_ID=? and a.TZ_COLU_ID=? and a.TZ_CONT_TYPE='A'";
+					sql = "select CONCAT(b.TZ_SITEI_NAME ,'-',a.TZ_COLU_NAME) TZ_COLU_NAME from PS_TZ_SITEI_COLU_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID AND a.TZ_SITEI_ID=? and a.TZ_COLU_ID=? and a.TZ_COLU_TYPE='D'";
 					coluName = sqlQuery.queryForObject(sql, new Object[] { siteId, coluId }, "String");
 
 					// 预览url;
