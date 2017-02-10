@@ -1019,7 +1019,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				// 校验机构会员数据项--不能为空;
 				String strTemV = "";
 				//String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				//yuds,查询配置的显示在完善信息的字段
+				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_IS_PREFECT='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strSiteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
