@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZWebInforShowBundle.service.impl;
+package com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * 招生站点获取栏目下随机一篇文章
  *
  */
-@Service("com.tranzvision.gd.TZWebInforShowBundle.service.impl.WebInfoSinglePageImpl")
-public class WebInfoSinglePageImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl.WebSiteSinglePageImpl")
+public class WebSiteSinglePageImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	

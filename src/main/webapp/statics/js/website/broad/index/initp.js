@@ -282,6 +282,7 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+				tab(".tabwrap .tabhead",".tabwrap .tabNote","tab_on","mousedown");
 			},
 			failure: function () {
 			  	//ToDo
