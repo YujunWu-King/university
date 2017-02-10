@@ -58,7 +58,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 				String adcertTmpl=jacksonUtil.getString("adcertTmpl");
 				System.out.println(adcertTmpl);
 				String adtmplName=jacksonUtil.getString("adtmplName");
-				String useFlag=jacksonUtil.getString("useFlag");
+				//String useFlag=jacksonUtil.getString("useFlag");
 				String adcertMergHtml=jacksonUtil.getString("adcertMergHtml");
 
 				 
@@ -67,7 +67,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 				PsTzADTMPLTBL.setTzAdTmplId(adcertTmpl);
 				PsTzADTMPLTBL.setTzTmplName(adtmplName);
 				PsTzADTMPLTBL.setTzAdHtml(adcertMergHtml);
-				PsTzADTMPLTBL.setTzUseFlag(useFlag);
+				PsTzADTMPLTBL.setTzUseFlag("Y");
 				PsTzADTMPLTBL.setRowAddedDttm(nowdate);
 				PsTzADTMPLTBL.setRowAddedOprid(Opid);
 				PsTzADTMPLTBL.setRowLastmantDttm(nowdate);
@@ -164,7 +164,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 				jacksonUtil.json2Map(strForm);
 				String adcertTmpl=jacksonUtil.getString("adcertTmpl");
 				String adtmplName=jacksonUtil.getString("adtmplName");
-				String useFlag=jacksonUtil.getString("useFlag");
+				//String useFlag=jacksonUtil.getString("useFlag");
 				String adcertMergHtml=jacksonUtil.getString("adcertMergHtml");
 
 				
@@ -178,7 +178,7 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl{
 					PsTzZsJGTBL.set*/
 					PsTzADTMPLTBL.setTzAdTmplId(String.valueOf(adcertTmpl));
 					PsTzADTMPLTBL.setTzTmplName(adtmplName);
-					PsTzADTMPLTBL.setTzUseFlag(useFlag);
+					PsTzADTMPLTBL.setTzUseFlag("Y");
 					PsTzADTMPLTBL.setTzAdHtml(adcertMergHtml);
 					PsTzADTMPLTBL.setRowLastmantDttm(nowdate);
 					PsTzADTMPLTBL.setRowLastmantOprid(Opid);
