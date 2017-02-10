@@ -425,7 +425,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String strOprid = "";
 			TzSession tzSession = new TzSession(request);
 			Object objOprid = tzSession.getSession(userSessionName);
-
+			logger.info("------test type -----" + objOprid);
 			if (null != objOprid) {
 				strOprid = String.valueOf(objOprid);
 			}
