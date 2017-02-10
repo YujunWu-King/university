@@ -195,6 +195,11 @@
 		var AddArr = [];
 		var deleteArr = [];
 		var closePanel = btn.closePanel;
+		
+		//自动初筛CheckBox
+		if(formRec.autoScreen != "Y"){
+			formRec.autoScreen = "N";
+		}
 		//表单信息
 		var formObj = {
 			type: 'nodeInfo',

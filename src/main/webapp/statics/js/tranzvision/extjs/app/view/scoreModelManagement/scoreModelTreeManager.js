@@ -70,13 +70,13 @@
         		dock : 'top', 
         		style:'background-color: #dfeaf2;',
         		items: ['->',{
-	        			iconCls : 'add',
+	        			iconCls : 'siblingnode',
 	        			reference: 'addButton',
 	        			text: '插入同级节点',
 	        			tooltip: '插入同级节点',
 	        			handler : "insertBrotherNode"
                     },{
-                    	iconCls : 'add',
+                    	iconCls : 'childnode',
                     	text: '插入子节点',
                     	tooltip: '插入子节点',
                     	handler : "insertChildNode" 

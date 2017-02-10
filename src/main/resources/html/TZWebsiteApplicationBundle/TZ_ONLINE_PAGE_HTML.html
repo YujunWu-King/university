@@ -1056,12 +1056,25 @@
 				});
 				
 				$(function(){
+					//var home_page = $("#HOME_PAGE").parent().children("li").first();
+					//console.dir($("#HOME_PAGE").parent());
+					//console.dir("1111");
+					//console.dir($("#HOME_PAGE").parent().children("li"));
+					//console.dir("1111");
+					//console.dir(home_page);
+					//console.log($("#HOME_PAGE").parent().attr("id"));
+					var home_page =$("#HOME_PAGE").parent().attr("id");
+					$(document).on("click","#"+home_page, function(event){
+						//alert("backToHome");
+						backToHome("%bind(:10)","%bind(:11)");
+					});
+					
 				     $(document).on("click", "#app_preButtom", function(event){
-				    	 	console.log("1111");
+				    	 	///console.log("1111");
 							var pwdTitleId = $("#%bind(:45)");
 							var pwdDivId = $("#%bind(:46)");
 							var pwdDiv2Id = $("#%bind(:47)");
-							console.log("pwdTitleId:"+pwdTitleId);
+							sconsole.log("pwdTitleId:"+pwdTitleId);
 							console.log("pwdDivId:"+pwdDivId);
 							console.log("pwdDiv2Id:"+pwdDiv2Id);
 							

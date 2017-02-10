@@ -79,7 +79,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJBT","问卷标题"),
                     sortable: true,
                     dataIndex: 'TZ_DC_WJBT',
-                    width: 500
+                    flex:1
                 },{  text: '状态',
                     dataIndex: 'TZ_DC_WJ_ZT',
                     width:100,

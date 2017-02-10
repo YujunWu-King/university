@@ -211,6 +211,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//用在拼写给定的div排列
 		console.dir(data);
 		var child=data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child=data["children"];
 		var BUSINESS_TYPE_GP=[
 			"互联网类",//01
@@ -423,7 +426,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(BUSINESS_TYPE_DEF=="02"){
 					FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
 				}else{
-					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;>'
+					FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;">'
 				}	
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
@@ -472,6 +475,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 	_eventbind: function(data) {
 		//-----根据"创业类型"下拉框 显示和隐藏"类型关联div"
 		var child = data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child = data["children"];
 		var $btype_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
 		$btype_select.change(function(){

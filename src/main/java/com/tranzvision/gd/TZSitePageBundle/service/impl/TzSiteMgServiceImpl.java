@@ -1219,7 +1219,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							}
 						} else {
 							errMsg[0] = "1";
-							errMsg[1] = "站点首页发布失败！";
+							errMsg[1] = "站点首页发布失败！错误信息："+errMsg[1];
 						}
 
 						break;
@@ -1272,7 +1272,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 								} else {
 									errMsg[0] = "1";
-									errMsg[1] = "站点首页发布失败！";
+									errMsg[1] = "站点首页发布失败！错误信息："+errMsg[1];
 								}
 							} else {
 								errMsg[0] = "1";
@@ -1644,7 +1644,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					sitePageBundle="TZSitePageBundle";
 				}
 				
-				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".siteIndexReleaseTpl",
+				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".SiteIndexReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1687,7 +1687,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
-			errMsg[1] = "站点首页发布异常！";
+			errMsg[1] = e.toString();
 		}
 
 		return boolRet;

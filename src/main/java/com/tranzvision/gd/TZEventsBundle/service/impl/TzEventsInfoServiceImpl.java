@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzSureyAudT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -55,6 +56,9 @@ import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
 
 /**
  * 活动基本信息，原PS：TZ_GD_HDGL:ActivityInfo
@@ -133,6 +137,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzArtPrjTMapper psTzArtPrjTMapper;
+	
+	@Autowired
+	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
 
 	// private String sessSiteId = "siteId";
 
@@ -209,7 +216,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			if (null == activityId || "".equals(activityId)) {
 
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", enabledApply, "",
-						"", "", "", "0", "", "", "", "", "", "", "");
+						"", "", "", "0", "", "", "", "", "", "", "",null,null);
 				return strRet;
 			}
 
@@ -221,7 +228,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				errorMsg[0] = "1";
 				errorMsg[1] = "活动数据不存在。";
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-						"", "", "", "", "", "", "", "");
+						"", "", "", "", "", "", "", "",null,null);
 				return strRet;
 			}
 
@@ -347,6 +354,21 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				}
 			}
 
+			//听众
+		    String sqlAud="SELECT A.TZ_AUD_ID,B.TZ_AUD_NAM FROM PS_TZ_ART_AUDIENCE_T A,PS_TZ_AUDIENCE_VW B WHERE  A.TZ_AUD_ID=B.TZ_AUD_ID AND TZ_ART_ID=?";  
+		    List<Map<String, Object>>AudList=new ArrayList<Map<String, Object>>();
+		    AudList=sqlQuery.queryForList(sqlAud, new Object[]{activityId});
+		    List<String>AudNameList=new ArrayList<String>();
+		    List<String>AudIDList=new ArrayList<String>();
+		    
+			if (AudList != null && AudList.size() > 0) {
+				for (int i = 0; i < AudList.size(); i++) {
+					AudNameList.add((String) AudList.get(i).get("TZ_AUD_NAM"));
+					AudIDList.add((String) AudList.get(i).get("TZ_AUD_ID"));
+					
+				}
+			}
+			
 			// 站点;
 			ArrayList<String> sites = new ArrayList<>();
 			List<Map<String, Object>> sitesList = sqlQuery.queryForList(
@@ -383,14 +405,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			strRet = this.genEventJsonString(activityId, activityName, strActivityStartDate, strActivityStartTime,
 					strActivityEndDate, strActivityEndTime, activityPlace, activityCity, externalLink, contentInfo,
 					titleImageTitle, titleImageDesc, titleImageUrl, enabledApply, strApplyStartDate, strApplyStartTime,
-					strApplyEndDate, strApplyEndTime, applyNum, showModel, artType, limit, projects, sites, colus,columsHide);
+					strApplyEndDate, strApplyEndTime, applyNum, showModel, artType, limit, projects, sites, colus,columsHide,AudIDList,AudNameList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = "查询失败！" + e.getMessage();
 			strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-					"", "", "", "", "", "", "");
+					"", "", "", "", "", "", "",null,null);
 		}
 
 		return strRet;
@@ -445,7 +467,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			String activityCity, String externalLink, String contentInfo, String titleImageTitle, String titleImageDesc,
 			String titleImageUrl, String enabledApply, String strApplyStartDate, String strApplyStartTime,
 			String strApplyEndDate, String strApplyEndTime, String applyNum, String showModel, String artType,
-			String limit, Object projects, Object sites, Object colus,String columsHide) {
+			String limit, Object projects, Object sites, Object colus,String columsHide,List<String>AudIDList,List<String> AudNameList) {
 		String strRet = "";
 
 		if ("".equals(strApplyStartTime)) {
@@ -490,6 +512,8 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		mapJson.put("colus", colus);
 		mapJson.put("columsHide", columsHide);
 		
+		mapJson.put("AudID",AudIDList);
+		mapJson.put("AudName",AudNameList);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
@@ -570,6 +594,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				if (mapData.get("siteids") != null && !"".equals(mapData.get("siteids"))) {
 					siteids = (ArrayList<String>) mapData.get("siteids");
 				}
+					
 
 				// 栏目
 				ArrayList<String> colus = new ArrayList<>();
@@ -1998,6 +2023,29 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			psTzArtRecTblWithBLOBs.setRowLastmantOprid(oprid);
 			psTzArtRecTblWithBLOBs.setTzArtEdittype("A");
 
+			
+			//活动听众表
+			
+			if(mapParams.containsKey("AudList")&& mapParams.get("AudList")!=null && !mapParams.get("AudList").toString().equals("")){
+				ArrayList<String> strListenersId=new ArrayList<String>();
+				strListenersId=(ArrayList<String>) mapParams.get("AudList");
+				PsTzArtAudienceTKey  PsTzArtAudienceTKey=new PsTzArtAudienceTKey();
+				for (int i = 0; i < strListenersId.size(); i++) {
+					
+					String sqlAudnum = "select COUNT(1) from PS_TZ_ART_AUDIENCE_T WHERE TZ_ART_ID=? AND TZ_AUD_ID=?";
+					int count = sqlQuery.queryForObject(sqlAudnum, new Object[]{activityId,(String) strListenersId.get(i)},"Integer");
+					if(count > 0){
+						
+					}else{
+						PsTzArtAudienceTKey.setTzAudId((String) strListenersId.get(i));
+						PsTzArtAudienceTKey.setTzArtId(activityId);
+						PsTzArtAudienceTMapper.insert(PsTzArtAudienceTKey);
+
+					}
+				}
+					
+			}
+			
 			// 文章内容关联表
 			/*
 			 * PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new

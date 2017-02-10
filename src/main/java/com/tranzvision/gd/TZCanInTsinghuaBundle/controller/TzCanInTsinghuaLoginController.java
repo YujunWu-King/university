@@ -73,21 +73,8 @@ public class TzCanInTsinghuaLoginController {
 	@RequestMapping(value = { "/count" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String count(HttpServletRequest request, HttpServletResponse response) {
-		String sUserAgent = request.getHeader("User-Agent");
-		
 		//是否移动设备访问
-		boolean isMobile = false;
-		
-		String[] mobileAgents = {"Windows CE","iPod","Symbian","iPhone","BlackBerry","Android","Windows Phone"};
-		if(sUserAgent.indexOf("Android") > -1 && (sUserAgent.indexOf("ERD79) > -1 || sUserAgent.indexOf('MZ60") > -1 || sUserAgent.indexOf("GT-P7") > -1 || sUserAgent.indexOf("SCH-P7") > -1)){
-		}else{
-			for( int i = 0; i < mobileAgents.length; i++){
-				if(sUserAgent.indexOf(mobileAgents[i])>-1){
-					isMobile = true;
-					break;
-				}
-			}
-		}
+		boolean isMobile = CommonUtils.isMobile(request);
 		
 		/*登录页面内容*/
 		String loginHtml = "";
@@ -108,34 +95,4 @@ public class TzCanInTsinghuaLoginController {
 
 		return loginHtml;
 	}
-	
-	@RequestMapping(value = { "/test" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String counttest(HttpServletRequest request, HttpServletResponse response) {
-		String sUserAgent = request.getHeader("User-Agent");
-		
-		//是否移动设备访问
-		boolean isMobile = false;
-		
-		String[] mobileAgents = {"Windows CE","iPod","Symbian","iPhone","BlackBerry","Android","Windows Phone"};
-		if(sUserAgent.indexOf("Android") > -1 && (sUserAgent.indexOf("ERD79) > -1 || sUserAgent.indexOf('MZ60") > -1 || sUserAgent.indexOf("GT-P7") > -1 || sUserAgent.indexOf("SCH-P7") > -1)){
-		}else{
-			for( int i = 0; i < mobileAgents.length; i++){
-				if(sUserAgent.indexOf(mobileAgents[i])>-1){
-					isMobile = true;
-					break;
-				}
-			}
-		}
-		
-		String loginHtml = null;
-		try {
-			loginHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_IFRAME_TEST",request.getContextPath());
-		} catch (TzSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return loginHtml;
-	}	
 }

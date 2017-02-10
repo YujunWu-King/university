@@ -5,6 +5,8 @@ import java.util.Date;
 public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
     private String tzTmplName;
 
+    private String tzCertTypeId;
+
     private String tzCertJgId;
 
     private String tzUseFlag;
@@ -19,16 +21,20 @@ public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
 
     private String rowLastmantOprid;
 
-    private Integer syncid;
-
-    private Date syncdttm;
-
     public String getTzTmplName() {
         return tzTmplName;
     }
 
     public void setTzTmplName(String tzTmplName) {
         this.tzTmplName = tzTmplName == null ? null : tzTmplName.trim();
+    }
+
+    public String getTzCertTypeId() {
+        return tzCertTypeId;
+    }
+
+    public void setTzCertTypeId(String tzCertTypeId) {
+        this.tzCertTypeId = tzCertTypeId == null ? null : tzCertTypeId.trim();
     }
 
     public String getTzCertJgId() {
@@ -85,21 +91,5 @@ public class PsTzCerttmplTbl extends PsTzCerttmplTblKey {
 
     public void setRowLastmantOprid(String rowLastmantOprid) {
         this.rowLastmantOprid = rowLastmantOprid == null ? null : rowLastmantOprid.trim();
-    }
-
-    public Integer getSyncid() {
-        return syncid;
-    }
-
-    public void setSyncid(Integer syncid) {
-        this.syncid = syncid;
-    }
-
-    public Date getSyncdttm() {
-        return syncdttm;
-    }
-
-    public void setSyncdttm(Date syncdttm) {
-        this.syncdttm = syncdttm;
     }
 }

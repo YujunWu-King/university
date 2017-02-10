@@ -658,6 +658,21 @@ $(document).ready(function(){
 	$("#TZ_COUNTRY_click").mouseout(function() {
 	   	$("#TZ_COUNTRY_click").css("cursor","");
 	});
+	$("#TZ_SCH_CNAME_Country").click(function(e){
+		$("#ParamCon").val("TZ_SCH_CNAME_Country");
+		s = $.layer({
+			type: 2,
+			title: false,
+			fix: false,
+			closeBtn: false,
+			shadeClose: false,
+			shade : [0.3 , '#000' , true],
+			border : [3 , 0.3 , '#000', true],
+			offset: ['30%',''],
+			area: ['830px','610px'],
+			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+		});
+	});
 	$("#TZ_SCH_CNAME_click").click(function(e) {
 		$("#ParamValue").val("TZ_SCH_CNAME");
 		s = $.layer({
@@ -824,7 +839,13 @@ $(document).ready(function(){
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
-		}*/else{//其他
+		}*/
+		else if(key="TZ_SCH_CNAME_Country"){
+			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
+			if(schCountry!=null&&schCountry!=undefined){
+				$("#TZ_SCH_COUNTRYCODE").val(schCountry);
+			}			
+		}else{//其他
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");

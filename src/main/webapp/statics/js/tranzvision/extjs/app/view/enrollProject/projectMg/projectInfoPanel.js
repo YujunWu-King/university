@@ -341,6 +341,29 @@
 				name: 'fmqd_desc',
 				style:'margin-left:8px'
 			}]
+		},{
+			layout: {
+				type: 'column'
+			},
+			items:[{
+				columnWidth:.4,
+				xtype: 'textfield',
+				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.zsmbid","证书模板编号"),
+				name: 'zsmbid',
+				editable: false,
+				triggers: {
+					search: {
+						cls: 'x-form-search-trigger',
+						handler: "pmtSearchZsmb"
+					}
+				}
+			},{
+				columnWidth:.6,
+				xtype: 'displayfield',
+				hideLabel: true,
+				name: 'zsmbname',
+				style:'margin-left:8px'
+			}]
 		}/*20170118 end**/,{
 			  xtype: 'tabpanel',
 			  frame: true,
