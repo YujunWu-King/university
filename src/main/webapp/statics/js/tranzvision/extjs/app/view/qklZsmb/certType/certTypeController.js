@@ -145,7 +145,7 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeController', {
         }
     },
     ensureTypeList:function(btn){
-        this.saveMbList(btn);
+        this.saveTypeList(btn);
         //关闭窗口
         var comView = this.getView();
         comView.close();
@@ -171,10 +171,12 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeController', {
 			}
 			var tzParams = '{"ComID":"TZ_CERTTYPE_COM","PageID":"TZ_TYPE_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			Ext.tzSubmit(tzParams,function(responseData){
-					win.actType = "update";	
+					
 					form.findField("certTypeId").setReadOnly(true);
                     form.findField("certTypeId").addCls('lanage_1');
+                    form.findField("certTypeId").setValue(responseData);
                     var store=win.findParentByType("grid").store;
+                    win.actType = "update";	
                     store.reload();
 			},"",true,this);
 		}
