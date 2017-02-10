@@ -16,7 +16,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class WebInfoSinglePageImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
-
+	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -29,24 +29,19 @@ public class WebInfoSinglePageImpl extends FrameworkImpl {
 			
 			strSiteId = jacksonUtil.getString("siteId");
 			strAreaId = jacksonUtil.getString("areaId");
-			
-			//获取栏目编号
-			String coluSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
-			String coluId = jdbcTemplate.queryForObject(coluSQL, new Object[] { strSiteId,strAreaId }, "String");
 
-			String artIdSql = "SELECT TZ_ART_ID FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? and TZ_COLU_ID=? ORDER BY RAND() LIMIT 1";
-			String artId = jdbcTemplate.queryForObject(artIdSql, new Object[]{strSiteId,coluId}, "String");
-			
-			if(artId!=null){
-				String artSql = "SELECT TZ_ART_CONENT FROM PS_TZ_ART_REC_TBL WHERE TZ_ART_ID=?";
-				artContent = jdbcTemplate.queryForObject(artSql, new Object[] { artId }, "String");
+			if(strSiteId!=null&&!"".equals(strSiteId)&&strAreaId!=null&&!"".equals(strAreaId)){
+				String artSql = "SELECT A.TZ_ART_CONENT FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=?) INNER JOIN PS_TZ_SITEI_AREA_T C ON (B.TZ_COLU_ID = C.TZ_COLU_ID AND C.TZ_SITEI_ID=B.TZ_SITE_ID AND C.TZ_AREA_ID=?) ORDER BY RAND() LIMIT 1";
+				artContent = jdbcTemplate.queryForObject(artSql, new Object[] { strSiteId,strAreaId }, "String");
 			}
+			
+			artContent = artContent==null?"":artContent;
 			
 			return artContent;
 			
 		} catch (Exception e) {
-			
+			return e.toString();
 		}
-		return "没有显示的数据";
+		
 	}
 }

@@ -282,12 +282,9 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
-<<<<<<< HEAD
-				$(".date_body").each(function(){
-					$clamp(this, {clamp:2});
-				});
-=======
->>>>>>> 244c0e2d08a2c519c7a4f1e408ecf4fc178444ec
+//				$(".date_body").each(function(){
+//					$clamp(this, {clamp:2});
+//				});
 			},
 			failure: function () {
 			  	//ToDo

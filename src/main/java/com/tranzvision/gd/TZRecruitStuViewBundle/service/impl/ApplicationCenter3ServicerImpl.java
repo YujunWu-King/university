@@ -45,21 +45,6 @@ public class ApplicationCenter3ServicerImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
 			String strAreaId="";
-//			if (jacksonUtil.containsKey("areaId")) {
-//				strAreaId = jacksonUtil.getString("areaId");
-//			}
-//
-//			if (strAreaId == null || "".equals(strAreaId)) {
-//				strAreaId = request.getParameter("areaId");
-//			}
-//			
-//			if (jacksonUtil.containsKey("siteId")) {
-//				strSiteId = jacksonUtil.getString("siteId");
-//			}
-//
-//			if (strSiteId == null || "".equals(strSiteId)) {
-//				strSiteId = request.getParameter("siteId");
-//			}
 			strSiteId = jacksonUtil.getString("siteId");
 			strAreaId = jacksonUtil.getString("areaId");
 			// 根据siteid得到机构id;

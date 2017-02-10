@@ -68,14 +68,10 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 			//根据siteid和areaId得到栏目id;
 			String coluSQL = "select TZ_COLU_ID from PS_TZ_SITEI_AREA_T where TZ_SITEI_ID=? and TZ_AREA_ID=?";
 			String coluId = jdbcTemplate.queryForObject(coluSQL, new Object[] { strSiteId,strAreaId }, "String");
+			/*招生活动、报考通知、资料专区栏目*/
 			String actColuId = "";
 			String applyNoticeColuId = "";
 			String dataAreaColuId = "";
-			System.out.println(coluId+"test1");
-			if (coluId != null){
-				String[] coluId1 = coluId.split(",");
-				System.out.println(coluId1[0]+"test2");
-			}
 
 			// 招生活动;
 			String recruitAct = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "1",language, "招生活动", "招生活动");
@@ -89,19 +85,37 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 			//更多;
 			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACTMESSAGE", "4", language, "更多","more");
 			
-			//根据siteid和coluid得到artid
-			String artIdSql = "select TZ_ART_ID from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=?";
-			String artId = jdbcTemplate.queryForObject(artIdSql, new Object[]{strSiteId,coluId}, "String");
-			List<Map<String, Object>> artIdList = jdbcTemplate.queryForList(artIdSql,new Object[] { strSiteId,coluId });
-			
 			String recruitActHtml = "";
 			
 			String applyNoticeHtml = "";
 			
 			String dataAreaHtml = "";
 			
-			recruitActHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuAct");
-			
+			//根据siteid和coluid得到artid
+			if (coluId != null) {
+				String[] coluId1 = coluId.split(",");
+				actColuId = coluId1[0];
+				applyNoticeColuId = coluId1[1];
+				dataAreaColuId = coluId1[2];
+				String artIdSql = "select TZ_ART_ID from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=?";
+				List<Map<String, Object>> artIdList = jdbcTemplate.queryForList(artIdSql,
+						new Object[] { strSiteId, actColuId });
+				if (artIdList != null && artIdList.size() > 0) {
+					for (int i = 0; i < artIdList.size(); i++) {
+						String artId = (String) artIdList.get(i).get("TZ_ART_ID");
+						String actSql = "select TZ_LONG1,TZ_DATE1 from PS_TZ_ART_REC_TBL where TZ_ART_ID=? order by ROW_ADDED_DTTM DESC limit 4";
+						List<Map<String, Object>> coluMapList = jdbcTemplate.queryForList(actSql,
+								new Object[] { artId });
+						if (coluMapList != null && coluMapList.size() > 0) {
+							for (int j = 0; j < artIdList.size(); j++) {
+								
+							}
+						}
+						recruitActHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuAct");
+					}
+				}
+
+			}
 			applyNoticeHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuNotice");
 			
 			dataAreaHtml = tzGDObject.getHTMLText("HTML.TZRecruitStuViewBundle.TZRecruitStuData");
@@ -111,8 +125,8 @@ public class TZRecruitStuActServicerImpl extends FrameworkImpl {
 					more,recruitActHtml,applyNoticeHtml,dataAreaHtml);
 			return applicationCenterHtml;
 		} catch (Exception e) {
-
+			return e.toString();
 		}
-		return "没有相关数据";
+//		return "没有相关数据";
 	}
 }
