@@ -60,18 +60,18 @@
             columns: [{
                 xtype: 'rownumberer',
                 width:50
-            },{
+            }/*,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirectionId","报考方向编号"),
                 dataIndex: 'classID',
                 minWidth:180,
                 flex:1
-            },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirection","报考方向名称"),
+            }*/,{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyDirection","班级名称"),
                 minWidth:180,
                 dataIndex:'className',
                 flex:1
             },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyBatch","申请批次"),
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyBatch","批次名称"),
                 dataIndex: 'batchName',
                 width:110
             }/*,{
@@ -118,6 +118,30 @@
                     },
                     handler: "publishResult"
                 }]
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width:150,
+                text: "材料评审",
+                xtype: 'actioncolumn',
+                align:'center',
+                items:[
+                    {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:''},"-",
+                    {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:''},"-",
+                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:''}
+                ]
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width:150,
+                text: "面试评审",
+                xtype: 'actioncolumn',
+                align:'center',
+                items:[
+                    {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:''},"-",
+                    {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:''},"-",
+                    {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:''}
+                ]
             }],
             store: store,
             bbar: {
