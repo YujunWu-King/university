@@ -282,9 +282,13 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+<<<<<<< HEAD
 //				$(".date_body").each(function(){
 //					$clamp(this, {clamp:2});
 //				});
+=======
+				tab(".tabwrap .tabhead",".tabwrap .tabNote","tab_on","mousedown");
+>>>>>>> c40efc1929ffa98d03337cb0310f8501e1700ade
 			},
 			failure: function () {
 			  	//ToDo

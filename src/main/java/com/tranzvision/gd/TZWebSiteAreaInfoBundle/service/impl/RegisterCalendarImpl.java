@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZRecruitStuViewBundle.service.impl;
+package com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -15,12 +15,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
+ * 招生报名系统首页，报考日历
  * 
- * 报考日历
- *
+ * @author 叶少威
+ * @since 2017-2-10
  */
-@Service("com.tranzvision.gd.TZRecruitStuViewBundle.service.impl.TZARegisterCalendarServicerImpl")
-public class TZARegisterCalendarServicerImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl.RegisterCalendarImpl")
+public class RegisterCalendarImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -30,7 +31,6 @@ public class TZARegisterCalendarServicerImpl extends FrameworkImpl {
 	@Autowired
 	private TZGDObject tzGDObject;
 
-	/****** 报考日历 ********/
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String registerCalendarHtml = "";
@@ -53,7 +53,7 @@ public class TZARegisterCalendarServicerImpl extends FrameworkImpl {
 			// language;
 			String language = "";
 
-			String siteSQL = "select TZ_JG_ID,TZ_SKIN_STOR,TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+			String siteSQL = "select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { strSiteId });
 			if (siteMap != null) {
 				language = (String) siteMap.get("TZ_SITE_LANG");
@@ -87,24 +87,24 @@ public class TZARegisterCalendarServicerImpl extends FrameworkImpl {
 					String artAddr = (String) artList.get(i).get("TZ_ART_ADDR");
 					String artMonth = artList.get(i).get("TZ_ART_MONTH").toString();
 					String artDay = artList.get(i).get("TZ_ART_DAY").toString();
-					StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_preview&operatetype=HTML&oprate=R&siteId=")
+					StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_preview&operatetype=HTML&siteId=")
 							.append(strSiteId).append("&columnId=").append(columnId).append("&artId=").append(artId);
 					
 					if(registerCalendarLisHtml==null){
-						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 								artDay,artMonth,artTitle,artAddr));
 					}else{
 						if(i==2){
 							registerCalendarLisHtml.append("</ul>");
 						}
-						registerCalendarLisHtml.append(tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 										artDay,artMonth,artTitle,artAddr));
 					}
 				}
 				registerCalendarLisHtml.append("</ul>");
 			}
 			
-			registerCalendarHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_BKRL_HTML", registerCalendar,
+			registerCalendarHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_HTML", registerCalendar,
 					more,registerCalendarLisHtml==null?"":registerCalendarLisHtml.toString()); 
 			
 			return registerCalendarHtml;

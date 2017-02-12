@@ -71,6 +71,8 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			String orgId = jacksonUtil.getString("orgId").toUpperCase();
 			// 判断是否为站点装修的请求
 			String isd = jacksonUtil.getString("isd");
+			//项目跟目录;
+			String rootPath = request.getContextPath();
 
 			// 根据站点实例id ， 找站点语言
 			String sysDefaultLang = getSysHardCodeVal.getSysDefaultLanguage();
@@ -174,15 +176,17 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 				strActCount = String.valueOf(actCount);
 			}
 			System.out.println("strActCount=" + strActCount);
+			//站内信管理页面;
+			String znxUrl = rootPath + "/dispatcher?classid=znxGl&siteId="+siteId;
 			//sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
 			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
 			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 			if ("Y".equals(isShowPhoto)) {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto);
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto,znxUrl);
 			} else {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay);
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,znxUrl);
 			}
 
 			strRet = strRet.replace((char) (10), ' ');

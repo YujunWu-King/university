@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZWebInforShowBundle.service.impl;
+package com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl;
 
 import java.util.Map;
 
@@ -14,8 +14,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * 招生站点获取左侧区域一和区域二内容：友情链接和二维码
  *
  */
-@Service("com.tranzvision.gd.TZWebInforShowBundle.service.impl.WebInfoLeftAreaImpl")
-public class WebInfoLeftAreaImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl.WebSiteLeftAreaImpl")
+public class WebSiteLeftAreaImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	
