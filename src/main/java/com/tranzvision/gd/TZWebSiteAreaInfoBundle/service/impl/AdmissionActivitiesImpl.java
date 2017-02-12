@@ -99,8 +99,10 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT LIMIT 5";
 							
 					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId });
+					
+					StringBuffer artContentTabLisHtml = null;
 					if (artList != null && artList.size()>0){
-						StringBuffer artContentTabLisHtml = new StringBuffer("");
+						artContentTabLisHtml= new StringBuffer("");
 						
 						for(int j=0;j<artList.size();j++){	
 							String artId = (String) artList.get(j).get("TZ_ART_ID");
@@ -117,14 +119,13 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 							}
 							
 							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_preview&operatetype=HTML&siteId=")
-									.append(strSiteId).append("&columnId=").append(columnId).append("&artId=").append(artId);
+									.append(strSiteId).append("&columnId=").append(currentColumnId).append("&artId=").append(artId);
 							
 							artContentTabLisHtml = artContentTabLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_LI_HTML", sbArtUrl.toString(),
 									artTitle,artDate,hotTagDisplay,newTagDisplay));
 						}
-						
-						sbArtContentTabsHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_HTML",i==0?"dis_block":"dis_none", artContentTabLisHtml.toString()));
 					}
+					sbArtContentTabsHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_HTML",i==0?"dis_block":"dis_none", artContentTabLisHtml!=null?artContentTabLisHtml.toString():""));
 				}
 				
 			}
