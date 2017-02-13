@@ -177,7 +177,7 @@ public class certTmplGl extends FrameworkImpl {
 					sqlQuery.update(sqlUpdate, new Object[] { JgId,certTypeID });
 				}else{
 				}
-				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzgetCountTmplByCertId");
+				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzGetCountTmplByCertId");
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { JgId,certTmpl }, "Integer");
 				if (count > 0) {
 					errMsg[0] = "1";
@@ -242,7 +242,7 @@ public class certTmplGl extends FrameworkImpl {
 					sqlQuery.update(sqlUpdate, new Object[] { JgId,certTypeID });
 				}else{
 				}
-				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzgetCountTmplByCertId");;
+				String sql = tzSQLObject.getSQLText("SQL.TZCertTmplGLBundle.TzGetCountTmplByCertId");;
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { JgId,certTmpl }, "Integer");
 				if (count > 0) {
 					PsTzCerttmplTblWithBLOBs psTzCerttmplTblWithBLOBs = new PsTzCerttmplTblWithBLOBs();
