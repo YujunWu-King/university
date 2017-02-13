@@ -5,6 +5,7 @@
     <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <id column="TZ_CERT_TMPL_ID" property="tzCertTmplId" jdbcType="VARCHAR" />
     <result column="TZ_TMPL_NAME" property="tzTmplName" jdbcType="VARCHAR" />
+    <result column="TZ_CERT_TYPE_ID" property="tzCertTypeId" jdbcType="VARCHAR" />
     <result column="TZ_CERT_JG_ID" property="tzCertJgId" jdbcType="VARCHAR" />
     <result column="TZ_USE_FLAG" property="tzUseFlag" jdbcType="VARCHAR" />
     <result column="TZ_ATTACHSYSFILENA" property="tzAttachsysfilena" jdbcType="VARCHAR" />
@@ -12,8 +13,6 @@
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
-    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
-    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_CERT_MERG_HTML1" property="tzCertMergHtml1" jdbcType="LONGVARCHAR" />
@@ -21,8 +20,8 @@
     <result column="TZ_CERT_MERG_HTML3" property="tzCertMergHtml3" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_JG_ID, TZ_CERT_TMPL_ID, TZ_TMPL_NAME, TZ_CERT_JG_ID, TZ_USE_FLAG, TZ_ATTACHSYSFILENA, 
-    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_JG_ID, TZ_CERT_TMPL_ID, TZ_TMPL_NAME, TZ_CERT_TYPE_ID, TZ_CERT_JG_ID, TZ_USE_FLAG, 
+    TZ_ATTACHSYSFILENA, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
   </sql>
   <sql id="Blob_Column_List" >
     TZ_CERT_MERG_HTML1, TZ_CERT_MERG_HTML2, TZ_CERT_MERG_HTML3
@@ -43,17 +42,17 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblWithBLOBs" >
     insert into PS_TZ_CERTTMPL_TBL (TZ_JG_ID, TZ_CERT_TMPL_ID, TZ_TMPL_NAME, 
-      TZ_CERT_JG_ID, TZ_USE_FLAG, TZ_ATTACHSYSFILENA, 
-      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-      TZ_CERT_MERG_HTML1, TZ_CERT_MERG_HTML2, 
-      TZ_CERT_MERG_HTML3)
+      TZ_CERT_TYPE_ID, TZ_CERT_JG_ID, TZ_USE_FLAG, 
+      TZ_ATTACHSYSFILENA, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, TZ_CERT_MERG_HTML1, 
+      TZ_CERT_MERG_HTML2, TZ_CERT_MERG_HTML3
+      )
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzCertTmplId,jdbcType=VARCHAR}, #{tzTmplName,jdbcType=VARCHAR}, 
-      #{tzCertJgId,jdbcType=VARCHAR}, #{tzUseFlag,jdbcType=VARCHAR}, #{tzAttachsysfilena,jdbcType=VARCHAR}, 
-      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
-      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
-      #{tzCertMergHtml1,jdbcType=LONGVARCHAR}, #{tzCertMergHtml2,jdbcType=LONGVARCHAR}, 
-      #{tzCertMergHtml3,jdbcType=LONGVARCHAR})
+      #{tzCertTypeId,jdbcType=VARCHAR}, #{tzCertJgId,jdbcType=VARCHAR}, #{tzUseFlag,jdbcType=VARCHAR}, 
+      #{tzAttachsysfilena,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzCertMergHtml1,jdbcType=LONGVARCHAR}, 
+      #{tzCertMergHtml2,jdbcType=LONGVARCHAR}, #{tzCertMergHtml3,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblWithBLOBs" >
     insert into PS_TZ_CERTTMPL_TBL
@@ -66,6 +65,9 @@
       </if>
       <if test="tzTmplName != null" >
         TZ_TMPL_NAME,
+      </if>
+      <if test="tzCertTypeId != null" >
+        TZ_CERT_TYPE_ID,
       </if>
       <if test="tzCertJgId != null" >
         TZ_CERT_JG_ID,
@@ -88,12 +90,6 @@
       <if test="rowLastmantOprid != null" >
         ROW_LASTMANT_OPRID,
       </if>
-      <if test="syncid != null" >
-        SYNCID,
-      </if>
-      <if test="syncdttm != null" >
-        SYNCDTTM,
-      </if>
       <if test="tzCertMergHtml1 != null" >
         TZ_CERT_MERG_HTML1,
       </if>
@@ -113,6 +109,9 @@
       </if>
       <if test="tzTmplName != null" >
         #{tzTmplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTypeId != null" >
+        #{tzCertTypeId,jdbcType=VARCHAR},
       </if>
       <if test="tzCertJgId != null" >
         #{tzCertJgId,jdbcType=VARCHAR},
@@ -135,12 +134,6 @@
       <if test="rowLastmantOprid != null" >
         #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null" >
-        #{syncid,jdbcType=INTEGER},
-      </if>
-      <if test="syncdttm != null" >
-        #{syncdttm,jdbcType=TIMESTAMP},
-      </if>
       <if test="tzCertMergHtml1 != null" >
         #{tzCertMergHtml1,jdbcType=LONGVARCHAR},
       </if>
@@ -157,6 +150,9 @@
     <set >
       <if test="tzTmplName != null" >
         TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTypeId != null" >
+        TZ_CERT_TYPE_ID = #{tzCertTypeId,jdbcType=VARCHAR},
       </if>
       <if test="tzCertJgId != null" >
         TZ_CERT_JG_ID = #{tzCertJgId,jdbcType=VARCHAR},
@@ -179,12 +175,6 @@
       <if test="rowLastmantOprid != null" >
         ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       </if>
-      <if test="syncid != null" >
-        SYNCID = #{syncid,jdbcType=INTEGER},
-      </if>
-      <if test="syncdttm != null" >
-        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      </if>
       <if test="tzCertMergHtml1 != null" >
         TZ_CERT_MERG_HTML1 = #{tzCertMergHtml1,jdbcType=LONGVARCHAR},
       </if>
@@ -201,6 +191,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTblWithBLOBs" >
     update PS_TZ_CERTTMPL_TBL
     set TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      TZ_CERT_TYPE_ID = #{tzCertTypeId,jdbcType=VARCHAR},
       TZ_CERT_JG_ID = #{tzCertJgId,jdbcType=VARCHAR},
       TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
       TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
@@ -208,8 +199,6 @@
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
-      SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_CERT_MERG_HTML1 = #{tzCertMergHtml1,jdbcType=LONGVARCHAR},
       TZ_CERT_MERG_HTML2 = #{tzCertMergHtml2,jdbcType=LONGVARCHAR},
       TZ_CERT_MERG_HTML3 = #{tzCertMergHtml3,jdbcType=LONGVARCHAR}
@@ -219,15 +208,14 @@
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCertTmplGLBundle.model.PsTzCerttmplTbl" >
     update PS_TZ_CERTTMPL_TBL
     set TZ_TMPL_NAME = #{tzTmplName,jdbcType=VARCHAR},
+      TZ_CERT_TYPE_ID = #{tzCertTypeId,jdbcType=VARCHAR},
       TZ_CERT_JG_ID = #{tzCertJgId,jdbcType=VARCHAR},
       TZ_USE_FLAG = #{tzUseFlag,jdbcType=VARCHAR},
       TZ_ATTACHSYSFILENA = #{tzAttachsysfilena,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
-      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
-      SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR}
   </update>

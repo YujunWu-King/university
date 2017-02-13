@@ -282,6 +282,7 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+				tab(".tabwrap .tabhead",".tabwrap .tabNote","tab_on","mousedown");
 			},
 			failure: function () {
 			  	//ToDo
@@ -298,7 +299,7 @@ $(document).ready(function(){
 		var areaId = $me.attr("area-id");
 		//栏目id;
 		var colId = $me.attr("area-col");
-		$me.html("<span style='margin:50% auto'>加载中...</span>");
+		$me.html("加载中...");
 		var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_SINGLE_PAGE_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
 		$.ajax({
 			type:"POST",
@@ -315,7 +316,4 @@ $(document).ready(function(){
 		});
 	});
 	//end获取栏目单篇文章
-	
-
-
 });

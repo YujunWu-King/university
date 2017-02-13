@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZAdvertisementTmplBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,7 +92,7 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl{
 		String strRet = "";
 		//获取当前登陆人机构ID
         String Orgid=tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
+         Date nowdate=new Date();
 		// 若参数为空，直接返回;
 		if (actData == null || actData.length == 0) {
 			return strRet;
@@ -107,11 +108,20 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl{
 				String adcertTmpl = jacksonUtil.getString("adcertTmpl");
 				System.out.println(adcertTmpl);
 				if (adcertTmpl != null ) {
-					PsTzADTMPLTBLKey PsTzADTMPLTBLKey=new PsTzADTMPLTBLKey();
+					PsTzADTMPLTBL PsTzADTMPLTBL=new PsTzADTMPLTBL();
+                    PsTzADTMPLTBL.setTzJgId(Orgid);
+					PsTzADTMPLTBL.setTzAdTmplId(String.valueOf(adcertTmpl));
+					PsTzADTMPLTBL.setTzUseFlag("N");
+					PsTzADTMPLTBL.setRowLastmantDttm(nowdate);
+					PsTzADTMPLTBL.setRowLastmantOprid(Orgid);
+					PsTzADTMPLTBLMapper.updateByPrimaryKeySelective(PsTzADTMPLTBL);
+					
+                  /*PsTzADTMPLTBLKey PsTzADTMPLTBLKey=new PsTzADTMPLTBLKey();
 					PsTzADTMPLTBLKey.setTzAdTmplId(adcertTmpl);
 					PsTzADTMPLTBLKey.setTzJgId(Orgid);
-					PsTzADTMPLTBLMapper.deleteByPrimaryKey(PsTzADTMPLTBLKey);
 					
+					PsTzADTMPLTBLMapper.deleteByPrimaryKey(PsTzADTMPLTBLKey);
+					*/
 			
 				}
 			}

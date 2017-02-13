@@ -939,12 +939,11 @@ function LoadMenu( jgId, siteId, opt){
 //#:加载菜单统一方法
 
 
+//~:加载左侧区域统一方法
+function LoadLeftArea( jgId, siteId, opt){
 
-//~:加载欢迎语统一方法
-function LoadWelcome( jgId, siteId, opt){
-	 					
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgId":"'+jgId+'","siteId":"'+siteId+'","typeflg":"welcome"}}';
-
+	var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_LEFT_AREA_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'"}}';
+	
 	$.ajax({
 		async: false,
 		type:"POST",
@@ -952,25 +951,19 @@ function LoadWelcome( jgId, siteId, opt){
 		data:{
 			tzParams:tzParams
 		},
-		dataType:'json',
 		success:function(response){
-	
-			if (response.comContent.success == "true") {  
-               	if ($("#welcome"))
-				{
-					$("#welcome").html(response.comContent.welcome);
+				if (response){
+					$('.zxj_left').append(response);
 				}
-				
-            }else{
-			  alert(response.state.errdesc);
-			}    
 		},
-	    failure: function () {
-			  alert(response.state.errdesc);
-	    }    
+		failure: function () {
+	  		alert(response.state.errdesc);
+		}    
 	});
+
 }
 
+//#:加载左侧区域统一方法
 
 function tz_onmousemove(){
     $("#tz_edituser").css("display","block");

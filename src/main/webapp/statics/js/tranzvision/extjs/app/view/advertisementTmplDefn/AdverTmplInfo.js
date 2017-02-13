@@ -57,7 +57,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ]
 
-                },{
+                },/*{
 					xtype: 'combo',
 					labelWidth: 110,
 					editable: false,
@@ -68,7 +68,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
 					valueField: 'TValue',
 					displayField: 'TSDesc',
 					store: new KitchenSink.view.common.store.appTransStore("TZ_USE_FLAG")
-				},{
+				},*/{
                         xtype: 'tabpanel',
                         frame: true,
                         activeTab: 0,

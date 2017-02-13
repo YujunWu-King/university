@@ -74,16 +74,18 @@
 				var pageno=$("#pageno").val();
 		        if(pageno<1){
 		        	$("#applyMBA").css("display","none");
+		        	$("#mbaDesc").css("display","none");
 		        }
-		        $('#applyMBA').bind("click", function(){
-		        	window.location.href="%bind(:4)";
-		        });
+		        $("#applyMBA").bind("click", function(){
+		        	window.parent.location.href="%bind(:4)"; 
+		        }); 
 			});
 		</script>
 	</head>
 	<body style="padding: 10px">
 		 %bind(:3)
 		 <input type="button" value="马上申请清华MBA" id="applyMBA" />
+		 <p style="color:#997423;font-size: 14px;margin-left:5px;" id="mbaDesc">注册后可了解更多招生信息，可参加清华经管各类讲座论坛和招生宣讲会等活动</p>
 		 <input type="hidden" value="%bind(:2)" id="pageno"/>
 	</body>
 </html>

@@ -1019,7 +1019,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				// 校验机构会员数据项--不能为空;
 				String strTemV = "";
 				//String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
-				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				//yuds,查询配置的显示在完善信息的字段
+				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_IS_PREFECT='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strSiteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
@@ -2045,15 +2046,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
-				if((url.lastIndexOf("/") + 1) == url.length()){
-					url = request.getContextPath() + url + siteid + "/" + "perfect.html";
-				}else{
-					url = request.getContextPath() + url + "/" + siteid + "/perfect.html";
+				if(!"/".equals(url.substring(0, 1))){
+					url = "/" + url;
 				}
+				if(!"/".equals(url.substring(url.length()-1))){
+					url = url + "/";
+				}
+				url = request.getContextPath() + url + siteid + "/perfect.html";
 			}else{
 				url = request.getContextPath() + "/" + siteid + "/perfect.html";
-			}
-			
+			}			
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -425,7 +425,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String strOprid = "";
 			TzSession tzSession = new TzSession(request);
 			Object objOprid = tzSession.getSession(userSessionName);
-
+			logger.info("------test type -----" + objOprid);
 			if (null != objOprid) {
 				strOprid = String.valueOf(objOprid);
 			}
@@ -893,7 +893,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			return strCountHtml;
 			
 		} catch (Exception e) {
-			// 最外层 try catch捕捉所有异常
+			//最外层 try catch捕捉所有异常
 			e.printStackTrace();
 			return null;
 		}
