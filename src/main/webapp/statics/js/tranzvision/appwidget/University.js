@@ -147,7 +147,7 @@ SurveyBuild.extend("University", "baseComponent", {
 
         sch.click(function(e) {
 			var schoollUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-			var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '"}}';
+			var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","Type":"B"}}';
 			schoollUrl = schoollUrl + window.escape(params);
 
 			var ccode = national.attr("ccode");
@@ -161,6 +161,8 @@ SurveyBuild.extend("University", "baseComponent", {
 			}
 			$("#ParamValue").val(data["itemId"] + data.children[1]["itemId"]);
 			$("#CountryCode").val(data["itemId"] + data.children[0]["itemId"]);
+			//console.log("11:"+$("#CountryCode").val());
+			//console.log("11:"+$("#CountryCode").attr("ccode"));
 			s = $.layer({
 				type: 2,
 				title: false,

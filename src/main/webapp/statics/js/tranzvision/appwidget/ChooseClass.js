@@ -250,7 +250,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		
 		if (data.isRequire == "Y"){
 			//$obj.formValidator({tipID:data["itemId"]+child.bmrBatch.itemId+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"})			
-			 $obj.inputValidator({min:'1',onError: child.renbmrBatch.itemName + MsgSet["REQUIRE"]});
+			 $obj.inputValidator({min:'1',onError: child.bmrBatch.itemName + MsgSet["REQUIRE"]});
 		}; 
 	}
 	
