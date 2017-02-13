@@ -169,7 +169,7 @@ public class Index {
 		 * errMsg[0] + "====>" + errMsg[1];
 		 */
 		
-		logger.info("dispatcher---");
+		//logger.info("dispatcher---");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 组件配置的类引用ID;
 		String tmpClassId = request.getParameter("classid");
@@ -357,7 +357,7 @@ public class Index {
 						sCommParams = "{}";
 					}
 				}
-				logger.info("sCommParams:"+sCommParams);
+				//logger.info("sCommParams:"+sCommParams);
 				gdKjComService.setCurrentAccessComponentPage(request, comID, sPageID);
 				strComContent = gdKjComService.userRequestDispatcher(request, response, comID, sPageID, strOprType,
 						sCommParams, errMsgArr);
@@ -407,7 +407,7 @@ public class Index {
 					+ ",\"authorizedInfo\": {" + authorizedInfomation + "}}}";
 		}
 		
-		logger.info("strRetContent:"+strRetContent);
+		//logger.info("strRetContent:"+strRetContent);
 		return strRetContent;
 	}
 
