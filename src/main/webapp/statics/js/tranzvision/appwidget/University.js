@@ -27,7 +27,7 @@ SurveyBuild.extend("University", "baseComponent", {
 		],
     _getHtml: function(data, previewmode) {
         var children = data.children;
-		var c = '<input id="TZ_SCH_CNAME_Country" type="hidden" name="TZ_SCH_CNAME_Country" value="CHN">';
+		var c = '<input id="CountryCode" type="hidden" name="CountryCode" value="CHN">';
 		
         if (previewmode) {
             if(SurveyBuild._readonly){
@@ -147,7 +147,7 @@ SurveyBuild.extend("University", "baseComponent", {
 
         sch.click(function(e) {
 			var schoollUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-			var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '"}}';
+			var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","Type":"B"}}';
 			schoollUrl = schoollUrl + window.escape(params);
 
 			var ccode = national.attr("ccode");
@@ -160,7 +160,9 @@ SurveyBuild.extend("University", "baseComponent", {
 				national.attr("ccode","CHN");
 			}
 			$("#ParamValue").val(data["itemId"] + data.children[1]["itemId"]);
-			$("#TZ_SCH_CNAME_Country").val(data["itemId"] + data.children[0]["itemId"]);
+			$("#CountryCode").val(data["itemId"] + data.children[0]["itemId"]);
+			//console.log("11:"+$("#CountryCode").val());
+			//console.log("11:"+$("#CountryCode").attr("ccode"));
 			s = $.layer({
 				type: 2,
 				title: false,

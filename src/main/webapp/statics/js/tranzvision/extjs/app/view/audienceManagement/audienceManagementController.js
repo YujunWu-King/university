@@ -483,7 +483,7 @@ console.log(store);
 	},
 	savePageRegInfo: function(win,view){
 	//	console.log(view);
-        //页面注册信息表单
+        //信息表单
         var form = win.child("form").getForm();
        
 		var gridStore =win.child("form").child("grid").getStore();
@@ -536,12 +536,16 @@ console.log(store);
 		
 		var audDxzt = selRec.get("audDxzt");
 		console.log(audDxzt);
+		
+		"'+win.actType+'"
 	*/	
 		
 		
 		//表单数据
 	//	var formParams = form.getValues();
-		var	comParamsALL = '"update":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
+//		var	comParamsALL = '"update":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
+		
+		var	comParamsALL = '"+win.actType+":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
 		
 		
 		 //表格数据
