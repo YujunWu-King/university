@@ -75,7 +75,7 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 			String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_LONG1 AS TZ_ART_ADDR,month(B.TZ_ART_NEWS_DT) AS TZ_ART_MONTH,day(B.TZ_ART_NEWS_DT) AS TZ_ART_DAY FROM PS_TZ_ART_REC_TBL A "
 					+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y') "
 					+ "INNER JOIN PS_TZ_SITEI_AREA_T C ON (B.TZ_COLU_ID = C.TZ_COLU_ID AND C.TZ_SITEI_ID=B.TZ_SITE_ID AND C.TZ_AREA_ID=?) "
-					+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT LIMIT 4";
+					+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 4";
 					
 			List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,strAreaId });
 			if (artList != null && artList.size()>0){
@@ -95,7 +95,7 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 								artDay,artMonth,artTitle,artAddr));
 					}else{
 						if(i==2){
-							registerCalendarLisHtml.append("</ul>");
+							registerCalendarLisHtml.append("</ul><ul>");
 						}
 						registerCalendarLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 										artDay,artMonth,artTitle,artAddr));
