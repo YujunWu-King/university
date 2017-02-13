@@ -355,8 +355,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				// 毕业院校所属国家;
 				String strTZ_SCH_CNAME_COUNTRY = "";
-				if (dataMap.containsKey("TZ_SCH_COUNTRYCODE")) {
-					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRYCODE")).trim();
+				if (dataMap.containsKey("TZ_SCH_COUNTRY")) {
+					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRY")).trim();
 				}
 				
 				// 毕业院校;
@@ -903,8 +903,8 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				// 毕业院校所属国家;
 				String strTZ_SCH_CNAME_COUNTRY = "";
-				if (dataMap.containsKey("TZ_SCH_COUNTRYCODE")) {
-					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRYCODE")).trim();
+				if (dataMap.containsKey("TZ_SCH_COUNTRY")) {
+					strTZ_SCH_CNAME_COUNTRY = ((String) dataMap.get("TZ_SCH_COUNTRY")).trim();
 				}
 				
 				// 毕业院校;

@@ -149,7 +149,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						+ siteId + "\"}}";
 				// 获取基本信息;
 				String str_userInfo = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_ZS_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
+						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
 						+ siteId + "\"}}";
 				// 保存提醒设置;
 				String SaveRemind = commonUrl;
@@ -343,11 +343,9 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 							// TZ_SCH_CNAME;
 							if ("TZ_SCH_CNAME".equals(regFieldId)) {
-								img = "<img src=\"" + imgPath
-										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/ style=\"top:0px;left:-42px;\">";
-								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"");
+								img = "<img src=\"" + imgPath + "/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/ style=\"top:0px;left:-35px;\">";
+								fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML2",regFldYsmc, regFieldId, img, "readonly=\"true\"",regFieldId + "_Country");							
+					    		
 							}
 
 							// TZ_LEN_PROID;
@@ -634,6 +632,10 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						} else {
 							fields = fields + "," + regFieldId;
 						}
+						//毕业院校增加国家选择，yuds
+                        if("TZ_SCH_CNAME".equals(regFieldId)){
+                        	fields = fields + "," + "TZ_SCH_COUNTRY";
+                        }
 						arryField.add(regFieldId);
 					}
 				}
@@ -645,6 +647,12 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				String fieldsValueSQL = "SELECT " + fields + " FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 				returnMap = jdbcTemplate.queryForMap(fieldsValueSQL, new Object[] { oprid });
 			}
+			//院校数据中增加国家描述
+            if(fields.lastIndexOf("TZ_SCH_COUNTRY")>=0&&returnMap.get("TZ_SCH_COUNTRY")!=null){
+            	String sqlCountryDesc = "SELECT descrshort FROM PS_COUNTRY_TBL WHERE country=?";                
+                String countryDesc = jdbcTemplate.queryForObject(sqlCountryDesc, new Object[] { returnMap.get("TZ_SCH_COUNTRY") }, "String");
+                returnMap.put("TZ_SCH_CNAME_Country", countryDesc);
+            }
 			if (returnMap == null) {
 				returnMap = new HashMap<>();
 			}
@@ -802,8 +810,15 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						} else {
 							updateRegSql = updateRegSql + "," + regFieldId + " = ?";
 						}
+						
 						updateList.add(field);
-
+						//院校选择中增加国家
+						if("TZ_SCH_CNAME".equals(regFieldId)){
+							String schCountryField = "TZ_SCH_COUNTRY";
+							updateRegSql = updateRegSql + "," + schCountryField + " = ?";
+							String schCountryValue = jacksonUtil.getString(schCountryField);
+							updateList.add(schCountryValue);
+						}
 					}
 
 					if ("TZ_EMAIL".equals(regFieldId) && (strUserEmail == null || "".equals(strUserEmail))) {
