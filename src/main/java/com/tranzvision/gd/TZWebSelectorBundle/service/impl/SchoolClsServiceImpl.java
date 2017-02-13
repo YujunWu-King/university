@@ -57,19 +57,25 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> list;
 			// 通过省市名称查询 BEGIN
 			if ("BYSCHOOL".equals(strOType)) {
-				if("".equals(strValue)){
-					sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[]{});
-				}else{
-					sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				if ("".equals(strValue)) {
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] {});
+				} else {
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strValue });
 				}
-				
+
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						Map<String, Object> returnMap = new HashMap<>();
-						returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						String schoolname_en = (String) list.get(i).get("TZ_SCHOOL_NAMEENG");
+						if (list.get(i).get("TZ_SCHOOL_NAMEENG") != null && !"".equals(schoolname_en)) {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME") + "(" + schoolname_en + ")");
+						} else {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						}
+
 						arraylist.add(returnMap);
 					}
 				}
@@ -81,12 +87,18 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSEARCH".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
 				ArrayList<String> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
-						arraylist.add((String) list.get(i).get("TZ_SCHOOL_NAME"));
+						String schoolname_en = (String) list.get(i).get("TZ_SCHOOL_NAMEENG");
+						if (list.get(i).get("TZ_SCHOOL_NAMEENG") != null && !"".equals(schoolname_en)) {
+							arraylist.add((String) list.get(i).get("TZ_SCHOOL_NAME") + "(" + schoolname_en + ")");
+						} else {
+							arraylist.add((String) list.get(i).get("TZ_SCHOOL_NAME"));
+						}
+
 					}
 				}
 				try {
@@ -97,13 +109,19 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSCHOOLNAME".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
 						Map<String, Object> returnMap = new HashMap<>();
-						returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						String schoolname_en = (String) list.get(i).get("TZ_SCHOOL_NAMEENG");
+						if (list.get(i).get("TZ_SCHOOL_NAMEENG") != null && !"".equals(schoolname_en)) {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME") + "(" + schoolname_en + ")");
+						} else {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						}
+
 						arraylist.add(returnMap);
 					}
 				}
