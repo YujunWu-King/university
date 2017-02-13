@@ -59,9 +59,10 @@ public class XmlToWord {
 			return "1";
 		} else {
 
+			
 			// 检测文件夹是否存在，如果不存在，创建文件夹
 			File dir = new File(Filepath);
-			// System.out.println(dir.getAbsolutePath());
+			System.out.println("路径"+dir.getAbsolutePath());
 			if (!dir.exists()) {
 				//System.out.println("路径不存在");
 				dir.mkdirs();

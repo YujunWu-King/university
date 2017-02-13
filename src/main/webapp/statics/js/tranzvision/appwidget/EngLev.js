@@ -387,11 +387,6 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 //		var child=data["children"];
 		var htmlContent="";
 		//--考试种类初始值
-		//console.dir(child);
-		//var EXAM_TYPE_DEF=child.EngLevelType.value;
-		
-		//htmlContent += '<div class="main_inner_content_para" style="margin-top:50px;margin-bottom:30px" >';
-		//htmlContent += '<div class="main_inner_content_top"></div><div class="padding_div"></div><div class="main_inner_content_foot"></div>';
 		//----容器:
 		for (var x in childList) {
 
@@ -412,34 +407,33 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			if (SurveyBuild._readonly) {
 				//只读模式
 				//----------------------------考试种类OPT
+				//------只读数据：
+				var varDesc="";	
 				var OPT_ENG='';
 				for(var i in EXAM_TYPE_MAP){
 					OPT_ENG+='<option value="'+i+'"'+(EXAM_TYPE_DEF==i?'selected="selected"': '')+'>'+EXAM_TYPE_MAP[i]+'</option>'
+					if(EXAM_TYPE_DEF==i){
+						varDesc=EXAM_TYPE_MAP[i];
+					}
 				}
 				//----------------------------放入考试种类OPT
 				htmlContent += '<div  class="input-list" style="display:block">';
-				htmlContent += '	<div   class="input-list-info left">' + child.EngLevelType.itemName + ':</div>';
-				htmlContent += '	<div class="input-list-text left">';
-				htmlContent += '		<select disabled=true id="' + data["itemId"] + child.EngLevelType.itemId + '" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
-				htmlContent += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
-				htmlContent += OPT_ENG;
-				htmlContent += '		</select>';
-				//----------------------------不知道干嘛用的，这段可删除
-				htmlContent += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.EngLevelType.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
-				htmlContent += '			<div class="onCorrect">&nbsp;</div></div>';
-				htmlContent += '		</div>';
+				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + ':</div>';
+				htmlContent += '	<div class="input-list-text left input-edu-select">';
+				htmlContent += varDesc;
 				htmlContent += '	</div>';
-				htmlContent += '<div class="clear"></div>';
 				htmlContent += '</div>';
 				//---------------------------根据考试种类，要显示的不同种类DIV
 				//日期框HTML
 				var getDateDiv=function(date_id,date_val,date_name,date_title){
 					var DATE_DIV='';
-					DATE_DIV += '  <div class="input-list" style="display:block"><span class="input-list-info left">Test date：</span>';
-					DATE_DIV += '      <div class="input-list-text left"><input readOnly=true id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onclick="this.focus()" title="' +date_name + '">';
-					DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;"></div>';
-					DATE_DIV += ' <div class="clear"></div>';
-					DATE_DIV += '</div>';
+					DATE_DIV += '  <div class="input-list" style="display:block"><div class="input-list-info left"><span class="red-star">*</span><span>Test date：</span></div>';
+					
+					DATE_DIV += '     <div class="input-list-text left">';
+					DATE_DIV +=date_val;
+					DATE_DIV += '	  </div>'
+					//DATE_DIV += ' <div class="clear"> </div>';
+					DATE_DIV += '  </div>';
 					return DATE_DIV;
 				}
 				//--GRE日期框HTML
@@ -457,189 +451,275 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				
 				//<!--1.GRE关联DIV-->
 				var GRE_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T1")
-					GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:block" >'
+				var greDesc='';
+				htmlContent+='<div class="clear"></div>'
+				htmlContent+='<div name="relatedDiv">'	
+				if(EXAM_TYPE_DEF=="ENG_LEV_T1"){
+					GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:block">'
+					greDesc=child.EngLevelOpt1_2.value;
+				}
 				else
-				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
+				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div> <div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
+					GRE_DIV+='<div class="clear"></div>'
+					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div> '
+					GRE_DIV+='<div class="input-list-text left">'
+						GRE_DIV+=greDesc;
+					GRE_DIV+='</div>'
 				GRE_DIV+='</div>';
-				GRE_DIV+='<div class="clear"></div>';
 				htmlContent+=GRE_DIV;
 				
 				//<!--2.GMAT关联DIV-->
 				var GMAT_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T2")
-					GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" class="input-list" style="display:block">'
+				var gmatDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T2"){
+					GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2" class="input-list" style="display:block">'
+					gmatDesc=child.EngLevelOpt2_2.value;
+				}
 				else
-				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" class="input-list" style="display:none">'
+				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
-				GMAT_DIV+='</div>'
 					GMAT_DIV+='<div class="clear"></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div>'
+					GMAT_DIV+='<div class="input-list-text left">'
+						GMAT_DIV+=gmatDesc;
+					GMAT_DIV+='</div>'				
+				GMAT_DIV+='</div>'
+					//GMAT_DIV+='<div class="clear"></div>'	
 				htmlContent+=GMAT_DIV;
 				
 				//<!--3.TOFEL关联DIV-->
 				var TOFEL_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T3")
-					TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:block">'
+				var tofelDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T3"){
+					TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:block">'
+					tofelDesc=child.EngLevelOpt3_2.value;
+				}
 				else
-				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
+				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span>Total:</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
+					TOFEL_DIV+='<div class="clear"></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total:</span></div>'
+					TOFEL_DIV+='<div class="input-list-text left">'
+						TOFEL_DIV+=tofelDesc;
+					TOFEL_DIV+='</div>'	
 				TOFEL_DIV+='</div>'	
-					TOFEL_DIV+='<div class="changedDiv"></div>'	
 				htmlContent+=TOFEL_DIV;
 				
 				//<!--4.IELTS关联DIV-->
 				var IELTS_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T4")
-					IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:block">'
+				var ieltsDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T4"){
+					IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:block">'
+					ieltsDesc=child.EngLevelOpt4_2.value;
+				}
 				else
-				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
+				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score:</span></div><div class="input-list-text left" ><input readOnly=true id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
-				IELTS_DIV+='</div>'
 					IELTS_DIV+='<div class="clear"></div>'
+					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Overall Band Score:</span></div>'
+					IELTS_DIV+='<div class="input-list-text left">'
+						IELTS_DIV+=ieltsDesc;
+					IELTS_DIV+='</div>'
+				IELTS_DIV+='</div>'
+					//IELTS_DIV+='<div class="clear"></div>'
 				htmlContent+=IELTS_DIV;
 				
 				//<!--5.英语六级（710分制）关联DIV-->
 				var CET6_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T5")
-					CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
+				var cet6Desc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T5"){
+					CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
+					cet6Desc= child.EngLevelOpt5_1.value;
+				}
 				else	
-				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left" ><input readOnly=true class="input-list-text left"   id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
+				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
+					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					CET6_DIV+='<div class="input-list-text left">'
+						CET6_DIV+=cet6Desc;
+					CET6_DIV+='</div>'
 				CET6_DIV+='</div>'
-					CET6_DIV+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV;
 				
 				//<!--6.英语四级（710分制）关联DIV-->
 				var CET4_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T6")
-					CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
+				var cet4Desc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T6"){
+					CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
+					cet4Desc=child.EngLevelOpt6_1.value;
+				}
 				else
-				CET4_DIV+='<div id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left" ><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
+				CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
+					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					CET4_DIV+='<div class="input-list-text left">'
+						CET4_DIV+=cet4Desc;
+					CET4_DIV+='</div>'	
 				CET4_DIV+='</div>'
-					CET4_DIV+='<div class="clear"></div>'
 				htmlContent+=CET4_DIV;
 				
 				//<!--7.英语六级（100分制）关联DIV-->
 				var CET6_DIV2='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T7")
-					CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
+				var cet6Desc2='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T7"){
+					CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
+					if(child.EngLevelOpt7_1.value=="Y")
+						cet6Desc2="通过";
+					else 
+						cet6Desc2="未通过";
+				}
 				else
-				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span>是否通过:</span></div>'
-					CET6_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
-						CET6_DIV2+='<option value="Y">通过</option>'
-						CET6_DIV2+='<option value="N">未通过</option>'
-					CET6_DIV2+='</select></div>'
+				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
+					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >是否通过:</span></div>'
+					CET6_DIV2+='<div class="input-list-text left" >'
+						CET6_DIV2+=cet6Desc2;
+					CET6_DIV2+='</div>'
 				CET6_DIV2+='</div>'
-					CET6_DIV2+='<div class="clear"></div>'
+					//CET6_DIV2+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV2;
 				
 				//<!--8.英语四级（100分制）关联DIV-->
 				var CET4_DIV2='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T8")
-					CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
+				var cetDesc2='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T8"){
+					CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
+					if(child.EngLevelOpt8_1.value=="Y")
+						cetDesc2="通过";
+					else
+						cetDesc2="未通过";
+				}
 				else
-				CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span>是否通过:</span></div>'
-					CET4_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
-						CET4_DIV2+='<option value="Y">通过</option>'
-						CET4_DIV2+='<option value="N">未通过</option>'
-					CET4_DIV2+='</select></div>'
+				CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
+					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>是否通过:</span></div>'
+					CET4_DIV2+='<div class="input-list-text left" >'
+						CET4_DIV2+=cetDesc2;
+					CET4_DIV2+='</div>'
 				CET4_DIV2+='</div>'
-					CET4_DIV2+='<div class="clear"></div>'
 				htmlContent+=CET4_DIV2;
 				
 				//<!--9.专业英语关联DIV-->
 				var TEM_DIV=''
-				if(EXAM_TYPE_DEF=="ENG_LEV_T9")
-					TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
+				var temDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T9"){
+					TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
+					if(child.EngLevelOpt9_1.value=="TEM4")
+						temDesc="专业四级";
+					else
+						temDesc="专业八级";
+				}
 				else
-				TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
-					TEM_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
-						TEM_DIV+='<option value="TEM4">专业四级</option>'
-						TEM_DIV+='<option value="TEM8">专业八级</option>'
-					TEM_DIV+='</select></div>'
+				TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
+					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					TEM_DIV+='<div class="input-list-text left" >'
+						TEM_DIV+=temDesc;
+					TEM_DIV+='</div>'
 				TEM_DIV+='</div>'
-					TEM_DIV+='<div class="clear"></div>'
 				htmlContent+=TEM_DIV;
 				
 				//<!--10.高级口译关联DIV-->
 				var H_INTER_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T10")
-					H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
+				var hInterDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T10"){
+					H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
+					if(child.EngLevelOpt10_1.value=="A")
+						hInterDesc="拿到资格证书";
+					else
+						hInterDesc="笔试证书";
+				}
 				else
-				H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
-					H_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
-						H_INTER_DIV+='<option>拿到资格证书</option>'
-						H_INTER_DIV+='<option>笔试证书</option>'
-					H_INTER_DIV+='</select></div>'
+				H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
+					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					H_INTER_DIV+='<div class="input-list-text left" >'
+						H_INTER_DIV+=hInterDesc;
+					H_INTER_DIV+='</div>'
 				H_INTER_DIV+='</div>'
-					H_INTER_DIV+='<div class=""clear></div>'
 				htmlContent+=H_INTER_DIV;
 				
 				//<!--11.中级口译关联DIV-->
 				var M_INTER_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T11")
-					M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
+				var mInterDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T11"){
+					M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
+					if(child.EngLevelOpt11_1.value=="A")
+						mInterDesc="拿到资格证书";
+					else 
+						mInterDesc="笔试证书";
+				}
 				else
-				M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
-					M_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
-						M_INTER_DIV+='<option value="A">拿到资格证书</option>'
-						M_INTER_DIV+='<option value="B">笔试证书</option>'
-					M_INTER_DIV+='</select></div>'
+				M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
+					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					M_INTER_DIV+='<div class="input-list-text left" >'
+						M_INTER_DIV+=mInterDesc;
+					M_INTER_DIV+='</div>'
 				M_INTER_DIV+='</div>'
-					M_INTER_DIV+='<div class="clear"></div>'
 				htmlContent+=M_INTER_DIV;
 				
 				//<!--12.BEC关联DIV-->
 				var BEC_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T12")
-					BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
+				var becDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T12"){
+					BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
+					if(child.EngLevelOpt12_1.value=="A")
+						becDesc="高级";
+					else if(child.EngLevelOpt12_1.value=="B")
+						becDesc="中级";
+					else
+						becDesc="初级";
+				}
 				else
-				BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span>总分(成绩):</span></div>'
-					BEC_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" disabled=true  id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
-						BEC_DIV+='<option value="A">高级</option>'
-						BEC_DIV+='<option value="B">中级</option>'
-						BEC_DIV+='<option value="C">初级</option>'
-					BEC_DIV+='</select></div>'
+				BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
+					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					BEC_DIV+='<div class="input-list-text left" >'
+						BEC_DIV+=becDesc;
+					BEC_DIV+='</div>'
 				BEC_DIV+='</div>'
-					BEC_DIV+='<div class="clear"></div>'
 				htmlContent+=BEC_DIV;
 				
 				//<!--13.TOEIC990-->
 				var TOEIC_DIV='';
-				if(EXAM_TYPE_DEF=="ENG_LEV_T13")
-					TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:block">'
+				var toeicDesc='';
+				if(EXAM_TYPE_DEF=="ENG_LEV_T13"){
+					TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:block">'
+					toeicDesc=child.EngLevelOpt13_2.value;
+				}
 				else
-				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
+				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span>总分:</span><input readOnly=true id="'+data["itemId"] + child.EngLevelOpt13_1.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/>'
+					TOEIC_DIV+='<div class="clear"></div>'
+					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					TOEIC_DIV+='<div  class="input-list-text left">'
+						TOEIC_DIV+=toeicDesc;
+					TOEIC_DIV+="</div>";
 				TOEIC_DIV+='</div>'	
-					TOEIC_DIV+='<div class="clear"></div>'	
 				htmlContent+=TOEIC_DIV;
 				
 				//<!--通用上传控件部分-->
-				if(EXAM_TYPE_DEF!=""&&EXAM_TYPE_DEF!="-1")
-					htmlContent+='<div name="'+data.itemId+'UP" class="input-list" style="display:block">'
-				else
-				htmlContent+='<div id="'+data.itemId+'UP" class="input-list" style="display:none">'
-					htmlContent+='<div class="input-list-info-readonly left"><span>上传证书/成绩扫描件</span></div><div class="input-list-wz-readonly left" ><input readOnly=true type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'" name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
-				htmlContent+='<div class="clear"></div>'
-					htmlContent+='</div>'
+//				if(EXAM_TYPE_DEF!=""&&EXAM_TYPE_DEF!="-1")
+//					htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:block">'
+//				else
+//				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="main_inner_content_para" style="display:none">'
+//					htmlContent+='<div class="input-list-info left"><span >上传证书/成绩扫描件</span></div>'
+//						htmlContent+='<div class="input-list-wz-readonly left" >'
+//							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
+//								htmlContent+= '<div class="filebtn left">';
+//								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+//								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.oldUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
+//								htmlContent+= '</div>';
+//				        htmlContent+='</div>'
+//					htmlContent+='<div class="clear"></div>'
+//					var filename = child.EngLevelUp.filename;
+//					htmlContent += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child.EngLevelUp["itemId"]+'Attch" class="fancybox" href="' +child.EngLevelUp.accessPath + child.EngLevelUp.sysFileName + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
+//					htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
+//				htmlContent+='</div>'
+				//---------------------------
+				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
+				//htmlContent+='</div>'
+				//--------------	
+				htmlContent+='</div>';
 				//---------------------------		
 			} else {//填写模式
 				//-----main_inner_content_info_autoheight
 				htmlContent += '<div  class="main_inner_content_info_autoheight">';
+				htmlContent +='<div class="clear"></div>'
 				//----------------------------考试种类OPT
 				var OPT_ENG='';
 				for(var i in EXAM_TYPE_MAP){
@@ -668,7 +748,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					
 					DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onclick="this.focus()" title="' +date_name + '">';
 					DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:0px;left:-31px;cursor:pointer;"></div>';
-					DATE_DIV += ' <div class="clear"> </div>';
+					//DATE_DIV += ' <div class="clear"> </div>';
 					DATE_DIV += '  </div>';
 					return DATE_DIV;
 				}
@@ -687,14 +767,15 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				
 				//<!--1.GRE关联DIV-->
 				var GRE_DIV='';
+				htmlContent+='<div class="clear"></div>'
+				htmlContent+='<div name="relatedDiv">'	
 				if(EXAM_TYPE_DEF=="ENG_LEV_T1")
 					GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:block">'
 				else
 				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div> <div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
+					GRE_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/></div>'
 				GRE_DIV+='</div>';
-				GRE_DIV+='<div class="clear"></div>'
 				htmlContent+=GRE_DIV;
 				
 				//<!--2.GMAT关联DIV-->
@@ -704,9 +785,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span>Total(Score):</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/></div>'
 				GMAT_DIV+='</div>'
-					GMAT_DIV+='<div class="clear"></div>'	
+					//GMAT_DIV+='<div class="clear"></div>'	
 				htmlContent+=GMAT_DIV;
 				
 				//<!--3.TOFEL关联DIV-->
@@ -716,9 +797,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span>Total:</span></div><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span>Total:</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/></div>'
 				TOFEL_DIV+='</div>'	
-					TOFEL_DIV+='<div class="clear"></div>'		
+					//TOFEL_DIV+='<div class="clear"></div>'		
 				htmlContent+=TOFEL_DIV;
 				
 				//<!--4.IELTS关联DIV-->
@@ -728,9 +809,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score:</span></div><div class="input-list-text left"><input  id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
+					IELTS_DIV+='<div class="input-list-info left"><span>Overall Band Score:</span></div><div class="input-list-text left"><input   class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/></div>'
 				IELTS_DIV+='</div>'
-					IELTS_DIV+='<div class="clear"></div>'
+					//IELTS_DIV+='<div class="clear"></div>'
 				htmlContent+=IELTS_DIV;
 				
 				//<!--5.英语六级（710分制）关联DIV-->
@@ -739,9 +820,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
 				else	
 				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
+					CET6_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/></div>'
 				CET6_DIV+='</div>'
-					CET6_DIV+='<div class="clear"></div>'
+					//CET6_DIV+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV;
 				
 				//<!--6.英语四级（710分制）关联DIV-->
@@ -750,10 +831,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
 				else
 				CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input   id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
-					CET4_DIV+='<div class="clear"></div>'
+					CET4_DIV+='<span class="input-list-info left">总分:</span><div class="input-list-text left"><input    class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/></div>'
+					//CET4_DIV+='<div class="clear"></div>'
 				CET4_DIV+='</div>'
-					CET4_DIV+='<div class="clear"></div>'	
+					//CET4_DIV+='<div class="clear"></div>'	
 				htmlContent+=CET4_DIV;
 				
 				//<!--7.英语六级（100分制）关联DIV-->
@@ -768,7 +849,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						CET6_DIV2+='<option value="N">未通过</option>'
 					CET6_DIV2+='</select></div>'
 				CET6_DIV2+='</div>'
-					CET6_DIV2+='<div class="clear"></div>'
+					//CET6_DIV2+='<div class="clear"></div>'
 				htmlContent+=CET6_DIV2;
 				
 				//<!--8.英语四级（100分制）关联DIV-->
@@ -783,7 +864,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						CET4_DIV2+='<option value="N">未通过</option>'
 					CET4_DIV2+='</select></div>'
 				CET4_DIV2+='</div>'
-					CET4_DIV2+='<div class="clear"></div>'
+					//CET4_DIV2+='<div class="clear"></div>'
 				htmlContent+=CET4_DIV2;
 				
 				//<!--9.专业英语关联DIV-->
@@ -798,7 +879,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						TEM_DIV+='<option value="TEM8">专业八级</option>'
 					TEM_DIV+='</select></div>'
 				TEM_DIV+='</div>'
-					TEM_DIV+='<div class="clear"></div>'
+					//TEM_DIV+='<div class="clear"></div>'
 				htmlContent+=TEM_DIV;
 				
 				//<!--10.高级口译关联DIV-->
@@ -813,7 +894,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						H_INTER_DIV+='<option value="B">笔试证书</option>'
 					H_INTER_DIV+='</select></div>'
 				H_INTER_DIV+='</div>'
-					H_INTER_DIV+='<div class="clear"></div>'
+					//H_INTER_DIV+='<div class="clear"></div>'
 				htmlContent+=H_INTER_DIV;
 				
 				//<!--11.中级口译关联DIV-->
@@ -828,7 +909,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						M_INTER_DIV+='<option value="B">笔试证书</option>'
 					M_INTER_DIV+='</select></div>'
 				M_INTER_DIV+='</div>'
-					M_INTER_DIV+='<div class="clear"></div>'
+					//M_INTER_DIV+='<div class="clear"></div>'
 				htmlContent+=M_INTER_DIV;
 				
 				//<!--12.BEC关联DIV-->
@@ -844,7 +925,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						BEC_DIV+='<option value="C">初级</option>'
 					BEC_DIV+='</select></div>'
 				BEC_DIV+='</div>'
-					BEC_DIV+='<div class="clear"></div>'
+					//BEC_DIV+='<div class="clear"></div>'
 				htmlContent+=BEC_DIV;
 				
 				//<!--13.TOEIC990-->
@@ -854,9 +935,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span>总分:</span></div><div  class="input-list-text left"><input id="TZ_4r_gname" class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/></div>'
+					TOEIC_DIV+='<div class="input-list-info left"><span>总分:</span></div><div  class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_1.value+'"/></div>'
 				TOEIC_DIV+='</div>'	
-					TOEIC_DIV+='<div class="clear"></div>'	
+				//	TOEIC_DIV+='<div class="clear"></div>'	
 				htmlContent+=TOEIC_DIV;
 				
 				//<!--通用上传控件部分-->
@@ -869,7 +950,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.oldUploadAttachment(this,\''+ data.instanceId +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
+								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.oldUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
 								htmlContent+= '</div>';
 				        htmlContent+='</div>'
 					htmlContent+='<div class="clear"></div>'
@@ -878,6 +959,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
 				htmlContent+='</div>'
 				//---------------------------
+				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
+				htmlContent+='</div>'
+				//--------------	
 				htmlContent+='</div>';
 			}
 			j++;
@@ -909,52 +993,29 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 //				if (child == undefined) {
 //			   		 child=data["children"];
 //			   	 	}
-//				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
-//				//console.log("==type_select==:");
-//				//console.dir(type_select);
-//				type_select.on("change",function(){
-//					console.log("this->:");
-//					console.dir($(this));
-//					console.log("this value->:"+$(this).val())
-//					for(var i in EXAM_TYPE_MAP){
-//						if($(this).val()==i){
-//							var div_select=$(this).siblings(".changedDiv").find("div[name='"+data["itemId"]+i+"']");
-//							div_select.css("display","block");
-//							console.log("div_select:");
-//							console.dir(div_select);
-//						}else{
-//							var div_select=$(this).siblings(".changedDiv").find("div[name='"+data["itemId"]+i+"']");
-//							div_select.css("display","none");
-//						}
-//					}
-//					if($(this).val()=="-1")
-//						$("#"+data.itemId+"UP").css("display","none");
-//					else
-//						$("#"+data.itemId+"UP").css("display","block");
-//					//---清理数据
-//				});
-				//------
 				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				//--
 				type_select.each(function(index){
 					$(this).on("change",function(){
+						var related_div_name="div[name='relatedDiv']";
 						for(var i in EXAM_TYPE_MAP){
 							var div_name="div[name='"+data.itemId+i+"']";
 							if($(this).val()==i){
-								$(this).parents(".input-list").siblings(div_name).css("display","block");
+								$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 								//$("#"+data.itemId+i).css("display","block");
 								//如果子模块中有"select":
-								console.log("child-select:");
-								console.dir($(this).parents(".input-list").siblings(div_name).find("select"));
-								$(this).parents(".input-list").siblings(div_name).find("select").chosen({width: "100%"});
-								$(this).parents(".input-list").siblings(div_name).find("select").trigger("chosen:updated");
+								//console.log("child-select:");
+								//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
+								$(this).parents(".input-list").siblings(related_div_name).find("select").chosen({width: "100%"});
+								$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
 							}else{
-								$(this).parents(".input-list").siblings(div_name).css("display","none");
+								$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
+								//$(this).parents(".input-list").siblings(div_name).css("display","none");
 								//$("#"+data.itemId+i).css("display","none");
 							}
 						}
 						var up_name="div[name='"+data.itemId+"UP"+"']";
-						var up_btn=$(this).parents(".input-list").siblings(up_name);
+						var up_btn=$(this).parents(".input-list").siblings(related_div_name).find(up_name);
 						if($(this).val()=="-1")
 							//$("#"+data.itemId+"UP").css("display","none");
 							up_btn.css("display","none");

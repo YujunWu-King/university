@@ -56,7 +56,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			String sqlFindScholls = "";
 			List<Map<String, Object>> list;
 			// 通过省市名称查询 BEGIN
-			if ("BYSCHOOL".equals(strOType)) {
+			if ("BYSCHOOL".equals(strOType)) {				
 				if ("".equals(strValue)) {
 					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] {});
@@ -175,10 +175,14 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 
 		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
-
+		
+		
+		//A:注册用  B:报名表
+		String type = jacksonUtil.getString("Type");
+		
 		try {
 			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_SCHOOL_SELECT", tzGeneralURL, contextUrl,
-					imgPath);
+					imgPath,type);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}
