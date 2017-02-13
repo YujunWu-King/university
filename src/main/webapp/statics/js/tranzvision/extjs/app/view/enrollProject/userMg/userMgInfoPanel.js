@@ -88,12 +88,37 @@
                     readOnly:true,
                     name: 'userPhone',
                     fieldStyle:'background:#F4F4F4'
-                },{
+                }/*,{
                     xtype: 'textfield',
                     fieldLabel: '账号激活状态',
                     readOnly:true,
                     name: 'jihuoZt',
                     fieldStyle:'background:#F4F4F4'
+                }*/,{
+                    xtype: 'combo',
+                    fieldLabel: '账号激活状态',
+                    name: 'jihuoZt',
+                    emptyText:'请选择',
+                    queryMode: 'remote',
+                    editable:false,
+                    valueField: 'TZ_ZHZ_ID',
+                    displayField: 'TZ_ZHZ_DMS',
+                    store:new KitchenSink.view.common.store.comboxStore({
+                        recname: 'TZ_PT_ZHZXX_TBL',
+                        condition:{
+                            TZ_ZHZJH_ID:{
+                                value: "TZ_JIHUO_ZT",
+                                operator:"01",
+                                type:"01"
+                            },
+                            TZ_EFF_STATUS:{
+                                value: "A",
+                                operator:"01",
+                                type:"01"
+                            }
+                        },
+                        result:'TZ_ZHZ_ID,TZ_ZHZ_DMS'
+                    })
                 },{
                     xtype: 'combo',
                     fieldLabel: '账号锁定状态',

@@ -107,7 +107,6 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			return "无法获取相关数据";
 		}	
 		return applicationGuideHtml;

@@ -126,7 +126,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					} 
 					
 					
-					String accoutztSQL = "select (SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_JIHUO_ZT' AND TZ_ZHZ_ID=TZ_JIHUO_ZT AND TZ_EFF_STATUS='A') TZ_JIHUO_ZT, date_format(TZ_ZHCE_DT, '%Y-%m-%d %H:%i:%s') TZ_ZHCE_DT from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+					String accoutztSQL = "select (SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_JIHUO_ZT' AND TZ_ZHZ_ID=TZ_JIHUO_ZT AND TZ_EFF_STATUS='A') TZ_JIHUO_ZT, date_format(TZ_ZHCE_DT, '%Y-%m-%d %H:%i:%s') TZ_ZHCE_DT,TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
 					Map<String, Object> accoutztMap = jdbcTemplate.queryForMap(accoutztSQL,new Object[]{str_oprid});
 					if(phoneAndEmailMap != null){
 						str_jihuozt = (String) accoutztMap.get("TZ_JIHUO_ZT");
@@ -134,6 +134,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 						
 						str_zc_time = (String) accoutztMap.get("TZ_ZHCE_DT");
 						str_zc_time = (str_zc_time != null) ? str_zc_time : "";
+						
+						str_msSqh= (String) accoutztMap.get("TZ_MSH_ID");
+						str_msSqh = (str_msSqh != null) ? str_msSqh : "";
 					} 
 					
 					//账号锁定状态;
@@ -270,6 +273,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String strOprId = (String) map.get("OPRID");
 				    // 锁定状态;
 				    String strAcctLock = (String) map.get("acctlock");
+				    // 激活状态;
+				    String strJihuoZt = (String) map.get("jihuoZt");
 				    // 黑名单状态
 				    String strBlackName = (String) map.get("blackName");
 				    String strAllowApply = (String) map.get("allowApply");
@@ -286,6 +291,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
 					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
 				
+					String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=? WHERE OPRID=?";
+					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,strOprId});
+					
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 					if (i > 0) {
 						returnJsonMap.replace("OPRID", strOprId);

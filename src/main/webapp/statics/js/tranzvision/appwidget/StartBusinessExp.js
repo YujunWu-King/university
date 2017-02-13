@@ -393,24 +393,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				htmlContent += '		</div>';
 				htmlContent += '	</div>';
 				htmlContent += '</div>';
-			}
+
 
 			//2.融资情况:
-			if (SurveyBuild._readonly) {
-				//只读模式
-//				var valDesc = "";
-//				//读取融资情况的值直接存入div
-//				valDesc=child.WorkExper2.option[FINANCING_DEL];
-//				console.log("融资情况value:");
-//				console.dir(valDesc);
-//				var redioRead = '<input type="radio" value='+valDesc+' readOnly=true />';
-//				htmlContent += '<div class="main_inner_content_info_autoheight cLH">';
-//				htmlContent += '	<div class="input-list-info left" style="width:120px">' + child.WorkExper2.itemName + '</div>';
-//				htmlContent += '	<div class="main_inner_content_info_right" style="margin-left:5px">' + redioRead + '</div>';
-//				htmlContent += '</div>';
-
-			} else {
-				//填写模式
 				//----第一次只显示互联网相关div 其他关联div隐藏
 				var NET_DIV=''
 					//初始值设定
@@ -505,7 +490,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		var $btype_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
 		$btype_select.change(function(){
 			var btypeVal=$btype_select.val();
-			console.log("blur");
+			//console.log("blur");
 			if(btypeVal=="01"){
 				$("#NET_TYPE_SHOW").css("display","block");
 				//清空除开"互联网"之外的数据
@@ -593,8 +578,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//-----------将raido中的数据放入radioGroup下的隐藏input中
 			var radioValInput=$("#"+data["itemId"] + child.WorkExper2.itemId);
 			radioValInput.val(financingTypeVal);
-			console.dir("radioValInput:");
-			console.dir(radioValInput);
+			//console.dir("radioValInput:");
+			//console.dir(radioValInput);
 		});
 		}
 })
