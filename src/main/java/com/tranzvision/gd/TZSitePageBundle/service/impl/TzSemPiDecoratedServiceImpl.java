@@ -176,17 +176,20 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 				strActCount = String.valueOf(actCount);
 			}
 			System.out.println("strActCount=" + strActCount);
-			//站内信管理页面;
-			String znxUrl = rootPath + "/dispatcher?classid=znxGl&siteId="+siteId;
+			//站内信管理页面  jufeng 增加2017-02-10;
+			//String znxUrl = rootPath + "/dispatcher?classid=znxGl&siteId="+siteId;
+			StringBuffer znxUrl = new StringBuffer(rootPath).append("/dispatcher?classid=znxGl&siteId=").append(siteId);
+			//我的活动 jufeng 增加2017-02-10;
+			StringBuffer myActUrl = new StringBuffer(rootPath).append("/dispatcher?classid=webAct&siteId=").append(siteId);
 			//sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_JG_ID=?";
 			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
 			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 			if ("Y".equals(isShowPhoto)) {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto,znxUrl);
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto,znxUrl.toString(),myActUrl.toString());
 			} else {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,znxUrl);
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,znxUrl.toString(),myActUrl.toString());
 			}
 
 			strRet = strRet.replace((char) (10), ' ');
