@@ -469,7 +469,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				htmlContent+=OTH_DIV
 			}
 		
-		
+			htmlContent+="</div>";
 		return htmlContent;
 	},
 	_eventbind: function(data) {
