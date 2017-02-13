@@ -61,6 +61,7 @@ if(dataApp){
 	})
 	$.each(data.items,function(instanceId,obj){
 		var recApp;
+		////console.log("classname:"+obj.classname);	
 		if(obj.classname=="recommendletter" && refInstanceId!="")
 		{
 			recApp = dataApp[refInstanceId];
@@ -68,17 +69,25 @@ if(dataApp){
 		{
 			recApp = dataApp[instanceId];
 		}
+		////console.log("classname:"+recApp);	
+		//console.dir(recApp);
 		
 		if(recApp){
+			//console.log(recApp.isDoubleLine);
 			if(recApp.isDoubleLine  == "Y"){
 				//模板中的children为对象，报名表中的多行为数组，对象转换成数组并value赋值
 				obj["children"] = [	obj["children"]] ;
+				////console.log("length:"+recApp["children"] .length);	
 				for(var j = 1; j< recApp["children"] .length;j++){
 					obj["children"].push(cloneObj(obj["children"][0]));
 				}
 				/*是通用容器还是固定多行容器*/
 				$.each(obj["children"],function(i,perChildren){
+					//console.log("perChildren:"+perChildren);
+					////console.dir(perChildren);
 					$.each(perChildren,function(j,perXxx){
+						//console.log("perXxx:"+perXxx);
+						////console.dir(perXxx);
 						var itemId0 = perXxx["itemId"];		
 						
 						if(i> 0)
@@ -96,8 +105,15 @@ if(dataApp){
 								}
 								
 						}
-			
+						//console.dir(recApp["children"]);
+						//console.dir(recApp["children"][i][j]);
+						//console.dir(perXxx);
+						
+						////console.log(recApp["children"][i][j]["children"]["bmrBatch"]["value"]);
+						
 						if(recApp["children"][i][j]){	
+							
+							
 							if(perXxx.isSingleLine  == "Y"){
 								$.each(perXxx["children"],function(z,signlePerXxx){	
 									var itemId1 = signlePerXxx["itemId"];	
@@ -148,8 +164,8 @@ if(dataApp){
 								}
 							}else if(perXxx.classname  == "Radio" || perXxx.classname  == "Check"){
 								/*单选框和复选框处理方式*/
-								//console.log("Radio");
-								//console.log(perXxx["option"]);
+								////console.log("Radio");
+								////console.log(perXxx["option"]);
 								if( perXxx["option"] ){
 									$.each(perXxx["option"],function(ii,optionInfo){
 										
@@ -172,22 +188,37 @@ if(dataApp){
 								}
 							}else if(perXxx.classname  == "refLetterFile"){
 								/*推荐信附件*/
-								//console.log(recApp["children"][i][j]["filename"]);	
+								////console.log(recApp["children"][i][j]["filename"]);	
 								perXxx["filename"] = recApp["children"][i][j]["filename"];
 								perXxx["sysFileName"] = recApp["children"][i][j]["sysFileName"];
 								//perXxx["path"] = recApp["children"][i][j]["path"];	By WRL
 								perXxx["accessPath"] = recApp["children"][i][j]["accessPath"];
 								perXxx["viewFileName"] = recApp["children"][i][j]["viewFileName"];
-							}else{	
+							}else if(perXxx.classname  == "ChooseClass"){
+								//console.log("111");
+									perXxx["children"]["bmrClass"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["bmrClass"]["value"]);
+									perXxx["children"]["bmrBatch"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["bmrBatch"]["value"]);
+									////console.log("LoadbmrClassvalue:"+perXxx["children"]["bmrClass"]["value"]);
+									////console.log("LoadbmrBatchvalue:"+perXxx["children"]["bmrBatch"]["value"]);
+								
+									
+									perXxx["children"]["bmrClass"]["wzsm"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["bmrClass"]["wzsm"]);
+									perXxx["children"]["bmrBatch"]["wzsm"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["bmrBatch"]["wzsm"]);
+									////console.log("LoadbmrClasswzsm:"+perXxx["children"]["bmrClass"]["wzsm"]);
+									////console.log("LoadbmrBatchwzsm:"+perXxx["children"]["bmrBatch"]["wzsm"]);
+											
+							} else{	
 								if( recApp["children"][i][j]["value"]){
 									perXxx["value"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["value"]);
 								}
+								
 								if(recApp["children"][i][j]){
 									perXxx["othervalue"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["othervalue"]);
 								}
 								if(perXxx.hasOwnProperty("wzsm"))
 								{
 									perXxx["wzsm"] =  recApp["children"][i][j]["wzsm"];
+									
 								}
 							}
 						}		
@@ -197,11 +228,13 @@ if(dataApp){
 				//单行容器
 				if( obj["children"] && $.isArray( obj["children"])){
 					$.each(obj["children"],function(i,perXxx){
-						//console.log(perXxx["itemId"] +"-->"+recApp["children"][i]["value"]+"-->"+i);										
+						////console.log(perXxx["itemId"] +"-->"+recApp["children"][i]["value"]+"-->"+i);										
 						perXxx["value"] = 	SurveyBuild.htmlCharReplace(recApp["children"][i]["value"]);
+						////console.log("Loadvalue:"+recApp["children"][i]["value"]);
 						if(perXxx.hasOwnProperty("wzsm"))
 						{
 							perXxx["wzsm"] =  recApp["children"][i]["wzsm"];
+							////console.log("Loadwzsm:"+recApp["children"][i]["wzsm"]);
 						}
 					})
 				}
@@ -211,9 +244,9 @@ if(dataApp){
 					obj["children"].push(cloneObj(obj["children"][0]));
 				}
 				if( obj["children"] && $.isArray( obj["children"])){
-					//console.log(recApp["children"].length);
+					////console.log(recApp["children"].length);
 					$.each(obj["children"],function(i,perXxx){	
-						//console.log( recApp["children"][i]["fileName"]);
+						////console.log( recApp["children"][i]["fileName"]);
 						perXxx["fileName"] = recApp["children"][i]["fileName"];
 						perXxx["sysFileName"] = recApp["children"][i]["sysFileName"];
 						perXxx["orderby"] = recApp["children"][i]["orderby"];
@@ -226,7 +259,7 @@ if(dataApp){
 				/*单选框和复选框处理方式*/
 				if( obj["option"] ){
 					$.each(obj["option"],function(i,optionInfo){	
-						//console.log(optionInfo);
+						////console.log(optionInfo);
 						if(recApp["option"][i]){
 							optionInfo["checked"] = recApp["option"][i]["checked"];
 							if(recApp["option"][i]["othervalue"]!=undefined ){
@@ -260,7 +293,7 @@ if(dataApp){
 	})
 }
 
-//console.log(JSON.stringify(data.items));
+////console.log(JSON.stringify(data.items));
 /*加载页面信息*/
 
 SurveyBuild["_items"] = data.items;
@@ -279,14 +312,14 @@ var config = {
 for (var selector in config) {
   $(selector).chosen(config[selector]);
 }
-//console.log($(".bmbtjxtitle"));
+////console.log($(".bmbtjxtitle"));
 $(".bmbtjxtitle").find(".chosen-container").unbind();
 
 
 /*默认点击选中的Tab页签*/
 $(".menu-active").click();
 
-//console.log(appReadOnly);
+////console.log(appReadOnly);
 if(appReadOnly == "Y"){
 	pageReadOnly();
 }else{

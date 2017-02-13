@@ -45,7 +45,7 @@ initComponent: function () {
 	var store = new KitchenSink.view.qklZsmb.zsmbListStore();
 	Ext.apply(this, {
 		columns:[{
-			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.JgId","证书模板编号"),
+			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.JgId","机构编号"),
 			dataIndex: 'JgId',
 			width: 200,
 			hidden:true
@@ -54,15 +54,26 @@ initComponent: function () {
 			dataIndex: 'certTmpl',
 			width: 200
 		},{
-			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.tmplName","证书名称"),
-			dataIndex: 'tmplName',
-			minWidth: 100,
+			text: Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.certType","证书类型"),
+			dataIndex: 'certType',
+			minWidth: 200,
 			flex:1
 		},{
 			text:  Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.certJGID","证书颁发机构"),
 			dataIndex: 'certJGID',
-			minWidth: 100,
+			minWidth: 200,
 			flex:1
+		},{
+			text:  Ext.tzGetResourse("TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.useFlag","启用状态"),
+			dataIndex: 'useFlag',
+			width: 100,
+			renderer : function(value, metadata, record) {
+				if (value=="Y"){
+					return "启用";
+				}else if(value=="N"){
+					return "不启用";
+				}
+			}
 		},{
 			menuDisabled: true,
 			sortable: false,

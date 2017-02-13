@@ -57,8 +57,14 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> list;
 			// 通过省市名称查询 BEGIN
 			if ("BYSCHOOL".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strValue });
+				if("".equals(strValue)){
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[]{});
+				}else{
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strValue });
+				}
+				
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {

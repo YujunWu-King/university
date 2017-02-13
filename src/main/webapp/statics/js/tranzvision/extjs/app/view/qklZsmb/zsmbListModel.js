@@ -1,8 +1,9 @@
 Ext.define('KitchenSink.view.qklZsmb.zsmbListModel',{
     extend:'Ext.data.Model',
-    fields:[
+    fields:[{name: 'JgId'},
         {name: 'certTmpl'},
-        {name: 'tmplName'},
-        {name: 'certJGID'}
+        {name: 'certType'},
+        {name: 'certJGID'},
+        {name: 'useFlag'}
     ]
 });

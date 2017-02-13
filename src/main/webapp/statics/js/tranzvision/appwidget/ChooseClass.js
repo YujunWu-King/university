@@ -7,6 +7,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	itemName: "项目选择",
 	title:"项目选择",
 	isDoubleLine:"Y",
+	isSingleLine: "N",
 	fixedContainer:"Y",// 固定容器标识
 	children:{
 		"bmrClass": {
@@ -18,7 +19,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 			"value": "",
 			"StorageType": "S",
 			"wzsm": "",
-			"classname":"bmrClass"
+			"classname":"baseComponent"
 		},
 		"bmrBatch": {
 			"instanceId": "bmrBatch",
@@ -30,7 +31,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 			"StorageType": "S",
 			"option": {},
 			"wzsm" : "",
-			"classname":"bmrBatch"
+			"classname":"Select"
 		}
 	},
 	minLines:"1",
@@ -38,21 +39,26 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	_getHtml : function(data,previewmode){
 		 // 预览模式
 		 var c = '',e='',params='',desc = '';
-		 console.log("data:"+data);
-		 console.log("previewmode:"+previewmode);
-		 console.log("_readonly:"+SurveyBuild._readonly);
-		 //console.dir(data);
+		 //console.log("data:"+data);
+		 ////console.dir(data);
+		 //console.log("previewmode:"+previewmode);
+		 //console.log("_readonly:"+SurveyBuild._readonly);
+		 ////console.dir(data);
 		
 		 
 	     if(previewmode){
 	    	 var child=data["children"][0];
+	    	 
+	    	 if (child == undefined) {
+	    		 child=data["children"];
+	    	 }
 			// console.log("child:"+child);
-			 console.dir(child);
+			 ////console.dir(child);
 			 var val=child.bmrClass.value;
 			 var classid = $("#ClassId").val();
 			 var batchId = $("#BatchId").val();
 			 
-			 console.log("classid:"+classid);
+			// console.log("classid:"+classid);
 	    	 if($("#ClassId").length > 0){
 	    		 // var classid = $("#ClassId").val();
 	             params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"CLASSINFO","CLASSID":' + classid + '}}';
@@ -78,8 +84,9 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	    	 e += '<div class="input-list">';
 	    	 e += '	<div class="input-list-info left"><span class="red">*</span>' + child.bmrClass.title + '</div>';
 	    	 
-	    	 console.log("wzsm:"+child.bmrClass.wzsm);
-	    	 console.dir("wzsm:"+child.bmrClass);
+	    	 //console.log("wzsm:"+child.bmrClass.wzsm);
+	    	 //console.log("bmrClass:"+child.bmrClass.value);
+	    	// //console.dir("wzsm:"+child.bmrClass);
 	    	 
 	    	 if(SurveyBuild._readonly || $("#ClassId").length <= 0){
 	    		 e += '	<div class="input-list-text left">' + child.bmrClass.wzsm + '</div>';
@@ -120,9 +127,16 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	                    }
 	                });
 	                
+	                //console.dir(child.bmrBatch);
+	                //console.log("code:"+child.bmrBatch.value);
+	                //console.log("itemId:"+child.bmrBatch.itemId);
+	                //console.log("title:"+child.bmrBatch.title);
+	                //console.log("wzsm:"+child.bmrBatch.wzsm);
 	                var op='';
 	                op += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
 	                for (var i in child.bmrBatch.option) {
+	                	//console.log("code"+i+":"+child.bmrBatch["option"][i]["code"]);
+	                	
 	                	op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 	                }
 	                e += '<div class="input-list">';
@@ -182,13 +196,16 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	
 	_eventbind: function(data) {
 		var child = data["children"][0];
+		if (child == undefined) {
+   		 child=data["children"];
+   	 	}
 		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btn");
 
 		var siteId=$("#siteId").val();
 		
 		var classId=$("#ClassId").val();
 		//console.log($selectBtn);
-		//console.dir($selectBtn);
+		////console.dir($selectBtn);
 		var prov;
 		
 		$selectBtn.on("click",function(){
@@ -217,12 +234,12 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		}); 
 		
 		var $obj = $("#" + data["itemId"] +child.bmrBatch.itemId);
-		console.log("$obj:"+$obj);
-		console.dir($obj);
+		//console.log("$obj:"+$obj);
+		//console.dir($obj);
 		$obj.on("change",function(){
             var selectIndex = $obj[0].selectedIndex;
             if($obj[0].options[selectIndex].value){
-            	console.log("value:"+$obj[0].options[selectIndex].value);
+            	//console.log("value:"+$obj[0].options[selectIndex].value);
             	child.bmrBatch.wzsm = $obj[0].options[selectIndex].text;
             	$("#BatchId").val($obj[0].options[selectIndex].value);
             	

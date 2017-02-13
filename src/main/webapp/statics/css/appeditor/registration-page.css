@@ -1122,5 +1122,5 @@ url("chrome://browser/content/history/history-panel.xul")
 /*表单填写说明css*/
 .form_sm{padding:5px 10px;width:150px;text-align:center;}
 .form_input{width:750px;height:400px;overflow-y:auto;border:1px solid #0070c6;display:none;}
-.readme{width:150px;}
+.readme{width:150px;margin: 5px 0 0 0;}
 .tips{margin:0px 4px 0 0;vertical-align:middle;}

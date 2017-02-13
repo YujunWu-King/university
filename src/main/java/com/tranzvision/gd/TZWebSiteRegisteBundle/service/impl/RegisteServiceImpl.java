@@ -586,7 +586,7 @@ public class RegisteServiceImpl {
 				    		fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_HIDE_FIELD_HTML", regFieldId,"CREATE");
 				    	}
 				    	
-				    }else{
+				    }else{				    	
 				    	//是否下拉框;
 				    	String fieldType = (String)map.get("TZ_FIELD_TYPE");
 				    	if("DROP".equals(fieldType)){
@@ -596,7 +596,7 @@ public class RegisteServiceImpl {
 				    		}else{
 				    			//String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 				    			String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_SITEI_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
-					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strJgid,regFieldId});
+					    		List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,new Object[]{strLang,strSiteId,regFieldId});
 					    		
 					    		for(int j = 0; j<dropList.size(); j++ ){
 					    			String optId = (String)dropList.get(j).get("TZ_OPT_ID");
@@ -613,8 +613,8 @@ public class RegisteServiceImpl {
 					    					combox = combox + "<option value =\"" + optId + "\">" + optEngValue + "</option>";
 					    				}
 					    			}else{
-						    				if("Y".equals(selectFlg) || "1".equals(selectFlg)){
-				    					combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optValue + "</option>";
+						    			if("Y".equals(selectFlg) || "1".equals(selectFlg)){
+						    				combox = combox + "<option value =\"" + optId + "\" selected=\"selected\">" + optValue + "</option>";
 					    				}else{
 					    					combox = combox + "<option value =\"" + optId + "\">" + optValue + "</option>";
 					    				}
