@@ -503,7 +503,6 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	 * @param errorMsg
 	 * @return
 	 */
-	@SuppressWarnings("null")
 	private String queryAudIDsArr(String strParams, String[] errorMsg){
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
