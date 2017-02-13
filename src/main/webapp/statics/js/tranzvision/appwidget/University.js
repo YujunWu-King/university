@@ -27,7 +27,7 @@ SurveyBuild.extend("University", "baseComponent", {
 		],
     _getHtml: function(data, previewmode) {
         var children = data.children;
-		var c = '<input id="CountryCode" type="hidden" name="CountryCode" value="CHN">';
+		var c = '<input id="TZ_SCH_CNAME_Country" type="hidden" name="TZ_SCH_CNAME_Country" value="CHN">';
 		
         if (previewmode) {
             if(SurveyBuild._readonly){
@@ -160,7 +160,7 @@ SurveyBuild.extend("University", "baseComponent", {
 				national.attr("ccode","CHN");
 			}
 			$("#ParamValue").val(data["itemId"] + data.children[1]["itemId"]);
-			$("#CountryCode").val(data["itemId"] + data.children[0]["itemId"]);
+			$("#TZ_SCH_CNAME_Country").val(data["itemId"] + data.children[0]["itemId"]);
 			s = $.layer({
 				type: 2,
 				title: false,
