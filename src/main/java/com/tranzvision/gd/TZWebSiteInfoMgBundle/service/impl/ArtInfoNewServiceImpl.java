@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
@@ -100,6 +102,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 
+	@Autowired
+	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
+	
 	/* 查询表单信息 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -173,6 +178,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("projects", "");
 		map.put("staticName", "");
 		map.put("autoStaticName", "");
+		
+		map.put("AudID",null);
+		map.put("AudName",null);
+		
 		// 排序
 		map.put("artSeq", 0);
 		// 栏目说明
@@ -236,6 +245,24 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					strRet = jacksonUtil.Map2json(returnJsonMap);
 					return strRet;
 				}
+				
+				//听众
+			    String sqlAud="SELECT A.TZ_AUD_ID,B.TZ_AUD_NAM FROM PS_TZ_ART_AUDIENCE_T A,PS_TZ_AUDIENCE_VW B WHERE  A.TZ_AUD_ID=B.TZ_AUD_ID AND TZ_ART_ID=?";  
+			    List<Map<String, Object>>AudList=new ArrayList<Map<String, Object>>();
+			    AudList=jdbcTemplate.queryForList(sqlAud, new Object[]{strArtId});
+			    List<String>AudNameList=new ArrayList<String>();
+			    List<String>AudIDList=new ArrayList<String>();
+			    
+				if (AudList != null && AudList.size() > 0) {
+					for (int i = 0; i < AudList.size(); i++) {
+						AudNameList.add((String) AudList.get(i).get("TZ_AUD_NAM"));
+						AudIDList.add((String) AudList.get(i).get("TZ_AUD_ID"));
+						
+					}
+				}
+				
+				map.replace("AudID",AudIDList);
+				map.replace("AudName",AudNameList);
 
 				// 获取内容模板字段是否启用
 				String artTypeItemSQL = "SELECT B.TZ_FIELD_VALUE,B.TZ_FIELD_DESC FROM PS_TZ_SITEI_COLU_T A,PS_TZ_CONT_FLDEF_T B "
@@ -640,6 +667,27 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
 
+						//活动听众表
+						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
+							ArrayList<String> strListenersId=new ArrayList<String>();
+							strListenersId=(ArrayList<String>) dataMap.get("AudList");
+							PsTzArtAudienceTKey  PsTzArtAudienceTKey=new PsTzArtAudienceTKey();
+							for (int i = 0; i < strListenersId.size(); i++) {
+								
+								String sqlAudnum = "select COUNT(1) from PS_TZ_ART_AUDIENCE_T WHERE TZ_ART_ID=? AND TZ_AUD_ID=?";
+								int count = jdbcTemplate.queryForObject(sqlAudnum, new Object[]{artId,(String) strListenersId.get(i)},"Integer");
+								if(count > 0){
+									
+								}else{
+									PsTzArtAudienceTKey.setTzAudId((String) strListenersId.get(i));
+									PsTzArtAudienceTKey.setTzArtId(artId);
+									PsTzArtAudienceTMapper.insert(PsTzArtAudienceTKey);
+
+								}
+							}
+								
+						}
+						
 						// 发布者;
 						String artFbz = (String) dataMap.get("artFbz");
 						// 发布部门;
@@ -973,6 +1021,27 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 							artContent = (String) dataMap.get("contentInfo");
 						} else {
 							artContent = (String) dataMap.get("contentInfo1");
+						}
+						
+						//活动听众表
+						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
+							ArrayList<String> strListenersId=new ArrayList<String>();
+							strListenersId=(ArrayList<String>) dataMap.get("AudList");
+							PsTzArtAudienceTKey  PsTzArtAudienceTKey=new PsTzArtAudienceTKey();
+							for (int i = 0; i < strListenersId.size(); i++) {
+								
+								String sqlAudnum = "select COUNT(1) from PS_TZ_ART_AUDIENCE_T WHERE TZ_ART_ID=? AND TZ_AUD_ID=?";
+								int count = jdbcTemplate.queryForObject(sqlAudnum, new Object[]{artId,(String) strListenersId.get(i)},"Integer");
+								if(count > 0){
+									
+								}else{
+									PsTzArtAudienceTKey.setTzAudId((String) strListenersId.get(i));
+									PsTzArtAudienceTKey.setTzArtId(artId);
+									PsTzArtAudienceTMapper.insert(PsTzArtAudienceTKey);
+
+								}
+							}
+								
 						}
 
 						// 发布者;
