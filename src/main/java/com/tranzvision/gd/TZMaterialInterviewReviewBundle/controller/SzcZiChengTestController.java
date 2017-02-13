@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.TzClpyDataServiceImpl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.XmlToWord;
-import com.tranzvision.gd.szctest.dao.TzSzcJavaTstTMapper;
-import com.tranzvision.gd.szctest.service.impl.Freemark;
-import com.tranzvision.gd.szctest.service.impl.HtmlToFdf;
-import com.tranzvision.gd.szctest.service.impl.TestSzcServiceImpl;
+
 
 import com.tranzvision.gd.util.base.TzSystemException;
 
@@ -32,24 +29,23 @@ import com.tranzvision.gd.util.base.TzSystemException;
 @Controller
 public class SzcZiChengTestController {
 
-	@Autowired
-	private TestSzcServiceImpl testSzcServiceImpl;
+
 	
 	@Autowired
 	private TzClpyDataServiceImpl tzClpyDataServiceImpl;
 
-	@Autowired
-	private Freemark freemark;
+
 
 	@Autowired
 	private XmlToWord xmlToWord;
 
-	@Autowired
-	private HtmlToFdf htmlToFdf;
+
 
 	@RequestMapping("/song")
 	public String testUpdate(HttpServletRequest request, HttpServletResponse response) {
 
+	
+		
 		String arr[] = {"a","b"};
 		String strParams = "{\"TZ_CLASS_ID\":\"106\",\"TZ_APPLY_PC_ID\":\"1\",\"TZ_DQPY_LUNC\":\"02\",\"TZ_PWEI_OPRIDS\":\"clpw06=clpw07=clpw08=clpw09\"}";
 		//String strParams = "{\"TZ_CLASS_ID\":\"106\",\"TZ_APPLY_PC_ID\":\"1\",\"TZ_DQPY_LUNC\":\"02\",\"TZ_PWEI_OPRIDS\":\"clpw6\"}";
