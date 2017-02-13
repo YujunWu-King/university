@@ -30,8 +30,10 @@ public class TzClpyDataServiceImpl extends FrameworkImpl  {
 		
 		String filepath = "C:/tstcreateword2";//定义路径 ， 要用hardcode 配置
 		filepath = getHardCodePoint.getHardCodePointVal("TZ_GD_CL_DCPYSJ_PATH");
+		filepath = "/pydata/clpydata/";
 		
 		String url = null ;//定义返回的文档的url
+		
 		
 		// 返回值;
 		String strRet = "{}";
