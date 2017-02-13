@@ -306,8 +306,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		var $position_select = $("#" +data["itemId"] + child.WorkExper2.itemId);
 
 		$firm_select.on("change",function(){
-			console.log("valeList:");
-			console.log(child.WorkExper1.value);
+			//console.log("valeList:");
+			//console.log(child.WorkExper1.value);
 			var POSITION_TYPE_DEL=$position_select.val();
 			var FIRM_TYPE=$firm_select.val();
 			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
