@@ -2028,7 +2028,7 @@ var SurveyBuild = {
         }
 	},
 	//--------原版本图片上传:还原方法
-	oldUploadAttachment: function(el,instanceId){
+	oldUploadAttachment: function(el,instanceId,engIntanceId,i){
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
 		var refLetterId = SurveyBuild.refLetterId;//推荐信编号
         var data;
@@ -2039,7 +2039,9 @@ var SurveyBuild = {
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
             index = $(el).closest(".main_inner_content_para").index();
-            data = SurveyBuild._items[dhIns].children[index][instanceId];
+            var test=SurveyBuild._items[dhIns];
+            console.dir(test);
+            data = SurveyBuild._items[dhIns].children[i][engIntanceId];
         }
         var itemId = data.itemId;
         var itemName = data.itemName;

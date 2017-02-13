@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplListStore', {
     extend: 'Ext.data.Store',
     alias: 'store.resourceStore',
     model: 'KitchenSink.view.advertisementTmplDefn.AdverTmplListModel',
-    pageSize: 5,
+    pageSize: 10,
     autoLoad:true,
     comID: 'TZ_AD_TMPL_COM',
     pageID: 'TZ_AD_LIST_STD',
