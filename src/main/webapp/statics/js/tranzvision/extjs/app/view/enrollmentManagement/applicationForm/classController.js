@@ -836,6 +836,228 @@
                 "file": "N"
             });
         });
+    },
+    /*评审进度管理*/
+    clReviewScheduleMg:function(grid,rowIndex){
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_CLPS_SCHE_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有管理评审进度的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_SCHE_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+
+        ViewClass = Ext.ClassManager.get(className);
+        //ViewClass = new KitchenSink.view.materialsReview.materialsReview.materialsReviewSchedule();
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var record = grid.store.getAt(rowIndex);
+        var classID = record.get('classID');
+        var batchID = record.get('batchID');
+        cmp = new ViewClass(classID,batchID);
+
+        cmp.on('afterrender',function(panel){
+            var judgeStore =panel.down('tabpanel').child("form[name=judgeInfoForm]").child('grid').store,
+                judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
+                form = panel.child('form').getForm();
+            var stuListStore = panel.down('tabpanel').child('grid[name=materialsStudentGrid]').store,
+                stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
+            var tzParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' +
+                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            Ext.tzLoad(tzParams,function(respData){
+                respData.className = record.data.className;
+                respData.batchName = record.data.batchName;
+                form.setValues(respData);
+                var formButton =panel.child('form');
+                var btnStartNewReview=formButton.down('button[name=startNewReview]'),
+                    btnCloseReview=formButton.down('button[name=closeReview]'),
+                    btnReStartReview=formButton.down('button[name=reStartReview]');
+                if(respData.status=='进行中'){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='positive';
+                    btnReStartReview.flagType='negative';
+                    btnStartNewReview.setDisabled(true);
+                    btnReStartReview.setDisabled(true);
+                }
+                if(respData.status=='已关闭'){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='positive';
+                    btnCloseReview.setDisabled(true);
+                }
+                if(respData.status=='未开始'){
+                    btnStartNewReview.flagType='negative';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='positive';
+                    btnCloseReview.setDisabled(true);
+                }
+                if(respData.delibCount==0){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='negative';
+                    btnCloseReview.setDisabled(true);
+                    btnReStartReview.setDisabled(true);
+                }
+            });
+            judgeStore.tzStoreParams = judgeParams;
+            judgeStore.load();
+            stuListStore.tzStoreParams = stuListParams;
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    /*评审进度管理*/
+    msReviewScheduleMg:function(grid,rowIndex){
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_SCHE_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有管理评审进度的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_SCHE_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+
+        ViewClass = Ext.ClassManager.get(className);
+        //ViewClass = new KitchenSink.view.materialsReview.materialsReview.materialsReviewSchedule();
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var record = grid.store.getAt(rowIndex);
+        var classID = record.get('classID');
+        var batchID = record.get('batchID');
+        cmp = new ViewClass(classID,batchID);
+
+        cmp.on('afterrender',function(panel){
+            var judgeStore =panel.down('tabpanel').child("form[name=judgeInfoForm]").child('grid').store,
+                judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
+                form = panel.child('form').getForm();
+            var stuListStore = panel.down('tabpanel').child('grid[name=materialsStudentGrid]').store,
+                stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
+            var tzParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' +
+                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            Ext.tzLoad(tzParams,function(respData){
+                respData.className = record.data.className;
+                respData.batchName = record.data.batchName;
+                form.setValues(respData);
+                var formButton =panel.child('form');
+                var btnStartNewReview=formButton.down('button[name=startNewReview]'),
+                    btnCloseReview=formButton.down('button[name=closeReview]'),
+                    btnReStartReview=formButton.down('button[name=reStartReview]');
+                if(respData.status=='进行中'){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='positive';
+                    btnReStartReview.flagType='negative';
+                    btnStartNewReview.setDisabled(true);
+                    btnReStartReview.setDisabled(true);
+                }
+                if(respData.status=='已关闭'){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='positive';
+                    btnCloseReview.setDisabled(true);
+                }
+                if(respData.status=='未开始'){
+                    btnStartNewReview.flagType='negative';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='positive';
+                    btnCloseReview.setDisabled(true);
+                }
+                if(respData.delibCount==0){
+                    btnStartNewReview.flagType='positive';
+                    btnCloseReview.flagtype='negative';
+                    btnReStartReview.flagType='negative';
+                    btnCloseReview.setDisabled(true);
+                    btnReStartReview.setDisabled(true);
+                }
+            });
+            judgeStore.tzStoreParams = judgeParams;
+            judgeStore.load();
+            stuListStore.tzStoreParams = stuListParams;
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
     }
 });
 

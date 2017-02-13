@@ -96,7 +96,7 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 					//根据栏目下已发布的文章列表，每个栏目限制5条
 					String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d') AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
 							+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
-							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT LIMIT 5";
+							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
 							
 					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId });
 					
