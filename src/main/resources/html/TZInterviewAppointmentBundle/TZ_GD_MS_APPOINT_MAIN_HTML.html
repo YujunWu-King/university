@@ -8,7 +8,7 @@
 		TzUniversityContextPath = "%bind(:6)";
 	</script>
     <script type="text/javascript" src="%bind(:6)/statics/js/lib/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+	<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
     <!--<script type="text/javascript" src="%bind(:6)/statics/js/tranzvision/js/laydate.js"></script>-->
     <script type="text/javascript">
         $(document).ready(function(){
@@ -37,12 +37,7 @@
 	        </div>
 	        <!--左侧菜单 end-->
 	    </div>
-	    
-	    <div class="friends">
-            	<div class="zxj_tit">友情链接</div>
-        </div>
-        <div class="zxj_code"></div>
-	            
+	      
     </div>
     <!-- left end -->
 
@@ -66,7 +61,7 @@
         LoadMenu("%bind(:4)","%bind(:5)","");
         LoadFooter("%bind(:4)","%bind(:5)","");
         LoadWelcome("%bind(:4)","%bind(:5)","");
-  		
+  		LoadLeftArea("%bind(:4)","%bind(:5)","");//加载常用链接和二维码
         
 		onChangTimeZone("");
     });
