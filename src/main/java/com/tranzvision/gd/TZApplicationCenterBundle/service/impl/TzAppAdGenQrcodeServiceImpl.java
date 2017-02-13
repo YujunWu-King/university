@@ -76,7 +76,7 @@ public class TzAppAdGenQrcodeServiceImpl {
 			String ctxPath = request.getContextPath();
 	
 			String qrcodeUrl = request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + ctxPath + "/event/preview/m/" + siteId + "/" + oprid
+						+ String.valueOf(request.getServerPort()) + ctxPath + "/admission/" +jgId+"/" + siteId + "/" + oprid
 						+ "/" + tzAppInsID;
 	
 			qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName);
