@@ -211,6 +211,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//用在拼写给定的div排列
 		console.dir(data);
 		var child=data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child=data["children"];
 		var BUSINESS_TYPE_GP=[
 			"互联网类",//01
@@ -466,12 +469,15 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				htmlContent+=OTH_DIV
 			}
 		
-		
+			htmlContent+="</div>";
 		return htmlContent;
 	},
 	_eventbind: function(data) {
 		//-----根据"创业类型"下拉框 显示和隐藏"类型关联div"
 		var child = data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child = data["children"];
 		var $btype_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
 		$btype_select.change(function(){

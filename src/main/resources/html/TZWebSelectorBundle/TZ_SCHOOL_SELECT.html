@@ -233,11 +233,15 @@
 		   		menu[i].className=i==n?"now2":""; 
 			}
 			var title = $(menu[n]).attr("title"); */
-			
-			var $CountryCode = $("#CountryCode", window.parent.document).val();
-			var title = $("#" + $CountryCode, window.parent.document).attr("ccode");
-			console.log($CountryCode + "   " + title);
-			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + title + '"}}';
+			//yuds 不使用国籍作为院校选择器国家选择搜索条件
+			//var $CountryCode = $("#CountryCode", window.parent.document).val();
+			//var title = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
+			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
+			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
+			if($CountryCode==undefined||$CountryCode==null){
+				$CountryCode = ""; 
+			}
+			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
 			
 			$.ajax({
 				'url':tzGeneralURL, //服务器的地址
@@ -417,7 +421,7 @@
 	<div class="city_main_city"><a title="新疆" href="javascript:;" onclick="setTab(30);layerChange();">新疆</a></div>
 	
   </div> -->
-  <div class="city_main_line3" id="selectorList">
+  <div class="city_main_line3" id="selectorList" style="padding-top:15px;">
   </div>
   </div>
   <div class="tab1">

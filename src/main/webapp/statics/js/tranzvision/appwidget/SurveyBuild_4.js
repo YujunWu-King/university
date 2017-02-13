@@ -2476,7 +2476,9 @@ var SurveyBuild = {
         if (!this.checkAttrVal()) {
             return
         }
-		var pageSize = $("#tabNav").children().size();
+        
+		var pageSize = $(".tabNav_child").size();
+		console.log(pageSize);
 		if(pageSize > 0){
 			if(pageSize == 1){
 				noteing("建议分页报名表至少分两页！", 2)

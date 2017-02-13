@@ -5,7 +5,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
     extend: 'Ext.data.Store',
     alias: 'store.resourceStore',
     model: 'KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManageModel',
-    pageSize: 5,
+    pageSize: 10,
     autoLoad:true,
     comID: 'TZ_SCH_LIB_COM',
     pageID: 'TZ_SCH_LIST_STD',

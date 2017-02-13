@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
     alias: 'controller.zsmbController',
     searchCertTmpl:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId:'TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.TZ_CERTTMPL_TBL',
+            cfgSrhId:'TZ_ZHENGSHU_COM.TZ_MOBAN_LIST_STD.TZ_CERTTMPL_V',
             callback:function(searchCfg){
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = searchCfg;
@@ -231,8 +231,7 @@ Ext.define('KitchenSink.view.qklZsmb.zsmbController', {
 		//操作类型，add-添加，edit-编辑
 		var actType = panel.actType;
 		var form = panel.child("form").getForm();
-		if (form.isValid()) {
-			
+		if (form.isValid()) {			
 			//新增
 			var comParams="";
 			if(actType == "add"){

@@ -105,6 +105,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 	_getContentHtml: function(data) {
 		console.dir(data);
 		var child=data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//var child=data["children"];
 		var types="";
 		//--公司类型初始值
@@ -157,7 +160,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '<div class="input-list" style="display:block">';
 				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
-				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
 				types += OPT_FIRM;
 				types += '		</select>';
@@ -189,7 +192,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
-				types +='<div class="clear"><div>';
+				types +='<div class="clear"></div>';
 				types += '</div>';
 			}
 
@@ -260,7 +263,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '</div>';
 			}
 		
-		
+			types+="</div>"
 		return types;
 	},
 	_eventbind: function(data) {
@@ -294,6 +297,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			];
 		//-----------------------
 		var child = data["children"][0];
+		if (child == undefined) {
+	   		 child=data["children"];
+	   	 	}
 		//	var child = data["children"];
 		//取得公司性质下拉框的”选择器“
 		var $firm_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
