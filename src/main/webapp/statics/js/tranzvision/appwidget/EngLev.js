@@ -980,7 +980,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        		for(var index=0; index<childrenAttr.length; index++){
 			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 			        				htmlContent+= '<div class="input-list-uploadcon-list">';
-			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
+			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
 			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 			        				htmlContent+= '	<div class="clear"></div>';
 			        				htmlContent+= '</div>';
@@ -991,7 +991,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        		for(var index=0; index<childrenAttr.length; index++){
 			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 			        				htmlContent+= '<div class="input-list-uploadcon-list">';
-			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
+			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
 			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 			        				htmlContent+= '	<div class="clear"></div>';
 			        				htmlContent+= '</div>';
@@ -1035,8 +1035,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 //				if (child == undefined) {
 //			   		 child=data["children"];
 //			   	 	}
+
 				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
-				//--
 				type_select.each(function(index){
 					$(this).on("change",function(){
 						var related_div_name="div[name='relatedDiv']";
