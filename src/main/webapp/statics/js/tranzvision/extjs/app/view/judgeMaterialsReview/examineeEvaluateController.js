@@ -74,6 +74,12 @@ Ext.define('KitchenSink.view.judgeMaterialsReview.examineeEvaluateController',{
         	});
         });
         
+        tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if(cmp.floating){
+        	cmp.show();
+        }
         
 	},
 	//返回评审主页面

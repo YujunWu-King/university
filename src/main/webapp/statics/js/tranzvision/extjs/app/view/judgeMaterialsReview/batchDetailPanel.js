@@ -21,8 +21,12 @@ Ext.define('KitchenSink.view.judgeMaterialsReview.batchDetailPanel',{
 	dockedItems:[{
 		xtype:'toolbar',
 		items:[{
-			text:'进行评审',
+			text:'进行评审【材料】',
 			handler:'materialsReviewTest'
+		},{
+			text:'进行评审【面试】',
+			handler:'interviewReviewTest'
 		}]
-	}]
+	}],
+	title:'材料面试评审'
 });
