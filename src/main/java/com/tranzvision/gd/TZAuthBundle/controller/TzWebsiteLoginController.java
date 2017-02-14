@@ -211,7 +211,9 @@ public class TzWebsiteLoginController {
 		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
 
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
-
+		//System.out.println("orgid:"+orgid);
+		//System.out.println("siteid:"+siteid);
+		
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
@@ -219,6 +221,7 @@ public class TzWebsiteLoginController {
 		orgid = orgid.toLowerCase();
 
 		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
+		//System.out.println("redirect:"+redirect);
 
 		return redirect;
 	}

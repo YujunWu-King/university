@@ -13,6 +13,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
+import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -94,37 +95,29 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			// 1.站内信;
 			String stationLetter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "1",
 					language, "站内信", "站内信");
-
 			// 获取数据失败，请联系管理员;
 			znxCenterHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "2",
 					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
-
 			// 2.有;
 			String have = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "3",
 					language, "有", "有");
 			// 3.条数未读;
 			String unread = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "4",
 					language, "条未读", "条未读");
-			
 			//4.删除;
 			String delete = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "5",
 					language, "删除", "删除");
-			
 			//5.发件人;
 			String sendName = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "6",
 					language, "发件人", "发件人");
-			
 			//6.主题;
 			String theme = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "7",
 					language, "主题", "主题");
-			
 			//7.时间;
 			String time = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "8",
 					language, "时间", "时间");
-			
-
 			String znxCenterList = "";
-			//未读和已读状态显示;
+			//未读和已读状态显示样式;
 			String unreadStyle = "erow";
 			String readStyle = "erow read_on";
 			String sql = "select a.TZ_ZNX_MSGID,a.TZ_ZNX_SENDID,a.TZ_MSG_SUBJECT,a.ROW_ADDED_DTTM from PS_TZ_ZNX_MSG_T a,PS_TZ_ZNX_REC_T b where a.TZ_ZNX_MSGID = b.TZ_ZNX_MSGID and b.TZ_ZNX_RECID = ? and b.TZ_REC_DELSTATUS = 'N'";
@@ -134,38 +127,46 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 					String msgId = (String)list.get(i).get("TZ_ZNX_MSGID");
 					String sendId = (String)list.get(i).get("TZ_ZNX_SENDID");
 					String subJect = (String)list.get(i).get("TZ_MSG_SUBJECT");
-					String sendTime = (String)list.get(i).get("ROW_ADDED_DTTM");
+					String sendTime = (String)list.get(i).get("ROW_ADDED_DTTM").toString();
 					//站内信列表;
 					String viewStyle = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ?";
 					String znxStatus = jdbcTemplate.queryForObject(viewStyle,new Object[]{msgId},"String");
-					if (znxStatus.equals("N")){
-						znxCenterList = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST",unreadStyle,sendId,subJect,sendTime);
-					}else{
-						znxCenterList = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST",readStyle,sendId,subJect,sendTime);
+					
+					String strTr = "";
+					try{
+						if (znxStatus.equals("N")){
+							strTr = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST",unreadStyle,sendId,subJect,sendTime);
+						}else{
+							strTr = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST",readStyle,sendId,subJect,sendTime);
+						}
+					}catch(TzSystemException e){
+						e.printStackTrace();
 					}
+					znxCenterList += strTr;
 				}
 			}else{
 				//没有站内信;
-				znxCenterList = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST","","","","");
+				znxCenterList = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_LIST","readStyle","系统管理员","飓风今天测试","2017/02/13 20:00");
 			}
-			String unreadCountSql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID = ? and TZ_REC_DELSTATUS = 'N' and TZ_ZNX_STATUS ='N'";
-			int unreadCount = jdbcTemplate.queryForObject(unreadCountSql,new Object[]{oprid},"Integer");
+			//未读站内信数量;
+			int unreadCount =0;
+			String unreadCountSql = "select count(*) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID = ? and TZ_REC_DELSTATUS = 'N' and TZ_ZNX_STATUS <>'Y'";
+			unreadCount = jdbcTemplate.queryForObject(unreadCountSql,new Object[]{oprid},"int");
 			
 			// 站内信信息;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_CONTENT",
-					stationLetter,have,String.valueOf(unreadCount),unread,delete,sendName,theme,time,znxCenterList);
+					request.getContextPath(),stationLetter,have,String.valueOf(unreadCount),unread,delete,sendName,theme,time,znxCenterList);
 			// 展示页面;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_HTML",
 					request.getContextPath(), ZSGL_URL, strCssDir, znxCenterHtml, str_jg_id, strSiteId);
 
 			znxCenterHtml = siteRepCssServiceImpl.repTitle(znxCenterHtml, strSiteId);
 			znxCenterHtml = siteRepCssServiceImpl.repCss(znxCenterHtml, strSiteId);
-
+			
+			return znxCenterHtml;
 		} catch (Exception e) {
 			e.printStackTrace();
-
-			return "无法获取相关数据";
 		}
-		return znxCenterHtml;
+		return "";
 	}
 }

@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeController', {
     alias: 'controller.certTypeController',
     searchCertType:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId:'TZ_CERTTYPE_COM.TZ_TYPE_LIST_STD.TZ_CERT_TYPE_TBL',
+            cfgSrhId:'TZ_CERTTYPE_COM.TZ_TYPE_LIST_STD.TZ_CERT_TYPE_VW',
             callback:function(searchCfg){
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = searchCfg;
@@ -171,21 +171,47 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeController', {
 			}
 			var tzParams = '{"ComID":"TZ_CERTTYPE_COM","PageID":"TZ_TYPE_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			Ext.tzSubmit(tzParams,function(responseData){
-					
+				
 					form.findField("certTypeId").setReadOnly(true);
                     form.findField("certTypeId").addCls('lanage_1');
                     form.findField("certTypeId").setValue(responseData);
                     var store=win.findParentByType("grid").store;
-                    win.actType = "update";	
+                    win.actType="update";
                     store.reload();
 			},"",true,this);
 		}
 	},
 	onCertTypeEnsure:function(btn){
-        this.onCertTypeSave(btn);
+   	 var win = btn.findParentByType("window");
+		//操作类型，add-添加，edit-编辑
+		var actType = win.actType;
+		var form = win.child("form").getForm();
+		if (form.isValid()) {
+			
+			//新增
+			var comParams="";
+			if(actType == "add"){
+				comParams = '"add":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}else{
+				//修改
+				comParams = '"update":[{"data":'+Ext.JSON.encode(form.getValues())+'}]';
+			}
+			var comView = this.getView();
+			var tzParams = '{"ComID":"TZ_CERTTYPE_COM","PageID":"TZ_TYPE_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			Ext.tzSubmit(tzParams,function(responseData){
+				
+				 /*form.findField("certTypeId").setReadOnly(true);
+                 form.findField("certTypeId").addCls('lanage_1');
+                 form.findField("certTypeId").setValue(responseData);*/
+                 var store=win.findParentByType("grid").store;
+                 win.actType="update";
+                 store.reload();
+                 comView.close();
+			},"",true,this);
+		}
+       // this.onCertTypeSave(btn);
         //关闭窗口
-        var comView = this.getView();
-        comView.close();
+       
     },
     //关闭
     onCertTypeClose: function(){

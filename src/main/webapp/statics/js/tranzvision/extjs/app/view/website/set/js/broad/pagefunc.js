@@ -941,7 +941,7 @@ function LoadMenu( jgId, siteId, opt){
 
 //~:加载左侧区域统一方法
 function LoadLeftArea( jgId, siteId, opt){
-
+	
 	var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_LEFT_AREA_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'"}}';
 	
 	$.ajax({
