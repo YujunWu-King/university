@@ -1,9 +1,16 @@
 package com.tranzvision.gd.TZApplicationCenterBundle.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.tranzvision.gd.util.sql.SqlQuery;
 
+/**
+
+* @author YTT
+* @Time 2017-2-14
+* @param 机构id,站点id,申请人oprid,报名表编号
+* @return 晒录取通知书证书模板中的系统变量解析值
+
+*/
 public class CertGetParameter {
 	@Autowired
 	private SqlQuery sqlQuery;	
