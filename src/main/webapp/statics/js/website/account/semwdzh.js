@@ -84,8 +84,8 @@ $(document)
 							border : [ 3, 0.3, '#000', true ],
 							offset : [ '10%', '' ],
 							area : [ '830px', '720px' ],
-							content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22B%22}}'
-						})
+							content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
+						});
 					});
 					$.each([ $("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click") ],
 							function(i, el) {
@@ -116,7 +116,7 @@ $(document)
 										border : [ 3, 0.3, '#000', true ],
 										offset : [ '10%', '' ],
 										area : [ '830px', '720px' ],
-										content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
+										content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'
 									})
 								});
 							});

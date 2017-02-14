@@ -2027,7 +2027,7 @@ var SurveyBuild = {
             })
         }
 	},
-	//--------原版本图片上传:还原方法
+	//--------原版本图片上传:还原方法->>
 	oldUploadAttachment: function(el,instanceId,engIntanceId,i){
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
 		var refLetterId = SurveyBuild.refLetterId;//推荐信编号
