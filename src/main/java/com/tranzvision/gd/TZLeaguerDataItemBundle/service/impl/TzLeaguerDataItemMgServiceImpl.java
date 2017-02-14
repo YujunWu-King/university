@@ -271,6 +271,22 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 									psTzRegFieldT.setTzIsPrefect("N");
 								}
 							}
+							
+							if (mapGridRow.containsKey("isReg")) {
+								if (Boolean.parseBoolean(String.valueOf(mapGridRow.get("isReg")))) {
+									psTzRegFieldT.setTzIsReg("Y");
+								} else {
+									psTzRegFieldT.setTzIsReg("N");
+								}
+							}
+							
+							if (mapGridRow.containsKey("isZhgl")) {
+								if (Boolean.parseBoolean(String.valueOf(mapGridRow.get("isZhgl")))) {
+									psTzRegFieldT.setTzIsZhgl("Y");
+								} else {
+									psTzRegFieldT.setTzIsZhgl("N");
+								}
+							}
 
 							
 							psTzRegFieldTMapper.updateByPrimaryKeySelective(psTzRegFieldT);
@@ -372,7 +388,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				psTzUserregMbTMapper.insert(psTzUserregMbT);
 
 				// 初始化 用户注册项信息字段存储表
-				sql = "select TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT from PS_TZ_REG_FIELD_T where TZ_SITEI_ID='' AND TZ_JG_ID = ? order by TZ_ORDER";
+				sql = "select TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT,TZ_IS_REG,TZ_IS_ZHGL from PS_TZ_REG_FIELD_T where TZ_SITEI_ID='' AND TZ_JG_ID = ? order by TZ_ORDER";
 
 				List<?> listData = sqlQuery.queryForList(sql, new Object[] { platformOrgID });
 
@@ -409,6 +425,15 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							mapData.get("TZ_IS_SHOWWZSY") == null ? "" : String.valueOf(mapData.get("TZ_IS_SHOWWZSY")));
 					psTzRegFieldT.setTzIsPrefect(
 							mapData.get("TZ_IS_PREFECT") == null ? "" : String.valueOf(mapData.get("TZ_IS_PREFECT")));
+					if("TZ_GENDER".equals(fieldId)||"TZ_EMAIL".equals(fieldId)||"TZ_PASSWORD".equals(fieldId)||"TZ_REPASSWORD".equals(fieldId)){
+						psTzRegFieldT.setTzIsReg("Y");
+					}else{
+						psTzRegFieldT.setTzIsReg(
+								mapData.get("TZ_IS_REG") == null ? "" : String.valueOf(mapData.get("TZ_IS_REG")));
+					}
+					
+					psTzRegFieldT.setTzIsZhgl(
+							mapData.get("TZ_IS_ZHGL") == null ? "" : String.valueOf(mapData.get("TZ_IS_ZHGL")));
 					
 					psTzRegFieldTMapper.insert(psTzRegFieldT);
 
@@ -522,7 +547,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			mapRetFormData.put("photo2", showPhoto2);
 
 			//sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
-			sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
+			sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT,TZ_IS_REG,TZ_IS_ZHGL from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
 			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { siteId });
 
 			ArrayList<Map<String, Object>> listRetJson = new ArrayList<Map<String, Object>>();
@@ -551,6 +576,10 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapRegField.get("TZ_IS_SHOWWZSY"));
 				String isPerfectInfo = mapRegField.get("TZ_IS_PREFECT") == null ? ""
 						: String.valueOf(mapRegField.get("TZ_IS_PREFECT"));
+				String isReg = mapRegField.get("TZ_IS_REG") == null ? ""
+						: String.valueOf(mapRegField.get("TZ_IS_REG"));
+				String isZhgl = mapRegField.get("TZ_IS_ZHGL") == null ? ""
+						: String.valueOf(mapRegField.get("TZ_IS_ZHGL"));
 				
 				boolean enable = false;
 				if ("Y".equals(isEnable)) {
@@ -572,6 +601,16 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					PrefectInfo = true;
 				}
 				
+				boolean ShowReg = false;
+				if("Y".equals(isReg)){
+					ShowReg = true;
+				}
+
+				boolean ShowZhgl = false;
+				if("Y".equals(isZhgl)){
+					ShowZhgl = true;
+				}				
+				
 				//sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
 				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
 				String regEnName = sqlQuery.queryForObject(sql, new Object[] { siteId, regId, languageCd }, "String");
@@ -589,6 +628,8 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				mapRetJson.put("isShowWzsy", showWzsy);
 				mapRetJson.put("regEnName", regEnName);
 				mapRetJson.put("isPerfectInfo", PrefectInfo);
+				mapRetJson.put("isReg", ShowReg);
+				mapRetJson.put("isZhgl", ShowZhgl);
 
 				listRetJson.add(mapRetJson);
 
@@ -640,7 +681,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 			}
 
 			//String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID = ? order by TZ_ORDER";
-			String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
+			String sql = "select TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_ORDER,TZ_ENABLE,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL,TZ_YXBG_SRKLX,TZ_IS_SHOWWZSY,TZ_IS_PREFECT,TZ_IS_REG,TZ_IS_ZHGL from PS_TZ_REG_FIELD_T where TZ_SITEI_ID = ? order by TZ_ORDER";
 
 			List<?> listRegField = sqlQuery.queryForList(sql, new Object[] { siteId });
 
@@ -670,6 +711,11 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapRegField.get("TZ_IS_SHOWWZSY"));
 				String isPrefectInfo = mapRegField.get("TZ_IS_PREFECT") == null ? ""
 						: String.valueOf(mapRegField.get("TZ_IS_PREFECT"));
+				String isReg = mapRegField.get("TZ_IS_REG") == null ? ""
+						: String.valueOf(mapRegField.get("TZ_IS_REG"));
+				String isZhgl = mapRegField.get("TZ_IS_ZHGL") == null ? ""
+						: String.valueOf(mapRegField.get("TZ_IS_ZHGL"));
+				
 				
 				boolean enable = false;
 				if ("Y".equals(isEnable)) {
@@ -689,8 +735,22 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				boolean PrefectInfo = false;
 				if ("Y".equals(isPrefectInfo)) {
 					PrefectInfo = true;
-				}							
+				}
+				
+				boolean ShowReg = false;
+				if("Y".equals(isReg)){
+					ShowReg = true;
+				}
 
+				boolean ShowZhgl = false;
+				if("Y".equals(isZhgl)){
+					ShowZhgl = true;
+				}
+				
+				if("TZ_GENDER".equals(regId)||"TZ_EMAIL".equals(regId)||"TZ_PASSWORD".equals(regId)||"TZ_REPASSWORD".equals(regId)){
+					ShowReg = true;
+				}
+				
 				//sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_JG_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
 				sql = "select TZ_REG_FIELD_NAME from PS_TZ_REGFIELD_ENG where TZ_SITEI_ID = ? and TZ_REG_FIELD_ID = ? and LANGUAGE_CD = ?";
 				String regEnName = sqlQuery.queryForObject(sql, new Object[] { siteId, regId, languageCd }, "String");
@@ -710,7 +770,9 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 				mapRetJson.put("regEnName", regEnName);
 				mapRetJson.put("regEnName", regEnName);
 				mapRetJson.put("isPerfectInfo", PrefectInfo);
-
+				mapRetJson.put("isReg", ShowReg);
+				mapRetJson.put("isZhgl", ShowZhgl);
+				
 				listRetJson.add(mapRetJson);
 
 			}
