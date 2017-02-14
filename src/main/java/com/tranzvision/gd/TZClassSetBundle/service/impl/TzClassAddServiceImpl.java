@@ -2,7 +2,7 @@
  * 
  */
 package com.tranzvision.gd.TZClassSetBundle.service.impl;
-
+import org.apache.commons.lang.StringUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -202,7 +202,7 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 					String tzZlpsScorMdId = "";
 					String tzMscjScorMdId = "";
 					String tzCsScorMdId = "";
-					Float tzTtBl = (float) 10 ;
+					Float tzTtBl = 0f ;
 					String tzCsKsbqzId = "";					
 					String tzCsFmbqzId = "";
 					
@@ -210,9 +210,13 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 						tzZlpsScorMdId = psTzPrjInfT.getTzZlpsScorMdId();
 						tzMscjScorMdId = psTzPrjInfT.getTzMscjScorMdId();
 						tzCsScorMdId = psTzPrjInfT.getTzCsScorMdId();
-						tzTtBl = Float.valueOf(psTzPrjInfT.getTzTtBl());
 						tzCsKsbqzId = psTzPrjInfT.getTzCsKsbqzId();
 						tzCsFmbqzId = psTzPrjInfT.getTzCsFmbqzId();
+						if(StringUtils.isBlank(psTzPrjInfT.getTzTtBl())){
+							tzTtBl = 0f;
+						}else{
+						tzTtBl = Float.valueOf(psTzPrjInfT.getTzTtBl());						
+						}
 					}
 					/*20170122*/
 					sql = "select TZ_APP_TPL_MC from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
@@ -230,7 +234,7 @@ public class TzClassAddServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzZlpsScorMdId(tzZlpsScorMdId);
 					psTzClassInfT.setTzMscjScorMdId(tzMscjScorMdId);
 					psTzClassInfT.setTzCsScorMdId(tzCsScorMdId);
-					psTzClassInfT.setTzTtBl(tzTtBl);
+					psTzClassInfT.setTzTtBl(Float.valueOf(tzTtBl));
 					psTzClassInfT.setTzCsKsbqzId(tzCsKsbqzId);
 					psTzClassInfT.setTzCsFmbqzId(tzCsFmbqzId);
 					/*20170122-end*/
