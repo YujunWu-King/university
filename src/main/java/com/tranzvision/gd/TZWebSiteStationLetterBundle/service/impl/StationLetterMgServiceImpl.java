@@ -95,35 +95,27 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			// 1.站内信;
 			String stationLetter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "1",
 					language, "站内信", "站内信");
-
 			// 获取数据失败，请联系管理员;
 			znxCenterHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "2",
 					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
-
 			// 2.有;
 			String have = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "3",
 					language, "有", "有");
 			// 3.条数未读;
 			String unread = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "4",
 					language, "条未读", "条未读");
-			
 			//4.删除;
 			String delete = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "5",
 					language, "删除", "删除");
-			
 			//5.发件人;
 			String sendName = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "6",
 					language, "发件人", "发件人");
-			
 			//6.主题;
 			String theme = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "7",
 					language, "主题", "主题");
-			
 			//7.时间;
 			String time = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEB_ZNX_MESSAGE", "8",
 					language, "时间", "时间");
-			
-
 			String znxCenterList = "";
 			//未读和已读状态显示样式;
 			String unreadStyle = "erow";
