@@ -53,7 +53,7 @@ Ext.define('KitchenSink.view.judgeMaterialsReview.examineeEvaluatePanel',{
 					layout:'fit',
 					items:[{
 						xtype:'grid',
-						title:'请给以下考生打分'，
+						title:'请给以下考生打分',
 						columnsLines:true,
 						name:'examineeListGrid',
 						store:'',
