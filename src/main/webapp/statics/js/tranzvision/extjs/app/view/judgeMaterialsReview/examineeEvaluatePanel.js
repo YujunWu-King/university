@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.judgeMaterialsReview.examineeEvaluatePanel',{
 		'Ext.layout.container.Border',
 		'Ext.toolbar.Paging',
 		'Ext.ux.ProgressBarPager',
+		'tranzvision.extension.grid.column.Link',
 		'KitchenSink.view.judgeMaterialsReview.examineeEvaluateController'
 	],
 	layout:'fit',
@@ -68,7 +69,7 @@ Ext.define('KitchenSink.view.judgeMaterialsReview.examineeEvaluatePanel',{
 							text: '排名',
                             dataIndex: 'examineeRank',
                             width: 50
-						}，{
+						},{
 							text:'总分',
 							dataIndex:'examineeTotalScore',
 							width:50
