@@ -1,6 +1,9 @@
 ﻿Ext.define('KitchenSink.view.content.artMg.artInfoController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.artInfoController', 
+	requires: [
+	           'KitchenSink.view.content.artMg.tagModel'
+	       ],
 	onArtSave: function(){
 		//内容表单
 		var form = this.getView().child("form").getForm();
@@ -442,6 +445,64 @@
 //                    znxBulkDetForm.down('button[reference=clearAllBtn]').disabled=false;
 //                    znxBulkDetForm.down('button[reference=clearAllBtn]').removeCls('x-item-disabled x-btn-disabled')
                 }
+            }
+        })
+    },
+  //查看听众
+    searchListeners:function(btn){
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_AUDIENCE_VW',
+            searchDesc: '选择听众',
+            maxRow:20,
+            condition:{
+                presetFields:{
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
+                },
+                srhConFields:{
+                    TZ_AUD_NAME:{
+                        desc:'听众名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_AUD_ID:'听众ID',
+                TZ_AUD_NAME: '听众名称',
+                //TZ_ORG_CODE:'所属部门',
+                ROW_ADDED_DTTM:'创建时间'
+                // ROW_LASTMANT_DTTM:'修改时间'
+            },
+            multiselect: true,
+            callback: function(selection){
+                var oprIdArray=new Array();
+                var i=0;
+                var listenersList=btn.findParentByType("form").getForm().findField("AudList");
+                var j= 0,k=0;
+                for (k=0;k<listenersList.valueCollection.items.length;k++){
+                    var listData=listenersList.valueCollection.items[k];
+                    
+                    var TagModel=new KitchenSink.view.content.artMg.tagModel();
+                    var audName = listData.data.tagName;
+                    var audId=listData.data.tagId;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                }
+                for(j=0;j<selection.length;j++){
+                    var TagModel=new KitchenSink.view.content.artMg.tagModel();
+                    var audName = selection[j].data.TZ_AUD_NAME;
+                    var audId=selection[j].data.TZ_AUD_ID;
+                    TagModel.set('tagId',audId);
+                    TagModel.set('tagName',audName);
+                    oprIdArray[i]=TagModel;
+                    i++;
+                };
+                btn.findParentByType("form").getForm().findField("AudList").setValue(oprIdArray);
             }
         })
     }

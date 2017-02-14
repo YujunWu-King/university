@@ -19,38 +19,34 @@
 	src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
-<script type="text/javascript"	src="%bind(:1)/statics/js/website/account/init.js"></script>	
+<script type="text/javascript"	src="%bind(:1)/statics/js/website/account/semInit.js"></script>
 <!-- <script type="text/javascript"	src="%bind(:1)/statics/js/website/broad/index/initp.js"></script> -->
 </head>
 <body style="background: #eee">
-	<div id="headarea" class="top assdiv" area-add="false" area-edit="true"
-		area-del="false" area-copy="false" area-moveup="false"
-		area-movedown="false" area-postion="H" area-type="YT" area-id="">
-
-	</div>
+	<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id=""></div>	
 
 	<div id="main" class="main">
-		<div id="letf_menu" class="main_left assdiv zxj_left" area-add="false"
+		<!-- <div id="letf_menu" class="main_left assdiv zxj_left" area-add="false"
 			area-edit="true" area-del="false" area-copy="false"
 			area-moveup="false" area-movedown="false" area-postion="L"
 			area-type="ZC" area-id="">
 			<div></div>
 
+		</div> -->
+		<div class="zxj_left">
+			<div id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="" style="height:560px !important;">
+				<div style="height:100%;border-left:3px solid #e7ceeb;padding-top:25px;margin-left: 6%;"></div>
+			</div>
 		</div>
-
+		<!-- content start -->
 		%bind(:4)
 
 	</div>
 
-	<div id="footarea" class="foot assdiv" area-add="false"
-		area-edit="true" area-del="false" area-copy="false"
-		area-moveup="false" area-movedown="false" area-postion="F"
-		area-type="YW" area-id=""></div>
+	<div id="footarea" class="foot assdiv" area-add="false"	area-edit="true" area-del="false" area-copy="false"	area-moveup="false" area-movedown="false" area-postion="F"	area-type="YW" area-id=""></div>
 
 	<div>
-		<input id="jgid" name="jgid" type="hidden" /> <input id="siteid"
-			name="siteid" type="hidden" /> <input id="lang" name="lang"
-			type="hidden" />
+		<input id="jgid" name="jgid" type="hidden" /> <input id="siteid" name="siteid" type="hidden" /> <input id="lang" name="lang" type="hidden" />
 	</div>
 
 </body>

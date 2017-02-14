@@ -72,6 +72,21 @@ $(document)
 					$("#TZ_COUNTRY_click").mouseout(function() {
 						$("#TZ_COUNTRY_click").css("cursor", "");
 					});
+					$("#TZ_SCH_CNAME_Country").click(function(e){
+						$("#ParamCon").val("TZ_SCH_CNAME_Country");						
+						s = layer.open({
+							type : 2,
+							title : false,
+							fixed : false,
+							closeBtn : 0,
+							shadeClose : false,
+							shade : [ 0.3, '#000', true ],
+							border : [ 3, 0.3, '#000', true ],
+							offset : [ '10%', '' ],
+							area : [ '830px', '720px' ],
+							content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
+						});
+					});
 					$.each([ $("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click") ],
 							function(i, el) {
 								el.click(function(e) {
@@ -101,7 +116,7 @@ $(document)
 										border : [ 3, 0.3, '#000', true ],
 										offset : [ '10%', '' ],
 										area : [ '830px', '720px' ],
-										content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'
+										content:TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'
 									})
 								});
 							});
@@ -208,6 +223,9 @@ $(document)
 											"checked", "checked");
 								} else {
 									$("#" + key).val(data[key]);
+									if(key == "TZ_SCH_COUNTRY"){
+										$("#TZ_SCH_CNAME_Country").attr("ccode",data[key]);
+									}
 								}
 							}
 							/*
@@ -281,6 +299,13 @@ $(document)
 												userInfoJson[key] = $("#" + key)
 														.val();
 											}
+											if(key =="TZ_SCH_CNAME_Country"){
+												var countryCode = $("#TZ_SCH_CNAME_Country").attr("ccode");
+												if(countryCode!=null&&countryCode!=undefined){
+													$("#TZ_SCH_COUNTRY").val(countryCode);
+													userInfoJson["TZ_SCH_COUNTRY"] = countryCode;
+												}												
+											}
 										}
 										/*
 										 * date1 =
@@ -289,7 +314,7 @@ $(document)
 										userInfoJson["jgid"] = $("#jgid").val();
 										userInfoJson["lang"] = $("#lang").val();
 
-										var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_ZS_USERMNG_STD","OperateType":"SAVEUSERINFO","comParams":'
+										var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"SAVEUSERINFO","comParams":'
 												+ JSON.stringify(userInfoJson)
 												+ '}';
 
@@ -324,7 +349,7 @@ $(document)
 											"lang" : lang
 										};
 
-										var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_ZS_USERMNG_STD","OperateType":"NOTICE","comParams":'
+										var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"NOTICE","comParams":'
 												+ JSON.stringify(notice) + '}';
 
 										$.ajax({
@@ -349,7 +374,7 @@ function changeBindEmail() {
 		"lang" : lang,
 		"BIND" : isBindEmail
 	};
-	var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_ZS_USERMNG_STD","OperateType":"EMAIL","comParams":'
+	var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"EMAIL","comParams":'
 			+ JSON.stringify(bindOrUnbindEmail) + '}';
 
 	$.ajax({
@@ -392,7 +417,7 @@ function changeBindMobile() {
 		"lang" : lang,
 		"BIND" : isBindMobile
 	};
-	var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_ZS_USERMNG_STD","OperateType":"MOBILE","comParams":'
+	var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"MOBILE","comParams":'
 			+ JSON.stringify(bindOrUnbindMobile) + '}';
 
 	$.ajax({

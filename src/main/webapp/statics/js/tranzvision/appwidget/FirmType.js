@@ -153,23 +153,20 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			if (SurveyBuild._readonly) {
 				//只读模式
 				var OPT_FIRM='';
+				var valDesc='';
 				for(var k=0;k<FIRM_TYPE_GRP.length;k++){
-					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
+					//OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
+					if(FIRM_TYPE_DEF=="0"+parseInt(k+1)){
+						valDesc=FIRM_TYPE_GRP[k];
+						break;
+					}
 				}
 				//----------------------------放入公司性质OPT
 				types += '<div class="input-list" style="display:block">';
 				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
-				types += '	<div class="input-list-text left input-edu-select">';
-				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
-				types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
-				types += OPT_FIRM;
-				types += '		</select>';
-				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
-				types += '			<div class="onCorrect">&nbsp;</div></div>';
-				types += '		</div>';
+				types += '	<div class="input-list-text left">';
+				types +=valDesc;
 				types += '	</div>';
-				types +='<div class="clear"></div>';
 				types += '</div>';
 
 			} else {
@@ -192,7 +189,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
-				types +='<div class="clear"><div>';
+				types +='<div class="clear"></div>';
 				types += '</div>';
 			}
 
@@ -200,14 +197,21 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			if (SurveyBuild._readonly) {
 				//只读模式
 				var OPT_POSITION='';
+				var valDesc='';
 				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null&&FIRM_TYPE_DEF!="-1"){
 					if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
 						for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-							OPT_POSITION+='<option value="A'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("A"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP1[k]+'</option>'
+							if(POSITION_TYPE_DEL==("A"+parseInt(k+1))){
+								valDesc=POSITION_TYPE_GP1[k];
+								break;
+							}
 						}
 					}else if(FIRM_TYPE_DEF=='05'||FIRM_TYPE_DEF=='06'){
 						for(var k=0;k<POSITION_TYPE_GP2.length;k++){
-							OPT_POSITION+='<option value="B'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("B"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP2[k]+'</option>'
+							if(POSITION_TYPE_DEL==("B"+parseInt(k+1))){
+								valDesc=POSITION_TYPE_GP2[k];
+								break;
+							}
 						}
 
 					}
@@ -217,16 +221,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '<div class="input-list" style="display:block">';
 				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
-				types += '		<select disabled=true id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 255px;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
-				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
-				types += OPT_POSITION;
-				types += '		</select>';
-				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
-				types += '			<div class="onCorrect">&nbsp;</div></div>';
-				types += '		</div>';
+				types +=valDesc;
 				types += '	</div>';
-				types += '<div class="clear"></div>';
 				types += '</div>';
 
 			} else {
@@ -263,7 +259,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '</div>';
 			}
 		
-		
+			types+="</div>"
 		return types;
 	},
 	_eventbind: function(data) {
@@ -310,8 +306,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		var $position_select = $("#" +data["itemId"] + child.WorkExper2.itemId);
 
 		$firm_select.on("change",function(){
-			console.log("valeList:");
-			console.log(child.WorkExper1.value);
+			//console.log("valeList:");
+			//console.log(child.WorkExper1.value);
 			var POSITION_TYPE_DEL=$position_select.val();
 			var FIRM_TYPE=$firm_select.val();
 			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';

@@ -52,11 +52,11 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagList', {
            
                 
                  columns: [{
-                text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.zsJGID","机构ID") ,
+                text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.zsJGID","证书颁发机构编号") ,
                 dataIndex: 'zhjgID',
                 width: 200
             },{
-                text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.typeName","证书颁发机构"),
+                text:Ext.tzGetResourse("TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.typeName","证书颁发机构名称"),
                 dataIndex: 'zhjgName',
                 minWidth: 350,
                 flex:1

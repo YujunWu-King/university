@@ -715,192 +715,193 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// -------------复制推荐信
 
 						// ---0.去年的推荐信不为空，则进行“复制推荐信”操作
-							final String LAST_LETTER_SQL = "SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =?";
-							List<Map<String, Object>> letterList = new ArrayList<Map<String, Object>>();
-							//System.out.println("numHisAppInsId:"+numHisAppInsId+"->numAppInsId:"+numAppInsId);
-							letterList = sqlQuery.queryForList(LAST_LETTER_SQL,new Object[]{numHisAppInsId});
-							// 将所有的推荐信 信息复制过去 考生推荐信表
-							if (letterList != null) {
-								// ---1.向"报名表实例表"，加入报名表实例信息PS_TZ_APP_INS_T
-								Long tzAppInsId = Long.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
-								PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
-								psTzAppInsT.setTzAppInsId(tzAppInsId);// 报名表实例ID
-																		// 新生成的
-								psTzAppInsT.setRowAddedOprid(oprid); // 当前用户ID
-								psTzAppInsT.setRowAddedDttm(new Date());
-								psTzAppInsT.setRowLastmantDttm(new Date());
-								psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
-								psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
-								//psTzAppInsT.setTzAppFormSta("S");
-								psTzAppInsTMapper.insertSelective(psTzAppInsT);
-								//System.out.println("向报名表实例表，加入报名表实例信息 ");
-								
-								// ---2.将"班级"和"报名表"关系数据 存入 "PS_TZ_FORM_WRK_T"
-								PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-								psTzFormWrkT.setTzClassId(strClassId);// 班级ID
-								psTzFormWrkT.setOprid(oprid);// 当前用户
-								psTzFormWrkT.setTzAppInsId(tzAppInsId);// 报名表实例ID
-								psTzFormWrkT.setRowAddedDttm(new Date());
-								psTzFormWrkT.setRowLastmantDttm(new Date());
-								psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
-								//System.out.println("将班级和报名表关系数据 存入 ");
+						final String LAST_LETTER_SQL = "SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =?";
+						List<Map<String, Object>> letterList = new ArrayList<Map<String, Object>>();
+						// System.out.println("numHisAppInsId:"+numHisAppInsId+"->numAppInsId:"+numAppInsId);
+						letterList = sqlQuery.queryForList(LAST_LETTER_SQL, new Object[] { numHisAppInsId });
+						// 将所有的推荐信 信息复制过去 考生推荐信表
+						if (letterList != null) {
+							// ---1.向"报名表实例表"，加入报名表实例信息PS_TZ_APP_INS_T
+							Long tzAppInsId = Long.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
+							PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+							psTzAppInsT.setTzAppInsId(tzAppInsId);// 报名表实例ID
+																	// 新生成的
+							psTzAppInsT.setRowAddedOprid(oprid); // 当前用户ID
+							psTzAppInsT.setRowAddedDttm(new Date());
+							psTzAppInsT.setRowLastmantDttm(new Date());
+							psTzAppInsT.setTzAppTplId(strTplId);// 当前报名表模板ID
+							psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
+							// psTzAppInsT.setTzAppFormSta("S");
+							psTzAppInsTMapper.insertSelective(psTzAppInsT);
+							// System.out.println("向报名表实例表，加入报名表实例信息 ");
 
-								
-								// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
-								//System.out.println(letterList.size());
-								for (int i = 0; i < letterList.size(); i++) {
-									//System.out.println("推荐信读取");
-									Map<String, Object> letterMap = letterList.get(i);
-									
-									String tzRefLetterId = String
-											.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
-									PsTzKsTjxTbl psTzKsTjxTbl = new PsTzKsTjxTbl();
-									psTzKsTjxTbl.setTzRefLetterId(tzRefLetterId);// 主键
-																					// 推荐信ID
-									psTzKsTjxTbl.setTzAppInsId(tzAppInsId);// 关联报名表
-																			// 实例ID
-									Long tzTjxAppInsId = Long
-											.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
-									psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId); // 推荐信在 报名表实例表中的实例ID
-																					// 报名表编号
-									psTzKsTjxTbl.setOprid(oprid);
-									if (letterMap.get("TZ_TJX_TYPE") != null) {
-										psTzKsTjxTbl.setTzTjxType(String.valueOf(letterMap.get("TZ_TJX_TYPE")));
-									}
-									if (letterMap.get("TZ_REFLETTERTYPE") != null) {
-										psTzKsTjxTbl
-												.setTzReflettertype(String.valueOf(letterMap.get("TZ_REFLETTERTYPE")));
-									}
-									if (letterMap.get("TZ_TJR_ID") != null) {
-										psTzKsTjxTbl.setTzTjrId(String.valueOf(letterMap.get("TZ_TJR_ID")));
-									}
-									if (letterMap.get("TZ_MBA_TJX_YX") != null) {
-										psTzKsTjxTbl.setTzMbaTjxYx(String.valueOf(letterMap.get("TZ_MBA_TJX_YX")));
-									}
-									if (letterMap.get("TZ_REFERRER_NAME") != null) {
-										psTzKsTjxTbl
-												.setTzReferrerName(String.valueOf(letterMap.get("TZ_REFERRER_NAME")));
-									}
-									if (letterMap.get("TZ_REFERRER_GNAME") != null) {
-										psTzKsTjxTbl
-												.setTzReferrerGname(String.valueOf(letterMap.get("TZ_REFERRER_GNAME")));
-									}
-									if (letterMap.get("TZ_COMP_CNAME") != null) {
-										psTzKsTjxTbl.setTzCompCname(String.valueOf(letterMap.get("TZ_COMP_CNAME")));
-									}
-									if (letterMap.get("TZ_POSITION") != null) {
-										psTzKsTjxTbl.setTzPosition(String.valueOf(letterMap.get("TZ_POSITION")));
-									}
-									if (letterMap.get("TZ_TJX_TITLE") != null) {
-										psTzKsTjxTbl.setTzTjxTitle(String.valueOf(letterMap.get("TZ_TJX_TITLE")));
-									}
-									if (letterMap.get("TZ_TJR_GX") != null) {
-										psTzKsTjxTbl.setTzTjrGx(String.valueOf(letterMap.get("TZ_TJR_GX")));
-									}
-									if (letterMap.get("TZ_EMAIL") != null) {
-										psTzKsTjxTbl.setTzEmail(String.valueOf(letterMap.get("TZ_EMAIL")));
-									}
-									if (letterMap.get("TZ_PHONE_AREA") != null) {
-										psTzKsTjxTbl.setTzPhoneArea(String.valueOf(letterMap.get("TZ_PHONE_AREA")));
-									}
-									if (letterMap.get("TZ_PHONE") != null) {
-										psTzKsTjxTbl.setTzPhone(String.valueOf(letterMap.get("TZ_PHONE")));
-									}
-									if (letterMap.get("TZ_GENDER") != null) {
-										psTzKsTjxTbl.setTzGender(String.valueOf(letterMap.get("TZ_GENDER")));
-									}
-									if (letterMap.get("TZ_TJX_YL_1") != null) {
-										psTzKsTjxTbl.setTzTjxYl1(String.valueOf(letterMap.get("TZ_TJX_YL_1")));
-									}
-									if (letterMap.get("TZ_TJX_YL_2") != null) {
-										psTzKsTjxTbl.setTzTjxYl2(String.valueOf(letterMap.get("TZ_TJX_YL_2")));
-									}
-									if (letterMap.get("TZ_TJX_YL_3") != null) {
-										psTzKsTjxTbl.setTzTjxYl3(String.valueOf(letterMap.get("TZ_TJX_YL_3")));
-									}
-									if (letterMap.get("TZ_TJX_YL_4") != null) {
-										psTzKsTjxTbl.setTzTjxYl4(String.valueOf(letterMap.get("TZ_TJX_YL_4")));
-									}
-									if (letterMap.get("TZ_TJX_YL_5") != null) {
-										psTzKsTjxTbl.setTzTjxYl5(String.valueOf(letterMap.get("TZ_TJX_YL_5")));
-									}
-									if (letterMap.get("TZ_TJX_YL_6") != null) {
-										psTzKsTjxTbl.setTzTjxYl6(String.valueOf(letterMap.get("TZ_TJX_YL_6")));
-									}
-									if (letterMap.get("TZ_TJX_YL_7") != null) {
-										psTzKsTjxTbl.setTzTjxYl7(String.valueOf(letterMap.get("TZ_TJX_YL_7")));
-									}
-									if (letterMap.get("TZ_TJX_YL_8") != null) {
-										psTzKsTjxTbl.setTzTjxYl8(String.valueOf(letterMap.get("TZ_TJX_YL_8")));
-									}
-									if (letterMap.get("TZ_TJX_YL_9") != null) {
-										psTzKsTjxTbl.setTzTjxYl9(String.valueOf(letterMap.get("TZ_TJX_YL_9")));
-									}
-									if (letterMap.get("TZ_TJX_YL_10") != null) {
-										psTzKsTjxTbl.setTzTjxYl10(String.valueOf(letterMap.get("TZ_TJX_YL_10")));
-									}
-									if (letterMap.get("TZ_ATT_A_URL") != null) {
-										psTzKsTjxTbl.setTzAttAUrl(String.valueOf(letterMap.get("TZ_ATT_A_URL")));
-									}
-									if (letterMap.get("ATTACHSYSFILENAME") != null) {
-										psTzKsTjxTbl.setAttachsysfilename(
-												String.valueOf(letterMap.get("ATTACHSYSFILENAME")));
-									}
-									if (letterMap.get("ATTACHUSERFILE") != null) {
-										psTzKsTjxTbl.setAttachuserfile(String.valueOf(letterMap.get("ATTACHUSERFILE")));
-									}
-									psTzKsTjxTbl.setRowAddedDttm(new Date());
-									psTzKsTjxTbl.setRowAddedOprid(oprid);
-									psTzKsTjxTbl.setRowLastmantDttm(new Date());
-									psTzKsTjxTbl.setRowLastmantOprid(oprid);
-									if (letterMap.get("SYNCID") != null && letterMap.get("SYNCID") != "") {
-										psTzKsTjxTbl
-												.setSyncid(Integer.valueOf(String.valueOf(letterMap.get("SYNCID"))));
-									}
-									psTzKsTjxTbl.setSyncdttm(new Date());
-									if (letterMap.get("TZ_ACCESS_PATH") != null) {
-										psTzKsTjxTbl.setTzAccessPath(String.valueOf(letterMap.get("TZ_ACCESS_PATH")));
-									}
-									psTzKsTjxTblMapper.insertSelective(psTzKsTjxTbl);
-									//System.out.println("考生推荐信 信息存入");
-									// ---3.2.向“报名表实例表”中加入”推荐信“实例信息 （这表结构设计的有毒）
-									//将“原报名表”关联的“推荐信实例ID”拿出来
-									String LAST_LETTER_INS_ID=letterMap.get("TZ_TJX_APP_INS_ID")==null?"":letterMap.get("TZ_TJX_APP_INS_ID").toString();
-									//已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
-									final String SQL_LETTER_INS="SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
-									if(!LAST_LETTER_INS_ID.equals("")){
-										List<Map<String,Object>>letterInsList=sqlQuery.queryForList(SQL_LETTER_INS,new Object[]{LAST_LETTER_INS_ID});
-										if(letterInsList!=null){
-											for(int k=0;k<letterInsList.size();k++){
-												Map<String,Object> letterInsMap=letterInsList.get(k);
-												PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
-												psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);// 报名表实例ID
-												// 新生成的
-												psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
-												psTzAppInsT2.setRowLastmantOprid(oprid);
-												psTzAppInsT2.setRowAddedDttm(new Date());
-												psTzAppInsT2.setRowLastmantDttm(new Date());
-												psTzAppInsT2.setTzAppTplId(letterInsMap.get("TZ_APP_TPL_ID").toString());// 历史推荐信模板ID
-												psTzAppInsT2.setTzAppinsJsonStr(letterInsMap.get("TZ_APPINS_JSON_STR").toString());// 历史推荐信字符串信息
-												//新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
-												String submitState=letterInsMap.get("TZ_APP_FORM_STA")==null?"":letterInsMap.get("TZ_APP_FORM_STA").toString();
-												if(submitState.equals("U")){
-													strRefLetterId=tzRefLetterId;
-												}
-												psTzAppInsT2.setTzAppFormSta(submitState);
-												String tzPwd=letterInsMap.get("")==null?"":letterInsMap.get("").toString();
-												psTzAppInsT2.setTzPwd(tzPwd);
-												psTzAppInsTMapper.insertSelective(psTzAppInsT2);
-												//System.out.println("存入推荐信实例");
-											}
-										}
-										}
-									
+							// ---2.将"班级"和"报名表"关系数据 存入 "PS_TZ_FORM_WRK_T"
+							PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+							psTzFormWrkT.setTzClassId(strClassId);// 班级ID
+							psTzFormWrkT.setOprid(oprid);// 当前用户
+							psTzFormWrkT.setTzAppInsId(tzAppInsId);// 报名表实例ID
+							psTzFormWrkT.setRowAddedDttm(new Date());
+							psTzFormWrkT.setRowLastmantDttm(new Date());
+							psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
+							// System.out.println("将班级和报名表关系数据 存入 ");
+
+							// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
+							// System.out.println(letterList.size());
+							for (int i = 0; i < letterList.size(); i++) {
+								// System.out.println("推荐信读取");
+								Map<String, Object> letterMap = letterList.get(i);
+
+								String tzRefLetterId = String
+										.valueOf(getSeqNum.getSeqNum("PS_TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+								PsTzKsTjxTbl psTzKsTjxTbl = new PsTzKsTjxTbl();
+								psTzKsTjxTbl.setTzRefLetterId(tzRefLetterId);// 主键
+																				// 推荐信ID
+								psTzKsTjxTbl.setTzAppInsId(tzAppInsId);// 关联报名表
+																		// 实例ID
+								Long tzTjxAppInsId = Long
+										.valueOf(getSeqNum.getSeqNum("PS_TZ_APP_INS_T", "TZ_APP_INS_ID"));
+								psTzKsTjxTbl.setTzTjxAppInsId(tzTjxAppInsId); // 推荐信在
+																				// 报名表实例表中的实例ID
+																				// 报名表编号
+								psTzKsTjxTbl.setOprid(oprid);
+								if (letterMap.get("TZ_TJX_TYPE") != null) {
+									psTzKsTjxTbl.setTzTjxType(String.valueOf(letterMap.get("TZ_TJX_TYPE")));
 								}
-								// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId,
-								strAppInsId = String.valueOf(tzAppInsId);
-								//System.out.println("strAppInsId:" + strAppInsId);
+								if (letterMap.get("TZ_REFLETTERTYPE") != null) {
+									psTzKsTjxTbl.setTzReflettertype(String.valueOf(letterMap.get("TZ_REFLETTERTYPE")));
+								}
+								if (letterMap.get("TZ_TJR_ID") != null) {
+									psTzKsTjxTbl.setTzTjrId(String.valueOf(letterMap.get("TZ_TJR_ID")));
+								}
+								if (letterMap.get("TZ_MBA_TJX_YX") != null) {
+									psTzKsTjxTbl.setTzMbaTjxYx(String.valueOf(letterMap.get("TZ_MBA_TJX_YX")));
+								}
+								if (letterMap.get("TZ_REFERRER_NAME") != null) {
+									psTzKsTjxTbl.setTzReferrerName(String.valueOf(letterMap.get("TZ_REFERRER_NAME")));
+								}
+								if (letterMap.get("TZ_REFERRER_GNAME") != null) {
+									psTzKsTjxTbl.setTzReferrerGname(String.valueOf(letterMap.get("TZ_REFERRER_GNAME")));
+								}
+								if (letterMap.get("TZ_COMP_CNAME") != null) {
+									psTzKsTjxTbl.setTzCompCname(String.valueOf(letterMap.get("TZ_COMP_CNAME")));
+								}
+								if (letterMap.get("TZ_POSITION") != null) {
+									psTzKsTjxTbl.setTzPosition(String.valueOf(letterMap.get("TZ_POSITION")));
+								}
+								if (letterMap.get("TZ_TJX_TITLE") != null) {
+									psTzKsTjxTbl.setTzTjxTitle(String.valueOf(letterMap.get("TZ_TJX_TITLE")));
+								}
+								if (letterMap.get("TZ_TJR_GX") != null) {
+									psTzKsTjxTbl.setTzTjrGx(String.valueOf(letterMap.get("TZ_TJR_GX")));
+								}
+								if (letterMap.get("TZ_EMAIL") != null) {
+									psTzKsTjxTbl.setTzEmail(String.valueOf(letterMap.get("TZ_EMAIL")));
+								}
+								if (letterMap.get("TZ_PHONE_AREA") != null) {
+									psTzKsTjxTbl.setTzPhoneArea(String.valueOf(letterMap.get("TZ_PHONE_AREA")));
+								}
+								if (letterMap.get("TZ_PHONE") != null) {
+									psTzKsTjxTbl.setTzPhone(String.valueOf(letterMap.get("TZ_PHONE")));
+								}
+								if (letterMap.get("TZ_GENDER") != null) {
+									psTzKsTjxTbl.setTzGender(String.valueOf(letterMap.get("TZ_GENDER")));
+								}
+								if (letterMap.get("TZ_TJX_YL_1") != null) {
+									psTzKsTjxTbl.setTzTjxYl1(String.valueOf(letterMap.get("TZ_TJX_YL_1")));
+								}
+								if (letterMap.get("TZ_TJX_YL_2") != null) {
+									psTzKsTjxTbl.setTzTjxYl2(String.valueOf(letterMap.get("TZ_TJX_YL_2")));
+								}
+								if (letterMap.get("TZ_TJX_YL_3") != null) {
+									psTzKsTjxTbl.setTzTjxYl3(String.valueOf(letterMap.get("TZ_TJX_YL_3")));
+								}
+								if (letterMap.get("TZ_TJX_YL_4") != null) {
+									psTzKsTjxTbl.setTzTjxYl4(String.valueOf(letterMap.get("TZ_TJX_YL_4")));
+								}
+								if (letterMap.get("TZ_TJX_YL_5") != null) {
+									psTzKsTjxTbl.setTzTjxYl5(String.valueOf(letterMap.get("TZ_TJX_YL_5")));
+								}
+								if (letterMap.get("TZ_TJX_YL_6") != null) {
+									psTzKsTjxTbl.setTzTjxYl6(String.valueOf(letterMap.get("TZ_TJX_YL_6")));
+								}
+								if (letterMap.get("TZ_TJX_YL_7") != null) {
+									psTzKsTjxTbl.setTzTjxYl7(String.valueOf(letterMap.get("TZ_TJX_YL_7")));
+								}
+								if (letterMap.get("TZ_TJX_YL_8") != null) {
+									psTzKsTjxTbl.setTzTjxYl8(String.valueOf(letterMap.get("TZ_TJX_YL_8")));
+								}
+								if (letterMap.get("TZ_TJX_YL_9") != null) {
+									psTzKsTjxTbl.setTzTjxYl9(String.valueOf(letterMap.get("TZ_TJX_YL_9")));
+								}
+								if (letterMap.get("TZ_TJX_YL_10") != null) {
+									psTzKsTjxTbl.setTzTjxYl10(String.valueOf(letterMap.get("TZ_TJX_YL_10")));
+								}
+								if (letterMap.get("TZ_ATT_A_URL") != null) {
+									psTzKsTjxTbl.setTzAttAUrl(String.valueOf(letterMap.get("TZ_ATT_A_URL")));
+								}
+								if (letterMap.get("ATTACHSYSFILENAME") != null) {
+									psTzKsTjxTbl
+											.setAttachsysfilename(String.valueOf(letterMap.get("ATTACHSYSFILENAME")));
+								}
+								if (letterMap.get("ATTACHUSERFILE") != null) {
+									psTzKsTjxTbl.setAttachuserfile(String.valueOf(letterMap.get("ATTACHUSERFILE")));
+								}
+								psTzKsTjxTbl.setRowAddedDttm(new Date());
+								psTzKsTjxTbl.setRowAddedOprid(oprid);
+								psTzKsTjxTbl.setRowLastmantDttm(new Date());
+								psTzKsTjxTbl.setRowLastmantOprid(oprid);
+								if (letterMap.get("SYNCID") != null && letterMap.get("SYNCID") != "") {
+									psTzKsTjxTbl.setSyncid(Integer.valueOf(String.valueOf(letterMap.get("SYNCID"))));
+								}
+								psTzKsTjxTbl.setSyncdttm(new Date());
+								if (letterMap.get("TZ_ACCESS_PATH") != null) {
+									psTzKsTjxTbl.setTzAccessPath(String.valueOf(letterMap.get("TZ_ACCESS_PATH")));
+								}
+								psTzKsTjxTblMapper.insertSelective(psTzKsTjxTbl);
+								// System.out.println("考生推荐信 信息存入");
+								// ---3.2.向“报名表实例表”中加入”推荐信“实例信息 （这表结构设计的有毒）
+								// 将“原报名表”关联的“推荐信实例ID”拿出来
+								String LAST_LETTER_INS_ID = letterMap.get("TZ_TJX_APP_INS_ID") == null ? ""
+										: letterMap.get("TZ_TJX_APP_INS_ID").toString();
+								// 已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
+								final String SQL_LETTER_INS = "SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+								if (!LAST_LETTER_INS_ID.equals("")) {
+									List<Map<String, Object>> letterInsList = sqlQuery.queryForList(SQL_LETTER_INS,
+											new Object[] { LAST_LETTER_INS_ID });
+									if (letterInsList != null) {
+										for (int k = 0; k < letterInsList.size(); k++) {
+											Map<String, Object> letterInsMap = letterInsList.get(k);
+											PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
+											psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);// 报名表实例ID
+											// 新生成的
+											psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
+											psTzAppInsT2.setRowLastmantOprid(oprid);
+											psTzAppInsT2.setRowAddedDttm(new Date());
+											psTzAppInsT2.setRowLastmantDttm(new Date());
+											psTzAppInsT2.setTzAppTplId(letterInsMap.get("TZ_APP_TPL_ID").toString());// 历史推荐信模板ID
+											psTzAppInsT2.setTzAppinsJsonStr(
+													letterInsMap.get("TZ_APPINS_JSON_STR").toString());// 历史推荐信字符串信息
+											// 新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
+											String submitState = letterInsMap.get("TZ_APP_FORM_STA") == null ? ""
+													: letterInsMap.get("TZ_APP_FORM_STA").toString();
+											if (submitState.equals("U")) {
+												strRefLetterId = tzRefLetterId;
+											}
+											psTzAppInsT2.setTzAppFormSta(submitState);
+											String tzPwd = letterInsMap.get("") == null ? ""
+													: letterInsMap.get("").toString();
+											psTzAppInsT2.setTzPwd(tzPwd);
+											psTzAppInsTMapper.insertSelective(psTzAppInsT2);
+											// System.out.println("存入推荐信实例");
+										}
+									}
+								}
+
 							}
+							// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId,
+							strAppInsId = String.valueOf(tzAppInsId);
+							// System.out.println("strAppInsId:" + strAppInsId);
+						}
 
 						// -----------------复制推荐信 代码结束
 					}
@@ -1569,7 +1570,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd, strOtype);
 					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
-						System.out.println("checkFiledValid："+strMsg);
+						System.out.println("checkFiledValid：" + strMsg);
 						if ("".equals(strMsg)) {
 							this.savePageCompleteState(numAppInsId, strPageId, "Y");
 						} else {
@@ -1917,6 +1918,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
+		String sql = "";
 		for (Object objData : listData) {
 			strFieldValue = "";
 			Map<String, Object> mapData = (Map<String, Object>) objData;
@@ -1928,26 +1930,26 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			try {
 				if ("TZ_SKYPE".equals(strField) || "TZ_MOBILE".equals(strField) || "TZ_EMAIL".equals(strField)) {
 					if ("TZ_MOBILE".equals(strField)) {
-						String sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					} else if ("TZ_EMAIL".equals(strField)) {
-						String sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					} else {
-						String sql = "SELECT TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					}
 				} else {
 					if ("TZ_REALNAME".equals(strField)) {
-						String sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
+						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { orgid, oprid }, "String");
 					} else {
 						// 项目字段没对应;
 						if ("TZ_PROJECT".equals(strField)) {
-							String sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
+							sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
 						} else {
-							String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
+							sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
 						}
 					}
@@ -1962,6 +1964,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				continue;
 			}
 		}
+
+		// 插入面试申请号码
+		sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+		String TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
+		if (TZ_MSH_ID == null) {
+			TZ_MSH_ID = "";
+		}
+		map.put("TZ_MSH_ID", TZ_MSH_ID);
+
 		strUserInfo = jacksonUtil.Map2json(map);
 
 		return strUserInfo;
@@ -2148,8 +2159,28 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 										strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
 									}
 									if (mapJsonChildrenItems.containsKey("children")) {
-										// 多行容器下的子容器
-										List<?> mapChildrens2 = (ArrayList<?>) mapJsonChildrenItems.get("children");
+										// 多行容器下的子容器 modity by caoy
+										// 解决分组框的某些组合控件的问题
+										System.out.println("111:" + mapJsonChildrenItems.get("children"));
+										List<Map<String, Object>> mapChildrens2 = null;
+										try {
+											mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
+													.get("children");
+										} catch (Exception e) {
+											// e.printStackTrace();
+											mapChildrens2 = new ArrayList<Map<String, Object>>();
+											Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems
+													.get("children");
+											Map<String, Object> ccmap = null;
+											for (String key : cmap.keySet()) {
+												ccmap = (Map<String, Object>) cmap.get(key);
+												mapChildrens2.add(ccmap);
+											}
+										}
+
+										// System.out.println("Size:" +
+										// mapChildrens2.size());
+
 										String strIsSingleLine2 = "";
 										if (mapJsonChildrenItems.containsKey("isSingleLine")) {
 											strIsSingleLine2 = String.valueOf(mapJsonChildrenItems.get("isSingleLine"));
@@ -2696,9 +2727,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		/* 信息项校验程序 */
 		String strPath, strName, strMethod;
-		
-		
-		//modity by caoy 页面从1开始 
+
+		// modity by caoy 页面从1开始
 		int numCurrentPageNo = 1;
 
 		ArrayList<Integer> listPageNo = new ArrayList<Integer>();
@@ -2754,8 +2784,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
 
 				if ("save".equals(strOtype)) {
-					//System.out.println("numCurrentPageNo:"+numCurrentPageNo);
-					//System.out.println("numPageNo:"+numPageNo);
+					// System.out.println("numCurrentPageNo:"+numCurrentPageNo);
+					// System.out.println("numPageNo:"+numPageNo);
 					if (numCurrentPageNo == numPageNo) {
 						/*
 						 * String[] parameterTypes = new String[]
@@ -2781,7 +2811,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
 								.getBean(strPath + "." + strName);
 						String strReturn = "";
-						System.out.println("strMethod:"+strMethod);
+						System.out.println("strMethod:" + strMethod);
 						switch (strMethod) {
 						case "requireValidator":
 							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2833,7 +2863,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
 							break;
 						}
-						System.out.println("strReturn:"+strReturn);
+						System.out.println("strReturn:" + strReturn);
 						if (!"".equals(strReturn)) {
 							returnMsg = strReturn;
 							break;
@@ -2856,7 +2886,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					 */
 					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
-					System.out.println("strMethod:"+strMethod);
+					System.out.println("strMethod:" + strMethod);
 					switch (strMethod) {
 					case "requireValidator":
 						strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2915,7 +2945,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								numXxxMinLine, strTjxSub, strJygzTsxx);
 						break;
 					}
-					System.out.println("strReturn:"+strReturn);
+					System.out.println("strReturn:" + strReturn);
 					if (!"".equals(strReturn)) {
 						if (!listPageNo.contains(numPageNo)) {
 							listPageNo.add(numPageNo);

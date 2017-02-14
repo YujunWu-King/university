@@ -236,12 +236,30 @@
 			//yuds 不使用国籍作为院校选择器国家选择搜索条件
 			//var $CountryCode = $("#CountryCode", window.parent.document).val();
 			//var title = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
-			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
-			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
-			if($CountryCode==undefined||$CountryCode==null){
-				$CountryCode = ""; 
+			
+			var type = "%bind(:4)";
+			
+			var tzByStateParams ='';
+			
+			
+			if (type == "A") {
+				var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
+				var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
+				if($CountryCode==undefined||$CountryCode==null){
+					$CountryCode = ""; 
+				}
+				 tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
 			}
-			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
+			if (type == "B") {
+				var $CountryCode = $("#CountryCode", window.parent.document).val();
+				var title = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
+				if(title==undefined||title==null){
+					title = ""; 
+				}
+				//console.log("title:"+title);
+				 tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + title + '"}}';
+			}
+			
 			
 			$.ajax({
 				'url':tzGeneralURL, //服务器的地址
