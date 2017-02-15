@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.judgesManagement.judgeAccount.judgeAccList', {
+﻿Ext.define('KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccList', {
     extend: 'Ext.grid.Panel',
 	requires: [
         'Ext.data.*',
@@ -6,20 +6,20 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-		'KitchenSink.view.judgesManagement.judgeAccount.judgeAccStore',
-		'KitchenSink.view.judgesManagement.judgeAccount.judgeAccController',
-		'KitchenSink.view.judgesManagement.judgeAccount.judgeAccInfoWin',
+		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccStore',
+		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccController',
+		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccInfoWin',
 		'KitchenSink.view.judgesManagement.judgeAccount.judgeTypeStore'
     ],
-    xtype: 'judgeAccountMg',
-	controller: 'judgeAccController',
+    xtype: 'judgeCLAccountMg',
+	controller: 'judgeCLAccController',
     columnLines: true,
-	style:"margin:8px", 
+	style:"margin:8px",
 	selModel: {
        	type: 'checkboxmodel'
     },
     multiSelect: false,
-    title: '面试评委账号管理',
+    title: '材料评委账号管理',
 	header:false,
 	frame: true,
     dockedItems:[
@@ -44,7 +44,7 @@
 		}
 	],
     initComponent: function () {    
-		var store = new KitchenSink.view.judgesManagement.judgeAccount.judgeAccStore();
+		var store = new KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccStore();
 		
         Ext.apply(this, {
            columns: [{ 
@@ -64,6 +64,18 @@
                 dataIndex: 'judgeName',
                 minWidth: 200,
 				flex: 1
+            },{
+                text: '手机',
+                sortable: true,
+                dataIndex: 'judPhoneNumber',
+                minWidth: 150,
+                flex: 1
+            },{
+                text: '邮箱',
+                sortable: true,
+                dataIndex: 'judEmail',
+                minWidth: 150,
+                flex: 1
             },{
                 text: '评委类型',
                 sortable: true,
