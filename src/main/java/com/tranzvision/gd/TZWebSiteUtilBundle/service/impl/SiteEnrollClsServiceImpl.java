@@ -760,11 +760,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				
 				//是否生产面试申请号;
 				if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){
-					Calendar a = Calendar.getInstance();
-					String year = String.valueOf(a.get(Calendar.YEAR));//得到年
-					String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNumOracle("TZ_REG_USER_T", "TZ_MSSQH"+year));
-					String mssqh = year + sjNum.substring(sjNum.length()-4,sjNum.length());
-					psTzRegUserT.setTzMssqh(mssqh);
+					psTzRegUserT.setTzMssqh(tzMshId);
 				}
 				
 				psTzRegUserTMapper.insert(psTzRegUserT);
@@ -1284,14 +1280,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzBjsSms("N");				
 				psTzAqYhxxTbl.setTzIsCmpl("Y");
 				
-				//是否生产面试申请号;
-				String strMssqQH = "";
-				Calendar a = Calendar.getInstance();
-				String year = String.valueOf(a.get(Calendar.YEAR));//得到年
-				String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNumOracle("TZ_AQ_YHXX_T", "TZ_MSH_ID"+year));
-				strMssqQH = year + sjNum.substring(sjNum.length()-5);
+				//产生面试申请号，流水号格式：yyyy+00001
+				Calendar date=Calendar.getInstance();
+				String currentYear = String.valueOf(date.get(Calendar.YEAR));
+				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
+				xuhao = xuhao.substring(xuhao.length()-5);
+				String tzMshId = currentYear + xuhao;
 								
-				psTzAqYhxxTbl.setTzMshId(strMssqQH);
+				psTzAqYhxxTbl.setTzMshId(tzMshId);
 				psTzAqYhxxTbl.setRowLastmantDttm(new Date());
 				psTzAqYhxxTbl.setRowLastmantOprid(oprid);				
 				psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
@@ -1364,7 +1360,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				
 				//是否生产面试申请号;
 				if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){					
-					psTzRegUserT.setTzMssqh(strMssqQH);
+					psTzRegUserT.setTzMssqh(tzMshId);
 				}
 				
 				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
