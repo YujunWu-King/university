@@ -1826,8 +1826,7 @@ var SurveyBuild = {
         var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器
         var _children = this._items[instanceId]["children"], _fc = cloneObj(_children[0]);
 
-        var suffix = this._items[dhid]["linesNo"].shift();
-
+        var suffix = this._items[dhid]["linesNo"].shift();        
         //初始化多行容器的行信息data
         $.each(_fc,function(ins, obj) {
             _fc[ins]["value"] = "";

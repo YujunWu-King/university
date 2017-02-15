@@ -275,13 +275,32 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 	},
 	minLines: "1",
 	maxLines: "4",
-	linesNo: [1, 2, 3],
+	
 	defaultLines:1,
+	_init: function(d, previewmode) {
+		var linesNo = [];
+		for (var i = 1; i < this.maxLines; i++) {
+			linesNo.push(i);
+		}
+		this["linesNo"] = linesNo;
+	},
 	_getHtml: function(data, previewmode) {
+
 		var c = ""
 		var len=data.children.length;
-		if(data.children.length=="undefined")
-			len=1;
+		var showLines;
+		//-----------刷新页面处理：
+		if(len>=data.defaultLines)
+		{
+			showLines = len;
+		}else{
+			showLines = data.defaultLines;
+		}
+		//alert(showLines);
+		for(var i=1;i<showLines;i++){
+				data["linesNo"].shift(); 
+		}
+		//-------------------
 		if (previewmode) {
 			var htmlContent = this._getHtmlOne(data,0);
 			c += '<div class="main_inner_content_top"></div>';
@@ -1039,6 +1058,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					$(this).chosen({width:"100%"});
 				});
 				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
+				console.log("type_select:");
+				console.dir(type_select);
 				type_select.each(function(index){
 					$(this).on("change",function(){
 						var related_div_name="div[name='relatedDiv']";
