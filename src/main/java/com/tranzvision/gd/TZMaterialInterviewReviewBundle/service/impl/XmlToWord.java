@@ -63,9 +63,12 @@ public class XmlToWord {
 				|| StringUtils.isBlank(TZ_PWEI_OPRIDS)) {
 			return "1";
 		} else {
+			
+			String dq_oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-			String Filepath = getSysHardCodeVal.getDownloadPath() + "/pydata/clpydata/"
+			String Filepath = getSysHardCodeVal.getDownloadPath() + "/pydata/clpydata/"+dq_oprid+"/"
 					+ new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "/";
+			
 			//用于返回值
 			String FilepathandName = "/university"+Filepath;
 			Filepath = request.getServletContext().getRealPath(Filepath);
@@ -337,13 +340,30 @@ public class XmlToWord {
 							: String.valueOf(cjpwksResult.get("TZ_KSH_PSPM"));
 
 					// a、获取grid 的列 （面试申请号、姓名、排名）-固定项;
-					/*
-					 * 注：临时先用TZ_APP_INS_ID 提到， 正式时要替换为 面试申请号，姓名
-					 */
+					//取得OPRID ;
+					String ksName = "";//考生姓名
+					String ksMssqh = "";//考生面试申请号
+					String OPRID = "";
+					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
+					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
+					
+					//取得姓名、面试申请号
+					String Name_Mssqh_SQL = "";
+					Name_Mssqh_SQL = "SELECT TZ_REALNAME,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID = ? AND OPRID = ?";
+					Map<String, Object> Name_Mssqh_MAP = null;
+					Name_Mssqh_MAP = jdbcTemplate.queryForMap(Name_Mssqh_SQL,new Object[] { TZ_JG_ID, OPRID});
+					
+					if (Name_Mssqh_MAP == null) {
+					} else {
+						ksName = Name_Mssqh_MAP.get("TZ_REALNAME") == null ? "": String.valueOf(Name_Mssqh_MAP.get("TZ_REALNAME"));
+						ksMssqh = Name_Mssqh_MAP.get("TZ_MSH_ID") == null ? "": String.valueOf(Name_Mssqh_MAP.get("TZ_MSH_ID"));
+					}
+					
+					
 					String pw_ks_mssqh_html = tzGDObject.getHTMLText(
-							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML", TZ_APP_INS_ID);
+							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML", ksMssqh);
 					String pw_ks_name_html = tzGDObject.getHTMLText(
-							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML", TZ_APP_INS_ID);
+							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML", ksName);
 					String pw_ks_pm_html = tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML", TZ_KSH_PSPM);
 

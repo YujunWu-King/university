@@ -17,7 +17,14 @@
    		$(".Shade").hide();
         $(".sq_pop").hide();
    }
-   
+   function checkAll(obj){
+       var $obj=$(obj);
+       if($obj.hasClass("trSelected")){
+           $(".erow").removeClass("trSelected");
+       }else{
+           $(".erow").addClass("trSelected");
+       }
+   }
    function tab(nav,content,on,type)
    {
      $(nav).children().bind(type,(function(){
@@ -31,14 +38,26 @@
        $content.eq(tab_index).show();
      }));
    }
-   //删除站内信
+   
    	$(document).ready(function(){
-   		$(".detele_icon").click(function(){
- 		   alert("请选择要删除的记录");
- 	     });
+   		$("td:eq(1)",$("tr")).hide(); 
+   		$(".table_style tbody tr ").click(function(){
+            $(this).toggleClass('trSelected');
+        });
+   	 	//删除站内信
+   		$(".detele_icon").click(function(event) {
+            $(".table_style tbody tr").each(function(i, item) {
+            var index = $(".table_style tbody tr").index(this);
+            if ($(this).hasClass('trSelected')) {
+              $(this).hide();
+            } 
+            
+          });
+        });
    		$(".search_icon").click(function(){
    			//alert("搜索");
    		});
+   		
    	});
 </script>
 

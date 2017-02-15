@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +25,7 @@ import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.qrcode.CreateQRCode;
+import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 
 /**
  * 
@@ -274,6 +276,15 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							}
 						}
 
+						//是否必填;
+					    String isRequired = (String)map.get("TZ_IS_REQUIRED"); 
+					    String isRequiredLabel="";
+					    if("Y".equals(isRequired)){
+					    	isRequiredLabel = "*";
+					    }else{
+					    	isRequiredLabel = "";
+					    }
+					    
 						String regFieldId = (String) map.get("TZ_REG_FIELD_ID");
 						String regDefValue = (String) map.get("TZ_DEF_VAL");
 						if (regDefValue == null) {
@@ -297,39 +308,53 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						if(doNotShowFieldsArr.contains(regFieldId)){
 							continue;
 						}
+						
+						String fieldTip = "";
+						fieldTip = fieldTip + "<span id='" + regFieldId + "Style' class='alert_display_none semUserTip'>" ;
+						fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+						fieldTip = fieldTip + "	<label id='" + regFieldId + "_status'></label>";
+						fieldTip = fieldTip + "</span>";
 						if (fieldsArr.contains(regFieldId)) {
 							// 性别;
 							if ("TZ_GENDER".equals(regFieldId)) {
 								if ("ENG".equals(language)) {
-									fields = fields + tzGdObject.getHTMLText(
-											"HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_FILD_EN_HTML", regFldYsmc,
-											regFieldId);
+									fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_EN_HTML", regFldYsmc,
+											regFieldId,isRequiredLabel);
 								} else {
-									fields = fields
-											+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_SEX_FILD_HTML",
-													regFldYsmc, regFieldId);
+									fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_HTML",
+													regFldYsmc, regFieldId,isRequiredLabel);		
 								}
 							}
 
 							// TZ_EMAIL;
 							if ("TZ_EMAIL".equals(regFieldId)) {
+								fieldTip = "";
+								fieldTip = fieldTip + "<span id='userEmailStyle' class='alert_display_none semUserTip'>" ;
+								fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+								fieldTip = fieldTip + "	<label id='userEmail_status'></label>";
+								fieldTip = fieldTip + "</span>";
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, "userEmail", "", "");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, "userEmail", "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");								
 							}
 
 							// TZ_MOBILE;
 							if ("TZ_MOBILE".equals(regFieldId)) {
+								fieldTip = "";
+								fieldTip = fieldTip + "<span id='userMoblieStyle' class='alert_display_none semUserTip'>" ;
+								fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+								fieldTip = fieldTip + "	<label id='userMobliestatus'></label>";
+								fieldTip = fieldTip + "</span>";
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, "userMoblie", "", "");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, "userMoblie", "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 
-							// BIRTHDATE;
-							if ("BIRTHDATE".equals(regFieldId)) {
+							// BIRTHDATE 清华特例，TZ_COMMENT1，TZ_COMMENT3也为日期格式;
+							if ("BIRTHDATE".equals(regFieldId)||"TZ_COMMENT1".equals(regFieldId)||"TZ_COMMENT3".equals(regFieldId)) {
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, "", "readonly=\"true\"");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, regFieldId,"" , "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 
 							// TZ_COUNTRY;
@@ -337,14 +362,14 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 								img = "<img src=\"" + imgPath
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 
 							// TZ_SCH_CNAME;
 							if ("TZ_SCH_CNAME".equals(regFieldId)) {
 								img = "<img src=\"" + imgPath + "/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/ style=\"top:0px;left:-35px;\">";
-								fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML2",regFldYsmc, regFieldId, img, "readonly=\"true\"",regFieldId + "_Country");							
+								fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML2",regFldYsmc, regFieldId, img, "readonly=\"true\"",regFieldId + "_Country",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");							
 					    		
 							}
 
@@ -353,8 +378,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 								img = "<img src=\"" + imgPath
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\" style=\"top:0px;left:-42px;\"/>";
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 
 							// TZ_LEN_CITY;
@@ -362,8 +387,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 								img = "<img src=\"" + imgPath
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 						} else {
 							// 是否下拉框;
@@ -391,12 +416,12 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 									}
 								}
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_COMBOX_HTML", 
-												regFldYsmc, regFieldId, combox);
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_COMBOX_HTML", 
+												regFldYsmc, regFieldId, combox,fieldTip,isRequiredLabel,"required=\"" + isRequired + "\"");
 							} else {
 								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, "", "");
+										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
+												regFldYsmc, regFieldId, "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 						}
 					}
@@ -744,7 +769,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("lang")) {
 				strLang = jacksonUtil.getString("lang");
 			}
-			
+						
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			//得到用户注册的siteid;
 			String siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
@@ -756,6 +781,21 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			String strBlankTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "26",
 					"不能为空", "cannot be blank");
 
+			//必须为整数
+			String strIntTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "61",
+					"必须为整数", "must be an integer. ");
+			//邮箱长度
+			String strEmailLength = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "52", "邮箱长度需满足6-70个字符", "Email length required to meet 6-70 characters");
+			//邮箱格式
+			String strEmailFormat = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "53", "邮箱格式不正确", "Mailbox format is not correct.");
+			//邮箱已经被占用
+			String strEmailZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "48", "邮箱已注册，建议取回密码", "It has been occupied!");
+			//手机号码
+			String strPhone = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "47","手机号码不正确", "The mobile phone is incorrect .");
+			//手机被占用
+			String strPhoneZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "49",
+      				"手机已注册，建议取回密码", "The mobile phone has been registered, proposed to retrieve Password");
+			
 			String strFirstName = "";
 			String strLastName = "";
 			String tzRealName = "";
@@ -821,14 +861,54 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						}
 					}
 
-					if ("TZ_EMAIL".equals(regFieldId) && (strUserEmail == null || "".equals(strUserEmail))) {
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
-								regFieldYsmc + " " + strBlankTips);
+					if ("TZ_EMAIL".equals(regFieldId)) {
+						if(strUserEmail == null || "".equals(strUserEmail)){
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+									regFieldYsmc + " " + strBlankTips);
+						}else{
+							//校验邮箱格式及唯一性
+							//校验邮箱长度;
+        					      	if("".equals(strUserEmail) || strUserEmail.length()<6 || strUserEmail.length()>70 ){
+        					      		return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+        										regFieldYsmc + " " + strEmailLength);
+        					      	}
+        					      	//校验邮箱格式;
+        					      	ValidateUtil validateUtil = new ValidateUtil();
+        					      	boolean  bl = validateUtil.validateEmail(strUserEmail);
+        					      	if(bl == false){
+        					      		return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+        										regFieldYsmc + " " + strEmailFormat);
+        					      	}					      	
+						}						
 					}
 
-					if ("TZ_MOBILE".equals(regFieldId) && (strUserMoblie == null || "".equals(strUserMoblie))) {
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
-								regFieldYsmc + " " + strBlankTips);
+					if ("TZ_MOBILE".equals(regFieldId)) {
+						if(strUserMoblie == null || "".equals(strUserMoblie)){
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+									regFieldYsmc + " " + strBlankTips);
+						}else{
+							//校验手机格式及唯一性
+							boolean  bl = RegExpValidatorUtils.isMobile(strUserMoblie);
+							if(bl==false){
+								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+										regFieldYsmc + " " + strPhone);
+							}	
+						}
+						
+					}
+					//清华特例-以下为整数
+					if("TZ_COMMENT12".equals(regFieldId)||"TZ_COMMENT13".equals(regFieldId)||"TZ_COMMENT14".equals(regFieldId)){
+						//清华特例-判断为整数
+						String strTZ_COMMENT="";
+						if(jacksonUtil.containsKey(regFieldId)){
+							strTZ_COMMENT = jacksonUtil.getString(regFieldId);
+						}
+						Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$"); 
+						Boolean booleanInt = pattern.matcher(strTZ_COMMENT).matches();
+						if(!booleanInt){
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+									regFieldYsmc + " " + strIntTips);
+						}			
 					}
 				}
 			}
@@ -850,7 +930,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			}
 			String updateYhxxSQL = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_REALNAME=? WHERE OPRID=?";
 			jdbcTemplate.update(updateYhxxSQL, new Object[] { tzRealName, oprid });
-
+			
 			if (strUserEmail != null && !"".equals(strUserEmail)) {
 				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_ZY_EMAIL=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserEmail, oprid });
