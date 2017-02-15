@@ -45,11 +45,11 @@ public class SzcZiChengTestController {
 	public String testUpdate(HttpServletRequest request, HttpServletResponse response) {
 
 	
-		
+		String oprType = "DCPY";
 		String arr[] = {"a","b"};
 		String strParams = "{\"TZ_CLASS_ID\":\"106\",\"TZ_APPLY_PC_ID\":\"1\",\"TZ_DQPY_LUNC\":\"02\",\"TZ_PWEI_OPRIDS\":\"clpw06=clpw07=clpw08=clpw09\"}";
 		//String strParams = "{\"TZ_CLASS_ID\":\"106\",\"TZ_APPLY_PC_ID\":\"1\",\"TZ_DQPY_LUNC\":\"02\",\"TZ_PWEI_OPRIDS\":\"clpw6\"}";
-		String url = tzClpyDataServiceImpl.tzOther(strParams, arr);
+		String url = tzClpyDataServiceImpl.tzOther(oprType,strParams, arr);
 		
 		
 		System.out.println("url="+url);

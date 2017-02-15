@@ -14,13 +14,15 @@
     <result column="TZ_FIELD_TYPE" property="tzFieldType" jdbcType="VARCHAR" />
     <result column="TZ_DEF_VAL" property="tzDefVal" jdbcType="VARCHAR" />
     <result column="TZ_YXBG_SRKLX" property="tzYxbgSrklx" jdbcType="VARCHAR" />
-    <result column="TZ_IS_SHOWWZSY" property="tzIsShowwzsy" jdbcType="VARCHAR" />
+    <result column="TZ_IS_REG" property="tzIsReg" jdbcType="VARCHAR" />
     <result column="TZ_IS_PREFECT" property="tzIsPrefect" jdbcType="VARCHAR" />
+    <result column="TZ_IS_SHOWWZSY" property="tzIsShowwzsy" jdbcType="VARCHAR" />
+    <result column="TZ_IS_ZHGL" property="tzIsZhgl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_SITEI_ID, TZ_REG_FIELD_ID, TZ_JG_ID, TZ_RED_FLD_YSMC, TZ_REG_FIELD_NAME, TZ_ORDER, 
     TZ_ENABLE, TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, TZ_FIELD_TYPE, TZ_DEF_VAL, TZ_YXBG_SRKLX, 
-    TZ_IS_SHOWWZSY, TZ_IS_PREFECT
+    TZ_IS_REG, TZ_IS_PREFECT, TZ_IS_SHOWWZSY, TZ_IS_ZHGL
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldTKey" >
     select 
@@ -39,12 +41,14 @@
       TZ_RED_FLD_YSMC, TZ_REG_FIELD_NAME, TZ_ORDER, 
       TZ_ENABLE, TZ_IS_REQUIRED, TZ_SYSFIELD_FLAG, 
       TZ_FIELD_TYPE, TZ_DEF_VAL, TZ_YXBG_SRKLX, 
-      TZ_IS_SHOWWZSY, TZ_IS_PREFECT)
+      TZ_IS_REG, TZ_IS_PREFECT, TZ_IS_SHOWWZSY, 
+      TZ_IS_ZHGL)
     values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzRegFieldId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzRedFldYsmc,jdbcType=VARCHAR}, #{tzRegFieldName,jdbcType=VARCHAR}, #{tzOrder,jdbcType=INTEGER}, 
       #{tzEnable,jdbcType=VARCHAR}, #{tzIsRequired,jdbcType=VARCHAR}, #{tzSysfieldFlag,jdbcType=VARCHAR}, 
       #{tzFieldType,jdbcType=VARCHAR}, #{tzDefVal,jdbcType=VARCHAR}, #{tzYxbgSrklx,jdbcType=VARCHAR}, 
-      #{tzIsShowwzsy,jdbcType=VARCHAR}, #{tzIsPrefect,jdbcType=VARCHAR})
+      #{tzIsReg,jdbcType=VARCHAR}, #{tzIsPrefect,jdbcType=VARCHAR}, #{tzIsShowwzsy,jdbcType=VARCHAR}, 
+      #{tzIsZhgl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzRegFieldT" >
     insert into PS_TZ_REG_FIELD_T
@@ -85,11 +89,17 @@
       <if test="tzYxbgSrklx != null" >
         TZ_YXBG_SRKLX,
       </if>
-      <if test="tzIsShowwzsy != null" >
-        TZ_IS_SHOWWZSY,
+      <if test="tzIsReg != null" >
+        TZ_IS_REG,
       </if>
       <if test="tzIsPrefect != null" >
         TZ_IS_PREFECT,
+      </if>
+      <if test="tzIsShowwzsy != null" >
+        TZ_IS_SHOWWZSY,
+      </if>
+      <if test="tzIsZhgl != null" >
+        TZ_IS_ZHGL,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -129,11 +139,17 @@
       <if test="tzYxbgSrklx != null" >
         #{tzYxbgSrklx,jdbcType=VARCHAR},
       </if>
-      <if test="tzIsShowwzsy != null" >
-        #{tzIsShowwzsy,jdbcType=VARCHAR},
+      <if test="tzIsReg != null" >
+        #{tzIsReg,jdbcType=VARCHAR},
       </if>
       <if test="tzIsPrefect != null" >
         #{tzIsPrefect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsShowwzsy != null" >
+        #{tzIsShowwzsy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsZhgl != null" >
+        #{tzIsZhgl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -170,11 +186,17 @@
       <if test="tzYxbgSrklx != null" >
         TZ_YXBG_SRKLX = #{tzYxbgSrklx,jdbcType=VARCHAR},
       </if>
-      <if test="tzIsShowwzsy != null" >
-        TZ_IS_SHOWWZSY = #{tzIsShowwzsy,jdbcType=VARCHAR},
+      <if test="tzIsReg != null" >
+        TZ_IS_REG = #{tzIsReg,jdbcType=VARCHAR},
       </if>
       <if test="tzIsPrefect != null" >
         TZ_IS_PREFECT = #{tzIsPrefect,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsShowwzsy != null" >
+        TZ_IS_SHOWWZSY = #{tzIsShowwzsy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsZhgl != null" >
+        TZ_IS_ZHGL = #{tzIsZhgl,jdbcType=VARCHAR},
       </if>
     </set>
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
@@ -192,8 +214,10 @@
       TZ_FIELD_TYPE = #{tzFieldType,jdbcType=VARCHAR},
       TZ_DEF_VAL = #{tzDefVal,jdbcType=VARCHAR},
       TZ_YXBG_SRKLX = #{tzYxbgSrklx,jdbcType=VARCHAR},
+      TZ_IS_REG = #{tzIsReg,jdbcType=VARCHAR},
+      TZ_IS_PREFECT = #{tzIsPrefect,jdbcType=VARCHAR},
       TZ_IS_SHOWWZSY = #{tzIsShowwzsy,jdbcType=VARCHAR},
-      TZ_IS_PREFECT = #{tzIsPrefect,jdbcType=VARCHAR}
+      TZ_IS_ZHGL = #{tzIsZhgl,jdbcType=VARCHAR}
     where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
       and TZ_REG_FIELD_ID = #{tzRegFieldId,jdbcType=VARCHAR}
   </update>
