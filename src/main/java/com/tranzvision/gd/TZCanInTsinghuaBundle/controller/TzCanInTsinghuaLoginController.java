@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzCanInTsinghuaClsServiceImpl;
+import com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzRegMbaKsServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
@@ -34,6 +35,9 @@ public class TzCanInTsinghuaLoginController {
 	 
 	@Autowired
 	private TzCanInTsinghuaClsServiceImpl tzCanInTsinghuaClsServiceImpl;
+	
+	@Autowired
+	private TzRegMbaKsServiceImpl tzRegMbaKsServiceImpl;
 	
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
@@ -92,6 +96,17 @@ public class TzCanInTsinghuaLoginController {
 			loginHtml = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "参数异常，问卷编号不存在或者为null.",
 					"Parameter is unusual, questionnaire number does not exist or is null. ");
 		}
+
+		return loginHtml;
+	}
+	
+	@RequestMapping(value = { "/reg/{min}/{max}" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String reg(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min) {
+		if(max == min){
+			max = max + 1;
+		}
+		String loginHtml = tzRegMbaKsServiceImpl.reg(max,min);
 
 		return loginHtml;
 	}
