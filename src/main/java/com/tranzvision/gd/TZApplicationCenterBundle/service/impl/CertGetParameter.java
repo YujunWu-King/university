@@ -93,14 +93,14 @@ public class CertGetParameter {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String CertYearSql="SELECT YEAR(TZ_START_DT) from PS_TZ_CLASS_INF_T C,PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE C.TZ_JG_ID=? AND A.TZ_APP_INS_ID=?  AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID AND A.TZ_APP_TPL_ID=C.TZ_APP_MODAL_ID AND C.TZ_PRJ_ID=B.TZ_PRJ_ID";
+			String CertYearSql="SELECT YEAR(A.TZ_START_DT) from PS_TZ_CLASS_INF_T A,PS_TZ_FORM_WRK_T B WHERE B.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID";
 
-			String jgId=paramters[0].toUpperCase();
+			String jgId=paramters[0];
 			String siteId=paramters[1];
 			String oprid=paramters[2];
 			String appIns=paramters[3];
 			
-			String CertYear = jdbcTemplate.queryForObject(CertYearSql, String.class, new Object[] { jgId,appIns });
+			String CertYear = jdbcTemplate.queryForObject(CertYearSql, String.class, new Object[] { appIns });
 			return CertYear;
 		
 		} catch (Exception e) {
