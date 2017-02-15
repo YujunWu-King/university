@@ -69,6 +69,26 @@ public class PsTzRegUserT {
 
     private String tzComment10;
 
+    private String tzComment11;
+
+    private String tzComment12;
+
+    private String tzComment13;
+
+    private String tzComment14;
+
+    private String tzComment15;
+
+    private String tzComment16;
+
+    private String tzComment17;
+
+    private String tzComment18;
+
+    private String tzComment19;
+
+    private String tzComment20;
+
     private String tzSiteiId;
 
     private Date rowAddedDttm;
@@ -351,6 +371,86 @@ public class PsTzRegUserT {
 
     public void setTzComment10(String tzComment10) {
         this.tzComment10 = tzComment10 == null ? null : tzComment10.trim();
+    }
+
+    public String getTzComment11() {
+        return tzComment11;
+    }
+
+    public void setTzComment11(String tzComment11) {
+        this.tzComment11 = tzComment11 == null ? null : tzComment11.trim();
+    }
+
+    public String getTzComment12() {
+        return tzComment12;
+    }
+
+    public void setTzComment12(String tzComment12) {
+        this.tzComment12 = tzComment12 == null ? null : tzComment12.trim();
+    }
+
+    public String getTzComment13() {
+        return tzComment13;
+    }
+
+    public void setTzComment13(String tzComment13) {
+        this.tzComment13 = tzComment13 == null ? null : tzComment13.trim();
+    }
+
+    public String getTzComment14() {
+        return tzComment14;
+    }
+
+    public void setTzComment14(String tzComment14) {
+        this.tzComment14 = tzComment14 == null ? null : tzComment14.trim();
+    }
+
+    public String getTzComment15() {
+        return tzComment15;
+    }
+
+    public void setTzComment15(String tzComment15) {
+        this.tzComment15 = tzComment15 == null ? null : tzComment15.trim();
+    }
+
+    public String getTzComment16() {
+        return tzComment16;
+    }
+
+    public void setTzComment16(String tzComment16) {
+        this.tzComment16 = tzComment16 == null ? null : tzComment16.trim();
+    }
+
+    public String getTzComment17() {
+        return tzComment17;
+    }
+
+    public void setTzComment17(String tzComment17) {
+        this.tzComment17 = tzComment17 == null ? null : tzComment17.trim();
+    }
+
+    public String getTzComment18() {
+        return tzComment18;
+    }
+
+    public void setTzComment18(String tzComment18) {
+        this.tzComment18 = tzComment18 == null ? null : tzComment18.trim();
+    }
+
+    public String getTzComment19() {
+        return tzComment19;
+    }
+
+    public void setTzComment19(String tzComment19) {
+        this.tzComment19 = tzComment19 == null ? null : tzComment19.trim();
+    }
+
+    public String getTzComment20() {
+        return tzComment20;
+    }
+
+    public void setTzComment20(String tzComment20) {
+        this.tzComment20 = tzComment20 == null ? null : tzComment20.trim();
     }
 
     public String getTzSiteiId() {
