@@ -11,8 +11,8 @@ Ext.define('KitchenSink.view.template.user.regManage', {
     ],
     title: '用户注册项管理',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-    constructor: function (config) {
-    	if(config == ""){
+    constructor: function (config) {    	
+    	if(config == "" || config == null || config == undefined){
     		this.siteId = "";
     	}else{
    		 	this.siteId = config.siteId;
@@ -191,7 +191,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                     xtype: 'checkcolumn',
                     text: '是否启用',
                     dataIndex: 'isEnable',
-                    width:100,
+                    width:80,
                     listeners: {
                         "beforecheckchange": function(col, rowIndex, checked, eOpts) {
                             var store = col.findParentByType("grid").store;
@@ -305,7 +305,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                     xtype: 'checkcolumn',
                     text: '是否必填',
                     dataIndex: 'isRequired',
-                    width:100,
+                    width:80,
                     listeners: {
                         beforecheckchange: function(col, rowIndex, checked, eOpts) {
                             var store = col.findParentByType("grid").store;
@@ -340,7 +340,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 },
                 {
                     text: '设置下拉项',
-                    width: 130,
+                    width: 90,
                     renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
                         var isSysField = store.getAt(rowIndex).data.isSysField;
                         var regFieldType = store.getAt(rowIndex).data.regFieldType;
@@ -357,9 +357,76 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 },
                 {
                     xtype: 'checkcolumn',
-                    text: '展示在网站首页',
+                    text: '注册项',
+                    dataIndex: 'isReg',
+                    width:80,
+                    listeners: {
+                        beforecheckchange: function(col, rowIndex, checked, eOpts) {
+                            var store = col.findParentByType("grid").store;
+                            var regId = store.getAt(rowIndex).data.regId;
+                            var isEnable = store.getAt(rowIndex).data.isEnable;
+
+                            if(isEnable == false ){
+                                Ext.Msg.alert("提示","请先启用此项，再进行设置！");
+                                return false;
+                            }
+                            if(regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                                return false;
+                            }
+                        }
+                    },
+                    renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
+                        var regId = record.get('regId');
+                        if (regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                            //如何为当前TD添加disabled属性？
+                            cellmeta.tdCls = "x-item-disabled";
+                        }
+                        return (new Ext.grid.column.CheckColumn).renderer(value);
+                    }
+                },
+                {
+                    xtype: 'checkcolumn',
+                    text: '完善项',
+                    dataIndex: 'isPerfectInfo',
+                    width:80,
+                    listeners: {
+                        beforecheckchange: function(col, rowIndex, checked, eOpts) {
+                            var store = col.findParentByType("grid").store;
+                            var regId = store.getAt(rowIndex).data.regId;
+                            var isEnable = store.getAt(rowIndex).data.isEnable;
+
+                            if(isEnable == false ){
+                                Ext.Msg.alert("提示","请先启用此项，再进行设置！");
+                                return false;
+                            }
+
+                            if(regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" || regId == "TZ_EMAIL"){
+                                return false;
+                            }
+                        }
+                    },
+                    renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
+
+                        var regId = record.get('regId');
+
+                        if (regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD"||regId == "TZ_EMAIL"){
+                            var isEnable = store.getAt(rowIndex).data.isEnable;
+
+                            //如何为当前CheckColumn添加disabled属性？
+                            cellmeta.tdCls = "x-item-disabled";
+                            return (new Ext.grid.column.CheckColumn).renderer(false);
+
+                        }
+                        else {
+                            return (new Ext.grid.column.CheckColumn).renderer(value);
+                        }
+                    }
+                },
+                {
+                    xtype: 'checkcolumn',
+                    text: '首页',
                     dataIndex: 'isShowWzsy',
-                    flex: 1,
+                    width:80,
                     listeners: {
                         beforecheckchange: function(col, rowIndex, checked, eOpts) {
                             var store = col.findParentByType("grid").store;
@@ -400,9 +467,9 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                 },
                 {
                     xtype: 'checkcolumn',
-                    text: '所需完善信息',
-                    dataIndex: 'isPerfectInfo',
-                    flex: 1,
+                    text: '维护项',
+                    dataIndex: 'isZhgl',
+                    width:80,
                     listeners: {
                         beforecheckchange: function(col, rowIndex, checked, eOpts) {
                             var store = col.findParentByType("grid").store;
@@ -414,7 +481,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                                 return false;
                             }
 
-                            if(regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" || regId == "TZ_EMAIL"){
+                            if(regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD"){
                                 return false;
                             }
                         }
@@ -423,7 +490,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
 
                         var regId = record.get('regId');
 
-                        if (regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD"||regId == "TZ_EMAIL"){
+                        if (regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD"){
                             var isEnable = store.getAt(rowIndex).data.isEnable;
 
                             //如何为当前CheckColumn添加disabled属性？

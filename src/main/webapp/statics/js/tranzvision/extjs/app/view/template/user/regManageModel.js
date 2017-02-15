@@ -12,7 +12,9 @@ Ext.define('KitchenSink.view.template.user.regManageModel', {
             {name: "regFieldType"},
             {name: "defaultValue"},
             {name: "isChange"},
+            {name: "isReg"},
+            {name: "isPerfectInfo"},
             {name: "isShowWzsy"},
-            {name: "isPerfectInfo"}
+            {name: "isZhgl"}
 	]
 });
