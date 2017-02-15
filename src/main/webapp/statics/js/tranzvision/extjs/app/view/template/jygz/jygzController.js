@@ -29,6 +29,8 @@ Ext.define('KitchenSink.view.template.jygz.jygzController', {
         grid.close();
     },
     queryJygz:function(btn){
+    	
+    	
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_JYGZ_COM.TZ_JYGZ_LIST_STD.TZ_JYGZ_VW',
             callback: function(seachCfg){
@@ -37,6 +39,7 @@ Ext.define('KitchenSink.view.template.jygz.jygzController', {
                 store.load();
             }
         });
+       
     },
     addJygz:function(btn){
         //是否有访问权限
@@ -272,6 +275,57 @@ Ext.define('KitchenSink.view.template.jygz.jygzController', {
         //提交参数
         var tzParams = '{"ComID":"TZ_JYGZ_COM","PageID":"TZ_JYGZ_INFO_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
+    },
+    testdcpydata:function(obj,rowIndex){
+
+        var jygzIDs ="";
+        if(obj.name=="toolbarTest"){
+            var selList = this.getView().getSelectionModel().getSelection();
+            var checkLen = selList.length;
+            if(checkLen == 0){
+                Ext.MessageBox.alert("提示","请选择一条要导出的记录");
+                return;
+            }else{
+            	for (var i=0;i<selList.length;i++){
+            		if(jygzIDs==""){
+            			jygzIDs = selList[i].get("jygzID");	
+            		}else{
+            			jygzIDs = jygzIDs+"="+selList[i].get("jygzID");
+            		}
+            	}
+            }
+        }else{
+            //var store = obj.findParentByType("grid").store;
+            //var selRec = store.getAt(rowIndex);
+            //jygzID = selRec.get("jygzID");
+        }
+        console.log(jygzIDs);
+        
+        //是否有访问权限
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_CLPYSJ_STD"];
+
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+    	
+        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"106","TZ_APPLY_PC_ID":"1","TZ_PWEI_OPRIDS":"clpw06=clpw07=clpw08=clpw09"}}';
+        
+        //加载数据
+        Ext.tzLoad(tzParams,function(responseData){
+
+        	if( responseData.url == "" || responseData.url == undefined){
+                 Ext.MessageBox.alert('提示', '下载失败，请与管理员联系。');
+                 return;
+            }else{
+            	//var url = "/university/statics/download/pydata/clpydata/2017-02-14/dc_pysj_2017-02-14 01-40-34.doc";
+            	//window.open(responseData.url, "download","status=no,menubar=yes,toolbar=no,location=no");	
+            	  window.open(responseData.url, '_blank');
+            }
+        	 
+        });
+   
     }
 });
 

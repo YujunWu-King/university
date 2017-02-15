@@ -44,7 +44,7 @@
 			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deletebqzManageInfos"}
 		]
 	}],
-    initbqzponent: function () { 
+	initComponent: function () { 
 	    //标签组列表
 	    var store = new KitchenSink.view.clmsHtpz.bqzManagement.bqzStore();
         Ext.apply(this, {

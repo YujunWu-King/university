@@ -4,9 +4,9 @@
     title: '标签定义', 
 	reference: 'bqDefnWindow',
     width: 600,
-    height: 520,
+    //height: 300,
     minWidth: 300,
-    minHeight: 380,
+    //minHeight: 300,
     layout: 'fit',
     resizable: true,
     modal: true,
@@ -20,24 +20,29 @@
 		},
 		border: false,
 		bodyPadding: 10,
-		//heigth: 600,
+		//heigth: 300,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
-			labelWidth: 150,
+			labelWidth: 100,
 			labelStyle: 'font-weight:bold'
 		},
 		items: [{
 			xtype: 'textfield',
+			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.bqID","标签组ID"),
+			name: 'bqzID',
+			hidden: true
+		},{
+			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.bqID","标签ID"),
 			name: 'bqID',
-			readOnly:'true'
+			hidden: true
 		}, {
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.bqName","标签名称"),
 			name: 'bqName'
 		}, {
-			xtype: 'textfield',
+			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.bqDesc","标签说明"),
 			name: 'bqDesc'
 		}, {

@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.sclmsHtpz.bqzManagement.bqzModel', {
+Ext.define('KitchenSink.view.clmsHtpz.bqzManagement.bqzModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'bqzID'},

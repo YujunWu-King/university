@@ -64,7 +64,8 @@ Ext.define('KitchenSink.view.template.jygz.jygzSet', {
             {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryJygz'},"-",
             {text:"新增",tooltip:"新增规则",iconCls:"add",handler:'addJygz'},"-",
             {text:"编辑",tooltip:"编辑选中的规则",name:"toolbarEdit",iconCls:"edit",handler:'editJygz'},"-",
-            {text:"删除",tooltip:"删除选中的规则",iconCls:"remove",handler:'deleteJygz'}
+            {text:"删除",tooltip:"删除选中的规则",iconCls:"remove",handler:'deleteJygz'},
+            {text:"测试按钮",tooltip:"测试按钮",name:"toolbarTest",iconCls:"query",handler:'testdcpydata'}
         ]
     }],
     initComponent: function () {
