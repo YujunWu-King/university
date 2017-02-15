@@ -1000,7 +1000,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        	}
 			        	htmlContent+= '		</div>';
 			        	htmlContent+= '	</div>';
-				//---------------------------
+
 				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
 				htmlContent+='</div>'
 				//--------------	
@@ -1035,7 +1035,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 //				if (child == undefined) {
 //			   		 child=data["children"];
 //			   	 	}
-
+				$("select").each(function(){
+					$(this).chosen({width:"100%"});
+				});
 				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.each(function(index){
 					$(this).on("change",function(){
@@ -1090,8 +1092,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						$selectBtn.click(function() {
 							$inputBox.click();
 						});
+						
 				}
-				
+				//---------------------
+
 				
 		       
 	}

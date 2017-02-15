@@ -8,7 +8,7 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-		'KitchenSink.view.clmsHtpz.bqzManagement.pageStore'
+		'KitchenSink.view.clmsHtpz.bqzManagement.bqStore'
 	],
     title: '标签组定义',
 	bodyStyle:'overflow-y:auto;overflow-x:hidden', 
@@ -90,7 +90,7 @@
 			dataIndex: 'bqID',
 			width:60
 		},{
-			text: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQZ_DEFN_STD.bqName","标签"),
+			text: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQZ_DEFN_STD.bqName","标签名称"),
 			dataIndex: 'bqName',
 			width:100
 		},{
@@ -109,27 +109,27 @@
 			align:'center',
 			xtype: 'actioncolumn',
 			items:[
-				{iconCls: 'edit',tooltip: '编辑',handler: 'editBqRegInfoOne'},
-				{iconCls: 'remove',tooltip: '删除',handler: 'deleteBqRegInfoOne'}
+				{iconCls: 'edit',tooltip: '编辑',handler: 'editbqDefnInfoOne'},
+				{iconCls: 'remove',tooltip: '删除',handler: 'deletebqDefnInfoOne'}
 			]	
 			}
 		],
 		store: {
-			type: 'pageStore'
+			type: 'bqStore'
 		},
 		dockedItems:[{
 			xtype:"toolbar",
 			items:[
-				{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addBqRegInfo"},"-",
-				{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:"editBqRegInfo"},"-",
-				{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deleteBqRegInfos"}
+				{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addbqDefnInfo"},"-",
+				{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:"editbqDefnInfo"},"-",
+				{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deletebqDefnInfos"}
 			]
 		}],
 		bbar: {
 			xtype: 'pagingtoolbar',
 			pageSize: 5,
 			/*store: {
-				type: 'pageStore'
+				type: 'bqStore'
 			},*/
 			listeners:{
 				afterrender: function(pbar){

@@ -22,6 +22,7 @@
 						<i class="ico-check" id="checkAll"></i>
 					</div>
 					</div></td>
+				<td>站内信消息id</td>
 				<td>%bind(:7)</td>
 				<td>%bind(:8)</td>
 				<td>%bind(:9)</td>
@@ -30,17 +31,17 @@
 		<tbody>%bind(:10)
 		</tbody>
 	</table>
-	<div class="main_article_nav">
+	<div class="main_article_nav" style="%bind(:11)">
 		<div class="main_article_nav_left2">
 
 			<ul id="pagecount">
 				<li onClick="QueryColu(1)">&lt;&lt;</li>
-				<li class="now" onClick="QueryColu(1)">1</li>
+				%bind(:12)
 				<li onClick="QueryColu(1)">&gt;&gt;</li>
 			</ul>
 		</div>
 		<div id="curentcoutpage" class="main_article_nav_right2">
-			第 <span id="nowpage">1</span>/1 页
+			第 <span id="nowpage">1</span>/%bind(:13)页
 		</div>
 
 	</div>

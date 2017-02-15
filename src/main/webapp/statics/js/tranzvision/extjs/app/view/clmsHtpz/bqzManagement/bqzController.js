@@ -3,7 +3,7 @@
     alias: 'controller.bqzManage', 
     addbqzManageInfo: function() {
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.bqzManageResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQZ_DEFN_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQZ_DEFN_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -111,7 +111,7 @@
 	},
 	editbqzManageIntoByID: function(bqzID){
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.bqzManageResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQZ_DEFN_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQZ_DEFN_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -169,7 +169,7 @@
 			//标签注册信息列表
 			var grid = panel.child('grid');
 			//参数
-			var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQZ_DEFN_STD","OperateType":"QF","bqzParams":{"bqzID":"'+bqzID+'"}}';
+			var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQZ_DEFN_STD","OperateType":"QF","comParams":{"bqzID":"'+bqzID+'"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
 				//标签组注册信息数据
@@ -195,10 +195,11 @@
 			cmp.show();
 		}
 	},
+	/*标签组列表保存*/
 	savebqzManageInfos: function(btn){
-		//标签组注册信息列表
+		//标签组列表
 		var grid = btn.findParentByType("grid");
-		//标签组注册信息数据
+		//标签组数据
 		var store = grid.getStore();
 		//删除json字符串
 		var removeJson = "";
@@ -217,7 +218,7 @@
 			comParams = '"delete":[' + removeJson + "]";
 		}
 		//提交参数
-		var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQZ_MG_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQZ_MG_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
         if(comParams!=""){
             Ext.tzSubmit(tzParams,function(){
@@ -226,6 +227,7 @@
         }
 
 	},
+	/*新增标签*/
 	addbqDefnInfo: function(btn){
 		if(this.getView().actType == "add"){
 			Ext.MessageBox.alert("提示","请先保存标签组信息后，再新增标签。");
@@ -233,7 +235,7 @@
 		}
 		
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.bqzManageResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -266,9 +268,10 @@
 		var form = win.child("form").getForm();
 		form.reset();
 		form.findField("bqzID").setValue(bqzID);
-		form.findField("bqID").setReadOnly(false);
+		//form.findField("bqID").setReadOnly(false);
         win.show();
 	},
+	/*编辑标签*/
 	editbqDefnInfo: function(btn){
 		//选中行
 	    var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
@@ -282,7 +285,7 @@
 		   return;
 	    }
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.bqzManageResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -312,7 +315,7 @@
 		//标签ID
 		var bqID = selList[0].get("bqID");
 		//参数
-		var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQ_DEFN_STD","OperateType":"QF","bqzParams":{"bqzID":"'+bqzID+'","bqID":"'+bqID+'"}}';
+		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQ_DEFN_STD","OperateType":"QF","comParams":{"bqzID":"'+bqzID+'","bqID":"'+bqID+'"}}';
 		//标签注册信息表单
 		var form = win.child("form").getForm();
 		Ext.tzLoad(tzParams,function(responseData){
@@ -341,16 +344,17 @@
 			},this);   
 	   }
 	},
+	/*标签组定义页面保存*/
 	onbqzManageSave: function(btn){
-		//标签组注册表单
+		//标签组表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
-			//获取标签组注册信息参数
+			//获取标签组标签信息参数
 			var tzParams = this.getbqzManageInfoParams();
 			var bqzView = this.getView();
-			//标签注册信息列表
+			//标签列表
 			var grid = bqzView.child("grid");
-			//标签注册信息数据
+			//标签列表数据
 			var store = grid.getStore();
 			Ext.tzSubmit(tzParams,function(responseData){
 				bqzView.actType = "update";	
@@ -365,7 +369,7 @@
 		//标签组注册表单
 		var form = this.getView().child("form").getForm();
 		if (form.isValid()) {
-			//获取标签组注册信息参数
+			//获取标签组页面信息参数
 			var tzParams = this.getbqzManageInfoParams();
 			var bqzView = this.getView();
 			Ext.tzSubmit(tzParams,function(responseData){
@@ -374,6 +378,7 @@
 			},"",true,this);
 		}
 	},
+	/*标签组定义页面保存-获取标签组页面各信息参数*/
 	getbqzManageInfoParams: function(){
 		//标签组注册表单
 		var form = this.getView().child("form").getForm();
@@ -391,11 +396,11 @@
 			editJson = '{"typeFlag":"COM","data":'+Ext.JSON.encode(form.getValues())+'}';
 		}
 		
-		//标签注册信息列表
+		//标签列表
 		var grid = this.getView().child("grid");
-		//标签注册信息数据
+		//标签数据
 		var store = grid.getStore();
-		//修改记录
+		//获取标签列表修改记录
 		var mfRecs = store.getModifiedRecords(); 
 		for(var i=0;i<mfRecs.length;i++){
 			if(editJson == ""){
@@ -413,7 +418,7 @@
 		}
 		//删除json字符串
 		var removeJson = "";
-		//删除记录
+		//获取标签列表删除记录
 		var removeRecs = store.getRemovedRecords();
 		for(var i=0;i<removeRecs.length;i++){
 			if(removeJson == ""){
@@ -430,7 +435,7 @@
 			}
 		}
 		//提交参数
-		var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQZ_DEFN_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQZ_DEFN_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
 	},
 	onbqzManageClose: function(btn){
@@ -473,7 +478,7 @@
 		var tzParams = '{"ComID":"TZ_GD_TRANSLATE_COM","PageID":"TZ_GD_TRANSXX_STD","OperateType":"QF","comParams":{"transSetID":"'+transSetID+'","transID":"'+transID+'","language":"'+language+'"}}';*/
 		
 		//提交参数
-		var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQ_DEFN_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
+		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQ_DEFN_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
 		var tzStoreParams = '{"bqzID":"'+formParams["bqzID"]+'"}';
 		var bqGrid = this.getView().child("grid");
 		Ext.tzSubmit(tzParams,function(resp){
@@ -515,7 +520,7 @@
 	editbqDefnInfoOne: function(view, rowIndex){
 
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.bqzManageResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BIAOQZ_COM"]["TZ_BIAOQ_DEFN_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -547,7 +552,7 @@
 		//标签ID
 		var bqID = selRec.get("bqID");
 		//参数
-		var tzParams = '{"bqzID":"TZ_BIAOQZ_COM","bqID":"TZ_BIAOQ_DEFN_STD","OperateType":"QF","comParams":{"bqzID":"'+bqzID+'","bqID":"'+bqID+'"}}';
+		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQ_DEFN_STD","OperateType":"QF","comParams":{"bqzID":"'+bqzID+'","bqID":"'+bqID+'"}}';
 		//标签表单
 		var form = win.child("form").getForm();
 		Ext.tzLoad(tzParams,function(responseData){

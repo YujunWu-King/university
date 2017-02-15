@@ -1,7 +1,5 @@
 package com.tranzvision.gd.TZApplicationGuideBundle.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +19,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 /**
  * 
  * 清华MBA招生网站_申请指导
+ * @author JF
  * @since 2016-01-14
  */
 @Service("com.tranzvision.gd.TZApplicationGuideBundle.service.impl.TzApplicationGuideServicelImpl")
