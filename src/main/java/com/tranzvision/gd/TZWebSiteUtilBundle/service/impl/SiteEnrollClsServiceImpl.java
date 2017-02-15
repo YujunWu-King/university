@@ -450,6 +450,65 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strTZ_COMMENT10 = ((String) dataMap.get("TZ_COMMENT10")).trim();
 				}
 
+				// 预留字段11;
+				String strTZ_COMMENT11 = "";
+				if (dataMap.containsKey("TZ_COMMENT11")) {
+					strTZ_COMMENT11 = ((String) dataMap.get("TZ_COMMENT11")).trim();
+				}
+				
+				// 预留字段12;
+				String strTZ_COMMENT12 = "";
+				if (dataMap.containsKey("TZ_COMMENT12")) {
+					strTZ_COMMENT12 = ((String) dataMap.get("TZ_COMMENT12")).trim();
+				}
+				
+				// 预留字段13;
+				String strTZ_COMMENT13 = "";
+				if (dataMap.containsKey("TZ_COMMENT13")) {
+					strTZ_COMMENT13 = ((String) dataMap.get("TZ_COMMENT13")).trim();
+				}
+				
+				// 预留字段14;
+				String strTZ_COMMENT14 = "";
+				if (dataMap.containsKey("TZ_COMMENT14")) {
+					strTZ_COMMENT14 = ((String) dataMap.get("TZ_COMMENT14")).trim();
+				}
+				
+				// 预留字段15;
+				String strTZ_COMMENT15 = "";
+				if (dataMap.containsKey("TZ_COMMENT15")) {
+					strTZ_COMMENT15 = ((String) dataMap.get("TZ_COMMENT15")).trim();
+				}
+				
+				// 预留字段16;
+				String strTZ_COMMENT16 = "";
+				if (dataMap.containsKey("TZ_COMMENT16")) {
+					strTZ_COMMENT16 = ((String) dataMap.get("TZ_COMMENT16")).trim();
+				}
+				
+				// 预留字段17;
+				String strTZ_COMMENT17 = "";
+				if (dataMap.containsKey("TZ_COMMENT17")) {
+					strTZ_COMMENT17 = ((String) dataMap.get("TZ_COMMENT17")).trim();
+				}
+				
+				// 预留字段18;
+				String strTZ_COMMENT18 = "";
+				if (dataMap.containsKey("TZ_COMMENT18")) {
+					strTZ_COMMENT18 = ((String) dataMap.get("TZ_COMMENT18")).trim();
+				}
+				
+				// 预留字段19;
+				String strTZ_COMMENT19 = "";
+				if (dataMap.containsKey("TZ_COMMENT19")) {
+					strTZ_COMMENT19 = ((String) dataMap.get("TZ_COMMENT19")).trim();
+				}
+				
+				// 预留字段20;
+				String strTZ_COMMENT20 = "";
+				if (dataMap.containsKey("TZ_COMMENT20")) {
+					strTZ_COMMENT20 = ((String) dataMap.get("TZ_COMMENT20")).trim();
+				}
 				// 验证方式;
 				String strActivateType = "";
 				if (dataMap.containsKey("yzfs")) {
@@ -684,6 +743,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setTzComment8(strTZ_COMMENT8);
 				psTzRegUserT.setTzComment9(strTZ_COMMENT9);
 				psTzRegUserT.setTzComment10(strTZ_COMMENT10);
+				psTzRegUserT.setTzComment11(strTZ_COMMENT11);
+				psTzRegUserT.setTzComment12(strTZ_COMMENT12);
+				psTzRegUserT.setTzComment13(strTZ_COMMENT13);
+				psTzRegUserT.setTzComment14(strTZ_COMMENT14);
+				psTzRegUserT.setTzComment15(strTZ_COMMENT15);
+				psTzRegUserT.setTzComment16(strTZ_COMMENT16);
+				psTzRegUserT.setTzComment17(strTZ_COMMENT17);
+				psTzRegUserT.setTzComment18(strTZ_COMMENT18);
+				psTzRegUserT.setTzComment19(strTZ_COMMENT19);
+				psTzRegUserT.setTzComment20(strTZ_COMMENT20);
 				psTzRegUserT.setRowAddedDttm(new Date());
 				psTzRegUserT.setRowAddedOprid(oprId);
 				psTzRegUserT.setRowLastmantDttm(new Date());
@@ -823,12 +892,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strTZ_REPASSWORD = ((String) dataMap.get("TZ_REPASSWORD")).trim();
 				}
 
-				// 邮箱;
+				// 完善信息页面，邮箱通过SQL获取;
 				String strTZ_EMAIL = "";
-				if (dataMap.containsKey("TZ_EMAIL")) {
-					strTZ_EMAIL = ((String) dataMap.get("TZ_EMAIL")).trim();
-				}
-
+				String emailSql = "SELECT TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+				strTZ_EMAIL = jdbcTemplate.queryForObject(emailSql, new Object[] { oprid },
+						"String");
 				// 手机;
 				String strTZ_MOBILE = "";
 				if (dataMap.containsKey("TZ_MOBILE")) {
@@ -998,6 +1066,66 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strTZ_COMMENT10 = ((String) dataMap.get("TZ_COMMENT10")).trim();
 				}
 
+				// 预留字段11;
+				String strTZ_COMMENT11 = "";
+				if (dataMap.containsKey("TZ_COMMENT11")) {
+					strTZ_COMMENT11 = ((String) dataMap.get("TZ_COMMENT11")).trim();
+				}
+				
+				// 预留字段12;
+				String strTZ_COMMENT12 = "";
+				if (dataMap.containsKey("TZ_COMMENT12")) {
+					strTZ_COMMENT12 = ((String) dataMap.get("TZ_COMMENT12")).trim();
+				}
+				
+				// 预留字段13;
+				String strTZ_COMMENT13 = "";
+				if (dataMap.containsKey("TZ_COMMENT13")) {
+					strTZ_COMMENT13 = ((String) dataMap.get("TZ_COMMENT13")).trim();
+				}
+				
+				// 预留字段14;
+				String strTZ_COMMENT14 = "";
+				if (dataMap.containsKey("TZ_COMMENT14")) {
+					strTZ_COMMENT14 = ((String) dataMap.get("TZ_COMMENT14")).trim();
+				}
+				
+				// 预留字段15;
+				String strTZ_COMMENT15 = "";
+				if (dataMap.containsKey("TZ_COMMENT15")) {
+					strTZ_COMMENT15 = ((String) dataMap.get("TZ_COMMENT15")).trim();
+				}
+				
+				// 预留字段16;
+				String strTZ_COMMENT16 = "";
+				if (dataMap.containsKey("TZ_COMMENT16")) {
+					strTZ_COMMENT16 = ((String) dataMap.get("TZ_COMMENT16")).trim();
+				}
+				
+				// 预留字段17;
+				String strTZ_COMMENT17 = "";
+				if (dataMap.containsKey("TZ_COMMENT17")) {
+					strTZ_COMMENT17 = ((String) dataMap.get("TZ_COMMENT17")).trim();
+				}
+				
+				// 预留字段18;
+				String strTZ_COMMENT18 = "";
+				if (dataMap.containsKey("TZ_COMMENT18")) {
+					strTZ_COMMENT18 = ((String) dataMap.get("TZ_COMMENT18")).trim();
+				}
+				
+				// 预留字段19;
+				String strTZ_COMMENT19 = "";
+				if (dataMap.containsKey("TZ_COMMENT19")) {
+					strTZ_COMMENT19 = ((String) dataMap.get("TZ_COMMENT19")).trim();
+				}
+				
+				// 预留字段20;
+				String strTZ_COMMENT20 = "";
+				if (dataMap.containsKey("TZ_COMMENT20")) {
+					strTZ_COMMENT20 = ((String) dataMap.get("TZ_COMMENT20")).trim();
+				}
+				
 				// 验证方式;
 				String strActivateType = "";
 				if (dataMap.containsKey("yzfs")) {
@@ -1020,7 +1148,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				String strTemV = "";
 				//String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
 				//yuds,查询配置的显示在完善信息的字段
-				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_IS_PREFECT='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
+				String sqlMemberDatas = "SELECT TZ_REG_FIELD_ID,TZ_REG_FIELD_NAME,TZ_IS_REQUIRED,TZ_ENABLE,TZ_IS_PREFECT FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_IS_PREFECT='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlMemberDatas, new Object[] { strSiteId });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
@@ -1028,10 +1156,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						String regFieldName = (String) list.get(i).get("TZ_REG_FIELD_NAME");
 						String required = (String) list.get(i).get("TZ_IS_REQUIRED");
 						String enable = (String) list.get(i).get("TZ_ENABLE");
+						String perfect = (String) list.get(i).get("TZ_IS_PREFECT");
 						if (dataMap.containsKey(regFieldId)) {
 							strTemV = (String) dataMap.get(regFieldId) == null ? ""
 									: ((String) dataMap.get(regFieldId)).trim();
-							if ("".equals(strTemV) && "Y".equals(required) && "Y".equals(enable)) {
+							if ("".equals(strTemV) && "Y".equals(required) && "Y".equals(enable) && "Y".equals(perfect)) {
 								errMsg[0] = "2";
 								errMsg[1] = regFieldName + validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang,
 										"TZ_SITE_MESSAGE", "26", "不能为空", "cannot be blank");
@@ -1220,6 +1349,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setTzComment8(strTZ_COMMENT8);
 				psTzRegUserT.setTzComment9(strTZ_COMMENT9);
 				psTzRegUserT.setTzComment10(strTZ_COMMENT10);
+				psTzRegUserT.setTzComment11(strTZ_COMMENT11);
+				psTzRegUserT.setTzComment12(strTZ_COMMENT12);
+				psTzRegUserT.setTzComment13(strTZ_COMMENT13);
+				psTzRegUserT.setTzComment14(strTZ_COMMENT14);
+				psTzRegUserT.setTzComment15(strTZ_COMMENT15);
+				psTzRegUserT.setTzComment16(strTZ_COMMENT16);
+				psTzRegUserT.setTzComment17(strTZ_COMMENT17);
+				psTzRegUserT.setTzComment18(strTZ_COMMENT18);
+				psTzRegUserT.setTzComment19(strTZ_COMMENT19);
+				psTzRegUserT.setTzComment20(strTZ_COMMENT20);
 				psTzRegUserT.setRowLastmantDttm(new Date());
 				psTzRegUserT.setRowLastmantOprid(oprid);
 				

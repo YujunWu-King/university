@@ -136,6 +136,11 @@ function submitEnroll() {
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
+		}else if(key="TZ_SCH_CNAME_Country"){
+			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
+			if(schCountry!=null&&schCountry!=undefined){
+				$("#TZ_SCH_COUNTRY").val(schCountry);
+			}			
 		}else{//其他
 			if(jsonValue[key] == "Y"){
 				var val;
