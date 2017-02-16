@@ -2330,6 +2330,7 @@ var SurveyBuild = {
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
             var index = $(el).closest(".main_inner_content_para").index();
+
             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
         }
         var _children = data.children;

@@ -436,10 +436,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		//--考试种类初始值
 		//----容器:
 		for (var x in childList) {
-			htmlContent+='<div class="clear"></div>'
 			htmlContent += '<div id="main_inner_content_para'+j+'" class="main_inner_content_para">';
 
 			htmlContent += '<div class="main_inner_content_top">';
+			htmlContent +='<div class="clear"></div>'
 			//-----
 			if(j != 0&&!SurveyBuild._readonly){
 				htmlContent += '		<div onclick="SurveyBuild.oldDeleteFun(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
@@ -756,7 +756,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 			        				htmlContent+= '<div class="input-list-uploadcon-list">';
 			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
-			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 			        				htmlContent+= '	<div class="clear"></div>';
 			        				htmlContent+= '</div>';
 			        			}
@@ -766,8 +766,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        		for(var index=0; index<childrenAttr.length; index++){
 			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 			        				htmlContent+= '<div class="input-list-uploadcon-list">';
-			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
-			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
+			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 			        				htmlContent+= '	<div class="clear"></div>';
 			        				htmlContent+= '</div>';
 			        			}
@@ -1062,10 +1062,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
 				htmlContent+='</div>'
 				//--------------	
-				htmlContent+='</div>';
+				htmlContent+='</div></div>';
 			}
 			j++;
-			htmlContent+="</div></div>";	
+			htmlContent+="</div>";	
 		}
 		return htmlContent;
 	},
