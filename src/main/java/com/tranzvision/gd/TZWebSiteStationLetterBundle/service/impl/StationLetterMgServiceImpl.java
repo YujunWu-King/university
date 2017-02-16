@@ -160,21 +160,21 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	
 	/* 删除站内信 */
 	@Override
-	public String tzDelete(String[] actData, String[] errMsg) {
+	public String tzDelete(String[] znxData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 若参数为空，直接返回;
-		if (actData == null || actData.length == 0) {
+		if (znxData == null || znxData.length == 0) {
 			return strRet;
 		}
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 
 			int num = 0;
-			for (num = 0; num < actData.length; num++) {
+			for (num = 0; num < znxData.length; num++) {
 				// 表单内容;
-				String strForm = actData[num];
+				String strForm = znxData[num];
 				// 将字符串转换成json;
 				jacksonUtil.json2Map(strForm);
 				// 组件ID;
