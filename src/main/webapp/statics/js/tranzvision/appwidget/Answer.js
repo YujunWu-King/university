@@ -2034,7 +2034,8 @@ var SurveyBuild = {
         }
 	},
 	//--------原版本图片上传:还原方法->>
-	   engUploadAttachment: function(el,instanceId,engIntanceId,i){
+	   engUploadAttachment: function(el,instanceId,engIntanceId){
+		    //根据当前的句柄，获取id后坠
 	        var appInsId = SurveyBuild.appInsId;//报名表实例ID
 			var refLetterId = SurveyBuild.refLetterId;//推荐信编号
 	        var data;
@@ -2047,7 +2048,7 @@ var SurveyBuild = {
 	            index = $(el).closest(".main_inner_content_para").index();
 
 
-	            data = SurveyBuild._items[dhIns].children[i][engIntanceId];
+	            data = SurveyBuild._items[dhIns].children[index][engIntanceId];
 	        }
 	        var itemId = data.itemId;
 	        var itemName = data.itemName;
@@ -2170,9 +2171,9 @@ var SurveyBuild = {
 														}
 														if (className == "imagesUpload"){
 									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + i + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
 									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + i + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 									        				c += '	<div class="clear"></div>';
 									        				c += '</div>';
 														} else {
@@ -2185,7 +2186,7 @@ var SurveyBuild = {
 								        	   				}
 								        	   				c += '	</div>';
 								        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + i + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 								        	   				c += '	<div class="clear"></div>';
 								        	   				c += '</div>';
 														}
@@ -2217,9 +2218,9 @@ var SurveyBuild = {
 														_children[0].viewFileName = rstObj.viewFileName;
 														if (className == "imagesUpload"){
 									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + i + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
 									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + i + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 									        				c += '	<div class="clear"></div>';
 									        				c += '</div>';
 														} else {
@@ -2334,6 +2335,7 @@ var SurveyBuild = {
             console.log("param:"+comInstanceId+" "+i)
             console.log("data:");
             console.dir(SurveyBuild._items[dhIns]);
+            //读取上传文件
             data = SurveyBuild._items[dhIns].children[i][comInstanceId];
         }
         var _children = data.children;

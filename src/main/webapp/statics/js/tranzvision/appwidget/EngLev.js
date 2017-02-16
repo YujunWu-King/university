@@ -991,13 +991,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF!=""&&EXAM_TYPE_DEF!="-1")
 					htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:block">'
 				else
-				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="main_inner_content_para" style="display:none">'
+				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="input-list" style="display:none">'
 					htmlContent+='<div class="input-list-info left"><span >上传证书/成绩扫描件</span></div>'
 						htmlContent+='<div class="input-list-texttemplate left" >'
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
+								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
 								htmlContent+= '</div>';
 								htmlContent+='<div class="clear"></div>'
 									var msg="请上传.jpg .jpeg .png的文件 大小在1M以内"
