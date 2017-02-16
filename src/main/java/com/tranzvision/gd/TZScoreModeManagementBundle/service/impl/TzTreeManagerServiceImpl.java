@@ -135,6 +135,8 @@ public class TzTreeManagerServiceImpl extends FrameworkImpl{
 					return strRtn;
 				}
 
+				String nodeDesc = mapRoot.get("DESCR") == null ? "" : mapRoot.get("DESCR").toString();
+				
 				List<?> listChildren = this.getChildrenList( orgId, treeName, root);
 
 				Map<String, Object> mapRootJson = new HashMap<String, Object>();
@@ -143,7 +145,7 @@ public class TzTreeManagerServiceImpl extends FrameworkImpl{
 				mapRootJson.put("itemId", root);
 				mapRootJson.put("isRoot", "Y");
 				mapRootJson.put("expanded", "true");
-				mapRootJson.put("text", root+" - "+mapRoot.get("DESCR").toString());
+				mapRootJson.put("text", root +" - "+ nodeDesc);
 				mapRootJson.put("leaf", "false");
 				mapRootJson.put("children", listChildren);
 

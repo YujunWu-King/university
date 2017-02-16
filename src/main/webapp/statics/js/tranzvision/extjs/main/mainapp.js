@@ -1432,6 +1432,18 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             if (cmp.floating) {
                 cmp.show();
             }
+        },
+        
+        //查看进程运行详细信息
+        batchProcessDetails: function(configuration){
+        	var className = 'KitchenSink.view.common.batchProcessDetailsWindow';
+        	
+            if(!Ext.ClassManager.isCreated(className)){
+                Ext.syncRequire(className);
+            }
+            var ViewClass = Ext.ClassManager.get(className);
+            var win = new ViewClass(configuration);
+            win.show();
         }
     };
 
@@ -1474,6 +1486,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             if(Ext.tzImport == undefined) Ext.tzUnifiedImport = TranzvisionMeikecityAdvanced.Boot.unifiedImportExcel;
             if(Ext.tzGetHardcodeValue == undefined) Ext.tzGetHardcodeValue = TranzvisionMeikecityAdvanced.Boot.getHardcodeValue;
 			if(Ext.tzSearchMailHistory == undefined) Ext.tzSearchMailHistory = TranzvisionMeikecityAdvanced.Boot.searchMailHistory;
+			if(Ext.tzBatchProcessDetails == undefined) Ext.tzBatchProcessDetails = TranzvisionMeikecityAdvanced.Boot.batchProcessDetails;
 
 
             /*加载重验证码校验相关的JS代码*/

@@ -120,16 +120,14 @@
 							}
 						}
 		        	},{
-		        		//columnWidth: .2,
 		        		xtype:'button',
 						text:'<span style="text-decoration:underline;color:blue;">设置树结构</span>',
-						style: 'border:none;box-shadow:none',
 						textAlign: 'right',
 						border:false,
 						width: 100,
 						style:{
 							background: 'white',
-							//marginLeft: '10px'
+							boxShadow:'none'
 						},
 						handler: 'setTreeManager'
 		        	}]
