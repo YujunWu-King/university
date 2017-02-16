@@ -2171,9 +2171,9 @@ var SurveyBuild = {
 														}
 														if (className == "imagesUpload"){
 									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
 									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 									        				c += '	<div class="clear"></div>';
 									        				c += '</div>';
 														} else {
@@ -2186,7 +2186,7 @@ var SurveyBuild = {
 								        	   				}
 								        	   				c += '	</div>';
 								        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 								        	   				c += '	<div class="clear"></div>';
 								        	   				c += '</div>';
 														}
@@ -2218,7 +2218,7 @@ var SurveyBuild = {
 														_children[0].viewFileName = rstObj.viewFileName;
 														if (className == "imagesUpload"){
 									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
+									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
 									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
 															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 									        				c += '	<div class="clear"></div>';
@@ -2276,7 +2276,7 @@ var SurveyBuild = {
 			} 
 	    },
     //------------------------------->>
-    oldDeleteFile: function(el,instanceId,comInstanceId,i){
+    oldDeleteFile: function(el,instanceId,comInstanceId){
     	//alert("delete");
     	 var appInsId = SurveyBuild.appInsId;//报名表实例ID
          var data;
@@ -2285,10 +2285,8 @@ var SurveyBuild = {
              data = SurveyBuild._items[instanceId];
          } else {
              var dhIns = $isDhContainer.attr("data-instancid");
-             //var index = $(el).closest(".main_inner_content_para").index();
-             console.log("oldDeleteFile——>i:"+i)
-             console.dir(SurveyBuild._items[dhIns]);
-             data = SurveyBuild._items[dhIns].children[i][comInstanceId];
+             var index = $(el).closest(".main_inner_content_para").index();
+             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
          }
          var itemId = data.itemId;
          var _children = data.children;
@@ -2323,7 +2321,7 @@ var SurveyBuild = {
 
     },
     //----------------------
-    engViewImageSet: function(el, instanceId,comInstanceId,i) {
+    engViewImageSet: function(el, instanceId,comInstanceId) {
         var appInsId = SurveyBuild.appInsId; //报名表实例ID
         //var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
@@ -2331,12 +2329,8 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            //var index = $(el).closest(".main_inner_content_para").index();
-            console.log("param:"+comInstanceId+" "+i)
-            console.log("data:");
-            console.dir(SurveyBuild._items[dhIns]);
-            //读取上传文件
-            data = SurveyBuild._items[dhIns].children[i][comInstanceId];
+            var index = $(el).closest(".main_inner_content_para").index();
+            data = SurveyBuild._items[dhIns].children[index][comInstanceId];
         }
         var _children = data.children;
         var index = $(el).parents(".input-list-uploadcon-list").index();
