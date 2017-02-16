@@ -29,6 +29,7 @@
 				{text:Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCORE_MG_STD.query","查询"),iconCls: "query",handler:"cfgSearchScoreModel"},'-',
 				{text:Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCORE_MG_STD.add","新增"),iconCls: "add",handler:"addNewScoreModel"},'-',
 				{text:Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCORE_MG_STD.edit","编辑"),iconCls:"edit",handler:'editSelScoreModel'}
+				,'-',{text:'测试自动初筛',iconCls:"set",handler:'testAutoScreen'}
 			]
 		},
 		{

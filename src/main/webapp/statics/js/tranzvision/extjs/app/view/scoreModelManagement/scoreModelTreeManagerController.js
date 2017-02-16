@@ -218,7 +218,6 @@
 			}else{
 				modObj.isDefault = "N";
 			}
-			console.log(modObj);
 			modifyData.push(modObj);
 		}
 		//grid删除记录
