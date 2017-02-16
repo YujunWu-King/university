@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZApplicationGuideBundle.service.impl;
+package com.tranzvision.gd.TZWebSiteStationLetterBundle.service.impl;
 
 import java.util.Map;
 
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -17,14 +18,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 
- * 清华MBA招生网站_申请指导
- * @author JF
- * @since 2016-01-14
+ * 招生网站站内信详细信息
+ *
  */
-@Service("com.tranzvision.gd.TZApplicationGuideBundle.service.impl.TzApplicationGuideServicelImpl")
-public class TzApplicationGuideServicelImpl extends FrameworkImpl {
-	
+@Service("com.tranzvision.gd.TZWebSiteStationLetterBundle.service.impl.StationLetterInfoServiceImpl")
+public class StationLetterInfoServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -39,26 +37,23 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
+	@Autowired
+	private FliterForm fliterForm;
 
+	/****** 站内信详情 ********/
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-		String applicationGuideHtml = "";
+		//返回值
+		String znxCenterHtml = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
-			if (jacksonUtil.containsKey("siteId")) {
-				strSiteId = jacksonUtil.getString("siteId");
-			}
-
-			if (strSiteId == null || "".equals(strSiteId)) {
-				strSiteId = request.getParameter("siteId");
-			}
-
-			// 项目跟目录;
-			String rootPath = request.getContextPath();
+			String strMailId = "";
+			strSiteId = request.getParameter("siteId");
+			strMailId = request.getParameter("mailId");
 
 			// 根据siteid得到机构id;
 			String str_jg_id = "";
@@ -86,29 +81,44 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 			if (language == null || "".equals(language)) {   
 				language = "ZHS";
 			}
+			//站内信内容页面双语化
+			String znxContent = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "1",
+					language, "站内信内容", "站内信内容");
+			String znxReturn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "2",
+					language, "返回", "返回");
+			String znxPrev = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "3",
+					language, "上一个", "上一个");
+			String znxNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "4",
+					language, "下一个", "下一个");
 			// 通用链接;
-			String ZSGL_URL = request.getContextPath() + "/dispatcher";
-
-			// 1.申请指导;
-			String appGuide = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "1",
-					language, "申请指导", "申请指导");
-
-			// 获取数据失败，请联系管理员;
-			applicationGuideHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "2",
-					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
-			
+			String dispatcher = request.getContextPath() + "/dispatcher";
+			String znxSendName = "";
+			String znxSubject = "";
+			String znxAddTime = "";
+			String znxText = "";
+			String znxInfoSQL = "select TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=?";
+			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId });
+			if (znxInfoMap != null){
+				znxSendName = (String) znxInfoMap.get("TZ_ZNX_SENDNAME");
+				znxSubject = (String) znxInfoMap.get("TZ_MSG_SUBJECT");
+				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM").toString();
+				znxText = (String) znxInfoMap.get("TZ_MSG_TEXT");
+			}
+			//站内信内容
+			String znxInfoHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_INFO_CONTENT",
+					true,request.getContextPath(),znxContent,znxNext,znxPrev,znxReturn,znxSendName,znxSubject,znxAddTime,znxText,strMailId);
 			// 展示页面;
-			applicationGuideHtml = tzGDObject.getHTMLText("HTML.TZApplicationGuideBundle.TZ_APP_GUIDE_HTML",
-					request.getContextPath(), ZSGL_URL, strCssDir, applicationGuideHtml, str_jg_id, strSiteId,appGuide);
+			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_VIEW_HTML",
+					true,request.getContextPath(), dispatcher,strCssDir,znxInfoHtml, str_jg_id, strSiteId);
 
-			applicationGuideHtml = siteRepCssServiceImpl.repTitle(applicationGuideHtml, strSiteId);
-			applicationGuideHtml = siteRepCssServiceImpl.repCss(applicationGuideHtml, strSiteId);
-
+			znxCenterHtml = siteRepCssServiceImpl.repTitle(znxCenterHtml, strSiteId);
+			znxCenterHtml = siteRepCssServiceImpl.repCss(znxCenterHtml, strSiteId);
+			
+			return znxCenterHtml;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "无法获取相关数据";
-		}	
-		return applicationGuideHtml;
+		}
+		return "";
 	}
 
 }
