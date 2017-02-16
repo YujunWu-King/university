@@ -952,7 +952,28 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							errMsg[0] = "1";
 							errMsg[1] = "站点首页保存失败！";
 						}
-
+						//增加手机注册页及完善信息页面保存发布逻辑
+						if("0".equals(errMsg[0])){
+						    String strMEnrollPageCode = registeServiceImpl.handleMEnrollPage(strSiteId);
+						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
+							boolResult = registeServiceImpl.saveMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
+							if(boolResult){
+							    errMsg[0] = "0";
+							    errMsg[1] = "站点保存完成！";
+							    mapRet.clear();
+							    mapRet.put("success", true);
+							    strRet = jacksonUtil.Map2json(mapRet);	
+							}else{
+							    errMsg[0] = "1";
+							    errMsg[1] = "站点手机注册页保存失败！";
+							    strRet="";
+							}
+						    }else{
+							errMsg[0] = "1";
+							errMsg[1] = "站点手机注册页保存失败！";
+							strRet="";
+						    }
+						}
 						break;
 
 					case "loginpage":
@@ -1009,6 +1030,28 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							errMsg[1] = "站点登录页保存失败！";
 						}
 
+						//增加手机注册页及完善信息页面保存发布逻辑
+						if("0".equals(errMsg[0])){
+						    String strMEnrollPageCode = registeServiceImpl.handleMEnrollPage(strSiteId);
+						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
+							boolResult = registeServiceImpl.saveMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
+							if(boolResult){
+							    errMsg[0] = "0";
+							    errMsg[1] = "站点保存完成！";
+							    mapRet.clear();
+							    mapRet.put("success", true);
+							    strRet = jacksonUtil.Map2json(mapRet);	
+							}else{
+							    errMsg[0] = "1";
+							    errMsg[1] = "站点手机注册页保存失败！";
+							    strRet="";
+							}
+						    }else{
+							errMsg[0] = "1";
+							errMsg[1] = "站点手机注册页保存失败！";
+							strRet="";
+						    }
+						}
 						break;
 
 					case "enrollpage":
@@ -1222,6 +1265,28 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							errMsg[1] = "站点首页发布失败！错误信息："+errMsg[1];
 						}
 
+						//增加手机注册页及完善信息页面保存发布逻辑
+						if("0".equals(errMsg[0])){
+						    String strMEnrollPageCode = registeServiceImpl.handleMEnrollPage(strSiteId);
+						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
+							boolResult = registeServiceImpl.releasMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
+							if(boolResult){
+							    errMsg[0] = "0";
+							    errMsg[1] = "站点保存完成！";
+							    mapRet.clear();
+							    mapRet.put("success", true);
+							    strRet = jacksonUtil.Map2json(mapRet);	
+							}else{
+							    errMsg[0] = "1";
+							    errMsg[1] = "站点手机注册页发布失败！";
+							    strRet="";
+							}
+						    }else{
+							errMsg[0] = "1";
+							errMsg[1] = "站点手机注册页发布失败！";
+							strRet="";
+						    }
+						}
 						break;
 
 					case "loginpage":
@@ -1282,7 +1347,28 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 							errMsg[0] = "1";
 							errMsg[1] = "站点登录页发布失败！";
 						}
-
+						//增加手机注册页及完善信息页面保存发布逻辑
+						if("0".equals(errMsg[0])){
+						    String strMEnrollPageCode = registeServiceImpl.handleMEnrollPage(strSiteId);
+						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
+							boolResult = registeServiceImpl.releasMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
+							if(boolResult){
+							    errMsg[0] = "0";
+							    errMsg[1] = "站点保存完成！";
+							    mapRet.clear();
+							    mapRet.put("success", true);
+							    strRet = jacksonUtil.Map2json(mapRet);	
+							}else{
+							    errMsg[0] = "1";
+							    errMsg[1] = "站点手机注册页发布失败！";
+							    strRet="";
+							}
+						    }else{
+							errMsg[0] = "1";
+							errMsg[1] = "站点手机注册页发布失败！";
+							strRet="";
+						    }
+						}
 						break;
 
 					case "enrollpage":

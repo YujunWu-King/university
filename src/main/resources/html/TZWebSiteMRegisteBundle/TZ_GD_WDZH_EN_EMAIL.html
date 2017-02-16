@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8/9" >
+<title></title>
+<link href="page_stylecss" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="%bind(:3)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:3)/statics/js/tranzvision/util/layer.js"></script>
+<!-- 载入左侧边栏自适应高度的js-->
+
+<script type="text/javascript">
+	function closeThis(){
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+
+	}
+
+	function check_email(val){
+	var flag=false;
+		if(val!=''){
+			var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+			if (!patrn.test(val)){
+			   $('#userEmail_status').html("<span>The email address is incorrect!</span>");
+			   $('#userEmailStyle').removeClass("alert_display_none");
+			}else{
+	var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+$("#jgid",window.parent.document).val()+'","lang":"'+$("#lang",window.parent.document).val()+'","sen":"7"}}';
+				$.ajax({
+					type: "get",
+					async :false,
+					data:{
+						tzParams:tzParams
+					},
+					url:"%bind(:1)",
+					dataType: "json",
+					success: function(result){
+						if(result.comContent =="success"){
+							$('#userEmail_status').html("");
+							$('#userEmailStyle').addClass("alert_display_none");
+							flag=true;
+						}else{
+							$('#userEmail_status').html("<span>"+result.state.errdesc+"</span>");
+							$('#userEmailStyle').removeClass("alert_display_none");
+							flag=false;
+						}
+					}
+				});
+			}
+		}else{
+			$('#userEmail_status').html("<span>It cannot be blank!</span>");
+			$('#userEmailStyle').removeClass("alert_display_none");
+		}
+		return flag;
+	}
+
+
+
+
+ function emailsubmit(){
+				
+
+			var newsemail=$("#newsemail").val();
+
+			if(newsemail==""){alert("Please input Email Address!");}
+			else{
+
+			var flag=check_email(newsemail);	
+
+		if (flag==true){
+			var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+newsemail+'","orgid":"'+$("#jgid",window.parent.document).val()+'","lang":"'+$("#lang",window.parent.document).val()+'","sen":"8"}}';
+
+				$.ajax({
+					type:"post",
+					dataType:"json",
+					async:false,
+					data: {
+						tzParams:tzParams
+					},
+					url:"%bind(:1)",
+					success:function(result){
+					
+						if(result.comContent =="success"){alert("The mail has been sent to your mailbox, please check!");closeThis();}
+					}
+				});
+			}else{
+				
+			}
+		}
+	 }
+	</script>
+</head>
+
+<body>
+<div class="city_top">
+  <div class="city_close"  onclick="closeThis();"><img src="%bind(:4)/del.png" width="15" height="15" /></div>
+</div>
+<div class="city_main">
+	<div class="padding_div_40px"></div>
+	<div class="main_inner_right_line_50px">
+	    <div class="main_inner_right_line_left5">New Email Address：</div>
+	    <div class="main_inner_right_line_mid_user">
+	        <input name="newsemail" id="newsemail" type="text" class="input_251px" id="newsemail" value="%bind(:5)" onblur="check_email(this.value)"/>
+	    </div>
+	    <div style="text-align:center">
+			<span id="userEmailStyle" class="alert_display_none"><img src="%bind(:4)/alert.png" width="16" height="16" class="alert_img"  />
+			<label id="userEmail_status"></label></span>
+		</div>
+	</div>
+	<div class="center_bt2" style="margin-top:40px">
+	    <div id="sendemail" class="bt_blue" onclick="emailsubmit()">Send Mail</div> 
+	</div>
+	<div class="padding_div_40px"></div>
+<input name="strJgid" id="strJgid" type="hidden" value="%bind(:2)"/>
+</div>
+
+<div class="city_foot"></div>
+</body>
+</html>
