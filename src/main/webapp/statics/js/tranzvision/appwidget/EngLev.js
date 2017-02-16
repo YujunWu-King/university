@@ -1007,10 +1007,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//var filename = child.EngLevelUp.filename;
 					//htmlContent += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child.EngLevelUp["itemId"]+'Attch" class="fancybox" href="' +child.EngLevelUp.accessPath + child.EngLevelUp.sysFileName + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
 					//htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
-				htmlContent+='</div>'
 				//----------------------------
 					var childrenAttr=child.EngLevelUp.children;
-				       // htmlContent+=  '<div class="input-list-info-blank left" style="display:block"><span class="red"></span></div>'
+				    htmlContent+=  '<div class="input-list-info-blank left" style="display:block"><span class="red"></span></div>'
 					htmlContent+= '	<div class="input-list-upload left">';
 				        htmlContent+= '		<div class="input-list-upload-con" id="' + child.EngLevelUp.itemId+ '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'black') + '">';
 				        if(child.EngLevelUp.allowMultiAtta == "Y"){
@@ -1038,7 +1037,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        	}
 			        	htmlContent+= '		</div>';
 			        	htmlContent+= '	</div>';
-
+			        	//将上传图片显示放到上传部分的div类
+			        	htmlContent+='</div>'
 				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
 				htmlContent+='</div>'
 				//--------------	
