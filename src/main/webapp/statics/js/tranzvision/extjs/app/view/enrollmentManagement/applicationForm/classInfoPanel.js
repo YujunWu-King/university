@@ -300,7 +300,7 @@
                                             for(var i=0;i<validColorSortStore.getCount();i++){
                                                 arrayData.push(validColorSortStore.data['items'][i].data);
                                             };
-                                            if(colorSortID.length>0&&validColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID)==-1){
+                                            if(colorSortID!=null&&colorSortID.length>0&&validColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID)==-1){
                                                 var tmpRec = orgColorSortStore.getAt(orgColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID));
                                                 arrayData.push(tmpRec.data);
                                             };
