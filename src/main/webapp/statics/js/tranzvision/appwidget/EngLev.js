@@ -309,7 +309,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			                    tarItemId = obj["children"][0]["itemId"];
 			                }else{
 			                    tarItemId = obj["itemId"];
-			                    alert(tarItemId);
+			                    //alert(tarItemId);
 			                }
 							if(tarItemId && tarItemId.substr(-2,1) == "_"){
 								lineno = parseInt(tarItemId.substr(-1));
@@ -1105,8 +1105,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							   var EngLevelOpt="EngLevelOpt"+id_gp[j]+"_1";
 							   var $inputBox = $("#" + data.itemId +child[EngLevelOpt].itemId);
 							   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
-							   console.log("$inputBox:");
-							   console.dir($inputBox);
+							   //console.log("$inputBox:");
+							   //console.dir($inputBox);
 							   $inputBox.each(function(){
 								   $(this).datepicker({
 										showButtonPanel:true,
