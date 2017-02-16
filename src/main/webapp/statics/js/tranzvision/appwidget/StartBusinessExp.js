@@ -374,7 +374,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 
 			} else {
 				//填写模式
-
+				htmlContent+='<div class="clear"></div>'
 				var OPT_BTYPE='';
 				for(var k=0;k<BUSINESS_TYPE_GP.length;k++){
 					OPT_BTYPE+='<option value="0'+parseInt(k+1)+'"'+(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+BUSINESS_TYPE_GP[k]+'</option>';

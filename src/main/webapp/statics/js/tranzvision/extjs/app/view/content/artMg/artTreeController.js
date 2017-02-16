@@ -304,6 +304,8 @@
 							form.findField("tzdate2").hide();
 						}
 						
+						//新建时，隐藏听众列表
+						form.findField("AudList").hide(); 
 						
 						//发布对象
 						var siteType = form.findField("siteType").getValue();
@@ -603,8 +605,32 @@
 					}else{
 						form.findField("tzdate2").hide();
 					}
-					//
-
+					
+					//听众赋值20170209
+				     var audIDList=formData.AudID;
+		             var audNameList=formData.AudName;
+		             var oprIdArray=new Array();
+		             var i=0,j=0;
+		                for(j=0;j<audIDList.length;j++){
+		                    var TagModel=new KitchenSink.view.content.artMg.tagModel();
+		                    var audId = audIDList[j];
+		                    var audName=audNameList[j];
+		                    TagModel.set('tagId',audId);
+		                    TagModel.set('tagName',audName);
+		                    oprIdArray[i]=TagModel;
+		                    i++;
+		                }
+		                form.findField("AudList").setValue(oprIdArray);
+		                
+		             //根据发布对象判断是否因此听众
+		             var str_limit=formData.limit;
+		             if ("B"==str_limit){
+		            	 //听众
+		            	 form.findField("AudList").show(); 
+		             }else{
+		            	 //无限制
+		            	 form.findField("AudList").hide(); 
+		             }
 					
 					var siteType = form.findField("siteType").getValue();
 				

@@ -55,7 +55,8 @@ public class TzMenuShowWwServiceImpl extends FrameworkImpl {
 					if (!"".equals(strUrl)) {
 						// 这里需要跳转
 						// %Response.RedirectURL(&strUrl);
-						strRet = tzGDObject.getHTMLText("SQL.TZSitePageBundle.TzWinLocationAndOpenWin", strOpenType, strUrl);
+//						strRet = tzGDObject.getHTMLText("SQL.TZSitePageBundle.TzWinLocationAndOpenWin", strOpenType, strUrl);
+						strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzWinLocationAndOpenWin", strOpenType, strUrl);
 					} else {
 						return "参数错误！";
 					}

@@ -197,15 +197,12 @@ public class certTypeGl extends FrameworkImpl {
 				if (count > 0) {
 					PsTzCertTypeTbl psTzCertTypeTbl  = new PsTzCertTypeTbl();
 					psTzCertTypeTbl.setTzJgId(JgId);
-					//psTzCertTypeTbl.setTzCertTypeId(certTypeId);
+					psTzCertTypeTbl.setTzCertTypeId(certTypeId);
 					psTzCertTypeTbl.setTzCertTypeName(certName);
 					psTzCertTypeTblMapper.updateByPrimaryKeySelective(psTzCertTypeTbl);
-					
 					returnJsonMap.put("certTypeId", String.valueOf(certTypeId));
-					
 					strRet=String.valueOf(certTypeId);
 				} else {
-					
 				}
 			}
 		} catch (Exception e) {
@@ -243,7 +240,6 @@ public class certTypeGl extends FrameworkImpl {
 					psTzCertTypeTbl.setTzUseFlag("N");
 					psTzCertTypeTbl.setTzJgId(JgId);
 					psTzCertTypeTblMapper.updateByPrimaryKeySelective(psTzCertTypeTbl);
-			
 				}
 			}
 		} catch (Exception e) {

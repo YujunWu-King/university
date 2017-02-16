@@ -35,6 +35,16 @@
     <result column="TZ_COMMENT8" property="tzComment8" jdbcType="VARCHAR" />
     <result column="TZ_COMMENT9" property="tzComment9" jdbcType="VARCHAR" />
     <result column="TZ_COMMENT10" property="tzComment10" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT11" property="tzComment11" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT12" property="tzComment12" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT13" property="tzComment13" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT14" property="tzComment14" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT15" property="tzComment15" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT16" property="tzComment16" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT17" property="tzComment17" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT18" property="tzComment18" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT19" property="tzComment19" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT20" property="tzComment20" jdbcType="VARCHAR" />
     <result column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
@@ -51,9 +61,11 @@
     TZ_COMP_INDUSTRY, TZ_DEPTMENT, TZ_ZHIWU, TZ_COUNTRY, TZ_LEN_PROID, TZ_LEN_CITY, TZ_TIMEZONE, 
     NATIONAL_ID_TYPE, NATIONAL_ID, BIRTHDATE, TZ_SCH_COUNTRY, TZ_SCH_CNAME, TZ_SPECIALTY, 
     TZ_HIGHEST_EDU, TZ_PRJ_ID, TZ_MSSQH, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, 
-    TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_SITEI_ID, 
-    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
-    TZ_BLACK_NAME, TZ_ALLOW_APPLY, TZ_BEIZHU
+    TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_COMMENT11, 
+    TZ_COMMENT12, TZ_COMMENT13, TZ_COMMENT14, TZ_COMMENT15, TZ_COMMENT16, TZ_COMMENT17, 
+    TZ_COMMENT18, TZ_COMMENT19, TZ_COMMENT20, TZ_SITEI_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_BLACK_NAME, TZ_ALLOW_APPLY, 
+    TZ_BEIZHU
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -77,10 +89,13 @@
       TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, 
       TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, 
       TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, 
-      TZ_SITEI_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM, TZ_BLACK_NAME, TZ_ALLOW_APPLY, 
-      TZ_BEIZHU)
+      TZ_COMMENT11, TZ_COMMENT12, TZ_COMMENT13, 
+      TZ_COMMENT14, TZ_COMMENT15, TZ_COMMENT16, 
+      TZ_COMMENT17, TZ_COMMENT18, TZ_COMMENT19, 
+      TZ_COMMENT20, TZ_SITEI_ID, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM, TZ_BLACK_NAME, 
+      TZ_ALLOW_APPLY, TZ_BEIZHU)
     values (#{oprid,jdbcType=VARCHAR}, #{tzRealname,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
       #{tzSkype,jdbcType=VARCHAR}, #{tzFirstName,jdbcType=VARCHAR}, #{tzLastName,jdbcType=VARCHAR}, 
       #{tzCompanyName,jdbcType=VARCHAR}, #{tzCompIndustry,jdbcType=VARCHAR}, #{tzDeptment,jdbcType=VARCHAR}, 
@@ -92,10 +107,13 @@
       #{tzComment2,jdbcType=VARCHAR}, #{tzComment3,jdbcType=VARCHAR}, #{tzComment4,jdbcType=VARCHAR}, 
       #{tzComment5,jdbcType=VARCHAR}, #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, 
       #{tzComment8,jdbcType=VARCHAR}, #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, 
-      #{tzSiteiId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP}, #{tzBlackName,jdbcType=VARCHAR}, #{tzAllowApply,jdbcType=VARCHAR}, 
-      #{tzBeizhu,jdbcType=VARCHAR})
+      #{tzComment11,jdbcType=VARCHAR}, #{tzComment12,jdbcType=VARCHAR}, #{tzComment13,jdbcType=VARCHAR}, 
+      #{tzComment14,jdbcType=VARCHAR}, #{tzComment15,jdbcType=VARCHAR}, #{tzComment16,jdbcType=VARCHAR}, 
+      #{tzComment17,jdbcType=VARCHAR}, #{tzComment18,jdbcType=VARCHAR}, #{tzComment19,jdbcType=VARCHAR}, 
+      #{tzComment20,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzBlackName,jdbcType=VARCHAR}, 
+      #{tzAllowApply,jdbcType=VARCHAR}, #{tzBeizhu,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT" >
     insert into PS_TZ_REG_USER_T
@@ -198,6 +216,36 @@
       </if>
       <if test="tzComment10 != null" >
         TZ_COMMENT10,
+      </if>
+      <if test="tzComment11 != null" >
+        TZ_COMMENT11,
+      </if>
+      <if test="tzComment12 != null" >
+        TZ_COMMENT12,
+      </if>
+      <if test="tzComment13 != null" >
+        TZ_COMMENT13,
+      </if>
+      <if test="tzComment14 != null" >
+        TZ_COMMENT14,
+      </if>
+      <if test="tzComment15 != null" >
+        TZ_COMMENT15,
+      </if>
+      <if test="tzComment16 != null" >
+        TZ_COMMENT16,
+      </if>
+      <if test="tzComment17 != null" >
+        TZ_COMMENT17,
+      </if>
+      <if test="tzComment18 != null" >
+        TZ_COMMENT18,
+      </if>
+      <if test="tzComment19 != null" >
+        TZ_COMMENT19,
+      </if>
+      <if test="tzComment20 != null" >
+        TZ_COMMENT20,
       </if>
       <if test="tzSiteiId != null" >
         TZ_SITEI_ID,
@@ -330,6 +378,36 @@
       <if test="tzComment10 != null" >
         #{tzComment10,jdbcType=VARCHAR},
       </if>
+      <if test="tzComment11 != null" >
+        #{tzComment11,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment12 != null" >
+        #{tzComment12,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment13 != null" >
+        #{tzComment13,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment14 != null" >
+        #{tzComment14,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment15 != null" >
+        #{tzComment15,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment16 != null" >
+        #{tzComment16,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment17 != null" >
+        #{tzComment17,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment18 != null" >
+        #{tzComment18,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment19 != null" >
+        #{tzComment19,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment20 != null" >
+        #{tzComment20,jdbcType=VARCHAR},
+      </if>
       <if test="tzSiteiId != null" >
         #{tzSiteiId,jdbcType=VARCHAR},
       </if>
@@ -461,6 +539,36 @@
       <if test="tzComment10 != null" >
         TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
       </if>
+      <if test="tzComment11 != null" >
+        TZ_COMMENT11 = #{tzComment11,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment12 != null" >
+        TZ_COMMENT12 = #{tzComment12,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment13 != null" >
+        TZ_COMMENT13 = #{tzComment13,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment14 != null" >
+        TZ_COMMENT14 = #{tzComment14,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment15 != null" >
+        TZ_COMMENT15 = #{tzComment15,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment16 != null" >
+        TZ_COMMENT16 = #{tzComment16,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment17 != null" >
+        TZ_COMMENT17 = #{tzComment17,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment18 != null" >
+        TZ_COMMENT18 = #{tzComment18,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment19 != null" >
+        TZ_COMMENT19 = #{tzComment19,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment20 != null" >
+        TZ_COMMENT20 = #{tzComment20,jdbcType=VARCHAR},
+      </if>
       <if test="tzSiteiId != null" >
         TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR},
       </if>
@@ -528,6 +636,16 @@
       TZ_COMMENT8 = #{tzComment8,jdbcType=VARCHAR},
       TZ_COMMENT9 = #{tzComment9,jdbcType=VARCHAR},
       TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
+      TZ_COMMENT11 = #{tzComment11,jdbcType=VARCHAR},
+      TZ_COMMENT12 = #{tzComment12,jdbcType=VARCHAR},
+      TZ_COMMENT13 = #{tzComment13,jdbcType=VARCHAR},
+      TZ_COMMENT14 = #{tzComment14,jdbcType=VARCHAR},
+      TZ_COMMENT15 = #{tzComment15,jdbcType=VARCHAR},
+      TZ_COMMENT16 = #{tzComment16,jdbcType=VARCHAR},
+      TZ_COMMENT17 = #{tzComment17,jdbcType=VARCHAR},
+      TZ_COMMENT18 = #{tzComment18,jdbcType=VARCHAR},
+      TZ_COMMENT19 = #{tzComment19,jdbcType=VARCHAR},
+      TZ_COMMENT20 = #{tzComment20,jdbcType=VARCHAR},
       TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},

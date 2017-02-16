@@ -33,6 +33,11 @@
 	   };
 	   artColuStore.tzStoreParams = Ext.JSON.encode(tzStoreParamsJson);
 	   artColuStore.load();
+	   
+	   var tagStore1 = new Ext.data.Store({
+           fields:['tagName','tagId'],
+           data:[]
+       });
   
 	Ext.apply(this,{
     items: [{
@@ -326,7 +331,7 @@
         	name: 'contentInfo1',
         	height:900
         	
-        },{
+        },/*{
 			xtype: 'fieldset',
 			layout: {
 	            type: 'vbox',
@@ -384,6 +389,55 @@
                     baseCls:'x-btn x-unselectable x-column x-btn-default-small'
                 }]
 			}]
+        }*/{
+        	xtype:'radiogroup',
+        	fieldLabel:'发布对象',
+        	items: [{
+        		name: 'limit',
+        		inputValue: 'A',
+        		boxLabel: '无限制',
+        		
+        		checked: true,
+        		listeners:{
+        			"change":function(el,checked){
+        				if(checked){
+        					el.findParentByType("form").getForm().findField('AudList').hide();
+        				}
+        			}
+        		}
+        		},{
+        		name: 'limit',
+        		inputValue: 'B',
+        		boxLabel: '听众',
+                
+        			listeners:{
+            			"change":function(el,checked){
+            				if(checked){
+            					el.findParentByType("form").getForm().findField('AudList').show();
+            				}
+            			}
+            		}
+        		}]
+        },        
+        
+        {   xtype:'tagfield',
+            fieldLabel:'听众列表',
+            name:'AudList',
+            anyMatch:true,
+            filterPickList: true,
+            createNewOnEnter: true,
+            createNewOnBlur: false,
+            enableKeyEvents: true,
+            ignoreChangesFlag:true,
+            store: tagStore1,
+            valueField: 'tagId',
+            displayField: 'tagName',
+            triggers: {
+                search: {
+                    cls: 'x-form-search-trigger',
+                    handler: "searchListeners"
+                }
+            }
         },{
         	xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artFbz","发布者"),

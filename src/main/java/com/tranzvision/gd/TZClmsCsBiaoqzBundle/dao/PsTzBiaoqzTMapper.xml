@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClmsCsBiaoqzBundle.dao.PsTzBiaoqzTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzT" >
+    <id column="TZ_BIAOQZ_ID" property="tzBiaoqzId" jdbcType="VARCHAR" />
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_BIAOQZ_NAME" property="tzBiaoqzName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQZ_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_BIAOQZ_T
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzTKey" >
+    delete from PS_TZ_BIAOQZ_T
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzT" >
+    insert into PS_TZ_BIAOQZ_T (TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQZ_NAME
+      )
+    values (#{tzBiaoqzId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzBiaoqzName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzT" >
+    insert into PS_TZ_BIAOQZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzBiaoqzId != null" >
+        TZ_BIAOQZ_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzBiaoqzId != null" >
+        #{tzBiaoqzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBiaoqzName != null" >
+        #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzT" >
+    update PS_TZ_BIAOQZ_T
+    <set >
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzT" >
+    update PS_TZ_BIAOQZ_T
+    set TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR}
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -798,7 +798,11 @@ function LoadHeader( jgId, siteId, opt){
 			  		alert(response.state.errdesc);
 	    		}    
 			});
-
+	//隐藏安全退出按钮
+	var $exit = $(".top_main .exit");
+	if($exit.length>0){
+		$exit.hide();
+	}
 }
 
 //#:加载页头统一方法
