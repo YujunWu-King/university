@@ -92,17 +92,25 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 					language, "下一个", "下一个");
 			// 通用链接;
 			String dispatcher = request.getContextPath() + "/dispatcher";
+			String znxRecId = "";
 			String znxSendName = "";
 			String znxSubject = "";
 			String znxAddTime = "";
 			String znxText = "";
-			String znxInfoSQL = "select TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=?";
+			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=?";
 			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId });
 			if (znxInfoMap != null){
+				znxRecId = (String) znxInfoMap.get("TZ_ZNX_RECID");
 				znxSendName = (String) znxInfoMap.get("TZ_ZNX_SENDNAME");
 				znxSubject = (String) znxInfoMap.get("TZ_MSG_SUBJECT");
 				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM").toString();
 				znxText = (String) znxInfoMap.get("TZ_MSG_TEXT");
+			}
+			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_SENDID = ?";
+			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid },"String");
+			if (znxStatus!= null && znxStatus.equals("N")){
+				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_SENDID = ?";
+				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
 			}
 			//站内信内容
 			String znxInfoHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_INFO_CONTENT",

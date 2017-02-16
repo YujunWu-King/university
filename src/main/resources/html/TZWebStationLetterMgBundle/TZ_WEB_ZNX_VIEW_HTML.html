@@ -20,6 +20,22 @@
 		$(".Shade").hide();
 		$(".sq_pop").hide();
 	}
+	
+	$(document).ready(function(){
+		//返回
+		$(".return_icon").click(function(){
+			history.back();
+		});
+		//上一个
+		$(".prev_icon").click(function(event){
+			alert("上一个");
+		});
+		//下一个
+		$(".next_icon").click(function(event){
+			alert("下一个");
+		});
+	});
+	
 </script>
 
 </head>
