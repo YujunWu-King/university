@@ -1821,6 +1821,7 @@ var SurveyBuild = {
 	//英语水平控件"多行容器"处理:
 	oldShowDiv:function(btnEl, instanceId){
 		var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
+		var _defaultLines = this._items[instanceId]["defaultLines"];
 
         var maxLines = this._items[instanceId]["maxLines"], me = this;
         var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器

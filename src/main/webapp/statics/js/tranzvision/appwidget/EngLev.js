@@ -282,14 +282,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		for (var i = 1; i < this.maxLines; i++) {
 			linesNo.push(i);
 		}
+		
 		this["linesNo"] = linesNo;
 	},
 	_getHtml: function(data, previewmode) {
 
 		var c = ""
-		var len=data.children.length;
-		var showLines;
-		//-----------刷新页面处理：
+		var len = data.children.length;
 		if(len>=data.defaultLines)
 		{
 			showLines = len;
@@ -297,11 +296,31 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			showLines = data.defaultLines;
 		}
 		//alert(showLines);
-		for(var i=1;i<showLines;i++){
-				data["linesNo"].shift(); 
-		}
-		//-------------------
 		if (previewmode) {
+			for(var i=0;i<showLines;i++){
+			        var lineno = 0;
+			        var children= data.children[i];
+			        $.each(children,function(d, obj) {
+			            if(lineno > 0){
+			                return true
+			            }else{
+							var tarItemId = "";
+			                if(obj["isSingleLine"]&& obj["isSingleLine"] == "Y"){
+			                    tarItemId = obj["children"][0]["itemId"];
+			                }else{
+			                    tarItemId = obj["itemId"];
+			                    //alert(tarItemId);
+			                }
+							if(tarItemId && tarItemId.substr(-2,1) == "_"){
+								lineno = parseInt(tarItemId.substr(-1));
+							}
+			            }
+			        });
+					if(lineno > 0){
+						var indexof = $.inArray(lineno,this["linesNo"]);
+						indexof >= 0 && this["linesNo"].splice(indexof,1);
+					}
+			}
 			var htmlContent = this._getHtmlOne(data,0);
 			c += '<div class="main_inner_content_top"></div>';
 			c += '<div class="main_inner_content">';
@@ -1049,72 +1068,74 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				};
 				 var children = data.children;
 				 len = children.length;
-				 var child=children[len-1];
-//				var child=data["children"][0];
-//				if (child == undefined) {
-//			   		 child=data["children"];
-//			   	 	}
+				 var type_select="";
+				 //为所有的select注册事件
+				 for(var i=0;i<len;i++){
+					 var child=children[i];
+						type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
+						//console.log("type_select:");
+						//console.dir(type_select);
+						type_select.each(function(index){
+							$(this).on("change",function(){
+								var related_div_name="div[name='relatedDiv']";
+								for(var i in EXAM_TYPE_MAP){
+									var div_name="div[name='"+data.itemId+i+"']";
+									if($(this).val()==i){
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
+										//如果子模块中有"select":
+										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
+									}else{
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
+									}
+								}
+								var up_name="div[name='"+data.itemId+"UP"+"']";
+								var up_btn=$(this).parents(".input-list").siblings(related_div_name).find(up_name);
+								if($(this).val()=="-1")
+									up_btn.css("display","none");
+								else
+									up_btn.css("display","block");
+								//---清理数据
+							})
+						});
+					//为所有的timePicker注册事件:
+						//日期控件处理1.2.3.4.13
+						var id_gp=[1,2,3,4,13];
+						for(var j=0;j<id_gp.length;j++){
+							   var EngLevelOpt="EngLevelOpt"+id_gp[j]+"_1";
+							   var $inputBox = $("#" + data.itemId +child[EngLevelOpt].itemId);
+							   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
+							   //console.log("$inputBox:");
+							   //console.dir($inputBox);
+							   $inputBox.each(function(){
+								   $(this).datepicker({
+										showButtonPanel:true,
+										changeMonth: true,
+										changeYear: true,
+										yearRange: "1960:2030",
+										dateFormat:"yy-mm-dd",
+										onClose:function(dateText, inst){
+											$(this).trigger("blur");
+										}
+									});
+							   });
+							   $selectBtn.each(function(){
+								   $(this).click(function(){
+									   //console.log("prev:");
+									   //console.dir($(this).prev());
+									   $(this).prev().click();
+								   })
+							   })
+								
+						}
+				 }
+				 //所有看的到的select:
 				$("select").each(function(){
 					$(this).chosen({width:"100%"});
 				});
-				var type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
-				console.log("type_select:");
-				console.dir(type_select);
-				type_select.each(function(index){
-					$(this).on("change",function(){
-						var related_div_name="div[name='relatedDiv']";
-						for(var i in EXAM_TYPE_MAP){
-							var div_name="div[name='"+data.itemId+i+"']";
-							if($(this).val()==i){
-								$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
-								//$("#"+data.itemId+i).css("display","block");
-								//如果子模块中有"select":
-								//console.log("child-select:");
-								//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
-								$(this).parents(".input-list").siblings(related_div_name).find("select").chosen({width: "100%"});
-								$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
-							}else{
-								$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
-								//$(this).parents(".input-list").siblings(div_name).css("display","none");
-								//$("#"+data.itemId+i).css("display","none");
-							}
-						}
-						var up_name="div[name='"+data.itemId+"UP"+"']";
-						var up_btn=$(this).parents(".input-list").siblings(related_div_name).find(up_name);
-						if($(this).val()=="-1")
-							//$("#"+data.itemId+"UP").css("display","none");
-							up_btn.css("display","none");
-						else
-							//$("#"+data.itemId+"UP").css("display","block");
-							up_btn.css("display","block");
-						//---清理数据
-					})
-				});
-				//type_select.on("change",function(){
-				//});
 				
-				//日期控件处理1.2.3.4.13
-				var id_gp=[1,2,3,4,13];
-				for(var i=0;i<id_gp.length;i++){
-					   var EngLevelOpt="EngLevelOpt"+id_gp[i]+"_1";
-					   var $inputBox = $("#" + data.itemId +child[EngLevelOpt].itemId);
-					   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
-					   $inputBox.datepicker({
-							showButtonPanel:true,
-							changeMonth: true,
-							changeYear: true,
-							yearRange: "1960:2030",
-							dateFormat:"yy-mm-dd",
-							onClose:function(dateText, inst){
-								$(this).trigger("blur");
-							}
-						});
-
-						$selectBtn.click(function() {
-							$inputBox.click();
-						});
-						
-				}
+				
+				
 				//---------------------
 
 				
