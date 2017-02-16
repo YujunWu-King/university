@@ -179,26 +179,26 @@ public class XmlToWord {
 			String TZ_CLASS_NAME = "";
 
 			if (TZ_CLASS_MAP == null) {
-
 			} else {
-				TZ_CLASS_NAME = (String) TZ_CLASS_MAP.get("TZ_CLASS_NAME");
-				TZ_CLASS_NAME = (TZ_CLASS_NAME != null) ? TZ_CLASS_NAME : "";
+				TZ_CLASS_NAME = ((String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") != null) ? (String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") : "";
 			}
+			
+			//获取批次名称
+			String TZ_CLS_BATCH_SQL = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID = ? and TZ_BATCH_ID = ?";
+			String 	TZ_BATCH_NAME = jdbcTemplate.queryForObject(TZ_CLS_BATCH_SQL, new Object[] { TZ_CLASS_ID,TZ_APPLY_PC_ID},"String");
 
-			String class_pc = TZ_CLASS_NAME + "-" + TZ_APPLY_PC_ID;
-			System.out.println("批次：" + class_pc);
+			//拼装班级批次信息
+			String class_pc = TZ_CLASS_NAME + "-" + ((TZ_BATCH_NAME!=null)?TZ_BATCH_NAME:"");
 
 			// 获取机构id;
 			String TZ_JG_ID = "";
 			// 根据班级获取机构 ，不再取当前机构 TZ_JG_ID =
 			// tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			TZ_JG_ID = (String) TZ_CLASS_MAP.get("TZ_JG_ID");
-			TZ_JG_ID = (TZ_JG_ID != null) ? TZ_JG_ID : "";
+			TZ_JG_ID = ((String) TZ_CLASS_MAP.get("TZ_JG_ID") != null) ? (String) TZ_CLASS_MAP.get("TZ_JG_ID") : "";
 
 			// 获取资料评审成绩模型ID ;
 			String TZ_ZLPS_SCOR_MD_ID = "";
-			TZ_ZLPS_SCOR_MD_ID = (String) TZ_CLASS_MAP.get("TZ_ZLPS_SCOR_MD_ID");
-			TZ_ZLPS_SCOR_MD_ID = (TZ_ZLPS_SCOR_MD_ID != null) ? TZ_ZLPS_SCOR_MD_ID : "";
+			TZ_ZLPS_SCOR_MD_ID = ((String) TZ_CLASS_MAP.get("TZ_ZLPS_SCOR_MD_ID") != null) ? (String) TZ_CLASS_MAP.get("TZ_ZLPS_SCOR_MD_ID") : "";
 			// 成绩模型树名称;
 			String TREE_NAME_SQL = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID = ? AND TZ_SCORE_MODAL_ID = ?";
 			Map<String, Object> TREE_NAME_MAP = jdbcTemplate.queryForMap(TREE_NAME_SQL,

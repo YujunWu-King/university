@@ -4,7 +4,7 @@
     alias: 'controller.appFormClass',
     queryClass:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.TZ_CLASS_OPR_V',
+            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.TZ_BMBSH_MGR_VW',
             condition:{
                 TZ_DLZH_ID:TranzvisionMeikecityAdvanced.Boot.loginUserId,
                 TZ_JG_ID:Ext.tzOrgID
@@ -129,7 +129,8 @@
 
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
-
+        var batchID = record.data.batchID;
+        
         var initData=[];
         var stuGridColorSortFilterOptions=[];/*考生类别的过滤器数据*/
         var orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
@@ -172,12 +173,12 @@
                                 );
                             }
                         });
-                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'"}}';
+                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
                         Ext.tzLoad(tzParams,function(respData){
                             var formData = respData.formData;
                             form.setValues(formData);
 
-                            var tzStoreParams = '{"classID":"'+classID+'"}';
+                            var tzStoreParams = '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
                             panelGrid.store.tzStoreParams = tzStoreParams;
                             panelGrid.store.load();
                         });

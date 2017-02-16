@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -179,26 +180,27 @@ public class MsXmlToWord {
 			String TZ_CLASS_NAME = "";
 
 			if (TZ_CLASS_MAP == null) {
-
 			} else {
-				TZ_CLASS_NAME = (String) TZ_CLASS_MAP.get("TZ_CLASS_NAME");
-				TZ_CLASS_NAME = (TZ_CLASS_NAME != null) ? TZ_CLASS_NAME : "";
+				TZ_CLASS_NAME = ((String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") != null) ? (String) TZ_CLASS_MAP.get("TZ_CLASS_NAME") : "";
 			}
 
-			String class_pc = TZ_CLASS_NAME + "-" + TZ_APPLY_PC_ID;
-			System.out.println("批次：" + class_pc);
+			//获取批次名称
+			String TZ_CLS_BATCH_SQL = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID = ? and TZ_BATCH_ID = ?";
+			String 	TZ_BATCH_NAME = jdbcTemplate.queryForObject(TZ_CLS_BATCH_SQL, new Object[] { TZ_CLASS_ID,TZ_APPLY_PC_ID},"String");
+			
+			
+			//拼装班级批次信息
+			String class_pc = TZ_CLASS_NAME + "-" +((TZ_BATCH_NAME!=null)?TZ_BATCH_NAME:"");
 
 			// 获取机构id;
 			String TZ_JG_ID = "";
 			// 根据班级获取机构 ，不再取当前机构 TZ_JG_ID =
 			// tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			TZ_JG_ID = (String) TZ_CLASS_MAP.get("TZ_JG_ID");
-			TZ_JG_ID = (TZ_JG_ID != null) ? TZ_JG_ID : "";
+			TZ_JG_ID = ((String) TZ_CLASS_MAP.get("TZ_JG_ID") != null) ? (String) TZ_CLASS_MAP.get("TZ_JG_ID") : "";
 
 			// 获取面试评审成绩模型ID ;
 			String TZ_MSCJ_SCOR_MD_ID = "";
-			TZ_MSCJ_SCOR_MD_ID = (String) TZ_CLASS_MAP.get("TZ_MSCJ_SCOR_MD_ID");
-			TZ_MSCJ_SCOR_MD_ID = (TZ_MSCJ_SCOR_MD_ID != null) ? TZ_MSCJ_SCOR_MD_ID : "";
+			TZ_MSCJ_SCOR_MD_ID = ((String) TZ_CLASS_MAP.get("TZ_MSCJ_SCOR_MD_ID") != null) ? (String) TZ_CLASS_MAP.get("TZ_MSCJ_SCOR_MD_ID") : "";
 			// 成绩模型树名称;
 			String TREE_NAME_SQL = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_JG_ID = ? AND TZ_SCORE_MODAL_ID = ?";
 			Map<String, Object> TREE_NAME_MAP = jdbcTemplate.queryForMap(TREE_NAME_SQL,
@@ -214,7 +216,7 @@ public class MsXmlToWord {
 			List<Map<String, Object>> tz_cjbph_list = jdbcTemplate.queryForList(tz_cj_bph_sql,
 					new Object[] { TZ_JG_ID, TZ_MSCJ_SCOR_MD_ID });
 			// 扁平化每列的宽度
-			int bph_lk = 12950 / tz_cjbph_list.size();
+			int bph_lk = 11950 / tz_cjbph_list.size();
 
 			/*
 			 * System.out.println("----------"+bph_lk); for (Object cjbphObj :
@@ -257,7 +259,7 @@ public class MsXmlToWord {
 				html_pwgrids = "";
 
 				// 获取评委组名称
-				TZ_PWZ_NAME_SQL = "SELECT (SELECT TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID = CP.TZ_PWZBH AND TZ_JG_ID=?) TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_PW_TBL CP WHERE CP.TZ_CLASS_ID =? AND CP.TZ_APPLY_PC_ID =? AND CP.TZ_PWEI_OPRID=?";
+				TZ_PWZ_NAME_SQL = "SELECT (SELECT TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID = CP.TZ_PWEI_GRPID AND TZ_JG_ID=?) TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_PW_TBL CP WHERE CP.TZ_CLASS_ID =? AND CP.TZ_APPLY_PC_ID =? AND CP.TZ_PWEI_OPRID=?";
 
 				TZ_PWZ_NAME_MAP = jdbcTemplate.queryForMap(TZ_PWZ_NAME_SQL,
 						new Object[] { TZ_JG_ID, TZ_CLASS_ID, TZ_APPLY_PC_ID, arr[i] });
@@ -269,7 +271,17 @@ public class MsXmlToWord {
 					TZ_CLPS_GR_NAME = TZ_PWZ_NAME_MAP.get("TZ_CLPS_GR_NAME") == null ? ""
 							: String.valueOf(TZ_PWZ_NAME_MAP.get("TZ_CLPS_GR_NAME"));
 				}
-
+				
+				// 处理每个评委考生的面试序号;
+				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+				List<Map<String, Object>> pw_ks_xh_list = jdbcTemplate.queryForList(pw_ks_xh_sql,new Object[] {TZ_CLASS_ID,TZ_APPLY_PC_ID,arr[i]});
+				Map<String, Object> pw_ks_xh_map =new HashMap();
+				
+				for(int k = 0;k<pw_ks_xh_list.size();k++){
+					//System.out.println("TZ_APP_INS_ID="+TZ_APP_INS_ID);
+					pw_ks_xh_map.put(pw_ks_xh_list.get(k).get("TZ_APP_INS_ID").toString(),k+1);
+				}
+				
 				// 1、获取班级批次、评委信息;
 				String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, arr[i] };
 				String pc_pw_html = tzGDObject
@@ -278,7 +290,9 @@ public class MsXmlToWord {
 				String kh_html = tzGDObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_KH_HTML");
 
 				// 3 、拼装grid
-				// 3、1、获取grid 列头 的列宽度组 （面试申请号、姓名、排名）-固定项;
+				// 3、1、获取grid 列头 的列宽度组 （面试序号、面试申请号、姓名、排名）-固定项;
+				String pw_msxh_lk_html = tzGDObject
+						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1000");
 				String pw_mssqh_lk_html = tzGDObject
 						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1242");
 				String pw_name_lk_html = tzGDObject
@@ -291,9 +305,12 @@ public class MsXmlToWord {
 					dt_bph_lk_html = dt_bph_lk_html + tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", bph_lk + "");
 				}
-				String grid_head_lks = pw_mssqh_lk_html + pw_name_lk_html + pw_pm_lk_html + dt_bph_lk_html;
+				//列宽由：面试序号+面试申请号+姓名+排名+动态项 组成
+				String grid_head_lks = pw_msxh_lk_html + pw_mssqh_lk_html + pw_name_lk_html + pw_pm_lk_html + dt_bph_lk_html;
 
-				// 3、2、获取grid 列头 （面试申请号、姓名、排名）-固定项;
+				// 3、2、获取grid 列头 （面试序号、面试申请号、姓名、排名）-固定项;
+				String pw_msxh_html = tzGDObject
+						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试序号");
 				String pw_mssqh_html = tzGDObject
 						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试申请号");
 				String pw_name_html = tzGDObject
@@ -309,8 +326,8 @@ public class MsXmlToWord {
 					dt_bph_html = dt_bph_html + tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", TZ_XS_MC);
 				}
-
-				String grid_head_tcs = pw_mssqh_html + pw_name_html + pw_pm_html + dt_bph_html;
+				//列：面试序号+面试申请号+姓名+排名+动态项 组成
+				String grid_head_tcs = pw_msxh_html + pw_mssqh_html + pw_name_html + pw_pm_html + dt_bph_html;
 				String grid_head_tr = tzGDObject.getHTMLText(
 						"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TR_HTML", grid_head_tcs);
 
@@ -358,12 +375,17 @@ public class MsXmlToWord {
 						ksName = Name_Mssqh_MAP.get("TZ_REALNAME") == null ? "": String.valueOf(Name_Mssqh_MAP.get("TZ_REALNAME"));
 						ksMssqh = Name_Mssqh_MAP.get("TZ_MSH_ID") == null ? "": String.valueOf(Name_Mssqh_MAP.get("TZ_MSH_ID"));
 					}
-					
-					
+					//面试序号
+					String pw_ks_xh_str = pw_ks_xh_map.get(TZ_APP_INS_ID).toString();
+					String pw_ks_msxh_html = tzGDObject.getHTMLText(
+							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", pw_ks_xh_str);	
+					//面试申请号
 					String pw_ks_mssqh_html = tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", ksMssqh);
+					//姓名
 					String pw_ks_name_html = tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", ksName);
+					//排名
 					String pw_ks_pm_html = tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", TZ_KSH_PSPM);
 
@@ -420,10 +442,10 @@ public class MsXmlToWord {
 
 					}
 
-					// 此处需要添加动态列
+					// 此处需要添加动态列 （所有列：面试序号+面试申请号+姓名+排名+动态项）
 					grid_pwks_tr = tzGDObject.getHTMLText(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TR_HTML",
-							pw_ks_mssqh_html + pw_ks_name_html + pw_ks_pm_html + pw_ks_bph_html);
+							pw_ks_msxh_html + pw_ks_mssqh_html + pw_ks_name_html + pw_ks_pm_html + pw_ks_bph_html);
 					grid_pwks_trs = grid_pwks_trs + grid_pwks_tr;
 
 				}
