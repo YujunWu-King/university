@@ -52,54 +52,7 @@ public class TzAppAdmissionController {
 		try{	
 			orgid = orgid.toLowerCase();
 			String strRet = "";
-
-		
-			orgid = orgid.toLowerCase();
 			
-			
-			/*//【1】查询个人信息照片：有则取；无则取默认
-			String ctxPath = request.getContextPath();
-			
-			String sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetUserHeadImg");
-			Map<String, Object> mapUserHeadImg = sqlQuery1.queryForMap(sql, new Object[] { oprid });
-			
-			String strPhoto = "";
-			
-			//如果有个人信息照片
-			if (null != mapUserHeadImg) {
-				String strPhotoDir = mapUserHeadImg.get("TZ_ATT_A_URL") == null ? ""
-						: String.valueOf(mapUserHeadImg.get("TZ_ATT_A_URL"));
-				String strPhotoName = mapUserHeadImg.get("TZ_ATTACHSYSFILENA") == null ? ""
-						: String.valueOf(mapUserHeadImg.get("TZ_ATTACHSYSFILENA"));
-
-				if (!"".equals(strPhotoDir) && !"".equals(strPhotoName)) {
-					strPhoto = ctxPath + strPhotoDir + strPhotoName;
-				}
-
-			}
-			
-			//如果没有个人信息照片
-			if ("".equals(strPhoto)) {
-				strPhoto = "/statics/images/website/skins/21/photo_reg.png";
-			}
-
-			//【2】查询姓名
-			String nameSql = "SELECT B.TZ_REALNAME FROM TZGDQHJG.PS_TZ_OPR_PHT_GL_T A,TZGDQHJG.PS_TZ_REG_USER_T B WHERE A.OPRID=? AND A.OPRID=B.OPRID";
-			String perName = sqlQuery1.queryForObject(nameSql, new Object[] {oprid}, "String");
-			
-			//【3】查询班级
-			String classNameSql = "SELECT A.TZ_CLASS_NAME FROM TZGDQHJG.PS_TZ_CLASS_INF_T A ,TZGDQHJG.PS_TZ_APP_INS_T B WHERE B.TZ_APP_INS_ID=? AND A.TZ_APP_MODAL_ID=TZ_APP_TPL_ID";
-			String className = sqlQuery1.queryForObject(classNameSql, new Object[] {tzAppInsID}, "String");
-			
-			//strRet=tzGDObject.getHTMLText("HTML.TZApplicationAdmissionBundle.TZ_GD_APP_AD_HTML",false, strPhoto, perName,className);
-			strRet=tzGDObject.getHTMLText("HTML.TZApplicationAdmissionBundle.TZ_APP_ADMISSION_HTML",false, strPhoto, perName,className);
-			
-			
-			*/
-			//【0】报名人oprid
-			//String tzCertOpridSql="SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
-			//String tzCertOprid= sqlQuery1.queryForObject(tzAppTplIdSql, new Object[] {tzAppInsID}, "String");
-			 
 			//【1】查询证书模板id
 			String tzCertTplIdSql="SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
 			String tzCertTplId= sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] {tzAppInsID}, "String");
@@ -127,21 +80,8 @@ public class TzAppAdmissionController {
 			};
 						
 			//【4】生成静态录取通知书html
-			PsTzUserregMbT psTzUserregMbT = psTzUserregMbTMapper.selectByPrimaryKey(siteid);
-        	String enrollDir = psTzUserregMbT.getTzEnrollDir();
-        	String dir = getSysHardCodeVal.getWebsiteEnrollPath();
-        	dir = request.getServletContext().getRealPath(dir);
-        	if(enrollDir == null || "".equals(enrollDir)){
-        		dir = dir + File.separator + orgid;
-        	}else{
-        		if((dir.lastIndexOf(File.separator)+1) != dir.length()){
-        			dir = dir + File.separator + enrollDir;
-        		}else{
-        			dir = dir + enrollDir;
-        		}
-        	}
-        	//一个机构可以有多个站点
-        	dir = dir + File.separator + siteid;
+			String dir =request.getServletContext().getRealPath("/statics/css/website/m");
+			System.out.println("my/"+dir);
         	boolean bl = this.staticFile(tzCertMergHtml, dir, tzAppInsID+".html", errMsg);
         	if(!bl){
 	        	errMsg[0] = "1";
