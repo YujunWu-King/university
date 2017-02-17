@@ -1,0 +1,45 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
+<title>清华MBA招生移动端-登录</title>
+<link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/rem.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/common.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/mlogin.js"></script>  
+</head>
+<body>
+     <div class="viewport-adaptive">
+         <div class="bg" id="body_login">
+             <img class="img-responsive book_logo" id="" src="%bind(:1)/statics/css/website/m/images/login_logo.png">
+            <div class="login_ab">
+            	<div class="login_account">
+            		<div class="users"></div>
+            		<input type="text" name="userName" id="userName" placeholder="手机/邮箱">
+            	</div>
+            	<div class="login_email">
+            		<div class="login_mm"></div>
+            		<input type="password" name="password" id="password" placeholder="密码">
+            	</div>
+            	<p class="login_tips" style="display:none;">邮箱格式输入错误，请重新输入!</p>
+            	<div class="clear"></div>
+            	<a href="javascript:void(0)" class="login_btn" onclick="goToLogin()">登 录</a>
+            	<a href="javascript:void(0)" class="login_new" onclick="goToRegister()">新用户注册</a>
+            	<div class="login_bottom">
+            		<a href="javascript:void(0)" class="login_forget" onclick="forgetPwd()">
+            			<i></i>
+            			<span>忘记密码</span>
+            		</a>
+            		<a href="javascript:void(0)" class="login_help">
+            			<i></i>
+            			<span>帮助中心</span>
+            		</a>
+            	</div>
+            </div>
+         </div>
+     </div>
+</body>
+</html>

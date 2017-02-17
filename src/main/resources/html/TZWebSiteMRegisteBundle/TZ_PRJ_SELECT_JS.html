@@ -1,0 +1,23 @@
+var tzParams = '{"ComID":"TZ_ZC_PRJ_COM","PageID":"TZ_ZC_PRJ_STD","OperateType":"QG","comParams":{"siteid":"%bind(:1)"}}';
+jQuery.ajax({
+ 	type:"POST",
+ 	url: urlBegin,
+ 	data:{
+ 		tzParams:tzParams
+ 	},
+ 	success:function(response){
+ 		try{
+ 			var resposneJson = eval("(" + response + ")");
+	 		var total = resposneJson.comContent.total;
+	 		var root = resposneJson.comContent.root;	
+			if(total > 0){
+				for(var i=0; i < root.length; i++)
+				{
+					var prjId = root[i].prjId;
+					var prjName = root[i].prjName;
+					jQuery("#TZ_PROJECT").append('<option value="'+prjId+'">'+prjName+'</option>' );
+				}
+			}
+ 		}catch (e){}	
+ 	}
+});

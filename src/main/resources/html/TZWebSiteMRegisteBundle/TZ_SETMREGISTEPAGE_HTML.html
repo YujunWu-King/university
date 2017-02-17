@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
+<title>清华MBA招生移动端-注册</title>
+<script type="text/javascript"
+	src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js">
+	
+</script>
+<script type="text/javascript">
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null)
+			return unescape(r[2]);
+		return null;
+	}
+</script>
+</head>
+
+<body style="background: #fff" onkeydown="BindEnter(event)">
+	<div id="all">
+
+		<!-- top start -->
+		<!-- top end -->
+
+		%bind(:1)
+
+		<!-- foot start -->
+		<!--foot end -->
+
+		<div>
+			<input id="pagetype" name="pagetype" value="enrollpage" type="hidden" />
+			<input id="jgid" name="jgid" type="hidden" /> 
+			<input id="siteid"	name="siteid" type="hidden" /> 
+			<input id="lang" name="lang" type="hidden" /> 
+			<input id="operator" name="operator" type="hidden" />
+		</div>
+	</div>
+</body>
+</html>

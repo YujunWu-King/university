@@ -1,0 +1,135 @@
+<!-- <link href="%bind(:1)/statics/css/website/css.css" rel="stylesheet" type="text/css" /> -->
+<link rel="stylesheet" type="text/css" href="page_stylecss" />
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+
+<div class="city_top">
+	<div class="city_close"  onclick="closeThis();"><img src="%bind(:1)/statics/images/tranzvision/del.png" width="15" height="15" /></div>
+</div>
+<div class="city_main">
+	<div class="padding_div_40px"></div>
+	<div class="main_inner_right_line_50px">
+    	<div class="main_inner_right_line_left5"> Phone：</div>
+        <div class="main_inner_right_line_mid3" style="width:200px">
+        	<input id="newstel" name="newstel" type="text" class="input_251px" style ="width:201px" value="%bind(:4)"/>
+        </div>
+        <div class="main_inner_right_line_right2">
+          	<input id="gainyzm" type="button" value="Send Security Code" style="width:170px;margin-left:10px;" onclick="gainyzm()"/>
+        </div>
+  	</div>
+  	<div class="main_inner_right_line_50px">
+    	<div class="main_inner_right_line_left5"> Security Code：</div>
+    	<div class="main_inner_right_line_mid4" style="width:200px">
+      		<input id="newsyzm" name="newsyzm" type="text" class="input_152px" style ="width:201px" />
+    	</div>
+		<span id="yzmtext" style="margin-left:10px;font-size:14px;color:#FF0000"></span>
+  	</div>
+  	<div class="main_inner_right_line_50px">
+    	<div class="main_inner_right_line_left5"></div>
+    	<div class="main_inner_right_line_mid4">
+      		<div id="ymobile" class="bt_blue" style="width:200px;margin-top:10px;">Confirm</div>
+    	</div>
+  	</div>
+    <input id="strJgid" name="strJgid" type="hidden" value="%bind(:5)"/>
+  	<div class="padding_div_40px"></div>
+</div>
+<script type="text/javascript">
+	function closeThis(){
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	}
+
+	function gainyzm(){   
+		var newsyzm=$("#newsyzm").val();
+		var newstel=$("#newstel").val();
+		var strJgid=$("#strJgid").val();
+		$("#newsyzm").val("");
+		$("#yzmtext").text("");
+		if(newstel==""){alert("Mobile Phone Cannot be blank!");}
+		else{
+			var fsyzm = {"orgid": strJgid, "phone": newstel, "lang": "ENG" };
+
+			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"SEND","comParams":' + JSON.stringify( fsyzm ) + '}';
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				async:false,
+				data: {
+					"tzParams" : tzParams
+				},
+				url:"%bind(:2)",
+				success:function(result){
+					var success = result.comContent;
+					if(success=="success"){atime();alert("The security code has been sent to your mobile phone, please check!")}
+					else{alert(result.state.errdesc);}
+				}
+			});
+		}
+  	};
+
+	$("#ymobile").click( function(){
+		var newsyzm=$("#newsyzm").val();
+		var newstel=$("#newstel").val();
+		var strJgid=$("#strJgid").val();
+		if(newsyzm==""){$("#yzmtext").text("*Security Code Cannot be blank!");}
+		else if(newstel==""){$("#yzmtext").text("*Mobile Phone Cannot be blank!");}
+		else{
+			var saveYzm = {"orgid": strJgid, "phone": newstel, "yzm": newsyzm, "lang": "ZHS"};
+
+			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_CHANGE_MOBILE","OperateType":"SURE","comParams":' + JSON.stringify( saveYzm ) + '}';
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				async:false,
+				data: {
+					"tzParams" : tzParams
+				},
+				url:"%bind(:3)",
+				success:function(result){	
+ 					var success = result.comContent;
+					if(success=="success"){clearTimeout(stop);$("#yzmtext").text("");alert("修改成功！");btime();myrefresh();}
+							else{$("#yzmtext").text(result.state.errdesc);}
+				}
+			});
+		}
+	});
+</script>
+<script type="text/javascript">
+	var stop;
+	var wait=60;
+	function atime() {
+		if(wait <= 0){
+			$("#gainyzm").css("cursor","pointer");
+			$("#gainyzm").css("opacity","0.8");
+			$("#gainyzm").removeAttr("disabled");
+			$("#newstel").removeAttr("readOnly");
+			$("#gainyzm").css("color","#fff");			
+			$("#gainyzm").val("Send Security Code");
+			$("#gainyzm").css("background-image","");
+			wait =60;
+		} else{
+			$("#gainyzm").css("cursor","default");
+			$("#gainyzm").prop("disabled","true");
+			$("#gainyzm").css("opacity","1");
+			$("#gainyzm").css("color","#A9A9A9");
+			$("#gainyzm").val("Resend ("+wait+")");
+			$("#newstel").prop("readOnly","true");
+			$("#gainyzm").css("background-image","url(%bind(:1)/statics/images/tranzvision/gray_bg_bt.png)");
+			if(wait>=0){
+				wait=wait-1;}
+			stop = setTimeout("atime()",1000);
+		}
+	}
+	
+	function btime() {
+		$("#gainyzm").css("cursor","pointer");
+		$("#gainyzm").css("opacity","0.8");
+		$("#gainyzm").prop("disabled", "false");
+		$("#gainyzm").css("background-image","");			
+		$("#gainyzm").val("发送验证码");
+		wait =60;
+	}
+
+	function myrefresh(){
+		parent.location.reload();
+	}
+</script>
