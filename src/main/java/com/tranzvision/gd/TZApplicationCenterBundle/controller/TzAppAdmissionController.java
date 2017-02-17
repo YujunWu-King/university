@@ -52,41 +52,59 @@ public class TzAppAdmissionController {
 		try{	
 			orgid = orgid.toLowerCase();
 			String strRet = "";
+			String tzCertMergHtml="";
 			
-			//【1】查询证书模板id
-			String tzCertTplIdSql="SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
-			String tzCertTplId= sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] {tzAppInsID}, "String");
+			String dir =request.getServletContext().getRealPath("/statics/css/website/m/html");
+			String fileName=tzAppInsID+".html";
 			
-			//【2】获取证书模板默认套打模板html
-			String tzCertMergHtmlSql="SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
-			String tzCertMergHtml= sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] {tzCertTplId,orgid}, "String");
+			String filePath = "";
+			if((dir.lastIndexOf(File.separator)+1) != dir.length()){
+				filePath = dir + File.separator + fileName;
+			}else{
+				filePath = dir + fileName;
+			}
+			
+			//【0】判断静态文件是否已存在
+			File file = new File(filePath);
+			if (!file.exists()){
+			
+				//【1】查询证书模板id
+				String tzCertTplIdSql="SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
+				String tzCertTplId= sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] {tzAppInsID}, "String");
 				
-			//【3】解析系统变量、返回解析后的html
-			/**/int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-			while (syavarStartIndex!=-1){
-				int syavarEndIndex=tzCertMergHtml.indexOf(']',syavarStartIndex);
-				String sysvarId=tzCertMergHtml.substring(syavarStartIndex+8,syavarEndIndex);
-				System.out.println(sysvarId);
-				String[] sysVarParam = { orgid,siteid,oprid,tzAppInsID };
-				AnalysisSysVar analysisSysVar = new AnalysisSysVar();
-				analysisSysVar.setM_SysVarID(sysvarId);
-				analysisSysVar.setM_SysVarParam(sysVarParam);
-				Object sysvarValue = analysisSysVar.GetVarValue();
-				System.out.println((String)sysvarValue);
-				System.out.println("[SYSVAR-"+sysvarId+"]");
-				tzCertMergHtml=tzCertMergHtml.replace("[SYSVAR-"+sysvarId+"]",(String)sysvarValue);
-				System.out.println(tzCertMergHtml);
-				syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-			};
-						
-			//【4】生成静态录取通知书html
-			String dir =request.getServletContext().getRealPath("/statics/css/website/m");
-			System.out.println("my/"+dir);
-        	boolean bl = this.staticFile(tzCertMergHtml, dir, tzAppInsID+".html", errMsg);
-        	if(!bl){
-	        	errMsg[0] = "1";
-				errMsg[1] = "静态化html失败！";	        	
-	        }  
+				//【2】获取证书模板默认套打模板html
+				String tzCertMergHtmlSql="SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
+				tzCertMergHtml= sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] {tzCertTplId,orgid}, "String");
+					
+				//【3】解析系统变量、返回解析后的html
+				/**/int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+				while (syavarStartIndex!=-1){
+					int syavarEndIndex=tzCertMergHtml.indexOf(']',syavarStartIndex);
+					String sysvarId=tzCertMergHtml.substring(syavarStartIndex+8,syavarEndIndex);
+					System.out.println(sysvarId);
+					String[] sysVarParam = { orgid,siteid,oprid,tzAppInsID };
+					AnalysisSysVar analysisSysVar = new AnalysisSysVar();
+					analysisSysVar.setM_SysVarID(sysvarId);
+					analysisSysVar.setM_SysVarParam(sysVarParam);
+					Object sysvarValue = analysisSysVar.GetVarValue();
+					System.out.println((String)sysvarValue);
+					System.out.println("[SYSVAR-"+sysvarId+"]");
+					tzCertMergHtml=tzCertMergHtml.replace("[SYSVAR-"+sysvarId+"]",(String)sysvarValue);
+					System.out.println(tzCertMergHtml);
+					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+				};
+							
+				//【4】生成静态录取通知书html
+				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
+	        	if(!bl){
+		        	errMsg[0] = "1";
+					errMsg[1] = "静态化html失败！";	        	
+		        }  
+			}else{
+				strRet=request.getScheme() + "://" + request.getServerName() + ":"
+						+ String.valueOf(request.getServerPort()) + request.getContextPath()+"/statics/css/website/m/html/" + fileName;
+				response.sendRedirect(strRet);
+			}
 			
 			strRet=tzCertMergHtml;
 			return strRet;
