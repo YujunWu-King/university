@@ -284,8 +284,9 @@ $(document).ready(function(){
 			jsonValue = data;
 			for (var key in data){
 				$("#" + key).on("blur",function(){
-					var val = this.value;
+					var val = this.value;					
 					var fieldId = this.id;
+					console.log(fieldId,val);
 					if(fieldId=="TZ_REALNAME"){//姓名
 						if(val !=''){
 								if(val.length>1){
@@ -638,28 +639,25 @@ $(document).ready(function(){
 		}
 	},300);
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
-		console.log(el);
-		el.on("click","",function(){
-			console.log("click-------------------");
-		});
 		el.click(function(e) { 
-			/*$("#ParamCon").val("TZ_COUNTRY");
-			s = $.layer({
-				type: 2,
-				title: false,
-				fix: false,
-				closeBtn: false,
-				shadeClose: false,
-				shade : [0.3 , '#000' , true],
-				border : [3 , 0.3 , '#000', true],
-				offset: ['50%',''],
-				area: ['830px','610px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
-			});*/
-			console.log("click");
-			$("#body").css("position","fixed");
-		    $(".shade").show();
-		    $(".country_pop").show();
+			$("#ParamCon").val(el.attr("id"));
+			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+			$.ajax({
+				type: "post",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url: TzUniversityContextPath + "/dispatcher",
+				dataType: "html",
+				success: function(result){
+					$("#searchCountry").html("");
+					$("#searchCountry").html(result);
+					$("#body").css("position","fixed");
+					$(".shade").show();
+				    $("#searchCountry").show();
+				}
+			});
 		});
 	});
 	$("#TZ_COUNTRY_click").mouseover(function() {
@@ -668,21 +666,6 @@ $(document).ready(function(){
 	$("#TZ_COUNTRY_click").mouseout(function() {
 	   	$("#TZ_COUNTRY_click").css("cursor","");
 	});
-	/*$("#TZ_SCH_CNAME_Country").click(function(e){
-		$("#ParamCon").val("TZ_SCH_CNAME_Country");
-		s = $.layer({
-			type: 2,
-			title: false,
-			fix: false,
-			closeBtn: false,
-			shadeClose: false,
-			shade : [0.3 , '#000' , true],
-			border : [3 , 0.3 , '#000', true],
-			offset: ['30%',''],
-			area: ['830px','610px'],
-			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
-		});
-	});*/
 	//默认国家为中国
 	$("#TZ_SCH_CNAME_Country").val("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
@@ -701,9 +684,24 @@ $(document).ready(function(){
 			//iframe: {src: '/tranzvision/colselector_liu.html'}
 			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
 		});*/
-		$("#body").css("position","fixed");
-	    $(".shade").show();
-	    $(".school_pop").show();
+		$("#ParamCon").val("TZ_SCH_CNAME");
+		var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","Type":"A"}}';
+		$.ajax({
+			type: "post",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url: TzUniversityContextPath + "/dispatcher",
+			dataType: "html",
+			success: function(result){
+				$("#searchSchool").html("");
+				$("#searchSchool").html(result);
+				$("#body").css("position","fixed");
+				$(".shade").show();
+			    $("#searchSchool").show();
+			}
+		});
     });
     $("#TZ_SCH_CNAME_click").mouseover(function() {
 	   	$("#TZ_SCH_CNAME_click").css("cursor","pointer");
@@ -726,9 +724,25 @@ $(document).ready(function(){
 				area: ['588px','300px'],
 				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22,%22siteId%22:%22'+$("#siteid").val()+'%22}}'},
 			});*/
-			$("#body").css("position","fixed");
-		    $(".shade").show();
-		    $(".school_pop").show();
+			var _prov_id = "TZ_LEN_PROID";
+			$("#ParamCon").val(el.attr("id"));
+			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+_prov_id+'","siteId":"'+strSiteId+'"}}';
+			$.ajax({
+				type: "post",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url: TzUniversityContextPath + "/dispatcher",
+				dataType: "html",
+				success: function(result){
+					$("#searchState").html("");
+					$("#searchState").html(result);
+					$("#body").css("position","fixed");
+					$(".shade").show();
+				    $("#searchState").show();
+				}
+			});
 		});
     });
     $("#TZ_LEN_PROID_click").mouseover(function() {
@@ -1059,7 +1073,7 @@ function check_yzmEmail(val){
 }
 
 //发送验证码
-function send_yzm(){
+function send_yzm(_this){
 	var yzfs = $("#yzfs").val();
 	var email = $("#TZ_EMAIL").val();
 	var mobile = $("#TZ_MOBILE").val();
@@ -1087,11 +1101,11 @@ function send_yzm(){
 		async:false,
 		data: {
 			tzParams:tzParams
-			},
+		},
 		url: TzUniversityContextPath + "/dispatcher",
 		success:function(result){
 			if(result.comContent=="success"){
-				atime();
+				time(_this);
 				if ($("#lang").val()=="ENG")
 					{
 					alert(RegisterTips._SmsSuccess_eng);
@@ -1115,6 +1129,21 @@ function send_yzm(){
 
 var stop;
 var wait=60;
+function time(o) {
+	if (wait == 0) {
+	   o.removeAttribute("disabled");   
+	   o.value="获取短信密码";
+	   wait = 60;
+	} else { 
+	   o.setAttribute("disabled", true);
+	   o.value="重新发送(" + wait + ")";
+	   wait--;
+	   setTimeout(function() {
+		   time(o)
+	   },1000)
+	}
+}
+
 function atime() {
 	var sendCode="";
 	var sendAgain="";

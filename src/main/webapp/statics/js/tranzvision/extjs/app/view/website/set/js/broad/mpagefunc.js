@@ -193,15 +193,9 @@ function QueryColu(page){
 	{
 		areaType="";
 	}
-	var columnId=getQueryString("columnId");
-	if (!columnId)
-	{
-		columnId="";
-	}
 
 
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId":"'+columnId+'"}}';
-	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
 	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
 
 $.ajax({
@@ -439,12 +433,13 @@ function Login(){
     var userName = encodeURI($("#userName").val());
 
 	var password = encodeURI($("#password").val());
-
-	var yzm = encodeURI($("#yzm").val());
+	//手机登录不需要验证码
+	//var yzm = encodeURI($("#yzm").val());
 	
 	var siteid = encodeURI($("#siteid").val());
 
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
+	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
 		type:"POST",
 		url: TzUniversityContextPath + "/user/login/dologin",
@@ -453,8 +448,7 @@ function Login(){
 			language:$("#lang").val()
 		},
 		dataType:'json',
-		success:function(response){
-	
+		success:function(response){			
 			if (response.success == "true") {  
 			   $("#errormsg").hide();
                	window.location.href=response.url;
@@ -471,16 +465,16 @@ function Login(){
 				   if (response.errorCode=="2")
 				   {
 						$("#password").val("");
-						$("#yzm").val("");
-						SetImgCode();
+						//$("#yzm").val("");
+						//SetImgCode();
 				   }
 				   if (response.errorCode=="3")
 				   {
-					    $("#yzm").val("");
-						SetImgCode();
+					    //$("#yzm").val("");
+						//SetImgCode();
 				   }
 
-					 $("#errormsg").children("span").html(response.errorDesc);
+					 $("#errormsg").html(response.errorDesc);
 					 $("#errormsg").show();
 			   }
 			  
@@ -524,7 +518,7 @@ function Logout(){
 
 /*跳转到注册页*/
 function goToRegister(){
-	var url = urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","sen":"8"}}';
+	var url = urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","sen":"9"}}';
 	
 	$.ajax({
 		type:"POST",
@@ -544,15 +538,14 @@ function goToRegister(){
 /*忘记密码*/
 function forgetPwd(jgid){
 	jgid=$("#jgid").val();
-		//window.location.href=urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"4"}}';
-		window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=4';
+	
+	window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=10';
 }
 
 /*重新激活*/
 function reactivate(jgid){
     jgid=$("#jgid").val();
 	$("#resetbnt").hide();
-	//window.location.href=urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","orgid":"'+jgid +'","lang":"'+$("#lang").val()+'","sen":"3"}}';
 	window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=3';
 }
 

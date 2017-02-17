@@ -1616,6 +1616,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			if("8".contentEquals(strSen)){
 				return this.getEnrollUrl(strParams);
 			}
+			//获取手机版注册链接
+			if("9".contentEquals(strSen)){
+				return this.getMEnrollUrl(strParams);
+			}
+			if("10".contentEquals(strSen)){
+			    	return this.createMPageForPass(strParams);
+			}
 			String strMessage = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "119",
 					"链接错误，请确认您输入的URL地址无误！", "Url is invalid, please makesure the url is valid!");
 			return strMessage;
@@ -1907,6 +1914,70 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 	}
 
+	public String createMPageForPass(String strParams) {
+		String strOrgid = "";
+		String strSiteId = "";
+		String strLang = "";
+		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			strOrgid = jacksonUtil.getString("orgid");
+			strSiteId = jacksonUtil.getString("siteid");
+			strLang = jacksonUtil.getString("lang");
+
+			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
+					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+
+			String contextPath = request.getContextPath();
+			String strBeginUrl = contextPath + "/dispatcher";
+			String loginUrl = contextPath + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
+			String sql = "SELECT TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			String skinId = jdbcTemplate.queryForObject(sql, new Object[] { strSiteId }, "String");
+			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+			imgPath = request.getContextPath() + imgPath + "/" + skinId;
+
+			// 激活方式;
+			String strTabType = "";
+			//String activeteTypqSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
+			String activeteTypqSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?";
+			try {
+				strTabType = jdbcTemplate.queryForObject(activeteTypqSQL, new Object[] { strSiteId }, "String");
+			} catch (Exception e) {
+
+			}
+
+			String str_content = "";
+			if (strTabType.contains("MOBILE") && strTabType.contains("EMAIL")) {
+				if ("ENG".equals(strLang)) {
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_ENG_HTML",
+							strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
+				} else {
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP_HTML", strBeginUrl,
+							strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
+				}
+			} else {
+
+				if (strTabType.contains("EMAIL")) {
+					if ("ENG".equals(strLang)) {
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_ENG_HTML",
+								strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl);
+					} else {
+						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP1_HTML",
+								strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl);
+					}
+				} else {
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WJMM_EP2_HTML", strBeginUrl, strOrgid, strLang, contextPath, imgPath, loginUrl,strSiteId);
+				}
+			}
+			str_content = objRep.repTitle(str_content, strSiteId);
+			str_content = objRep.repCss(str_content, strSiteId);
+			return str_content;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return strResult;
+		}
+	}
 	public String createPageForFixPass(String strParams) {
 		String strOrgid = "";
 		String strSiteId = "";
@@ -2171,6 +2242,35 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(map);
 	}
 
+	public String getMEnrollUrl(String strParams){
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String siteid = "";
+		String url = "";
+		try {
+			jacksonUtil.json2Map(strParams);
+			siteid = jacksonUtil.getString("siteid");
+			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
+			url = url.replaceAll("\\\\", "/");
+			if(!"".equals(url)){
+				if(!"/".equals(url.substring(0, 1))){
+					url = "/" + url;
+				}
+				if(!"/".equals(url.substring(url.length()-1))){
+					url = url + "/";
+				}
+				url = request.getContextPath() + url + siteid + "/menroll.html";
+			}else{
+				url = request.getContextPath() + "/" + siteid +"/menroll.html";
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("url", url);
+		return jacksonUtil.Map2json(map);
+	}
+	
 	public String getCompleteUrl(String strParams){
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String siteid = "";

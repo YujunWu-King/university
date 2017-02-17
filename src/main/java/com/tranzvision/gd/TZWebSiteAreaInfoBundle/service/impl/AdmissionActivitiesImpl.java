@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
@@ -30,6 +31,8 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TZGDObject tzGDObject;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -50,7 +53,7 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 			
 			// language;
 			String language = "";
-
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String siteSQL = "select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { strSiteId });
 			if (siteMap != null) {
@@ -94,11 +97,12 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 					}
 					
 					//根据栏目下已发布的文章列表，每个栏目限制5条
-					String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d') AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
-							+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
-							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
+//					String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d') AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
+//							+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
+//							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
+					String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_ADM_ACT_ART_LIST");
 							
-					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId });
+					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId,oprid });
 					
 					StringBuffer artContentTabLisHtml = null;
 					if (artList != null && artList.size()>0){
