@@ -77,7 +77,6 @@ $(document).ready(function(){
       $(".shade").show();
       $(".school_pop").show();
   });
-
   /*弹窗洲选择*/
    $(".chose_list li").click(function(){
     $(this).parents("ul").find("li").removeClass("chose_on");

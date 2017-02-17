@@ -302,6 +302,9 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						fieldsArr.add("TZ_SCH_CNAME");
 						fieldsArr.add("TZ_LEN_PROID");
 						fieldsArr.add("TZ_LEN_CITY");
+						//清华特例-毕业时间、最高学历毕业时间
+						fieldsArr.add("TZ_COMMENT1");
+						fieldsArr.add("TZ_COMMENT3");
 						ArrayList<String> doNotShowFieldsArr = new ArrayList<>();
 						doNotShowFieldsArr.add("TZ_PASSWORD");
 						doNotShowFieldsArr.add("TZ_REPASSWORD");
@@ -350,8 +353,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 												regFldYsmc, "userMoblie", "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
 							}
 
-							// BIRTHDATE 清华特例，TZ_COMMENT1，TZ_COMMENT3也为日期格式;
-							if ("BIRTHDATE".equals(regFieldId)||"TZ_COMMENT1".equals(regFieldId)||"TZ_COMMENT3".equals(regFieldId)) {
+							// BIRTHDATE 清华特例，TZ_COMMENT1，TZ_COMMENT3也为日期格式;													    
+							if ("BIRTHDATE".equals(regFieldId)||"TZ_COMMENT1".equals(regFieldId)||"TZ_COMMENT3".equals(regFieldId)) {							    	
 								fields = fields
 										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
 												regFldYsmc, regFieldId,"" , "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");

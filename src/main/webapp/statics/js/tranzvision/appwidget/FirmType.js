@@ -177,6 +177,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
 				}
 				//----------------------------放入公司性质OPT
+				types +='<div class="clear"></div>'
 				types += '<div class="input-list" style="display:block">';
 				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
@@ -185,7 +186,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += OPT_FIRM;
 				types += '		</select>';
 				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '		<div style="margin-top:-40px;margin-left:330px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
@@ -251,7 +252,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += OPT_POSITION;
 				types += '		</select>';
 				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '		<div style="margin-top:-40px;margin-left:330px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
@@ -336,33 +337,17 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//console.log(child.WorkExper2.value);
 		});
 		//--岗位类型初始值
-		
-		//----------------------------------------
-		//----change方法失效  blur替代  效果不怎么好  再change事件无法使用的时候可以暂时使用  
-//		$firm_select.on("focus",function(){
-//			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
-//			$position_select.html(OPT_POSITION);
-//		})
-//		$firm_select.on("blur",function(){
-//			var FIRM_TYPE=$firm_select.val();
-//			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
-//			if(FIRM_TYPE=='01'||FIRM_TYPE=='03'||FIRM_TYPE=='04'||FIRM_TYPE=='07'){
-//				for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-//					OPT_POSITION+='<option value="A'+parseInt(k+1)+'">'+POSITION_TYPE_GP1[k]+'</option>'
-//				}
-//			}else if(FIRM_TYPE=='05'||FIRM_TYPE=='06'){
-//				for(var k=0;k<POSITION_TYPE_GP2.length;k++){
-//					OPT_POSITION+='<option value="B'+parseInt(k+1)+'">'+POSITION_TYPE_GP2[k]+'</option>'
-//				}
-//
-//			}else if(FIRM_TYPE=='02'){
-//				for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-//					OPT_POSITION+='<option value="A'+parseInt(k+1)+'">'+POSITION_TYPE_GP1[k]+'</option>'
-//				}
-//				//设置创业经历必填
-//			}
-//			$position_select.html(OPT_POSITION);
-//		});
+		 //所有看的到的select美化:
+		$("select").each(function(){
+			//$(this).chosen({width:"100%"});
+			$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+			$(this).functionValidator({
+				fun:function(val,el){
+					if(val==""||val=="-1")
+						return "此项必选";
+				}	
+			});
+		});
 	
 	}
 })
