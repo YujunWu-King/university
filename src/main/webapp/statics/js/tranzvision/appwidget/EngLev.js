@@ -287,9 +287,11 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		this["linesNo"] = linesNo;
 	},
 	_getHtml: function(data, previewmode) {
-
 		var c = ""
 		var len = data.children.length;
+		if(len==undefined){
+			len=1;
+		}
 		if(len>=data.defaultLines)
 		{
 			showLines = len;
@@ -297,7 +299,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			showLines = data.defaultLines;
 		}
 		//alert(showLines);
-		if (previewmode) {
+		if (previewmode&&len>1) {
 			for(var i=0;i<showLines;i++){
 			        var lineno = 0;
 			        var children= data.children[i];
