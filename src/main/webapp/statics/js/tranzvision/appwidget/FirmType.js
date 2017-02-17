@@ -103,7 +103,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		return e;
 	},
 	_getContentHtml: function(data) {
-		console.dir(data);
+		//console.dir(data);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
@@ -336,18 +336,24 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			child.WorkExper2.value=$position_select.val();
 			//console.log(child.WorkExper2.value);
 		});
-		//--岗位类型初始值
-		 //所有看的到的select美化:
-		$("select").each(function(){
-			//$(this).chosen({width:"100%"});
-			$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-			$(this).functionValidator({
-				fun:function(val,el){
-					if(val==""||val=="-1")
-						return "此项必选";
-				}	
-			});
-		});
+		 //所有select非空验证:WorkExper1 WorkExper2
+		var select_id_gp=["WorkExper1","WorkExper1"];
+		for(var j=0;j<select_id_gp.length;j++){
+			 var EngLevelOpt=""+select_id_gp[j];
+			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+			   $selectEl.each(function(){
+				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+							if(val==""||val=="-1"){
+								return "此项必选";
+							}else{
+								return true;
+							}
+						}	
+					}); 
+			   });
+		}
 	
 	}
 })
