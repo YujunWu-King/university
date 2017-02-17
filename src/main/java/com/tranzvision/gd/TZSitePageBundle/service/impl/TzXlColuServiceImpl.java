@@ -41,10 +41,10 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
-	
+
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
-	
+
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -52,7 +52,7 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 	public String tzQuery(String strParams, String[] errMsg) {
 
 		String strRet = "";
-		//当前登录的用户;
+		// 当前登录的用户;
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -77,33 +77,37 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			String strFrom = jacksonUtil.getString("qureyFrom");
 
 			String strColuId = "";
-			if ("M".equals(strFrom)) {
 
-				String strMenuId = jacksonUtil.getString("menuId");
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidBySiteidMenuidMenuStateY");
-				strColuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
+			strColuId = jacksonUtil.getString("columnId");
+			if (null == strColuId || "".equals(strColuId)) {
 
-			} else if ("A".equals(strFrom)) {
+				if ("M".equals(strFrom)) {
 
-				String strAreaId = jacksonUtil.getString("areaId");
+					String strMenuId = jacksonUtil.getString("menuId");
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidBySiteidMenuidMenuStateY");
+					strColuId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strMenuId }, "String");
 
-				// String strAreaZone = jacksonUtil.getString("areaZone");
+				} else if ("A".equals(strFrom)) {
 
-				String strAreaType = jacksonUtil.getString("areaType");
+					String strAreaId = jacksonUtil.getString("areaId");
 
-				if (null == strAreaId || "".equals(strAreaId)) {
-					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatypeStateY");
-					strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
+					// String strAreaZone = jacksonUtil.getString("areaZone");
+
+					String strAreaType = jacksonUtil.getString("areaType");
+
+					if (null == strAreaId || "".equals(strAreaId)) {
+						sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzAreaIdFromSiteidAreatypeStateY");
+						strAreaId = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strAreaType }, "String");
+					}
+
+					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidAreaNameBySiteidAreaid");
+					Map<String, Object> mapColu = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaId });
+					if (null != mapColu) {
+						strColuId = mapColu.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapColu.get("TZ_COLU_ID"));
+					}
+
 				}
-
-				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetColuidAreaNameBySiteidAreaid");
-				Map<String, Object> mapColu = sqlQuery.queryForMap(sql, new Object[] { strSiteId, strAreaId });
-				if (null != mapColu) {
-					strColuId = mapColu.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapColu.get("TZ_COLU_ID"));
-				}
-
 			}
-
 			int numNowPage = jacksonUtil.getInt("page");
 
 			int numPageSize = jacksonUtil.getInt("pagesize");
@@ -120,32 +124,39 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 			int numTotalRow = 0;
 			int numTotalPage = 0;
-			
-			//查看当前用户有没有设置范围;
-			//如果没有设置范围，且没有报报名表则显示全部的;
-			//其他的显示并集;
-			//String jgId = tzLoginServiceImpl.getLoginedManagerOrgid(request); 
-			//String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
-			String isPrjShowWW = sqlQuery.queryForObject("select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{strSiteId},"String");
+
+			// 查看当前用户有没有设置范围;
+			// 如果没有设置范围，且没有报报名表则显示全部的;
+			// 其他的显示并集;
+			// String jgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			// String isPrjShowWW = sqlQuery.queryForObject("select
+			// TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_JG_ID=? AND
+			// TZ_REG_FIELD_ID='TZ_PROJECT'", new Object[]{jgId},"String");
+			String isPrjShowWW = sqlQuery.queryForObject(
+					"select TZ_IS_SHOWWZSY from PS_TZ_REG_FIELD_T where TZ_SITEI_ID=? AND TZ_REG_FIELD_ID='TZ_PROJECT'",
+					new Object[] { strSiteId }, "String");
 			int haveBmCount = 0;
 			int selectShowCount = 0;
-			
-			if("Y".equals(isPrjShowWW)){
+
+			if ("Y".equals(isPrjShowWW)) {
 				String haveBmCountSql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCurBmbCountByOprid");
-				//有没有报名已经开放班级;
-				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[]{oprid,strSiteId},"Integer");
-				//有没有选择查看的范围;
-				selectShowCount = sqlQuery.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=?", new Object[]{oprid}, "Integer");
+				// 有没有报名已经开放班级;
+				haveBmCount = sqlQuery.queryForObject(haveBmCountSql, new Object[] { oprid, strSiteId }, "Integer");
+				// 有没有选择查看的范围;
+				selectShowCount = sqlQuery.queryForObject("SELECT count(1) FROM PS_SHOW_PRJ_NEWS_T where OPRID=?",
+						new Object[] { oprid }, "Integer");
 			}
-			
+
 			// 取得总条数
 			try {
-				if(haveBmCount == 0 && selectShowCount==0){
+				if (haveBmCount == 0 && selectShowCount == 0) {
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCountOfSiteColu");
-					numTotalRow = Integer.parseInt(sqlQuery.queryForObject(sql, new Object[] {strSiteId, strColuId}, "String"));
-				}else{
+					numTotalRow = Integer
+							.parseInt(sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId }, "String"));
+				} else {
 					sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetCountOfSiteColuByProject");
-					numTotalRow = sqlQuery.queryForObject(sql, new Object[] {strSiteId, strColuId,oprid,oprid}, "Integer");
+					numTotalRow = sqlQuery.queryForObject(sql, new Object[] { strSiteId, strColuId, oprid, oprid },
+							"Integer");
 				}
 			} catch (Exception ep) {
 				numTotalRow = 0;
@@ -230,18 +241,17 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			 */
 
 			// 查询的最大行，最小行
-			//int numMaxRow = numNowPage * numPageRow;
-			//int numMinRow = (numNowPage - 1) * numPageRow + 1;
+			// int numMaxRow = numNowPage * numPageRow;
+			// int numMinRow = (numNowPage - 1) * numPageRow + 1;
 			int numMinRow = (numNowPage - 1) * numPageRow;
 			List<Map<String, Object>> listSiteArts;
-			if(haveBmCount == 0 && selectShowCount==0){
+			if (haveBmCount == 0 && selectShowCount == 0) {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsList");
-				listSiteArts = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
-			}else{
+				listSiteArts = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+			} else {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsListByProject");
 				listSiteArts = sqlQuery.queryForList(sql,
-						new Object[] { strSiteId, strColuId,oprid,oprid, numMinRow, numPageRow });
+						new Object[] { strSiteId, strColuId, oprid, oprid, numMinRow, numPageRow });
 			}
 
 			String strResultContent = "";
@@ -249,9 +259,9 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 			String dtFormat = getSysHardCodeVal.getDateTimeHMFormat();
 			SimpleDateFormat datetimeformat = new SimpleDateFormat(dtFormat);
-			
+
 			for (Map<String, Object> mapSiteArt : listSiteArts) {
-				
+
 				strColuId = mapSiteArt.get("TZ_COLU_ID") == null ? "" : String.valueOf(mapSiteArt.get("TZ_COLU_ID"));
 				String strArtId = mapSiteArt.get("TZ_ART_ID") == null ? ""
 						: String.valueOf(mapSiteArt.get("TZ_ART_ID"));
@@ -259,13 +269,12 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 						: String.valueOf(mapSiteArt.get("TZ_ART_TITLE"));
 				String strArtTime = mapSiteArt.get("TZ_ART_NEWS_DT") == null ? ""
 						: datetimeformat.format(mapSiteArt.get("TZ_ART_NEWS_DT"));
-				
 
 				String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId + "&columnId="
 						+ strColuId + "&artId=" + strArtId + "&oprate=R";
 
 				strResultContent = strResultContent
-						+ "<li><div class=\"main_mid_recruit_list_title2\"><a target=\"_blank\" href=" + strUrl + ">"
+						+ "<li><div class=\"main_mid_recruit_list_title2\"><a href=" + strUrl + ">"
 						+ strArtTitle + "</a></div><div class=\"main_mid_recruit_list_date\">" + strArtTime
 						+ "</div></li>";
 

@@ -1,6 +1,5 @@
 package com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,27 +7,23 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 招生报名系统首页，报考日历全部显示页面
+ * 招生报名系统首页，单页显示数据
  * 
  * @author 琚峰
  * @since 2017-2-10
  */
-@Service("com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl.MoreRegisterCalendarImpl")
-public class MoreRegisterCalendarImpl extends FrameworkImpl {
+@Service("com.tranzvision.gd.TZWebSiteAreaInfoBundle.service.impl.WebSitePageContentImpl")
+public class WebSitePageContentImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private MessageTextServiceImpl messageTextServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -36,17 +31,16 @@ public class MoreRegisterCalendarImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+//		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
+			String strAreaId = "";
 			if (jacksonUtil.containsKey("siteId")) {
 				strSiteId = jacksonUtil.getString("siteId");
 			}
@@ -54,9 +48,15 @@ public class MoreRegisterCalendarImpl extends FrameworkImpl {
 			if (strSiteId == null || "".equals(strSiteId)) {
 				strSiteId = request.getParameter("siteId");
 			}
-			
+			if (jacksonUtil.containsKey("areaId")) {
+				strAreaId = jacksonUtil.getString("areaId");
+			}
+
+			if (strAreaId == null || "".equals(strAreaId)) {
+				strAreaId = request.getParameter("areaId");
+			}
 			// 项目跟目录;
-			String rootPath = request.getContextPath();
+//			String rootPath = request.getContextPath();
 			// 通用链接;
 			String ZSGL_URL = request.getContextPath() + "/dispatcher";
 			
@@ -82,19 +82,30 @@ public class MoreRegisterCalendarImpl extends FrameworkImpl {
 							+ "/" + skinstor + "/" + "style_" + str_jg_id.toLowerCase() + ".css?v=" + strRandom;
 				}
 			}
+			
 			if (language == null || "".equals(language)) {   
 				language = "ZHS";
 			}
-			
-			// 报考日历双语;
-			String registerCalendar = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_REGCALENDAR_MESSAGE", "1", language, "报考日历","Register Calendar");	
+			//获取栏目编号;
+			String columnSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID=? AND TZ_AREA_ID=?";
+			String columnId = jdbcTemplate.queryForObject(columnSQL, new Object[] { strSiteId,strAreaId }, "String");
 			String registerCalListHtml = "";
 			String registerCalContentHtml = "";
-			// 报考日历列表;
-			registerCalListHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML");
+			if(columnId!=null&&!"".equals(columnId)){
+				String[] columns = columnId.split(",");
+			for(int i=0;i<columns.length;i++){
+				String currentColumnId = columns[i];
+			
+			//获取栏目名称;
+			String columnNameSQL = "SELECT TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
+			String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId,currentColumnId }, "String");			
+			// 招生网站单页列表;
+			registerCalListHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML",true,columnName);
+			}
+			}
 			// 展示页面;
 			registerCalContentHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_HTML",
-					request.getContextPath(), ZSGL_URL, strCssDir, registerCalListHtml, str_jg_id, strSiteId);
+					true,request.getContextPath(), ZSGL_URL, strCssDir, registerCalListHtml, str_jg_id, strSiteId);
 			
 			registerCalContentHtml = siteRepCssServiceImpl.repTitle(registerCalContentHtml, strSiteId);
 			registerCalContentHtml = siteRepCssServiceImpl.repCss(registerCalContentHtml, strSiteId);
