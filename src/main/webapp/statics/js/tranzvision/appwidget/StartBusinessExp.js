@@ -441,6 +441,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						NET_DIV += '</div>';
 						//---------
 					NET_DIV+='</div></div>'	
+					NET_DIV+='<div class="clear"></div>'
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
 				var FAM_DIV='';
@@ -473,8 +474,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						FAM_DIV += '	</div>';
 						FAM_DIV += '</div>';
 						//----------------------
-					FAM_DIV+='</div>'	
-				FAM_DIV+='</div></div>'	
+					FAM_DIV+='</div></div>'
+					FAM_DIV+='<div class="clear"></div>'		
+				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
 				var OTH_DIV='';
 					//初始值设定
@@ -518,8 +520,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						OTH_DIV += '	</div>';
 						OTH_DIV += '</div>';
 						//----------------------
-					OTH_DIV+='</div</div>'	
-				OTH_DIV+='</div>'		
+					OTH_DIV+='</div></div>'
+				OTH_DIV+='</div>'
+				OTH_DIV+='<div class="clear"></div>'	
 				//-------------------------------
 				htmlContent+=NET_DIV
 				htmlContent+=FAM_DIV
