@@ -12,26 +12,26 @@
 <script type="text/javascript"
 	src="%bind(:1)/statics/css/website/m/js/jeesite.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/func/mregister.js"></script>	
+<style>
+	.select_pros{
+		margin-top:2% !important;
+	}
+</style>
 <div class="viewport-adaptive">
 	<div class="bg1">
 		<!-- 头部 -->
 		<div class="topbar">
-			用户注册 <a href="#"><i></i></a>
+			用户注册 <a href="%bind(:6)"><i></i></a>
 		</div>
 		<div class="register">
 			<form id="signupForm" name="signupForm" method="post" enctype="multipart/form-data">
 				%bind(:2)
 				%bind(:3)
-				<div id="button_yzfs" class="register_body" %bind(:4)>
-			   		<p></p>
-			   		<div class="overhidden">
-			   		   <input type="button" name="send_Verification" id="send_Verification" value="发送手机验证码" onclick="send_yzm()">
-			   		</div>
-			   	</div>
 			   	<div id="yzfsMobile" class="register_body" %bind(:4)>
 			   		<p>验证码*</p>
 			   		<div class="overhidden">
-			   		   <input type="text" name="yzm" id="yzm" onblur="check_yzm(this.value)" />
+			   		   <input type="text" name="yzm" id="yzm" onblur="check_yzm(this.value)" style="width:60%;"/>
+			   		   <input class="send_yzm" type="button" id="send_Verification" name="send_Verification" value="获取短信密码" onclick="send_yzm(this);" /> 
 			   		</div>
 			   	</div>
 				<p id="yzm_status" class="reg_tips"></p>
@@ -49,63 +49,7 @@
 	</div>
 </div>
 <div class="shade"></div>
-<div class="country_pop">
-	<div class="pop_tit">
-		<span>Country/State</span> <a href="#" class="pop_close">X</a>
-	</div>
-	<div class="pop_search">
-		<input type="text" name=""
-			style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
-		<a href="#"><i></i></a>
-	</div>
-	<div class="pop_chose">Choose State</div>
-	<ul class="chose_list">
-		<li class="chose_on">非洲 Africa</li>
-		<li>亚洲 Asia</li>
-		<li>欧洲 Europe</li>
-		<li>北美洲 North America</li>
-		<li>大洋洲 Pacific</li>
-		<li>南美洲 South America</li>
-
-	</ul>
-	<div class="pop_chose">Country/State</div>
-	<ul class="country_list">
-		<li class="chose_on">Argentina ARG</li>
-		<li>St Vincent and the Grenadines VCT</li>
-		<li>Virgin Islands (U.S.) VIR</li>
-		<li>Puerto Rico PRI</li>
-		<li>Costa Rica CRI</li>
-		<li>Barbados BRB</li>
-		<li>Barbados BRB</li>
-		<li>Barbados BRB</li>
-		<li>Barbados BRB</li>
-	</ul>
-</div>
-<div class="school_pop">
-	<div class="pop_tit">
-		<span>Select University</span> <a href="#" class="pop_close">X</a>
-	</div>
-	<div class="pop_search">
-		<input type="text" name=""
-			style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
-		<a href="#"><i></i></a>
-	</div>
-	<div class="pop_chose">Select University</div>
-	<ul class="country_list">
-		<li class="chose_on">City University of Hong Kong</li>
-		<li>Hong Kong Baptist University</li>
-		<li>Hong Kong Shue Yan University</li>
-		<li>Lingnan University of Hong Kong</li>
-		<li>Open University of Hong Kong</li>
-		<li>The Chinese University of Hong Kong</li>
-		<li>Barbados BRB</li>
-		<li>Barbados BRB</li>
-		<li>Barbados BRB</li>
-	</ul>
-	<div class="pop_chose">Other University</div>
-	<div class="pop_search1">
-		<input type="text" name="" placeholder="Please enter Other University"
-			style="width: 100%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
-		<a href="#"><i></i></a>
-	</div>
-</div>
+<div class="country_pop" id="searchCountry"></div>
+<div class="school_pop" id="searchSchool"></div>
+<div class="country_pop" id="searchState"></div>
+<input type="hidden" id="ParamCon" name="ParamCon" />

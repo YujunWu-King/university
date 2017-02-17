@@ -453,7 +453,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			return strRtn;
 		}
 		String ctxPath = request.getContextPath();
-		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath);
+		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid);
 
 	    } catch (Exception e) {
 		e.printStackTrace();
