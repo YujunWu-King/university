@@ -411,7 +411,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			childList = data.children;
 		}
 		//考试种类OPT
-		var TzUniversityContextPath="/university";
+		//var TzUniversityContextPath="/university";
 		var EXAM_TYPE_MAP={
 			"ENG_LEV_T1":"GRE",
 			"ENG_LEV_T2":"GMAT",
@@ -1197,8 +1197,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							   var EngLevelOpt="EngLevelOpt"+id_gp[j]+"_1";
 							   var $inputBox = $("#" + data.itemId +child[EngLevelOpt].itemId);
 							   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
-							   //console.log("$inputBox:");
-							   //console.dir($inputBox);
+							   //日期选择事件绑定:
 							   $inputBox.each(function(){
 								   $(this).datepicker({
 										showButtonPanel:true,
@@ -1211,6 +1210,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 										}
 									});
 							   });
+							   //日期小图标事件绑定:
 							   $selectBtn.each(function(){
 								   $(this).click(function(){
 									   //console.log("prev:");
@@ -1218,12 +1218,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 									   $(this).prev().click();
 								   })
 							   })
-								
 						}
-						//------验证控件数据:
+						//------上传控件验证:
 						var $fileInput=$("#"+child["EngLevelUp"].itemId);
 						//console.log("验证:");
-						//console.dir($fileInput);
 						$fileInput.each(function(){
 							$(this).mouseover(function(e){
 								$(this).prev().css("opacity","0.8");	
@@ -1241,7 +1239,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 										if (child["EngLevelUp"].children.length > 1){
 											return 	true;
 										} else if (child["EngLevelUp"].children.length == 1 && child["EngLevelUp"].children[0].fileName != ""){
-											return true;	
+											return true;
 										} else {
 											return MsgSet["FILE_UPL_REQUIRE"];
 										}
@@ -1249,29 +1247,49 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								}	
 							});
 						});
+						//-----验证input数据:EngLevelOpt1_1,EngLevelOpt1_2,EngLevelOpt2_1,EngLevelOpt2_2,
+						var input_id_gp=["1_1","1_2","2_1","2_2","3_1","3_2","4_1","4_2","5_1","6_1","13_1","13_2"];
+						for(var j=0;j<input_id_gp.length;j++){
+							   var EngLevelOpt="EngLevelOpt"+input_id_gp[j];
+							   var $inputBox = $("#" + data.itemId +child[EngLevelOpt].itemId);
+							   $inputBox.each(function(){
+								   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+									$(this).functionValidator({
+										fun:function(val,el){
+											if(val==""){
+												return "此项必填";
+											}else{
+												return true;
+											}
+										}	
+									}); 
+							   });
+						}
+						//-----验证select数据:EngLevelOpt7_1 EngLevelOpt8_1 EngLevelOpt9_1 EngLevelOpt10_1 EngLevelOpt11_1 EngLevelOpt12_1
+						var select_id_gp=["EngLevelType","EngLevelOpt7_1","EngLevelOpt8_1","EngLevelOpt9_1","EngLevelOpt10_1","EngLevelOpt11_1","EngLevelOpt12_1"];
+						for(var j=0;j<select_id_gp.length;j++){
+							 var EngLevelOpt=""+select_id_gp[j];
+							   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+							   $selectEl.each(function(){
+								   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+									$(this).functionValidator({
+										fun:function(val,el){
+											if(val==""||val=="-1"){
+												return "此项必选";
+											}else{
+												return true;
+											}
+										}	
+									}); 
+							   });
+						}
+						
 						
 				 }
 				 //所有看的到的select美化:
 				$("select").each(function(){
 					$(this).chosen({width:"100%"});
-					$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-					$(this).functionValidator({
-						fun:function(val,el){
-							if(val==""||val=="-1")
-								return "此项必选";
-						}	
-					});
 				});
-				$("input").each(function(){
-					$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-					$(this).functionValidator({
-						fun:function(val,el){
-							if(val=="")
-								return "此项必填";
-						}	
-					});
-				});
-				
 		       
 	}
 })

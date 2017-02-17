@@ -187,7 +187,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		return c;
 	},
 	_edit: function(data) {
-//		var e = '';//所有都为必填
+		var e = '';//所有都为必填
 		//规则设置
 //		e += '<div class="edit_jygz">';
 //		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
@@ -205,11 +205,11 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 //		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
 //		e += '      </div>';
 //		e += '</div>';
-//		return e;
+		return e;
 	},
 	_getContentHtml: function(data) {
 		//用在拼写给定的div排列
-		console.dir(data);
+		//console.dir(data);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
@@ -222,7 +222,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		];	
 		var htmlContent="";
 		//--创业类型初始值
-		console.dir(child);
+		//console.dir(child);
 		var BUSINESS_TYPE_DEF=child.WorkExper1.value;
 		//--融资情况初始值
 		var FINANCING_DEL=child.WorkExper2.value;
@@ -424,7 +424,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------NET_DIV input格式检验DIV:
 						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						NET_DIV += '	<div id="' + data.itemId+child.WorkExper3.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						NET_DIV += '		<div class="onShow">test</div>';
+						NET_DIV += '		<div class="onShow"></div>';
 						NET_DIV += '	</div>';
 						NET_DIV += '</div>';
 						//---------
@@ -436,11 +436,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------NET_DIV input格式检验DIV:
 						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						NET_DIV += '	<div id="' + data.itemId+child.WorkExper4.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						NET_DIV += '		<div class="onShow">test</div>';
+						NET_DIV += '		<div class="onShow"></div>';
 						NET_DIV += '	</div>';
 						NET_DIV += '</div>';
 						//---------
 					NET_DIV+='</div></div>'	
+					NET_DIV+='<div class="clear"></div>'
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
 				var FAM_DIV='';
@@ -457,7 +458,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------FAM_DIV input格式检验DIV:
 						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper5.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						FAM_DIV += '		<div class="onShow">test</div>';
+						FAM_DIV += '		<div class="onShow"></div>';
 						FAM_DIV += '	</div>';
 						FAM_DIV += '</div>';
 						//---------
@@ -469,12 +470,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------FAM_DIV input格式检验DIV:
 						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper6.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						FAM_DIV += '		<div class="onShow">test</div>';
+						FAM_DIV += '		<div class="onShow"></div>';
 						FAM_DIV += '	</div>';
 						FAM_DIV += '</div>';
 						//----------------------
-					FAM_DIV+='</div>'	
-				FAM_DIV+='</div></div>'	
+					FAM_DIV+='</div></div>'
+					FAM_DIV+='<div class="clear"></div>'		
+				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
 				var OTH_DIV='';
 					//初始值设定
@@ -490,7 +492,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------FAM_DIV input格式检验DIV:
 						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper7.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow">test</div>';
+						OTH_DIV += '		<div class="onShow"></div>';
 						OTH_DIV += '	</div>';
 						OTH_DIV += '</div>';
 						//----------------------
@@ -502,7 +504,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------OTH_DIV input格式检验DIV:
 						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper8.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow">test</div>';
+						OTH_DIV += '		<div class="onShow"></div>';
 						OTH_DIV += '	</div>';
 						OTH_DIV += '</div>';
 						//----------------------
@@ -514,12 +516,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						//---------OTH_DIV input格式检验DIV:
 						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
 						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper9.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow">test</div>';
+						OTH_DIV += '		<div class="onShow"></div>';
 						OTH_DIV += '	</div>';
 						OTH_DIV += '</div>';
 						//----------------------
-					OTH_DIV+='</div</div>'	
-				OTH_DIV+='</div>'		
+					OTH_DIV+='</div></div>'
+				OTH_DIV+='</div>'
+				OTH_DIV+='<div class="clear"></div>'	
 				//-------------------------------
 				htmlContent+=NET_DIV
 				htmlContent+=FAM_DIV
@@ -632,24 +635,37 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		});
 		
 		//---所有的input,select非空验证:
-		$("select").each(function(){
-			//$(this).chosen({width:"100%"});
-			$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-			$(this).functionValidator({
-				fun:function(val,el){
-					if(val==""||val=="-1")
-						return "此项必选";
-				}	
-			});
-		});
-		$("input").each(function(){
-			$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-			$(this).functionValidator({
-				fun:function(val,el){
-					if(val=="")
-						return "此项必填";
-				}	
-			});
-		});
+		//验证所有的select:WorkExper1
+		 var selectEl = $("#" + data.itemId +child.WorkExper1.itemId);
+		 	 selectEl.each(function(){
+			   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+				$(this).functionValidator({
+					fun:function(val,el){
+						if(val==""){
+							return "此项必选";
+						}else{
+							return true;
+						}
+					}	
+				}); 
+		   });
+		//验证所有的input:WorkExper2 WorkExper2_1 WorkExper2_3 WorkExper3 WorkExper4 WorkExper5 WorkExper6 WorkExper7 WorkExper8 WorkExper9
+		var input_id_gp=["2","2_1","2_2","2_3","3","4","5","6","7","8","9"];
+		for(var j=0;j<input_id_gp.length;j++){
+			 var workExperOpt="WorkExper"+input_id_gp[j];
+			   var inputEl = $("#" + data.itemId +child[workExperOpt].itemId);
+			   inputEl.each(function(){
+				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+							if(val==""){
+								return "此项必填";
+							}else{
+								return true;
+							}
+						}	
+					}); 
+			   });
+		}
 		}
 })

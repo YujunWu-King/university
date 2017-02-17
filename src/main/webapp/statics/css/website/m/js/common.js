@@ -14,8 +14,15 @@ $(document).ready(function(){
      $("#pop_btn").click(function(){
        $(".shade1").hide();
        $(".pop").hide();
-  
+      
     });
+
+      $(".share_remind").click(function(){
+       $(".shade1").show();
+       $(".pop").show();
+      
+    });
+
      //查看流程信息
    $(".search_step").click(function(){
          
@@ -69,14 +76,17 @@ $(document).ready(function(){
   });
   /*弹出国家选择*/
    $("#country").click(function(){
+      $("#body").css("position","fixed");
       $(".shade").show();
       $(".country_pop").show();
   });
    /*弹出学校选择*/
    $("#school").click(function(){
+      $("#body").css("position","fixed");
       $(".shade").show();
       $(".school_pop").show();
   });
+
   /*弹窗洲选择*/
    $(".chose_list li").click(function(){
     $(this).parents("ul").find("li").removeClass("chose_on");
@@ -93,6 +103,7 @@ $(document).ready(function(){
       $(".shade").hide();
       $(".country_pop").hide();
       $(".school_pop").hide();
+       $("#body").css("position","relative");
   });
 
 

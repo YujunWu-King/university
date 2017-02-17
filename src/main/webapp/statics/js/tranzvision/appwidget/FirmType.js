@@ -70,40 +70,40 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 	_edit: function(data) {
 		var e = '';
 
-		e += '<div class="edit_jygz">';
-		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
-		e += '  <div class="groupbox">';
-		e += '  <div class="edit_item_warp">';
-		e += '      <span class="edit_item_label">最小行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
-		e += '  </div>';
-
-		e += '  <div class="edit_item_warp mb10">';
-		e += '      <span class="edit_item_label">最大行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
-		e += '  </div>';
-		e += '</div>';
-		//规则设置
-		e += '<div class="edit_jygz">';
-		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
-		e += '      <div class="groupbox">';
-		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
-		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
-		e += '                 <label for="is_require">是否必填';
-		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '                 </label>';
-		e += '          </div>';
-		e += '      </div>';
-		//高级设置
-		e += '      <div class="edit_item_warp">';
-		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
-		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '      </div>';
-		e += '</div>';
+//		e += '<div class="edit_jygz">';
+//		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
+//		e += '  <div class="groupbox">';
+//		e += '  <div class="edit_item_warp">';
+//		e += '      <span class="edit_item_label">最小行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+//		e += '  </div>';
+//
+//		e += '  <div class="edit_item_warp mb10">';
+//		e += '      <span class="edit_item_label">最大行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+//		e += '  </div>';
+//		e += '</div>';
+//		//规则设置
+//		e += '<div class="edit_jygz">';
+//		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
+//		e += '      <div class="groupbox">';
+//		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
+//		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
+//		e += '                 <label for="is_require">是否必填';
+//		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '                 </label>';
+//		e += '          </div>';
+//		e += '      </div>';
+//		//高级设置
+//		e += '      <div class="edit_item_warp">';
+//		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
+//		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '      </div>';
+//		e += '</div>';
 		return e;
 	},
 	_getContentHtml: function(data) {
-		console.dir(data);
+		//console.dir(data);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
@@ -336,18 +336,24 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			child.WorkExper2.value=$position_select.val();
 			//console.log(child.WorkExper2.value);
 		});
-		//--岗位类型初始值
-		 //所有看的到的select美化:
-		$("select").each(function(){
-			//$(this).chosen({width:"100%"});
-			$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-			$(this).functionValidator({
-				fun:function(val,el){
-					if(val==""||val=="-1")
-						return "此项必选";
-				}	
-			});
-		});
+		 //所有select非空验证:WorkExper1 WorkExper2
+		var select_id_gp=["WorkExper1","WorkExper1"];
+		for(var j=0;j<select_id_gp.length;j++){
+			 var EngLevelOpt=""+select_id_gp[j];
+			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+			   $selectEl.each(function(){
+				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+							if(val==""||val=="-1"){
+								return "此项必选";
+							}else{
+								return true;
+							}
+						}	
+					}); 
+			   });
+		}
 	
 	}
 })

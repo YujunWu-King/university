@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <id column="TZ_ZDBQ_ID" property="tzZdbqId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+    delete from PS_TZ_CS_KSBQ_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ZDBQ_ID = #{tzZdbqId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+    insert into PS_TZ_CS_KSBQ_T (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, 
+      TZ_ZDBQ_ID)
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
+      #{tzZdbqId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+    insert into PS_TZ_CS_KSBQ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzApplyPcId != null" >
+        TZ_APPLY_PC_ID,
+      </if>
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzZdbqId != null" >
+        TZ_ZDBQ_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzApplyPcId != null" >
+        #{tzApplyPcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzZdbqId != null" >
+        #{tzZdbqId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
