@@ -70,36 +70,36 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 	_edit: function(data) {
 		var e = '';
 
-		e += '<div class="edit_jygz">';
-		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
-		e += '  <div class="groupbox">';
-		e += '  <div class="edit_item_warp">';
-		e += '      <span class="edit_item_label">最小行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
-		e += '  </div>';
-
-		e += '  <div class="edit_item_warp mb10">';
-		e += '      <span class="edit_item_label">最大行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
-		e += '  </div>';
-		e += '</div>';
-		//规则设置
-		e += '<div class="edit_jygz">';
-		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
-		e += '      <div class="groupbox">';
-		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
-		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
-		e += '                 <label for="is_require">是否必填';
-		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '                 </label>';
-		e += '          </div>';
-		e += '      </div>';
-		//高级设置
-		e += '      <div class="edit_item_warp">';
-		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
-		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '      </div>';
-		e += '</div>';
+//		e += '<div class="edit_jygz">';
+//		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
+//		e += '  <div class="groupbox">';
+//		e += '  <div class="edit_item_warp">';
+//		e += '      <span class="edit_item_label">最小行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+//		e += '  </div>';
+//
+//		e += '  <div class="edit_item_warp mb10">';
+//		e += '      <span class="edit_item_label">最大行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+//		e += '  </div>';
+//		e += '</div>';
+//		//规则设置
+//		e += '<div class="edit_jygz">';
+//		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
+//		e += '      <div class="groupbox">';
+//		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
+//		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
+//		e += '                 <label for="is_require">是否必填';
+//		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '                 </label>';
+//		e += '          </div>';
+//		e += '      </div>';
+//		//高级设置
+//		e += '      <div class="edit_item_warp">';
+//		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
+//		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '      </div>';
+//		e += '</div>';
 		return e;
 	},
 	_getContentHtml: function(data) {

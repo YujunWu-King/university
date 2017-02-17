@@ -411,7 +411,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			childList = data.children;
 		}
 		//考试种类OPT
-		var TzUniversityContextPath="/university";
+		//var TzUniversityContextPath="/university";
 		var EXAM_TYPE_MAP={
 			"ENG_LEV_T1":"GRE",
 			"ENG_LEV_T2":"GMAT",

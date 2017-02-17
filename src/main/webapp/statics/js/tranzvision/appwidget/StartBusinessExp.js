@@ -187,7 +187,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		return c;
 	},
 	_edit: function(data) {
-//		var e = '';//所有都为必填
+		var e = '';//所有都为必填
 		//规则设置
 //		e += '<div class="edit_jygz">';
 //		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
@@ -205,7 +205,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 //		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
 //		e += '      </div>';
 //		e += '</div>';
-//		return e;
+		return e;
 	},
 	_getContentHtml: function(data) {
 		//用在拼写给定的div排列
