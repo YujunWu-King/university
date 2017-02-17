@@ -402,6 +402,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 	_getHtmlOne: function(data,index) {
 		//多行容器处理：
 		var len = data.children.length;
+		if(len==undefined){
+			len=1;
+		}
 		var edus = "",j = 0,childList = [];
 		if (parseInt(index) == parseInt(len)){
 			//返回最后一条记录的HTML及最后一个教育经历（主要用于新增）
