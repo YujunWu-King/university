@@ -1096,7 +1096,7 @@ public class RegisteServiceImpl {
 			if ("TZ_COUNTRY".equals(regFieldId)) {
 			    String countryClick = "TZ_COUNTRY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"readonly=\"true\"",countryClick);
+				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",countryClick);
 			}
 
 			// TZ_SCH_CNAME;
@@ -1109,14 +1109,14 @@ public class RegisteServiceImpl {
 			if ("TZ_LEN_PROID".equals(regFieldId)) {
 			    String lenProidClick = "TZ_LEN_PROID_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc,"readonly=\"true\"",lenProidClick);
+				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc,"",lenProidClick);
 			}
 
 			// TZ_LEN_CITY;
 			if ("TZ_LEN_CITY".equals(regFieldId)) {
 			    String lenCityClick = "TZ_LEN_CITY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"readonly=\"true\"",lenCityClick);
+				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",lenCityClick);
 			}
 
 			// 如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
@@ -1231,9 +1231,9 @@ public class RegisteServiceImpl {
 		prjJs = prjJs.replace("$", "\\$");
 	    }
 	    if ("ENG".equals(strLang)) {
-		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_EN_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay);
+		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_EN_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
 	    } else {
-		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay);
+		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
 	    }
 
 	    // fields = tzGdObject.getHTMLText("HTML.test.test",
@@ -1397,7 +1397,7 @@ public class RegisteServiceImpl {
 		    }
 		    // 一个机构下可以有多个站点
 		    dir = dir + File.separator + strSiteId;
-		    boolean bl = this.staticFile(strReleasContent, dir, "mEnroll.html", errMsg);
+		    boolean bl = this.staticFile(strReleasContent, dir, "menroll.html", errMsg);
 		    return bl;
 		} else {
 		    errMsg[0] = "1";

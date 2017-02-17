@@ -10,10 +10,14 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "";
         if (previewmode) {
-            SurveyBuild.appInsId == "0" && (data.defaultval = "{%BIND:TZ_MSH_ID}") ;
-            SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-            SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
-            
+            //SurveyBuild.appInsId == "0" && (data.defaultval = "{%BIND:TZ_MSH_ID}") ;
+            //SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+            //SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
+        	data.defaultval = "{%BIND:TZ_MSH_ID}";
+        	this._getDefaultVal(data);
+        	data.wzsm = data.value;
+        	
+        	
             c += '<div class="input-list">';
             c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
             c += '	<div class="input-list-text left">' + data.value + '</div>';
