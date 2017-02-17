@@ -110,6 +110,7 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			}
 			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID = ?";
 			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid },"String");
+			znxStatus = znxStatus == null ?"":znxStatus;
 			if (znxStatus.equals("N")){
 				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID = ?";
 				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
