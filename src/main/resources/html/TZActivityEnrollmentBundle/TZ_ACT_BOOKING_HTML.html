@@ -1,0 +1,36 @@
+
+<div class="main_tit">%bind(:1)</div>
+<div class="mian_inner_nav" id="tab1">
+	<div class="float_left">
+		<ul>
+			<li class="li_tab now" onClick="QueryColuHY(1,0)">%bind(:2)</li>
+			<li class="li_tab " onClick="QueryColuHY(1,1)">%bind(:3)</li>
+			<li class="li_tab " onClick="QueryColuHY(1,2)">%bind(:4)</li>
+		</ul>
+	</div>
+</div>
+
+<div id="content1">
+	<div class="tab1 block">
+
+		<div class="tab_list">
+			<ul id="countlist">
+
+			</ul>
+			<script type="text/javascript">
+            $(document).ready(function(){
+				QueryColuHY(1,0);
+            });
+        </script>
+		</div>
+		<div class="main_article_nav">
+			<div class="main_article_nav_left2">
+				<ul id="pagecount">
+
+				</ul>
+			</div>
+			<div id="curentcoutpage" class="main_article_nav_right2"></div>
+		</div>
+
+	</div>
+</div>

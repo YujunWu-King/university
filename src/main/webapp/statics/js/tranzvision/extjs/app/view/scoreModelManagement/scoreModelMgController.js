@@ -605,187 +605,6 @@
 		}
 	},
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-	//放大镜选择材料/面试评审成绩模型
-	choiceScoreModal: function(btn){
-		var fieldName = btn.name;
-		var searchDesc,modal,modal_desc;
-		if(fieldName=='clps_cj_modal'){
-			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.sscspscjmx","搜索材料评审成绩模型");
-			modal="clps_cj_modal";
-			modal_desc="clps_cj_modal_desc";
-		}else if(fieldName=="msps_cj_modal"){
-			searchDesc=Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.ssmspscjmx","搜索面试评审成绩模型");
-			modal="msps_cj_modal";
-			modal_desc="msps_cj_modal_desc";
-		}
-		var form = this.getView().child("form").getForm();
-		Ext.tzShowPromptSearch({
-			recname: 'TZ_RS_MODAL_TBL',
-			searchDesc: searchDesc,
-			maxRow:20,
-			condition:{
-				presetFields:{
-					TZ_JG_ID:{
-						value: Ext.tzOrgID,
-						type: '01'
-					},
-					TZ_MODAL_FLAG:{
-						value: 'Y',
-						type: '01'
-					}
-				},
-				srhConFields:{
-					TZ_SCORE_MODAL_ID:{
-						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.cjmxid","成绩模型ID"),
-						operator:'07',
-						type:'01'
-					},
-					TZ_MODAL_NAME:{
-						desc:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.cjmxms","成绩模型描述") ,
-						operator:'07',
-						type:'01'
-					}
-				}
-			},
-			srhresult:{
-				TZ_SCORE_MODAL_ID: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.cjmxid","成绩模型ID"),
-				TZ_MODAL_NAME:Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.cjmxms","成绩模型描述")
-			},
-			multiselect: false,
-			callback: function(selection){
-				form.findField(modal).setValue(selection[0].data.TZ_SCORE_MODAL_ID);
-				form.findField(modal_desc).setValue(selection[0].data.TZ_MODAL_NAME);
-			}
-		});
-	},
-
-	//可配置搜索
-	cfgSearchScoreModel: function(btn){    
-		Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_SCORE_MOD_COM.TZ_SCORE_MG_STD.TZ_RS_MODAL_TBL',
-			condition:
-			{
-				"TZ_JG_ID": Ext.tzOrgID
-			},
-			callback: function(seachCfg){
-				var store = btn.findParentByType("grid").store;
-				store.tzStoreParams = seachCfg;
-				store.load();
-			}
-		});
-	},
-	
-	onGridPanelClose: function(btn){
-		//关闭
-		var grid = btn.findParentByType("grid");
-		grid.close();
-	},
-
-	editPrjByID:function(projectId,professionId){
-		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_PRJ_PROMG_COM"]["TZ_PRJ_ZYFX_STD"];
-		if( pageResSet == "" || pageResSet == undefined){
-			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.prompt","提示"), Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.nmyqx","您没有权限"));
-			return;
-		}
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || className == undefined){
-			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.prompt","提示"),Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_ZYFX_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
-			return;
-		}
-
-		var contentPanel,cmp, className, ViewClass, clsProto;
-		var themeName = Ext.themeName;
-
-		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.body.addCls('kitchensink-example');
-
-		if(!Ext.ClassManager.isCreated(className)){
-			Ext.syncRequire(className);
-		}
-
-		ViewClass = Ext.ClassManager.get(className);
-
-		clsProto = ViewClass.prototype;
-
-		if (clsProto.themes) {
-			clsProto.themeInfo = clsProto.themes[themeName];
-
-			if (themeName === 'gray') {
-				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-			} else if (themeName !== 'neptune' && themeName !== 'classic') {
-				if (themeName === 'crisp-touch') {
-					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-				}
-				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-			}
-			// <debug warn>
-			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-			if (!clsProto.themeInfo) {
-				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-					themeName + '\'. Is this intentional?');
-			}
-			// </debug>
-		}
-
-
-		var win = this.lookupReference('ZyfxWindow');
-		if (!win) {
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-			win = new ViewClass();
-			var form = win.child('form').getForm();
-
-			this.getView().add(win);
-		}
-		var proZYFXIdField = form.findField("pro_zyfx_id");
-		proZYFXIdField.setReadOnly(true);
-		proZYFXIdField.addCls('lanage_1');/*灰掉应用程序类ID输入框*/
-
-		var tzParams = '{"ComID":"TZ_PRJ_PROMG_COM","PageID":"TZ_PRJ_ZYFX_STD","OperateType":"QF","comParams":{"projectId":"'+projectId+'","professionId":"'+professionId+'"}}';
-		//加载数据
-		Ext.tzLoad(tzParams,function(responseData){
-			//var formData = responseData.formData;
-			form.setValues(responseData);
-
-		});
-
-		win.show();
-
-	},
-
-	editCurrentRow: function(view, rowIndex) {
-		var comSiteParams = this.getView().child("form").getForm().getValues();
-		var projectId = comSiteParams["projectId"];
-		var store = view.findParentByType("grid").store;
-		var selRec = store.getAt(rowIndex);
-		var professionId = selRec.get("professionId");
-		this.editPrjByID(projectId,professionId);
-	},
-
 	//选择成绩项
 	selectScoreModelItemId: function(btn){
 		var grid = btn.up('grid');
@@ -832,5 +651,80 @@
                 record.set("itemId",selection[0].data.TZ_SCORE_ITEM_ID);
             }
         });
+	},
+	
+	//可配置搜索
+	cfgSearchScoreModel: function(btn){    
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_SCORE_MOD_COM.TZ_SCORE_MG_STD.TZ_RS_MODAL_TBL',
+			condition:
+			{
+				"TZ_JG_ID": Ext.tzOrgID
+			},
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load();
+			}
+		});
+	},
+	
+	onGridPanelClose: function(btn){
+		//关闭
+		var grid = btn.findParentByType("grid");
+		grid.close();
+	},
+	
+	
+	testAutoScreen: function(){
+		Ext.tzSetCompResourses("TZ_AUTO_SCREEN_COM");
+		
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUTO_SCREEN_COM"]["TZ_AUTO_SCREEN_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUTO_SCREEN_STD，请检查配置。');
+			return;
+		}
+
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+	
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		
+		ViewClass = Ext.ClassManager.get(className);
+
+		cmp = new ViewClass({
+			classId:'105',
+			batchId:'45'
+		});
+		
+		cmp.on('afterrender',function(gridPanel){
+			
+
+		});
+		
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
+
 	}
+	
+	
+	
 });

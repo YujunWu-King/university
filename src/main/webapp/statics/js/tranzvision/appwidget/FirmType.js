@@ -70,40 +70,40 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 	_edit: function(data) {
 		var e = '';
 
-		e += '<div class="edit_jygz">';
-		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
-		e += '  <div class="groupbox">';
-		e += '  <div class="edit_item_warp">';
-		e += '      <span class="edit_item_label">最小行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
-		e += '  </div>';
-
-		e += '  <div class="edit_item_warp mb10">';
-		e += '      <span class="edit_item_label">最大行数：</span>';
-		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
-		e += '  </div>';
-		e += '</div>';
-		//规则设置
-		e += '<div class="edit_jygz">';
-		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
-		e += '      <div class="groupbox">';
-		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
-		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
-		e += '                 <label for="is_require">是否必填';
-		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '                 </label>';
-		e += '          </div>';
-		e += '      </div>';
-		//高级设置
-		e += '      <div class="edit_item_warp">';
-		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
-		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '      </div>';
-		e += '</div>';
+//		e += '<div class="edit_jygz">';
+//		e += '	<span class="title"><i class="icon-info-sign"></i> 参数设置</span>';
+//		e += '  <div class="groupbox">';
+//		e += '  <div class="edit_item_warp">';
+//		e += '      <span class="edit_item_label">最小行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'minLines\')" value="' + data.minLines + '"/>';
+//		e += '  </div>';
+//
+//		e += '  <div class="edit_item_warp mb10">';
+//		e += '      <span class="edit_item_label">最大行数：</span>';
+//		e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'maxLines\')" value="' + data.maxLines + '"/>';
+//		e += '  </div>';
+//		e += '</div>';
+//		//规则设置
+//		e += '<div class="edit_jygz">';
+//		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
+//		e += '      <div class="groupbox">';
+//		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
+//		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
+//		e += '                 <label for="is_require">是否必填';
+//		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '                 </label>';
+//		e += '          </div>';
+//		e += '      </div>';
+//		//高级设置
+//		e += '      <div class="edit_item_warp">';
+//		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
+//		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '      </div>';
+//		e += '</div>';
 		return e;
 	},
 	_getContentHtml: function(data) {
-		console.dir(data);
+		//console.dir(data);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
@@ -177,6 +177,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 					OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
 				}
 				//----------------------------放入公司性质OPT
+				types +='<div class="clear"></div>'
 				types += '<div class="input-list" style="display:block">';
 				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
@@ -185,7 +186,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += OPT_FIRM;
 				types += '		</select>';
 				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '		<div style="margin-top:-40px;margin-left:330px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
@@ -251,7 +252,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += OPT_POSITION;
 				types += '		</select>';
 				//----------------------------
-				types += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				types += '		<div style="margin-top:-40px;margin-left:330px"><div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				types += '			<div class="onCorrect">&nbsp;</div></div>';
 				types += '		</div>';
 				types += '	</div>';
@@ -306,8 +307,8 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		var $position_select = $("#" +data["itemId"] + child.WorkExper2.itemId);
 
 		$firm_select.on("change",function(){
-			console.log("valeList:");
-			console.log(child.WorkExper1.value);
+			//console.log("valeList:");
+			//console.log(child.WorkExper1.value);
 			var POSITION_TYPE_DEL=$position_select.val();
 			var FIRM_TYPE=$firm_select.val();
 			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
@@ -335,34 +336,24 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			child.WorkExper2.value=$position_select.val();
 			//console.log(child.WorkExper2.value);
 		});
-		//--岗位类型初始值
-		
-		//----------------------------------------
-		//----change方法失效  blur替代  效果不怎么好  再change事件无法使用的时候可以暂时使用  
-//		$firm_select.on("focus",function(){
-//			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
-//			$position_select.html(OPT_POSITION);
-//		})
-//		$firm_select.on("blur",function(){
-//			var FIRM_TYPE=$firm_select.val();
-//			var OPT_POSITION='<option value="-1">--'+MsgSet["PLEASE_SELECT"]+'--</option>';
-//			if(FIRM_TYPE=='01'||FIRM_TYPE=='03'||FIRM_TYPE=='04'||FIRM_TYPE=='07'){
-//				for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-//					OPT_POSITION+='<option value="A'+parseInt(k+1)+'">'+POSITION_TYPE_GP1[k]+'</option>'
-//				}
-//			}else if(FIRM_TYPE=='05'||FIRM_TYPE=='06'){
-//				for(var k=0;k<POSITION_TYPE_GP2.length;k++){
-//					OPT_POSITION+='<option value="B'+parseInt(k+1)+'">'+POSITION_TYPE_GP2[k]+'</option>'
-//				}
-//
-//			}else if(FIRM_TYPE=='02'){
-//				for(var k=0;k<POSITION_TYPE_GP1.length;k++){
-//					OPT_POSITION+='<option value="A'+parseInt(k+1)+'">'+POSITION_TYPE_GP1[k]+'</option>'
-//				}
-//				//设置创业经历必填
-//			}
-//			$position_select.html(OPT_POSITION);
-//		});
+		 //所有select非空验证:WorkExper1 WorkExper2
+		var select_id_gp=["WorkExper1","WorkExper1"];
+		for(var j=0;j<select_id_gp.length;j++){
+			 var EngLevelOpt=""+select_id_gp[j];
+			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+			   $selectEl.each(function(){
+				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+							if(val==""||val=="-1"){
+								return "此项必选";
+							}else{
+								return true;
+							}
+						}	
+					}); 
+			   });
+		}
 	
 	}
 })

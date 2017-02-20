@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+		<title></title>
+		<script type="text/javascript">
+			var TzUniversityContextPath = "%bind(:2)";
+		</script>
+		<link href="%bind(:2)/statics/css/website/userRegPreview.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/util/layer.js"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/lib/laydate/laydate.js"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+		<link rel="stylesheet" href="%bind(:2)/statics/css/website/chosen.css">
+		<script src="%bind(:2)/statics/js/lib/jquery/chosen.jquery.js" type="text/javascript"></script>
+		<script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/util/checkExplorer.js" charset="utf-8"></script>
+
+
+	</head>
+		%bind(:1)
+		<input type="hidden" value="%bind(:3)" id="siteid" name="siteid"/>
+	<script type="text/javascript">
+
+	    var config = {
+	      '.chosen-select'           : {},
+	      '.chosen-select-deselect'  : {allow_single_deselect:true},
+	      '.chosen-select-no-single' : {disable_search_threshold:10},
+	      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+	      '.chosen-select-width'     : {width:"95%"}
+	    };
+
+	    for (var selector in config) {
+	      $(selector).chosen(config[selector]);
+	    }
+		$("#submitbutton").hide();
+	</script>
+</html>

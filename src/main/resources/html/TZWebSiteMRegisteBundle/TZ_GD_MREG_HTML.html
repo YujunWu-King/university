@@ -1,0 +1,55 @@
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/website/m/css/style.css">
+<link rel="stylesheet" type="text/css"
+	href="%bind(:1)/statics/css/website/m/js/jquery-select2/3.4/select2.min.css">
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/rem.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/common.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/jquery-select2/3.4/select2.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/jeesite.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/func/mregister.js"></script>	
+<style>
+	.select_pros{
+		margin-top:2% !important;
+	}
+</style>
+<div class="viewport-adaptive">
+	<div class="bg1">
+		<!-- 头部 -->
+		<div class="topbar">
+			用户注册 <a href="%bind(:6)"><i></i></a>
+		</div>
+		<div class="register">
+			<form id="signupForm" name="signupForm" method="post" enctype="multipart/form-data">
+				%bind(:2)
+				%bind(:3)
+			   	<div id="yzfsMobile" class="register_body" %bind(:4)>
+			   		<p>验证码*</p>
+			   		<div class="overhidden">
+			   		   <input type="text" name="yzm" id="yzm" onblur="check_yzm(this.value)" style="width:60%;"/>
+			   		   <input class="send_yzm" type="button" id="send_Verification" name="send_Verification" value="获取短信密码" onclick="send_yzm(this);" /> 
+			   		</div>
+			   	</div>
+				<p id="yzm_status" class="reg_tips"></p>
+				<div id="yzfsEmail" class="register_body" %bind(:5)>
+			   		<p>验证码*</p>
+			   		<div class="overhidden">
+			   		   <input type="text" name="yzmEmail" id="yzmEmail" onblur="check_yzmEmail(this.value)" style="width:84%"/>
+			   		   <a id="changeImgEmail" href="javascript:void(0)"><img id="yzmImgEmail"  class="reg_code" width="63" height="23"></a>
+			   		</div>
+			   	</div>
+				<p id="yzm_Emailstatus" class="reg_tips"></p>	
+			</form>		
+		</div>
+		<a href="javascript:void(0)" class="register_btn" id="submitbutton">注 册</a>
+	</div>
+</div>
+<div class="shade"></div>
+<div class="country_pop" id="searchCountry"></div>
+<div class="school_pop" id="searchSchool"></div>
+<div class="country_pop" id="searchState"></div>
+<input type="hidden" id="ParamCon" name="ParamCon" />

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZDistributionTableBundle.dao.PsTzFbdzMxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTbl" >
+    <id column="TZ_M_FBDZ_ID" property="tzMFbdzId" jdbcType="VARCHAR" />
+    <id column="TZ_M_FBDZ_MX_ID" property="tzMFbdzMxId" jdbcType="VARCHAR" />
+    <result column="TZ_M_FBDZ_MX_XH" property="tzMFbdzMxXh" jdbcType="VARCHAR" />
+    <result column="TZ_M_FBDZ_MX_NAME" property="tzMFbdzMxName" jdbcType="VARCHAR" />
+    <result column="TZ_M_FBDZ_MX_SM" property="tzMFbdzMxSm" jdbcType="VARCHAR" />
+    <result column="TZ_M_FBDZ_MX_SX" property="tzMFbdzMxSx" jdbcType="DECIMAL" />
+    <result column="TZ_M_FBDZ_MX_XX" property="tzMFbdzMxXx" jdbcType="DECIMAL" />
+    <result column="TZ_M_FBDZ_MX_SX_JX" property="tzMFbdzMxSxJx" jdbcType="VARCHAR" />
+    <result column="TZ_M_FBDZ_MX_XX_JX" property="tzMFbdzMxXxJx" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_M_FBDZ_ID, TZ_M_FBDZ_MX_ID, TZ_M_FBDZ_MX_XH, TZ_M_FBDZ_MX_NAME, TZ_M_FBDZ_MX_SM, 
+    TZ_M_FBDZ_MX_SX, TZ_M_FBDZ_MX_XX, TZ_M_FBDZ_MX_SX_JX, TZ_M_FBDZ_MX_XX_JX
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FBDZ_MX_TBL
+    where TZ_M_FBDZ_ID = #{tzMFbdzId,jdbcType=VARCHAR}
+      and TZ_M_FBDZ_MX_ID = #{tzMFbdzMxId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTblKey" >
+    delete from PS_TZ_FBDZ_MX_TBL
+    where TZ_M_FBDZ_ID = #{tzMFbdzId,jdbcType=VARCHAR}
+      and TZ_M_FBDZ_MX_ID = #{tzMFbdzMxId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTbl" >
+    insert into PS_TZ_FBDZ_MX_TBL (TZ_M_FBDZ_ID, TZ_M_FBDZ_MX_ID, TZ_M_FBDZ_MX_XH, 
+      TZ_M_FBDZ_MX_NAME, TZ_M_FBDZ_MX_SM, TZ_M_FBDZ_MX_SX, 
+      TZ_M_FBDZ_MX_XX, TZ_M_FBDZ_MX_SX_JX, TZ_M_FBDZ_MX_XX_JX
+      )
+    values (#{tzMFbdzId,jdbcType=VARCHAR}, #{tzMFbdzMxId,jdbcType=VARCHAR}, #{tzMFbdzMxXh,jdbcType=VARCHAR}, 
+      #{tzMFbdzMxName,jdbcType=VARCHAR}, #{tzMFbdzMxSm,jdbcType=VARCHAR}, #{tzMFbdzMxSx,jdbcType=DECIMAL}, 
+      #{tzMFbdzMxXx,jdbcType=DECIMAL}, #{tzMFbdzMxSxJx,jdbcType=VARCHAR}, #{tzMFbdzMxXxJx,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTbl" >
+    insert into PS_TZ_FBDZ_MX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzMFbdzId != null" >
+        TZ_M_FBDZ_ID,
+      </if>
+      <if test="tzMFbdzMxId != null" >
+        TZ_M_FBDZ_MX_ID,
+      </if>
+      <if test="tzMFbdzMxXh != null" >
+        TZ_M_FBDZ_MX_XH,
+      </if>
+      <if test="tzMFbdzMxName != null" >
+        TZ_M_FBDZ_MX_NAME,
+      </if>
+      <if test="tzMFbdzMxSm != null" >
+        TZ_M_FBDZ_MX_SM,
+      </if>
+      <if test="tzMFbdzMxSx != null" >
+        TZ_M_FBDZ_MX_SX,
+      </if>
+      <if test="tzMFbdzMxXx != null" >
+        TZ_M_FBDZ_MX_XX,
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        TZ_M_FBDZ_MX_SX_JX,
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        TZ_M_FBDZ_MX_XX_JX,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzMFbdzId != null" >
+        #{tzMFbdzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxId != null" >
+        #{tzMFbdzMxId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxXh != null" >
+        #{tzMFbdzMxXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxName != null" >
+        #{tzMFbdzMxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxSm != null" >
+        #{tzMFbdzMxSm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxSx != null" >
+        #{tzMFbdzMxSx,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxXx != null" >
+        #{tzMFbdzMxXx,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTbl" >
+    update PS_TZ_FBDZ_MX_TBL
+    <set >
+      <if test="tzMFbdzMxXh != null" >
+        TZ_M_FBDZ_MX_XH = #{tzMFbdzMxXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxName != null" >
+        TZ_M_FBDZ_MX_NAME = #{tzMFbdzMxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxSm != null" >
+        TZ_M_FBDZ_MX_SM = #{tzMFbdzMxSm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxSx != null" >
+        TZ_M_FBDZ_MX_SX = #{tzMFbdzMxSx,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxXx != null" >
+        TZ_M_FBDZ_MX_XX = #{tzMFbdzMxXx,jdbcType=DECIMAL},
+      </if>
+      <if test="tzMFbdzMxSxJx != null" >
+        TZ_M_FBDZ_MX_SX_JX = #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMFbdzMxXxJx != null" >
+        TZ_M_FBDZ_MX_XX_JX = #{tzMFbdzMxXxJx,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_M_FBDZ_ID = #{tzMFbdzId,jdbcType=VARCHAR}
+      and TZ_M_FBDZ_MX_ID = #{tzMFbdzMxId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZDistributionTableBundle.model.PsTzFbdzMxTbl" >
+    update PS_TZ_FBDZ_MX_TBL
+    set TZ_M_FBDZ_MX_XH = #{tzMFbdzMxXh,jdbcType=VARCHAR},
+      TZ_M_FBDZ_MX_NAME = #{tzMFbdzMxName,jdbcType=VARCHAR},
+      TZ_M_FBDZ_MX_SM = #{tzMFbdzMxSm,jdbcType=VARCHAR},
+      TZ_M_FBDZ_MX_SX = #{tzMFbdzMxSx,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_XX = #{tzMFbdzMxXx,jdbcType=DECIMAL},
+      TZ_M_FBDZ_MX_SX_JX = #{tzMFbdzMxSxJx,jdbcType=VARCHAR},
+      TZ_M_FBDZ_MX_XX_JX = #{tzMFbdzMxXxJx,jdbcType=VARCHAR}
+    where TZ_M_FBDZ_ID = #{tzMFbdzId,jdbcType=VARCHAR}
+      and TZ_M_FBDZ_MX_ID = #{tzMFbdzMxId,jdbcType=VARCHAR}
+  </update>
+</mapper>

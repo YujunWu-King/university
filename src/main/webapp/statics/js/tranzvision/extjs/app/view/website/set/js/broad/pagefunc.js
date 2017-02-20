@@ -193,9 +193,15 @@ function QueryColu(page){
 	{
 		areaType="";
 	}
+	var columnId=getQueryString("columnId");
+	if (!columnId)
+	{
+		columnId="";
+	}
 
 
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId":"'+columnId+'"}}';
+	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","pagesize":"10","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
 	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzXlColuServiceImpl+'","page":"'+page+'","qureyFrom":"'+qureyFrom+'"}}';
 
 $.ajax({
@@ -941,7 +947,7 @@ function LoadMenu( jgId, siteId, opt){
 
 //~:加载左侧区域统一方法
 function LoadLeftArea( jgId, siteId, opt){
-
+	
 	var tzParams = '{"ComID":"TZ_WEBINFO_SHOW_COM","PageID":"TZ_LEFT_AREA_STD","OperateType":"HTML","comParams":{"siteId":"'+siteId+'"}}';
 	
 	$.ajax({

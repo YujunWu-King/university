@@ -1,7 +1,5 @@
 package com.tranzvision.gd.TZApplicationGuideBundle.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +19,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 /**
  * 
  * 清华MBA招生网站_申请指导
+ * @author JF
  * @since 2016-01-14
  */
 @Service("com.tranzvision.gd.TZApplicationGuideBundle.service.impl.TzApplicationGuideServicelImpl")
@@ -91,7 +90,7 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 			String ZSGL_URL = request.getContextPath() + "/dispatcher";
 
 			// 1.申请指导;
-			String stationLetter = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "1",
+			String appGuide = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "1",
 					language, "申请指导", "申请指导");
 
 			// 获取数据失败，请联系管理员;
@@ -100,14 +99,13 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 			
 			// 展示页面;
 			applicationGuideHtml = tzGDObject.getHTMLText("HTML.TZApplicationGuideBundle.TZ_APP_GUIDE_HTML",
-					request.getContextPath(), ZSGL_URL, strCssDir, applicationGuideHtml, str_jg_id, strSiteId,stationLetter);
+					request.getContextPath(), ZSGL_URL, strCssDir, applicationGuideHtml, str_jg_id, strSiteId,appGuide);
 
 			applicationGuideHtml = siteRepCssServiceImpl.repTitle(applicationGuideHtml, strSiteId);
 			applicationGuideHtml = siteRepCssServiceImpl.repCss(applicationGuideHtml, strSiteId);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-
 			return "无法获取相关数据";
 		}	
 		return applicationGuideHtml;

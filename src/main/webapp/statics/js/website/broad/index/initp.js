@@ -265,12 +265,10 @@ $(document).ready(function(){
 	//end 报考日历;
 	
 	//加载招生活动、报考通知、资料专区区域
-	$(".main_mid_zxj_zs").each(function(){
+	$(".main_mid_zxj_zs.assdiv").each(function(){
 		var $me = $(this);
 		//区域id;
 		var areaId = $me.attr("area-id");
-		//栏目id;
-		var colId = $me.attr("area-col");
 	
 		$me.html("加载中...");
 		var tzParams = '{"ComID":"TZ_RECRUIT_VIEW_COM","PageID":"TZ_RECRUIT_ACT_STD","OperateType":"HTML","comParams":{"siteId":"'+siteid +'","areaId":"'+areaId+'","oprate":"'+oprate+'"}}';
@@ -282,6 +280,13 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+				$(".main_mid_zxj_zs.assdiv").each(function(){
+					var _me = $(this);
+					_me.find("a.zxj_more").click(function(){
+						url = TzUniversityContextPath+"/dispatcher?classid=websiteCommList&siteId="+siteid+"&areaId="+areaId+"&columnId="+_me.find("li.tab_on").attr("tab-col"),
+						window.location = url;
+					});
+				});
 				tab(".tabwrap .tabhead",".tabwrap .tabNote","tab_on","mousedown");
 			},
 			failure: function () {
@@ -289,7 +294,7 @@ $(document).ready(function(){
 			} 
 		});
 	});
-	
+	   
 	//end招生活动、报考通知、资料专区区域
 	
 	//获取栏目单篇文章：友情链接，二维码等区域

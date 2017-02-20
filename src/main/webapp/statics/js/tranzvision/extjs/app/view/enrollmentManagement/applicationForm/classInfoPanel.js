@@ -80,8 +80,14 @@
                     hidden:true
                 },{
                     xtype: 'textfield',
-                    fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.className","班级名称"),
+                    fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.applyDirectionName","报考方向名称"),
                     name: 'className',
+                    cls:'lanage_1',
+                    readOnly:true
+                },{
+                    xtype: 'textfield',
+                    fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.applyBatchName","申请批次"),
+                    name: 'batchName',
                     cls:'lanage_1',
                     readOnly:true
                 }
@@ -294,7 +300,7 @@
                                             for(var i=0;i<validColorSortStore.getCount();i++){
                                                 arrayData.push(validColorSortStore.data['items'][i].data);
                                             };
-                                            if(colorSortID.length>0&&validColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID)==-1){
+                                            if(colorSortID!=null&&colorSortID.length>0&&validColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID)==-1){
                                                 var tmpRec = orgColorSortStore.getAt(orgColorSortStore.find("TZ_COLOR_SORT_ID",colorSortID));
                                                 arrayData.push(tmpRec.data);
                                             };

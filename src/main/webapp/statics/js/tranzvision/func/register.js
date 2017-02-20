@@ -136,6 +136,11 @@ function submitEnroll() {
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
+		}else if(key="TZ_SCH_CNAME_Country"){
+			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
+			if(schCountry!=null&&schCountry!=undefined){
+				$("#TZ_SCH_COUNTRY").val(schCountry);
+			}			
 		}else{//其他
 			if(jsonValue[key] == "Y"){
 				var val;
@@ -670,9 +675,11 @@ $(document).ready(function(){
 			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
 		});
 	});
+	//默认国家为中国
+	$("#TZ_SCH_CNAME_Country").val("中国");
+	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME_click").click(function(e) {
-		$("#ParamValue").val("TZ_SCH_CNAME");
-		$("#CountryCode").val("CHN");
+		$("#ParamValue").val("TZ_SCH_CNAME");		
 		s = $.layer({
 			type: 2,
 			title: false,
@@ -684,7 +691,7 @@ $(document).ready(function(){
 			offset: ['50%',''],
 			area: ['830px','720px'],
 			//iframe: {src: '/tranzvision/colselector_liu.html'}
-			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
 		});
     });
     $("#TZ_SCH_CNAME_click").mouseover(function() {
@@ -840,7 +847,7 @@ $(document).ready(function(){
 		}else if(key="TZ_SCH_CNAME_Country"){
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
 			if(schCountry!=null&&schCountry!=undefined){
-				$("#TZ_SCH_COUNTRYCODE").val(schCountry);
+				$("#TZ_SCH_COUNTRY").val(schCountry);
 			}			
 		}else{//其他
 			if(jsonValue[key] == "Y"){

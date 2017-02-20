@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzMsiteiDefnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnT" >
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_MENROLL_SAVECODE" property="tzMenrollSavecode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MENROLL_PRECODE" property="tzMenrollPrecode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MENROLL_PUBCODE" property="tzMenrollPubcode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MPERFECT_SAVECODE" property="tzMperfectSavecode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MPERFECT_PRECODE" property="tzMperfectPrecode" jdbcType="LONGVARCHAR" />
+    <result column="TZ_MPERFECT_PUBCODE" property="tzMperfectPubcode" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SITEI_ID, TZ_JG_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MENROLL_SAVECODE, TZ_MENROLL_PRECODE, TZ_MENROLL_PUBCODE, TZ_MPERFECT_SAVECODE, 
+    TZ_MPERFECT_PRECODE, TZ_MPERFECT_PUBCODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MSITEI_DEFN_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_MSITEI_DEFN_T
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnTWithBLOBs" >
+    insert into PS_TZ_MSITEI_DEFN_T (TZ_SITEI_ID, TZ_JG_ID, TZ_MENROLL_SAVECODE, 
+      TZ_MENROLL_PRECODE, TZ_MENROLL_PUBCODE, 
+      TZ_MPERFECT_SAVECODE, TZ_MPERFECT_PRECODE, 
+      TZ_MPERFECT_PUBCODE)
+    values (#{tzSiteiId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzMenrollSavecode,jdbcType=LONGVARCHAR}, 
+      #{tzMenrollPrecode,jdbcType=LONGVARCHAR}, #{tzMenrollPubcode,jdbcType=LONGVARCHAR}, 
+      #{tzMperfectSavecode,jdbcType=LONGVARCHAR}, #{tzMperfectPrecode,jdbcType=LONGVARCHAR}, 
+      #{tzMperfectPubcode,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnTWithBLOBs" >
+    insert into PS_TZ_MSITEI_DEFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzMenrollSavecode != null" >
+        TZ_MENROLL_SAVECODE,
+      </if>
+      <if test="tzMenrollPrecode != null" >
+        TZ_MENROLL_PRECODE,
+      </if>
+      <if test="tzMenrollPubcode != null" >
+        TZ_MENROLL_PUBCODE,
+      </if>
+      <if test="tzMperfectSavecode != null" >
+        TZ_MPERFECT_SAVECODE,
+      </if>
+      <if test="tzMperfectPrecode != null" >
+        TZ_MPERFECT_PRECODE,
+      </if>
+      <if test="tzMperfectPubcode != null" >
+        TZ_MPERFECT_PUBCODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenrollSavecode != null" >
+        #{tzMenrollSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMenrollPrecode != null" >
+        #{tzMenrollPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMenrollPubcode != null" >
+        #{tzMenrollPubcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectSavecode != null" >
+        #{tzMperfectSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectPrecode != null" >
+        #{tzMperfectPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectPubcode != null" >
+        #{tzMperfectPubcode,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnTWithBLOBs" >
+    update PS_TZ_MSITEI_DEFN_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMenrollSavecode != null" >
+        TZ_MENROLL_SAVECODE = #{tzMenrollSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMenrollPrecode != null" >
+        TZ_MENROLL_PRECODE = #{tzMenrollPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMenrollPubcode != null" >
+        TZ_MENROLL_PUBCODE = #{tzMenrollPubcode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectSavecode != null" >
+        TZ_MPERFECT_SAVECODE = #{tzMperfectSavecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectPrecode != null" >
+        TZ_MPERFECT_PRECODE = #{tzMperfectPrecode,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzMperfectPubcode != null" >
+        TZ_MPERFECT_PUBCODE = #{tzMperfectPubcode,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnTWithBLOBs" >
+    update PS_TZ_MSITEI_DEFN_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_MENROLL_SAVECODE = #{tzMenrollSavecode,jdbcType=LONGVARCHAR},
+      TZ_MENROLL_PRECODE = #{tzMenrollPrecode,jdbcType=LONGVARCHAR},
+      TZ_MENROLL_PUBCODE = #{tzMenrollPubcode,jdbcType=LONGVARCHAR},
+      TZ_MPERFECT_SAVECODE = #{tzMperfectSavecode,jdbcType=LONGVARCHAR},
+      TZ_MPERFECT_PRECODE = #{tzMperfectPrecode,jdbcType=LONGVARCHAR},
+      TZ_MPERFECT_PUBCODE = #{tzMperfectPubcode,jdbcType=LONGVARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzMsiteiDefnT" >
+    update PS_TZ_MSITEI_DEFN_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+    where TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+  </update>
+</mapper>

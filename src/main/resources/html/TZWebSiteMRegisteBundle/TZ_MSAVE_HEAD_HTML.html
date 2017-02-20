@@ -1,0 +1,55 @@
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=IE9" >
+        <title></title>
+        <link href="page_stylecss" rel="stylesheet" type="text/css" />
+        <link id="decoratedplugincss" href="%bind(:1)/statics/css/website/decoratedplugin.css" rel="stylesheet" type="text/css"/>
+       <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/neptune-touch/resources/KitchenSink-all.css" symbol="backend"/>
+
+		<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/website/flat-ui.css">
+
+	
+        <script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/ext-all.js" symbol="backend">
+        </script>
+	
+
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/ueditor/ueditor.config.js" symbol="backend"></script>
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/ueditor/ueditor.all.js" symbol="backend"></script>
+
+		<script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/ux/ueditor.js" symbol="backend"></script>
+
+        <script id="decoratedpluginjs" type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/decoratedplugin.js">
+        </script>
+	
+     	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+  		<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js">
+        </script>
+	<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/layer.js"></script>
+
+       <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/backendcommon.js" symbol="backend"></script>
+		
+        <style type="text/css">
+            .iconMenu{width:35px;height:35px;} 			.save{background-image:url(%bind(:1)/statics/css/kitchensink/neptune/resources/images/icons/fam/folder_go.gif)}
+            .ensure{background-image:url(%bind(:1)/statics/css/kitchensink/neptune/resources/images/icons/fam/folder_go.gif)}
+            .edit{background-image:url(%bind(:1)/statics/css/kitchensink/neptune/resources/images/icons/fam/page_white_edit.png)}
+            .close{background-image:url(%bind(:1)/statics/css/kitchensink/neptune/resources/images/icons/fam/close.png)}
+            .x-grid-cell-inner-treecolumn{ line-height:25px; color:#046dba; font-weight:bold;
+            border-bottom:1px solid #dadbdd; text-align:center; } .x-grid-cell-last{
+            }
+        </style>
+        <script type="text/javascript">
+			
+			function getQueryString(name) { 
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+				var r = window.location.search.substr(1).match(reg); 
+				if (r != null) return unescape(r[2]); return null; 
+			} 
+
+             $(document).ready(function(){
+
+				if ($(".main_mid").height()>760){
+				$("#letf_menu").height($(".main_mid").height());}else{$("#letf_menu").height(760);}
+
+            });
+        </script>
+    </head>

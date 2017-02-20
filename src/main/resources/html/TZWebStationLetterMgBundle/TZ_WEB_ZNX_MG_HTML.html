@@ -1,79 +1,49 @@
 <!DOCTYPE html><html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-<title>清华MBA-站内信</title>
-<link href="%bind(:3)" rel="stylesheet" type="text/css">
+<title></title>
+
 <script type="text/javascript">
-	TzUniversityContextPath = "%bind(:1)";
+	var TzUniversityContextPath = "%bind(:1)";
+	var dispatcher = "%bind(:2)";
+	var language = "%bind(:3)";
+	var oprid = "%bind(:4)";
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
-
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
+<link href="%bind(:5)" rel="stylesheet" type="text/css">
 <script type="text/javascript">
-
-     var urlBegin="%bind(:2)";
-     
-     function checkHisApply(classId,languageCd){
-	   	  var confirmValue = false;
-	   	  var siteid=$("#siteid").val();
-	   	  var tzParams = '{"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_APPLY_CENT_PAGE","OperateType":"QF","comParams":{"classId":"'+classId+'","siteid":"'+siteid+'"}}';
+	$.format = function (source, params) { 
+		if (arguments.length == 1) 
+		return function () { 
+		var args = $.makeArray(arguments); 
+		args.unshift(source); 
+		return $.format.apply(this, args); 
+		}; 
+		if (arguments.length > 2 && params.constructor != Array) { 
+		params = $.makeArray(arguments).slice(1); 
+		} 
+		if (params.constructor != Array) { 
+		params = [params]; 
+		} 
+		$.each(params, function (i, n) { 
+		source = source.replace(new RegExp("\\{" + i + "\\}", "g"), n); 
+		}); 
+		return source; 
+	}; 
 	
-	   		$.ajax({
-	   				type:"POST",
-	   				url:urlBegin,
-	   				data:{
-	   					tzParams:tzParams
-	   				},
-	   				dataType:'json',
-	   				success:function(response){
-	   					  var HaveHisApplyForm = response.comContent.HaveHisApplyForm;
-	   					  var HaveHCBJ=response.comContent.HaveHCBJ;
-	   					  if(HaveHCBJ=="true"){
-	   						if(languageCd == "ENG"){
-	   							alert("Our system has detected existing registration information from an application you previously started, and you are not allowed to  the application for other programs related.");
-	   						}else{
-	   							alert("系统检测到您已经申请了一个项目，不允许再申请相关的其他项目。");
-	   						}
-	   					  }else{
-	   						if(HaveHisApplyForm == "true"){
-	   							if(languageCd == "ENG"){
-	   						  	confirmValue = confirm("Our system has detected existing registration information from an application you previously started. Would you like to copy your previously entered application information into the new application form?");
-	   						  }else{
-	   						  	confirmValue = confirm("系统检测到您曾经报过名，是否从过往报名表中带入历史数据？");
-	   						  }
-	   						}
-	   						 
-	   						if(confirmValue==true){
-	   							location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
-	   						}else{
-	   							location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
-	   						} 
-	   					}
-	   				}   
-	   	});
-
-   }
-
-
-   function addBmb(languageCd){
-   	var classidVale = $('input[name="classidradio"]:checked ').val();
-   	if(classidVale == null || classidVale == ""){
-   		if(languageCd == "ENG"){
-   			alert("请选择班级");
-   		}else{
-   			alert("请选择班级");
-   		}
-   		
-   	}else{
-   		checkHisApply(classidVale,languageCd);
-   	}
-   }
-
    function classSelectCancle(){
    		$(".Shade").hide();
         $(".sq_pop").hide();
    }
-   
+   function checkAll(obj){
+       var $obj=$(obj);
+       if($obj.hasClass("trSelected")){
+           $(".erow").removeClass("trSelected");
+       }else{
+           $(".erow").addClass("trSelected");
+       }
+   }
    function tab(nav,content,on,type)
    {
      $(nav).children().bind(type,(function(){
@@ -87,15 +57,100 @@
        $content.eq(tab_index).show();
      }));
    }
-   //删除站内信
+   
    	$(document).ready(function(){
-   		$(".detele_icon").click(function(){
- 		   alert("请选择要删除的记录");
- 	     });
-   		$(".search_icon").click(function(){
-   			//alert("搜索");
+   		$(".table_style tbody tr ").click(function(){
+            $(this).toggleClass('trSelected');
+        });
+   	 	//删除站内信
+   		$(".detele_icon").click(function(event) {
+	            $(".table_style tbody tr").each(function(i, item) {
+	            var index = $(".table_style tbody tr").index(this);
+	            if ($(this).hasClass('trSelected')) {
+	                $(this).hide();
+	                //loadStationMails(1,0);
+	            } 
+	          });
+        });
+   		$(".search_icon").click(function(event){
+   			$(".search_input").val();
    		});
+   		
+   		//初始加载站内信列表
+   		loadStationMails(1,0);
    	});
+   	
+   	function loadStationMails(page,start){
+	   	 var tzParams = {
+	   			 ComID:"TZ_WEBSITE_ZNX_COM",
+	   			 PageID:"TZ_WEBSITE_ZNX_STD",
+	   			 OperateType:"QG",
+	   			 comParams:{
+	   				 cfgSrhId:"TZ_WEBSITE_ZNX_COM.TZ_WEBSITE_ZNX_STD.PS_TZ_ZNX_MSG_VW",
+	   				 condition:{
+	   					 "TZ_ZNX_RECID-operator": "01",
+	   					 "TZ_ZNX_RECID-value": oprid
+	   					 }
+	   	 		}
+	   	 	};
+
+		 $.ajax({
+				type:"POST",
+				url: urlBegin,
+				data:{
+					tzParams:JSON.stringify(tzParams),
+					page:page,
+					start:start,
+					limit:15
+				},
+				success:function(response){
+					try{
+						var data = eval("("+response+")").comContent;
+						
+						var pageCount = parseInt(data.total/15)+(data.total%15>0&&1||0)
+						if(pageCount<1){
+							$(".main_article_nav").hide();
+						}
+						//分页栏
+						var pageCountsHtml = '<li onclick="loadPage(-1)">&lt;&lt;</li>';
+						for(var i=1;i<=pageCount;i++){
+							pageCountsHtml = pageCountsHtml+'<li '+(i==page?'class="now"':'')+' onclick="loadPage('+i+')">'+i+'</li>';
+						}
+						var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage(1)">&gt;&gt;</li>';
+
+						$("#pagecount").html(pageCountsHtml);
+						$("#nowpage").html(page);
+						$("#allpages").html(pageCount);
+						
+				      	//列表数据
+				      	var list = data.root;
+				      	var listHtmlContent="";
+				      	var recordBase = [
+							'<tr class="erow {0}">',
+							'<td><div class="check-box"> <i class="ico-check" id="checkAll" mailid={1}></i></div></td>',
+							'<td>{2}</td>',
+							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}">{3}</a></td>',
+							'<td>{4}</td>',
+							'</tr>'
+						];
+				      
+				      	$.each(list,function(index,record){
+				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),"",record["stationMailId"],record["sendName"],record["stationMailTitle"],record["stationMailReceived"])
+				      	});
+				      	$(".table_style tbody").html(listHtmlContent);
+				      	$(".table_style tbody tr ").click(function(){
+				            $(this).toggleClass('trSelected');
+				        });
+				      	
+					}catch(exception){
+						alert("加载数据异常："+exception.toString());
+					}
+				},
+		    	failure: function () {
+				  		//ToDo
+		    	}    
+		});
+   	}
 </script>
 
 </head>
@@ -129,8 +184,42 @@
 	  <!-- main start -->
 
 	<div class="main_mid_left">
-		%bind(:4)
-	   
+		<div class="main_tit">站内信</div>
+		<div class="zxj_main_body">
+			<div class="table_top">
+                 	<p class="zxj_messages">有<span class="message_cur">%bind(:6)</span>条未读</p>
+                 	<a class="detele_icon">
+                 		<img src="%bind(:1)/statics/images/website/skins/23/message_de.png">
+                 		<span>删除</span>
+                 	</a>
+                 	<div class="table_search">
+                 		<input type="text" class="search_input">
+                 		<a class="search_icon"></a>
+                 	</div>
+           </div>
+           <table class="table_style" style="margin-top:10px;">
+			<thead>
+			   <tr onclick="checkAll(this);" class="erow">
+			   	<td><div class="check-box"> <i class="ico-check" id="checkAll"></i></div>
+			   	</td>
+				<td>发件人</td>
+				<td>主题</td>
+				<td>时间</td>
+			   </tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+           </table>
+           <div class="main_article_nav">
+      			<div class="main_article_nav_left2">
+	
+			      <ul id="pagecount"></ul>
+      			</div>
+      			<div id="curentcoutpage" class="main_article_nav_right2">第 <span id="nowpage">&nbsp;</span>/<span id="allpages">&nbsp;</span> 页</div>
+				
+			</div>
+		</div>
   	</div>
     
   <!-- main end -->
@@ -147,13 +236,13 @@
 
 <script type="text/javascript">
      $(document).ready(function(){
-        LoadHeader("%bind(:5)","%bind(:6)","");
-		LoadMenu("%bind(:5)","%bind(:6)","");
-		LoadFooter("%bind(:5)","%bind(:6)","");
-		LoadWelcome("%bind(:5)","%bind(:6)","");
+        LoadHeader("%bind(:7)","%bind(:8)","");
+		LoadMenu("%bind(:7)","%bind(:8)","");
+		LoadFooter("%bind(:7)","%bind(:8)","");
+		LoadLeftArea("%bind(:7)","%bind(:8)", "");
 	});
 </script>
 
-<input type="hidden" id="siteid" name="siteid" value="%bind(:6)"/>	
+<input type="hidden" id="siteid" name="siteid" value="%bind(:8)"/>
 </body>
 </html>

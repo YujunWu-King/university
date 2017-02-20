@@ -1,0 +1,94 @@
+<!DOCTYPE html><html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+<title></title>
+<link href="%bind(:3)" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+	TzUniversityContextPath = "%bind(:1)";
+</script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
+
+<script type="text/javascript">
+
+     var urlBegin="%bind(:2)";
+
+   function classSelectCancle(){
+   		$(".Shade").hide();
+        $(".sq_pop").hide();
+   }
+   
+   function tab(nav,content,on,type)
+   {
+     $(nav).children().bind(type,(function(){
+    
+       var $tab=$(this);
+       var tab_index=$tab.prevAll().length;
+       var $content = $(content).children();
+       $(nav).children().removeClass(on);
+       $tab.addClass(on);
+       $content.hide();
+       $content.eq(tab_index).show();
+     }));
+   }
+</script>
+
+</head>
+<body style="background:#eee;">
+
+<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id="">
+		
+<!---  网站标题头 begin--->
+		
+<!---  网站标题头 end--->
+</div>	
+
+		
+
+        </div>
+	<!-- top end -->
+	<!-- content start -->
+<div id="main" class="main">
+<!--左侧菜单 begin-->
+<div class="zxj_left">
+ <div  id="letf_menu" class="main_left assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="L" area-type="ZC" area-id="">
+	
+    <div style="height:100%;border-left:3px solid #e7ceeb;padding-top:25px;margin-left: 6%;">
+
+    </div>
+</div>
+</div>
+ <!--左侧菜单 end-->
+
+	<!-- left nav end --><!-- left end -->
+	  <!-- main start -->
+
+	<div class="main_mid_left">
+		%bind(:4)
+	   
+  	</div>
+    
+  <!-- main end -->
+</div>
+
+ <div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id="">
+         
+<!---替换结尾footer--begin--->
+
+<!---替换结尾footer--end--->
+		</div>
+	
+
+
+<script type="text/javascript">
+     $(document).ready(function(){
+        LoadHeader("%bind(:5)","%bind(:6)","");
+		LoadMenu("%bind(:5)","%bind(:6)","");
+		LoadFooter("%bind(:5)","%bind(:6)","");
+		LoadLeftArea("%bind(:5)","%bind(:6)", "");
+	});
+</script>
+
+<input type="hidden" id="siteid" name="siteid" value="%bind(:6)"/>	
+</body>
+</html>

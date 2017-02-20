@@ -56,7 +56,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 			
 			int tableNameCount = 0;
 			String tableName = str_view_name;
-			String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
+			String tableNameSql = "select COUNT(1) from TZ_SCHEMA_TABLES_VW where TABLE_NAME=?";
 			tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_view_name},"Integer");
 			if(tableNameCount <= 0){
 				tableName =  "PS_" + str_view_name;
@@ -64,12 +64,12 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 			
 			int total = 0;
 			// 查询总数;
-			String totalSQL = "select COUNT(1) from information_schema.COLUMNS where TABLE_NAME=? AND UPPER(COLUMN_NAME) LIKE ? ORDER BY ORDINAL_POSITION ASC";
+			String totalSQL = "select COUNT(1) from TZ_SCHEMA_COLUMNS_VW where TABLE_NAME=? AND UPPER(COLUMN_NAME) LIKE ? ORDER BY ORDINAL_POSITION ASC";
 			
 			total = jdbcTemplate.queryForObject(totalSQL, new Object[] {tableName,"%"+str_field_name+"%" },
 					"Integer");
 			
-			String sql = "select COLUMN_NAME,COLUMN_COMMENT from information_schema.COLUMNS where TABLE_NAME=? AND UPPER(COLUMN_NAME) LIKE ? ORDER BY ORDINAL_POSITION ASC limit ?,? ";
+			String sql = "select COLUMN_NAME,COLUMN_COMMENT from TZ_SCHEMA_COLUMNS_VW where TABLE_NAME=? AND UPPER(COLUMN_NAME) LIKE ? ORDER BY ORDINAL_POSITION ASC limit ?,? ";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 					new Object[] { tableName,"%"+str_field_name+"%" ,numStart,numLimit});
 			
@@ -124,7 +124,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 				
 				int tableNameCount = 0;
 				String tableName = str_view_name;
-				String tableNameSql = "select COUNT(1) from information_schema.tables where TABLE_NAME=?";
+				String tableNameSql = "select COUNT(1) from TZ_SCHEMA_TABLES_VW where TABLE_NAME=?";
 				tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_view_name},"Integer");
 				if(tableNameCount <= 0){
 					tableName =  "PS_" + str_view_name;
@@ -147,7 +147,7 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 					}catch(Exception e){
 						numxh = 0;
 					}
-					String fieldNameSQL = "select DATA_TYPE,COLUMN_COMMENT from information_schema.COLUMNS where TABLE_NAME=? AND COLUMN_NAME=?";
+					String fieldNameSQL = "select DATA_TYPE,COLUMN_COMMENT from TZ_SCHEMA_COLUMNS_VW where TABLE_NAME=? AND COLUMN_NAME=?";
 					Map<String, Object> map = jdbcTemplate.queryForMap(fieldNameSQL,new Object[]{tableName,str_field_name});
 					str_fieldgl_desc = (String) map.get("COLUMN_COMMENT");
 					String fieldType = (String) map.get("DATA_TYPE");

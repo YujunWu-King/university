@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClmsCsBiaoqzBundle.dao.PsTzBiaoqzBqTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
+    <id column="TZ_BIAOQZ_ID" property="tzBiaoqzId" jdbcType="VARCHAR" />
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_BIAOQ_ID" property="tzBiaoqId" jdbcType="VARCHAR" />
+    <result column="TZ_BIAOQZ_NAME" property="tzBiaoqzName" jdbcType="VARCHAR" />
+    <result column="TZ_DESC" property="tzDesc" jdbcType="VARCHAR" />
+    <result column="TZ_BIAOQZ_JAVA" property="tzBiaoqzJava" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQ_ID, TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_BIAOQZ_BQ_T
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_BIAOQ_ID = #{tzBiaoqId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqTKey" >
+    delete from PS_TZ_BIAOQZ_BQ_T
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_BIAOQ_ID = #{tzBiaoqId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
+    insert into PS_TZ_BIAOQZ_BQ_T (TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQ_ID, 
+      TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA
+      )
+    values (#{tzBiaoqzId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzBiaoqId,jdbcType=VARCHAR}, 
+      #{tzBiaoqzName,jdbcType=VARCHAR}, #{tzDesc,jdbcType=VARCHAR}, #{tzBiaoqzJava,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
+    insert into PS_TZ_BIAOQZ_BQ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzBiaoqzId != null" >
+        TZ_BIAOQZ_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzBiaoqId != null" >
+        TZ_BIAOQ_ID,
+      </if>
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME,
+      </if>
+      <if test="tzDesc != null" >
+        TZ_DESC,
+      </if>
+      <if test="tzBiaoqzJava != null" >
+        TZ_BIAOQZ_JAVA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzBiaoqzId != null" >
+        #{tzBiaoqzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBiaoqId != null" >
+        #{tzBiaoqId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBiaoqzName != null" >
+        #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDesc != null" >
+        #{tzDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBiaoqzJava != null" >
+        #{tzBiaoqzJava,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
+    update PS_TZ_BIAOQZ_BQ_T
+    <set >
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDesc != null" >
+        TZ_DESC = #{tzDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBiaoqzJava != null" >
+        TZ_BIAOQZ_JAVA = #{tzBiaoqzJava,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_BIAOQ_ID = #{tzBiaoqId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
+    update PS_TZ_BIAOQZ_BQ_T
+    set TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR},
+      TZ_DESC = #{tzDesc,jdbcType=VARCHAR},
+      TZ_BIAOQZ_JAVA = #{tzBiaoqzJava,jdbcType=VARCHAR}
+    where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_BIAOQ_ID = #{tzBiaoqId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZScoreModeManagementBundle.service.impl;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -550,6 +551,9 @@ public class TzScoreModeDefnServiceImpl extends FrameworkImpl {
 					psTzModalDtTblWithBLOBs.setTzJgId(orgId);
 					psTzModalDtTblWithBLOBs.setTreeName(treeName);
 					psTzModalDtTblWithBLOBs.setTzScoreItemId(root);
+					psTzModalDtTblWithBLOBs.setTzScoreItemType("A");
+					psTzModalDtTblWithBLOBs.setDescr("总分");
+					psTzModalDtTblWithBLOBs.setTzScoreHz(new BigDecimal(100));
 					
 					psTzModalDtTblMapper.insertSelective(psTzModalDtTblWithBLOBs);
 				}

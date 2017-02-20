@@ -6,6 +6,6 @@ Ext.define('KitchenSink.view.qklZsmb.certType.certTypeStore', {
     pageSize: 50,
     comID: 'TZ_CERTTYPE_COM',
     pageID: 'TZ_TYPE_LIST_STD',
-    tzStoreParams: '{"cfgSrhId":"TZ_CERTTYPE_COM.TZ_TYPE_LIST_STD.TZ_CERT_TYPE_TBL","condition":{}}',
+    tzStoreParams: '{"cfgSrhId":"TZ_CERTTYPE_COM.TZ_TYPE_LIST_STD.TZ_CERT_TYPE_VW","condition":{}}',
     proxy: Ext.tzListProxy()
 });

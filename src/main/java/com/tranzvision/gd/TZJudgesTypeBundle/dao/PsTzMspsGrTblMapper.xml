@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZJudgesTypeBundle.dao.PsTzMspsGrTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
+    <id column="TZ_CLPS_GR_ID" property="tzClpsGrId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_CLPS_GR_NAME" property="tzClpsGrName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_MSPS_GR_TBL
+    where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_MSPS_GR_TBL
+    where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
+    insert into PS_TZ_MSPS_GR_TBL (TZ_CLPS_GR_ID, TZ_JG_ID, TZ_CLPS_GR_NAME
+      )
+    values (#{tzClpsGrId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzClpsGrName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
+    insert into PS_TZ_MSPS_GR_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClpsGrId != null" >
+        TZ_CLPS_GR_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzClpsGrName != null" >
+        TZ_CLPS_GR_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClpsGrId != null" >
+        #{tzClpsGrId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClpsGrName != null" >
+        #{tzClpsGrName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
+    update PS_TZ_MSPS_GR_TBL
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClpsGrName != null" >
+        TZ_CLPS_GR_NAME = #{tzClpsGrName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzMspsGrTbl" >
+    update PS_TZ_MSPS_GR_TBL
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_CLPS_GR_NAME = #{tzClpsGrName,jdbcType=VARCHAR}
+    where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
+  </update>
+</mapper>

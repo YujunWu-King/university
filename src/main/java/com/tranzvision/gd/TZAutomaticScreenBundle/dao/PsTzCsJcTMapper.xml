@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsJcTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcT" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
+    <result column="PRCSINSTANCE" property="prcsinstance" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, PRCSINSTANCE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CS_JC_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcTKey" >
+    delete from PS_TZ_CS_JC_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcT" >
+    insert into PS_TZ_CS_JC_T (TZ_CLASS_ID, TZ_APPLY_PC_ID, PRCSINSTANCE
+      )
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{prcsinstance,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcT" >
+    insert into PS_TZ_CS_JC_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzApplyPcId != null" >
+        TZ_APPLY_PC_ID,
+      </if>
+      <if test="prcsinstance != null" >
+        PRCSINSTANCE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzApplyPcId != null" >
+        #{tzApplyPcId,jdbcType=VARCHAR},
+      </if>
+      <if test="prcsinstance != null" >
+        #{prcsinstance,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcT" >
+    update PS_TZ_CS_JC_T
+    <set >
+      <if test="prcsinstance != null" >
+        PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcT" >
+    update PS_TZ_CS_JC_T
+    set PRCSINSTANCE = #{prcsinstance,jdbcType=INTEGER}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+  </update>
+</mapper>

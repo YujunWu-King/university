@@ -928,7 +928,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 			// 获取个人基本信息
 			String strUserInfoSet = "";
-			strUserInfoSet = this.getUserInfo();
+			strUserInfoSet = this.getUserInfo(strAppInsId);
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
@@ -1090,7 +1090,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						Pwdname, strSubmit2, contextUrl);
 
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
-						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
+						true, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
 						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
 						strMsgSet, strLanguage, strSave, strNext, strSubmit, strTplType, strLoading, strProcessing,
 						strAfterSubmitUrl, strOnlineHead, strOnlineFoot, strOnlineLeft, strIsAdmin, strMainInnerStyle,
@@ -1657,7 +1657,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// String strMsgAlter = "";
 
 					if ("".equals(strMsg)) {
-						strMsg = this.checkFiledValid(numAppInsId, strTplId, "", "submit");
+						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "pre");
+						if ("".equals(strMsg)) {
+							this.savePageCompleteState(numAppInsId, strPageId, "Y");
+						} else {
+							this.savePageCompleteState(numAppInsId, strPageId, "N");
+						}
 					}
 
 					if ("".equals(strMsg)) {
@@ -1905,7 +1910,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String getUserInfo() {
+	private String getUserInfo(String strAppInsId) {
 
 		// 当前登陆人
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -1918,6 +1923,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
+		String sql = "";
 		for (Object objData : listData) {
 			strFieldValue = "";
 			Map<String, Object> mapData = (Map<String, Object>) objData;
@@ -1929,26 +1935,26 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			try {
 				if ("TZ_SKYPE".equals(strField) || "TZ_MOBILE".equals(strField) || "TZ_EMAIL".equals(strField)) {
 					if ("TZ_MOBILE".equals(strField)) {
-						String sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					} else if ("TZ_EMAIL".equals(strField)) {
-						String sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					} else {
-						String sql = "SELECT TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
+						sql = "SELECT TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY = 'ZCYH' AND TZ_LYDX_ID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					}
 				} else {
 					if ("TZ_REALNAME".equals(strField)) {
-						String sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
+						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? AND OPRID = ?";
 						strFieldValue = sqlQuery.queryForObject(sql, new Object[] { orgid, oprid }, "String");
 					} else {
 						// 项目字段没对应;
 						if ("TZ_PROJECT".equals(strField)) {
-							String sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
+							sql = "SELECT TZ_PRJ_ID FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
 						} else {
-							String sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
+							sql = "SELECT " + strField + " FROM PS_TZ_REG_USER_T WHERE OPRID = '" + oprid + "'";
 							strFieldValue = sqlQuery.queryForObject(sql, "String");
 						}
 					}
@@ -1963,6 +1969,28 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				continue;
 			}
 		}
+
+		// 插入面试申请号码, 推荐信 不需要登录，所以没有oprid
+		System.out.println("strAppInsId:" + strAppInsId);
+		String TZ_MSH_ID = "";
+		System.out.println("oprid:" + oprid);
+		if (oprid == null || oprid.equals("")) {
+			sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_KS_TJX_TBL B WHERE A.OPRID=B.OPRID AND B.TZ_TJX_APP_INS_ID=?";
+			TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
+			if (TZ_MSH_ID == null) {
+				TZ_MSH_ID = "";
+			}
+		} else {
+
+			sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+			TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
+			if (TZ_MSH_ID == null) {
+				TZ_MSH_ID = "";
+			}
+		}
+		System.out.println("TZ_MSH_ID:" + TZ_MSH_ID);
+		map.put("TZ_MSH_ID", TZ_MSH_ID);
+
 		strUserInfo = jacksonUtil.Map2json(map);
 
 		return strUserInfo;
@@ -2157,7 +2185,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 											mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
 													.get("children");
 										} catch (Exception e) {
-											//e.printStackTrace();
+											// e.printStackTrace();
 											mapChildrens2 = new ArrayList<Map<String, Object>>();
 											Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems
 													.get("children");
@@ -2168,7 +2196,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 											}
 										}
 
-										//System.out.println("Size:" + mapChildrens2.size());
+										// System.out.println("Size:" +
+										// mapChildrens2.size());
 
 										String strIsSingleLine2 = "";
 										if (mapJsonChildrenItems.containsKey("isSingleLine")) {
@@ -2634,6 +2663,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	}
 
 	// 检查是否填写完成
+	/**
+	 * 
+	 * @param numAppInsId
+	 * @param strTplId
+	 * @param strPageId
+	 * @param strOtype
+	 * @return
+	 */
 	private String checkFiledValid(Long numAppInsId, String strTplId, String strPageId, String strOtype) {
 		String returnMsg = "";
 
@@ -2728,10 +2765,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				numCurrentPageNo = sqlQuery.queryForObject(sqlGetPageNo, new Object[] { strTplId, strPageId },
 						"Integer");
 			}
+			String sql = "";
+			List<?> listData = null;
 
-			String sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL");
+			if ("pre".equals(strOtype)) {
+				System.out.println("numCurrentPageNo:"+numCurrentPageNo);
+				sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL2");
 
-			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId });
+				listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numCurrentPageNo });
+			} else {
+				sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL");
+				listData = sqlQuery.queryForList(sql, new Object[] { strTplId });
+			}
+
 			for (Object objData : listData) {
 				Map<String, Object> MapData = (Map<String, Object>) objData;
 				strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
@@ -2776,27 +2822,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// System.out.println("numCurrentPageNo:"+numCurrentPageNo);
 					// System.out.println("numPageNo:"+numPageNo);
 					if (numCurrentPageNo == numPageNo) {
-						/*
-						 * String[] parameterTypes = new String[]
-						 * {"Long","String","String","String","String",
-						 * "int","String","String","String","String","String",
-						 * "String","String","String","String","int","int",
-						 * "String","int","int","String",
-						 * "String","String","int","String","String"}; Object[]
-						 * arglist = new
-						 * Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,
-						 * strComMc,
-						 * numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,
-						 * strXxxZsxzgs,strXxxZdxzgs,
-						 * strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,
-						 * numXxxMinlen,numXxxMaxlen,
-						 * strXxxNumBz,numXxxMin,numXxxMax,strXxxXsws,
-						 * strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,
-						 * strJygzTsxx}; Object objs =
-						 * ObjectDoMethod.Load(strPath + "." + strName,
-						 * strMethod, parameterTypes, arglist); String strReturn
-						 * = String.valueOf(objs);
-						 */
 						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
 								.getBean(strPath + "." + strName);
 						String strReturn = "";
@@ -2859,20 +2884,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						}
 					}
 				} else {
-					/*
-					 * String[] parameterTypes = new String[] {"String[]" };
-					 * Object[] arglist = new
-					 * Object[]{numAppInsId,strTplId,strXxxBh,strXxxMc,strComMc,
-					 * numPageNo,strXxxRqgs,strXxxXfmin,strXxxXfmax,strXxxZsxzgs
-					 * ,strXxxZdxzgs,
-					 * strXxxYxsclx,strXxxYxscdx,strXxxBtBz,strXxxCharBz,
-					 * numXxxMinlen,numXxxMaxlen,strXxxNumBz,numXxxMin,numXxxMax
-					 * ,strXxxXsws,
-					 * strXxxGdgsjy,strXxxDrqBz,numXxxMinLine,strTjxSub,
-					 * strJygzTsxx}; Object objs = ObjectDoMethod.Load(strPath +
-					 * "." + strName, strMethod, parameterTypes, arglist);
-					 * String strReturn = String.valueOf(objs);
-					 */
 					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
 					System.out.println("strMethod:" + strMethod);

@@ -38,39 +38,34 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 
-			if (jacksonUtil.containsKey("classID")) {
+			if (jacksonUtil.containsKey("classID")&&jacksonUtil.containsKey("batchID")) {
 				// 班级编号;
 				String strClassID = jacksonUtil.getString("classID");
-				// 班级名称，所属项目，所属项目名称;
-				String strClassName = "", strProjectID = "", strProjectName = "", strAppModalID = "";
+				// 批次编号;
+				String strBatchID = jacksonUtil.getString("batchID");
+				// 班级名称，报名表模板编号，批次名称;
+				String strClassName = "", strAppModalID = "",strBatchName = "";
 
-				// 获取班级名称、所属项目，所属项目名称，报名表模板ID;
-				String sql = "SELECT TZ_CLASS_NAME,TZ_PRJ_ID,TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
-				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strClassID });
+				// 获取班级名称，报名表模板ID，批次名称;
+				String sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T A INNER JOIN PS_TZ_CLS_BATCH_T B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_BATCH_ID=?) WHERE A.TZ_CLASS_ID=?";
+				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strBatchID,strClassID });
 				if (map != null) {
 					strClassName = (String) map.get("TZ_CLASS_NAME");
-					strProjectID = (String) map.get("TZ_PRJ_ID");
 					strAppModalID = (String) map.get("TZ_APP_MODAL_ID");
-
-					if (strProjectID != null && !"".equals(strProjectID)) {
-						String prjSql = "SELECT TZ_PRJ_NAME FROM PS_TZ_PRJ_INF_T WHERE TZ_PRJ_ID=?";
-						strProjectName = jdbcTemplate.queryForObject(prjSql, new Object[] { strProjectID }, "String");
-						if (strProjectName == null) {
-							strProjectName = "";
-						}
-					}
-
+					strBatchName = (String) map.get("TZ_BATCH_NAME");
+					
 					Map<String, Object> hMap = new HashMap<>();
 					hMap.put("classID", strClassID);
 					hMap.put("className", strClassName);
-					hMap.put("projectName", strProjectName);
 					hMap.put("modalID", strAppModalID);
+					hMap.put("batchID", strBatchID);
+					hMap.put("batchName", strBatchName);
 					returnJsonMap.replace("formData", hMap);
 				}
 
 			} else {
 				errMsg[0] = "1";
-				errMsg[1] = "请选择班级";
+				errMsg[1] = "请选择报考方向和批次";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,7 +90,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(comParams);
 			// 班级编号;
 			String strClassID = jacksonUtil.getString("classID");
-
+			// 批次编号;
+			String strBatchID = jacksonUtil.getString("batchID");
+			
 			// 当前语言环境;
 			String strLanguageId = tzLoginServiceImpl.getSysLanaguageCD(request);
 			if (strLanguageId == null || "".equals(strLanguageId)) {
@@ -134,7 +131,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
 						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
 						+ " ,TZ_SUBMIT_DT_STR ,TZ_MS_RESULT," + tzMsResultSQL
-						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? ORDER BY TZ_APP_INS_ID DESC LIMIT " + numStart
+						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? ORDER BY TZ_APP_INS_ID DESC LIMIT " + numStart
 						+ "," + numLimit;
 			}
 
@@ -169,7 +166,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
 			
 			
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlStudentList, new Object[] { strClassID });
+			List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlStudentList, new Object[] { strClassID ,strBatchID});
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					strOprID = (String) list.get(i).get("OPRID");
@@ -339,8 +336,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			}
 
 			// 获取学生信息总数;
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=?";
-			int numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strClassID }, "Integer");
+			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+			int numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strClassID ,strBatchID}, "Integer");
 			mapRet.replace("total", numTotal);
 			mapRet.replace("root", listData);
 

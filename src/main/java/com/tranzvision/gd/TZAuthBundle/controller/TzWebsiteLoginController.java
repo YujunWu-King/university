@@ -27,6 +27,7 @@ import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 
 /**
  * 机构网站登录前端控制器
@@ -75,9 +76,18 @@ public class TzWebsiteLoginController {
 			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
 
 			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
-
-				String loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
-				strRet = loginHtml;
+			    	
+				String loginHtml = "";
+				Boolean isMobile = CommonUtils.isMobile(request);
+				if(isMobile){
+				    loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				}else{
+				    loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				}
+				
+				
 			} else {
 
 				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
@@ -211,7 +221,9 @@ public class TzWebsiteLoginController {
 		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
 
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
-
+		//System.out.println("orgid:"+orgid);
+		//System.out.println("siteid:"+siteid);
+		
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
@@ -219,6 +231,7 @@ public class TzWebsiteLoginController {
 		orgid = orgid.toLowerCase();
 
 		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
+		//System.out.println("redirect:"+redirect);
 
 		return redirect;
 	}
