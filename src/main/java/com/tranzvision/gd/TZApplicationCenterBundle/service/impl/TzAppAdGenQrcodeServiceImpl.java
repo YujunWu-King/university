@@ -22,9 +22,10 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 生成录取通知书分享二维码页面
- * 生成录取通知书分享html页面
+ * 生成录取通知书分享二维码
  * 
+ * @para 报名表编号
+ * @ret  录取通知书二维码图片地址
  * @author YTT
  * @since 2017-01-16
  */
@@ -52,24 +53,22 @@ public class TzAppAdGenQrcodeServiceImpl {
 	private CreateQRCode createQRCode;	
 	
 	//生成录取通知书二维码
-	public String genQrcode(String siteId,String oprid,Long tzAppInsID) {
+	public String genQrcode(Long tzAppInsID) {
 		String qrcodeFilePath="";
+		String siteId="";
+		String oprid="";
+		String jgId="";
 		
 		try {
-			String language = "", jgId = "", skinId = "";
-			String siteSQL = "SELECT TZ_JG_ID,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
-			Map<String, Object> siteMap = sqlQuery.queryForMap(siteSQL, new Object[] { siteId });
-			if (siteMap != null) {
-				language = (String) siteMap.get("TZ_SITE_LANG");
-				jgId = (String) siteMap.get("TZ_JG_ID");
-				skinId = (String) siteMap.get("TZ_SKIN_ID");
-				if (language == null || "".equals(language)) {
-					language = "ZHS";
-				}
-				if (jgId == null || "".equals(jgId)) {
-					jgId = "ADMIN";
-				}
-			}
+			//oprid
+			String opridSql="SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+			oprid= sqlQuery.queryForObject(opridSql, new Object[] {tzAppInsID}, "String");
+			//站点
+			String siteIdSql="SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+			siteId= sqlQuery.queryForObject(siteIdSql, new Object[] {oprid}, "String");
+			//机构
+			String jgIdSql="SELECT TZ_JG_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y'";
+			jgId= sqlQuery.queryForObject(jgIdSql, new Object[] {siteId}, "String");
 				
 			String qrcodeFileName = "TZ_ADMISSION_PREVIEW_" + siteId + "_" + oprid + "_" + tzAppInsID + ".png";
 				
