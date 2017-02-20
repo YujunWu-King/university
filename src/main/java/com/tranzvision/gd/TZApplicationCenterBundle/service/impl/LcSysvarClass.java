@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 
@@ -18,6 +21,12 @@ import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 public class LcSysvarClass {
 	// table 允许的列数量；
 	private static int TABLE_COLUM_NUM = 6;
+	@Autowired
+	private SqlQuery sqlQuery;	
+	@Autowired
+	private TZGDObject tzGDObject;
+	@Autowired
+	private TzAppAdGenQrcodeServiceImpl TzAppAdGenQrcodeServiceImpl;
 
 	// 报名表提交状态;
 	public String[] getAppSubmitSatus(String[] para) {
@@ -171,7 +180,26 @@ public class LcSysvarClass {
 		try{
 			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_MSJG"});
 			if(lcName != null && !"".equals(lcName)){
-				result = this.analyLcDrInfo(lcName, type, appIns, rootPath, defalutString);
+				
+				result = this.analyLcDrInfo(lcName, type, appIns, rootPath, defalutString); String QrcodeHtml="";
+				
+				 /* 
+				 * @author YTT
+				 * @since 2017-02-20
+				 * @desc 查询录取状态，如果状态为已录取，则显示查看电子录取通知书按钮
+				 * 
+				 * */
+				//录取状态
+					String tzLuquStaSql="SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
+					String tzLuquSta= sqlQuery.queryForObject(tzLuquStaSql, new Object[] {appIns}, "String");
+					if (tzLuquSta=="A"){
+						//录取通知书二维码地址
+						String Qrcodefilepath=TzAppAdGenQrcodeServiceImpl.genQrcode(appIns);
+						//查看录取通知书按钮html
+						QrcodeHtml=tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_GENQRCODE_HTML",Qrcodefilepath);
+						//将查看录取通知书按钮的html放在拼接面试结果html的开头
+						result[1] = QrcodeHtml+result[1];
+					};						
 			}
 		}catch(Exception e){
 			

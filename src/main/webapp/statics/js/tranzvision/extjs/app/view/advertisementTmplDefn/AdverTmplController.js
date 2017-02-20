@@ -36,11 +36,10 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
         cmp = new ViewClass();
         cmp.actType="add";
 
-        /*cmp.on('afterrender',function(panel){
+        cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             form.findField('adcertTmpl').setValue('NEXT');
-        });*/
-
+        });
 
         tab = contentPanel.add(cmp);
 
@@ -225,7 +224,8 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
             	form.findField("adcertTmpl").setReadOnly(true);
-                form.findField("adcertTmpl").addCls("lanage_1");
+                form.findField("adcertTmpl").addCls("lanage_1");               
+                form.findField("adcertTmpl").setValue(responseData.adcertTmpl);
             	
                 comView.actType = "update";
             },"",true,this);

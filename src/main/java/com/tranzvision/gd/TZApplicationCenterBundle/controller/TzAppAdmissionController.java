@@ -25,6 +25,8 @@ import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
 /**
  * 录取通知书html5展示
  * 
+ * @para 录取通知书html
+ * @ret  报名表对应的解析证书模板后的html或静态html
  * @author YTT
  * @since 2017-01-22
  */

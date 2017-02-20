@@ -67,11 +67,8 @@
 	            $(".table_style tbody tr").each(function(i, item) {
 	            var index = $(".table_style tbody tr").index(this);
 	            if ($(this).hasClass('trSelected')) {
-	    			var con = confirm("确定删除所选内容？");
-	       			if(con == true){
-	              		$(this).hide();
-	              		loadStationMails(1,0);
-	       			}
+	                $(this).hide();
+	                //loadStationMails(1,0);
 	            } 
 	          });
         });
@@ -91,8 +88,8 @@
 	   			 comParams:{
 	   				 cfgSrhId:"TZ_WEBSITE_ZNX_COM.TZ_WEBSITE_ZNX_STD.PS_TZ_ZNX_MSG_VW",
 	   				 condition:{
-	   					 //"TZ_ZNX_RECID-operator": "01",
-	   					 //"TZ_ZNX_RECID-value": oprid
+	   					 "TZ_ZNX_RECID-operator": "01",
+	   					 "TZ_ZNX_RECID-value": oprid
 	   					 }
 	   	 		}
 	   	 	};

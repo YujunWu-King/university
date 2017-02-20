@@ -52,9 +52,29 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
 			String strMailId = "";
+			String strOperate = "";
 			strSiteId = request.getParameter("siteId");
 			strMailId = request.getParameter("mailId");
-
+			if (jacksonUtil.containsKey("operate")) {
+				strOperate = jacksonUtil.getString("operate");
+			}
+			if (strOperate == null || "".equals(strOperate)) {
+				strOperate = request.getParameter("operate");
+			}
+			
+			if(strOperate!=null&&!"".equals(strOperate)){
+				switch(strOperate){
+				case "next":
+					String nextSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{"TZ_14026",strMailId},"String");
+					break;
+				case "prev":
+					String prevSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{"TZ_14026",strMailId},"String");
+					break;
+				}
+			}
+			
 			// 根据siteid得到机构id;
 			String str_jg_id = "";
 			// language;
@@ -99,8 +119,8 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			String znxSubject = "";
 			String znxAddTime = "";
 			String znxText = "";
-			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=?";
-			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId });
+			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=? and and B.TZ_ZNX_RECID=?";
+			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId,oprid });
 			if (znxInfoMap != null){
 				znxRecId = (String) znxInfoMap.get("TZ_ZNX_RECID");
 				znxSendName = (String) znxInfoMap.get("TZ_ZNX_SENDNAME");
@@ -108,16 +128,25 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM").toString();
 				znxText = (String) znxInfoMap.get("TZ_MSG_TEXT");
 			}
-			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID = ?";
-			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid },"String");
+			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and B.TZ_ZNX_RECID=?";
+			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid},"String");
 			znxStatus = znxStatus == null ?"":znxStatus;
 			if (znxStatus.equals("N")){
-				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID = ?";
+				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and B.TZ_ZNX_RECID=?";
 				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
 			}
+			//当前站内信的下一条站内信ID;
+			String nextMailSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+			String nextMailId ="";
+			nextMailId = jdbcTemplate.queryForObject(nextMailSQL, new Object[]{oprid,strMailId},"String");
+			//当前站内信的上一条站内信ID;
+			String prevMailSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+			String prevMailId ="";
+			prevMailId = jdbcTemplate.queryForObject(prevMailSQL, new Object[]{oprid,strMailId},"String");
+			//123123
 			//站内信内容
 			String znxInfoHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_INFO_CONTENT",
-					true,request.getContextPath(),znxContent,znxNext,znxPrev,znxReturn,znxSendName,znxSubject,znxAddTime,znxText,strMailId,str_skin_id);
+					true,request.getContextPath(),znxContent,znxNext,znxPrev,znxReturn,znxSendName,znxSubject,znxAddTime,znxText,strMailId,str_skin_id,nextMailId,prevMailId);
 			// 展示页面;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_VIEW_HTML",
 					true,request.getContextPath(), dispatcher,strCssDir,znxInfoHtml, str_jg_id, strSiteId);

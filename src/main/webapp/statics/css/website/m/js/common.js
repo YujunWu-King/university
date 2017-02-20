@@ -3,7 +3,8 @@ $(document).ready(function(){
    // 切换
      tab(".zhaos .list",".zhaos .tabNote","list_on","mousedown");
      tab(".Tab_school .tit_tab",".Tab_school .tabN_school","school_on","mousedown");
-    
+     tab(".tab_login .login_tit",".tab_login .login_tabnote","add_f","mousedown");
+     
       $(".tit_tab  li").click(function(){
                 $(this).parents("").find("li").removeClass("school_on");
                 $(this).parents("").find(".school_t").hide();
