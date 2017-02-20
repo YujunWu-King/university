@@ -46,7 +46,9 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
                     afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ],
-                    maxLength:14
+                    maxLength:14,
+                    cls:'lanage_1',
+                    readOnly: true
                 },{
                     xtype: 'textfield',
                     fieldLabel:Ext.tzGetResourse("TZ_AD_TMPL_COM.TZ_AD_INFO_STD.adtmplName","广告位名称"), 
