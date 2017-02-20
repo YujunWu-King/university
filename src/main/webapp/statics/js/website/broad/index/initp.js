@@ -284,7 +284,7 @@ $(document).ready(function(){
 					var _me = $(this);
 					_me.find("a.zxj_more").click(function(){
 						url = TzUniversityContextPath+"/dispatcher?classid=websiteCommList&siteId="+siteid+"&areaId="+areaId+"&columnId="+_me.find("li.tab_on").attr("tab-col"),
-						window.open(url);
+						window.location = url;
 					});
 				});
 				tab(".tabwrap .tabhead",".tabwrap .tabNote","tab_on","mousedown");

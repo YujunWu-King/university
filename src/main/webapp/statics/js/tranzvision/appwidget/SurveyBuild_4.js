@@ -1003,13 +1003,18 @@ var SurveyBuild = {
 		if(!SurveyBuild._DynamicBindHtml){
 			 /* 判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html */
 			var tz_app_id=SurveyBuild._tid;
+			//console.log(tz_app_id);
 			$.ajax({
 				type: "post",
-				url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tz_app_id":"'+tz_app_id+'"}}',
+				url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}',
 				dataType: "json",
 				async: false,
 				success: function(result){
 					var siteArr = result.comContent.root;
+					//console.log(siteArr);
+					///console.log(result);
+					//console.dir(result);
+					//console.log(result.comContent.total);
 					if(result.comContent.total == "1"){
 						var siteObj = siteArr[0];
 						var siteId = siteObj.siteId;
@@ -2572,7 +2577,7 @@ var SurveyBuild = {
 							var tz_app_id=SurveyBuild._tid;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tz_app_id":"'+tz_app_id+'"}}',
+								url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}',
 								dataType: "json",
 								async: false,
 								success: function(result){

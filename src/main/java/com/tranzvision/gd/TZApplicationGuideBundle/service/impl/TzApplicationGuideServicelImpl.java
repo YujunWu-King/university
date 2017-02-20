@@ -49,12 +49,20 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
+			String strMenuId = "";
 			if (jacksonUtil.containsKey("siteId")) {
 				strSiteId = jacksonUtil.getString("siteId");
 			}
 
 			if (strSiteId == null || "".equals(strSiteId)) {
 				strSiteId = request.getParameter("siteId");
+			}
+			if (jacksonUtil.containsKey("menuId")) {
+				strMenuId = jacksonUtil.getString("menuId");
+			}
+
+			if (strMenuId == null || "".equals(strMenuId)) {
+				strMenuId = request.getParameter("menuId");
 			}
 
 			// 项目跟目录;
@@ -92,14 +100,12 @@ public class TzApplicationGuideServicelImpl extends FrameworkImpl {
 			// 1.申请指导;
 			String appGuide = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "1",
 					language, "申请指导", "申请指导");
-
-			// 获取数据失败，请联系管理员;
-			applicationGuideHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APP_GUIDE_MESSAGE", "2",
-					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
-			
+			String columnSql = "select TZ_MENU_COLUMN from PS_TZ_SITEI_MENU_T where TZ_SITEI_ID =? and TZ_MENU_ID =? and TZ_MENU_STATE = 'Y'";
+			String contentSql = "select TZ_ART_CONENT from PS_TZ_ART_REC_TBL where TZ_ART_ID = (select TZ_ART_ID from PS_TZ_LM_NR_GL_T where TZ_COLU_ID =("+columnSql+"));";
+			String appGuidecontent = jdbcTemplate.queryForObject(contentSql, new Object[] { strSiteId,strMenuId},"String");
 			// 展示页面;
 			applicationGuideHtml = tzGDObject.getHTMLText("HTML.TZApplicationGuideBundle.TZ_APP_GUIDE_HTML",
-					request.getContextPath(), ZSGL_URL, strCssDir, applicationGuideHtml, str_jg_id, strSiteId,appGuide);
+					request.getContextPath(), ZSGL_URL, strCssDir,appGuidecontent,str_jg_id, strSiteId,appGuide);
 
 			applicationGuideHtml = siteRepCssServiceImpl.repTitle(applicationGuideHtml, strSiteId);
 			applicationGuideHtml = siteRepCssServiceImpl.repCss(applicationGuideHtml, strSiteId);

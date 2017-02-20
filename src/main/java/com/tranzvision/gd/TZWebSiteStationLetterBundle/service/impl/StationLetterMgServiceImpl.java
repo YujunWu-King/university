@@ -173,16 +173,14 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 
 			int num = 0;
 			for (num = 0; num < znxData.length; num++) {
-				// 表单内容;
 				String strForm = znxData[num];
 				// 将字符串转换成json;
 				jacksonUtil.json2Map(strForm);
 				// 组件ID;
 				
 				String strStationMailId = jacksonUtil.getString("stationMailId");
-				
-				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ? AND TZ_ZNX_RECID = ?";
-				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,oprid});		
+				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ?";
+				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId});		
 				
 			}
 		} catch (Exception e) {

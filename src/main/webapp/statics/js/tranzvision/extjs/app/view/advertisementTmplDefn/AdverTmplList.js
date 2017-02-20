@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplList', {
     ],
     
     xtype: 'adtmplMgList',
-    title:Ext.tzGetResourse("TZ_AD_TMPL_COM.TZ_AD_LIST_STD.zfbfjgmg","证书颁发机构管理") ,
+    title:Ext.tzGetResourse("TZ_AD_TMPL_COM.TZ_AD_LIST_STD.zfbfjgmg","广告位模板管理") ,
     controller: 'adTmplMgController',
     iewConfig: {markDirty: false},
     columnLines: true,
