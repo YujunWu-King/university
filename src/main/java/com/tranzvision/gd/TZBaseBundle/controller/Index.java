@@ -226,7 +226,7 @@ public class Index {
 			strParams = jacksonUtil.Map2json(strParamsMap);
 		}
 		
-		logger.info("strParams:"+strParams);
+		//logger.info("strParams:"+strParams);
 
 		// 操作类型;
 		String strOprType = "";
