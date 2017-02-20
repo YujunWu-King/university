@@ -478,6 +478,21 @@
 												$("#mask").hide();
 												$("#inpwd").hide();
 												$("#MainDiv").show(); 
+												
+												/*$(".chosen-container").each(function(){
+													$(this).removeAttr("style")
+													$(this).attr("style","width: 100%");
+												});*/	
+												//console.dir($("select"));
+												$("select").each(function(){
+													//console.dir($(this));
+													//$(this).trigger("chosen:updated")
+													//$(this).chosen("width: 100%");
+													 //$(this).css('width','100%');
+													//$(this).chosen({width:"100%"});
+													$(this).chosen("destroy").chosen();
+													//$linkitems.trigger("blur");
+												});
 											}else{
 												alert(f.comContent.msg);
 											}
