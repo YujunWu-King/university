@@ -187,29 +187,29 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		return c;
 	},
 	_edit: function(data) {
-		var e = '';
+		var e = '';//所有都为必填
 		//规则设置
-		e += '<div class="edit_jygz">';
-		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
-		e += '      <div class="groupbox">';
-		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
-		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
-		e += '                 <label for="is_require">是否必填';
-		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '                 </label>';
-		e += '          </div>';
-		e += '      </div>';
-		//高级设置
-		e += '      <div class="edit_item_warp">';
-		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
-		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-		e += '      </div>';
-		e += '</div>';
+//		e += '<div class="edit_jygz">';
+//		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
+//		e += '      <div class="groupbox">';
+//		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
+//		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
+//		e += '                 <label for="is_require">是否必填';
+//		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '                 </label>';
+//		e += '          </div>';
+//		e += '      </div>';
+//		//高级设置
+//		e += '      <div class="edit_item_warp">';
+//		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
+//		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+//		e += '      </div>';
+//		e += '</div>';
 		return e;
 	},
 	_getContentHtml: function(data) {
 		//用在拼写给定的div排列
-		console.dir(data);
+		//console.dir(data);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
@@ -222,7 +222,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		];	
 		var htmlContent="";
 		//--创业类型初始值
-		console.dir(child);
+		//console.dir(child);
 		var BUSINESS_TYPE_DEF=child.WorkExper1.value;
 		//--融资情况初始值
 		var FINANCING_DEL=child.WorkExper2.value;
@@ -388,7 +388,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				htmlContent += OPT_BTYPE;
 				htmlContent += '		</select>';
 				//----------------------------
-				htmlContent += '		<div style="margin-top:-40px;margin-left:256px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
+				htmlContent += '		<div style="margin-top:-40px;margin-left:365px"><div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="onCorrect" style="margin: 0px; padding: 0px; background: transparent;">';
 				htmlContent += '			<div class="onCorrect">&nbsp;</div></div>';
 				htmlContent += '		</div>';
 				htmlContent += '	</div>';
@@ -419,14 +419,29 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					
 					//<!--收入140px-->
 					NET_DIV+='<div id="income_y" style="margin-top:10px" class="input-list">'	
-						NET_DIV+='<div  class="input-list-info left">'+MsgSet["INCOME"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
-					NET_DIV+='</div>'					
+						NET_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["INCOME"]+':</div>'
+						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
+						//---------NET_DIV input格式检验DIV:
+						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						NET_DIV += '	<div id="' + data.itemId+child.WorkExper3.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						NET_DIV += '		<div class="onShow"></div>';
+						NET_DIV += '	</div>';
+						NET_DIV += '</div>';
+						//---------
+					NET_DIV+='</div></div>'					
 					//<!--用户数20px-->
 					NET_DIV+='<div id="people" style="margin-top:10px" class="input-list">'
-						NET_DIV+='<div  class="input-list-info left">'+MsgSet["USER_NUM"]+':</div>'
-						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" /><span>'+MsgSet["PEOPLES"]+'</span></div>'
-					NET_DIV+='</div>'	
+						NET_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["USER_NUM"]+':</div>'
+						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" /><span>'+MsgSet["PEOPLES"]+'</span>'
+						//---------NET_DIV input格式检验DIV:
+						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						NET_DIV += '	<div id="' + data.itemId+child.WorkExper4.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						NET_DIV += '		<div class="onShow"></div>';
+						NET_DIV += '	</div>';
+						NET_DIV += '</div>';
+						//---------
+					NET_DIV+='</div></div>'	
+					NET_DIV+='<div class="clear"></div>'
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
 				var FAM_DIV='';
@@ -438,14 +453,29 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				}	
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
-						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["OWN_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
-					FAM_DIV+='</div>'		
+						FAM_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["OWN_MONEY"]+':</div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
+						//---------FAM_DIV input格式检验DIV:
+						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper5.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						FAM_DIV += '		<div class="onShow"></div>';
+						FAM_DIV += '	</div>';
+						FAM_DIV += '</div>';
+						//---------
+					FAM_DIV+='</div></div>'		
 					//<!--家族企业资产-->
 					FAM_DIV+='<div id="family_money" class="input-list">'	
-						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["FAMILY_MONEY"]+':</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
-					FAM_DIV+='</div>'	
+						FAM_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["FAMILY_MONEY"]+':</div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
+						//---------FAM_DIV input格式检验DIV:
+						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper6.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						FAM_DIV += '		<div class="onShow"></div>';
+						FAM_DIV += '	</div>';
+						FAM_DIV += '</div>';
+						//----------------------
+					FAM_DIV+='</div></div>'
+					FAM_DIV+='<div class="clear"></div>'		
 				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
 				var OTH_DIV='';
@@ -457,20 +487,42 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				}
 					//<!--近12个月收入-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
-						OTH_DIV+='<div  class="input-list-info left" >'+MsgSet["INCOME"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'	
-					OTH_DIV+='</div>'	
+						OTH_DIV+='<div  class="input-list-info left" ><span class="red-star">*</span>'+MsgSet["INCOME"]+':</div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'	
+						//---------FAM_DIV input格式检验DIV:
+						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper7.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						OTH_DIV += '		<div class="onShow"></div>';
+						OTH_DIV += '	</div>';
+						OTH_DIV += '</div>';
+						//----------------------
+					OTH_DIV+='</div></div>'	
 					//<!--年纯利润-->
 					OTH_DIV+='<div id="year_income" class="input-list">'
-						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["YEAR_PROFIT"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span></div>'
-					OTH_DIV+='</div>'	
+						OTH_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["YEAR_PROFIT"]+':</div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
+						//---------OTH_DIV input格式检验DIV:
+						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper8.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						OTH_DIV += '		<div class="onShow"></div>';
+						OTH_DIV += '	</div>';
+						OTH_DIV += '</div>';
+						//----------------------
+					OTH_DIV+='</div></div>'	
 					//<!--企业规模-->
 					OTH_DIV+='<div id="firm_scale" class="input-list">'
-						OTH_DIV+='<div  class="input-list-info left">'+MsgSet["FIRM_SCALE"]+':</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span></div>'	
-					OTH_DIV+='</div>'	
-				OTH_DIV+='</div>'		
+						OTH_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["FIRM_SCALE"]+':</div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span>'	
+						//---------OTH_DIV input格式检验DIV:
+						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper9.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+						OTH_DIV += '		<div class="onShow"></div>';
+						OTH_DIV += '	</div>';
+						OTH_DIV += '</div>';
+						//----------------------
+					OTH_DIV+='</div></div>'
+				OTH_DIV+='</div>'
+				OTH_DIV+='<div class="clear"></div>'	
 				//-------------------------------
 				htmlContent+=NET_DIV
 				htmlContent+=FAM_DIV
@@ -581,5 +633,39 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//console.dir("radioValInput:");
 			//console.dir(radioValInput);
 		});
+		
+		//---所有的input,select非空验证:
+		//验证所有的select:WorkExper1
+		 var selectEl = $("#" + data.itemId +child.WorkExper1.itemId);
+		 	 selectEl.each(function(){
+			   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+				$(this).functionValidator({
+					fun:function(val,el){
+						if(val==""){
+							return "此项必选";
+						}else{
+							return true;
+						}
+					}	
+				}); 
+		   });
+		//验证所有的input:WorkExper2 WorkExper2_1 WorkExper2_3 WorkExper3 WorkExper4 WorkExper5 WorkExper6 WorkExper7 WorkExper8 WorkExper9
+		var input_id_gp=["2","2_1","2_2","2_3","3","4","5","6","7","8","9"];
+		for(var j=0;j<input_id_gp.length;j++){
+			 var workExperOpt="WorkExper"+input_id_gp[j];
+			   var inputEl = $("#" + data.itemId +child[workExperOpt].itemId);
+			   inputEl.each(function(){
+				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+							if(val==""){
+								return "此项必填";
+							}else{
+								return true;
+							}
+						}	
+					}); 
+			   });
+		}
 		}
 })

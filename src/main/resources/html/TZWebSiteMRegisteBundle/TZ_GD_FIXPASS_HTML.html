@@ -1,0 +1,141 @@
+<div class="padding_div_50px"></div>
+<!--
+<div class="main_all_line_center">
+	%bind(:2)：
+	<input name="oldpass" type="password" class="input_368px" id="oldpass" />
+</div>
+<span class="alert_display_none" id="msgEmpty">
+	<img src="%bind(:18)/alert.png" width="16" height="16" class="alert_img" />%bind(:2) %bind(:7)
+</span>
+-->
+<div class="main_full_line">
+	<div class="main_full_line_left">%bind(:2)：</div>
+	<div class="main_full_line_right">
+		<input name="oldpass" type="password" class="input_368px" id="oldpass" />
+		<span class="alert_display_none" id="msgEmpty"> <img
+			src="%bind(:18)/alert.png" width="16" height="16" class="alert_img" />%bind(:2)
+			%bind(:7)
+		</span>
+	</div>
+</div>
+
+<!--
+<div class="main_all_line_center">
+	%bind(:3)：
+	<input name="newpass" type="password" class="input_368px" id="newpass" />
+	<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
+		<i class="pw-tip-arr"></i>
+		<div class="pw-tip-bd">
+			<div class="pw-strength"><span data-phase-id="r_ui_pwd_strength">%bind(:13)：</span>
+				<div class="pw-strength-bar" style="left:120px">
+					<span class="pw-strength-1"></span>
+					<span class="pw-strength-2"></span>
+					<span class="pw-strength-3"></span>
+					<em></em>
+				</div>
+			</div>
+			<div>
+				<div class="pw-rule-item pw-rule-length"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdLengthTip">%bind(:14)</span></div>
+				<div class="pw-rule-item pw-rule-legal"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdCharacterTip">%bind(:15)</span></div>
+				<div class="pw-rule-item pw-rule-multi"><i class="iconfont">О</i><span data-phase-id="u_ui_pwdStengthTip">%bind(:16)</span></div>
+			</div>
+		</div>
+	</div>
+	<span class="alert_display_none" id="msgError">
+		<img src="%bind(:18)/alert.png" width="16" height="16" class="alert_img" />%bind(:3) %bind(:7)
+	</span>
+</div>
+-->
+<div class="main_full_line">
+	<div class="main_full_line_left">%bind(:3)：</div>
+	<div class="main_full_line_right">
+		<input name="newpass" type="password" class="input_368px" id="newpass" />
+		<input id="status_PASSWORD" type="hidden" name="status_PASSWORD"
+			value="1">
+		<div class="pw-tip" id="J_PwdTip"
+			style="display: none; position: absolute;">
+			<i class="pw-tip-arr"></i>
+			<div class="pw-tip-bd">
+				<div class="pw-strength">
+					<span data-phase-id="r_ui_pwd_strength">%bind(:13)：</span>
+					<div class="pw-strength-bar" style="left: 120px">
+						<span class="pw-strength-1"></span> <span class="pw-strength-2"></span>
+						<span class="pw-strength-3"></span> <em></em>
+					</div>
+				</div>
+				<div>
+					<div class="pw-rule-item pw-rule-length">
+						<i class="iconfont">О</i><span data-phase-id="r_ui_pwdLengthTip">%bind(:14)</span>
+					</div>
+					<div class="pw-rule-item pw-rule-legal">
+						<i class="iconfont">О</i><span
+							data-phase-id="r_ui_pwdCharacterTip">%bind(:15)</span>
+					</div>
+					<div class="pw-rule-item pw-rule-multi">
+						<i class="iconfont">О</i><span data-phase-id="u_ui_pwdStengthTip">%bind(:16)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<span class="alert_display_none" id="msgError"> <img
+			src="%bind(:18)/alert.png" width="16" height="16" class="alert_img" />%bind(:3)
+			%bind(:7)
+		</span>
+	</div>
+</div>
+
+<!--
+<div class="main_all_line_center">
+	%bind(:4)：
+	<input name="cfpass" type="password" class="input_368px" id="cfpass"/>
+	<span class="alert_display_none" id="msgPass">
+		<img src="%bind(:18)/alert.png" width="16" height="16" class="alert_img"/>%bind(:4) %bind(:7)
+	</span>
+</div>
+-->
+
+<div class="main_full_line">
+	<div class="main_full_line_left">%bind(:4)：</div>
+	<div class="main_full_line_right">
+		<input name="cfpass" type="password" class="input_368px" id="cfpass" />
+		<span class="alert_display_none" id="msgPass"> <img
+			src="%bind(:18)/alert.png" width="16" height="16" class="alert_img" />%bind(:4)
+			%bind(:7)
+		</span>
+	</div>
+</div>
+
+
+<div style="clear: both; text-align: center">
+	<span style="font-size: 16px; color: #fe800e; display: none;"
+		id="messTip"> </span>
+</div>
+
+<div class="main_article_nav">
+	<div class="center_bt">
+		<div class="bt_blue" id="btnpass">%bind(:5)</div>
+	</div>
+</div>
+
+
+<div class="padding_div_50px"></div>
+<div style="clear: both;"></div>
+
+<!-- content end -->
+<script type="text/javascript">
+	var tzGdFixpwdUrl = '%bind(:1)';
+	var tzGdFixpwdOldPass = '%bind(:2)';
+	var tzGdFixpwdNewPass = '%bind(:3)';
+	var tzGdFixpwdConfPass = '%bind(:4)';
+	var tzGdFixpwdBlankTips = '%bind(:6)';
+	var tzGdFixpwdErrorTips = '%bind(:7)';
+	var tzGdFixpwdNotSameTips = '%bind(:8)';
+	var tzGdFixpwdPassSucTips = '%bind(:9)';
+	var tzGdFixpwdWeakTips = '%bind(:10)';
+	var tzGdFixpwdMiddleTips = '%bind(:11)';
+	var tzGdFixpwdStrongTips = '%bind(:12)';
+	var tzGdFixpwdStrongMsg = '%bind(:17)';
+	var tzGdFixpwdImgPath = '%bind(:18)';
+</script>
+<script type="text/javascript"
+	src="%bind(:19)/statics/js/website/account/changepwd.js"></script>

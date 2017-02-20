@@ -3,7 +3,8 @@ $(document).ready(function(){
    // 切换
      tab(".zhaos .list",".zhaos .tabNote","list_on","mousedown");
      tab(".Tab_school .tit_tab",".Tab_school .tabN_school","school_on","mousedown");
-    
+     tab(".tab_login .login_tit",".tab_login .login_tabnote","add_f","mousedown");
+     
       $(".tit_tab  li").click(function(){
                 $(this).parents("").find("li").removeClass("school_on");
                 $(this).parents("").find(".school_t").hide();
@@ -14,8 +15,15 @@ $(document).ready(function(){
      $("#pop_btn").click(function(){
        $(".shade1").hide();
        $(".pop").hide();
-  
+      
     });
+
+      $(".share_remind").click(function(){
+       $(".shade1").show();
+       $(".pop").show();
+      
+    });
+
      //查看流程信息
    $(".search_step").click(function(){
          
@@ -69,11 +77,13 @@ $(document).ready(function(){
   });
   /*弹出国家选择*/
    $("#country").click(function(){
+      $("#body").css("position","fixed");
       $(".shade").show();
       $(".country_pop").show();
   });
    /*弹出学校选择*/
    $("#school").click(function(){
+      $("#body").css("position","fixed");
       $(".shade").show();
       $(".school_pop").show();
   });
@@ -94,6 +104,7 @@ $(document).ready(function(){
       $(".shade").hide();
       $(".country_pop").hide();
       $(".school_pop").hide();
+       $("#body").css("position","relative");
   });
 
 

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" >
+<title></title>
+<link href="page_stylecss" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="%bind(:7)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	create_yzm();//获取验证码
+	$("#reNewPassword").val(""); 
+	$("#reNewPassword").val("");
+	$("#yzm").val("");	
+	$("#status_password").val("");
+	$("#status_yzm").val("");	
+    }).on("click", "#submitPassword", function () {
+			var pwd=$("#NewPassword").val();
+			var repwd=$("#reNewPassword").val();
+			pwd=encodeURI(pwd);
+			repwd=encodeURI(repwd);
+    	var strYZM=$("#yzm").val();
+		var passwordFlg=$("#status_password").val();
+		var yzmFlg=$("#status_yzm").val();
+
+		if(passwordFlg =='0' && yzmFlg=='0'){
+	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
+	        var tzParams2 = {};
+	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+	        tzParams2.PageID = "TZ_SITE_SMS_STD";
+	        tzParams2.OperateType = "QF";
+	        tzParams2.comParams = {};
+	        tzParams2.comParams.pwd = pwd;
+	        tzParams2.comParams.repwd = repwd;
+	        tzParams2.comParams.checkCode = strYZM;
+	        tzParams2.comParams.phone = "%bind(:2)";
+	        tzParams2.comParams.lang = "%bind(:3)";
+	        tzParams2.comParams.sen = "5";
+	        tzParams2.comParams.orgid = "%bind(:4)";
+	        tzParams2.comParams.siteid = "%bind(:10)";
+	        
+	        var tzParams = "";
+	        if(JSON && JSON.stringify)
+	        {
+	          tzParams = JSON.stringify(tzParams2);
+	        }
+	        else
+	        {
+	          tzParams = tzParams1;
+	        }
+	
+			$.ajax({
+				type: "post",
+				async :false,
+				data:{
+					tzParams: tzParams
+				},
+				url:"%bind(:1)",
+				dataType: "json",
+				success: function(result){
+					if(result.comContent.result =="success"){
+						alert("Password modification success!");
+						window.location.href=result.comContent.jumpurl;
+					}else{
+						alert(result.state.errdesc);
+						create_yzm();//重新获取验证码
+						}
+				}
+			})
+		}else{
+			check_password();
+			//check_yzm();
+		}
+			document.getElementById("updatePassWord").reset(); 
+			$("#status_password").val('');
+		    $("#status_yzm").val('');
+	})
+
+//获取URL传递的参数 
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+	return null;
+    }
+	
+//判断输入的验证码是否一致
+function check_yzm(val){
+	if(val !=''){
+        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","lang":"%bind(:3)","sen":"3"}}';
+        var tzParams2 = {};
+        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+        tzParams2.PageID = "TZ_SITE_ENROLL_STD";
+        tzParams2.OperateType = "QF";
+        tzParams2.comParams = {};
+        tzParams2.comParams.checkCode = val;
+        tzParams2.comParams.lang = "%bind(:3)";
+        tzParams2.comParams.sen = "3";
+
+        var tzParams = "";
+        if(JSON && JSON.stringify)
+        {
+          tzParams = JSON.stringify(tzParams2);
+        }
+        else
+        {
+          tzParams = tzParams1;
+        }
+
+
+		$.ajax({
+			type: "get",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url:"%bind(:1)",
+			dataType: "json",
+			success: function(result){
+			   if(result.comContent =="success"){
+				$('#yzm_status').html("");
+				$('#status_yzm').attr("value", 0); 
+				$("#yzm_style").addClass("alert_display_none");
+					}else{
+						$('#yzm_status').html("<span>"+result.state.errdesc+"</span>");
+						$('#status_yzm').attr("value", 1);
+						$("#yzm_style").removeClass("alert_display_none");
+						}
+					}
+			});			
+		
+		}else{
+				$('#yzm_status').html("<span>It cannot be blank!</span>");
+ 						$('#status_yzm').attr("value", 1);
+				$("#yzm_style").removeClass("alert_display_none");
+		}
+}
+
+
+
+//判断输入的密码是否一致
+function check_password(){
+	var password =$("#NewPassword").val();
+	var repassword=$("#reNewPassword").val();
+	if(password !=''){
+			if(password.length<6 ||password.length>32){
+				$('#password_status').html("Password length must be greater than 6 less than 32!"); 
+				$('#status_password').attr("value", 1);
+				$("#new_pwd_style").removeClass("alert_display_none");
+				}else if(repassword ==''){
+					$('#password_status').html("");
+					$('#repassword_status').html("It cannot be blank!");
+			     	 $('#status_password').attr("value", 1); 
+					 $("#new_pwd_style").addClass("alert_display_none");
+					 $("#new_repwd_style").removeClass("alert_display_none");
+					}else if(repassword==password){
+						$('#password_status').html("");
+						$('#repassword_status').html("");
+			        	 $('#status_password').attr("value", 0); 
+						 $("#new_pwd_style").addClass("alert_display_none");
+						 $("#new_repwd_style").addClass("alert_display_none");
+						}else if(repassword !=password){
+							$('#password_status').html("");
+							$('#repassword_status').html("Password and confirm password is Inconsistent!"); 
+							$('#status_password').attr("value", 1);
+							$("#new_pwd_style").addClass("alert_display_none");
+							$("#new_repwd_style").removeClass("alert_display_none");
+							}
+
+			 if($("#status_PASSWORD").val()=="1"){
+									$('#password_status').html("%bind(:5)");
+									$('#repassword_status').html(""); 
+									$('#status_password').attr("value", 1);
+									$("#new_pwd_style").removeClass("alert_display_none");
+									$("#new_repwd_style").addClass("alert_display_none");
+							}
+
+
+		}else {
+			$('#password_status').html("It cannot be blank!");
+			$('#status_password').attr("value", 1); 
+			$("#new_pwd_style").removeClass("alert_display_none");
+			
+			}
+	
+}
+
+//重新加载验证码
+function create_yzm(){
+	var _captchaURL = "%bind(:7)/captcha";
+	$('#yzmImg').attr('src',_captchaURL + "?" + Math.random());
+	/*
+	var tzParams='{"ComID":"TZ_PT_LOGIN_COM","PageID":"TZ_PT_LOGIN_PAGE","OperateType":"HTML","comParams":{"validateType":"IamgeCodeGet"}}';
+	$.ajax({
+			type: "get",
+			async :false,
+			url:"%bind(:1)",
+			data:{
+				tzParams:tzParams
+			},
+			dataType: "json",
+			success: function(result){
+				$('#yzmImg').attr('src',result.codeImgUrl);
+				  	
+				}
+		});*/
+}
+
+	$("#NewPassword").on("focus",function(){
+		var top = $("#NewPassword").position().top;
+		var left = $("#NewPassword").position().left;
+		var height = $("#NewPassword").height()
+		var width = $("#NewPassword").width()
+		var hi = $("#J_PwdTip").height();
+		
+		left = left + width + 15;
+		top = top + (height - hi) / 2;
+		$("#J_PwdTip").css("display","block");
+		$("#J_PwdTip").css("left",left);
+		$("#J_PwdTip").css("top",top);
+	});
+	$("#NewPassword").on("blur",function(){
+		$("#J_PwdTip").css("display","none");
+	});
+
+
+setInterval(function(){
+		var val = $("#NewPassword").val();
+		if(val != "" && val != null){
+			var patrn;
+			var num = 0;
+			var num1 = 0;
+			var num2 = 0;
+			var num3 = 0;
+			var num4 = 0;
+			var num5=0;
+			var num6=0;
+			var str1 = 0;
+			var str2 = 0;
+			var cr;
+			for (var i=0;i<val.length ;i++ )
+			{
+				 cr = val.charAt(i);
+						
+				
+				/*
+				patrn= /[^\d\w\s]/;
+				if (patrn.test(val)){
+					num = num + 1;
+				}
+				*/
+				patrn= /\w/;
+				if (patrn.test(cr)){
+					num = num + 1;
+				}else{
+					num5=1;
+				}
+				
+			}
+			
+				patrn= /[A-Z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[a-z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[0-9]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[_]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+
+			if(val.length >= 6 && val.length <= 32){
+				num1 = 1;				
+				$("#J_PwdTip .pw-rule-length .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#14c2b3");
+			}else{
+				num1 = 0;
+				$("#J_PwdTip .pw-rule-length .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#FF460F");
+			}
+			
+			if(num > 0 && num5==0){
+				num2 = 1;
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#14c2b3");
+			}else{
+				
+				num2 = 0;
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#FF460F");
+			}
+			
+			if(num5==0 && num6>1){
+				num3 = 1;
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("√");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#14c2b3");
+			}else{
+				num3 = 0;
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("X");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#FF460F");
+			}
+			
+			num4 = num1 + num2 + num3;
+			if(num4 < 1){
+				$("#J_PwdTip .pw-strength-1").css("background-color","");
+				$("#J_PwdTip .pw-strength-2").css("background-color","");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				
+				$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+				$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+				$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+				
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","");
+				
+				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+			}
+			if(num4 >= 1){
+				$("#J_PwdTip .pw-strength-1").css("background-color","#FF460F");
+				$("#J_PwdTip .pw-strength-2").css("background-color","");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				if ($("#lang").val()=="ENG"){
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}
+			}
+			if(num4 >= 2){
+				$("#J_PwdTip .pw-strength-2").css("background-color","#FF460F");
+				$("#J_PwdTip .pw-strength-3").css("background-color","");
+				if ($("#lang").val()=="ENG"){
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
+				}
+			}
+
+			if(num5==0 && num4>=3 && num>10){
+				$("#J_PwdTip .pw-strength-1").css("background-color","#0A9E00");
+				$("#J_PwdTip .pw-strength-2").css("background-color","#0A9E00");
+				$("#J_PwdTip .pw-strength-3").css("background-color","#0A9E00");
+				if ($("#lang").val()=="ENG"){
+				
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}else{
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
+					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
+				}
+			}
+
+			if(num4 >= 3){
+				$('#status_PASSWORD').attr("value", 0);
+			}else{
+				$('#status_PASSWORD').attr("value", 1);
+			}
+			
+		}else{
+			$("#J_PwdTip .pw-strength-1").css("background-color","");
+			$("#J_PwdTip .pw-strength-2").css("background-color","");
+			$("#J_PwdTip .pw-strength-3").css("background-color","");
+			
+			$("#J_PwdTip .pw-rule-length .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
+			$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
+			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
+			
+			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
+		}
+	},200);
+
+</script>
+</head>
+<body>
+<!-- content start -->
+<div id="main">
+<form action="" method="post" enctype="multipart/form-data" name="updatePassWord" id="updatePassWord">
+<div class="padding_div_40px2"></div>
+<div class="padding_div_40px2"></div>
+
+<div class="main_full_top"></div>
+<div class="main_full">
+  <div class="main_full_line">
+    <div class="main_full_line_title_font_left">Change Password <span class="font_gray_14px_dark">%bind(:6)</span></div> 
+    <div class="main_full_full_right"><a href="%bind(:9)" class="blue_">&nbsp;&nbsp;&nbsp;back</a></div>
+  </div>
+  <div class="main_full_lines_720px"></div>
+  <div class="main_full_line">
+    <div class="main_full_line_left"><span class="reg_title_star">*</span>New Password：</div>
+  
+    <div class="main_full_line_right">
+      <input name="NewPassword" type="password" class="input_251px" id="NewPassword" onblur="check_password()"/>
+	  <input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="1">
+		<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
+		<i class="pw-tip-arr"></i>
+		<div class="pw-tip-bd">
+			<div class="pw-strength"><span data-phase-id="r_ui_pwd_strength">Password Strength：</span>
+				<div class="pw-strength-bar" style="left:120px">
+					<span class="pw-strength-1"></span>
+					<span class="pw-strength-2"></span>
+					<span class="pw-strength-3"></span>
+					<em></em>
+				</div>
+			</div>
+			<div>
+				<div class="pw-rule-item pw-rule-length"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdLengthTip">6-32 characters.</span></div>
+				<div class="pw-rule-item pw-rule-legal"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdCharacterTip">Can only contain letters, numbers, and underscores.</span></div>
+				<div class="pw-rule-item pw-rule-multi"><i class="iconfont">О</i><span data-phase-id="u_ui_pwdStengthTip">Letters, numbers and underscores at least two .</span></div>
+			</div>
+		</div>
+	</div>
+      <span id="new_pwd_style" class="alert_display_none"><img src="%bind(:8)/alert.png" width="16" height="16" class="alert_img"  /><label id="password_status"></label></span>
+    </div>
+  </div>
+  
+  <div class="main_full_line">
+    <div class="main_full_line_left"><span class="reg_title_star">*</span>Confirm Password：</div>
+  
+    <div class="main_full_line_right">
+      <input name="reNewPassword" type="password" class="input_251px" id="reNewPassword" onblur="check_password()"/>
+      <span id="new_repwd_style" class="alert_display_none"><img src="%bind(:8)/alert.png" width="16" height="16" class="alert_img"  /><label id="repassword_status"></label></span>
+    </div>
+  </div>
+  
+  <div class="main_full_line">
+    <div class="main_full_line_left"><span class="reg_title_star">*</span>Security Code：</div>
+  
+    <div class="main_full_line_right">
+      <input name="yzm" type="text" class="input_text input_120px" id="yzm"  onblur="check_yzm(this.value)"/>
+      
+	   <a id="changeImg" href="javascript:void(0)" onclick="create_yzm();"><img id="yzmImg" src="%bind(:8)/yzm.jpg" width="113" height="37" class="img_num" /></a>
+<span id="yzm_style" style="margin-left:13px" class="alert_display_none"><img src="%bind(:8)/alert.png" width="16" height="16" class="alert_img"  /><label id="yzm_status"></label></span>
+
+    </div>
+  </div>
+  <div class="main_full_lines_400px"></div>
+  <div class="main_full_line"> <div class="bt_blue" id="submitPassword" style="width:111px;float:none;margin:0 auto;text-align:center"><span style="color:#FFFFFF">Submit</span></div> </div>
+  
+</div>
+
+
+
+<div class="main_full_foot"></div>
+<div class="padding_div_50px"></div>
+<div class="padding_div_50px"></div>
+<div style="clear:both;"></div>
+</form>
+</div>
+ <input id="status_password" type="hidden" name="status_password" />
+ <input id="status_yzm" type="hidden" name="status_yzm" />
+<!-- content end -->
+</body>
+<script type="text/javascript">
+$(document).keyup(function(event){
+  if(event.keyCode ==13){
+    $("#submitPassword").trigger("click");
+  }
+});
+</script>
+</html>

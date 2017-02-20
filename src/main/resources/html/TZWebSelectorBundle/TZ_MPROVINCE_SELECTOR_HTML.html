@@ -1,0 +1,16 @@
+<script>
+	var lenField = "%bind(:2)";
+	function closePop(){
+		$(".shade").hide();
+		$("#searchState").empty();
+		$("#body").css("position","relative");
+	}
+	function selectProvince(province){
+		$("#"+lenField).val(province);
+		closePop();
+	}
+</script>
+<div class="pop_tit">
+	<span>选择省份</span> <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a>
+</div>
+<ul id="selectorList" class="chose_list">%bind(:1)</ul>

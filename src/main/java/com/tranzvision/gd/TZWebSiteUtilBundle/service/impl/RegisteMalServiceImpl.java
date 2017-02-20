@@ -84,6 +84,10 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				if("8".equals(strSen)){
 					return this.emailSendByChange(strParams, errMsg);
 				}
+				//以下为清华MBA手机版香港
+				if("11".equals(strSen)){
+					return this.emailVerifyByMEnroll(strParams, errMsg);
+				}
 			}
 			
 		}catch(Exception e){
@@ -149,7 +153,60 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		return strResult;
 	}
 	
-	
+	public String emailVerifyByMEnroll(String strParams,String[] errorMsg){
+		String strEmail = "";
+		   
+		String strOrgid = "";
+		String strLang = "";
+		   
+		String strResult = "\"failure\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();   
+		try{
+			jacksonUtil.json2Map(strParams);
+			if(jacksonUtil.containsKey("email") 
+					&& jacksonUtil.containsKey("orgid") 
+					&& jacksonUtil.containsKey("lang")){
+				strEmail = jacksonUtil.getString("email").trim();
+		      	strOrgid = jacksonUtil.getString("orgid").trim();
+		      	strLang =  jacksonUtil.getString("lang").trim();
+		      	
+		      	//校验邮箱长度;
+		      	if("".equals(strEmail) || strEmail.length()<6 || strEmail.length()>70 ){
+		      		errorMsg[0] = "1";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "52", "邮箱长度需满足6-70个字符", "Email length required to meet 6-70 characters");
+		            return strResult;
+		      	}
+		      	//校验邮箱格式;
+		      	ValidateUtil validateUtil = new ValidateUtil();
+		      	boolean  bl = validateUtil.validateEmail(strEmail);
+		      	if(bl == false){
+		      		errorMsg[0] = "2";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "53", "邮箱格式不正确", "Mailbox format is not correct.");
+		            return strResult;
+		      	}
+		      	
+		      	//邮箱是否被占用
+		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL WHERE LOWER(TZ_EMAIL) = LOWER(?) AND LOWER(TZ_JG_ID)=LOWER(?)";
+		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
+		      	if(count > 0){
+		      		errorMsg[0] = "3";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "48", "邮箱已注册，建议取回密码", "It has been occupied!");
+		            return strResult;
+		      	}
+		      	strResult = "\"success\"";
+		        return strResult;
+			}else{
+				errorMsg[0] = "100";
+				errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "100";
+			errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+		}
+		
+		return strResult;
+	}
 	//发送邮箱激活邮件
 	public String emailSendByEnroll(String strParams,String[] errorMsg){
 		String strEmail = "";  

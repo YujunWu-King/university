@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8/9" >
+	<title></title>
+	<link href="page_stylecss" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="%bind(:20)/statics/css/website/jquery.Jcrop.css" type="text/css" />
+	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/browser.js"></script>
+	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.Jcrop.js"></script>
+	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.form.js"></script>
+	<script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/util/layer.js"></script>
+	<style type="text/css">
+		.city_close2 {font-size: 16px;text-align: left;clear: right;float: right;height: 30px;width: 35px;line-height: 30px;color: #9f9f9f;margin-top: -50px;}
+		#loading {width: 200px;height: 25px;border: 1px solid #000;border-top: none;background-color: #FFC;position: absolute;top: 0px;left: 50%;margin-left: -75px;text-align: center;line-height: 25px;font-size: 15px;font-weight: bold;color: #d6070a;}
+		.photo_up{color:#df1524;font-size:16px;line-height:48px;}
+	</style>
+	<script type="text/javascript">
+		var imaUrl="";
+		var imaName = "";
+		var imaPath="";
+		var filename="";
+		var path="";
+		jQuery(function($){
+			var i;
+			function loading(){
+				var loadi = layer.load("%bind(:2)");
+				layer.area(loadi,"top:200px");
+			}
+			function imaRotate(){
+				var loadi = layer.load("%bind(:3)");
+				layer.area(loadi,"top:200px");
+			}
+		    var jcrop_api, boundx, boundy;
+		    var showimg = $("#showimg");
+		    var scalingimg = $("#photo_pre");
+		    var btn = $("#pldiv");
+		    if($.browser.msie  ){
+		        if($.browser.version == "7.0"){
+		            $("#idcity").addClass("city_close2");
+		        }
+		    }
+			var maxFileSize = 2,isClip,clip,_imgBl = 3/4,_imgWidth = 60,_imgHeight = 80;
+			
+			if(window.top.SurveyBuild && window.top.SurveyBuild.tzGeneralURL){
+					window.SurveyBuild = window.top.SurveyBuild;
+					var _iItem = $("#photo",window.top.document).parent().parent().parent().parent().parent();
+					var  _iData = SurveyBuild._items[_iItem.attr("data-instancid")];
+					var fixArr =_iData.upFileType.toLowerCase().split(",");
+					maxFileSize = _iData.upFileSize;
+					isClip = _iData.isClip;
+					clip = _iData.clip;
+					$("#pldiv").html("%bind(:4) " + _iData.upFileType.toUpperCase() + " %bind(:5) " + maxFileSize + " %bind(:6)");
+					if(clip  == "1"){
+						_imgHeight = 80;
+						_imgBl =3/4;
+					}else if(clip  == "2"){
+						_imgHeight = 96;
+						_imgBl =5/8;
+					}else if(clip  == "3"){
+						_imgHeight = 108;
+						_imgBl =5/9;
+					}else if(clip  == "4"){
+						_imgHeight = 60;
+						_imgBl =0;
+					}
+			}
+		    $("#fileupload").change(function(){
+				var fileName = $("#fileupload").val();
+				//获取后缀
+				var fix = fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length);
+				if(fix == ""){
+					return ;
+				}
+
+				if((!window.SurveyBuild && (fix.toLowerCase() == "jpg" || fix.toLowerCase() == "png" || fix.toLowerCase() == "gif"))||(window.SurveyBuild && window.SurveyBuild.tzGeneralURL && $.inArray(fix.toLowerCase(),fixArr)>=0)){
+					/*张浪注释
+						@2015-08-26 该方法不支持IE浏览器
+					var fileSize =  document.getElementById("fileupload").files[0].size;*/
+					
+					/*张浪添加 @2015-08-26*/
+					try{
+						var obj_file = document.getElementById("fileupload");
+						var fileSize;
+						if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) {
+							var obj_img = document.getElementById('tempimg');
+							obj_img.dynsrc=obj_file.value;
+							filesize = obj_img.fileSize;
+						}else{
+							fileSize =  obj_file.files[0].size;
+						}
+					}catch(e){
+						fileSize = 0;
+					}
+					if(fileSize / 1024 / 1024 <= maxFileSize){
+						$("#pldiv").text("%bind(:7)");
+						loading();
+						$("#myupload").ajaxSubmit({
+							dataType:  "json",
+							success: function(msg) {
+								$("#pldiv").text("%bind(:8)");
+								layer.close(layer.index);
+								
+								fileSize = msg.msg.size;
+								fileSize = fileSize.substring(0,fileSize.length-1);
+								if(fileSize / 1024 <= maxFileSize){
+									
+									//文件访问路径
+									var filePath = msg.msg.accessPath;
+									if(filePath.charAt(0) != '/'){
+										filePath = "/" + filePath;
+									}
+									if(filePath.charAt(filePath.length - 1) != '/'){
+										filePath = filePath + "/";
+									}
+									var img = "%bind(:20)"+filePath + msg.msg.sysFileName;
+									showimg.html("<img src='" + img + "' id='target' />");
+									scalingimg.html("<img src='" + img + "' id='preview' />");
+									imaUrl = img;
+									imaName = msg.msg.sysFileName;
+									imaPath = filePath;
+									filename = msg.msg.filename;
+									//path = msg.msg.path;
+									$("#sysfilename").val(imaName);
+									//截取图片的js
+									$('#target').Jcrop({
+										onChange: uppreAndShow,
+										onSelect: uppreAndShow,
+										onRelease:  clearCoords,
+										setSelect:   [ 0, 0, _imgWidth,_imgHeight ],
+										aspectRatio: _imgBl
+									},function(){
+										var bounds = this.getBounds();
+										boundx = bounds[0];
+										boundy = bounds[1];
+										jcrop_api = this;
+									});
+								}else{
+									alert("%bind(:9)" + maxFileSize + "%bind(:10)");
+								}
+							},
+							error:function(xhr){
+								btn.html(xhr.msg);
+								layer.close(layer.index);
+							}
+						});
+					}else{
+							alert("%bind(:9)" + maxFileSize + "%bind(:10)");
+					}
+				}else{
+						alert("%bind(:11)");
+				}
+					$("#fileupload").val("");
+			    });
+			
+			    $("#save").click(function(){
+					if($("#sysfilename").val() != ""){
+					    loading();
+				        $("#crop_form").ajaxSubmit({
+				            dataType:"json",
+							data:{
+								"imaPath":imaPath
+							},
+				            success: function(msg) {
+				              	//var data="sysFileName=" + msg.name + "&filename=" + filename + "&imaPath=" + imaPath + "&path=" + path;
+			          			var fileStrJson = {"sysFileName": msg.name , "filename": filename, "imaPath": imaPath, "path": path};
+					  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
+			
+				                $.ajax({
+				                    type:"POST",
+				                    url:"%bind(:1)",
+									dataType:"json",
+				                    data: {"tzParams" : tzParams },	
+				                    beforeSend:function() {
+				                        $(function(){
+				                            $("#loading").fadeIn();
+				                        });
+				                    },
+				                    success:function(html){
+				                        if(html.comContent.success == "Y"){
+				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
+											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
+				                            
+											//layer.close(layer.index);
+											$("#loading").fadeOut();
+											closeThis();
+				                        }else{
+				                        	 //closeThis();
+											 alert("%bind(:12)");
+											 //layer.close(layer.index);
+											 $("#loading").fadeOut();
+										}
+				                    },
+						            error:function(xhr){
+						                btn.html(xhr.responseText);
+						                $("#loading").fadeOut();
+										//layer.close(layer.index);
+						            }
+				                })
+				            },
+				            error:function(xhr){
+				                btn.html(xhr.responseText);
+								layer.close(layer.index);
+				            }
+				        });
+					}else{
+						alert("%bind(:13)");
+					}
+			    });
+			
+			    $("#turnRight").click(function(){
+					if(imaUrl != ""){
+				        $("#pldiv").text("%bind(:7)");
+						imaRotate();
+				        var data2 = "imaName=" + imaName + "&imaPath=" + imaPath;
+				        var showimg = $("#showimg");
+				        var scalingimg = $("#photo_pre");
+				        //旋转图片并获取旋转后图片地址
+				        $.ajax({
+				            dataType:"json",
+				            type:"POST",
+				            url:"%bind(:20)/ImageRotateTurnRight",
+				            data:data2,
+				            success:function(msg){
+				                $("#pldiv").text("%bind(:8)");
+								layer.close(layer.index);
+				                //显示上传后的图片
+				                showimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='target' />");
+				                scalingimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='preview' />");
+				                imaUrl = msg.imaUrl;
+				                imaName = msg.imaName;
+				                $("#sysfilename").val(msg.imaName);
+				                //截取图片的js
+				                $('#target').Jcrop({
+				                    onChange: uppreAndShow,
+				                    onSelect: uppreAndShow,
+				                    onRelease:  clearCoords,
+				                    setSelect:   [ 0, 0, 126, 158 ],
+				                    aspectRatio: 126/158
+				                },function(){
+				                    var bounds = this.getBounds();
+				                    boundx = bounds[0];
+				                    boundy = bounds[1];
+				                    jcrop_api = this;
+				                });
+				            },
+							error:function(xhr){
+				                btn.html(xhr.responseText);
+								layer.close(layer.index);
+				            }
+				        });
+					}else{
+						alert("%bind(:13)");
+					}
+			    });
+			    $("#turnLeft").click(function(){
+					if(imaUrl != ""){
+				        $("#pldiv").text("%bind(:7)");
+						imaRotate();
+				        var data2 = "imaName=" + imaName + "&imaPath=" + imaPath;
+				        var showimg = $("#showimg");
+				        var scalingimg = $("#photo_pre");
+				        //旋转图片并获取旋转后图片地址
+				        $.ajax({
+				            dataType:"json",
+				            type:"POST",
+				            url:"%bind(:20)/ImageRotateTurnLeft",
+				            data:data2,
+				            success:function(msg){
+				                $("#pldiv").text("%bind(:8)");
+								layer.close(layer.index);
+				                //显示上传后的图片
+				                showimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='target' />");
+				                scalingimg.html("<img src='%bind(:20)" + msg.imaUrl + "' id='preview' />");
+				                imaUrl = msg.imaUrl;
+				                imaName = msg.imaName;
+				                $("#sysfilename").val(msg.imaName);
+				                //截取图片的js
+				                $('#target').Jcrop({
+				                    onChange: uppreAndShow,
+				                    onSelect: uppreAndShow,
+				                    onRelease:  clearCoords,
+				                    setSelect:   [ 0, 0, 126, 158 ],
+				                    aspectRatio: 126/158
+				                },function(){
+				                    var bounds = this.getBounds();
+				                    boundx = bounds[0];
+				                    boundy = bounds[1];
+				                    jcrop_api = this;
+				                });
+				            },
+							error:function(xhr){
+				                btn.html(xhr.responseText);
+								layer.close(layer.index);
+				            }
+				        });
+					}else{
+						alert("%bind(:13)");
+					}
+			    });
+
+				$("#photoupbt").click(function(){
+
+					$("#fileupload").click();
+				});
+			    function clearCoords(){
+			        $("#crop_form input").val("");
+			    };
+			    function uppreAndShow(c){
+			        updatePreview(c);
+			        showCoords(c);
+			    }
+			    function showCoords(c){
+			        $("#x1").val(c.x);
+			        $("#y1").val(c.y);
+			        $("#x2").val(c.x2);
+			        $("#y2").val(c.y2);
+			        $("#w").val(c.w);
+			        $("#h").val(c.h);
+			    };
+			
+			    function updatePreview(c){
+			        if (parseInt(c.w) > 0){
+			            var rx = 126 / c.w;
+			            var ry = 158 / c.h;
+			            $("#preview").css({
+			                width: Math.round(rx * boundx) + "px",
+			                height: Math.round(ry * boundy) + "px",
+			                marginLeft: "-" + Math.round(rx * c.x) + "px",
+			                marginTop: "-" + Math.round(ry * c.y) + "px"
+			            });
+			        }
+			    };
+			});
+			function closeThis(){
+			    var index = parent.layer.getFrameIndex(window.name);
+			    parent.layer.close(index);
+			};
+		</script>
+	</head>
+	<body>
+		<div id="loading" style="display: none">
+			%bind(:14)
+		</div>
+		<div class="main_photo">
+			<div class="photo_title">
+				%bind(:15)
+				<div id="idcity" class="city_close" onclick="closeThis();">
+					<img src="%bind(:21)/del.png" width="15" height="15" />
+					&nbsp;
+				</div>
+			</div>
+			<div class="photo_up">
+				<div class="main_inner_content_info_upload2" style="position:relative;">
+					<div id="photoupbt" class="photoupbt"><!-- %bind(:18) --></div>
+                    <img id="tempimg" dynsrc="" style="display:none" />
+					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
+					<form id="myupload"
+						action="%bind(:20)/UpdWebServlet?filePath=zhglPhoto" method="post"
+						enctype="multipart/form-data">
+						<input class="fileupload2" type="file" name="websitefile" id="fileupload" style="position:absolute"/>
+					</form>
+				</div>
+				<div class="main_inner_content_info_text2" id="pldiv">
+					%bind(:16)
+				</div>
+			</div>
+			<div class="photo_left">
+				<div class="photo_img" id="showimg">
+					<img src="%bind(:21)/upload.png" name="target" id="target" />
+				</div>
+				<div class="photo_turn_left" id="turnLeft">
+					<a href="javascript:;" class="ora">
+            			<img src="%bind(:21)/left_bt.png" height="28" width="25"><br/>左旋转
+            		</a>
+				</div>
+				<div class="photo_turn_right" id="turnRight">
+					<a href="javascript:;" class="ora">
+            			<img src="%bind(:21)/right_bt.png" height="28" width="25"><br/>右旋转
+            		</a>
+				</div>
+			</div>
+			<div class="photo_right">
+				<div class="photo_right_intro">
+					%bind(:17)
+				</div>
+				<div class="photo_preview" id="photo_pre">
+					<img id="preview" width="126px;" src="%bind(:22)" onerror="javascript:this.src='%bind(:20)/statics/images/appeditor/bjphoto.jpg';" />
+				</div>
+				<div class="photo_bt" id="save">
+					<div class="photosavbt"><!-- %bind(:19) --> 
+						<a href="javascript:;" class="alpha">
+            				<img src="%bind(:21)/save_photo_bt.png" id="save" height="35" width="111"></a>
+            		</div>
+				</div>
+			</div>
+			<form id="crop_form" method="post" action="%bind(:20)/ImaScalingServlet">
+				<!--通过生成尺寸和旋转角度 后台获取尺寸和旋转角度再进行裁剪-->
+				<input id="sysfilename" type="hidden" name="sysfilename" value="">
+				<input id="x1" type="hidden" name="x1" value="">
+				<input id="y1" type="hidden" name="y1" value="">
+				<input id="x2" type="hidden" name="x2" value="">
+				<input id="y2" type="hidden" name="y2" value="">
+				<input id="h" type="hidden" name="h" value="">
+				<input id="w" type="hidden" name="w" value="">
+			</form>
+		</div>
+	</body>
+</html>

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
@@ -30,7 +31,8 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TZGDObject tzGDObject;
-
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String registerCalendarHtml = "";
@@ -52,7 +54,7 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 
 			// language;
 			String language = "";
-
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String siteSQL = "select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			Map<String, Object> siteMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { strSiteId });
 			if (siteMap != null) {
@@ -72,14 +74,14 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_REGCALENDAR_MESSAGE", "2", language, "更多","More");
 			
 			//查看更多报考日历 jufeng 增加2017-02-10;
-			StringBuffer moreRegisterCalUrl = new StringBuffer(contextPath).append("/dispatcher?classid=moreBkrl&siteId=").append(strSiteId);
+			StringBuffer moreRegisterCalUrl = new StringBuffer(contextPath).append("/dispatcher?classid=websiteCommList&siteId=").append(strSiteId).append("&areaId=").append(strAreaId);
 			//根据站点和区域获取栏目的文章列表:报考日历内容类型配置字段 TZ_LONG1：地点
-			String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_LONG1 AS TZ_ART_ADDR,month(B.TZ_ART_NEWS_DT) AS TZ_ART_MONTH,day(B.TZ_ART_NEWS_DT) AS TZ_ART_DAY FROM PS_TZ_ART_REC_TBL A "
-					+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y') "
-					+ "INNER JOIN PS_TZ_SITEI_AREA_T C ON (B.TZ_COLU_ID = C.TZ_COLU_ID AND C.TZ_SITEI_ID=B.TZ_SITE_ID AND C.TZ_AREA_ID=?) "
-					+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 4";
-					
-			List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,strAreaId });
+//			String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_LONG1 AS TZ_ART_ADDR,month(B.TZ_ART_NEWS_DT) AS TZ_ART_MONTH,day(B.TZ_ART_NEWS_DT) AS TZ_ART_DAY FROM PS_TZ_ART_REC_TBL A "
+//					+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y') "
+//					+ "INNER JOIN PS_TZ_SITEI_AREA_T C ON (B.TZ_COLU_ID = C.TZ_COLU_ID AND C.TZ_SITEI_ID=B.TZ_SITE_ID AND C.TZ_AREA_ID=?) "
+//					+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 4";
+			String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_REG_CAL_ART_LIST");
+			List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,strAreaId,oprid });
 			if (artList != null && artList.size()>0){
 				for(int i=0;i<artList.size();i++){
 					

@@ -3,7 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>新版报名表</title> <!-- <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
+	<title>新版报名表</title>  
+	
+	<!--  <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
 
 	<!-- <link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/bootstrap.min2.css" type="text/css" /> -->
 	<link rel="stylesheet"
@@ -57,8 +59,11 @@
 	<!-- <script type="text/javascript" src="%bind(:32)/statics/js/onlineSurvey/layer/layer.js"></script> -->
 	 <script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/layer/extend/layer.ext.js"></script>
 
+	<!--  <script type="text/javascript"
+		src="%bind(:32)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>-->
+		
 	<script type="text/javascript"
-		src="%bind(:32)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
+		src="%bind(:32)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
 	<!-- <script type="text/javascript" src="%bind(:32)/statics/js/lib/bootstrap/js/bootstrap.min.js"></script> -->
 	<script type="text/javascript"
 		src="%bind(:32)/statics/js/lib/fancyBox/jquery.fancybox.pack.js"></script>
@@ -478,6 +483,21 @@
 												$("#mask").hide();
 												$("#inpwd").hide();
 												$("#MainDiv").show(); 
+												
+												/*$(".chosen-container").each(function(){
+													$(this).removeAttr("style")
+													$(this).attr("style","width: 100%");
+												});*/	
+												//console.dir($("select"));
+												$("select").each(function(){
+													//console.dir($(this));
+													//$(this).trigger("chosen:updated")
+													//$(this).chosen("width: 100%");
+													 //$(this).css('width','100%');
+													//$(this).chosen({width:"100%"});
+													$(this).chosen("destroy").chosen();
+													//$linkitems.trigger("blur");
+												});
 											}else{
 												alert(f.comContent.msg);
 											}
@@ -1379,7 +1399,11 @@
 </head>
 <body >
 	<!--头部内容开始-->
-	<div class="reg-top" id="header">%bind(:23)</div>
+	
+	<!--  <div class="reg-top" id="header">%bind(:23)</div>-->
+	<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id=""> 
+    
+   </div> 
 	<!--头部内容结束-->
 	<!-- TJX输入密码 隐藏层-->
 	%bind(:50)
@@ -1417,9 +1441,12 @@
 	<!--主体内容结束-->
 
 	<!--底部开始-->
-	<div class="footer" id="footer">
+	<!--  <div class="footer" id="footer">
 		<div class="footer-main">%bind(:24)</div>
-	</div>
+	</div> -->
+	<div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id=""> 
+   
+   </div> 
 	<!--底部结束-->
 
 	<!--侧滑内容开始-->
@@ -1442,6 +1469,12 @@
 
 	<script type="text/javascript">
 			$(document).ready(function() {
+				
+				LoadHeader("",%bind(:10),"");
+				LoadFooter("",%bind(:10),"");
+				
+
+				
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
 					//LoadHeader("%bind(:11)", "%bind(:10)");
@@ -1449,7 +1482,7 @@
 					var tplType = "%bind(:19)";
 					if (tplType == "BMB") {
 						//LoadMenu("%bind(:11)", "%bind(:10)");
-						LoadWelcome("%bind(:11)", "%bind(:10)");
+						//LoadWelcome("%bind(:11)", "%bind(:10)");
 					}
 				}else{
 					$("#header").hide();
@@ -1515,6 +1548,7 @@
 						});
 					};
 				}
+				
 				if(passAuth && passAuth === "Y"){
 					
 					var is_password = getcookie("SURVEY_TJX_IS_PASSWORD");

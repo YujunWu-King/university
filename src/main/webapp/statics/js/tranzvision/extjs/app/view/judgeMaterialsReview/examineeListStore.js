@@ -1,0 +1,10 @@
+Ext.define('KitchenSink.view.judgeMaterialsReview.examineeListStore',{
+	extend:'Ext.data.Store',
+	alias:'store.examineeListStore',
+	model:'KitchenSink.view.judgeMaterialsReview.examineeListModel',
+	pageSize:1000,
+	comID:'TZ_PW_CLPS_COM',
+	pageID:'TZ_CLPS_DF_STD',
+	tzStoreParams:'',
+	proxy:Ext.tzListProxy()
+});

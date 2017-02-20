@@ -4,7 +4,31 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8/9" >
 	<title></title>
-	<link href="page_stylecss" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">
+	if(window.top.SurveyBuild && window.top.SurveyBuild.tzGeneralURL){
+	</script>
+	<style type="text/css">
+		.fileupload2{height:35px;width:111px;overflow:hidden;right:0;top:0;opacity:0;filter:alpha(opacity=0);cursor:pointer}
+		.main_inner_content_info_text2{clear:right;float:left;height:39px;width:600px;text-align:left}
+		.photo_preview{height:158px;width:126px;margin-top:40px;margin-right:auto;margin-bottom:30px;margin-left:auto;overflow:hidden}
+		.photo_preview img{max-width:none}.photo_bt{text-align:center;clear:both;height:35px;width:100%}
+		.photo_bt{text-align:center;clear:both;height:35px;width:100%}
+		.photo_left{float:left;height:450px;width:300px}
+		.photo_img{height:360px;width:300px;border:1px solid #000;overflow:hidden;background-color:#CCC;text-align:left}
+		.photo_img img{max-height:360px;max-width:300px}
+		.photo_turn_left{margin-top:15px;float:left;height:62px;width:62px;text-align:center}
+		.photo_turn_right{margin-top:15px;float:right;height:62px;width:62px;text-align:center}
+		.photo_right{clear:right;float:left;height:460px;width:435px;padding-left:25px}
+		.photo_right_intro{font-size:16px;line-height:30px;color:#555;text-align:left;clear:both;height:70px;width:100%}
+		
+	</style>
+	<script type="text/javascript">
+	} else {
+	</script>
+		<link href="page_stylecss" rel="stylesheet" type="text/css" />
+	<script type="text/javascript">
+		}
+	</script>
 	<link rel="stylesheet" href="%bind(:20)/statics/css/website/jquery.Jcrop.css" type="text/css" />
 	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/browser.js"></script>
@@ -44,8 +68,35 @@
 			
 			if(window.top.SurveyBuild && window.top.SurveyBuild.tzGeneralURL){
 					window.SurveyBuild = window.top.SurveyBuild;
-					var _iItem = $("#photo",window.top.document).parent().parent().parent().parent().parent();
-					var  _iData = SurveyBuild._items[_iItem.attr("data-instancid")];
+					//var _iItem = $("#photo",window.top.document).parent().parent().parent().parent().parent();
+					var _iItem = $("#photo",window.top.document).parent().siblings("input");
+					//console.log(_iItem);
+					//console.log( $("#photo",window.top.document).parent());
+					//console.dir(_iItem);
+					
+					var dataId = _iItem.attr("data-id");
+					//console.log(dataId);
+					
+					var  _iData = SurveyBuild._items[dataId];
+					//做如下修改 以适用分组框 modity by caoy
+					if (_iData == null || _iData == undefined) {
+						var _iItemFZ = $("#photo",window.top.document).parent().parent().parent().parent().parent().parent().parent();
+						dataIdFZ = _iItemFZ.attr("data-instancid");
+						//console.log(dataIdFZ);
+						//_iData = SurveyBuild._items[dataIdFZ]["children"][dataId];
+						var FZarr = SurveyBuild._items[dataIdFZ]["children"];
+						//console.dir(FZarr);
+						console.log(FZarr.length);
+						for(var i=0;i<FZarr.length;i++){
+							if (FZarr[i][dataId] != null && FZarr[i][dataId] != undefined) {
+								_iData = FZarr[i][dataId] ;
+								break;
+							}
+						}
+					}
+					//console.log(_iData);
+					//console.dir(_iData);
+					
 					var fixArr =_iData.upFileType.toLowerCase().split(",");
 					maxFileSize = _iData.upFileSize;
 					isClip = _iData.isClip;
@@ -180,7 +231,7 @@
 				                        if(html.comContent.success == "Y"){
 				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
 											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
-				                            
+											//做如下修改 以适用分组框 modity by caoy
 											//layer.close(layer.index);
 											$("#loading").fadeOut();
 											closeThis();
@@ -352,7 +403,7 @@
 			</div>
 			<div class="photo_up">
 				<div class="main_inner_content_info_upload2" style="position:relative;">
-					<div id="photoupbt" class="photoupbt">%bind(:18)</div>
+					<div id="photoupbt" class="photoupbt"><!--  %bind(:18)--></div>
                     <img id="tempimg" dynsrc="" style="display:none" />
 					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
 					<form id="myupload"
@@ -382,8 +433,11 @@
 					<img id="preview" width="126px;" src="%bind(:22)" onerror="javascript:this.src='%bind(:20)/statics/images/appeditor/bjphoto.jpg';" />
 				</div>
 				<div class="photo_bt" id="save">
-					<div class="photosavbt">%bind(:19)</div>
-				</div>
+				<div class="photosavbt"><!-- %bind(:19) --> 
+						<a href="javascript:;" class="alpha">
+            				<img src="%bind(:21)/save_photo_bt.png" id="save" height="35" width="111"></a>
+            		</div>
+            	</div>
 			</div>
 			<form id="crop_form" method="post" action="%bind(:20)/ImaScalingServlet">
 				<!--通过生成尺寸和旋转角度 后台获取尺寸和旋转角度再进行裁剪-->

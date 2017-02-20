@@ -435,4 +435,30 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 		return strRtn;
 	}
 
+	public String getMLoginPublishCode(HttpServletRequest request, String orgid, String siteid){
+	    String strRtn = "";
+	    try {
+		orgid = orgid.toUpperCase();
+
+		Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
+		String siteLang = String.valueOf(mapRst.get("siteLang"));
+		if (!(boolean) mapRst.get("checkResult")) {
+			strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效站点。",
+					"Invalid siteid.");
+			return strRtn;
+		}
+		if (!this.checkOrgId(orgid, "")) {
+			strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效机构。",
+					"Invalid orgid.");
+			return strRtn;
+		}
+		String ctxPath = request.getContextPath();
+		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid);
+
+	    } catch (Exception e) {
+		e.printStackTrace();
+		strRtn = "系统异常，请稍后再试。";
+	    }
+	    return strRtn;
+	}
 }

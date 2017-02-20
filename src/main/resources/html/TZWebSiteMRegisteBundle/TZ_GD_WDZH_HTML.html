@@ -1,0 +1,80 @@
+<script type="text/javascript">
+	var tzGdWdzhSaveActivateUrl = '%bind(:1)';
+	var tzGdWdzhPhotoUrl = '%bind(:2)';
+	var tzGdWdzhChangeEmailUrl = '%bind(:4)';
+	var tzGdWdzhChangeMobileUrl = '%bind(:5)';
+	var tzGdWdzhGetUserInfo = '%bind(:8)';
+	var tzGdWdzhSaveRemind = '%bind(:9)';
+	var tzGdWdzhProvUrl = '%bind(:11)';
+	var tzGdWdzhCityUrl = '%bind(:12)';
+	var tzGdWdzhDoBind = "%bind(:20)";
+	var tzGdWdzhReleaseBind = "%bind(:21)";
+	var tzGdWdzhAbsence = "%bind(:22)";
+	var tzGdWdzhPassSucTips = "%bind(:23)";
+	var tzGdWdzhCountryUrl = '%bind(:24)';
+</script>
+<script type="text/javascript"
+	src="%bind(:27)/statics/js/tranzvision/func/custom_radio.js"></script>
+<script type="text/javascript"
+	src="%bind(:27)/statics/js/lib/laydate/laydate.js"></script>
+<script type="text/javascript"
+	src="%bind(:27)/statics/js/tranzvision/util/layer.js"></script>
+<script type="text/javascript"
+	src="%bind(:27)/statics/js/website/account/wdzh.js"></script>
+<!-- content start -->
+<div class="main_inner">
+	<div class="main_inner_title">
+		<div class="main_inner_title_text_wide">%bind(:13)</div>
+	</div>
+	<div class="mian_inner_nav" id="tab1">
+		<div class="float_left">
+			<ul>
+				<li class="now" onclick="setTab(1,0)">%bind(:14)</li>
+				<li onclick="setTab(1,1)">%bind(:15)</li>
+				<li onclick="setTab(1,2)">%bind(:17)</li>
+				<!-- Hello World LDD TEST-->
+				<!--<li onclick="setTab(1,3)">%bind(:16)</li> -->
+			</ul>
+		</div>
+	</div>
+	<div id="content1">
+		<div class="tab1 block">
+			<div class="main_inner_left">
+				<!-- 带头像的html-->
+				<div onmousemove="tz_onmousemove();" onmouseout="tz_onmouseout();"
+					class="main_mid_info_photo"
+					style="float: none; position: relative; margin: 0 auto; text-align: center">
+					<a onclick="openUpload2();"><img src="%bind(:26)" width="126"
+						height="158" id="photo">
+						<div id="tz_edituser"
+							style="position: absolute; z-index: 2; left: 0px; top: 130px; display: none;">
+							<img src="%bind(:25)"
+								style="filter: alpha(opacity = 30); -moz-opacity: 0.7; opacity: 0.7; -khtml-opacity: 0.7;"
+								width="126" height="28" id="photo2">
+						</div> </a>
+				</div>
+				<!--<div class="main_article_nav">
+						<div class="center_bt">
+					    	<div id="saveInfo" class="bt_blue" onclick="openUpload()">%bind(:18)</div>
+					    </div>
+					</div>-->
+			</div>
+			<div class="main_inner_right">
+				<input type="hidden" id="ParamCon" /> <input type="hidden"
+					id="ParamValue" /> %bind(:10)
+			</div>
+			<div class="main_all_line_center"></div>
+			<div class="main_article_nav">
+				<div class="center_bt">
+					<div id="saveper" class="bt_blue">%bind(:19)</div>
+				</div>
+			</div>
+			<div class="padding_div_50px"></div>
+		</div>
+		<div class="tab1">%bind(:3)</div>
+		<div class="tab1">%bind(:7)</div>
+		<!--<div class="tab1">%bind(:6)</div>-->
+	</div>
+	<div style="clear: both;"></div>
+</div>
+<!-- content end -->

@@ -130,7 +130,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
-                var formData = responseData;
+                var formData = responseData.zhjgID;
                 form.setValues(formData);
                 //资源集合信息列表数据
 
@@ -224,7 +224,8 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
-            	form.findField("zhjgID").setValue(responseData);
+            	
+            	form.findField("zhjgID").setValue(responseData.zhjgID);
                 comView.actType = "update";
             },"",true,this);
         }
