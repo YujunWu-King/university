@@ -25,6 +25,14 @@
 		</div>
 		<div class="register">
 			<form id="signupForm" name="signupForm" method="post" enctype="multipart/form-data">
+				<input id="status_TZ_REALNAME" type="hidden" name="status_TZ_REALNAME" value="0"/>
+		    	<input id="status_TZ_EMAIL" type="hidden" name="status_TZ_EMAIL" value="0"/>
+		    	<input id="status_TZ_MOBILE" type="hidden" name="status_TZ_MOBILE" value="0"/>
+		    	<input id="status_TZ_PASSWORD" type="hidden" name="status_TZ_PASSWORD" value="0"/>
+				<input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="0"/>
+				<input type="hidden" id="ParamCon"/>
+				<input type="hidden" id="ParamValue"/>
+		     	<input id="status_yzm" type="hidden" name="status_yzm" value="0"/>
 				%bind(:2)
 				%bind(:3)
 			   	<div id="yzfsMobile" class="register_body" %bind(:4)>
@@ -52,4 +60,3 @@
 <div class="country_pop" id="searchCountry"></div>
 <div class="school_pop" id="searchSchool"></div>
 <div class="country_pop" id="searchState"></div>
-<input type="hidden" id="ParamCon" name="ParamCon" />
