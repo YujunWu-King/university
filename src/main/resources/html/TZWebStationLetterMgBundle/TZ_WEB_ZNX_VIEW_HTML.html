@@ -24,15 +24,29 @@
 	$(document).ready(function(){
 		//返回
 		$(".return_icon").click(function(){
-			history.back();
+			//history.back();
+			location.href=urlBegin+"/?classid=znxGl&siteId=%bind(:6)";
+			
 		});
 		//上一个
 		$(".prev_icon").click(function(event){
-			alert("上一个");
+			var prevmailid = $(this).attr("prevmailid");
+			if (prevmailid != ""){
+				var mailid = $(this).attr("mailid"); 
+				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=prev";
+			}else{
+				alert("没有上一个站内信!");
+			}
 		});
 		//下一个
 		$(".next_icon").click(function(event){
-			alert("下一个");
+			var nextmailid = $(this).attr("nextmailid");
+			if (nextmailid != ""){
+				var mailid = $(this).attr("mailid"); 
+				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=next";
+			}else{
+				alert("没有下一个站内信！");
+			}
 		});
 	});
 	
