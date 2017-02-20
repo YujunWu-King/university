@@ -119,7 +119,7 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			String znxSubject = "";
 			String znxAddTime = "";
 			String znxText = "";
-			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=? and and B.TZ_ZNX_RECID=?";
+			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=? and TZ_ZNX_RECID=?";
 			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId,oprid });
 			if (znxInfoMap != null){
 				znxRecId = (String) znxInfoMap.get("TZ_ZNX_RECID");
@@ -128,11 +128,11 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM").toString();
 				znxText = (String) znxInfoMap.get("TZ_MSG_TEXT");
 			}
-			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and B.TZ_ZNX_RECID=?";
+			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
 			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid},"String");
 			znxStatus = znxStatus == null ?"":znxStatus;
 			if (znxStatus.equals("N")){
-				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and B.TZ_ZNX_RECID=?";
+				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
 				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
 			}
 			//当前站内信的下一条站内信ID;
@@ -143,7 +143,6 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			String prevMailSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
 			String prevMailId ="";
 			prevMailId = jdbcTemplate.queryForObject(prevMailSQL, new Object[]{oprid,strMailId},"String");
-			//123123
 			//站内信内容
 			String znxInfoHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_INFO_CONTENT",
 					true,request.getContextPath(),znxContent,znxNext,znxPrev,znxReturn,znxSendName,znxSubject,znxAddTime,znxText,strMailId,str_skin_id,nextMailId,prevMailId);

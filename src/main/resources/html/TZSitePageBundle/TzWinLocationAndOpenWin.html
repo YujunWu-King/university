@@ -4,7 +4,8 @@ var visitUrl = "%bind(:2)";
 if(visitUrlType=="_self"){
 	window.location=visitUrl;
 }else{
-	var newTab=window.open('about:blank');
+	//var newTab=window.open('about:blank');
+	var newTab = window.open('','_self');
 	try{
 		setTimeout(function(){newTab.location.href= visitUrl},100);
 	}catch(e){

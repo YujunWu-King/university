@@ -456,7 +456,7 @@ function Login(){
             }else{
 			   if (response.errorCode=="1")
 			   {
-				    $("#errormsg").children("span").html(response.errorDesc);
+				    $("#errormsg").html(response.errorDesc);
 					$("#errormsg").show();
 					$("#resetbnt").show();
 					
@@ -546,7 +546,7 @@ function forgetPwd(jgid){
 function reactivate(jgid){
     jgid=$("#jgid").val();
 	$("#resetbnt").hide();
-	window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=3';
+	window.location.href=urlBegin+'?classid=enrollCls&siteid='+$("#siteid").val()+'&orgid='+jgid+'&lang='+$("#lang").val()+'&sen=3&isMobile=Y';
 }
 
 
