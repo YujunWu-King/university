@@ -970,7 +970,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			String sqlGetSiteYt = "";
 			String strSiteYtHtml = "";
 			String strLogoImg = "";
-			try {
+			/*try {
 				sqlGetSiteYt = "SELECT TZ_AREA_PUBCODE FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID = ? AND TZ_AREA_TYPE = 'YT'";
 				strSiteYtHtml = sqlQuery.queryForObject(sqlGetSiteYt, new Object[] { strSiteId }, "String");
 
@@ -988,13 +988,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				// TODO Auto-generated catch block
 				strLogoImg = contextUrl + "/statics/images/appeditor/new/logo.png";
 				e1.printStackTrace();
-			}
+			} */
 
 			if ("Y".equals(strIsAdmin)) {
 				strMainInnerStyle = "margin: 0 auto;float:none";
 				strMainStyle = "width:788px;";
 			} else {
-				try {
+				/*try {
 
 					strOnlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML", false,
 							strLogoImg);
@@ -1013,7 +1013,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				} catch (TzSystemException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				} */
 			}
 
 			if ("".equals(strAppInsId) || strAppInsId == null) {
