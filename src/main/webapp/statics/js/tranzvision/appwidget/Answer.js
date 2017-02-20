@@ -592,6 +592,9 @@ var SurveyBuild = {
                 }
             } else {
                 var is_hava_rule_c = false;
+                if(obj["rules"]==undefined){
+                	return;
+                }
                 for (var _r in obj["rules"]) {
                     if (obj["rules"][_r]["isEnable"] == "Y") {
                         is_hava_rule_c = true;
@@ -881,7 +884,15 @@ var SurveyBuild = {
 					_fc[ins]["orderby"] = "";
 					_fc[ins]["accessPath"] = "";
 					_fc[ins]["viewFileName"] = "";
-					
+				}else if("imagesUpload"==_fc[ins]["classname"]){
+					_fc[ins]["filename"] = "";
+					_fc[ins]["sysFileName"] = "";
+					_fc[ins]["orderby"] = "";
+					_fc[ins]["accessPath"] = "";
+					_fc[ins]["viewFileName"] = "";
+					if(_fc[ins].hasOwnProperty("children")){
+						_fc[ins]["children"]=[{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}]
+					}
 				}
             }
             if (!isFixedCon || isFixedCon != "Y"){
@@ -1818,193 +1829,6 @@ var SurveyBuild = {
 		var _captchaURL = TzUniversityContextPath + "/captcha";
 		var imgObj = $(el).find("img").attr("src",_captchaURL + "?" + Math.random());
 	},
-	//英语水平控件"多行容器"处理:
-	oldShowDiv:function(btnEl, instanceId){
-		var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
-		var _defaultLines = this._items[instanceId]["defaultLines"];
-
-        var maxLines = this._items[instanceId]["maxLines"], me = this;
-        var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器
-        var _children = this._items[instanceId]["children"], _fc = cloneObj(_children[0]);
-
-        var suffix = this._items[dhid]["linesNo"].shift();        
-        //初始化多行容器的行信息data
-        $.each(_fc,function(ins, obj) {
-            _fc[ins]["value"] = "";
-
-            if (obj.isSingleLine == "Y") {
-                $.each(obj.children,function(i, ch) {
-                    ch["value"] = "";
-                    //ch["itemId"] += "_" + _children.length;
-                    ch["itemId"] += "_" + suffix;
-					if(ch.hasOwnProperty("isHidden")){
-						ch["isHidden"] = "N";
-					}
-                });
-            }else{
-                //_fc[ins]["itemId"] += "_" + _children.length;
-                _fc[ins]["itemId"] += "_" + suffix;
-				if(obj.hasOwnProperty("isHidden")){
-					obj["isHidden"] = "N";
-				}
-				//附件上传,清空附件信息
-				if (_fc[ins]["classname"]=="AttachmentUpload" || _fc[ins]["classname"]=="imagesUpload"){
-                    if(_fc[ins].hasOwnProperty("children")){
-                        var _fileChildren = _fc[ins].children;
-                        if (_fileChildren.length>1){
-                            _fileChildren.splice(1,_fileChildren.length-1);
-                        }
-                        _fileChildren[0].fileName = "";
-                        _fileChildren[0].sysFileName = "";
-                        _fileChildren[0].orderby = "";
-                        _fileChildren[0].accessPath = "";
-                        _fileChildren[0].viewFileName = "";
-                    }else{
-						_fc[ins]["filename"] = "";
-						_fc[ins]["sysFileName"] = "";
-						_fc[ins]["path"] = "";
-						_fc[ins]["accessPath"] = "";
-						_fc[ins]["value"] = "";
-					}
-				}
-            }
-            if (!isFixedCon || isFixedCon != "Y"){
-                _fc[ins] = new me.comClass[obj.classname](obj);
-            }
-            if(obj.hasOwnProperty("option")){
-                $.each(obj.option,function(i, opt) {
-                    _fc[ins]["option"][i]["defaultval"] = "N";
-                    _fc[ins]["option"][i]["other"] = "N";
-                    _fc[ins]["option"][i]["checked"] = "N";
-                });
-            }
-        });
-        _children.push(_fc);
-        if (isFixedCon && isFixedCon == "Y"){
-            //处理固定多行容器
-            $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length)).insertBefore($(btnEl).parents(".main_inner_content_info"));
-
-            /*行信息中的Select格式化*/
-	       	 $("select").each(function(){
-				 $(this).chosen({width: "100%"});
-			 });
-            var selectObj = $(this._items[instanceId]._getHtml(this._items[instanceId],true)).find("select");
-            $.each(selectObj,function(i,sObj){
-                $("#" + $(sObj).attr("id")).chosen();
-            });
-            if (this._items[instanceId]._eventbind && typeof this._items[instanceId]._eventbind == "function") {
-                this._items[instanceId]._eventbind(this._items[instanceId]);
-            }
-        } else {
-            // $(this._oldAddOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
-			//this.ArrShift(_children[_children.length - 1],dhid);
-            $(this._oldAddOneRec(_children, _children.length - 1)).animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                $(SurveyBuild._oldAddOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
-            });
-
-            /*行信息中的Select格式化*/
-	       	 $("select").each(function(){
-				 $(this).chosen({width: "100%"});
-			 });
-            var selectObj = $(this._oldAddOneRec(_children, _children.length - 1)).find("select");
-            $.each(selectObj,function(i,sObj){
-                $("#" + $(sObj).attr("id")).chosen();
-            });
-        }
-		
-		/*新增一行动态效果*/
-		var $newRow = $(btnEl).parents(".main_inner_content_info").prev(".main_inner_content_para");
-
-		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
-
-        //行数等于最大行数时，隐藏“Add One +”按钮
-        if (_children.length == maxLines) {
-            $(btnEl).hide();
-        }
-
-        /*子信息项事件绑定*/
-        $.each(_children[_children.length - 1],function(d, obj) {
-            if (obj._eventbind && typeof obj._eventbind == "function") {
-                obj._eventbind(obj);
-            }
-        });
-        this._setValidator(_fc);
-
-        $.each(_fc,function(insid, obj) {
-            if(obj.hasOwnProperty("rules") && obj.isSingleLine != "Y"){
-
-                //事件绑定
-                $.each(obj["rules"],function(classname, classObj) {
-                    if ($.inArray(classname, me._baseRules) == -1 && obj["rules"][classname]["isEnable"] == "Y") {
-
-                        var _ruleClass = ValidationRules[classname];
-                        if (_ruleClass && _ruleClass._eventList && $.trim(classObj["messages"])!="") {
-                            if (obj["classname"] == "CheckBox") {
-                                $inputObject = $("#" + obj["itemId"]);
-                                $.each(_ruleClass._eventList, function (eventname, fun) {
-                                    $inputObject.bind(eventname, function () {
-                                        if (fun && typeof fun == "function") {
-                                            fun(obj["itemId"], classObj["messages"], classObj["params"] || {}, obj);
-                                        }
-                                    });
-                                });
-                                $inputObject.trigger('click');
-                                $inputObject.trigger('click');
-                            }
-                        }
-                    }
-                });
-            }
-        });
-	},
-	 //英语水平多行容器添加行(还原最初版本 新增一行的方法)
-    _oldAddOneRec: function(children, i) {
-        var _co = "",del = "",lsep = ""; //容器行信息、容器行删除按钮、行与行直接的间隔
-        //容器中行删除按钮源码
-        del += '<div class="main_inner_content_del_bmb" onclick="SurveyBuild.deleteFun(this);">';
-        del += '  <img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" width="15" height="15">&nbsp;' + MsgSet["DEL"];
-        del += '</div>';
-
-        //容器中行与行直接的间隔
-        lsep += '<div class="main_inner_content_top"></div>';
-        lsep += '<div class="padding_div"></div>';
-        lsep += '<div class="main_inner_content_foot"></div>';
-
-        /*容器行信息 begin*/
-        _co += "<div class='main_inner_content_para'>";
-
-        if (i > 0) {
-            //在第N行与N+1行直接添加间隔信息（首行除外）
-            _co += lsep;
-        }
-        var lineno = 0;
-        $.each(children[i],function(d, obj) {
-            _co += obj._getHtml(obj, true);
-            if(lineno > 0){
-                return true
-            }else{
-				var tarItemId = "";
-                if(obj["isSingleLine"]&& obj["isSingleLine"] == "Y"){
-                    tarItemId = obj["children"][0]["itemId"];
-                }else{
-                    tarItemId = obj["itemId"];
-                }
-				if(tarItemId && tarItemId.substr(-2,1) == "_"){
-					lineno = parseInt(tarItemId.substr(-1));
-					
-				}
-            }
-        });
-        _co += "</div>";
-        /*容器行信息 end*/
-
-        if (i > 0) {
-            //为除第一行之外的行添加删除功能
-            //将删除按钮添加在行信息中，首个信息项的后面（该信息项必须包含main_inner_content_info_autoheight）
-            _co = $(_co).find(".main_inner_content_info_autoheight").eq(0).append(del).closest(".main_inner_content_para").get(0).outerHTML;
-        }
-        return _co;
-    },
 	//----------------------------
 	oldDeleteFun:function(el){
 		   var index = $(el).closest(".main_inner_content_para").index();
