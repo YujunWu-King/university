@@ -538,6 +538,8 @@
 				treeExists = respData.treeExists;
 				if(treeExists == "Y"){
 					me.viewTreeManager(treeName);
+				}else if(treeExists == "YN"){
+					Ext.Msg.alert("提示","系统已存在这棵树，请重新命名！"); 
 				}else{
 					Ext.MessageBox.confirm("提示","系统没有此树，是否创建一棵新树？",function(btnId){
 		                if(btnId == 'yes'){

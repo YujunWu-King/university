@@ -7,7 +7,7 @@ public class PsTzCsKsTbl extends PsTzCsKsTblKey {
 
     private String tzKshCsjg;
 
-    private String tzKshPspm;
+    private Short tzKshPspm;
 
     private Date rowAddedDttm;
 
@@ -37,12 +37,12 @@ public class PsTzCsKsTbl extends PsTzCsKsTblKey {
         this.tzKshCsjg = tzKshCsjg == null ? null : tzKshCsjg.trim();
     }
 
-    public String getTzKshPspm() {
+    public Short getTzKshPspm() {
         return tzKshPspm;
     }
 
-    public void setTzKshPspm(String tzKshPspm) {
-        this.tzKshPspm = tzKshPspm == null ? null : tzKshPspm.trim();
+    public void setTzKshPspm(Short tzKshPspm) {
+        this.tzKshPspm = tzKshPspm;
     }
 
     public Date getRowAddedDttm() {
