@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -45,6 +46,9 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Override
 	public String tzGetHtmlContent(String strParams) {
+		//是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
+		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String schlrViewHtml = "";
 		jacksonUtil.json2Map(strParams);
@@ -86,7 +90,12 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 			String schlredHtml = this.schlredHtml(jgId);
 
 			try {
-				schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_HTML",cssPath,request.getContextPath(), "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
+				if(isMobile){
+					//TODO 移动版展示内容
+					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_MHTML",request.getContextPath(),cssPath, "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
+				}else{
+					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_HTML",cssPath,request.getContextPath(), "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
+				}
 				schlrViewHtml = siteRepCssServiceImpl.repTitle(schlrViewHtml, strSiteId);
 				schlrViewHtml=siteRepCssServiceImpl.repCss(schlrViewHtml, strSiteId);
 				
@@ -109,8 +118,10 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String schlredHtml(String jgId) {
-		String schlredHtml = "";
+		//是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
 		
+		String schlredHtml = "";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_DC_WJ_DY_T WJ,PS_TZ_DC_INS_T INS WHERE WJ.TZ_DC_WJ_ID = SCH.TZ_DC_WJ_ID AND SCH.TZ_DC_WJ_ID = INS.TZ_DC_WJ_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND INS.ROW_ADDED_OPRID = ?";
 		String wjSql = "SELECT CONCAT(WJ.TZ_DC_WJ_KSRQ,' ',WJ.TZ_DC_WJ_KSSJ) AS TZ_DC_WJ_KRQ,CONCAT(WJ.TZ_DC_WJ_JSRQ,' ',WJ.TZ_DC_WJ_JSSJ) AS TZ_DC_WJ_JRQ,TZ_DC_WJ_URL FROM PS_TZ_DC_WJ_DY_T WJ WHERE TZ_DC_WJ_ID = ?";
@@ -119,57 +130,60 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 		String attrKrq = "";
 		String attrJrq = "";
 		String attrWjUrl = "";
-		if(schlrList == null || schlrList.size() < 1){
-			/*没有开放的奖学金申请*/
-			try {
-				schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_HTML");
-			} catch (TzSystemException e) {
-				e.printStackTrace();
-			}
-		}else{
-			for (Object obj : schlrList) {
-				Map<String, Object> result = (Map<String, Object>) obj;
-				
-				String attrSchlrId = result.get("TZ_SCHLR_ID") == null ? "" : String.valueOf(result.get("TZ_SCHLR_ID"));
-//				String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
-				String attrIsApply = sqlQuery.queryForObject(applySql, new Object[]{attrSchlrId,oprid}, "string");
-				if(StringUtils.equals("Y", attrIsApply)){
-					attrIsApply = "通过申请";
-				}else if(StringUtils.equals("N", attrIsApply)){
-					attrIsApply = "建议申请其他";
-				}else if(StringUtils.equals("W", attrIsApply)){
-					attrIsApply = "待审核";
+		try {
+			if(schlrList == null || schlrList.size() < 1){
+				/*没有开放的奖学金申请*/
+				if(isMobile){
+					//TODO 移动端内容展示
+					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_MHTML");
 				}else{
-					attrIsApply = "待审核";
+					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_HTML");
 				}
-				
-				String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
-				String attrWjId = result.get("TZ_DC_WJ_ID") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_ID"));
-				
-				Map<String, Object> wjMap = sqlQuery.queryForMap(wjSql, new Object[] { attrWjId });
-
-				if (wjMap != null) {
-					attrKrq = wjMap.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_KRQ"));
-					attrJrq = wjMap.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_JRQ"));
-					attrWjUrl = wjMap.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_URL"));
+			}else{
+				for (Object obj : schlrList) {
+					Map<String, Object> result = (Map<String, Object>) obj;
+					
+					String attrSchlrId = result.get("TZ_SCHLR_ID") == null ? "" : String.valueOf(result.get("TZ_SCHLR_ID"));
+	//				String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
+					String attrIsApply = sqlQuery.queryForObject(applySql, new Object[]{attrSchlrId,oprid}, "string");
+					if(StringUtils.equals("Y", attrIsApply)){
+						attrIsApply = "通过申请";
+					}else if(StringUtils.equals("N", attrIsApply)){
+						attrIsApply = "建议申请其他";
+					}else if(StringUtils.equals("W", attrIsApply)){
+						attrIsApply = "待审核";
+					}else{
+						attrIsApply = "待审核";
+					}
+					
+					String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
+					String attrWjId = result.get("TZ_DC_WJ_ID") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_ID"));
+					
+					Map<String, Object> wjMap = sqlQuery.queryForMap(wjSql, new Object[] { attrWjId });
+	
+					if (wjMap != null) {
+						attrKrq = wjMap.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_KRQ"));
+						attrJrq = wjMap.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_JRQ"));
+						attrWjUrl = wjMap.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_URL"));
+					}
+					
+					String wjInsSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1";
+					String insId = sqlQuery.queryForObject(wjInsSql, new Object[] { oprid },"String");
+					
+					if(StringUtils.isNotBlank(attrWjUrl)){
+						attrWjUrl = attrWjUrl + "&SURVEY_INS_ID=" + insId;
+					}
+					if(isMobile){
+						//TODO 移动端展示内容
+						schlredHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_MHTML",attrSchlrName,attrIsApply,attrWjUrl);
+					}else{
+						schlredHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
+					}
 				}
-				
-				String wjInsSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1";
-				String insId = sqlQuery.queryForObject(wjInsSql, new Object[] { oprid },"String");
-				
-				if(StringUtils.isNotBlank(attrWjUrl)){
-					attrWjUrl = attrWjUrl + "&SURVEY_INS_ID=" + insId;
-				}
-				String strTr = "";
-				try {
-					strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
-				} catch (TzSystemException e) {
-					e.printStackTrace();
-				}
-				schlredHtml += strTr;
 			}
+		} catch (TzSystemException e) {
+			e.printStackTrace();
 		}
-		
 		return schlredHtml;
 	}
 	
@@ -181,15 +195,22 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String schlrHtml(String jgId) {
-		String schlrHtml = "";
+		//是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
 		
+		String schlrHtml = "";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			String sql = tzGDObject.getSQLText("SQL.TZSchlrBundle.TzViewOpenSchlr");
 			List<?> schlrList = sqlQuery.queryForList(sql, new Object[]{oprid,jgId,oprid});
 			if(schlrList == null ||  schlrList.size() < 1){
 				/*没有开放的奖学金申请*/
-				schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_HTML");
+				if(isMobile){
+					//TODO 移动设备展示内容
+					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_MHTML");
+				}else{
+					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_HTML");
+				}
 			}else{
 				for (Object obj : schlrList) {
 					Map<String, Object> result = (Map<String, Object>) obj;
@@ -198,14 +219,13 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					String attrKrq = result.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_KRQ"));
 					String attrJrq = result.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_JRQ"));
 					String attrWjUrl = result.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_URL"));
-
-					String strTr = "";
-					try {
-						strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
-					} catch (TzSystemException e) {
-						e.printStackTrace();
+					if(isMobile){
+						//TODO 移动端展示
+						schlrHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_MHTML",attrSchlrName,attrWjUrl);
+					}else{
+						schlrHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
 					}
-					schlrHtml += strTr;
+					
 				}
 			}
 						
