@@ -741,8 +741,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
 				//----------------------------
 					var childrenAttr=child.EngLevelUp.children;
-					htmlContent+= '	<div class="input-list-upload left">';
+					htmlContent+= '	<div class="input-list-texttemplate left">';
 				        htmlContent+= '		<div class="input-list-upload-con" id="' + child.EngLevelUp.itemId+ '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'black') + '">';
+				        htmlContent+='<div class="filebtn left">'
 				        if(child.EngLevelUp.allowMultiAtta == "Y"){
 				        	//alert(childrenAttr.length);
 			        		for(var index=0; index<childrenAttr.length; index++){
@@ -765,12 +766,14 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        			}
 			        		}
 			        	}
+				        htmlContent+='</div>'
 			        	htmlContent+= '		</div>';
 			        	htmlContent+= '	</div>';
 			        	//将上传图片显示放到上传部分的div类
 			        	htmlContent+='</div>'
 				//---------------------------
-				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
+				//加入clear之后结构被破坏，所以在clear下加入一层IDV
+			        		 htmlContent+='<div class="clear"></div>'    		
 				htmlContent+='</div>'
 				//--------------	
 				htmlContent+='</div>';

@@ -44,7 +44,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			c += '<div class="main_inner_content">';
 			c += types;
 			c += '</div>';
-			c += '<div class="main_inner_content_foot"></div>';
+			c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
 
 		} else {
 			var typeLi = '';
@@ -103,15 +103,17 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		return e;
 	},
 	_getContentHtml: function(data) {
-		//console.dir(data);
+		console.log("firmType:")
+		console.dir(data);
+		console.dir(data.children);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];
-	   	 	}
+	   	 }
 		//var child=data["children"];
 		var types="";
 		//--公司类型初始值
-		//console.dir(child);
+		console.dir(child);
 		var FIRM_TYPE_DEF=child.WorkExper1.value;
 		//--岗位类型初始值
 		var POSITION_TYPE_DEL=child.WorkExper2.value;
