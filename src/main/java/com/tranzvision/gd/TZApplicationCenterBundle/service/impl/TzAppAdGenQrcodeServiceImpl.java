@@ -79,7 +79,7 @@ public class TzAppAdGenQrcodeServiceImpl {
 						+ "/" + tzAppInsID;
 	
 			qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName);
-			qrcodeFilePath="/university"+qrcodeFilePath;
+			qrcodeFilePath=ctxPath+qrcodeFilePath;
 		
 		}catch (Exception e) {			
 			e.printStackTrace();

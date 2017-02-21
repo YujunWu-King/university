@@ -7,7 +7,7 @@
     <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
     <result column="TZ_SCORE_INS_ID" property="tzScoreInsId" jdbcType="BIGINT" />
     <result column="TZ_KSH_CSJG" property="tzKshCsjg" jdbcType="VARCHAR" />
-    <result column="TZ_KSH_PSPM" property="tzKshPspm" jdbcType="VARCHAR" />
+    <result column="TZ_KSH_PSPM" property="tzKshPspm" jdbcType="SMALLINT" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -40,7 +40,7 @@
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
       )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
-      #{tzScoreInsId,jdbcType=BIGINT}, #{tzKshCsjg,jdbcType=VARCHAR}, #{tzKshPspm,jdbcType=VARCHAR}, 
+      #{tzScoreInsId,jdbcType=BIGINT}, #{tzKshCsjg,jdbcType=VARCHAR}, #{tzKshPspm,jdbcType=SMALLINT}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
       )
@@ -102,7 +102,7 @@
         #{tzKshCsjg,jdbcType=VARCHAR},
       </if>
       <if test="tzKshPspm != null" >
-        #{tzKshPspm,jdbcType=VARCHAR},
+        #{tzKshPspm,jdbcType=SMALLINT},
       </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -134,7 +134,7 @@
         TZ_KSH_CSJG = #{tzKshCsjg,jdbcType=VARCHAR},
       </if>
       <if test="tzKshPspm != null" >
-        TZ_KSH_PSPM = #{tzKshPspm,jdbcType=VARCHAR},
+        TZ_KSH_PSPM = #{tzKshPspm,jdbcType=SMALLINT},
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -163,7 +163,7 @@
     update PS_TZ_CS_KS_TBL
     set TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT},
       TZ_KSH_CSJG = #{tzKshCsjg,jdbcType=VARCHAR},
-      TZ_KSH_PSPM = #{tzKshPspm,jdbcType=VARCHAR},
+      TZ_KSH_PSPM = #{tzKshPspm,jdbcType=SMALLINT},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

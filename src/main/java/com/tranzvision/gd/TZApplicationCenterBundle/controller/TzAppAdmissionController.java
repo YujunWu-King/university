@@ -56,7 +56,12 @@ public class TzAppAdmissionController {
 			String strRet = "";
 			String tzCertMergHtml="";
 			
-			String dir =request.getServletContext().getRealPath("/statics/css/website/m/html");
+			String staticHtmlDirSql="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			//录取通知书静态html路径——"/statics/css/website/m/html"
+			String staticHtmlDir= sqlQuery1.queryForObject(staticHtmlDirSql, new Object[] {"TZ_GD_CERT_STCHTML_DIR"}, "String");
+			
+			
+			String dir =request.getServletContext().getRealPath(staticHtmlDir);
 			String fileName=tzAppInsID+".html";
 			
 			String filePath = "";
@@ -110,7 +115,14 @@ public class TzAppAdmissionController {
 				//}else{tzCertMergHtml="该学员还未录取！";}
 			}else{
 				strRet=request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath()+"/statics/css/website/m/html/" + fileName;
+						+ String.valueOf(request.getServerPort()) + request.getContextPath()+staticHtmlDir ;
+				
+				if((strRet.lastIndexOf(File.separator)+1) != strRet.length()){
+					strRet = strRet + File.separator + fileName;
+				}else{
+					strRet = strRet + fileName;
+				}
+				
 				response.sendRedirect(strRet);
 			}
 			

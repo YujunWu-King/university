@@ -287,61 +287,47 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		this["linesNo"] = linesNo;
 	},
 	_getHtml: function(data, previewmode) {
-
 		var c = ""
-		var len = data.children.length;
-		if(len>=data.defaultLines)
-		{
-			showLines = len;
-		}else{
-			showLines = data.defaultLines;
-		}
-		//alert(showLines);
+
 		if (previewmode) {
-			for(var i=0;i<showLines;i++){
-			        var lineno = 0;
-			        var children= data.children[i];
-			        $.each(children,function(d, obj) {
-			            if(lineno > 0){
-			                return true
-			            }else{
-							var tarItemId = "";
-			                if(obj["isSingleLine"]&& obj["isSingleLine"] == "Y"){
-			                    tarItemId = obj["children"][0]["itemId"];
-			                }else{
-			                    tarItemId = obj["itemId"];
-			                    //alert(tarItemId);
-			                }
-							if(tarItemId && tarItemId.substr(-2,1) == "_"){
-								lineno = parseInt(tarItemId.substr(-1));
-							}
-			            }
-			        });
-					if(lineno > 0){
-						var indexof = $.inArray(lineno,this["linesNo"]);
-						indexof >= 0 && this["linesNo"].splice(indexof,1);
-					}
+			var showLines;
+			var len = data.children.length;
+			if(len>=data.defaultLines)
+			{
+				showLines = len;
+			}else{
+				showLines = data.defaultLines;
 			}
-			var htmlContent = this._getHtmlOne(data,0);
-			c += '<div class="main_inner_content_top"></div>';
+			var htmlContent="";
+			for(var i=1;i<=showLines;i++){
+				
+				var tempHtml = this._getHtmlOne(data,i);
+				htmlContent += tempHtml;
+				if(i>1){
+					data["linesNo"].shift(); 
+				}
+			}
 			c += '<div class="main_inner_content">';
 
 			c += htmlContent;
 			//--------
 			/*添加 (添加下一条) 按钮*/
-			c += '	<div class="main_inner_content_info">';
-//			c += '		<div id="main_inner_content_info_save0">';
-//			c += '			<div id="saveEdu" class="bt_blue" onclick="SurveyBuild.saveApp();">' + MsgSet["SAVE"] + '</div>';
-//			c += '			<a href="#" class="alpha"></a>';
-//			c += '		</div>';
-
-            c += '		<div style="float:right" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.oldShowDiv(this,\'' + data.instanceId + '\');">';
-			c += '			<div class="input-addbtn">' + MsgSet["ADD_ONE"] + '</div>';
-			c += '		</div>';
-            c += '	</div>';
+			c += '	<div class="addNext">';
+			if(len<data.maxLines){
+	            c += '		<div style="float:right" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">';
+				c += '			<div class="input-addbtn">' + MsgSet["ADD_ONE"] + '</div>';
+				c += '		</div>';
+	            c += '	</div>';
+			}
+			else{
+				c += '		<div style="float:right;display:none" class="main_inner_content_info_add addnextbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">';
+				c += '			<div class="input-addbtn">' + MsgSet["ADD_ONE"] + '</div>';
+				c += '		</div>';
+		        c += '	</div>';
+			}
 			//--------
 			c += '</div>';
-			c += '<div class="main_inner_content_foot"></div>';
+			c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
 			
 		} else {
 			var htmlRead = '';
@@ -400,16 +386,24 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		return e;
 	},
 	_getHtmlOne: function(data,index) {
+		/**/
+		if (SurveyBuild.appInsId=="0"&&data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+			
+		}else if (data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+		}
+		
+		/*已填写的数据的行数*/
 		//多行容器处理：
 		var len = data.children.length;
 		var edus = "",j = 0,childList = [];
-		if (parseInt(index) == parseInt(len)){
-			//返回最后一条记录的HTML及最后一个教育经历（主要用于新增）
-			j = index - 1;
-			childList.push(data.children[index-1]);
-		}else{
-			childList = data.children;
+		if(len==undefined){
+			len=1;
 		}
+		var x = index - 1;
+		childList = data.children;
+
 		//考试种类OPT
 		//var TzUniversityContextPath="/university";
 		var EXAM_TYPE_MAP={
@@ -431,14 +425,17 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		var htmlContent="";
 		//--考试种类初始值
 		//----容器:
-		for (var x in childList) {
-			htmlContent += '<div id="main_inner_content_para'+j+'" class="main_inner_content_para">';
-
-			htmlContent += '<div class="main_inner_content_top">';
-			htmlContent +='<div class="clear"></div>'
+		//var xx=1;
+		//for (var x in childList) {
+			//htmlContent+='<div class="clear"></div>'
+			htmlContent += '<div id="main_inner_content_para'+index+'" class="main_inner_content_para">';
+			htmlContent+='<div class="clear"></div>'
+			htmlContent += '<div class="mainright-title">';
+				htmlContent += '<span class="title-line"></span>' + "英语水平"  + ' ' +index+ ' :'+ data.title + ' :</div>';
+			htmlContent += '<div class="mainright-box pos-rela">';
 			//-----
-			if(j != 0&&!SurveyBuild._readonly){
-				htmlContent += '		<div onclick="SurveyBuild.oldDeleteFun(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
+			if(index > 1&&!SurveyBuild._readonly){
+				htmlContent += '		<div onclick="SurveyBuild.deleteTjx(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
 			}
 			//--------------
 			//works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
@@ -461,7 +458,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				//----------------------------放入考试种类OPT
 				htmlContent += '<div  class="input-list" style="display:block">';
-				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + ':</div>';
+				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += varDesc;
 				htmlContent += '	</div>';
@@ -505,7 +502,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
 					GRE_DIV+='<div class="clear"></div>'
-					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div> '
+					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div> '
 					GRE_DIV+='<div class="input-list-text left">'
 						GRE_DIV+=greDesc;
 					GRE_DIV+='</div>'
@@ -523,7 +520,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
 					GMAT_DIV+='<div class="clear"></div>'
-					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div>'
 					GMAT_DIV+='<div class="input-list-text left">'
 						GMAT_DIV+=gmatDesc;
 					GMAT_DIV+='</div>'				
@@ -542,7 +539,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
 					TOFEL_DIV+='<div class="clear"></div>'
-					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total:</span></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total：</span></div>'
 					TOFEL_DIV+='<div class="input-list-text left">'
 						TOFEL_DIV+=tofelDesc;
 					TOFEL_DIV+='</div>'	
@@ -744,8 +741,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
 				//----------------------------
 					var childrenAttr=child.EngLevelUp.children;
-					htmlContent+= '	<div class="input-list-upload left">';
+					htmlContent+= '	<div class="input-list-texttemplate left">';
 				        htmlContent+= '		<div class="input-list-upload-con" id="' + child.EngLevelUp.itemId+ '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'black') + '">';
+				        htmlContent+='<div class="filebtn left">'
 				        if(child.EngLevelUp.allowMultiAtta == "Y"){
 				        	//alert(childrenAttr.length);
 			        		for(var index=0; index<childrenAttr.length; index++){
@@ -764,17 +762,18 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			        				htmlContent+= '<div class="input-list-uploadcon-list">';
 			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
 			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-			        				htmlContent+= '	<div class="clear"></div>';
 			        				htmlContent+= '</div>';
 			        			}
 			        		}
 			        	}
+				        htmlContent+='</div>'
 			        	htmlContent+= '		</div>';
 			        	htmlContent+= '	</div>';
 			        	//将上传图片显示放到上传部分的div类
 			        	htmlContent+='</div>'
 				//---------------------------
-				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
+				//加入clear之后结构被破坏，所以在clear下加入一层IDV
+			        		 htmlContent+='<div class="clear"></div>'    		
 				htmlContent+='</div>'
 				//--------------	
 				htmlContent+='</div>';
@@ -782,7 +781,6 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			} else {//填写模式
 				//-----main_inner_content_info_autoheight
 				htmlContent += '<div  class="main_inner_content_info_autoheight">';
-				htmlContent +='<div class="clear"></div>'
 				//----------------------------考试种类OPT
 				var OPT_ENG='';
 				for(var i in EXAM_TYPE_MAP){
@@ -790,7 +788,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				//----------------------------放入考试种类OPT
 				htmlContent += '<div  class="input-list" style="display:block">';
-				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + ':</div>';
+				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
 				htmlContent += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
@@ -810,7 +808,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					DATE_DIV += '  <div class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">*</span>Test date：</span>';
 					
 					DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onclick="this.focus()" title="' +date_name + '">';
-					DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/calendar.png" style="position:relative;top:0px;left:-31px;cursor:pointer;">';
+					DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;">';
 					//DATE_DIV += ' <div class="clear"> </div>';
 					//---------日期 input格式检验:
 					DATE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
@@ -844,7 +842,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/>'
+					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/>'
 					//---------GRE input格式检验:
 					GRE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GRE_DIV += '	<div id="' + data.itemId+child.EngLevelOpt1_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -862,7 +860,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score):</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/>'
+					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/>'
 					//---------GMAT  input格式检验:
 					GMAT_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GMAT_DIV += '	<div id="' + data.itemId+child.EngLevelOpt2_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -881,7 +879,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total:</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/>'
+					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/>'
 					//---------TOFEL_DIV  input格式检验:
 					TOFEL_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOFEL_DIV += '	<div id="' + data.itemId+child.EngLevelOpt3_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -900,7 +898,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Overall Band Score:</span></div><div class="input-list-text left"><input   class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/>'
+					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Overall Band Score：</span></div><div class="input-list-text left"><input   class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/>'
 					//---------IELTS_DIV  input格式检验:
 					IELTS_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					IELTS_DIV += '	<div id="' + data.itemId+child.EngLevelOpt4_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -918,7 +916,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
 				else	
 				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/>'
+					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/>'
 					//---------CET6_DIV  input格式检验:
 					CET6_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET6_DIV += '	<div id="' + data.itemId+child.EngLevelOpt5_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -936,7 +934,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
 				else
 				CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div><div class="input-list-text left"><input    class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/>'
+					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div class="input-list-text left"><input    class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/>'
 					//---------CET4_DIV  input格式检验:
 					CET4_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET4_DIV += '	<div id="' + data.itemId+child.EngLevelOpt6_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -954,7 +952,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
 				else
 				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >是否通过:</span></div>'
+					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >是否通过：</span></div>'
 					CET6_DIV2+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
 						CET6_DIV2+='<option value="Y">通过</option>'
 						CET6_DIV2+='<option value="N">未通过</option>'
@@ -969,7 +967,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
 				else
 				CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>是否通过:</span></div>'
+					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>是否通过：</span></div>'
 					CET4_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
 						CET4_DIV2+='<option value="Y">通过</option>'
 						CET4_DIV2+='<option value="N">未通过</option>'
@@ -984,7 +982,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
 				else
 				TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
 					TEM_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
 						TEM_DIV+='<option value="TEM4">专业四级</option>'
 						TEM_DIV+='<option value="TEM8">专业八级</option>'
@@ -999,7 +997,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
 				else
 				H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
 					H_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
 						H_INTER_DIV+='<option value="A">拿到资格证书</option>'
 						H_INTER_DIV+='<option value="B">笔试证书</option>'
@@ -1014,7 +1012,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
 				else
 				M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
 					M_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
 						M_INTER_DIV+='<option value="A">拿到资格证书</option>'
 						M_INTER_DIV+='<option value="B">笔试证书</option>'
@@ -1029,7 +1027,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
 				else
 				BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
 					BEC_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
 						BEC_DIV+='<option value="A">高级</option>'
 						BEC_DIV+='<option value="B">中级</option>'
@@ -1046,7 +1044,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div><div  class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_2.value+'"/>'
+					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div  class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_2.value+'"/>'
 					//---------TOEIC_DIV  input格式检验:
 					TOEIC_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOEIC_DIV += '	<div id="' +data.itemId+ child.EngLevelOpt13_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -1093,53 +1091,56 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
+								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
 								htmlContent+= '</div>';
 								htmlContent+='<div class="clear"></div>'
 									
 										htmlContent+= '<div>' + msg + '<div id="' + child.EngLevelUp.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
-				        htmlContent+='</div>'
-				        htmlContent+='<div class="clear"></div>'
-				    //--------------------------图片上传处理:3.上传图片"预览"和"删除"   		
-					var childrenAttr=child.EngLevelUp.children;
-				    htmlContent+=  '<div class="input-list-info-blank left" style="display:block"><span class="red"></span></div>'
-					htmlContent+= '	<div class="input-list-upload left">';
-				        htmlContent+= '		<div class="input-list-upload-con" id="' + child.EngLevelUp.itemId+ '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'black') + '">';
-				        if(child.EngLevelUp.allowMultiAtta == "Y"){
-				        	//alert(childrenAttr.length);
-			        		for(var index=0; index<childrenAttr.length; index++){
-			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
-			        				htmlContent+= '<div class="input-list-uploadcon-list">';
-			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
-			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-			        				htmlContent+= '	<div class="clear"></div>';
-			        				htmlContent+= '</div>';
-			        			}
-			        		}
-			        	}else{
-			        		//alert(childrenAttr.length);
-			        		for(var index=0; index<childrenAttr.length; index++){
-			        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
-			        				htmlContent+= '<div class="input-list-uploadcon-list">';
-			        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
-			        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-			        				htmlContent+= '	<div class="clear"></div>';
-			        				htmlContent+= '</div>';
-			        			}
-			        		}
-			        	}
-			        	htmlContent+= '		</div>';
-			        	htmlContent+= '	</div>';
+					        	
+						htmlContent+='</div>'
+
+						    //--------------------------图片上传处理:3.上传图片"预览"和"删除"   		
+							var childrenAttr=child.EngLevelUp.children;
+						    htmlContent+=  '<div class="input-list-info-blank left" style="display:block"><span class="red"></span></div>'
+							htmlContent+= '	<div class="input-list-upload left">';
+						        htmlContent+= '		<div class="input-list-upload-con" id="' + child.EngLevelUp.itemId+ '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'black') + '">';
+						        if(child.EngLevelUp.allowMultiAtta == "Y"){
+						        	//alert(childrenAttr.length);
+					        		for(var index=0; index<childrenAttr.length; index++){
+					        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
+					        				htmlContent+= '<div class="input-list-uploadcon-list">';
+					        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
+					        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+					        				htmlContent+= '	<div class="clear"></div>';
+					        				htmlContent+= '</div>';
+					        			}
+					        		}
+					        	}else{
+					        		//alert(childrenAttr.length);
+					        		for(var index=0; index<childrenAttr.length; index++){
+					        			if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
+					        				htmlContent+= '<div class="input-list-uploadcon-list">';
+					        				htmlContent+= '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,"' + data.instanceId + '") file-index="' + childrenAttr[index].orderby + '">' + childrenAttr[index].viewFileName + '</a></div>';
+					        				htmlContent+= '<div class="input-list-uploadcon-listr left" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+					        				htmlContent+= '	<div class="clear"></div>';
+					        				htmlContent+= '</div>';
+					        			}
+					        		}
+					        	}
+					        	htmlContent+= '		</div>';
+					        	htmlContent+= '	</div>';
+					        	//----------------------------------	
 			        	//将上传图片显示放到上传部分的div类
 			        	htmlContent+='</div>'
-				//加入clear之后结构被破坏，所以在clear下加入一层IDV	
+				//加入clear之后结构被破坏，所以在clear下加入一层IDV
+			        htmlContent+='<div class="clear"></div>'    		
 				htmlContent+='</div>'
 				//---------------	
 				htmlContent+='</div></div>';
 			}
-			j++;
+			//j++;
 			htmlContent+="</div>";	
-		}
+		//}
 		return htmlContent;
 	},
 	_eventbind: function(data) {
@@ -1161,6 +1162,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				};
 				 var children = data.children;
 				 len = children.length;
+				 if(len==undefined){
+					 len=1;
+				 }
 				 var type_select="";
 				 //为所有的select注册事件
 				 for(var i=0;i<len;i++){
@@ -1174,7 +1178,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
-										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
 										//----
 									}else{
@@ -1221,27 +1225,31 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						}
 						//------上传控件验证:
 						var $fileInput=$("#"+child["EngLevelUp"].itemId);
-						//console.log("验证:");
-						$fileInput.each(function(){
+						
+						$fileInput.each(function(k){
 							$(this).mouseover(function(e){
 								$(this).prev().css("opacity","0.8");	
 							});
-							
+							$(this).attr("len",i);
+							//console.log("len:"+$(this).attr("len"));
 							$(this).mouseout(function(e) {
 								$(this).prev().css("opacity","1");
 					        });
-							$(this).formValidator({tipID:(child["EngLevelUp"].itemId+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+							$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+							var me=$(this);
 							$(this).functionValidator({
 								fun:function(val,el){
 									//必须上传
 									//if (child["EngLevelUp"].isRequire == "Y"){
 										//如果该div中上传附件数量>1,则不显示提示,如果=1可能是"只有一个节点数据为空"要提示
+									var child=children[me.attr("len")];
 										if (child["EngLevelUp"].children.length > 1){
 											return 	true;
 										} else if (child["EngLevelUp"].children.length == 1 && child["EngLevelUp"].children[0].fileName != ""){
 											return true;
 										} else {
 											return MsgSet["FILE_UPL_REQUIRE"];
+											//return "length:"+child["EngLevelUp"].children.length+"name:"+child["EngLevelUp"].children[0].fileName;
 										}
 									//}
 								}	

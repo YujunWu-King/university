@@ -45,9 +45,18 @@
 					text:'关闭账号',
 					handler:'deleteUser'
 				},{
+					text:'加入黑名单',
+					handler:'addHmd'
+				},{
 					text:'邮件发送历史',
 					iconCls: 'mail',
 					handler:'viewMailHistory'	
+				},{
+					text:'另存为静态听众',
+					handler:'saveAsStaAud'	
+				},{
+					text:'另存为动态听众',
+					handler:'saveAsDynAud'	
 				}]
 			}
 		]
@@ -94,6 +103,11 @@
                 text: '账号锁定状态',
                 sortable: true,
                 dataIndex: 'acctlock',
+                width: 110,
+            },{
+                text: '黑名单用戶',
+                sortable: true,
+                dataIndex: 'hmdUser',
                 minWidth: 110,
 				flex:1,
             },{

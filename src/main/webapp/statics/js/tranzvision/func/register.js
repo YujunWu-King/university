@@ -136,7 +136,7 @@ function submitEnroll() {
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
-		}else if(key="TZ_SCH_CNAME_Country"){
+		}else if(key=="TZ_SCH_CNAME_Country"){
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
 			if(schCountry!=null&&schCountry!=undefined){
 				$("#TZ_SCH_COUNTRY").val(schCountry);
@@ -844,7 +844,7 @@ $(document).ready(function(){
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
-		}else if(key="TZ_SCH_CNAME_Country"){
+		}else if(key=="TZ_SCH_CNAME_Country"){
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
 			if(schCountry!=null&&schCountry!=undefined){
 				$("#TZ_SCH_COUNTRY").val(schCountry);

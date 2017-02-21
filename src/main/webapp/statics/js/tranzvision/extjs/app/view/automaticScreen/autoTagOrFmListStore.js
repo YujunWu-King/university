@@ -1,9 +1,9 @@
 Ext.define('KitchenSink.view.automaticScreen.autoTagOrFmListStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.autoScreenStore',
+    alias: 'store.autoTagOrFmListStore',
     model: 'KitchenSink.view.automaticScreen.autoTagOrFmListModel',
-	autoLoad: false,
-	pageSize: 10,
+	autoLoad: true,
+	pageSize: 100,
 	comID: 'TZ_AUTO_SCREEN_COM',
 	pageID: 'TZ_ZDCS_INFO_STD',
 	tzStoreParams: '',

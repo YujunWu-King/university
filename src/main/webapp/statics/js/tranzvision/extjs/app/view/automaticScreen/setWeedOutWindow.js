@@ -8,8 +8,8 @@ Ext.define('KitchenSink.view.automaticScreen.setWeedOutWindow', {
 	],
 	controller: 'autoScreenController',
 	
-	width: 450,
-	height: 240,
+	width: 350,
+	height: 180,
   	resizable: false,
 	modal: true,
 	closeAction: 'destroy',
@@ -41,26 +41,28 @@ Ext.define('KitchenSink.view.automaticScreen.setWeedOutWindow', {
         Ext.apply(this, {
 		    items: [{        
 		        xtype: 'form',
-		        bodyPadding: 10,
-		        /*
-				layout: {
-					type: 'vbox',
-					align: 'stretch'
-		        },
-		        */
+		        bodyPadding: 20,
 		        border: false,
 		        
 		        items: [{
 		            xtype: 'displayfield',
 					value: '报考考生数量共'+ this.totalNum +'人,参与自动初筛'+ this.screenNum +'人'
 		        },{
-		           	xtype: 'textfield',
-		           	name: 'personNum',
-		           	hideLabel: true,
-		           	beforeBodyEl: '淘汰后',
-		           	afterBodyEl: '名考生',
-		           	width: 100,
-		           	value: this.lastNum
+		        	layout:'column',
+		        	items:[{
+		        		xtype: 'displayfield',
+						value: '淘汰后'
+		        	},{
+		        		xtype: 'numberfield',
+			           	name: 'personNum',
+			           	minValue: 1,
+			           	hideLabel: true,
+			           	width: 100,
+			           	value: this.lastNum
+		        	},{
+		        		xtype: 'displayfield',
+						value: '名考生'
+		        	}]
 		        }]
 		    }]
         });
@@ -70,7 +72,7 @@ Ext.define('KitchenSink.view.automaticScreen.setWeedOutWindow', {
     buttons: [{
 		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ensure","确定"),
 		iconCls:"ensure",
-		handler: 'copyScoreModelEnsure'
+		handler: 'setWeedOutStuEnsure'
 	}, {
 		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.close","关闭"),
 		iconCls:"close",

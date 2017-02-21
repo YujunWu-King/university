@@ -100,7 +100,18 @@
 		};
 
 	var ajax_request = function(){
+			var type = "%bind(:4)";
 			var tzByCountryParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSEARCH","search-text":"' + $searchInput.val() + '"}}';
+			var $CountryCode="";
+	    	if(type=="A"){
+	    		$CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");	    			    		
+	    	}else if(type=="B"){
+	    		$CountryCode = $("#CountryCode", window.parent.document).val();
+	    		$CountryCode = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
+	    	}
+	    	if($CountryCode!=null&&$CountryCode!=undefined){
+    			tzByCountryParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSEARCH","search-text":"' + $searchInput.val() + '","country":"' + $CountryCode  + '"}}';
+    		}
 			//ajax服务端通信
 			$.ajax({
 				'url':tzGeneralURL, //服务器的地址
@@ -321,7 +332,7 @@
          	});
           setTab2(1,0)
         } */
-        function findData() {
+        function findData() {        	
 			$.ajax({
 				'url': tzGeneralURL,//服务器的地址
 				'data': {'search-text': $("#search-text").val()},//参数
