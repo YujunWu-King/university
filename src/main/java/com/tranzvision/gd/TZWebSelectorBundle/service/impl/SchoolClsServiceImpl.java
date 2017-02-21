@@ -47,6 +47,13 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strOType = jacksonUtil.getString("OType");
 			String strValue = jacksonUtil.getString("search-text");
+			String strCountry = "";
+			try{
+			    strCountry = jacksonUtil.getString("country");
+			}catch(Exception e){
+			    /*未传递国家参数*/
+			}
+
 			if (strValue == null) {
 				strValue = "";
 			} else {
@@ -87,8 +94,14 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSEARCH".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
+			    	if("".equals(strCountry)||strCountry==null){
+			    	    sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+			    	    list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%"});    
+			    	}else{
+			    	    sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where (TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ?) AND COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+			    	    list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%","%" + strValue + "%",strCountry});
+			    	}
+				
 				ArrayList<String> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
