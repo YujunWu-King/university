@@ -1178,7 +1178,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
-										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
 										//----
 									}else{
