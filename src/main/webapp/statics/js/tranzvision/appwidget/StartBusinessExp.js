@@ -602,8 +602,6 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//----"互联网"类型下，radio的切换处理
 		$("input[name='financing_type']").click(function(){
 			//alert($(this).val());
-			console.log("thisXX:");
-			console.dir($(this));
 			var financingTypeVal=($(this).val());
 			//获取5个radio的句柄
 //			var b_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
