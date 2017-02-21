@@ -552,12 +552,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(btypeVal=="01"){
 					netDiv.css("display","block");
 					//清空除开"互联网"之外的数据
-					$("#"+data["itemId"] + child.WorkExper5.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
 					
-					$("#"+data["itemId"] + child.WorkExper7.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper8.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
 					//---------------------
 				}else{
 					netDiv.css("display","none");
@@ -565,16 +565,16 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(btypeVal=="02"){
 					familyDiv.css("display","block");
 					//清空除开"家族企业"之外的数据
-					$("#"+data["itemId"] + child.WorkExper2.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper3.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
 					
-					$("#"+data["itemId"] + child.WorkExper7.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper8.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
 					//-----------------------
 				}else{
 					familyDiv.css("display","none");
@@ -582,15 +582,15 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(btypeVal=="03"){
 					otherDiv.css("display","block");
 					//清除除开"其他"之外所有数据
-					$("#"+data["itemId"] + child.WorkExper2.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper3.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+					netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
 					
-					$("#"+data["itemId"] + child.WorkExper5.itemId).val("");
-					$("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+					familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+					familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
 					
 				}else{
 					otherDiv.css("display","none");
@@ -602,12 +602,16 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//----"互联网"类型下，radio的切换处理
 		$("input[name='financing_type']").click(function(){
 			//alert($(this).val());
+			console.log("thisXX:");
+			console.dir($(this));
 			var financingTypeVal=($(this).val());
 			//获取5个radio的句柄
-			var b_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
-			var a_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_aspan");
-			var ang_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_angspan");
-
+//			var b_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
+//			var a_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_aspan");
+//			var ang_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_angspan");
+			var b_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
+			var a_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_aspan");
+			var ang_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_angspan");
 			//---radio-1
 			if(financingTypeVal=="B_FINANCING"){
 				//$("#B_FINANCING_S").css("display","inline");
@@ -636,7 +640,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				//--------------------
 			}
 			//-----------将raido中的数据放入radioGroup下的隐藏input中
-			var radioValInput=$("#"+data["itemId"] + child.WorkExper2.itemId);
+			var radioValInput=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId);
 			radioValInput.val(financingTypeVal);
 			//console.dir("radioValInput:");
 			//console.dir(radioValInput);
