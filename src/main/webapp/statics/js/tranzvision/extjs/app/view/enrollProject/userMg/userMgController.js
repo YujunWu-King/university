@@ -521,6 +521,44 @@
 			},this);   
 	   }
 	},
+	addHmd: function(){
+		//选中行
+		var selList = this.getView().getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要加入黑名单的记录");   
+			return;
+	   }else{
+			Ext.MessageBox.confirm('确认', '您确定要將所选账户加入黑名单吗?', function(btnId){
+				if(btnId == 'yes'){					   
+				   var store = this.getView().store;
+				   //删除json字符串
+					var updateJson = "";
+					var OPRID = "";
+					for(var i=0;i<selList.length;i++){
+						OPRID = selList[i].get("OPRID");
+						if(updateJson == ""){
+							updateJson = '{"OPRID":"' + OPRID + '"}';
+						}else{
+							updateJson = updateJson + ','+'{"OPRID":"' + OPRID + '"}';
+						}
+					}
+					var comParams = "";
+					if(updateJson != ""){
+						comParams = '"update":[' + updateJson + "]";
+					}
+					//提交参数
+					var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERMG_STD","OperateType":"U","comParams":{'+comParams+'}}';
+			        //保存数据
+					Ext.tzSubmit(tzParams,function(){
+						store.reload();			   
+					},"",true,this);
+					   
+				}												  
+			},this);   
+	   }
+	},
 	saveDataInfo: function(){
 		
 		var win =this.getView();

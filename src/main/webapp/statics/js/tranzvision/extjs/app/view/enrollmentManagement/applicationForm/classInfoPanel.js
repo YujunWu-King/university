@@ -152,6 +152,9 @@
                                 iconCls:"print",
                                 handler:'printAppForm'
                             },{
+                                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.addHmdUser","加入黑名单"),
+                                handler:'addHmd'
+                            },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewEmailSendHis","查看邮件发送历史"),
                                 handler:'viewMailHistory'
                             },{

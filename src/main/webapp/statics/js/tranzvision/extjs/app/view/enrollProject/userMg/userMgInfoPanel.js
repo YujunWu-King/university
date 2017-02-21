@@ -154,7 +154,7 @@
                     },{
                         xtype: 'radiogroup',
                         fieldLabel: '黑名单用户',
-                        readOnly:true,
+                        //readOnly:true,
                         name: 'blackNames',
                         fieldStyle:'background:#F4F4F4',
                         columns: 6,
@@ -162,17 +162,17 @@
                         	boxLabel: "是",
                             name: "blackName",
                             inputValue: "Y",
-                            readOnly : true
+                            //readOnly : true
                         },{
                         	boxLabel: "否",
                             name: "blackName",
                             inputValue: "N",
-                            readOnly : true
+                            //readOnly : true
                         }]  
                     },{
                         xtype: 'radiogroup',
                         fieldLabel: '允许继续申请',
-                        readOnly:true,
+                        //readOnly:true,
                         name: 'allowApplys',
                         fieldStyle:'background:#F4F4F4',
                         columns: 6,
@@ -180,12 +180,12 @@
                         	boxLabel: "是",
                             name: "allowApply",
                             inputValue: "Y",
-                            readOnly : true
+                            //readOnly : true
                         },{
                         	boxLabel: "否",
                             name: "allowApply",
                             inputValue: "N",
-                            readOnly : true
+                            //readOnly : true
                         }]
                     },{
                         xtype: 'textarea',
