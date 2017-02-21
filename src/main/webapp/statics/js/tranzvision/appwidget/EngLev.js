@@ -327,7 +327,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			}
 			//--------
 			c += '</div>';
-			c += '<div class="main_inner_content_foot"></div>';
+			c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
 			
 		} else {
 			var htmlRead = '';
@@ -1248,8 +1248,8 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 										} else if (child["EngLevelUp"].children.length == 1 && child["EngLevelUp"].children[0].fileName != ""){
 											return true;
 										} else {
-											//return MsgSet["FILE_UPL_REQUIRE"];
-											return "length:"+child["EngLevelUp"].children.length+"name:"+child["EngLevelUp"].children[0].fileName;
+											return MsgSet["FILE_UPL_REQUIRE"];
+											//return "length:"+child["EngLevelUp"].children.length+"name:"+child["EngLevelUp"].children[0].fileName;
 										}
 									//}
 								}	
