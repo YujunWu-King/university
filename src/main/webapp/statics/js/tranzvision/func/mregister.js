@@ -51,6 +51,14 @@ var RegisterTips={
 	_SmsTimeshort_eng:"Send too fast,Try again later",
 }
 
+function layerMsg(content){
+	layer.open({
+	    content: content,
+	    skin: 'msg',
+	    time: 2 //2秒后自动关闭
+	});	
+}
+
 /*注册页面提交按钮事件*/
 function submitEnroll() {
 
@@ -93,7 +101,7 @@ function submitEnroll() {
 			if(jsonValue[key] == "Y"){
 				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
 					$('#TZ_REALNAME_status').html("<span>"+TipBlank+"</span>");
-					$("#TZ_REALNAMEStyle").removeClass("alert_display_none");
+					$("#TZ_REALNAME_status").show();
 					_statusFlg="error";
 				}
 			}
@@ -102,11 +110,11 @@ function submitEnroll() {
 				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
 					if ($('#TZ_EMAIL_status').html())
 					{
-						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						$("#TZ_EMAIL_status").show()
 						_statusFlg="error";
 					}else{
 						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
-						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						$("#TZ_EMAIL_status").show()
 						_statusFlg="error";
 					}
 				}
@@ -115,25 +123,25 @@ function submitEnroll() {
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
 					$('#TZ_MOBILE_status').html("<span>"+TipPhone+"</span>");
-					$("#TZ_MOBILEStyle").removeClass("alert_display_none");
+					$("#TZ_MOBILE_status").show();
 					_statusFlg="error";
 				}
 			}
 		}else if(key=="TZ_PASSWORD"){//密码
 			if($('#TZ_PASSWORD').val() ==''){
 				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_PASSWORD_status").show();
 				_statusFlg="error";
 			}
 			if(_pwdFlg != 0){
 				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
-				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_PASSWORD_status").show();
 				_statusFlg="error";
 			}
 		}else if(key=="TZ_REPASSWORD"){//确认密码
 			if($('#TZ_REPASSWORD').val()==''){
 				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_REPASSWORD_status").show();
 				_statusFlg="error";
 			}
 		}else if(key="TZ_SCH_CNAME_Country"){
@@ -142,6 +150,9 @@ function submitEnroll() {
 				$("#TZ_SCH_COUNTRY").val(schCountry);
 			}			
 		}else{//其他
+			console.log("-------------------------------");
+			console.log(jsonValue);
+			console.log(key);
 			if(jsonValue[key] == "Y"){
 				var val;
 
@@ -151,10 +162,10 @@ function submitEnroll() {
 				}else{
 				  val=$('#' + key).val();			
 				}
-				
+				console.log(val);
 				if(!val){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
-					$('#' + key + 'Style').removeClass("alert_display_none");
+					$('#' + key + '_status').show();
 					_statusFlg="error";
 			   }
 			}
@@ -164,14 +175,14 @@ function submitEnroll() {
 	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
 		
 		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
-		$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+		$("#TZ_REPASSWORD_status").show();
 		_statusFlg="error";
 	}
 
 	if($("#yzfs").val() == "M"){
 		if(_yzmFlg !=0 || $('#yzm').val() ==''){
 			$('#yzm_status').html("<span>"+TipCode+"</span>");
-			$("#yzmStyle").removeClass("alert_display_none");
+			$("#yzm_status").show();
 			_statusFlg="error";
 		}
 	}else{
@@ -179,7 +190,7 @@ function submitEnroll() {
 		if(_yzmFlg !=0 || $('#yzmEmail').val() ==''){
 
 			$('#yzm_Emailstatus').html("<span>"+TipCode+"</span>");
-			$("#yzmEmailStyle").removeClass("alert_display_none");
+			$("#yzm_Emailstatus").show();
 			_statusFlg="error";
 		}
 	}
@@ -210,7 +221,7 @@ function submitEnroll() {
 					//loading();
 					window.location.href=result.resultDescr;
 				}else{
-					alert(result.state.errdesc);
+					layerMsg(result.state.errdesc);
 				}
 			}
 		});
@@ -286,17 +297,16 @@ $(document).ready(function(){
 				$("#" + key).on("blur",function(){
 					var val = this.value;					
 					var fieldId = this.id;
-					console.log(fieldId,val);
 					if(fieldId=="TZ_REALNAME"){//姓名
 						if(val !=''){
 								if(val.length>1){
 									$('#' + fieldId + '_status').html("");
 									$('#status_' + fieldId).attr("value", 0);
-									$('#' + fieldId + 'Style').addClass("alert_display_none");
+									$('#' + fieldId + '_status').hide();
 								}else{
 									$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 									$('#status_' + fieldId).attr("value", 1);
-									$('#' + fieldId + 'Style').removeClass("alert_display_none");
+									$('#' + fieldId + '_status').show();
 								}
 						
 						}else{
@@ -304,7 +314,7 @@ $(document).ready(function(){
 								//$('#' + fieldId).val("请输入真实名字");
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								$('#' + fieldId + '_status').show();
 							}
 						}
 					}else if(fieldId=="TZ_EMAIL"){//邮箱
@@ -313,7 +323,7 @@ $(document).ready(function(){
 							if (!patrn.test(val)){
 							   $('#' + fieldId + '_status').html("<span>"+TipEmail+"</span>");
 							   $('#status_' + fieldId).attr("value", 1);
-							   $('#' + fieldId + 'Style').removeClass("alert_display_none");
+							   $('#' + fieldId + '_status').show();
 							}else{
 								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 								$.ajax({
@@ -328,11 +338,11 @@ $(document).ready(function(){
 										if(result.comContent =="success"){
 											$('#' + fieldId + '_status').html("");
 											$('#status_' + fieldId).attr("value", 0); 
-											$('#' + fieldId + 'Style').addClass("alert_display_none");
+											$('#' + fieldId + '_status').hide();
 										}else{
 											$('#' + fieldId + '_status').html("<span>"+result.state.errdesc+"</span>");
 					   						$('#status_' + fieldId).attr("value", 1);
-											$('#' + fieldId + 'Style').removeClass("alert_display_none");
+											$('#' + fieldId + '_status').show();
 										}
 									}
 								});
@@ -341,7 +351,7 @@ $(document).ready(function(){
 							if(data[fieldId] == "Y"){
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								$('#' + fieldId + '_status').show();
 							}
 						}
 					}else if(fieldId=="TZ_MOBILE"){//手机
@@ -350,7 +360,7 @@ $(document).ready(function(){
 							if (!patrn.test(val)){
 								$('#' + fieldId + '_status').html("<span>"+TipPhone+"</span>");
 							  	$('#status_' + fieldId).attr("value", 1);
-							  	$('#' + fieldId + 'Style').removeClass("alert_display_none");
+							  	$('#' + fieldId + '_status').show();
 							}else{
 								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 								$.ajax({
@@ -365,11 +375,11 @@ $(document).ready(function(){
 										if(result.comContent =="success"){
 											$('#' + fieldId + '_status').html("");
 											$('#status_' + fieldId).attr("value", 0); 
-											$('#' + fieldId + 'Style').addClass("alert_display_none");
+											$('#' + fieldId + '_status').hide();
 										}else{
 											$('#' + fieldId + '_status').html("<span>"+result.state.errdesc+"</span>");
 											$('#status_' + fieldId).attr("value", 1);
-											$('#' + fieldId + 'Style').removeClass("alert_display_none");
+											$('#' + fieldId + '_status').show();
 										}
 									}
 								});
@@ -378,7 +388,7 @@ $(document).ready(function(){
 							if(data[fieldId] == "Y"){
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								$('#' + fieldId + '_status').show();
 							}
 						}
 					}else if(fieldId=="TZ_PASSWORD"){//密码
@@ -388,27 +398,27 @@ $(document).ready(function(){
 							if(pwd == 0){
 								$('#' + fieldId + '_status').html("");
 					        	$('#status_' + fieldId).attr("value", 0); 
-								$('#' + fieldId + 'Style').addClass("alert_display_none");
+								$('#' + fieldId + '_status').hide();
 							}else{
 								$('#' + fieldId + '_status').html(PwdError); 
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");		
+								$('#' + fieldId + '_status').show();		
 							}
 							/*
 							if(val.length<6 ||val.length>32){
 								$('#' + fieldId + '_status').html("密码长度必须大于6小于32位"); 
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								$('#' + fieldId + 'Style').show();
 							}else{
 								$('#' + fieldId + '_status').html("");
 					        	$('#status_' + fieldId).attr("value", 0); 
-								$('#' + fieldId + 'Style').addClass("alert_display_none");
+								$('#' + fieldId + 'Style').hide();
 							}
 							*/
 						}else {
 							$('#' + fieldId + '_status').html(TipBlank);
 							$('#status_' + fieldId).attr("value", 1); 
-							$('#' + fieldId + 'Style').removeClass("alert_display_none");
+							$('#' + fieldId + '_status').show();
 						}
 					}else if(fieldId=="TZ_REPASSWORD"){//确认密码
 						var password =$("#TZ_PASSWORD").val();
@@ -416,38 +426,45 @@ $(document).ready(function(){
 							if(password.length<6 ||password.length>32){
 								$('#TZ_PASSWORD_status').html(PwdLen); 
 								$('#status_TZ_PASSWORD').attr("value", 1);
-								$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+								$("#TZ_PASSWORD_status").show();
 							}else if(val ==''){
 								$('#TZ_PASSWORD_status').html("");
 								$('#TZ_REPASSWORD_status').html(TipBlank);
 						     	$('#status_TZ_PASSWORD').attr("value", 1); 
-								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
-								$('#TZ_REPASSWORDStyle').removeClass("alert_display_none");
+								$('#TZ_PASSWORD_status').hide();
+								$('#TZ_REPASSWORD_status').show();
 							}else if(val == password){
 								$('#TZ_PASSWORD_status').html("");
 								$('#TZ_REPASSWORD_status').html("");
 					        	$('#status_TZ_PASSWORD').attr("value", 0); 
-								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
-								$('#TZ_REPASSWORDStyle').addClass("alert_display_none");
+								$('#TZ_PASSWORD_status').hide();
+								$('#TZ_REPASSWORD_status').hide();
 							}else if(val != password){
 								$('#TZ_PASSWORD_status').html("");
 								$('#TZ_REPASSWORD_status').html(PwdCor); 
 								$('#status_TZ_PASSWORD').attr("value", 1);
-								$('#TZ_PASSWORDStyle').addClass("alert_display_none");
-								$('#TZ_REPASSWORDStyle').removeClass("alert_display_none");
+								$('#TZ_PASSWORD_status').hide();
+								$('#TZ_REPASSWORD_status').show();
 							}
 						}else {
 							$('#TZ_PASSWORD_status').html(TipBlank);
 							$('#status_TZ_PASSWORD').attr("value", 1); 
-							$('#TZ_PASSWORDStyle').removeClass("alert_display_none");
+							$('#TZ_PASSWORD_status').show();
 						}
+					}else if(fieldId=="TZ_SCH_CNAME"){
+						
+					}else if(fieldId=="TZ_LEN_PROID"){
+						
 					}else{//其他
+						console.log("============================================");
+						console.log(data);
+						console.log(fieldId);
 						if(data[fieldId] == "Y"){
 							if(val != ""){
-								$('#' + fieldId + 'Style').addClass("alert_display_none");
+								$('#' + fieldId + '_status;').hide();
 							}else{
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
-								$('#' + fieldId + 'Style').removeClass("alert_display_none");
+								$('#' + fieldId + '_status').show();
 							}
 						}
 					}
@@ -456,165 +473,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	setInterval(function(){
-		var val = $("#TZ_PASSWORD").val();
-		if(val != "" && val != null){
-			var patrn;
-			var num = 0;
-			var num1 = 0;
-			var num2 = 0;
-			var num3 = 0;
-			var num4 = 0;
-			var num5=0;
-			var num6=0;
-			var str1 = 0;
-			var str2 = 0;
-			var cr;
-			for (var i=0;i<val.length ;i++ )
-			{
-				 cr = val.charAt(i);
-						
-				
-				/*
-				patrn= /[^\d\w\s]/;
-				if (patrn.test(val)){
-					num = num + 1;
-				}
-				*/
-				patrn= /\w/;
-				if (patrn.test(cr)){
-					num = num + 1;
-				}else{
-					num5=1;
-				}
-				
-			}
-			
-				patrn= /[A-Z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[a-z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[0-9]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[_]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-
-			if(val.length >= 6 && val.length <= 32){
-				num1 = 1;				
-				$("#J_PwdTip .pw-rule-length .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#14c2b3");
-			}else{
-				num1 = 0;
-				$("#J_PwdTip .pw-rule-length .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","#FF460F");
-			}
-			
-			if(num > 0 && num5==0){
-				num2 = 1;
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#14c2b3");
-			}else{
-				
-				num2 = 0;
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","#FF460F");
-			}
-			
-			if(num5==0 && num6>1){
-				num3 = 1;
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("√");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#14c2b3");
-			}else{
-				num3 = 0;
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("X");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","#FF460F");
-			}
-			
-			num4 = num1 + num2 + num3;
-			if(num4 < 1){
-				$("#J_PwdTip .pw-strength-1").css("background-color","");
-				$("#J_PwdTip .pw-strength-2").css("background-color","");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				
-				$("#J_PwdTip .pw-rule-length .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
-				$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
-				$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
-				$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
-				
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","");
-				
-				$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-			}
-			if(num4 >= 1){
-				$("#J_PwdTip .pw-strength-1").css("background-color","#FF460F");
-				$("#J_PwdTip .pw-strength-2").css("background-color","");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				if ($("#lang").val()=="ENG"){
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("weak");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("低");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}
-			}
-			if(num4 >= 2){
-				$("#J_PwdTip .pw-strength-2").css("background-color","#FF460F");
-				$("#J_PwdTip .pw-strength-3").css("background-color","");
-				if ($("#lang").val()=="ENG"){
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("average");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("中");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#FF460F");
-				}
-			}
-
-			if(num5==0 && num4>=3 && num>10){
-				$("#J_PwdTip .pw-strength-1").css("background-color","#0A9E00");
-				$("#J_PwdTip .pw-strength-2").css("background-color","#0A9E00");
-				$("#J_PwdTip .pw-strength-3").css("background-color","#0A9E00");
-				if ($("#lang").val()=="ENG"){
-				
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("strong");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}else{
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").html("高");
-					$("#J_PwdTip .pw-strength .pw-strength-bar em").css("color","#0A9E00");
-				}
-			}
-
-			if(num4 >= 3){
-				$('#status_PASSWORD').attr("value", 0);
-			}else{
-				$('#status_PASSWORD').attr("value", 1);
-			}
-			
-		}else{
-			$("#J_PwdTip .pw-strength-1").css("background-color","");
-			$("#J_PwdTip .pw-strength-2").css("background-color","");
-			$("#J_PwdTip .pw-strength-3").css("background-color","");
-			
-			$("#J_PwdTip .pw-rule-length .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-length .iconfont").css("color","");
-			$("#J_PwdTip .pw-rule-legal .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-legal .iconfont").css("color","");
-			$("#J_PwdTip .pw-rule-multi .iconfont").html("О");
-			$("#J_PwdTip .pw-rule-multi .iconfont").css("color","");
-			
-			$("#J_PwdTip .pw-strength .pw-strength-bar em").html("");
-		}
-	},200);
 	
 	$("#TZ_PASSWORD").on("focus",function(){
 		var top = $("#TZ_PASSWORD").position().top;
@@ -635,7 +493,7 @@ $(document).ready(function(){
 	setInterval(function(){
 		if($("#BIRTHDATE").val() != ""){
 			$('#BIRTHDATE_status').html("");
-			$('#BIRTHDATEStyle').addClass("alert_display_none");
+			$('#BIRTHDATEStyle').hide();
 		}
 	},300);
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
@@ -797,7 +655,7 @@ $(document).ready(function(){
 	var _pwdFlg=$("#status_PASSWORD").val();
 	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
-
+console.log("+++++++++++++++++++++++++++++++++++++");
 	var TipBlank = "";
 		var TipEmail = "";
 		var TipPhone = "";
@@ -829,7 +687,7 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
 					$('#TZ_REALNAME_status').html("<span>"+TipBlank+"</span>");
-					$("#TZ_REALNAMEStyle").removeClass("alert_display_none");
+					$("#TZ_REALNAMEStyle").show();
 					_statusFlg="error";
 				}
 			}
@@ -838,11 +696,11 @@ $(document).ready(function(){
 				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
 					if ($('#TZ_EMAIL_status').html())
 					{
-						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						$("#TZ_EMAIL_status").show();
 						_statusFlg="error";
 					}else{
 						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
-						$("#TZ_EMAILStyle").removeClass("alert_display_none");
+						$("#TZ_EMAIL_status").show();
 						_statusFlg="error";
 					}
 				}
@@ -851,25 +709,25 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
 					$('#TZ_MOBILE_status').html("<span>"+TipPhone+"</span>");
-					$("#TZ_MOBILEStyle").removeClass("alert_display_none");
+					$("#TZ_MOBILE_status").show();
 					_statusFlg="error";
 				}
 			}
 		}else if(key=="TZ_PASSWORD"){//密码
 			if($('#TZ_PASSWORD').val() ==''){
 				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_PASSWORD_status").show();
 				_statusFlg="error";
 			}
 			if(_pwdFlg != 0){
 				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
-				$("#TZ_PASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_PASSWORDStyle").show();
 				_statusFlg="error";
 			}
 		}else if(key=="TZ_REPASSWORD"){//确认密码
 			if($('#TZ_REPASSWORD').val()==''){
 				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+				$("#TZ_REPASSWORD_status").show();
 				_statusFlg="error";
 			}
 		}else if(key="TZ_SCH_CNAME_Country"){
@@ -881,7 +739,7 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
-					$('#' + key + 'Style').removeClass("alert_display_none");
+					$('#' + key + '_status').show();
 					_statusFlg="error";
 				}
 			}
@@ -891,7 +749,7 @@ $(document).ready(function(){
 	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
 		
 		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
-		$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
+		$("#TZ_REPASSWORD_status").show();
 		_statusFlg="error";
 	}
 
@@ -899,7 +757,7 @@ $(document).ready(function(){
 	if($("#yzfs").val() == "M"){
 		if(_yzmFlg !=0 || $('#yzm').val() ==''){
 			$('#yzm_status').html("<span>"+TipCode+"</span>");
-			$("#yzmStyle").removeClass("alert_display_none");
+			$("#yzm_status").show();
 			_statusFlg="error";
 		}
 	}else{
@@ -907,7 +765,7 @@ $(document).ready(function(){
 		if(_yzmFlg !=0 || $('#yzmEmail').val() ==''){
 
 			$('#yzm_Emailstatus').html("<span>"+TipCode+"</span>");
-			$("#yzmEmailStyle").removeClass("alert_display_none");
+			$("#yzm_Emailstatus").show();
 			_statusFlg="error";
 		}
 	}
@@ -939,14 +797,14 @@ $(document).ready(function(){
 					//loading();
 					if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
-							alert("Registration successful.");
+							layerMsg("Registration successful.");
 						}else{
-							alert("注册成功");
+							layerMsg("注册成功");
 						}
 					}
 					window.location.href=result.comContent.jumpurl;
 				}else{
-					alert(result.state.errdesc);
+					layerMsg(result.state.errdesc);
 				}
 			}
 		});
@@ -1012,18 +870,18 @@ function check_yzm(val){
 				if(result.resultFlg =="success"){
 					$('#yzm_status').html("");
 					$('#status_yzm').attr("value", 0); 
-					$("#yzmStyle").addClass("alert_display_none");
+					$("#yzm_status").hide();
 				}else{
 					$('#yzm_status').html("<span>"+result.errorDescr+"</span>");
 					$('#status_yzm').attr("value", 1);
-					$("#yzmStyle").removeClass("alert_display_none");
+					$("#yzm_status").show();
 				}
 			}
 		});
 	}else{
 		$('#yzm_status').html("<span>"+TipBlank+"</span>");
 		$('#status_yzm').attr("value", 1);
-		$("#yzmStyle").removeClass("alert_display_none");
+		$("#yzm_status").show();
 	}
 }
 
@@ -1057,18 +915,18 @@ function check_yzmEmail(val){
 				if(result.comContent =="success"){
 					$('#yzm_Emailstatus').html("");
 					$('#status_yzm').attr("value", 0);
-					$("#yzmEmailStyle").addClass("alert_display_none");
+					$("#yzmEmailStyle").hide();
 				}else{
 					$('#yzm_Emailstatus').html("<span>"+result.state.errdesc+"</span>");
 					$('#status_yzm').attr("value", 1);
-					$("#yzmEmailStyle").removeClass("alert_display_none");
+					$("#yzmEmailStyle").show();
 				}
 			}
 		});
 	}else{
 		$('#yzm_Emailstatus').html("<span>"+TipBlank+"</span>");
 		$('#status_yzm').attr("value", 1);
-		$("#yzmEmailStyle").removeClass("alert_display_none");
+		$("#yzmEmailStyle").show();
 	}
 }
 
@@ -1081,16 +939,16 @@ function send_yzm(_this){
 		if(mobile == ""){
 			$('#TZ_MOBILE_status').html("<span>请输入正确的手机号</span>");
 		  	$('#status_TZ_MOBILE').attr("value", 1);
-		  	$('#TZ_MOBILEStyle').removeClass("alert_display_none");
-			alert("请填写正确的手机");
+		  	$('#TZ_MOBILEStyle').show();
+			layerMsg("请填写正确的手机");
 			return;
 		}
 	}else{
 		if(email == ""){
 			$('#TZ_EMAIL_status').html("<span>请输入正确的邮箱</span>");
 		  	$('#status_TZ_EMAIL').attr("value", 1);
-		  	$('#TZ_EMAILStyle').removeClass("alert_display_none");
-			alert("请输入正确的邮箱");
+		  	$('#TZ_EMAILStyle').show();
+			layerMsg("请输入正确的邮箱");
 			return;
 		}
 	}
@@ -1108,20 +966,20 @@ function send_yzm(_this){
 				time(_this);
 				if ($("#lang").val()=="ENG")
 					{
-					alert(RegisterTips._SmsSuccess_eng);
+					layerMsg(RegisterTips._SmsSuccess_eng);
 				}else{
-					alert(RegisterTips._SmsSuccess_zhs);
+					layerMsg(RegisterTips._SmsSuccess_zhs);
 				}
 			}
 			else if(result.comContent=="shtime"){
 				if ($("#lang").val()=="ENG"){
-					alert(RegisterTips._SmsTimeshort_eng);
+					layerMsg(RegisterTips._SmsTimeshort_eng);
 				}else{
-					alert(RegisterTips._SmsTimeshort_zhs);
+					layerMsg(RegisterTips._SmsTimeshort_zhs);
 				}
 			}
 			else{
-					alert(result.state.errdesc);
+					layerMsg(result.state.errdesc);
 			}
 		}
 	});

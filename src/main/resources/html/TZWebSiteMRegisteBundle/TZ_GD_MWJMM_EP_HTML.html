@@ -1,0 +1,284 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
+<title></title>
+<link href="%bind(:1)/statics/css/website/m/css/style.css"	rel="stylesheet" type="text/css" />
+<style>
+	.login_btn[disabled]{background-color:#eee;color:#999;}
+	.sendBtn[disabled]{background-color:#eee;color:#999;}
+	input[type="button"]{border-radius:0.3rem;}	
+</style>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/rem.js"></script>	
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/common.js"></script>	
+<script type="text/javascript"
+	src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>	
+<script type="text/javascript">
+
+function layerMsg(content){
+	layer.open({
+	    content: content,
+	    skin: 'msg',
+	    time: 2 //2秒后自动关闭
+	});	
+}
+function check_email(val) {
+	var flag = false;
+	if (val != '') {
+		var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		if (!patrn.test(val)) {
+			$('#errormsg1').html("<span>请输入正确的邮件地址</span>");
+			$('#errormsg1').show();
+		} else {
+			var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'
+					+ val
+					+ '","orgid":"'
+					+ $("#orgid").val()
+					+ '","lang":"%bind(:3)","sen":"3"}}';
+			$.ajax({
+				type : "POST",
+				async : false,
+				data : {
+					tzParams : tzParams
+				},
+				url : "%bind(:4)",
+				dataType : "json",
+				success : function(result) {
+					if (result.comContent == "success") {
+						$('#errormsg1').hide();
+						flag = true;
+					} else {
+						$('#errormsg1').html("<span>" + result.state.errdesc + "</span>");
+						$('#errormsg1').show();
+						flag = false;
+					}
+				}
+			});
+		}
+	} else {
+		$('#errormsg1').html("<span>邮箱地址不能为空</span>");
+		$('#errormsg1').show();
+	}
+	return flag;
+}
+
+function check_mobile(val) {
+	var flag = false;
+	if (val != '') {
+		var patrn=/^\d{8}$|^\d{11}$/;
+		if (!patrn.test(val)) {
+			$('#errormsg1').html("<span>请输入正确的手机号</span>");
+			$('#errormsg1').show();
+		} else {
+			var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"6"}}';
+			$.ajax({
+				type : "POST",
+				async : false,
+				data : {
+					tzParams : tzParams
+				},
+				url : "%bind(:4)",
+				dataType : "json",
+				success : function(result) {
+					if (result.comContent == "success") {
+						$('#errormsg2').hide();
+						flag = true;
+					} else {
+						$('#errormsg2').html("<span>" + result.state.errdesc + "</span>");
+						$('#errormsg2').show();
+						flag = false;
+					}
+				}
+			});
+		}
+	} else {
+		$('#errormsg2').html("<span>手机号不能为空</span>");
+		$('#errormsg2').show();
+	}
+	return flag;
+}
+
+function send_email(_this){
+	if($("#sendemail").prop("disabled") != "true"){
+		var email=$("#Email_User").val();
+		if(check_email(email)){
+			if(email==""){layerMsg("请输入邮箱！");}
+			else{
+				var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)",	"sen":"6"}}';
+				$.ajax({
+					type:"post",
+					dataType:"json",
+					async:false,
+					data:{
+						tzParams:tzParams
+					},
+					url:"%bind(:4)",
+					success:function(result){
+						if(result.comContent=="success"){emailtime(_this);layerMsg("邮件已发送到您邮箱，请注意查收！");}
+						else{layerMsg(result.state.errdesc);}
+					}
+				});
+			}
+		}else{
+			layerMsg("请输入正确的邮件地址");
+		}
+	}
+};
+function send_yzm(_this){ 
+	if($("#sendyzm").prop("disabled") != "true"){
+			var yzm=$("#yzm").val();
+			var tel=$("#Mobile_User").val();
+			$("#yzm").val("");
+			$("#Mobile_User").text("");
+			if(check_mobile(tel)){
+				if(tel==""){layerMsg("请输入手机号!");}
+				else{
+					var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"7"}}';
+					$.ajax({
+						type:"post",
+						dataType:"json",
+						async:false,
+						data: {tzParams:tzParams},
+						url:"%bind(:4)",
+						success:function(result){
+							if(result.comContent=="success"){smstime(_this);layerMsg("验证码已发送到您手机，请注意查收！");}
+							else{layerMsg(result.state.errdesc);}
+						}
+					});
+				}
+			}else{
+				layerMsg("请输入正确的手机号！");
+			}
+		}
+  	};
+
+	function ymobile(_this){ 
+		var yzm=$("#yzm").val();
+		var tel=$("#Mobile_User").val();
+		if(yzm==""){$("#errormsg2").html("<span>请输入验证码</span>");$("#errormsg2").show();}
+		else{
+			var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+tel+'","yzm":"'+yzm+'","siteid":"%bind(:5)","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)","sen":"3"}}';
+			$.ajax({
+				type:"post",
+				dataType:"json",
+				async:false,
+				data:{tzParams:tzParams},
+				url:"%bind(:4)",
+				success:function(result){	
+					if(result.comContent=="success"){
+						clearTimeout(stop);
+						$("#errormsg2").html("");
+						$("#errormsg2").hide();
+						//btime();
+						window.location.href="%bind(:4)"+"?classid=smsCls&orgid="+$("#orgid").val()+"&siteid=%bind(:5)&phone="+tel+"&lang=%bind(:3)&sen=4&yzm="+yzm+"&isMobile=Y";
+					}else{
+						$("#errormsg2").html(result.state.errdesc);
+						$("#errormsg2").show();
+					}
+				}
+			});
+		}
+	};
+</script>
+<script type="text/javascript">
+	var emailstop;
+	var stop;
+	var emailwait=60;
+	var wait=60;		
+
+	function emailtime(o) {
+		if (wait == 0) {
+	   		o.removeAttribute("disabled");   
+	   		o.value = "发送邮件到邮箱";
+	   		wait = 60;
+	  	} else { 
+	   		o.setAttribute("disabled", true);
+	   		o.value = "(" + wait + ")秒后重新发送";
+	   		wait--;
+	   		setTimeout(function() {
+	   			emailtime(o)
+	   		},1000)
+	  	}
+	}
+	
+	function smstime(o) {
+		if (wait == 0) {
+	   		o.removeAttribute("disabled");   
+	   		o.value = "发送验证码";
+	   		wait = 60;
+	  	} else { 
+	   		o.setAttribute("disabled", true);
+	   		o.value = "(" + wait + ")秒后重新发送";
+	   		wait--;
+	   		setTimeout(function() {
+	   			smstime(o)
+	   		},1000)
+	  	}
+	}
+	
+	function myrefresh(){
+		parent.location.reload();
+	}
+</script>
+</head>
+<body>
+<!-- content start -->
+<div class="viewport-adaptive">
+		<form action="" method="post" enctype="multipart/form-data"	name="forgetForm" id="forgetForm">
+			<div class="bg" id="body_login">
+				<img class="img-responsive book_logo" id=""	src="%bind(:1)/statics/css/website/m/images/login_logo.png">
+				<div class="login_ab" style="top: 32%;">
+					<div class="tab_login">
+						<div class="login_tit">
+							<li class="add_f">邮箱找回</li>
+							<li class="">手机找回</li>							
+						</div>
+						<div class="login_tabnote">							
+							<div class="note_f">
+								<div class="login_account" style="border-radius: 0.3rem;">
+									<div class="users"></div>
+									<input class="important_input" type="text" name="Email_User"
+										id="Email_User" placeholder="请输入邮箱"
+										onblur="check_email(this.value)">
+								</div>
+								<p class="login_tips" id="errormsg1" style="display: none;"></p>
+								<div class="clear"></div>
+								<!-- <a href="javascript:void(0)" class="login_btn" onclick="send_email(this)">发送邮件到邮箱</a> -->
+								<input id="sendemail" type="button"  class="login_btn" onclick="send_email(this)" value="发送邮件到邮箱" />
+								<p class="add_tips">如有问题，请联系：</p>
+								<div class="clear"></div>
+								<p class="login_tips" style="float: left;">mbastudents@sem.tsinghua.edu.cn</p>
+							</div>
+							<div class="note_f dis_none">
+	                        	<div class="login_account" style="border-radius:0.3rem;">
+	                                <div class="users"></div>
+	                                <input class="important_input" type="text" name="Mobile_User" id="Mobile_User" placeholder="请输入手机号码" onblur="check_mobile(this.value)">
+	                             </div>
+	                             <div class="login_account" style="border-radius:0.3rem;margin-top:2%;">
+	                                 <input class="yzm_input" type="text" name="yzm" id="yzm" placeholder="请输入验证码" style="width:60%;float:left;">
+	                                 <input id="sendyzm" class="send_yzm sendBtn" type="button" value="获取短信密码" onclick="send_yzm(this)" />
+	                             </div>
+	                             <p class="login_tips" id="errormsg2" style="display: none;"></p>
+	                             <div class="clear"></div>
+	                             <a href="javascript:void(0)" class="login_btn" onclick="ymobile(this)">下一步</a>
+	                             <p class="add_tips">如有问题，请联系：</p>
+	                             <div class="clear"></div>
+	                             <p class="login_tips" style="float:left;">mbastudents@sem.tsinghua.edu.cn</p> 
+	                        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input name="orgid" type="hidden" class="input_251px" id="orgid" value="%bind(:2)"/>
+		</form>
+	</div>
+</body>
+</html>
+<!-- content end -->
