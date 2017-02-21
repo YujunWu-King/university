@@ -59,187 +59,6 @@ function layerMsg(content){
 	});	
 }
 
-/*注册页面提交按钮事件*/
-function submitEnroll() {
-
-	    var TipBlank = "";
-		var TipEmail = "";
-		var TipPhone = "";
-		var PwdError = "";
-		var TipCode = "";
-		var PwdLen ="";
-		var PwdCor="";
-		if ($("#lang").val()=="ENG")
-		{
-			TipBlank = RegisterTips._blank_eng;
-			TipEmail = RegisterTips._email_eng;
-			TipPhone = RegisterTips._phone_eng;
-			PwdError = RegisterTips._pwd_eng;
-			TipCode = RegisterTips._code_eng;
-			PwdLen=RegisterTips._pwdl_eng;
-			PwdCor=RegisterTips._pwdc_eng;
-		}else{
-			TipBlank = RegisterTips._blank_zhs;
-			TipEmail = RegisterTips._email_zhs;
-			TipPhone = RegisterTips._phone_zhs;
-			PwdError = RegisterTips._pwd_zhs;
-			TipCode = RegisterTips._code_zhs;
-			PwdLen=RegisterTips._pwdl_zhs;
-			PwdCor=RegisterTips._pwdc_zhs;
-        }
-
-
-	var _nameFlg=$("#status_TZ_REALNAME").val();
-	var _emailFlg=$("#status_TZ_EMAIL").val();
-	var _moblieFlg=$("#status_TZ_MOBILE").val();
-	var _passwordFlg=$("#status_TZ_PASSWORD").val();
-	var _pwdFlg=$("#status_PASSWORD").val();
-	var _yzmFlg=$("#status_yzm").val();
-	var _statusFlg="";
-	for (var key in jsonValue){
-		if(key=="TZ_REALNAME"){//姓名
-			if(jsonValue[key] == "Y"){
-				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
-					$('#TZ_REALNAME_status').html("<span>"+TipBlank+"</span>");
-					$("#TZ_REALNAME_status").show();
-					_statusFlg="error";
-				}
-			}
-		}else if(key=="TZ_EMAIL"){//邮箱
-			if(jsonValue[key] == "Y"){
-				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
-					if ($('#TZ_EMAIL_status').html())
-					{
-						$("#TZ_EMAIL_status").show()
-						_statusFlg="error";
-					}else{
-						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
-						$("#TZ_EMAIL_status").show()
-						_statusFlg="error";
-					}
-				}
-			}
-		}else if(key=="TZ_MOBILE"){//手机
-			if(jsonValue[key] == "Y"){
-				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
-					$('#TZ_MOBILE_status').html("<span>"+TipPhone+"</span>");
-					$("#TZ_MOBILE_status").show();
-					_statusFlg="error";
-				}
-			}
-		}else if(key=="TZ_PASSWORD"){//密码
-			if($('#TZ_PASSWORD').val() ==''){
-				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_PASSWORD_status").show();
-				_statusFlg="error";
-			}
-			if(_pwdFlg != 0){
-				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
-				$("#TZ_PASSWORD_status").show();
-				_statusFlg="error";
-			}
-		}else if(key=="TZ_REPASSWORD"){//确认密码
-			if($('#TZ_REPASSWORD').val()==''){
-				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_REPASSWORD_status").show();
-				_statusFlg="error";
-			}
-		}else if(key="TZ_SCH_CNAME_Country"){
-			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
-			if(schCountry!=null&&schCountry!=undefined){
-				$("#TZ_SCH_COUNTRY").val(schCountry);
-			}			
-		}else{//其他
-			console.log("-------------------------------");
-			console.log(jsonValue);
-			console.log(key);
-			if(jsonValue[key] == "Y"){
-				var val;
-
-				if (key=="TZ_GENDER")
-				{
-				  val=$('input:radio[name="TZ_GENDER"]:checked').val();
-				}else{
-				  val=$('#' + key).val();			
-				}
-				console.log(val);
-				if(!val){
-					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
-					$('#' + key + '_status').show();
-					_statusFlg="error";
-			   }
-			}
-		}
-	}
-	
-	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
-		
-		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
-		$("#TZ_REPASSWORD_status").show();
-		_statusFlg="error";
-	}
-
-	if($("#yzfs").val() == "M"){
-		if(_yzmFlg !=0 || $('#yzm').val() ==''){
-			$('#yzm_status').html("<span>"+TipCode+"</span>");
-			$("#yzm_status").show();
-			_statusFlg="error";
-		}
-	}else{
-
-		if(_yzmFlg !=0 || $('#yzmEmail').val() ==''){
-
-			$('#yzm_Emailstatus').html("<span>"+TipCode+"</span>");
-			$("#yzm_Emailstatus").show();
-			_statusFlg="error";
-		}
-	}
-   
-	//alert(_statusFlg+" "+_nameFlg+" "+_emailFlg+" "+_moblieFlg+" "+_passwordFlg+" "+_yzmFlg);
-	if(_statusFlg=="error"){
-		return false;
-	}
-
-	if(_nameFlg=="0" && _emailFlg=="0" && _moblieFlg=="0" && _passwordFlg=="0" && _yzmFlg=="0"){
-		//$('#submitbutton').submit();
-		//var signupsContent = $("#signupForm").serialize();
-		
-		var signupsContent =$("#signupForm").serializeJson();
-
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2","isMobile":"Y"}}';
-		$.ajax({
-			type: "post",
-			async :false,
-			data:{
-				tzParams:tzParams
-			},
-			url: TzUniversityContextPath + "/dispatcher",
-			dataType: "json",
-			success: function(result){
-				if(result.comContent=='success'){
-					//$("#resetbtn").trigger("click");
-					//loading();
-					window.location.href=result.resultDescr;
-				}else{
-					layerMsg(result.state.errdesc);
-				}
-			}
-		});
-  	}
-
-  	create_yzm();
-	$("#TZ_PASSWORD").val('');
-	$("#TZ_REPASSWORD").val('');
-	$("#status_TZ_PASSWORD").val('');
-	$("#status_yzm").val('');
-	$("#yzm").val('');
-	$("#yzmEmail").val('');
-}
-
-
-
-
-
 function BindEnter(obj)
 {
 	if(obj.keyCode == 13)        
@@ -404,17 +223,6 @@ $(document).ready(function(){
 								$('#status_' + fieldId).attr("value", 1);
 								$('#' + fieldId + '_status').show();		
 							}
-							/*
-							if(val.length<6 ||val.length>32){
-								$('#' + fieldId + '_status').html("密码长度必须大于6小于32位"); 
-								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + 'Style').show();
-							}else{
-								$('#' + fieldId + '_status').html("");
-					        	$('#status_' + fieldId).attr("value", 0); 
-								$('#' + fieldId + 'Style').hide();
-							}
-							*/
 						}else {
 							$('#' + fieldId + '_status').html(TipBlank);
 							$('#status_' + fieldId).attr("value", 1); 
@@ -456,9 +264,6 @@ $(document).ready(function(){
 					}else if(fieldId=="TZ_LEN_PROID"){
 						
 					}else{//其他
-						console.log("============================================");
-						console.log(data);
-						console.log(fieldId);
 						if(data[fieldId] == "Y"){
 							if(val != ""){
 								$('#' + fieldId + '_status;').hide();
@@ -473,20 +278,87 @@ $(document).ready(function(){
 		}
 	});
 	
+	setInterval(function(){
+		var val = $("#TZ_PASSWORD").val();
+		if(val != "" && val != null){
+			var patrn;
+			var num = 0;
+			var num1 = 0;
+			var num2 = 0;
+			var num3 = 0;
+			var num4 = 0;
+			var num5=0;
+			var num6=0;
+			var str1 = 0;
+			var str2 = 0;
+			var cr;
+			for (var i=0;i<val.length ;i++ )
+			{
+				 cr = val.charAt(i);
+						
+				
+				/*
+				patrn= /[^\d\w\s]/;
+				if (patrn.test(val)){
+					num = num + 1;
+				}
+				*/
+				patrn= /\w/;
+				if (patrn.test(cr)){
+					num = num + 1;
+				}else{
+					num5=1;
+				}
+				
+			}
+			
+				patrn= /[A-Z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[a-z]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[0-9]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+				patrn= /[_]/;
+				if (patrn.test(val)){
+					num6 = num6+1;
+				}
+
+			if(val.length >= 6 && val.length <= 32){
+				num1 = 1;				
+			}else{
+				num1 = 0;
+			}
+			
+			if(num > 0 && num5==0){
+				num2 = 1;
+			}else{				
+				num2 = 0;
+			}
+			
+			if(num5==0 && num6>1){
+				num3 = 1;
+			}else{
+				num3 = 0;
+			}
+			
+			num4 = num1 + num2 + num3;
+
+			if(num4 >= 3){
+				$('#status_PASSWORD').attr("value", 0);
+			}else{
+				$('#status_PASSWORD').attr("value", 1);
+			}
+			
+		}else{
+		}
+	},200);
 	
-	$("#TZ_PASSWORD").on("focus",function(){
-		var top = $("#TZ_PASSWORD").position().top;
-		var left = $("#TZ_PASSWORD").position().left;
-		var height = $("#TZ_PASSWORD").height()
-		var width = $("#TZ_PASSWORD").width()
-		var hi = $("#J_PwdTip").height();
-		
-		left = left + width + 15;
-		top = top + (height - hi) / 2;
-		$("#J_PwdTip").css("display","block");
-		$("#J_PwdTip").css("left",left);
-		$("#J_PwdTip").css("top",top);
-	});
 	$("#BIRTHDATE").click(function() {
 		laydate();
 	});
@@ -655,34 +527,33 @@ $(document).ready(function(){
 	var _pwdFlg=$("#status_PASSWORD").val();
 	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
-console.log("+++++++++++++++++++++++++++++++++++++");
 	var TipBlank = "";
-		var TipEmail = "";
-		var TipPhone = "";
-		var PwdError = "";
-		var TipCode = "";
-		var PwdLen ="";
-		var PwdCor="";
-		if ($("#lang").val()=="ENG")
-		{
-			TipBlank = RegisterTips._blank_eng;
-			TipEmail = RegisterTips._email_eng;
-			TipPhone = RegisterTips._phone_eng;
-			PwdError = RegisterTips._pwd_eng;
-			TipCode = RegisterTips._code_eng;
-			PwdLen=RegisterTips._pwdl_eng;
-			PwdCor=RegisterTips._pwdc_eng;
-		}else{
-			TipBlank = RegisterTips._blank_zhs;
-			TipEmail = RegisterTips._email_zhs;
-			TipPhone = RegisterTips._phone_zhs;
-			PwdError = RegisterTips._pwd_zhs;
-			TipCode = RegisterTips._code_zhs;
-			PwdLen=RegisterTips._pwdl_zhs;
-			PwdCor=RegisterTips._pwdc_zhs;
-        }
-
+	var TipEmail = "";
+	var TipPhone = "";
+	var PwdError = "";
+	var TipCode = "";
+	var PwdLen ="";
+	var PwdCor="";
+	if ($("#lang").val()=="ENG")
+	{
+		TipBlank = RegisterTips._blank_eng;
+		TipEmail = RegisterTips._email_eng;
+		TipPhone = RegisterTips._phone_eng;
+		PwdError = RegisterTips._pwd_eng;
+		TipCode = RegisterTips._code_eng;
+		PwdLen=RegisterTips._pwdl_eng;
+		PwdCor=RegisterTips._pwdc_eng;
+	}else{
+		TipBlank = RegisterTips._blank_zhs;
+		TipEmail = RegisterTips._email_zhs;
+		TipPhone = RegisterTips._phone_zhs;
+		PwdError = RegisterTips._pwd_zhs;
+		TipCode = RegisterTips._code_zhs;
+		PwdLen=RegisterTips._pwdl_zhs;
+		PwdCor=RegisterTips._pwdc_zhs;
+    }
 	for (var key in jsonValue){
+		console.log(key)
 		if(key=="TZ_REALNAME"){//姓名
 			if(jsonValue[key] == "Y"){
 				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
@@ -712,6 +583,8 @@ console.log("+++++++++++++++++++++++++++++++++++++");
 					$("#TZ_MOBILE_status").show();
 					_statusFlg="error";
 				}
+			}else{
+				$('#' + key + '_status').hide();
 			}
 		}else if(key=="TZ_PASSWORD"){//密码
 			if($('#TZ_PASSWORD').val() ==''){
@@ -723,24 +596,32 @@ console.log("+++++++++++++++++++++++++++++++++++++");
 				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
 				$("#TZ_PASSWORDStyle").show();
 				_statusFlg="error";
+			}else{
+				$('#' + key + '_status').hide();
 			}
 		}else if(key=="TZ_REPASSWORD"){//确认密码
 			if($('#TZ_REPASSWORD').val()==''){
 				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
 				$("#TZ_REPASSWORD_status").show();
 				_statusFlg="error";
+			}else{
+				$('#' + key + '_status').hide();
 			}
-		}else if(key="TZ_SCH_CNAME_Country"){
+		}else if(key=="TZ_SCH_CNAME_Country"){
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
 			if(schCountry!=null&&schCountry!=undefined){
 				$("#TZ_SCH_COUNTRY").val(schCountry);
 			}			
 		}else{//其他
+			console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");			
+			console.log(key);
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
 					$('#' + key + '_status').show();
 					_statusFlg="error";
+				}else{
+					$('#' + key + '_status').hide();
 				}
 			}
 		}
