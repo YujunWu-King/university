@@ -103,9 +103,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		return e;
 	},
 	_getContentHtml: function(data) {
-		console.log("firmType:")
-		console.dir(data);
-		console.dir(data.children);
+//		console.log("firmType:")
+//		console.dir(data);
+//		console.dir(data.children);
 		var child=data["children"][0];
 		if (child == undefined) {
 	   		 child=data["children"];

@@ -213,7 +213,7 @@ if(dataApp){
 								perXxx["children"]["WorkExper1"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["WorkExper1"]["value"]);
 								perXxx["children"]["WorkExper2"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["WorkExper2"]["value"]);										
 							}else if(perXxx.classname=="StartBusinessExp"){
-								console.log("StartBusinessExp");
+								//console.log("StartBusinessExp");
 								//WorkExper1 2 2_1 2_2 2_3 3 4 5 6 7 8 9
 								var tempGp=["1", "2", "2_1", "2_2" ,"2_3" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9"];
 								
