@@ -776,7 +776,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 				System.out.println("strForm:" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-
+				
+				//System.out.println("strForm:"+strForm);
+				
 				String tid = jacksonUtil.getString("tid");
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				strRet = templateEngine.saveTpl(tid, infoData);

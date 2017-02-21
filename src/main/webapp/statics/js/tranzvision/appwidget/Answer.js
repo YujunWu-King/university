@@ -686,8 +686,14 @@ var SurveyBuild = {
                 return true
             }else{
 				var tarItemId = "";
+				//console.dir(obj);
+				
                 if(obj["isSingleLine"]&& obj["isSingleLine"] == "Y"){
-                    tarItemId = obj["children"][0]["itemId"];
+                	if (obj["children"][0]  == undefined) {
+                		tarItemId = obj["children"]["itemId"];
+                	} else {
+                		tarItemId = obj["children"][0]["itemId"];
+                	}
                 }else{
                     tarItemId = obj["itemId"];
                 }

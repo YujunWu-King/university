@@ -94,7 +94,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 					sb.append(
 							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() ");
 					sb.append(
-							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() ");
+							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') >= now() ");
 
 					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sb.toString(),
 							new Object[] { siteId, psTzClassInfT.getTzJgId(), psTzClassInfT.getTzAppModalId() });
