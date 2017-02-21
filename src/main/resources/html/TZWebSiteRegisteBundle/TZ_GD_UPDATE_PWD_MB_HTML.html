@@ -15,67 +15,75 @@ $(document).ready(function(){
 	$("#status_password").val("");
 	$("#status_yzm").val("");	
     }).on("click", "#submitPassword", function () {
-			var pwd=$("#NewPassword").val();
-			var repwd=$("#reNewPassword").val();
-			pwd=encodeURI(pwd);
-			repwd=encodeURI(repwd);
-    	var strYZM=$("#yzm").val();
+		var pwd=$("#NewPassword").val();
+		var repwd=$("#reNewPassword").val();
+		pwd=encodeURI(pwd);
+		repwd=encodeURI(repwd);
+	    var strYZM=$("#yzm").val();
 		var passwordFlg=$("#status_password").val();
 		var yzmFlg=$("#status_yzm").val();
 		if(passwordFlg =='0' && yzmFlg=='0'){
-        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
-        var tzParams2 = {};
-        tzParams2.ComID = "TZ_SITE_UTIL_COM";
-        tzParams2.PageID = "TZ_SITE_SMS_STD";
-        tzParams2.OperateType = "QF";
-        tzParams2.comParams = {};
-        tzParams2.comParams.pwd = pwd;
-        tzParams2.comParams.repwd = repwd;
-        tzParams2.comParams.checkCode = strYZM;
-        tzParams2.comParams.phone = "%bind(:2)";
-        tzParams2.comParams.lang = "%bind(:3)";
-        tzParams2.comParams.sen = "5";
-        tzParams2.comParams.orgid = "%bind(:4)";
-        tzParams2.comParams.siteid = "%bind(:10)";
+	        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
+	        var tzParams2 = {};
+	        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+	        tzParams2.PageID = "TZ_SITE_SMS_STD";
+	        tzParams2.OperateType = "QF";
+	        tzParams2.comParams = {};
+	        tzParams2.comParams.pwd = pwd;
+	        tzParams2.comParams.repwd = repwd;
+	        tzParams2.comParams.checkCode = strYZM;
+	        tzParams2.comParams.phone = "%bind(:2)";
+	        tzParams2.comParams.lang = "%bind(:3)";
+	        tzParams2.comParams.sen = "5";
+	        tzParams2.comParams.orgid = "%bind(:4)";
+	        tzParams2.comParams.siteid = "%bind(:10)";
 
 
-        var tzParams = "";
-        if(JSON && JSON.stringify)
-        {
-          tzParams = JSON.stringify(tzParams2);
-        }
-        else
-        {
-          tzParams = tzParams1;
-        }
+	        var tzParams = "";
+	        if(JSON && JSON.stringify)
+	        {
+	          tzParams = JSON.stringify(tzParams2);
+	        }
+	        else
+	        {
+	          tzParams = tzParams1;
+	        }
 
-		$.ajax({
-			type: "post",
-			async :false,
-			data:{
-				tzParams:tzParams
-			},
-			url:"%bind(:1)",
-			dataType: "json",
-			success: function(result){
-				if(result.comContent.result =="success"){
-					alert("密码修改成功！");
-					window.location.href=result.comContent.jumpurl;
-				}else{
-					alert(result.state.errdesc);
-					create_yzm();//重新获取验证码
+			$.ajax({
+				type: "post",
+				async :false,
+				data:{
+					tzParams:tzParams
+				},
+				url:"%bind(:1)",
+				dataType: "json",
+				success: function(result){
+					if(result.comContent.result =="success"){
+						alert("密码修改成功！");
+						window.location.href=result.comContent.jumpurl;
+					}else{
+						create_yzm();//重新获取验证码
+						alert(result.state.errdesc);					
 					}
-			}
-		})
+				}
+			})
 		
 		}else{
 			check_password();
 		}
-			document.getElementById("updatePassWord").reset(); 
-			$("#status_password").val('');
-		    $("#status_yzm").val('');
+		create_yzm();//重新获取验证码
+		document.getElementById("updatePassWord").reset(); 
+		$("#status_password").val('');
+		$("#status_yzm").val('');
 	})
 
+	document.onkeydown = function(e){
+		var ev = document.all ? window.event : e;
+			if(ev.keyCode==13) {
+				$("#submitPassword").trigger("click");
+		}
+	}
+	
 //获取URL传递的参数 
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -117,23 +125,23 @@ function check_yzm(val){
 			url:"%bind(:1)",
 			dataType: "json",
 			success: function(result){
-			   if(result.comContent =="success"){
-				$('#yzm_status').html("");
-				$('#status_yzm').attr("value", 0); 
-				$("#yzm_style").addClass("alert_display_none");
-					}else{
-						$('#yzm_status').html("<span>"+result.state.errdesc+"</span>");
-						$('#status_yzm').attr("value", 1);
-						$("#yzm_style").removeClass("alert_display_none");
-						}
-					}
-			});			
+			   	if(result.comContent =="success"){
+			   		$('#yzm_status').html("");
+					$('#status_yzm').attr("value", 0); 
+					$("#yzm_style").addClass("alert_display_none");
+				}else{					
+					$('#yzm_status').html("<span>"+result.state.errdesc+"</span>");
+					$('#status_yzm').attr("value", 1);
+					$("#yzm_style").removeClass("alert_display_none");
+				}
+			}
+		});			
 		
-		}else{
-						$('#yzm_status').html("<span>验证码不能为空</span>");
-   						$('#status_yzm').attr("value", 1);
-						$("#yzm_style").removeClass("alert_display_none");
-						}
+	}else{
+		$('#yzm_status').html("<span>验证码不能为空</span>");
+   		$('#status_yzm').attr("value", 1);
+		$("#yzm_style").removeClass("alert_display_none");
+	}
 }
 
 
@@ -392,7 +400,7 @@ setInterval(function(){
 
 </script>
 </head>
-<body>
+<body style="overflow-x:hidden;">
 <!-- content start -->
 <div id="main">
 <form action="" method="post" enctype="multipart/form-data" name="updatePassWord" id="updatePassWord">

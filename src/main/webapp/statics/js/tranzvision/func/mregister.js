@@ -553,7 +553,6 @@ $(document).ready(function(){
 		PwdCor=RegisterTips._pwdc_zhs;
     }
 	for (var key in jsonValue){
-		console.log(key)
 		if(key=="TZ_REALNAME"){//姓名
 			if(jsonValue[key] == "Y"){
 				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
@@ -613,8 +612,6 @@ $(document).ready(function(){
 				$("#TZ_SCH_COUNTRY").val(schCountry);
 			}			
 		}else{//其他
-			console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");			
-			console.log(key);
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");

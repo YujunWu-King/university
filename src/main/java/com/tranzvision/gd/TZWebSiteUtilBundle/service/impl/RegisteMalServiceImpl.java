@@ -516,7 +516,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 			    }
 			    
 			   //邮箱是否存在
-		      	String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND A.TZ_YXBD_BZ='Y'";
+		      		String sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND A.TZ_YXBD_BZ='Y'";
 		      	int count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
 		      	if(count <= 0){
 		      		errorMsg[0] = "3";
@@ -530,6 +530,15 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		      	if(count <= 0){
 		      		errorMsg[0] = "3";
 		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "133", "抱歉，该账号已锁定。", "Sorry,this account has been locked.");
+		            return strResult;
+		      	}
+		      	
+		      	//内部人员不能使用找回密码功能
+		      	sql = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL A WHERE LOWER(A.TZ_EMAIL) = LOWER(?) AND LOWER(A.TZ_JG_ID)=LOWER(?) AND A.TZ_JIHUO_ZT ='Y' AND TZ_RYLX='NBYH'";
+		      	count = jdbcTemplate.queryForObject(sql, new Object[]{strEmail,strOrgid},"Integer");
+		      	if(count > 0){
+		      		errorMsg[0] = "3";
+		      		errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "189", "当前账户为内部人员，不能使用找回密码功能", "Sorry,the account for internal staff, can not use the password recovery function");
 		            return strResult;
 		      	}
 		      	
