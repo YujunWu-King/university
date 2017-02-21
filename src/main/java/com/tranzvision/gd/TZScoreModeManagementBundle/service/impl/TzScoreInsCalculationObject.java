@@ -1,7 +1,9 @@
 package com.tranzvision.gd.TZScoreModeManagementBundle.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +15,13 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCjxTblMapper;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzSrmbaInsTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCjxTblKey;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCjxTblWithBLOBs;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzSrmbaInsTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -41,20 +47,39 @@ public class TzScoreInsCalculationObject {
 	private TZGDObject tzSQLObject;
 	
 	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private GetSysHardCodeVal getSysHardCodeVal; 
+	
+	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
+	
+	@Autowired
+	private PsTzSrmbaInsTblMapper psTzSrmbaInsTblMapper;
 	
 	/*机构*/
 	private String orgId = "";
+	
+	private String oprId = "";
 	/*成绩模型树*/
 	private String treeName = "";
 	/*错误信息*/
 	private String errorMsg = "";
 	/*成绩单ID*/
-	private Long tzScoreInsId;
+	private Long tzScoreInsId = (long) 0;
+	
+	private String tzScoreModeId = "";
 	/*打分成绩项分数实例*/
 	private Map<String, String[]> itemsScoreValMap;
 	/*待保存成绩项分值*/
 	private List<Map<String,Object>> itemsScoreValListTmp;
+	
+	
+	
+	public Long getScoreInstanceId(){
+		return tzScoreInsId;
+	}
 	
 	
 	/**
@@ -88,6 +113,8 @@ public class TzScoreInsCalculationObject {
 		try{
 			//当前机构
 			orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			//
+			oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
@@ -109,7 +136,9 @@ public class TzScoreInsCalculationObject {
 					pwkshSql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 				}
 				
-				if(!"".equals(scoreModeId) && scoreModeId == null){
+				if(!"".equals(scoreModeId) && scoreModeId != null){
+					tzScoreModeId = scoreModeId;
+					
 					//查询成绩模型树
 					sql = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? and TZ_JG_ID=?";
 					treeName = sqlQuery.queryForObject(sql, new Object[]{ scoreModeId, orgId }, "String");
@@ -137,10 +166,13 @@ public class TzScoreInsCalculationObject {
 					}
 					itemsScoreValMap = itemValMap;
 					//查询成绩单编号
-					String scoreInsId = sqlQuery.queryForObject(pwkshSql, new Object[]{classId,batchId,bmbId,orgId}, "String");
+					String scoreInsId = sqlQuery.queryForObject(pwkshSql, new Object[]{classId,batchId,bmbId,oprId}, "String");
+					if(!"".equals(scoreInsId) && scoreInsId != null){
+						tzScoreInsId = Long.valueOf(scoreInsId);
+					}
 					
 					//保存打分
-					String rtn = SaveScore(scoreInsId);
+					String rtn = SaveScore();
 					errorCode = rtn;
 					
 					if("0".equals(rtn)){
@@ -179,11 +211,10 @@ public class TzScoreInsCalculationObject {
 	/**
 	 * 保存打分
 	 * @param scoreInsId	//成绩单ID
-	 * @param itemValArr	//成绩项分值数组
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private String SaveScore(String scoreInsId){
+	private String SaveScore(){
 		String errorCode = "";
 		//根据TREE NAME，获取该TREE的根节点的 TREE_NODE，及TREE_NODE_NUM;
 		int treeNodeNum;
@@ -353,10 +384,35 @@ public class TzScoreInsCalculationObject {
 	 */
 	private Boolean doSaveDate(){
 		Boolean boolSave = true; 
+		String dtFormat = getSysHardCodeVal.getDateFormat();
+		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
 		try{
+			if(tzScoreInsId == 0){
+				tzScoreInsId = this.creatNewScoreInstanceId();
+				
+				//psTzSrmbaInsTblMapper
+				
+				PsTzSrmbaInsTbl psTzSrmbaInsTbl = new PsTzSrmbaInsTbl();
+				psTzSrmbaInsTbl.setTzScoreInsId(tzScoreInsId);
+				psTzSrmbaInsTbl.setTzScoreModalId(tzScoreModeId);
+				
+				Date scoreInsDate = format.parse("2099-12-31");
+				psTzSrmbaInsTbl.setTzScoreInsDate(scoreInsDate);
+				psTzSrmbaInsTbl.setRowAddedDttm(new Date());
+				psTzSrmbaInsTbl.setRowAddedOprid(oprId);
+				psTzSrmbaInsTbl.setRowLastmantDttm(new Date());
+				psTzSrmbaInsTbl.setRowLastmantOprid(oprId);
+				
+				psTzSrmbaInsTblMapper.insert(psTzSrmbaInsTbl);
+				
+			}
+			
+			
 			for(Map<String,Object> itemScoreMap: itemsScoreValListTmp){
 				String itemId = itemScoreMap.get("itemId").toString();
-				Boolean exists = false;
+				
+				sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID= ?", new Object[]{ tzScoreInsId,itemId });
+				sqlQuery.execute("commit");
 				
 				PsTzCjxTblKey PsTzCjxTblKey = new PsTzCjxTblKey();
 				PsTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
@@ -366,8 +422,6 @@ public class TzScoreInsCalculationObject {
 					psTzCjxTbl = new PsTzCjxTblWithBLOBs();
 					psTzCjxTbl.setTzScoreInsId(tzScoreInsId);
 					psTzCjxTbl.setTzScoreItemId(itemId);
-				}else{
-					exists = true;
 				}
 				
 				//分值
@@ -387,11 +441,7 @@ public class TzScoreInsCalculationObject {
 					psTzCjxTbl.setTzCjxXlkXxbh(optId);
 				}
 				
-				if(exists){
-					psTzCjxTblMapper.updateByPrimaryKeyWithBLOBs(psTzCjxTbl);
-				}else{
-					psTzCjxTblMapper.insert(psTzCjxTbl);
-				}
+				psTzCjxTblMapper.insert(psTzCjxTbl);
 			}
 		}catch(Exception e){
 			boolSave = false;
@@ -456,5 +506,16 @@ public class TzScoreInsCalculationObject {
 		}
 	
 		return boolValid;
+	}
+	
+	
+	/***
+	 * 生成成绩单编号
+	 * @return
+	 */
+	public Long creatNewScoreInstanceId(){
+		long scoreInsId = getSeqNum.getSeqNum("TZ_SRMBAINS_TBL", "TZ_SCORE_INS_ID");
+		
+		return scoreInsId;
 	}
 }

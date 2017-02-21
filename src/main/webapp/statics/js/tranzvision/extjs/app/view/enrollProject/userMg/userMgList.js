@@ -48,6 +48,12 @@
 					text:'邮件发送历史',
 					iconCls: 'mail',
 					handler:'viewMailHistory'	
+				},{
+					text:'另存为静态听众',
+					handler:'saveAsStaAud'	
+				},{
+					text:'另存为动态听众',
+					handler:'saveAsDynAud'	
 				}]
 			}
 		]

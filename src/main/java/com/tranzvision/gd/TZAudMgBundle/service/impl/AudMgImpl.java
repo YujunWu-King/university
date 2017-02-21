@@ -8,6 +8,8 @@ import java.util.ArrayList;
 	import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
+import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudListTMapper;
+import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 	import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 	
@@ -30,6 +32,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 		private PsTzAqComzcTblMapper psTzAqComzcTblMapper;
 		@Autowired
 		private PsTzAudDefnTMapper psTzAudDefnTMapper;
+		@Autowired
+		private PsTzAudListTMapper psTzAudListTMapper;
 		@Autowired
 		private FliterForm fliterForm;
 		
@@ -63,8 +67,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 						String[] rowList = list.get(i);
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("audName", rowList[0]);
-						mapList.put("audType", rowList[1]);
-						mapList.put("audStat", rowList[2]);
+						mapList.put("audStat", rowList[1]);
+						mapList.put("audType", rowList[2]);
 						mapList.put("audId", rowList[3]);
 						mapList.put("audMS", rowList[4]);
 						mapList.put("audSQL", rowList[5]);
@@ -121,6 +125,56 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 				return strRet;
 			}
 
+			return strRet;
+		}
+		
+		
+		/* 新增听众注册信息 */
+		@Override
+		public String tzAdd(String[] actData, String[] errMsg) {
+			// 返回值;
+			String strRet = "{}";
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			try {
+				int num = 0;
+				for (num = 0; num < actData.length; num++) {
+				
+				
+					// 表单内容;
+					String strForm = actData[num];
+					jacksonUtil.json2Map(strForm);
+					if(jacksonUtil.containsKey("OPRID")){
+						// 用户账号;
+					    String strOprId = jacksonUtil.getString("OPRID");
+					    String strAudId = jacksonUtil.getString("AudID");
+
+					    System.out.println(strOprId);
+					    PsTzAudListT psTzAudListT=new PsTzAudListT();
+					    
+					    psTzAudListT.setOprid(strOprId);
+					    psTzAudListT.setTzLydxId(strOprId);
+					    psTzAudListT.setTzAudId(strAudId);
+					    psTzAudListT.setTzLxfsLy("ZCYH");
+					    psTzAudListT.setTzDxzt("A");
+					   
+					    
+					   
+					    int i = psTzAudListTMapper.insert(psTzAudListT);
+						
+						if (i > 0) {
+						} else {
+							errMsg[0] = "1";
+							errMsg[1] = "信息保存失败";
+						}
+					}else{
+						errMsg[0] = "1";
+						errMsg[1] = "参数错误";
+					}
+				}
+			} catch (Exception e) {
+				errMsg[0] = "1";
+				errMsg[1] = e.toString();
+			}
 			return strRet;
 		}
 	}

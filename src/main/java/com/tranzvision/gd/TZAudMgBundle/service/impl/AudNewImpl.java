@@ -117,8 +117,10 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					
 					
 					
-					if (strAudID != null && !"".equals(strAudID) && strAudName != null && !"".equals(strAudName)&& strAudStat != null && !"".equals(strAudStat)&& strAudType != null && !"".equals(strAudType)) {
-					//	PsTzAqPagzcTblKey psTzAqPagzcTblKey = new PsTzAqPagzcTblKey();
+					if (strAudID != null && !"".equals(strAudID) ) {
+			//		if (strAudID != null && !"".equals(strAudID) && strAudName != null && !"".equals(strAudName)&& strAudStat != null && !"".equals(strAudStat)&& strAudType != null && !"".equals(strAudType)) {
+							
+						//	PsTzAqPagzcTblKey psTzAqPagzcTblKey = new PsTzAqPagzcTblKey();
 						PsTzAudDefnT psTzAudDefnT=new PsTzAudDefnT();
 					
 						psTzAudDefnT.setTzAudId(strAudID);
@@ -225,8 +227,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					String strAudType = jacksonUtil.getString("audType");
 					String strTips = jacksonUtil.getString("audMS");
 					String strSql = jacksonUtil.getString("audSQL");
+					
+					
 
 	
+					
 					// 查找当前组件下是否已经存在该页面;
 					String isExistSql = "SELECT count(1) FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=? ";
 
@@ -267,7 +272,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							psTzAudDefnT.setTzAudMs(strTips);
 							psTzAudDefnT.setTzAudSql(strSql);
 							
-						
+							
+							
+							strRet=String.valueOf(strAudID);
+							
+							
 							int i = psTzAudDefnTMapper.insert(psTzAudDefnT);
 							if(i <= 0){
 								errMsg[0] = "1";
@@ -284,10 +293,12 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 				} catch (Exception e) {
 					errMsg[0] = "1";
 					errMsg[1] = e.toString();
+					
 					return strRet;
 				}
-
+				
 				return strRet;
+				
 			}
 			
 			
@@ -325,7 +336,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					//	String strAudId =	jacksonUtil.getString("audID");
 						String strAudId = (String) infoData.get("audID");
 						
-						String strAudName = jacksonUtil.getString("audName");
+				//		String strAudName = jacksonUtil.getString("audName");
+						String strAudName = (String) infoData.get("audName");
 						
 				//		String strAudStat = jacksonUtil.getString("audStat");
 						String strAudStat = (String) infoData.get("audStat");
