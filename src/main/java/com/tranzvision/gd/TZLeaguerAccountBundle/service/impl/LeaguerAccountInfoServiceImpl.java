@@ -233,8 +233,13 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
-				
+				if(!"Y".equals(str_blackName)){
+				    str_blackName = "N";
+				}
 				jsonMap2.put("blackName",str_blackName );
+				if(!"Y".equals(str_allowApply)){
+				    str_allowApply = "N";
+				}
 				jsonMap2.put("allowApply",str_allowApply );
 				jsonMap2.put("beizhu",str_beizhu );
 				

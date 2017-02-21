@@ -199,6 +199,9 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 #userName {width:80%;float:left;height:2rem;line-height:2rem;margin-top:0;font-size:0.6rem;text-indent:8px;}
 #password{width:80%;float:left;height:2rem;line-height:2rem;margin-top:0;font-size:0.6rem;text-indent:8px;}
 .important_input{width:80% !important;float:left !important;height:2rem !important;line-height:2rem !important;margin-top:0 !important;font-size:0.6rem !important;text-indent:8px !important;}
+.yzm_input{width:60%;float:left;height:2rem !important;line-height:2rem !important;margin-top:0 !important;font-size:0.6rem !important;text-indent:8px !important;}
+.sendBtn{width: 30%;height: 1.4rem;line-height: 1.4rem;margin: 0.3rem 2% 0 0;background-color: #8f5dbf;color: #fff;text-align: center;border-radius: 0.3rem;float: right;font-size: 0.54rem;}
+.psw_update{width:90% !important;margin-left:5%;height:2rem !important;margin-top:0px !important;}
 /*报考方向选择*/
 .direction{width:100%;height:auto;}
 .direction_list{width:94%;margin:2% auto;border-bottom:1px solid #ddd;overflow:hidden;padding:2% 0;}

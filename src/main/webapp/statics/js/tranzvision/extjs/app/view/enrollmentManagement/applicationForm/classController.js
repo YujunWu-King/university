@@ -764,6 +764,41 @@
         }
 
     },
+    /*黑名单管理*/
+    addHmd:function(btn){
+        var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
+        if(selList.length<1) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+            return;
+        }else{
+        	Ext.MessageBox.confirm('确认', '您确定要將所选账户加入黑名单吗?', function(btnId){
+        		if(btnId == 'yes'){					   
+	        		var strOprId;
+	                for (var i = 0; i < selList.length; i++) {
+	                	strOprId = selList[i].get('oprID');
+	                    if (i>0) {
+	                    	updateJson = updateJson + ','+'{"OPRID":"' + strOprId + '"}';
+	                    }else{
+	                    	updateJson = '{"OPRID":"' + strOprId + '"}';
+	                    }
+	
+	                }
+	                var comParams = "";
+	        		if(updateJson != ""){
+	        			comParams = '"update":[' + updateJson + "]";
+	        		}
+	        		//提交参数
+	        		var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERMG_STD","OperateType":"U","comParams":{'+comParams+'}}';
+	                //保存数据
+	        		Ext.tzSubmit(tzParams,function(){
+	        			//无须刷新页面数据
+	        			//store.reload();			   
+	        		},"",true,this);
+        		}
+        	});            
+        }        
+
+    },
     /*清除过滤条件*/
     onClearFilters: function (btn) {
         btn.findParentByType('grid').filters.clearFilters();

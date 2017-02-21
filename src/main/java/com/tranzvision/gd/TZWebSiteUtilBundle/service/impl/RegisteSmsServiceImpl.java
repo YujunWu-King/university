@@ -105,12 +105,12 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strLang = request.getParameter("lang");
 		String strSen = request.getParameter("sen");
 		String classid = request.getParameter("classid");
-		
+		String isMobile = request.getParameter("isMobile");
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			if(classid != null && !"".equals(classid)){
-				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang + "\",\"yzm\":\"" + strYzm + "\",\"phone\":\"" + strPhone + "\",\"sen\":\"" + strSen + "\"}";
+				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang + "\",\"yzm\":\"" + strYzm + "\",\"phone\":\"" + strPhone + "\",\"sen\":\"" + strSen + "\",\"isMobile\":\"" + isMobile + "\"}";
 			}else{
 				jacksonUtil.json2Map(strParams);
 				strOrgid = jacksonUtil.getString("orgid");
@@ -743,6 +743,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strYzm = "";
 		String strResult = "";
 		String siteid = "";
+		String isMobile="";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
 			jacksonUtil.json2Map(strParams);
@@ -751,6 +752,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			strPhone = jacksonUtil.getString("phone").trim();
 			strYzm = jacksonUtil.getString("yzm").trim();
 			siteid = jacksonUtil.getString("siteid").trim();
+			isMobile = jacksonUtil.getString("isMobile").trim();
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "123", "请重置新密码", "Please Enter New Password.");
@@ -776,9 +778,17 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			if(count> 0){
 				//有效；
 				if("ENG".equals(strLang)){
+				    if("Y".equals(isMobile)){
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+				    }else{
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+				    }
 				}else{
+				    if("Y".equals(isMobile)){
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+				    }else{
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+				    }
 				}
 				
 				str_content = objRep.repTitle(str_content, strSiteId);
@@ -786,11 +796,15 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 				return str_content;
 			}else{
 				//无效；
+			    if("Y".equals(isMobile)){
+				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=10";
+			    }else{
 				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang=" + strLang + "&sen=4";
-				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "130", "验证码已失效，请重新发送手机验证码！", "Security Code has timed out, please resend message!");
-				str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL",message,strBeginUrl );
-				return str_content;
-			}	
+			    }
+			    String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "130", "验证码已失效，请重新发送手机验证码！", "Security Code has timed out, please resend message!");
+			    str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_TIMEOUT_TIP_HMTL",message,strBeginUrl );
+			return str_content;
+		   }	
 		}catch(Exception e){
 			e.printStackTrace();
 			return strResult;

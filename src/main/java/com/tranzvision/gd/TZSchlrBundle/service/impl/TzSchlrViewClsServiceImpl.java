@@ -112,7 +112,6 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 		String schlredHtml = "";
 		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-//		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID,SCHR.TZ_IS_APPLY FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_SCHLR_RSLT_TBL SCHR WHERE SCH.TZ_SCHLR_ID = SCHR.TZ_SCHLR_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND SCHR.OPRID = ?";
 		String sql = "SELECT SCH.TZ_SCHLR_ID,SCH.TZ_SCHLR_NAME,SCH.TZ_DC_WJ_ID FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_DC_WJ_DY_T WJ,PS_TZ_DC_INS_T INS WHERE WJ.TZ_DC_WJ_ID = SCH.TZ_DC_WJ_ID AND SCH.TZ_DC_WJ_ID = INS.TZ_DC_WJ_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND INS.ROW_ADDED_OPRID = ?";
 		String wjSql = "SELECT CONCAT(WJ.TZ_DC_WJ_KSRQ,' ',WJ.TZ_DC_WJ_KSSJ) AS TZ_DC_WJ_KRQ,CONCAT(WJ.TZ_DC_WJ_JSRQ,' ',WJ.TZ_DC_WJ_JSSJ) AS TZ_DC_WJ_JRQ,TZ_DC_WJ_URL FROM PS_TZ_DC_WJ_DY_T WJ WHERE TZ_DC_WJ_ID = ?";
 		String applySql = "SELECT TZ_IS_APPLY FROM PS_TZ_SCHLR_RSLT_TBL WHERE TZ_SCHLR_ID = ? AND OPRID = ?";
@@ -120,42 +119,55 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 		String attrKrq = "";
 		String attrJrq = "";
 		String attrWjUrl = "";
-		for (Object obj : schlrList) {
-			Map<String, Object> result = (Map<String, Object>) obj;
-			
-			String attrSchlrId = result.get("TZ_SCHLR_ID") == null ? "" : String.valueOf(result.get("TZ_SCHLR_ID"));
-//			String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
-			String attrIsApply = sqlQuery.queryForObject(applySql, new Object[]{attrSchlrId,oprid}, "String");
-			if(StringUtils.equals("Y", attrIsApply)){
-				attrIsApply = "通过申请";
-			}else{
-				attrIsApply = "建议申请其他";
-			}
-			
-			String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
-			String attrWjId = result.get("TZ_DC_WJ_ID") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_ID"));
-			
-			Map<String, Object> wjMap = sqlQuery.queryForMap(wjSql, new Object[] { attrWjId });
-
-			if (wjMap != null) {
-				attrKrq = wjMap.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_KRQ"));
-				attrJrq = wjMap.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_JRQ"));
-				attrWjUrl = wjMap.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_URL"));
-			}
-			
-			String wjInsSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1";
-			String insId = sqlQuery.queryForObject(wjInsSql, new Object[] { oprid },"String");
-			
-			if(StringUtils.isNotBlank(attrWjUrl)){
-				attrWjUrl = attrWjUrl + "&SURVEY_INS_ID=" + insId;
-			}
-			String strTr = "";
+		if(schlrList == null || schlrList.size() < 1){
+			/*没有开放的奖学金申请*/
 			try {
-				strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
+				schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_HTML");
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 			}
-			schlredHtml += strTr;
+		}else{
+			for (Object obj : schlrList) {
+				Map<String, Object> result = (Map<String, Object>) obj;
+				
+				String attrSchlrId = result.get("TZ_SCHLR_ID") == null ? "" : String.valueOf(result.get("TZ_SCHLR_ID"));
+//				String attrIsApply = result.get("TZ_IS_APPLY") == null ? "" : String.valueOf(result.get("TZ_IS_APPLY"));
+				String attrIsApply = sqlQuery.queryForObject(applySql, new Object[]{attrSchlrId,oprid}, "string");
+				if(StringUtils.equals("Y", attrIsApply)){
+					attrIsApply = "通过申请";
+				}else if(StringUtils.equals("N", attrIsApply)){
+					attrIsApply = "建议申请其他";
+				}else if(StringUtils.equals("W", attrIsApply)){
+					attrIsApply = "待审核";
+				}else{
+					attrIsApply = "待审核";
+				}
+				
+				String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
+				String attrWjId = result.get("TZ_DC_WJ_ID") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_ID"));
+				
+				Map<String, Object> wjMap = sqlQuery.queryForMap(wjSql, new Object[] { attrWjId });
+
+				if (wjMap != null) {
+					attrKrq = wjMap.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_KRQ"));
+					attrJrq = wjMap.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_JRQ"));
+					attrWjUrl = wjMap.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(wjMap.get("TZ_DC_WJ_URL"));
+				}
+				
+				String wjInsSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1";
+				String insId = sqlQuery.queryForObject(wjInsSql, new Object[] { oprid },"String");
+				
+				if(StringUtils.isNotBlank(attrWjUrl)){
+					attrWjUrl = attrWjUrl + "&SURVEY_INS_ID=" + insId;
+				}
+				String strTr = "";
+				try {
+					strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
+				} catch (TzSystemException e) {
+					e.printStackTrace();
+				}
+				schlredHtml += strTr;
+			}
 		}
 		
 		return schlredHtml;
@@ -172,24 +184,34 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 		String schlrHtml = "";
 		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-		String sql = "SELECT SCH.TZ_SCHLR_NAME,CONCAT(WJ.TZ_DC_WJ_KSRQ,' ',WJ.TZ_DC_WJ_KSSJ) AS TZ_DC_WJ_KRQ,CONCAT(WJ.TZ_DC_WJ_JSRQ,' ',WJ.TZ_DC_WJ_JSSJ) AS TZ_DC_WJ_JRQ,WJ.TZ_DC_WJ_URL FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_DC_WJ_DY_T WJ,(SELECT distinct SAU.TZ_DC_WJ_ID FROM PS_TZ_AUD_LIST_T AUD left join PS_TZ_SURVEY_AUD_T SAU on AUD.TZ_AUD_ID = SAU.TZ_AUD_ID WHERE AUD.OPRID = ?) AUDWJ WHERE WJ.TZ_DC_WJ_ID = AUDWJ.TZ_DC_WJ_ID AND SCH.TZ_DC_WJ_ID = WJ.TZ_DC_WJ_ID AND SCH.TZ_JG_ID = ? AND SCH.TZ_STATE = 'Y' AND SCH.TZ_SCHLR_ID NOT IN (SELECT TZ_SCHLR_ID FROM PS_TZ_SCHLR_TBL SCH,PS_TZ_DC_WJ_DY_T WJ,PS_TZ_DC_INS_T INS WHERE WJ.TZ_DC_WJ_ID = SCH.TZ_DC_WJ_ID AND SCH.TZ_DC_WJ_ID = INS.TZ_DC_WJ_ID AND INS.ROW_ADDED_OPRID = ?)";
-		List<?> schlrList = sqlQuery.queryForList(sql, new Object[]{oprid,jgId,oprid});
-		
-		for (Object obj : schlrList) {
-			Map<String, Object> result = (Map<String, Object>) obj;
+		try {
+			String sql = tzGDObject.getSQLText("SQL.TZSchlrBundle.TzViewOpenSchlr");
+			List<?> schlrList = sqlQuery.queryForList(sql, new Object[]{oprid,jgId,oprid});
+			if(schlrList == null ||  schlrList.size() < 1){
+				/*没有开放的奖学金申请*/
+				schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_HTML");
+			}else{
+				for (Object obj : schlrList) {
+					Map<String, Object> result = (Map<String, Object>) obj;
 
-			String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
-			String attrKrq = result.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_KRQ"));
-			String attrJrq = result.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_JRQ"));
-			String attrWjUrl = result.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_URL"));
+					String attrSchlrName = result.get("TZ_SCHLR_NAME") == null ? "" : String.valueOf(result.get("TZ_SCHLR_NAME"));
+					String attrKrq = result.get("TZ_DC_WJ_KRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_KRQ"));
+					String attrJrq = result.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_JRQ"));
+					String attrWjUrl = result.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_URL"));
 
-			String strTr = "";
-			try {
-				strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
-			} catch (TzSystemException e) {
-				e.printStackTrace();
+					String strTr = "";
+					try {
+						strTr = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
+					} catch (TzSystemException e) {
+						e.printStackTrace();
+					}
+					schlrHtml += strTr;
+				}
 			}
-			schlrHtml += strTr;
+						
+		} catch (TzSystemException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
 		return schlrHtml;
