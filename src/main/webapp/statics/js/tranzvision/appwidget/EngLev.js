@@ -1091,7 +1091,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext" accept="image/*"/>';
+								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
 								htmlContent+= '</div>';
 								htmlContent+='<div class="clear"></div>'
 									
