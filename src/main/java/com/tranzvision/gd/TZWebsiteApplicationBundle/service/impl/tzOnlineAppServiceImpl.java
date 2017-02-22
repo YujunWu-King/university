@@ -643,7 +643,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 				}
 
-				System.out.println(strXxxBh + ":" + strDivClass);
+				// //System.out.println(strXxxBh + ":" + strDivClass);
 
 				if ("Y".equals(strIsAdmin)) {
 					strComplete = "";
@@ -667,13 +667,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 
 				try {
-					System.out.println("strTabs:" + strTabs);
+					//// //System.out.println("strTabs:" + strTabs);
 					// if(StringUtils.isNotBlank(strComplete)){}
 					strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG", strComplete);
-					System.out.println("strComplete:" + strComplete);
+					//// //System.out.println("strComplete:" + strComplete);
 					strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
 							strDivClass, strXxxTitle, strComplete, strXxxBh);
-					System.out.println("strTabs:" + strTabs);
+					//// //System.out.println("strTabs:" + strTabs);
 				} catch (TzSystemException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -717,7 +717,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// ---0.去年的推荐信不为空，则进行“复制推荐信”操作
 						final String LAST_LETTER_SQL = "SELECT * FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID =?";
 						List<Map<String, Object>> letterList = new ArrayList<Map<String, Object>>();
-						// System.out.println("numHisAppInsId:"+numHisAppInsId+"->numAppInsId:"+numAppInsId);
+						// ////System.out.println("numHisAppInsId:"+numHisAppInsId+"->numAppInsId:"+numAppInsId);
 						letterList = sqlQuery.queryForList(LAST_LETTER_SQL, new Object[] { numHisAppInsId });
 						// 将所有的推荐信 信息复制过去 考生推荐信表
 						if (letterList != null) {
@@ -733,7 +733,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							psTzAppInsT.setTzAppinsJsonStr(strInsData);// 从历史表中即将推送到前台的json，存入报名表实例表中
 							// psTzAppInsT.setTzAppFormSta("S");
 							psTzAppInsTMapper.insertSelective(psTzAppInsT);
-							// System.out.println("向报名表实例表，加入报名表实例信息 ");
+							// ////System.out.println("向报名表实例表，加入报名表实例信息 ");
 
 							// ---2.将"班级"和"报名表"关系数据 存入 "PS_TZ_FORM_WRK_T"
 							PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
@@ -743,12 +743,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							psTzFormWrkT.setRowAddedDttm(new Date());
 							psTzFormWrkT.setRowLastmantDttm(new Date());
 							psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
-							// System.out.println("将班级和报名表关系数据 存入 ");
+							// ////System.out.println("将班级和报名表关系数据 存入 ");
 
 							// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
-							// System.out.println(letterList.size());
+							// ////System.out.println(letterList.size());
 							for (int i = 0; i < letterList.size(); i++) {
-								// System.out.println("推荐信读取");
+								// ////System.out.println("推荐信读取");
 								Map<String, Object> letterMap = letterList.get(i);
 
 								String tzRefLetterId = String
@@ -858,7 +858,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									psTzKsTjxTbl.setTzAccessPath(String.valueOf(letterMap.get("TZ_ACCESS_PATH")));
 								}
 								psTzKsTjxTblMapper.insertSelective(psTzKsTjxTbl);
-								// System.out.println("考生推荐信 信息存入");
+								// ////System.out.println("考生推荐信 信息存入");
 								// ---3.2.向“报名表实例表”中加入”推荐信“实例信息 （这表结构设计的有毒）
 								// 将“原报名表”关联的“推荐信实例ID”拿出来
 								String LAST_LETTER_INS_ID = letterMap.get("TZ_TJX_APP_INS_ID") == null ? ""
@@ -892,7 +892,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 													: letterInsMap.get("").toString();
 											psTzAppInsT2.setTzPwd(tzPwd);
 											psTzAppInsTMapper.insertSelective(psTzAppInsT2);
-											// System.out.println("存入推荐信实例");
+											// ////System.out.println("存入推荐信实例");
 										}
 									}
 								}
@@ -900,7 +900,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							}
 							// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId,
 							strAppInsId = String.valueOf(tzAppInsId);
-							// System.out.println("strAppInsId:" + strAppInsId);
+							// ////System.out.println("strAppInsId:" +
+							// strAppInsId);
 						}
 
 						// -----------------复制推荐信 代码结束
@@ -970,50 +971,44 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			String sqlGetSiteYt = "";
 			String strSiteYtHtml = "";
 			String strLogoImg = "";
-			/*try {
-				sqlGetSiteYt = "SELECT TZ_AREA_PUBCODE FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID = ? AND TZ_AREA_TYPE = 'YT'";
-				strSiteYtHtml = sqlQuery.queryForObject(sqlGetSiteYt, new Object[] { strSiteId }, "String");
-
-				int numCharstart = strSiteYtHtml.indexOf("src=\"");
-				int numCharend = strSiteYtHtml.indexOf("\"", numCharstart + 5);
-				// System.out.println("开始位置:"+numCharstart +
-				// "结束位置:"+numCharend);
-				if (numCharend > numCharstart) {
-					strLogoImg = strSiteYtHtml.substring(numCharstart + 5, numCharend);
-					// System.out.println("logo:"+strLogoImg);
-				} else {
-					strLogoImg = contextUrl + "/statics/images/appeditor/new/logo.png";
-				}
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				strLogoImg = contextUrl + "/statics/images/appeditor/new/logo.png";
-				e1.printStackTrace();
-			} */
+			/*
+			 * try { sqlGetSiteYt =
+			 * "SELECT TZ_AREA_PUBCODE FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID = ? AND TZ_AREA_TYPE = 'YT'"
+			 * ; strSiteYtHtml = sqlQuery.queryForObject(sqlGetSiteYt, new
+			 * Object[] { strSiteId }, "String");
+			 * 
+			 * int numCharstart = strSiteYtHtml.indexOf("src=\""); int
+			 * numCharend = strSiteYtHtml.indexOf("\"", numCharstart + 5); //
+			 * ////System.out.println("开始位置:"+numCharstart + //
+			 * "结束位置:"+numCharend); if (numCharend > numCharstart) { strLogoImg
+			 * = strSiteYtHtml.substring(numCharstart + 5, numCharend); //
+			 * ////System.out.println("logo:"+strLogoImg); } else { strLogoImg =
+			 * contextUrl + "/statics/images/appeditor/new/logo.png"; } } catch
+			 * (Exception e1) { // TODO Auto-generated catch block strLogoImg =
+			 * contextUrl + "/statics/images/appeditor/new/logo.png";
+			 * e1.printStackTrace(); }
+			 */
 
 			if ("Y".equals(strIsAdmin)) {
 				strMainInnerStyle = "margin: 0 auto;float:none";
 				strMainStyle = "width:788px;";
 			} else {
-				/*try {
-
-					strOnlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML", false,
-							strLogoImg);
-					strOnlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML",
-							false);
-					if ("BMB".equals(strTplType)) {
-						if ("Y".equals(strIsGuest)) {
-							strMainInnerStyle = "margin: 0 auto;float:none";
-						} else {
-							strOnlineLeft = tzGdObject
-									.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_LEFTMENU_HTML", false);
-						}
-					} else {
-						strMainInnerStyle = "margin: 0 auto;float:none";
-					}
-				} catch (TzSystemException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} */
+				/*
+				 * try {
+				 * 
+				 * strOnlineHead = tzGdObject.getHTMLText(
+				 * "HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML", false,
+				 * strLogoImg); strOnlineFoot = tzGdObject.getHTMLText(
+				 * "HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML",
+				 * false); if ("BMB".equals(strTplType)) { if
+				 * ("Y".equals(strIsGuest)) { strMainInnerStyle =
+				 * "margin: 0 auto;float:none"; } else { strOnlineLeft =
+				 * tzGdObject .getHTMLText(
+				 * "HTML.TZWebsiteApplicationBundle.TZ_ONLINE_LEFTMENU_HTML",
+				 * false); } } else { strMainInnerStyle =
+				 * "margin: 0 auto;float:none"; } } catch (TzSystemException e)
+				 * { // TODO Auto-generated catch block e.printStackTrace(); }
+				 */
 			}
 
 			if ("".equals(strAppInsId) || strAppInsId == null) {
@@ -1073,7 +1068,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
 				strInsData = strInsData.replace(" ", "");
-				System.out.println("strTabs:" + strTabs);
+				//// //System.out.println("strTabs:" + strTabs);
 				String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"TJXSETPWDError", strLanguage, "请填写密码", "Please fill in the password");
 
@@ -1324,7 +1319,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								errMsg[0] = "1";
 								errMsg[1] = strParaError;
 								strMsg = strParaError;
-								// System.out.println("1111111");
+								// ////System.out.println("1111111");
 							}
 						} else {
 							// 没报名表实例编号
@@ -1376,20 +1371,20 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							errMsg[0] = "1";
 							errMsg[1] = strParaError;
 							strMsg = strParaError;
-							System.out.println("222222");
+							//// //System.out.println("222222");
 						}
 					} else {
 						errMsg[0] = "1";
 						errMsg[1] = strParaError;
 						strMsg = strParaError;
-						System.out.println("33333");
+						//// //System.out.println("33333");
 					}
 				} else {
 					// 非法操作
 					errMsg[0] = "1";
 					errMsg[1] = strParaError;
 					strMsg = strParaError;
-					System.out.println("444444");
+					//// //System.out.println("444444");
 				}
 			}
 			// 当前报名表实例版本是否和数据库一致
@@ -1570,7 +1565,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd, strOtype);
 					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
-						System.out.println("checkFiledValid：" + strMsg);
+						//// //System.out.println("checkFiledValid：" + strMsg);
 						if ("".equals(strMsg)) {
 							this.savePageCompleteState(numAppInsId, strPageId, "Y");
 						} else {
@@ -1658,17 +1653,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 					if ("".equals(strMsg)) {
 						strMsg = this.checkFiledValid(numAppInsId, strTplId, strPageId, "pre");
-						if ("".equals(strMsg)) {
-							this.savePageCompleteState(numAppInsId, strPageId, "Y");
-						} else {
-							this.savePageCompleteState(numAppInsId, strPageId, "N");
-						}
+
 					}
 
 					if ("".equals(strMsg)) {
 						strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData, strTplType,
 								strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 								strOtype);
+
+						if ("".equals(strMsg)) {
+							this.savePageCompleteState(numAppInsId, strPageId, "Y");
+						} else {
+							this.savePageCompleteState(numAppInsId, strPageId, "N");
+						}
 
 						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
 							// 如果是管理员并且可编辑的话继续 By WRL@20161027
@@ -1862,7 +1859,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					password = formDataMap.get("PASSWORD").toString();
 				}
 				boolRtn = tzOnlineAppRulesImpl.checkTJXPwd(dataPwd, language, password);
-				System.out.println("boolRtn:" + boolRtn);
+				//// //System.out.println("boolRtn:" + boolRtn);
 				if (!boolRtn) {
 					successFlag = "1";
 					strMsg = tzOnlineAppRulesImpl.msg;
@@ -1874,11 +1871,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					cookie.setMaxAge(-1);
 					cookie.setValue(appInsId + "_" + appTplId + "_Y");
 					response.addCookie(cookie);
-					System.out.println("ADD cookie");
+					//// //System.out.println("ADD cookie");
 				}
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
-				// System.out.println("11111111");
+				// ////System.out.println("11111111");
 				try {
 					String Pwdname = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 							"TJXSETPWD", language, "访问密码", "Access password");
@@ -1971,9 +1968,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		}
 
 		// 插入面试申请号码, 推荐信 不需要登录，所以没有oprid
-		System.out.println("strAppInsId:" + strAppInsId);
+		//// //System.out.println("strAppInsId:" + strAppInsId);
 		String TZ_MSH_ID = "";
-		System.out.println("oprid:" + oprid);
+		//// //System.out.println("oprid:" + oprid);
 		if (oprid == null || oprid.equals("")) {
 			sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_KS_TJX_TBL B WHERE A.OPRID=B.OPRID AND B.TZ_TJX_APP_INS_ID=?";
 			TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
@@ -1988,7 +1985,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				TZ_MSH_ID = "";
 			}
 		}
-		System.out.println("TZ_MSH_ID:" + TZ_MSH_ID);
+		//// //System.out.println("TZ_MSH_ID:" + TZ_MSH_ID);
 		map.put("TZ_MSH_ID", TZ_MSH_ID);
 
 		strUserInfo = jacksonUtil.Map2json(map);
@@ -2034,16 +2031,23 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		// Long numAppInsId = Long.parseLong(strAppInsId);
 		try {
 			String sql = "";
-			int count = 0;
+			// int count = 0;
+			String TZ_APP_FORM_STA = null;
 			boolean chageClass = false;
 
 			if (newClassId != null && !newClassId.equals(strClassId)) {
 				chageClass = true;
 			}
 
-			sql = "SELECT COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
-			count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "Integer");
-			if (count > 0) {
+			// modity by caoy 保存的时候，如果是 预提交状态 那么状态不改变
+			sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+			// count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId
+			// }, "Integer");
+			TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+			//System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
+			//System.out.println("strOtype:" + strOtype);
+			// if (count > 0) {
+			if (TZ_APP_FORM_STA != null && !TZ_APP_FORM_STA.equals("")) {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
@@ -2052,7 +2056,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				if (strOtype.equals("PRE")) {
 					psTzAppInsT.setTzAppFormSta("P");
 				} else {
-					psTzAppInsT.setTzAppFormSta(strAppInsState);
+					if (TZ_APP_FORM_STA.equals("P") && strAppInsState.equals("S")) {
+
+					} else {
+						psTzAppInsT.setTzAppFormSta(strAppInsState);
+					}
 				}
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowLastmantOprid(oprid);
@@ -2079,9 +2087,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BMB".equals(strTplType)) {
+				int count = 0;
 				// 如果是 变更班级，那么
 				if (chageClass) {
-					count = 0;
+
 					sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
 					count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
 					if (count > 0) {
@@ -2179,7 +2188,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									if (mapJsonChildrenItems.containsKey("children")) {
 										// 多行容器下的子容器 modity by caoy
 										// 解决分组框的某些组合控件的问题
-										System.out.println("111:" + mapJsonChildrenItems.get("children"));
+										//// //System.out.println("111:" +
+										// mapJsonChildrenItems.get("children"));
 										List<Map<String, Object>> mapChildrens2 = null;
 										try {
 											mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
@@ -2196,7 +2206,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 											}
 										}
 
-										// System.out.println("Size:" +
+										// ////System.out.println("Size:" +
 										// mapChildrens2.size());
 
 										String strIsSingleLine2 = "";
@@ -2768,8 +2778,23 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			String sql = "";
 			List<?> listData = null;
 
+			// 保存的時候 如果本页 有预提交按钮，检查是否 已经预备提交了
+			if ("save".equals(strOtype)) {
+				sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
+				int PretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" }, "Integer");
+				if (PretPageNo == numCurrentPageNo) {
+					sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+					String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+					if (TZ_APP_FORM_STA.equals("P")) {
+						return "";
+					} else {
+						return "NOPRE";
+					}
+				}
+			}
+
 			if ("pre".equals(strOtype)) {
-				System.out.println("numCurrentPageNo:"+numCurrentPageNo);
+				// ////System.out.println("numCurrentPageNo:"+numCurrentPageNo);
 				sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL2");
 
 				listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numCurrentPageNo });
@@ -2819,13 +2844,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strJygzTsxx = MapData.get("TZ_JYGZ_TSXX") == null ? "" : String.valueOf(MapData.get("TZ_JYGZ_TSXX"));
 
 				if ("save".equals(strOtype)) {
-					// System.out.println("numCurrentPageNo:"+numCurrentPageNo);
-					// System.out.println("numPageNo:"+numPageNo);
+					// ////System.out.println("numCurrentPageNo:"+numCurrentPageNo);
+					// ////System.out.println("numPageNo:"+numPageNo);
 					if (numCurrentPageNo == numPageNo) {
 						tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx
 								.getBean(strPath + "." + strName);
 						String strReturn = "";
-						System.out.println("strMethod:" + strMethod);
+						// ////System.out.println("strMethod:" + strMethod);
 						switch (strMethod) {
 						case "requireValidator":
 							strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2877,7 +2902,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									strXxxDrqBz, numXxxMinLine, strTjxSub, strJygzTsxx);
 							break;
 						}
-						System.out.println("strReturn:" + strReturn);
+						// ////System.out.println("strReturn:" + strReturn);
 						if (!"".equals(strReturn)) {
 							returnMsg = strReturn;
 							break;
@@ -2886,7 +2911,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				} else {
 					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
-					System.out.println("strMethod:" + strMethod);
+					// ////System.out.println("strMethod:" + strMethod);
 					switch (strMethod) {
 					case "requireValidator":
 						strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,
@@ -2945,7 +2970,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								numXxxMinLine, strTjxSub, strJygzTsxx);
 						break;
 					}
-					System.out.println("strReturn:" + strReturn);
+					// ////System.out.println("strReturn:" + strReturn);
 					if (!"".equals(strReturn)) {
 						if (!listPageNo.contains(numPageNo)) {
 							listPageNo.add(numPageNo);
@@ -2956,9 +2981,21 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 
 			if ("submit".equals(strOtype)) {
+
+				// 提交的时候 ，校验是否 已经预提交 ，如果没有预备提交，那么该页不设置打勾
+				sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+				String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+				if (!TZ_APP_FORM_STA.equals("P")) {
+					returnMsg = returnMsg + "请先预提交" + "<br/>";
+
+					sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
+					int PretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" }, "Integer");
+					listPageNo.add(PretPageNo);
+				}
+
 				// 页面全部设置成完成
 
-				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
+				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND  TZ_PAGE_NO>0 ";
 				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, new Object[] { strTplId, "Page" });
 				for (Object ObjValue : ListPageXxxBh) {
 					Map<String, Object> MapXxxBh = (Map<String, Object>) ObjValue;
@@ -2978,6 +3015,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						this.savePageCompleteState(numAppInsId, strXxxBh2, "N");
 					}
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
