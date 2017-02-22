@@ -48,6 +48,7 @@ public class AnalysisLcResult {
 		}
 		result[0] = isFb;
 		result[1] = TZ_APPPRO_RST;
+
 		return result;
 	}
 }
