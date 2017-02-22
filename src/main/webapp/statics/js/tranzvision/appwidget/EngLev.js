@@ -8,10 +8,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelType": {
 			"instanceId": "EngLevelType",
 			"itemId": "exam_type",
-			//"itemName": MsgSet["EXAM_TYPE"],
-			"itemName":"考试名称",
-			//"title": MsgSet["EXAM_TYPE"],
-			"title": "考试名称",
+			"itemName": MsgSet["EXAM_TYPE"],
+			//"itemName":"考试名称",
+			"title": MsgSet["EXAM_TYPE"],
+			//"title": "考试名称",
 			"orderby": 1,
 			"value": "-1",
 			"StorageType": "S",
@@ -21,10 +21,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt1_1": {
 			"instanceId": "EngLevelOpt1_1",
 			"itemId": "opt1_exam_date",
-			//"itemName": MsgSet["EXAM_TDATE"],
-			"itemName": "Test date",
-			//"title": MsgSet["EXAM_TDATE"],
-			"title": "Test date",
+			"itemName": MsgSet["EXAM_TDATE"],
+			//"itemName": "Test date",
+			"title": MsgSet["EXAM_TDATE"],
+			//"title": "Test date",
 			"orderby": 2,
 			"value": "",
 			"StorageType": "S",
@@ -33,10 +33,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt1_2": {
 			"instanceId": "EngLevelOpt1_2",
 			"itemId": "opt1_exam_score",
-			//"itemName": MsgSet["EXAM_TSCORE"],
-			"itemName": "Total(Score)",
-			//"title": MsgSet["EXAM_TSCORE"],
-			"title": "Total(Score)",
+			"itemName": MsgSet["EXAM_TSCORE"],
+			//"itemName": "Total(Score)",
+			"title": MsgSet["EXAM_TSCORE"],
+			//"title": "Total(Score)",
 			"orderby": 3,
 			"value": "",
 			"StorageType": "S",
@@ -46,10 +46,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 	 	"EngLevelOpt2_1": {
 			"instanceId": "EngLevelOpt2_1",
 			"itemId": "opt2_exam_date",
-			//"itemName": MsgSet["EXAM_TDATE"],
-			"itemName": "Test date",
-			//"title": MsgSet["EXAM_TDATE"],
-			"title": "Test date",
+			"itemName": MsgSet["EXAM_TDATE"],
+			//"itemName": "Test date",
+			"title": MsgSet["EXAM_TDATE"],
+			//"title": "Test date",
 			"orderby": 4,
 			"value": "",
 			"StorageType": "S",
@@ -58,10 +58,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt2_2": {
 			"instanceId": "EngLevelOpt2_2",
 			"itemId": "opt2_exam_score",
-			//"itemName": MsgSet["EXAM_TSCORE"],
-			"itemName": "Total(Score)",
-			//"title": MsgSet["EXAM_TSCORE"],
-			"title": "Total(Score)",
+			"itemName": MsgSet["EXAM_TSCORE"],
+			//"itemName": "Total(Score)",
+			"title": MsgSet["EXAM_TSCORE"],
+			//"title": "Total(Score)",
 			"orderby": 5,
 			"value": "",
 			"StorageType": "S",
@@ -71,10 +71,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt3_1": {
 			"instanceId": "EngLevelOpt3_1",
 			"itemId": "opt3_exam_date",
-			//"itemName": MsgSet["EXAM_TDATE"],
-			"itemName": "Test date",
-			//"title": MsgSet["EXAM_TDATE"],
-			"title": "Test date",
+			"itemName": MsgSet["EXAM_TDATE"],
+			//"itemName": "Test date",
+			"title": MsgSet["EXAM_TDATE"],
+			//"title": "Test date",
 			"orderby": 6,
 			"value": "",
 			"StorageType": "S",
@@ -83,9 +83,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt3_2": {
 			"instanceId": "EngLevelOpt3_2",
 			"itemId": "opt3_exam_score",
-			//"itemName": MsgSet["EXAM_TOTAL"],
-			"itemName": "Total",
-			//"title": MsgSet["EXAM_TOTAL"],
+			"itemName": MsgSet["EXAM_TOTAL"],
+			//"itemName": "Total",
+			"title": MsgSet["EXAM_TOTAL"],
 			"title": "Total",
 			"orderby": 7,
 			"value": "",
@@ -96,9 +96,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt4_1": {
 			"instanceId": "EngLevelOpt4_1",
 			"itemId": "opt4_exam_date",
-			//"itemName": MsgSet["EXAM_TDATE"],
-			"itemName": "Test date",
-			//"title": MsgSet["EXAM_TDATE"],
+			"itemName": MsgSet["EXAM_TDATE"],
+			//"itemName": "Test date",
+			"title": MsgSet["EXAM_TDATE"],
 			"title": "Test date",
 			"orderby": 8,
 			"value": "",
@@ -108,10 +108,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt4_2": {
 			"instanceId": "EngLevelOpt4_2",
 			"itemId": "opt4_exam_score",
-			//"itemName": MsgSet["EXAM_ISCORE"],
-			"itemName": "Overall Band Score",
-			//"title": MsgSet["EXAM_ISCORE"],
-			"title": "Overall Band Score",
+			"itemName": MsgSet["EXAM_ISCORE"],
+			//"itemName": "Overall Band Score",
+			"title": MsgSet["EXAM_ISCORE"],
+			//"title": "Overall Band Score",
 			"orderby": 9,
 			"value": "",
 			"StorageType": "S",
@@ -121,10 +121,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt5_1": {
 			"instanceId": "EngLevelOpt5_1",
 			"itemId": "opt5_exam_score",
-			//"itemName": MsgSet["EXAM_SCORE"],
-			"itemName": "总分",
-			//"title": MsgSet["EXAM_SCORE"],
-			"title": "总分",
+			"itemName": MsgSet["EXAM_SCORE"],
+			//"itemName": "总分",
+			"title": MsgSet["EXAM_SCORE"],
+			//"title": "总分",
 			"orderby": 10,
 			"value": "",
 			"StorageType": "S",
@@ -134,10 +134,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt6_1": {
 			"instanceId": "EngLevelOpt6_1",
 			"itemId": "opt6_exam_score",
-			//"itemName": MsgSet["EXAM_SCORE"],
-			"itemName": "总分",
-			//"title": MsgSet["EXAM_SCORE"],
-			"title": "总分",
+			"itemName": MsgSet["EXAM_SCORE"],
+			//"itemName": "总分",
+			"title": MsgSet["EXAM_SCORE"],
+			//"title": "总分",
 			"orderby": 11,
 			"value": "",
 			"StorageType": "S",
@@ -147,10 +147,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt7_1": {
 			"instanceId": "EngLevelOpt7_1",
 			"itemId": "opt7_cet6_pass",
-			//"itemName": MsgSet["EXAM_PASS"],
-			"itemName": "是否通过",
-			//"title": MsgSet["EXAM_PASS"],
-			"title": "是否通过",
+			"itemName": MsgSet["EXAM_PASS"],
+			//"itemName": "是否通过",
+			"title": MsgSet["EXAM_PASS"],
+			//"title": "是否通过",
 			"orderby": 12,
 			"value": "",
 			"StorageType": "S",
@@ -160,10 +160,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt8_1": {
 			"instanceId": "EngLevelOpt8_1",
 			"itemId": "opt8_cet4_pass",
-			//"itemName": MsgSet["EXAM_PASS"],
-			"itemName": "是否通过",
-			//"title": MsgSet["EXAM_PASS"],
-			"title": "是否通过",
+			"itemName": MsgSet["EXAM_PASS"],
+			//"itemName": "是否通过",
+			"title": MsgSet["EXAM_PASS"],
+			//"title": "是否通过",
 			"orderby": 13,
 			"value": "",
 			"StorageType": "S",
@@ -173,10 +173,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt9_1": {
 			"instanceId": "EngLevelOpt9_1",
 			"itemId": "opt9_exam_result",
-			//"itemName": MsgSet["EXAM_GSCORE"],
-			"itemName": "总分(成绩)",
-			//"title": MsgSet["EXAM_GSCORE"],
-			"title": "总分(成绩)",
+			"itemName": MsgSet["EXAM_GSCORE"],
+			//"itemName": "总分(成绩)",
+			"title": MsgSet["EXAM_GSCORE"],
+			//"title": "总分(成绩)",
 			"orderby": 14,
 			"value": "",
 			"StorageType": "S",
@@ -186,10 +186,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt10_1": {
 			"instanceId": "EngLevelOpt10_1",
 			"itemId": "opt10_exam_result",
-			//"itemName": MsgSet["EXAM_GSCORE"],
-			"itemName": "总分(成绩)",
-			//"title": MsgSet["EXAM_GSCORE"],
-			"title": "总分(成绩)",
+			"itemName": MsgSet["EXAM_GSCORE"],
+			//"itemName": "总分(成绩)",
+			"title": MsgSet["EXAM_GSCORE"],
+			//"title": "总分(成绩)",
 			"orderby": 15,
 			"value": "",
 			"StorageType": "S",
@@ -199,10 +199,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt11_1": {
 			"instanceId": "EngLevelOpt11_1",
 			"itemId": "opt11_exam_result",
-			//"itemName": MsgSet["EXAM_GSCORE"],
-			"itemName": "总分(成绩)",
-			//"title": MsgSet["EXAM_GSCORE"],
-			"title": "总分(成绩)",
+			"itemName": MsgSet["EXAM_GSCORE"],
+			//"itemName": "总分(成绩)",
+			"title": MsgSet["EXAM_GSCORE"],
+			//"title": "总分(成绩)",
 			"orderby": 16,
 			"value": "",
 			"StorageType": "S",
@@ -212,10 +212,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt12_1": {
 			"instanceId": "EngLevelOpt12_1",
 			"itemId": "opt12_exam_result",
-			//"itemName": MsgSet["EXAM_GSCORE"],
-			"itemName": "总分(成绩)",
-			//"title": MsgSet["EXAM_GSCORE"],
-			"title": "总分(成绩)",
+			"itemName": MsgSet["EXAM_GSCORE"],
+			//"itemName": "总分(成绩)",
+			"title": MsgSet["EXAM_GSCORE"],
+			//"title": "总分(成绩)",
 			"orderby": 17,
 			"value": "",
 			"StorageType": "S",
@@ -225,10 +225,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt13_1": {
 			"instanceId": "EngLevelOpt13_1",
 			"itemId": "opt13_exam_date",
-			//"itemName": MsgSet["EXAM_DATE"],
-			"itemName": "考试时间",
-			//"title": MsgSet["EXAM_DATE"],
-			"title": "考试时间",
+			"itemName": MsgSet["EXAM_DATE"],
+			//"itemName": "考试时间",
+			"title": MsgSet["EXAM_DATE"],
+			//"title": "考试时间",
 			"orderby": 18,
 			"value": "",
 			"StorageType": "S",
@@ -237,10 +237,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelOpt13_2": {
 			"instanceId": "EngLevelOpt13_2",
 			"itemId": "opt13_exam_score",
-			//"itemName": MsgSet["EXAM_SCORE"],
-			"itemName": "总分",
-			//"title": MsgSet["EXAM_SCORE"],
-			"title": "总分",
+			"itemName": MsgSet["EXAM_SCORE"],
+			//"itemName": "总分",
+			"title": MsgSet["EXAM_SCORE"],
+			//"title": "总分",
 			"orderby": 19,
 			"value": "",
 			"StorageType": "S",
@@ -250,9 +250,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 		"EngLevelUp": {
 			"instanceId": "EngLevelUp",
 			"itemId": "exam_upload",
-			//"itemName": MsgSet["EXAM_UPLOAD"],
-			"itemName": "扫描件上传",
-			//"title": MsgSet["EXAM_UPLOAD"],
+			"itemName": MsgSet["EXAM_UPLOAD"],
+			//"itemName": "扫描件上传",
+			"title": MsgSet["EXAM_UPLOAD"],
 			"isRequire":"Y",
 			"title": "扫描件上传",
 			"orderby": 20,
@@ -333,14 +333,14 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			var htmlRead = '';
 			//考试类型类型
 			htmlRead += '<div class="type_item_li">';
-			htmlRead += '	<span class="type_item_label">'+"考试类型"+'：</span>';
+			htmlRead += '	<span class="type_item_label">'+MsgSet["EXAM_TYPE_T"]+'：</span>';
 			htmlRead += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
 			htmlRead += '	</div>';
 
 			//成绩显示DIV
 			htmlRead += '<div class="type_item_li">';
-			htmlRead += '	<span class="type_item_label">'+"考试成绩"+'：</span>';
-			htmlRead += '		<b class="read-input" style="min-width:120px;">显示相应考试成绩</b>';
+			htmlRead += '	<span class="type_item_label">'+MsgSet["EXAM_SCORE_T"]+'：</span>';
+			htmlRead += '		<b class="read-input" style="min-width:120px;">'+MsgSet["SHOW_SCORE"]+'</b>';
 			htmlRead += '	</div>';
 			
 			
@@ -431,7 +431,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			htmlContent += '<div id="main_inner_content_para'+index+'" class="main_inner_content_para">';
 			htmlContent+='<div class="clear"></div>'
 			htmlContent += '<div class="mainright-title">';
-				htmlContent += '<span class="title-line"></span>' + "英语水平"  + ' ' +index+ ' :'+ data.title + ' :</div>';
+				htmlContent += '<span class="title-line"></span>' + MsgSet["ENG_LEV"]  +index+ ' :</div>';
 			htmlContent += '<div class="mainright-box pos-rela">';
 			//-----
 			if(index > 1&&!SurveyBuild._readonly){
@@ -467,7 +467,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				//日期框HTML
 				var getDateDiv=function(date_id,date_val,date_name,date_title){
 					var DATE_DIV='';
-					DATE_DIV += '  <div class="input-list" style="display:block"><div class="input-list-info left"><span class="red-star">*</span><span>Test date：</span></div>';
+					DATE_DIV += '  <div class="input-list" style="display:block"><div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TDATE"]+'：</span></div>';
 					
 					DATE_DIV += '     <div class="input-list-text left">';
 					DATE_DIV +=date_val;
@@ -502,7 +502,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
 					GRE_DIV+='<div class="clear"></div>'
-					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div> '
+					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TSCORE"]+'：</span></div> '
 					GRE_DIV+='<div class="input-list-text left">'
 						GRE_DIV+=greDesc;
 					GRE_DIV+='</div>'
@@ -520,7 +520,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
 					GMAT_DIV+='<div class="clear"></div>'
-					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div>'
+					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TSCORE"]+'：</span></div>'
 					GMAT_DIV+='<div class="input-list-text left">'
 						GMAT_DIV+=gmatDesc;
 					GMAT_DIV+='</div>'				
@@ -539,7 +539,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
 					TOFEL_DIV+='<div class="clear"></div>'
-					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total：</span></div>'
+					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TOTAL"]+'：</span></div>'
 					TOFEL_DIV+='<div class="input-list-text left">'
 						TOFEL_DIV+=tofelDesc;
 					TOFEL_DIV+='</div>'	
@@ -557,7 +557,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
 					IELTS_DIV+='<div class="clear"></div>'
-					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Overall Band Score:</span></div>'
+					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_ISCORE"]+':</span></div>'
 					IELTS_DIV+='<div class="input-list-text left">'
 						IELTS_DIV+=ieltsDesc;
 					IELTS_DIV+='</div>'
@@ -574,7 +574,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				else	
 				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+':</span></div>'
 					CET6_DIV+='<div class="input-list-text left">'
 						CET6_DIV+=cet6Desc;
 					CET6_DIV+='</div>'
@@ -590,7 +590,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				}
 				else
 				CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+':</span></div>'
 					CET4_DIV+='<div class="input-list-text left">'
 						CET4_DIV+=cet4Desc;
 					CET4_DIV+='</div>'	
@@ -603,13 +603,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T7"){
 					CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
 					if(child.EngLevelOpt7_1.value=="Y")
-						cet6Desc2="通过";
+						cet6Desc2=MsgSet["PASS_Y"];
 					else 
-						cet6Desc2="未通过";
+						cet6Desc2=MsgSet["PASS_N"];
 				}
 				else
 				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >是否通过:</span></div>'
+					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >'+MsgSet["EXAM_PASS"]+':</span></div>'
 					CET6_DIV2+='<div class="input-list-text left" >'
 						CET6_DIV2+=cet6Desc2;
 					CET6_DIV2+='</div>'
@@ -623,13 +623,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T8"){
 					CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
 					if(child.EngLevelOpt8_1.value=="Y")
-						cetDesc2="通过";
+						cetDesc2=MsgSet["PASS_Y"];
 					else
-						cetDesc2="未通过";
+						cetDesc2=MsgSet["PASS_N"];
 				}
 				else
 				CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>是否通过:</span></div>'
+					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_PASS"]+':</span></div>'
 					CET4_DIV2+='<div class="input-list-text left" >'
 						CET4_DIV2+=cetDesc2;
 					CET4_DIV2+='</div>'
@@ -642,13 +642,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T9"){
 					TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
 					if(child.EngLevelOpt9_1.value=="TEM4")
-						temDesc="专业四级";
+						temDesc=MsgSet["EXAM_TEM4"];
 					else
-						temDesc="专业八级";
+						temDesc=MsgSet["EXAM_TEM8"];
 				}
 				else
 				TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+':</span></div>'
 					TEM_DIV+='<div class="input-list-text left" >'
 						TEM_DIV+=temDesc;
 					TEM_DIV+='</div>'
@@ -661,13 +661,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T10"){
 					H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
 					if(child.EngLevelOpt10_1.value=="A")
-						hInterDesc="拿到资格证书";
+						hInterDesc=MsgSet["INTER_A"];
 					else
-						hInterDesc="笔试证书";
+						hInterDesc=MsgSet["INTER_B"];
 				}
 				else
 				H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+':</span></div>'
 					H_INTER_DIV+='<div class="input-list-text left" >'
 						H_INTER_DIV+=hInterDesc;
 					H_INTER_DIV+='</div>'
@@ -680,13 +680,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T11"){
 					M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
 					if(child.EngLevelOpt11_1.value=="A")
-						mInterDesc="拿到资格证书";
+						mInterDesc=MsgSet["INTER_A"];
 					else 
-						mInterDesc="笔试证书";
+						mInterDesc=MsgSet["INTER_B"];
 				}
 				else
 				M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+':</span></div>'
 					M_INTER_DIV+='<div class="input-list-text left" >'
 						M_INTER_DIV+=mInterDesc;
 					M_INTER_DIV+='</div>'
@@ -699,15 +699,15 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				if(EXAM_TYPE_DEF=="ENG_LEV_T12"){
 					BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
 					if(child.EngLevelOpt12_1.value=="A")
-						becDesc="高级";
+						becDesc=MsgSet["LEV_A"];
 					else if(child.EngLevelOpt12_1.value=="B")
-						becDesc="中级";
+						becDesc=MsgSet["LEV_B"];
 					else
-						becDesc="初级";
+						becDesc=MsgSet["LEV_C"];
 				}
 				else
 				BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩):</span></div>'
+					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+':</span></div>'
 					BEC_DIV+='<div class="input-list-text left" >'
 						BEC_DIV+=becDesc;
 					BEC_DIV+='</div>'
@@ -725,7 +725,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
 					TOEIC_DIV+='<div class="clear"></div>'
-					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分:</span></div>'
+					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+':</span></div>'
 					TOEIC_DIV+='<div  class="input-list-text left">'
 						TOEIC_DIV+=toeicDesc;
 					TOEIC_DIV+="</div>";
@@ -805,7 +805,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				//日期框HTML
 				var getDateDiv=function(date_id,date_val,date_name,date_title){
 					var DATE_DIV='';
-					DATE_DIV += '  <div class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">*</span>Test date：</span>';
+					DATE_DIV += '  <div class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">*</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
 					
 					DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onclick="this.focus()" title="' +date_name + '">';
 					DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;">';
@@ -842,7 +842,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GRE_DIV+='<div name="'+data.itemId+'ENG_LEV_T1" id="'+data.itemId+'ENG_LEV_T1" class="input-list" style="display:none">'
 					GRE_DIV+=GRE_DATE
-					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/>'
+					GRE_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TSCORE"]+'：</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt1_2.itemId+'" value="'+child.EngLevelOpt1_2.value+'"/>'
 					//---------GRE input格式检验:
 					GRE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GRE_DIV += '	<div id="' + data.itemId+child.EngLevelOpt1_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -860,7 +860,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				GMAT_DIV+='<div name="'+data.itemId+'ENG_LEV_T2" id="'+data.itemId+'ENG_LEV_T2"  class="input-list" style="display:none">'
 					GMAT_DIV+=GMAT_DATE
-					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total(Score)：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/>'
+					GMAT_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TSCORE"]+'：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt2_2.itemId+'" value="'+child.EngLevelOpt2_2.value+'"/>'
 					//---------GMAT  input格式检验:
 					GMAT_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GMAT_DIV += '	<div id="' + data.itemId+child.EngLevelOpt2_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -879,7 +879,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOFEL_DIV+='<div name="'+data.itemId+'ENG_LEV_T3" id="'+data.itemId+'ENG_LEV_T3" class="input-list" style="display:none">'
 					TOFEL_DIV+=TOFEL_DATE
-					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Total：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/>'
+					TOFEL_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_TOTAL"]+'：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt3_2.itemId+'" value="'+child.EngLevelOpt3_2.value+'"/>'
 					//---------TOFEL_DIV  input格式检验:
 					TOFEL_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOFEL_DIV += '	<div id="' + data.itemId+child.EngLevelOpt3_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -898,7 +898,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				IELTS_DIV+='<div name="'+data.itemId+'ENG_LEV_T4" id="'+data.itemId+'ENG_LEV_T4" class="input-list" style="display:none">'
 					IELTS_DIV+=IELTS_DATE
-					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>Overall Band Score：</span></div><div class="input-list-text left"><input   class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/>'
+					IELTS_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_ISCORE"]+'：</span></div><div class="input-list-text left"><input   class="inpu-list-text-enter" style="height:36px;" id="'+data.itemId+child.EngLevelOpt4_2.itemId+'" value="'+child.EngLevelOpt4_2.value+'"/>'
 					//---------IELTS_DIV  input格式检验:
 					IELTS_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					IELTS_DIV += '	<div id="' + data.itemId+child.EngLevelOpt4_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -916,7 +916,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:block">'
 				else	
 				CET6_DIV+='<div name="'+data.itemId+'ENG_LEV_T5" id="'+data.itemId+'ENG_LEV_T5" class="input-list" style="display:none">'
-					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/>'
+					CET6_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+'：</span></div><div class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt5_1.itemId+'" value="'+child.EngLevelOpt5_1.value+'"/>'
 					//---------CET6_DIV  input格式检验:
 					CET6_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET6_DIV += '	<div id="' + data.itemId+child.EngLevelOpt5_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -934,7 +934,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:block">'
 				else
 				CET4_DIV+='<div name="'+data.itemId+'ENG_LEV_T6" id="'+data.itemId+'ENG_LEV_T6" class="input-list" style="display:none">'
-					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div class="input-list-text left"><input    class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/>'
+					CET4_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+'：</span></div><div class="input-list-text left"><input    class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt6_1.itemId+'" value="'+child.EngLevelOpt6_1.value+'"/>'
 					//---------CET4_DIV  input格式检验:
 					CET4_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET4_DIV += '	<div id="' + data.itemId+child.EngLevelOpt6_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -952,10 +952,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:block">'
 				else
 				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
-					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >是否通过：</span></div>'
+					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >'+MsgSet["EXAM_PASS"]+'：</span></div>'
 					CET6_DIV2+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
-						CET6_DIV2+='<option value="Y">通过</option>'
-						CET6_DIV2+='<option value="N">未通过</option>'
+						CET6_DIV2+='<option value="Y">'+MsgSet["PASS_Y"]+'</option>'
+						CET6_DIV2+='<option value="N">'+MsgSet["PASS_N"]+'</option>'
 					CET6_DIV2+='</select></div>'
 				CET6_DIV2+='</div>'
 					//CET6_DIV2+='<div class="clear"></div>'
@@ -967,10 +967,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:block">'
 				else
 				CET4_DIV2+='<div name="'+data.itemId+'ENG_LEV_T8" id="'+data.itemId+'ENG_LEV_T8" class="input-list" style="display:none">'
-					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>是否通过：</span></div>'
+					CET4_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_PASS"]+'：</span></div>'
 					CET4_DIV2+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt8_1.itemId+'" value="'+child.EngLevelOpt8_1.value+'">'
-						CET4_DIV2+='<option value="Y">通过</option>'
-						CET4_DIV2+='<option value="N">未通过</option>'
+						CET4_DIV2+='<option value="Y">'+MsgSet["PASS_Y"]+'</option>'
+						CET4_DIV2+='<option value="N">'+MsgSet["PASS_N"]+'</option>'
 					CET4_DIV2+='</select></div>'
 				CET4_DIV2+='</div>'
 					//CET4_DIV2+='<div class="clear"></div>'
@@ -982,10 +982,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:block">'
 				else
 				TEM_DIV+='<div name="'+data.itemId+'ENG_LEV_T9" id="'+data.itemId+'ENG_LEV_T9" class="input-list" style="display:none">'
-					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
+					TEM_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+'：</span></div>'
 					TEM_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt9_1.itemId+'" value="'+child.EngLevelOpt9_1.value+'">'
-						TEM_DIV+='<option value="TEM4">专业四级</option>'
-						TEM_DIV+='<option value="TEM8">专业八级</option>'
+						TEM_DIV+='<option value="TEM4">'+MsgSet["EXAM_TEM4"]+'</option>'
+						TEM_DIV+='<option value="TEM8">'+MsgSet["EXAM_TEM8"]+'</option>'
 					TEM_DIV+='</select></div>'
 				TEM_DIV+='</div>'
 					//TEM_DIV+='<div class="clear"></div>'
@@ -997,10 +997,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:block">'
 				else
 				H_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T10" id="'+data.itemId+'ENG_LEV_T10" class="input-list" style="display:none">'
-					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
+					H_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+'：</span></div>'
 					H_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt10_1.itemId+'" value="'+child.EngLevelOpt10_1.value+'">'
-						H_INTER_DIV+='<option value="A">拿到资格证书</option>'
-						H_INTER_DIV+='<option value="B">笔试证书</option>'
+						H_INTER_DIV+='<option value="A">'+MsgSet["INTER_A"]+'</option>'
+						H_INTER_DIV+='<option value="B">'+MsgSet["INTER_B"]+'</option>'
 					H_INTER_DIV+='</select></div>'
 				H_INTER_DIV+='</div>'
 					//H_INTER_DIV+='<div class="clear"></div>'
@@ -1012,10 +1012,10 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:block">'
 				else
 				M_INTER_DIV+='<div name="'+data.itemId+'ENG_LEV_T11" id="'+data.itemId+'ENG_LEV_T11" class="input-list" style="display:none">'
-					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
+					M_INTER_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+'：</span></div>'
 					M_INTER_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt11_1.itemId+'" value="'+child.EngLevelOpt11_1.value+'">'
-						M_INTER_DIV+='<option value="A">拿到资格证书</option>'
-						M_INTER_DIV+='<option value="B">笔试证书</option>'
+						M_INTER_DIV+='<option value="A">'+MsgSet["INTER_A"]+'</option>'
+						M_INTER_DIV+='<option value="B">'+MsgSet["INTER_B"]+'</option>'
 					M_INTER_DIV+='</select></div>'
 				M_INTER_DIV+='</div>'
 					//M_INTER_DIV+='<div class="clear"></div>'
@@ -1027,11 +1027,11 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:block">'
 				else
 				BEC_DIV+='<div name="'+data.itemId+'ENG_LEV_T12" id="'+data.itemId+'ENG_LEV_T12" class="input-list" style="display:none">'
-					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分(成绩)：</span></div>'
+					BEC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_GSCORE"]+'：</span></div>'
 					BEC_DIV+='<div class="input-list-text left" ><select style="width:100%;height:36px" id="'+data["itemId"] + child.EngLevelOpt12_1.itemId+'" value="'+child.EngLevelOpt12_1.value+'">'
-						BEC_DIV+='<option value="A">高级</option>'
-						BEC_DIV+='<option value="B">中级</option>'
-						BEC_DIV+='<option value="C">初级</option>'
+						BEC_DIV+='<option value="A">'+MsgSet["LEV_A"]+'</option>'
+						BEC_DIV+='<option value="B">'+MsgSet["LEV_B"]+'</option>'
+						BEC_DIV+='<option value="C">'+MsgSet["LEV_C"]+'</option>'
 					BEC_DIV+='</select></div>'
 				BEC_DIV+='</div>'
 					//BEC_DIV+='<div class="clear"></div>'
@@ -1044,7 +1044,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				else
 				TOEIC_DIV+='<div name="'+data.itemId+'ENG_LEV_T13" id="'+data.itemId+'ENG_LEV_T13" class="input-list" style="display:none">'
 					TOEIC_DIV+=TOEIC_DATE
-					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>总分：</span></div><div  class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_2.value+'"/>'
+					TOEIC_DIV+='<div class="input-list-info left"><span class="red-star">*</span><span>'+MsgSet["EXAM_SCORE"]+'：</span></div><div  class="input-list-text left"><input  class="inpu-list-text-enter" style="height:36px;" id="'+data["itemId"] + child.EngLevelOpt13_2.itemId+'" value="'+child.EngLevelOpt13_2.value+'"/>'
 					//---------TOEIC_DIV  input格式检验:
 					TOEIC_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOEIC_DIV += '	<div id="' +data.itemId+ child.EngLevelOpt13_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -1086,7 +1086,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:block">'
 				else
 				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="input-list" style="display:none">'
-					htmlContent+='<div class="input-list-info left"><span class="red-star">*</span><span >上传证书/成绩扫描件</span></div>'
+					htmlContent+='<div class="input-list-info left"><span class="red-star">*</span><span >'+MsgSet["SCORE_UP"]+'</span></div>'
 						htmlContent+='<div class="input-list-texttemplate left" >'
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
 								htmlContent+= '<div class="filebtn left">';
