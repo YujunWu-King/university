@@ -441,9 +441,14 @@ public class TzScoreModeDefnServiceImpl extends FrameworkImpl {
 			
 			String sql = "SELECT 'Y' FROM PS_TZ_TREEDEFN WHERE TZ_JG_ID=? and TREE_NAME=? and TZ_TREE_TYPE='A'";
 			String treeExists = jdbcTemplate.queryForObject(sql, new Object[]{ orgId, treeName }, "String");
+			
+			sql = "select COUNT(*) from PSTREENODE where TREE_NAME=?";
+			int nodeCont = jdbcTemplate.queryForObject(sql, new Object[]{ treeName }, "Integer");
 
 			if("Y".equals(treeExists)){
 				rtnMap.replace("treeExists", treeExists);
+			}else if(!"Y".equals(treeExists) && nodeCont > 0){
+				rtnMap.replace("treeExists", "YN");
 			}
 		}catch(Exception e){
 			e.printStackTrace();

@@ -35,6 +35,8 @@ var RegisterTips={
 	_pwdl_zhs:"密码长度必须大于6小于32位!",
 	_pwdc_eng:"Password and confirm password is Inconsistent!",
 	_pwdc_zhs:"密码和确认密码不一致！",
+	_pwdformat_eng:"Password format does not meet the requirements!",
+	_pwdformat_zhs:"密码格式不符合要求！",
 	_code_eng:"The security code is incorrect.",
 	_code_zhs:"验证码不正确!",
 	_send_eng:"Send security code",
@@ -267,15 +269,14 @@ $(document).ready(function(){
 			TipBlank = RegisterTips._blank_eng;
 			TipEmail = RegisterTips._email_eng;
 			TipPhone = RegisterTips._phone_eng;
-			PwdError = RegisterTips._pwd_eng;
+			PwdError = RegisterTips._pwdformat_eng;
 			TipCode = RegisterTips._code_eng;
 			PwdLen=RegisterTips._pwdl_eng;
-			PwdCor=RegisterTips._pwdc_eng;
 		}else{
 			TipBlank = RegisterTips._blank_zhs;
 			TipEmail = RegisterTips._email_zhs;
 			TipPhone = RegisterTips._phone_zhs;
-			PwdError = RegisterTips._pwd_zhs;
+			PwdError = RegisterTips._pwdformat_zhs;
 			TipCode = RegisterTips._code_zhs;
 			PwdLen=RegisterTips._pwdl_zhs;
 			PwdCor=RegisterTips._pwdc_zhs;
@@ -678,20 +679,22 @@ $(document).ready(function(){
 	//默认国家为中国
 	$("#TZ_SCH_CNAME_Country").val("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
-	$("#TZ_SCH_CNAME_click").click(function(e) {
-		$("#ParamValue").val("TZ_SCH_CNAME");		
-		s = $.layer({
-			type: 2,
-			title: false,
-			fix: false,
-			closeBtn: false,
-			shadeClose: false,
-			shade : [0.3 , '#000' , true],
-			border : [3 , 0.3 , '#000', true],
-			offset: ['50%',''],
-			area: ['830px','720px'],
-			//iframe: {src: '/tranzvision/colselector_liu.html'}
-			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
+	$.each([$("#TZ_SCH_CNAME"),$("#TZ_SCH_CNAME_click")],function(i,el){	
+		el.click(function(e){
+			$("#ParamValue").val("TZ_SCH_CNAME");		
+			s = $.layer({
+				type: 2,
+				title: false,
+				fix: false,
+				closeBtn: false,
+				shadeClose: false,
+				shade : [0.3 , '#000' , true],
+				border : [3 , 0.3 , '#000', true],
+				offset: ['50%',''],
+				area: ['830px','720px'],
+				//iframe: {src: '/tranzvision/colselector_liu.html'}
+				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
+			});
 		});
     });
     $("#TZ_SCH_CNAME_click").mouseover(function() {
@@ -782,7 +785,7 @@ $(document).ready(function(){
 			TipBlank = RegisterTips._blank_eng;
 			TipEmail = RegisterTips._email_eng;
 			TipPhone = RegisterTips._phone_eng;
-			PwdError = RegisterTips._pwd_eng;
+			PwdError = RegisterTips._pwdformat_eng;
 			TipCode = RegisterTips._code_eng;
 			PwdLen=RegisterTips._pwdl_eng;
 			PwdCor=RegisterTips._pwdc_eng;
@@ -790,7 +793,7 @@ $(document).ready(function(){
 			TipBlank = RegisterTips._blank_zhs;
 			TipEmail = RegisterTips._email_zhs;
 			TipPhone = RegisterTips._phone_zhs;
-			PwdError = RegisterTips._pwd_zhs;
+			PwdError = RegisterTips._pwdformat_zhs;
 			TipCode = RegisterTips._code_zhs;
 			PwdLen=RegisterTips._pwdl_zhs;
 			PwdCor=RegisterTips._pwdc_zhs;

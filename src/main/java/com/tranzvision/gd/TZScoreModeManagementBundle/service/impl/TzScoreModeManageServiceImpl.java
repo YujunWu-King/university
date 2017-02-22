@@ -173,8 +173,8 @@ public class TzScoreModeManageServiceImpl extends FrameworkImpl {
 					
 					String dttmFormat = getSysHardCodeVal.getDateTimeHMFormat();
 					SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
-					String addoprDttm =  dttmSimpleDateFormat.format(addDate);
-					String updateOprDttm =  dttmSimpleDateFormat.format(updateDate);
+					String addoprDttm =  addDate == null ? "" : dttmSimpleDateFormat.format(addDate);
+					String updateOprDttm = updateDate == null ? "" : dttmSimpleDateFormat.format(updateDate);
 					
 					mapForm.put("orgId", orgId);
 					mapForm.put("modelId", modeId);

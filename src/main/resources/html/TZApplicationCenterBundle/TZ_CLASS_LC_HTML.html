@@ -4,6 +4,7 @@
 	<div class="main_mid_zxj_interview">
 		<div class="select_project">  
 			<a href="%bind(:7)" class="zxj_more1" style="margin-bottom: 10px;">%bind(:2)</a>
+			<a href="%bind(:6)" class="zxj_more1" style="margin-bottom: 10px;">%bind(:3)</a>
 		</div>
 		<div class="zxj_mba">
 			
@@ -11,9 +12,16 @@
 		    	%bind(:5)
 			</div>
 			%bind(:4)
-			<a href="%bind(:6)" class="zxj_more1" style="margin-bottom: 10px;">%bind(:3)</a>
+			
 		</div>
 	</div>
 </div>
+<script>
+
+	var showLcNum = %bind(:8);
+	var $content = $(".zxj_mba .step_Note").children();
+	$content.hide();
+	$content.eq(showLcNum).show();
+</script>
 
                

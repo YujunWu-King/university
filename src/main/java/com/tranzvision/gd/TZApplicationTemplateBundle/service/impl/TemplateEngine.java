@@ -306,8 +306,11 @@ public class TemplateEngine {
 						this.saveTemplateField(item);
 
 						/*------ 多行容器（通用多行容器、固定多行容器） Begin ------*/
+						/*---------------modity by caoy 关于多行容器里面组合控件的修改----------------*/
 						if (StringUtils.equals("Y", isDoubleLine)) {
 							if (item.containsKey("children")) {
+
+								//System.out.println(item.toString());
 								Map<String, Object> childrens = (Map<String, Object>) item.get("children");
 								for (String keyi : childrens.keySet()) {
 									Map<String, Object> children = (Map<String, Object>) childrens.get(keyi);
@@ -343,12 +346,35 @@ public class TemplateEngine {
 									String isSingle = children.get("isSingleLine") == null ? ""
 											: String.valueOf(children.get("isSingleLine"));
 									if (StringUtils.equals("Y", isSingle)) {
-										ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children
-												.get("children");
+
+										// 多行容器下的子容器 modity by caoy
+										// 解决分组框的某些组合控件的问题
+										//System.out.println("111:" + children.get("children"));
+										List<Map<String, Object>> childs = null;
+										try {
+											childs = (ArrayList<Map<String, Object>>) children.get("children");
+										} catch (Exception e) {
+											// e.printStackTrace();
+											childs = new ArrayList<Map<String, Object>>();
+											Map<String, Object> cmap = (Map<String, Object>) children.get("children");
+											Map<String, Object> ccmap = null;
+											for (String keysss : cmap.keySet()) {
+												ccmap = (Map<String, Object>) cmap.get(keysss);
+												childs.add(ccmap);
+											}
+										}
+
+										// ArrayList<Map<String, Object>> childs
+										// = (ArrayList<Map<String, Object>>)
+										// children
+										// .get("children");
 
 										for (Object obj : childs) {
 											Map<String, Object> child = (Map<String, Object>) obj;
+											
+											//System.out.println("222:" + child.toString());
 											PsTzRqXxxPzT psTzRqXxxPzT_ = new PsTzRqXxxPzT();
+											
 											// 模板编号
 											psTzRqXxxPzT_.setTzAppTplId(tid);
 
@@ -486,10 +512,14 @@ public class TemplateEngine {
 		String fixedContainer = item.get("fixedContainer") == null ? "" : String.valueOf(item.get("fixedContainer"));
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
 
+		//System.out.println(item.toString());
+
 		// 是否多行容器
 		if (StringUtils.equals("Y", isDoubleLine)) {
 			Map<String, Object> childrens = (Map<String, Object>) item.get("children");
 			for (int i = 0; i < Integer.parseInt(maxLines); i++) {
+				//System.out.println(childrens.toString());
+
 				if (StringUtils.equals("Y", fixedContainer)) {
 					// 固定多行容器
 					for (String key : childrens.keySet()) {
@@ -556,10 +586,29 @@ public class TemplateEngine {
 
 						order++;
 						if (StringUtils.equals("Y", isSingle)) {
-							ArrayList<Map<String, Object>> childs = (ArrayList<Map<String, Object>>) children
-									.get("children");
+							// 多行容器下的子容器 modity by caoy
+							// 解决分组框的某些组合控件的问题
+							// ArrayList<Map<String, Object>> childs =
+							// (ArrayList<Map<String, Object>>) children
+							// .get("children");
+
+							//System.out.println("111:" + children.get("children"));
+							List<Map<String, Object>> childs = null;
+							try {
+								childs = (ArrayList<Map<String, Object>>) children.get("children");
+							} catch (Exception e) {
+								// e.printStackTrace();
+								childs = new ArrayList<Map<String, Object>>();
+								Map<String, Object> cmap = (Map<String, Object>) children.get("children");
+								Map<String, Object> ccmap = null;
+								for (String keyss : cmap.keySet()) {
+									ccmap = (Map<String, Object>) cmap.get(keyss);
+									childs.add(ccmap);
+								}
+							}
 
 							for (Object obj : childs) {
+
 								Map<String, Object> child = (Map<String, Object>) obj;
 								String childItemId = child.get("itemId") == null ? ""
 										: String.valueOf(child.get("itemId"));
@@ -638,7 +687,7 @@ public class TemplateEngine {
 		// 信息项文字说明
 		String itemName = item.get("itemName") == null ? "" : String.valueOf(item.get("itemName"));
 		if (itemName.length() > 60) {
-			System.out.println(itemName);
+			//System.out.println(itemName);
 		}
 		psTzAppXxxPz.setTzXxxMc(itemName);
 

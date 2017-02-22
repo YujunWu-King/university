@@ -41,8 +41,8 @@
 			,"-",{text:"测试邮件发送",tooltip:"测试邮件发送",iconCls:"email",handler:"sendEmail"}
 			/*,"-",{text:"图片上传",tooltip:"图片上传处理",iconCls:"add",handler:"picClipping"}
 			,"-",
-			{text:"导入Excel",tooltip:"导入Excel",iconCls:"import",handler:"importExcel"},"-",
-			{text:"测试短信发送",tooltip:"测试短信发送",iconCls:"sms",handler:"sendSms"}*/
+			{text:"导入Excel",tooltip:"导入Excel",iconCls:"import",handler:"importExcel"}*/,"-",
+			{text:"测试短信发送",tooltip:"测试短信发送",iconCls:"sms",handler:"sendSms"}
 		]
 	}],
     initComponent: function () {    

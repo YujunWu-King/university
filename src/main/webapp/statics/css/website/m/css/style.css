@@ -145,6 +145,8 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .register_btn{width:94%;margin:2% auto 3%;height:1.5rem;background-color:#8f5dbf;color:#fff;font-size:0.6rem;line-height:1.5rem;text-align:center;border-radius:0.3rem;}
 .register_body #send_Verification{width:30%;padding:2%;margin-bottom:1%;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
 .register_body #send_Verification[disabled]{background-color:#eee;color:#999;}
+ #sendBtn{width:30%;height:1.4rem;line-height:1.4rem;margin: 0.3rem 2% 0 0;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
+#sendBtn[disabled]{background-color:#eee;color:#999;}
 
 /*注册弹窗*/
 .shade{display:none;width: 100%; height: 100%; position:fixed; top:0; left: 0; background-color: #000; opacity: 0.6; filter: alpha(opacity=60); -ms-filter: "alpha(opacity=30)"; z-index: 135;}
@@ -217,6 +219,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
  
 /*报考自测*/
 .test_body{width:94%;margin:2% auto;font-size:0.56rem;color:#666;}
+.test_body p:first-child{text-align:center;font-size:0.8rem;color:#333;border-bottom:1px solid #ddd;padding:2% 0;line-height:1rem;}
 .test_body p{text-indent:1rem;line-height:1rem;}
 .first_p{color:#333;font-size:0.64rem;}
 /*微信解绑*/
@@ -313,6 +316,10 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .login_tit li:nth-child(2){float:right;}
 .add_f{color:#8f5dbf !important;border-bottom:2px solid #8f5dbf;}
 
+
+.bottom_btn{position:fixed;bottom:0;left:0;width:100%;padding:2% 0;text-align:center;color:#fff;background-color:#8f5dbf;font-size:0.6rem;display:block;}
+.bottom_btn_left{position:fixed;bottom:0;left:0;width:50%;padding:2% 0;text-align:center;color:#666;background-color:#ddd;font-size:0.6rem;display:block;}
+.bottom_btn_right{position:fixed;bottom:0;right:0;width:50%;padding:2% 0;text-align:center;color:#f25050;background-color:#ddd;font-size:0.6rem;display:block;}
 /*自定义响应式*/
 @media only screen and (min-width:320px)  and (max-width:420px) {
 	.search{margin:2% 0 0 5%;}

@@ -1600,7 +1600,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             fileName: '奖学金参与人.xls'
         })
     },
-    //设置奖学金通过状态
+    /*设置奖学金通过状态*/
     cyrScholarStatus:function(view,t,rowIndex){
         var msg="";
         var record = view.findParentByType("grid").store.getAt(rowIndex);
@@ -1613,9 +1613,36 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 	            record.set("isApply", "Y");
 	            msg = "设置申请通过成功";
 	        }
-	        var tzParams = this.submitContentParams(schLrId,msg);
+	       // var tzParams = this.submitContentParams(schLrId,msg);
        }
     },
+    //设置为未审核
+    setScholarStatusW:function(view, rowIndex, colIndex){
+    	var msg="";
+        var record = view.findParentByType("grid").getStore().getAt(rowIndex);
+        var schLrId=view.findParentByType("grid").schLrId;
+        record.set("isApply", "W");
+        msg = "审核状态为待审核设置成功";
+        var tzParams = this.submitContentParams(schLrId,msg);
+    },
+    //设置为审核通过
+    setScholarStatusY:function(view, rowIndex, colIndex){
+    	var msg="";
+        var record = view.findParentByType("grid").getStore().getAt(rowIndex);
+        var schLrId=view.findParentByType("grid").schLrId;
+        record.set("isApply", "Y");
+        msg = "审核状态为通过设置成功";
+        var tzParams = this.submitContentParams(schLrId,msg);
+    },
+    //设置为未通过
+    setScholarStatusN:function(view, rowIndex, colIndex){
+    	var msg="";
+        var record = view.findParentByType("grid").getStore().getAt(rowIndex);
+        var schLrId=view.findParentByType("grid").schLrId;
+        record.set("isApply", "N");
+        msg = "审核状态为未通过设置成功";
+        var tzParams = this.submitContentParams(schLrId,msg);
+    }, 
     //获取修改的记录(提交的参数)
     submitContentParams: function(schLrId,msg){
         var comParams = "";
