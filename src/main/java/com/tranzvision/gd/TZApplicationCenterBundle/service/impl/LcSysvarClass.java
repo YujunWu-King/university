@@ -63,11 +63,11 @@ public class LcSysvarClass {
 			String thead = "";
 			String tbody = "";
 			int totalnum = jdbcTemplate.queryForObject(
-					"SELECT count(1) FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ?",
+					"SELECT count(1) FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? and TZ_PAGE_NO > 0",
 					Integer.class, new Object[] { appTplId });
 			if (totalnum > 0) {
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(
-						"SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC",
+						"SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? and TZ_PAGE_NO > 0 ORDER BY TZ_ORDER ASC",
 						new Object[] { appTplId });
 				if (list != null && list.size() > 0) {
 					int count = 0;
