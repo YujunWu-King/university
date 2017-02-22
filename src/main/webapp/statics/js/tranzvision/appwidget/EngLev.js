@@ -334,7 +334,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			//考试类型类型
 			htmlRead += '<div class="type_item_li">';
 			htmlRead += '	<span class="type_item_label">'+MsgSet["EXAM_TYPE_T"]+'：</span>';
-			htmlRead += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			htmlRead += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			htmlRead += '	</div>';
 
 			//成绩显示DIV
@@ -791,7 +791,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
-				htmlContent += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
+				htmlContent += '			<option value="-1">' +MsgSet["PLEASE_SELECT"] + '</option>';
 				htmlContent += OPT_ENG;
 				htmlContent += '		</select>';
 				//----------------------------非空验证DIV

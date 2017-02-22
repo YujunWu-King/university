@@ -170,13 +170,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//创业类型 MsgSet["BUSINESS_TYPE"]
 			htmlDisplay += '<div class="type_item_li">';
 			htmlDisplay += '	<span class="type_item_label">'+ MsgSet["BUSINESS_TYPE"]+':</span>';
-			htmlDisplay += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			htmlDisplay += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			htmlDisplay += '	</div>';
 
 			//融资情况 sgSet["FINANCING"]  "请选择"：MsgSet["PLEASE_SELECT"]
 			htmlDisplay += '<div class="type_item_li">';
-			htmlDisplay += '	<span class="type_item_label">'+"融资情况"+':</span>';
-			htmlDisplay += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			htmlDisplay += '	<span class="type_item_label">'+MsgSet["FINANCING"]+':</span>';
+			htmlDisplay += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			htmlDisplay += '	</div>';
 			
 			
