@@ -54,6 +54,9 @@
 				},{
 					text:'另存为动态听众',
 					handler:'saveAsDynAud'	
+				},{
+					text:'添加到已有听众',
+					handler:'saveToStaAud'	
 				}]
 			}
 		]
