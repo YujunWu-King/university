@@ -1,186 +1,167 @@
-<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8/9" >
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
 <title></title>
-<link href="page_stylecss" rel="stylesheet" type="text/css" />
-	%bind(:3)
-<script type="text/javascript" src="%bind(:5)/statics/js/lib/jquery/jquery.min.js"></script>
+<link href="%bind(:1)/statics/css/website/m/css/style.css"
+	rel="stylesheet" type="text/css" />
+<style>
+	.login_btn[disabled]{background-color:#eee;color:#999;}	
+	input[type="button"]{border-radius:0.3rem;}
+</style>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/css/website/m/js/rem.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>		
 <script type="text/javascript">
+function layerMsg(content){
+	layer.open({
+	    content: content,
+	    skin: 'msg',
+	    time: 2 //2秒后自动关闭
+	});	
+}
 
-
-	function check_email(val){
-	var flag=false;
-		if(val!=''){
+	function check_email(val) {
+		var flag = false;
+		if (val != '') {
 			var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-			if (!patrn.test(val)){
-			   $('#userEmail_status').html("<span>The email address is incorrect!</span>");
-			   $('#userEmailStyle').removeClass("alert_display_none");
-			}else{
-	var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:4)","sen":"3"}}';
+			if (!patrn.test(val)) {
+				$('#errormsg').html("<span>The email address is incorrect!</span>");
+				$('#errormsg').show();
+			} else {
+				var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'
+						+ val
+						+ '","orgid":"'
+						+ $("#orgid").val()
+						+ '","lang":"%bind(:3)","sen":"3"}}';
 				$.ajax({
-					type: "POST",
-					async :false,
-					data:{
-							tzParams:tzParams
-							},
-					url:"%bind(:1)",
-					dataType: "json",
-					success: function(result){
-						if(result.comContent =="success"){
-							$('#userEmail_status').html("");
-							$('#userEmailStyle').addClass("alert_display_none");
-							flag=true;
-						}else{
-							$('#userEmail_status').html("<span>"+result.state.errdesc+"</span>");
-							$('#userEmailStyle').removeClass("alert_display_none");
-							flag=false;
+					type : "POST",
+					async : false,
+					data : {
+						tzParams : tzParams
+					},
+					url : "%bind(:4)",
+					dataType : "json",
+					success : function(result) {
+						if (result.comContent == "success") {
+							$('#errormsg').hide();
+							flag = true;
+						} else {
+							$('#errormsg')
+									.html(
+											"<span>" + result.state.errdesc
+													+ "</span>");
+							$('#errormsg').show();
+							flag = false;
 						}
 					}
 				});
 			}
-		}else{
-			$('#userEmail_status').html("<span>It cannot be blank!</span>");
-			$('#userEmailStyle').removeClass("alert_display_none");
+		} else {
+			$('#errormsg').html("<span>It cannot be blank!</span>");
+			$('#errormsg').show();
 		}
 		return flag;
 	}
 
-	function send_email(){
-		var email=$("#Email_User").val();
-		if(check_email(email)){
-			if(email==""){alert("The email address cannot be blank!");}
-			else{
-	var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:4)","sen":"4"}}';
+	function send_email(_this) {
+		var email = $("#Email_User").val();
+		if (check_email(email)) {
+			if (email == "") {
+				alert("The email address cannot be blank!");
+			} else {
+				var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'
+						+ email
+						+ '","orgid":"'
+						+ $("#orgid").val()
+						+ '","lang":"%bind(:3)","sen":"4"}}';
 				$.ajax({
-					type:"post",
-					async:false,
-					data:{
-						tzParams:tzParams
-						},
-					url:"%bind(:1)",
-					dataType: "json",
-					success:function(result){
-						if(result.comContent=="success"){emailtime();alert("The mail has been sent to your mailbox, please check!");}
-						else{alert(result.state.errdesc);}
+					type : "post",
+					async : false,
+					data : {
+						tzParams : tzParams
+					},
+					url : "%bind(:4)",
+					dataType : "json",
+					success : function(result) {
+						if (result.comContent == "success") {
+							time(_this);
+							layerMsg("The mail has been sent to your mailbox, please check!");
+						} else {
+							layerMsg(result.state.errdesc);
+						}
 					}
 				});
 			}
-		}else{
-			alert("The email address is incorrect!");
-		};
-  	};
-
-
+		} else {
+			layerMsg("The email address is incorrect!");
+		}
+		;
+	};
 </script>
 <script type="text/javascript">
-	var emailstop;
-	var stop;
-	var emailwait=60;
-	var wait=60;
-	function emailtime() {
-		if(emailwait <= 0){
-			$("#sendemail").css("cursor","default");
-			$("#sendemail").css("opacity","1");
-			$("#sendemail").removeAttr("disabled");
-			$("#Email_User").removeAttr("readOnly");
-			$("#sendemail").css("color","#4f4f4f");			
-			$("#sendemail").val("Send Mail");
-			$("#sendemail").css("background-image","");
-			emailwait =60;
-		} else{
-			$("#sendemail").css("cursor","default");
-			$("#sendemail").prop("disabled","true");
-			$("#sendemail").css("opacity","1");
-			$("#sendemail").css("color","#A9A9A9");
-			$("#sendemail").val("("+emailwait+")seconds after the re transmission");
-			$("#Email_User").prop("readOnly","true");
-			$("#sendemail").css("background-image","url(%bind(:6)/gray_bg_bt.png)");
-			if(emailwait>=0){
-				emailwait=emailwait-1;}
-			emailstop = setTimeout("emailtime()",1000);
-		}
-	}
+var wait=60;
+function time(o) {
+	if (wait == 0) {
+   		o.removeAttribute("disabled");   
+   		o.value = "Send Mail";
+   		wait = 60;
+  	} else { 
+   		o.setAttribute("disabled", true);
+   		o.value = "(" + wait + ")seconds after the re transmission";
+   		wait--;
+   		setTimeout(function() {
+    		time(o)
+   		},1000)
+  	}
+}
 
-	function atime() {
-		if(wait <= 0){
-			$("#sendyzm").css("cursor","pointer");
-			$("#sendyzm").css("opacity","0.8");
-			$("#sendyzm").removeAttr("disabled");
-			$("#Mobile_User").removeAttr("readOnly");
-			$("#sendyzm").css("color","#fff");			
-			$("#sendyzm").val("Send Security Code");
-			$("#sendyzm").css("background-image","");
-			wait =60;
-		} else{
-			$("#sendyzm").css("cursor","default");
-			$("#sendyzm").prop("disabled","true");
-			$("#sendyzm").css("opacity","1");
-			$("#sendyzm").css("color","#A9A9A9");
-			$("#sendyzm").val("("+wait+")seconds after the re transmission");
-			$("#Mobile_User").prop("readOnly","true");
-			$("#sendyzm").css("background-image","url(%bind(:6)/gray_bg_bt.png)");
-			if(wait>=0){
-				wait=wait-1;}
-			stop = setTimeout("atime()",1000);
-		}
-	}
-
-	function btime() {
-		$("#sendyzm").css("cursor","pointer");
-		$("#sendyzm").css("opacity","0.8");
-		$("#sendyzm").prop("disabled", "false");
-		$("#sendyzm").css("background-image","");			
-		$("#sendyzm").val("Send Security Code");
-		wait =60;
-	}
-
-	function myrefresh(){
+	function myrefresh() {
 		parent.location.reload();
 	}
 </script>
 </head>
 <body>
-<!-- content start -->
-<div id="main" class="actTip">
-	<form action="" method="post" enctype="multipart/form-data" name="forgetForm" id="forgetForm">
-		<div class="padding_div_40px2"></div>
-		<div class="padding_div_40px2"></div>
-		<div class="main_full_top"></div>
-		<div class="main_full">
-			<div class="main_full_line">
-		    	<div class="main_full_line_title_font_left">Activation Account <span  class="font_gray_14px_dark">Only can activate the mailbox account</span></div>
-		    	<div class="main_full_full_right"><a href="%bind(:5)/user/login/%bind(:7)" class="blue_">&nbsp;&nbsp;&nbsp;back</a></div>
-		  	</div>
-		  	<div class="main_full_lines_720px"></div>
-
-			<div id="content1">
-				<div class="tab1 block">
-					<div class="main_full_line">
-					    <div class="main_full_line_left"><span class="reg_title_star"></span>Email：</div>
-  
-					    <div class="main_full_line_right">
-					      <input name="Email_User" type="text" class="input_251px" id="Email_User" onblur="check_email(this.value)"/>
-					      <span id="userEmailStyle" class="alert_display_none"><img src="%bind(:6)/alert.png" width="16" height="16" class="alert_img"  />
-						  <label id="userEmail_status"></label></span>
-					    </div>
-					  </div>
-					<div class="padding_div_50px"></div>
-					<div class="main_full_line">
-						<div class="main_full_line_right">
-			    			<input id="sendemail" type="button" value="Send Mail" class="button_251px" onclick="send_email()"/>
+	<div class="viewport-adaptive">
+		<form action="" method="post" enctype="multipart/form-data"
+			name="forgetForm" id="forgetForm">
+			<div class="bg" id="body_login">
+				<img class="img-responsive book_logo" id=""
+					src="%bind(:1)/statics/css/website/m/images/login_logo.png">
+				<div class="login_ab" style="top: 32%;">
+					<div class="tab_login">
+						<div class="login_tit">
+							<li class="add_f">Email</li>
 						</div>
-			  		</div>
+						<div class="login_tabnote">
+							<div class="note_f note_f">
+								<div class="login_account" style="border-radius: 0.3rem;">
+									<div class="users"></div>
+									<input class="important_input" type="text" name="Email_User"
+										id="Email_User" placeholder="email"
+										onblur="check_email(this.value)">
+								</div>
+								<p class="login_tips" id="errormsg" style="display: none;"></p>
+								<div class="clear"></div>
+								<!-- <a href="javascript:void(0)" class="login_btn" onclick="send_email(this)">发送邮件到邮箱</a> -->
+								<input type="button"  class="login_btn" onclick="send_email(this)" value="Send Mail" />
+								<p class="add_tips">If you have any questions, please contact:</p>
+								<div class="clear"></div>
+								<p class="login_tips" style="float: left;">mbastudents@sem.tsinghua.edu.cn</p>
+							</div>
+						</div>
+					</div>
 				</div>
+			</div>
 			<input name="orgid" type="hidden" class="input_251px" id="orgid" value="%bind(:2)"/>
-		    <div style="clear:both;"></div>
-		</div>
-
-		<div class="main_full_foot"></div>
-		<div style="clear:both;"></div>
-	</form>
-</div>
+		</form>
+	</div>
 </body>
 </html>
 <!-- content end -->

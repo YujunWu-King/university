@@ -207,7 +207,24 @@ if(dataApp){
 									////console.log("LoadbmrClasswzsm:"+perXxx["children"]["bmrClass"]["wzsm"]);
 									////console.log("LoadbmrBatchwzsm:"+perXxx["children"]["bmrBatch"]["wzsm"]);
 											
-							} else{	
+							}else if(perXxx.classname  == "FirmType"){
+		
+								//console.dir(recApp["children"][i][j]["children"]);
+								perXxx["children"]["WorkExper1"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["WorkExper1"]["value"]);
+								perXxx["children"]["WorkExper2"]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"]["WorkExper2"]["value"]);										
+							}else if(perXxx.classname=="StartBusinessExp"){
+								//console.log("StartBusinessExp");
+								//WorkExper1 2 2_1 2_2 2_3 3 4 5 6 7 8 9
+								var tempGp=["1", "2", "2_1", "2_2" ,"2_3" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9"];
+								
+								for(var index=0;index<tempGp.length;index++){
+									tempStr="WorkExper"+tempGp[index];
+									perXxx["children"][tempStr]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][tempStr]["value"]);
+									perXxx["children"][tempStr]["value"]  =SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][tempStr]["value"]);										
+								}
+							}  
+							//------------
+							else{	
 								if( recApp["children"][i][j]["value"]){
 									perXxx["value"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["value"]);
 								}

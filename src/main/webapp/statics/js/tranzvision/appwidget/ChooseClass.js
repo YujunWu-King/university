@@ -7,7 +7,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	itemName: "项目选择",
 	title:"项目选择",
 	isDoubleLine:"Y",
-	isSingleLine: "N",
+	isSingleLine: "Y",
 	fixedContainer:"Y",// 固定容器标识
 	children:{
 		"bmrClass": {

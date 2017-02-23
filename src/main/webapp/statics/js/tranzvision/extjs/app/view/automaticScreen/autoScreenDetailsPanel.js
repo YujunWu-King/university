@@ -3,7 +3,9 @@
 	requires: [
         'Ext.data.*',
         'Ext.util.*',
-        'KitchenSink.view.automaticScreen.autoScreenController'
+        'KitchenSink.view.automaticScreen.autoScreenController',
+        'KitchenSink.view.automaticScreen.autoTagOrFmListStore',
+        'KitchenSink.view.automaticScreen.autoTagOrFmListModel'
     ],
     xtype: 'autoScreenDetails',
 	controller: 'autoScreenController',
@@ -18,6 +20,8 @@
 	},
 
     initComponent: function () {   
+        Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-cls div {background:#eee;}","readOnly-tagfield-cls");
+        
     	var config = this.tzConfig;
     	
     	var ksbqConfig = config;
@@ -66,28 +70,57 @@
 		        },
 		        items: [{
 		        	xtype:'hiddenfield',
-		        	value:'classId'
+		        	name:'classId',
+		        	value: config.classId
 		        },{
 		        	xtype:'hiddenfield',
-		        	value:'batchId'
+		        	name:'batchId',
+		        	value: config.batchId
 		        },{
 		            xtype: 'textfield',
 					name: 'name',
 					fieldLabel: '考生姓名',
 					readOnly: true,
-					cls: 'lanage_1'
+					cls: 'lanage_1',
+					value: config.name
 		        },{
 		        	xtype: 'textfield',
 					name: 'applyNum',
 					fieldLabel: '面试申请号',
 					readOnly: true,
-					cls: 'lanage_1'
+					cls: 'lanage_1',
+					value: config.msApplyId
 		        },{
 		        	xtype: 'textfield',
 					name: 'appId',
 					fieldLabel: '报名表编号',
 					readOnly: true,
-					cls: 'lanage_1'
+					cls: 'lanage_1',
+					//value: config.appId,
+					beforeBodyEl: [
+                        '<li id="{id}-viewApplyForm" data-qtip="查看报名表" data-ref="viewApplyForm" class="x-tagfield-item x-tagfield-item-selected" style="cursor:pointer;right:5px;bottom:1px;position:absolute;">' +
+                        	'<span class="x-tagfield-item-text" style="padding-right:4px;">查看报名表</span>' +
+                        '</li>'
+		            	],
+					childEls: [
+		                    'viewApplyForm'
+		                ],
+					listeners: {
+						change: function (field) {
+							var appId = field.getValue();
+							console.log(appId+"---");
+							var viewApplyForm = this.viewApplyForm;
+							var len = appId.length;
+							if(len > 0){
+								viewApplyForm.applyStyles("display:block");
+								if(viewApplyForm){
+									viewApplyForm.addListener("click", "tzViewApplyForm");	
+								}
+							}else{
+								viewApplyForm.applyStyles("display:none");	
+							}
+						}
+					}
 		        },{
 		        	xtype:'combo',
 		        	name: 'status',
@@ -108,6 +141,7 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    readOnly: true
 		        },{
 		        	xtype: 'tagfield',
 		        	name: 'autoLabel',
@@ -115,6 +149,7 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    readOnly: true
 		        },{
 		        	xtype: 'textfield',
 		        	name: 'manualLabel',

@@ -555,9 +555,9 @@
 	sendSms: function(){ 
 		Ext.tzSendSms({
 	       //发送的短信模板;
-	       "SmsTmpName": ["TZ_TEST_SMS_001","TZ_TEST_SMS_002"],
+	       "SmsTmpName": ["TZ_SMS_N_001","TZ_WJDC_SMS"],
 	        //发送的听众;
-	        "audienceId": "385"
+	        "audienceId": "1012"
 	    });
 	}
 });

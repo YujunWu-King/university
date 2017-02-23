@@ -133,8 +133,7 @@
 					isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
 						var scoreInsId = record.get('scoreInsId');
 						if(scoreInsId == "0"){
-							//return true;
-							return false;
+							return true;
 						}else{
 							return false;
 						}
@@ -193,7 +192,7 @@
 	    				xtype:"toolbar",
 	    				items:[
 	    					{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchAutoScreenStu"},"-",
-	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set"},"-",
+	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
 	    					{
 	    						xtype:'button',
 	    						text:'批量设置进入材料评审状态',

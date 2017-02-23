@@ -153,6 +153,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 							"Integer");
 					String stepHtml = "";
 					String lcContentHtml = "";
+					int showLcStepNum = 0;
 					// 循环报名流程;
 					if (bmlcTotalNum > 0) {
 						String bmlcSql = "select a.TZ_APPPRO_ID,a.TZ_APPPRO_NAME,b.TZ_APPPRO_HF_BH,b.TZ_APPPRO_RST from PS_TZ_CLS_BMLC_T a left join (select * from PS_TZ_APPPRO_RST_T where TZ_APP_INS_ID=? and TZ_CLASS_ID=?) b on a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=? order by a.TZ_SORT_NUM asc";
@@ -208,11 +209,11 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 								if (lcContentHtml == null || "".equals(lcContentHtml)) {
 									lcContentHtml = tzGDObject.getHTMLText(
 											"HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT", TZ_APPPRO_RST,
-											"triangle", "triangle_span");
+											"triangle" + (step + 4), "triangle_span" + (step + 4));
 								} else {
 									TZ_APPPRO_RST = tzGDObject.getHTMLText(
 											"HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT2", TZ_APPPRO_RST,
-											"triangle" + (step - 1), "triangle_span" + (step - 1));
+											"triangle" + (step + 4), "triangle_span" + (step + 4));
 									lcContentHtml = lcContentHtml + TZ_APPPRO_RST;
 								}
 
@@ -222,6 +223,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 									// 流程打勾样式
 									styleClassName = " sq_steped";
 									stepNum = "";
+									showLcStepNum = step;
 								} else {
 									// 未发布的一个流程紫色，或则前面的流程是发布的;
 									if (lcZsBl == false || sgIsFb == true) {
@@ -234,8 +236,13 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 									}
 
 								}
-								stepLi = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_SETP",
-										styleClassName, stepNum, TZ_APPPRO_NAME);
+								
+								if(step == 1){
+									stepLi = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_SETP1",styleClassName,stepNum,TZ_APPPRO_NAME);
+								}else{
+									stepLi = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_SETP",styleClassName, stepNum, TZ_APPPRO_NAME);
+								}
+								
 
 								// 第一步前面不需要加横线;
 								if (step == 1) {
@@ -265,9 +272,13 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 					lcContentHtml = "<div class=\"step_Note\">" + lcContentHtml + "</div>";
 					//历史报名页面;
 					String hisUrl = rootPath + "/dispatcher?classid=applyHis&siteId="+strSiteId;
+					String showLcStepString = "0";
+					if(showLcStepNum > 0){
+						showLcStepString = String.valueOf((showLcStepNum-1)*2);
+					}
 					applicationCenterHtml = tzGDObject.getHTMLText(
 							"HTML.TZApplicationCenterBundle.TZ_CLASS_LC_HTML", ApplicationCenter, viewHistoryDesc,
-							viewBmbDesc, lcContentHtml, stepHtml, applyFromUrl,hisUrl);
+							viewBmbDesc, lcContentHtml, stepHtml, applyFromUrl,hisUrl,showLcStepString);
 					
 				} else {
 					// 未报名的显示开始申请按钮;

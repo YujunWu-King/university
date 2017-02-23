@@ -98,26 +98,66 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     dataIndex: 'dcState', 
                     width: 120
                 },
-                {   text: '通过/未通过',
+               /* {   text: '审核状态',
                     dataIndex: 'isApply',
-                    width: 120,
+                    width: 200,
                     align: 'center',
                     groupable: false,
-                    renderer: function (v) {
+                    renderer: function (v,metaData,record) {
                         if (v == "Y") {
-                            return '<a href="javascript:void(0)">通过</a>';
+                            return '<a href="javascript:void(0)">待审核</a>/<a href="javascript:void(0)">未通过</a>/<a href="javascript:void(0)"><font color="red">通过</font></a>';
                         } else {
                         	if(v == "N"){
-                        		return '<a href="javascript:void(0)">未通过</a>';
-                        	}else{
-                        		return "未通过";
+                        		return '<a href="javascript:void(0)">待审核</a>/<a href="javascript:void(0)"><font color="red">未通过</font></a>/<a href="javascript:void(0)">审批通过</a>';
                         	}
-                            
+                        	if(v == "W"){
+                        		metaData.tdAttr = 'data-qtip="待审核"';
+                        		return '<a href="javascript:void(0)"><font color="red">待审核</font></a>/<a href="javascript:void(0)">未通过</a>/<a href="javascript:void(0)">审批通过</a>';
+                        	}
                         }
                     },
                     listeners: {
                         click: 'cyrScholarStatus'
                     } 
+                },*/{
+                    xtype:'linkcolumn',
+                    sortable: false,
+                    width: 200,
+                    text: '审核状态',
+                    items:[{
+                        handler:'setScholarStatusW',
+                        getText:function(v,metadata,record){
+                        	var isApply = record.data.isApply;
+                        	if(isApply=='W'){
+                        		return "<span style='color:red'>待审核</span>";
+                        	}else{
+                        		return "待审核";
+                        	}
+                        	
+                        }
+                    },{
+                        handler:'setScholarStatusY',
+                        getText:function(v,metadata,record){
+                        	var isApply = record.data.isApply;
+                        	if(isApply=='Y'){
+                        		return "/<span style='color:red'>通过</span>";
+                        	}else{
+                        		return "/通过";
+                        	}
+                        	
+                        }
+                    },{
+                        handler:'setScholarStatusN',
+                        getText:function(v,metadata,record){
+                        	var isApply = record.data.isApply;
+                        	if(isApply=='N'){
+                        		return "/<span style='color:red'>未通过</span>";
+                        	}else{
+                        		return "/未通过";
+                        	}
+                        	
+                        }
+                    }]
                 }],
                 store:store,
                 bbar: {

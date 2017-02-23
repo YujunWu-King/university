@@ -59,6 +59,10 @@ public class BatchProcessDetailsImpl extends FrameworkImpl{
 					String runStatusDesc = "";
 					
 					switch(runStatus){
+						//排队中
+						case "QUENED":
+							runStatusDesc = "排队中";
+							break;
 						//已启动
 						case "STARTED":
 							runStatusDesc = "已启动";
