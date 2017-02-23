@@ -1,7 +1,8 @@
 SurveyBuild.extend("FirmType", "baseComponent", {
 	itemName: "职业背景",
 	title: "职业背景",
-	isDoubleLine: "Y",
+	//isDoubleLine: "Y",
+	isSingleLine:"Y",
 	fixedContainer: "Y",//固定容器标识
 	children: {
 		//公司类型

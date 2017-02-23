@@ -192,6 +192,9 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .login_forget{float:left;overflow:hidden;}
 .login_forget i{float:left;width:1rem;height:1rem;background:url(../images/forget.png)no-repeat center center;background-size:90%;}
 .login_forget span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
+.account_active{float:left;overflow:hidden;}
+.account_active i{float:left;width:1rem;height:1rem;background:url(../images/jh.png)no-repeat center center;background-size:90%;}
+.account_active span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
 .login_help{float:right;overflow:hidden;}
 .login_help i{float:left;width:1rem;height:1rem;background:url(../images/help.png)no-repeat center center;background-size:90%;}
 .login_help span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
@@ -330,6 +333,12 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 @media only screen and (min-width:640px)  and (max-width:750px) {
 	
 }
+
+/*帮助中心*/
+.question_body{width:94%;margin:2% auto;font-size:0.56rem;line-height:1rem;}
+.question{margin:2% auto;}
+.question span{display:block;width:100%;border-bottom:1px solid #ddd;color:#333;font-size:0.56rem;padding:1% 0;}
+.question p{text-indent:2em;color:#999;font-size:0.58rem;}
 
 
 
