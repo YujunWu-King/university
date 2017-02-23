@@ -119,7 +119,8 @@ public class TzWebsiteLoginController {
 		String strYzmCode = mapData.get("yzmCode") == null ? "" : String.valueOf(mapData.get("yzmCode"));
 		String strLang = mapData.get("lang") == null ? "" : String.valueOf(mapData.get("lang"));
 		String strSiteId = mapData.get("siteid") == null ? "" : String.valueOf(mapData.get("siteid"));
-		
+		String isMobile = mapData.get("isMobile") == null ? "" : String.valueOf(mapData.get("isMobile"));
+				
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
 		try {
@@ -163,15 +164,21 @@ public class TzWebsiteLoginController {
 							String indexUrl = "";
 							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
 							if(infoIsCmpl){
-								indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+							    //如果为手机，则跳转到手机页面-待完成
+							    indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
 							}else{
-								String strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\"}";
-								String completeInfoUrl = siteEnrollClsServiceImpl.getCompleteUrl(strParams);
+							    String strParams = "";
+							    if("Y".equals(isMobile)){
+								strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\",\"isMobile\":\"Y\"}";
+							    }else{
+								strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\",\"isMobile\":\"N\"}";
+							    }
+							    String completeInfoUrl = siteEnrollClsServiceImpl.getCompleteUrl(strParams);
 								
-								jacksonUtil.json2Map(completeInfoUrl);								
-								indexUrl= jacksonUtil.getString("url");
-								String encryUserName = DESUtil.encrypt(strUserName,"TZ_GD_TRANZVISION");
-								indexUrl = indexUrl + "?userName=" + encryUserName;
+							    jacksonUtil.json2Map(completeInfoUrl);
+							    indexUrl= jacksonUtil.getString("url");
+							    String encryUserName = DESUtil.encrypt(strUserName,"TZ_GD_TRANZVISION");
+							    indexUrl = indexUrl + "?userName=" + encryUserName;
 							}							
 														
 							jsonMap.put("url", indexUrl);

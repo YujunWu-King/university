@@ -51,6 +51,16 @@ var RegisterTips={
 	_SmsTimeshort_eng:"Send too fast,Try again later",
 }
 
+var userName;
+
+function getQueryString(name) { 
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+	var r = window.location.search.substr(1).match(reg); 
+	if (r != null) return unescape(r[2]); return null; 
+} 
+
+userName = getQueryString("userName");
+
 function layerMsg(content){
 	layer.open({
 	    content: content,
@@ -136,43 +146,6 @@ $(document).ready(function(){
 								$('#' + fieldId + '_status').show();
 							}
 						}
-					}else if(fieldId=="TZ_EMAIL"){//邮箱
-						if(val!=''){
-							var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-							if (!patrn.test(val)){
-							   $('#' + fieldId + '_status').html("<span>"+TipEmail+"</span>");
-							   $('#status_' + fieldId).attr("value", 1);
-							   $('#' + fieldId + '_status').show();
-							}else{
-								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
-								$.ajax({
-									type: "get",
-									async :false,
-									data:{
-										tzParams:tzParams
-									},
-									url: TzUniversityContextPath + "/dispatcher",
-									dataType: "json",
-									success: function(result){
-										if(result.comContent =="success"){
-											$('#' + fieldId + '_status').html("");
-											$('#status_' + fieldId).attr("value", 0); 
-											$('#' + fieldId + '_status').hide();
-										}else{
-											$('#' + fieldId + '_status').html("<span>"+result.state.errdesc+"</span>");
-					   						$('#status_' + fieldId).attr("value", 1);
-											$('#' + fieldId + '_status').show();
-										}
-									}
-								});
-							}
-						}else{
-							if(data[fieldId] == "Y"){
-								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
-								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + '_status').show();
-							}
-						}
 					}else if(fieldId=="TZ_MOBILE"){//手机
 						if(val!=''){
 							var patrn=/^\d{8}$|^\d{11}$/;
@@ -209,56 +182,7 @@ $(document).ready(function(){
 								$('#status_' + fieldId).attr("value", 1);
 								$('#' + fieldId + '_status').show();
 							}
-						}
-					}else if(fieldId=="TZ_PASSWORD"){//密码
-						$("#J_PwdTip").css("display","none");
-						if(val !=''){
-							var pwd = $("#status_PASSWORD").val();
-							if(pwd == 0){
-								$('#' + fieldId + '_status').html("");
-					        	$('#status_' + fieldId).attr("value", 0); 
-								$('#' + fieldId + '_status').hide();
-							}else{
-								$('#' + fieldId + '_status').html(PwdError); 
-								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + '_status').show();		
-							}
-						}else {
-							$('#' + fieldId + '_status').html(TipBlank);
-							$('#status_' + fieldId).attr("value", 1); 
-							$('#' + fieldId + '_status').show();
-						}
-					}else if(fieldId=="TZ_REPASSWORD"){//确认密码
-						var password =$("#TZ_PASSWORD").val();
-						if(password !=''){
-							if(password.length<6 ||password.length>32){
-								$('#TZ_PASSWORD_status').html(PwdLen); 
-								$('#status_TZ_PASSWORD').attr("value", 1);
-								$("#TZ_PASSWORD_status").show();
-							}else if(val ==''){
-								$('#TZ_PASSWORD_status').html("");
-								$('#TZ_REPASSWORD_status').html(TipBlank);
-						     	$('#status_TZ_PASSWORD').attr("value", 1); 
-								$('#TZ_PASSWORD_status').hide();
-								$('#TZ_REPASSWORD_status').show();
-							}else if(val == password){
-								$('#TZ_PASSWORD_status').html("");
-								$('#TZ_REPASSWORD_status').html("");
-					        	$('#status_TZ_PASSWORD').attr("value", 0); 
-								$('#TZ_PASSWORD_status').hide();
-								$('#TZ_REPASSWORD_status').hide();
-							}else if(val != password){
-								$('#TZ_PASSWORD_status').html("");
-								$('#TZ_REPASSWORD_status').html(PwdCor); 
-								$('#status_TZ_PASSWORD').attr("value", 1);
-								$('#TZ_PASSWORD_status').hide();
-								$('#TZ_REPASSWORD_status').show();
-							}
-						}else {
-							$('#TZ_PASSWORD_status').html(TipBlank);
-							$('#status_TZ_PASSWORD').attr("value", 1); 
-							$('#TZ_PASSWORD_status').show();
-						}
+						}					
 					}else if(fieldId=="TZ_SCH_CNAME"){
 						
 					}else if(fieldId=="TZ_LEN_PROID"){
@@ -277,87 +201,7 @@ $(document).ready(function(){
 		    }
 		}
 	});
-	
-	setInterval(function(){
-		var val = $("#TZ_PASSWORD").val();
-		if(val != "" && val != null){
-			var patrn;
-			var num = 0;
-			var num1 = 0;
-			var num2 = 0;
-			var num3 = 0;
-			var num4 = 0;
-			var num5=0;
-			var num6=0;
-			var str1 = 0;
-			var str2 = 0;
-			var cr;
-			for (var i=0;i<val.length ;i++ )
-			{
-				 cr = val.charAt(i);
-						
-				
-				/*
-				patrn= /[^\d\w\s]/;
-				if (patrn.test(val)){
-					num = num + 1;
-				}
-				*/
-				patrn= /\w/;
-				if (patrn.test(cr)){
-					num = num + 1;
-				}else{
-					num5=1;
-				}
-				
-			}
-			
-				patrn= /[A-Z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[a-z]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[0-9]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-				patrn= /[_]/;
-				if (patrn.test(val)){
-					num6 = num6+1;
-				}
-
-			if(val.length >= 6 && val.length <= 32){
-				num1 = 1;				
-			}else{
-				num1 = 0;
-			}
-			
-			if(num > 0 && num5==0){
-				num2 = 1;
-			}else{				
-				num2 = 0;
-			}
-			
-			if(num5==0 && num6>1){
-				num3 = 1;
-			}else{
-				num3 = 0;
-			}
-			
-			num4 = num1 + num2 + num3;
-
-			if(num4 >= 3){
-				$('#status_PASSWORD').attr("value", 0);
-			}else{
-				$('#status_PASSWORD').attr("value", 1);
-			}
-			
-		}else{
-		}
-	},200);
+		
 	
 	$("#BIRTHDATE").click(function() {
 		laydate({
@@ -402,20 +246,6 @@ $(document).ready(function(){
 	$("#TZ_SCH_CNAME_Country").val("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME").click(function(e) {
-		/*$("#ParamValue").val("TZ_SCH_CNAME");		
-		s = $.layer({
-			type: 2,
-			title: false,
-			fix: false,
-			closeBtn: false,
-			shadeClose: false,
-			shade : [0.3 , '#000' , true],
-			border : [3 , 0.3 , '#000', true],
-			offset: ['50%',''],
-			area: ['830px','720px'],
-			//iframe: {src: '/tranzvision/colselector_liu.html'}
-			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
-		});*/
 		$("#ParamCon").val("TZ_SCH_CNAME");
 		var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","Type":"A"}}';
 		$.ajax({
@@ -443,19 +273,6 @@ $(document).ready(function(){
 	});
 	$.each([$("#TZ_LEN_PROID"),$("#TZ_LEN_PROID_click")],function(i,el){
 		el.click(function(e) { 
-			/*var _prov_id = "TZ_LEN_PROID";
-			prov = $.layer({
-				type: 2,
-				title: false,
-				fix: false,
-				closeBtn: false,
-				shadeClose: false,
-				shade : [0.3 , '#000' , true],
-				border : [3 , 0.3 , '#000', true],
-				offset: ['100px',''],
-				area: ['588px','300px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22,%22siteId%22:%22'+$("#siteid").val()+'%22}}'},
-			});*/
 			var _prov_id = "TZ_LEN_PROID";
 			$("#ParamCon").val(el.attr("id"));
 			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+_prov_id+'","siteId":"'+strSiteId+'"}}';
@@ -563,20 +380,6 @@ $(document).ready(function(){
 					_statusFlg="error";
 				}
 			}
-		}else if(key=="TZ_EMAIL"){//邮箱
-			if(jsonValue[key] == "Y"){
-				if(_emailFlg !=0 || $('#TZ_EMAIL').val()==''){
-					if ($('#TZ_EMAIL_status').html())
-					{
-						$("#TZ_EMAIL_status").show();
-						_statusFlg="error";
-					}else{
-						$('#TZ_EMAIL_status').html("<span>"+TipEmail+"</span>");
-						$("#TZ_EMAIL_status").show();
-						_statusFlg="error";
-					}
-				}
-			}
 		}else if(key=="TZ_MOBILE"){//手机
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
@@ -584,27 +387,6 @@ $(document).ready(function(){
 					$("#TZ_MOBILE_status").show();
 					_statusFlg="error";
 				}
-			}else{
-				$('#' + key + '_status').hide();
-			}
-		}else if(key=="TZ_PASSWORD"){//密码
-			if($('#TZ_PASSWORD').val() ==''){
-				$('#TZ_PASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_PASSWORD_status").show();
-				_statusFlg="error";
-			}
-			if(_pwdFlg != 0){
-				$('#TZ_PASSWORD_status').html("<span>"+PwdError+"</span>");
-				$("#TZ_PASSWORDStyle").show();
-				_statusFlg="error";
-			}else{
-				$('#' + key + '_status').hide();
-			}
-		}else if(key=="TZ_REPASSWORD"){//确认密码
-			if($('#TZ_REPASSWORD').val()==''){
-				$('#TZ_REPASSWORD_status').html("<span>"+TipBlank+"</span>");
-				$("#TZ_REPASSWORD_status").show();
-				_statusFlg="error";
 			}else{
 				$('#' + key + '_status').hide();
 			}
@@ -625,14 +407,7 @@ $(document).ready(function(){
 			}
 		}
 	}
-		
-	if($('#TZ_PASSWORD').val() !='' && ($('#TZ_PASSWORD').val() !=$('#TZ_REPASSWORD').val()|| _passwordFlg !=0)){
-		
-		$('#TZ_REPASSWORD_status').html("<span>"+PwdCor+"</span>");
-		$("#TZ_REPASSWORD_status").show();
-		_statusFlg="error";
-	}
-
+	
 
 	if($("#yzfs").val() == "M"){
 		if(_yzmFlg !=0 || $('#yzm').val() ==''){
@@ -655,13 +430,13 @@ $(document).ready(function(){
 		return false;
 	}
 
-	if(_nameFlg=="0" && _emailFlg=="0" && _moblieFlg=="0" && _passwordFlg=="0" && _yzmFlg=="0"){
+	if(_nameFlg=="0"&& _moblieFlg=="0" && _yzmFlg=="0"){
 		//$('#submitbutton').submit();
 		//var signupsContent = $("#signupForm").serialize();
 		
 		var signupsContent =$("#signupForm").serializeJson();
 
-		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2","isMobile":"Y"}}';
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"5","isMobile":"Y","userName":"' + userName + '"}}';
 		$.ajax({
 			type: "post",
 			async :false,
@@ -677,9 +452,9 @@ $(document).ready(function(){
 					//loading();
 					if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
-							layerMsg("Registration successful.");
+							layerMsg("Save successful.");
 						}else{
-							layerMsg("注册成功");
+							layerMsg("保存成功");
 						}
 					}
 					window.location.href=result.comContent.jumpurl;
@@ -691,9 +466,6 @@ $(document).ready(function(){
   	}
 
   	create_yzm();
-	$("#TZ_PASSWORD").val('');
-	$("#TZ_REPASSWORD").val('');
-	$("#status_TZ_PASSWORD").val('');
 	$("#status_yzm").val('');
 	$("#yzm").val('');
 	$("#yzmEmail").val('');

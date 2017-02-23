@@ -958,11 +958,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
 							boolResult = registeServiceImpl.saveMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
 							if(boolResult){
-							    errMsg[0] = "0";
-							    errMsg[1] = "站点保存完成！";
-							    mapRet.clear();
-							    mapRet.put("success", true);
-							    strRet = jacksonUtil.Map2json(mapRet);	
+							    String strMPerfectPageCode = registeServiceImpl.handleMPerfectPage(strSiteId);
+							    if(strMPerfectPageCode!=null&&!"".equals(strMPerfectPageCode)){
+								boolResult = registeServiceImpl.saveMPerfectpage(strMPerfectPageCode, strSiteId,errMsg);
+								if(boolResult){
+        							    errMsg[0] = "0";
+        							    errMsg[1] = "站点保存完成！";
+        							    mapRet.clear();
+        							    mapRet.put("success", true);
+        							    strRet = jacksonUtil.Map2json(mapRet);
+								}else{
+								    errMsg[0] = "1";
+								    errMsg[1] = "站点手机完善页发布失败！";
+								    strRet="";
+								}
+							    }else{
+								errMsg[0] = "1";
+								errMsg[1] = "站点手机完善页发布失败！";
+								strRet="";
+							    }	
 							}else{
 							    errMsg[0] = "1";
 							    errMsg[1] = "站点手机注册页保存失败！";
@@ -1036,11 +1050,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
 							boolResult = registeServiceImpl.saveMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
 							if(boolResult){
-							    errMsg[0] = "0";
-							    errMsg[1] = "站点保存完成！";
-							    mapRet.clear();
-							    mapRet.put("success", true);
-							    strRet = jacksonUtil.Map2json(mapRet);	
+							    String strMPerfectPageCode = registeServiceImpl.handleMPerfectPage(strSiteId);
+							    if(strMPerfectPageCode!=null&&!"".equals(strMPerfectPageCode)){
+								boolResult = registeServiceImpl.saveMPerfectpage(strMPerfectPageCode, strSiteId,errMsg);
+								if(boolResult){
+        							    errMsg[0] = "0";
+        							    errMsg[1] = "站点保存完成！";
+        							    mapRet.clear();
+        							    mapRet.put("success", true);
+        							    strRet = jacksonUtil.Map2json(mapRet);
+								}else{
+								    errMsg[0] = "1";
+								    errMsg[1] = "站点手机完善页发布失败！";
+								    strRet="";
+								}
+							    }else{
+								errMsg[0] = "1";
+								errMsg[1] = "站点手机完善页发布失败！";
+								strRet="";
+							    }	
 							}else{
 							    errMsg[0] = "1";
 							    errMsg[1] = "站点手机注册页保存失败！";
@@ -1271,11 +1299,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
 							boolResult = registeServiceImpl.releasMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
 							if(boolResult){
-							    errMsg[0] = "0";
-							    errMsg[1] = "站点保存完成！";
-							    mapRet.clear();
-							    mapRet.put("success", true);
-							    strRet = jacksonUtil.Map2json(mapRet);	
+							    String strMPerfectPageCode = registeServiceImpl.handleMPerfectPage(strSiteId);
+							    if(strMPerfectPageCode!=null&&!"".equals(strMPerfectPageCode)){
+								boolResult = registeServiceImpl.releasMPerfectpage(strMPerfectPageCode, strSiteId,errMsg);
+								if(boolResult){
+        							    errMsg[0] = "0";
+        							    errMsg[1] = "站点保存完成！";
+        							    mapRet.clear();
+        							    mapRet.put("success", true);
+        							    strRet = jacksonUtil.Map2json(mapRet);
+								}else{
+								    errMsg[0] = "1";
+								    errMsg[1] = "站点手机完善页发布失败！";
+								    strRet="";
+								}
+							    }else{
+								errMsg[0] = "1";
+								errMsg[1] = "站点手机完善页发布失败！";
+								strRet="";
+							    }	
 							}else{
 							    errMsg[0] = "1";
 							    errMsg[1] = "站点手机注册页发布失败！";
@@ -1353,11 +1395,25 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 						    if (strMEnrollPageCode != null && !"".equals(strMEnrollPageCode)) {
 							boolResult = registeServiceImpl.releasMEnrollpage(strMEnrollPageCode, strSiteId,errMsg);
 							if(boolResult){
-							    errMsg[0] = "0";
-							    errMsg[1] = "站点保存完成！";
-							    mapRet.clear();
-							    mapRet.put("success", true);
-							    strRet = jacksonUtil.Map2json(mapRet);	
+							    String strMPerfectPageCode = registeServiceImpl.handleMPerfectPage(strSiteId);
+							    if(strMPerfectPageCode!=null&&!"".equals(strMPerfectPageCode)){
+								boolResult = registeServiceImpl.releasMPerfectpage(strMPerfectPageCode, strSiteId,errMsg);
+								if(boolResult){
+        							    errMsg[0] = "0";
+        							    errMsg[1] = "站点保存完成！";
+        							    mapRet.clear();
+        							    mapRet.put("success", true);
+        							    strRet = jacksonUtil.Map2json(mapRet);
+								}else{
+								    errMsg[0] = "1";
+								    errMsg[1] = "站点手机完善页发布失败！";
+								    strRet="";
+								}
+							    }else{
+								errMsg[0] = "1";
+								errMsg[1] = "站点手机完善页发布失败！";
+								strRet="";
+							    }
 							}else{
 							    errMsg[0] = "1";
 							    errMsg[1] = "站点手机注册页发布失败！";

@@ -331,5 +331,11 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 	
 }
 
+/*帮助中心*/
+.question_body{width:94%;margin:2% auto;font-size:0.56rem;line-height:1rem;}
+.question{margin:2% auto;}
+.question span{display:block;width:100%;border-bottom:1px solid #ddd;color:#333;font-size:0.56rem;padding:1% 0;}
+.question p{text-indent:2em;color:#999;font-size:0.58rem;}
+
 
 

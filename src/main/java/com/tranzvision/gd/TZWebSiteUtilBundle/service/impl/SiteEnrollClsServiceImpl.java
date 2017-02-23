@@ -841,6 +841,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strLang = "";
 		String userName = "";
 		String oprid = "";
+		String isMobile = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);			
@@ -848,6 +849,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strSiteId = jacksonUtil.getString("siteId");
 			strLang = jacksonUtil.getString("lang");
 			userName = jacksonUtil.getString("userName");
+			try{
+			    isMobile = jacksonUtil.getString("isMobile");
+			} catch (Exception e) {
+			    /*pc版注册*/
+			}
 			oprid = DESUtil.decrypt(userName, "TZ_GD_TRANZVISION");
 			if (strOrgId == null || "".equals(strOrgId)||oprid==null||"".equals(oprid)) {
 				errMsg[0] = "100";
@@ -1398,9 +1404,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						return strResult;
 					}
 					strJumUrl = request.getContextPath() + "/dispatcher";
-					strJumUrl = strJumUrl
-							+ "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+					String strJumPar = "";
+					if("Y".equals(isMobile)){
+					    strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+							+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId+ "\",\"orgid\":\"" + strOrgId + "\",\"sen\":\"11\"}}";
+					}else{
+					    strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 							+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId+ "\",\"orgid\":\"" + strOrgId + "\",\"sen\":\"1\"}}";
+					}
+					strJumUrl = strJumUrl + strJumPar;
 				}
 				Map<String, Object> returnMap = new HashMap<>();
 				returnMap.put("result", "success");
@@ -2471,21 +2483,29 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String siteid = "";
 		String url = "";
+		String isMobile = "";
 		try {
 			jacksonUtil.json2Map(strParams);
 			siteid = jacksonUtil.getString("siteid");
+			isMobile = jacksonUtil.getString("isMobile");
+			String html="";
+			if("Y".equals(isMobile)){
+			    html = "mperfect.html";
+			}else{
+			    html = "perfect.html";
+			}
 			url = jdbcTemplate.queryForObject("SELECT TZ_ENROLL_DIR FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?", new Object[]{siteid},"String");
 			url = url.replaceAll("\\\\", "/");
 			if(!"".equals(url)){
-				if(!"/".equals(url.substring(0, 1))){
-					url = "/" + url;
-				}
-				if(!"/".equals(url.substring(url.length()-1))){
-					url = url + "/";
-				}
-				url = request.getContextPath() + url + siteid + "/perfect.html";
+			    if(!"/".equals(url.substring(0, 1))){
+				url = "/" + url;
+			    }
+			    if(!"/".equals(url.substring(url.length()-1))){
+				url = url + "/";
+			    }
+			    url = request.getContextPath() + url + siteid + "/" + html;
 			}else{
-				url = request.getContextPath() + "/" + siteid + "/perfect.html";
+			    url = request.getContextPath() + "/" + siteid + "/" + html;
 			}			
 		}catch(Exception e){
 			e.printStackTrace();
