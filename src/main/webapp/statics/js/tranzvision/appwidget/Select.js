@@ -32,7 +32,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 		if (previewmode) {
 			if (SurveyBuild._readonly) {
 				//只读模式
-				var valDesc = "";
+				 var valDesc = "";
                 e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
                 for (var i in data.option) {
                     e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
@@ -42,9 +42,9 @@ SurveyBuild.extend("Select", "baseComponent", {
 						valDesc = data["option"][i]["txt"];
 					}
 				}
-                c += '<select name="' + data.itemId + '" id="' + data.itemId + '" style="width:100%;display:none;" title="' + data.itemName + '">';
+                /*c += '<select name="' + data.itemId + '" id="' + data.itemId + '" style="width:100%;display:none;" title="' + data.itemName + '">';
                 c +=  e;
-                c += '</select>';
+                c += '</select>';  */
 				c += '<div class="input-list">';
 				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
 				c += '  <div class="input-list-text left">' + valDesc + '</div>';
