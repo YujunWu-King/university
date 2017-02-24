@@ -77,13 +77,13 @@
 		},this);  
 	},
 //删除选中听众  	
-	deleteComRegInfos: function(){
+	deleteComRegInfos: function(btn){
 	   //选中行
 		
 		var win = this.lookupReference('newAudWindow');
 		
 				if (!win) {
-					//className = 'KitchenSink.view.security.com.pageRegWindow';
+					className = 'KitchenSink.view.security.com.pageRegWindow';
 					Ext.syncRequire(className);
 					ViewClass = Ext.ClassManager.get(className);
 					//新建类
@@ -93,9 +93,9 @@
 		console.log(win);
 		
 		
-	//   var selList = this.getView().getSelectionModel().getSelection();
+	   var selList = this.getView().getSelectionModel().getSelection();
 	   
-	   var selList = win.child("form").child("grid").getSelectionModel().getSelection();
+	//   var selList = win.child("form").child("grid").getSelectionModel().getSelection();
 		console.log(selList);
 	   
 	//   console.log(selList);
@@ -108,8 +108,9 @@
 			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
 				if(btnId == 'yes'){		
 					
-				var gridStore =win.child("form").child("grid").getStore();
-				//   var store = this.getView().store;
+		//		var gridStore =win.child("form").child("grid").getStore();
+				var gridStore =btn.findParentByType("grid").getStore();
+				   var store = this.getView().store;
 				   gridStore.remove(selList);
 				}												  
 			},this);   
@@ -485,20 +486,9 @@ console.log(store);
 	//	console.log(view);
         //信息表单
         var form = win.child("form").getForm();
-       
-		var gridStore =win.child("form").child("grid").getStore();
-		
-
+        var gridStore =win.child("form").child("grid").getStore();
 		var selList = win.child("form").child("grid").getSelectionModel().getSelection();
-	//	console.log(selList);
-		
-//		var audName = selList["audName"];
-	//	var audName = selList.get("audName");
-	//	console.log(audName);
-		
 	
-		
-      
 		var removeJson = "";
 		//删除记录
 		var removeRecs = gridStore.getRemovedRecords();
@@ -510,14 +500,12 @@ console.log(store);
 				removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
 			}
 		};
-	//	console.log(removeRecs);
 		
 		 var comParams = "";
 			if(removeJson != ""){
 				comParams = '"delete":[' + removeJson + "]";
 			}
 			
-			console.log(comParams);
 			var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		//	console.log(tzParams2);
 			//保存数据
@@ -526,32 +514,21 @@ console.log(store);
 	            	gridStore.reload();
 	            },"",true,this);
 	        }
-		
-		
-		
-		
-	/*	var selRec = gridStore.getAt(rowIndex);
-		//组件ID
-		console.log(selRec);
-		
-		var audDxzt = selRec.get("audDxzt");
-		console.log(audDxzt);
-		
-		"'+win.actType+'"
-	*/	
-		
-		
-		//表单数据
-	//	var formParams = form.getValues();
+
+	        
+	        //表单数据
+//		var formParams = form.getValues();
 //		var	comParamsALL = '"update":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
 		
-		var	comParamsALL = '"+win.actType+":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
-		
+		var	comParamsALL = '"update":[{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}]';
+			
+		var actType=win.actType;
+		console.log(actType);
 		
 		 //表格数据
 		var updateJson = "";
 		var updateRecs = gridStore.getUpdatedRecords();
-		//console.log(updateRecs);
+		console.log(updateRecs);
 		
 		for(var i=0;i<updateRecs.length;i++){
 			if(updateJson == ""){
