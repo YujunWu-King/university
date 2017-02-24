@@ -337,6 +337,7 @@ public class PdfPrintbyModel {
 		try {
 			stmt = conn.createStatement();
 			String TZ_APP_S_TEXT = "";
+			String TZ_APP_L_TEXT="";
 			String sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "'";
 
@@ -346,14 +347,18 @@ public class PdfPrintbyModel {
 			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
 			while ((rt != null) && rt.next()) {
 				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
-				TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
+				/*TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
 				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.trim().equals("")) {
 					ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
-					// System.out.println(TZ_XXX_BH + ":" + TZ_APP_S_TEXT);
 				} else {
 					ht.put(TZ_XXX_BH, rt.getString("TZ_APP_L_TEXT"));
-					// System.out.println(TZ_XXX_BH + ":" +
-					// rt.getString("TZ_APP_L_TEXT"));
+				} */
+				
+				TZ_APP_L_TEXT = rt.getString("TZ_APP_L_TEXT");
+				if (TZ_APP_L_TEXT != null && !TZ_APP_L_TEXT.trim().equals("")) {
+					ht.put(TZ_XXX_BH, TZ_APP_L_TEXT);
+				} else {
+					ht.put(TZ_XXX_BH, rt.getString("TZ_APP_S_TEXT"));
 				}
 			}
 			rt.close();
