@@ -1203,8 +1203,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
 							   //日期选择事件绑定:
 							   $inputBox.each(function(){
-								   $(this).datepicker({
+								   $(this).datetimepicker({
 										showButtonPanel:true,
+										showTimepicker: false,
 										changeMonth: true,
 										changeYear: true,
 										yearRange: "1960:2030",
