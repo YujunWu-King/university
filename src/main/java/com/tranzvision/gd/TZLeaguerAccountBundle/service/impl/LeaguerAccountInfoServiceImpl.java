@@ -70,7 +70,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				}
 				//------------
 				//工作地址，单位，行业类别，本科院校;
-				String str_lenCity = "",str_comName="",str_comIndus = "",str_schName="";
+				String str_lenProvince="",str_lenCity = "",str_comName="",str_comIndus = "",str_schName="";
 				//是否是黑名单，是否允许申请;备注
 				String str_blackName = "",str_allowApply="",str_beizhu="";
 				//面试申请号
@@ -105,6 +105,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					str_allowApply= psTzRegUserT.getTzAllowApply();
 					str_beizhu= psTzRegUserT.getTzBeizhu();
 					
+					str_lenProvince = psTzRegUserT.getTzLenProid();
 					str_lenCity= psTzRegUserT.getTzLenCity();
 					str_comName= psTzRegUserT.getTzCompanyName();
 					str_comIndus= psTzRegUserT.getTzCompIndustry();
@@ -202,7 +203,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 //					jsonMap.put("desc", "Sky账号");
 //					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
-					jsonMap.put("TZ_LEN_CITY", str_lenCity);
+					//20170225,yuds,更改为省市
+					jsonMap.put("TZ_LEN_CITY", str_lenProvince);
 					jsonMap.put("desc", "工作所在省市");
 					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
@@ -210,15 +212,17 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					jsonMap.put("desc", "工作单位");
 					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
-					jsonMap.put("TZ_COMP_INDUSTRY", str_comIndus);
+					//20170225,yuds,行业类别下拉框
+					String str_comIndusDesc="";
+					String str_sqlIndus = "SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_TBL WHERE TZ_REG_FIELD_ID='TZ_COMP_INDUSTRY' AND TZ_SITEI_ID = '' AND TZ_OPT_ID=?";
+					str_comIndusDesc = jdbcTemplate.queryForObject(str_sqlIndus, new Object[]{str_comIndus},"String");
+					jsonMap.put("TZ_COMP_INDUSTRY", str_comIndusDesc);
 					jsonMap.put("desc", "行业类别");
 					arraylist.add(jsonMap);
 					jsonMap = new HashMap<>();
 					jsonMap.put("TZ_SCH_CNAME", str_schName);
 					jsonMap.put("desc", "本科院校");
 					arraylist.add(jsonMap);
-					
-					
 				}
 				
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
