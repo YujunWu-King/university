@@ -259,7 +259,9 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 					String isAllowedApp = "";
 					//需要查询考生允许报名表 ；
 					isAllowedApp = jdbcTemplate.queryForObject("select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
-					if("N".equals(isAllowedApp)){
+					//黑名单
+					String isBlack = jdbcTemplate.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+					if("Y".equals(isBlack) || "N".equals(isAllowedApp)){
 						//不允许报名
 						applicationCenterHtml = tzGDObject.getHTMLText(
 								"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CANTNOT_APPLY", ApplicationCenter,

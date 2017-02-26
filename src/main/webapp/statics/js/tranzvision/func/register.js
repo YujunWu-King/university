@@ -847,11 +847,20 @@ $(document).ready(function(){
 				$("#TZ_REPASSWORDStyle").removeClass("alert_display_none");
 				_statusFlg="error";
 			}
-		}else if(key=="TZ_SCH_CNAME_Country"){
+		}else if(key=="TZ_SCH_CNAME"){			
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
 			if(schCountry!=null&&schCountry!=undefined){
 				$("#TZ_SCH_COUNTRY").val(schCountry);
-			}			
+			}
+			if(jsonValue["TZ_SCH_CNAME"]=="Y"){
+				if($("#TZ_SCH_CNAME_Country").val()==''||$("#TZ_SCH_CNAME").val()==''){
+					$('#TZ_SCH_CNAME_status').html("<span>"+TipBlank+"</span>");
+					$("#TZ_SCH_CNAMEStyle").removeClass("alert_display_none");
+					_statusFlg="error";
+				}else{
+					$("#TZ_SCH_CNAMEStyle").addClass("alert_display_none");
+				}				
+			}
 		}else{//其他
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
