@@ -813,7 +813,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------日期 input格式检验:
 					DATE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					DATE_DIV += '	<div id="' + date_id + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					DATE_DIV += '		<div class="onShow">test</div>';
+					DATE_DIV += '		<div class="onShow"></div>';
 					DATE_DIV += '	</div>';
 					DATE_DIV += '</div>';
 					//---------
@@ -846,7 +846,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------GRE input格式检验:
 					GRE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GRE_DIV += '	<div id="' + data.itemId+child.EngLevelOpt1_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					GRE_DIV += '		<div class="onShow">test</div>';
+					GRE_DIV += '		<div class="onShow"></div>';
 					GRE_DIV += '	</div>';
 					GRE_DIV += '</div>';
 					//---------
@@ -864,7 +864,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------GMAT  input格式检验:
 					GMAT_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GMAT_DIV += '	<div id="' + data.itemId+child.EngLevelOpt2_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					GMAT_DIV += '		<div class="onShow">test</div>';
+					GMAT_DIV += '		<div class="onShow"></div>';
 					GMAT_DIV += '	</div>';
 					GMAT_DIV += '</div>';
 					//---------
@@ -883,7 +883,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------TOFEL_DIV  input格式检验:
 					TOFEL_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOFEL_DIV += '	<div id="' + data.itemId+child.EngLevelOpt3_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					TOFEL_DIV += '		<div class="onShow">test</div>';
+					TOFEL_DIV += '		<div class="onShow"></div>';
 					TOFEL_DIV += '	</div>';
 					TOFEL_DIV += '</div>';
 					//---------
@@ -902,7 +902,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------IELTS_DIV  input格式检验:
 					IELTS_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					IELTS_DIV += '	<div id="' + data.itemId+child.EngLevelOpt4_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					IELTS_DIV += '		<div class="onShow">test</div>';
+					IELTS_DIV += '		<div class="onShow"></div>';
 					IELTS_DIV += '	</div>';
 					IELTS_DIV += '</div>';
 					//---------
@@ -920,7 +920,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------CET6_DIV  input格式检验:
 					CET6_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET6_DIV += '	<div id="' + data.itemId+child.EngLevelOpt5_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					CET6_DIV += '		<div class="onShow">test</div>';
+					CET6_DIV += '		<div class="onShow"></div>';
 					CET6_DIV += '	</div>';
 					CET6_DIV += '</div>';
 					//---------
@@ -938,7 +938,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------CET4_DIV  input格式检验:
 					CET4_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET4_DIV += '	<div id="' + data.itemId+child.EngLevelOpt6_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					CET4_DIV += '		<div class="onShow">test</div>';
+					CET4_DIV += '		<div class="onShow"></div>';
 					CET4_DIV += '	</div>';
 					CET4_DIV += '</div>';
 					//---------
@@ -1048,7 +1048,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------TOEIC_DIV  input格式检验:
 					TOEIC_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOEIC_DIV += '	<div id="' +data.itemId+ child.EngLevelOpt13_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					TOEIC_DIV += '		<div class="onShow">test</div>';
+					TOEIC_DIV += '		<div class="onShow"></div>';
 					TOEIC_DIV += '	</div>';
 					TOEIC_DIV += '</div>';
 					//---------
@@ -1183,6 +1183,11 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 										//----
 									}else{
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
+										//select切换时候清空 其他select对应div中的input的数据:
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("input").val("");
+										//清理附件div中信息:
+										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).siblings("#"+ data["itemId"]+"UP").find(".input-list-upload").find(".input-list-upload-con").html("");
+										//清理附件 存储结构中数据：
 									}
 								}
 								var up_name="div[name='"+data.itemId+"UP"+"']";
