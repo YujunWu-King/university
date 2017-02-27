@@ -114,7 +114,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		//var child=data["children"];
 		var types="";
 		//--公司类型初始值
-		console.dir(child);
+		//console.dir(child);
 		var FIRM_TYPE_DEF=child.WorkExper1.value;
 		//--岗位类型初始值
 		var POSITION_TYPE_DEL=child.WorkExper2.value;
