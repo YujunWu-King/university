@@ -84,7 +84,7 @@ $(document).ready(function() {
     $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
 		el.click(function(e) { 
 			$("#ParamCon").val(el.attr("id"));
-			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
+			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+strLang+'","sen":"2"}}';
 			$.ajax({
 				type: "post",
 				async :false,
@@ -113,7 +113,7 @@ $(document).ready(function() {
     $.each([$("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click")],    function(i, el) {
         el.click(function(e) {
         	$("#ParamCon").val("TZ_SCH_CNAME");
-    		var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","Type":"A"}}';
+    		var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+strLang+'","Type":"A"}}';
     		$.ajax({
     			type: "post",
     			async :false,
@@ -244,8 +244,8 @@ $(document).ready(function() {
         if(_statusFlg=="error"){
         	return false;
         }
-        userInfoJson["jgid"] = $("#jgid").val();
-        userInfoJson["lang"] = $("#lang").val();
+        userInfoJson["jgid"] = strJgid;
+        userInfoJson["lang"] = strLang;
 
         var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"SAVEUSERINFO","comParams":' + JSON.stringify(userInfoJson) + '}';
 
@@ -300,6 +300,82 @@ $(document).ready(function() {
             }
         });
     });
+    $("#btnpass").click(function() {
+    	var $oldPass = $("#oldpass").val();
+		var $newPass = $("#newpass").val();
+		var $cfPass = $("#cfpass").val();
+
+		if ($oldPass.length < 1) {
+			var pass = document.getElementById("oldpass");
+
+			$(".login_tips").html(tzGdFixpwdOldPass + " " + tzGdFixpwdBlankTips);
+			$("#oldpassTip").show();
+			return false;
+		}else{
+			$(".login_tips").empty();
+			$("#oldpassTip").hide();
+		}
+
+		if ($newPass.length < 1) {
+			var pass = document.getElementById("newpass");
+			$(".login_tips").html(tzGdFixpwdNewPass + " " + tzGdFixpwdBlankTips);
+			$("#newpassTip").show();
+			return false;
+		}else{
+			$(".login_tips").empty();
+			$("#newpassTip").hide();
+		}
+
+		if ($cfPass.length < 1) {
+			var pass = document.getElementById("cfpass");
+			$(".login_tips").html(tzGdFixpwdConfPass + " " + tzGdFixpwdBlankTips);
+			$("#cfpassTip").show();
+			return false;
+		}else{
+			$(".login_tips").empty();
+			$("#cfpassTip").hide();
+		}
+		
+		if ($newPass != $cfPass) {
+			var pass = document.getElementById("cfpass");
+			$(".login_tips").html(tzGdFixpwdNotSameTips);
+			$("#cfpassTip").show();
+			return false;
+		}else{
+			$(".login_tips").empty();
+			$("#cfpassTip").hide();
+		}
+		
+		var pwd = {
+			"oldPass" : $oldPass,
+			"newPass" : $newPass,
+			"lang" : strLang
+		};
+
+		$("#login_tips").html('');
+		$("#messTip").hide();
+		var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_ZS_USERMNG_STD","OperateType":"PWD","comParams":'
+					+ JSON.stringify(pwd) + '}';
+		$.ajax({
+			type : "POST",
+			dataType : "json",
+			url : tzGdFixpwdUrl,
+			data : {
+				"tzParams" : tzParams
+			},
+			success : function(jsondata) {
+				$("#oldpass").val("");
+				$("#newpass").val("");
+				$("#cfpass").val("");
+				layer.open({
+                	content:jsondata.comContent.success,
+                	skin:'msg',
+                    time: 2
+                });
+			}
+		});
+		return false;
+	});
 })
 // 绑定/解绑邮箱
 function changeBindEmail() {
@@ -413,7 +489,7 @@ function openUpload() {
     });
 }
 function changeEmail() {
-    changeEmailUrlParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"' + $("#siteid").val() + '","orgid":"' + $("#jgid").val() + '","lang":"' + $("#lang").val() + '","sen":"6"}}';
+    changeEmailUrlParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"' + strSiteId + '","orgid":"' + strJgid + '","lang":"' + strLang + '","sen":"6"}}';
     changeEmailUrl = tzGdWdzhChangeEmailUrl + "?tzParams=" + encodeURI(changeEmailUrlParams);
  
     layer.open({
