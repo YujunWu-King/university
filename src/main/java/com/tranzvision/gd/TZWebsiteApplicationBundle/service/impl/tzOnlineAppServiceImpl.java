@@ -903,6 +903,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strBatchId = "";
 		// 密码
 		String strPwd = "";
+		//是否保存密码
+		String isPwd="";
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 表单内容
@@ -926,7 +928,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("PASSWORD")) {
 				strPwd = String.valueOf(jacksonUtil.getString("PASSWORD"));
 			}
-
+			if (jacksonUtil.containsKey("ISPWD")) {
+				isPwd = String.valueOf(jacksonUtil.getString("ISPWD"));
+			}
+			
+			System.out.println("strPwd:"+strPwd);
+			
+			System.out.println("isPwd:"+isPwd);
+			
 			// 密码用MD5加密存储
 			if (strPwd != null && !strPwd.equals("")) {
 				strPwd = Sha3DesMD5.md5(strPwd);
@@ -1309,7 +1318,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				if ("SAVE".equals(strOtype)) {
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype);
+							strOtype,isPwd);
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
 						//// //System.out.println("checkFiledValid：" + strMsg);
@@ -1364,7 +1373,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							"SAVE");
+							"SAVE",isPwd);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
@@ -1415,7 +1424,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype);
+								strClassId, strPwd, strOtype,isPwd);
 
 						if ("".equals(strMsg)) {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
@@ -1429,7 +1438,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							// 如果是推荐信，则提交后发送邮件
 							if ("TJX".equals(strTplType)) {
 								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
-										strTplType, strBatchId, strPwd);
+										strTplType, strBatchId, strPwd,isPwd);
 								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 							}
 							if ("BMB".equals(strTplType)) {
@@ -1440,7 +1449,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype);
+							strOtype,isPwd);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
@@ -1492,7 +1501,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							// 如果是推荐信，则提交后发送邮件
 							if ("TJX".equals(strTplType)) {
 								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
-										strTplType, strBatchId, strPwd);
+										strTplType, strBatchId, strPwd,isPwd);
 								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 							}
 							if ("BMB".equals(strTplType)) {
@@ -1506,7 +1515,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 					} else {
 						strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType,
-								strBatchId, strPwd);
+								strBatchId, strPwd,isPwd);
 						if ("BMB".equals(strTplType)) {
 							// 同步报名人联系方式
 							tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);

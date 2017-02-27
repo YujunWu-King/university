@@ -612,11 +612,17 @@
 							var batchId = $("#BatchId").val();
 							////console.log("classId:"+classId);
 							////console.log("batchId:"+batchId);
-							
+							var isPwd="N";
+							if (pwd == undefined) {
+								isPwd="N";
+								pwd="";
+							} else {
+								isPwd="Y";
+							}
 								
 							
 							var _a = getData();
-							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -702,9 +708,15 @@
 						//console.log("classId:"+classId);
 						//console.log("batchId:"+batchId);
 						
+						var isPwd="N";
+						if (pwd == undefined) {
+							isPwd="N";
+							pwd="";
+						} else {
+							isPwd="Y";
+						}
 						
-						
-						var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+						var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 						$.ajax({
 							type: "POST",
 							url: SurveyBuild.tzGeneralURL,
@@ -803,9 +815,15 @@
 							//console.log("classId:"+classId);
 							//console.log("batchId:"+batchId);
 							
+							var isPwd="N";
+							if (pwd == undefined) {
+								isPwd="N";
+								pwd="";
+							} else {
+								isPwd="Y";
+							}
 							
-							
-							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -898,10 +916,16 @@
 							var batchId = $("#BatchId").val();
 							//console.log("classId:"+classId);
 							//console.log("batchId:"+batchId);
+							var isPwd="N";
+							if (pwd == undefined) {
+								isPwd="N";
+								pwd="";
+							} else {
+								isPwd="Y";
+							}
 							
 							
-							
-							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
@@ -952,7 +976,6 @@
 						
 						var pwd="";
 						var pwd2="";
-						
 						if (pwdTitleId != undefined && pwdDivId != undefined && pwdDiv2Id!= undefined) {
 							pwd = $("#%bind(:43)").val();
 							pwd2 = $("#%bind(:44)").val();
@@ -979,10 +1002,16 @@
 						//console.log("classId:"+classId);
 						//console.log("batchId:"+batchId);
 						
-						
+						var isPwd="N";
+						if (pwd == undefined) {
+							isPwd="N";
+							pwd="";
+						} else {
+							isPwd="Y";
+						}
 						
 						var _a = getData();
-						var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+						var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 						$.ajax({
 							type: "POST",
 							url: SurveyBuild.tzGeneralURL,
@@ -1136,10 +1165,17 @@
 							var batchId = $("#BatchId").val();
 							//console.log("classId:"+classId);
 							//console.log("batchId:"+batchId);
-							console.log($.toJSON(_a));
+							//console.log($.toJSON(_a));
 							
+							var isPwd="N";
+							if (pwd == undefined) {
+								isPwd="N";
+								pwd="";
+							} else {
+								isPwd="Y";
+							}
 							
-							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"PRE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"PRE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 							$.ajax({
 								type: "POST",
 								url: SurveyBuild.tzGeneralURL,
