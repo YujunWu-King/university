@@ -54,7 +54,7 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private PsTzAppCompTblMapper psTzAppCompTblMapper;
-	
+
 	@Autowired
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 
@@ -66,7 +66,7 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
-	
+
 	@Autowired
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 
@@ -697,14 +697,21 @@ public class tzOnlineAppEngineImpl {
 
 			// modity by caoy 保存的时候，如果是 预提交状态 那么状态不改变
 			// 更换班级 需要变更 报名表和WOrk表 只需要保存一份实例
-			sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+			sql = "SELECT TZ_APP_INS_ID,TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			// count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId
 			// }, "Integer");
-			TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+			Map<String, Object> mapData = null;
+
+			mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
+
+			TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
+					: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
+
+			String INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
 			// if (count > 0) {
-			if (TZ_APP_FORM_STA != null && !TZ_APP_FORM_STA.equals("")) {
+			if (INS_ID != null && Long.parseLong(INS_ID) > 0) {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
