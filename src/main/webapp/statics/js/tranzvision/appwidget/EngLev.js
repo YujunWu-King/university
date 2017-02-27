@@ -13,7 +13,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			"title": MsgSet["EXAM_TYPE"],
 			//"title": "考试名称",
 			"orderby": 1,
-			"value": "-1",
+			"value": "",
 			"StorageType": "S",
 			"classname": "Select"
 		},
@@ -791,7 +791,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
-				htmlContent += '			<option value="-1">' +MsgSet["PLEASE_SELECT"] + '</option>';
+				htmlContent += '			<option value="">' +MsgSet["PLEASE_SELECT"] + '</option>';
 				htmlContent += OPT_ENG;
 				htmlContent += '		</select>';
 				//----------------------------非空验证DIV
@@ -954,6 +954,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
 					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >'+MsgSet["EXAM_PASS"]+'：</span></div>'
 					CET6_DIV2+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
+						//CET6_DIV2+='<option value="">'+MsgSet["PLEASE_SELECT"]+'</option>'
 						CET6_DIV2+='<option value="Y">'+MsgSet["PASS_Y"]+'</option>'
 						CET6_DIV2+='<option value="N">'+MsgSet["PASS_N"]+'</option>'
 					CET6_DIV2+='</select></div>'
@@ -1167,24 +1168,31 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				 }
 				 var type_select="";
 				 //为所有的select注册事件
+				 $("select").trigger("chosen:updated");
 				 for(var i=0;i<len;i++){
 					 var child=children[i];
 						type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 						type_select.each(function(index){
 							$(this).on("change",function(){
 								var related_div_name="div[name='relatedDiv']";
+								var chidSelect=$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
+								chidSelect.chosen({width: "100%"});
+
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
-										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
-										$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
+										//$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
+										//$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
 										//----
 									}else{
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
 										//select切换时候清空 其他select对应div中的input的数据:
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("input").val("");
+										//清理子模块select数据:
+										$(this).parents(".input-list").siblings(related_div_name).find("select").val("");
+
 										//清理附件div中信息:
 										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).siblings("#"+ data["itemId"]+"UP").find(".input-list-upload").find(".input-list-upload-con").html("");
 										//清理附件 存储结构中数据：
@@ -1192,7 +1200,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								}
 								var up_name="div[name='"+data.itemId+"UP"+"']";
 								var up_btn=$(this).parents(".input-list").siblings(related_div_name).find(up_name);
-								if($(this).val()=="-1")
+								if($(this).val()=="")
 									up_btn.css("display","none");
 								else
 									up_btn.css("display","block");
