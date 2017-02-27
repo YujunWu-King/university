@@ -1168,31 +1168,29 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				 }
 				 var type_select="";
 				 //为所有的select注册事件
-				 $("select").trigger("chosen:updated");
 				 for(var i=0;i<len;i++){
 					 var child=children[i];
 						type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 						type_select.each(function(index){
 							$(this).on("change",function(){
 								var related_div_name="div[name='relatedDiv']";
-								var chidSelect=$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
-								chidSelect.chosen({width: "100%"});
-
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
+									$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
-										//$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
-										//$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
+										//console.log("child-select:");
+										//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
+										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										//----
 									}else{
+										
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
 										//select切换时候清空 其他select对应div中的input的数据:
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("input").val("");
 										//清理子模块select数据:
-										$(this).parents(".input-list").siblings(related_div_name).find("select").val("");
-
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").val("");
 										//清理附件div中信息:
 										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).siblings("#"+ data["itemId"]+"UP").find(".input-list-upload").find(".input-list-upload-con").html("");
 										//清理附件 存储结构中数据：
@@ -1293,6 +1291,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							 var EngLevelOpt=""+select_id_gp[j];
 							   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
 							   $selectEl.each(function(){
+								   $(this).chosen("destroy").chosen({width:"100%"});
 								   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 									$(this).functionValidator({
 										fun:function(val,el){
@@ -1309,9 +1308,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						
 				 }
 				 //所有看的到的select美化:
-				$("select").each(function(){
-					$(this).chosen({width:"100%"});
-				});
+//				$("select").each(function(){
+//					$(this).chosen({width:"100%"});
+//				});
 		       
 	}
 })
