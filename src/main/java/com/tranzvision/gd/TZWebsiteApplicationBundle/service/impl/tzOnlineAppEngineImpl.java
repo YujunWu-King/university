@@ -711,7 +711,7 @@ public class tzOnlineAppEngineImpl {
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
 			// if (count > 0) {
-			if (INS_ID != null && Long.parseLong(INS_ID) > 0) {
+			if (INS_ID != null && !INS_ID.equals("") && Long.parseLong(INS_ID) > 0) {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
