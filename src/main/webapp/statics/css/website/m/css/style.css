@@ -50,7 +50,7 @@ a,a:hover{text-decoration: none;display: block;}
 .step_lined{border-top:1px solid #746fbe;}
 .step_ing{color:#fff;background-color:#8f5dbf;}
 .step_ed{background:url(../images/ed_icon.png)no-repeat center center;background-color:#8f5dbf;}
-.step_li p{font-size:0.44rem;color:#333;position:absolute;top:-25px;left:-0.6rem;width:2.5rem;}
+.step_li p{font-size:0.44rem;color:#333;position:absolute;top:-25px;left:-1.2rem;width:4rem;}
 .step_ing p{color:#8f5dbf;}
 /*活动列表*/
 .zhaos{width: 100%;height:auto;background-color:#fff;overflow: hidden;margin-top:5px;}
