@@ -368,7 +368,7 @@ public class FliterForm extends FrameworkImpl {
 
 					if (intTypeString.contains(fieldType)) {
 						// 数字;
-						result = result + ", CONCAT(ifnull(" + resultFld + ",'0'),'')";
+						result = result + ", CONCAT(ifnull(" + resultFld + ",0),'')";
 					} else if ("DATE".equals(fieldType)) {
 						// 是否是日期;
 						result = result + ", ifnull(date_format(" + resultFld + ",'%Y-%m-%d'),'')";

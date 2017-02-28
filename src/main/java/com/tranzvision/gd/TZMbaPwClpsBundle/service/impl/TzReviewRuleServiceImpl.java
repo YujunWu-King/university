@@ -58,7 +58,7 @@ public class TzReviewRuleServiceImpl extends FrameworkImpl {
 			/* 报考考生数量,材料评审考生*/
 			int numReviewCount = 0;
 
-			String sql = "SELECT date_format(TZ_PYKS_RQ,'%Y-%m-%d') AS TZ_PYKS_RQ, date_format(TZ_PYKS_SJ,'%i:%s') AS TZ_PYKS_SJ, date_format(TZ_PYJS_RQ,'%Y-%m-%d') AS TZ_PYJS_RQ, date_format(TZ_PYJS_SJ,'%i:%s') AS TZ_PYJS_SJ, TZ_CLPS_SM,TZ_MSPY_NUM,CASE WHEN TZ_DQPY_ZT = 'A' THEN '进行中' WHEN TZ_DQPY_ZT = 'B' THEN '已结束' ELSE '未开始' END FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?";
+			String sql = "SELECT date_format(TZ_PYKS_RQ,'%Y-%m-%d') AS TZ_PYKS_RQ, date_format(TZ_PYKS_SJ,'%i:%s') AS TZ_PYKS_SJ, date_format(TZ_PYJS_RQ,'%Y-%m-%d') AS TZ_PYJS_RQ, date_format(TZ_PYJS_SJ,'%i:%s') AS TZ_PYJS_SJ, TZ_CLPS_SM,TZ_MSPY_NUM,CASE WHEN TZ_DQPY_ZT = 'A' THEN '进行中' WHEN TZ_DQPY_ZT = 'B' THEN '已结束' ELSE '未开始' END AS TZ_DQPY_ZT FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ?";
 
 			Map<String,Object> rulesMap = sqlQuery.queryForMap(sql, new Object[]{classId,batchID});
 			if(rulesMap != null){
@@ -151,9 +151,18 @@ public class TzReviewRuleServiceImpl extends FrameworkImpl {
 					
 					String classID = infoData.get("classID") == null ? "" : String.valueOf(infoData.get("classID"));
 					String batchID = infoData.get("batchID") == null ? "" : String.valueOf(infoData.get("batchID"));
-					Date startDate = infoData.get("startDate") == null ? null : dateFormat.parse(infoData.get("startDate").toString());
+					String strKSDate = infoData.get("startDate") == null ? null : String.valueOf(infoData.get("startDate"));
+					Date startDate = null;
+					if(StringUtils.isNotBlank(strKSDate)){
+						startDate = dateFormat.parse(strKSDate);
+					}
 					Date startTime = infoData.get("startTime") == null ? timeFormat.parse("08:30") : timeFormat.parse(infoData.get("startTime").toString());
-					Date endDate = infoData.get("endDate") == null ? null : dateFormat.parse(infoData.get("endDate").toString());
+					
+					String strJSDate = infoData.get("endDate") == null ? null : String.valueOf(infoData.get("endDate"));
+					Date endDate = null;
+					if(StringUtils.isNotBlank(strJSDate)){
+						endDate = dateFormat.parse(strJSDate);
+					}
 					Date endTime = infoData.get("endTime") == null ? timeFormat.parse("17:30") : timeFormat.parse(infoData.get("endTime").toString());
 					String desc = infoData.get("desc") == null ? "" : String.valueOf(infoData.get("desc"));
 					String reviewCount = infoData.get("reviewCount") == null ? "0" : String.valueOf(infoData.get("reviewCount"));
@@ -256,6 +265,7 @@ public class TzReviewRuleServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strRet;
 	}
