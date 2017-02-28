@@ -569,8 +569,8 @@ public class tzOnlineAppEngineImpl {
 											strRefLetterId = tzRefLetterId;
 										}
 										psTzAppInsT2.setTzAppFormSta(submitState);
-										String tzPwd = letterInsMap.get("") == null ? ""
-												: letterInsMap.get("").toString();
+										String tzPwd = letterInsMap.get("TZ_PWD") == null ? ""
+												: letterInsMap.get("TZ_PWD").toString();
 										psTzAppInsT2.setTzPwd(tzPwd);
 										psTzAppInsTMapper.insertSelective(psTzAppInsT2);
 									}
@@ -679,7 +679,7 @@ public class tzOnlineAppEngineImpl {
 	@SuppressWarnings("unchecked")
 	public String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
 			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState,
-			String strBathId, String newClassId, String pwd, String strOtype) {
+			String strBathId, String newClassId, String pwd, String strOtype, String isPwd) {
 
 		String returnMsg = "";
 
@@ -708,6 +708,7 @@ public class tzOnlineAppEngineImpl {
 					: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
 
 			String INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
+
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
 			// if (count > 0) {
@@ -729,7 +730,10 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
-				psTzAppInsT.setTzPwd(pwd);
+
+				if (isPwd != null && isPwd.equals("Y")) {
+					psTzAppInsT.setTzPwd(pwd);
+				}
 				psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
 			} else {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
@@ -746,7 +750,9 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setRowAddedDttm(new Date());
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
-				psTzAppInsT.setTzPwd(pwd);
+				if (isPwd != null && isPwd.equals("Y")) {
+					psTzAppInsT.setTzPwd(pwd);
+				}
 				psTzAppInsTMapper.insert(psTzAppInsT);
 			}
 
@@ -1007,7 +1013,7 @@ public class tzOnlineAppEngineImpl {
 
 	// 报名表提交
 	public String submitAppForm(Long numAppInsId, String strClassId, String strAppOprId, String strTplType,
-			String strBathId, String pwd) {
+			String strBathId, String pwd, String isPwd) {
 
 		String returnMsg = "";
 
@@ -1025,7 +1031,9 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setTzAppSubDttm(new Date());
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
-				psTzAppInsT.setTzPwd(pwd);
+				if (isPwd != null && isPwd.equals("Y")) {
+					psTzAppInsT.setTzPwd(pwd);
+				}
 				psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
 			} else {
 				returnMsg = "failed";
@@ -1348,14 +1356,18 @@ public class tzOnlineAppEngineImpl {
 			// 保存的時候 如果本页 有预提交按钮，检查是否 已经预备提交了
 			if ("save".equals(strOtype)) {
 				sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
-				int PretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" }, "Integer");
-				if (PretPageNo == numCurrentPageNo) {
-					sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
-					String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-					if (TZ_APP_FORM_STA.equals("P")) {
-						return "";
-					} else {
-						return "NOPRE";
+				String strPretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" }, "String");
+
+				if (strPretPageNo != null && !strPretPageNo.equals("")) {
+					int PretPageNo = Integer.parseInt(strPretPageNo);
+					if (PretPageNo == numCurrentPageNo) {
+						sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+						String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+						if (TZ_APP_FORM_STA.equals("P")) {
+							return "";
+						} else {
+							return "NOPRE";
+						}
 					}
 				}
 			}
@@ -1556,8 +1568,15 @@ public class tzOnlineAppEngineImpl {
 					returnMsg = returnMsg + "请先预提交" + "<br/>";
 
 					sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
-					int PretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" }, "Integer");
-					listPageNo.add(PretPageNo);
+					String strPretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" },
+							"String");
+
+					if (strPretPageNo != null && !strPretPageNo.equals("")) {
+						listPageNo.add(Integer.parseInt(strPretPageNo));
+					}
+					// int PretPageNo = sqlQuery.queryForObject(sql, new
+					// Object[] { strTplId, "PreButtom" }, "Integer");
+
 				}
 
 				// 页面全部设置成完成
