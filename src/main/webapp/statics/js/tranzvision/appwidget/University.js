@@ -29,7 +29,10 @@ SurveyBuild.extend("University", "baseComponent", {
         var children = data.children;
 		var c = '<input id="CountryCode" type="hidden" name="CountryCode" value="CHN">';
 		
+		
+		
         if (previewmode) {
+        	
             if(SurveyBuild._readonly){
                 //只读模式
 
@@ -53,6 +56,39 @@ SurveyBuild.extend("University", "baseComponent", {
             }else{
                 //填写模式
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+                
+                
+              //modity by caoy 增加对于默认值的处理
+        		var defaulCountry = data.defaultval;
+        		//console.log("111"+defaulCountry);
+        		
+        		if (defaulCountry != undefined  && defaulCountry.length > 0) {
+        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +defaulCountry + '"}}';
+					$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        data:{
+                            tzParams:params
+                        },
+                        async:false,
+                        url:SurveyBuild.tzGeneralURL,
+                        success: function(f) {
+                        	var data = [];
+							if(f.state.errcode == "0"){
+								data = f.comContent;
+							}
+							if(data.length) {
+								//遍历data，添加到自动完成区
+								$.each(data, function(index,term) {
+									if (term.descr == defaulCountry) {
+										children[0]["value"] = term.descr;
+										children[0]["ccode"] = term.country;
+									}
+								});
+							}
+                        }
+                    });
+        		}
 
                 /*c += '<div class="main_inner_content_info_autoheight">';
                 c += '	<div class="main_inner_connent_info_left">';

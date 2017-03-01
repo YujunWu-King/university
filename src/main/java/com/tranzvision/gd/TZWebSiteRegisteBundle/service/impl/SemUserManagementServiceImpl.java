@@ -842,7 +842,6 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						if ("TZ_LAST_NAME".equals(regFieldId)) {
 							strLastName = field;
 						}
-
 						if ("Y".equals(required) && (field == null || "".equals(field))) {
 							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
 									regFieldYsmc + " " + strBlankTips);
@@ -857,6 +856,11 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						updateList.add(field);
 						//院校选择中增加国家
 						if("TZ_SCH_CNAME".equals(regFieldId)){
+						    	String schCountry = jacksonUtil.getString("TZ_SCH_CNAME_Country");
+						    	if("Y".equals(required)&&(schCountry==null||"".equals(schCountry))){
+						    	    return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+								"院校所属国家" + " " + strBlankTips);
+						    	}
 							String schCountryField = "TZ_SCH_COUNTRY";
 							updateRegSql = updateRegSql + "," + schCountryField + " = ?";
 							String schCountryValue = jacksonUtil.getString(schCountryField);

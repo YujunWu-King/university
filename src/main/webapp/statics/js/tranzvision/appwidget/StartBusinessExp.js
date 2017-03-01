@@ -1,7 +1,8 @@
 SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 	itemName: "创业经历",
 	title: "创业经历",
-	isDoubleLine: "Y",
+	//isDoubleLine: "Y",
+	isSingleLine:"Y",
 	fixedContainer: "Y",//固定容器标识
 	minLines: "1",
 	maxLines: "4",
@@ -170,13 +171,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			//创业类型 MsgSet["BUSINESS_TYPE"]
 			htmlDisplay += '<div class="type_item_li">';
 			htmlDisplay += '	<span class="type_item_label">'+ MsgSet["BUSINESS_TYPE"]+':</span>';
-			htmlDisplay += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			htmlDisplay += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			htmlDisplay += '	</div>';
 
 			//融资情况 sgSet["FINANCING"]  "请选择"：MsgSet["PLEASE_SELECT"]
 			htmlDisplay += '<div class="type_item_li">';
-			htmlDisplay += '	<span class="type_item_label">'+"融资情况"+':</span>';
-			htmlDisplay += '		<b class="read-select" style="min-width:120px;">--'+MsgSet["PLEASE_SELECT"]+'--</b>';
+			htmlDisplay += '	<span class="type_item_label">'+MsgSet["FINANCING"]+':</span>';
+			htmlDisplay += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			htmlDisplay += '	</div>';
 			
 			
@@ -405,42 +406,105 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
 				}
 					//<!--融资标题-->
-					NET_DIV+='<div class="input-list-info left" style="height:100px"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
-					//<!---融资radioGroup-->	
-					NET_DIV+='<div class="input-list-text left" style="height:240px" >'
-						//<!--加入一个隐藏input缓存radio数据-->
-						NET_DIV+='<input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/>'
-						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING" />'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING" >'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST" />'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span><br/>'	
-						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING" />'+MsgSet["NO_FINANCING"]+'<br/>'	
-						NET_DIV+='<input type="radio" name="financing_type"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE" />'+MsgSet["NEW_CREATE"]+''	
-					NET_DIV+='</div>'	
-					
+				//原始版：
+//					NET_DIV+='<div class="input-list-info left"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+//					//<!---融资radioGroup-->	
+//					NET_DIV+='<div class="margart8 input-list-textwrap left">'
+//						//<!--加入一个隐藏input缓存radio数据-->checkedRadio
+//						NET_DIV+='<ul>'
+//						NET_DIV+='<li name="radioData"><input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/></li>'
+//						NET_DIV+='<li name="financingB"><div class="radio-btn '+(FINANCING_DEL=="B_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING"/></i></div>'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//						NET_DIV+='<li name="financingA"><div class="radio-btn '+(FINANCING_DEL=="A_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING"/></i></div>'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//						NET_DIV+='<li name="financingAn"><div class="radio-btn '+(FINANCING_DEL=="ANGEL_INVEST"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST"/></i></div>'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//						NET_DIV+='<li name="financingNo"><div class="radio-btn '+(FINANCING_DEL=="NO_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING"/></i></div>'+MsgSet["NO_FINANCING"]+'</li>'	
+//						NET_DIV+='<li name="financingNe"><div class="radio-btn '+(FINANCING_DEL=="NEW_CREATE"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE"/></i></div>'+MsgSet["NEW_CREATE"]+'</li>'	
+//						NET_DIV+='</ul>'
+//					NET_DIV+='</div>'	
+					//-------------------------------------修正版:
+		
+						//<!--融资标题-->
+						NET_DIV+='<div class="input-list-info left" style="height:240px"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+						//<!---融资radioGroup-->	
+						NET_DIV+='<div class="right" name="financingGp" style="width:65%;height:240px">'
+							//隐藏DIV中的input存值
+							NET_DIV+='<div name="radioData" style="display:block"><input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/></div>'
+							//<!--B轮融资->
+							NET_DIV+='<div id="FB">'
+								NET_DIV+='<div name="financingB" class="input-list-text left" style="width:53%">'
+									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="B_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="B_FINANCING" '+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["B_FINANCING"]+'</div>'
+									NET_DIV+='<div class="right" style="width:68%;  '+(FINANCING_DEL=="B_FINANCING"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'"></div>'
+								NET_DIV+='</div>'
+								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_1.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+							NET_DIV+='</div>'
+							//<!--A轮融资->
+							NET_DIV+='<div id="FA">'
+								NET_DIV+='<div name="financingA" class="input-list-text left" style="width:53%">'
+									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="A_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="A_FINANCING" '+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["A_FINANCING"]+'</div>'
+									NET_DIV+='<div class="right" style="width:68%; '+(FINANCING_DEL=="A_FINANCING"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'"></div>'
+								NET_DIV+='</div>'
+								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_2.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+							NET_DIV+='</div>'
+							//<!--天使轮融资->
+							NET_DIV+='<div id="FAN">'
+								NET_DIV+='<div name="financingAn" class="input-list-text left" style="width:53%">'
+									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="ANGEL_INVEST"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="ANGEL_INVEST" '+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+'></i></div>'+MsgSet["ANGEL_INVEST"]+'</div>'
+									NET_DIV+='<div class="right" style="width:68%; '+(FINANCING_DEL=="ANGEL_INVEST"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'"></div>'
+								NET_DIV+='</div>'
+								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_3.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+							NET_DIV+='</div>'
+							//<!--未融资->
+							NET_DIV+='<div id="FNO">'
+								NET_DIV+='<div name="financingNo" class="input-list-text left" style="width:53%">'
+									NET_DIV+='<div class="left"><div class="radio-btn'+(FINANCING_DEL=="NO_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NO_FINANCING" '+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["NO_FINANCING"]+'</div>'
+								NET_DIV+='</div>'
+							NET_DIV+='</div>'
+							//<!--初创->	
+							NET_DIV+='<div id="FNE">'
+								NET_DIV+='<div name="financingNe" class="input-list-text left" style="width:53%">'
+									NET_DIV+='<div class="left"><div class="radio-btn'+(FINANCING_DEL=="NEW_CREATE"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NEW_CREATE" '+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+'></i></div>'+MsgSet["NEW_CREATE"]+'</div>'
+								NET_DIV+='</div>'
+							NET_DIV+='</div>'									
+							//<!--加入一个隐藏input缓存radio数据-->checkedRadio
+//							NET_DIV+='<ul>'
+//							NET_DIV+='<li name="radioData"><input type="hidden" id="'+ data["itemId"] + child.WorkExper2.itemId + '" value="'+child.WorkExper2.value + '"/></li>'
+//							NET_DIV+='<li name="financingB"><div class="radio-btn '+(FINANCING_DEL=="B_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+' value="B_FINANCING"/></i></div>'+MsgSet["B_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_bspan"'+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//							NET_DIV+='<li name="financingA"><div class="radio-btn '+(FINANCING_DEL=="A_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+' value="A_FINANCING"/></i></div>'+MsgSet["A_FINANCING"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_aspan"'+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//							NET_DIV+='<li name="financingAn"><div class="radio-btn '+(FINANCING_DEL=="ANGEL_INVEST"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+' value="ANGEL_INVEST"/></i></div>'+MsgSet["ANGEL_INVEST"]+'<span id="'+ data["itemId"] + child.WorkExper2.itemId + '_angspan"'+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'><input class="inpu-list-text-enter" style="width:55%;height:35px;margin-left:5px" id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" style="width:120px;margin-left:5px"/><span>'+MsgSet["ONE_MILLION"]+'</span></span></li>'	
+//							NET_DIV+='<li name="financingNo"><div class="radio-btn '+(FINANCING_DEL=="NO_FINANCING"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+' value="NO_FINANCING"/></i></div>'+MsgSet["NO_FINANCING"]+'</li>'	
+//							NET_DIV+='<li name="financingNe"><div class="radio-btn '+(FINANCING_DEL=="NEW_CREATE"?'checkedRadio': '')+'"><i><input type="radio" name="financing_type"'+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+' value="NEW_CREATE"/></i></div>'+MsgSet["NEW_CREATE"]+'</li>'	
+//							NET_DIV+='</ul>'
+						NET_DIV+='</div>'		
+					//-------------------------------------	
 					//<!--收入140px-->
 					NET_DIV+='<div id="income_y" style="margin-top:10px" class="input-list">'	
 						NET_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["INCOME"]+'：</div>'
-						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
-						//---------NET_DIV input格式检验DIV:
-						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						NET_DIV += '	<div id="' + data.itemId+child.WorkExper3.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						NET_DIV += '		<div class="onShow"></div>';
-						NET_DIV += '	</div>';
-						NET_DIV += '</div>';
-						//---------
-					NET_DIV+='</div></div>'					
+						NET_DIV+='<div class="input-list-text left"><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper3.itemId + '" value="'+child.WorkExper3.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["ONE_MILLION"]+'</span>'
+							//---------NET_DIV input格式检验DIV:
+//							NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							NET_DIV += '	<div id="' + data.itemId+child.WorkExper3.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							NET_DIV += '		<div class="onShow"></div>';
+//							NET_DIV += '	</div>';
+//							NET_DIV += '</div>';
+							//---------
+						NET_DIV+='</div>'
+						NET_DIV+='<div class="input-list-suffix left">'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper3.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+
+					NET_DIV+='</div>'					
 					//<!--用户数20px-->
 					NET_DIV+='<div id="people" style="margin-top:10px" class="input-list">'
 						NET_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["USER_NUM"]+'：</div>'
-						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" /><span>'+MsgSet["PEOPLES"]+'</span>'
-						//---------NET_DIV input格式检验DIV:
-						NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						NET_DIV += '	<div id="' + data.itemId+child.WorkExper4.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						NET_DIV += '		<div class="onShow"></div>';
-						NET_DIV += '	</div>';
-						NET_DIV += '</div>';
-						//---------
-					NET_DIV+='</div></div>'	
+						NET_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper4.itemId + '" value="'+child.WorkExper4.value+'" />'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["PEOPLES"]+'</span>'
+							//---------NET_DIV input格式检验DIV:
+//							NET_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							NET_DIV += '	<div id="' + data.itemId+child.WorkExper4.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							NET_DIV += '		<div class="onShow"></div>';
+//							NET_DIV += '	</div>';
+//							NET_DIV += '</div>';
+							//---------
+						NET_DIV+='</div>'
+						NET_DIV+='<div class="input-list-suffix left">'+MsgSet["PEOPLES"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper4.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+
+					NET_DIV+='</div>'	
 					NET_DIV+='<div class="clear"></div>'
 				NET_DIV+='</div>'
 				//-----家族企业关联的DIV
@@ -454,27 +518,33 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--自有资金-->
 					FAM_DIV+='<div id="own_money" class="input-list">'
 						FAM_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["OWN_MONEY"]+'：</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
-						//---------FAM_DIV input格式检验DIV:
-						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper5.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						FAM_DIV += '		<div class="onShow"></div>';
-						FAM_DIV += '	</div>';
-						FAM_DIV += '</div>';
-						//---------
-					FAM_DIV+='</div></div>'		
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["ONE_MILLION"]+'</span>'
+							//---------FAM_DIV input格式检验DIV:
+//							FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							FAM_DIV += '	<div id="' + data.itemId+child.WorkExper5.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							FAM_DIV += '		<div class="onShow"></div>';
+//							FAM_DIV += '	</div>';
+//							FAM_DIV += '</div>';
+							//---------
+						FAM_DIV+='</div>'
+						FAM_DIV+='<div class="input-list-suffix left">'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper5.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+
+					FAM_DIV+='</div>'		
 					//<!--家族企业资产-->
 					FAM_DIV+='<div id="family_money" class="input-list">'	
 						FAM_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["FAMILY_MONEY"]+'：</div>'
-						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
-						//---------FAM_DIV input格式检验DIV:
-						FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						FAM_DIV += '	<div id="' + data.itemId+child.WorkExper6.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						FAM_DIV += '		<div class="onShow"></div>';
-						FAM_DIV += '	</div>';
-						FAM_DIV += '</div>';
-						//----------------------
-					FAM_DIV+='</div></div>'
+						FAM_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["ONE_MILLION"]+'</span>'
+							//---------FAM_DIV input格式检验DIV:
+//							FAM_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							FAM_DIV += '	<div id="' + data.itemId+child.WorkExper6.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							FAM_DIV += '		<div class="onShow"></div>';
+//							FAM_DIV += '	</div>';
+//							FAM_DIV += '</div>';
+							//----------------------
+						FAM_DIV+='</div>'
+						FAM_DIV+='<div class="input-list-suffix left">'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper6.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+					FAM_DIV+='</div>'
+						
 					FAM_DIV+='<div class="clear"></div>'		
 				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
@@ -488,39 +558,46 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//<!--近12个月收入-->
 					OTH_DIV+='<div id="income_o" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left" ><span class="red-star">*</span>'+MsgSet["INCOME"]+'：</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'	
-						//---------FAM_DIV input格式检验DIV:
-						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper7.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow"></div>';
-						OTH_DIV += '	</div>';
-						OTH_DIV += '</div>';
-						//----------------------
-					OTH_DIV+='</div></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["ONE_MILLION"]+'</span>'	
+							//---------FAM_DIV input格式检验DIV:
+//							OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							OTH_DIV += '	<div id="' + data.itemId+child.WorkExper7.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							OTH_DIV += '		<div class="onShow"></div>';
+//							OTH_DIV += '	</div>';
+//							OTH_DIV += '</div>';
+							//----------------------
+						OTH_DIV+='</div>'
+						OTH_DIV+='<div class="input-list-suffix left">'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper7.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+
+					OTH_DIV+='</div>'	
 					//<!--年纯利润-->
 					OTH_DIV+='<div id="year_income" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["YEAR_PROFIT"]+'：</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/><span>'+MsgSet["ONE_MILLION"]+'</span>'
-						//---------OTH_DIV input格式检验DIV:
-						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper8.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow"></div>';
-						OTH_DIV += '	</div>';
-						OTH_DIV += '</div>';
-						//----------------------
-					OTH_DIV+='</div></div>'	
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["ONE_MILLION"]+'</span>'
+							//---------OTH_DIV input格式检验DIV:
+//							OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							OTH_DIV += '	<div id="' + data.itemId+child.WorkExper8.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							OTH_DIV += '		<div class="onShow"></div>';
+//							OTH_DIV += '	</div>';
+//							OTH_DIV += '</div>';
+							//----------------------
+						OTH_DIV+='</div>'
+						OTH_DIV+='<div class="input-list-suffix left">'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper8.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+					OTH_DIV+='</div>'	
 					//<!--企业规模-->
 					OTH_DIV+='<div id="firm_scale" class="input-list">'
 						OTH_DIV+='<div  class="input-list-info left"><span class="red-star">*</span>'+MsgSet["FIRM_SCALE"]+'：</div>'
-						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/><span>'+MsgSet["PEOPLES"]+'</span>'	
-						//---------OTH_DIV input格式检验DIV:
-						OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
-						OTH_DIV += '	<div id="' + data.itemId+child.WorkExper9.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-						OTH_DIV += '		<div class="onShow"></div>';
-						OTH_DIV += '	</div>';
-						OTH_DIV += '</div>';
-						//----------------------
-					OTH_DIV+='</div></div>'
+						OTH_DIV+='<div class="input-list-text left"  ><input class="inpu-list-text-enter" style="height:35px; " id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"/>'//&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#999">'+MsgSet["PEOPLES"]+'</span>'	
+							//---------OTH_DIV input格式检验DIV:
+//							OTH_DIV += '<div style="margin-top: -40px; margin-left: 365px">';
+//							OTH_DIV += '	<div id="' + data.itemId+child.WorkExper9.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
+//							OTH_DIV += '		<div class="onShow"></div>';
+//							OTH_DIV += '	</div>';
+//							OTH_DIV += '</div>';
+							//----------------------
+						OTH_DIV+='</div>'
+						OTH_DIV+='<div class="input-list-suffix left">'+MsgSet["PEOPLES"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper9.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
+					OTH_DIV+='</div>'
 				OTH_DIV+='</div>'
 				OTH_DIV+='<div class="clear"></div>'	
 				//-------------------------------
@@ -552,12 +629,12 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				if(btypeVal=="01"){
 					netDiv.css("display","block");
 					//清空除开"互联网"之外的数据
-					netDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+					familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+					familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
 					
-					netDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+					otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
 					//---------------------
 				}else{
 					netDiv.css("display","none");
@@ -575,7 +652,20 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
 					otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
 					otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
-					//-----------------------
+					//清除"互联网"下的radio选择和隐藏后缀
+					netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
+					netDiv.find("#FB").find(".input-list-suffix").css("display","none");
+					
+					netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
+					netDiv.find("#FA").find(".input-list-suffix").css("display","none");
+					
+					netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
+					netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
+					
+					
 				}else{
 					familyDiv.css("display","none");
 				}
@@ -592,59 +682,98 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
 					familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
 					
+					//清除"互联网"下的radio选择和隐藏后缀
+					netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
+					netDiv.find("#FB").find(".input-list-suffix").css("display","none");
+					
+					netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
+					netDiv.find("#FA").find(".input-list-suffix").css("display","none");
+					
+					netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+					netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
+					netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
+					
 				}else{
 					otherDiv.css("display","none");
 					//
 				}
 			});
 		});
-		//--------------------------
 		//----"互联网"类型下，radio的切换处理
-		$("input[name='financing_type']").click(function(){
-			//alert($(this).val());
-			console.log("thisXX:");
-			console.dir($(this));
-			var financingTypeVal=($(this).val());
+		$(".radio-btn").click(function(){
+			var radioEl=$(this).find("input[name='financing_type']");
+
+			$(this).addClass("checkedRadio");
+			var financingTypeVal=radioEl.val();
+			//alert(financingTypeVal);
 			//获取5个radio的句柄
-//			var b_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
-//			var a_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_aspan");
-//			var ang_financing_s=$("#"+data["itemId"] + child.WorkExper2.itemId + "_angspan");
-			var b_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_bspan");
-			var a_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_aspan");
-			var ang_financing_s=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId + "_angspan");
+			var b_financing_i=$(this).parents("div[name='financingGp']").find("#FB").find("div[name='financingB']").find(".right");
+			var b_financing_s=$(this).parents("div[name='financingGp']").find("#FB").find(".input-list-suffix");
+			
+			//console.log("b_financing_i:");
+			//console.dir(b_financing_i);
+			var a_financing_i=$(this).parents("div[name='financingGp']").find("#FA").find("div[name='financingA']").find(".right");
+			var a_financing_s=$(this).parents("div[name='financingGp']").find("#FA").find(".input-list-suffix");
+			
+			var ang_financing_i=$(this).parents("div[name='financingGp']").find("#FAN").find("div[name='financingAn']").find(".right");
+			var ang_financing_s=$(this).parents("div[name='financingGp']").find("#FAN").find(".input-list-suffix");
+			
+			var no_radio=$(this).parents("div[name='financingGp']").find("#FNO").find("div[name='financingNo']").find(".radio-btn");
+			var new_radio=$(this).parents("div[name='financingGp']").find("#FNE").find("div[name='financingNe']").find(".radio-btn");
+
 			//---radio-1
 			if(financingTypeVal=="B_FINANCING"){
-				//$("#B_FINANCING_S").css("display","inline");
+				b_financing_i.css("display","inline");
 				b_financing_s.css("display","inline");
 			}else{
-				//$("#B_FINANCING_S").css("display","none");
+				b_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+				b_financing_i.css("display","none");
 				b_financing_s.css("display","none");
+				//清空B轮融资的数据：
+				b_financing_i.find("input").val("");
 			}
 			//---radio-2
 			if(financingTypeVal=="A_FINANCING"){
-				//$("#A_FINANCING_S").css("display","inline");
+				a_financing_i.css("display","inline");
 				a_financing_s.css("display","inline");
 			}else{
-				//$("#A_FINANCING_S").css("display","none");
+				a_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+				a_financing_i.css("display","none");
 				a_financing_s.css("display","none");
-				
+				//清空A轮融资的数据:
+				a_financing_i.find("input").val("");
 			}
 			//---radio-3
 			if(financingTypeVal=="ANGEL_INVEST"){
-				//$("#ANGEL_INVEST_S").css("display","inline");
+				ang_financing_i.css("display","inline");
 				ang_financing_s.css("display","inline");
 			}else{
-				//$("#ANGEL_INVEST_S").css("display","none");
+				ang_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+				ang_financing_i.css("display","none");
 				ang_financing_s.css("display","none");
-				//清除天使融资之外的数据
-				//--------------------
+				//清空天使融资的数据：
+				ang_financing_i.find("input").val("");
+			}
+			if(financingTypeVal!="NO_FINANCING"){
+				no_radio.removeClass("checkedRadio");
+			}
+			if(financingTypeVal!="NEW_CREATE"){
+				new_radio.removeClass("checkedRadio");
+			}
+			if(financingTypeVal=="NO_FINANCING"||financingTypeVal=="NEW_CREATE"){
+				//清楚B轮融资 A轮融资 天使融资 数据:
+				a_financing_i.val("");
+				b_financing_i.val("");
+				ang_financing_i.val("");
 			}
 			//-----------将raido中的数据放入radioGroup下的隐藏input中
-			var radioValInput=$(this).siblings("#"+data["itemId"] + child.WorkExper2.itemId);
+			var radioValInput=$(this).parents(".right").find("div[name='radioData']").find("#"+data["itemId"] + child.WorkExper2.itemId);
 			radioValInput.val(financingTypeVal);
-			//console.dir("radioValInput:");
-			//console.dir(radioValInput);
 		});
+		//--------------------------
+	
 		
 		//---所有的input,select非空验证:
 		//验证所有的select:WorkExper1

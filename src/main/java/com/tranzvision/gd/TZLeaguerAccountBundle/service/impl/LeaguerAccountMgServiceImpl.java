@@ -15,6 +15,8 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -38,6 +40,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
+	@Autowired
+	private PsTzRegUserTMapper PsTzRegUserTMapper;
 	
 	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -126,7 +130,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_ZHZ_DMS", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_ZHCE_DT", "ACCTLOCK"};
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_ZHZ_DMS", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME"};
 			
 			String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
 			strParams.replaceAll(admin, "");
@@ -149,6 +153,11 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("jihuoZt", rowList[5]);
 					mapList.put("zcTime", rowList[6]);
 					mapList.put("acctlock", rowList[7]);
+					String hmdUser = "否";
+					if("Y".equals(rowList[8])){
+					    hmdUser = "是";
+					}
+					mapList.put("hmdUser", hmdUser);
 					listData.add(mapList);
 				}
 
@@ -183,6 +192,42 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 				    psoprdefn.setOprid(strOprId);
 				    psoprdefn.setAcctlock(Short.valueOf("1"));
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
+					if (i > 0) {
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "信息保存失败";
+					}
+				}else{
+					errMsg[0] = "1";
+					errMsg[1] = "参数错误";
+				}
+			}
+		} catch (Exception e) {
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return strRet;
+	}
+	
+	/* 加入黑名单*/
+	@Override
+	public String tzUpdate(String[] actData, String[] errMsg) {
+		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				if(jacksonUtil.containsKey("OPRID")){
+					// 用户账号;
+				    String strOprId = jacksonUtil.getString("OPRID");
+				    //TZ_REG_USER_T
+				    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();	
+				    psTzRegUserT.setOprid(strOprId);
+				    psTzRegUserT.setTzBlackName("Y");				    
+				    int i = PsTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
 					if (i > 0) {
 					} else {
 						errMsg[0] = "1";

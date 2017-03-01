@@ -158,6 +158,47 @@
 		},"保存成功",true,this);
 	},
 	
+	//运行自动初筛引擎,如果上次运行正在进行中，显示进程运行详细信息
+	runAutoScreenEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_AUTO_SCREEN_STD',
+			OperateType: 'getLastEngineStatus',
+			comParams:{
+				classId: classId,
+				batchId: batchId
+			}
+		}
+		
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			processIns = respData.processIns;
+		});
+		
+		if(processIns>0 && (status=="RUNNING" || status=="STARTED" || status=="QUENED")){
+			Ext.tzBatchProcessDetails({
+				//进程实例ID
+				processIns: processIns,
+				callBack:function(statusCode){
+					
+				}
+			});
+		}else{
+			comParamsObj.OperateType = "tzRunBatchProcess";
+			tzParams = Ext.JSON.encode(comParamsObj);
+			
+			Ext.tzSubmit(tzParams,function(respData){
+				
+			},"运行成功",true,this);
+		}
+	},
+	
 	//查看打分过程
 	onClickNumber: function(view,rowIndex,colIndex){
 		var rec = view.getStore().getAt(rowIndex);
@@ -179,23 +220,49 @@
 	
 	//查看自动初筛进程运行详情
 	showBatchProcessInfo: function(btn){
-		Ext.tzBatchProcessDetails({
-			//进程实例ID
-			processIns: "100000746",
-			/**
-			 * 回调函数,关闭返回时调用,statusCode-进程行回状态码
-			 * STARTED - 已启动
-			 * RUNNING - 正在运行中
-			 * SUCCEEDED - 成功完成
-			 * ERROR - 发生错误
-			 * FATAL - 发生严重错误
-			 * STOPPING - 正在停止
-			 * TERMINATED - 已强行终止
-			 */
-			callBack:function(statusCode){
-
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_AUTO_SCREEN_STD',
+			OperateType: 'getLastEngineStatus',
+			comParams:{
+				classId: classId,
+				batchId: batchId
 			}
+		}
+		
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			processIns = respData.processIns;
 		});
+		
+		if(processIns > 0){
+			Ext.tzBatchProcessDetails({
+				//进程实例ID
+				processIns: processIns,
+				/**
+				 * 回调函数,关闭返回时调用,statusCode-进程行回状态码
+				 * QUENED -　排队中
+				 * STARTED - 已启动
+				 * RUNNING - 正在运行中
+				 * SUCCEEDED - 成功完成
+				 * ERROR - 发生错误
+				 * FATAL - 发生严重错误
+				 * STOPPING - 正在停止
+				 * TERMINATED - 已强行终止
+				 */
+				callBack:function(statusCode){
+
+				}
+			});
+		}else{
+			Ext.Msg.alert("提示","尚未运行自动初筛引擎");
+		}
 	},
 	
 	//根据名次批量淘汰
@@ -220,12 +287,52 @@
         win.show();
 	},
 	
+	
+	//确定设置批量淘汰
+	setWeedOutStuEnsure: function(btn){
+		var win = btn.findParentByType('setWeedOutWindow');
+		var form = win.child('form').getForm();
+		
+		var classId = win.classId;
+		var batchId = win.batchId;
+		var screenNum = win.screenNum;
+		
+		if(form.isVaild()){
+			var outNum = form.findField('personNum').getValue();
+			if(outNum > screenNum){
+				Ext.Msg.alert("提示","淘汰人数不能超过参与初筛人数！");
+				return;
+			}
+			
+			var comParamsObj = {
+				ComID: 'TZ_AUTO_SCREEN_COM',
+				PageID: 'TZ_AUTO_SCREEN_STD',
+				OperateType: 'setWeedOutByOrder',
+				comParams:{
+					classId: classId,
+					batchId: batchId,
+					outNum: outNum
+					
+				}
+			}
+			
+			var tzParams = Ext.JSON.encode(comParamsObj);
+			Ext.tzSubmit(tzParams,function(respData){
+				//回调刷新
+				win.reLoadGrid();
+			},"保存成功",true,this);
+		}
+	},
+	
+	
 	//编辑自动初筛详细信息
 	editStuScreenDetails: function(grid,rowIndex,colIndex){
 		var rec = grid.getStore().getAt(rowIndex);
 		var classId = rec.get("classId");
 		var batchId = rec.get("batchId");
 		var appId = rec.get("appId");
+		var name = rec.get("name");
+		var msApplyId = rec.get("msApplyId");
 
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUTO_SCREEN_COM"]["TZ_ZDCS_INFO_STD"];
@@ -253,11 +360,14 @@
 		cmp = new ViewClass({
 			classId: classId,
 			batchId: batchId,
-			appId:appId
+			appId:appId,
+			name:name,
+			msApplyId:msApplyId
 		});
 
 		cmp.on('afterrender',function(panel){
-			var form = panel.child('form').getForm();
+			var csDetailsform = panel.child('form');
+			var form = csDetailsform.getForm();
 			
 			var comParamsObj = {
 				ComID: 'TZ_AUTO_SCREEN_COM',
@@ -274,6 +384,9 @@
 			Ext.tzLoad(tzParams,function(respData){
 				var formData = respData;
 				form.setValues(formData);
+				
+				csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+				csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
 			});
 		});
 
@@ -284,6 +397,90 @@
 		if (cmp.floating) {
 			cmp.show();
 		}
+	},
+	
+	//保存自动初筛详细信息
+	onAutoScreenDetailsSave: function(btn){
+		var panel = btn.findParentByType('autoScreenDetails');
+		var closePanel = panle.closePanel;
+		
+		var form = panel.child('form');
+		var formRec = form.getForm().getValues();
+		if(form.isValid()){
+			var comParamsObj = {
+				ComID: 'TZ_AUTO_SCREEN_COM',
+				PageID: 'TZ_ZDCS_INFO_STD',
+				OperateType: 'U',
+				comParams:{
+					update: formRec
+				}
+			}
+			
+			var tzParams = Ext.JSON.encode(comParamsObj);
+			Ext.tzSubmit(tzParams,function(respData){
+				var formDate = respData.formData;
+				form.getForm().setValues(formDate);
+				
+				if(closePanel == "Y"){
+					panel.close();
+				}
+			},"保存成功",true,this);
+		}
+	},
+	
+	//确定保存自动初筛详细信息
+	onAutoScreenDetailsEnsure: function(btn){
+		this.onAutoScreenDetailsSave(btn);
+	},
+	//关闭自动初筛详细信息
+	onAutoScreenDetailsClose: function(btn){
+		var panel = btn.findParentByType('autoScreenDetails');
+		if(panel) panel.close();
+	},
+	
+	
+	tzViewApplyForm: function(btn){
+		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert("提示","您没有权限");
+            return;
+        }
+        
+		var form = this.getView().child('form').getForm();
+		var appInsID = form.findField('appId').getValue();
+
+		var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","TZ_MANAGER":"Y"}}';
+        var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
+        var win = new Ext.Window({
+            title : "查看报名表",
+            maximized : true,
+            width : Ext.getBody().width,
+            height : Ext.getBody().height,
+            autoScroll : true,
+            border:false,
+            bodyBorder : false,
+            isTopContainer : true,
+            modal : true,
+            resizable : false,
+            contentEl : Ext.DomHelper.append(document.body, {
+                bodyBorder : false,
+                tag : 'iframe',
+                style : "border:0px none;scrollbar:true",
+                src : viewUrl,
+                height : "100%",
+                width : "100%"
+            }),
+            buttons: [ {
+                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+                iconCls:"close",
+                handler: function(){
+                    win.close();
+                }
+            }]
+        });
+        win.show();
 	}
 	
 });

@@ -47,7 +47,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
-		System.out.println("strParams:" + strParams);
+		//System.out.println("strParams:" + strParams);
 		// String skinId = "";
 		String language = "";
 		String classId = "";
@@ -62,11 +62,11 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 			language = map.get("TZ_SITE_LANG") == null ? "" : map.get("TZ_SITE_LANG").toString();
 			// skinId = map.get("TZ_SKIN_ID") == null ? "" :
 			// map.get("TZ_SKIN_ID").toString();
-			System.out.println("siteId:" + siteId);
+			//System.out.println("siteId:" + siteId);
 			if (StringUtils.isEmpty(language)) {
 				language = "ZHS";
 			}
-			System.out.println("language:" + language);
+			//System.out.println("language:" + language);
 			if (jacksonUtil.containsKey("TZ_PROV_ID")) {
 				pageID = jacksonUtil.getString("TZ_PROV_ID");
 			}
@@ -77,9 +77,9 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("classId")) {
 				classId = jacksonUtil.getString("classId");
 
-				System.out.println("pageID:" + pageID);
-				System.out.println("linkId" + linkId);
-				System.out.println("classId:" + classId);
+				//System.out.println("pageID:" + pageID);
+				//System.out.println("linkId" + linkId);
+				//System.out.println("classId:" + classId);
 
 				// 根据classId 找到 同一报名表模版下的 可以报名的班级
 				PsTzClassInfT psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(classId);
@@ -94,7 +94,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 					sb.append(
 							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() ");
 					sb.append(
-							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() ");
+							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') >= now() ");
 
 					List<Map<String, Object>> classList = jdbcTemplate.queryForList(sb.toString(),
 							new Object[] { siteId, psTzClassInfT.getTzJgId(), psTzClassInfT.getTzAppModalId() });
@@ -126,7 +126,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 					// 统一接口URL;
 					String tzGeneralURL = request.getContextPath() + "/dispatcher";
 					try {
-						return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_CLASS_SELECT_HTML",true, classInfo,
+						return tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_CLASS_SELECT_HTML",false, classInfo,
 								pageID, request.getContextPath(), title, sureBtn, cancelBtn, "CLASS_RD", error, linkId,
 								tzGeneralURL);
 					} catch (TzSystemException e) {

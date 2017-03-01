@@ -199,10 +199,20 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 				PsTzCsKsTbl psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
 				
 				if(psTzCsKsTbl != null){
+					Date currDate = new Date();
 					psTzCsKsTbl.setTzKshCsjg(status);
-					psTzCsKsTbl.setRowLastmantDttm(new Date());
+					psTzCsKsTbl.setRowLastmantDttm(currDate);
 					psTzCsKsTbl.setRowLastmantOprid(oprid);
 					psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
+					
+					Map<String,Object> formMap = new HashMap<String,Object>();
+					
+					String dttmFormat = getSysHardCodeVal.getDateTimeFormat();
+					SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
+					formMap.put("updateDttm", dttmSimpleDateFormat.format(currDate));
+					formMap.put("updateOpr", oprid);
+					
+					mapRet.replace("formData", formMap);
 				}
 			}
 		} catch (Exception e) {

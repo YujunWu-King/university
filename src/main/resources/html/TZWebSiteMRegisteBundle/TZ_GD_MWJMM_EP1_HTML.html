@@ -1,0 +1,161 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
+<title></title>
+<link href="%bind(:1)/statics/css/website/m/css/style.css"	rel="stylesheet" type="text/css" />
+<style>
+	.login_btn[disabled]{background-color:#eee;color:#999;}
+	.sendBtn[disabled]{background-color:#eee;color:#999;}
+	input[type="button"]{border-radius:0.3rem;}	
+</style>
+<script type="text/javascript"
+	src="%bind(:1)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:1)/statics/js/website/m/rem.js"></script>	
+<script type="text/javascript"
+	src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>		
+<script type="text/javascript">
+function layerMsg(content){
+	layer.open({
+	    content: content,
+	    skin: 'msg',
+	    time: 2 //2秒后自动关闭
+	});	
+} 
+function check_email(val) {
+	var flag = false;
+	if (val != '') {
+		var patrn = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+		if (!patrn.test(val)) {
+			$('#errormsg1').html("<span>请输入正确的邮件地址</span>");
+			$('#errormsg1').show();
+		} else {
+			var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'
+					+ val
+					+ '","orgid":"'
+					+ $("#orgid").val()
+					+ '","lang":"%bind(:3)","sen":"5"}}';
+			$.ajax({
+				type : "POST",
+				async : false,
+				data : {
+					tzParams : tzParams
+				},
+				url : "%bind(:4)",
+				dataType : "json",
+				success : function(result) {
+					if (result.comContent == "success") {
+						$('#errormsg1').hide();
+						flag = true;
+					} else {
+						$('#errormsg1').html("<span>" + result.state.errdesc + "</span>");
+						$('#errormsg1').show();
+						flag = false;
+					}
+				}
+			});
+		}
+	} else {
+		$('#errormsg1').html("<span>邮箱地址不能为空</span>");
+		$('#errormsg1').show();
+	}
+	return flag;
+}
+
+
+function send_email(_this){
+	if($("#sendemail").prop("disabled") != "true"){
+		var email=$("#Email_User").val();
+		if(check_email(email)){
+			if(email==""){layerMsg("请输入邮箱！");}
+			else{
+				var tzParams = 	'{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_MAIL_STD","OperateType":"QF","comParams":{"email":"'+email+'","orgid":"'+$("#orgid").val()+'","lang":"%bind(:3)",	"sen":"6"}}';
+				$.ajax({
+					type:"post",
+					dataType:"json",
+					async:false,
+					data:{
+						tzParams:tzParams
+					},
+					url:"%bind(:4)",
+					success:function(result){
+						if(result.comContent=="success"){emailtime(_this);layerMsg("邮件已发送到您邮箱，请注意查收！");}
+						else{layerMsg(result.state.errdesc);}
+					}
+				});
+			}
+		}else{
+			layerMsg("请输入正确的邮件地址");
+		}
+	}
+};
+	
+</script>
+<script type="text/javascript">
+	var emailstop;
+	var stop;
+	var emailwait=60;
+	var wait=60;		
+
+	function emailtime(o) {
+		if (wait == 0) {
+	   		o.removeAttribute("disabled");   
+	   		o.value = "发送邮件到邮箱";
+	   		wait = 60;
+	  	} else { 
+	   		o.setAttribute("disabled", true);
+	   		o.value = "(" + wait + ")秒后重新发送";
+	   		wait--;
+	   		setTimeout(function() {
+	   			emailtime(o)
+	   		},1000)
+	  	}
+	}
+	
+	
+	function myrefresh(){
+		parent.location.reload();
+	}
+</script>
+</head>
+<body>
+<!-- content start -->
+<div class="viewport-adaptive">
+		<form action="" method="post" enctype="multipart/form-data"	name="forgetForm" id="forgetForm">
+			<div class="bg" id="body_login">
+				<img class="img-responsive book_logo" id=""	src="%bind(:1)/statics/css/website/m/images/login_logo.png">
+				<div class="login_ab" style="top: 32%;">
+					<div class="tab_login">
+						<div class="login_tit">
+							<li class="add_f">邮箱找回</li>						
+						</div>
+						<div class="login_tabnote">							
+							<div class="note_f">
+								<div class="login_account" style="border-radius: 0.3rem;">
+									<div class="users"></div>
+									<input class="important_input" type="text" name="Email_User"
+										id="Email_User" placeholder="请输入邮箱"
+										onblur="check_email(this.value)">
+								</div>
+								<p class="login_tips" id="errormsg1" style="display: none;"></p>
+								<div class="clear"></div>
+								<!-- <a href="javascript:void(0)" class="login_btn" onclick="send_email(this)">发送邮件到邮箱</a> -->
+								<input id="sendemail" type="button"  class="login_btn" onclick="send_email(this)" value="发送邮件到邮箱" />
+								<p class="add_tips">如有问题，请联系：</p>
+								<div class="clear"></div>
+								<p class="login_tips" style="float: left;">mbastudents@sem.tsinghua.edu.cn</p>
+							</div>							
+						</div>
+					</div>
+				</div>
+			</div>
+			<input name="orgid" type="hidden" class="input_251px" id="orgid" value="%bind(:2)"/>
+		</form>
+	</div>
+</body>
+</html>
+<!-- content end -->

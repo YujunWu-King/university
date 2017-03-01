@@ -10,19 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
-
-import org.apache.commons.lang.ObjectUtils.Null;
-import org.apache.ibatis.jdbc.SQL;
-import org.apache.jasper.compiler.AntCompiler.JasperAntLogger;
-import org.apache.tomcat.util.bcel.classfile.ElementValue;
-import org.apache.xmlbeans.SchemaStringEnumEntry;
-import org.omg.CORBA.OBJ_ADAPTER;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.jcache.interceptor.JCacheAspectSupport;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.google.common.collect.MapMaker;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsKshTblMapper;
@@ -56,7 +46,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 
 	@Autowired
-	private SqlQuery jdbcTemplate;
+	private SqlQuery sqlQuery;
 	@Autowired
 	private HttpServletRequest request;	
 	@Autowired
@@ -150,21 +140,21 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				String type = jacksonUtil.getString("type");
 				
 				//当前登录人
-				//String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-				String oprid= "clpw07";
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				//String oprid= "clpw07";
 				
 				String sql;
 				
 				//当前评审轮次、实时计算评委偏差
 				sql = "SELECT TZ_DQPY_LUNC,TZ_REAL_TIME_PWPC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-				Map<String, Object> mapData = jdbcTemplate.queryForMap(sql, new Object[]{classId,applyBatchId});
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[]{classId,applyBatchId});
 				String dqpyLunc = mapData.get("TZ_DQPY_LUNC") == null ? "" : mapData.get("TZ_DQPY_LUNC").toString();
 				String realPwpc = mapData.get("TZ_REAL_TIME_PWPC") == null ? "" : mapData.get("TZ_REAL_TIME_PWPC").toString();
 						
 				
 				//判断当前评审轮次是否已提交，如果已提交，不允许修改
 				sql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
-				String dqpyLuncState = jdbcTemplate.queryForObject(sql, new Object[]{classId,applyBatchId,oprid,dqpyLunc},"String");
+				String dqpyLuncState = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,oprid,dqpyLunc},"String");
 				
 				if("Y".equals(dqpyLuncState)) {
 					errMsg[0] = "1";
@@ -173,7 +163,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 					//更新考生评审得分历史表
 					sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
 					sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
-					jdbcTemplate.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
+					sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
 					
 					//保存成绩项
 					String saveScoreItemRtn = this.scoreItemSave(classId,applyBatchId,bmbId,strForm,errMsg);
@@ -236,8 +226,8 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 
 		try {
 			//当前登录人
-			//String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String oprid = "clpw07";
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			//String oprid = "clpw07";
 			
 			ArrayList<Map<String, Object>> examineeJson = new ArrayList<Map<String,Object>>();
 			Integer count = 0;
@@ -246,7 +236,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			examineeSql = examineeSql + " FROM PS_TZ_REG_USER_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLASS_INF_T D";
 			examineeSql = examineeSql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.OPRID = C.OPRID AND A.TZ_CLASS_ID=D.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?"; 
 			
-			List<Map<String, Object>> examineeList = jdbcTemplate.queryForList(examineeSql,new Object[]{classId,applyBatchId,oprid});
+			List<Map<String, Object>> examineeList = sqlQuery.queryForList(examineeSql,new Object[]{classId,applyBatchId,oprid});
 			
 			for(Map<String, Object> mapExaminee : examineeList) {
 				count++;
@@ -266,7 +256,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				String totalScoreSql = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJ_BPH_TBL A,PS_TZ_CJX_TBL B";
 				totalScoreSql = totalScoreSql + " WHERE A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_INS_ID=? AND A.TZ_JG_ID=? AND A.TZ_SCORE_MODAL_ID=?";
 				totalScoreSql = totalScoreSql + " ORDER BY A.TZ_PX";
-				examineeTotalScore = jdbcTemplate.queryForObject(totalScoreSql, new Object[]{scoreInsId,jgId,scoreModelId},"String");
+				examineeTotalScore = sqlQuery.queryForObject(totalScoreSql, new Object[]{scoreInsId,jgId,scoreModelId},"String");
 				
 				examineeListJson.put("classId", classId);
 				examineeListJson.put("applyBatchId", applyBatchId);
@@ -317,7 +307,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 
 			/*当前考生在当前评委下的成绩单ID*/
 			String sql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
-			String scoreInsId = jdbcTemplate.queryForObject(sql, new Object[]{classId, applyBatchId, bmbId, oprid}, "String");
+			String scoreInsId = sqlQuery.queryForObject(sql, new Object[]{classId, applyBatchId, bmbId, oprid}, "String");
 			
 			
 			/*当前考生基本信息*/
@@ -326,7 +316,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			sqlBasic = sqlBasic + " FROM PS_TZ_REG_USER_T E,PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G";
 			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND B.OPRID=E.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
 
-			Map<String, Object> mapRootBasic = jdbcTemplate.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
+			Map<String, Object> mapRootBasic = sqlQuery.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
 			
 			if(mapRootBasic == null) {
 				return strRtn;
@@ -338,6 +328,9 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			String prgName = mapRootBasic.get("TZ_PRJ_NAME") == null ? "" : mapRootBasic.get("TZ_PRJ_NAME").toString();
 			String name = mapRootBasic.get("TZ_REALNAME") == null ? "" : mapRootBasic.get("TZ_REALNAME").toString();
 			String interviewApplyId = mapRootBasic.get("TZ_MSSQH") == null ? "" : mapRootBasic.get("TZ_MSSQH").toString();
+			String jgId = mapRootBasic.get("TZ_JG_ID") == null ? "" : mapRootBasic.get("TZ_JG_ID").toString();
+			String scoreModelId = mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID") == null ? "" : mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID").toString();
+			String scoreTree = mapRootBasic.get("TREE_NAME") == null ? "" : mapRootBasic.get("TREE_NAME").toString();
 			
 			mapRet.put("classId", classId);
 			mapRet.put("className", className);
@@ -349,25 +342,43 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			mapRet.put("name", name);
 			mapRet.put("interviewApplyId", interviewApplyId);
 			
+			
+			//考生标签：显示自动初筛形成的标签&管理员后台手工添加的标签，负面清单标签不显示
+			String examineeTag = "";
+			
+			String sqlBq = "SELECT A.TZ_ZDBQ_ID,B.TZ_BIAOQZ_NAME FROM PS_TZ_CS_KSBQ_T A,PS_TZ_BIAOQZ_BQ_T B,PS_TZ_CLASS_INF_T C";
+			sqlBq = sqlBq + " WHERE A.TZ_ZDBQ_ID=B.TZ_BIAOQ_ID AND B.TZ_BIAOQZ_ID=C.TZ_CS_KSBQZ_ID AND B.TZ_JG_ID=C.TZ_JG_ID AND C.TZ_CLASS_ID=A.TZ_CLASS_ID";
+			sqlBq = sqlBq + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
+			
+			List<Map<String, Object>> listBq = sqlQuery.queryForList(sqlBq, new Object[] {classId,applyBatchId,bmbId});
+			
+			for (Map<String, Object> mapBq : listBq) {
+				String zdbqId = mapBq.get("TZ_ZDBQ_ID") == null ? "" : mapBq.get("TZ_ZDBQ_ID").toString();
+				String zdbqName= mapBq.get("TZ_BIAOQZ_NAME") == null ? "" : mapBq.get("TZ_BIAOQZ_NAME").toString();
+				
+				examineeTag = examineeTag + "【" + zdbqName + "】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";			
+			}
+			//-------------------------------------还差手工标签
+			
+			mapRet.put("examineeTag", examineeTag);
+			
+			
 			/*成绩项*/
 			ArrayList<Map<String, Object>> scoreItemJson = new ArrayList<Map<String,Object>>();
-			
-			String jgId = mapRootBasic.get("TZ_JG_ID") == null ? "" : mapRootBasic.get("TZ_JG_ID").toString();
-			String scoreModelId = mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID") == null ? "" : mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID").toString();
-			String scoreTree = mapRootBasic.get("TREE_NAME") == null ? "" : mapRootBasic.get("TREE_NAME").toString();
-			
-			String sqlScore = "SELECT A.TREE_NODE,B.DESCR,B.TZ_SCORE_ITEM_TYPE,(SELECT 'Y' FROM PSTREENODE C WHERE C.TREE_NAME=A.TREE_NAME AND C.TREE_NODE_NUM>A.TREE_NODE_NUM AND C.TREE_NODE_NUM_END<A.TREE_NODE_NUM_END  LIMIT 1) TZ_NO_LEAF,A.TREE_LEVEL_NUM,B.TZ_SCORE_LIMITED,B.TZ_SCORE_LIMITED2,B.TZ_SCORE_PY_ZSLIM,B.TZ_SCORE_PY_ZSLIM0,B.TZ_SCORE_ITEM_DFSM,B.TZ_SCORE_ITEM_CKWT,B.TZ_SCORE_CKZL";
+
+			String sqlScore = "SELECT A.TREE_NODE,A.PARENT_NODE_NAME,B.DESCR,B.TZ_SCORE_ITEM_TYPE,(SELECT 'Y' FROM PSTREENODE C WHERE C.TREE_NAME=A.TREE_NAME AND C.TREE_NODE_NUM>A.TREE_NODE_NUM AND C.TREE_NODE_NUM_END<A.TREE_NODE_NUM_END  LIMIT 1) TZ_NO_LEAF,A.TREE_LEVEL_NUM,B.TZ_SCORE_LIMITED,B.TZ_SCORE_LIMITED2,B.TZ_SCORE_PY_ZSLIM,B.TZ_SCORE_PY_ZSLIM0,B.TZ_SCORE_ITEM_DFSM,B.TZ_SCORE_ITEM_CKWT,B.TZ_SCORE_CKZL";
 			sqlScore = sqlScore + " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
 			sqlScore = sqlScore + " WHERE A.TREE_NAME=B.TREE_NAME AND A.TREE_NODE=B.TZ_SCORE_ITEM_ID AND A.TREE_NAME=?";
 			sqlScore = sqlScore + " ORDER BY A.TREE_NODE_NUM,A.TREE_NODE_NUM_END DESC";
 
-			List<Map<String,Object>> scoreList = jdbcTemplate.queryForList(sqlScore,new Object[]{scoreTree});
+			List<Map<String,Object>> scoreList = sqlQuery.queryForList(sqlScore,new Object[]{scoreTree});
 
 			for (Map<String, Object>mapScore : scoreList) {
 				
 				Map<String, Object>mapScoreJson = new HashMap<String,Object>();
 				
 				String scoreItemId = mapScore.get("TREE_NODE") == null ? "" : mapScore.get("TREE_NODE").toString(); 
+				String scoreItemParentId = mapScore.get("PARENT_NODE_NAME") == null ? "" : mapScore.get("PARENT_NODE_NAME").toString();
 				String scoreItemName = mapScore.get("DESCR") == null ? "" : mapScore.get("DESCR").toString();
 				String scoreItemType = mapScore.get("TZ_SCORE_ITEM_TYPE") == null ? "" : mapScore.get("TZ_SCORE_ITEM_TYPE").toString();
 				String scoreItemIsLeaf = mapScore.get("TZ_NO_LEAF") == null ? "Y" : "N";
@@ -384,7 +395,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				
 				/*查询成绩项分值和评语值*/
 				String sqlScoreValue = "SELECT TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
-				Map<String, Object> mapScoreValue = jdbcTemplate.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
+				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
 				if(mapScoreValue==null) {
 					
 				} else {
@@ -399,7 +410,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 					optionSql = optionSql + " FROM PS_TZ_ZJCJXXZX_T";
 					optionSql = optionSql + " WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
 					
-					List<Map<String, Object>> optionList = jdbcTemplate.queryForList(optionSql,new Object[]{jgId,scoreTree,scoreItemId});
+					List<Map<String, Object>> optionList = sqlQuery.queryForList(optionSql,new Object[]{jgId,scoreTree,scoreItemId});
 					
 					for(Map<String, Object> mapOption : optionList) {
 						Map<String, Object> mapOptionJson = new HashMap<String,Object>();
@@ -420,6 +431,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				}
 				
 				mapScoreJson.put("itemId", scoreItemId);
+				mapScoreJson.put("itemParentId", scoreItemParentId);
 				mapScoreJson.put("itemName", scoreItemName);
 				mapScoreJson.put("itemType", scoreItemType);
 				mapScoreJson.put("itemIsLeaf", scoreItemIsLeaf);
@@ -440,6 +452,17 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			
 			mapRet.put("scoreContent", scoreItemJson);
 			
+			
+			//左侧考生列表header
+			Map<String, Object> mapHeader = new HashMap<String,Object>();
+			mapHeader.put("col01", "总分");
+			mapHeader.put("ps_ksh_id", "面试申请号");
+			mapHeader.put("ps_ksh_ppm", "排名");
+			mapHeader.put("ps_ksh_xh", "面试顺序");
+			mapHeader.put("ps_ksh_xm", "姓名");
+			
+			mapRet.put("ksGridHeader", mapHeader);
+			
 			/*考生列表*/
 			/*
 			ArrayList<Map<String, Object>> examineeJson = new ArrayList<Map<String,Object>>();
@@ -448,7 +471,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			examineeSql = examineeSql + " FROM PS_TZ_REG_USER_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CP_PW_KS_TBL A";
 			examineeSql = examineeSql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.OPRID = C.OPRID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?"; 
 			
-			List<Map<String, Object>> examineeList = jdbcTemplate.queryForList(examineeSql,new Object[]{classId,applyBatchId,oprid});
+			List<Map<String, Object>> examineeList = sqlQuery.queryForList(examineeSql,new Object[]{classId,applyBatchId,oprid});
 			
 			for(Map<String, Object> mapExaminee : examineeList) {
 				Map<String, Object> examineeListJson = new HashMap<String, Object>();
@@ -464,7 +487,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				String totalScoreSql = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJ_BPH_TBL A,PS_TZ_CJX_TBL B";
 				totalScoreSql = totalScoreSql + " WHERE A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_INS_ID=? AND A.TZ_JG_ID=? AND A.TZ_SCORE_MODAL_ID=?";
 				totalScoreSql = totalScoreSql + " ORDER BY A.TZ_PX";
-				examineeTotalScore = jdbcTemplate.queryForObject(totalScoreSql, new Object[]{scoreInsIdM,jgId,scoreModelId},"String");
+				examineeTotalScore = sqlQuery.queryForObject(totalScoreSql, new Object[]{scoreInsIdM,jgId,scoreModelId},"String");
 				
 				examineeListJson.put("examineeBmbId", examineeBmbId);
 				examineeListJson.put("examineeName", examineeName);
@@ -515,7 +538,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			sql = sql + " FROM PS_TZ_MODAL_DT_TBL A,PS_TZ_RS_MODAL_TBL B,PS_TZ_CLASS_INF_T C";
 			sql = sql + " WHERE B.TZ_JG_ID=C.TZ_JG_ID AND B.TZ_SCORE_MODAL_ID=C.TZ_ZLPS_SCOR_MD_ID AND A.TREE_NAME=B.TREE_NAME AND C.TZ_CLASS_ID=?";
 
-			List<Map<String, Object>> scoreList = jdbcTemplate.queryForList(sql,new Object[]{classId});
+			List<Map<String, Object>> scoreList = sqlQuery.queryForList(sql,new Object[]{classId});
 			for(Map<String, Object> mapScore : scoreList) {
 								
 				String scoreItemId = mapScore.get("TZ_SCORE_ITEM_ID") == null ? "" : mapScore.get("TZ_SCORE_ITEM_ID").toString();
@@ -674,7 +697,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
 			sql = sql + " ORDER BY E.TZ_SCORE_NUM DESC";
 			
-			List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql,new Object[]{classId,applyBatchId,oprid});
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql,new Object[]{classId,applyBatchId,oprid});
 			
 			Integer rank = 0;
 		
@@ -722,7 +745,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			
 			//清除临时表数据
 			sql = "DELETE FROM PS_TZ_PWKSPC_TMP_T";
-			jdbcTemplate.update(sql);
+			sqlQuery.update(sql);
 			
 			
 			sql = "SELECT A.TZ_PWEI_OPRID,A.TZ_SCORE_INS_ID,C.TZ_SCORE_NUM";
@@ -732,7 +755,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			sql = sql + " AND B.TZ_CLASS_ID=A.TZ_CLASS_ID AND B.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID";
 			sql = sql + " AND B.TZ_CLPS_LUNC=? AND B.TZ_SUBMIT_YN<>'C' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 			
-			List<Map<String,Object>> scoreList = jdbcTemplate.queryForList(sql,new Object[]{dqpyLunc,classId,applyBatchId,bmbId});
+			List<Map<String,Object>> scoreList = sqlQuery.queryForList(sql,new Object[]{dqpyLunc,classId,applyBatchId,bmbId});
 			
 			Double score = 0.0;
 			Integer i = 0;
@@ -749,7 +772,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			
 			//计算偏差
 			sql = "SELECT STDDEV(TZ_SCORE_NUM) FROM PS_TZ_PWKSPC_TMP_T";
-			Double pcValue = Double.valueOf(jdbcTemplate.queryForObject(sql,"String"));
+			Double pcValue = Double.valueOf(sqlQuery.queryForObject(sql,"String"));
 			
 			
 			PsTzClpsKshTblKey psTzClpsKshTblKey = new PsTzClpsKshTblKey();
@@ -801,7 +824,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			sql = sql + " WHERE C.TREE_NAME=D.TREE_NAME AND D.TZ_SCORE_MODAL_ID=E.TZ_ZLPS_SCOR_MD_ID AND E.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.PARENT_NODE_NUM=0)";
 			sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 			
-			List<Map<String, Object>> scoreList = jdbcTemplate.queryForList(sql,new Object[]{classId,applyBatchId,bmbId});
+			List<Map<String, Object>> scoreList = sqlQuery.queryForList(sql,new Object[]{classId,applyBatchId,bmbId});
 			
 			Integer count = 0;
 			Double score;
@@ -846,7 +869,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			
 			//是否存在没有评委组的评委
 			sql = "SELECT 'Y' FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_ZHZT='A' AND TZ_PWZBH=' '";
-			String noPwzFlag = jdbcTemplate.queryForObject(sql, new Object[]{classId,applyBatchId},"String");
+			String noPwzFlag = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId},"String");
 
 			if("Y".equals(noPwzFlag)) {
 				bmbIdNext = "";
@@ -862,7 +885,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				sql = sql + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND C.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND C.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID AND C.TZ_CLPS_LUNC=B.TZ_DQPY_LUNC";
 				sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
 
-				Map<String, Object> mapData = jdbcTemplate.queryForMap(sql,new Object[]{classId,applyBatchId,oprid});
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{classId,applyBatchId,oprid});
 
 				Integer pyksNum = mapData.get("TZ_PYKS_XX") == null ? 0 : Integer.valueOf(mapData.get("TZ_PYKS_XX").toString());
 				String pweiZhzt = mapData.get("TZ_PWEI_ZHZT") == null ? "" : mapData.get("TZ_PWEI_ZHZT").toString();
@@ -901,25 +924,25 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 									sql = sql + " WHERE Y.TZ_CLASS_ID=A.TZ_CLASS_ID AND Y.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND Y.TZ_APP_INS_ID=A.TZ_APP_INS_ID)";
 									sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? ORDER BY SJS";
 									
-									Map<String, Object> mapNext = jdbcTemplate.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,applyBatchId});
+									Map<String, Object> mapNext = sqlQuery.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,applyBatchId});
 									Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
 									
 									if(tzAppInsId>0) {
 										//锁表PS_TZ_CLPS_KSH_TBL
-										mySqlLockService.lockRow(jdbcTemplate, "TZ_CLPS_KSH_TBL");
+										mySqlLockService.lockRow(sqlQuery, "TZ_CLPS_KSH_TBL");
 										
 										//再次查看有没有超过上限
 										sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
-										Integer kspwNum = jdbcTemplate.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId},"Integer");
+										Integer kspwNum = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId},"Integer");
 										
 										//再次查看有没有被自己抽取过
 										sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?";
-										String myKsFlag = jdbcTemplate.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId,oprid}, "String");
+										String myKsFlag = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId,oprid}, "String");
 										
 										//再次查看有没有被同组人抽取过
 										sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B,PS_TZ_CLPS_PW_TBL C WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=C.TZ_PWEI_OPRID";
 										sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_PWZBH=?";
-										String tzpwFlag = jdbcTemplate.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId,pwzbh}, "String");
+										String tzpwFlag = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,tzAppInsId,pwzbh}, "String");
 										
 										if(kspwNum>=mspyNum || "Y".equals(myKsFlag) || "Y".equals(tzpwFlag)) {
 											
@@ -977,7 +1000,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 												sql = "SELECT TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,group_concat(TZ_PWEI_OPRID SEPARATOR',') AS TZ_PW_LIST FROM PS_TZ_CP_PW_KS_TBL";
 												sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? GROUP BY TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID";
 
-												Map<String, Object> mapKsPwList = jdbcTemplate.queryForMap(sql,new Object[]{classId,applyBatchId,tzAppInsId});
+												Map<String, Object> mapKsPwList = sqlQuery.queryForMap(sql,new Object[]{classId,applyBatchId,tzAppInsId});
 												String ksPwList = mapKsPwList.get("TZ_PW_LIST") == null ? "" : mapKsPwList.get("TZ_PW_LIST").toString();
 														
 												
@@ -1020,7 +1043,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 										}
 										
 										//解锁
-										mySqlLockService.unlockRow(jdbcTemplate);
+										mySqlLockService.unlockRow(sqlQuery);
 									} else {
 										bmbIdNext = "";
 										messageCode = "1";

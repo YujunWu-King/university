@@ -1940,7 +1940,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				if (children[m-1].recommend_18["useby"]=="Y"&&rec_title==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_18["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_18["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).blur();
 				}
@@ -1948,7 +1948,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
 				if (children[m-1].recommend_17["useby"]=="Y"&&rec_gname==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_17["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_17["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).blur();
 				}
@@ -1956,14 +1956,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
 				if (children[m-1].recommend_1["useby"]=="Y"&&rec_name==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).blur();
 				}
 				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
 				if (children[m-1].recommend_2["useby"]=="Y"&&rec_company==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_2["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_2["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).blur();
 				}
@@ -1971,7 +1971,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
 				if (children[m-1].recommend_3["useby"]=="Y"&&rec_post==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_3["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_3["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).blur();
 				}
@@ -1979,7 +1979,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
 				if (children[m-1].recommend_16["useby"]=="Y"&&rec_phone_area==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();	
 				} else{
@@ -1990,7 +1990,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					var _result_area = /^[\d-+]+$/.test(rec_phone_area);
 					if(!_result_area){
 						_yz="2";
-						_desc =  data["itemId"] + children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
 						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
 					}
@@ -2000,7 +2000,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 				}
@@ -2008,7 +2008,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					var _result = /^[\d-+]+$/.test(rec_phone_no);
 					if(!_result){
 						_yz="2";
-						_desc =  data["itemId"] + children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
 						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 					}
@@ -2016,7 +2016,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_5["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_5["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).blur();
 				}
@@ -2025,7 +2025,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).blur();
 				}else if (children[m-1].recommend_15["useby"]!="Y")
@@ -2035,7 +2035,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
 				if (children[m-1].recommend_6["useby"]=="Y"&&rec_relation==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_6["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_6["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).blur();
 				}
@@ -2043,7 +2043,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				//var rec_language = $("input[name="+data["itemId"]+children[0].recommend_7["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_7["useby"]=="Y"&&rec_language==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).blur();
 				}
@@ -2052,70 +2052,70 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
 				if (children[m-1].recommend_10["useby"]=="Y"&&rec_by1==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_10["itemName"]+ MsgSet["REQUIRE"];
+					_desc = children[m-1].recommend_10["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).blur();
 				}
 				var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
 				if (children[m-1].recommend_11["useby"]=="Y"&&rec_by2==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_11["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_11["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).blur();
 				}
 				var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
 				if (children[m-1].recommend_12["useby"]=="Y"&&rec_by3==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_12["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_12["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).blur();
 				}
 				var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
 				if (children[m-1].recommend_13["useby"]=="Y"&&rec_by4==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_13["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_13["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).blur();
 				}
 				var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
 				if (children[m-1].recommend_14["useby"]=="Y"&&rec_by5==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_14["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_14["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).blur();
 				}
 				var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
 				if (children[m-1].recommend_19["useby"]=="Y"&&rec_by6==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_19["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_19["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).blur();
 				}
 				var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
 				if (children[m-1].recommend_20["useby"]=="Y"&&rec_by7==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_20["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_20["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).blur();
 				}
 				var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
 				if (children[m-1].recommend_21["useby"]=="Y"&&rec_by8==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_21["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_21["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).blur();
 				}
 				var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
 				if (children[m-1].recommend_22["useby"]=="Y"&&rec_by9==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_22["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_22["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).blur();
 				}
 				var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
 				if (children[m-1].recommend_23["useby"]=="Y"&&rec_by10==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_23["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_23["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).blur();
 				}
@@ -2152,7 +2152,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					{
 						$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).focus();
 						$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).blur();
-						_desc =  data["itemId"] + children[m-1].recommend_5["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc = children[m-1].recommend_5["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 						alert(_desc);
 					}else{
 						
@@ -2365,65 +2365,65 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				if (children[m-1].recommend_18["useby"]=="Y"&&rec_title==""){
-					_desc =  data["itemId"] + children[m-1].recommend_18["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_18["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
 				if (children[m-1].recommend_17["useby"]=="Y"&&rec_gname==""){
-					_desc =  data["itemId"] + children[m-1].recommend_17["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_17["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
 				if (children[m-1].recommend_1["useby"]=="Y"&&rec_name==""){
-					_desc =  data["itemId"] + children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
 				if (children[m-1].recommend_2["useby"]=="Y"&&rec_company==""){
-					_desc =  data["itemId"] + children[m-1].recommend_2["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_2["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
 				if (children[m-1].recommend_3["useby"]=="Y"&&rec_post==""){
-					_desc =  data["itemId"] + children[m-1].recommend_3["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_3["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
 				if (children[m-1].recommend_16["useby"]=="Y"&&rec_phone_area==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
 					
 				}
 				if (_yz=="" && rec_phone_area!="") {
 					var _result_phone_area = /^[\d-+]+$/.test(rec_phone_area);
 					if(!_result_phone_area){
 						_yz="1";
-						_desc =  data["itemId"] + children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc = children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 					}
 				}
 				
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 				}
 				if (_yz=="" && rec_phone_no!="") {
 					var _result = /^[\d-+]+$/.test(rec_phone_no);
 					if(!_result){
 						_yz="1";
-						_desc =  data["itemId"] + children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 					}	
 				}
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_5["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_5["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
 				}else if (children[m-1].recommend_15["useby"]!="Y")
 				{
 					rec_sex="";
@@ -2437,70 +2437,70 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}*/
 				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
 				if (children[m-1].recommend_6["useby"]=="Y"&&rec_relation==""){
-					_desc =  data["itemId"] + children[m-1].recommend_6["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_6["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
 				if (children[m-1].recommend_7["useby"]=="Y"&&rec_language==""){
-					_desc =  data["itemId"] + children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
 				if (children[m-1].recommend_10["useby"]=="Y"&&rec_by1==""){
-					_desc =  data["itemId"] + children[m-1].recommend_10["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_10["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
 				if (children[m-1].recommend_11["useby"]=="Y"&&rec_by2==""){
-					_desc =  data["itemId"] + children[m-1].recommend_11["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_11["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
 				if (children[m-1].recommend_12["useby"]=="Y"&&rec_by3==""){
-					_desc =  data["itemId"] + children[m-1].recommend_12["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_12["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
 				if (children[m-1].recommend_13["useby"]=="Y"&&rec_by4==""){
-					_desc =  data["itemId"] + children[m-1].recommend_13["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_13["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
 				if (children[m-1].recommend_14["useby"]=="Y"&&rec_by5==""){
-					_desc =  data["itemId"] + children[m-1].recommend_14["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_14["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
 				}
 				var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
 				if (children[m-1].recommend_19["useby"]=="Y"&&rec_by6==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_19["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_19["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
 				if (children[m-1].recommend_20["useby"]=="Y"&&rec_by7==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_20["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_20["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
 				if (children[m-1].recommend_21["useby"]=="Y"&&rec_by8==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_21["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_21["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
 				if (children[m-1].recommend_22["useby"]=="Y"&&rec_by9==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_22["itemName"]+ MsgSet["REQUIRE"];
+					_desc =   children[m-1].recommend_22["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
 				if (children[m-1].recommend_23["useby"]=="Y"&&rec_by10==""){
 					_yz="1";
-					_desc =  data["itemId"] + children[m-1].recommend_23["itemName"]+ MsgSet["REQUIRE"];
+					_desc =  children[m-1].recommend_23["itemName"]+ MsgSet["REQUIRE"];
 				}
 				
 				if (_yz=="" && rec_email!="") {
 					var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
 					if (!std.test(rec_email)){
 						_yz="1";
-						_desc =  data["itemId"] + children[m-1].recommend_5["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
+						_desc =   children[m-1].recommend_5["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 					}
 				}
 				
@@ -2844,6 +2844,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			var cehckHtml=  function(val,elem,Regular){
 				if (val == "") { //判断 是否为为空
 					return elem.itemName+MsgSet["REQUIRE"];
+					//return elem.itemName+MsgSet["REQUIRE"];
 				}  else {
 					//正则表达式判断
 					if (Regular == "phone_area") {

@@ -54,15 +54,21 @@ $(document).ready(function() {
 		TipInt = RegisterTips._int_zhs;
     }
     $("#BIRTHDATE").click(function() {
-        laydate();
+        laydate({
+        	elem: '#BIRTHDATE'
+        });
     });
     //本科毕业时间
     $("#TZ_COMMENT1").click(function() {
-        laydate();
+    	laydate({
+        	elem: '#TZ_COMMENT1'
+        });
     });
     //最高学历获得时间
     $("#TZ_COMMENT3").click(function() {
-        laydate();
+    	laydate({
+        	elem: '#TZ_COMMENT3'
+        });
     });
     $.each([$("#TZ_COUNTRY"), $("#TZ_COUNTRY_click")],
     function(i, el) {

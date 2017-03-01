@@ -96,7 +96,7 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			if ("BYSEARCH".equals(strOType)) {
 			    	if("".equals(strCountry)||strCountry==null){
 			    	    sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-			    	    list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%"});    
+			    	    list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%","%" + strValue + "%"});    
 			    	}else{
 			    	    sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where (TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ?) AND COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 			    	    list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%","%" + strValue + "%",strCountry});

@@ -50,7 +50,7 @@ a,a:hover{text-decoration: none;display: block;}
 .step_lined{border-top:1px solid #746fbe;}
 .step_ing{color:#fff;background-color:#8f5dbf;}
 .step_ed{background:url(../images/ed_icon.png)no-repeat center center;background-color:#8f5dbf;}
-.step_li p{font-size:0.44rem;color:#333;position:absolute;top:-25px;left:-0.6rem;width:2.5rem;}
+.step_li p{font-size:0.44rem;color:#333;position:absolute;top:-25px;left:-1.2rem;width:4rem;}
 .step_ing p{color:#8f5dbf;}
 /*活动列表*/
 .zhaos{width: 100%;height:auto;background-color:#fff;overflow: hidden;margin-top:5px;}
@@ -145,7 +145,8 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .register_btn{width:94%;margin:2% auto 3%;height:1.5rem;background-color:#8f5dbf;color:#fff;font-size:0.6rem;line-height:1.5rem;text-align:center;border-radius:0.3rem;}
 .register_body #send_Verification{width:30%;padding:2%;margin-bottom:1%;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
 .register_body #send_Verification[disabled]{background-color:#eee;color:#999;}
-
+ #sendBtn{width:30%;height:1.4rem;line-height:1.4rem;margin: 0.3rem 2% 0 0;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
+#sendBtn[disabled]{background-color:#ddd;color:#999;}
 /*注册弹窗*/
 .shade{display:none;width: 100%; height: 100%; position:fixed; top:0; left: 0; background-color: #000; opacity: 0.6; filter: alpha(opacity=60); -ms-filter: "alpha(opacity=30)"; z-index: 135;}
 .country_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;}
@@ -177,7 +178,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .select-s1 .option a:hover{background:#ffda44;text-decoration:none; color: #333;}
 
 /*登录*/
-.login_ab{width:90%;height:auto;position:absolute;top:36%;left:5%;z-index: 115;}
+.login_ab{width:90%;height:auto;position:fixed;top:36%;left:5%;z-index: 115;}
 .login_account{width:100%;height:2rem;margin:0 auto;background-color:#fff;border-top-left-radius:0.3rem;border-top-right-radius:0.3rem;z-index:115;position:relative;border-bottom:1px solid #ddd;overflow:hidden;}
 .login_email{width:100%;height:2rem;margin:0 auto;background-color:#fff;border-bottom-left-radius:0.3rem;border-bottom-right-radius:0.3rem;z-index:115;position:relative;overflow:hidden;}
 .users{width:2rem;height:2rem;background:url(../images/users.png)no-repeat center center;background-color:#8f5dbf;background-size:40%;float:left;}
@@ -190,6 +191,9 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .login_forget{float:left;overflow:hidden;}
 .login_forget i{float:left;width:1rem;height:1rem;background:url(../images/forget.png)no-repeat center center;background-size:90%;}
 .login_forget span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
+.account_active{float:left;overflow:hidden;}
+.account_active i{float:left;width:1rem;height:1rem;background:url(../images/jh.png)no-repeat center center;background-size:90%;}
+.account_active span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
 .login_help{float:right;overflow:hidden;}
 .login_help i{float:left;width:1rem;height:1rem;background:url(../images/help.png)no-repeat center center;background-size:90%;}
 .login_help span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
@@ -199,6 +203,9 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 #userName {width:80%;float:left;height:2rem;line-height:2rem;margin-top:0;font-size:0.6rem;text-indent:8px;}
 #password{width:80%;float:left;height:2rem;line-height:2rem;margin-top:0;font-size:0.6rem;text-indent:8px;}
 .important_input{width:80% !important;float:left !important;height:2rem !important;line-height:2rem !important;margin-top:0 !important;font-size:0.6rem !important;text-indent:8px !important;}
+.yzm_input{width:60%;float:left;height:2rem !important;line-height:2rem !important;margin-top:0 !important;font-size:0.6rem !important;text-indent:8px !important;}
+.sendBtn{width: 30%;height: 1.4rem;line-height: 1.4rem;margin: 0.3rem 2% 0 0;background-color: #8f5dbf;color: #fff;text-align: center;border-radius: 0.3rem;float: right;font-size: 0.54rem;}
+.psw_update{width:90% !important;margin-left:5%;height:2rem !important;margin-top:0px !important;}
 /*报考方向选择*/
 .direction{width:100%;height:auto;}
 .direction_list{width:94%;margin:2% auto;border-bottom:1px solid #ddd;overflow:hidden;padding:2% 0;}
@@ -214,6 +221,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
  
 /*报考自测*/
 .test_body{width:94%;margin:2% auto;font-size:0.56rem;color:#666;}
+.test_body p:first-child{text-align:center;font-size:0.8rem;color:#333;border-bottom:1px solid #ddd;padding:2% 0;line-height:1rem;}
 .test_body p{text-indent:1rem;line-height:1rem;}
 .first_p{color:#333;font-size:0.64rem;}
 /*微信解绑*/
@@ -310,6 +318,16 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .login_tit li:nth-child(2){float:right;}
 .add_f{color:#8f5dbf !important;border-bottom:2px solid #8f5dbf;}
 
+
+.bottom_btn{position:fixed;bottom:0;left:0;width:100%;padding:2% 0;text-align:center;color:#fff;background-color:#8f5dbf;font-size:0.6rem;display:block;}
+.bottom_btn_left{position:fixed;bottom:0;left:0;width:50%;padding:2% 0;text-align:center;color:#666;background-color:#ddd;font-size:0.6rem;display:block;}
+.bottom_btn_right{position:fixed;bottom:0;right:0;width:50%;padding:2% 0;text-align:center;color:#f25050;background-color:#ddd;font-size:0.6rem;display:block;}
+
+/*帮助中心*/
+.question_body{width:94%;margin:2% auto;font-size:0.56rem;line-height:1rem;}
+.question{margin:2% auto;}
+.question span{display:block;width:100%;border-bottom:1px solid #ddd;color:#333;font-size:0.56rem;padding:1% 0;}
+.question p{text-indent:2em;color:#999;font-size:0.58rem;}
 /*自定义响应式*/
 @media only screen and (min-width:320px)  and (max-width:420px) {
 	.search{margin:2% 0 0 5%;}

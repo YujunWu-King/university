@@ -223,6 +223,15 @@ $(document).ready(function(){
 		success:function(response){
 			$('.main_mid_zxj_interview').prop('innerHTML', response);
 			tab(".zxj_mba .step_head",".zxj_mba .step_Note","","mousedown");
+			
+			var showLcNumVar = $("#showLcNum");
+			if(showLcNumVar.length > 0){
+				var showLcNum = showLcNumVar.val();
+				var $content = $(".zxj_mba .step_Note").children();
+	            $content.hide();
+	            $content.eq(showLcNum).show();
+			}
+			
 			$(".sq_btn").click(function(){
 			       $(".Shade").show();
 			       $(".sq_pop").show();

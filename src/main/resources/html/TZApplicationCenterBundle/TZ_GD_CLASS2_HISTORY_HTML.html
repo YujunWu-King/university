@@ -7,8 +7,9 @@
 	TzUniversityContextPath = "%bind(:1)";
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
-
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
+											 
 
 <script type="text/javascript">
 
@@ -89,6 +90,7 @@
      }));
    }
    
+   
     $(document).ready(function(){	
     	//查看报名信息
     	   $(".list_icon").click(function(){
@@ -157,8 +159,8 @@
         LoadHeader("%bind(:5)","%bind(:6)","");
 		LoadMenu("%bind(:5)","%bind(:6)","");
 		LoadFooter("%bind(:5)","%bind(:6)","");
-		LoadWelcome("%bind(:5)","%bind(:6)","");
-		
+		//LoadWelcome("%bind(:5)","%bind(:6)","");
+		LoadLeftArea("%bind(:5)","%bind(:6)","");
 	});
 </script>
 

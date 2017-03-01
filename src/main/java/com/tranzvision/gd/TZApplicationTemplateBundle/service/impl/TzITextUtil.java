@@ -184,7 +184,14 @@ public class TzITextUtil {
 				fields.setField(fieldValueArray[0], fieldValueArray[1]);
 			}
 			ps.setFormFlattening(true);
-			ps.close();
+			try {
+				ps.close();
+			} catch(Exception ec) {
+				ec.printStackTrace();
+				ps.setFormFlattening(false);
+				ps.close();
+			}
+			
 			out.write(bos.toByteArray());
 			// out.close();
 			// out.flush();
@@ -236,8 +243,16 @@ public class TzITextUtil {
 				}
 				fields.setField(fieldValueArray[0], fieldValueArray[1]);
 			}
+			
 			ps.setFormFlattening(true);
-			ps.close();
+			try {
+				ps.close();
+			} catch(Exception ec) {
+				ec.printStackTrace();
+				ps.setFormFlattening(false);
+				ps.close();
+			}
+			
 			fos = new FileOutputStream(outputfile);
 			fos.write(bos.toByteArray());
 			fos.close();
@@ -366,10 +381,12 @@ public class TzITextUtil {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TzITextUtil t = new TzITextUtil();
-		System.out.println(t.addBreak("上海交通大学安泰2015年_MBA考生申请表", 3));
-		// String a =
-		// t.getPdfFileFields("d://金鹰：上海交通大学安泰2015年_MBA考生申请表（解析）.pdf");
-		// System.out.println(a);
+		//System.out.println(t.addBreak("上海交通大学安泰2015年_MBA考生申请表", 3));
+		 String a =
+		 t.getPdfFileFields("d://清华MBA模板.pdf");
+		 System.out.println(a);
+		 t.setFieldsValue("d://清华MBA模板.pdf", "TZ_26TZ_TZ_26_1∨∨AA∧∧TZ_26TZ_TZ_26_4∨∨BB", "d://清华MBA_1.pdf");
+		 t.setFieldsValue("d://FMBA报名表-1026.pdf", "grcscszz∨∨AA∧∧grcscstd∨∨BB", "d://清华MBA_2.pdf");
 		// String[] b = a.split(";");
 		// for (int i = 0; i < b.length; i++) {
 		// System.out.println(b[i].length());
