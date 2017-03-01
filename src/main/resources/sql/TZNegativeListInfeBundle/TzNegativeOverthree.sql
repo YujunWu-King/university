@@ -1,0 +1,11 @@
+/**
+ * 根据OPRID查询时候存在报考的年份的次数大于三
+ * COUNT
+ */
+SELECT COUNT(1)
+FROM
+  ( SELECT DISTINCT YEAR (B.TZ_START_DT)
+   FROM PS_TZ_FORM_WRK_T A,
+        PS_TZ_CLASS_INF_T B
+   WHERE A.OPRID = ?
+     AND A.TZ_CLASS_ID = B.TZ_CLASS_ID ) AS A
