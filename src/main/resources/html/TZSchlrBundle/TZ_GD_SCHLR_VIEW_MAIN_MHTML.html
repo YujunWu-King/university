@@ -1,77 +1,14 @@
-<html>
-	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta charset="utf-8">
-		<meta name="format-detection" content="telephone=no">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
-		<title>清华MBA招生移动端-申请奖学金</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/website/m/js/jquery-select2/3.4/select2.min.css">
-		<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
-		<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/rem.js"></script>
-		<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/common.js"></script>
-	</head>
-	<body style="background-color: #e4e4e4;">
-		<div class="viewport-adaptive">
-			<div class="bg">
-				<!-- 头部 -->
-				<div class="topbar">可申请奖学金<a href="#"><i></i></a></div>
-				<div class="Tab_school">
-					<div class="tit_tab">
-						<li class="school_on">可申请奖学金<img class="school_t" src="%bind(:1)/statics/css/website/m/images/on.png"></li>
-						<li>已申请奖学金<img class="school_t" src="%bind(:1)/statics/css/website/m/images/on.png"></li>
-					</div>
-					<div class="tabN_school">
-						<div class="schooled">
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<a href="#" class="sq_btn">申请</a>
-							</li>
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<span class="sc_stateing over">已结束</span>
-								<a href="#" class="sq_btn over_btn">申请</a>
-							</li>
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<span class="sc_stateing">进行中</span>
-								<a href="#" class="sq_btn">申请</a>
-							</li>
-						</div>
-						<div class="school_no dis_none">
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<span class="sc_stateing over">已申请</span>
-								<a href="#" class="sq_btn over_btn">申请</a>
-							</li>
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<span class="sc_stateing over">已申请</span>
-								<a href="#" class="sq_btn over_btn">申请</a>
-							</li>
-							<li>
-								<span class="sc_name">奖学金121315申请</span>
-								<span class="sc_stateing over">已申请</span>
-								<a href="#" class="sq_btn over_btn">申请</a>
-							</li>
-						</div>
-					</div>
-				</div>
-			</div>
+<div class="bg">
+	<!-- 头部 -->
+	<div class="topbar">可申请奖学金<a href="#"><i></i></a></div>
+	<div class="Tab_school">
+		<div class="tit_tab">
+			<li class="school_on">可申请奖学金<img class="school_t" src="%bind(:1)/statics/css/website/m/images/on.png"></li>
+			<li>已申请奖学金<img class="school_t" src="%bind(:1)/statics/css/website/m/images/on.png"></li>
 		</div>
-		<!-- 底部菜单 -->
-		<div class="footer-wrap mt10">
-			<nav class="footer-nav">
-				<div class="label">
-					<ul>
-						<li class="on"><a href="＃"><i class="home"></i><span>首页</span></a></li>
-						<li><a href="#"><i class="center"></i><span>招生日历</span></a></li>
-						<li><a href="#"><i class="handle"></i><span>状态查询</span></a></li>
-						<li><a href="#"><i class="common_job"></i><span>联系我们</span></a></li>
-						<li><a href="#"><i class="my"></i><span>我的</span></a></li>
-					</ul>
-				</div>
-			</nav>
+		<div class="tabN_school">
+			<div class="schooled">%bind(:2)</div>
+			<div class="school_no dis_none">%bind(:3)</div>
 		</div>
-	</body>
-</html>
+	</div>
+</div>

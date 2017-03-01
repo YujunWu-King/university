@@ -763,11 +763,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setRowAddedOprid(oprId);
 				psTzRegUserT.setRowLastmantDttm(new Date());
 				psTzRegUserT.setRowLastmantOprid(oprId);
-				
+				//黑名单用户及允许继续申请
+				psTzRegUserT.setTzBlackName("N");
+				psTzRegUserT.setTzAllowApply("Y");
+				//始终产生面试申请号			
+				psTzRegUserT.setTzMssqh(tzMshId);
+				/*
 				//是否生产面试申请号;
 				if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){
 					psTzRegUserT.setTzMssqh(tzMshId);
-				}
+				}*/
 				
 				psTzRegUserTMapper.insert(psTzRegUserT);
 				
