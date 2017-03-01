@@ -2,7 +2,7 @@ var urlBegin= TzUniversityContextPath + "/dispatcher";
 var clsTzXlColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzXlColuServiceImpl";
 var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
 var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl";
-
+var claTzMyActServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzMyActServiceImpl";
 /*
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
@@ -383,6 +383,78 @@ var areaid=	getQueryString("areaId");
 			  alert(response.state.errdesc);
 	    }    
 	});
+}
+
+function QueryColuAct(page,type){
+
+
+	$(".li_tab").each(function(index,element){
+		if (index == type )
+			{
+				$(element).attr({"class":"li_tab now"});
+			}else{
+				$(element).attr({"class":"li_tab "});
+			}
+	});
+
+	var siteid=getQueryString("siteId");
+
+	var menuid=getQueryString("menuId");
+
+		var qureyFrom="";
+
+		if(menuid){
+			qureyFrom="M";
+		}else{
+			qureyFrom="A";
+		}
+	var areaid=	getQueryString("areaId");
+	    if (!areaid)
+		{
+			areaid="";
+		}
+
+		var areaZone=getQueryString("areaZone");
+		if (!areaZone)
+		{
+			areaZone="";
+		}
+
+		var areaType=getQueryString("areaType");
+		if (!areaType)
+		{
+			areaType="";
+		}
+		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId","407"}}';
+
+		//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
+	     
+		$.ajax({
+			type:"POST",
+			url:urlBegin,
+			data:{
+				tzParams:tzParams
+			},
+			dataType:'json',
+			success:function(response){
+				if (response !="false"){
+								$("#countlist").html(response.comContent.coluItem);
+								$("#pagecount").html(response.comContent.divPage);
+								if (! response.comContent.divPage)
+								{
+									$("#curentcoutpage").hide();
+								}else{
+									$("#curentcoutpage").show();
+								}
+								$("#curentcoutpage").html(response.comContent.nowPageDesc);
+				}else{
+								
+				}
+			},
+		    failure: function () {
+				  alert(response.state.errdesc);
+		    }    
+		});
 }
 
 function AreaColu(opt){
