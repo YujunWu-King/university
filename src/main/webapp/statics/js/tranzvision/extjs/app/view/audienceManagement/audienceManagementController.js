@@ -2,52 +2,66 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.audienceManagementController', 
 //新增听众
-    addComRegInfo: function() {
+addComRegInfo: function() {
+				//是否有访问权限
+				var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_PANEL_STD"];
+				if( pageResSet == "" || pageResSet == undefined){
+					Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+					return;
+				}
+				//该功能对应的JS类
+				var className = pageResSet["jsClassName"];
+				if(className == "" || className == undefined){
+					Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_NEW_STD，请检查配置。');
+					return;
+				}
+				
+				var contentPanel,cmp, className, ViewClass, clsProto;
+				var themeName = Ext.themeName;
+				
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+				contentPanel.body.addCls('kitchensink-example');
 
-		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_NEW_STD"];
-		if( pageResSet == "" || pageResSet == undefined){
-			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-			return;
-		}
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AQ_PAGEREG_STD，请检查配置。');
-			return;
-		}
+				//className = 'KitchenSink.view.security.com.comInfoPanel';
+				if(!Ext.ClassManager.isCreated(className)){
+					Ext.syncRequire(className);
+				}	
+				ViewClass = Ext.ClassManager.get(className);
+				clsProto = ViewClass.prototype;
 
-		var win = this.lookupReference('pageRegWindow');
+				if (clsProto.themes) {
+					clsProto.themeInfo = clsProto.themes[themeName];
 
-		if (!win) {
-			//className = 'KitchenSink.view.security.com.pageRegWindow';
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-			//新建类
-			win = new ViewClass();
-			this.getView().add(win);
-		}
+					if (themeName === 'gray') {
+						clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+					} else if (themeName !== 'neptune' && themeName !== 'classic') {
+						if (themeName === 'crisp-touch') {
+							clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+						}
+						clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+					}
+					// <debug warn>
+					// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+					if (!clsProto.themeInfo) {
+						Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+							themeName + '\'. Is this intentional?');
+					}
+					// </debug>
+				}
 
-		//操作类型设置为更新
-		win.actType = "update";
-/*		var store = view.findParentByType("grid").store;
-		var selRec = store.getAt(rowIndex);
-		//组件ID
-		var comID = selRec.get("comID");
-		//页面ID
-		var pageID = selRec.get("pageID");
-		//参数
-		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_PAGEREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'","pageID":"'+pageID+'"}}';
-		//页面注册信息表单
-		var form = win.child("form").getForm();
-		Ext.tzLoad(tzParams,function(responseData){
-			form.setValues(responseData);
-			form.findField("pageID").setReadOnly(true);
-		});
-		
-		*/
-		win.show();
-    },
+				cmp = new ViewClass();
+				
+				tab = contentPanel.add(cmp);     
+				
+				contentPanel.setActiveTab(tab);
+
+				Ext.resumeLayouts(true);
+
+				if (cmp.floating) {
+					cmp.show();
+				}
+		    },
+
     
 //修改听众   
     editComRegInfo: function() {
@@ -118,21 +132,24 @@
 	},
 	
 	editSelComRegInfo: function(view, rowIndex){
-		
 		 var store = view.findParentByType("grid").store;
 		 var selRec = store.getAt(rowIndex);
 		 //组件ID
-	   	 var comID = selRec.get("audId");
+	//   	 var comID = selRec.get("comID");
+	   	var audId = selRec.get("audId");
+	   	var audName = selRec.get("audName");
+		var audStat = selRec.get("audStat");
+		var audType = selRec.get("audType");
+		var audMS = selRec.get("audMS");
+		var audSQL = selRec.get("audSQL");
+		var audLY = selRec.get("audLY");
 	     //显示组件注册信息编辑页面
-	   	console.log(comID);
-	     this.editComRegIntoByID(comID);
-	     
-	     
+	     this.editComRegIntoByID(audId,audName,audStat,audType,audMS,audSQL,audLY);
 	},
-	
-	editComRegIntoByID: function(comID){
+	editComRegIntoByID: function(audId,audName,audStat,audType,audMS,audSQL,audLY){
 		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_NEW_STD"];
+		
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_PANEL_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
@@ -140,42 +157,97 @@
 		//该功能对应的JS类
 		var className = pageResSet["jsClassName"];
 		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_NEW_STD，请检查配置。');
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_PANEL_STD，请检查配置。');
 			return;
 		}
-
-		var win = this.lookupReference('newAudWindow');
-console.log(win);
-		if (!win) {
-			//className = 'KitchenSink.view.security.com.pageRegWindow';
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-			//新建类
-			win = new ViewClass();
-			this.getView().add(win);
-		}
-console.log(win);
-		//操作类型设置为更新
-		win.actType = "update";
 		
-	//	var store = view.findParentByType("grid").store;
-	//	var store = this.store;
-		var store = this.findParentByType("grid").getStore;
-console.log(store);			
-		var selRec = store.getAt(rowIndex);
-		//组件ID
-		var comID = selRec.get("comID");
-		//页面ID
-		var pageID = selRec.get("pageID");
-		//参数
-		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_PAGEREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'","pageID":"'+pageID+'"}}';
-		//页面注册信息表单
-		var form = win.child("form").getForm();
-		Ext.tzLoad(tzParams,function(responseData){
-			form.setValues(responseData);
-			form.findField("pageID").setReadOnly(true);
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+
+		//className = 'KitchenSink.view.security.com.comInfoPanel';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			// <debug warn>
+			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+			// </debug>
+		}
+
+		cmp = new ViewClass();
+		//操作类型设置为更新
+		cmp.actType = "update";
+		
+		cmp.on('afterrender',function(panel){
+			//组件注册表单信息;
+			var form = panel.child('form').getForm();
+	//		form.findField("comID").setReadOnly(true);
+	//		form.findField("comID").setFieldStyle('background:#F4F4F4');
+			//页面注册信息列表
+	//		var grid = panel.child('grid');
+			var gridStore =panel.child('grid').getStore();
+			//参数
+	//		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_COMREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'"}}';
+	
+			var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'","audLY":"'+audLY+'"}}';
+			console.log(tzParams);
+			
+			//页面注册信息表单
+			//加载数据
+			var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
+			
+			Ext.tzLoad(tzParams,function(responseData){
+				//组件注册信息数据
+				console.log(responseData);
+			//	var formData = responseData.formData;
+				form.setValues(responseData);
+			//	form.setValues(formData);
+				//页面注册信息列表数据
+				var roleList = responseData.listData;	
+
+		/*		var tzStoreParams = '{"comID":"'+comID+'"}';
+				grid.store.tzStoreParams = tzStoreParams;
+				grid.store.load();		
+		*/		
+
+				gridStore.tzStoreParams = tzStoreParams;
+				gridStore.reload();
+				
+			});
+			
+			
 		});
-		win.show();
+		
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
 	},
 
 //保存	
@@ -277,70 +349,128 @@ console.log(store);
 	
 	
 	editPageRegInfo: function(btn){
-		//选中行
-	    var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
-	    //选中行长度
-	    var checkLen = selList.length;
-	    if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择一条要修改的记录");   
-			return;
-	    }else if(checkLen >1){
-		   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
-		   return;
-	    }
-		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_NEW_STD"];
-		if( pageResSet == "" || pageResSet == undefined){
-			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-			return;
-		}
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_NEW_STD，请检查配置。');
-			return;
-		}
 		
-		var win = this.lookupReference('pageRegWindow');
-        
-        if (!win) {
-			//className = 'KitchenSink.view.security.com.pageRegWindow';
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-		    //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-		
-		//操作类型设置为更新
-		win.actType = "update";
-		//组件ID
-		var audId = selList[0].get("audId");
-		var audName = selList[0].get("audName");
-		var audStat = selList[0].get("audStat");
-		var audType = selList[0].get("audType");
-		var audMS = selList[0].get("audMS");
-		var audSQL = selList[0].get("audSQL");
-		
-		
-		//参数
-		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'"}}';
-		//页面注册信息表单
-		var form = win.child("form").getForm();
-		
-		var gridStore =win.child("form").child("grid").getStore();
-		var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
-
-		Ext.tzLoad(tzParams,function(responseData){
-			form.setValues(responseData);
-			form.findField("audName").setReadOnly(true);
-	//		form.findField("pageID").setReadOnly(true);
-	//		form.findField("pageID").setFieldStyle('background:#F4F4F4');
+			//选中行
+		    var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
+		    //选中行长度
+		    var checkLen = selList.length;
+		    if(checkLen == 0){
+				Ext.Msg.alert("提示","请选择一条要修改的记录");   
+				return;
+		    }else if(checkLen >1){
+			   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
+			   return;
+		    }
 			
-			gridStore.tzStoreParams = tzStoreParams;
-			gridStore.reload();
-		});
-        win.show();
+			//组件ID
+			var audId = selList[0].get("audId");
+			var audName = selList[0].get("audName");
+			var audStat = selList[0].get("audStat");
+			var audType = selList[0].get("audType");
+			var audMS = selList[0].get("audMS");
+			var audSQL = selList[0].get("audSQL");
+			var audLY = selList[0].get("audLY");
+			
+			var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_PANEL_STD"];
+			if( pageResSet == "" || pageResSet == undefined){
+				Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+				return;
+			}
+			//该功能对应的JS类
+			var className = pageResSet["jsClassName"];
+			if(className == "" || className == undefined){
+				Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_PANEL_STD，请检查配置。');
+				return;
+			}
+			
+			var contentPanel,cmp, className, ViewClass, clsProto;
+			var themeName = Ext.themeName;
+			
+			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+			contentPanel.body.addCls('kitchensink-example');
+
+			//className = 'KitchenSink.view.security.com.comInfoPanel';
+			if(!Ext.ClassManager.isCreated(className)){
+				Ext.syncRequire(className);
+			}	
+			ViewClass = Ext.ClassManager.get(className);
+
+			clsProto = ViewClass.prototype;
+
+			if (clsProto.themes) {
+				clsProto.themeInfo = clsProto.themes[themeName];
+
+				if (themeName === 'gray') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+				} else if (themeName !== 'neptune' && themeName !== 'classic') {
+					if (themeName === 'crisp-touch') {
+						clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+					}
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+				}
+				// <debug warn>
+				// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+				if (!clsProto.themeInfo) {
+					Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+						themeName + '\'. Is this intentional?');
+				}
+				// </debug>
+			}
+
+			cmp = new ViewClass();
+			//操作类型设置为更新
+			cmp.actType = "update";
+			
+			cmp.on('afterrender',function(panel){
+				//组件注册表单信息;
+				var form = panel.child('form').getForm();
+		//		form.findField("comID").setReadOnly(true);
+		//		form.findField("comID").setFieldStyle('background:#F4F4F4');
+				//页面注册信息列表
+		//		var grid = panel.child('grid');
+				var gridStore =panel.child('grid').getStore();
+				//参数
+		//		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_COMREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'"}}';
+		
+				var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'","audLY":"'+audLY+'"}}';
+				console.log(tzParams);
+				
+				//页面注册信息表单
+				//加载数据
+				var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
+				
+				Ext.tzLoad(tzParams,function(responseData){
+					//组件注册信息数据
+					console.log(responseData);
+				//	var formData = responseData.formData;
+					form.setValues(responseData);
+				//	form.setValues(formData);
+					//页面注册信息列表数据
+					var roleList = responseData.listData;	
+
+			/*		var tzStoreParams = '{"comID":"'+comID+'"}';
+					grid.store.tzStoreParams = tzStoreParams;
+					grid.store.load();		
+			*/		
+
+					gridStore.tzStoreParams = tzStoreParams;
+					gridStore.reload();
+					
+				});
+				
+				
+			});
+			
+			tab = contentPanel.add(cmp);     
+			
+			contentPanel.setActiveTab(tab);
+
+			Ext.resumeLayouts(true);
+
+			if (cmp.floating) {
+				cmp.show();
+			}
+		
 	},
 	deletePageRegInfos: function(btn){
 	   //页面注册信息列表
@@ -364,6 +494,7 @@ console.log(store);
 	onComRegSave: function(btn){
 		//组件注册表单
 		var form = this.getView().child("form").getForm();
+	//	console.log(form);
 		if (form.isValid()) {
 			//获取组件注册信息参数
 			var tzParams = this.getComRegInfoParams();
@@ -374,11 +505,12 @@ console.log(store);
 			var store = grid.getStore();
 			Ext.tzSubmit(tzParams,function(responseData){
 				comView.actType = "update";	
-				form.findField("comID").setReadOnly(true);
+		//		form.findField("comID").setReadOnly(true);
                 if(store.isLoaded()){
                     store.reload();
                 }
 			},"",true,this);
+			
 		}
 	},
 	onComRegEnsure: function(btn){
@@ -399,16 +531,17 @@ console.log(store);
 		var form = this.getView().child("form").getForm();
 		//组件信息标志
 		var actType = this.getView().actType;
+		console.log(actType);
 		//更新操作参数
 		var comParams = "";
 		//新增
 		if(actType == "add"){
-			comParams = '"add":[{"typeFlag":"COM","data":'+Ext.JSON.encode(form.getValues())+'}]';
+			comParams = '"add":['+Ext.JSON.encode(form.getValues())+']';
 		}
 		//修改json字符串
 		var editJson = "";
 		if(actType == "update"){
-			editJson = '{"typeFlag":"COM","data":'+Ext.JSON.encode(form.getValues())+'}';
+			editJson = '{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}';
 		}
 		
 		//页面注册信息列表
@@ -419,9 +552,9 @@ console.log(store);
 		var mfRecs = store.getModifiedRecords(); 
 		for(var i=0;i<mfRecs.length;i++){
 			if(editJson == ""){
-				editJson = '{"typeFlag":"PAGE","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+				editJson = '{"typeFlag":"GRID","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
 			}else{
-				editJson = editJson + ',{"typeFlag":"PAGE","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+				editJson = editJson + ',{"typeFlag":"GRID","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
 			}
 		}
 		if(editJson != ""){
@@ -450,8 +583,9 @@ console.log(store);
 			}
 		}
 		//提交参数
-		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_COMREG_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        return tzParams;
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        console.log(tzParams);
+		return tzParams;
 	},
 	onComRegClose: function(btn){
 		//关闭窗口
@@ -565,7 +699,7 @@ console.log(comParamsALL);
 		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParamsALL+'}}';
 		//	var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'"}}';
 	
-		console.log(tzParams);
+console.log(tzParams);
 		
 	//	var tzStoreParams = '{"comID":"'+formParams["comID"]+'"}';
 		
@@ -711,7 +845,112 @@ console.log(comParamsALL);
 		Ext.tzLoad(tzParams,function(responseData){
 	//		console.log(audId);
 			form.setValues(responseData);
+	//		form.findField("audName").setReadOnly(true);
+	//		win.actType = "update";
+		
+			gridStore.tzStoreParams = tzStoreParams;
+			gridStore.reload();
+			
+		});
+		
+		
+		
+		
+	/*	Ext.tzSubmit(tzParams,function(responseData){
+			console.log(audId);
+			form.setValues(responseData);
 			form.findField("audName").setReadOnly(true);
+	//		win.actType = "update";
+		
+			gridStore.tzStoreParams = tzStoreParams;
+			gridStore.reload();
+			
+			
+	    },"",true,this);
+		*/
+		win.show();
+	},
+	
+	//comInfoPanel.js 中grid 每行中的编辑
+	editPageRegInfoTwo: function(view, rowIndex){
+
+//console.log(rowIndex);	
+//console.log(view);	
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUD_COM"]["TZ_AUD_NEW_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUD_NEW_STD，请检查配置。');
+			return;
+		}
+
+		var win = this.lookupReference('pageRegWindow');
+
+		if (!win) {
+			//className = 'KitchenSink.view.security.com.pageRegWindow';
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			//新建类
+			win = new ViewClass();
+			this.getView().add(win);
+		}
+		
+//console.log(win);
+
+		//操作类型设置为更新
+		win.actType = "update";
+		var store = view.findParentByType("grid").store;
+		
+		var selRec = store.getAt(rowIndex);
+		//组件ID
+//console.log(selRec);		
+		var audId = selRec.get("audId");
+		var audName = selRec.get("audName");
+		var audStat = selRec.get("audStat");
+		var audType = selRec.get("audType");
+		var audMS = selRec.get("audMS");
+		var audSQL = selRec.get("audSQL");
+//		console.log(audId);
+
+
+		//参数
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'"}}';
+		//页面注册信息表单
+		var form = win.child("form").getForm();
+	//	var grid = win.child("grid");
+	//	var grid = form.getView().child("grid");
+	//	var grid = form.findParentByType("grid");
+	//	var grid = this.getView().child("grid");
+		
+	//	var grid = form.getGrid().getStore();
+		
+		var gridStore =win.child("form").child("grid").getStore();
+		
+	//	console.log(gridStore);
+		
+		
+		
+		
+		
+		
+	/*	var audChildID = form.findField("audID").getValue;
+		var audChildID = form.findField("audID").value;
+		console.log(audChildID);
+	*/
+		
+		var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
+
+//		console.log(tzStoreParams);
+		
+		Ext.tzLoad(tzParams,function(responseData){
+	//		console.log(audId);
+			form.setValues(responseData);
+	//		form.findField("audName").setReadOnly(true);
 	//		win.actType = "update";
 		
 			gridStore.tzStoreParams = tzStoreParams;
@@ -738,13 +977,14 @@ console.log(comParamsALL);
 	},
 	
 	
-	
 //重新产生听众	
 	freshAudMember: function(btn){
 		
-		var win = btn.findParentByType("window");
+	//	var win = btn.findParentByType("window");
 		//页面注册信息表单
-		var form = win.child("form").getForm();
+	//	var form = win.child("form").getForm();
+		
+		var form = this.getView().child("form").getForm();
 		//表单数据
 			var formParams = form.getValues();
 			var audSQL =formParams["audSQL"];
@@ -761,13 +1001,15 @@ console.log(comParamsALL);
 //console.log(comParams);
 //     var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			 
-	 var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"tzOther","comParams":{"audSQL":"'+audSQL+'"}}';
+	 var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"tzOther","comParams":{"audSQL":"'+audSQL+'","audID":"'+audID+'"}}';
 //console.log(tzParams); 
 	//	 var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audID+'"}}'
 		 
 	 var tzStoreParams =audSQL;
 		 
-		var gridStore =win.child("form").child("grid").getStore();	
+	//	var gridStore =win.child("form").child("grid").getStore();	
+	//	var grid = this.getView().child("grid");
+		var gridStore = this.getView().child("grid").getStore();	
 	//	gridStore.tzStoreParams = tzStoreParams;
 		
 /*		 if(comParams!=""){
