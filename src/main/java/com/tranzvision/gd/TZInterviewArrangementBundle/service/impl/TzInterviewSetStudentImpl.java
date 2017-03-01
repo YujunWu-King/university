@@ -228,8 +228,11 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
 						
 						//且不再其他听众里面
-						sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") AND TZ_LXFS_LY='ZSBM' limit 1";
-						String inOtherAud = jdbcTemplate.queryForObject(sql, "String");
+						String inOtherAud = "";
+						if(!"".equals(whereIn)){
+							sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") AND TZ_LXFS_LY='ZSBM' limit 1";
+							inOtherAud = jdbcTemplate.queryForObject(sql, "String");
+						}
 						
 						if(psTzMspsKshTbl != null && !"Y".equals(inOtherAud)){
 							psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);

@@ -136,7 +136,7 @@
 			*/
             var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
             Ext.tzLoad(tzParams,function(responseData){
-            	console.log(responseData);
+            	//console.log(responseData);
                 form.setValues(responseData);
                 var zl_grid = panel.down('grid[name=msjh_grid]');
 				Params= '{"classID":"'+classID+'","batchID":"'+batchID+'"}';

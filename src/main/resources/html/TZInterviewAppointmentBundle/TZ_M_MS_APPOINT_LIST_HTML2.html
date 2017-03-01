@@ -1,0 +1,13 @@
+<!-- 在线预约安排 -已预约-->
+<div class="order_ac">
+    <img  src="%bind(:1)/statics/css/website/m/images/order_ed.png">
+ 	<div class="ac_body">
+ 		<div class="now_time">
+ 			<div class="time_inner"><span>报道时间:</span>%bind(:2)</div>
+ 			<div class="time_inner"><span>报道地点:</span>%bind(:3)</div>
+ 			<div class="time_inner"><span>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</span>%bind(:4)</div>
+ 			<div class="time_inner"><span>预约状态:</span><span class="green">%bind(:5)</span></div>
+ 			<a href="javascript:void(0)" onclick=onConfirmAppointment(this,"%bind(:6)","%bind(:7)","%bind(:8)")>已预约／撤销预约</a>
+ 		</div>
+ 	</div>
+</div>
