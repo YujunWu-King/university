@@ -382,7 +382,7 @@ public class tzOnlineAppEngineImpl {
 		}
 	}
 
-	public String getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId, String strAppOrgId,
+	public Map<String, String>  getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId, String strAppOrgId,
 			String strTplId, String oprid, String strClassId, String strRefLetterId, String strInsData) {
 		String strHisAppInsId = "";
 
@@ -585,8 +585,13 @@ public class tzOnlineAppEngineImpl {
 				}
 			}
 		}
+		
+		Map<String, String> m  = new HashMap<String, String>();
+		m.put("strAppInsId", strAppInsId);
+		m.put("strInsData", strInsData);
+		m.put("strRefLetterId", strRefLetterId);
 
-		return strAppInsId + "|||" + strInsData + "|||" + strRefLetterId;
+		return m;
 	}
 
 	public String getUserInfo(String strAppInsId) {
