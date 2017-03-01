@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
+<title>在线预约</title>
+<link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/website/m/js/jquery-select2/3.4/select2.min.css">
+
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/rem.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/css/website/m/js/common.js"></script> 
+</head>
+<body style="background-color:#e4e4e4;">
+	<div class="viewport-adaptive">
+	   <div class="bg">
+	     <!-- 头部 -->
+	   	 <div class="topbar">
+	   	    在线预约 <a  href="#"><i></i></a>
+	   	 </div>
+	   	 <div class="order_sm">
+	   	 <!-- 文字说明 -->
+	   	 	%bind(:2)
+	   	 </div>
+	   	 <div id="tz-interview-appointment-List">
+		   	 %bind(:3)
+	   	 </div>
+	   </div>
+    </div>
+    <!-- 底部菜单 -->
+	<div class="footer-wrap mt10">
+	  <nav class="footer-nav">
+		  <div class="label ">
+			 <ul>
+				<li class="on"><a href="＃">
+					<i class="home"></i>
+					<span>首页</span>
+				</a></li>
+				<li ><a href="#">
+					<i class="center"></i>
+					<span>招生日历</span>
+				</a></li>
+				<li ><a href="#">
+					<i class="handle"></i>
+					<span>状态查询</span>
+				</a></li>
+				<li ><a href="#">
+					<i class="common_job"></i>
+					<span>联系我们</span>
+				</a></li>
+				<li ><a href="#">
+					<i class="my"></i>
+					<span>我的</span>
+				</a></li>
+			 </ul>
+		  </div>
+	  </nav>
+	</div>
+	
+<script type="text/javascript">
+	var url="%bind(:4)";
+    $(document).ready(function(){
+        
+    });
+	
+		
+	/*确认面试预约*/
+	function onConfirmAppointment(el, classId, pcId, planId){
+		if($(el).hasClass("btn-enabled")) return;
+
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_M_MSYY_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'"}}';
+		$.ajax({
+			type:"post",
+			dataType:"json",
+			async:false, 
+			data: {"tzParams" : tzParams },				
+			url:url,
+			success:function(data){
+				var errcode = data.state.errcode;
+				var errMsg = data.state.errdesc;
+				if(errcode == 0){
+					var _html =  data.comContent.appoHtml;
+					$("#tz-interview-appointment-List").html(_html);
+				}
+				alert(errMsg);
+			},
+			error: function(XMLHttpRequest,errorMsg){
+				alert("请求失败，请稍后再试。");
+			}
+		});
+	}
+</script>
+</body>
+</html>

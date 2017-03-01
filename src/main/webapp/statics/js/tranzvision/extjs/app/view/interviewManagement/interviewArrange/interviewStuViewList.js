@@ -18,9 +18,9 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 	reference: 'interviewStuView',
 	listeners:{
 		resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-			var buttonHeight = 44;/*button height plus panel body padding*/
+			var buttonHeight = 36;/*button height plus panel body padding*/
 			var grid = panel.child('form').child('grid');
-			if(grid) grid.setHeight( height -buttonHeight -100);
+			if(grid) grid.setHeight( height -buttonHeight -80);
 		}
 	},
 	initComponent: function (){

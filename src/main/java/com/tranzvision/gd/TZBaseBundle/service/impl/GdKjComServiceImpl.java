@@ -678,7 +678,8 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 				for (i = 0; i < list.size(); i++) {
 					columnNanme = (String) list.get(i).get("COLUMN_NAME");
 					if (result.contains(columnNanme)) {
-						dateType = ((String) list.get(i).get("DATA_TYPE")).toUpperCase();
+						//dateType = ((String) list.get(i).get("DATA_TYPE")).toUpperCase();
+						dateType = (list.get(i).get("DATA_TYPE").toString()).toUpperCase();
 
 						if (intTypeString.contains(dateType)) {
 							// 数字;

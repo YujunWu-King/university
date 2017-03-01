@@ -594,11 +594,27 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 			}
 			
 			String error = jacksonUtil.Map2json(mapRetJson);
-			logger.info(error);
 			return error;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	public String delete(String paramOprid) {
+		paramOprid = "MBA_" + paramOprid;
+		String sql1 = "DELETE FROM PSOPRDEFN WHERE OPRID = ?";
+		String sql2 = "DELETE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?";
+		String sql3 = "DELETE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LYDX_ID = ?";
+		String sql4 = "DELETE FROM PS_TZ_REG_USER_T WHERE OPRID = ?";
+		String sql5 = "DELETE FROM PSROLEUSER WHERE ROLEUSER = ?";
+		
+		int del1 = sqlQuery.update(sql1, new Object[]{paramOprid});
+		int del2 = sqlQuery.update(sql2, new Object[]{paramOprid});
+		int del3 = sqlQuery.update(sql3, new Object[]{paramOprid});
+		int del4 = sqlQuery.update(sql4, new Object[]{paramOprid});
+		int del5 = sqlQuery.update(sql5, new Object[]{paramOprid});
+		
+		String ret = paramOprid + "-->" + del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5;
+		return ret;
 	}
 }

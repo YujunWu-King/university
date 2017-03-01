@@ -5,8 +5,8 @@
 	reference: 'sendFormWindow',
 	//controller: 'applicantsMg',
 	title: '请选择发送类型',
-	width: 375,
-    height: 220,
+	width: 330,
+    height: 200,
     minWidth: 300,
     minHeight: 200,
   	layout: 'fit',
@@ -28,7 +28,7 @@
 			xtype: 'dataview',
             tpl: [
                 '<tpl for=".">',
-                    '<div class="send-type-item" style="float:left;margin:30px 20px;cursor:pointer">',
+                    '<div class="send-type-item" style="float:left;margin:20px 35px;cursor:pointer">',
                         '<img src="'+ TzUniversityContextPath +'/statics/images/tranzvision/{thumb}" />',
                         '<h3 style="text-align:center;font-size:12px;font-weight:bold;">{name}</h3>',
                     '</div>',
@@ -40,7 +40,7 @@
                 autoLoad: true,
                 sortOnLoad: true,
                 fields: [{name:'name'}, {name:'thumb'}, {name:'type'}],
-                data:[{name:'电子邮件',thumb:'email2.png',type:'E'},{name:'短信',thumb:'sms2.png',type:'M'},{name:'微信',thumb:'wechat2.png',type:'W'}]
+                data:[{name:'电子邮件',thumb:'email2.png',type:'E'},{name:'短信',thumb:'sms2.png',type:'M'}/*,{name:'微信',thumb:'wechat2.png',type:'W'}*/]
             }),
 			listeners:{
 				itemclick:function(view, record, item, index, e){
@@ -74,8 +74,6 @@
 						});
 						
 					}else if (record.data.type == 'M'){
-						Ext.Msg.alert("提示信息","系统暂不支持此功能！");
-						/*
 						parmJson = '{"ComID": "TZ_GD_BMRGL_COM","PageID": "TZ_GD_SMS_STD","OperateType": "EJSON","comParams": {'+parmData+'}}';
 						Ext.tzLoad(parmJson,function(resp){
 							win.close();
@@ -86,7 +84,6 @@
 								"audienceId": resp.audienceId
 							});
 						});
-						*/
 					}else if (record.data.type == 'W'){
 						Ext.Msg.alert("提示信息","系统暂不支持此功能！");
 					}

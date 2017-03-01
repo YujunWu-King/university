@@ -26,62 +26,19 @@
 					<div class="mian_inner_nav" id="tab1">
 						<div class="float_left">
 							<ul>
-								<li class="now" onClick="setTab(1,0)">
-									可申请奖学金
-								</li>
-								<li class="" onClick="setTab(1,1)">
-									已申请奖学金
-								</li>
+								<li class="now" onClick="setTab(1,0)">可申请奖学金</li>
+								<li class="" onClick="setTab(1,1)">已申请奖学金</li>
 							</ul>
 						</div>
 					</div>
 					<div id="content1">
 						<div style="display:block;" class="tab1 block">
-							<table class="table_style" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<td>
-											奖学金名称
-										</td>
-										<td>
-											开始时间
-										</td>
-										<td>
-											结束时间
-										</td>
-										<td>
-											操作
-										</td>
-									</tr>
-								</thead>
-								<tbody>%bind(:6)</tbody>
-							</table>
+							<table class="table_style" style="margin-top:10px;">%bind(:6)</table>
 							<div class="padding_div_50px">
 							</div>
 						</div>
 						<div style="display:none;" class="tab1">
-							<table class="table_style" style="margin-top:10px;">
-								<thead>
-									<tr>
-										<td>
-											奖学金名称
-										</td>
-										<td>
-											开始时间
-										</td>
-										<td>
-											结束时间
-										</td>
-										<td>
-											申请结果
-										</td>
-										<td>
-											操作
-										</td>
-									</tr>
-								</thead>
-								<tbody>%bind(:7)</tbody>
-							</table>
+							<table class="table_style" style="margin-top:10px;">%bind(:7)</table>
 							<div class="padding_div_50px">
 							</div>
 							<div style="clear: both;">
