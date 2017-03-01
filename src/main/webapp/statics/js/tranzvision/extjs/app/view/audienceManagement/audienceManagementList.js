@@ -21,7 +21,7 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
     },
 	style:"margin:8px",
  //   multiSelect: true,
-    title: '听众管理系统',
+    title: '听众管理',
     viewConfig: {
         enableTextSelection: true
     },
@@ -39,8 +39,8 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
 		xtype:"toolbar",
 		items:[
 			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchComList"},"-",
-		//	{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addComRegInfo"},"-",
-			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addPageRegInfo"},"-",
+			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addComRegInfo"},"-",
+		//	{text:"新增",tooltip:"新增数据",iconCls:"add",handler:"addPageRegInfo"},"-",
 			{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:"editPageRegInfo"},"-",
 			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deleteComRegInfos"}
 		]
@@ -68,6 +68,12 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
                 text: '听众描述',
                 hidden:true,
                 dataIndex: 'audMS',
+				Width: 400,
+				flex:1
+            },{ 
+                text: '听众来源',
+                hidden:true,
+                dataIndex: 'audLY',
 				Width: 400,
 				flex:1
             },{ 
@@ -117,8 +123,8 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
                align:'center',
                xtype: 'actioncolumn',
 			   items:[
-				//  {iconCls: 'edit',tooltip: '编辑',handler: 'editSelComRegInfo'},
-				  {iconCls: 'edit',tooltip: '编辑',handler: 'editPageRegInfoOne'},
+				  {iconCls: 'edit',tooltip: '编辑',handler: 'editSelComRegInfo'},
+				//  {iconCls: 'edit',tooltip: '编辑',handler: 'editPageRegInfoOne'},
 			   	//  {iconCls: 'remove',tooltip: '删除',handler: 'deleteComRegInfo'}
 			   ]
             }],

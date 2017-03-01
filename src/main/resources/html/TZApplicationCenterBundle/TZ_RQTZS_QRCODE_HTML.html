@@ -1,0 +1,16 @@
+<html>
+<head>
+	<script>
+		function closeThis(){
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		};
+	</script>
+</head>
+<body>
+	<div id="idcity" class="city_close" onclick="closeThis();">
+		<img src="/university/statics/images/website/skins/23/del.png" width="15" height="15">
+	</div>
+	<img src="%bind(:1)"/>
+</body>
+</html>

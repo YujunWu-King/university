@@ -927,7 +927,7 @@ public class SendSmsOrMalQfServiceImpl {
 							this.writeLsZnxData(strRwSlId, oprid, "", "", "NULL", strTaskId, prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
-							return;
+							continue;
 						}
 						
 						blRept = this.checkIsSendZnx(strTaskId, oprid);
@@ -936,6 +936,7 @@ public class SendSmsOrMalQfServiceImpl {
 							this.writeLsZnxData(strRwSlId, oprid, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 							this.writeLsMalAttchData(strRwSlId, strTaskId,strPicID);
 							this.deleteTaskAud(strTaskId, audId, audCyId);
+							continue;
 						}
 						
 						if ("Y".equals(isDynamicFlg)) {
@@ -1107,7 +1108,7 @@ public class SendSmsOrMalQfServiceImpl {
 	}
 	
 	
-	// 写邮件历史数据表
+	// 写站内信历史数据表
 	private void writeLsZnxData(String strRwSlId, String oprid, String tj, String content, String strFsZt,
 				String strTaskId, String prcsinstanceId,String tzAudcyId) {
 		// 站内信发送历史表;
@@ -1122,7 +1123,7 @@ public class SendSmsOrMalQfServiceImpl {
 		psTzZnxfslshiTbl.setTzAudcyId(tzAudcyId);
 		psTzZnxfslshiTblMapper.insert(psTzZnxfslshiTbl);
 
-		// 邮件发送内容历史表
+		// 站内信发送内容历史表
 		PsTzZnxzwlshiTbl psTzZnxzwlshiTbl = new PsTzZnxzwlshiTbl();
 		psTzZnxzwlshiTbl.setTzRwslId(strRwSlId);
 		psTzZnxzwlshiTbl.setTzYjfsRq(new Date());

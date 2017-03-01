@@ -136,19 +136,12 @@
 			hidden:true
 		},{
 			text: '操作',
-			//xtype: 'actioncolumn',
+			width: 80,
 			sortable: true,
-			/*items:[
-						{
-							text: '编辑',
-							iconCls: 'edit',
-							tooltip: '编辑',
-						   // scope: this,
-                    		handler: "currAttrEdit"
-						}
-			   ]*/
-		
+			menuDisabled: true,
+			resizable: false, 
 			renderer: function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
+				cellmeta.style = "padding:0px";	
 				var _hdId,_bmrId,_sta;
 				var _json = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"setRegSta","comParams":{';
 				
@@ -159,9 +152,9 @@
 				_json = _json + '"activityId":"'+_hdId+'","applicantsId":"'+_bmrId+'","applyStatus":"'+_sta+'"}}';
 	
 				if (_sta=="1" || _sta=="4"){
-					return "<input type='button' value='撤销' onclick=applyOrCancel(\'"+ _json +"\',\'"+ _sta +"\'); style='width:72px;height:25px;'/>";
+					return "<input type='button' value='撤销' onclick=applyOrCancel(\'"+ _json +"\',\'"+ _sta +"\'); style='width:100%;height:25px;'/>";
 				}else if(_sta=="2" || _sta=="3"){
-					return "<input type='button' value='报名' onclick=applyOrCancel(\'"+ _json +"\',\'"+ _sta +"\'); style='width:72px;height:25px;'/>";
+					return "<input type='button' value='报名' onclick=applyOrCancel(\'"+ _json +"\',\'"+ _sta +"\'); style='width:100%;height:25px;'/>";
 				}
 			}
 		},{

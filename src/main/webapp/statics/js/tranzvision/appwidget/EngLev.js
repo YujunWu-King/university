@@ -13,7 +13,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			"title": MsgSet["EXAM_TYPE"],
 			//"title": "考试名称",
 			"orderby": 1,
-			"value": "-1",
+			"value": "",
 			"StorageType": "S",
 			"classname": "Select"
 		},
@@ -791,7 +791,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				htmlContent += '	<div  class="input-list-info left"><span class="red-star">*</span>' + child.EngLevelType.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
-				htmlContent += '			<option value="-1">' +MsgSet["PLEASE_SELECT"] + '</option>';
+				htmlContent += '			<option value="">' +MsgSet["PLEASE_SELECT"] + '</option>';
 				htmlContent += OPT_ENG;
 				htmlContent += '		</select>';
 				//----------------------------非空验证DIV
@@ -813,7 +813,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------日期 input格式检验:
 					DATE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					DATE_DIV += '	<div id="' + date_id + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					DATE_DIV += '		<div class="onShow">test</div>';
+					DATE_DIV += '		<div class="onShow"></div>';
 					DATE_DIV += '	</div>';
 					DATE_DIV += '</div>';
 					//---------
@@ -846,7 +846,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------GRE input格式检验:
 					GRE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GRE_DIV += '	<div id="' + data.itemId+child.EngLevelOpt1_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					GRE_DIV += '		<div class="onShow">test</div>';
+					GRE_DIV += '		<div class="onShow"></div>';
 					GRE_DIV += '	</div>';
 					GRE_DIV += '</div>';
 					//---------
@@ -864,7 +864,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------GMAT  input格式检验:
 					GMAT_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					GMAT_DIV += '	<div id="' + data.itemId+child.EngLevelOpt2_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					GMAT_DIV += '		<div class="onShow">test</div>';
+					GMAT_DIV += '		<div class="onShow"></div>';
 					GMAT_DIV += '	</div>';
 					GMAT_DIV += '</div>';
 					//---------
@@ -883,7 +883,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------TOFEL_DIV  input格式检验:
 					TOFEL_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOFEL_DIV += '	<div id="' + data.itemId+child.EngLevelOpt3_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					TOFEL_DIV += '		<div class="onShow">test</div>';
+					TOFEL_DIV += '		<div class="onShow"></div>';
 					TOFEL_DIV += '	</div>';
 					TOFEL_DIV += '</div>';
 					//---------
@@ -902,7 +902,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------IELTS_DIV  input格式检验:
 					IELTS_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					IELTS_DIV += '	<div id="' + data.itemId+child.EngLevelOpt4_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					IELTS_DIV += '		<div class="onShow">test</div>';
+					IELTS_DIV += '		<div class="onShow"></div>';
 					IELTS_DIV += '	</div>';
 					IELTS_DIV += '</div>';
 					//---------
@@ -920,7 +920,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------CET6_DIV  input格式检验:
 					CET6_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET6_DIV += '	<div id="' + data.itemId+child.EngLevelOpt5_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					CET6_DIV += '		<div class="onShow">test</div>';
+					CET6_DIV += '		<div class="onShow"></div>';
 					CET6_DIV += '	</div>';
 					CET6_DIV += '</div>';
 					//---------
@@ -938,7 +938,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------CET4_DIV  input格式检验:
 					CET4_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					CET4_DIV += '	<div id="' + data.itemId+child.EngLevelOpt6_1.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					CET4_DIV += '		<div class="onShow">test</div>';
+					CET4_DIV += '		<div class="onShow"></div>';
 					CET4_DIV += '	</div>';
 					CET4_DIV += '</div>';
 					//---------
@@ -954,6 +954,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 				CET6_DIV2+='<div name="'+data.itemId+'ENG_LEV_T7" id="'+data.itemId+'ENG_LEV_T7" class="input-list" style="display:none">'
 					CET6_DIV2+='<div class="input-list-info left"><span class="red-star">*</span><span >'+MsgSet["EXAM_PASS"]+'：</span></div>'
 					CET6_DIV2+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+data["itemId"] + child.EngLevelOpt7_1.itemId+'" value="'+child.EngLevelOpt7_1.value+'">'
+						//CET6_DIV2+='<option value="">'+MsgSet["PLEASE_SELECT"]+'</option>'
 						CET6_DIV2+='<option value="Y">'+MsgSet["PASS_Y"]+'</option>'
 						CET6_DIV2+='<option value="N">'+MsgSet["PASS_N"]+'</option>'
 					CET6_DIV2+='</select></div>'
@@ -1048,7 +1049,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 					//---------TOEIC_DIV  input格式检验:
 					TOEIC_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
 					TOEIC_DIV += '	<div id="' +data.itemId+ child.EngLevelOpt13_2.itemId + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
-					TOEIC_DIV += '		<div class="onShow">test</div>';
+					TOEIC_DIV += '		<div class="onShow"></div>';
 					TOEIC_DIV += '	</div>';
 					TOEIC_DIV += '</div>';
 					//---------
@@ -1175,19 +1176,29 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								var related_div_name="div[name='relatedDiv']";
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
+									$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
-										$(this).parents(".input-list").siblings(related_div_name).find("select").chosen("destroy").chosen({width: "100%"});
-										$(this).parents(".input-list").siblings(related_div_name).find("select").trigger("chosen:updated");
+										//console.log("child-select:");
+										//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
+										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										//----
 									}else{
+										
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","none");
+										//select切换时候清空 其他select对应div中的input的数据:
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("input").val("");
+										//清理子模块select数据:
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").val("");
+										//清理附件div中信息:
+										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).siblings("#"+ data["itemId"]+"UP").find(".input-list-upload").find(".input-list-upload-con").html("");
+										//清理附件 存储结构中数据：
 									}
 								}
 								var up_name="div[name='"+data.itemId+"UP"+"']";
 								var up_btn=$(this).parents(".input-list").siblings(related_div_name).find(up_name);
-								if($(this).val()=="-1")
+								if($(this).val()=="")
 									up_btn.css("display","none");
 								else
 									up_btn.css("display","block");
@@ -1203,8 +1214,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							   var $selectBtn = $("#" + data.itemId +child[EngLevelOpt].itemId + "_Btn");
 							   //日期选择事件绑定:
 							   $inputBox.each(function(){
-								   $(this).datepicker({
+								   $(this).datetimepicker({
 										showButtonPanel:true,
+										showTimepicker: false,
 										changeMonth: true,
 										changeYear: true,
 										yearRange: "1960:2030",
@@ -1279,6 +1291,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							 var EngLevelOpt=""+select_id_gp[j];
 							   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
 							   $selectEl.each(function(){
+								   $(this).chosen("destroy").chosen({width:"100%"});
 								   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 									$(this).functionValidator({
 										fun:function(val,el){
@@ -1295,9 +1308,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						
 				 }
 				 //所有看的到的select美化:
-				$("select").each(function(){
-					$(this).chosen({width:"100%"});
-				});
+//				$("select").each(function(){
+//					$(this).chosen({width:"100%"});
+//				});
 		       
 	}
 })
