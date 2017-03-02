@@ -53,7 +53,7 @@
     				name: 'javaClass'
     	        },{
     	            xtype: 'displayfield',
-    				value:"此处设置的Java类必须实现接口 com.tranzvision.export.UnifiedExportBase",
+    				value:"此处设置的Java类必须实现接口 com.tranzvision.gd.TZUnifiedExportBundle.service.UnifiedExportBase",
     				fieldStyle:"color:#666;font-weight:bold",
     				fieldLabel:" ",
     	            labelSeparator:""
