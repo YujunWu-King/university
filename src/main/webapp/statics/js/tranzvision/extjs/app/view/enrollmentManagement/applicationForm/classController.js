@@ -875,7 +875,7 @@
     },
     /*评审进度管理*/
     clReviewScheduleMg:function(grid,rowIndex){
-
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_CLPS_SCHE_STD"];
         if( pageResSet == "" || pageResSet == undefined){
