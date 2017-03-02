@@ -245,11 +245,11 @@
                                                         bm_grid.store.tzStoreParams = Params;
                                                         bm_grid.store.reload();
                                                         //递交资料页面重新加载
-                                                        var _zl="";
+                                                        /*var _zl="";
                                                         var zl_grid = file.findParentByType('ClassInfo').down('grid[name=applyItemGrid1]');
                                                         Params= '{"bj_id":"'+bj_id+'","queryID":"6","zl_id":"'+_zl+'"}';
                                                         zl_grid.store.tzStoreParams = Params;
-                                                        zl_grid.store.reload();
+                                                        zl_grid.store.reload();*/
                                                     });
                                                 }
                                             }
@@ -951,7 +951,7 @@
                                     ]
                                 },
                                 //递交资料设置
-                                {
+                                /*{
                                     title: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.grid_djzlsz","递交资料设置"),
                                     name:"grid_djzl",
                                     layout: {
@@ -1139,7 +1139,7 @@
                                             ]
                                         }
                                     ]
-                                },{
+                                },*/{
                                     title: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.hcgztab","互斥班级"),
                                     xtype: 'grid',
                                     columnLines: true,

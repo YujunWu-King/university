@@ -280,8 +280,9 @@
 				},
 				result:'TZ_SBMINF_TMP_ID,TZ_SBMINF_TMP_NAME'
 			});
-			var _dd=panel.down('combobox[name=djzl_mx]');
-			_dd.setStore(lm_mbStore1);
+			//递交资料隐藏
+			//var _dd=panel.down('combobox[name=djzl_mx]');
+			//_dd.setStore(lm_mbStore1);
 			//tabpanel.findField("lm_mb").setStore(lm_mbStore);
 			//参数
 			var tzParams = '{"ComID":"TZ_GD_BJGL_COM","PageID":"TZ_GD_BJJB_STD","OperateType":"QF","comParams":{"bj_id":"'+bj_id+'"}}';
@@ -314,11 +315,11 @@
 				bm_grid.store.tzStoreParams = Params;
 				bm_grid.store.reload();
 				//递交资料页面重新加载
-				var _zl="";
+				/*var _zl="";
 				var zl_grid = panel.down('grid[name=applyItemGrid1]');
 				Params= '{"bj_id":"'+bj_id+'","queryID":"6","zl_id":"'+_zl+'"}';
 				zl_grid.store.tzStoreParams = Params;
-				zl_grid.store.reload();
+				zl_grid.store.reload();*/
 				//互斥规则页面数据加载
 				var hcgz_grid = panel.down('grid[name=hcgzGrid]');
 				Params= '{"bj_id":"'+bj_id+'","queryID":"7"}';

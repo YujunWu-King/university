@@ -145,7 +145,6 @@ public class TzWebsiteLoginController {
 
 						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strSiteId,
 								strUserName, strPassWord, strYzmCode, strLang, aryErrorMsg);
-
 						String loginStatus = aryErrorMsg.get(0);
 						String errorMsg = aryErrorMsg.get(1);
 						if (boolResult) {
