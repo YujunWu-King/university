@@ -82,18 +82,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//得到登录链接的url
 			String loginOutUrl = "";
-			Cookie[] cookies = request.getCookies();//这样便可以获取一个cookie数组
-			for(Cookie cookie : cookies){
-			    String cookieName = cookie.getName();// get the cookie name
-			    String cookieValue = cookie.getValue(); // get the cookie value
-			    System.out.println("cookieName======>"+cookieName);
-			    System.out.println("cookieValue======>"+cookieValue);
-			    if("TZGD_LOGIN_URL".equals(cookieName)){
-			    	loginOutUrl = cookieValue;
-			    	System.out.println("loginOutUrl===1===>"+loginOutUrl);
-			    }
-			}
-			
+
 			//得到登录地址;
 			loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
 			System.out.println("loginOutUrl===2===>"+loginOutUrl);
