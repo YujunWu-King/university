@@ -199,7 +199,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 									String type = "A";
 									// 解析邮件里的系统变量;
 									String[] result = analysisLcResult.analysisLc(type, String.valueOf(TZ_APP_INS_ID),
-											rootPath, TZ_APPPRO_RST);
+											rootPath, TZ_APPPRO_RST,"N");
 
 									isFb = result[0];
 									TZ_APPPRO_RST = result[1];
