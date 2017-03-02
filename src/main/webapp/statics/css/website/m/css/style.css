@@ -58,7 +58,7 @@ a,a:hover{text-decoration: none;display: block;}
 .list li{margin-right:5%;float: left;padding-bottom: 2%;}
 .list_body{width:96%;margin:2% auto;color:#666;font-size:0.5rem;}
 .list_body li{width:100%;margin:10px 0;}
-.list_body li p{width:90%;color:#666;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.list_body li p{width:75%;display:inline-block;color:#666;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .list_on{border-bottom:3px solid #8f5dc0;}
 /*快捷入口*/
 .exit{width:100%;height:auto;background-color:#fff;overflow: hidden;margin-top:5px;}
@@ -126,6 +126,8 @@ a,a:hover{text-decoration: none;display: block;}
 .circled{background:url(../images/step_on.png)no-repeat center center;background-color:#8f5dc0;background-size:80%;}
 .circling{background-color:#8f5dc0;color:#fff;}
 .ed{border-left: 1px solid #8f5dc0; }
+.add_icon{width:1rem;height:1rem;background:url(../images/table_search.png)no-repeat center center;background-size:80%;float:left;}
+
 
 /*用户注册*/
 .register{width:94%;margin:0 auto;padding-bottom: 3%;}
@@ -145,6 +147,8 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .register_btn{width:94%;margin:2% auto 3%;height:1.5rem;background-color:#8f5dbf;color:#fff;font-size:0.6rem;line-height:1.5rem;text-align:center;border-radius:0.3rem;}
 .register_body #send_Verification{width:30%;padding:2%;margin-bottom:1%;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
 .register_body #send_Verification[disabled]{background-color:#eee;color:#999;}
+ #sendButton{width:30%;padding:2%;margin-bottom:1%;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
+#sendButton[disabled]{background-color:#eee;color:#999;}
  #sendBtn{width:30%;height:1.4rem;line-height:1.4rem;margin: 0.3rem 2% 0 0;background-color:#8f5dbf;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
 #sendBtn[disabled]{background-color:#ddd;color:#999;}
 /*注册弹窗*/
@@ -328,6 +332,9 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .question{margin:2% auto;}
 .question span{display:block;width:100%;border-bottom:1px solid #ddd;color:#333;font-size:0.56rem;padding:1% 0;}
 .question p{text-indent:2em;color:#999;font-size:0.58rem;}
+
+
+.add_hot{display: block;max-width:8%;height: auto;width: 100%;margin:0 0 0 1%;}
 /*自定义响应式*/
 @media only screen and (min-width:320px)  and (max-width:420px) {
 	.search{margin:2% 0 0 5%;}
