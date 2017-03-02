@@ -44,7 +44,7 @@ public class tzOnlineAppUtility {
 	public String requireValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 
 		String returnMessage = "";
@@ -222,7 +222,7 @@ public class tzOnlineAppUtility {
 	public String ahphValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
@@ -255,7 +255,7 @@ public class tzOnlineAppUtility {
 	public String VerificationCodeValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc,
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
-			String strXxxCharBz, int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax,
+			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
 			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
 			String strJygzTsxx) {
 		String returnMessage = "";
@@ -290,7 +290,7 @@ public class tzOnlineAppUtility {
 	public String charLenValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
@@ -328,7 +328,7 @@ public class tzOnlineAppUtility {
 	public String valueValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
@@ -428,7 +428,7 @@ public class tzOnlineAppUtility {
 	public String regularValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
@@ -528,7 +528,7 @@ public class tzOnlineAppUtility {
 	public String dHLineValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
-			int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax, String strXxxXsws,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
@@ -555,7 +555,7 @@ public class tzOnlineAppUtility {
 	public String refLetterValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc,
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
-			String strXxxCharBz, int numXxxMinlen, int numXxxMaxlen, String strXxxNumBz, int numXxxMin, int numXxxMax,
+			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
 			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
 			String strJygzTsxx) {
 		String returnMessage = "";

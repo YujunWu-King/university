@@ -105,7 +105,8 @@ public class FliterForm extends FrameworkImpl {
 						new Object[] { tableName });
 				for (int list_i = 0; list_i < list.size(); list_i++) {
 					columnNanme = (String) list.get(list_i).get("COLUMN_NAME");
-					dateType = ((String) list.get(list_i).get("DATA_TYPE")).toUpperCase();
+					//dateType = ((String) list.get(list_i).get("DATA_TYPE")).toUpperCase();
+					dateType = (list.get(list_i).get("DATA_TYPE").toString()).toUpperCase();
 					resultFldTypeList.add(columnNanme);
 					resultFldTypeList.add(dateType);
 				}
@@ -349,7 +350,8 @@ public class FliterForm extends FrameworkImpl {
 			/** 字段类型 **/
 			for (int typelist_i = 0; typelist_i < typelist.size(); typelist_i++) {
 				columnNanme = (String) typelist.get(typelist_i).get("COLUMN_NAME");
-				dateType = ((String) typelist.get(typelist_i).get("DATA_TYPE")).toUpperCase();
+				//dateType = ((String) typelist.get(typelist_i).get("DATA_TYPE")).toUpperCase();
+				dateType = (typelist.get(typelist_i).get("DATA_TYPE").toString()).toUpperCase();
 				resultFldTypeList.add(columnNanme);
 				resultFldTypeList.add(dateType);
 			}

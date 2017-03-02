@@ -209,11 +209,16 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 					String delAudId = String.valueOf(delAudMap.get("TZ_AUD_ID"));
 					
 					//删除听众成员
-					sql = "SELECT TZ_LKYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
+					sql = "SELECT TZ_LYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
 					List<Map<String,Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[]{delAudId});
 					
 					for(Map<String,Object> audCyMap : audCyList){
-						Long appInsId = Long.valueOf(String.valueOf(audCyMap.get("TZ_LKYDX_ID")));
+						Long appInsId;
+						try{
+							appInsId = Long.valueOf(audCyMap.get("TZ_LYDX_ID").toString());
+						}catch(NumberFormatException nE){
+							continue;
+						}
 						
 						PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
 						psTzMspsKshTblKey.setTzClassId(classID);
@@ -223,8 +228,11 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
 						
 						//且不再其他听众里面
-						sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") AND TZ_LXFS_LY='ZSBM' limit 1";
-						String inOtherAud = jdbcTemplate.queryForObject(sql, "String");
+						String inOtherAud = "";
+						if(!"".equals(whereIn)){
+							sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") AND TZ_LXFS_LY='ZSBM' limit 1";
+							inOtherAud = jdbcTemplate.queryForObject(sql, "String");
+						}
 						
 						if(psTzMspsKshTbl != null && !"Y".equals(inOtherAud)){
 							psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
@@ -351,12 +359,16 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 					
 					if(rtn != 0){
 						//插入听成成员
-						sql = "SELECT TZ_LKYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
+						sql = "SELECT TZ_LYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
 						List<Map<String,Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[]{audID});
 						
 						for(Map<String,Object> audCyMap : audCyList){
-							Long appInsId = Long.valueOf(String.valueOf(audCyMap.get("TZ_LKYDX_ID")));
-							
+							Long appInsId;
+							try{
+								appInsId = Long.valueOf(audCyMap.get("TZ_LYDX_ID").toString());
+							}catch(NumberFormatException nE){
+								continue;
+							}
 							PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
 							psTzMspsKshTblKey.setTzClassId(classID);
 							psTzMspsKshTblKey.setTzApplyPcId(batchID);

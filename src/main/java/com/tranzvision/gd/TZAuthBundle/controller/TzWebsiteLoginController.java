@@ -165,7 +165,11 @@ public class TzWebsiteLoginController {
 							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
 							if(infoIsCmpl){
 							    //如果为手机，则跳转到手机页面-待完成
-							    indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+							    if("Y".equals(isMobile)){
+								indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + strSiteId;
+							    }else{
+								indexUrl= ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+							    }
 							}else{
 							    String strParams = "";
 							    if("Y".equals(isMobile)){

@@ -16,12 +16,13 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     title: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.panelTitle","面试安排考生名单管理"),
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     reference: 'interviewArrangeSetStuListPanel',
-    //style:"margin:8px",
+    bodyPadding: 10,
     listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 44;/*button height plus panel body padding*/
+            var buttonHeight = 36;/*button height plus panel body padding*/
             var grid = panel.child('grid');
-            if(grid)grid.setHeight( height -buttonHeight -138-8);
+            console.log(grid);
+            if(grid)grid.setHeight( height -buttonHeight -115);
         }
     },
     initComponent: function (){
@@ -60,7 +61,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     align: 'stretch'    // 控件横向拉伸至容器大小
                 },
                 border: false,
-                bodyPadding: 10,
+                bodyPadding: '0px 0px 5px 0px',
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelWidth: 160,
@@ -97,7 +98,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 }]
             },{
                 xtype: 'grid',
-                height: 420,
                 frame: true,
                 name: 'interviewArrangeSetStuListGrid',
                 reference: 'interviewArrangeSetStuListGrid',
