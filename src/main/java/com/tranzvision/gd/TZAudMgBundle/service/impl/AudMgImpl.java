@@ -54,7 +54,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 				String[][] orderByArr = new String[][] { { "TZ_AUD_ID", "ASC" } };
 
 				// json数据要的结果字段;
-				String[] resultFldArray = { "TZ_AUD_NAM", "TZ_AUD_STAT","TZ_AUD_TYPE","TZ_AUD_ID","TZ_AUD_MS","TZ_AUD_SQL" };
+				String[] resultFldArray = { "TZ_AUD_NAM", "TZ_AUD_STAT","TZ_AUD_TYPE","TZ_AUD_ID","TZ_AUD_MS","TZ_AUD_SQL","TZ_LXFS_LY" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -72,6 +72,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 						mapList.put("audId", rowList[3]);
 						mapList.put("audMS", rowList[4]);
 						mapList.put("audSQL", rowList[5]);
+						mapList.put("audLY", rowList[6]);
 						
 						listData.add(mapList);
 					}
