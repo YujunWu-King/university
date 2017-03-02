@@ -375,7 +375,7 @@
 			var tzParams = '{"ComID":"TZ_IMP_TPL_COM","PageID":"TZ_TPL_INF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 			Ext.tzSubmit(tzParams,function(responseData){
 				//清除store的更改目标表字段标识
-				panel.fieldStore.clearFlag=true;	
+				panel.fieldStore.clearFlag=false;
 				if(btn.name=="ensure"){
 					panel.close();
 				}else{
