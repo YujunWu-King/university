@@ -550,6 +550,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 				} catch (Exception e) {
 					errorMsg[0] = "1";
 					errorMsg[1] = e.toString();
+					
 					return strRet;
 				}
 

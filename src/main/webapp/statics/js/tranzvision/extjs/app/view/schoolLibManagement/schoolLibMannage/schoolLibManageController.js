@@ -269,16 +269,23 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolLibMannage.schoolLibManag
             },"",true,this);
         }  
     },
-    
-    //院校库详情页确定按钮
+        //院校库详情页确定按钮
     ensureonschoolSave:function(btn){
-        this.onschoolSave(btn);
-        //关闭窗口
-        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("schoolMgList").store.reload();
-        var comView = this.getView(); 		
-        comView.close();
+    	var form = this.getView().child("form").getForm();
+
+        if (form.isValid()) {
+            //获得院校库表单信息
+            var tzParams = this.getResSetInfoParams();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		    contentPanel.child("schoolMgList").store.reload();
+                comView.close();
+            },"",true,this);
+        }
+    
     },
+   
     closeResSets:function(btn){
         //关闭窗口
         var comView = this.getView();

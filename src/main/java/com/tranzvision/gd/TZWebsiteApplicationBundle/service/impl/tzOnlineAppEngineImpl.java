@@ -821,7 +821,7 @@ public class tzOnlineAppEngineImpl {
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			// jacksonUtil.json2Map(strJsonData);
-			System.out.println("保存传入数据:"+strJsonData);
+			//System.out.println("保存传入数据:"+strJsonData);
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
 
 			if (mapAppData != null) {

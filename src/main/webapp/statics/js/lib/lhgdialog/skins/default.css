@@ -64,7 +64,7 @@ background:-moz-linear-gradient(top, #46a0e1, #3280bf);
 background:-o-linear-gradient(top, #46a0e1, #3280bf);
 filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#46a0e1', endColorstr='#3280bf'); }
  
-.ui_state_focus .ui_title{ color:#FFF; text-shadow:0 1px 0 #333;}
+.ui_state_focus .ui_title{ color:#FFF;/* text-shadow:0 1px 0 #333;*/}
 .ui_state_drag .ui_title { border-bottom:1px solid #82bee6; text-shadow: 0 -1px 0 #333;
 background:linear-gradient(top, #3280bf, #46a0e1); 
 background:-moz-linear-gradient(top, #3280bf, #46a0e1); 
