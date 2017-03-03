@@ -41,6 +41,7 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		int num = 0;
 
 		// 排序字段如果没有不要赋值
 
@@ -66,17 +67,17 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl {
 				if (JgID.equals(Orgid)) {
 
 					mapList.put("adcertTmpl", rowList[1]);
-
 					mapList.put("adtmplName", rowList[2]);
+					listData.add(mapList);
 
 				} else {
+					num = Integer.valueOf(obj[0].toString()) - 1;
 
 				}
-				listData.add(mapList);
 
 			}
 
-			mapRet.replace("total", obj[0]);
+			mapRet.replace("total", num);
 			mapRet.replace("root", listData);
 		}
 
@@ -113,14 +114,6 @@ public class tzAdvertisementTmplListMg extends FrameworkImpl {
 					PsTzADTMPLTBL.setRowLastmantDttm(nowdate);
 					PsTzADTMPLTBL.setRowLastmantOprid(Orgid);
 					PsTzADTMPLTBLMapper.updateByPrimaryKeySelective(PsTzADTMPLTBL);
-
-					/*
-					 * PsTzADTMPLTBLKey PsTzADTMPLTBLKey=new PsTzADTMPLTBLKey();
-					 * PsTzADTMPLTBLKey.setTzAdTmplId(adcertTmpl);
-					 * PsTzADTMPLTBLKey.setTzJgId(Orgid);
-					 * 
-					 * PsTzADTMPLTBLMapper.deleteByPrimaryKey(PsTzADTMPLTBLKey);
-					 */
 
 				}
 			}

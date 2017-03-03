@@ -400,7 +400,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         {
             var proxy = new Ext.data.proxy.Ajax(
                 {
-                    url: boot.mainapp_interaction_url,
+                    url: boot.mainapp_interaction_url,               
                     reader:
                     {
                         type: 'json',
@@ -2427,6 +2427,22 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                         }
                     }
                 });
+                
+                /***修改代理的read请求方式为POST***/
+                Ext.define('tranzvision.Ext.data.proxy.Ajax',              
+                   {   
+                   override:'Ext.data.proxy.Ajax',
+                   getMethod: function(request) {
+                   var actions = this.getActionMethods(),
+                   action = request.getAction(),
+                   method;
+                   actions.read='POST';//修改read 的GET为POST方法
+                   if (actions) {
+                      method = actions[action];
+                     }
+                    return method || this.defaultActionMethods[action];
+                    }                                                   
+                   });
 
             /**表单校验*覆盖类Ext.form.field.Number的提示信息属性*/
             Ext.define('tranzvision.Ext.form.field.Number',
