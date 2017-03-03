@@ -4,6 +4,10 @@
 	onFormSave: function(btn){
 		var me=this;
 		var form = this.getView().child("form").getForm();
+		//判断必填		
+		if(form.isValid()==false){
+			return;
+		}
 		var actType = this.getView().actType;
 		var comParams = "";
 		if(actType == "add"){

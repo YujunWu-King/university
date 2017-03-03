@@ -59,7 +59,8 @@
                 xtype: 'datefield',
                 fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.bmjzrq","报名截止日期"),
                 format: 'Y-m-d',
-                name: 'pc_stbm_time'
+                name: 'pc_stbm_time',
+                allowBlank:false
             },{
                 xtype: 'datefield',
                 fieldLabel:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.msqrrq","面试确认日期") ,

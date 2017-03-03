@@ -130,7 +130,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
                 //资源集合信息数据
-                var formData = responseData.zhjgID;
+                var formData = responseData;
                 form.setValues(formData);
                 //资源集合信息列表数据
 
@@ -283,6 +283,7 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
     },
     //可配置搜索
 	searchzsMgList: function(btn){
+		
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_ZSBF_JG_COM.TZ_ZSBF_LIST_STD.TZ_JG_LINKEDIN_VW',
 			callback: function(seachCfg){

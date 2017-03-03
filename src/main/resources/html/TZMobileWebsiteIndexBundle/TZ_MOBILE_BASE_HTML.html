@@ -6,40 +6,41 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
 <title>%bind(:1)</title>
 <!-- 需要引入的css和js  -->
-%bind(:2)
+<link href="%bind(:2)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="%bind(:2)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+%bind(:3)
+
+<script type="text/javascript">
+	var TzUniversityContextPath = "%bind(:2)";
+	
+	$(document).ready(function(){
+		var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
+		$.ajax({
+			type:"POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data:{
+				tzParams:tzParams
+			},
+			success:function(response){
+				$('.footer-nav').prop('innerHTML', response);
+			},
+			failure: function () {
+			  	
+			} 
+			
+		});
+	});
+</script>
 </head>
 <body>
 	<div class="viewport-adaptive">
 	   <!-- 主体内容 -->
-	   %bind(:3)
+	   %bind(:6)
 	</div>
 	<!-- 底部菜单 -->
 	<div class="footer-wrap mt10">
 	  <nav class="footer-nav">
-		  <div class="label ">
-			 <ul>
-				<li class="on"><a href="＃">
-					<i class="home"></i>
-					<span>首页</span>
-				</a></li>
-				<li ><a href="#">
-					<i class="center"></i>
-					<span>招生日历</span>
-				</a></li>
-				<li ><a href="#">
-					<i class="handle"></i>
-					<span>状态查询</span>
-				</a></li>
-				<li ><a href="#">
-					<i class="common_job"></i>
-					<span>联系我们</span>
-				</a></li>
-				<li ><a href="#">
-					<i class="my"></i>
-					<span>我的</span>
-				</a></li>
-			 </ul>
-		  </div>
+		  
 	  </nav>
 	</div>
 </body>

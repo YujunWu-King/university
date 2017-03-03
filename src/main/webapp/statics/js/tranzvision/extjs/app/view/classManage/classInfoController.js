@@ -165,7 +165,7 @@
 		var form = this.getView().child("form").getForm();
 		Ext.tzShowPromptSearch({
 			recname: 'TZ_APPTPL_DY_T',
-			searchDesc: modal_desc,
+			searchDesc: searchDesc,
 			maxRow:20,
 			condition:{
 				presetFields:{
@@ -1778,11 +1778,11 @@
 					bm_grid.store.tzStoreParams = Params;
 					bm_grid.store.reload();
 					//递交资料页面重新加载
-					var _zl="";
+					/*var _zl="";
 					var zl_grid = btn.findParentByType('ClassInfo').down('grid[name=applyItemGrid1]');
 					Params= '{"bj_id":"'+bj_id+'","queryID":"6","zl_id":"'+_zl+'"}';
 					zl_grid.store.tzStoreParams = Params;
-					zl_grid.store.reload();
+					zl_grid.store.reload();*/
 				},"",true,this);
 			}
 		}
@@ -1872,8 +1872,8 @@
 				remove_str = remove_str + ',{"typeFlag":"bmlc","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(bmlc_remove[i].data)+'}';
 	  		}
 		}
-		//递交资料
-		var djzl_grid=this.getView().down('grid[name=applyItemGrid1]').getStore();
+		//递交资料-隐藏
+		/*var djzl_grid=this.getView().down('grid[name=applyItemGrid1]').getStore();
 		djzl_grid.each(function(rec){
 			if(edit_str == ""){
 				edit_str = '{"typeFlag":"djzl","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(rec.data)+'}';
@@ -1888,7 +1888,7 @@
 			}else{
 				remove_str = remove_str + ',{"typeFlag":"djzl","bj_id":"'+bj_id+'","data":'+Ext.JSON.encode(djzl_remove[i].data)+'}';
 	  		}
-		}
+		}*/
 		//更多信息
 		var form2=this.getView().down('form[name=form_2]').getForm();
 		var comParams1 = "";
@@ -1960,11 +1960,11 @@
 					bm_grid.store.tzStoreParams = Params;
 					bm_grid.store.reload();
 					//递交资料页面重新加载
-					var _zl="";
+					/*var _zl="";
 					var zl_grid = btn.findParentByType('ClassInfo').down('grid[name=applyItemGrid1]');
 					Params= '{"bj_id":"'+bj_id+'","queryID":"6","zl_id":"'+_zl+'"}';
 					zl_grid.store.tzStoreParams = Params;
-					zl_grid.store.reload();
+					zl_grid.store.reload();*/
 					me.getView().close();
 				},"",true,this);
 			}

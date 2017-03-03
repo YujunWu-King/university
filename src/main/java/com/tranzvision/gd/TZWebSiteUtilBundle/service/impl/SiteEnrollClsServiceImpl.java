@@ -670,11 +670,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
 				psTzAqYhxxTbl.setTzRylx("ZCYH");
-				if ("M".equals(strActivateType)) {
+				//清华修改，如果有手机则默认手机绑定、有邮箱默认邮箱绑定
+				/*if ("M".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
 				if ("E".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
+				}*/
+				if(strTZ_EMAIL!=null&&!"".equals(strTZ_EMAIL)){
+				    psTzAqYhxxTbl.setTzYxbdBz("Y");
+				}
+				if(strTZ_MOBILE!=null&&!"".equals(strTZ_MOBILE)){
+				    psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
@@ -1290,11 +1297,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
 				psTzAqYhxxTbl.setTzRylx("ZCYH");
-				if ("M".equals(strActivateType)) {
+				//清华修改，如果有手机则默认手机绑定、有邮箱默认邮箱绑定
+				/*if ("M".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
 				if ("E".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
+				}*/
+				if(strTZ_EMAIL!=null&&!"".equals(strTZ_EMAIL)){
+				    psTzAqYhxxTbl.setTzYxbdBz("Y");
+				}
+				if(strTZ_MOBILE!=null&&!"".equals(strTZ_MOBILE)){
+				    psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);

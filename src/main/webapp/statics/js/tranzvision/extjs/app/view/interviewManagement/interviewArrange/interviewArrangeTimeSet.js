@@ -10,9 +10,9 @@
 	controller:'MspcController',
 	
 	width: 620,
-	height: 440,
+	height: 350,
 	minWidth: 600,
-	minHeight: 400,
+	minHeight: 300,
     columnLines: true,
     title: '面试日程安排设置',
 	layout: 'fit',
