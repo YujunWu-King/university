@@ -112,8 +112,15 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			//头部 ;
 			String topHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_TOP",ctxPath,loginOutUrl);
 			//查看进度链接;
-			String viewJdUrl = ctxPath + "/dispatcher?classid=mAppstatus&siteId="+siteId;;
+			String viewJdUrl = ctxPath + "/dispatcher?classid=mAppstatus&siteId="+siteId;
 			/*个人信息*/;
+			//账户管理链接;
+			String accountMngUrl =  ctxPath + "/dispatcher?classid=phZhgl&siteId="+siteId;
+			//系统消息;
+			String znxListUrl = "";
+			//已经报名的活动;
+			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId="+siteId;
+			
 			//照片;
 			String imgSql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetUserHeadImg");
 			Map<String, Object> mapUserHeadImg = sqlQuery.queryForMap(imgSql, new Object[] { m_curOPRID });
@@ -166,7 +173,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String strActCount = String.valueOf(actCount);
 			//System.out.println("strActCount=" + strActCount);
 			
-			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount);
+			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
 			
 			
 			/*招生进度*/
@@ -324,9 +331,9 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					if(columnName!=null){
 						if(i==0){
-							hdheadLabel = "<li class=\"list_on\">"+columnName+"</li>";
+							hdheadLabel = "<li class=\"list_on\" date-column=\""+currentColumnId+"\">"+columnName+"</li>";
 						}else{
-							hdheadLabel = hdheadLabel + "<li>"+columnName+"</li>";
+							hdheadLabel = hdheadLabel + "<li date-column=\""+currentColumnId+">"+columnName+"</li>";
 						}
 					}
 					
@@ -374,7 +381,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				hdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle);
+				hdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle,siteId);
 			}
 			
 			//快捷菜单;
