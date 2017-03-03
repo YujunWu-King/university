@@ -942,7 +942,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         //导入Excel、粘贴Excel数据并解析的方法
         importExcel : function(config)
         {
-            var className = 'KitchenSink.view.common.importExcel.importExcelWindow';
+            var className = 'KitchenSink.view.common.importExcel.ImportExcelWindow';
 
             if(!Ext.ClassManager.isCreated(className)){
                 Ext.syncRequire(className);
@@ -955,7 +955,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
        //统一导入Excel的方法
         unifiedImportExcel : function(config)
         {
-            var className = 'KitchenSink.view.common.importExcel.unifiedImportWindow';
+            var className = 'KitchenSink.view.common.importExcel.UnifiedImportWindow';
             	
             if(!Ext.ClassManager.isCreated(className)){
                 Ext.syncRequire(className);
@@ -1483,7 +1483,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             if(Ext.tzGetResourseFromServer == undefined) Ext.tzGetResourseFromServer = TranzvisionMeikecityAdvanced.Boot.getResourseFromServer;
             if(Ext.tzTabOn == undefined) Ext.tzTabOn = TranzvisionMeikecityAdvanced.Boot.tabOn;
             if(Ext.tzImport == undefined) Ext.tzImport = TranzvisionMeikecityAdvanced.Boot.importExcel;
-            if(Ext.tzImport == undefined) Ext.tzUnifiedImport = TranzvisionMeikecityAdvanced.Boot.unifiedImportExcel;
+            if(Ext.tzUnifiedImport == undefined) Ext.tzUnifiedImport = TranzvisionMeikecityAdvanced.Boot.unifiedImportExcel;
             if(Ext.tzGetHardcodeValue == undefined) Ext.tzGetHardcodeValue = TranzvisionMeikecityAdvanced.Boot.getHardcodeValue;
 			if(Ext.tzSearchMailHistory == undefined) Ext.tzSearchMailHistory = TranzvisionMeikecityAdvanced.Boot.searchMailHistory;
 			if(Ext.tzBatchProcessDetails == undefined) Ext.tzBatchProcessDetails = TranzvisionMeikecityAdvanced.Boot.batchProcessDetails;

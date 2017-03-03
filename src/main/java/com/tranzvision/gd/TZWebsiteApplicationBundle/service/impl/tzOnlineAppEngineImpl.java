@@ -179,7 +179,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMinlen;
 
 		/* 信息项字数最大长度 */
-		int numXxxMaxlen;
+		long numXxxMaxlen;
 
 		/* 信息项是否启用数字范围 */
 		String strXxxNumBz = "";
@@ -188,7 +188,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMin;
 
 		/* 信息项字数最大长度 */
-		int numXxxMax;
+		long numXxxMax;
 
 		/* 信息项字段小数位数 */
 		String strXxxXsws = "";
@@ -260,13 +260,13 @@ public class tzOnlineAppEngineImpl {
 					numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0
 							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
 					numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0
-							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+							: Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
 					strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? ""
 							: String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
 					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
 							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
 					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
-							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+							:  Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAX")));
 					strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
 					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? ""
 							: String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
@@ -382,7 +382,7 @@ public class tzOnlineAppEngineImpl {
 		}
 	}
 
-	public String getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId, String strAppOrgId,
+	public Map<String, String>  getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId, String strAppOrgId,
 			String strTplId, String oprid, String strClassId, String strRefLetterId, String strInsData) {
 		String strHisAppInsId = "";
 
@@ -585,8 +585,13 @@ public class tzOnlineAppEngineImpl {
 				}
 			}
 		}
+		
+		Map<String, String> m  = new HashMap<String, String>();
+		m.put("strAppInsId", strAppInsId);
+		m.put("strInsData", strInsData);
+		m.put("strRefLetterId", strRefLetterId);
 
-		return strAppInsId + "|||" + strInsData + "|||" + strRefLetterId;
+		return m;
 	}
 
 	public String getUserInfo(String strAppInsId) {
@@ -689,6 +694,7 @@ public class tzOnlineAppEngineImpl {
 			String sql = "";
 			// int count = 0;
 			String TZ_APP_FORM_STA = null;
+			String INS_ID = null;
 			boolean chageClass = false;
 
 			if (newClassId != null && !newClassId.equals(strClassId)) {
@@ -703,11 +709,13 @@ public class tzOnlineAppEngineImpl {
 			Map<String, Object> mapData = null;
 
 			mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
-
-			TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
+			
+			if (mapData != null) {
+				TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
 					: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
 
-			String INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
+				INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
+			} 
 
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
@@ -1302,7 +1310,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMinlen;
 
 		/* 信息项字数最大长度 */
-		int numXxxMaxlen;
+		long numXxxMaxlen;
 
 		/* 信息项是否启用数字范围 */
 		String strXxxNumBz = "";
@@ -1311,7 +1319,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMin;
 
 		/* 信息项字数最大长度 */
-		int numXxxMax;
+		long numXxxMax;
 
 		/* 信息项字段小数位数 */
 		String strXxxXsws = "";
@@ -1402,12 +1410,12 @@ public class tzOnlineAppEngineImpl {
 				numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0
 						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
 				numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0
-						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+						: Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
 				strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
 				numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
 						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
 				numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
-						: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+						: Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAX")));
 				strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
 				strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? "" : String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
 				strXxxDrqBz = MapData.get("TZ_XXX_DRQ_BZ") == null ? "" : String.valueOf(MapData.get("TZ_XXX_DRQ_BZ"));

@@ -24,10 +24,11 @@
                     panel.gridRecord.commit();
 
                     if(btn.name=='auditAppFormSaveBtn'){
-                        var fileCheckStore = tabpanel.down('grid[name=fileCheckGrid]').getStore();
+                    	//取消显示材料及流程结果
+                        /*var fileCheckStore = tabpanel.down('grid[name=fileCheckGrid]').getStore();
                         if(fileCheckStore.isLoaded()){
                             fileCheckStore.reload();
-                        };
+                        };*/
                         var refLetterStore = tabpanel.down('grid[name=refLetterGrid]').getStore();
                         if(refLetterStore.isLoaded()){
                             refLetterStore.reload();
@@ -78,7 +79,7 @@
         editJson = editJson+ ',{"typeFlag":"MORE","appInsID":"'+appInsID+'","data":'+Ext.JSON.encode(moreInfoParams)+'}';
 
         /*考生提交资料列表修改数据*/
-        var fileCheckGrid = tabpanel.down('grid[name=fileCheckGrid]');
+        /*var fileCheckGrid = tabpanel.down('grid[name=fileCheckGrid]');
         var fileCheckStore = fileCheckGrid.getStore();
         var fileCheckGridModifiedRecs = fileCheckStore.getModifiedRecords();
         for(var i=0;i<fileCheckGridModifiedRecs.length;i++){
@@ -87,7 +88,7 @@
             }else{
                 editJson = editJson + ',{"typeFlag":"FILE","data":'+Ext.JSON.encode(fileCheckGridModifiedRecs[i].data)+'}';
             }
-        }
+        }*/
 
         /*推荐信列表修改数据*/
         var refLetterGrid = this.getView().down('grid[name=refLetterGrid]');

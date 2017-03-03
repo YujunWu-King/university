@@ -1,18 +1,28 @@
-Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
+Ext.define('KitchenSink.view.common.importExcel.ImportExcelWindow', {
     extend: 'Ext.window.Window',
     requires: [
         'Ext.layout.container.Card'
     ],
-    xtype: 'unifiedImportWindow',
+    xtype: 'importexcelwindow',
     layout:'fit',
     ignoreChangesFlag: true,
     viewModel: {
         data: {
-            title: '选择导入类型'
+            title: '导入Excel'
         }
     },
     bind: {
         title: '{title}'
+    },
+    //导入类型A：上传Excel；B：粘贴Excel数据
+    importType:'A',
+    //回调函数
+    businessHandler:null,
+    //模板资源ID
+    tplResId:'',
+    constructor: function (config) {
+    	Ext.apply(this,config);
+        this.callParent();
     },
     modal:true,
     defaults: {
@@ -25,7 +35,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
         },
 		afterrender:function(){
 			//处理在火狐下fieldset下的上传控件按钮宽度不够的问题
-			var filebutton = this.down("#excelFile").getTrigger('filebutton');;
+			var filebutton = this.down("#orguploadfile").getTrigger('filebutton');;
 			filebutton.el.dom.style.width='65px';
 		}
     },
@@ -33,12 +43,12 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
         var me = this,
             uploadExcelCollapsedFlag = me.importType=="B",
             pasteExcelDataCollapsedFlag = !uploadExcelCollapsedFlag,
-            columnWidths = me.tplResId!=undefined?[.8,.2]:[1,0],
-            excelLinkHidden=me.tplResId!=undefined?false:true,
+            excelLinkHidden=(me.tplResId==undefined||me.tplResId==""),
+            columnWidths = excelLinkHidden?[1,0]:[.8,.2],
             excelTplUrl;
 
         if(!excelLinkHidden){
-            var tzParams = '{"ComID":"TZ_UNIFIED_IMP_COM","PageID":"TZ_UNIFIED_IMP_STD","OperateType":"QF","comParams":{}}';
+            var tzParams = '{"ComID":"TZ_IMPORT_EXCEL_COM","PageID":"TZ_IMP_EXCEL_STD","OperateType":"tzGetExcelTplUrl","comParams":{"tplResId":"'+me.tplResId+'"}}';
             Ext.tzLoadAsync(tzParams,function(respData){
                 excelTplUrl = respData.url;
 				if(excelTplUrl==undefined){
@@ -54,13 +64,20 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                     layout: 'card',
                     width: 800,
                     minHeight:200,
-                    maxHeight:500,
                     bbar: [
                         {
                             xtype:'tbtext',
                             itemId: 'rowCount',
                             baseCls:Ext.baseCSSPrefix+'panel-header-title-light',
                             defaultTextMsg    : TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00028"),
+                            hidden:true
+                        },{
+                            xtype:'tbseparator',
+                            hidden:true
+                        },{
+                            xtype:'tbtext',
+                            itemId: 'msgTip',
+                            text :'<span style="color:#b11b3b;font-weight: bold">提示：</span>为避免页面显示过慢，最多提供20列*1000行的数据供预览',
                             hidden:true
                         },
                         '->',
@@ -69,7 +86,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                             iconCls:'prev',
                             text: '上一步',
                             handler: 'showPrevious',
-                            disabled: true
+                            hidden: true
                         },
                         {
                             itemId: 'card-next',
@@ -86,21 +103,13 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                         }
                     ],
                     items: [
-						{
-						    title:'选择导入类型',
-						    header:false,
-						    name:'selectImpTpl',
-						    itemId:'card-0',
-						    xtype:'form',
-						    ignoreLabelWidth: true
-						},
-                        {
-							title:'导入Excel',
+
+                        {title:'导入Excel',
                             header:false,
                             name:'importExcel',
                             bodyPadding:10,
                             xtype:'form',
-                            itemId:'card-1',
+                            itemId:'card-0',
                             items:[
                                 {
                                     xtype:'form',
@@ -115,10 +124,10 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                                         checkboxToggle:true,
                                         listeners:{
                                             expand:function( fieldset, eOpts ){
-                                                fieldset.findParentByType('importExcelWindow').down('fieldset[name=pasteExcelData]').collapse( );
+                                                fieldset.findParentByType('importexcelwindow').down('fieldset[name=pasteExcelData]').collapse( );
                                             },
                                             beforecollapse:function( fieldset, eOpts ){
-                                                var pasteExcelData=fieldset.findParentByType('importExcelWindow').down('fieldset[name=pasteExcelData]');
+                                                var pasteExcelData=fieldset.findParentByType('importexcelwindow').down('fieldset[name=pasteExcelData]');
                                                 if(pasteExcelData.collapsed)pasteExcelData.expand();
                                             }
                                         },
@@ -135,8 +144,8 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                                                 items:[
                                                     {
                                                         xtype: 'filefield',
-                                                        name: 'excelFile',
-                                                        itemId:'excelFile',
+                                                        name: 'orguploadfile',
+                                                        itemId:'orguploadfile',
                                                         msgTarget: 'side',
                                                         allowBlank: false,
                                                         anchor: '100%',
@@ -194,10 +203,10 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                                     collapsed:pasteExcelDataCollapsedFlag,
                                     listeners:{
                                         expand:function( fieldset, eOpts ){
-                                            fieldset.findParentByType('importExcelWindow').down('fieldset[name=uploadExcel]').collapse( );
+                                            fieldset.findParentByType('importexcelwindow').down('fieldset[name=uploadExcel]').collapse( );
                                         },
                                         beforecollapse:function( fieldset, eOpts ){
-                                            var uploadExcel=fieldset.findParentByType('importExcelWindow').down('fieldset[name=uploadExcel]');
+                                            var uploadExcel=fieldset.findParentByType('importexcelwindow').down('fieldset[name=uploadExcel]');
                                             if(uploadExcel.collapsed)uploadExcel.expand();
                                         }
                                     },
@@ -230,10 +239,10 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                             ]
                         },
                         {
-                            title:'预览导入数据(仅预览20列*1000行以内的数据)',
+                            title:'预览导入数据',
                             header:false,
                             name:'previewExcelData',
-                            itemId:'card-2',
+                            itemId:'card-1',
                             xtype:'form',
                             ignoreLabelWidth: true
                         },
@@ -242,7 +251,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                             title:'处理导入数据',
                             header:false,
                             name:'dealExcelData',
-                            itemId:'card-3'
+                            itemId:'card-2'
                         }
                     ]
                 }
@@ -263,11 +272,15 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
         var l = me.child('panel').getLayout();
         var i = l.activeItem.itemId.split('card-')[1];
         var next = parseInt(i, 10) + incr;
-        var displayRowCount=me.down('#rowCount');
+        var displayRowCount=me.down('#rowCount'),
+        	displayMsgTip=me.down('#msgTip'),
+        	tbSeparator = me.down('tbseparator');
 
         /*第一步：导入或者粘贴Excel数据*/
         if( l.activeItem.name == 'previewExcelData'&&incr==-1){
             displayRowCount.setVisible(false);
+            displayMsgTip.setVisible(false);
+            tbSeparator.setVisible(false);
         }
 
         /*第二步：解析并预览数据Excel*/
@@ -285,11 +298,11 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
 
             if(!uploadExcel.collapsed){
                 //解析上传Excel文件
-                var filename = me.down("#excelFile").getValue();
+                var filename = me.down("#orguploadfile").getValue();
                 var form = me.down('form[name=uploadExcelForm]').getForm();
                 if(filename&&form.isValid()){
                     //var dateStr = Ext.Date.format(new Date(), 'Ymd');
-                    var filePath = '/linkfile/FileUpLoad'
+                    var filePath = '';
                     var updateUrl = TzUniversityContextPath + '/UpdServlet';
 
                     form.submit({
@@ -300,7 +313,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                         },
                         success: function (form, action) {
                             var sysFileName = action.result.msg.sysFileName;
-                            var path = action.result.msg.path;
+                            var path = action.result.msg.accessPath;
                             /*后台解析Excsel*/
                             Ext.MessageBox.show({
                                 msg: '解析数据中，请稍候...',
@@ -312,7 +325,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                                 }
                             });
 
-                            var tzParams = '{"ComID":"TZ_IMPORT_EXCEL_COM","PageID":"TZ_IMP_EXCEL_STD","OperateType":"tzAnalysisExcel","comParams":{"path":'+Ext.JSON.encode(path)+',"sysFileName":'+Ext.JSON.encode(sysFileName)+'}}';
+                            var tzParams = '{"ComID":"TZ_IMPORT_EXCEL_COM","PageID":"TZ_IMP_EXCEL_STD","OperateType":"tzAnalyzeExcel","comParams":{"path":'+Ext.JSON.encode(path)+',"sysFileName":'+Ext.JSON.encode(sysFileName)+'}}';
 
                             Ext.tzLoad(tzParams,function(responseData){
                                 if(responseData.error){
@@ -322,6 +335,14 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                                 dataWithColumns = responseData;
                                 var firstLineTitle_1 = me.down('checkboxfield[name=firstLineTitle_1]').getValue();
                                 for(var i = 0;i<dataWithColumns.length;i++){
+                                	
+                                	//解析数据：服务端返回的数据格式为[{0:"张三",1:"20岁"}]，需要转成[["张三"],["20岁"]]
+                                	var dataTmp = [];
+                                	Ext.Object.each(dataWithColumns[i],function(key,value){
+                                		dataTmp[me.parseInt(key)] = value;
+                                	});
+                                	dataWithColumns[i] = dataTmp;
+                                	
                                     if(dataArray.length==1000)break;/*超过1000行的数据不展示*/
                                     columnsLength = (columnsLength==undefined?dataWithColumns[i].length:((columnsLength<dataWithColumns[i].length)?dataWithColumns[i].length:columnsLength));
 
@@ -419,19 +440,31 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                 displayRowCount.setText(Ext.String.format(displayRowCount.defaultTextMsg, dataArray.length==0?0:1,dataArray.length,dataArray.length));
             }
             displayRowCount.setVisible(true);
+            displayMsgTip.setVisible(true);
+            tbSeparator.setVisible(true);
         }
 
         /*第三步：用户自定义函数处理解析后的数据*/
         if( l.activeItem.name == 'previewExcelData'&&incr==1){
-            if(me.businessHandler!=undefined)me.businessHandler(me.columnArray,me.dataArray);
+            if(typeof me.businessHandler=="function")me.businessHandler(me.columnArray,me.dataArray);
             me.close();
             return;
         }
         l.setActiveItem(next);
         me.getViewModel().set('title', l.activeItem.title);
-        me.down('#card-prev').setDisabled(next===0);
-        me.down('#card-next').setDisabled(next===2);
+        me.down('#card-prev').setHidden(next===0);
+        me.down('#card-next').setHidden(next===2);
     },
+    
+    parseInt:function(key){
+	   var underlineIndex = key.indexOf("_");
+	   if(underlineIndex==-1){
+			return key;
+	   }else{
+			return key.substring(0,underlineIndex)
+	   }
+    },
+    
     pieceGrid:function(me,columns,columnsLength,data){
         var modelFields = new  Array();
         for(var i = 0;i<columnsLength;i++){
@@ -461,7 +494,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                 var columnWidth = columns[i].toString().length*15+30;
 
                 var gridColumn = new Ext.grid.Column({
-                    header:'<span style="font-size:14px">'+columns[i].toString().replace(/</g,'&lt').replace(/>/g,'&gt')+'</span>',
+                    header:'<span style="font-size:12px">'+columns[i].toString().replace(/</g,'&lt').replace(/>/g,'&gt')+'</span>',
                     minWidth:columnWidth>100?columnWidth:100,
                     flex:1,
                     sortable:false,
@@ -469,7 +502,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                     dataIndex:'column_'+i,
                     renderer:function(value){
                         value=(value==undefined?"":value);
-                        return '<span style="font-size:14px;">' + value + '</span>';
+                        return '<span style="font-size:12px;">' + value + '</span>';
                     }
                 })
                 gridColumns.push(gridColumn);
@@ -477,7 +510,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
         }else{
             for(var i = 0;i<columnsLength;i++){
                 var gridColumn = new Ext.grid.Column({
-                    header:'<span style="font-size:14px">'+'第'+(i+1)+'列'+'</span>',
+                    header:'<span style="font-size:12px">'+'第'+(i+1)+'列'+'</span>',
                     minWidth:100,
                     flex:1,
                     sortable:false,
@@ -485,7 +518,7 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
                     dataIndex:'column_'+i,
                     renderer:function(value){
                         value=(value==undefined?"":value);
-                        return '<span style="font-size:14px;">' + value + '</span>';
+                        return '<span style="font-size:12px;">' + value + '</span>';
                     }
                 })
                 gridColumns.push(gridColumn);
@@ -499,8 +532,8 @@ Ext.define('KitchenSink.view.common.importExcel.unifiedImportWindow', {
             xtype:'grid',
             name : 'previewExcelDataGrid',
             width:'100%',
-            minHeight:200,
-            maxHeight:300,
+            minHeight:150,
+            maxHeight:250,
             store:gridStore,
             columns:gridColumns
         };
