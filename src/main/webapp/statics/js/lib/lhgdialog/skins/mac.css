@@ -67,7 +67,7 @@ background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#c3c3c3));
 background:-moz-linear-gradient(top, #ebebeb, #c3c3c3 ); 
 background:-o-linear-gradient(top, #ebebeb, #c3c3c3); 
 filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ebebeb', endColorstr='#c3c3c3');
-border:1px solid f5f5f5; border-bottom:1px solid #e6e6e6; border-radius:4px 4px 0 0; text-shadow: 0 1px 0 #EEE; padding-left:5px; }
+border:1px solid f5f5f5; border-bottom:1px solid #e6e6e6; border-radius:4px 4px 0 0; /*text-shadow: 0 1px 0 #EEE;*/ padding-left:5px; }
 .ui_state_drag .ui_title { text-shadow: 0 -1px 0 #EEE;
 background:#ebebeb;
 background:-webkit-gradient(linear, 0% 0%, 0% 100%, from(#c3c3c3), to(#ebebeb));

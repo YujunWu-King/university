@@ -116,6 +116,7 @@ public class WebSitePageContentImpl extends FrameworkImpl {
 			String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId,strColumnId }, "String");
 			String registerCalListHtml = "";
 			String registerCalContentHtml = "";
+
 			registerCalListHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML",columnName);
 			// 展示页面;
 			registerCalContentHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_HTML",
