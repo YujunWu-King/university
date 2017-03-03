@@ -9,7 +9,7 @@
 		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccStore',
 		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccController',
 		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccInfoWin',
-		'KitchenSink.view.judgesManagement.judgeAccount.judgeTypeStore'
+		'KitchenSink.view.judgesManagement.judgeAccount.judgeCLAccStore'
     ],
     xtype: 'judgeCLAccountMg',
 	controller: 'judgeCLAccController',
