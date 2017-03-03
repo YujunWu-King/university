@@ -1176,13 +1176,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								var related_div_name="div[name='relatedDiv']";
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
-									$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
+									//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
 										//console.log("child-select:");
 										//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
-										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										//----
 									}else{
 										
