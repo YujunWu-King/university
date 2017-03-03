@@ -435,7 +435,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			htmlContent += '<div class="mainright-box pos-rela">';
 			//-----
 			if(index > 1&&!SurveyBuild._readonly){
-				htmlContent += '		<div onclick="SurveyBuild.deleteTjx(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
+				htmlContent += '		<div onclick="SurveyBuild.deleteEngLev(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
 			}
 			//--------------
 			//works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
@@ -1176,13 +1176,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								var related_div_name="div[name='relatedDiv']";
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
-									$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
+									//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
 										//console.log("child-select:");
 										//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
-										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
 										//----
 									}else{
 										

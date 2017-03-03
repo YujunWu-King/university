@@ -353,11 +353,11 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcDetailPanel', 
         }],
         buttons: [{
             text: '保存', 
-            iconCls: "close",
+            iconCls: "save",
             handler:'onCsWjdcSave'
         },{
             text: '确定',
-            iconCls: "close",
+            iconCls: "ensure",
             handler:'onCsWjdcEnsure'
         },{
             text: '关闭',

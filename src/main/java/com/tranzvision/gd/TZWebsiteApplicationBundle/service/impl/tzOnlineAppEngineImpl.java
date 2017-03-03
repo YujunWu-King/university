@@ -821,7 +821,7 @@ public class tzOnlineAppEngineImpl {
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			// jacksonUtil.json2Map(strJsonData);
-
+			System.out.println("保存传入数据:"+strJsonData);
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
 
 			if (mapAppData != null) {
@@ -852,7 +852,14 @@ public class tzOnlineAppEngineImpl {
 
 						List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
 						if ("Y".equals(strIsDoubleLine)) {
-							this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							//modity by caoy
+							if (strClassName.equals("LayoutControls")) {
+								this.saveDhLineNum(strItemIdLevel0, numAppInsId,
+										(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
+							} else {
+								this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							}
+							//this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 							for (Object children1 : mapChildrens1) {
 								// 多行容器
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;

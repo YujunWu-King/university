@@ -19,10 +19,16 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 		value: Ext.tzOrgID,
                         type: '01'
                     },
+                    TZ_AUD_STAT:{
+                    	value: '1',//有效
+                        type: '01'
+                    }
+                    /*
                     TZ_LXFS_LY:{
                         value: 'ZSBM',//来源类型：招生报名
                         type: '01'
                     }
+                    */
                 },
                 srhConFields:{
                     TZ_AUD_NAME:{
