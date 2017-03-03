@@ -244,9 +244,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
                 comView.close();
             },"",true,this);
         }
-
-    	  
-        
+    
     },
 
     closeResSets:function(btn){
