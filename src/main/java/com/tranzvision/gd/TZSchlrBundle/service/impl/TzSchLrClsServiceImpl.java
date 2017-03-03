@@ -116,8 +116,18 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(actData[0]);
 
+		// 机构ID
+		String TZ_JG_ID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String dataWjId = jacksonUtil.getString("id");
 		String shcolarName = jacksonUtil.getString("name");
+		
+	    //添加奖学金的视乎，对奖学金名称查重
+		int count=jdbcTemplate.queryForObject("select count(*) from PS_TZ_SCHLR_TBL where TZ_SCHLR_NAME=? AND TZ_JG_ID=?", new Object[]{shcolarName,TZ_JG_ID}, "Integer");
+		if(count>0){
+			errMsg[0]="1";
+			errMsg[1]="奖学金名称不能重复！";
+			return "";
+		}
 		String TZ_SCHLR_ID="";
 		final String SQL = "select TZ_APPTPL_JSON_STR,TZ_DC_JWNR,TZ_DC_JTNR,TZ_APP_TPL_LAN from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?";
 		Map<String, Object> tplDataMap = new HashMap<String, Object>();
@@ -139,8 +149,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 			// 发布URL
 			String TZ_DC_WJ_URL = "/university/dispatcher?classid=surveyapp&SURVEY_WJ_ID=" + TZ_DC_WJ_ID;
 			psTzDcWjDyTWithBLOBs.setTzDcWjUrl(TZ_DC_WJ_URL);
-			// 机构ID
-			String TZ_JG_ID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			psTzDcWjDyTWithBLOBs.setTzJgId(TZ_JG_ID);
 			//当前登录人
 			String TZ_OPRID=tzLoginServiceImpl.getLoginedManagerOprid(request);
