@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper;
-import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmTKey;
+import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -53,14 +53,16 @@ public class TzNegativeApplyLastTen extends TzNegativeListBundle {
 
 		if (tzappintlist != null && tzappintlist.size() > 0) {
 			for (int i = 0; i < tzappintlist.size(); i++) {
-				PsTzCsKsFmTKey PsTzCsKsFmTKey = new PsTzCsKsFmTKey();
+				PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
 				String fmqdId = "TZ_FMQ" + String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T", "TZ_FMQD_ID"));
-				PsTzCsKsFmTKey.setTzAppInsId((Integer) tzappintlist.get(i));
-				PsTzCsKsFmTKey.setTzClassId(classId);
-				PsTzCsKsFmTKey.setTzApplyPcId(batchId);
-				PsTzCsKsFmTKey.setTzJgId(OrgID);
-				PsTzCsKsFmTKey.setTzFmqdId(fmqdId);
-				PsTzCsKsFmTMapper.insert(PsTzCsKsFmTKey);
+				PsTzCsKsFmT.setTzAppInsId((Long) tzappintlist.get(i));
+				PsTzCsKsFmT.setTzClassId(classId);
+				PsTzCsKsFmT.setTzApplyPcId(batchId);
+				PsTzCsKsFmT.setTzJgId(OrgID);
+				PsTzCsKsFmT.setTzFmqdId(fmqdId);
+				PsTzCsKsFmT.setTzFmqdName("排名后百分之十");
+
+				PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
 				PsTzCsKsTBL PsTzCsKsTBL = new PsTzCsKsTBL();
 
 				PsTzCsKsTBL.setTzAppInsId((Integer) tzappintlist.get(i));
