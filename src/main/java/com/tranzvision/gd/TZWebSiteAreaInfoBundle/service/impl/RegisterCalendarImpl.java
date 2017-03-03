@@ -88,6 +88,19 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 					String artAddr = (String) artList.get(i).get("TZ_ART_ADDR");
 					String artMonth = artList.get(i).get("TZ_ART_MONTH").toString();
 					String artDay = artList.get(i).get("TZ_ART_DAY").toString();
+					//报考日历如果是活动发布则取活动开始日期、活动地点;
+					int actRel = 0;
+					String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+					actRel = jdbcTemplate.queryForObject(actRelCount, new Object[] {artId}, "int");
+					if(actRel != 0){
+						String actRelSql = "SELECT TZ_NACT_ADDR,month(TZ_START_DT) AS TZ_ART_MONTH,day(TZ_START_DT) AS TZ_ART_DAY FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+						Map<String, Object> actMap = jdbcTemplate.queryForMap(actRelSql, new Object[] {artId});
+						if (actMap != null) {
+							artAddr = (String) actMap.get("TZ_NACT_ADDR");
+							artMonth = (String) actMap.get("TZ_ART_MONTH").toString();
+							artDay = (String) actMap.get("TZ_ART_DAY").toString();
+						}
+					}
 					StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 							.append(strSiteId).append("&columnId=").append(columnId).append("&artId=").append(artId);
 					if(registerCalendarLisHtml==null){
