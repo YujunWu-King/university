@@ -435,7 +435,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 			htmlContent += '<div class="mainright-box pos-rela">';
 			//-----
 			if(index > 1&&!SurveyBuild._readonly){
-				htmlContent += '		<div onclick="SurveyBuild.deleteTjx(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
+				htmlContent += '		<div onclick="SurveyBuild.deleteEngLev(this);" class="input-delbtn">' + MsgSet["DEL"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div>';
 			}
 			//--------------
 			//works += '<span class="title-line"></span>' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
