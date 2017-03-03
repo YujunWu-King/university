@@ -5,11 +5,11 @@ public class PsTzCsKsFmTKey {
 
     private String tzApplyPcId;
 
-    private String tzJgId;
-
-    private Integer tzAppInsId;
+    private Long tzAppInsId;
 
     private String tzFmqdId;
+
+    private String tzJgId;
 
     public String getTzClassId() {
         return tzClassId;
@@ -27,19 +27,11 @@ public class PsTzCsKsFmTKey {
         this.tzApplyPcId = tzApplyPcId == null ? null : tzApplyPcId.trim();
     }
 
-    public String getTzJgId() {
-        return tzJgId;
-    }
-
-    public void setTzJgId(String tzJgId) {
-        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
-    }
-
-    public Integer getTzAppInsId() {
+    public Long getTzAppInsId() {
         return tzAppInsId;
     }
 
-    public void setTzAppInsId(Integer tzAppInsId) {
+    public void setTzAppInsId(Long tzAppInsId) {
         this.tzAppInsId = tzAppInsId;
     }
 
@@ -49,5 +41,13 @@ public class PsTzCsKsFmTKey {
 
     public void setTzFmqdId(String tzFmqdId) {
         this.tzFmqdId = tzFmqdId == null ? null : tzFmqdId.trim();
+    }
+
+    public String getTzJgId() {
+        return tzJgId;
+    }
+
+    public void setTzJgId(String tzJgId) {
+        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
     }
 }
