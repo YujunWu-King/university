@@ -123,6 +123,11 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
             form.findField("adcertTmpl").setReadOnly(true);
             form.findField("adcertTmpl").addCls("lanage_1");
             //资源信息列表
+            
+            //得到关联项目的grid
+            
+           var store= panel.down('grid[name=adprjgrid]').getStore();
+           
 
             //参数
             var tzParams = '{"ComID":"TZ_AD_TMPL_COM","PageID":"TZ_AD_INFO_STD","OperateType":"QF","comParams":{"adcertTmpl":"'+adcertTmpl+'"}}';
@@ -131,6 +136,9 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
                 //资源集合信息数据
                 var formData = responseData;
                 form.setValues(formData);
+                var adTmplid= form.findField("adcertTmpl").getValue();
+                store.tzStoreParams='{"cfgSrhId":"TZ_AD_TMPL_COM.TZ_AD_INFO_STD.TZ_AD_PRJ_VW","condition":{"TZ_AD_TMPL_ID-operator": "01","TZ_AD_TMPL_ID-value": "'+ adTmplid+'"}}';
+                store.load;
                 //资源集合信息列表数据
 
 

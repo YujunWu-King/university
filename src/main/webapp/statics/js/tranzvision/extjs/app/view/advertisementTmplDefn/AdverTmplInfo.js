@@ -6,7 +6,8 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
         'Ext.toolbar.Paging',
         'Ext.ux.Ueditor',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.advertisementTmplDefn.AdverTmplController'
+        'KitchenSink.view.advertisementTmplDefn.AdverTmplController',
+        'KitchenSink.view.advertisementTmplDefn.AdverTmplXmStore'
     ],
     extend : 'Ext.panel.Panel',
     controller:'adTmplMgController',
@@ -16,6 +17,8 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
     title:Ext.tzGetResourse("TZ_AD_TMPL_COM.TZ_AD_INFO_STD.adtmpldefn","广告位模板定义"),
     frame:true,
     initComponent:function(){
+    	var store=new KitchenSink.view.advertisementTmplDefn.AdverTmplXmStore();
+  
         Ext.apply(this,{
             items:[{
                 xtype:'form',
@@ -111,6 +114,9 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
                                 	 xtype: 'grid',
                                      columnLines: true,
                                      style:"margin:8px",
+                                     name:'adprjgrid',
+                                     layout: 'fit',
+                                     minHeight: 400,
                                      selModel: {
                                      type: 'checkboxmodel'
                                     },
@@ -124,8 +130,20 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplInfo', {
                                         dataIndex: 'xmName',
                                         width: 200
                                      }
-                                     ]
-                                                                     
+                                     ],
+                                      store: store,
+                                    bbar: {
+                                     xtype: 'pagingtoolbar',
+                                     pageSize: 10,
+                                     store: store,
+                                     displayInfo: true,
+                                     displayMsg:"显示{0}-{1}条，共{2}条",
+                                     beforePageText:"第",
+                                     afterPageText:"页/共{0}页",
+                                     emptyMsg: "没有数据显示",
+                                     plugins: new Ext.ux.ProgressBarPager()
+                                    }                   
+                                                                                      
                                 }]
                             }]
                     }]

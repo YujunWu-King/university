@@ -104,8 +104,7 @@ public class ExcelAnalysisImpl extends FrameworkImpl {
 			strRet = jacksonUtil.List2json(listData);
 
 			//删除临时文件
-			String realPath = request.getServletContext().getRealPath(dataFilePath);
-			File file = new File(realPath);
+			File file = new File(dataFilePath);  
 		    if (file.isFile() && file.exists()) {  
 		        file.delete();
 		    } 

@@ -1060,6 +1060,48 @@ var SurveyBuild = {
 		
 		
     },
+    //删除英语水平
+    deleteEngLev: function(el) {
+        //if (confirm("是否删除该条信息？")) {
+		
+        var index = $(el).closest(".main_inner_content_para").index();
+        var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
+        if (index > 0) {
+            $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
+                    $(el).closest(".main_inner_content_para").remove();
+            });
+            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
+			//console.log($(el).closest(".dhcontainer"));
+			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
+            $(el).closest(".dhcontainer").find(".input-addbtn").show();
+			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
+            SurveyBuild._items[instanceId]["children"].splice(index, 1);
+			
+        } else {
+            var chs = SurveyBuild._items[instanceId];
+            $.each(chs.children[0],function(instanceId, obj) {
+                var $el = $("#" + obj.itemId);
+                if ($el.length > 0) {
+                    SurveyBuild._clearAttrVal($el.get(0));
+                }
+                if (obj.isSingleLine == "Y") {
+                    $.each(obj.children,function(k, ch) {
+                        $el = $("#" + obj.itemId + ch.itemId);
+                        SurveyBuild._clearAttrVal($el.get(0));
+                    })
+                }
+            })
+        }
+        //delete SurveyBuild._items[instanceId]["children"][index];
+		//console.log($(el).closest(".mainright-box").siblings(".mainright-box"));
+        //}
+		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
+		$.each(paraObject,function(i,paraObj){
+			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
+		})
+		
+		
+    },
     /*==================================================
      +功能描述：报名表图片、附件控件上传
      +开发人：张浪

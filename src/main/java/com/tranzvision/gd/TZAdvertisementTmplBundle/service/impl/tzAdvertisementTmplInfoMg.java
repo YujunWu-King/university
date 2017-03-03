@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZAdvertisementTmplBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -194,6 +195,66 @@ public class tzAdvertisementTmplInfoMg extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return jacksonUtil.Map2json(returnJsonMap);
+	}
+
+	@SuppressWarnings("unchecked")
+	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		// 获取当前登陆人机构ID
+		String Orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		int num = 0;
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+
+			// 排序字段如果没有不要赋值
+
+			// String[][] orderByArr = new String[][] { { "TZ_AD_TMPL_ID", "ASC"
+			// }
+			// };
+			String[][] orderByArr = new String[][] {};
+
+			// json数据要的结果字段;
+
+			String[] resultFldArray = { "TZ_JG_ID", "TZ_PRJ_ID", "TZ_PRJ_NAME" };
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
+
+			if (obj != null && obj.length > 0) {
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					String JgID = rowList[0];
+					System.out.println(JgID);
+					System.out.println(rowList[1]);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					if (JgID.equals(Orgid)) {
+
+						mapList.put("xmid", rowList[1]);
+
+						mapList.put("xmName", rowList[2]);
+						listData.add(mapList);
+
+					} else {
+						num = Integer.valueOf(obj[0].toString()) - 1;
+
+					}
+
+				}
+				mapRet.replace("total", num);
+				mapRet.replace("root", listData);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 }
