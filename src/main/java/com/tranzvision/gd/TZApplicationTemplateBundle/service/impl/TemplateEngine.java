@@ -307,10 +307,11 @@ public class TemplateEngine {
 
 						/*------ 多行容器（通用多行容器、固定多行容器） Begin ------*/
 						/*---------------modity by caoy 关于多行容器里面组合控件的修改----------------*/
+						Map<String,String> check = new HashMap<String,String>();
 						if (StringUtils.equals("Y", isDoubleLine)) {
 							if (item.containsKey("children")) {
 
-								//System.out.println(item.toString());
+								// System.out.println(item.toString());
 								Map<String, Object> childrens = (Map<String, Object>) item.get("children");
 								for (String keyi : childrens.keySet()) {
 									Map<String, Object> children = (Map<String, Object>) childrens.get(keyi);
@@ -329,7 +330,9 @@ public class TemplateEngine {
 										orderby = "0";
 									}
 									psTzRqXxxPzT.setTzOrder(Integer.parseInt(orderby));
-
+									
+									
+									check.put(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh(), "N");
 									int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
 									if (count > 0) {
 										children.put("pageno", pageno);
@@ -349,7 +352,8 @@ public class TemplateEngine {
 
 										// 多行容器下的子容器 modity by caoy
 										// 解决分组框的某些组合控件的问题
-										//System.out.println("111:" + children.get("children"));
+										// System.out.println("111:" +
+										// children.get("children"));
 										List<Map<String, Object>> childs = null;
 										try {
 											childs = (ArrayList<Map<String, Object>>) children.get("children");
@@ -371,10 +375,11 @@ public class TemplateEngine {
 
 										for (Object obj : childs) {
 											Map<String, Object> child = (Map<String, Object>) obj;
-											
-											//System.out.println("222:" + child.toString());
+
+											// System.out.println("222:" +
+											// child.toString());
 											PsTzRqXxxPzT psTzRqXxxPzT_ = new PsTzRqXxxPzT();
-											
+
 											// 模板编号
 											psTzRqXxxPzT_.setTzAppTplId(tid);
 
@@ -393,7 +398,7 @@ public class TemplateEngine {
 												order_ = "0";
 											}
 											psTzRqXxxPzT_.setTzOrder(Integer.parseInt(order_));
-
+											check.put(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh(), "N");
 											int count_ = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT_);
 											if (count_ > 0) {
 												child.put("pageno", childPageno);
@@ -408,8 +413,23 @@ public class TemplateEngine {
 
 						/*------ 单行组合控件 Begin ------*/
 						if (StringUtils.equals("Y", isSingleLine)) {
-							ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item
-									.get("children");
+							//ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item
+							//		.get("children");
+							
+							ArrayList<Map<String, Object>> childrens = null;
+							try {
+								childrens = (ArrayList<Map<String, Object>>) item.get("children");
+							} catch (Exception e) {
+								// e.printStackTrace();
+								childrens = new ArrayList<Map<String, Object>>();
+								Map<String, Object> cmap = (Map<String, Object>) item.get("children");
+								Map<String, Object> ccmap = null;
+								for (String keysss : cmap.keySet()) {
+									ccmap = (Map<String, Object>) cmap.get(keysss);
+									childrens.add(ccmap);
+								}
+							}
+							
 							int i = 0;
 							for (Object obj : childrens) {
 								Map<String, Object> children = (Map<String, Object>) obj;
@@ -427,10 +447,13 @@ public class TemplateEngine {
 
 								// 排序
 								psTzRqXxxPzT.setTzOrder(i);
+								
+								if (check.get(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh()) ==null) {
 								int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
 								if (count > 0) {
 									children.put("pageno", pageno);
 									this.savePerXXX(children);
+								}
 								}
 								i++;
 							}
@@ -512,13 +535,16 @@ public class TemplateEngine {
 		String fixedContainer = item.get("fixedContainer") == null ? "" : String.valueOf(item.get("fixedContainer"));
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
 
-		//System.out.println(item.toString());
-
+		// System.out.println(item.toString());
+		//有多行容器和单行容器都是Y的情况 所以需要改造
+		Map<String,String> check = new HashMap<String,String>();
+		
+		
 		// 是否多行容器
 		if (StringUtils.equals("Y", isDoubleLine)) {
 			Map<String, Object> childrens = (Map<String, Object>) item.get("children");
 			for (int i = 0; i < Integer.parseInt(maxLines); i++) {
-				//System.out.println(childrens.toString());
+				// System.out.println(childrens.toString());
 
 				if (StringUtils.equals("Y", fixedContainer)) {
 					// 固定多行容器
@@ -553,6 +579,7 @@ public class TemplateEngine {
 						// 排序序号
 						psTzTempFieldTFixed.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTFixed);
+						check.put(psTzTempFieldTFixed.getTzDXxxBh()+"_"+psTzTempFieldTFixed.getTzXxxBh(), "N");
 					}
 				} else {
 					// 通用多行容器
@@ -583,6 +610,8 @@ public class TemplateEngine {
 						// 排序序号
 						psTzTempFieldTTY.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTTY);
+						
+						check.put(psTzTempFieldTTY.getTzDXxxBh()+"_"+psTzTempFieldTTY.getTzXxxBh(), "N");
 
 						order++;
 						if (StringUtils.equals("Y", isSingle)) {
@@ -592,7 +621,8 @@ public class TemplateEngine {
 							// (ArrayList<Map<String, Object>>) children
 							// .get("children");
 
-							//System.out.println("111:" + children.get("children"));
+							// System.out.println("111:" +
+							// children.get("children"));
 							List<Map<String, Object>> childs = null;
 							try {
 								childs = (ArrayList<Map<String, Object>>) children.get("children");
@@ -633,6 +663,7 @@ public class TemplateEngine {
 								psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
 
 								psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
+								check.put(psTzTempFieldTSingle.getTzDXxxBh()+"_"+psTzTempFieldTSingle.getTzXxxBh(), "N");
 								order++;
 							}
 						}
@@ -643,7 +674,20 @@ public class TemplateEngine {
 
 		// 是否组合控件
 		if (StringUtils.equals("Y", isSingleLine)) {
-			ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item.get("children");
+
+			ArrayList<Map<String, Object>> childrens = null;
+			try {
+				childrens = (ArrayList<Map<String, Object>>) item.get("children");
+			} catch (Exception e) {
+				// e.printStackTrace();
+				childrens = new ArrayList<Map<String, Object>>();
+				Map<String, Object> cmap = (Map<String, Object>) item.get("children");
+				Map<String, Object> ccmap = null;
+				for (String key : cmap.keySet()) {
+					ccmap = (Map<String, Object>) cmap.get(key);
+					childrens.add(ccmap);
+				}
+			}
 			int i = 0;
 			for (Object obj : childrens) {
 				Map<String, Object> children = (Map<String, Object>) obj;
@@ -663,8 +707,10 @@ public class TemplateEngine {
 				psTzTempFieldTSingle.setTzLineOrder(i + 1);
 				// 排序序号
 				psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
-
-				psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
+				
+				if (check.get(psTzTempFieldTSingle.getTzDXxxBh()+"_"+psTzTempFieldTSingle.getTzXxxBh()) == null) {
+					psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
+				}
 				i++;
 			}
 		}
@@ -687,7 +733,7 @@ public class TemplateEngine {
 		// 信息项文字说明
 		String itemName = item.get("itemName") == null ? "" : String.valueOf(item.get("itemName"));
 		if (itemName.length() > 60) {
-			//System.out.println(itemName);
+			// System.out.println(itemName);
 		}
 		psTzAppXxxPz.setTzXxxMc(itemName);
 

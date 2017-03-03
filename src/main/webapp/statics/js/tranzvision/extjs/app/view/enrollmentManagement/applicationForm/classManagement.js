@@ -14,7 +14,7 @@
     columnLines: true,
     controller: 'appFormClass',
     name:'appFormClass',
-    style:"margin:8px",
+    /*style:"margin:8px",*/
     multiSelect: true,
     title: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicationFormAuditing","报名表审核"),
     viewConfig: {
@@ -106,7 +106,7 @@
                     handler: "viewApplicants"
                 }],
                 width:130
-            },{
+            },/*{
                 xtype:'linkcolumn',
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.publishResult","报名流程结果公布"),
                 width:160,
@@ -118,7 +118,7 @@
                     },
                     handler: "publishResult"
                 }]
-            },{
+            },*/{
                 menuDisabled: true,
                 sortable: false,
                 width:150,

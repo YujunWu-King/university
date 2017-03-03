@@ -179,7 +179,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMinlen;
 
 		/* 信息项字数最大长度 */
-		int numXxxMaxlen;
+		long numXxxMaxlen;
 
 		/* 信息项是否启用数字范围 */
 		String strXxxNumBz = "";
@@ -188,7 +188,7 @@ public class tzOnlineAppEngineImpl {
 		int numXxxMin;
 
 		/* 信息项字数最大长度 */
-		int numXxxMax;
+		long numXxxMax;
 
 		/* 信息项字段小数位数 */
 		String strXxxXsws = "";
@@ -260,13 +260,13 @@ public class tzOnlineAppEngineImpl {
 					numXxxMinlen = MapData.get("TZ_XXX_MINLEN") == null ? 0
 							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MINLEN")));
 					numXxxMaxlen = MapData.get("TZ_XXX_MAXLEN") == null ? 0
-							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
+							: Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAXLEN")));
 					strXxxNumBz = MapData.get("TZ_XXX_NUM_BZ") == null ? ""
 							: String.valueOf(MapData.get("TZ_XXX_NUM_BZ"));
 					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
 							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
 					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
-							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MAX")));
+							:  Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAX")));
 					strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
 					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? ""
 							: String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
@@ -694,6 +694,7 @@ public class tzOnlineAppEngineImpl {
 			String sql = "";
 			// int count = 0;
 			String TZ_APP_FORM_STA = null;
+			String INS_ID = null;
 			boolean chageClass = false;
 
 			if (newClassId != null && !newClassId.equals(strClassId)) {
@@ -708,11 +709,13 @@ public class tzOnlineAppEngineImpl {
 			Map<String, Object> mapData = null;
 
 			mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
-
-			TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
+			
+			if (mapData != null) {
+				TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
 					: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
 
-			String INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
+				INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
+			} 
 
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
@@ -818,7 +821,7 @@ public class tzOnlineAppEngineImpl {
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			// jacksonUtil.json2Map(strJsonData);
-
+			//System.out.println("保存传入数据:"+strJsonData);
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
 
 			if (mapAppData != null) {
@@ -849,7 +852,14 @@ public class tzOnlineAppEngineImpl {
 
 						List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
 						if ("Y".equals(strIsDoubleLine)) {
-							this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							//modity by caoy
+							if (strClassName.equals("LayoutControls")) {
+								this.saveDhLineNum(strItemIdLevel0, numAppInsId,
+										(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
+							} else {
+								this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							}
+							//this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 							for (Object children1 : mapChildrens1) {
 								// 多行容器
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;

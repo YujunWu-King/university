@@ -122,7 +122,7 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 								newTagDisplay = artTitleStyle.indexOf("NEW")>-1?"block":newTagDisplay;
 							}
 							
-							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_preview&operatetype=HTML&siteId=")
+							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 									.append(strSiteId).append("&columnId=").append(currentColumnId).append("&artId=").append(artId);
 							
 							artContentTabLisHtml = artContentTabLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_LI_HTML", sbArtUrl.toString(),

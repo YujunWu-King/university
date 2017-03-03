@@ -203,9 +203,9 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			String ctxPath = request.getContextPath();
 			String strLoginUrl = "";
 			if(ctxPath!=null&&!"".equals(ctxPath)){
-			    strLoginUrl = "/" + ctxPath + "/user/login/" + orgid + "/" + siteid;  
+			    strLoginUrl =  ctxPath + "/user/login/" + orgid.toLowerCase() + "/" + siteid;  
 			}else{
-			    strLoginUrl = "/user/login/" + orgid + "/" + siteid;  
+			    strLoginUrl = "/user/login/" + orgid.toLowerCase() + "/" + siteid;  
 			}
 			tzCookie.addCookie(response, cookieWebLoginUrl, strLoginUrl);
 			

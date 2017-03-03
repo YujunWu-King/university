@@ -255,7 +255,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		long time = System.currentTimeMillis();
 
-		System.out.println("报名表展现数据预处理Begin");
+		System.out.println("报名表展现数据预处理Begin:");
 
 		// 如果报名表传过来了
 		if (numAppInsId > 0) {
@@ -546,16 +546,21 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			// System.out.println("numAppInsId:"+numAppInsId);
 			// System.out.println("strTplType:"+strTplType);
+			long time2 = System.currentTimeMillis();
+			System.out.println("报名表展现检查推荐信的完成状态Begin");
 			if (numAppInsId > 0 && "BMB".equals(strTplType)) {
 				// 检查推荐信的完成状态
 				tzOnlineAppEngineImpl.checkRefletter(numAppInsId, strTplId);
 			}
+			System.out.println("报名表展现检查推荐信的完成状态End,Time=" + (System.currentTimeMillis() - time2));
 
 			/*---执行页面加载事件-模版级事件开始 ----*/
 			// 目前没有做处理，源代码请看tzOnlineAppServiceImplOld
 			/*---执行页面加载事件-模版级事件结束 ----*/
 
 			/*-----报名表菜单生成Begin--------------*/
+			time2 = System.currentTimeMillis();
+			System.out.println("报名表展现左侧菜单处理Begin");
 			int numIndex = 0;
 			String strXxxBh = "";
 			// String strXxxMc = "";
@@ -633,13 +638,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strLeftStyle = "display:none";
 				strRightStyle = "margin: 0 auto;float:none";
 			}
+			System.out.println("报名表展现左侧菜单处理End,Time=" + (System.currentTimeMillis() - time2));
 
+			System.out.println("报名表展现获取控件信息处理Begin");
+			time2 = System.currentTimeMillis();
 			// 控件信息
 			String strComRegInfo = "";
 			ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(strTplId);
 			strComRegInfo = jacksonUtil.List2json(comDfn);
 			strComRegInfo = strComRegInfo.replace("\\", "\\\\");
+			System.out.println("报名表展现获取控件信息处理End,Time=" + (System.currentTimeMillis() - time2));
 
+			System.out.println("报名表展现历史报名表处理Begin");
+			time2 = System.currentTimeMillis();
 			/*-----------最新历史报名表Begin------------- */
 			Map<String, String> m = tzOnlineAppEngineImpl.getHistoryOnlineApp(strAppInsId, strCopyFrom, strAppOprId,
 					strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData);
@@ -650,6 +661,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			System.out.println("strAppInsId:" + strAppInsId);
 			System.out.println("strRefLetterId:" + strRefLetterId);
+			System.out.println("报名表展现历史报名表处理End,Time=" + (System.currentTimeMillis() - time2));
 			// System.out.println(strAppInsId);
 			// System.out.println(strInsData);
 			// System.out.println(strRefLetterId);
@@ -665,6 +677,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			// 双语化消息集合Json字符串
 			// msgSet 用于双语
+			System.out.println("报名表展现双语化处理Begin");
+			time2 = System.currentTimeMillis();
 			String strMsgSet = "{}";
 			strMsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",
 					strLanguage);
@@ -692,6 +706,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			String strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 					"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
 					"I have read the statement to confirm the submission of the registration form.");
+
+			System.out.println("报名表展现双语化处理End,Time=" + (System.currentTimeMillis() - time2));
 
 			if ("N".equals(strIsGuest)) {
 				sql = "SELECT TZ_IS_GUEST FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
@@ -726,7 +742,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if ("".equals(strAppInsId) || strAppInsId == null) {
 				strAppInsId = "0";
 			}
-			
+
 			System.out.println("strAppInsId:" + strAppInsId);
 
 			// 非匿名报名时，如果当前登录人为管理员、并且可编辑，同时报名表只读参数为Y时，将只读参数改为N
@@ -736,6 +752,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 
 			try {
+
+				System.out.println("报名表展现密码处理Begin");
+				time2 = System.currentTimeMillis();
 				String passWordHtml = "";
 
 				String setPwdId = "setPwd";
@@ -794,6 +813,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
 						Pwdname, strSubmit2, contextUrl);
 
+				System.out.println("报名表展现密码处理End,Time=" + (System.currentTimeMillis() - time2));
+
+				System.out.println("报名表展现构造HTML页面Begin");
+				time2 = System.currentTimeMillis();
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
 						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
 						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
@@ -806,6 +829,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);
+				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 			}
@@ -982,6 +1006,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				System.out.println("strClassId:" + strClassId);
 				System.out.println("tempClassId:" + tempClassId);
+				System.out.println("numAppInsId:" + numAppInsId);
 
 				if (!errMsg[0].equals("1")) {
 					mapData = null;
@@ -1168,12 +1193,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			System.out.println("报名表展现数据预处理End,Time=" + (System.currentTimeMillis() - time));
+			System.out.println("报名表保存数据预处理End,Time=" + (System.currentTimeMillis() - time));
 
 			time = System.currentTimeMillis();
 			System.out.println("报名表保存数据处理Begin");
 
 			if ("0".equals(errMsg[0]) && "".equals(strMsg)) {
+
+				System.out.println("报名表保存保存用户数据Begin");
+				long time2 = System.currentTimeMillis();
+
 				sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
 				strTplType = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
 				String strOtype = "";
@@ -1305,8 +1334,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strGuestOprId = createGuestUser(strAppOrgId, strNAME);
 					strAppOprId = strGuestOprId;
 				}
+				System.out.println("报名表保存保存用户数据End,Time=" + (System.currentTimeMillis() - time2));
 
 				if ("SAVE".equals(strOtype)) {
+					System.out.println("报名表保存SAVE数据Begin");
+					time2 = System.currentTimeMillis();
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
@@ -1359,8 +1391,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					//
 					// }
 					// }
+					System.out.println("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("PRE".equals(strOtype)) {
-
+					System.out.println("报名表保存PRE数据Begin");
+					time2 = System.currentTimeMillis();
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
@@ -1436,7 +1470,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
+					System.out.println("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("SUBMIT".equals(strOtype)) {
+					System.out.println("报名表保存SUBMIT数据Begin");
+					time2 = System.currentTimeMillis();
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
@@ -1499,7 +1536,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
+					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
+					System.out.println("报名表保存CONFIRMSUBMIT数据Begin");
+					time2 = System.currentTimeMillis();
 					/* 确认提交报名表 */
 					if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
 						// 如果是管理员并且可编辑的话继续 By WRL@20161027
@@ -1515,14 +1555,19 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									strAppOprId, strAppOrgId, strTplType);
 						}
 					}
+					System.out.println("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				}
+				
 			}
 
 			if (!"".equals(strMsg)) {
 				successFlag = "1";
 			}
 
-			System.out.println("报名表展现数据处理End,Time=" + (System.currentTimeMillis() - time));
+			System.out.println("报名表保存数据处理End,Time=" + (System.currentTimeMillis() - time));
+			time = System.currentTimeMillis();
+
+			System.out.println("报名表保存页面完成状态Begin");
 			// 页面完成状态Json
 			String strPageXxxBh = "";
 			String strPageCompleteState = "";
@@ -1556,6 +1601,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			mapJsonRet.put("pageCompleteState", listJsonCompleteStateJson);
 			mapJsonRet.put("appInsVersionId", strAppInsVersionDb);
 			strRet = jacksonUtil.Map2json(mapJsonRet);
+
+			System.out.println("报名表保存页面完成状态End,Time=" + (System.currentTimeMillis() - time));
 		} // end-for
 
 		return strRet;

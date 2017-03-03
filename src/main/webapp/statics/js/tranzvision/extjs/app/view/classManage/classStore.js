@@ -7,5 +7,12 @@ Ext.define('KitchenSink.view.classManage.classStore', {//班级管理列表获�
 	tzStoreParams: '{"cfgSrhId":"TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.TZ_GD_BJGL_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}',
 	autoLoad: true,
 	pageSize:30 ,
-	proxy: Ext.tzListProxy()
+	proxy: Ext.tzListProxy(),
+	sorters: [{
+        property: 'begin_time',
+        direction: 'desc'
+    }, {
+        property: 'end_time',
+        direction: 'desc'
+    }]
 });

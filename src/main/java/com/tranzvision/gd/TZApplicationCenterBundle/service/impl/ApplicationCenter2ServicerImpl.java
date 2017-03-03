@@ -181,7 +181,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 								if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 									String type = "A";
 									//解析系统变量;
-									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST);
+									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N");
 
 									isFb = result[0];
 									TZ_APPPRO_RST = result[1];

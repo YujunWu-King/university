@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper;
-import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmTKey;
+import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -58,14 +58,15 @@ public class TzNegativeBlackList extends TzNegativeListBundle {
 							&& SqlQuery.queryForObject(sqlhave, "String").equals("Y")) {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						Integer appinsId = SqlQuery.queryForObject(sql, new Object[] { classId, oprid }, "Integer");
-						PsTzCsKsFmTKey PsTzCsKsFmTKey = new PsTzCsKsFmTKey();
+						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
 						String fmqdId = "TZ_FMQ" + String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T", "TZ_FMQD_ID"));
-						PsTzCsKsFmTKey.setTzAppInsId(appinsId);
-						PsTzCsKsFmTKey.setTzClassId(classId);
-						PsTzCsKsFmTKey.setTzApplyPcId(batchId);
-						PsTzCsKsFmTKey.setTzJgId(OrgID);
-						PsTzCsKsFmTKey.setTzFmqdId(fmqdId);
-						PsTzCsKsFmTMapper.insert(PsTzCsKsFmTKey);
+						PsTzCsKsFmT.setTzAppInsId(Long.valueOf(appinsId));
+						PsTzCsKsFmT.setTzClassId(classId);
+						PsTzCsKsFmT.setTzApplyPcId(batchId);
+						PsTzCsKsFmT.setTzJgId(OrgID);
+						PsTzCsKsFmT.setTzFmqdId(fmqdId);
+						PsTzCsKsFmT.setTzFmqdName("黑名单");
+						PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
 						PsTzCsKsTBL PsTzCsKsTBL = new PsTzCsKsTBL();
 
 						PsTzCsKsTBL.setTzAppInsId(appinsId);

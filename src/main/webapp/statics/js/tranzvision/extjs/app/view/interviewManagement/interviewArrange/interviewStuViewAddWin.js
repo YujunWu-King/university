@@ -102,7 +102,7 @@
 		        	xtype: 'grid',
 		        	frame: true,
 		        	multiSelect: true,
-		        	height: 354,
+		        	height: 377,
 		            viewConfig: {
 		                enableTextSelection: true
 		            },

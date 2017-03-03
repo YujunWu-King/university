@@ -400,7 +400,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         {
             var proxy = new Ext.data.proxy.Ajax(
                 {
-                    url: boot.mainapp_interaction_url,
+                    url: boot.mainapp_interaction_url,               
                     reader:
                     {
                         type: 'json',
@@ -942,7 +942,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
         //导入Excel、粘贴Excel数据并解析的方法
         importExcel : function(config)
         {
-            var className = 'KitchenSink.view.common.importExcel.importExcelWindow';
+            var className = 'KitchenSink.view.common.importExcel.ImportExcelWindow';
 
             if(!Ext.ClassManager.isCreated(className)){
                 Ext.syncRequire(className);
@@ -955,7 +955,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
        //统一导入Excel的方法
         unifiedImportExcel : function(config)
         {
-            var className = 'KitchenSink.view.common.importExcel.unifiedImportWindow';
+            var className = 'KitchenSink.view.common.importExcel.UnifiedImportWindow';
             	
             if(!Ext.ClassManager.isCreated(className)){
                 Ext.syncRequire(className);
@@ -1483,7 +1483,7 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             if(Ext.tzGetResourseFromServer == undefined) Ext.tzGetResourseFromServer = TranzvisionMeikecityAdvanced.Boot.getResourseFromServer;
             if(Ext.tzTabOn == undefined) Ext.tzTabOn = TranzvisionMeikecityAdvanced.Boot.tabOn;
             if(Ext.tzImport == undefined) Ext.tzImport = TranzvisionMeikecityAdvanced.Boot.importExcel;
-            if(Ext.tzImport == undefined) Ext.tzUnifiedImport = TranzvisionMeikecityAdvanced.Boot.unifiedImportExcel;
+            if(Ext.tzUnifiedImport == undefined) Ext.tzUnifiedImport = TranzvisionMeikecityAdvanced.Boot.unifiedImportExcel;
             if(Ext.tzGetHardcodeValue == undefined) Ext.tzGetHardcodeValue = TranzvisionMeikecityAdvanced.Boot.getHardcodeValue;
 			if(Ext.tzSearchMailHistory == undefined) Ext.tzSearchMailHistory = TranzvisionMeikecityAdvanced.Boot.searchMailHistory;
 			if(Ext.tzBatchProcessDetails == undefined) Ext.tzBatchProcessDetails = TranzvisionMeikecityAdvanced.Boot.batchProcessDetails;
@@ -2427,6 +2427,22 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                         }
                     }
                 });
+                
+                /***修改代理的read请求方式为POST***/
+                Ext.define('tranzvision.Ext.data.proxy.Ajax',              
+                   {   
+                   override:'Ext.data.proxy.Ajax',
+                   getMethod: function(request) {
+                   var actions = this.getActionMethods(),
+                   action = request.getAction(),
+                   method;
+                   actions.read='POST';//修改read 的GET为POST方法
+                   if (actions) {
+                      method = actions[action];
+                     }
+                    return method || this.defaultActionMethods[action];
+                    }                                                   
+                   });
 
             /**表单校验*覆盖类Ext.form.field.Number的提示信息属性*/
             Ext.define('tranzvision.Ext.form.field.Number',

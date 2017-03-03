@@ -1,7 +1,7 @@
 SurveyBuild.extend("FirmType", "baseComponent", {
 	itemName: "职业背景",
 	title: "职业背景",
-	//isDoubleLine: "Y",
+	isDoubleLine: "Y",
 	isSingleLine:"Y",
 	fixedContainer: "Y",//固定容器标识
 	children: {
@@ -14,7 +14,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			"title": MsgSet["FIRM_TYPE"],
 			//"title": "公司类型",
 			"orderby": 1,
-			"value": "-1",
+			"value": "",
 			"StorageType": "S",
 			"classname": "Select"
 		},
@@ -27,7 +27,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			"title": MsgSet["POSITION_TYPE"],
 			"title": "岗位类型",
 			"orderby": 2,
-			"value": "-1",
+			"value": "",
 			"StorageType": "S",
 			"classname": "Select"
 		}
