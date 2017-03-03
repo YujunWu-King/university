@@ -55,12 +55,15 @@ public class ImportMaterialEvaRstImpl implements UnifiedImportBase {
 						
 						//更新材料评审考生表
 						String interviewEvaQualification = "";
-						if(strResultCode.equals("有")){
-							interviewEvaQualification = "Y";
+						if(strResultCode!=null){
+							if("有".equals(strResultCode)){
+								interviewEvaQualification = "Y";
+							}
+							if("无".equals(strResultCode)){
+								interviewEvaQualification = "N";
+							}
 						}
-						if(strResultCode.equals("无")){
-							interviewEvaQualification = "N";
-						}
+						
 						if(!interviewEvaQualification.equals("")){
 							sqlQuery.update(updateRelatedSql, new Object[]{interviewEvaQualification,strAppInsId});
 						}

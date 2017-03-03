@@ -44,7 +44,7 @@ public class ImportPermission2ContinueImpl implements UnifiedImportBase {
 						
 						if(oprId!=null&&!"".equals(oprId)){
 							//更新面试评审考生表
-							if(strPerm2Ctn.equals("是")){
+							if(strPerm2Ctn!=null&&"是".equals(strPerm2Ctn)){
 								strPerm2Ctn = "Y";
 							}else{
 								strPerm2Ctn = "N";
