@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -173,13 +174,15 @@ public class tzOnlineAppHisServiceImpl {
 			 for(int j=numDhLine;j<numMaxLine;j++){
 				 listLinesNo.add(j);
 			 }
-			 
 			 for(int i = 1;i <= numDhLine;i++){
 				 mapChild = new HashMap<String, Object>();
 				 strAppXxxInsChildList = "";
+				 boolean flagA=true;
 				 String sqlGetChildrenInfo = "SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ?  ORDER BY TZ_ORDER";
 				 List<?> childrenInfoList = sqlQuery.queryForList(sqlGetChildrenInfo, 
 				    		new Object[] { strTplId,strXxxBh });
+				 
+				 List<Map<String,Object>>tempList=new ArrayList<Map<String,Object>>();
 				 for (Object childrenInfo : childrenInfoList) {
 					 Map<String, Object> mapChildrenInfo = (Map<String, Object>) childrenInfo;
 					 strXxxBhChild = mapChildrenInfo.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapChildrenInfo.get("TZ_XXX_BH"));
@@ -190,7 +193,7 @@ public class tzOnlineAppHisServiceImpl {
 					 //1.解析"英语水平"控件   //2.解析"职业背景"控件  //3.解析"开始创业"控件 //4.解析"推荐信"控件
 					 else if("FirmType".equals(strComLmc)||"StartBusinessExp".equals(strComLmc))
 					 {
-						 System.out.println("strComLmc-xx:"+strComLmc);
+						 //System.out.println("strComLmc-xx:"+strComLmc);
 		
 						 mapAppXxxInsJson=this.getGpCtrlData(strComLmc, numAppInsId, strTplId, strXxxBhChild, strXxxBh, strOprNameApp);
 						// mapAppXxxInsJson=this.getEduOrWorkExprXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp); 
@@ -198,18 +201,56 @@ public class tzOnlineAppHisServiceImpl {
 						 mapAppXxxInsJson=getRefLetterXxxInfoJson(numAppInsId, strTplId, strXxxBhChild,i, strOprNameApp);
 					 }
 					 else{
-						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, strXxxBh,i, strOprNameApp);
+						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, strXxxBh,i, strOprNameApp,strComLmc);
+						 System.out.println("mapAppXxxInsJson.size:"+mapAppXxxInsJson.size()+" strComLmc:"+strComLmc+" strXxxBhChild:"+strXxxBhChild);
 					 }
 			
-					 
 					 if(mapAppXxxInsJson!=null){
 						 for (Entry<String, Object> entry:mapAppXxxInsJson.entrySet()){
 							 String mapAppXxxInsJsonKey = entry.getKey();
 							 Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
+							 //分解mapAppXxxInsJsonValue
+							 for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
+								 String valKey=valEntry.getKey();
+								 if(valKey.equals("children")){
+									 //將children中的值取出來作爲一個Map
+									 Map<String,Object>valChildren=((List<Map<String, Object>>) valEntry.getValue()).get(0);
+									 tempList.add(valChildren);
+								 }
+							 }
 							 mapChild.put(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
 						 }
 					 }
+		
 				  }
+				 //---------------------------------------------------------------------
+				 Map<String,Object>relChildrenData=new HashMap<String,Object>();
+				  if(tempList!=null&&tempList.size()>1){
+					  for(int index=0;index<tempList.size();index++){
+						  Map<String,Object>tempMap=tempList.get(index);
+						  for (Entry<String, Object> entry:tempMap.entrySet()){
+							  String dataKey=entry.getKey();
+							  Map<String,Object>dataVal=(Map<String, Object>)entry.getValue();
+							  relChildrenData.put(dataKey, dataVal);
+						  }
+					  }
+					  //將mapChild中的val中的children換成relChildrenData
+					  for (Entry<String, Object> entry:mapChild.entrySet()){
+						  String mapAppXxxInsJsonKey = entry.getKey();
+						  Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
+
+						  for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
+								 String valKey=valEntry.getKey();
+								 if(valKey.equals("children")){
+									 //將children中的值取出來作爲一個Map
+									 mapAppXxxInsJsonValue.replace("children", relChildrenData);
+								 }
+							 }
+						  mapChild.replace(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
+					  }
+				  }
+				  System.out.println("relChildrenData:"+new JacksonUtil().Map2json(relChildrenData));
+				  //---------------------------------------------------------------------
 				  listChild.add(mapChild);
 			 	}
 			 
@@ -230,11 +271,11 @@ public class tzOnlineAppHisServiceImpl {
 					map.put(strXxxSlid, mapAppXxxInsJson);
 					
 				 }
-				 //System.out.println(jacksonUtil.List2json(listChild));
+				 System.out.println("worldList"+jacksonUtil.List2json(listChild));
 		 }
 		 
 		 strAppInsJson = jacksonUtil.Map2json(map);
-		 //System.out.println("strAppInsJson:"+strAppInsJson);
+		 System.out.println("strAppInsJson:"+strAppInsJson);
 		 return strAppInsJson;
 	}
 	
@@ -1019,8 +1060,8 @@ public class tzOnlineAppHisServiceImpl {
 	}
 	
 	//多行容器
-	private Map<String, Object> getDhXxxInfoJson(Long numAppInsId, String strTplId, String strXxxBh,String itemId,int numDhSeq, String strOprNameApp){
-		
+	private Map<String, Object> getDhXxxInfoJson(Long numAppInsId, String strTplId, String strXxxBh,String itemId,int numDhSeq, String strOprNameApp,String pComMc){
+		//strXxxBh=“TZ_TZ_5_1” ”TZ_TZ_5_2“
 		//报名表使用模版编号
 		String strAppTplIdHis = "";
 		//报名表信息项存储类型
@@ -1041,7 +1082,7 @@ public class tzOnlineAppHisServiceImpl {
 		try{
 			ArrayList<Map<String, Object>> arrAppFileJson = null;
 			
-			ArrayList<Map<String, Object>> arrAppChildrenJson = null;
+			List<Map<String, Object>> arrAppChildrenJson = null;
 			
 			sql = "SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			strAppTplIdHis = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
@@ -1234,30 +1275,37 @@ public class tzOnlineAppHisServiceImpl {
 							|| "DateComboBox".equals(strComLmc)
 							|| "mobilePhone".equals(strComLmc)
 							|| "CertificateNum".equals(strComLmc)
+							||"StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)
 							|| "MailingAddress".equals(strComLmc)
 							|| "YearsAndMonth".equals(strComLmc)){
 					
 						String strAppxxxChildrenBh = "";
 						String strAppxxxChildrenValue = "";
 						String strAppxxxChildrenComLmc = "";
-//						if("StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)){
-//							
-//								System.out.println("参数:numAppInsId:"+numAppInsId+" strTplId:"+strTplId+" strXxxBh:"+strXxxBh+" itemId:"+itemId+" strOprNameApp:"+strOprNameApp+" strComLmc:"+strComLmc );
-//								Map<String,Object> tempMap=this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp);
-//								//topInsInd
-//								if(tempMap==null){
-//									return null;
-//								}
-//								strXxxSlid=tempMap.get("topInsId").toString();
-//								strItemId=strXxxBh;
-//								tempMap.remove("topInsId");
+						if("StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)){
+							
+								//SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = '121' AND TZ_D_XXX_BH ='TZ_5'  ORDER BY TZ_ORDER
+//								String SQL="SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH =?  ORDER BY TZ_ORDER";
+//								List<Map<String,Object>> TZ_XXX_BH=sqlQuery.queryForList(SQL,new Object[]{strTplId,itemId});
+//								for(int index=0;index<TZ_XXX_BH.size();index++){
+//									strXxxBh=TZ_XXX_BH.get(index).get("TZ_XXX_BH").toString();
+					
+									arrAppChildrenJson.add(this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp));
+								//}
+									//查询item通用数据 是唯一的
+								final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
+								Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBh});
+//								System.out.println("normalDataMap"+normalDataMap);
 //								
-//								arrAppChildrenJson.add(tempMap);
-//								
-//								System.out.println("ChildList:"+new JacksonUtil().List2json(arrAppChildrenJson));
-//								
-//						}
-//						else{
+								String topInsId=normalDataMap.get("TZ_XXX_SLID").toString();
+			
+								strItemId=strXxxBh;
+								//topInsId:
+								strXxxSlid=topInsId;
+								
+								
+						}
+						else{
 						String sqlGetXxxChildren = "SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T "
 								+ "WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? ORDER BY TZ_ORDER";
 
@@ -1280,22 +1328,24 @@ public class tzOnlineAppHisServiceImpl {
 								arrAppChildrenJson.add(mapAppChildJson);
 							}
 						}
-						//}
+						}
 					}
 					if(arrAppChildrenJson.isEmpty())
 						flag = false;
 				}
 			}
 			if(flag){
+				
 				Map<String, Object> mapXxxInfo = new HashMap<String, Object>();
 				mapXxxInfo.put("instanceId", strXxxSlid);
 				mapXxxInfo.put("itemId", strItemId);
-				mapXxxInfo.put("classname", strComLmc);
 				mapXxxInfo.put("isDoubleLine", "N");
+				
 				if("BirthdayAndAge".equals(strComLmc)
 						|| "DateComboBox".equals(strComLmc)
 						|| "mobilePhone".equals(strComLmc)
 						|| "CertificateNum".equals(strComLmc)
+						||"StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)
 						|| "MailingAddress".equals(strComLmc)
 						|| "YearsAndMonth".equals(strComLmc)){
 					mapXxxInfo.put("isSingleLine", "Y");
@@ -1304,7 +1354,7 @@ public class tzOnlineAppHisServiceImpl {
 				}
 				mapXxxInfo.put("value", strAppXxxValueS);
 				mapXxxInfo.put("wzsm", strAppXxxValueL);
-				
+				mapXxxInfo.put("classname", strComLmc);
 				if(mapAppXxxOptionJson != null){
 					mapXxxInfo.put("option", mapAppXxxOptionJson);
 				}
@@ -1320,6 +1370,7 @@ public class tzOnlineAppHisServiceImpl {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put(strXxxSlid, mapXxxInfo);
 				JacksonUtil jacksonUtil = new JacksonUtil();
+				System.out.println("mapXxxInfo:"+jacksonUtil.Map2json(mapXxxInfo));
 				System.out.println("World:"+ jacksonUtil.Map2json(map));
 				return map;
 			}
@@ -1330,47 +1381,61 @@ public class tzOnlineAppHisServiceImpl {
 	}
 	////解析分组框中的:"职业背景","创业经历"控件数据  //'FirmType','StartBusinessExp'
 	public Map<String,Object> getGpCtrlsData(String  strComLmc,Long numAppInsId, String strTplId, String strXxxBhChild, String itemId, String strOprNameApp){
+		//System.out.println("進入getGpCtrlsData()");
 		Map<String,Object>childMap=new HashMap<String,Object>();
-
-		String comFlag="";
-
-		ArrayList<String> keyGp=null;
-		ArrayList<String> childIdGp=null;
+		//1.“PS_TZ_TEMP_FIELD_T”查出 單項 ID:
+		//String sql="SELECT TZ_XXX_BH,TZ_XXX_NO FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID =? AND TZ_D_XXX_BH=? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO <> ?";
+		//List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+		//list=sqlQuery.queryForList(sql, new Object[]{strTplId,itemId,'%'+strXxxBhChild+'%',strXxxBhChild});
 		
+		//System.out.println("idList:"+list);
+		//查询item通用数据 是唯一的
+		//final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
+		
+		ArrayList<String> keyGp=null;
+		ArrayList<String> bgGp=null;
+		String comFlag="";
 		if(strComLmc.equals("FirmType")){
 			//WorkExper+keyGp[index]
 			keyGp=new ArrayList<String>();
-			keyGp.add("1");
-			keyGp.add("2");
-			//FirmType每一项的itemId
-			childIdGp=new ArrayList<String>();
-			childIdGp.add("firm_type");
-			childIdGp.add("position_type");
+			bgGp=new ArrayList<String>();
+			String str[]={"1","2"};
+			String bgStr[]={"firm_type","position_type"};
+			for(int n=0;n<str.length;n++){
+				keyGp.add(str[n]);
+				bgGp.add(bgStr[n]);
+			}
 		}else if(strComLmc.equals("StartBusinessExp")){
+			keyGp=new ArrayList<String>();
+			bgGp=new ArrayList<String>();
+
+			String str[]={"1","2","2_1","2_2","2_3","3","4","5","6","7","8","9"};
+			String bgStr[]={"business_type","financing_type","financing_binput","financing_ainput","financing_anginput","income_y","user_num","own_money","family_money","income_o","year_profit","firm_scale"};
+
+			for(int n=0;n<str.length;n++){
+				keyGp.add(str[n]);
+				bgGp.add(bgStr[n]);
+			}
+		}
+		for(int index=0;index<bgGp.size();index++){
+//			Map<String,Object>map=list.get(index);
+//			String insId=map.get("TZ_XXX_NO").toString();
+//			String childId=map.get("TZ_XXX_BH").toString();
 			
-		}
-		if(keyGp==null||childIdGp==null){
-			return null;
-		}
-		//模糊查询结果 是个LIST 可以通过确定"TZ_XXX_BH"查询唯一结果:
-		String LIKE_SQL="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE '%"+itemId+strXxxBhChild+comFlag+"%'";
-		
-		//查询item通用数据 是唯一的
-		final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
-		for(int  index=0;index<childIdGp.size();index++){
+			//模糊查询结果 是个LIST 可以通过确定"TZ_XXX_BH"查询唯一结果:
+			//comFlag=insId;
+			String insId=bgGp.get(index);
+			comFlag=bgGp.get(index);
+			String LIKE_SQL="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE '%"+itemId+strXxxBhChild+comFlag+"%'";
+			//System.out.println("LIKE_SQL:"+LIKE_SQL);
 			Map<String,Object>valMap=sqlQuery.queryForMap(LIKE_SQL, new Object[]{numAppInsId});if("FirmType".equals(strComLmc));
 			
 			String tempStr="WorkExper"+keyGp.get(index);
-			String childItemId=childIdGp.get(index);
-			Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
-			System.out.println("valMap:"+valMap);
-			System.out.println("normalDataMap"+normalDataMap);
+			//System.out.println("valMap:"+valMap);
 			
 			Map<String,Object>tempMap=new HashMap<String,Object>();
 			tempMap.put("instanceId",tempStr);
-			tempMap.put("itemId",childItemId);
-			//tempMap.put("itemName",normalDataMap.get("TZ_XXX_MC"));
-			//tempMap.put("title",normalDataMap.get("TZ_XXX_MC"));
+			tempMap.put("itemId",insId);
 			String val="";
 			if(valMap!=null&&valMap.get("TZ_APP_S_TEXT")!=null)
 				val=valMap.get("TZ_APP_S_TEXT").toString();
@@ -1378,39 +1443,34 @@ public class tzOnlineAppHisServiceImpl {
 				val=valMap.get("TZ_APP_L_TEXT").toString();
 			}
 			tempMap.put("value",val);
-			tempMap.put("StorageType",normalDataMap.get("TZ_XXX_CCLX"));
-			tempMap.put("orderby", normalDataMap.get("TZ_ORDER"));
-			tempMap.put("classname","Select");
+			//tempMap.put("StorageType",normalDataMap.get("TZ_XXX_CCLX"));
+			//tempMap.put("orderby", normalDataMap.get("TZ_ORDER"));
+			//tempMap.put("classname","Select");
 			childMap.put(tempStr, tempMap);
-			childMap.put("topInsId",normalDataMap.get("TZ_XXX_SLID"));
 		}
 		return childMap;
-
-		//"strXxxBhChild"在"FirmType"中的值为:firm_type和position_type
-			
-//			Map<String,Object>childMap=new HashMap<String,Object>();
-//			//WorkExper1 WorkExper2 WorkExper2_1 WorkExper2_2 WorkExper2_3 WorkExper3 WorkExper4 WorkExper5 WorkExper6 WorkExper7 WorkExper8 WorkExper9
-//			//String keyGp[]={"1","2","2_1","2_2","2_3","3","4","5","6","7","8","9"};
-//			String keyGp[]={"1","2"};
-//
-//			for(int index=0;index<keyGp.length;index++){
-//				System.out.println("参数:numAppInsId:"+numAppInsId+" strTplId:"+strTplId+" strXxxBh:"+strXxxBh+" itemId:"+itemId+" strOprNameApp:"+strOprNameApp+" strComLmc:"+strComLmc );
-//				Map<String,Object> tempMap=this.getGpCtrlData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp);
-//				String tempStr="WorkExper"+keyGp[index];
-//				//将tempMap中的instanceId换成tempStr
-//				tempMap.replace("instanceId", tempStr);
-//				childMap.put(tempStr, tempMap);
-//			}
-//			arrAppChildrenJson.add(childMap);
-//			System.out.println(new JacksonUtil().List2json(arrAppChildrenJson));
-//			}
+//		System.out.println("NORMAL_DATA_SQL:"+NORMAL_DATA_SQL);
+//		//---
+//		Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
+//		System.out.println("normalDataMap"+normalDataMap);
+//		
+//		String topInsId=normalDataMap.get("TZ_XXX_SLID").toString();
+//		Map<String,Object>topInsMap=new HashMap<String,Object>();
+//		topInsMap.put("instanceId", topInsId);
+//		topInsMap.put("children", childMap);
+//		topInsMap.put("itemId", strXxxBhChild);
+//		
+//		Map<String,Object>returnMap=new HashMap<String,Object>();
+//		returnMap.put(topInsId, topInsMap);
+//		System.out.println("参数:numAppInsId:"+numAppInsId+" strTplId:"+strTplId+" strXxxBh:"+strXxxBhChild+" itemId:"+itemId+" strOprNameApp:"+strOprNameApp+" strComLmc:"+strComLmc );
+//		return returnMap;
 
 	}
 	//解析"职业背景","创业经历"控件数据  //'FirmType','StartBusinessExp'
 	public Map<String,Object> getGpCtrlData(String  strComLmc,Long numAppInsId, String strTplId, String strXxxBhChild, String itemId, String strOprNameApp){
 			//Map<String,Object>returnMap=new HashMap<String,Object>();
 			Map<String,Object>childMap=new HashMap<String,Object>();
-			System.out.println("strComLmc:"+strComLmc);
+			//System.out.println("strComLmc:"+strComLmc);
 			//查询所有实例ID为“numAppInsId”的页面数据
 			//final String SQL1="SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? ";
 		
@@ -1418,13 +1478,13 @@ public class tzOnlineAppHisServiceImpl {
 			//查询item通用数据
 			final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
 
-			System.out.println("LIKE_SQL:"+LIKE_SQL);
-			System.out.println("NORMAL_DATA_SQL:"+NORMAL_DATA_SQL);
+			//System.out.println("LIKE_SQL:"+LIKE_SQL);
+			//System.out.println("NORMAL_DATA_SQL:"+NORMAL_DATA_SQL);
 			//"strXxxBhChild"在"FirmType"中的值为:firm_type和position_type
 			Map<String,Object>valMap=sqlQuery.queryForMap(LIKE_SQL, new Object[]{numAppInsId});
 			Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
-			System.out.println("valMap:"+valMap);
-			System.out.println("normalDataMap"+normalDataMap);
+			//System.out.println("valMap:"+valMap);
+			//System.out.println("normalDataMap"+normalDataMap);
 			
 			Map<String,Object>tempMap=new HashMap<String,Object>();
 			tempMap.put("instanceId",normalDataMap.get("TZ_XXX_SLID"));
