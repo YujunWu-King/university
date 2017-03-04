@@ -262,6 +262,13 @@ $(document).ready(function(){
 			},
 			success:function(response){
 				$me.html(response);
+				$(".main_mid_zxj_rili.assdiv").each(function(){
+					var _me = $(this);
+					_me.find("a.zxj_more").click(function(){
+						url = TzUniversityContextPath+"/dispatcher?classid=websiteCommList&siteId="+siteid+"&areaId="+areaId+"&columnId="+_me.find("div.zxj_tit1").attr("tab-col"),
+						window.location = url;
+					});
+				});
 				$(".date_body").each(function(){
 					$clamp(this, {clamp:2});
 				});

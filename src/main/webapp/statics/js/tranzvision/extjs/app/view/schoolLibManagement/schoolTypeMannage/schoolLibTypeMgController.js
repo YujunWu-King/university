@@ -153,7 +153,7 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
     //院校库列表页删除按钮
     deleteResSets: function(){
         //选中行
-        var selList = this.getView().down('grid').getSelectionModel().getSelection();
+        var selList = this.getView().getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -223,23 +223,30 @@ Ext.define('KitchenSink.view.schoolLibManagement.schoolTypeMannage.schoolLibType
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
+            	form.findField("typeID").setValue(responseData);
                 comView.actType = "update";
             },"",true,this);
         }
     },
-
-    //院校库详情页确定按钮
+    
+    
+     //院校库详情页确定按钮
     ensureonschoolSave:function(btn){
-    	this.onschoolSave(btn);
-    	contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-		contentPanel.child("schoolMgTypeList").store.reload();
-    	var comView = this.getView();
-    	comView.close();
-    	
+    	var form = this.getView().child("form").getForm();
 
-      
-        
+        if (form.isValid()) {
+            //获得院校库表单信息
+            var tzParams = this.getResSetInfoParams();
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		    contentPanel.child("schoolMgTypeList").store.reload();
+                comView.close();
+            },"",true,this);
+        }
+    
     },
+
     closeResSets:function(btn){
         //关闭窗口
         var comView = this.getView();

@@ -183,6 +183,9 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			errorMsg = MsgSet["REQUIRE"];
 		}
 		$inputBox.keyup(function(){
+			//if (data.wzsm =="" || data.wzsm== undefined) {
+			//	data.wzsm="";
+			//}
 			var len = $inputBox.val().length;
 			if (len != 0){
 				$("#" + data.itemId + "Size").text("已输入"+len+"字");

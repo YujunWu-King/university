@@ -266,7 +266,7 @@ public class tzOnlineAppEngineImpl {
 					numXxxMin = MapData.get("TZ_XXX_MIN") == null ? 0
 							: Integer.parseInt(String.valueOf(MapData.get("TZ_XXX_MIN")));
 					numXxxMax = MapData.get("TZ_XXX_MAX") == null ? 0
-							:  Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAX")));
+							: Long.parseLong(String.valueOf(MapData.get("TZ_XXX_MAX")));
 					strXxxXsws = MapData.get("TZ_XXX_XSWS") == null ? "" : String.valueOf(MapData.get("TZ_XXX_XSWS"));
 					strXxxGdgsjy = MapData.get("TZ_XXX_GDGSJY") == null ? ""
 							: String.valueOf(MapData.get("TZ_XXX_GDGSJY"));
@@ -382,8 +382,9 @@ public class tzOnlineAppEngineImpl {
 		}
 	}
 
-	public Map<String, String>  getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId, String strAppOrgId,
-			String strTplId, String oprid, String strClassId, String strRefLetterId, String strInsData) {
+	public Map<String, String> getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId,
+			String strAppOrgId, String strTplId, String oprid, String strClassId, String strRefLetterId,
+			String strInsData) {
 		String strHisAppInsId = "";
 
 		Long numHisAppInsId = 0l;
@@ -585,8 +586,8 @@ public class tzOnlineAppEngineImpl {
 				}
 			}
 		}
-		
-		Map<String, String> m  = new HashMap<String, String>();
+
+		Map<String, String> m = new HashMap<String, String>();
 		m.put("strAppInsId", strAppInsId);
 		m.put("strInsData", strInsData);
 		m.put("strRefLetterId", strRefLetterId);
@@ -709,13 +710,13 @@ public class tzOnlineAppEngineImpl {
 			Map<String, Object> mapData = null;
 
 			mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
-			
+
 			if (mapData != null) {
 				TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
-					: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
+						: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
 
 				INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
-			} 
+			}
 
 			// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
 			// System.out.println("strOtype:" + strOtype);
@@ -821,7 +822,7 @@ public class tzOnlineAppEngineImpl {
 			// 解析json
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			// jacksonUtil.json2Map(strJsonData);
-			System.out.println("保存传入数据:"+strJsonData);
+			// System.out.println("保存传入数据:"+strJsonData);
 			Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
 
 			if (mapAppData != null) {
@@ -852,14 +853,15 @@ public class tzOnlineAppEngineImpl {
 
 						List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
 						if ("Y".equals(strIsDoubleLine)) {
-							//modity by caoy
+							// modity by caoy
 							if (strClassName.equals("LayoutControls")) {
 								this.saveDhLineNum(strItemIdLevel0, numAppInsId,
 										(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
 							} else {
 								this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 							}
-							//this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
+							// this.saveDhLineNum(strItemIdLevel0, numAppInsId,
+							// (short) mapChildrens1.size());
 							for (Object children1 : mapChildrens1) {
 								// 多行容器
 								Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
@@ -1396,9 +1398,9 @@ public class tzOnlineAppEngineImpl {
 				sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_APP_ONLINE_CHECK_SQL");
 				listData = sqlQuery.queryForList(sql, new Object[] { strTplId });
 			}
-
+			Map<String, Object> MapData = null;
 			for (Object objData : listData) {
-				Map<String, Object> MapData = (Map<String, Object>) objData;
+				MapData = (Map<String, Object>) objData;
 				strXxxBh = MapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapData.get("TZ_XXX_BH"));
 				strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
 				strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
@@ -1577,31 +1579,41 @@ public class tzOnlineAppEngineImpl {
 			if ("submit".equals(strOtype)) {
 
 				// 提交的时候 ，校验是否 已经预提交 ，如果没有预备提交，那么该页不设置打勾
-				sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
-				String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-				if (!TZ_APP_FORM_STA.equals("P")) {
-					returnMsg = returnMsg + "请先预提交" + "<br/>";
+				// 校验的时候排除推荐信
+				sql = "SELECT A.TZ_USE_TYPE,B.TZ_APP_FORM_STA FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID=?";
 
-					sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
-					String strPretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" },
-							"String");
+				Map<String, Object> dataMap = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
 
-					if (strPretPageNo != null && !strPretPageNo.equals("")) {
-						listPageNo.add(Integer.parseInt(strPretPageNo));
+				if (dataMap != null) {
+
+					String TZ_USE_TYPE = dataMap.get("TZ_XXX_BH") == null ? ""
+							: String.valueOf(dataMap.get("TZ_USE_TYPE"));
+
+					String TZ_APP_FORM_STA = dataMap.get("TZ_XXX_BH") == null ? ""
+							: String.valueOf(dataMap.get("TZ_APP_FORM_STA"));
+
+					if (TZ_USE_TYPE.equals("BMB") && !TZ_APP_FORM_STA.equals("P")) {
+						returnMsg = returnMsg + "请先预提交" + "<br/>";
+
+						sql = "SELECT TZ_PAGE_NO FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ?";
+						String strPretPageNo = sqlQuery.queryForObject(sql, new Object[] { strTplId, "PreButtom" },
+								"String");
+
+						if (strPretPageNo != null && !strPretPageNo.equals("")) {
+							listPageNo.add(Integer.parseInt(strPretPageNo));
+						}
 					}
-					// int PretPageNo = sqlQuery.queryForObject(sql, new
-					// Object[] { strTplId, "PreButtom" }, "Integer");
-
 				}
 
 				// 页面全部设置成完成
 
 				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND  TZ_PAGE_NO>0 ";
 				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, new Object[] { strTplId, "Page" });
+				Map<String, Object> MapXxxBh = null;
+				String strPageXxxBh = "";
 				for (Object ObjValue : ListPageXxxBh) {
-					Map<String, Object> MapXxxBh = (Map<String, Object>) ObjValue;
-					String strPageXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? ""
-							: String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
+					MapXxxBh = (Map<String, Object>) ObjValue;
+					strPageXxxBh = MapXxxBh.get("TZ_XXX_BH") == null ? "" : String.valueOf(MapXxxBh.get("TZ_XXX_BH"));
 					if (strPageXxxBh != null && !"".equals(strPageXxxBh)) {
 						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
 					}

@@ -801,13 +801,23 @@
 	        })
 	    },
 	
+	    deleteAudInfo: function(view, rowIndex){
+			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+				if(btnId == 'yes'){					   
+				   var store = view.findParentByType("grid").store;
+				   store.removeAt(rowIndex);
+				}												  
+			},this);  
+		},
+		
+	
 	/*另存为静态听众--测试*/
 	saveAsStaAud: function() {
 
 		//获取选中人员；
 		var selList = this.getView().getSelectionModel().getSelection();
 		//拼接参数，新开听众页面；
-		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":""}]}}';
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
 		
 		//后台执行插入表操作
 		var AudID ="";
