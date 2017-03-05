@@ -807,7 +807,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				String Pwdname = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"TJXSETPWD", strLanguage, "访问密码", "Access password");
 				String strSubmit2 = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-						"SUBMIT", strLanguage, "提交", "Submit");
+						"CONFIRM", strLanguage, "确认", "Confirm");
 
 				// 构建密码输入框
 				String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,

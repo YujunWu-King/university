@@ -122,21 +122,21 @@
                     type: 'rowmodel'
                 },
                 store: detailStore,
-                /*dockedItems:[{
+                dockedItems:[{
                  xtype:"toolbar",
                  items:[
                  {
                  text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_INFO_STD.add","新增"),
                  iconCls:"add",
                  handler:"addItem"
-                 },"-",
+                 }/*,"-",
                  {
                  text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_INFO_STD.remove","删除"),
                  iconCls:"remove",
                  handler:'deleteScoreItems'
-                 }
+                 }*/
                  ]
-                 }],*/
+                 }],
                 plugins: {
                     ptype: 'cellediting',
                     pluginId: 'detailCellediting',

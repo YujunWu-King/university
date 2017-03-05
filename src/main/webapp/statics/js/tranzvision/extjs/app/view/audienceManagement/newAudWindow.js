@@ -161,7 +161,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	            xtype:'grid',
 	            frame: true,
 			//	name: 'audItemGrid',
-				dockedItems:[{
+	/*			dockedItems:[{
 	        		xtype:"toolbar",
 	        		items:[
 	        			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchComList"},"-",
@@ -169,6 +169,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	        			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deleteComRegInfos"}
 	        		]
 	        	}],
+	        	*/
 				columnLines: true,
 				selModel: {
 	                type: 'checkboxmodel'
