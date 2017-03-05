@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.ss.formula.functions.Replace;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -2589,6 +2590,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			psTzZxbmXxxTKey.setTzZxbmXxxId(applyItemId);
 
 			psTzZxbmXxxTMapper.deleteByPrimaryKey(psTzZxbmXxxTKey);
+			
+			//删除下拉值;
+			sqlQuery.update("delete from PS_TZ_XXX_TRANS_T where TZ_ART_ID=? and TZ_ZXBM_XXX_ID=?",new Object[]{activityId,applyItemId});
+			sqlQuery.update("delete from PS_TZ_XXX_TR_EN_T where TZ_ART_ID=? and TZ_ZXBM_XXX_ID=?",new Object[]{activityId,applyItemId});
 
 		} catch (Exception e) {
 			e.printStackTrace();
