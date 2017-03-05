@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.ss.formula.functions.Replace;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -703,8 +702,16 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 		try {
 
 			String ctxPath = request.getContextPath();
-			String ctxServerName = request.getScheme() + "://" + request.getServerName() + ":"
-					+ request.getServerPort();
+			String ctxServerName = "";
+			
+			if(request.getServerPort()==80){
+				 ctxServerName = request.getScheme() + "://" + request.getServerName();
+			}else{
+				ctxServerName = request.getScheme() + "://" + request.getServerName() + ":"
+						+ request.getServerPort();
+			}
+			
+			String rootparth = ctxServerName + ctxPath;
 
 			Date dateNow = new Date();
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -802,7 +809,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			 * "&oprate=R";
 			 */
 
-			sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventPreviewClassId");
+			sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 			classId = sqlQuery.queryForObject(sql, "String");
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -855,6 +862,11 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						for (int k = 0; k < colus.size(); k++) {
 							String coluId = colus.get(k);
 							if (coluId != null && !"".equals(coluId)) {
+								
+								String publishUrl = rootparth + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+										+ siteId + "&columnId=" + coluId + "&artId=" + activityId;
+								String publishUrlSj = rootparth + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+										+ siteId + "&columnId=" + coluId + "&artId=" + activityId + "&from=m";
 
 								// 查看站点栏目是否对应;
 								int existNum = sqlQuery.queryForObject(
@@ -869,6 +881,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTKey.setTzArtId(activityId);
 
 									String tzArtHtml = "";
+									String tzArtHtmlSj = "";
 
 									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = psTzLmNrGlTMapper
 											.selectByPrimaryKey(psTzLmNrGlTKey);
@@ -880,10 +893,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 										psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
 										psTzLmNrGlTWithBLOBs.setTzArtId(activityId);
 										psTzLmNrGlTWithBLOBs.setTzArtHtml("");
+										psTzLmNrGlTWithBLOBs.setTzArtSjHtml("");
 										psTzLmNrGlTWithBLOBs.setTzFbz("");
 										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 										psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+										psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
+										psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+										psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 
 										// 点击了置顶;
 										if ("Y".equals(upArtClick)) {
@@ -902,7 +919,15 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 											psTzLmNrGlTWithBLOBs = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
 											// 生成页面代码
-											tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
+											tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId,"PC",request.getContextPath());
+											// 解析的模板内容;
+											tzArtHtmlSj = artContentHtml.getContentHtml(siteId, coluId, activityId,"MS",request.getContextPath());
+											
+											//如果手机版内容为空，则不存储手机版URL地址
+											if("".equals(tzArtHtmlSj) || tzArtHtmlSj == null){
+												tzArtHtmlSj = "";
+											}
+											psTzLmNrGlTWithBLOBs.setTzArtSjHtml(tzArtHtmlSj);
 											psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
 											// 点击了发布或撤销发布;
 											if ("Y".equals(publishClick)) {
@@ -910,8 +935,15 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 												if ("Y".equals(publishStatus)) {
 													psTzLmNrGlTWithBLOBs.setTzArtNewsDt(dateNow);
 													psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+													if(!"".equals(tzArtHtmlSj) && tzArtHtmlSj != null){
+														psTzLmNrGlTWithBLOBs.setTzArtSjContScr(tzArtHtmlSj);
+													}
+													
 												} else if ("N".equals(publishStatus)) {
 													psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+													psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
+													psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+													psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 												}
 											}
 											psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
@@ -921,7 +953,15 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 										// 更新文章内容关联表
 										// 生成页面代码
-										tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
+										tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId,"PC",request.getContextPath());
+										// 解析的模板内容;
+										tzArtHtmlSj = artContentHtml.getContentHtml(siteId, coluId, activityId,"MS",request.getContextPath());
+										
+										//如果手机版内容为空，则不存储手机版URL地址
+										if("".equals(tzArtHtmlSj) || tzArtHtmlSj == null){
+											tzArtHtmlSj = "";
+										}
+										psTzLmNrGlTWithBLOBs.setTzArtSjHtml(tzArtHtmlSj);
 										psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
 										psTzLmNrGlTWithBLOBs.setTzFbz("");
 										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
@@ -933,8 +973,12 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 											if ("Y".equals(publishStatus)) {
 												psTzLmNrGlTWithBLOBs.setTzArtNewsDt(dateNow);
 												psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+												if(!"".equals(tzArtHtmlSj) && tzArtHtmlSj != null){
+													psTzLmNrGlTWithBLOBs.setTzArtSjContScr(tzArtHtmlSj);
+												}
 											} else if ("N".equals(publishStatus)) {
 												psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+												psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 											}
 										}
 
@@ -953,12 +997,13 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 										psTzLmNrGlTWithBLOBs = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
 										String strAutoStaticName = psTzLmNrGlTWithBLOBs.getTzStaticAotoName();
-
-										String rootparth = "http://" + request.getServerName() + ":"
-												+ request.getServerPort() + request.getContextPath();
+										tzArtHtml = psTzLmNrGlTWithBLOBs.getTzArtHtml();
+										tzArtHtmlSj = psTzLmNrGlTWithBLOBs.getTzArtSjHtml();
 										String strFileName = "";
 										String strFilePath = "";
 										String strFilePathAccess = "";
+										String strFilePathSj = "";
+										String strFilePathAccessSj = "";
 
 										/* 获取站点类型 */
 										String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
@@ -967,34 +1012,23 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 										
 										if ("C".equals(strSiteType)) {
 											// 招生站点;
-											strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + "/envents/"
-													+ siteId;
-											strFilePathAccess = "/envents/" + siteId;
 
 											if ("Y".equals(publishStatus)) {
 
-												// 静态化
-												if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
-													strAutoStaticName = String.valueOf(
-															getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
-												}
-											
-												strFileName = strAutoStaticName + ".html";
-												strFilePath = request.getServletContext().getRealPath(strFilePath);
-												artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
-												
-												String publishUrl = strFilePathAccess + "/" + strFileName;
 												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
-												psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+												if("".equals(tzArtHtmlSj) || tzArtHtmlSj==null){
+													psTzLmNrGlTWithBLOBs.setTzArtUrl("");
+												}else{
+													psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
+												}
+												
 												psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 
 											} else {
-												if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-													fileManageServiceImpl.DeleteFile(strFilePath,
-															strAutoStaticName + ".html");
-												}
-
+												psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+												psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+												psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 												psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
 												psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 											}
@@ -1008,24 +1042,6 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 											String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
 											strColuPath = sqlQuery.queryForObject(getColuPathSql,
 													new Object[] { siteId, coluId }, "String");
-											// String getAutoStaticNameSql =
-											// "SELECT TZ_STATIC_AOTO_NAME FROM
-											// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
-											// = ? AND TZ_COLU_ID = ? AND
-											// TZ_ART_ID = ? LIMIT 1";
-											// String strAutoStaticName =
-											// sqlQuery.queryForObject(getAutoStaticNameSql,new
-											// Object[] { siteId, coluId,
-											// activityId }, "String");
-											// String getOriginStaticNameSql =
-											// "SELECT TZ_STATIC_NAME FROM
-											// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
-											// = ? AND TZ_COLU_ID = ? AND
-											// TZ_ART_ID = ? LIMIT 1";
-											// String strOriginStaticName =
-											// sqlQuery.queryForObject(getOriginStaticNameSql,new
-											// Object[] { siteId, coluId,
-											// activityId }, "String");
 
 											if (strBasePath != null && !"".equals(strBasePath)) {
 												if (!strBasePath.startsWith("/")) {
@@ -1047,11 +1063,16 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 											strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath
 													+ strColuPath;
+											strFilePathSj = strFilePath + "/m";
 											strFilePathAccess = strBasePath + strColuPath;
+											strFilePathAccessSj = strFilePathAccess + "/m";
+											
 
 											if ("Y".equals(publishStatus)) {
 												// 如果是外网站点，则静态话
 												if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+													
+													
 													// 静态化
 													if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
 														strAutoStaticName = String.valueOf(getSeqNum
@@ -1059,10 +1080,20 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 													}
 													
 													strFileName = strAutoStaticName + ".html";
+													
 													strFilePath = request.getServletContext().getRealPath(strFilePath);
 													artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
+													
+													if("".equals(tzArtHtmlSj) || tzArtHtmlSj==null){
+														psTzLmNrGlTWithBLOBs.setTzArtUrl("");
+													}else{
+														artContentHtml.staticFile(tzArtHtmlSj, strFilePathSj, strFileName);
+														publishUrlSj = strFilePathAccessSj + "/"
+																+ strFileName;
+														psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
+													}
 													artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-													String publishUrl = strFilePathAccess + "/"
+													publishUrl = strFilePathAccess + "/"
 															+ strFileName;
 													psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 													psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
@@ -1077,6 +1108,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 												}
 
 												psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+												psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 												psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
 												psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 											}
@@ -1103,8 +1135,20 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							continue;
 						}
 						
+						String publishUrl = rootparth + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+								+ siteId + "&columnId=" + coluId + "&artId=" + activityId;
+						String publishUrlSj = rootparth + "/dispatcher?classid=" + classId + "&operatetype=HTML&siteId="
+								+ siteId + "&columnId=" + coluId + "&artId=" + activityId + "&from=m";
 						// 生成页面代码
-						String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId);
+						String tzArtHtml = artContentHtml.getContentHtml(siteId, coluId, activityId,"PC",request.getContextPath());
+						// 生成页面代码
+						String tzArtHtmlSj = artContentHtml.getContentHtml(siteId, coluId, activityId,"MS",request.getContextPath());
+						
+						//如果手机版内容为空，则不存储手机版URL地址
+						if("".equals(tzArtHtmlSj) || tzArtHtmlSj == null){
+							publishUrlSj = "";
+							tzArtHtmlSj = "";
+						}
 						
 						// 更新文章内容关联表
 						PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
@@ -1119,6 +1163,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						}
 
 						psTzLmNrGlTWithBLOBs.setTzArtHtml(tzArtHtml);
+						psTzLmNrGlTWithBLOBs.setTzArtSjHtml(tzArtHtmlSj);
 
 						// 点击了发布或撤销发布;
 						if ("Y".equals(publishClick)) {
@@ -1126,8 +1171,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							if ("Y".equals(publishStatus)) {
 								psTzLmNrGlTWithBLOBs.setTzArtNewsDt(dateNow);
 								psTzLmNrGlTWithBLOBs.setTzArtConentScr(tzArtHtml);
+								psTzLmNrGlTWithBLOBs.setTzArtSjContScr(tzArtHtmlSj);
 							} else if ("N".equals(publishStatus)) {
 								psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+								psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 							}
 						}
 
@@ -1138,12 +1185,14 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 							psTzLmNrGlTWithBLOBs = psTzLmNrGlTMapper.selectByPrimaryKey(psTzLmNrGlTKey);
 							String strAutoStaticName = psTzLmNrGlTWithBLOBs.getTzStaticAotoName();
-
-							String rootparth = "http://" + request.getServerName() + ":"
-									+ request.getServerPort() + request.getContextPath();
+							tzArtHtml = psTzLmNrGlTWithBLOBs.getTzArtHtml();
+							tzArtHtmlSj = psTzLmNrGlTWithBLOBs.getTzArtSjHtml();
+							
 							String strFileName = "";
 							String strFilePath = "";
 							String strFilePathAccess = "";
+							String strFilePathSj = "";
+							String strFilePathAccessSj = "";
 
 							/* 获取站点类型 */
 							String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
@@ -1152,34 +1201,23 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							
 							if ("C".equals(strSiteType)) {
 								// 招生站点;
-								strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + "/envents/"
-										+ siteId;
-								strFilePathAccess = "/envents/" + siteId;
 
 								if ("Y".equals(publishStatus)) {
 
-									// 静态化
-									if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
-										strAutoStaticName = String.valueOf(
-												getSeqNum.getSeqNum("TZ_LM_NR_GL_T", "TZ_STATIC_A_NAME"));
-									}
-								
-									strFileName = strAutoStaticName + ".html";
-									strFilePath = request.getServletContext().getRealPath(strFilePath);
-									artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
-									
-									String publishUrl = strFilePathAccess + "/" + strFileName;
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
-									psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
+									if("".equals(tzArtHtmlSj) || tzArtHtmlSj==null){
+										psTzLmNrGlTWithBLOBs.setTzArtUrl("");
+									}else{
+										psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
+									}
+									
 									psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 
 								} else {
-									if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
-										fileManageServiceImpl.DeleteFile(strFilePath,
-												strAutoStaticName + ".html");
-									}
-
+									psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+									psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+									psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 									psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
 									psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 								}
@@ -1193,24 +1231,6 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 								String getColuPathSql = "SELECT TZ_COLU_PATH FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID = ? AND TZ_COLU_ID = ? LIMIT 1";
 								strColuPath = sqlQuery.queryForObject(getColuPathSql,
 										new Object[] { siteId, coluId }, "String");
-								// String getAutoStaticNameSql =
-								// "SELECT TZ_STATIC_AOTO_NAME FROM
-								// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
-								// = ? AND TZ_COLU_ID = ? AND
-								// TZ_ART_ID = ? LIMIT 1";
-								// String strAutoStaticName =
-								// sqlQuery.queryForObject(getAutoStaticNameSql,new
-								// Object[] { siteId, coluId,
-								// activityId }, "String");
-								// String getOriginStaticNameSql =
-								// "SELECT TZ_STATIC_NAME FROM
-								// PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID
-								// = ? AND TZ_COLU_ID = ? AND
-								// TZ_ART_ID = ? LIMIT 1";
-								// String strOriginStaticName =
-								// sqlQuery.queryForObject(getOriginStaticNameSql,new
-								// Object[] { siteId, coluId,
-								// activityId }, "String");
 
 								if (strBasePath != null && !"".equals(strBasePath)) {
 									if (!strBasePath.startsWith("/")) {
@@ -1232,11 +1252,16 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 								strFilePath = getSysHardCodeVal.getWebsiteEnrollPath() + strBasePath
 										+ strColuPath;
+								strFilePathSj = strFilePath + "/m";
 								strFilePathAccess = strBasePath + strColuPath;
+								strFilePathAccessSj = strFilePathAccess + "/m";
+								
 
 								if ("Y".equals(publishStatus)) {
 									// 如果是外网站点，则静态话
 									if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
+										
+										
 										// 静态化
 										if (strAutoStaticName == null || "".equals(strAutoStaticName)) {
 											strAutoStaticName = String.valueOf(getSeqNum
@@ -1244,10 +1269,20 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 										}
 										
 										strFileName = strAutoStaticName + ".html";
+										
 										strFilePath = request.getServletContext().getRealPath(strFilePath);
 										artContentHtml.staticFile(tzArtHtml, strFilePath, strFileName);
+										
+										if("".equals(tzArtHtmlSj) || tzArtHtmlSj==null){
+											psTzLmNrGlTWithBLOBs.setTzArtUrl("");
+										}else{
+											artContentHtml.staticFile(tzArtHtmlSj, strFilePathSj, strFileName);
+											publishUrlSj = strFilePathAccessSj + "/"
+													+ strFileName;
+											psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
+										}
 										artContentHtml.staticSiteInfoByChannel(siteId, coluId);
-										String publishUrl = strFilePathAccess + "/"
+										publishUrl = strFilePathAccess + "/"
 												+ strFileName;
 										psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 										psTzLmNrGlTWithBLOBs.setTzStaticAotoName(strAutoStaticName);
@@ -1259,9 +1294,13 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 									if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 										fileManageServiceImpl.DeleteFile(strFilePath,
 												strAutoStaticName + ".html");
+										//同时删除手机版本的地址
+										fileManageServiceImpl.DeleteFile(strFilePathSj,
+												strAutoStaticName + ".html");
 									}
 
 									psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+									psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 									psTzLmNrGlTWithBLOBs.setTzStaticAotoName("");
 									psTzLmNrGlTMapper.updateByPrimaryKeyWithBLOBs(psTzLmNrGlTWithBLOBs);
 								}
@@ -1627,7 +1666,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						+ request.getServerPort() + request.getContextPath();
 				
 				// 获取预览和发布url信息
-				sql = "select TZ_SITE_ID,TZ_COLU_ID,TZ_ART_ID,TZ_ART_PUB_STATE,TZ_STATIC_ART_URL from PS_TZ_LM_NR_GL_T where TZ_ART_ID=?";
+				sql = "select TZ_SITE_ID,TZ_COLU_ID,TZ_ART_ID,TZ_ART_PUB_STATE,TZ_STATIC_ART_URL,TZ_ART_SJ_HTML,TZ_ART_URL from PS_TZ_LM_NR_GL_T where TZ_ART_ID=?";
 				List<Map<String, Object>> listArtView = sqlQuery.queryForList(sql, new Object[] { activityId });
 				total = 0;
 
@@ -1643,6 +1682,10 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 							: String.valueOf(mapArtView.get("TZ_ART_PUB_STATE"));
 					String publicUrl = mapArtView.get("TZ_STATIC_ART_URL") == null ? ""
 							: String.valueOf(mapArtView.get("TZ_STATIC_ART_URL"));
+					String publicUrlSj = mapArtView.get("TZ_ART_URL") == null ? ""
+							: String.valueOf(mapArtView.get("TZ_ART_URL"));
+					String artSjHtml = mapArtView.get("TZ_ART_SJ_HTML") == null ? ""
+							: String.valueOf(mapArtView.get("TZ_ART_SJ_HTML"));
 					String coluName = "";
 					sql = "select CONCAT(b.TZ_SITEI_NAME ,'-',a.TZ_COLU_NAME) TZ_COLU_NAME from PS_TZ_SITEI_COLU_T a,PS_TZ_SITEI_DEFN_T b where a.TZ_SITEI_ID=b.TZ_SITEI_ID AND a.TZ_SITEI_ID=? and a.TZ_COLU_ID=? and a.TZ_COLU_TYPE='D'";
 					coluName = sqlQuery.queryForObject(sql, new Object[] { siteId, coluId }, "String");
@@ -1662,6 +1705,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					mapJson.put("coluId", coluId);
 					mapJson.put("artId", artId);
 					mapJson.put("coluName", coluName);
+					mapJson.put("artPubType", "电脑");
 					if ("Y".equals(publicState)) {
 						mapJson.put("publicState", "已发布");
 					} else {
@@ -1669,12 +1713,34 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					}
 
 					mapJson.put("previewUrl", previewUrl);
+					/*
 					if( publicUrl != null && !"".equals(publicUrl)){
 						publicUrl = rootparth + publicUrl; 
-					}
+					}*/
 					mapJson.put("publicUrl", publicUrl);
 					total ++;
 					listJson.add(mapJson);
+					
+					if(!"".equals(artSjHtml)){
+						previewUrl = request.getContextPath() + "/dispatcher?classid=" + classId
+								+ "&operatetype=HTML&siteId=" + siteId + "&columnId=" + coluId + "&artId=" + activityId
+								+ "&oprate=R&from=m";
+						mapJson = new HashMap<String, Object>();
+						mapJson.put("siteId", siteId);
+						mapJson.put("coluId", coluId);
+						mapJson.put("artId", artId);
+						mapJson.put("coluName", coluName);
+						mapJson.put("artPubType", "手机");
+						if ("Y".equals(publicState)) {
+							mapJson.put("publicState", "已发布");
+						} else {
+							mapJson.put("publicState", "未发布");
+						}
+						mapJson.put("previewUrl", previewUrl);
+						mapJson.put("publicUrl", publicUrlSj);
+						total ++;
+						listJson.add(mapJson);
+					}	
 				}
 
 				//sql = "select count(1) from PS_TZ_ART_FILE_T a, PS_TZ_ART_FJJ_T b where a.TZ_ART_ID = ? and a.TZ_ATTACHSYSFILENA=b.TZ_ATTACHSYSFILENA";

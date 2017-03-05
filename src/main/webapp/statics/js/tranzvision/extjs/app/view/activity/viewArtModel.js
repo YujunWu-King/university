@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.activity.viewArtModel', {
         {name: 'coluId'},
         {name: 'artId'},
         {name: 'coluName'},
+		{name: 'artPubType'},
         {name: 'publicState'},
         {name: 'previewUrl'},
         {name: 'publicUrl'}

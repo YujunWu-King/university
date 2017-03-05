@@ -111,6 +111,87 @@ public class CmsUtils {
 
 		return contents;
 	}
+	
+	// 解析文章内容；tplType:如果是手机版，则为MS，如果为pc版本：则为PC
+	public String content(String siteId, String chnlId, String id,String tplType, String contentPath) {
+
+		if (StringUtils.isBlank(id)) {
+			return "文章编号为空";
+		}
+		ChannelMng channelMng = new ChannelMngImpl();
+		// 模板实例,通过站点和栏目去查找对应栏目的模版信息
+		CmsTemplate tpl = channelMng.findChnlContentTpl(siteId, chnlId);
+		if (tpl == null) {
+			return "未找到对应的模版";
+		}
+		// 栏目信息
+		CmsChannel channel = channelMng.findById(siteId, chnlId);
+		if (channel == null) {
+			return "未找到对应的栏目";
+		}
+
+		String jgId = "";
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+			jgId = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, String.class);
+		} catch (Exception e) {
+			jgId = "";
+		}
+
+		Map<String, Object> root = new HashMap<String, Object>();
+		root.put("CmsContent", new ContentDirective());
+		root.put("text_cut", new TextCutDirective());
+		root.put("ContentImage", new ArticleImageDirective());
+		root.put("ContentAtts", new ArticleAttachmentDirective());
+		root.put(CHANNEL, channel);
+		root.put(ART_ID, id);
+		root.put(SITE_ID, siteId);
+		String path = channelMng.getSitePath(siteId);
+		root.put("CONTEXTPATH", path);
+		root.put("TzUniversityContextPath", contentPath);
+		root.put("CmsMenu", new MenuDirective());
+
+		String strRandom = String.valueOf(10 * Math.random());
+		
+		String style = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
+				+ siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
+				+ "\" rel=\"stylesheet\" type=\"text/css\" />";
+		root.put("style", style);
+		
+		String jsAndCss = "<link href=\"" + contentPath + "/statics/css/website/orgs/" + jgId.toLowerCase() + "/"
+				+ siteId + "/style_" + jgId.toLowerCase() + ".css?v=" + strRandom
+				+ "\" rel=\"stylesheet\" type=\"text/css\" />" + "<script type=\"text/javascript\" src=\"" + contentPath
+				+ "/statics/js/lib/jquery/jquery.min.js\"></script>" + "<script type=\"text/javascript\" src=\""
+				+ contentPath + "/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js\"></script>"
+				+ "<script type=\"text/javascript\" src=\"" + contentPath
+				+ "/statics/js/tranzvision/extjs/app/view/website/set/js/pic_list.js\"></script>";
+		root.put("scriptsAndcss", jsAndCss);
+
+		/* 获得模版内容 */
+		String tplSource;
+		if("MS".equals(tplType)){
+			tplSource = tpl.getMsContent();
+		}else{
+			tplSource = tpl.getPcContent();
+		}
+		if (StringUtils.isBlank(tplSource)) {
+			return null;
+		}
+		String tplName = tpl.getId();
+
+		StringWriter out = new StringWriter();
+		try {
+			FreeMarkertUtils.processTemplate(tplSource, tplName, root, out);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		String contents = out.toString();
+
+		return contents;
+	}
 
 	/**
 	 * PAGE菜单菜单静态化

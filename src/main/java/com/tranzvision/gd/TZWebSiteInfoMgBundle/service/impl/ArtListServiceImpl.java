@@ -453,6 +453,10 @@ public class ArtListServiceImpl extends FrameworkImpl {
 				String siteId = (String) dataMap.get("siteId");
 				String columnId = (String) dataMap.get("columnId");
 				String articleId = (String) dataMap.get("articleId");
+				
+				String classIdSQL = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
+				String publishUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
+						new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_VIEW_STD" }, "String");
 
 				if (siteId != null && !"".equals(siteId) && columnId != null && !"".equals(columnId)
 						&& articleId != null && !"".equals(articleId)) {
@@ -532,7 +536,9 @@ public class ArtListServiceImpl extends FrameworkImpl {
 		
 								String strFileName = "";
 								String strFilePath = "";
+								String strFilePathSj = "";
 								String strFilePathAccess = "";
+								String strFilePathAccessSj = "";
 		
 								if (strBasePath != null && !"".equals(strBasePath)) {
 									if (!strBasePath.startsWith("/")) {
@@ -553,12 +559,32 @@ public class ArtListServiceImpl extends FrameworkImpl {
 								}
 		
 								String dir = getSysHardCodeVal.getWebsiteEnrollPath();
+								String strFilePathdelete = dir; // 用于删除文件
+								String strFilePathdeleteSj = strFilePathdelete; // 用于删除文件
 								dir = request.getServletContext().getRealPath(dir);
 								strFilePath = dir + strBasePath + strColuPath;
+								//手机端静态话地址加上/m
+								strFilePathSj = strFilePath + "/" + "m";
 								strFilePathAccess = strBasePath + strColuPath;
+								//手机端静态话地址加上/m
+								strFilePathAccessSj = strFilePathAccess + "/" + "m";
+								strFilePathdelete = strFilePathdelete + strBasePath + strColuPath;
+								//手机端静态话地址加上/m
+								strFilePathdeleteSj = strFilePathdelete + "/" + "m";
 		
-								String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
-										+ request.getContextPath();
+								String rootparth = "";
+								
+								if(request.getServerPort()==80){
+									rootparth = "http://" + request.getServerName() + request.getContextPath();
+								}else{
+									rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+									+ request.getContextPath();
+								}
+								
+								String publishUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+										+ siteId + "&columnId=" + coluId + "&artId=" + articleId;
+								String publishUrlSj = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+										+ siteId + "&columnId=" + coluId + "&artId=" + articleId + "&from=m";
 		
 								PsTzLmNrGlTKey psTzLmNrGlTKey = new PsTzLmNrGlTKey();
 								psTzLmNrGlTKey.setTzSiteId(siteId);
@@ -575,7 +601,16 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
 									psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
 									// 解析的模板内容;
-									String contentHtml = artContentHtml.getContentHtml(siteId, coluId, articleId);
+									String contentHtml = artContentHtml.getContentHtml(siteId, coluId, articleId,"PC",request.getContextPath());
+									// 解析的模板内容;
+									String contentSjHtml = artContentHtml.getContentHtml(siteId, coluId, articleId,"MS",request.getContextPath());
+									
+									//如果手机版内容为空，则不存储手机版URL地址
+									if("".equals(contentSjHtml) || contentSjHtml == null){
+										publishUrlSj = "";
+										contentSjHtml = "";
+									}
+									
 									int success = 0;
 									psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
 									if ("Y".equals(releaseOrUndo)) {
@@ -584,12 +619,15 @@ public class ArtListServiceImpl extends FrameworkImpl {
 											psTzLmNrGlTWithBLOBs.setTzArtNewsDt(new Date());
 										}
 										psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
+										psTzLmNrGlTWithBLOBs.setTzArtSjContScr(contentSjHtml);
 										// 发布时，判断是否是外网网站，如果是，则静态化
 										// 如果是外网站点和手机站点，则静态话
 										if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
 											// 静态化
 											if (strStaticName != null && !"".equals(strStaticName)) {
-												strFileName = strStaticName + ".html";
+												if (!strStaticName.toLowerCase().endsWith(".html")) {
+													strFileName = strStaticName + ".html";
+												}
 											} else {
 												if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 													strFileName = strAutoStaticName + ".html";
@@ -605,8 +643,14 @@ public class ArtListServiceImpl extends FrameworkImpl {
 											// fileManageServiceImpl.UpdateFile(strFilePath,
 											// strFileName,contentHtml.getBytes());
 											artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
+											if(!"".equals(contentSjHtml) && contentSjHtml != null){
+												artContentHtml.staticFile(contentSjHtml, strFilePathSj, strFileName);
+												psTzLmNrGlTWithBLOBs.setTzArtSjContScr(contentSjHtml);
+												publishUrlSj = rootparth + strFilePathAccessSj + "/" + strFileName;
+												psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
+											}
 		
-											String publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
+											publishUrl = rootparth + strFilePathAccess + "/" + strFileName;
 											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
 											psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 											psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
@@ -615,18 +659,28 @@ public class ArtListServiceImpl extends FrameworkImpl {
 										} else {
 											psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 											psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+											psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+											psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
 											success = psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 										}
 									} else {
 										psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+										psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
+										psTzLmNrGlTWithBLOBs.setTzStaticArtUrl("");
+										psTzLmNrGlTWithBLOBs.setTzArtUrl("");
 										// 删除静态化文件
 										if (strStaticName != null && !"".equals(strStaticName)) {
-		
-											fileManageServiceImpl.DeleteFile(strFilePath, strStaticName + ".html");
+											if (!strStaticName.toLowerCase().endsWith(".html")) {
+												strStaticName = strStaticName + ".html";
+											}
+											fileManageServiceImpl.DeleteFile(strFilePathdelete, strStaticName);
+											//同时删除手机版本的地址
+											fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strStaticName);
 										}
 										if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 											
-											fileManageServiceImpl.DeleteFile(strFilePath, strAutoStaticName + ".html");
+											fileManageServiceImpl.DeleteFile(strFilePathdelete, strAutoStaticName + ".html");
+											fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strAutoStaticName + ".html");
 										}
 										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
