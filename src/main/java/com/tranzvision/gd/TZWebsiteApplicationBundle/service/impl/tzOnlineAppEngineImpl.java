@@ -1586,10 +1586,10 @@ public class tzOnlineAppEngineImpl {
 
 				if (dataMap != null) {
 
-					String TZ_USE_TYPE = dataMap.get("TZ_XXX_BH") == null ? ""
+					String TZ_USE_TYPE = dataMap.get("TZ_USE_TYPE") == null ? ""
 							: String.valueOf(dataMap.get("TZ_USE_TYPE"));
 
-					String TZ_APP_FORM_STA = dataMap.get("TZ_XXX_BH") == null ? ""
+					String TZ_APP_FORM_STA = dataMap.get("TZ_APP_FORM_STA") == null ? ""
 							: String.valueOf(dataMap.get("TZ_APP_FORM_STA"));
 
 					if (TZ_USE_TYPE.equals("BMB") && !TZ_APP_FORM_STA.equals("P")) {
