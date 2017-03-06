@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZWebSiteInfoBundle.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,13 +36,38 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 		String siteId = request.getParameter("siteId");
 		String columnId = request.getParameter("columnId");
 		String artId = request.getParameter("artId");
-
+		String from = request.getParameter("from");
+		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-		// 校验 用户是否已经登录，如果未登录 则 跳到登录页面，用户登录完成以后在跳转回来
+		// 校验 用户是否已经登录，如果未登录 则 跳到登录页面，用户登录完成以后在跳转回来 by caoy 2017-3-3
 
 		if (siteId != null && !siteId.equals("")) {
+			// 如果用户未登录 直接 跳到登录页面
+			if (oprid == null || oprid.equals("")) {
+				// 根据siteId得到机构ID
+				String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+				String jgid = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, "String");
 
+				String contextUrl = request.getContextPath();
+				/// user/login/sem/72
+				String fg = "/";
+				if (!contextUrl.endsWith(fg)) {
+					contextUrl = contextUrl + fg;
+				}
+				contextUrl = contextUrl + "user/login/" + jgid + fg + siteId;
+				// classid=art_view&operatetype=HTML&siteId=72&columnId=417&artId=518
+				String code = "classid=art_view___" + columnId + "___" + artId;
+
+				
+				contextUrl = contextUrl + "?" + code;
+				StringBuffer html = new StringBuffer();
+				html.append("<html><head><title></title></head>");
+				html.append("<script language='javascript'>document.location = '");
+				html.append(contextUrl);
+				html.append("'</script></body></html>");
+				return html.toString();
+			}
 		}
 
 		if (siteId != null && !"".equals(siteId) && columnId != null && !"".equals(columnId) && artId != null
@@ -84,18 +111,22 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 						} else {
 							strRet = "<script type=\"text/javascript\">;location.href=\"" + outurl + "\"</script>";
 						}
-					} else {
-						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=? and TZ_ART_NEWS_DT <= now()";
-						Map<String, Object> contentMap = jdbcTemplate.queryForMap(htmlSQL,
-								new Object[] { siteId, columnId, artId });
-						if (contentMap == null) {
+					}else{
+						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR,TZ_ART_CONENT_SCR,TZ_ART_SJ_CONT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=? and TZ_ART_NEWS_DT <= now()";
+						Map< String, Object> contentMap = jdbcTemplate.queryForMap(htmlSQL,new Object[]{siteId,columnId,artId});
+						if(contentMap == null){
 							strRet = "当前时间不可查看该内容";
-						} else {
-							strRet = (String) contentMap.get("TZ_ART_CONENT_SCR");
+						}else{
+							if("m".equals(from)){
+								strRet = (String) contentMap.get("TZ_ART_SJ_CONT_SCR");
+							}else{
+								strRet = (String) contentMap.get("TZ_ART_CONENT_SCR");
+							}
+							
 						}
 					}
-
-				} else {
+					
+				}else{
 					strRet = "参数错误，请联系系统管理员";
 				}
 			}

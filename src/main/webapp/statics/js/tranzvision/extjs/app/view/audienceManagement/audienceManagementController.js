@@ -991,7 +991,9 @@ console.log(tzParams);
 			var audID =formParams["audID"];
 			 console.log(audSQL);
 			 console.log(audID);
-			
+			if(audSQL==""){
+				Ext.MessageBox.alert("提示","请先填写SQL信息后，再执行操作。");
+			}else{
 			 var removeAud =Ext.JSON.encode(audID); 
 			 var comParams = "";
 				if(removeAud != ""){
@@ -1020,12 +1022,12 @@ console.log(tzParams);
 
 */		
 		Ext.tzLoad(tzParams,function(responseData){
-			
+			console.log(responseData);
 			gridStore.reload();
 					
 				});
 		
-
+			}
 }
 	
 })

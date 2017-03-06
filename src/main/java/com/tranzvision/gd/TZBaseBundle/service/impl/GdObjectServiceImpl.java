@@ -61,6 +61,10 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 * 记录登录类型，后台 - GLY；前台 - SQR；
 	 */
 	private final static String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
+	/**
+	 * 登录地址
+	 */
+	private final static String cookieLoginUrl = "TZGD_LOGIN_URL";
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -520,48 +524,50 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String classid = request.getParameter("classid");
 		String siteId = request.getParameter("siteId");
 		String menuId = request.getParameter("menuId");
-		String tmpOrgID = "";
+		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);;
 		String tmpLanguageCd = "";
-		if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
-			tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-			tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-			if(tmpOrgID != null && !"".equals(tmpOrgID)){
-				tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
-			}else{
-				tmpOrgID = "";
-				tmpLoginURL = request.getContextPath() + "/login";
-			}
-		}else{
-			// 得到机构的cookie;
-			tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
-			// 得到语言;
-			tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-			//判断是前台登录还是后台登录;
-			String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
-			//得到访问的siteId;
-			siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
-			
-			//查看cookie登录时前台还是后天；
-			if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
-				// 查询机构是不是存在;
-				String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
-				int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
-				if("SQR".equals(tmpLoginType)){
+		tmpLoginURL = tzCookie.getStringCookieVal(request, cookieLoginUrl); 
+		if(tmpLoginURL == null || "".equals(tmpLoginURL)){
+			if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
+				tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+				tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+				if(tmpOrgID != null && !"".equals(tmpOrgID)){
 					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
 				}else{
-					if (count > 0) {
-						tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
-					} else {
-						tmpLoginURL = request.getContextPath() + "/login";
-					}
+					tmpOrgID = "";
+					tmpLoginURL = request.getContextPath() + "/login";
 				}
 			}else{
-				tmpOrgID = "";
-				tmpLoginURL = request.getContextPath() + "/login";
-			}	
+				// 得到机构的cookie;
+				tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+				// 得到语言;
+				tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+				//判断是前台登录还是后台登录;
+				String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
+				//得到访问的siteId;
+				siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
+				
+				//查看cookie登录时前台还是后天；
+				if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
+					// 查询机构是不是存在;
+					String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+					int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
+					if("SQR".equals(tmpLoginType)){
+						tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
+					}else{
+						if (count > 0) {
+							tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
+						} else {
+							tmpLoginURL = request.getContextPath() + "/login";
+						}
+					}
+				}else{
+					tmpOrgID = "";
+					tmpLoginURL = request.getContextPath() + "/login";
+				}	
+			}
 		}
-			
-		
+
 		/*
 		if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 			// 查询机构是不是存在;

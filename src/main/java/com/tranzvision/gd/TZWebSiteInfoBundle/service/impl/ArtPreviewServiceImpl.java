@@ -31,6 +31,7 @@ public class ArtPreviewServiceImpl extends FrameworkImpl {
 		String siteId = request.getParameter("siteId");
 		String columnId = request.getParameter("columnId");
 		String artId = request.getParameter("artId");
+		String from = request.getParameter("from");
 		if(siteId != null && !"".equals(siteId)
 				&& columnId != null && !"".equals(columnId)
 				&& artId != null && !"".equals(artId)){
@@ -47,7 +48,12 @@ public class ArtPreviewServiceImpl extends FrameworkImpl {
 						strRet = "<script type=\"text/javascript\">;location.href=\""+outurl+"\"</script>";
 					}
 				}else{
-					String htmlSQL = "select TZ_ART_HTML from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
+					String htmlSQL = "";
+					if("m".equals(from)){
+						htmlSQL= "select TZ_ART_SJ_HTML from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
+					}else{
+						htmlSQL = "select TZ_ART_HTML from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
+					}
 					strRet = jdbcTemplate.queryForObject(htmlSQL,new Object[]{siteId,columnId,artId},"String");
 				}
 				

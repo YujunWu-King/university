@@ -194,7 +194,7 @@ public class TzZnxPreviewClsServiceImpl extends FrameworkImpl {
 				// 是听众
 				if (count > 0) {
 
-					String sql = "select a.OPRID FROM PS_TZ_AUD_LIST_T a, PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					String sql = "select a.OPRID FROM PS_TZ_AUD_LIST_T a, PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { audId });
 					if (list != null) {
 						for (int j = 0; j < list.size(); j++) {

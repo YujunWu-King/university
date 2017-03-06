@@ -425,7 +425,7 @@ function QueryColuAct(page,type){
 		{
 			areaType="";
 		}
-		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId","407"}}';
+		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId":"407"}}';
 
 		//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
 	     
@@ -506,6 +506,20 @@ function SetImgCode(){
 	$('#yzmImg').attr("src", GenCaptchaUrl());
 }
 
+
+function GetRequest() {   
+	   var url = location.search; //获取url中"?"符后的字串   
+	   var theRequest = new Object();   
+	   if (url.indexOf("?") != -1) {   
+	      var str = url.substr(1);   
+	      strs = str.split("&");   
+	      for(var i = 0; i < strs.length; i ++) {   
+	         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+	      }   
+	   }   
+	   return theRequest;   
+	} 
+
 function Login(){
 	
     var userName = encodeURI($("#userName").val());
@@ -515,6 +529,18 @@ function Login(){
 	var yzm = encodeURI($("#yzm").val());
 	
 	var siteid = encodeURI($("#siteid").val());
+	
+	var Request = new Object();
+	Request = GetRequest();
+	
+	//if 
+	var classid = Request["classid"];
+	
+	if (classid == undefined) {
+		classid = "";
+	}
+	
+	console.log(classid);
 
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
@@ -522,7 +548,8 @@ function Login(){
 		url: TzUniversityContextPath + "/user/login/dologin",
 		data:{
 			tzParams:tzParams,
-			language:$("#lang").val()
+			language:$("#lang").val(),
+			classIdParams : classid
 		},
 		dataType:'json',
 		success:function(response){

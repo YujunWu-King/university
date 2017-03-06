@@ -128,8 +128,9 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 			
 	            xtype:'grid',
 	            frame: true,
+	            height:200,
 			//	name: 'audItemGrid',
-				dockedItems:[{
+			/*	dockedItems:[{
 	        		xtype:"toolbar",
 	        		items:[
 	        			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchComList"},"-",
@@ -137,6 +138,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 	        			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deleteComRegInfos"}
 	        		]
 	        	}],
+	        	*/
 				columnLines: true,
 				selModel: {
 	                type: 'checkboxmodel'
@@ -234,7 +236,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 	                align:'center',
 	                xtype: 'actioncolumn',
 	 			   items:[
-	 			   	  {iconCls: 'remove',tooltip: '删除',handler: 'deleteComRegInfo'}
+	 			   	  {iconCls: 'remove',tooltip: '删除',handler: 'deleteAudInfo'}
 	 			   ]
 	             }],
 	           
