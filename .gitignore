@@ -4,3 +4,4 @@
 /src/main/webapp/statics/js/tmp/*
 /src/main/resources/conf/jdbc.properties
 /src/main/webapp/WEB-INF/logs/*.log
+/src/main/resources/conf/cookieSession.properties

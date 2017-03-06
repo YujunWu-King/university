@@ -1074,7 +1074,7 @@ var SurveyBuild = {
             $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
 			//console.log($(el).closest(".dhcontainer"));
 			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".dhcontainer").find(".input-addbtn").show();
+            $(el).closest(".main_inner_content").find(".addNext").find(".main_inner_content_info_add ").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
 			

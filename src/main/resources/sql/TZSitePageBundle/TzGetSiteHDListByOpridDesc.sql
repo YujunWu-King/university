@@ -21,7 +21,6 @@ where
 	and PT3.TZ_ART_ID = PT4.TZ_ART_ID  
 	and PT2.TZ_ART_PUB_STATE = 'Y' 
 	and PT1.TZ_SITEI_ID = ? 
-	and PT1.TZ_COLU_ID = ? 
 	and exists (
  		select 
  			'Y' 

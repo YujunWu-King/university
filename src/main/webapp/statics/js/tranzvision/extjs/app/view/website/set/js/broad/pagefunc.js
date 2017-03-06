@@ -425,7 +425,7 @@ function QueryColuAct(page,type){
 		{
 			areaType="";
 		}
-		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId","407"}}';
+		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId":"407"}}';
 
 		//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
 	     
