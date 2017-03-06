@@ -1176,13 +1176,13 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 								var related_div_name="div[name='relatedDiv']";
 								for(var i in EXAM_TYPE_MAP){
 									var div_name="div[name='"+data.itemId+i+"']";
-									//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 									if($(this).val()==i){
 										$(this).parents(".input-list").siblings(related_div_name).find(div_name).css("display","block");
 										//如果子模块中有"select":
 										//console.log("child-select:");
 										//console.dir($(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select"));
-										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
+										//$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").chosen("destroy").chosen({width: "100%"});
+										$(this).parents(".input-list").siblings(related_div_name).find(div_name).find("select").trigger("chosen:updated");
 										//----
 									}else{
 										
@@ -1292,6 +1292,7 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 							   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
 							   $selectEl.each(function(){
 								   $(this).chosen("destroy").chosen({width:"100%"});
+								   $(this).chosen("destroy").trigger("chosen:updated");
 								   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 									$(this).functionValidator({
 										fun:function(val,el){
@@ -1308,9 +1309,9 @@ SurveyBuild.extend("EngLev", "baseComponent", {
 						
 				 }
 				 //所有看的到的select美化:
-//				$("select").each(function(){
-//					$(this).chosen({width:"100%"});
-//				});
+				$("select").each(function(){
+					$(this).chosen({width:"100%"});
+				});
 		       
 	}
 })

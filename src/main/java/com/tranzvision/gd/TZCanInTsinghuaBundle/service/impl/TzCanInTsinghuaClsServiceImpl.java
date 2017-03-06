@@ -951,7 +951,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String encryUserName = DESUtil.encrypt(strOprid,"TZ_GD_TRANZVISION");
 			
 			if(StringUtils.equals("Y", strIsCmpl)){
-				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/login";
+				url = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() + "/" + strSiteId;
 			}else{
 				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
 			}

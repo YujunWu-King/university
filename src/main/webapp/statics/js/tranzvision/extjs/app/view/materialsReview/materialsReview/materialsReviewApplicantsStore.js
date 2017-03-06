@@ -2,9 +2,9 @@ Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewAppl
     extend: 'Ext.data.Store',
     alias: 'store.materialsReviewApplicants',
     model: 'KitchenSink.view.materialsReview.materialsReview.materialsReviewApplicantsModel',
-    autoLoad:false,
+    pageSize: 5,
     comID: 'TZ_REVIEW_CL_COM',
     pageID: 'TZ_CLPS_APPS_STD',
-    tzStoreParams:'',
+    tzStoreParams:'{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_APPS_STD.PS_TZ_CLPS_KSH_VW"}',
     proxy: Ext.tzListProxy()
 });
