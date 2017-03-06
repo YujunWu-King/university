@@ -67,7 +67,7 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 		String myUrl = "";
 		
 		String[] url = {indexUrl,rlUrl,statusUrl,lxUrl,myUrl};
-		url[menuNum-1] = "#";
+		url[menuNum-1] = "javascript:void(0);";
 		
 		String menuHtml = "";
 		try {

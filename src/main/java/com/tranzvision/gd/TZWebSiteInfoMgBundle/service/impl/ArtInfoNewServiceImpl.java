@@ -359,26 +359,42 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					return strRet;
 				}else{
 					List<Map<String, Object>> colusList = jdbcTemplate.queryForList(
-							"SELECT TZ_COLU_ID,TZ_STATIC_ART_URL,TZ_ART_PUB_STATE FROM PS_TZ_LM_NR_GL_T where TZ_ART_ID=? order by TZ_SITE_ID", new Object[] { strArtId });
+							"SELECT TZ_COLU_ID,ifnull(TZ_STATIC_ART_URL,'') TZ_STATIC_ART_URL,ifnull(TZ_ART_URL,'') TZ_ART_URL,TZ_ART_PUB_STATE FROM PS_TZ_LM_NR_GL_T where TZ_ART_ID=? order by TZ_SITE_ID", new Object[] { strArtId });
 					if (colusList != null) {
 						for (int h = 0; h < colusList.size(); h++) {
 							String coluIdDup = (String) colusList.get(h).get("TZ_COLU_ID");
 							colus.add(coluIdDup);
 							String artStaticUrl = (String) colusList.get(h).get("TZ_STATIC_ART_URL");
-							String artUrl = ""; 
+							String artUrl = (String) colusList.get(h).get("TZ_STATIC_ART_URL"); 
+							String artUrlSj = (String) colusList.get(h).get("TZ_ART_URL"); 
+			
 							String artPubState = (String) colusList.get(h).get("TZ_ART_PUB_STATE");
 							if ("Y".equals(artPubState)) {
-								
+								/*
 								artUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
 										+ siteId + "&columnId=" + coluId + "&artId=" + strArtId;
+								artUrlSj = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+										+ siteId + "&columnId=" + coluId + "&artId=" + strArtId + "&accesstype=m";
+										
 								if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
 									artUrl = artStaticUrl;
 								}
+								*/
 								if("".equals(artUrlAll)){
-									artUrlAll = artUrl;
+									if(!"".equals(artUrlSj)){
+										artUrlAll = "电脑端:" + artUrl;
+										artUrlAll = artUrlAll + "<br/>"+ "手机端:" + artUrlSj;
+									}else{
+										artUrlAll = artUrl;
+									}
 								}else{
-									artUrlAll = artUrlAll + "<br/>"+artUrl;
-								}
+									if(!"".equals(artUrlSj)){
+										artUrlAll = artUrlAll + "<br/>"+ "电脑端:" + artUrl;
+										artUrlAll = artUrlAll + "<br/>"+ "手机端:" + artUrlSj;
+									}else{
+										artUrlAll = artUrlAll + "<br/>" + artUrl;
+									}
+								}	
 							}
 						}
 					}
@@ -1389,10 +1405,19 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			
 			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 			String strFilePathdelete = dir; // 用于删除文件
+			String strFilePathdeleteSj = strFilePathdelete; // 用于删除文件
 			dir = request.getServletContext().getRealPath(dir);
 			
 			String rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
 			+ request.getContextPath();
+			
+			if(request.getServerPort()==80){
+				rootparth = "http://" + request.getServerName() + request.getContextPath();
+			}else{
+				rootparth = "http://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath();
+			}
+			
 			String classIdSQL = "select TZ_PAGE_REFCODE from PS_TZ_AQ_PAGZC_TBL where TZ_COM_ID=? and TZ_PAGE_ID=?";
 			String viewUrlClassId = jdbcTemplate.queryForObject(classIdSQL,
 					new Object[] { "TZ_ART_VIEW_COM", "TZ_ART_PREVIEW_STD" }, "String");
@@ -1419,7 +1444,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 	
 				String strFileName = "";
 				String strFilePath = "";
+				String strFilePathSj = "";
 				String strFilePathAccess = "";
+				String strFilePathAccessSj = "";
 	
 				if (strBasePath != null && !"".equals(strBasePath)) {
 					if (!strBasePath.startsWith("/")) {
@@ -1440,23 +1467,43 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				}
 	
 				strFilePath = dir + strBasePath + strColuPath;
+				//手机端静态话地址加上/m
+				strFilePathSj = strFilePath + "/" + "m";
+				
 				strFilePathdelete = strFilePathdelete + strBasePath + strColuPath;
-	
+				//手机端静态话地址加上/m
+				strFilePathdeleteSj = strFilePathdelete + "/" + "m";
+				
 				strFilePathAccess = strBasePath + strColuPath;
+				//手机端静态话地址加上/m
+				strFilePathAccessSj = strFilePathAccess + "/" + "m";
 	
 				String publishUrl = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
 						+ this.instanceSiteId + "&columnId=" + coluIdDup + "&artId=" + this.instanceArtId;
+				String publishUrlSj = rootparth + "/dispatcher?classid=" + publishUrlClassId + "&operatetype=HTML&siteId="
+						+ this.instanceSiteId + "&columnId=" + coluIdDup + "&artId=" + this.instanceArtId + "&from=m";
 				
 				// 解析的模板内容;
-				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId);
+				String contentHtml = artContentHtml.getContentHtml(siteId, coluId, artId,"PC",request.getContextPath());
+				
+				// 解析的模板内容;
+				String contentSjHtml = artContentHtml.getContentHtml(siteId, coluId, artId,"MS",request.getContextPath());
+				
+				//如果手机版内容为空，则不存储手机版URL地址
+				if("".equals(contentSjHtml) || contentSjHtml == null){
+					publishUrlSj = "";
+					contentSjHtml = "";
+				}
 	
 				PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 				psTzLmNrGlTWithBLOBs.setTzSiteId(this.instanceSiteId);
 				psTzLmNrGlTWithBLOBs.setTzColuId(coluIdDup);
 				psTzLmNrGlTWithBLOBs.setTzArtId(this.instanceArtId);
 				psTzLmNrGlTWithBLOBs.setTzArtHtml(contentHtml);
+				psTzLmNrGlTWithBLOBs.setTzArtSjHtml(contentSjHtml);
 				if ("Y".equals(this.ins_isPublish)) {
 					psTzLmNrGlTWithBLOBs.setTzArtConentScr(contentHtml);
+					psTzLmNrGlTWithBLOBs.setTzArtSjContScr(contentSjHtml);
 	
 					// 如果是外网站点，则静态话
 					if ("A".equals(strSiteType) || "B".equals(strSiteType)) {
@@ -1476,10 +1523,14 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 										strOriginStaticName = strOriginStaticName + ".html";
 									}
 									fileManageServiceImpl.DeleteFile(strFilePathdelete, strOriginStaticName);
+									//同时删除手机版本的地址
+									fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strOriginStaticName);
 								}
 							}
 							if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 								fileManageServiceImpl.DeleteFile(strFilePathdelete, strAutoStaticName + ".html");
+								//同时删除手机版本的地址
+								fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strAutoStaticName + ".html");
 							}
 						} else {
 							// 如果前台没有传过来 文件名称
@@ -1494,34 +1545,59 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						}
 						// 修改 bu caoy 地址没有加系统变量
 						publishUrl = strFilePathAccess + "/" + strFileName;
+						if(!"".equals(contentSjHtml) && contentSjHtml != null){
+							publishUrlSj = strFilePathAccessSj + "/" + strFileName;
+						}
+												
 						psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+						psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
 						psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+
 						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 	
 						boolean b = artContentHtml.staticFile(contentHtml, strFilePath, strFileName);
+						if(!"".equals(contentSjHtml) && contentSjHtml != null){
+							boolean b1 = artContentHtml.staticFile(contentSjHtml, strFilePathSj, strFileName);
+						}
+						
 						artContentHtml.staticSiteInfoByChannel(siteId, coluIdDup);
 					} else {
 						psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
+						psTzLmNrGlTWithBLOBs.setTzStaticArtUrl(publishUrl);
+						psTzLmNrGlTWithBLOBs.setTzArtUrl(publishUrlSj);
 						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
 					}
 					if("".equals(publishUrlAll)){
-						publishUrlAll = publishUrl;
+						if(!"".equals(publishUrlSj)){
+							publishUrlAll = "电脑端:" + publishUrl;
+							publishUrlAll = publishUrlAll + "<br/>"+ "手机端:" + publishUrlSj;
+						}else{
+							publishUrlAll = publishUrl;
+						}
 					}else{
-						publishUrlAll = publishUrlAll + "<br/>"+publishUrl;
+						if(!"".equals(publishUrlSj)){
+							publishUrlAll = publishUrlAll + "<br/>"+ "电脑端:" + publishUrl;
+							publishUrlAll = publishUrlAll + "<br/>"+ "手机端:" + publishUrlSj;
+						}else{
+							publishUrlAll = publishUrlAll + "<br/>" + publishUrl;
+						}
 					}
 					
 				} else {
 					if ("N".equals(this.ins_isPublish)) {
 						psTzLmNrGlTWithBLOBs.setTzArtConentScr("");
+						psTzLmNrGlTWithBLOBs.setTzArtSjContScr("");
 						if (strAutoStaticName != null && !"".equals(strAutoStaticName)) {
 	
 							fileManageServiceImpl.DeleteFile(strFilePathdelete, strAutoStaticName + ".html");
+							fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strAutoStaticName + ".html");
 						}
 						if (strOriginStaticName != null && !"".equals(strOriginStaticName)) {
 							if (!strOriginStaticName.toLowerCase().endsWith(".html")) {
 								strOriginStaticName = strOriginStaticName + ".html";
 							}
 							fileManageServiceImpl.DeleteFile(strFilePathdelete, strOriginStaticName);
+							fileManageServiceImpl.DeleteFile(strFilePathdeleteSj, strOriginStaticName);
 						}
 						psTzLmNrGlTWithBLOBs.setTzStaticName(ins_staticName);
 						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
