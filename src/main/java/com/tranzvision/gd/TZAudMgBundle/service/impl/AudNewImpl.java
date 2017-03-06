@@ -3,7 +3,8 @@ package com.tranzvision.gd.TZAudMgBundle.service.impl;
 	import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-		import java.util.Map;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,6 +114,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					String strAudType = jacksonUtil.getString("audType");
 					String strAudTips = jacksonUtil.getString("audMS");
 					String strAudSql = jacksonUtil.getString("audSQL");
+					String strAudLY = jacksonUtil.getString("audLY");
 					
 					
 					
@@ -129,6 +131,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						psTzAudDefnT.setTzAudType(strAudType);
 						psTzAudDefnT.setTzAudMs(strAudTips);
 						psTzAudDefnT.setTzAudSql(strAudSql);
+						psTzAudDefnT.setTzLxfsLy(strAudLY);
 						
 						
 				
@@ -143,6 +146,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						returnJsonMap.put("audType", strAudType);
 						returnJsonMap.put("audMS", strAudTips);
 						returnJsonMap.put("audSQL", strAudSql);
+						returnJsonMap.put("audLY", strAudLY);
 						
 					} else {
 						errMsg[0] = "1";
@@ -154,6 +158,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					errMsg[1] = e.toString();
 				}
 				strRet = jacksonUtil.Map2json(returnJsonMap);
+				System.out.println(strRet);
 				return strRet;
 			}
 			
@@ -228,6 +233,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					String strTips = jacksonUtil.getString("audMS");
 					String strSql = jacksonUtil.getString("audSQL");
 					
+					String strLY = jacksonUtil.getString("audLY");
+					System.out.println(strLY);
 					
 
 	
@@ -271,6 +278,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							psTzAudDefnT.setTzAudType(strAudType);
 							psTzAudDefnT.setTzAudMs(strTips);
 							psTzAudDefnT.setTzAudSql(strSql);
+							psTzAudDefnT.setTzLxfsLy(strLY);
 							
 							
 							
@@ -351,6 +359,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					//	String strSql = jacksonUtil.getString("audSQL");
 						String strSql = (String) infoData.get("audSQL");
 						
+						String strLY = (String) infoData.get("audLY");
 						
 					/*	String strDxID = jacksonUtil.getString("dxID");
 						System.out.println("ID:"+strDxID);
@@ -375,6 +384,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							psTzAudDefnT.setTzAudType(strAudType);
 							psTzAudDefnT.setTzAudMs(strTips);
 							psTzAudDefnT.setTzAudSql(strSql);
+							psTzAudDefnT.setTzLxfsLy(strLY);
 							
 					//		PsTzAudListT PsTzAudListT=new PsTzAudListT();
 					//		PsTzAudListT.setTzDxzt(strDxID);
@@ -483,22 +493,64 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						jacksonUtil.json2Map(strForm);
 						// 组件ID;
 						String SaudSQL = jacksonUtil.getString("audSQL");
-					
+						String SaudID = jacksonUtil.getString("audID");
 						
-				/*		PsTzAqPagzcTbl psTzAqPagzcTbl = new PsTzAqPagzcTbl();
-						psTzAqPagzcTbl.setTzComId(sComID);
-						psTzAqPagzcTbl.setTzPageId(sPageID);
-					
-						psTzAqPagzcTblMapper.deleteByPrimaryKey(psTzAqPagzcTbl);
-				*/			
+						
+						
 						//执行;
 						String deleteSQL = SaudSQL;
+						
+						String strAUDID ="";
+					//	String[] isExist ={};
+						String isExist ="";
+						
 						jdbcTemplate.execute(deleteSQL);
+		//				isExist =jdbcTemplate.queryForObject(SaudSQL, "String");
+						
+						List<Map<String, Object>> resultlist = null;
+						resultlist = jdbcTemplate.queryForList(SaudSQL);
+						System.out.println(resultlist);
+						
+						
+		/*				List<Map<String, Object>> list;
+						
+						String[] resultFldArray = null;
+						int resultFldNum = resultFldArray.length;
+		*/				
+						for (int K = 0; K < resultlist.size(); K++) {
+							Map<String, Object> resultMap = resultlist.get(K);
+							System.out.println(StringUtils.strip(resultMap.values().toString(),"[]"));
+							
+							String InsertID=StringUtils.strip(resultMap.values().toString(),"[]");
+							String comPageSql = "insert into PS_TZ_AUD_LIST_T values(?,'ZCYH',?,'A',?)";
+							jdbcTemplate.update(comPageSql,new Object[]{SaudID,InsertID,InsertID});
+							
+							
+			/*				String[] rowList = new String[resultFldNum];
+							int j = 0;
+							for (Object value : resultMap.values()) {
+
+								rowList[j] = (String) value;
+								j++;
+							}
+						//	list.add(rowList);
+							
+							*/
+						}
+						
+				
+						
+						
+						
+						
+						
+						
 			//			System.out.println(deleteSQL);
 			//		}
 				} catch (Exception e) {
 					errorMsg[0] = "1";
 					errorMsg[1] = e.toString();
+					
 					return strRet;
 				}
 

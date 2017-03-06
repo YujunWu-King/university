@@ -78,7 +78,7 @@ public class TzAppAdGenQrcodeServiceImpl {
 						+ String.valueOf(request.getServerPort()) + ctxPath + "/admission/" +jgId+"/" + siteId + "/" + oprid
 						+ "/" + tzAppInsID;
 	
-			qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName);
+			qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName,200,200);
 			qrcodeFilePath=ctxPath+qrcodeFilePath;
 		
 		}catch (Exception e) {			

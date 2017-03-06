@@ -1,14 +1,14 @@
 ﻿Ext.define('KitchenSink.view.basicData.import.importTplInfo', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.importTplInfo', 
-    uses:['KitchenSink.view.basicData.import.importTplFieldStore'],
 	controller: 'importTplController',
 	actType:'',
 	requires: [
 	    'Ext.data.*',
         'Ext.grid.*',
         'Ext.util.*',
-        'Ext.toolbar.Paging'
+        'Ext.toolbar.Paging',
+        'KitchenSink.view.basicData.import.importTplFieldStore'
 	],
     title: '导入模板信息', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -77,7 +77,7 @@
     				name: 'javaClass'
     	        },{
     	            xtype: 'displayfield',
-    				value:"此处设置的Java类必须实现接口 com.tranzvision.import.UnifiedImportBase",
+    				value:"此处设置的Java类必须实现接口 com.tranzvision.gd.TZUnifiedImportBundle.service.UnifiedImportBase",
     				fieldStyle:"color:#666;font-weight:bold",
     				fieldLabel:" ",
     	            labelSeparator:""
@@ -190,12 +190,6 @@
     	                text: '是否必填',
     	                xtype:'checkcolumn',
     	                dataIndex: 'required',
-    	                width: 100,
-    	                sortable:false
-    	            },{
-    	                text: '是否覆盖',
-    	                xtype:'checkcolumn',
-    	                dataIndex: 'cover',
     	                width: 100,
     	                sortable:false
     	            },{

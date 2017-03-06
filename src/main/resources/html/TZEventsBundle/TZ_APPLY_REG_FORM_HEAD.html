@@ -176,13 +176,13 @@ body, button, input, select, textarea {
 	background-color: #999
 }
 
-.apply-back {
-	background-color: #666;
-	border: 1px solid #999;
+.apply-submit {
+	background-color: #8f5dc0;
+	border: 1px solid #b7a5c6;
 }
 
-.apply-back:hover {
-	background-color: #999
+.apply-submit:hover {
+	background-color: #b7a5c6;
 }
 
 .apply-popover {
@@ -337,7 +337,7 @@ body, button, input, select, textarea {
 			$.ajax({
 				type : "POST",
 				url : applyURL + "?tzParams=" + strComParams,
-				// data: {"tzParams":strComParams},
+				//data: {"tzParams":strComParams},
 				dataType : "json",
 				success : function(data) {
 					var result = data.comContent.result;

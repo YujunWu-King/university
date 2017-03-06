@@ -209,25 +209,37 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 					String delAudId = String.valueOf(delAudMap.get("TZ_AUD_ID"));
 					
 					//删除听众成员
-					sql = "SELECT TZ_LKYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
+					sql = "SELECT OPRID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=?";
 					List<Map<String,Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[]{delAudId});
 					
 					for(Map<String,Object> audCyMap : audCyList){
-						Long appInsId = Long.valueOf(String.valueOf(audCyMap.get("TZ_LKYDX_ID")));
+						Long appInsId;
+						String audOprid = audCyMap.get("OPRID")==null ? "" : audCyMap.get("OPRID").toString();
 						
-						PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
-						psTzMspsKshTblKey.setTzClassId(classID);
-						psTzMspsKshTblKey.setTzApplyPcId(batchID);
-						psTzMspsKshTblKey.setTzAppInsId(appInsId);
-						
-						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
-						
-						//且不再其他听众里面
-						sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") AND TZ_LXFS_LY='ZSBM' limit 1";
-						String inOtherAud = jdbcTemplate.queryForObject(sql, "String");
-						
-						if(psTzMspsKshTbl != null && !"Y".equals(inOtherAud)){
-							psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+						sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and OPRID=?";
+						Map<String,Object> appMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID,audOprid });
+						if(appMap != null){
+							appInsId = appMap.get("TZ_APP_INS_ID") == null ? 0 : Long.valueOf(appMap.get("TZ_APP_INS_ID").toString());
+							
+							if(appInsId > 0){
+								PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
+								psTzMspsKshTblKey.setTzClassId(classID);
+								psTzMspsKshTblKey.setTzApplyPcId(batchID);
+								psTzMspsKshTblKey.setTzAppInsId(appInsId);
+								
+								PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+								
+								//且不再其他听众里面
+								String inOtherAud = "";
+								if(!"".equals(whereIn)){
+									sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN("+ whereIn +") and OPRID=? limit 1";
+									inOtherAud = jdbcTemplate.queryForObject(sql, new Object[]{ audOprid },"String");
+								}
+								
+								if(psTzMspsKshTbl != null && !"Y".equals(inOtherAud)){
+									psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+								}
+							}
 						}
 					}
 					
@@ -351,29 +363,40 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 					
 					if(rtn != 0){
 						//插入听成成员
-						sql = "SELECT TZ_LKYDX_ID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY='ZSBM'";
+						sql = "SELECT OPRID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and TZ_DXZT='A'";
 						List<Map<String,Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[]{audID});
 						
 						for(Map<String,Object> audCyMap : audCyList){
-							Long appInsId = Long.valueOf(String.valueOf(audCyMap.get("TZ_LKYDX_ID")));
+							long appInsId;
 							
-							PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
-							psTzMspsKshTblKey.setTzClassId(classID);
-							psTzMspsKshTblKey.setTzApplyPcId(batchID);
-							psTzMspsKshTblKey.setTzAppInsId(appInsId);
+							String audOprid = audCyMap.get("OPRID")==null ? "" : audCyMap.get("OPRID").toString();
 							
-							PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
-							if(psTzMspsKshTbl==null){
-								psTzMspsKshTbl = new PsTzMspsKshTbl();
-								psTzMspsKshTbl.setTzClassId(classID);
-								psTzMspsKshTbl.setTzApplyPcId(batchID);
-								psTzMspsKshTbl.setTzAppInsId(appInsId);
-								psTzMspsKshTbl.setRowAddedOprid(oprid);
-								psTzMspsKshTbl.setRowAddedDttm(new Date());
-								psTzMspsKshTbl.setRowLastmantOprid(oprid);
-								psTzMspsKshTbl.setRowLastmantDttm(new Date());
+							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and OPRID=?";
+							Map<String,Object> appMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID,audOprid });
+							
+							if(appMap != null){
+								appInsId = appMap.get("TZ_APP_INS_ID") == null ? 0 : Long.valueOf(appMap.get("TZ_APP_INS_ID").toString());
 								
-								psTzMspsKshTblMapper.insert(psTzMspsKshTbl);
+								if(appInsId>0){
+									PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
+									psTzMspsKshTblKey.setTzClassId(classID);
+									psTzMspsKshTblKey.setTzApplyPcId(batchID);
+									psTzMspsKshTblKey.setTzAppInsId(appInsId);
+									
+									PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+									if(psTzMspsKshTbl==null){
+										psTzMspsKshTbl = new PsTzMspsKshTbl();
+										psTzMspsKshTbl.setTzClassId(classID);
+										psTzMspsKshTbl.setTzApplyPcId(batchID);
+										psTzMspsKshTbl.setTzAppInsId(appInsId);
+										psTzMspsKshTbl.setRowAddedOprid(oprid);
+										psTzMspsKshTbl.setRowAddedDttm(new Date());
+										psTzMspsKshTbl.setRowLastmantOprid(oprid);
+										psTzMspsKshTbl.setRowLastmantDttm(new Date());
+										
+										psTzMspsKshTblMapper.insert(psTzMspsKshTbl);
+									}
+								}
 							}
 						}
 					}

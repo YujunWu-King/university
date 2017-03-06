@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -133,7 +134,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				contentStr = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_TABLE_HTML");
 			}
 			*/
-			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "面试预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
+			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "在线预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
 			interviewAppointHtml = siteRepCssServiceImpl.repTitle(interviewAppointHtml, strSiteId);
 			interviewAppointHtml=siteRepCssServiceImpl.repCss(interviewAppointHtml, strSiteId);
 			
@@ -327,7 +328,8 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			String noAppointmentText = "您暂时没有可预约的面试，如果有面试预约，我们将会邮件通知您。";
 			
 			if(planCount == 0){
-				msPlanTrHtml = noAppointmentText;
+				//msPlanTrHtml = noAppointmentText;
+				msPlanTrHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_DESCR_HTML",noAppointmentText);
 			}else{
 				msPlanTrHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_TABLE_HTML",msPlanTrHtml,msExplainInfo);
 			}
@@ -394,7 +396,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 						int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
 						if(rtn != 0){
 							errorMsg[0] = "0";
-							errorMsg[1] = "预约成功";
+							errorMsg[1] = "预约成功,将会发生预约信息至您的邮箱，请注意查收。";
 							
 							//预约成功后给发送邮件
 							sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
@@ -402,20 +404,24 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 							if(!"".equals(mainEmail) && mainEmail !=null){
 								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-								
-								//面试预约成功通知邮件模板
-								String mailModel = getHardCodePoint.getHardCodePointVal("TZ_MS_APPO_MAIL_TMP");
-								//当前机构
-								String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-								
-								//创建邮件任务实例
-								String taskId = createTaskServiceImpl.createTaskIns(jgid, mailModel, "MAL", "A");
-								// 创建邮件发送听众
-								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约通知邮件", "JSRW");
-								//添加听众成员
-								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", mainEmail, "", pcId, oprid, classId, planId, "");
-								if(bl){
-									sendSmsOrMalServiceImpl.send(taskId, "");
+								try{
+									//面试预约成功通知邮件模板
+									String mailModel = getHardCodePoint.getHardCodePointVal("TZ_MS_APPO_MAIL_TMP");
+									//当前机构
+									String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+									
+									//创建邮件任务实例
+									String taskId = createTaskServiceImpl.createTaskIns(jgid, mailModel, "MAL", "A");
+									// 创建邮件发送听众
+									String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约通知邮件", "JSRW");
+									//添加听众成员
+									boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", mainEmail, "", pcId, oprid, classId, planId, "");
+									if(bl){
+										sendSmsOrMalServiceImpl.send(taskId, "");
+									}
+								}catch(NullPointerException nullEx){
+									//没有配置邮件模板
+									nullEx.printStackTrace();
 								}
 							}
 						}
@@ -448,35 +454,75 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	 * @param audCyId
 	 * @return
 	 */
-	public String getEmlInterviewDate(String audId,String audCyId){
+	public String getEmlInterviewDate(String[] paramters){
 		String strRet = "";
-		
 		try{
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
+			GetSysHardCodeVal getSysHCVal = (GetSysHardCodeVal) getSpringBeanUtil.getSpringBeanByID("getSysHardCodeVal");
+			
 			String sql = "SELECT TZ_XSXS_ID,TZ_WEIXIN,TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
-			Map<String,Object> audMap = jdbcTemplate.queryForMap(sql, new Object[]{ audId, audCyId });
+			Map<String,Object> audMap = sqlQuery.queryForMap(sql, new Object[]{ audId, audCyId });
 			
 			String classID = String.valueOf(audMap.get("TZ_XSXS_ID"));
 			String batchID = String.valueOf(audMap.get("TZ_WEIXIN"));
 			String msPlanSeq = String.valueOf(audMap.get("TZ_HUOD_ID"));
 
 			sql = "SELECT TZ_MS_DATE,TZ_START_TM,TZ_END_TM FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=?";
-			Map<String,Object> msDateMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID, batchID, msPlanSeq });
+			Map<String,Object> msDateMap = sqlQuery.queryForMap(sql, new Object[]{ classID, batchID, msPlanSeq });
 			
-			String msDate = String.valueOf(msDateMap.get("TZ_MS_DATE"));
-			String msStartTime = String.valueOf(msDateMap.get("TZ_START_TM"));
-			String msEndTime = String.valueOf(msDateMap.get("TZ_END_TM"));
-			/*
-			String dtFormat = getSysHardCodeVal.getDateFormat();
-			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
+			Date msDate = (Date) msDateMap.get("TZ_MS_DATE");
+			Date msStartTime = (Date) msDateMap.get("TZ_START_TM");
+			//String msEndTime = String.valueOf(msDateMap.get("TZ_END_TM"));
+			
+			String dtFormat = getSysHCVal.getDateFormat();
+			String tmFormat = getSysHCVal.getTimeHMFormat();
 
 			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
 			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
-			*/
-			strRet = msDate+" "+msStartTime+" 至 "+ msDate+" "+msEndTime;
+			
+			strRet = dateSimpleDateFormat.format(msDate)+" "+timeSimpleDateFormat.format(msStartTime);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return strRet;
 	}
 	
+	
+	/**
+	 * 面试地点
+	 * @param audId
+	 * @param audCyId
+	 * @return
+	 */
+	public String getInterviewLocation(String[] paramters){
+		String strRet = "";
+		try{
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
+			
+			String sql = "SELECT TZ_XSXS_ID,TZ_WEIXIN,TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
+			Map<String,Object> audMap = sqlQuery.queryForMap(sql, new Object[]{ audId, audCyId });
+			
+			String classID = String.valueOf(audMap.get("TZ_XSXS_ID"));
+			String batchID = String.valueOf(audMap.get("TZ_WEIXIN"));
+			String msPlanSeq = String.valueOf(audMap.get("TZ_HUOD_ID"));
+
+			sql = "SELECT TZ_MS_LOCATION FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=?";
+			Map<String,Object> msMap = sqlQuery.queryForMap(sql, new Object[]{ classID, batchID, msPlanSeq });
+			
+			if(msMap != null){
+				strRet = msMap.get("TZ_MS_LOCATION").toString();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return strRet;
+	}
 }

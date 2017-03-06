@@ -53,9 +53,18 @@ public class GdObjectServiceImpl implements GdObjectService {
 	private final static String cookieJgId = "tzmo";
 	
 	/**
+	 * Cookie存储的当前访问站点的站点id
+	 */
+	private final static String cookieWebSiteId = "tzws";
+	
+	/**
 	 * 记录登录类型，后台 - GLY；前台 - SQR；
 	 */
 	private final static String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
+	/**
+	 * 登录地址
+	 */
+	private final static String cookieLoginUrl = "TZGD_LOGIN_URL";
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -510,18 +519,63 @@ public class GdObjectServiceImpl implements GdObjectService {
 	public String getTimeoutHTML(HttpServletRequest request, String htmlObject) {
 		String strRetContent = "";
 		String tmpLoginURL = "";
-		// 得到机构的cookie;
-		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
-		// 得到语言;
-		String tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-		//判断是前台登录还是后台登录;
-		String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
+
+		//查看是不是招生网站访问的地址;
+		String classid = request.getParameter("classid");
+		String siteId = request.getParameter("siteId");
+		String menuId = request.getParameter("menuId");
+		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);;
+		String tmpLanguageCd = "";
+		tmpLoginURL = tzCookie.getStringCookieVal(request, cookieLoginUrl); 
+		if(tmpLoginURL == null || "".equals(tmpLoginURL)){
+			if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
+				tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+				tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+				if(tmpOrgID != null && !"".equals(tmpOrgID)){
+					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
+				}else{
+					tmpOrgID = "";
+					tmpLoginURL = request.getContextPath() + "/login";
+				}
+			}else{
+				// 得到机构的cookie;
+				tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+				// 得到语言;
+				tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+				//判断是前台登录还是后台登录;
+				String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
+				//得到访问的siteId;
+				siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
+				
+				//查看cookie登录时前台还是后天；
+				if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
+					// 查询机构是不是存在;
+					String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+					int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
+					if("SQR".equals(tmpLoginType)){
+						tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
+					}else{
+						if (count > 0) {
+							tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
+						} else {
+							tmpLoginURL = request.getContextPath() + "/login";
+						}
+					}
+				}else{
+					tmpOrgID = "";
+					tmpLoginURL = request.getContextPath() + "/login";
+				}	
+			}
+		}
+
+		/*
 		if (tmpOrgID != null && !"".equals(tmpOrgID)) {
 			// 查询机构是不是存在;
 			String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
 			int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
 			if("SQR".equals(tmpLoginType)){
-				String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE lower(TZ_JG_ID)=lower(?) AND TZ_SITEI_ENABLE='Y' order by TZ_LASTMANT_DTTM desc limit 0,1", new Object[]{tmpOrgID},"String");
+				//String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE lower(TZ_JG_ID)=lower(?) AND TZ_SITEI_ENABLE='Y' order by TZ_LASTMANT_DTTM desc limit 0,1", new Object[]{tmpOrgID},"String");
+				System.out.println("=============siteid====1==========>"+siteId);
 				if(!"".equals(siteId)){
 					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
 				}
@@ -537,7 +591,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 			tmpOrgID = "";
 			tmpLoginURL = request.getContextPath() + "/login";
 		}
-
+		*/
+		
 		if (tmpLanguageCd != null) {
 			String langSQL = "SELECT COUNT(1) FROM PS_TZ_PT_ZHZXX_TBL WHERE UPPER(TZ_ZHZJH_ID)=UPPER(?) AND TZ_ZHZ_ID=? AND TZ_EFF_DATE<= curdate()";
 

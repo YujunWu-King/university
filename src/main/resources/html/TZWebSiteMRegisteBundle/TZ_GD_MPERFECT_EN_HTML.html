@@ -1,0 +1,107 @@
+<!--link href="/tranzvision/css/css.css" rel="stylesheet" type="text/css" /-->
+<script src="%bind(:5)/statics/js/lib/jquery/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript" src="%bind(:5)/statics/js/tranzvision/func/register.js"></script>
+<script type="text/javascript" src="%bind(:5)/statics/js/tranzvision/util/layer.js"></script>
+<script type="text/javascript" src="%bind(:5)/statics/js/lib/laydate/laydate.js"></script>
+<script type="text/javascript">
+	var strJgid = "%bind(:2)";
+	var strSiteId = "%bind(:10)";
+	
+	jQuery(function(){ 
+		%bind(:9)
+	});  
+</script>
+
+<div id="main">
+	<form action="" method="post" enctype="multipart/form-data" name="signupForm" id="signupForm">
+		<input id="status_TZ_REALNAME" type="hidden" name="status_TZ_REALNAME" value="0"/>
+    	<input id="status_TZ_EMAIL" type="hidden" name="status_TZ_EMAIL" value="0"/>
+    	<input id="status_TZ_MOBILE" type="hidden" name="status_TZ_MOBILE" value="0"/>
+    	<input id="status_TZ_PASSWORD" type="hidden" name="status_TZ_PASSWORD" value="0"/>
+		<input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="0"/>
+		<input type="hidden" id="ParamCon"/>
+		<input type="hidden" id="ParamValue"/>
+     	<input id="status_yzm" type="hidden" name="status_yzm" value="0"/>
+		<div class="main_full_top"></div>
+		<div class="main_full">
+	  		<div class="main_full_line">
+	    		<div class="main_full_line_title">Improve personal information</div>
+	    		<div class="main_full_full_right">
+					<a href="%bind(:6)" class="blue_">
+						&nbsp;&nbsp;&nbsp;back
+					</a>
+				</div>
+	  		</div>
+			<div class="main_full_lines"></div>
+			%bind(:1)
+			
+				
+							%bind(:3)
+						
+			
+			      
+			<div class="main_full_line" id="button_yzfs" %bind(:8)>
+				<div class="main_full_line_right">
+	    			<input id="send_Verification" type="button" value="Send Security Code" class="button_351px" onclick="send_yzm()"/>
+				</div>
+	  		</div>
+	  		<div class="main_full_lines"></div>
+			<div class="main_full_line" id="yzfsMobile" %bind(:8)>
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>Verification Code:
+				</div>
+				<div class="main_full_line_right">
+					<input name="yzm" type="text" class="input_351px" id="yzm" onblur="check_yzm(this.value)" style="width:351px;"/>
+			    	<!--input name="yzm" type="text" class="input_105px" id="yzm"  onblur="check_yzm(this.value)"/>
+			      	<a id="changeImg" href="javascript:void(0)"><img id="yzmImg" src="" width="113" height="34" class="img_num" /></a-->
+			      	<span id="yzmStyle" class="alert_display_none">
+						<img src="%bind(:4)/alert.png" width="16" height="16" class="alert_img"  />
+				  		<label id="yzm_status"></label>
+					</span>
+			     </div>
+			</div>
+			<div class="main_full_line" id="yzfsEmail" %bind(:7)>
+				<div class="main_full_line_left">
+					<span class="reg_title_star">*</span>Security Code:
+				</div>
+				<div class="main_full_line_right">
+			    	<input name="yzmEmail" type="text" class="input_225px" id="yzmEmail"  onblur="check_yzmEmail(this.value)"/>
+			      	<a id="changeImgEmail" href="javascript:void(0)"><img id="yzmImgEmail" src="" width="113" height="34" class="img_num" /></a>
+			      	<a href="javascript:void(0)" onclick="create_yzm()" class="regUpdateYzm">Refresh</a>
+			      	<span id="yzmEmailStyle" class="alert_display_none">
+						<img src="%bind(:4)/alert.png" width="16" height="16" class="alert_img"  />
+				  		<label id="yzm_Emailstatus"></label>
+					</span>
+			     </div>
+			</div>
+
+
+<div class="main_full_line">
+				<div class="bt_register" id="submitbutton"><span style="color:#FFFFFF">Save</span></div>
+</div>
+
+
+		</div>
+
+		<div class="main_full_foot"></div>
+		<div style="clear:both;"></div>
+	</form>
+</div>
+<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
+	<i class="pw-tip-arr"></i>
+	<div class="pw-tip-bd">
+		<div class="pw-strength"><span data-phase-id="r_ui_pwd_strength">Password Strength:</span>
+			<div class="pw-strength-bar" style="left:115px">
+				<span class="pw-strength-1"></span>
+				<span class="pw-strength-2"></span>
+				<span class="pw-strength-3"></span>
+				<em></em>
+			</div>
+		</div>
+		<div>
+			<div class="pw-rule-item pw-rule-length"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdLengthTip">6-32 characters</span></div>
+			<div class="pw-rule-item pw-rule-legal"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdCharacterTip">Can only contain letters, numbers, and underscores.</span></div>
+			<div class="pw-rule-item pw-rule-multi"><i class="iconfont">О</i><span data-phase-id="u_ui_pwdStengthTip">Letters, numbers and underscores at least two .</span></div>
+		</div>
+	</div>
+</div>

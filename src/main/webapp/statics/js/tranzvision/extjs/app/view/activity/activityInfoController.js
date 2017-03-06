@@ -595,14 +595,26 @@
 		var applyItemId = rec.data.applyItemId;
 		
 		if(applyItemId =="TZ_CYR_NAME" || applyItemId =="TZ_ZY_EMAIL" || applyItemId =="TZ_ZY_SJ"){
-        Ext.Msg.alert("提示","【姓名】、【邮箱】、【手机】不可修改");
-        return;
-    }
+	        Ext.Msg.alert("提示","【姓名】、【邮箱】、【手机】不可修改");
+	        return;
+	    }
 		
 		if(this.getView().actType == "add"){
 			Ext.MessageBox.alert("提示","请先保存当前页面信息。");
 			return;
 		}		
+		
+		//是否修改过;
+		//报名信息项选项数据
+		var store = grid.getStore();
+		//修改记录
+		var mfRecs = store.getModifiedRecords(); 
+		//删除记录
+		var removeRecs = store.getRemovedRecords();
+		if(removeRecs.length > 0 || mfRecs.length > 0){
+			Ext.MessageBox.alert("提示","请先保存当前页面信息。");
+			return;
+		}
 		
 		var activityId = this.getView().child("form").getForm().findField("activityId").getValue();
 		

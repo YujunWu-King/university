@@ -875,7 +875,7 @@
     },
     /*评审进度管理*/
     clReviewScheduleMg:function(grid,rowIndex){
-
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_CLPS_SCHE_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -984,6 +984,246 @@
             cmp.show();
         }
     },
+    /*材料评审--设置评审规则*/
+    setReviewRule:function(grid,rowIndex){
+    	Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_RULE_STD"];
+
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_RULE_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var record = grid.store.getAt(rowIndex);
+        var classID = record.data.classID;
+        var batchID = record.data.batchID;
+        cmp = new ViewClass();
+        cmp.classID=classID;
+        cmp.batchID=batchID;
+
+        cmp.on('afterrender',function(panel){
+            var form = panel.child('form').getForm();
+            var countForm = panel.lookupReference("CountForm").getForm();
+
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            console.log("---222-----" + tzParams);
+            Ext.tzLoad(tzParams,function(respData){
+                var formData = respData.formData;
+                formData.batchName = record.data.batchName;
+                formData.className = record.data.className;
+                form.setValues(formData);
+
+                countForm.findField("materialsReviewApplicantsNumber").setValue(formData.materialsReviewApplicantsNumber);
+                countForm.findField("reviewCountAll").setValue(parseInt(formData.materialsReviewApplicantsNumber)*(formData.reviewCount));
+                //  countForm.setValues(formData);
+//                countForm.setValues({
+//                    reviewCountAll:parseInt(formData.materialsReviewApplicantsNumber)*(formData.reviewCount)
+//                });
+            });
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    /*
+    viewApplicants:function(grid,rowIndex){
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_APPS_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_APPS_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var record = grid.store.getAt(rowIndex);
+        var classID = record.data.classID;
+        var batchID = record.data.batchID;
+
+        // cmp = new ViewClass();
+
+
+
+
+        var initData=[];
+        	//考生类别的过滤器数据
+        var stuGridColorSortFilterOptions=[];
+        var orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
+            recname:'TZ_ORG_COLOR_V',
+            condition:{
+                TZ_JG_ID:{
+                    value:Ext.tzOrgID,
+                    operator:'01',
+                    type:'01'
+                }},
+            result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE',
+            listeners:{
+                load:function( store, records, successful, eOpts){
+                    for(var i=0;i<records.length;i++){
+                        initData.push(records[i].data);
+                        stuGridColorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
+                    };
+
+                    cmp = new ViewClass({
+                            orgColorSortStore:orgColorSortStore ,
+                            initData:initData,
+                            stuGridColorSortFilterOptions:stuGridColorSortFilterOptions,
+                            classID:classID,
+                            batchID:batchID
+                        }
+                    );
+                    cmp.classID=classID;
+                    cmp.batchID=batchID;
+
+                    var tzAppColsParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_APPS_STD",' +
+                        '"OperateType":"getStudentColumns","comParams":{"type":"getStudentColumns", "classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                    var appFields= [
+                        {name: 'classID'},
+                        {name: 'batchID'},
+                        {name: 'appInsID'},
+                        {name: 'oprID'},
+                        {name: 'realName'},
+                        {name: 'gender'},
+                        {name: 'judgeList'},
+                        {name: 'reviewStatus'},
+                        {name: 'interviewQualification'},
+                        {name: 'colorType'},
+                        {name: 'remark'},
+                        {name: 'adminRemark'}
+                    ];
+                    Ext.tzLoad(tzAppColsParams,function(respData){
+                        var studentColums=respData.studentColums;
+                        if (studentColums!=""){
+                            var transScoreValue=studentColums.split(",");
+
+                            for (var tt=0;tt<transScoreValue.length;tt++) {
+                                appFields.push({
+                                    name:transScoreValue[tt]
+                                });
+                            }}
+
+                    });
+
+                    cmp.on('afterrender',function(panel){
+                        var form = panel.child('form').getForm();
+
+                        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_APPS_STD",' +
+                            '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+
+
+                        var tzStoreParams ='{"classID":"'+classID+'","batchID":"'+batchID+'"}';
+
+                        Ext.tzLoad(tzParams,function(respData){
+                            var formData = respData.formData;
+
+                            formData.className = record.data.className;
+                            formData.batchName = record.data.batchName;
+
+                            form.setValues(formData);
+                            var store = panel.child('form').child("grid").store;
+                            store.field=appFields;
+                            store.tzStoreParams = tzStoreParams;
+                            store.load({
+                                scope: this,
+                                callback: function(records, operation, success) {
+                                }
+                            });
+                        });
+                    });
+
+                    tab = contentPanel.add(cmp);
+
+                    contentPanel.setActiveTab(tab);
+
+                    Ext.resumeLayouts(true);
+
+                    if (cmp.floating) {
+                        cmp.show();
+                    }
+                }
+            }
+        })
+    },*/
     /*评审进度管理*/
     msReviewScheduleMg:function(grid,rowIndex){
 

@@ -699,8 +699,13 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										xtype: 'numberfield',
 										fieldLabel: '席位数',
 										minValue: 0,
-										value: '',
-										name: 'applyNum'
+										name: 'applyNum',
+										/*
+										validator: function(val){
+											var enabledApply = this.findParentByType('form').getForm().findField('enabledApply').getValue();
+											if(enabledApply == "Y" && val <=0) return '请填写席位数且席位数不能为0';
+											return true;	
+										}*/
 							},{
 										xtype: 'fieldset',
 										title: '席位信息显示模式',
@@ -764,7 +769,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
        	 					type: 'checkboxmodel'
    				 			},
 								reference: 'applyItemGrid',
-								style:"margin:10px",
+								//style:"margin:10px",
 								store: {
 									type: 'applyItemStore'
 								},
@@ -778,12 +783,13 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         								 var appplyItenId = context.record.data.applyItemId;
         								 if(appplyItenId =="TZ_CYR_NAME" || appplyItenId =="TZ_ZY_EMAIL" || appplyItenId =="TZ_ZY_SJ"){
         								 		
-        								 	  Ext.Msg.alert("提示","【姓名】、【邮箱】、【手机】为不可修改项");
-        								 	  editor.cancelEdit();
+        								 	  //Ext.Msg.alert("提示","【姓名】、【邮箱】、【手机】为不可修改项");
+        								 	  //editor.cancelEdit();
+        									 return false;
         								 }
         							}
-        						}
-        					//	clicksToEdit: 1
+        						},
+        						clicksToEdit: 1
     						},
     						viewConfig: {
         					plugins: {
@@ -811,7 +817,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 										}
 									}
     						},
-								columns: [{ 
+								columns: [/*{ 
 									text: '活动Id',
 									sortable: false,
 									dataIndex: 'activityId',
@@ -826,7 +832,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 									sortable: false,
 									dataIndex: 'applyItemNum',
 						      hidden: true
-								},{
+								},*/{
 									text: '信息项',
 									sortable: false,
 									dataIndex: 'applyItemName',
@@ -927,8 +933,34 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 									width:60,
 									xtype: 'actioncolumn',
 									items:[
-										{iconCls:'edit',tooltip: '设置',handler: 'editorApplyItemOptions'},
-										{iconCls: 'remove',tooltip: '删除',handler: 'deleteApplyItem'}
+										{iconCls:' edit',tooltip: '设置',handler: 'editorApplyItemOptions',
+											isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+												var applyItemType = record.get('applyItemType');
+												if(applyItemType == "2"){
+													return false;
+												}else{
+													return true;
+												}
+											},
+											getClass: function(v, metadata , r,rowIndex ,colIndex ,store ){
+												var applyItemType = store.getAt(rowIndex).get("applyItemType");
+												if(applyItemType == "2"){
+													return 'edit';
+												}else{
+													return ' edit';
+												}
+											}
+										},
+										{iconCls: ' remove',tooltip: '删除',handler: 'deleteApplyItem',
+											isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+												var applyItemId = record.get('applyItemId');
+												if(applyItemId == "TZ_CYR_NAME" || applyItemId == "TZ_ZY_SJ" ||applyItemId == "TZ_ZY_EMAIL"){
+													return true;
+												}else{
+													return false;
+												}
+											}
+										}
 									]
 								}]
 								//bbar: {
@@ -956,7 +988,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 			//id: 'attachmentGrid',
 			name: 'viewArtGrid',
 			reference: 'viewArtGrid',
-			style:"margin:10px",
+			style:"margin-top:10px",
 			store: {
 				type: 'viewArtStore'
 			},
@@ -982,9 +1014,15 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 				sortable: false,
 				hidden: false
 			},{ 
+				text: '发布类型',
+				dataIndex: 'artPubType',
+				width: 70,
+				sortable: false,
+				hidden: false
+			},{ 
 				text: '发布状态',
 				dataIndex: 'publicState',
-				width: 120,
+				width: 90,
 				sortable: false,
 				hidden: false
 			},{ 

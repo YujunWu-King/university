@@ -99,7 +99,7 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 
 			// 历史纪录;
 			String historyDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "9",
-					language, "历史纪录", "历史纪录");
+					language, "历史报名", "历史报名");
 			// 查看流程信息;
 			String viewLcInfoDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "10",
 					language, "查看流程信息", "查看流程信息");
@@ -115,7 +115,7 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 
 			String listBody = "";
 
-			String sql = "select a.TZ_APP_INS_ID, a.TZ_CLASS_ID,DATE_FORMAT(b.ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DTTM, c.TZ_CLASS_NAME from PS_TZ_FORM_WRK_T a,PS_TZ_APP_INS_T b,PS_TZ_CLASS_INF_T c where a.OPRID=? and a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and c.TZ_PRJ_ID in (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) and c.TZ_JG_ID=? order by ROW_LASTMANT_DTTM desc";
+			String sql = "select a.TZ_APP_INS_ID, a.TZ_CLASS_ID,DATE_FORMAT(b.ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DTTM, c.TZ_CLASS_NAME from PS_TZ_FORM_WRK_T a,PS_TZ_APP_INS_T b,PS_TZ_CLASS_INF_T c where a.OPRID=? and a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and c.TZ_PRJ_ID in (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) and c.TZ_JG_ID=? order by b.ROW_LASTMANT_DTTM desc";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{oprid,strSiteId,str_jg_id});
 			if(list != null && list.size() > 0){
 				for(int i = 0; i < list.size(); i++){
@@ -176,7 +176,7 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 								if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 									String type = "A";
 									//解析邮件里的系统变量;
-									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST);
+									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N");
 
 									isFb = result[0];
 									TZ_APPPRO_RST = result[1];

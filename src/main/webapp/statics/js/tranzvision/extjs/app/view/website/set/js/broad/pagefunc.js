@@ -2,7 +2,7 @@ var urlBegin= TzUniversityContextPath + "/dispatcher";
 var clsTzXlColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzXlColuServiceImpl";
 var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
 var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl";
-
+var claTzMyActServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzMyActServiceImpl";
 /*
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
@@ -385,6 +385,78 @@ var areaid=	getQueryString("areaId");
 	});
 }
 
+function QueryColuAct(page,type){
+
+
+	$(".li_tab").each(function(index,element){
+		if (index == type )
+			{
+				$(element).attr({"class":"li_tab now"});
+			}else{
+				$(element).attr({"class":"li_tab "});
+			}
+	});
+
+	var siteid=getQueryString("siteId");
+
+	var menuid=getQueryString("menuId");
+
+		var qureyFrom="";
+
+		if(menuid){
+			qureyFrom="M";
+		}else{
+			qureyFrom="A";
+		}
+	var areaid=	getQueryString("areaId");
+	    if (!areaid)
+		{
+			areaid="";
+		}
+
+		var areaZone=getQueryString("areaZone");
+		if (!areaZone)
+		{
+			areaZone="";
+		}
+
+		var areaType=getQueryString("areaType");
+		if (!areaType)
+		{
+			areaType="";
+		}
+		var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+claTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'","columnId":"407"}}';
+
+		//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
+	     
+		$.ajax({
+			type:"POST",
+			url:urlBegin,
+			data:{
+				tzParams:tzParams
+			},
+			dataType:'json',
+			success:function(response){
+				if (response !="false"){
+								$("#countlist").html(response.comContent.coluItem);
+								$("#pagecount").html(response.comContent.divPage);
+								if (! response.comContent.divPage)
+								{
+									$("#curentcoutpage").hide();
+								}else{
+									$("#curentcoutpage").show();
+								}
+								$("#curentcoutpage").html(response.comContent.nowPageDesc);
+				}else{
+								
+				}
+			},
+		    failure: function () {
+				  alert(response.state.errdesc);
+		    }    
+		});
+}
+
 function AreaColu(opt){
 	while (true)
 	{
@@ -434,6 +506,20 @@ function SetImgCode(){
 	$('#yzmImg').attr("src", GenCaptchaUrl());
 }
 
+
+function GetRequest() {   
+	   var url = location.search; //获取url中"?"符后的字串   
+	   var theRequest = new Object();   
+	   if (url.indexOf("?") != -1) {   
+	      var str = url.substr(1);   
+	      strs = str.split("&");   
+	      for(var i = 0; i < strs.length; i ++) {   
+	         theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);   
+	      }   
+	   }   
+	   return theRequest;   
+	} 
+
 function Login(){
 	
     var userName = encodeURI($("#userName").val());
@@ -443,6 +529,18 @@ function Login(){
 	var yzm = encodeURI($("#yzm").val());
 	
 	var siteid = encodeURI($("#siteid").val());
+	
+	var Request = new Object();
+	Request = GetRequest();
+	
+	//if 
+	var classid = Request["classid"];
+	
+	if (classid == undefined) {
+		classid = "";
+	}
+	
+	console.log(classid);
 
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	$.ajax({
@@ -450,7 +548,8 @@ function Login(){
 		url: TzUniversityContextPath + "/user/login/dologin",
 		data:{
 			tzParams:tzParams,
-			language:$("#lang").val()
+			language:$("#lang").val(),
+			classIdParams : classid
 		},
 		dataType:'json',
 		success:function(response){
@@ -976,4 +1075,24 @@ function tz_onmousemove(){
 }
 function tz_onmouseout(){
     $("#tz_edituser").css("display","none");
+}
+
+
+//查看电子版条件录取通知书
+function openRqQrcode(appIns){
+	var rqQrcodeUrl = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_PRINT_RQTZ_STD","OperateType":"HTML","comParams":{"appIns":"'+appIns+'"}}');
+	up = layer.open({
+	  	  type: 2,
+	  	  title: false,
+	  	  fixed: false,
+	  	  closeBtn: 0,
+	      shadeClose: true,
+	      shade : [0.3 , '#000' , true],
+	      border : [3 , 0.3 , '#000', true],
+	      offset: ['20%',''],
+	      area: ['250px','270px'],
+	  	 content: rqQrcodeUrl
+	 });
+	
+	
 }

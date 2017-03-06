@@ -91,8 +91,12 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 
 			try {
 				if(isMobile){
+					String contextPath = request.getContextPath();
+					String commonUrl = contextPath + "/dispatcher";
+					String strHeadHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_HEAD_MHTML",contextPath,commonUrl,jgId,strSiteId,language);
 					//TODO 移动版展示内容
-					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_MHTML",request.getContextPath(),cssPath, "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
+					String strMainHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_MHTML",contextPath,schlrHtml,schlredHtml);
+					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "", strHeadHtml, strMainHtml);
 				}else{
 					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_HTML",cssPath,request.getContextPath(), "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
 				}
@@ -138,6 +142,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_MHTML");
 				}else{
 					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_HTML");
+					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_TABLE_HTML","",schlredHtml);
 				}
 			}else{
 				for (Object obj : schlrList) {
@@ -180,6 +185,11 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 						schlredHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
 					}
 				}
+				if(!isMobile){
+					String theadHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_APPLY_THEAD_HTML");
+					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_TABLE_HTML",theadHtml,schlredHtml);
+
+				}
 			}
 		} catch (TzSystemException e) {
 			e.printStackTrace();
@@ -210,6 +220,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_MHTML");
 				}else{
 					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_HTML");
+					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_TABLE_HTML","",schlrHtml);
 				}
 			}else{
 				for (Object obj : schlrList) {
@@ -225,7 +236,10 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					}else{
 						schlrHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
 					}
-					
+				}
+				if(!isMobile){
+					String theadHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_OPEN_THEAD_HTML");
+					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_TABLE_HTML",theadHtml,schlrHtml);
 				}
 			}
 						

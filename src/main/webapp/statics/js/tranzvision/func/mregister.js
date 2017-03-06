@@ -266,7 +266,7 @@ $(document).ready(function(){
 					}else{//其他
 						if(data[fieldId] == "Y"){
 							if(val != ""){
-								$('#' + fieldId + '_status;').hide();
+								$('#' + fieldId + '_status').hide();
 							}else{
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#' + fieldId + '_status').show();
@@ -360,7 +360,9 @@ $(document).ready(function(){
 	},200);
 	
 	$("#BIRTHDATE").click(function() {
-		laydate();
+		laydate({
+			elem:"#BIRTHDATE"
+		});
 	});
 	setInterval(function(){
 		if($("#BIRTHDATE").val() != ""){

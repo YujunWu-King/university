@@ -326,6 +326,90 @@ Ext.define('KitchenSink.view.template.jygz.jygzController', {
         	 
         });
    
+    },
+    testshowtb:function(obj,rowIndex){
+
+        var jygzIDs ="";
+        if(obj.name=="toolbarShowTB"){
+            var selList = this.getView().getSelectionModel().getSelection();
+            var checkLen = selList.length;
+            if(checkLen == 0){
+                Ext.MessageBox.alert("提示","请选择需要的评委！");
+                return;
+            }else{
+            	for (var i=0;i<selList.length;i++){
+            		if(jygzIDs==""){
+            			jygzIDs = selList[i].get("jygzID");	
+            		}else{
+            			jygzIDs = jygzIDs+"="+selList[i].get("jygzID");
+            		}
+            	}
+            }
+        }else{
+            //var store = obj.findParentByType("grid").store;
+            //var selRec = store.getAt(rowIndex);
+            //jygzID = selRec.get("jygzID");
+        }
+
+        //是否有访问权限
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_MSTB_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_BMGL_MSTB_STD，请检查配置。');
+            return;
+        }
+
+        var contentPanel,cmp, className, ViewClass, clsProto;
+        var themeName = Ext.themeName;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className.toString());
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+  
+        cmp = new ViewClass({"name":"123"});
+  
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+ 
+        if (cmp.floating) {
+        
+            cmp.show();
+        }
+   
     }
 });
 

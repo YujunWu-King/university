@@ -611,12 +611,13 @@
 		Ext.tzSearchMailHistory(mailAddr);
 	},
 	
+	/*关闭窗口*/
 	onPageRegClose: function(btn){
-		//获取窗口
 		var win = btn.findParentByType("window");
-		
 		win.close();
 	},
+	
+	/*保存并关闭窗口*/
 	onPageRegEnsure: function(btn){
 		//获取窗口
 		var win = btn.findParentByType("window");
@@ -632,14 +633,193 @@
 		}	
 	},
 	
+	
+	/*添加到现有听众*/
+	 saveToStaAud:function(btn){
+	        var arrAddAudience=[];
+	        var addAudirec;
+	        var arrAddNameValue=[];
+	        
+	        var arrAddStatValue=[];
+	        var arrAddTypeValue=[];
+	        var arrAddMsValue=[];
+	        var arrAddSQLValue=[];
+	        
+	        var selList = this.getView().getSelectionModel().getSelection();
+	        
+        		
+	        var arrAddAudiValue=[];
+	        Ext.tzShowPromptSearch({
+	            recname: 'TZ_AUDCX_VW',
+	            searchDesc: '选择听众',
+	            maxRow:50,
+	            condition:{
+	                presetFields:{
+	                	TZ_JG_ID:{
+	                        value: Ext.tzOrgID,
+	                        type: '01'
+	                    }
+	                },
+	                srhConFields:{
+	                    TZ_AUD_NAME:{
+	                        desc:'听众名称',
+	                        operator:'07',
+	                        type:'01'
+	                    }
+	                }
+	            },
+	            srhresult:{
+	            	TZ_AUD_ID:'听众ID',
+	            	TZ_AUD_NAME: '听众名称'
+	       /*     	TZ_AUD_STAT: '听众状态',
+	            	TZ_AUD_TYPE: '听众类型',
+	            	TZ_AUD_MS: '描述',
+	            	TZ_AUD_SQL: 'SQL'
+	            	*/
+	            },
+	            multiselect: true,
+	            callback: function(selection){
+	                if (selection.length>0){
+	                    for(j=0;j<selection.length;j++){
+	                        addAudirec="";
+	                        addAudirec = {"id":selection[j].data.TZ_AUD_ID,"desc":selection[j].data.TZ_AUD_NAME};
+	                        arrAddAudience.push(addAudirec);
+	                        arrAddAudiValue.push(selection[j].data.TZ_AUD_ID);
+	                        arrAddNameValue.push(selection[j].data.TZ_AUD_NAME);
+	             /*           arrAddStatValue.push(selection[j].data.TZ_AUD_STAT);
+	                        arrAddTypeValue.push(selection[j].data.TZ_AUD_TYPE);
+	                        arrAddMsValue.push(selection[j].data.TZ_AUD_MS);
+	                        arrAddSQLValue.push(selection[j].data.TZ_AUD_SQL);
+	                        */
+	                        
+	                    };
+	                    
+	                	//是否有访问权限
+	       /*     		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_AUDNEW_STD"];
+	            	//	console.log(pageResSet);
+	            		if( pageResSet == "" || pageResSet == undefined){
+	            			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+	            			return;
+	            		}
+	            		//该功能对应的JS类
+	            		var className = pageResSet["jsClassName"];
+	            	//	console.log(className);
+	            		
+	            		if(className == "" || className == undefined){
+	            			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_AUDNEW_STD，请检查配置。');
+	            			return;
+	            		}
+
+	            		var win = this.lookupReference('pageRegWindow');
+
+	            		if (!win) {
+	            			className = 'KitchenSink.view.enrollProject.userMg.userMgNewAud';
+	            			Ext.syncRequire(className);
+	            			ViewClass = Ext.ClassManager.get(className);
+	            			//新建类
+	            			win = new ViewClass();
+	            	//		this.getView().add(win);
+	            		}
+	            		win.actType = "update";
+	       */     		
+	            		var audId = arrAddAudiValue;
+	            		var audName = arrAddNameValue;
+	          
+	            /*		var audStat = arrAddStatValue;
+	            		var audType = arrAddTypeValue;
+	            		var audMS = arrAddMsValue;
+	            		var audSQL = arrAddSQLValue;
+	            		
+	            	*/	
+	            		
+	            		AudID =audId;
+						
+	        			var oprIDJson = "";
+	        			for(var i=0;i<selList.length;i++){
+	        				var OPRID = selList[i].get("OPRID");
+	        				console.log(OPRID);
+	        				if(oprIDJson == ""){
+	        					oprIDJson = '{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+	        				}else{
+	        					oprIDJson = oprIDJson + ','+'{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+	        				}
+	        			}
+	        			var comParamsOPRID = "";
+	        			if(oprIDJson != ""){
+	        				comParamsOPRID = '"add":[' + oprIDJson + "]";
+	        			}
+	        			var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_LIST_STD","OperateType":"U","comParams":{'+comParamsOPRID+'}}';
+	        			console.log(tzParams2);
+	        			
+	        			Ext.tzSubmit(tzParams2,function(resp){
+	        				
+	        			},"",true,this,AudID);
+	            		
+	            		
+	            		
+	            		
+	            		
+	            		
+	            		
+	            		
+	        			/* 		
+	            		
+	            		//参数
+	            		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'"}}';
+	            		//页面注册信息表单
+	            		
+	            		var form = win.child("form").getForm();
+	            		
+	            		var gridStore =win.child("form").child("grid").getStore();
+	            		var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
+
+	            		Ext.tzLoad(tzParams,function(responseData){
+	            			console.log(responseData);
+	            			form.setValues(responseData);
+	            		//	form.findField("audName").setReadOnly(true);
+
+	            		
+	            			gridStore.tzStoreParams = tzStoreParams;
+	            			gridStore.reload();
+	            			
+	            		});
+	            		
+
+	            		win.show();
+	                   var SmsGroupDetForm = btn.findParentByType('smsGroupDet').child('form');
+	                    var storereceive=SmsGroupDetForm.child('tagfield[reference="receverTagField"]').getStore();
+	                    storereceive.add(arrAddAudience);
+	                    SmsGroupDetForm.down('tagfield[reference="receverTagField"]').removeListener('change','receverChange');
+	                    SmsGroupDetForm.child('tagfield[reference="receverTagField"]').addValue(arrAddAudiValue);
+	                    SmsGroupDetForm.down('tagfield[reference="receverTagField"]').addListener('change','receverChange');
+
+	                    SmsGroupDetForm.child('toolbar[reference=receverToolbar]').child('button[reference=clearAllBtn]').disabled=false;
+	                    SmsGroupDetForm.child('toolbar[reference=receverToolbar]').child('button[reference=clearAllBtn]').removeCls('x-item-disabled x-btn-disabled');
+	                */
+	                }
+	            }
+	        })
+	    },
+	
+	    deleteAudInfo: function(view, rowIndex){
+			Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+				if(btnId == 'yes'){					   
+				   var store = view.findParentByType("grid").store;
+				   store.removeAt(rowIndex);
+				}												  
+			},this);  
+		},
+		
+	
 	/*另存为静态听众--测试*/
 	saveAsStaAud: function() {
 
-		
+		//获取选中人员；
 		var selList = this.getView().getSelectionModel().getSelection();
-
-		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":""}]}}';
+		//拼接参数，新开听众页面；
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
 		
+		//后台执行插入表操作
 		var AudID ="";
 		Ext.tzSubmit(tzParams,function(resp){
 			AudID =resp;

@@ -23,6 +23,7 @@ import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -93,6 +94,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	public final String cookieWebLoginedUserName = "tzmu";
 
 	/**
+	 * Cookie存储当前登录网站的链接地址
+	 */
+	public final String cookieWebLoginUrl = "TZGD_LOGIN_URL";
+	/**
 	 * 记录登录类型，后台 - GLY；前台 - SQR；
 	 */
 	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
@@ -110,16 +115,18 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	@Override
 	public boolean doLogin(HttpServletRequest request, HttpServletResponse response, String orgid, String siteid,
 			String userName, String userPwd, String code, String language, ArrayList<String> errorMsg) {
-
-		// 校验验证码
-		Patchca patchca = new Patchca();
-		if (!patchca.verifyToken(request, code)) {
-			errorMsg.add("3");
-			errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
-					"TZGD_FWINIT_00040", language, "输入的验证码不正确。", "Security code is incorrect."));
-			return false;
-		}
-
+	    	//20170222，yuds，手机版暂不进行验证码校验
+	    	boolean isMobile = CommonUtils.isMobile(request);
+	    	if(!isMobile){
+        		// 校验验证码
+        		Patchca patchca = new Patchca();
+        		if (!patchca.verifyToken(request, code)) {
+        			errorMsg.add("3");
+        			errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
+        					"TZGD_FWINIT_00040", language, "输入的验证码不正确。", "Security code is incorrect."));
+        			return false;
+        		}
+	    	}
 		try {
 
 			// 校验机构和站点的有效性
@@ -192,6 +199,16 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24 * 3600);
 			tzCookie.addCookie(response, cookieWebLoginedUserName, psTzAqYhxxTblKey.getTzDlzhId());
 			tzCookie.addCookie(response, cookieContextLoginType, "SQR");
+			//将当前登录地址也写入cookie中
+			String ctxPath = request.getContextPath();
+			String strLoginUrl = "";
+			if(ctxPath!=null&&!"".equals(ctxPath)){
+			    strLoginUrl =  ctxPath + "/user/login/" + orgid.toLowerCase() + "/" + siteid;  
+			}else{
+			    strLoginUrl = "/user/login/" + orgid.toLowerCase() + "/" + siteid;  
+			}
+			tzCookie.addCookie(response, cookieWebLoginUrl, strLoginUrl);
+			
 			errorMsg.add("0");
 			errorMsg.add("");
 			return true;

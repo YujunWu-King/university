@@ -14,7 +14,7 @@
     columnLines: true,
     controller: 'appFormClass',
     name:'appFormClass',
-    style:"margin:8px",
+    /*style:"margin:8px",*/
     multiSelect: true,
     title: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicationFormAuditing","报名表审核"),
     viewConfig: {
@@ -106,7 +106,7 @@
                     handler: "viewApplicants"
                 }],
                 width:130
-            },{
+            },/*{
                 xtype:'linkcolumn',
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.publishResult","报名流程结果公布"),
                 width:160,
@@ -118,7 +118,7 @@
                     },
                     handler: "publishResult"
                 }]
-            },{
+            },*/{
                 menuDisabled: true,
                 sortable: false,
                 width:150,
@@ -126,8 +126,8 @@
                 xtype: 'actioncolumn',
                 align:'center',
                 items:[
-                    {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:''},"-",
-                    {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:''},"-",
+                    {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSet","设置评审规则"),handler:'setReviewRule'},"-",
+                    {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewApplicants'},"-",
                     {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'clReviewScheduleMg'}
                 ]
             },{
