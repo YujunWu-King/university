@@ -119,8 +119,8 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		String strView=messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_VIEW", language, "预览模式", "View");
 		String strViewDesc=messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_VIEW_DESC", language, "您无法提交任何数据", "View");
 		//文件报文数据
-		String surveyData=null;
-		String surveyInsData=null;
+		String surveyData="";
+		String surveyInsData="";
 		if(type.equals("TPL")){
 			final String SQL1="SELECT TZ_APPTPL_JSON_STR FROM PS_TZ_DC_DY_T WHERE TZ_APP_TPL_ID = ?";
 			surveyData=jdbcTemplate.queryForObject(SQL1, new Object[]{survyID},"String");
