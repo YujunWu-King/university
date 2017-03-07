@@ -137,7 +137,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 			if(schlrList == null || schlrList.size() < 1){
 				/*没有开放的奖学金申请*/
 				if(isMobile){
-					//TODO 移动端内容展示
+					//移动端内容展示
 					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_MHTML");
 				}else{
 					schlredHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_APPLY_HTML");
@@ -178,7 +178,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 						attrWjUrl = attrWjUrl + "&SURVEY_INS_ID=" + insId;
 					}
 					if(isMobile){
-						//TODO 移动端展示内容
+						//移动端展示内容
 						schlredHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_MHTML",attrSchlrName,attrIsApply,attrWjUrl);
 					}else{
 						schlredHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLREDTR_HTML",attrSchlrName,attrKrq,attrJrq,attrIsApply,attrWjUrl);
@@ -215,7 +215,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 			if(schlrList == null ||  schlrList.size() < 1){
 				/*没有开放的奖学金申请*/
 				if(isMobile){
-					//TODO 移动设备展示内容
+					//移动设备展示内容
 					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_MHTML");
 				}else{
 					schlrHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_NO_OPEN_HTML");
@@ -230,7 +230,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					String attrJrq = result.get("TZ_DC_WJ_JRQ") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_JRQ"));
 					String attrWjUrl = result.get("TZ_DC_WJ_URL") == null ? "" : String.valueOf(result.get("TZ_DC_WJ_URL"));
 					if(isMobile){
-						//TODO 移动端展示
+						//移动端展示
 						schlrHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_MHTML",attrSchlrName,attrWjUrl);
 					}else{
 						schlrHtml += tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_SCHLRTR_HTML",attrSchlrName,attrKrq,attrJrq,attrWjUrl);
@@ -243,7 +243,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 			}
 						
 		} catch (TzSystemException e1) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
