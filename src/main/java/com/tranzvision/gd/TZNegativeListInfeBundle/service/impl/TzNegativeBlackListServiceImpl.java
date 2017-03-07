@@ -24,7 +24,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @since 2017-2-14
  */
 @Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeBlackList")
-public class TzNegativeBlackList extends TzNegativeListBundle {
+public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private TZGDObject TzSQLObject;
 	@Autowired

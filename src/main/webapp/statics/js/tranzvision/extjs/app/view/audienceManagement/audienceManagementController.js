@@ -50,6 +50,23 @@ addComRegInfo: function() {
 				}
 
 				cmp = new ViewClass();
+			    cmp.on('afterrender',function(panel){
+			    	
+			    	/*隐藏发布对象
+					var fbSet = panel.down('fieldset[name=fbSet]');
+					fbSet.hide();
+						
+					*/		
+							var cmpForm = panel.child("form").getForm();
+							//新建时，隐藏保存按钮
+					//		cmpForm.findField("audID").hide(); 
+				//			cmpForm.findField("audName").hide(); 
+			//				var cmpB= panel.buttons("audSave");
+			//				var cmpB2=panel.getCmp("audSave2");
+							var cmpB3=panel.down("button[reference=audSave]").setVisible(false);
+						//	cmpB2.hide(); 
+					});
+				
 				
 				tab = contentPanel.add(cmp);     
 				
@@ -107,7 +124,7 @@ addComRegInfo: function() {
 		console.log(win);
 		
 		
-	   var selList = this.getView().getSelectionModel().getSelection();
+	   var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
 	   
 	//   var selList = win.child("form").child("grid").getSelectionModel().getSelection();
 		console.log(selList);
@@ -520,11 +537,18 @@ addComRegInfo: function() {
 			//获取组件注册信息参数
 			var tzParams = this.getComRegInfoParams();
 			var comView = this.getView();
+			console.log(comView);
+		//	var pageGrid = comView.parent.child("grid");
 			Ext.tzSubmit(tzParams,function(responseData){
 				//关闭窗口						   
-				comView.close();	
+				comView.close();
+			//	gridStore.reload();
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+			    contentPanel.child("audienceManagementDa").store.reload();
+		//		pageGrid.store.reload();
 			},"",true,this);
 		}
+		
 	},
 	getComRegInfoParams: function(){
 		//组件注册表单
@@ -730,22 +754,53 @@ console.log(tzParams);
 //查询窗口	
 	searchComList: function(btn){
 		Ext.tzShowCFGSearch({
-		//	cfgSrhId: 'TZ_AQ_COMREG_COM.TZ_AQ_COMGL_STD.TZ_GD_COMZC_VW',
+		
 			cfgSrhId: 'TZ_AUD_COM.TZ_AUD_LIST_STD.PS_TZ_AUDCX_VW',
 		//	tzStoreParams: '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_LIST_STD.PS_TZ_AUDCX_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}',
+			condition:
+			{
+				"TZ_JG_ID": Ext.tzOrgID
+			},
 			
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
 				store.load(				
-			/*		condition:{
-						TZ_JG_ID:{
-							value: Ext.tzOrgID,
-							operator:"01",
-							type:"01"
-					}
-				}
-				*/
+				);
+			}
+		});	
+	},
+	
+	searchList: function(btn){
+	
+/*		var panel = btn.findParentByType('newAudPanel');
+		
+	//	var audChildID = panel.audID;
+		var form = panel.child("form").getForm();
+		console.log(form);
+		var audChildID = form.findField("audID").getValue;
+*/		
+		var form = this.getView().child("form").getForm();
+		//表单数据
+			var formParams = form.getValues();
+			
+			var audChildID =formParams["audID"];
+		
+		
+		console.log(audChildID);
+		
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW',
+		//	tzStoreParams: '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_LIST_STD.PS_TZ_AUDCX_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'"}}',
+			condition:
+			{
+				"TZ_AUD_ID": audChildID
+			},
+		
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load(				
 				);
 			}
 		});	

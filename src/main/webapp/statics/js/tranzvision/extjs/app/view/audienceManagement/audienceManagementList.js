@@ -16,6 +16,9 @@ Ext.define('KitchenSink.view.audienceManagement.audienceManagementList', {
     xtype: 'audienceManagementDa',
 	controller: 'audienceManagementController',
     columnLines: true,
+ //   reference:'audGrid',
+//    name:'audGrid',
+ //   id:'audGrid',
     selModel: {
         type: 'checkboxmodel'
     },
