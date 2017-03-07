@@ -104,7 +104,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudPanel', {
 						
 						
 						if(audTypeNow=="1"){
-						
+					//		Ext.MessageBox.alert('提示', '请填写SQL');
 							audSQLs.allowBlank = false;
 						}else{
 							audSQLs.allowBlank = true;
@@ -158,7 +158,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudPanel', {
 		dockedItems:[{
     		xtype:"toolbar",
     		items:[
-    			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchComList"},"-",
+    			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchList"},"-",
     			{text:"重新产生听众成员",tooltip:"重新产生听众成员",iconCls:"add",handler:"freshAudMember"},"-",
     			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:"deleteComRegInfos"}
     		]
@@ -301,7 +301,11 @@ Ext.define('KitchenSink.view.audienceManagement.newAudPanel', {
     buttons: [{
 		text: '保存',
 		iconCls:"save",
-		handler: 'onComRegSave'
+		handler: 'onComRegSave',
+		name: 'audSave',
+		id:'audSave',
+		reference:'audSave'
+		
 	}, {
 		text: '确定',
 		iconCls:"ensure",
