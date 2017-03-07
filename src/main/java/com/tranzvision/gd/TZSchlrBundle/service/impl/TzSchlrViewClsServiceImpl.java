@@ -95,7 +95,7 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 					String commonUrl = contextPath + "/dispatcher";
 					String strHeadHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_HEAD_MHTML",contextPath,commonUrl,jgId,strSiteId,language);
 					String strMainHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_MHTML",contextPath,schlrHtml,schlredHtml);
-					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "申请奖学金",contextPath, strHeadHtml,strSiteId,"1", strMainHtml);
+					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "申请奖学金",contextPath, strHeadHtml,strSiteId,"5", strMainHtml);
 				}else{
 					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_HTML",cssPath,request.getContextPath(), "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
 				}
