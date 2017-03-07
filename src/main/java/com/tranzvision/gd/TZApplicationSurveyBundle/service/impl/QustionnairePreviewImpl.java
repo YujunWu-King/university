@@ -219,6 +219,8 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		String footer=survyMap.get("TZ_DC_JWNR")==null?"":survyMap.get("TZ_DC_JWNR").toString();
 		surveyData = surveyData.replace("\\", "\\\\");
 		surveyData = surveyData.replaceAll("\\$", "~");
+		surveyInsData = surveyInsData.replace("\\", "\\\\");
+		surveyInsData = surveyInsData.replaceAll("\\$", "~");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_VIEW_HTML", header,footer,
 					strComRegInfo,surveyData, surveyInsData,String.valueOf(numMaxPage), language, strTitle, strPre, strNext, strROnly, strROnlyDesc, strView, strViewDesc, String.valueOf(surveyInsId), surveyLogic, tzGeneralURL, strMsgSet,URL);
