@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAutomaticTagBundle.dao.PsQynDbblKsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutomaticTagBundle.model.PsQynDbblKsTKey" >
+    <id column="TZ_PRJ_ID" property="tzPrjId" jdbcType="VARCHAR" />
+    <id column="TZ_KSSSYEAR" property="tzKsssyear" jdbcType="VARCHAR" />
+    <id column="TZ_MSH_ID" property="tzMshId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticTagBundle.model.PsQynDbblKsTKey" >
+    delete from PS_TZ_QYNDBBL_KS_T
+    where TZ_PRJ_ID = #{tzPrjId,jdbcType=VARCHAR}
+      and TZ_KSSSYEAR = #{tzKsssyear,jdbcType=VARCHAR}
+      and TZ_MSH_ID = #{tzMshId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticTagBundle.model.PsQynDbblKsTKey" >
+    insert into PS_TZ_QYNDBBL_KS_T (TZ_PRJ_ID, TZ_KSSSYEAR, TZ_MSH_ID
+      )
+    values (#{tzPrjId,jdbcType=VARCHAR}, #{tzKsssyear,jdbcType=VARCHAR}, #{tzMshId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticTagBundle.model.PsQynDbblKsTKey" >
+    insert into PS_TZ_QYNDBBL_KS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
+        TZ_PRJ_ID,
+      </if>
+      <if test="tzKsssyear != null" >
+        TZ_KSSSYEAR,
+      </if>
+      <if test="tzMshId != null" >
+        TZ_MSH_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzPrjId != null" >
+        #{tzPrjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKsssyear != null" >
+        #{tzKsssyear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMshId != null" >
+        #{tzMshId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
