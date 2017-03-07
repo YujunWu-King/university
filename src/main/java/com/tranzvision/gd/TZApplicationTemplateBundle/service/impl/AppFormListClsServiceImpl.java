@@ -769,11 +769,11 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			int dataLength = actData.length;
 
-			System.out.println();
+			//System.out.println();
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				String strForm = actData[num];
-				System.out.println("strForm:" + strForm);
+				//System.out.println("strForm:" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
 				

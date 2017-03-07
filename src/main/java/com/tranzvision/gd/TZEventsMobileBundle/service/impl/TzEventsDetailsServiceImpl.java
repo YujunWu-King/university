@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZEventsMobileBundle.service.impl;
 
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
@@ -18,6 +21,8 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+
+import freemarker.core.ParseException;
 
 /**
  * 手机版活动详情页面
@@ -38,6 +43,9 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 	
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
@@ -151,8 +159,8 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 		try {
 
 			jacksonUtil.json2Map(strParams);
-			strAPPLYID = jacksonUtil.getString("APPLYID");
-			strBMRID = jacksonUtil.getString("BMRID");
+			strAPPLYID = jacksonUtil.getString("actId");
+			strBMRID = jacksonUtil.getString("bmrId");
 
 			// 双语化
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetSiteLang");
@@ -169,8 +177,8 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 
 		try {
 
-			strAPPLYID = jacksonUtil.getString("APPLYID");
-			strBMRID = jacksonUtil.getString("BMRID");
+			strAPPLYID = jacksonUtil.getString("actId");
+			strBMRID = jacksonUtil.getString("bmrId");
 
 			// 报名状态
 			String sql = "select TZ_NREG_STAT from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
@@ -215,7 +223,7 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 						// 解锁
 						mySqlLockService.unlockRow(sqlQuery);
 					}
-					errorCode = "1";
+					errorCode = "0";
 					errorMsg = cancelSuccess;
 				} else {
 					errorCode = "1";
@@ -267,7 +275,7 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 	 * @param errorMsg
 	 * @return
 	 */
-	private String getActInfoData(String strParams, String[] errorMsg){
+	private String getActInfoData(String strParams, String[] errorMsg) throws ParseException{
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
 		rtnMap.put("diaplayAppBar", "N");
@@ -278,6 +286,8 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			jacksonUtil.json2Map(strParams);
 			//活动编号
 			String actId = jacksonUtil.getString("actId");
+			
+			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			
 			// 获取活动显示模式
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
@@ -295,6 +305,45 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			// 只有启用在线报名并且在有效报名时间内才显示在线报名条
 			if ("Y".equals(strQy_zxbm) && "Y".equals(validTD)) {
 				rtnMap.replace("diaplayAppBar","Y");
+				
+				sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+				Map<String, Object> mapBM = sqlQuery.queryForMap(sql, new Object[] { oprid, actId });
+
+				// 是否已注册报名标识
+				String regFlag = "";
+				// 报名人ID
+				String strBmrId = "";
+				if (mapBM != null) {
+					regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
+					strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
+				}
+				
+				rtnMap.put("regFlag", regFlag);
+				rtnMap.put("bmrId", strBmrId);
+				
+				
+				String strBaseUrl = request.getServletContext().getContextPath() + "/dispatcher?tzParams=";
+				//在线报名URL
+				String strAppFormUrl = request.getContextPath() + "/dispatcher?classid=eventsAppForm&actId="+actId;
+				
+				// 构造链接参数
+				Map<String, Object> mapComParams = new HashMap<String, Object>();
+				Map<String, Object> mapParams = new HashMap<String, Object>();
+				
+				mapComParams.put("actId", actId);
+				mapComParams.put("bmrId", strBmrId);
+
+				mapParams.put("ComID", "TZ_HD_MOBILE_COM");
+				mapParams.put("PageID", "TZ_HD_DETAILS_STD");
+				mapParams.put("OperateType", "EJSON");
+				mapParams.put("comParams", mapComParams);
+
+				String strUrlParams = jacksonUtil.Map2json(mapParams);
+				//撤销报名URL
+				String cancelApplyUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
+				
+				rtnMap.put("appFormUrl", strAppFormUrl);
+				rtnMap.put("cancelApplyUrl", cancelApplyUrl);
 			}
 			
 			String actAddr = "";
@@ -306,11 +355,21 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 				actAddr = actMap.get("TZ_NACT_ADDR") == null ? "" : actMap.get("TZ_NACT_ADDR").toString();
 				startTime = actMap.get("TZ_START_DT") == null ? "" : actMap.get("TZ_START_DT").toString();
 				endTime = actMap.get("TZ_END_DT") == null ? "" : actMap.get("TZ_END_DT").toString();
+				
+				SimpleDateFormat simpleDatetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat simpleDttmFormat = new SimpleDateFormat("MM/dd HH:mm");
+				if(!"".equals(startTime)){
+					startTime = simpleDttmFormat.format(simpleDatetimeFormat.parse(startTime)); 
+				}
+				if(!"".equals(endTime)){
+					endTime = simpleDttmFormat.format(simpleDatetimeFormat.parse(endTime)); 
+				}
 			}
 			
 			rtnMap.put("location", actAddr);
 			rtnMap.put("startTime", startTime);
 			rtnMap.put("endTime", endTime);
+
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";

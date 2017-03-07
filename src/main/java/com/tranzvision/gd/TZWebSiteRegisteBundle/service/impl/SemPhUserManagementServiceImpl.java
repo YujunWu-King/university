@@ -69,7 +69,7 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 			}
 
 			try {				
-				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "", strHeadHtml, strMainHtml);
+				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "",contextPath, strHeadHtml,strSiteId,"5", strMainHtml);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 				return "【TZ_MOBILE_BASE_HTML】html对象未定义";

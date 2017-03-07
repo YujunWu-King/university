@@ -2369,6 +2369,22 @@ var SurveyBuild = {
     /*模板设置---高级设置 END*/
     reFocus:function(id){
         $("#"+id).trigger('blur');
-    }
+    },
+    specialCharReplace: function(str){ 
+		var s = "";
+		if(str == undefined) {
+			return str;
+		}
+		if(str.length == 0) return "";
+		s = $.trim(str.toString());
+		s = s.replace(/\\/g,"\\\\")
+		s = s.replace(/\"/g,"\\\"");
+		s = s.replace(/\'/g,"\\'");
+		s = s.replace(/\t/g,"\\t");
+		s = s.replace(/\f/g,"\\f");
+		s = s.replace(/\//g,"\\/");
+		s = s.replace(/\n/g,"\\n");
+		return s;
+	},
 };
 var MsgSet = {};

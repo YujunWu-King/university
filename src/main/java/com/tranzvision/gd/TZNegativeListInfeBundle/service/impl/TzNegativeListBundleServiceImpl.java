@@ -7,7 +7,7 @@ import com.tranzvision.gd.TZNegativeListInfeBundle.service.TzNegativeListInterfa
  * 负面清单接口 空方法。
  */
 
-public class TzNegativeListBundle implements TzNegativeListInterface{
+public class TzNegativeListBundleServiceImpl implements TzNegativeListInterface{
 
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
