@@ -12,7 +12,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tzhjl
  * @since 2017-2-09 标签统一接口
  */
-public class TzNegativeListComin extends FrameworkImpl {
+public class TzNegativeListCominServiceImpl extends FrameworkImpl {
 	@Autowired
 	private ApplicationContext ctx;
 	@Autowired
@@ -33,7 +33,7 @@ public class TzNegativeListComin extends FrameworkImpl {
 			String sql = "SELECT TZ_BIAOQZ_JAVA FROM PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
 			String strAppClass = SqlQuery.queryForObject(sql, new Object[] { labelId }, "String");
 
-			TzNegativeListBundle obj = (TzNegativeListBundle) ctx.getBean(strAppClass);
+			TzNegativeListBundleServiceImpl obj = (TzNegativeListBundleServiceImpl) ctx.getBean(strAppClass);
 
 			Boolean strReturn = obj.makeNegativeList(classId, batchId, labelId);
 

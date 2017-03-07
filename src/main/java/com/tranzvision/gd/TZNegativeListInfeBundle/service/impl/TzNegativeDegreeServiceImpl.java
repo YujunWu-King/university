@@ -18,7 +18,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeDegree")
-public class TzNegativeDegree extends TzNegativeListBundle {
+public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private TZGDObject TzSQLObject;
 	@Autowired
